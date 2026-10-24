@@ -175,7 +175,7 @@ class ShadeCoolingController:
         self._started = self.clock()
         try:
             from homeassistant.helpers.storage import Store
-            self._store = Store(self.hass, STORE_VERSION,
+            self._store = Store(self.hass, 1,
                 f"{DOMAIN}.shade_cooling_{self.manager.entry.entry_id}")
             data = await self._store.async_load()
             if data is not None and (
