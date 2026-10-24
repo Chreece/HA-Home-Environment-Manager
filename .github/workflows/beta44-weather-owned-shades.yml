@@ -153,9 +153,11 @@ jobs:
           assert 'COVER_CLOSE_FEATURE' in sources
           assert 'self.shading.schedule()' in manager
           assert '"sun.sun"' in manager
-          assert '"cover", "close_cover", {}, target={"entity_id": entity_id}' in shade
-          for forbidden in ('"cover", "open_cover"', '"cover", "set_cover_position"'):
-              assert forbidden not in shade, forbidden
+          assert '"cover", "close_cover", {}' in shade
+          assert '"cover", "open_cover", {}' in shade
+          assert 'target={"entity_id": entity}' in shade
+          assert '"cover", "set_cover_position"' not in shade
+          assert '"cover", "toggle"' not in shade
           assert 'HOLD_SECONDS = 7200' in shade
           assert 'data-shade-switch' in card and 'data-open-shade' in card
           PY
