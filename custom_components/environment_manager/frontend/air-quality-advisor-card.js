@@ -540,6 +540,30 @@
           }
           return;
         }
+        const selectedCover = event.target.closest?.('[data-open-shade]');
+        if (selectedCover) {
+          const area=selectedCover.getAttribute('data-shade-area');
+          const entityId=selectedCover.getAttribute('data-open-shade');
+          const inRoom=safeArray(this._shadingEvidence(area)?.selected_covers).includes(entityId);
+          if (inRoom && typeof entityId==='string' && entityId.startsWith('cover.')) {
+            this.dispatchEvent(new CustomEvent('hass-more-info',{
+              detail:{entityId},bubbles:true,composed:true,
+            }));
+          }
+          return;
+        }
+        const shadeSwitch = event.target.closest?.('[data-shade-switch]');
+        if (shadeSwitch && this._hass?.callService) {
+          const area=shadeSwitch.getAttribute('data-shade-area');
+          const entityId=shadeSwitch.getAttribute('data-shade-switch');
+          const found=this._shadingSwitch(area);
+          if (found?.id!==entityId) return;
+          const service=found.state.state==='on'?'turn_off':'turn_on';
+          Promise.resolve(this._hass.callService('switch',service,{
+            entity_id:entityId,
+          })).catch((error)=>console.warn('Home Environment Manager shade toggle failed',error));
+          return;
+        }
         const moreInfo = event.target.closest?.('[data-open-climate]');
         if (moreInfo) {
           const entityId = moreInfo.getAttribute('data-open-climate');
@@ -1807,6 +1831,69 @@
         '<small>'+escape(l.caution)+'</small>'+button+'</section>';
     }
 
+    _shadingEvidence(area) {
+      const snapshot=this._dashboardData || this._state()[1]?.attributes?.dashboard;
+      const rooms=safeArray(snapshot?.rooms);
+      return rooms.find((room)=>room?.area_id===area)?.environment?.shade_cooling || null;
+    }
+
+    _shadingSwitch(area) {
+      const found=Object.entries(this._hass?.states || {}).filter(([id,state])=>
+        id.startsWith('switch.') && state?.attributes?.area_id===area &&
+        state.attributes.close_only === true &&
+        Array.isArray(state.attributes.selected_shades));
+      return found.length===1?{id:found[0][0],state:found[0][1]}:null;
+    }
+
+    _shadePanel(room) {
+      const report=room?.environment?.shade_cooling;
+      const covers=safeArray(report?.selected_covers).filter((id)=>
+        typeof id==='string' && id.startsWith('cover.'));
+      if (!covers.length) return '';
+      const lang=this._language();
+      const words={
+        en:['Solar shade cooling','Enabled','Disabled','Open shade details',
+            'Closes selected window shades when the room is warm and sun is up. No automatic opening.',
+            'Room','Sun','Status'],
+        el:['Ηλιακή σκίαση για ψύξη','Ενεργό','Ανενεργό','Άνοιγμα στοιχείων σκίασης',
+            'Κλείνει επιλεγμένα σκίαστρα όταν ο χώρος είναι ζεστός και υπάρχει ήλιος. Δεν ανοίγουν αυτόματα.',
+            'Δωμάτιο','Ήλιος','Κατάσταση'],
+        de:['Solare Beschattung zur Kühlung','Ein','Aus','Beschattung anzeigen',
+            'Schließt ausgewählte Fensterrollos bei Wärme und Sonne. Kein automatisches Öffnen.',
+            'Raum','Sonne','Status'],
+      }[lang] || ['Solar shade cooling','Enabled','Disabled','Open shade details',
+        'Selected shades close when warm and sunny; never automatically reopen.',
+        'Room','Sun','Status'];
+      const managed=this._shadingSwitch(room.area_id);
+      const enabled=managed?.state?.state==='on';
+      const toggle=managed?'<button type="button" data-shade-switch="'+escape(managed.id)+
+        '" data-shade-area="'+escape(room.area_id)+'" class="shade-toggle">'+
+        escape(enabled?words[1]:words[2])+'</button>':'';
+      const status=String(report.status||'disabled').replaceAll('_',' ');
+      const list=covers.map((entityId)=>{
+        const state=this._hass?.states?.[entityId];
+        const title=state?.attributes?.friendly_name || entityId;
+        const result=report.covers?.[entityId];
+        return '<button type="button" class="shade-source" data-open-shade="'+
+          escape(entityId)+'" data-shade-area="'+escape(room.area_id)+'" '+
+          'title="'+escape(entityId)+'">'+escape(title)+
+          ' · '+escape(result||state?.state||'unknown')+'</button>';
+      }).join('');
+      const details=[
+        typeof report.temperature_c==='number' ? words[5]+' '+
+          this._format(report.temperature_c)+' °C' : '',
+        typeof report.sun_elevation==='number' ? words[6]+' '+
+          this._format(report.sun_elevation)+'°' : '',
+      ].filter(Boolean).join(' · ');
+      return '<section class="shade-panel" aria-label="'+escape(words[0])+'">'+
+        '<div class="shade-heading">'+this._icon('mdi:blinds')+
+        '<strong>'+escape(words[0])+'</strong>'+toggle+'</div>'+
+        '<small>'+escape(words[4])+'</small>'+
+        '<div class="shade-status">'+escape(words[7])+': '+escape(status)+
+        (details?' · '+escape(details):'')+'</div>'+
+        '<div class="shade-sources">'+list+'</div></section>';
+    }
+
     _room(room) {
       if (room?.climate_only === true) {
         const labels=CLIMATE_LABELS[this._language()] || CLIMATE_LABELS.en;
@@ -1818,6 +1905,7 @@
             ${this._editButton(room.area_id)}
           </div>
           ${this._climatePanel(room)}
+          ${this._shadePanel(room)}
         </article>`;
       }
       const status = ['safe','attention','unknown'].includes(room.status) ? room.status : 'unknown';
@@ -1897,6 +1985,7 @@
         ${expanded && this._config.show_metrics !== false
           ? this._moldCalibrationDetails(moldCalibration) : ''}
         ${this._climatePanel(room)}
+        ${this._shadePanel(room)}
         ${this._pidPanel(room)}
         ${this._config.show_science === false ? '' : this._environmentReport(room)}
         ${rhFallback}
@@ -2090,6 +2179,19 @@
         color:var(--aqa-green);display:grid;place-items:center;flex-shrink:0}
       .room-attention .room-icon{background:color-mix(in srgb,var(--aqa-amber),transparent 85%);color:var(--aqa-amber)}
       .room-unknown .room-icon{background:color-mix(in srgb,var(--aqa-muted),transparent 88%);color:var(--aqa-muted)}
+      .shade-panel{margin-top:12px;padding:11px;border:1px solid var(--aqa-edge);
+        background:color-mix(in srgb,var(--aqa-blue),transparent 96%);border-radius:12px;
+        display:grid;gap:6px;min-width:0}
+      .shade-panel small,.shade-status{color:var(--aqa-muted);font-size:11px;line-height:1.4}
+      .shade-heading{display:flex;gap:7px;align-items:center;flex-wrap:wrap;font-size:12px}
+      .shade-heading ha-icon{--mdc-icon-size:18px;color:var(--aqa-blue)}
+      .shade-toggle{margin-inline-start:auto;border:1px solid var(--aqa-edge);
+        border-radius:9px;background:var(--aqa-surface);padding:6px 9px;color:var(--aqa-text);
+        font-size:11px;cursor:pointer}
+      .shade-sources{display:flex;gap:5px;flex-wrap:wrap}
+      .shade-source{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere;
+        color:var(--aqa-text);font-size:11px;background:var(--aqa-surface);
+        border-radius:8px;border:1px solid var(--aqa-edge);padding:5px 7px;cursor:pointer}
       .room-main{min-width:0;flex:1}
       .room-main h3{margin:0;font-size:14px;line-height:1.35;font-weight:760;overflow-wrap:anywhere}
       .room-main span{display:block;color:var(--aqa-muted);font-size:10px;line-height:1.35;margin-top:2px}
