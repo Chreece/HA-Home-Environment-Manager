@@ -46,6 +46,48 @@ LABELS = {
  "zh-Hant": ("自動關閉窗簾以協助降溫", "室溫高於此值時關閉窗簾", "最小太陽高度角"),
  "th": ("ปิดม่านอัตโนมัติเพื่อให้ห้องเย็น", "ปิดม่านเมื่ออุณหภูมิห้องสูงกว่าค่า", "มุมเงยดวงอาทิตย์ขั้นต่ำ"),
 }
+ANNOUNCE_NAMES = {
+ "en":"Announce before moving window shades",
+ "el":"Ανακοίνωση πριν από το άνοιγμα ή κλείσιμο σκιάστρων",
+ "de":"Vor dem Öffnen oder Schließen der Rollos ankündigen",
+ "fr":"Annoncer avant d’ouvrir ou fermer les stores",
+ "es":"Anunciar antes de abrir o cerrar persianas",
+ "it":"Annuncia prima di aprire o chiudere le tende",
+ "nl":"Aankondigen voordat zonwering opent of sluit",
+ "pt":"Anunciar antes de abrir ou fechar os estores",
+ "pt-BR":"Anunciar antes de abrir ou fechar as persianas",
+ "pl":"Zapowiadaj przed otwarciem lub zamknięciem rolet",
+ "cs":"Oznámit před otevřením nebo zavřením rolet",
+ "sk":"Oznámiť pred otvorením alebo zatvorením roliet",
+ "sv":"Meddela innan solskydd öppnas eller stängs",
+ "da":"Giv besked før solafskærmning åbnes eller lukkes",
+ "nb":"Varsle før solskjerming åpnes eller lukkes",
+ "fi":"Ilmoita ennen kaihtimien avaamista tai sulkemista",
+ "hu":"Értesítés a redőnyök nyitása vagy zárása előtt",
+ "ro":"Anunță înainte de deschiderea sau închiderea jaluzelelor",
+ "bg":"Извести преди отваряне или затваряне на щорите",
+ "hr":"Najavi prije otvaranja ili zatvaranja roleta",
+ "sr":"Најави пре отварања или затварања ролетни",
+ "ru":"Сообщать перед открытием или закрытием жалюзи",
+ "uk":"Сповіщати перед відкриттям або закриттям ролет",
+ "tr":"Panjurlar açılmadan veya kapanmadan önce duyur",
+ "ar":"الإعلان قبل فتح أو إغلاق ستائر النوافذ",
+ "he":"להודיע לפני פתיחה או סגירה של התריסים",
+ "fa":"اعلام پیش از باز یا بسته شدن پرده‌ها",
+ "hi":"ब्लाइंड खोलने या बंद करने से पहले घोषणा करें",
+ "bn":"ব্লাইন্ড খোলা বা বন্ধের আগে ঘোষণা করুন",
+ "ta":"திரைகளைத் திறப்பதற்கு அல்லது மூடுவதற்கு முன் அறிவி",
+ "ur":"پردے کھولنے یا بند کرنے سے پہلے اطلاع دیں",
+ "id":"Umumkan sebelum tirai dibuka atau ditutup",
+ "vi":"Thông báo trước khi mở hoặc đóng rèm cửa",
+ "ko":"블라인드를 열거나 닫기 전에 알림",
+ "ja":"ブラインドを開閉する前に通知",
+ "zh-Hans":"开合窗帘前发送通知",
+ "zh-Hant":"開合窗簾前發送通知",
+ "th":"แจ้งเตือนก่อนเปิดหรือปิดม่าน",
+}
+
+
 DETAIL = {
  "en": "Only selected room window shades can CLOSE when a fresh room thermometer is above the threshold, sun.sun is above the configured angle, and every selected window contact is confirmed closed. Never automatically opens. Disabled by default; repeated close attempts are held for two hours.",
  "el": "Κλείνει μόνο τα επιλεγμένα σκίαστρα του χώρου όταν η πραγματική θερμοκρασία ξεπερνά το όριο, ο ήλιος είναι αρκετά ψηλά και όλες οι επαφές παραθύρων είναι κλειστές. Δεν ανοίγει αυτόματα. Αρχικά ανενεργό· αποφεύγει νέες εντολές για δύο ώρες.",
@@ -55,7 +97,8 @@ DETAIL = {
 
 def apply_shading_i18n(root: Path) -> None:
     files = [root/"strings.json", *sorted((root/"translations").glob("*.json"))]
-    if len(files) != 39 or set(LABELS) != set(SHADE_NAMES):
+    if (len(files) != 39 or set(LABELS) != set(SHADE_NAMES)
+            or set(ANNOUNCE_NAMES) != set(SHADE_NAMES)):
         raise ValueError("All 38 Home Assistant languages require shade controls")
     for path in files:
         lang = "en" if path.name == "strings.json" else path.stem
@@ -64,6 +107,9 @@ def apply_shading_i18n(root: Path) -> None:
         entities = data.setdefault("entity", {})
         entities.setdefault("switch", {})["area_shading_enabled"] = {
             "name": name,
+        }
+        entities["switch"]["home_shade_announce_before_movement"] = {
+            "name": ANNOUNCE_NAMES[lang],
         }
         nums = entities.setdefault("number", {})
         nums["area_shading_close_above_c"] = {"name": temperature + " (°C)"}
