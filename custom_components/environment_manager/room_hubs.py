@@ -48,7 +48,7 @@ def async_reconcile_removed_rooms(hass: Any, entry: Any) -> set[str]:
     options = deepcopy(dict(entry.options))
     options[ROOM_IDS] = {a: sid for a, sid in saved.items() if a not in removed}
     options[CONF_AREAS] = [a for a in settings.get(CONF_AREAS, []) if a not in removed]
-    for section in (CONF_CLIMATE_ROOMS, CONF_PID_ROOMS):
+    for section in (CONF_CLIMATE_ROOMS, CONF_PID_ROOMS, "shade_rooms"):
         rooms = settings.get(section, {})
         if not isinstance(rooms, dict) or not removed.intersection(rooms):
             continue
