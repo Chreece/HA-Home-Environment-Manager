@@ -31,7 +31,8 @@ def make_room(*, temp=27.0, sun=45.0, window="closed",
     sun_entity=MockState("sun.sun","above_horizon" if sun is not None else "unknown")
     if sun is not None:
         sun_entity.attributes["elevation"]=sun
-    sources=[cover,door,actual_window,sensor,sun_entity]
+    weather=MockState("weather.room","sunny")
+    sources=[cover,door,actual_window,sensor,sun_entity,weather]
     if second_cover:
         another=MockState("cover.room_blind","open",device_class="blind")
         another.attributes["supported_features"]=2
@@ -42,16 +43,17 @@ def make_room(*, temp=27.0, sun=45.0, window="closed",
         available=True
         def __init__(self):self.calls=[]
         def has_service(self,domain,service):
-            return self.available and (domain,service)==("cover","close_cover")
+            return self.available and domain=="cover" and service in ("close_cover","open_cover")
         async def async_call(self,domain,service,data,*,target,blocking):
-            assert (domain,service,data)==("cover","close_cover",{})
+            assert domain=="cover" and service in ("close_cover","open_cover") and data=={}
             assert blocking
             assert list(target)==["entity_id"] and target["entity_id"].startswith("cover.")
             self.calls.append((domain,service,data,target))
-            hass.states.get(target["entity_id"]).state="closing"
+            hass.states.get(target["entity_id"]).state=(
+                "closing" if service=="close_cover" else "opening")
     hass.services=Services()
     entry=SimpleNamespace(entry_id="room-shading",data={
-        "areas":["room"],
+        "areas":["room"],"weather_entities":["weather.room"],
         "room_sources":{"room":{
             "temperature":[sensor.entity_id],"windows":[actual_window.entity_id],
             "shades":[cover.entity_id,*(
@@ -82,7 +84,8 @@ def make_room(*, temp=27.0, sun=45.0, window="closed",
         async def async_save(self,content):
             if self.fail:raise RuntimeError("persist unavailable")
             self.writes.append(content)
-    controller=ShadeCoolingController(manager,clock=lambda:10000)
+    controller=ShadeCoolingController(manager,clock=lambda:10000,
+                                     announcement_grace_seconds=0)
     controller._started=0
     controller._active=controller._ready=True
     controller._store=Store()
@@ -145,15 +148,16 @@ def test_explicit_close_exact_entity_and_manual_reopen_is_not_fought(adapter):
     })
     assert h.control.statuses["room"]["status"]=="close_command_sent"
     assert len(h.control._store.writes)==1
-    h.cover.state="open"  # User manually raised roller shade after our close
+    h.cover.state="closed"
+    asyncio.run(h.control._tick("room"))
+    assert h.control._records[h.cover.entity_id]["phase"]=="owned_closed"
+    h.cover.state="open"  # User manually raised a confirmed closed shutter
     asyncio.run(h.control._tick("room"))
     assert len(h.hass.services.calls)==1
-    assert h.control.statuses["room"]["covers"][h.cover.entity_id]==(
-        "recent_close_or_manual_reopen_hold")
-    # Re-arm only after persistent two-hour manual-override hold.
+    assert h.control.statuses["room"]["covers"][h.cover.entity_id]=="manual_override"
     h.control.clock=lambda:10000+HOLD_SECONDS+1
     asyncio.run(h.control._tick("room"))
-    assert len(h.hass.services.calls)==2
+    assert len(h.hass.services.calls)==1, "Manual override is durable, not merely a timer"
 
 
 def test_storage_failure_blocks_physical_close(adapter):
@@ -170,7 +174,7 @@ def test_disabled_service_and_invalid_source_location_hold_closed(adapter):
     h=make_room()
     h.hass.services.available=False
     asyncio.run(h.control._tick("room"))
-    assert h.control.statuses["room"]["status"]=="close_cover_service_unavailable"
+    assert h.control.statuses["room"]["covers"][h.cover.entity_id]=="close_service_unavailable"
     h.hass.services.available=True
     h.hass._entity_areas[h.cover.entity_id]="other"
     asyncio.run(h.control._tick("room"))
