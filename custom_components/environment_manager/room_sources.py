@@ -12,7 +12,12 @@ from typing import Any
 from .const import DOMAIN
 
 CONF_ROOM_SOURCES = "room_sources"
-GROUPS = ("windows", "air_quality", "temperature", "humidity", "pressure", "climate_devices")
+GROUPS = ("windows", "air_quality", "temperature", "humidity", "pressure", "climate_devices", "shades")
+# Cover device classes that represent an indoor window shade, never an opening
+# such as a window, garage, gate, door, damper or exterior wind-driven awning.
+SHADING_COVER_CLASSES = frozenset(("blind", "shade", "shutter", "curtain"))
+COVER_CLOSE_FEATURE = 2  # homeassistant.components.cover.CoverEntityFeature.CLOSE
+
 PRESSURE_UNITS = {"pa": .01, "hpa": 1., "kpa": 10., "mbar": 1., "bar": 1000.,
                   "inhg": 33.8638866667, "mmhg": 1.33322387415, "psi": 68.9475729317}
 
@@ -58,6 +63,15 @@ def category(hass: Any, state: Any) -> str | None:
     from .discovery import _device_class, is_window, supported_metric
     if not native(hass, state.entity_id):
         return None
+    # Window shading actuators are *not* window contact sensors. They are an
+    # independent opt-in output group, never general climate devices.
+    if state.domain == "cover":
+        try:
+            supported = int(state.attributes.get("supported_features", 0))
+        except (TypeError, ValueError, OverflowError):
+            supported = 0
+        return ("shades" if _device_class(hass, state) in SHADING_COVER_CLASSES
+                and supported & COVER_CLOSE_FEATURE else None)
     if is_window(hass, state):
         return "windows"
     if state.domain in ("climate", "fan", "humidifier"):
@@ -125,6 +139,9 @@ def defaults(hass: Any, settings: dict, area: str) -> dict[str, list[str]]:
         settings.get("excluded_indoor_entities", {}).get(area, []))
     result = {k: [v["value"] for v in values if v["value"] not in excluded]
               for k, values in available.items()}
+    # Existing rooms must never begin physically moving covers simply because
+    # this new group was discovered in a later release. Explicit opt-in only.
+    result["shades"] = []
     room = settings.get("climate_rooms", {}).get(area, {})
     if "selected_devices" in room or configured_sources(settings, area):
         result["climate_devices"] = list(configured_sources(settings, area))
@@ -140,6 +157,16 @@ def store_selection(hass: Any, settings: dict, area: str, inputs: dict) -> None:
     previous = deepcopy(rooms.get(area, {}))
     room = deepcopy(previous)
     devices = inputs["climate_devices"]
+    # Selecting a shade only enrolls it as an available room output.
+    # Actuation remains OFF until the room's own shade cooling switch is set.
+    new_shades = set(inputs["shades"])
+    prior_shades = set((selected(settings, area, "shades") or ()))
+    if new_shades != prior_shades:
+        shade_cfg = settings.setdefault("shade_rooms", {})
+        if isinstance(shade_cfg, dict):
+            previous_shade = shade_cfg.get(area, {})
+            previous_shade = previous_shade if isinstance(previous_shade, dict) else {}
+            shade_cfg[area] = {**previous_shade, "enabled": False}
     profiles = room.setdefault("device_settings", {})
     previous_inputs = settings.get(CONF_ROOM_SOURCES, {}).get(area)
     if isinstance(previous_inputs, dict) and any(previous_inputs.get(key) != inputs.get(key)
@@ -217,6 +244,10 @@ def store_selection(hass: Any, settings: dict, area: str, inputs: dict) -> None:
 
 def restrict_rooms(settings: dict, areas: list[str]) -> None:
     settings["areas"] = list(areas)
+    if isinstance(shades := settings.get("shade_rooms"), dict):
+        for area in set(shades) - set(areas):
+            if isinstance(shades.get(area), dict):
+                shades[area]["enabled"] = False
     for key in ("climate_rooms", "pid_rooms"):
         for area, cfg in settings.get(key, {}).items():
             if area in areas or not isinstance(cfg, dict):
