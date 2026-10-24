@@ -299,7 +299,6 @@ async def update_device_setting(manager: Any, kind: str, key: str,
         elif kind == "area_shading":
             from .shade_cooling import CONF_SHADE_ROOMS, SHADE_NUMBERS, eligible_shade
             from .room_sources import selected
-            from .const import CONF_AREAS
             if area not in current.get(CONF_AREAS, []):
                 raise HomeAssistantError("Shade cooling requires a monitored room")
             enrolled = selected(current, area, "shades") or ()
