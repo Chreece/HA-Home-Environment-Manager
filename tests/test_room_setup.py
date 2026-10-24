@@ -72,7 +72,7 @@ def test_seven_separate_multiselects_with_opt_in_native_shades(monkeypatch, adap
     flow = build(monkeypatch, adapter)
     asyncio.run(flow.async_step_init())
     form = asyncio.run(flow.async_step_setup_rooms({"areas": ["living"]}))
-    assert list(form["data_schema"]) == ["windows", "air_quality", "temperature", "humidity", "pressure", "climate_devices"]
+    assert list(form["data_schema"]) == ["windows", "air_quality", "temperature", "humidity", "pressure", "climate_devices", "shades"]
     for value in form["data_schema"].values():
         assert value.config.multiple is True and value.config.custom_value is False
     choices = lambda group: {v["value"]: v["label"] for v in form["data_schema"][group].config.options}
