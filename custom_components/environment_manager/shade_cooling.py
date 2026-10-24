@@ -437,13 +437,8 @@ class ShadeCoolingController:
                 reason = _solar_release_reason(
                     temp=temp, threshold=cfg["close_above_c"], sun=sun,
                     min_sun_elevation=cfg["min_sun_elevation"],
-                    weather=details["close_reason"] if False else
-                        ("weather_hazard_hold" if
-                          details.get("weather_status") == "weather_hazard_hold" else
-                          details.get("weather_status")),
+                    weather=details.get("weather_status"),
                 )
-                # Above uses evidence from the same weather check that
-                # decided closure; never treat an unknown report as sunny.
                 if reason is None:
                     outcomes[entity] = "owned_closed_weather_still_warrants_shade"
                     continue
