@@ -17,7 +17,6 @@ from .const import (
     CONF_MEDIA_PLAYERS, CONF_TTS_ENGINE, CONF_SHADE_ANNOUNCE,
 )
 from .hub_delivery import hub_available, make_hub_payload, async_submit_hub
-from .discovery import entity_area
 
 MESSAGES = {
     "en": {
@@ -63,6 +62,7 @@ def _targets(manager: Any, entities: Any, room: str) -> list[str]:
         return []
     if callable(getattr(manager, "_targets_in_room", None)):
         return manager._targets_in_room(entities, room)
+    from .discovery import entity_area
     return [item for item in entities if isinstance(item, str)
             and (entity_area(manager.hass, item) in (None, room))]
 
