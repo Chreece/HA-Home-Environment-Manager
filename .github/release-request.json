@@ -1,17 +1,19 @@
 {
-  "version": "0.6.0b42",
+  "version": "0.6.0b43",
   "channel": "beta",
-  "release_branch": "beta/v0.6.0b42",
-  "intent": "Make the actual Home Assistant friendly names for every PID parameter start with the literal PID acronym in all 38 supported languages. Include native per-device tuning numbers, measured-model calibration inputs, fan capacity model selectors/measurements/buttons, room PID numbers and gain selectors. Preserve translated descriptions and exact entity/unique IDs.",
-  "note": "Correct both generated i18n names and PID parameter has_entity_name behavior; HA device or physical channel prefixes must not precede PID in friendly_name. No native power, control behavior, settings, calibration data, or config entry migration changes.",
+  "release_branch": "beta/v0.6.0b43",
+  "intent": "Add opt-in room-scoped native window shade/blind/shutter/curtain closure to reduce overheating when measured room temperature and sun elevation warrant it, with strict window contact safety, exact cover CLOSE capability, no automatic opening or garage/door/awning commands.",
+  "note": "Room setup gains seventh explicit output group 'shades', default empty. Room hub has disabled-by-default solar shade cooling switch and room temperature/sun-elevation thresholds. Persist each close intent and two-hour manual-reopen cooldown; independent per-room tasks without physical device/area broadcasts. Preserve beta42 PID-first locale names and all previous PID/Recorder protections.",
   "validation_attempt": 0,
   "changes": [
-    "Add a deterministic final translation-generation pass ensuring PID · is the first visible token of every PID parameter name in strings.json and all 38 translations, after all other per-device/room generators.",
-    "Move the multi-channel placeholder after PID; avoid duplicate literal PID strings within the same localized display name while preserving locale-specific wording and units.",
-    "Mark only per-controller and room PID parameter entities as has_entity_name=False so Home Assistant never inserts the physical device/room name ahead of the PID sorting prefix in friendly_name.",
-    "Apply to Kp/Ki/Kd, PID sample/cycle duration, process model inputs, capacity stage/speed/output inputs, PID calibration selectors, explicit Apply buttons, room-level and direct room tuning, and the room PID gain-source selector.",
-    "Preserve the original integration domain, entity registry unique IDs, translation keys, channel/device associations, valid ranges, selectable modes, and physical controller behavior.",
-    "Retain non-PID names (climate/quiet/physical devices), existing control mode selector, and the existing beta31–41 safety and measured-capacity behavior.",
-    "Test real Home Assistant 2026.10 entity has_entity_name behavior and exact original unique IDs, all locales' PID prefixes, generator idempotence and non-PID unchanged names, plus existing Python/Node, HACS/Hassfest and flat archive gates."
+    "Add a seventh room-source category 'shades' distinct from true window contacts and climate actuators, with strict same-area native HA registry membership and COVER CLOSE supported feature; exclude garage, gate, door, damper, actual window and outdoor awning device classes.",
+    "Default all existing and new installations to zero shade sources and physical movement disabled; changing selected shades withdraws prior approval until explicitly enabled again.",
+    "Add per-room opt-in Auto solar shade cooling switch and two validated room device numbers: indoor close temperature and minimum sun elevation, both translated for all 38 locales.",
+    "Read only fresh, explicitly selected same-room temperature evidence and HA sun.sun elevation; require every real selected room window contact known closed; unknown and stale conditions block all commands.",
+    "Dispatch only cover.close_cover against a single exact selected entity, with no automatic open, no set_position, no cover group broadcast, no wind-sensitive outdoor awnings, no garage/gates.",
+    "Persist close intent before actuator service and hold repeat attempts/manual reopen for two hours; startup holds and failed storage/service do not cause retries.",
+    "Integrate independent shade decision tasks and compact room dashboard/status reporting without Recorder attribute explosion or changing existing HVAC/PID permission.",
+    "Cover room-source selection, excluded physical cover classes, exactly scoped service call, time/temperature/solar evidence, open window holds, manual override and storage failures in unit+real HA 2026.10 tests; include frontend no-unsafe-command assertions.",
+    "Preserve one canonical environment_manager domain, beta31–42 improvements and 38 translated PID-first entity names; gate on Python 3.13/3.14, Node, real HA, HACS/Hassfest and flat-beta publication."
   ]
 }
