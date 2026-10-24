@@ -21,8 +21,8 @@ def test_home_opt_in_is_disabled_by_default_and_saved_independently(adapter):
         [setattr(entry,key,val) for key,val in kw.items()])
     toggle=HomeSettingSwitch(h.manager,h.entry.entry_id,CONF_SHADE_ANNOUNCE)
     assert toggle.is_on is False
-    assert toggle.unique_id==h.entry.entry_id+"_home_"+CONF_SHADE_ANNOUNCE
-    assert toggle.device_info["identifiers"]=={("environment_manager",h.entry.entry_id)}
+    assert toggle._attr_unique_id==h.entry.entry_id+"_home_"+CONF_SHADE_ANNOUNCE
+    assert toggle._attr_device_info["identifiers"]=={("environment_manager",h.entry.entry_id)}
     asyncio.run(update_device_setting(h.manager,"global_setting",CONF_SHADE_ANNOUNCE,True))
     assert toggle.is_on is True
     asyncio.run(update_device_setting(h.manager,"global_setting",CONF_SHADE_ANNOUNCE,False))
