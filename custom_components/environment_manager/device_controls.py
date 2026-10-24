@@ -321,6 +321,11 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                         raise HomeAssistantError(
                             "All enrolled shades must be native same-area window covers with CLOSE support"
                         )
+                if value and room.get("enabled") is not True:
+                    # Manual user override is persistent. Only an intentional
+                    # OFF -> ON re-enable revokes the previous manual latch.
+                    room["authorization_revision"] = int(
+                        room.get("authorization_revision", 0)) + 1
                 room["enabled"] = value
             else:
                 room[key] = _finite(value, SHADE_NUMBERS[key])
