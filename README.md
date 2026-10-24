@@ -21,7 +21,15 @@
 
 # Home Environment Manager for Home Assistant
 
-> **v0.6.0 beta 42 is available for opt-in testing.** Stable remains **v0.5.1**. Beta42 makes every PID parameter entity's friendly name start with **PID** in all 38 supported languages, including per-device calibration/measurements and room PID settings, while leaving non-PID entities and all device behavior unchanged. Beta31–41 fixes remain; the domain is `environment_manager`.
+> **v0.6.0 beta 43 is available for opt-in testing.** Stable remains **v0.5.1**. Beta43 adds explicit per-room native window shade/shutter selection and close-only passive solar cooling, guarded by fresh temperature, sunlight and confirmed closed windows. Automatic movement is off by default; safety controls, all 38 translations and b31–42 fixes remain in canonical `environment_manager`.
+
+## Beta 43 - native window shades close to reduce unwanted solar heating
+
+Home Environment Manager can now close explicitly chosen native `cover.*` window blinds, shades, shutters and curtains to keep hot rooms cooler in daylight. The new **Shades** room-source group lists only same-room covers with one of those device classes and a verified CLOSE feature; window entities, doors, garages, gates and outdoor awnings are never included. Selecting a shade in Configure does not authorize physical movement.
+
+After selecting the covers, enable the room's **Automatic solar shade cooling** switch on its Home Assistant room hub (or the dashboard), and adjust **Close above room temperature** (default 25°C) and **Minimum sun elevation** (default 10°). The controller will only send an exact `cover.close_cover` request if that room has a fresh explicitly selected room temperature, `sun.sun` is above its angle, and selected real window contacts are confirmed closed. Unknown sources, open windows, unavailable covers and physical startup hold close requests. A durable two-hour hold prevents repeat attempts and fighting manual reopening. The integration never automatically opens shades.
+
+The solar angle threshold indicates sunshine potential; it does not yet distinguish north/south window orientation or clouds. Choose only the window shades you want closed under those room conditions. Shade status and native HA cover details appear on the room dashboard and room hub; no new giant Recorder data or changes to other controllers.
 
 ## Beta 42 - PID parameters sort together in all languages
 
