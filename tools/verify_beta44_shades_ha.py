@@ -67,8 +67,8 @@ async def test(directory):
             **additional,"device_class":klass,
         })
         ids[name]=item.entity_id
-    weather=entities.async_get_or_create("weather","demo","sunny-weather",
-        config_entry=native,device_id=physical.id,original_name="Weather")
+    weather=registration.async_get_or_create("weather","demo","sunny-weather",
+        config_entry=native,device_id=device.id,original_name="Weather")
     hass.states.async_set(weather.entity_id,"sunny",{})
     hass.states.async_set("sun.sun","above_horizon",{
         "elevation":35.,"azimuth":180.,
