@@ -203,7 +203,7 @@ def test_selected_source_removal_withdraws_existing_feedback_grants(monkeypatch,
     assert "calibration_factor" not in data["mold_rooms"]["living"]
 
 
-def test_room_setup_catalogs_have_all_six_groups_and_specific_general_fields():
+def test_room_setup_catalogs_have_all_seven_groups_and_specific_general_fields():
     import json
     from pathlib import Path
     from custom_components.environment_manager.room_sources import GROUPS
