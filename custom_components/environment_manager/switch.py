@@ -55,6 +55,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
                     for spec in equipment.specs(manager)
                     if (cap := equipment.capabilities(manager, spec)) is not None
                     and (cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}))
+    from .room_sources import selected
+    for area in manager.settings.get(CONF_AREAS, []):
+        if selected(manager.settings, area, "shades"):
+            entities.append(ShadeCoolingSwitch(manager, entry.entry_id, area))
     async_add_grouped_entities(entry.runtime_data, async_add_entities, entities)
     register_late_capabilities(
         hass, entry, async_add_entities, entities, native_quiet_switches,
@@ -173,3 +177,55 @@ class EquipmentQuietSwitch(EquipmentEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs):
         await self._manager.equipment.async_update(self._spec, {self._key: False})
+
+
+class ShadeCoolingSwitch(SwitchEntity):
+    """Explicit room-level permission to CLOSE selected window shades only."""
+
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_translation_key = "area_shading_enabled"
+    _attr_icon = "mdi:blinds"
+
+    def __init__(self, manager, entry_id: str, area: str):
+        self._manager, self._area = manager, area
+        self._attr_unique_id = f"{entry_id}_area_{area}_shade_cooling_enabled"
+        self._attr_device_info = {"identifiers": {(DOMAIN, f"{entry_id}_area_{area}")}}
+
+    @property
+    def is_on(self) -> bool:
+        from .shade_cooling import config
+        return config(self._manager.settings, self._area)["enabled"]
+
+    @property
+    def extra_state_attributes(self):
+        from .room_sources import selected
+        status = getattr(self._manager, "shading", None)
+        return {
+            "area_id": self._area,
+            "selected_shades": list(selected(self._manager.settings, self._area, "shades") or ()),
+            "close_only": True,
+            "controller_status": status.statuses.get(self._area) if status else None,
+        }
+
+    async def async_turn_on(self, **kwargs):
+        await update_device_setting(self._manager, "area_shading", "enabled", True,
+                                    area=self._area)
+        self.async_write_ha_state()
+
+    async def async_turn_off(self, **kwargs):
+        await update_device_setting(self._manager, "area_shading", "enabled", False,
+                                    area=self._area)
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(async_dispatcher_connect(
+            self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}",
+            self._update,
+        ))
+
+    @callback
+    def _update(self):
+        self.async_write_ha_state()
