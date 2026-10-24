@@ -26,7 +26,9 @@ def build(monkeypatch, adapter):
         MockState("humidifier.dryer", "off", device_class="dehumidifier"),
         MockState("cover.window", "closed", device_class="window"),
         MockState("sensor.manager", 22, device_class="temperature", unit="°C"),
+        MockState("cover.living_shade", "open", device_class="shade"),
     ]
+    values[-1].attributes["supported_features"] = 2
     values[5].attributes.update(hvac_modes=["off", "heat", "cool"])
     for state in values:
         flow.hass._values[state.entity_id] = state
