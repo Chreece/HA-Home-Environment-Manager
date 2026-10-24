@@ -14,7 +14,8 @@ from .const import (
 )
 from .device_controls import update_device_setting
 
-CONTROLS = (CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE)
+CONTROLS = (CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE,
+            CONF_SHADE_ANNOUNCE)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
