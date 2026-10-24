@@ -385,7 +385,8 @@ class ShadeCoolingController:
                 phase = None
 
             if phase == "closing_requested":
-                if state.state == "closed":
+                if (state.state == "closed" and
+                        0 <= now-record["command_at"] <= ACK_GRACE_SECONDS):
                     saved = {**record, "phase": "owned_closed", "close_confirmed_at": now}
                     if not await self._save(entity, saved):
                         outcomes[entity] = "storage_failure_no_command"
@@ -484,6 +485,8 @@ class ShadeCoolingController:
                 valid, _ = eligible_shade(self.hass, area, entity,
                     selected(self.manager.settings, area, "shades") or ())
                 if (not valid or decision != reason
+                        or not new_cfg["enabled"]
+                        or new_cfg["authorization_revision"] != revision
                         or not new_details["window_safe"]
                         or newer is None or newer.state != "closed"
                         or not _open_supported(newer)
@@ -534,6 +537,8 @@ class ShadeCoolingController:
             valid, _ = eligible_shade(self.hass, area, entity,
                 selected(self.manager.settings, area, "shades") or ())
             if (not valid or new_reason != "closing_recommended"
+                    or not new_cfg["enabled"]
+                    or new_cfg["authorization_revision"] != revision
                     or not new_details["window_safe"] or newer is None
                     or newer.state != "open" or
                     self._records.get(entity, {}).get("phase") in (
