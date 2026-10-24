@@ -47,10 +47,53 @@ TEXT = {
 }
 
 
+SHADE_NAMES = {
+    'en':'Window blinds, shades and shutters',
+    'el':'Σκίαστρα, περσίδες και ρολά παραθύρων',
+    'de':'Fensterrollos, Jalousien und Rollläden',
+    'fr':'Stores, rideaux et volets de fenêtre',
+    'es':'Persianas, estores y cortinas de ventana',
+    'it':'Tende, persiane e tapparelle',
+    'nl':'Raamzonwering, jaloezieën en rolluiken',
+    'pt':'Estores, persianas e cortinas de janela',
+    'pt-BR':'Persianas, cortinas e venezianas de janela',
+    'pl':'Rolety, żaluzje i zasłony okienne',
+    'cs':'Okenní rolety, žaluzie a závěsy',
+    'sk':'Okenné rolety, žalúzie a závesy',
+    'sv':'Persienner, rullgardiner och fönsterluckor',
+    'da':'Persienner, rullegardiner og skodder',
+    'nb':'Persienner, rullegardiner og skodder',
+    'fi':'Ikkunaverhot, kaihtimet ja luukut',
+    'hu':'Ablakredőnyök, reluxák és függönyök',
+    'ro':'Jaluzele, rulouri și obloane',
+    'bg':'Щори, завеси и капаци за прозорци',
+    'hr':'Prozorske rolete, sjenila i žaluzine',
+    'sr':'Прозорске ролетне, завесе и жалузине',
+    'ru':'Оконные жалюзи, шторы и ставни',
+    'uk':'Віконні жалюзі, штори та ролети',
+    'tr':'Pencere perdeleri, panjurlar ve jaluziler',
+    'ar':'ستائر النوافذ والمصاريع والستائر الدوارة',
+    'he':'תריסים, וילונות וצלונים לחלונות',
+    'fa':'پرده‌ها، کرکره‌ها و سایه‌بان‌های پنجره',
+    'hi':'खिड़की के परदे, ब्लाइंड और शटर',
+    'bn':'জানালার পর্দা, ব্লাইন্ড ও শাটার',
+    'ta':'சாளரத் திரைகள், பிளைண்டுகள் மற்றும் ஷட்டர்கள்',
+    'ur':'کھڑکیوں کے پردے، بلائنڈز اور شٹر',
+    'id':'Tirai, gorden, dan penutup jendela',
+    'vi':'Rèm, mành và cửa chớp',
+    'ko':'창문 블라인드, 차양 및 셔터',
+    'ja':'窓のブラインド・シェード・シャッター',
+    'zh-Hans':'窗帘、百叶帘及卷帘',
+    'zh-Hant':'窗簾、百葉簾及捲簾',
+    'th':'ม่าน มู่ลี่ และบานเกล็ดหน้าต่าง',
+}
+
+
 def apply_document(doc: dict, lang: str, words: dict) -> None:
     rooms, windows, air, pressure, help_text, general_help = TEXT[lang]
     labels = {"windows": windows, "air_quality": air, "temperature": words['temperature'],
-              "humidity": words['humidity'], "pressure": pressure, "climate_devices": words['devices']}
+              "humidity": words['humidity'], "pressure": pressure, "climate_devices": words['devices'],
+              "shades": SHADE_NAMES[lang]}
     for scope in ('config', 'options'):
         target = doc.setdefault(scope, {})
         steps = target.setdefault('step', {})
@@ -85,7 +128,8 @@ def apply_document(doc: dict, lang: str, words: dict) -> None:
 def apply_room_setup_i18n(root: Path) -> None:
     vocab = json.loads((root / 'compact_locales.json').read_text(encoding='utf-8'))
     files = sorted((root / 'translations').glob('*.json'))
-    if set(TEXT) != set(vocab) or set(TEXT) != {p.stem for p in files}:
+    if (set(TEXT) != set(vocab) or set(TEXT) != {p.stem for p in files}
+            or set(SHADE_NAMES) != set(TEXT)):
         raise ValueError('Every supported setup language must be supplied')
     for path in [root / 'strings.json', *files]:
         lang = 'en' if path.name == 'strings.json' else path.stem
