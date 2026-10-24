@@ -13,8 +13,8 @@ from custom_components.environment_manager.shade_delivery import (
 from custom_components.environment_manager.const import CONF_SHADE_ANNOUNCE
 
 
-def test_home_opt_in_is_disabled_by_default_and_saved_independently(adapter):
-    from custom_components.environment_manager.switch import HomeSettingSwitch
+def test_home_opt_in_is_disabled_by_default_and_saved_independently(platforms, adapter):
+    HomeSettingSwitch = platforms.switch.HomeSettingSwitch
     from custom_components.environment_manager.device_controls import update_device_setting
     h=make_room()
     h.hass.config_entries=SimpleNamespace(async_update_entry=lambda entry,**kw:
