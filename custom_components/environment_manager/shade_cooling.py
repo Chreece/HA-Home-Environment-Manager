@@ -607,6 +607,7 @@ class ShadeCoolingController:
             "close_command_sent" if "close_command_sent" in outcomes.values() else
             "manual_override" if "manual_override" in outcomes.values() else
             "owned_closed" if "owned_closed_weather_still_warrants_shade" in outcomes.values() else
+            close_reason if close_reason != "closing_recommended" else
             "cooling_hold"
         )
         self._status(area, status, covers=outcomes, **details)
