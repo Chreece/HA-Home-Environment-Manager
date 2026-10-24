@@ -81,6 +81,8 @@ class AirQualityManager:
         self._environment_history = EnvironmentHistory()
         self._environment_store: Any | None = None
         self.equipment = EquipmentRuntime(self)
+        from .shade_cooling import ShadeCoolingController
+        self.shading = ShadeCoolingController(self)
         self.pid = ClimatePidCoordinator(self.hass, self.entry.entry_id, report_changed=self._pid_updated)
         self.native_climate = NativeClimateControl(self.hass, self.entry.entry_id)
         self.direct_climate = DirectClimateControl(
@@ -468,6 +470,20 @@ class AirQualityManager:
             self._environment_store.async_delay_save(
                 self._environment_history.snapshot, 300,
             )
+        # Solar shading diagnostics share the full read-only dashboard; they
+        # never enter Recorder as an unbounded recommendation attribute.
+        from .room_sources import selected as selected_room_source
+        for area in monitored_areas:
+            enrolled = selected_room_source(config, area, "shades") or ()
+            if enrolled:
+                environment.setdefault(area, {})["shade_cooling"] = (
+                    self.shading.statuses.get(area, {
+                        "status": "disabled", "selected_covers": list(enrolled)
+                    })
+                )
+                self._tracked.update(enrolled)
+                if config.get("shade_rooms", {}).get(area, {}).get("enabled") is True:
+                    self._tracked.add("sun.sun")
         air_plan=evaluate(
             outdoor_readings, current_weather, warnings, selected_rooms,
             self.thresholds, environment=environment,
@@ -524,6 +540,7 @@ class AirQualityManager:
         await self.fan_power.async_start()
         await self.native_air_mode.async_start()
         await self.equipment.async_start()
+        await self.shading.async_start()
         self._active = True
         self._unsubs.extend((
             self.hass.bus.async_listen(EVENT_STATE_CHANGED, self._on_state_changed),
@@ -534,6 +551,12 @@ class AirQualityManager:
             async_track_time_interval(self.hass, self._on_fast_climate_interval, timedelta(seconds=30)),
         ))
         self._recalculate(initial=True)
+
+    @callback
+    def _shade_updated(self) -> None:
+        """Report per-room shade decisions without listening to our own entities."""
+        if self._active:
+            self._recalculate()
 
     @callback
     def _pid_updated(self) -> None:
@@ -853,6 +876,7 @@ class AirQualityManager:
         self.fan_power.schedule(native_configs,plans)
         self.native_air_mode.schedule(native_configs,plans)
         self.equipment.schedule()
+        self.shading.schedule()
 
         previous = self._active_actions
         notices=(*new_plan.recommendations,*new_plan.climate_recommendations)
@@ -1016,6 +1040,7 @@ class AirQualityManager:
         self._active = False
         controllers = (
             ("equipment",self.equipment),
+            ("shading",self.shading),
             ("pid",self.pid),("native_climate",self.native_climate),
             ("direct_climate",self.direct_climate),
             ("native_humidity",self.native_humidity),
