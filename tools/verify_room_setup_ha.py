@@ -71,6 +71,7 @@ async def check(config_dir):
         "humidity": ("sensor", "humidity", "45", {"unit_of_measurement": "%"}),
         "pressure": ("sensor", "atmospheric_pressure", "1012", {"unit_of_measurement": "hPa"}),
         "climate_devices": ("climate", None, "off", {"hvac_modes": ["off", "heat"], "supported_features": 1}),
+        "shades": ("cover", "shutter", "open", {"supported_features": 2}),
     }
     for group, (domain, device_class, state, attributes) in definitions.items():
         item = entities.async_get_or_create(domain, "demo", "source_"+group,
