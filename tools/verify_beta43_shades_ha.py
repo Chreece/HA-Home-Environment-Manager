@@ -94,6 +94,11 @@ async def test(directory):
     toggle=ShadeCoolingSwitch(manager,managed.entry_id,area.id)
     temp=ShadeCoolingNumber(manager,managed.entry_id,area.id,"close_above_c")
     solar=ShadeCoolingNumber(manager,managed.entry_id,area.id,"min_sun_elevation")
+    # These HA entities are deliberately instantiated without registering
+    # an entity platform. Only suppress HA's state write in this smoke harness;
+    # the production classes retain standard async_write_ha_state behavior.
+    for entity in (toggle,temp,solar):
+        entity.async_write_ha_state=lambda:None
     assert not toggle.is_on
     assert temp.native_value==25 and solar.native_value==10
     assert toggle.unique_id==managed.entry_id+"_area_"+area.id+"_shade_cooling_enabled"
