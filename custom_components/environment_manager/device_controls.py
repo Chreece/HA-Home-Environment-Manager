@@ -296,6 +296,37 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                 raise HomeAssistantError(f"Unsafe PID settings: {why}")
             rooms[area] = {**original, **draft}
             options[CONF_PID_ROOMS] = rooms
+        elif kind == "area_shading":
+            from .shade_cooling import CONF_SHADE_ROOMS, SHADE_NUMBERS, eligible_shade
+            from .room_sources import selected
+            from .const import CONF_AREAS
+            if area not in current.get(CONF_AREAS, []):
+                raise HomeAssistantError("Shade cooling requires a monitored room")
+            enrolled = selected(current, area, "shades") or ()
+            if not enrolled:
+                raise HomeAssistantError("Select supported native window shades in Room Setup first")
+            if key != "enabled" and key not in SHADE_NUMBERS:
+                raise HomeAssistantError("Unsupported shade cooling setting")
+            rooms = deepcopy(current.get(CONF_SHADE_ROOMS, {}))
+            rooms = rooms if isinstance(rooms, dict) else {}
+            room = rooms.get(area, {})
+            room = deepcopy(room) if isinstance(room, dict) else {}
+            if key == "enabled":
+                if type(value) is not bool:
+                    raise HomeAssistantError("Shade control must be explicitly enabled or disabled")
+                if value:
+                    invalid = [entity for entity in enrolled
+                               if not eligible_shade(manager.hass, area, entity, enrolled)[0]]
+                    if invalid:
+                        raise HomeAssistantError(
+                            "All enrolled shades must be native same-area window covers with CLOSE support"
+                        )
+                room["enabled"] = value
+            else:
+                room[key] = _finite(value, SHADE_NUMBERS[key])
+            rooms[area] = room
+            options[CONF_SHADE_ROOMS] = rooms
+
         elif kind in ("profile", "climate_profile"):
             rooms = current.get(CONF_CLIMATE_ROOMS, {})
             rooms = deepcopy(rooms) if isinstance(rooms, dict) else {}
