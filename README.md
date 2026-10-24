@@ -21,7 +21,17 @@
 
 # Home Environment Manager for Home Assistant
 
-> **v0.6.0 beta 43 is available for opt-in testing.** Stable remains **v0.5.1**. Beta43 adds explicit per-room native window shade/shutter selection and close-only passive solar cooling, guarded by fresh temperature, sunlight and confirmed closed windows. Automatic movement is off by default; safety controls, all 38 translations and b31–42 fixes remain in canonical `environment_manager`.
+> **v0.6.0 beta 44 is available for opt-in testing.** Stable remains **v0.5.1**. Beta44 makes solar shade closing weather-aware, reopens only previously confirmed Manager-closed shades, permanently honors manual reopening until explicit room re-enable, and adds a Home-wide opt-in to announce before opening/closing. All safety controls, locales and beta31–43 fixes remain under the canonical `environment_manager` domain.
+
+## Beta 44 - weather-aware shade cooling, owned reopening and pre-movement announcements
+
+Closing now requires **verified current sunny or partly cloudy weather** from every configured Home Assistant weather entity as well as a high enough sun angle, fresh measured room temperature and confirmed closed window contacts. Cloudy, rainy, windy or unknown weather prevents new closures. The native Home Assistant condition list is the source of truth, not invented irradiance estimates.
+
+The controller maintains persisted **per-cover ownership**. It may automatically open a shade only after this same integration sent `close_cover` and the exact physical shade subsequently reported `closed` within its acknowledgement window. The owned shade can reopen at verified night/low sunlight, or after five minutes of stable benign cloudy weather or lower room temperature, subject to safe contacts and actual Open capability. It never opens a shade the user closed. A manual reopening overrides this controller indefinitely (including restarts); to explicitly reset, turn **Automatic solar shade cooling** OFF then ON on that room's device. The integration's own completed reopening inhibits another automatic close for the rest of that day. Old beta43 close-attempt logs are treated as unverified, so no unsafe ownership is assumed during upgrade.
+
+On the **Home Environment Manager Home device**, enable **Announce before moving window shades** to submit a room-specific open/close notice before a physical command. It uses your configured Announcement Hub or native notification/TTS delivery. If no output accepts the notice, motion is held. After a successful submission there is a five-second grace interval, followed by complete physical/weather/authorization revalidation. Hub queue acceptance does not guarantee that queued audio has finished playing before motion; direct TTS is awaited, but queue timing may vary.
+
+This stays independent of HVAC/PID, retains all window safety controls and source selection, and never targets garage doors, gates, actual windows or outdoor awnings.
 
 ## Beta 43 - native window shades close to reduce unwanted solar heating
 
