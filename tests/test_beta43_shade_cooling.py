@@ -17,7 +17,7 @@ from custom_components.environment_manager.logic import Window
 
 def make_room(*, temp=27.0, sun=45.0, window="closed",
               shade_state="open", enabled=True, cover_class="shutter",
-              supported_features=2, hours_old=0, second_cover=False):
+              supported_features=3, hours_old=0, second_cover=False):
     cover=MockState("cover.room_shutter",shade_state,device_class=cover_class)
     cover.attributes["supported_features"]=supported_features
     door=MockState("cover.garage", "open", device_class="garage")
