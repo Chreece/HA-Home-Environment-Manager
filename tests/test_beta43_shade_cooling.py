@@ -35,7 +35,7 @@ def make_room(*, temp=27.0, sun=45.0, window="closed",
     sources=[cover,door,actual_window,sensor,sun_entity,weather]
     if second_cover:
         another=MockState("cover.room_blind","open",device_class="blind")
-        another.attributes["supported_features"]=2
+        another.attributes["supported_features"]=3
         sources.append(another)
     hass=FakeHass(sources, {source.entity_id:"room" for source in sources
                             if source.entity_id!="sun.sun"})
