@@ -1853,17 +1853,17 @@
       const lang=this._language();
       const words={
         en:['Solar shade cooling','Enabled','Disabled','Open shade details',
-            'Closes selected window shades when the room is warm and sun is up. No automatic opening.',
-            'Room','Sun','Status'],
+            'Closes in sunny weather; reopens only after a confirmed automatic close. Manual opening pauses this shade until you turn room shading off and on again.',
+            'Room','Sun','Status','Weather','Manual override: disable then re-enable room shading'],
         el:['Ηλιακή σκίαση για ψύξη','Ενεργό','Ανενεργό','Άνοιγμα στοιχείων σκίασης',
-            'Κλείνει επιλεγμένα σκίαστρα όταν ο χώρος είναι ζεστός και υπάρχει ήλιος. Δεν ανοίγουν αυτόματα.',
-            'Δωμάτιο','Ήλιος','Κατάσταση'],
+            'Κλείνει με ηλιοφάνεια και ανοίγει μόνο σκίαστρα που έκλεισε το ίδιο. Το χειροκίνητο άνοιγμα σταματά τον αυτοματισμό μέχρι να τον απενεργοποιήσεις και να τον ενεργοποιήσεις ξανά.',
+            'Δωμάτιο','Ήλιος','Κατάσταση','Καιρός','Χειροκίνητη παρέμβαση: απενεργοποίησε και ενεργοποίησε ξανά'],
         de:['Solare Beschattung zur Kühlung','Ein','Aus','Beschattung anzeigen',
-            'Schließt ausgewählte Fensterrollos bei Wärme und Sonne. Kein automatisches Öffnen.',
-            'Raum','Sonne','Status'],
+            'Schließt bei Sonne; öffnet nur zuvor bestätigt automatisch geschlossene Rollos. Manuelles Öffnen sperrt das Rollo bis zum Aus- und Einschalten der Automatik.',
+            'Raum','Sonne','Status','Wetter','Manuelle Sperre: Automatik aus- und wieder einschalten'],
       }[lang] || ['Solar shade cooling','Enabled','Disabled','Open shade details',
-        'Selected shades close when warm and sunny; never automatically reopen.',
-        'Room','Sun','Status'];
+        'Close in sun and reopen only shades this controller confirmed closing. A manual opening latches until explicit re-enable.',
+        'Room','Sun','Status','Weather','Manual override: toggle shading off and back on'];
       const managed=this._shadingSwitch(room.area_id);
       const enabled=managed?.state?.state==='on';
       const toggle=managed?'<button type="button" data-shade-switch="'+escape(managed.id)+
@@ -1884,13 +1884,19 @@
           this._format(report.temperature_c)+' °C' : '',
         typeof report.sun_elevation==='number' ? words[6]+' '+
           this._format(report.sun_elevation)+'°' : '',
+        Object.keys(report.weather_conditions || {}).length
+          ? words[8]+' '+Object.values(report.weather_conditions).join(', ')
+          : '',
       ].filter(Boolean).join(' · ');
+      const manual=Object.values(report.covers || {}).some(value=>
+        value==='manual_override'||value==='legacy_manual_hold');
       return '<section class="shade-panel" aria-label="'+escape(words[0])+'">'+
         '<div class="shade-heading">'+this._icon('mdi:blinds')+
         '<strong>'+escape(words[0])+'</strong>'+toggle+'</div>'+
         '<small>'+escape(words[4])+'</small>'+
         '<div class="shade-status">'+escape(words[7])+': '+escape(status)+
         (details?' · '+escape(details):'')+'</div>'+
+        (manual?'<small role="status">'+escape(words[9])+'</small>':'')+
         '<div class="shade-sources">'+list+'</div></section>';
     }
 
