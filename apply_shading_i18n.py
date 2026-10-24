@@ -68,14 +68,4 @@ def apply_shading_i18n(root: Path) -> None:
         nums = entities.setdefault("number", {})
         nums["area_shading_close_above_c"] = {"name": temperature + " (°C)"}
         nums["area_shading_min_sun_elevation"] = {"name": solar + " (°)"}
-        # Native device entities already have translated friendly names. The
-        # help is a short safety contract, never a promise of solar prediction.
-        text = DETAIL.get(lang, DETAIL["en"])
-        for key in ("config", "options"):
-            step = data.setdefault(key, {}).setdefault("step", {}).get("setup_room_sources")
-            if isinstance(step, dict):
-                descriptions = step.setdefault("data_description", {})
-                descriptions["shades"] = (
-                    SHADE_NAMES[lang] + ". " + text
-                )
         path.write_text(json.dumps(data, ensure_ascii=False, indent=2)+"\n",encoding="utf-8")
