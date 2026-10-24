@@ -94,6 +94,7 @@ class HomeSettingSwitch(SwitchEntity):
             CONF_AUTO_TTS: "mdi:account-voice",
             CONF_HUB: "mdi:home-assistant",
             CONF_AI_REWRITE: "mdi:robot-outline",
+            CONF_SHADE_ANNOUNCE: "mdi:blinds-horizontal",
             "pollen_avoid_ventilation": "mdi:flower-pollen",
             "sleep_room": "mdi:bed",
             "enable_pmv": "mdi:human-male-board-poll",
