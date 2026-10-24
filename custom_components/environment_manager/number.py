@@ -232,6 +232,14 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
                     )
                     for key in chosen
                 )
+    from .room_sources import selected
+    from .shade_cooling import SHADE_NUMBERS
+    for area_id in manager.settings.get(CONF_AREAS, []):
+        if selected(manager.settings, area_id, "shades"):
+            numbers.extend(
+                ShadeCoolingNumber(manager, entry.entry_id, area_id, key)
+                for key in SHADE_NUMBERS
+            )
     if manager.settings.get(CONF_USE_MOLD) is True:
         for area_id in manager.settings.get(CONF_AREAS, []):
             numbers.append(ConfigNumber(
@@ -506,3 +514,45 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
 
     async def async_set_native_value(self, value):
         await self._manager.equipment.async_update(self._spec, {self._key: value})
+
+
+class ShadeCoolingNumber(NumberEntity):
+    """Bounded room solar-cooling thresholds, not physical cover targets."""
+
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_mode = NumberMode.BOX
+
+    def __init__(self, manager, entry_id: str, area: str, key: str):
+        from .shade_cooling import SHADE_NUMBERS
+        self._manager, self._area, self._key = manager, area, key
+        bounds = SHADE_NUMBERS[key]
+        self._attr_unique_id = f"{entry_id}_area_{area}_shade_cooling_{key}"
+        self._attr_translation_key = f"area_shading_{key}"
+        self._attr_device_info = {"identifiers": {(DOMAIN, f"{entry_id}_area_{area}")}}
+        self._attr_native_min_value, self._attr_native_max_value = bounds[:2]
+        self._attr_native_step = bounds[2]
+        self._attr_native_unit_of_measurement = bounds[3]
+
+    @property
+    def native_value(self):
+        from .shade_cooling import config
+        return config(self._manager.settings, self._area)[self._key]
+
+    async def async_set_native_value(self, value):
+        await update_device_setting(
+            self._manager, "area_shading", self._key, value, area=self._area
+        )
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(async_dispatcher_connect(
+            self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}",
+            self._update,
+        ))
+
+    @callback
+    def _update(self):
+        self.async_write_ha_state()
