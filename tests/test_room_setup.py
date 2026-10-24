@@ -68,7 +68,7 @@ def test_exact_public_order_and_all_registered_rooms(monkeypatch, adapter):
     assert data["room_sources"]["empty"] == {k: [] for k in flow._values["room_sources"]["empty"]}
 
 
-def test_six_separate_multiselects_correct_type_and_labels(monkeypatch, adapter):
+def test_seven_separate_multiselects_with_opt_in_native_shades(monkeypatch, adapter):
     flow = build(monkeypatch, adapter)
     asyncio.run(flow.async_step_init())
     form = asyncio.run(flow.async_step_setup_rooms({"areas": ["living"]}))
