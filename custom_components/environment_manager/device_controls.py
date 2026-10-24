@@ -648,7 +648,8 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                 if not number.is_integer():
                     raise HomeAssistantError("Announcement interval must be whole minutes")
                 options[key] = int(number)
-            elif key in (CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE):
+            elif key in (CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE,
+                              CONF_SHADE_ANNOUNCE):
                 if type(value) is not bool:
                     raise HomeAssistantError("Global on/off settings require a boolean")
                 if value and key == CONF_HUB:
