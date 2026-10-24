@@ -9,7 +9,8 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import EntityCategory
 
 from .const import (
-    CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE, DOMAIN, SIGNAL_UPDATED,
+    CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE,
+    CONF_SHADE_ANNOUNCE, DOMAIN, SIGNAL_UPDATED,
 )
 from .device_controls import update_device_setting
 
