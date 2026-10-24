@@ -743,6 +743,15 @@ class AirQualityManager:
         # refresh. Use the last validated plan; _tick rechecks sensor freshness.
         if not self._active:
             return
+        # Sun elevation and stable weather release timers need clock ticks
+        # even when no physical climate equipment is selected in this room.
+        from .shade_cooling import config as shade_config
+        from .room_sources import selected as selected_room
+        if any(shade_config(self.settings, area)["enabled"] and
+               selected_room(self.settings, area, "shades")
+               for area in self.settings.get(CONF_AREAS, [])):
+            self._recalculate()
+            return
         if claimed_sources(self):
             # Per-device control requires fresh occupancy/outdoor plans at every
             # 30-second decision boundary, independently of notification timing.
