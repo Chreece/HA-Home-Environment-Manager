@@ -1391,3 +1391,88 @@ assert.ok(nativeDryCard.shadowRoot.innerHTML.includes('data-climate-action="resu
   assert.ok(html.includes('data-apply-pid-fan-capacity="'+button+'"'));
   assert.ok(html.includes('Physical output must be OFF'));
 }
+
+
+// Beta43: independent close-only solar shade cooling belongs to the room hub.
+// The card toggles ONLY its Manager-created switch and opens the selected HA
+// cover's native info dialog; it NEVER directly calls cover.open/close itself.
+{
+  const dashboard=JSON.parse(JSON.stringify(input));
+  dashboard.rooms=[{
+    area_id:'room',name:'Living',status:'unknown',readings:[],windows:[],
+    environment:{shade_cooling:{
+      status:'room_below_cooling_threshold',
+      selected_covers:['cover.living_shutter'],temperature_c:23.5,
+      threshold_c:25.0,sun_elevation:35,
+    }},
+  }];
+  const switchId='switch.manager_room_shading';
+  const states={
+    'sensor.beta43':{state:'idle',attributes:{dashboard}},
+    [switchId]:{state:'off',attributes:{
+      area_id:'room',selected_shades:['cover.living_shutter'],
+      close_only:true,
+    }},
+    'cover.living_shutter':{state:'open',attributes:{
+      friendly_name:'Living shutters',device_class:'shutter',
+    }},
+    'cover.garage':{state:'open',attributes:{
+      friendly_name:'Garage door',device_class:'garage',
+    }},
+  };
+  const commands=[],popups=[];
+  const card=new Card();
+  card.setConfig({entity:'sensor.beta43'});
+  card.dispatchEvent=(event)=>{popups.push(event.detail);return true;};
+  card.hass={language:'en',states,
+    callService:(domain,action,data)=>{
+      commands.push([domain,action,data]);return Promise.resolve();
+    }};
+  let html=card.shadowRoot.innerHTML;
+  assert.ok(html.includes('Solar shade cooling'));
+  assert.ok(html.includes('data-shade-switch="'+switchId+'"'));
+  assert.ok(html.includes('data-open-shade="cover.living_shutter"'));
+  assert.ok(!html.includes('data-open-shade="cover.garage"'));
+  const target=(attributes)=>({
+    getAttribute:(name)=>attributes[name]??null,
+  });
+  card.shadowRoot.listeners.click({target:{closest:(query)=>
+    query==='[data-shade-switch]'?target({
+      'data-shade-switch':switchId,'data-shade-area':'room',
+    }):null,
+  }});
+  assert.deepEqual(commands.pop(),['switch','turn_on',{entity_id:switchId}]);
+  card.shadowRoot.listeners.click({target:{closest:(query)=>
+    query==='[data-open-shade]'?target({
+      'data-open-shade':'cover.living_shutter','data-shade-area':'room',
+    }):null,
+  }});
+  assert.deepEqual(popups.pop(),{entityId:'cover.living_shutter'});
+  // Spoofed room or unselected/garage ID can neither toggle our switch nor
+  // open the selected shade's native dialog through the manager's card.
+  card.shadowRoot.listeners.click({target:{closest:(query)=>
+    query==='[data-shade-switch]'?target({
+      'data-shade-switch':switchId,'data-shade-area':'garage',
+    }):null,
+  }});
+  card.shadowRoot.listeners.click({target:{closest:(query)=>
+    query==='[data-open-shade]'?target({
+      'data-open-shade':'cover.garage','data-shade-area':'room',
+    }):null,
+  }});
+  assert.equal(commands.length,0);
+  assert.equal(popups.length,0);
+  states[switchId].state='on';
+  dashboard.rooms[0].environment.shade_cooling={
+    status:'close_command_sent',selected_covers:['cover.living_shutter'],
+    temperature_c:26.0,sun_elevation:25.0,
+    covers:{'cover.living_shutter':'close_command_sent'},
+  };
+  card.hass={language:'el',states,callService:(...args)=>{
+    commands.push(args);return Promise.resolve();
+  }};
+  html=card.shadowRoot.innerHTML;
+  assert.ok(html.includes('Ηλιακή σκίαση για ψύξη'));
+  assert.ok(html.includes('close command sent'));
+  assert.ok(html.includes('Living shutters'));
+}
