@@ -500,6 +500,29 @@ class ShadeCoolingController:
                 if not await self._save(entity, updated):
                     outcomes[entity] = "storage_failure_no_command"
                     continue
+                # The durable intent write itself yields to other automations.
+                # Never move a shade if its exact authorization or physical
+                # state was withdrawn during that write.
+                latest_cfg = config(self.manager.settings, area)
+                physical = self.hass.states.get(entity)
+                fresh_allowed, _ = eligible_shade(
+                    self.hass, area, entity,
+                    selected(self.manager.settings, area, "shades") or (),
+                )
+                fresh_reason, fresh_evidence, fresh_sun, _, fresh_temp, _ = self._inputs(
+                    area, self.manager.settings)
+                if (not self._ready or not latest_cfg["enabled"]
+                        or latest_cfg["authorization_revision"] != revision
+                        or not fresh_allowed or physical is None
+                        or physical.state != "closed" or not fresh_evidence["window_safe"]
+                        or _solar_release_reason(
+                            temp=fresh_temp, threshold=latest_cfg["close_above_c"],
+                            sun=fresh_sun,
+                            min_sun_elevation=latest_cfg["min_sun_elevation"],
+                            weather=fresh_evidence.get("weather_status")) != reason):
+                    await self._save(entity, {**updated, "phase": "manual_override"})
+                    outcomes[entity] = "authorization_changed_during_persistence"
+                    continue
                 try:
                     await self.hass.services.async_call(
                         "cover", "open_cover", {},
@@ -551,6 +574,22 @@ class ShadeCoolingController:
             }
             if not await self._save(entity, attempt):
                 outcomes[entity] = "storage_failure_no_command"
+                continue
+            latest_cfg = config(self.manager.settings, area)
+            physical = self.hass.states.get(entity)
+            fresh_allowed, _ = eligible_shade(
+                self.hass, area, entity,
+                selected(self.manager.settings, area, "shades") or (),
+            )
+            fresh_reason, fresh_evidence, _, _, _, _ = self._inputs(
+                area, self.manager.settings)
+            if (not self._ready or not latest_cfg["enabled"]
+                    or latest_cfg["authorization_revision"] != revision
+                    or not fresh_allowed or physical is None
+                    or physical.state != "open" or not fresh_evidence["window_safe"]
+                    or fresh_reason != "closing_recommended"):
+                await self._save(entity, {**attempt, "phase": "manual_override"})
+                outcomes[entity] = "authorization_changed_during_persistence"
                 continue
             try:
                 await self.hass.services.async_call(
