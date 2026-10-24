@@ -82,6 +82,9 @@ def test_seven_separate_multiselects_with_opt_in_native_shades(monkeypatch, adap
     assert set(choices("pressure")) == {"sensor.pressure"}
     assert "sensor.kitchen_co2" not in choices("air_quality")
     assert set(choices("climate_devices")) == {"climate.aircon", "fan.aircon", "humidifier.dryer"}
+    assert set(choices("shades")) == {"cover.living_shade"}
+    assert "cover.window" not in choices("shades")
+    assert defaults(form)["shades"] == [], "Window shade movement is opt-in"
 
 
 @pytest.mark.parametrize("bad", ["sensor.temp1", [None], [["sensor.temp1"]], ["sensor.kitchen_co2"], ["sensor.manager"]])
