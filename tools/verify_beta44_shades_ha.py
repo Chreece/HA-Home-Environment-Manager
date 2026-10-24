@@ -54,7 +54,7 @@ async def test(directory):
     registration=er.async_get(hass)
     ids={}
     sources=[
-        ("shade","cover","shutter","open",{"supported_features":int(CoverEntityFeature.CLOSE)}),
+        ("shade","cover","shutter","open",{"supported_features":int(CoverEntityFeature.OPEN | CoverEntityFeature.CLOSE)}),
         ("garage","cover","garage","open",{"supported_features":int(CoverEntityFeature.CLOSE)}),
         ("window","binary_sensor","window","off",{}),
         ("temperature","sensor","temperature","27",{"unit_of_measurement":"°C"}),
