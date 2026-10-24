@@ -211,7 +211,12 @@ def test_window_shade_settings_validate_exact_room_and_are_off_by_default(adapte
         ))
 
 
-def test_deselecting_shades_revokes_auto_close_approval(adapter):
+def test_deselecting_shades_revokes_auto_close_approval(adapter, monkeypatch):
+    # The isolated adapter fixture does not initialize HA's OptionsFlow
+    # selector/probatio stubs. Reuse the existing real room wizard fixture,
+    # which supplies those dependencies before calling store_selection.
+    from test_room_setup import build
+    build(monkeypatch, adapter)
     h=make_room()
     data={**h.manager.settings}
     data["shade_rooms"]={"room":{"enabled":True}}
