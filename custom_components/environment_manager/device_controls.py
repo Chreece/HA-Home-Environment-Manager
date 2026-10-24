@@ -259,7 +259,7 @@ async def update_device_setting(manager: Any, kind: str, key: str,
         "pid", "profile", "climate_profile", "pid_gain_source",
         "area_environment", "climate_operating", "climate_policy",
         "device_target", "device_policy", "climate_schedule", "direct_tuning", "area_science",
-        "room_equipment_limit",
+        "room_equipment_limit", "area_shading",
     ) and not area:
         raise HomeAssistantError("A configured Home Assistant area is required")
 
