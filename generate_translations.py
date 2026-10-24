@@ -411,5 +411,9 @@ apply_beta19_i18n(root)
 # Final presentation-only pass. All PID parameter names must start with PID
 # in every locale, even after downstream generators change room/device labels.
 # The channel name, if present, follows PID so sorting is consistent.
+# Room shade cooling controls, after the room-source group translations.
+from apply_shading_i18n import apply_shading_i18n
+apply_shading_i18n(root)
+
 from apply_pid_sort_i18n import apply_pid_sort_i18n
 apply_pid_sort_i18n(root)
