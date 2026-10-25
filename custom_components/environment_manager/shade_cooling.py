@@ -394,7 +394,7 @@ class ShadeCoolingController:
             return
         cfg = config(settings, area)
         sources = selected(settings, area, "shades") or ()
-        if not cfg["enabled"]:
+        if not any(cover_config(settings, area, entity)["enabled"] for entity in sources):
             self._status(area, "disabled", selected_covers=list(sources))
             return
         if not self._ready:
@@ -407,11 +407,13 @@ class ShadeCoolingController:
         close_reason, details, sun, cfg, temp, windows = self._inputs(area, settings)
         outcomes = {}
         for entity in sources:
+            close_reason, details, sun, cfg, temp, windows = self._inputs(
+                area, self.manager.settings, entity)
             now = self.clock()
             latest = self.manager.settings
-            revision = config(latest, area)["authorization_revision"]
+            revision = cover_config(latest, area, entity)["authorization_revision"]
             if (area not in latest.get("areas", [])
-                    or not config(latest, area)["enabled"]
+                    or not cover_config(latest, area, entity)["enabled"]
                     or entity not in (selected(latest, area, "shades") or ())):
                 outcomes[entity] = "authorization_withdrawn"
                 continue
@@ -431,6 +433,27 @@ class ShadeCoolingController:
                 record = None
 
             phase = record.get("phase") if record else None
+            seen = self._observed_cover_states.get(entity)
+            self._observed_cover_states[entity] = (revision, state.state)
+            # An independent cover remembers external opening AND closing,
+            # including a quick closed/open transition between control ticks.
+            manual_move = (not cfg["legacy"] and phase is None
+                           and seen is not None and seen[0] == revision
+                           and seen[1] != state.state
+                           and (state.state in ("closing", "opening")
+                                or seen[1] in ("closed", "closing")
+                                and state.state == "open"
+                                or seen[1] in ("open", "closing")
+                                and state.state == "closed"))
+            if manual_move:
+                if not await self._save(entity, {
+                    "area": area, "revision": revision,
+                    "command_at": now, "phase": "manual_override",
+                }):
+                    outcomes[entity] = "storage_failure_no_command"
+                else:
+                    outcomes[entity] = "manual_override"
+                continue
             if phase in ("legacy_manual_hold", "manual_override", "open_failed_hold"):
                 outcomes[entity] = phase
                 continue
@@ -537,7 +560,7 @@ class ShadeCoolingController:
                     outcomes[entity] = "announcement_unavailable_hold"
                     continue
                 new_reason, new_details, new_sun, new_cfg, new_temp, _ = self._inputs(
-                    area, self.manager.settings)
+                    area, self.manager.settings, entity)
                 newer = self.hass.states.get(entity)
                 decision = _solar_release_reason(
                     temp=new_temp,threshold=new_cfg["close_above_c"],sun=new_sun,
@@ -565,14 +588,14 @@ class ShadeCoolingController:
                 # The durable intent write itself yields to other automations.
                 # Never move a shade if its exact authorization or physical
                 # state was withdrawn during that write.
-                latest_cfg = config(self.manager.settings, area)
+                latest_cfg = cover_config(self.manager.settings, area, entity)
                 physical = self.hass.states.get(entity)
                 fresh_allowed, _ = eligible_shade(
                     self.hass, area, entity,
                     selected(self.manager.settings, area, "shades") or (),
                 )
                 fresh_reason, fresh_evidence, fresh_sun, _, fresh_temp, _ = self._inputs(
-                    area, self.manager.settings)
+                    area, self.manager.settings, entity)
                 if (not self._ready or not latest_cfg["enabled"]
                         or latest_cfg["authorization_revision"] != revision
                         or not fresh_allowed or physical is None
@@ -617,7 +640,7 @@ class ShadeCoolingController:
                 outcomes[entity] = "announcement_unavailable_hold"
                 continue
             new_reason, new_details, _, new_cfg, _, _ = self._inputs(
-                area, self.manager.settings)
+                area, self.manager.settings, entity)
             newer = self.hass.states.get(entity)
             valid, _ = eligible_shade(self.hass, area, entity,
                 selected(self.manager.settings, area, "shades") or ())
@@ -637,14 +660,14 @@ class ShadeCoolingController:
             if not await self._save(entity, attempt):
                 outcomes[entity] = "storage_failure_no_command"
                 continue
-            latest_cfg = config(self.manager.settings, area)
+            latest_cfg = cover_config(self.manager.settings, area, entity)
             physical = self.hass.states.get(entity)
             fresh_allowed, _ = eligible_shade(
                 self.hass, area, entity,
                 selected(self.manager.settings, area, "shades") or (),
             )
             fresh_reason, fresh_evidence, _, _, _, _ = self._inputs(
-                area, self.manager.settings)
+                area, self.manager.settings, entity)
             if (not self._ready or not latest_cfg["enabled"]
                     or latest_cfg["authorization_revision"] != revision
                     or not fresh_allowed or physical is None
