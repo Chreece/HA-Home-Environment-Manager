@@ -116,7 +116,19 @@ async def check(config_dir):
     assert len(manager_entry.subentries) == 3  # Home + Living room + Office.
     home_device = devices.async_get(manager._device_hierarchy["home_device_id"])
     assert home_device is not None and home_device.config_subentry_id == home_sid
-    assert len(manager._device_hierarchy["controllers"]) == 1
+    # One HVAC controller plus one independently assigned shade controller.
+    # The native hardware may expose both endpoints on the SAME physical
+    # device; the shade must still be a distinct child of the room hub.
+    assert len(manager._device_hierarchy["controllers"]) == 2
+    from custom_components.environment_manager.device_hierarchy import controller_device_info
+    shade = controller_device_info(manager, living.id, source_ids["shades"])
+    hvac = controller_device_info(manager, living.id, source_ids["climate_devices"])
+    assert shade and hvac and shade != hvac
+    for logical in (shade, hvac):
+        identifier = next(iter(logical["identifiers"]))
+        controller = devices.async_get_device(identifiers={identifier})
+        assert controller is not None
+        assert controller.area_id == living.id
     assert devices.async_get(physical.id).config_entry_id == native.entry_id
     assert len(manager._device_hierarchy["areas"]) == 2
     await hass.async_block_till_done()
