@@ -69,10 +69,12 @@ def _targets(manager: Any, entities: Any, room: str) -> list[str]:
 
 async def async_announce_before_move(
     manager: Any, *, area: str, action: str,
+    entity_id: str | None = None, required: bool | None = None,
 ) -> bool:
     """Announce ONE room action before movement. Never send cover commands."""
     config = manager.settings
-    if config.get(CONF_SHADE_ANNOUNCE) is not True:
+    announce = config.get(CONF_SHADE_ANNOUNCE) is True if required is None else required
+    if not announce:
         return True
     from homeassistant.helpers import area_registry as ar
 
@@ -84,6 +86,25 @@ async def async_announce_before_move(
     lang = _language(manager)
     title = MESSAGES[lang]["title"]
     message = MESSAGES[lang][action].format(room=area_record.name)
+    if entity_id is not None:
+        # A per-cover permission must not announce that ALL room covers will move.
+        source = manager.hass.states.get(entity_id)
+        name = getattr(source, "name", None) or entity_id
+        prefix = {
+            "en": ("Closing {cover} in {room} shortly to reduce solar heat.",
+                   "Opening {cover} in {room} shortly; shading is no longer needed."),
+            "de": ("{cover} in {room} wird gleich geschlossen, um Sonneneinstrahlung zu reduzieren.",
+                   "{cover} in {room} wird gleich geöffnet; die Beschattung ist nicht mehr nötig."),
+            "el": ("Το σκίαστρο {cover} στο {room} θα κλείσει σύντομα για περιορισμό της ηλιακής θερμότητας.",
+                   "Το σκίαστρο {cover} στο {room} θα ανοίξει σύντομα· δεν χρειάζεται πλέον σκίαση."),
+            "fr": ("Fermeture imminente de {cover} dans {room} pour limiter la chaleur du soleil.",
+                   "Ouverture imminente de {cover} dans {room} : la protection solaire n'est plus nécessaire."),
+            "es": ("La persiana {cover} de {room} se cerrará pronto para reducir el calor solar.",
+                   "La persiana {cover} de {room} se abrirá pronto; ya no hace falta sombra."),
+        }[lang]
+        message = prefix[0 if action == "close" else 1].format(
+            room=area_record.name, cover=name,
+        )
     speech = bool(config.get(CONF_AUTO_TTS))
     visual = bool(config.get(CONF_AUTO_NOTIFY)) or not speech
     prefer_hub = config.get(CONF_HUB) is True
