@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0b47 - Valid-only numerical room averages and multi-sensor mold calibration (beta)
+
+- Average multiple same-metric inputs after unit normalization, using only valid, finite, fresh samples. Ignore individual offline/unknown/stale/out-of-range sensors without fabricating zero or substituting other rooms.
+- Apply to temperature, humidity, CO2, PM and other normalized air measurements, pressure, weather temperatures/humidity/wind, ventilate-or-close numeric decisions and managed-device feedback.
+- Fix the per-room mold recalibration button when Room Setup has multiple temperature sensors. Use their available mean and the available mean of configured weather sources; save complete source lists and exact calibration means.
+- Invalidate mold factors tied to changed temperature or weather source sets; preserve previous calibration on transient read errors, and keep manual measured surface temperature and physical calibration bounds.
+- Retain independent categorical hazards, AQI scale distinctions, the canonical environment_manager domain, all safety interlocks, and every prior Beta46/Beta45 cover and climate control change.
+
 ## 0.6.0b46 - Plain hyphens in localized UI and AI announcement text (beta)
 
 - Normalize en dashes, doubled en dashes and em dashes to ASCII hyphens in displayed text, dashboard placeholders, fixed notifications, labels and all 38 language catalogs.
