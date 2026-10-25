@@ -173,7 +173,13 @@ def managed_devices(hass: Any, entry_id: str, settings: dict) -> tuple[ManagedDe
 
 def managed_shade_devices(hass: Any, entry_id: str, settings: dict) -> tuple[ManagedDevice, ...]:
     """A separate logical device for every selected native window shade."""
-    from .room_sources import selected, native
+    from .room_sources import selected
+    # Existing installs without selected covers must not load discovery or
+    # introduce an HA-core import dependency into read-only area hub setup.
+    if not any(selected(settings, area_id, "shades")
+               for area_id in configured_area_ids(settings)):
+        return ()
+    from .room_sources import native
     from .discovery import entity_area
     from homeassistant.helpers import area_registry as ar
     from homeassistant.helpers import device_registry as dr
