@@ -135,10 +135,13 @@ class _FlowMixin(RoomSetupMixin, CompactOptionsMixin):
             excluded_entities=set(excluded) |
                 set(self._values.get(CONF_EXCLUDED_WINDOWS, [])),
         )[0]
-        indoor_sensor = calibration.get("indoor_temperature_entity")
-        indoor_c = (
-            temperature_sensor_c(self.hass, indoor_sensor, self._mold_source_age())
-            if isinstance(indoor_sensor, str) else None
+        from .room_sources import selected, room_temperature_evidence
+        pinned = calibration.get("indoor_temperature_entity")
+        indoor_c, _ = room_temperature_evidence(
+            self.hass, self._values, area_id,
+            pinned=pinned if selected(self._values, area_id, "temperature") is None
+            and isinstance(pinned, str) else None,
+            age_minutes=self._mold_source_age(),
         )
         current = tuple(
             current_weather(self.hass, entity, self._mold_source_age())
