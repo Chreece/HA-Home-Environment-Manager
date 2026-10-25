@@ -1,8 +1,9 @@
 name: Beta44 weather-aware owned shade reopening and Home notices
+# Beta44 is already published and immutable. Keep its historical
+# verification recipe callable manually, but do not run a b44 payload builder
+# on later beta versions committed to the active development branch.
 on:
-  push:
-    branches:
-      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
+  workflow_dispatch:
 
 permissions:
   contents: read
