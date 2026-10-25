@@ -16,7 +16,38 @@ GROUPS = ("windows", "air_quality", "temperature", "humidity", "pressure", "clim
 # Cover device classes that represent an indoor window shade, never an opening
 # such as a window, garage, gate, door, damper or exterior wind-driven awning.
 SHADING_COVER_CLASSES = frozenset(("blind", "shade", "shutter", "curtain"))
+# Explicitly classified non-shading covers must never operate as window shades.
+# A classless, user-selected cover is eligible for *inventory* when it has a
+# genuine native CLOSE feature. Device class is optional in HA and is omitted
+# by many roller shutter integrations, including template-backed endpoints.
+EXCLUDED_SHADING_COVER_CLASSES = frozenset((
+    "garage", "gate", "door", "awning", "window", "damper",
+))
 COVER_CLOSE_FEATURE = 2  # homeassistant.components.cover.CoverEntityFeature.CLOSE
+
+
+def is_shading_cover(hass: Any, state: Any) -> bool:
+    """Recognize native window shades, including unclassified roller shutters.
+
+    A supported feature bit proves only that the entity can close, not that
+    it is physically safe to move. Real movement still requires explicit room
+    selection, an individual opt-in, a linked closed window, live feedback,
+    sunlight/weather checks and validated durable ownership.
+    """
+    if getattr(state, "domain", None) != "cover":
+        return False
+    try:
+        supported = int(state.attributes.get("supported_features", 0))
+    except (TypeError, ValueError, OverflowError, AttributeError):
+        return False
+    if not (supported & COVER_CLOSE_FEATURE):
+        return False
+    from .discovery import _device_class
+    cover_class = _device_class(hass, state)
+    if cover_class in EXCLUDED_SHADING_COVER_CLASSES:
+        return False
+    return cover_class in SHADING_COVER_CLASSES or not cover_class
+
 
 PRESSURE_UNITS = {"pa": .01, "hpa": 1., "kpa": 10., "mbar": 1., "bar": 1000.,
                   "inhg": 33.8638866667, "mmhg": 1.33322387415, "psi": 68.9475729317}
@@ -66,12 +97,7 @@ def category(hass: Any, state: Any) -> str | None:
     # Window shading actuators are *not* window contact sensors. They are an
     # independent opt-in output group, never general climate devices.
     if state.domain == "cover":
-        try:
-            supported = int(state.attributes.get("supported_features", 0))
-        except (TypeError, ValueError, OverflowError):
-            supported = 0
-        return ("shades" if _device_class(hass, state) in SHADING_COVER_CLASSES
-                and supported & COVER_CLOSE_FEATURE else None)
+        return "shades" if is_shading_cover(hass, state) else None
     if is_window(hass, state):
         return "windows"
     if state.domain in ("climate", "fan", "humidifier"):
@@ -110,9 +136,19 @@ def choices(hass: Any, area: str, previous: dict | None = None) -> dict[str, lis
     from .discovery import entity_area
     previous = previous if isinstance(previous, dict) else {}
     result = {group: {} for group in GROUPS}
+    registry = er.async_get(hass)
     for state in hass.states.async_all():
-        if entity_area(hass, state.entity_id) == area and (group := category(hass, state)):
-            result[group][state.entity_id] = label(hass, state.entity_id)
+        if entity_area(hass, state.entity_id) != area:
+            continue
+        if not (group := category(hass, state)):
+            continue
+        if group == "shades":
+            entry = registry.async_get(state.entity_id)
+            if entry is not None and (
+                    getattr(entry, "disabled_by", None) is not None
+                    or getattr(entry, "hidden_by", None) is not None):
+                continue
+        result[group][state.entity_id] = label(hass, state.entity_id)
     for group in GROUPS:
         values = previous.get(group, [])
         for entity in values if isinstance(values, list) else ():
@@ -120,8 +156,15 @@ def choices(hass: Any, area: str, previous: dict | None = None) -> dict[str, lis
                 continue
             state = hass.states.get(entity)
             # Keep registered unavailable inputs, never a retyped or moved input.
-            if (state is None or state.state in ("unknown", "unavailable")
-                    or group == "climate_devices" and entity.partition(".")[0] in ("switch", "input_boolean", "number", "input_number")) and er.async_get(hass).async_get(entity):
+            registered = registry.async_get(entity)
+            if group == "shades" and registered is not None and (
+                    getattr(registered, "disabled_by", None) is not None
+                    or getattr(registered, "hidden_by", None) is not None):
+                continue
+            if ((state is None or state.state in ("unknown", "unavailable")
+                    or group == "climate_devices" and entity.partition(".")[0] in (
+                        "switch", "input_boolean", "number", "input_number"))
+                    and registered):
                 result[group].setdefault(entity, label(hass, entity))
     return {group: sorted(({"value": e, "label": name} for e, name in values.items()),
                           key=lambda item: (item["label"].casefold(), item["value"]))
