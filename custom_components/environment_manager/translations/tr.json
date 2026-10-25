@@ -163,7 +163,8 @@
           "temperature": "Sıcaklık",
           "humidity": "Nem",
           "pressure": "Basınç sensörleri",
-          "climate_devices": "Cihazlar"
+          "climate_devices": "Cihazlar",
+          "shades": "Pencere perdeleri, panjurlar ve jaluziler"
         },
         "data_description": {
           "windows": "Pencereler. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
@@ -171,7 +172,8 @@
           "temperature": "Sıcaklık. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "humidity": "Nem. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "pressure": "Basınç sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "climate_devices": "Cihazlar. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez."
+          "climate_devices": "Cihazlar. Yalnızca odadaki fiziksel climate.*, humidifier.* ve fan.* varlıklarını seçin. Cihazın yerel özellikleri ısıtma, soğutma, nem alma, hedefler ve fan hızını belirler. Seçim cihazı çalıştırmaz; otomatik kontrolü her cihazda ayrıca etkinleştirin.",
+          "shades": "Pencere perdeleri, panjurlar ve jaluziler. Odadaki cover.* panjur, stor ve perdeleri seçin. device_class olmayan covers, CLOSE destekliyorsa ve gerçekten pencere gölgeliyorsa kabul edilir. Garajlar, kapılar, geçitler, pencereler ve tenteler hariçtir. Seçim hareket ettirmez: pencere sensörünü bağlayın, otomatik kontrolü, duyuruyu ve sıcaklığı ayarlayın. Bilinmeyen durum hareketi engeller."
         }
       },
       "setup_general": {
@@ -1115,7 +1117,8 @@
           "temperature": "Sıcaklık",
           "humidity": "Nem",
           "pressure": "Basınç sensörleri",
-          "climate_devices": "Cihazlar"
+          "climate_devices": "Cihazlar",
+          "shades": "Pencere perdeleri, panjurlar ve jaluziler"
         },
         "data_description": {
           "windows": "Pencereler. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
@@ -1123,7 +1126,8 @@
           "temperature": "Sıcaklık. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "humidity": "Nem. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "pressure": "Basınç sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "climate_devices": "Cihazlar. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez."
+          "climate_devices": "Cihazlar. Yalnızca odadaki fiziksel climate.*, humidifier.* ve fan.* varlıklarını seçin. Cihazın yerel özellikleri ısıtma, soğutma, nem alma, hedefler ve fan hızını belirler. Seçim cihazı çalıştırmaz; otomatik kontrolü her cihazda ayrıca etkinleştirin.",
+          "shades": "Pencere perdeleri, panjurlar ve jaluziler. Odadaki cover.* panjur, stor ve perdeleri seçin. device_class olmayan covers, CLOSE destekliyorsa ve gerçekten pencere gölgeliyorsa kabul edilir. Garajlar, kapılar, geçitler, pencereler ve tenteler hariçtir. Seçim hareket ettirmez: pencere sensörünü bağlayın, otomatik kontrolü, duyuruyu ve sıcaklığı ayarlayın. Bilinmeyen durum hareketi engeller."
         }
       },
       "setup_general": {

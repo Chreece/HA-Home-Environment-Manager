@@ -163,7 +163,8 @@
           "temperature": "Temperatura",
           "humidity": "Humedad",
           "pressure": "Sensores de presión",
-          "climate_devices": "Dispositivos"
+          "climate_devices": "Dispositivos",
+          "shades": "Persianas, estores y cortinas de ventana"
         },
         "data_description": {
           "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
@@ -171,7 +172,8 @@
           "temperature": "Temperatura. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "pressure": "Sensores de presión. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "climate_devices": "Dispositivos. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático."
+          "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
+          "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve."
         }
       },
       "setup_general": {
@@ -1115,7 +1117,8 @@
           "temperature": "Temperatura",
           "humidity": "Humedad",
           "pressure": "Sensores de presión",
-          "climate_devices": "Dispositivos"
+          "climate_devices": "Dispositivos",
+          "shades": "Persianas, estores y cortinas de ventana"
         },
         "data_description": {
           "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
@@ -1123,7 +1126,8 @@
           "temperature": "Temperatura. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "pressure": "Sensores de presión. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "climate_devices": "Dispositivos. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático."
+          "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
+          "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve."
         }
       },
       "setup_general": {

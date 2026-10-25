@@ -163,7 +163,8 @@
           "temperature": "Teplota",
           "humidity": "Vlhkost",
           "pressure": "Snímače tlaku",
-          "climate_devices": "Zařízení"
+          "climate_devices": "Zařízení",
+          "shades": "Okenní rolety, žaluzie a závěsy"
         },
         "data_description": {
           "windows": "Okna. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
@@ -171,7 +172,8 @@
           "temperature": "Teplota. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "pressure": "Snímače tlaku. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "climate_devices": "Zařízení. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení."
+          "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
+          "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje."
         }
       },
       "setup_general": {
@@ -1115,7 +1117,8 @@
           "temperature": "Teplota",
           "humidity": "Vlhkost",
           "pressure": "Snímače tlaku",
-          "climate_devices": "Zařízení"
+          "climate_devices": "Zařízení",
+          "shades": "Okenní rolety, žaluzie a závěsy"
         },
         "data_description": {
           "windows": "Okna. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
@@ -1123,7 +1126,8 @@
           "temperature": "Teplota. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "pressure": "Snímače tlaku. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "climate_devices": "Zařízení. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení."
+          "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
+          "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje."
         }
       },
       "setup_general": {

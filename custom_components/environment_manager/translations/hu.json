@@ -163,7 +163,8 @@
           "temperature": "Hőmérséklet",
           "humidity": "Páratartalom",
           "pressure": "Nyomásérzékelők",
-          "climate_devices": "Eszközök"
+          "climate_devices": "Eszközök",
+          "shades": "Ablakredőnyök, reluxák és függönyök"
         },
         "data_description": {
           "windows": "Ablakok. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
@@ -171,7 +172,8 @@
           "temperature": "Hőmérséklet. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
           "humidity": "Páratartalom. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
           "pressure": "Nyomásérzékelők. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
-          "climate_devices": "Eszközök. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést."
+          "climate_devices": "Eszközök. Csak a szoba valódi climate.*, humidifier.* és fan.* entitásait válaszd. A natív képességek határozzák meg a fűtést, hűtést, párátlanítást, célértékeket és ventilátorsebességet. A kiválasztás nem kapcsol be semmit; az automatika eszközönként engedélyezhető.",
+          "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás."
         }
       },
       "setup_general": {
@@ -1115,7 +1117,8 @@
           "temperature": "Hőmérséklet",
           "humidity": "Páratartalom",
           "pressure": "Nyomásérzékelők",
-          "climate_devices": "Eszközök"
+          "climate_devices": "Eszközök",
+          "shades": "Ablakredőnyök, reluxák és függönyök"
         },
         "data_description": {
           "windows": "Ablakok. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
@@ -1123,7 +1126,8 @@
           "temperature": "Hőmérséklet. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
           "humidity": "Páratartalom. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
           "pressure": "Nyomásérzékelők. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
-          "climate_devices": "Eszközök. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést."
+          "climate_devices": "Eszközök. Csak a szoba valódi climate.*, humidifier.* és fan.* entitásait válaszd. A natív képességek határozzák meg a fűtést, hűtést, párátlanítást, célértékeket és ventilátorsebességet. A kiválasztás nem kapcsol be semmit; az automatika eszközönként engedélyezhető.",
+          "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás."
         }
       },
       "setup_general": {

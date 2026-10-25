@@ -163,7 +163,8 @@
           "temperature": "Temperatura",
           "humidity": "Wilgotność",
           "pressure": "Czujniki ciśnienia",
-          "climate_devices": "Urządzenia"
+          "climate_devices": "Urządzenia",
+          "shades": "Rolety, żaluzje i zasłony okienne"
         },
         "data_description": {
           "windows": "Okna. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
@@ -171,7 +172,8 @@
           "temperature": "Temperatura. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "pressure": "Czujniki ciśnienia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "climate_devices": "Urządzenia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania."
+          "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
+          "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch."
         }
       },
       "setup_general": {
@@ -1115,7 +1117,8 @@
           "temperature": "Temperatura",
           "humidity": "Wilgotność",
           "pressure": "Czujniki ciśnienia",
-          "climate_devices": "Urządzenia"
+          "climate_devices": "Urządzenia",
+          "shades": "Rolety, żaluzje i zasłony okienne"
         },
         "data_description": {
           "windows": "Okna. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
@@ -1123,7 +1126,8 @@
           "temperature": "Temperatura. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "pressure": "Czujniki ciśnienia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "climate_devices": "Urządzenia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania."
+          "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
+          "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch."
         }
       },
       "setup_general": {

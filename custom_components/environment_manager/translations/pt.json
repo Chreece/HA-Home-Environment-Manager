@@ -163,7 +163,8 @@
           "temperature": "Temperatura",
           "humidity": "Humidade",
           "pressure": "Sensores de pressão",
-          "climate_devices": "Dispositivos"
+          "climate_devices": "Dispositivos",
+          "shades": "Estores, persianas e cortinas de janela"
         },
         "data_description": {
           "windows": "Janelas. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
@@ -171,7 +172,8 @@
           "temperature": "Temperatura. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "pressure": "Sensores de pressão. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "climate_devices": "Dispositivos. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático."
+          "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
+          "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento."
         }
       },
       "setup_general": {
@@ -1115,7 +1117,8 @@
           "temperature": "Temperatura",
           "humidity": "Humidade",
           "pressure": "Sensores de pressão",
-          "climate_devices": "Dispositivos"
+          "climate_devices": "Dispositivos",
+          "shades": "Estores, persianas e cortinas de janela"
         },
         "data_description": {
           "windows": "Janelas. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
@@ -1123,7 +1126,8 @@
           "temperature": "Temperatura. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "pressure": "Sensores de pressão. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "climate_devices": "Dispositivos. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático."
+          "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
+          "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento."
         }
       },
       "setup_general": {

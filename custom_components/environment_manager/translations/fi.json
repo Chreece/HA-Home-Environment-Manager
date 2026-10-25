@@ -163,7 +163,8 @@
           "temperature": "Lämpötila",
           "humidity": "Kosteus",
           "pressure": "Paineanturit",
-          "climate_devices": "Laitteet"
+          "climate_devices": "Laitteet",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut"
         },
         "data_description": {
           "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
@@ -171,7 +172,8 @@
           "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "climate_devices": "Laitteet. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta."
+          "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen."
         }
       },
       "setup_general": {
@@ -1115,7 +1117,8 @@
           "temperature": "Lämpötila",
           "humidity": "Kosteus",
           "pressure": "Paineanturit",
-          "climate_devices": "Laitteet"
+          "climate_devices": "Laitteet",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut"
         },
         "data_description": {
           "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
@@ -1123,7 +1126,8 @@
           "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "climate_devices": "Laitteet. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta."
+          "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen."
         }
       },
       "setup_general": {

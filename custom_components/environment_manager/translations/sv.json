@@ -163,7 +163,8 @@
           "temperature": "Temperatur",
           "humidity": "Luftfuktighet",
           "pressure": "Trycksensorer",
-          "climate_devices": "Enheter"
+          "climate_devices": "Enheter",
+          "shades": "Persienner, rullgardiner och fönsterluckor"
         },
         "data_description": {
           "windows": "Fönster. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
@@ -171,7 +172,8 @@
           "temperature": "Temperatur. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "pressure": "Trycksensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "climate_devices": "Enheter. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning."
+          "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
+          "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse."
         }
       },
       "setup_general": {
@@ -1115,7 +1117,8 @@
           "temperature": "Temperatur",
           "humidity": "Luftfuktighet",
           "pressure": "Trycksensorer",
-          "climate_devices": "Enheter"
+          "climate_devices": "Enheter",
+          "shades": "Persienner, rullgardiner och fönsterluckor"
         },
         "data_description": {
           "windows": "Fönster. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
@@ -1123,7 +1126,8 @@
           "temperature": "Temperatur. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "pressure": "Trycksensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "climate_devices": "Enheter. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning."
+          "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
+          "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse."
         }
       },
       "setup_general": {

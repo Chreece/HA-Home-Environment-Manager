@@ -163,7 +163,8 @@
           "temperature": "Temperature",
           "humidity": "Humidity",
           "pressure": "Pressure sensors",
-          "climate_devices": "Devices"
+          "climate_devices": "Devices",
+          "shades": "Window blinds, shades and shutters"
         },
         "data_description": {
           "windows": "Windows. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
@@ -171,7 +172,8 @@
           "temperature": "Temperature. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
           "humidity": "Humidity. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
           "pressure": "Pressure sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "climate_devices": "Devices. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control."
+          "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
+          "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available."
         }
       },
       "setup_general": {
@@ -1115,7 +1117,8 @@
           "temperature": "Temperature",
           "humidity": "Humidity",
           "pressure": "Pressure sensors",
-          "climate_devices": "Devices"
+          "climate_devices": "Devices",
+          "shades": "Window blinds, shades and shutters"
         },
         "data_description": {
           "windows": "Windows. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
@@ -1123,7 +1126,8 @@
           "temperature": "Temperature. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
           "humidity": "Humidity. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
           "pressure": "Pressure sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "climate_devices": "Devices. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control."
+          "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
+          "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available."
         }
       },
       "setup_general": {
