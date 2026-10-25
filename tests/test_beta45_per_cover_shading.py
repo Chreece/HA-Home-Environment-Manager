@@ -11,7 +11,6 @@ from test_beta43_shade_cooling import make_room
 from custom_components.environment_manager.shade_cooling import (
     cover_config, selectable_windows,
 )
-from custom_components.environment_manager.device_controls import update_device_setting
 from custom_components.environment_manager.device_hierarchy import managed_shade_devices
 
 
@@ -21,6 +20,7 @@ def _editor(h):
 
 
 def _set(h, key, value, cover=None):
+    from custom_components.environment_manager.device_controls import update_device_setting
     return asyncio.run(update_device_setting(
         h.manager, "shade_device", key, value, area="room",
         entity_id=cover or h.cover.entity_id,
