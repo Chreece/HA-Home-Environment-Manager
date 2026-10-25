@@ -235,11 +235,14 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
     from .room_sources import selected
     from .shade_cooling import SHADE_NUMBERS
     for area_id in manager.settings.get(CONF_AREAS, []):
-        if selected(manager.settings, area_id, "shades"):
+        covers = selected(manager.settings, area_id, "shades") or ()
+        if covers:
             numbers.extend(
                 ShadeCoolingNumber(manager, entry.entry_id, area_id, key)
                 for key in SHADE_NUMBERS
             )
+        numbers.extend(ShadeDeviceNumber(manager, entry.entry_id, area_id, cover)
+                       for cover in covers)
     if manager.settings.get(CONF_USE_MOLD) is True:
         for area_id in manager.settings.get(CONF_AREAS, []):
             numbers.append(ConfigNumber(
@@ -543,6 +546,55 @@ class ShadeCoolingNumber(NumberEntity):
     async def async_set_native_value(self, value):
         await update_device_setting(
             self._manager, "area_shading", self._key, value, area=self._area
+        )
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(async_dispatcher_connect(
+            self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}",
+            self._update,
+        ))
+
+    @callback
+    def _update(self):
+        self.async_write_ha_state()
+
+
+class ShadeDeviceNumber(NumberEntity):
+    """Independent threshold to close this particular cover."""
+
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_translation_key = "shade_close_above_c"
+    _attr_mode = NumberMode.BOX
+    _attr_icon = "mdi:thermometer-chevron-up"
+
+    def __init__(self, manager, entry_id: str, area: str, cover: str):
+        from .shade_cooling import SHADE_NUMBERS
+        self._manager, self._area, self._cover = manager, area, cover
+        self._attr_unique_id = (
+            f"{entry_id}_area_{area}_shade_{cover.replace('.', '_')}_close_above_c")
+        self._attr_device_info = controller_device_info(manager, area, cover)
+        if self._attr_device_info is None:
+            raise ValueError("No registered child device for this window shade")
+        lo, hi, step, unit, _ = SHADE_NUMBERS["close_above_c"]
+        self._attr_native_min_value = lo
+        self._attr_native_max_value = hi
+        self._attr_native_step = step
+        self._attr_native_unit_of_measurement = unit
+
+    @property
+    def native_value(self):
+        from .shade_cooling import cover_config
+        return cover_config(self._manager.settings, self._area, self._cover)[
+            "close_above_c"]
+
+    async def async_set_native_value(self, value):
+        await update_device_setting(
+            self._manager, "shade_device", "close_above_c", value,
+            area=self._area, entity_id=self._cover,
         )
         self.async_write_ha_state()
 
