@@ -459,12 +459,12 @@ jobs:
         run: |
           set -euo pipefail
           if gh release view v0.6.0b44 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            echo 'v0.6.0b44 already exists; refusing to replace it'
-            exit 1
+            echo 'v0.6.0b44 already exists; preserving the published release'
+            exit 0
           fi
           if gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/beta/v0.6.0b44" >/dev/null 2>&1; then
-            echo 'beta/v0.6.0b44 already exists; refusing to replace it'
-            exit 1
+            echo 'beta/v0.6.0b44 already exists; preserving the published beta branch'
+            exit 0
           fi
           payload=/tmp/beta44-payload
           git config user.name 'github-actions[bot]'
