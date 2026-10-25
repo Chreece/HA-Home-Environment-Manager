@@ -129,6 +129,24 @@ async def check(config_dir):
         controller = devices.async_get_device(identifiers={identifier})
         assert controller is not None
         assert controller.area_id == living.id
+    # Instantiate new entities with REAL Home Assistant 2026.10 bases.
+    # The per-cover controls must not require a physical device migration.
+    from custom_components.environment_manager.select import ShadeWindowSelect
+    from custom_components.environment_manager.switch import ShadeDeviceSwitch
+    from custom_components.environment_manager.number import ShadeDeviceNumber
+    cover_id = source_ids["shades"]
+    window = ShadeWindowSelect(manager, manager_entry.entry_id, living.id, cover_id)
+    automatic = ShadeDeviceSwitch(manager, manager_entry.entry_id, living.id, cover_id, "enabled")
+    announce = ShadeDeviceSwitch(manager, manager_entry.entry_id, living.id, cover_id, "announce")
+    threshold = ShadeDeviceNumber(manager, manager_entry.entry_id, living.id, cover_id)
+    for entity in (window, automatic, announce, threshold):
+        assert entity.device_info == shade
+        assert entity.unique_id
+    assert source_ids["windows"] in window._window_options().values()
+    assert window.extra_state_attributes["window_state"] == "unknown"  # Unassigned
+    assert not automatic.is_on
+    assert not announce.is_on
+    assert threshold.native_value == 25.0
     assert devices.async_get(physical.id).config_entry_id == native.entry_id
     assert len(manager._device_hierarchy["areas"]) == 2
     await hass.async_block_till_done()
