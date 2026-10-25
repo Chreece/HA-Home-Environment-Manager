@@ -301,10 +301,27 @@ def store_selection(hass: Any, settings: dict, area: str, inputs: dict) -> None:
     if env.get("radiant_temperature_entity") not in inputs["temperature"]:
         env["radiant_temperature_entity"] = None
     mold = settings.setdefault("mold_rooms", {}).setdefault(area, {})
-    if isinstance(mold, dict) and mold.get("indoor_temperature_entity") not in inputs["temperature"]:
-        mold["indoor_temperature_entity"] = inputs["temperature"][0] if len(inputs["temperature"]) == 1 else None
-        mold.pop("calibration_factor", None)
-        mold.pop("calibrated_at", None)
+    if isinstance(mold, dict):
+        sensors = list(inputs["temperature"])
+        prior = mold.get("indoor_temperature_entities")
+        legacy = mold.get("indoor_temperature_entity")
+        # A calibration factor belongs to the complete set of calibrated
+        # sensors. Changing the set (including adding a second sensor) must
+        # invalidate the old factor, even when the previous pin still exists.
+        changed = (
+            (isinstance(prior, list) and prior != sensors)
+            or (not isinstance(prior, list) and legacy is not None
+                and (len(sensors) != 1 or legacy != sensors[0]))
+            or (isinstance(previous_inputs, dict)
+                and previous_inputs.get("temperature", []) != sensors)
+        )
+        if changed:
+            for field in ("calibration_factor", "calibrated_indoor_c",
+                          "calibrated_outdoor_c", "calibrated_at"):
+                mold.pop(field, None)
+        mold["indoor_temperature_entities"] = sensors
+        # A single legacy pin cannot silently suppress a selected room mean.
+        mold["indoor_temperature_entity"] = sensors[0] if len(sensors) == 1 else None
     settings.setdefault(CONF_ROOM_SOURCES, {})[area] = deepcopy(inputs)
     included = {e for key in GROUPS for e in inputs[key]}
     settings["excluded_window_entities"] = [e for e in settings.get("excluded_window_entities", []) if e not in included]
@@ -361,12 +378,20 @@ def numeric(hass: Any, entity: str, area: str, group: str, age: float) -> float 
 
 
 def aggregate(hass: Any, entities, area: str, group: str, age: float) -> tuple[float | None, str]:
+    """Average valid normalized measurements only; never inject missing zeros."""
     if not entities:
         return None, "not_selected"
-    values = [numeric(hass, e, area, group, age) for e in entities]
-    if any(v is None for v in values):
+    candidates = [numeric(hass, e, area, group, age) for e in dict.fromkeys(entities)]
+    values = [v for v in candidates
+              if isinstance(v, (int, float)) and not isinstance(v, bool)
+              and math.isfinite(v)]
+    if not values:
         return None, "selected_source_unavailable"
-    return sum(values) / len(values), "selected_mean" if len(values) > 1 else "selected_sensor"
+    partial = len(values) != len(candidates)
+    return sum(values) / len(values), (
+        ("selected_partial_mean" if len(values) > 1 else "selected_partial_sensor")
+        if partial else ("selected_mean" if len(values) > 1 else "selected_sensor")
+    )
 
 
 
@@ -374,18 +399,18 @@ def room_temperature_evidence(
     hass: Any, settings: dict, area: str, *,
     pinned: str | None = None, age_minutes: float = 10,
 ) -> tuple[float | None, dict]:
-    """Use only explicit, validated room temperature sources for room policy.
+    """Mean of valid selected room temperatures, with discarded inputs visible.
 
-    A configured single-device pin takes precedence over the room selection;
-    if it fails, do not silently substitute another device. Without a pin,
-    multiple explicitly selected sensors contribute only when ALL readings
-    are current, correctly typed and assigned to the exact HA area.
-    This never grants physical actuation authority.
+    An explicitly selected multi-sensor room always uses its mean, including
+    when an older per-device or mold pin exists. A single pin continues to
+    work for legacy setups. Wrong-area/manager-owned/stale inputs never
+    contribute; all-invalid or explicitly empty selections fail closed.
     """
     from .discovery import entity_area, temperature_sensor_c
 
     selected_ids = selected(settings, area, "temperature")
-    if isinstance(pinned, str) and pinned:
+    if isinstance(pinned, str) and pinned and (
+            selected_ids is None or len(selected_ids) <= 1):
         ids = (pinned,)
         if selected_ids is not None and pinned not in selected_ids:
             return None, {"status": "pinned_sensor_not_selected",
@@ -399,7 +424,7 @@ def room_temperature_evidence(
                       "entity_ids": [], "selected_count": 0}
     values = []
     problems = []
-    for entity_id in ids:
+    for entity_id in dict.fromkeys(ids):
         state = hass.states.get(entity_id)
         if not native(hass, entity_id):
             reason = "manager_entity_not_physical"
@@ -409,17 +434,20 @@ def room_temperature_evidence(
             reason = "sensor_unavailable"
         else:
             value = temperature_sensor_c(hass, entity_id, age_minutes)
-            reason = None if value is not None and -60 <= value <= 85 else "invalid_or_stale_temperature"
+            reason = None if value is not None and -60 <= value <= 85 and math.isfinite(value) else "invalid_or_stale_temperature"
         if reason is not None:
             problems.append({"entity_id": entity_id, "reason": reason})
         else:
             values.append(value)
-    evidence = {"entity_ids": list(ids), "selected_count": len(ids), "source": source}
+    evidence = {"entity_ids": list(dict.fromkeys(ids)), "selected_count": len(set(ids)),
+                "source": source, "valid_count": len(values),
+                "ignored_count": len(problems)}
     if problems:
-        return None, {**evidence, "status": "selected_temperature_invalid",
-                      "invalid_sources": problems}
+        evidence["invalid_sources"] = problems
+    if not values:
+        return None, {**evidence, "status": "selected_temperature_invalid"}
     return sum(values) / len(values), {**evidence, "status": "ready",
-                                      "valid_count": len(values)}
+                                      "partial": bool(problems)}
 
 
 def source_overview(manager: Any, area: str) -> dict:
