@@ -1,0 +1,54 @@
+name: Plain ASCII hyphens in text and AI announcements
+on:
+  push:
+    branches:
+      - 'chore/plain-hyphens-ai-text-20261025'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: plain-hyphens-text
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install pytest
+      - name: Regenerate all source-driven translations
+        run: python generate_translations.py
+      - name: Verify ASCII punctuation remains after regeneration
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root=Path('custom_components/environment_manager')
+          paths=[p for p in root.rglob('*') if p.is_file()
+                 and p.suffix in ('.py','.js','.json','.yaml')]
+          paths.extend(p for p in Path('.').glob('*.py')
+                       if p.name.startswith(('apply_','generate')))
+          for path in paths:
+              content=path.read_text(encoding='utf-8')
+              assert '–' not in content and '—' not in content, path
+          assert len(list((root/'translations').glob('*.json'))) == 38
+          PY
+      - name: Full regression suite
+        run: python -m pytest -q tests
+      - name: Compile Python
+        run: python -m compileall -q custom_components
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Frontend parsing and DOM tests
+        run: |
+          node --check custom_components/environment_manager/frontend/air-quality-advisor-card.js
+          node tests/card_test.cjs
