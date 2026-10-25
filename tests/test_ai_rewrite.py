@@ -68,6 +68,19 @@ def test_grounded_rewrite_is_accepted_and_original_is_untouched():
     assert ORIGINAL == announcement(REC, "en")[1]
 
 
+@pytest.mark.parametrize("separator", ["–", "––", "—"])
+def test_ai_rewrite_normalizes_long_and_doubled_dashes(separator):
+    text = (f"OPEN|Please open Living window in Living room {separator} "
+            "CO₂ is high (1,250 ppm); fresh air may help.")
+    expected = ("Please open Living window in Living room - "
+                "CO₂ is high (1,250 ppm); fresh air may help.")
+    assert ai.validate_rewrite(result(text), REC, ORIGINAL) == expected
+    assert ai.normalize_ai_dashes("A" + separator + "B") == "A-B"
+    assert "ASCII hyphen" in ai.make_rewrite_prompt(REC, ORIGINAL, "en")
+
+
+
+
 @pytest.mark.parametrize("answer", [
     "CLOSE|Please close Living window in Living room: CO₂ is high (1,250 ppm).",
     "OPEN|Please open Living window in the kitchen: CO₂ is high (1,250 ppm).",
