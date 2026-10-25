@@ -58,6 +58,51 @@ def config(settings: dict, area: str) -> dict:
     }
 
 
+def cover_config(settings: dict, area: str, entity_id: str) -> dict:
+    """Per-cover grants. Untouched beta44 rooms retain legacy safety behavior."""
+    room = config(settings, area)
+    rooms = settings.get(CONF_SHADE_ROOMS, {})
+    source = rooms.get(area, {}) if isinstance(rooms, dict) else {}
+    covers = source.get("covers", {}) if isinstance(source, dict) else {}
+    saved = covers.get(entity_id) if isinstance(covers, dict) else None
+    legacy = not isinstance(saved, dict)
+    saved = saved if isinstance(saved, dict) else {}
+    revision = saved.get("authorization_revision", room["authorization_revision"])
+    if type(revision) is not int or revision < 0:
+        revision = room["authorization_revision"]
+    threshold = _numeric(saved.get("close_above_c"), 18., 36.)
+    return {
+        **room,
+        "enabled": room["enabled"] if legacy else saved.get("enabled") is True,
+        "legacy": legacy,
+        "window_entity": saved.get("window_entity") if isinstance(
+            saved.get("window_entity"), str) else None,
+        "announce": (settings.get(CONF_SHADE_ANNOUNCE) is True if legacy
+                     else saved.get("announce") is True),
+        "close_above_c": room["close_above_c"] if threshold is None else threshold,
+        "authorization_revision": revision,
+    }
+
+
+def selectable_windows(hass: Any, settings: dict, area: str) -> tuple[str, ...]:
+    """Only explicitly selected native, same-room Window-class contacts."""
+    from .room_sources import choices
+    from .discovery import entity_area, is_window
+    chosen = selected(settings, area, "windows")
+    candidates = (chosen if chosen is not None else tuple(
+        option["value"] for option in choices(hass, area)["windows"]))
+    result = []
+    for entity in candidates:
+        if not isinstance(entity, str) or not entity.startswith("binary_sensor."):
+            continue
+        if not native(hass, entity) or entity_area(hass, entity) != area:
+            continue
+        state = hass.states.get(entity)
+        if state is not None and is_window(hass, state):
+            result.append(entity)
+    return tuple(dict.fromkeys(result))
+
+
 def _numeric(value: Any, lo: float, hi: float) -> float | None:
     return float(value) if type(value) in (float, int) and math.isfinite(value) and lo <= value <= hi else None
 
@@ -170,6 +215,7 @@ class ShadeCoolingController:
         self._active = False
         self._ready = False
         self._store = None
+        self._observed_cover_states: dict[str, tuple[int, str]] = {}
 
     async def async_start(self):
         self._started = self.clock()
@@ -269,8 +315,9 @@ class ShadeCoolingController:
                 _LOGGER.exception("Shade room task failed: %s", area)
                 self._status(area, "controller_error")
 
-    def _inputs(self, area: str, settings: dict) -> tuple[str, dict, Any, Any, float | None, tuple]:
-        cfg = config(settings, area)
+    def _inputs(self, area: str, settings: dict, entity: str | None = None
+                ) -> tuple[str, dict, Any, dict, float | None, tuple]:
+        cfg = cover_config(settings, area, entity) if entity else config(settings, area)
         sources = selected(settings, area, "shades") or ()
         temp, evidence = room_temperature_evidence(
             self.hass, settings, area, age_minutes=10)
@@ -279,14 +326,20 @@ class ShadeCoolingController:
         room = next((r for r in (*plan.rooms, *plan.climate_rooms)
                      if r.area_id == area), None)
         windows = room.windows if room else ()
-        # The plan is an input summary, but read the exact native contacts
-        # again just before acting. No state-update lag may permit movement
-        # while a real window was opened in the meantime.
+        linked = cfg.get("window_entity")
+        linked_valid = None
+        if entity and not cfg["legacy"]:
+            linked_valid = linked in selectable_windows(self.hass, settings, area)
+            physical = self.hass.states.get(linked) if linked_valid else None
+            from .logic import Window
+            windows = ((Window(linked, getattr(physical, "name", linked),
+                               physical.state == "on" if physical.state in ("on", "off")
+                               else None),) if physical is not None else ())
         safe_contacts = bool(windows)
         for window in windows:
             physical = self.hass.states.get(window.entity_id)
             if (getattr(window, "opened", None) is not False or
-                    physical is None or physical.state not in ("off", "closed")):
+                    physical is None or physical.state != "off"):
                 safe_contacts = False
         sun = self.hass.states.get("sun.sun")
         close_reason, details = evaluate_conditions(
@@ -298,9 +351,14 @@ class ShadeCoolingController:
         )
         if not safe_contacts and windows:
             close_reason = "window_open_or_unknown"
+        if entity and not cfg["legacy"] and not linked:
+            close_reason = "window_not_assigned"
+        elif entity and not cfg["legacy"] and not linked_valid:
+            close_reason = "window_not_eligible"
         details.update(weather)
         details["temperature_evidence"] = evidence
-        details["window_safe"] = safe_contacts
+        details["window_safe"] = safe_contacts and (linked_valid is not False)
+        details["linked_window"] = linked if entity and not cfg.get("legacy") else None
         details["close_reason"] = close_reason
         return close_reason, details, sun, cfg, temp, windows
 
@@ -310,21 +368,25 @@ class ShadeCoolingController:
 
     async def _before_move(self, area: str, action: str, entity: str,
                            revision: int) -> bool:
-        """Queue configured announcement, then allow time to be noticed.
-
-        All physical state/conditions are rechecked AFTER this point.
-        """
-        if self.manager.settings.get(CONF_SHADE_ANNOUNCE) is not True:
+        """Deliver per-cover notice if opted in, then recheck the authorization."""
+        shade = cover_config(self.manager.settings, area, entity)
+        if not shade["announce"]:
             return True
-        ok = await async_announce_before_move(self.manager, area=area, action=action)
+        if shade["legacy"]:
+            ok = await async_announce_before_move(self.manager, area=area, action=action)
+        else:
+            ok = await async_announce_before_move(
+                self.manager, area=area, action=action,
+                entity_id=entity, required=True)
         if not ok:
             return False
         if self.announcement_grace_seconds:
             await asyncio.sleep(self.announcement_grace_seconds)
+        latest = cover_config(self.manager.settings, area, entity)
         return (area in self.manager.settings.get("areas", [])
                 and entity in (selected(self.manager.settings, area, "shades") or ())
-                and config(self.manager.settings, area)["enabled"]
-                and config(self.manager.settings, area)["authorization_revision"] == revision)
+                and latest["enabled"]
+                and latest["authorization_revision"] == revision)
 
     async def _tick(self, area: str):
         settings = self.manager.settings
