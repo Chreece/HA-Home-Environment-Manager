@@ -23,6 +23,12 @@ DEFAULT_AGENT = "default"
 AI_TIMEOUT_SECONDS = 8
 MAX_REPLY_CHARS = 480
 
+def normalize_ai_dashes(value: str) -> str:
+    """Use ordinary ASCII hyphens rather than AI-style long/doubled dashes."""
+    return value.replace("\u2013\u2013", "-").replace("\u2014", "-").replace("\u2013", "-")
+
+
+
 
 def ai_effectively_enabled(settings: dict[str, Any]) -> bool:
     """A single opt-in setting controls Hub AI and direct message rewriting."""
@@ -89,6 +95,7 @@ def make_rewrite_prompt(recommendation: Any, original: str, language: str) -> st
         "facts, values, warnings, advice, devices or target rooms. "
         "Do not add any other actions or suggestions. Keep under 300 characters "
         "where possible. No markdown, emojis or quotes. "
+        "Use a plain ASCII hyphen (-) instead of en dashes, em dashes or doubled dashes. "
         "Start your reply with the literal ASCII prefix "
         + recommendation.action.upper() + "|, followed by the rewritten message. "
         "Do not repeat the JSON. INPUT_DATA="
@@ -127,7 +134,7 @@ def _validate_rewrite_text(raw: Any, recommendation: Any, original: str) -> str 
     )
     if not set(_NUMBER.findall(rewritten)).issubset(valid_numbers):
         return None
-    return rewritten
+    return normalize_ai_dashes(rewritten)
 
 
 def validate_rewrite(response: Any, recommendation: Any, original: str) -> str | None:
