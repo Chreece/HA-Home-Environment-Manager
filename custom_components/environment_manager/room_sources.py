@@ -166,8 +166,35 @@ def store_selection(hass: Any, settings: dict, area: str, inputs: dict) -> None:
         if isinstance(shade_cfg, dict):
             previous_shade = shade_cfg.get(area, {})
             previous_shade = previous_shade if isinstance(previous_shade, dict) else {}
-            shade_cfg[area] = {**previous_shade, "enabled": False}
+            per_cover = previous_shade.get("covers", {})
+            per_cover = per_cover if isinstance(per_cover, dict) else {}
+            # Changing the enrolled covers revokes all per-cover automatic
+            # grants; do not silently re-arm a reselected or moved actuator.
+            per_cover = {
+                source: {**cfg, "enabled": False}
+                for source, cfg in per_cover.items() if isinstance(cfg, dict)
+            }
+            shade_cfg[area] = {
+                **previous_shade, "enabled": False, "covers": per_cover,
+            }
     profiles = room.setdefault("device_settings", {})
+    # A removed/changed contact must not leave a shade with a stale window
+    # mapping and an active automation grant.
+    if "windows" in inputs:
+        old_windows = set(selected(settings, area, "windows") or ())
+        if old_windows != set(inputs["windows"]):
+            shade_cfg = settings.setdefault("shade_rooms", {})
+            if isinstance(shade_cfg, dict):
+                previous_shade = shade_cfg.get(area, {})
+                if isinstance(previous_shade, dict):
+                    covers = previous_shade.get("covers", {})
+                    if isinstance(covers, dict):
+                        invalid = {
+                            source: {**cfg, "enabled": False}
+                            if cfg.get("window_entity") not in inputs["windows"] else cfg
+                            for source, cfg in covers.items() if isinstance(cfg, dict)
+                        }
+                        shade_cfg[area] = {**previous_shade, "covers": invalid}
     previous_inputs = settings.get(CONF_ROOM_SOURCES, {}).get(area)
     if isinstance(previous_inputs, dict) and any(previous_inputs.get(key) != inputs.get(key)
             for key in ("windows", "temperature", "humidity", "air_quality")):
@@ -248,6 +275,12 @@ def restrict_rooms(settings: dict, areas: list[str]) -> None:
         for area in set(shades) - set(areas):
             if isinstance(shades.get(area), dict):
                 shades[area]["enabled"] = False
+                per_cover = shades[area].get("covers", {})
+                if isinstance(per_cover, dict):
+                    shades[area]["covers"] = {
+                        source: {**cfg, "enabled": False}
+                        for source, cfg in per_cover.items() if isinstance(cfg, dict)
+                    }
     for key in ("climate_rooms", "pid_rooms"):
         for area, cfg in settings.get(key, {}).items():
             if area in areas or not isinstance(cfg, dict):
