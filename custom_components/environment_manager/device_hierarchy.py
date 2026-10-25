@@ -171,6 +171,50 @@ def managed_devices(hass: Any, entry_id: str, settings: dict) -> tuple[ManagedDe
     return tuple(result)
 
 
+def managed_shade_devices(hass: Any, entry_id: str, settings: dict) -> tuple[ManagedDevice, ...]:
+    """A separate logical device for every selected native window shade."""
+    from .room_sources import selected, native
+    from .discovery import entity_area
+    from homeassistant.helpers import area_registry as ar
+    from homeassistant.helpers import device_registry as dr
+    from homeassistant.helpers import entity_registry as er
+
+    areas, devices, entities = ar.async_get(hass), dr.async_get(hass), er.async_get(hass)
+    result: list[ManagedDevice] = []
+    for area_id in configured_area_ids(settings):
+        if area_id not in settings.get(CONF_AREAS, []):
+            continue
+        if areas.async_get_area(area_id) is None:
+            continue
+        for cover in selected(settings, area_id, "shades") or ():
+            if not cover.startswith("cover.") or not native(hass, cover):
+                continue
+            if entity_area(hass, cover) != area_id:
+                continue
+            entry = entities.async_get(cover)
+            if entry is not None and getattr(entry, "platform", None) == DOMAIN:
+                continue
+            source_id = getattr(entry, "device_id", None)
+            source = devices.async_get(source_id) if source_id else None
+            state = hass.states.get(cover)
+            # Exact-cover registry ID survives entity_id renames. A physical
+            # product with two cover endpoints creates two child controllers.
+            identity = getattr(entry, "id", None) or cover
+            digest = hashlib.sha256(
+                f"{area_id}\0shade\0{identity}".encode()).hexdigest()[:24]
+            name = (getattr(entry, "name", None)
+                    or getattr(state, "name", None)
+                    or getattr(entry, "original_name", None) or cover)
+            result.append(ManagedDevice(
+                identifier=f"{entry_id}_shade_{digest}",
+                area_id=area_id,
+                name=name,
+                source_device_id=source_id if source is not None else None,
+                source_entities=(cover,),
+            ))
+    return tuple(result)
+
+
 def _register(registry: Any, entry_id: str, info: dict, *,
               hass: Any, subentry_id: str | None = None,
               parent: Any = None) -> Any:
@@ -225,7 +269,8 @@ def async_register_hierarchy(hass: Any, entry: Any) -> None:
             registry.async_update_device(device.id, area_id=area_id)
         area_devices[area_id] = device
         device_subentries[area_identifier(entry.entry_id, area_id)] = subentries.get(area_id)
-    specs = managed_devices(hass, entry.entry_id, settings)
+    specs = (*managed_devices(hass, entry.entry_id, settings),
+             *managed_shade_devices(hass, entry.entry_id, settings))
     controllers, by_source = {}, {}
     for spec in specs:
         parent = area_devices.get(spec.area_id)
@@ -235,7 +280,8 @@ def async_register_hierarchy(hass: Any, entry: Any) -> None:
             "identifiers": {(DOMAIN, spec.identifier)},
             "name": f"{spec.name} Controller",
             "manufacturer": "Home Environment Manager",
-            "model": "Managed Environment Controller",
+            "model": ("Window Shade Controller" if "_shade_" in spec.identifier
+                      else "Managed Environment Controller"),
         }
         if spec.source_device_id:
             info["configuration_url"] = (
