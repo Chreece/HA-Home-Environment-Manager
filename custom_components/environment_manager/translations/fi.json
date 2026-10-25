@@ -71,7 +71,7 @@
           "language": "Kieli",
           "automatic_tts": "Automaattinen",
           "automatic_notifications": "Automaattinen · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Ilmoitukset (valinnainen) · 0–1440 min",
+          "announcement_repeat_minutes": "Ilmoitukset (valinnainen) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "asetukset · lähde",
           "tts_engine": "asetukset · lähde · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Lisäraja-arvot",
-        "description": "Lisäraja-arvot. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Lisäraja-arvot. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Ulkona · AQI (≤)",
           "outdoor_co2": "Ulkona · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "Virheellinen valinta: Ohita sisäilma-anturit.",
       "no_windows_after_exclusions": "Jätä ainakin yksi ikkuna-anturi käyttöön.",
       "review_areas_after_exclusions": "Tarkista: Huoneet · Mittaukset (0).",
-      "invalid_repeat_minutes": "Virheellinen valinta: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Virheellinen valinta: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Ei saatavilla: conversation.process.",
       "invalid_ai_agent": "Virheellinen valinta: conversation.*.",
       "invalid_mold_temperature_sensor": "Huoneet · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "Virheellinen: Huone · lähde"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — on jo määritetty.",
+      "already_configured": "Home Environment Manager - on jo määritetty.",
       "setup_area_removed": "Virheellinen: Valvottavat huoneet",
       "setup_changed": "asetukset ↻ Valvottavat huoneet"
     }
@@ -337,7 +337,7 @@
           "language": "Kieli",
           "automatic_tts": "Automaattinen",
           "automatic_notifications": "Automaattinen · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Ilmoitukset (valinnainen) · 0–1440 min",
+          "announcement_repeat_minutes": "Ilmoitukset (valinnainen) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "asetukset · lähde",
           "tts_engine": "asetukset · lähde · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Lisäraja-arvot",
-        "description": "Lisäraja-arvot. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Lisäraja-arvot. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Ulkona · AQI (≤)",
           "outdoor_co2": "Ulkona · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "Virheellinen valinta: Ohita sisäilma-anturit.",
       "no_windows_after_exclusions": "Jätä ainakin yksi ikkuna-anturi käyttöön.",
       "review_areas_after_exclusions": "Tarkista: Huoneet · Mittaukset (0).",
-      "invalid_repeat_minutes": "Virheellinen valinta: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Virheellinen valinta: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Ei saatavilla: conversation.process.",
       "invalid_ai_agent": "Virheellinen valinta: conversation.*.",
       "invalid_mold_temperature_sensor": "Huoneet · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · Avaa (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Ilmoitukset (valinnainen) · 0–1440 min"
+        "name": "Ilmoitukset (valinnainen) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "tavoite (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "Ilmoitukset (valinnainen) — Home Environment Manager",
+      "name": "Ilmoitukset (valinnainen) - Home Environment Manager",
       "description": "Ilmoitukset (valinnainen) · Huoneet",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — Oletus",
+        "auto": "Home Assistant - Oletus",
         "en": "asetukset · lähde",
         "de": "asetukset · lähde",
         "el": "asetukset · lähde",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "lähde · Virheellinen",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "tavoite · asetukset"
       }
     }

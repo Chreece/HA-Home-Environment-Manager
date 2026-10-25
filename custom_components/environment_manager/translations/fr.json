@@ -25,7 +25,7 @@
         }
       },
       "indoor_sensors": {
-        "title": "Paramètres des pièces — air et moisissure",
+        "title": "Paramètres des pièces - air et moisissure",
         "description": "Pièce : {area_name} ({position}/{total}). Excluez les capteurs de cette pièce. Pour l’indicateur de moisissure, mesurez maintenant la température du point le plus froid (coin de mur extérieur ou cadre de fenêtre), quand les températures intérieure et extérieure sont stables. Saisissez °C ou laissez vide pour plus tard.\n\n{mold_room_notice}",
         "data": {
           "excluded_indoor_entities": "Capteurs à exclure pour cette pièce",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Seuils avancés",
-        "description": "Ces seuils concernent les valeurs instantanées, pas des normes médicales. Par défaut, l’AQI utilise l’échelle américaine 0–500.",
+        "description": "Ces seuils concernent les valeurs instantanées, pas des normes médicales. Par défaut, l’AQI utilise l’échelle américaine 0-500.",
         "data": {
           "outdoor_aqi": "AQI extérieur maximal",
           "outdoor_co2": "CO₂ extérieur maximal (ppm)",
@@ -102,9 +102,9 @@
           "outdoor_pm10": "PM10 extérieur maximal (µg/m³)",
           "outdoor_voc": "COV extérieur maximal (µg/m³)",
           "outdoor_voc_parts": "COV extérieur maximal (ppb)",
-          "outdoor_no2": "NO₂ extérieur — seuil opérationnel (µg/m³)",
-          "outdoor_o3": "O₃ extérieur — seuil opérationnel (µg/m³)",
-          "outdoor_so2": "SO₂ extérieur — seuil opérationnel (µg/m³)",
+          "outdoor_no2": "NO₂ extérieur - seuil opérationnel (µg/m³)",
+          "outdoor_o3": "O₃ extérieur - seuil opérationnel (µg/m³)",
+          "outdoor_so2": "SO₂ extérieur - seuil opérationnel (µg/m³)",
           "indoor_aqi": "Seuil d'AQI intérieur déclenchant l'aération",
           "indoor_co2": "Seuil de CO₂ intérieur déclenchant l'aération (ppm)",
           "indoor_pm25": "Seuil de PM2,5 intérieur déclenchant l'aération (µg/m³)",
@@ -126,9 +126,9 @@
           "outdoor_pm10": "Seuil de décision pour « PM10 extérieur maximal (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
           "outdoor_voc": "Seuil de décision pour « COV extérieur maximal (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
           "outdoor_voc_parts": "Seuil de décision pour « COV extérieur maximal (ppb) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
-          "outdoor_no2": "Seuil de décision pour « NO₂ extérieur — seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
-          "outdoor_o3": "Seuil de décision pour « O₃ extérieur — seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
-          "outdoor_so2": "Seuil de décision pour « SO₂ extérieur — seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "outdoor_no2": "Seuil de décision pour « NO₂ extérieur - seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "outdoor_o3": "Seuil de décision pour « O₃ extérieur - seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "outdoor_so2": "Seuil de décision pour « SO₂ extérieur - seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
           "indoor_aqi": "Seuil de décision pour « Seuil d'AQI intérieur déclenchant l'aération ». Il influence les conseils, mais ne constitue pas une limite médicale.",
           "indoor_co2": "Seuil de décision pour « Seuil de CO₂ intérieur déclenchant l'aération (ppm) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
           "indoor_pm25": "Seuil de décision pour « Seuil de PM2,5 intérieur déclenchant l'aération (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
@@ -291,7 +291,7 @@
         }
       },
       "indoor_sensors": {
-        "title": "Paramètres des pièces — air et moisissure",
+        "title": "Paramètres des pièces - air et moisissure",
         "description": "Pièce : {area_name} ({position}/{total}). Excluez les capteurs de cette pièce. Pour l’indicateur de moisissure, mesurez maintenant la température du point le plus froid (coin de mur extérieur ou cadre de fenêtre), quand les températures intérieure et extérieure sont stables. Saisissez °C ou laissez vide pour plus tard.\n\n{mold_room_notice}",
         "data": {
           "excluded_indoor_entities": "Capteurs à exclure pour cette pièce",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Seuils avancés",
-        "description": "Ces seuils concernent les valeurs instantanées, pas des normes médicales. Par défaut, l’AQI utilise l’échelle américaine 0–500.",
+        "description": "Ces seuils concernent les valeurs instantanées, pas des normes médicales. Par défaut, l’AQI utilise l’échelle américaine 0-500.",
         "data": {
           "outdoor_aqi": "AQI extérieur maximal",
           "outdoor_co2": "CO₂ extérieur maximal (ppm)",
@@ -368,9 +368,9 @@
           "outdoor_pm10": "PM10 extérieur maximal (µg/m³)",
           "outdoor_voc": "COV extérieur maximal (µg/m³)",
           "outdoor_voc_parts": "COV extérieur maximal (ppb)",
-          "outdoor_no2": "NO₂ extérieur — seuil opérationnel (µg/m³)",
-          "outdoor_o3": "O₃ extérieur — seuil opérationnel (µg/m³)",
-          "outdoor_so2": "SO₂ extérieur — seuil opérationnel (µg/m³)",
+          "outdoor_no2": "NO₂ extérieur - seuil opérationnel (µg/m³)",
+          "outdoor_o3": "O₃ extérieur - seuil opérationnel (µg/m³)",
+          "outdoor_so2": "SO₂ extérieur - seuil opérationnel (µg/m³)",
           "indoor_aqi": "Seuil d'AQI intérieur déclenchant l'aération",
           "indoor_co2": "Seuil de CO₂ intérieur déclenchant l'aération (ppm)",
           "indoor_pm25": "Seuil de PM2,5 intérieur déclenchant l'aération (µg/m³)",
@@ -392,9 +392,9 @@
           "outdoor_pm10": "Seuil de décision pour « PM10 extérieur maximal (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
           "outdoor_voc": "Seuil de décision pour « COV extérieur maximal (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
           "outdoor_voc_parts": "Seuil de décision pour « COV extérieur maximal (ppb) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
-          "outdoor_no2": "Seuil de décision pour « NO₂ extérieur — seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
-          "outdoor_o3": "Seuil de décision pour « O₃ extérieur — seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
-          "outdoor_so2": "Seuil de décision pour « SO₂ extérieur — seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "outdoor_no2": "Seuil de décision pour « NO₂ extérieur - seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "outdoor_o3": "Seuil de décision pour « O₃ extérieur - seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "outdoor_so2": "Seuil de décision pour « SO₂ extérieur - seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
           "indoor_aqi": "Seuil de décision pour « Seuil d'AQI intérieur déclenchant l'aération ». Il influence les conseils, mais ne constitue pas une limite médicale.",
           "indoor_co2": "Seuil de décision pour « Seuil de CO₂ intérieur déclenchant l'aération (ppm) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
           "indoor_pm25": "Seuil de décision pour « Seuil de PM2,5 intérieur déclenchant l'aération (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
@@ -565,7 +565,7 @@
         }
       },
       "environment_room_air": {
-        "title": "Pièce : {area_name} — ventilation et humidité",
+        "title": "Pièce : {area_name} - ventilation et humidité",
         "description": "Facultatif. Renseignez les capteurs réels, le volume et le CADR mesuré. Confirmez un vrai capteur CO₂ NDIR.",
         "data": {
           "temperature_entity": "Température · source",
@@ -589,7 +589,7 @@
         }
       },
       "environment_room_exposure": {
-        "title": "Pièce : {area_name} — capteurs spécialisés",
+        "title": "Pièce : {area_name} - capteurs spécialisés",
         "description": "Capteurs facultatifs de radon, formaldéhyde, bruit et éclairage. Les comparaisons nécessitent des mesures vérifiées.",
         "data": {
           "radon_entity": "RADON · Rn · source",
@@ -617,7 +617,7 @@
         }
       },
       "environment_room_comfort": {
-        "title": "Pièce : {area_name} — confort thermique complet",
+        "title": "Pièce : {area_name} - confort thermique complet",
         "description": "ISO 7730 optionnel : température radiante, vitesse de l'air, activité et vêtements obligatoires.",
         "data": {
           "enable_pmv": "PMV / PPD · Automatique",
@@ -637,7 +637,7 @@
         }
       },
       "pid": {
-        "title": "PID climatique — choisir une pièce",
+        "title": "PID climatique - choisir une pièce",
         "description": "Facultatif et désactivé par défaut. Choisir une seule pièce et ses propres appareils.",
         "data": {
           "pid_area": "Pièce à configurer"
@@ -647,7 +647,7 @@
         }
       },
       "pid_room": {
-        "title": "PID climatique dans {area_name} — appareils et température",
+        "title": "PID climatique dans {area_name} - appareils et température",
         "description": "Activer seulement avec un vrai capteur de température et des appareils autorisés. Le mode chauffage/refroidissement doit déjà être actif. Une fenêtre ouverte ou inconnue suspend les commandes. Aucun changement de mode HVAC.",
         "data": {
           "pid_enabled": "Activer le PID climatique",
@@ -667,7 +667,7 @@
         }
       },
       "pid_tuning": {
-        "title": "PID climatique dans {area_name} — réglages avancés et sécurité",
+        "title": "PID climatique dans {area_name} - réglages avancés et sécurité",
         "description": "Kp en %/°C, Ki en %/(°C·min) et Kd en %·min/°C. La consigne reste limitée. Les changements manuels suspendent le PID jusqu'à la reprise explicite.",
         "data": {
           "pid_kp": "PID Kp · contrôle (% per °C)",
@@ -693,8 +693,8 @@
         }
       },
       "climate": {
-        "title": "Climat — choisir une pièce",
-        "description": "Configurez « Climat — choisir une pièce » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
+        "title": "Climat - choisir une pièce",
+        "description": "Configurez « Climat - choisir une pièce » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
         "data": {
           "climate_area": "Appareils"
         },
@@ -703,7 +703,7 @@
         }
       },
       "climate_room": {
-        "title": "Climat — régulation, présence et absence",
+        "title": "Climat - régulation, présence et absence",
         "description": "Zone · paramètres · Appareils · contrôle. Présence · capteur · Obligatoire.",
         "data": {
           "climate_enabled": "Appareils · Automatique · AUTO",
@@ -855,7 +855,7 @@
         }
       },
       "climate_profiles": {
-        "title": "Climat — plages de température par mode",
+        "title": "Climat - plages de température par mode",
         "description": "Zone · paramètres · Appareils · contrôle. Présence · capteur · Obligatoire.",
         "data": {
           "home_heat": "Chauffage · Maison (°C)",
@@ -931,7 +931,7 @@
         "description": "Zone · paramètres: Choisir source, capteur / Appareils · contrôle.",
         "menu_options": {
           "areas": "Pièces",
-          "indoor_sensors": "Paramètres des pièces — air et moisissure",
+          "indoor_sensors": "Paramètres des pièces - air et moisissure",
           "window_sensors": "Exclure des capteurs de fenêtre",
           "environment_room": "Choisir une pièce pour l'analyse environnementale",
           "area_devices": "Appareils climatiques"
@@ -1286,13 +1286,13 @@
         "name": "COV extérieur maximal (ppb)"
       },
       "global_threshold_outdoor_no2": {
-        "name": "NO₂ extérieur — seuil opérationnel (µg/m³)"
+        "name": "NO₂ extérieur - seuil opérationnel (µg/m³)"
       },
       "global_threshold_outdoor_o3": {
-        "name": "O₃ extérieur — seuil opérationnel (µg/m³)"
+        "name": "O₃ extérieur - seuil opérationnel (µg/m³)"
       },
       "global_threshold_outdoor_so2": {
-        "name": "SO₂ extérieur — seuil opérationnel (µg/m³)"
+        "name": "SO₂ extérieur - seuil opérationnel (µg/m³)"
       },
       "global_threshold_indoor_aqi": {
         "name": "Seuil d'AQI intérieur déclenchant l'aération"
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "source · Invalide",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "consigne · paramètres"
       }
     }

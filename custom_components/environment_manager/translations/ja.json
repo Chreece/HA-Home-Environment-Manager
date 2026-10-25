@@ -71,7 +71,7 @@
           "language": "言語",
           "automatic_tts": "自動",
           "automatic_notifications": "自動 · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "通知（任意） · 0–1440 min",
+          "announcement_repeat_minutes": "通知（任意） · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "設定 · 情報源",
           "tts_engine": "設定 · 情報源 · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "詳細なしきい値",
-        "description": "詳細なしきい値. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "詳細なしきい値. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "屋外 · AQI (≤)",
           "outdoor_co2": "屋外 · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "無効な選択: 室内空気センサーを除外.",
       "no_windows_after_exclusions": "窓センサーを少なくとも一つ残してください.",
       "review_areas_after_exclusions": "確認してください: 部屋 · 測定値 (0).",
-      "invalid_repeat_minutes": "無効な選択: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "無効な選択: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "利用できません: conversation.process.",
       "invalid_ai_agent": "無効な選択: conversation.*.",
       "invalid_mold_temperature_sensor": "部屋 · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "無効: 部屋 · 情報源"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — 設定済みです.",
+      "already_configured": "Home Environment Manager - 設定済みです.",
       "setup_area_removed": "無効: 監視する部屋",
       "setup_changed": "設定 ↻ 監視する部屋"
     }
@@ -337,7 +337,7 @@
           "language": "言語",
           "automatic_tts": "自動",
           "automatic_notifications": "自動 · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "通知（任意） · 0–1440 min",
+          "announcement_repeat_minutes": "通知（任意） · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "設定 · 情報源",
           "tts_engine": "設定 · 情報源 · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "詳細なしきい値",
-        "description": "詳細なしきい値. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "詳細なしきい値. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "屋外 · AQI (≤)",
           "outdoor_co2": "屋外 · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "無効な選択: 室内空気センサーを除外.",
       "no_windows_after_exclusions": "窓センサーを少なくとも一つ残してください.",
       "review_areas_after_exclusions": "確認してください: 部屋 · 測定値 (0).",
-      "invalid_repeat_minutes": "無効な選択: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "無効な選択: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "利用できません: conversation.process.",
       "invalid_ai_agent": "無効な選択: conversation.*.",
       "invalid_mold_temperature_sensor": "部屋 · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · 開ける (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "通知（任意） · 0–1440 min"
+        "name": "通知（任意） · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "目標 (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "通知（任意） — Home Environment Manager",
+      "name": "通知（任意） - Home Environment Manager",
       "description": "通知（任意） · 部屋",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — 既定",
+        "auto": "Home Assistant - 既定",
         "en": "設定 · 情報源",
         "de": "設定 · 情報源",
         "el": "設定 · 情報源",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "情報源 · 無効",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "目標 · 設定"
       }
     }

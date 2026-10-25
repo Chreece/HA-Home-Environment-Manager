@@ -279,7 +279,7 @@ class CompactOptionsMixin:
                  in ("occupancy", "presence"))],
             key=lambda x: x["label"].casefold(),
         )
-        source_options=[{"value":"none","label":"—"},
+        source_options=[{"value":"none","label":"-"},
                         *self._room_source_options(self.hass)]
         source_ids={v["value"] for v in source_options if v["value"]!="none"}
         errors = {}
@@ -479,7 +479,7 @@ class CompactOptionsMixin:
             fields[_field("outside_aqi_no_sources", False)] = selector.BooleanSelector()
         return self.async_show_form(
             step_id="outside_aqi", data_schema=probatio.Schema(fields),
-            errors=errors, description_placeholders={"aqi_entities":", ".join(aqis) or "—"}
+            errors=errors, description_placeholders={"aqi_entities":", ".join(aqis) or "-"}
         )
 
     def _device_areas(self):
@@ -971,9 +971,9 @@ class CompactOptionsMixin:
             fields[_field("device_fan_purpose",old.get("fan_purpose","extraction"))]=_select(
                 ["extraction","filtration"],translation_key="device_fan_purpose")
             fields[_field("device_co2_entity",old.get("co2_entity"))]=_select(
-                [{"value":"none","label":"—"}]+eligible_sensor("co2"))
+                [{"value":"none","label":"-"}]+eligible_sensor("co2"))
             fields[_field("device_pm25_entity",old.get("pm25_entity"))]=_select(
-                [{"value":"none","label":"—"}]+eligible_sensor("pm25"))
+                [{"value":"none","label":"-"}]+eligible_sensor("pm25"))
             fields[_field("device_sensor_verified",old.get("sensor_verified",False))]=selector.BooleanSelector()
         if domain in ("fan", "humidifier", "climate"):
             permitted = ({

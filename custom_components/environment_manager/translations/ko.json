@@ -71,7 +71,7 @@
           "language": "언어",
           "automatic_tts": "자동",
           "automatic_notifications": "자동 · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "알림(선택 사항) · 0–1440 min",
+          "announcement_repeat_minutes": "알림(선택 사항) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "설정 · 정보원",
           "tts_engine": "설정 · 정보원 · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "고급 임계값",
-        "description": "고급 임계값. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "고급 임계값. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "실외 · AQI (≤)",
           "outdoor_co2": "실외 · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "잘못된 선택: 실내 공기 센서 제외.",
       "no_windows_after_exclusions": "창문 센서를 하나 이상 유지하세요.",
       "review_areas_after_exclusions": "확인하세요: 방 · 측정값 (0).",
-      "invalid_repeat_minutes": "잘못된 선택: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "잘못된 선택: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "사용할 수 없음: conversation.process.",
       "invalid_ai_agent": "잘못된 선택: conversation.*.",
       "invalid_mold_temperature_sensor": "방 · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "잘못됨: 방 · 정보원"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — 이미 설정됨.",
+      "already_configured": "Home Environment Manager - 이미 설정됨.",
       "setup_area_removed": "잘못됨: 모니터링할 방",
       "setup_changed": "설정 ↻ 모니터링할 방"
     }
@@ -337,7 +337,7 @@
           "language": "언어",
           "automatic_tts": "자동",
           "automatic_notifications": "자동 · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "알림(선택 사항) · 0–1440 min",
+          "announcement_repeat_minutes": "알림(선택 사항) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "설정 · 정보원",
           "tts_engine": "설정 · 정보원 · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "고급 임계값",
-        "description": "고급 임계값. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "고급 임계값. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "실외 · AQI (≤)",
           "outdoor_co2": "실외 · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "잘못된 선택: 실내 공기 센서 제외.",
       "no_windows_after_exclusions": "창문 센서를 하나 이상 유지하세요.",
       "review_areas_after_exclusions": "확인하세요: 방 · 측정값 (0).",
-      "invalid_repeat_minutes": "잘못된 선택: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "잘못된 선택: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "사용할 수 없음: conversation.process.",
       "invalid_ai_agent": "잘못된 선택: conversation.*.",
       "invalid_mold_temperature_sensor": "방 · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · 열기 (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "알림(선택 사항) · 0–1440 min"
+        "name": "알림(선택 사항) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "목표 (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "알림(선택 사항) — Home Environment Manager",
+      "name": "알림(선택 사항) - Home Environment Manager",
       "description": "알림(선택 사항) · 방",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — 기본값",
+        "auto": "Home Assistant - 기본값",
         "en": "설정 · 정보원",
         "de": "설정 · 정보원",
         "el": "설정 · 정보원",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "정보원 · 잘못됨",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "목표 · 설정"
       }
     }

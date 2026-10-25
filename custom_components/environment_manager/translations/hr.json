@@ -71,7 +71,7 @@
           "language": "Jezik",
           "automatic_tts": "Automatsko",
           "automatic_notifications": "Automatsko · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Obavijesti (neobavezno) · 0–1440 min",
+          "announcement_repeat_minutes": "Obavijesti (neobavezno) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "postavke · izvor",
           "tts_engine": "postavke · izvor · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Napredni pragovi",
-        "description": "Napredni pragovi. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Napredni pragovi. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Vani · AQI (≤)",
           "outdoor_co2": "Vani · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "Nevažeći odabir: Isključi senzore zraka u zatvorenom.",
       "no_windows_after_exclusions": "Ostavite barem jedan senzor prozora.",
       "review_areas_after_exclusions": "Provjerite: Prostorije · Mjerenja (0).",
-      "invalid_repeat_minutes": "Nevažeći odabir: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Nevažeći odabir: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Nedostupno: conversation.process.",
       "invalid_ai_agent": "Nevažeći odabir: conversation.*.",
       "invalid_mold_temperature_sensor": "Prostorije · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "Neispravno: Soba · izvor"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — već postavljeno.",
+      "already_configured": "Home Environment Manager - već postavljeno.",
       "setup_area_removed": "Neispravno: Sobe za praćenje",
       "setup_changed": "postavke ↻ Sobe za praćenje"
     }
@@ -337,7 +337,7 @@
           "language": "Jezik",
           "automatic_tts": "Automatsko",
           "automatic_notifications": "Automatsko · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Obavijesti (neobavezno) · 0–1440 min",
+          "announcement_repeat_minutes": "Obavijesti (neobavezno) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "postavke · izvor",
           "tts_engine": "postavke · izvor · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Napredni pragovi",
-        "description": "Napredni pragovi. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Napredni pragovi. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Vani · AQI (≤)",
           "outdoor_co2": "Vani · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "Nevažeći odabir: Isključi senzore zraka u zatvorenom.",
       "no_windows_after_exclusions": "Ostavite barem jedan senzor prozora.",
       "review_areas_after_exclusions": "Provjerite: Prostorije · Mjerenja (0).",
-      "invalid_repeat_minutes": "Nevažeći odabir: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Nevažeći odabir: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Nedostupno: conversation.process.",
       "invalid_ai_agent": "Nevažeći odabir: conversation.*.",
       "invalid_mold_temperature_sensor": "Prostorije · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · Otvorite (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Obavijesti (neobavezno) · 0–1440 min"
+        "name": "Obavijesti (neobavezno) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "cilj (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "Obavijesti (neobavezno) — Home Environment Manager",
+      "name": "Obavijesti (neobavezno) - Home Environment Manager",
       "description": "Obavijesti (neobavezno) · Prostorije",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — Zadano",
+        "auto": "Home Assistant - Zadano",
         "en": "postavke · izvor",
         "de": "postavke · izvor",
         "el": "postavke · izvor",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "izvor · Neispravno",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "cilj · postavke"
       }
     }

@@ -71,7 +71,7 @@
           "language": "زبان",
           "automatic_tts": "خودکار",
           "automatic_notifications": "خودکار · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "اعلانات (اختیاری) · 0–1440 min",
+          "announcement_repeat_minutes": "اعلانات (اختیاری) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "ترتیبات · ماخذ",
           "tts_engine": "ترتیبات · ماخذ · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "اعلیٰ حدود",
-        "description": "اعلیٰ حدود. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "اعلیٰ حدود. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "باہر · AQI (≤)",
           "outdoor_co2": "باہر · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "غلط انتخاب: اندرونی ہوا کے سینسر خارج کریں.",
       "no_windows_after_exclusions": "کم از کم ایک کھڑکی کا سینسر فعال رکھیں.",
       "review_areas_after_exclusions": "چیک کریں: کمرے · پیمائشیں (0).",
-      "invalid_repeat_minutes": "غلط انتخاب: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "غلط انتخاب: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "دستیاب نہیں: conversation.process.",
       "invalid_ai_agent": "غلط انتخاب: conversation.*.",
       "invalid_mold_temperature_sensor": "کمرے · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "غلط: کمرہ · ماخذ"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — پہلے سے ترتیب دیا گیا.",
+      "already_configured": "Home Environment Manager - پہلے سے ترتیب دیا گیا.",
       "setup_area_removed": "غلط: نگرانی کے کمرے",
       "setup_changed": "ترتیبات ↻ نگرانی کے کمرے"
     }
@@ -337,7 +337,7 @@
           "language": "زبان",
           "automatic_tts": "خودکار",
           "automatic_notifications": "خودکار · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "اعلانات (اختیاری) · 0–1440 min",
+          "announcement_repeat_minutes": "اعلانات (اختیاری) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "ترتیبات · ماخذ",
           "tts_engine": "ترتیبات · ماخذ · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "اعلیٰ حدود",
-        "description": "اعلیٰ حدود. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "اعلیٰ حدود. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "باہر · AQI (≤)",
           "outdoor_co2": "باہر · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "غلط انتخاب: اندرونی ہوا کے سینسر خارج کریں.",
       "no_windows_after_exclusions": "کم از کم ایک کھڑکی کا سینسر فعال رکھیں.",
       "review_areas_after_exclusions": "چیک کریں: کمرے · پیمائشیں (0).",
-      "invalid_repeat_minutes": "غلط انتخاب: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "غلط انتخاب: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "دستیاب نہیں: conversation.process.",
       "invalid_ai_agent": "غلط انتخاب: conversation.*.",
       "invalid_mold_temperature_sensor": "کمرے · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · کھولیں (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "اعلانات (اختیاری) · 0–1440 min"
+        "name": "اعلانات (اختیاری) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "ہدف (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "اعلانات (اختیاری) — Home Environment Manager",
+      "name": "اعلانات (اختیاری) - Home Environment Manager",
       "description": "اعلانات (اختیاری) · کمرے",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — پہلے سے طے شدہ",
+        "auto": "Home Assistant - پہلے سے طے شدہ",
         "en": "ترتیبات · ماخذ",
         "de": "ترتیبات · ماخذ",
         "el": "ترتیبات · ماخذ",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "ماخذ · غلط",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "ہدف · ترتیبات"
       }
     }

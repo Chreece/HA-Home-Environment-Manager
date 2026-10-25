@@ -288,7 +288,7 @@ def apply_compact_i18n(root: Path) -> None:
         }}
         selectors["outside_aqi_scale"]={"options":{
             "not_configured":f"{vocab['source']} · {vocab['invalid']}",
-            "us_epa":"US EPA AQI (0–500)","eea_category":"EEA AQI (1–6)",
+            "us_epa":"US EPA AQI (0-500)","eea_category":"EEA AQI (1-6)",
             "custom":f"{vocab['target']} · {vocab['settings']}",
         }}
         # Explain actual source/attribute semantics, not a generic selector

@@ -71,7 +71,7 @@
           "language": "Ngôn ngữ",
           "automatic_tts": "Tự động",
           "automatic_notifications": "Tự động · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Thông báo (tùy chọn) · 0–1440 min",
+          "announcement_repeat_minutes": "Thông báo (tùy chọn) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "cài đặt · nguồn",
           "tts_engine": "cài đặt · nguồn · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Ngưỡng nâng cao",
-        "description": "Ngưỡng nâng cao. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Ngưỡng nâng cao. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Ngoài trời · AQI (≤)",
           "outdoor_co2": "Ngoài trời · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "Lựa chọn không hợp lệ: Loại trừ cảm biến không khí trong nhà.",
       "no_windows_after_exclusions": "Giữ ít nhất một cảm biến cửa sổ.",
       "review_areas_after_exclusions": "Kiểm tra: Phòng · Đo lường (0).",
-      "invalid_repeat_minutes": "Lựa chọn không hợp lệ: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Lựa chọn không hợp lệ: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Không khả dụng: conversation.process.",
       "invalid_ai_agent": "Lựa chọn không hợp lệ: conversation.*.",
       "invalid_mold_temperature_sensor": "Phòng · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "Không hợp lệ: Phòng · nguồn"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — đã được cấu hình.",
+      "already_configured": "Home Environment Manager - đã được cấu hình.",
       "setup_area_removed": "Không hợp lệ: Phòng cần giám sát",
       "setup_changed": "cài đặt ↻ Phòng cần giám sát"
     }
@@ -337,7 +337,7 @@
           "language": "Ngôn ngữ",
           "automatic_tts": "Tự động",
           "automatic_notifications": "Tự động · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Thông báo (tùy chọn) · 0–1440 min",
+          "announcement_repeat_minutes": "Thông báo (tùy chọn) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "cài đặt · nguồn",
           "tts_engine": "cài đặt · nguồn · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Ngưỡng nâng cao",
-        "description": "Ngưỡng nâng cao. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Ngưỡng nâng cao. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Ngoài trời · AQI (≤)",
           "outdoor_co2": "Ngoài trời · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "Lựa chọn không hợp lệ: Loại trừ cảm biến không khí trong nhà.",
       "no_windows_after_exclusions": "Giữ ít nhất một cảm biến cửa sổ.",
       "review_areas_after_exclusions": "Kiểm tra: Phòng · Đo lường (0).",
-      "invalid_repeat_minutes": "Lựa chọn không hợp lệ: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Lựa chọn không hợp lệ: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Không khả dụng: conversation.process.",
       "invalid_ai_agent": "Lựa chọn không hợp lệ: conversation.*.",
       "invalid_mold_temperature_sensor": "Phòng · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · Mở (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Thông báo (tùy chọn) · 0–1440 min"
+        "name": "Thông báo (tùy chọn) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "mục tiêu (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "Thông báo (tùy chọn) — Home Environment Manager",
+      "name": "Thông báo (tùy chọn) - Home Environment Manager",
       "description": "Thông báo (tùy chọn) · Phòng",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — Mặc định",
+        "auto": "Home Assistant - Mặc định",
         "en": "cài đặt · nguồn",
         "de": "cài đặt · nguồn",
         "el": "cài đặt · nguồn",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "nguồn · Không hợp lệ",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "mục tiêu · cài đặt"
       }
     }

@@ -71,7 +71,7 @@
           "language": "भाषा",
           "automatic_tts": "स्वचालित",
           "automatic_notifications": "स्वचालित · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "घोषणाएँ (वैकल्पिक) · 0–1440 min",
+          "announcement_repeat_minutes": "घोषणाएँ (वैकल्पिक) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "सेटिंग · स्रोत",
           "tts_engine": "सेटिंग · स्रोत · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "उन्नत सीमाएँ",
-        "description": "उन्नत सीमाएँ. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "उन्नत सीमाएँ. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "बाहर · AQI (≤)",
           "outdoor_co2": "बाहर · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "अमान्य चयन: इनडोर वायु सेंसर बाहर रखें.",
       "no_windows_after_exclusions": "कम से कम एक खिड़की सेंसर सक्रिय रखें.",
       "review_areas_after_exclusions": "जाँचें: कमरे · माप (0).",
-      "invalid_repeat_minutes": "अमान्य चयन: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "अमान्य चयन: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "उपलब्ध नहीं: conversation.process.",
       "invalid_ai_agent": "अमान्य चयन: conversation.*.",
       "invalid_mold_temperature_sensor": "कमरे · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "अमान्य: कमरा · स्रोत"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — पहले से कॉन्फ़िगर है.",
+      "already_configured": "Home Environment Manager - पहले से कॉन्फ़िगर है.",
       "setup_area_removed": "अमान्य: निगरानी के कमरे",
       "setup_changed": "सेटिंग ↻ निगरानी के कमरे"
     }
@@ -337,7 +337,7 @@
           "language": "भाषा",
           "automatic_tts": "स्वचालित",
           "automatic_notifications": "स्वचालित · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "घोषणाएँ (वैकल्पिक) · 0–1440 min",
+          "announcement_repeat_minutes": "घोषणाएँ (वैकल्पिक) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "सेटिंग · स्रोत",
           "tts_engine": "सेटिंग · स्रोत · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "उन्नत सीमाएँ",
-        "description": "उन्नत सीमाएँ. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "उन्नत सीमाएँ. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "बाहर · AQI (≤)",
           "outdoor_co2": "बाहर · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "अमान्य चयन: इनडोर वायु सेंसर बाहर रखें.",
       "no_windows_after_exclusions": "कम से कम एक खिड़की सेंसर सक्रिय रखें.",
       "review_areas_after_exclusions": "जाँचें: कमरे · माप (0).",
-      "invalid_repeat_minutes": "अमान्य चयन: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "अमान्य चयन: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "उपलब्ध नहीं: conversation.process.",
       "invalid_ai_agent": "अमान्य चयन: conversation.*.",
       "invalid_mold_temperature_sensor": "कमरे · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · खोलें (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "घोषणाएँ (वैकल्पिक) · 0–1440 min"
+        "name": "घोषणाएँ (वैकल्पिक) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "लक्ष्य (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "घोषणाएँ (वैकल्पिक) — Home Environment Manager",
+      "name": "घोषणाएँ (वैकल्पिक) - Home Environment Manager",
       "description": "घोषणाएँ (वैकल्पिक) · कमरे",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — डिफ़ॉल्ट",
+        "auto": "Home Assistant - डिफ़ॉल्ट",
         "en": "सेटिंग · स्रोत",
         "de": "सेटिंग · स्रोत",
         "el": "सेटिंग · स्रोत",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "स्रोत · अमान्य",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "लक्ष्य · सेटिंग"
       }
     }

@@ -71,7 +71,7 @@
           "language": "Bahasa",
           "automatic_tts": "Otomatis",
           "automatic_notifications": "Otomatis · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Pengumuman (opsional) · 0–1440 min",
+          "announcement_repeat_minutes": "Pengumuman (opsional) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "pengaturan · sumber",
           "tts_engine": "pengaturan · sumber · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Ambang batas lanjutan",
-        "description": "Ambang batas lanjutan. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Ambang batas lanjutan. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Di luar · AQI (≤)",
           "outdoor_co2": "Di luar · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "Pilihan tidak valid: Kecualikan sensor udara dalam ruangan.",
       "no_windows_after_exclusions": "Sisakan setidaknya satu sensor jendela.",
       "review_areas_after_exclusions": "Periksa: Ruangan · Pengukuran (0).",
-      "invalid_repeat_minutes": "Pilihan tidak valid: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Pilihan tidak valid: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Tidak tersedia: conversation.process.",
       "invalid_ai_agent": "Pilihan tidak valid: conversation.*.",
       "invalid_mold_temperature_sensor": "Ruangan · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "Tidak valid: Ruangan · sumber"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — sudah dikonfigurasi.",
+      "already_configured": "Home Environment Manager - sudah dikonfigurasi.",
       "setup_area_removed": "Tidak valid: Ruangan untuk dipantau",
       "setup_changed": "pengaturan ↻ Ruangan untuk dipantau"
     }
@@ -337,7 +337,7 @@
           "language": "Bahasa",
           "automatic_tts": "Otomatis",
           "automatic_notifications": "Otomatis · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Pengumuman (opsional) · 0–1440 min",
+          "announcement_repeat_minutes": "Pengumuman (opsional) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "pengaturan · sumber",
           "tts_engine": "pengaturan · sumber · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Ambang batas lanjutan",
-        "description": "Ambang batas lanjutan. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Ambang batas lanjutan. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Di luar · AQI (≤)",
           "outdoor_co2": "Di luar · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "Pilihan tidak valid: Kecualikan sensor udara dalam ruangan.",
       "no_windows_after_exclusions": "Sisakan setidaknya satu sensor jendela.",
       "review_areas_after_exclusions": "Periksa: Ruangan · Pengukuran (0).",
-      "invalid_repeat_minutes": "Pilihan tidak valid: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Pilihan tidak valid: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Tidak tersedia: conversation.process.",
       "invalid_ai_agent": "Pilihan tidak valid: conversation.*.",
       "invalid_mold_temperature_sensor": "Ruangan · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · Buka (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Pengumuman (opsional) · 0–1440 min"
+        "name": "Pengumuman (opsional) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "target (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "Pengumuman (opsional) — Home Environment Manager",
+      "name": "Pengumuman (opsional) - Home Environment Manager",
       "description": "Pengumuman (opsional) · Ruangan",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — Bawaan",
+        "auto": "Home Assistant - Bawaan",
         "en": "pengaturan · sumber",
         "de": "pengaturan · sumber",
         "el": "pengaturan · sumber",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "sumber · Tidak valid",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "target · pengaturan"
       }
     }

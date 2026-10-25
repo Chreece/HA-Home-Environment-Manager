@@ -128,8 +128,8 @@
     "el": "Όρισε την τιμή δείκτη από την οποία ο πάροχος θεωρεί τη γύρη υψηλή. Χρησιμοποίησε την κλίμακά του, όχι ένα καθολικό όριο αλλεργίας."
   },
   "pollen.pollen_max_scale": {
-    "en": "Maximum value on the pollen provider's numerical scale, e.g. 5 for 0–5. Used to interpret relative severity without assuming a country.",
-    "el": "Μέγιστη τιμή της αριθμητικής κλίμακας παρόχου, π.χ. 5 για 0–5. Χρησιμεύει στην ερμηνεία χωρίς υπόθεση χώρας."
+    "en": "Maximum value on the pollen provider's numerical scale, e.g. 5 for 0-5. Used to interpret relative severity without assuming a country.",
+    "el": "Μέγιστη τιμή της αριθμητικής κλίμακας παρόχου, π.χ. 5 για 0-5. Χρησιμεύει στην ερμηνεία χωρίς υπόθεση χώρας."
   },
   "pollen.pollen_avoid_ventilation": {
     "en": "When enabled, reliable high-pollen evidence blocks advice to open windows. Turn on only when avoiding pollen is relevant to occupants.",
@@ -140,8 +140,8 @@
     "el": "Διάλεξε έναν πραγματικό εξωτερικό αισθητήρα AQI για να δηλώσεις την κλίμακα του παρόχου. Οι αισθητήρες συγκεντρώσεων χρησιμοποιούν άλλες μονάδες."
   },
   "outside_aqi.outside_aqi_scale": {
-    "en": "Choose US EPA (0–500), EEA categories or custom only if this exactly matches the selected AQI provider. Unknown scales cannot certify safe outside air.",
-    "el": "Διάλεξε US EPA (0–500), κατηγορίες EEA ή προσαρμοσμένη κλίμακα μόνο όταν ταιριάζει με τον πάροχο. Άγνωστη κλίμακα δεν σημαίνει ασφαλές έξω."
+    "en": "Choose US EPA (0-500), EEA categories or custom only if this exactly matches the selected AQI provider. Unknown scales cannot certify safe outside air.",
+    "el": "Διάλεξε US EPA (0-500), κατηγορίες EEA ή προσαρμοσμένη κλίμακα μόνο όταν ταιριάζει με τον πάροχο. Άγνωστη κλίμακα δεν σημαίνει ασφαλές έξω."
   },
   "outside_aqi.outside_aqi_limit": {
     "en": "Operational unsafe AQI threshold only for a custom-scale provider. Do not use a US AQI value for a European category scale.",

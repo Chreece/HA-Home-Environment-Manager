@@ -71,7 +71,7 @@
           "language": "Jazyk",
           "automatic_tts": "Automatické",
           "automatic_notifications": "Automatické · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Oznámení (volitelně) · 0–1440 min",
+          "announcement_repeat_minutes": "Oznámení (volitelně) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "nastavení · zdroj",
           "tts_engine": "nastavení · zdroj · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Pokročilé limity",
-        "description": "Pokročilé limity. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Pokročilé limity. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Venku · AQI (≤)",
           "outdoor_co2": "Venku · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "Neplatný výběr: Vyloučit senzory vzduchu uvnitř.",
       "no_windows_after_exclusions": "Ponechte alespoň jeden okenní senzor.",
       "review_areas_after_exclusions": "Zkontrolujte: Místnosti · Měření (0).",
-      "invalid_repeat_minutes": "Neplatný výběr: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Neplatný výběr: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Nedostupné: conversation.process.",
       "invalid_ai_agent": "Neplatný výběr: conversation.*.",
       "invalid_mold_temperature_sensor": "Místnosti · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "Neplatné: Místnost · zdroj"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — již nastaveno.",
+      "already_configured": "Home Environment Manager - již nastaveno.",
       "setup_area_removed": "Neplatné: Sledované místnosti",
       "setup_changed": "nastavení ↻ Sledované místnosti"
     }
@@ -337,7 +337,7 @@
           "language": "Jazyk",
           "automatic_tts": "Automatické",
           "automatic_notifications": "Automatické · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Oznámení (volitelně) · 0–1440 min",
+          "announcement_repeat_minutes": "Oznámení (volitelně) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "nastavení · zdroj",
           "tts_engine": "nastavení · zdroj · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Pokročilé limity",
-        "description": "Pokročilé limity. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Pokročilé limity. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Venku · AQI (≤)",
           "outdoor_co2": "Venku · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "Neplatný výběr: Vyloučit senzory vzduchu uvnitř.",
       "no_windows_after_exclusions": "Ponechte alespoň jeden okenní senzor.",
       "review_areas_after_exclusions": "Zkontrolujte: Místnosti · Měření (0).",
-      "invalid_repeat_minutes": "Neplatný výběr: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Neplatný výběr: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Nedostupné: conversation.process.",
       "invalid_ai_agent": "Neplatný výběr: conversation.*.",
       "invalid_mold_temperature_sensor": "Místnosti · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · Otevřete (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Oznámení (volitelně) · 0–1440 min"
+        "name": "Oznámení (volitelně) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "cíl (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "Oznámení (volitelně) — Home Environment Manager",
+      "name": "Oznámení (volitelně) - Home Environment Manager",
       "description": "Oznámení (volitelně) · Místnosti",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — Výchozí",
+        "auto": "Home Assistant - Výchozí",
         "en": "nastavení · zdroj",
         "de": "nastavení · zdroj",
         "el": "nastavení · zdroj",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "zdroj · Neplatné",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "cíl · nastavení"
       }
     }

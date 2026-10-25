@@ -19,7 +19,7 @@ FIVE = {
     "en": {
         "enable": "Use mold indication instead of raw room RH",
         "enable_help": "When enabled, humidity recommendations use the estimated relative humidity at each room's coldest surface instead of raw RH. Calibrate each room under the Room settings menu; an uncalibrated room remains unknown rather than safe.",
-        "room_title": "Room settings — indoor air and mold",
+        "room_title": "Room settings - indoor air and mold",
         "room_desc": "Room: {area_name} ({position}/{total}). Exclude indoor air sensors here. For mold indication, measure the temperature of the coldest surface (for example an exterior corner or window frame) with a thermometer while room and outdoor temperatures are stable. Enter the surface temperature in °C below. Leave it empty to calibrate later.",
         "sensor": "Room temperature sensor for mold calibration",
         "sensor_help": "Choose the ambient room temperature sensor (°C/°F). Only supported temperature sensors assigned to this room are offered. The reading is captured together with the outdoor weather temperature when you save a new calibration.",
@@ -39,7 +39,7 @@ FIVE = {
     "de": {
         "enable": "Schimmelindikator statt relativer Raumluftfeuchte verwenden",
         "enable_help": "Die Lüftungsempfehlung berücksichtigt die geschätzte relative Feuchte an der kältesten Oberfläche statt der normalen Raumluftfeuchte. Pro Raum kalibrieren; ohne Kalibrierung wird der Wert als unbekannt angezeigt.",
-        "room_title": "Raumeinstellungen – Innenluft und Schimmel",
+        "room_title": "Raumeinstellungen - Innenluft und Schimmel",
         "room_desc": "Raum: {area_name} ({position}/{total}). Hier Luftsensoren ausschließen. Für die Schimmelanzeige die kälteste Oberfläche (z. B. Außenwandecke oder Fensterrahmen) jetzt mit einem Thermometer messen, während Raum- und Außentemperatur stabil sind. Temperatur unten in °C eingeben; leer lassen, um später zu kalibrieren.",
         "sensor": "Raumtemperatursensor für die Schimmelkalibrierung",
         "sensor_help": "Temperatursensor (°C/°F) aus diesem Raum wählen. Beim Kalibrieren werden aktuelle Raum- und Außentemperatur gleichzeitig übernommen.",
@@ -59,12 +59,12 @@ FIVE = {
     "el": {
         "enable": "Χρήση ένδειξης μούχλας αντί της σχετικής υγρασίας",
         "enable_help": "Οι συστάσεις αερισμού βασίζονται στην εκτιμώμενη υγρασία της πιο κρύας επιφάνειας και όχι μόνο στο RH του δωματίου. Κάθε χώρος χρειάζεται βαθμονόμηση· αλλιώς η ένδειξη παραμένει άγνωστη.",
-        "room_title": "Ρυθμίσεις δωματίων — αέρας και μούχλα",
+        "room_title": "Ρυθμίσεις δωματίων - αέρας και μούχλα",
         "room_desc": "Χώρος: {area_name} ({position}/{total}). Επίλεξε αισθητήρες προς εξαίρεση. Για την ένδειξη μούχλας, μέτρησε με θερμόμετρο την πιο κρύα επιφάνεια (γωνία εξωτερικού τοίχου ή πλαίσιο παραθύρου), ενώ οι θερμοκρασίες μέσα και έξω είναι σταθερές. Καταχώρισε °C ή άφησε κενό για αργότερα.",
         "sensor": "Αισθητήρας θερμοκρασίας χώρου για βαθμονόμηση",
         "sensor_help": "Επίλεξε αισθητήρα θερμοκρασίας του δωματίου (°C/°F). Κατά τη νέα βαθμονόμηση καταγράφονται ταυτόχρονα η εσωτερική και η εξωτερική θερμοκρασία.",
         "critical": "Μετρημένη θερμοκρασία πιο κρύας επιφάνειας (°C)",
-        "critical_help": "Μέτρησε τώρα την πιο κρύα γωνία ή το πλαίσιο παραθύρου μαζί με την εσωτερική και εξωτερική θερμοκρασία. Χρειάζεται διαφορά τουλάχιστον 3°C μέσα–έξω. Η μέτρηση δημιουργεί συντελεστή βαθμονόμησης, όχι σταθερή θερμοκρασία επιφάνειας. Κενό για κατάργηση.",
+        "critical_help": "Μέτρησε τώρα την πιο κρύα γωνία ή το πλαίσιο παραθύρου μαζί με την εσωτερική και εξωτερική θερμοκρασία. Χρειάζεται διαφορά τουλάχιστον 3°C μέσα-έξω. Η μέτρηση δημιουργεί συντελεστή βαθμονόμησης, όχι σταθερή θερμοκρασία επιφάνειας. Κενό για κατάργηση.",
         "recal": "Επαναβαθμονόμηση με τις τρέχουσες θερμοκρασίες",
         "recal_help": "Ενεργοποίησέ το μόνο αν μέτρησες ξανά την πιο κρύα επιφάνεια. Η αλλαγή εξαιρέσεων αισθητήρων δεν πρέπει να αλλάζει την παλιά βαθμονόμηση.",
         "threshold": "Όριο ένδειξης μούχλας για αερισμό (εκτιμώμενη υγρασία επιφάνειας, %)",
@@ -73,13 +73,13 @@ FIVE = {
             "missing_mold_indoor_temperature": "Ο αισθητήρας θερμοκρασίας δωματίου δεν δίνει πρόσφατη έγκυρη μέτρηση.",
             "missing_mold_outdoor_temperature": "Καμία επιλεγμένη οντότητα καιρού δεν δίνει πρόσφατη εξωτερική θερμοκρασία.",
             "invalid_mold_surface_temperature": "Καταχώρισε έγκυρη μετρημένη θερμοκρασία επιφάνειας σε °C.",
-            "invalid_mold_calibration": "Μέτρησε ταυτόχρονα θερμοκρασία χώρου, έξω και κρύας επιφάνειας, με διαφορά τουλάχιστον 3°C μέσα–έξω."
+            "invalid_mold_calibration": "Μέτρησε ταυτόχρονα θερμοκρασία χώρου, έξω και κρύας επιφάνειας, με διαφορά τουλάχιστον 3°C μέσα-έξω."
         }
     },
     "fr": {
         "enable": "Utiliser l’indicateur de moisissure au lieu de l’humidité relative",
         "enable_help": "Les conseils d’aération reposent sur l’humidité estimée près de la surface la plus froide plutôt que sur l’humidité ambiante. Calibrez chaque pièce ; sinon l’indicateur reste indisponible.",
-        "room_title": "Paramètres des pièces — air et moisissure",
+        "room_title": "Paramètres des pièces - air et moisissure",
         "room_desc": "Pièce : {area_name} ({position}/{total}). Excluez les capteurs de cette pièce. Pour l’indicateur de moisissure, mesurez maintenant la température du point le plus froid (coin de mur extérieur ou cadre de fenêtre), quand les températures intérieure et extérieure sont stables. Saisissez °C ou laissez vide pour plus tard.",
         "sensor": "Sonde de température intérieure pour l’étalonnage",
         "sensor_help": "Choisissez une sonde de température de cette pièce (°C/°F). Les températures intérieure et extérieure sont relevées au moment de la calibration.",
@@ -99,7 +99,7 @@ FIVE = {
     "es": {
         "enable": "Usar indicador de moho en lugar de humedad relativa",
         "enable_help": "Las recomendaciones se basan en la humedad estimada de la superficie más fría, no en la humedad relativa ambiental. Calibra cada habitación; sin calibración la lectura es desconocida.",
-        "room_title": "Configuración por habitación — aire y moho",
+        "room_title": "Configuración por habitación - aire y moho",
         "room_desc": "Habitación: {area_name} ({position}/{total}). Excluye aquí sensores del aire. Para el indicador de moho, mide ahora la superficie más fría (esquina exterior o marco de ventana) con un termómetro, con las temperaturas interior y exterior estables. Introduce los °C o deja vacío para calibrar después.",
         "sensor": "Sensor de temperatura interior para calibración",
         "sensor_help": "Elige un sensor de temperatura de esta habitación (°C/°F). La temperatura interior y exterior se capturan al guardar una calibración nueva.",

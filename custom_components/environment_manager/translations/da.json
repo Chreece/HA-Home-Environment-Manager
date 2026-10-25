@@ -71,7 +71,7 @@
           "language": "Sprog",
           "automatic_tts": "Automatisk",
           "automatic_notifications": "Automatisk · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Meddelelser (valgfrit) · 0–1440 min",
+          "announcement_repeat_minutes": "Meddelelser (valgfrit) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "indstillinger · kilde",
           "tts_engine": "indstillinger · kilde · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Avancerede grænser",
-        "description": "Avancerede grænser. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Avancerede grænser. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Udenfor · AQI (≤)",
           "outdoor_co2": "Udenfor · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "Ugyldigt valg: Udeluk indeklimasensorer.",
       "no_windows_after_exclusions": "Behold mindst én vinduessensor.",
       "review_areas_after_exclusions": "Kontrollér: Rum · Målinger (0).",
-      "invalid_repeat_minutes": "Ugyldigt valg: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Ugyldigt valg: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Ikke tilgængelig: conversation.process.",
       "invalid_ai_agent": "Ugyldigt valg: conversation.*.",
       "invalid_mold_temperature_sensor": "Rum · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "Ugyldig: Rum · kilde"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — allerede konfigureret.",
+      "already_configured": "Home Environment Manager - allerede konfigureret.",
       "setup_area_removed": "Ugyldig: Rum der skal overvåges",
       "setup_changed": "indstillinger ↻ Rum der skal overvåges"
     }
@@ -337,7 +337,7 @@
           "language": "Sprog",
           "automatic_tts": "Automatisk",
           "automatic_notifications": "Automatisk · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Meddelelser (valgfrit) · 0–1440 min",
+          "announcement_repeat_minutes": "Meddelelser (valgfrit) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "indstillinger · kilde",
           "tts_engine": "indstillinger · kilde · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Avancerede grænser",
-        "description": "Avancerede grænser. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Avancerede grænser. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Udenfor · AQI (≤)",
           "outdoor_co2": "Udenfor · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "Ugyldigt valg: Udeluk indeklimasensorer.",
       "no_windows_after_exclusions": "Behold mindst én vinduessensor.",
       "review_areas_after_exclusions": "Kontrollér: Rum · Målinger (0).",
-      "invalid_repeat_minutes": "Ugyldigt valg: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Ugyldigt valg: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Ikke tilgængelig: conversation.process.",
       "invalid_ai_agent": "Ugyldigt valg: conversation.*.",
       "invalid_mold_temperature_sensor": "Rum · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · Åbn (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Meddelelser (valgfrit) · 0–1440 min"
+        "name": "Meddelelser (valgfrit) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "mål (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "Meddelelser (valgfrit) — Home Environment Manager",
+      "name": "Meddelelser (valgfrit) - Home Environment Manager",
       "description": "Meddelelser (valgfrit) · Rum",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — Standard",
+        "auto": "Home Assistant - Standard",
         "en": "indstillinger · kilde",
         "de": "indstillinger · kilde",
         "el": "indstillinger · kilde",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "kilde · Ugyldig",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "mål · indstillinger"
       }
     }

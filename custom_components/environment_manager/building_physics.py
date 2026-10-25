@@ -313,7 +313,7 @@ def co2_decay_ach(samples: Sequence[dict], now: float, outdoor_co2: float | None
 def nighttime_overheating_exposure(samples: Sequence[dict], now: float,
                                   local_timezone: str = "UTC",
                                   *, threshold_c: float = 26.0) -> dict[str, Any]:
-    """Observed hot sleeping hours (22:00–07:00), NOT TM59 compliance.
+    """Observed hot sleeping hours (22:00-07:00), NOT TM59 compliance.
 
     The CIBSE TM59 design method requires dynamic simulation and occupancy
     assumptions. This is only an observed air-temperature duration indicator.

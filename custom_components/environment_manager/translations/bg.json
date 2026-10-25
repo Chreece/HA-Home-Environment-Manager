@@ -71,7 +71,7 @@
           "language": "Език",
           "automatic_tts": "Автоматично",
           "automatic_notifications": "Автоматично · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Съобщения (по избор) · 0–1440 min",
+          "announcement_repeat_minutes": "Съобщения (по избор) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "настройки · източник",
           "tts_engine": "настройки · източник · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Разширени прагове",
-        "description": "Разширени прагове. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Разширени прагове. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Навън · AQI (≤)",
           "outdoor_co2": "Навън · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "Невалиден избор: Изключване на датчици за въздух на закрито.",
       "no_windows_after_exclusions": "Оставете поне един датчик за прозорец.",
       "review_areas_after_exclusions": "Проверете: Стаи · Измервания (0).",
-      "invalid_repeat_minutes": "Невалиден избор: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Невалиден избор: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Недостъпно: conversation.process.",
       "invalid_ai_agent": "Невалиден избор: conversation.*.",
       "invalid_mold_temperature_sensor": "Стаи · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "Невалидно: Стая · източник"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — вече е настроен.",
+      "already_configured": "Home Environment Manager - вече е настроен.",
       "setup_area_removed": "Невалидно: Стаи за наблюдение",
       "setup_changed": "настройки ↻ Стаи за наблюдение"
     }
@@ -337,7 +337,7 @@
           "language": "Език",
           "automatic_tts": "Автоматично",
           "automatic_notifications": "Автоматично · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Съобщения (по избор) · 0–1440 min",
+          "announcement_repeat_minutes": "Съобщения (по избор) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "настройки · източник",
           "tts_engine": "настройки · източник · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Разширени прагове",
-        "description": "Разширени прагове. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Разширени прагове. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Навън · AQI (≤)",
           "outdoor_co2": "Навън · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "Невалиден избор: Изключване на датчици за въздух на закрито.",
       "no_windows_after_exclusions": "Оставете поне един датчик за прозорец.",
       "review_areas_after_exclusions": "Проверете: Стаи · Измервания (0).",
-      "invalid_repeat_minutes": "Невалиден избор: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Невалиден избор: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Недостъпно: conversation.process.",
       "invalid_ai_agent": "Невалиден избор: conversation.*.",
       "invalid_mold_temperature_sensor": "Стаи · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · Отворете (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Съобщения (по избор) · 0–1440 min"
+        "name": "Съобщения (по избор) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "цел (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "Съобщения (по избор) — Home Environment Manager",
+      "name": "Съобщения (по избор) - Home Environment Manager",
       "description": "Съобщения (по избор) · Стаи",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — По подразбиране",
+        "auto": "Home Assistant - По подразбиране",
         "en": "настройки · източник",
         "de": "настройки · източник",
         "el": "настройки · източник",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "източник · Невалидно",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "цел · настройки"
       }
     }

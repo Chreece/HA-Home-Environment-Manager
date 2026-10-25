@@ -71,7 +71,7 @@
           "language": "اللغة",
           "automatic_tts": "تلقائي",
           "automatic_notifications": "تلقائي · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "الإعلانات (اختياري) · 0–1440 min",
+          "announcement_repeat_minutes": "الإعلانات (اختياري) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "الإعدادات · المصدر",
           "tts_engine": "الإعدادات · المصدر · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "حدود متقدمة",
-        "description": "حدود متقدمة. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "حدود متقدمة. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "الخارج · AQI (≤)",
           "outdoor_co2": "الخارج · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "اختيار غير صالح: استبعاد مستشعرات الهواء الداخلي.",
       "no_windows_after_exclusions": "اترك مستشعر نافذة واحدًا على الأقل.",
       "review_areas_after_exclusions": "تحقق: الغرف · القياسات (0).",
-      "invalid_repeat_minutes": "اختيار غير صالح: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "اختيار غير صالح: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "غير متاح: conversation.process.",
       "invalid_ai_agent": "اختيار غير صالح: conversation.*.",
       "invalid_mold_temperature_sensor": "الغرف · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "غير صالح: غرفة · المصدر"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — تم الإعداد مسبقًا.",
+      "already_configured": "Home Environment Manager - تم الإعداد مسبقًا.",
       "setup_area_removed": "غير صالح: الغرف المراد مراقبتها",
       "setup_changed": "الإعدادات ↻ الغرف المراد مراقبتها"
     }
@@ -337,7 +337,7 @@
           "language": "اللغة",
           "automatic_tts": "تلقائي",
           "automatic_notifications": "تلقائي · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "الإعلانات (اختياري) · 0–1440 min",
+          "announcement_repeat_minutes": "الإعلانات (اختياري) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "الإعدادات · المصدر",
           "tts_engine": "الإعدادات · المصدر · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "حدود متقدمة",
-        "description": "حدود متقدمة. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "حدود متقدمة. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "الخارج · AQI (≤)",
           "outdoor_co2": "الخارج · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "اختيار غير صالح: استبعاد مستشعرات الهواء الداخلي.",
       "no_windows_after_exclusions": "اترك مستشعر نافذة واحدًا على الأقل.",
       "review_areas_after_exclusions": "تحقق: الغرف · القياسات (0).",
-      "invalid_repeat_minutes": "اختيار غير صالح: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "اختيار غير صالح: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "غير متاح: conversation.process.",
       "invalid_ai_agent": "اختيار غير صالح: conversation.*.",
       "invalid_mold_temperature_sensor": "الغرف · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · افتح (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "الإعلانات (اختياري) · 0–1440 min"
+        "name": "الإعلانات (اختياري) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "الهدف (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "الإعلانات (اختياري) — Home Environment Manager",
+      "name": "الإعلانات (اختياري) - Home Environment Manager",
       "description": "الإعلانات (اختياري) · الغرف",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — افتراضي",
+        "auto": "Home Assistant - افتراضي",
         "en": "الإعدادات · المصدر",
         "de": "الإعدادات · المصدر",
         "el": "الإعدادات · المصدر",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "المصدر · غير صالح",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "الهدف · الإعدادات"
       }
     }

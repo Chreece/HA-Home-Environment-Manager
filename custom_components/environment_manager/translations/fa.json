@@ -71,7 +71,7 @@
           "language": "زبان",
           "automatic_tts": "خودکار",
           "automatic_notifications": "خودکار · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "اعلان‌ها (اختیاری) · 0–1440 min",
+          "announcement_repeat_minutes": "اعلان‌ها (اختیاری) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "تنظیمات · منبع",
           "tts_engine": "تنظیمات · منبع · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "آستانه‌های پیشرفته",
-        "description": "آستانه‌های پیشرفته. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "آستانه‌های پیشرفته. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "بیرون · AQI (≤)",
           "outdoor_co2": "بیرون · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "انتخاب نامعتبر: حذف حسگرهای هوای داخل.",
       "no_windows_after_exclusions": "حداقل یک حسگر پنجره را فعال نگه دارید.",
       "review_areas_after_exclusions": "بررسی کنید: اتاق‌ها · اندازه‌گیری‌ها (0).",
-      "invalid_repeat_minutes": "انتخاب نامعتبر: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "انتخاب نامعتبر: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "در دسترس نیست: conversation.process.",
       "invalid_ai_agent": "انتخاب نامعتبر: conversation.*.",
       "invalid_mold_temperature_sensor": "اتاق‌ها · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "نامعتبر: اتاق · منبع"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — قبلاً تنظیم شده.",
+      "already_configured": "Home Environment Manager - قبلاً تنظیم شده.",
       "setup_area_removed": "نامعتبر: اتاق‌های مورد پایش",
       "setup_changed": "تنظیمات ↻ اتاق‌های مورد پایش"
     }
@@ -337,7 +337,7 @@
           "language": "زبان",
           "automatic_tts": "خودکار",
           "automatic_notifications": "خودکار · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "اعلان‌ها (اختیاری) · 0–1440 min",
+          "announcement_repeat_minutes": "اعلان‌ها (اختیاری) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "تنظیمات · منبع",
           "tts_engine": "تنظیمات · منبع · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "آستانه‌های پیشرفته",
-        "description": "آستانه‌های پیشرفته. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "آستانه‌های پیشرفته. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "بیرون · AQI (≤)",
           "outdoor_co2": "بیرون · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "انتخاب نامعتبر: حذف حسگرهای هوای داخل.",
       "no_windows_after_exclusions": "حداقل یک حسگر پنجره را فعال نگه دارید.",
       "review_areas_after_exclusions": "بررسی کنید: اتاق‌ها · اندازه‌گیری‌ها (0).",
-      "invalid_repeat_minutes": "انتخاب نامعتبر: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "انتخاب نامعتبر: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "در دسترس نیست: conversation.process.",
       "invalid_ai_agent": "انتخاب نامعتبر: conversation.*.",
       "invalid_mold_temperature_sensor": "اتاق‌ها · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · باز کنید (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "اعلان‌ها (اختیاری) · 0–1440 min"
+        "name": "اعلان‌ها (اختیاری) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "هدف (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "اعلان‌ها (اختیاری) — Home Environment Manager",
+      "name": "اعلان‌ها (اختیاری) - Home Environment Manager",
       "description": "اعلان‌ها (اختیاری) · اتاق‌ها",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — پیش‌فرض",
+        "auto": "Home Assistant - پیش‌فرض",
         "en": "تنظیمات · منبع",
         "de": "تنظیمات · منبع",
         "el": "تنظیمات · منبع",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "منبع · نامعتبر",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "هدف · تنظیمات"
       }
     }

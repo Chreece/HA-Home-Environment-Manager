@@ -71,7 +71,7 @@
           "language": "Язык",
           "automatic_tts": "Автоматическое",
           "automatic_notifications": "Автоматическое · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Оповещения (необязательно) · 0–1440 min",
+          "announcement_repeat_minutes": "Оповещения (необязательно) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "настройки · источник",
           "tts_engine": "настройки · источник · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Дополнительные пороги",
-        "description": "Дополнительные пороги. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Дополнительные пороги. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Снаружи · AQI (≤)",
           "outdoor_co2": "Снаружи · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "Неверный выбор: Исключить датчики воздуха в помещениях.",
       "no_windows_after_exclusions": "Оставьте хотя бы один датчик окна.",
       "review_areas_after_exclusions": "Проверьте: Комнаты · Измерения (0).",
-      "invalid_repeat_minutes": "Неверный выбор: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Неверный выбор: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Недоступно: conversation.process.",
       "invalid_ai_agent": "Неверный выбор: conversation.*.",
       "invalid_mold_temperature_sensor": "Комнаты · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "Ошибка: Комната · источник"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — уже настроено.",
+      "already_configured": "Home Environment Manager - уже настроено.",
       "setup_area_removed": "Ошибка: Комнаты для наблюдения",
       "setup_changed": "настройки ↻ Комнаты для наблюдения"
     }
@@ -337,7 +337,7 @@
           "language": "Язык",
           "automatic_tts": "Автоматическое",
           "automatic_notifications": "Автоматическое · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Оповещения (необязательно) · 0–1440 min",
+          "announcement_repeat_minutes": "Оповещения (необязательно) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "настройки · источник",
           "tts_engine": "настройки · источник · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Дополнительные пороги",
-        "description": "Дополнительные пороги. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Дополнительные пороги. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Снаружи · AQI (≤)",
           "outdoor_co2": "Снаружи · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "Неверный выбор: Исключить датчики воздуха в помещениях.",
       "no_windows_after_exclusions": "Оставьте хотя бы один датчик окна.",
       "review_areas_after_exclusions": "Проверьте: Комнаты · Измерения (0).",
-      "invalid_repeat_minutes": "Неверный выбор: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Неверный выбор: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Недоступно: conversation.process.",
       "invalid_ai_agent": "Неверный выбор: conversation.*.",
       "invalid_mold_temperature_sensor": "Комнаты · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · Откройте (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Оповещения (необязательно) · 0–1440 min"
+        "name": "Оповещения (необязательно) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "цель (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "Оповещения (необязательно) — Home Environment Manager",
+      "name": "Оповещения (необязательно) - Home Environment Manager",
       "description": "Оповещения (необязательно) · Комнаты",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — По умолчанию",
+        "auto": "Home Assistant - По умолчанию",
         "en": "настройки · источник",
         "de": "настройки · источник",
         "el": "настройки · источник",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "источник · Ошибка",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "цель · настройки"
       }
     }

@@ -49,7 +49,7 @@ def generate_extended(root: Path = ROOT) -> None:
             "delivery": {
                 "language": ui[17], "automatic_tts": ui[16],
                 "automatic_notifications": ui[15],
-                "announcement_repeat_minutes": f"{ui[5]} · 0–1440 min",
+                "announcement_repeat_minutes": f"{ui[5]} · 0-1440 min",
                 "use_announcement_hub": "Announcement Hub",
                 "notify_entities": ui[15], "tts_engine": ui[16],
                 "media_players": ui[16],
@@ -84,7 +84,7 @@ def generate_extended(root: Path = ROOT) -> None:
             "outdoor": f"{ui[3]}. AQI, CO₂, PM2.5, PM10, VOC.",
             "weather": f"{ui[4]}. weather.*",
             "delivery": f"{ui[5]}. {ui[15]} · {ui[16]}. Announcement Hub.",
-            "thresholds": f"{ui[6]}. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+            "thresholds": f"{ui[6]}. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         }
         for scope in ("config", "options"):
             for step in STEPS:
@@ -135,7 +135,7 @@ def generate_extended(root: Path = ROOT) -> None:
             "blocked": card[1],
         }
         service = obj["services"]["announce"]
-        service["name"] = f"{ui[5]} — Home Environment Manager"
+        service["name"] = f"{ui[5]} - Home Environment Manager"
         service["description"] = f"{ui[5]} · {ui[0]}"
         for key, value in (
             ("language", ui[17]), ("channels", ui[5]), ("areas", ui[0])

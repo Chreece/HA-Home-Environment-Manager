@@ -1,6 +1,6 @@
 # Releasing Home Environment Manager
 
-## v0.6.0b45 — Generic roller shutters and per-cover controllers
+## v0.6.0b45 - Generic roller shutters and per-cover controllers
 
 Only create `v0.6.0b45` through the opt-in beta45 workflow after Python
 3.13/3.14 full regressions, all 38 generated-language help descriptions,
@@ -20,11 +20,11 @@ API checks (registry migration, wizard selectors, read-only settings/device
 methods). Exact source SHA, prerelease and `--latest=false` are mandatory.
 No prior release tag or main branch is updated.
 
-## v0.6.0b12 — Native room grouping and registry migration
+## v0.6.0b12 - Native room grouping and registry migration
 
 Publish the exact validated commit from `beta/v0.6.0b12`, marked prerelease and not Latest. Validate both Python versions, regenerated catalogs, frontend, pinned real Home Assistant registry migration, Hassfest/HACS and ZIP integrity. Preserve main, stable v0.5.1 and earlier tags. Installation migrates the service flags and room memberships in place; no user-run migration script or integration deletion is needed.
 
-## v0.6.0b11 — Combined controller beta
+## v0.6.0b11 - Combined controller beta
 
 Publish only from `beta/v0.6.0b11` after Python 3.13/3.14, deterministic
 38-language generation (including `equipment_text.py`), frontend, Hassfest,
@@ -35,7 +35,7 @@ on/off-PID and quiet-mode software. Default method Existing prevents automatic
 migration of equipment control; real hardware commissioning is still required.
 
 
-## v0.6.0b10 — Source selection in setup and per-device tuning
+## v0.6.0b10 - Source selection in setup and per-device tuning
 
 Opt-in beta 10 is released only from `beta/v0.6.0b10` at the validated
 commit. Area and Home configuration entities, manual measured mold calibration,
@@ -46,19 +46,19 @@ the installation archive before publishing. Real hardware commissioning is
 still required for experimental physical power or compressor controls.
 
 
-## v0.6.0b5 — Complete initial/options help across 38 locales
+## v0.6.0b5 - Complete initial/options help across 38 locales
 
 The opt-in `beta/v0.6.0b5` HACS/GitHub prerelease is locked to its fully validated HEAD. All 38 locales have required data_description text for every visible initial-config or options field, including 22 advanced thresholds previously missing help. Reviewed English and Greek explanation texts cover exact controls and scientific caveats; the other 36 locale texts are localized with safety-aware templates. CI checks no untranslated labels, no missing help, reproducible translation generation, Python 3.13/3.14, frontend, Hassfest, HACS and the manual package. The integration's original `air_quality_advisor` domain, stored options, stable v0.5.1 and physical-control safety gates are unchanged.
 
-## v0.6.0b4 — First-install retry recovery beta
+## v0.6.0b4 - First-install retry recovery beta
 
 This HACS-selectable prerelease is built from `beta/v0.6.0b4` and published **only after** the full Python 3.13/3.14, frontend, translation, Hassfest, HACS and installation ZIP checks pass. It removes the early unique-ID reservation that made a first-time dialog lost by the browser block retries as `already_in_progress`. The fixed `home` unique ID and existing-entry checks are enforced at final save, not removed. Stable `v0.5.1`, earlier betas, the internal domain and all hardware-safety permissions remain unchanged. A previous pending HA config flow can be cleared by restarting only Home Assistant after the HACS update.
 
-## v0.6.0b3 — Measurement help and useful-source selector beta
+## v0.6.0b3 - Measurement help and useful-source selector beta
 
 This opt-in HACS prerelease is published from the isolated `beta/v0.6.0b3` branch only after Python 3.13 and 3.14, generated 38-language translations, Node.js frontend tests, Hassfest, HACS validation and ZIP integrity succeed. It adds contextual measurement info, fresh/valid occupied and sleep-room selector choices and corrected Greek form guidance. Stable v0.5.1 and existing tags remain unchanged. The GitHub release is explicitly marked prerelease and never Latest. The ZIP is for manual installation; HACS reads the matching tagged source tree.
 
-## v0.6.0b2 — Compact options and international device occupancy beta
+## v0.6.0b2 - Compact options and international device occupancy beta
 
 Version `v0.6.0b2` is the next HACS-selectable **prerelease**, created from
 `beta/v0.6.0b2` at its validated HEAD. GitHub Latest remains stable `v0.5.1`
@@ -139,7 +139,7 @@ A completed push to `main` automatically starts `.github/workflows/validate.yml`
 
 A failed gate **prevents a release**. Newer pushes cancel superseded runs, and the publish job confirms that its tested SHA is still the head of `main`, even after packaging. Already published versions are skipped without failing CI. An orphaned pre-existing tag blocks publication rather than being silently repointed.
 
-## Release process — automatic after pushing
+## Release process - automatic after pushing
 
 1. Commit the complete code, translation, test and documentation changes. Set `manifest.json` and `.github/release-request.json` to the same **new** version and include `.github/releases/v<VERSION>.md`.
 2. Push the complete changes to `main`. This **automatically** starts validation and publishes the versioned GitHub/HACS Release (including the installation ZIP) after every check passes. No manual Actions click or CLI dispatch is necessary.
