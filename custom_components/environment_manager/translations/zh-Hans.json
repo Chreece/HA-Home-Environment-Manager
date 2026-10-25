@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "家中 · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "室温超过此值时关闭窗帘 (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}传感器 · 必填"
+      },
+      "shade_auto_control": {
+        "name": "自动关闭窗帘帮助降温"
+      },
+      "shade_announce": {
+        "name": "开合窗帘前发送通知"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "来源 · 速度 · 室外 (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "关联的窗户传感器"
       }
     },
     "time": {

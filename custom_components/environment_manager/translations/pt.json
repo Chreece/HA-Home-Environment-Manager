@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "Casa · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "Fechar estores acima desta temperatura (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}sensor · Obrigatório"
+      },
+      "shade_auto_control": {
+        "name": "Fecho automático de estores para arrefecer"
+      },
+      "shade_announce": {
+        "name": "Anunciar antes de abrir ou fechar os estores"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "fonte · Velocidade · Exterior (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "Contacto da janela associado"
       }
     },
     "time": {

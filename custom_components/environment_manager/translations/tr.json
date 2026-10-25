@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "Ev · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "Oda sıcaklığı eşiğinde panjurları kapat (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}sensör · Gerekli"
+      },
+      "shade_auto_control": {
+        "name": "Serinletmek için otomatik panjur kapatma"
+      },
+      "shade_announce": {
+        "name": "Panjurlar açılmadan veya kapanmadan önce duyur"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "kaynak · Hız · Dış (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "İlişkili pencere sensörü"
       }
     },
     "time": {

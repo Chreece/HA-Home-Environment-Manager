@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "Дом · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "Затваряне над стайна температура (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}сензор · Задължително"
+      },
+      "shade_auto_control": {
+        "name": "Автоматично затваряне на щори за охлаждане"
+      },
+      "shade_announce": {
+        "name": "Извести преди отваряне или затваряне на щорите"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "източник · Скорост · Външни (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "Свързан сензор за прозорец"
       }
     },
     "time": {

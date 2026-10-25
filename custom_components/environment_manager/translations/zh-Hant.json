@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "家中 · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "室溫高於此值時關閉窗簾 (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}感測器 · 必填"
+      },
+      "shade_auto_control": {
+        "name": "自動關閉窗簾以協助降溫"
+      },
+      "shade_announce": {
+        "name": "開合窗簾前發送通知"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "來源 · 速度 · 室外 (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "關聯的窗戶感測器"
       }
     },
     "time": {

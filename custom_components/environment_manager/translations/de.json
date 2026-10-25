@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "Zuhause · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "Rollos schließen ab Raumtemperatur (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}Sensor · Erforderlich"
+      },
+      "shade_auto_control": {
+        "name": "Automatische Fensterbeschattung zur Kühlung"
+      },
+      "shade_announce": {
+        "name": "Vor dem Öffnen oder Schließen der Rollos ankündigen"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "Gemessene Luftgeschwindigkeit (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "Zugeordneter Fensterkontakt"
       }
     },
     "time": {

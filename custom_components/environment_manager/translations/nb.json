@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "Hjem · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "Lukk solskjerming over romtemperatur (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}sensor · Påkrevd"
+      },
+      "shade_auto_control": {
+        "name": "Automatisk lukking av solskjerming"
+      },
+      "shade_announce": {
+        "name": "Varsle før solskjerming åpnes eller lukkes"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "kilde · Hastighet · Utendørs (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "Tilknyttet vinduskontakt"
       }
     },
     "time": {

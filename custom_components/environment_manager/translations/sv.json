@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "Hem · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "Stäng solskydd över rumstemperaturen (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}sensor · Krävs"
+      },
+      "shade_auto_control": {
+        "name": "Automatisk stängning av solskydd vid värme"
+      },
+      "shade_announce": {
+        "name": "Meddela innan solskydd öppnas eller stängs"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "källa · Hastighet · Utomhus (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "Kopplad fönsterkontakt"
       }
     },
     "time": {

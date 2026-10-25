@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "বাড়ি · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "ঘরের তাপমাত্রার উপরে ব্লাইন্ড বন্ধ (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}সেন্সর · আবশ্যক"
+      },
+      "shade_auto_control": {
+        "name": "ঘর ঠান্ডা রাখতে ব্লাইন্ড স্বয়ংক্রিয় বন্ধ"
+      },
+      "shade_announce": {
+        "name": "ব্লাইন্ড খোলা বা বন্ধের আগে ঘোষণা করুন"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "উৎস · গতি · বাইরের (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "সংযুক্ত জানালার সেন্সর"
       }
     },
     "time": {

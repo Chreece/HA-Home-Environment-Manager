@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "घर · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "कमरे के तापमान से ऊपर ब्लाइंड बंद करें (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}सेंसर · आवश्यक"
+      },
+      "shade_auto_control": {
+        "name": "कमरा ठंडा रखने हेतु ब्लाइंड स्वतः बंद करें"
+      },
+      "shade_announce": {
+        "name": "ब्लाइंड खोलने या बंद करने से पहले घोषणा करें"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "स्रोत · गति · बाहरी (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "संबंधित खिड़की सेंसर"
       }
     },
     "time": {
