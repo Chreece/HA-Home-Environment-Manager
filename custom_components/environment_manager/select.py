@@ -87,6 +87,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
                     for key in equipment.DEVICE_SELECTS
                     if key != "fan_purpose" or (cap := equipment.capabilities(manager, spec)) is not None
                     and (cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}))
+    from .room_sources import selected
+    from .const import CONF_AREAS
+    for area in manager.settings.get(CONF_AREAS, []):
+        for cover in selected(manager.settings, area, "shades") or ():
+            entities.append(ShadeWindowSelect(manager, entry.entry_id, area, cover))
     async_add_grouped_entities(entry.runtime_data, async_add_entities, entities)
     register_late_capabilities(
         hass, entry, async_add_entities, entities, native_quiet_selects,
@@ -323,4 +328,79 @@ class AreaScienceSource(ConfigSelect):
 
     async def async_select_option(self, option):
         await update_device_setting(self._manager, "area_science", self._setting_key, option, area=self._area_id)
+        self.async_write_ha_state()
+
+
+class ShadeWindowSelect(SelectEntity):
+    """Select the exact physical window contact assigned to one motorized cover."""
+
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_translation_key = "shade_window_entity"
+    _attr_icon = "mdi:window-closed-variant"
+
+    def __init__(self, manager, entry_id: str, area: str, cover: str):
+        self._manager, self._area, self._cover = manager, area, cover
+        self._attr_unique_id = (
+            f"{entry_id}_area_{area}_shade_{cover.replace('.', '_')}_window")
+        self._attr_device_info = controller_device_info(manager, area, cover)
+        if self._attr_device_info is None:
+            raise ValueError("No registered per-cover controller for this room")
+
+    def _window_options(self) -> dict[str, str | None]:
+        from .shade_cooling import selectable_windows
+        # Include the entity_id to disambiguate two identically named windows.
+        result: dict[str, str | None] = {"Not assigned": None}
+        for entity in selectable_windows(
+                self._manager.hass, self._manager.settings, self._area):
+            state = self._manager.hass.states.get(entity)
+            name = getattr(state, "name", None) or entity
+            result[f"{name} ({entity})"] = entity
+        return result
+
+    @property
+    def options(self):
+        return list(self._window_options())
+
+    @property
+    def current_option(self):
+        from .shade_cooling import cover_config
+        saved = cover_config(
+            self._manager.settings, self._area, self._cover)["window_entity"]
+        return next((label for label, item in self._window_options().items()
+                     if item == saved), "Not assigned")
+
+    @property
+    def extra_state_attributes(self):
+        from .shade_cooling import cover_config
+        contact_id = cover_config(
+            self._manager.settings, self._area, self._cover)["window_entity"]
+        state = self._manager.hass.states.get(contact_id) if contact_id else None
+        raw = getattr(state, "state", None)
+        window_status = (
+            "open" if raw == "on" else "closed" if raw == "off"
+            else "unknown")
+        return {"window_entity_id": contact_id, "window_state": window_status,
+                "source_cover": self._cover}
+
+    async def async_select_option(self, option: str):
+        choices = self._window_options()
+        if option not in choices:
+            raise ValueError("Select a real Window-class contact assigned to this room")
+        await update_device_setting(
+            self._manager, "shade_device", "window_entity", choices[option],
+            area=self._area, entity_id=self._cover,
+        )
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(async_dispatcher_connect(
+            self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}",
+            self._update,
+        ))
+
+    @callback
+    def _update(self):
         self.async_write_ha_state()

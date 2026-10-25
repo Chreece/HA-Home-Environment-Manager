@@ -59,8 +59,12 @@ async def async_setup_entry(hass, entry, async_add_entities):
                     and (cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}))
     from .room_sources import selected
     for area in manager.settings.get(CONF_AREAS, []):
-        if selected(manager.settings, area, "shades"):
+        covers = selected(manager.settings, area, "shades") or ()
+        if covers:
             entities.append(ShadeCoolingSwitch(manager, entry.entry_id, area))
+        for cover in covers:
+            for key in ("enabled", "announce"):
+                entities.append(ShadeDeviceSwitch(manager, entry.entry_id, area, cover, key))
     async_add_grouped_entities(entry.runtime_data, async_add_entities, entities)
     register_late_capabilities(
         hass, entry, async_add_entities, entities, native_quiet_switches,
@@ -220,6 +224,76 @@ class ShadeCoolingSwitch(SwitchEntity):
     async def async_turn_off(self, **kwargs):
         await update_device_setting(self._manager, "area_shading", "enabled", False,
                                     area=self._area)
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(async_dispatcher_connect(
+            self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}",
+            self._update,
+        ))
+
+    @callback
+    def _update(self):
+        self.async_write_ha_state()
+
+
+class ShadeDeviceSwitch(SwitchEntity):
+    """Cover-specific automation and advance-announcement permissions."""
+
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_entity_category = EntityCategory.CONFIG
+
+    def __init__(self, manager, entry_id: str, area: str, cover: str, key: str):
+        from .device_hierarchy import controller_device_info
+        self._manager, self._area, self._cover, self._key = (
+            manager, area, cover, key)
+        self._attr_unique_id = (
+            f"{entry_id}_area_{area}_shade_{cover.replace('.', '_')}_{key}")
+        self._attr_translation_key = f"shade_{'auto_control' if key == 'enabled' else 'announce'}"
+        self._attr_icon = "mdi:blinds" if key == "enabled" else "mdi:bullhorn-outline"
+        self._attr_device_info = controller_device_info(manager, area, cover)
+        if self._attr_device_info is None:
+            raise ValueError("Shade controller requires a registered same-room device")
+
+    @property
+    def is_on(self) -> bool:
+        from .shade_cooling import cover_config
+        cfg = cover_config(self._manager.settings, self._area, self._cover)
+        if self._key == "enabled" and cfg["enabled"]:
+            # A resident override makes the automatic switch appear paused,
+            # allowing one deliberate turn-on to rearm this exact cover.
+            record = getattr(self._manager.shading, "_records", {}).get(self._cover, {})
+            if record.get("phase") in ("manual_override", "legacy_manual_hold"):
+                return False
+        return cfg[self._key] is True
+
+    @property
+    def extra_state_attributes(self):
+        from .shade_cooling import cover_config
+        status = getattr(self._manager.shading, "statuses", {}).get(self._area, {})
+        per_cover = status.get("covers", {})
+        cfg = cover_config(self._manager.settings, self._area, self._cover)
+        return {
+            "source_cover": self._cover,
+            "assigned_window": cfg["window_entity"],
+            "cover_status": per_cover.get(self._cover),
+            "manual_override_paused": per_cover.get(self._cover) == "manual_override",
+        }
+
+    async def async_turn_on(self, **kwargs):
+        await update_device_setting(
+            self._manager, "shade_device", self._key, True,
+            area=self._area, entity_id=self._cover,
+        )
+        self.async_write_ha_state()
+
+    async def async_turn_off(self, **kwargs):
+        await update_device_setting(
+            self._manager, "shade_device", self._key, False,
+            area=self._area, entity_id=self._cover,
+        )
         self.async_write_ha_state()
 
     async def async_added_to_hass(self):

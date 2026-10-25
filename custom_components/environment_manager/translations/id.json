@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "Rumah · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "Tutup tirai di atas suhu ruangan (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}sensor · Wajib"
+      },
+      "shade_auto_control": {
+        "name": "Tutup tirai otomatis untuk mendinginkan"
+      },
+      "shade_announce": {
+        "name": "Umumkan sebelum tirai dibuka atau ditutup"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "sumber · Kecepatan · Luar (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "Sensor jendela terkait"
       }
     },
     "time": {

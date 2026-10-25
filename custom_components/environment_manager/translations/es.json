@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "Casa · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "Cerrar persianas por encima de la temperatura (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}sensor · Obligatorio"
+      },
+      "shade_auto_control": {
+        "name": "Cierre automático de persianas para enfriar"
+      },
+      "shade_announce": {
+        "name": "Anunciar antes de abrir o cerrar persianas"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "fuente · Velocidad · Exterior (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "Sensor de ventana asociado"
       }
     },
     "time": {

@@ -253,14 +253,14 @@ async def update_device_setting(manager: Any, kind: str, key: str,
         "area_environment", "climate_operating", "global_policy", "climate_policy",
         "device_target", "device_policy", "aqi_scale", "aqi_limit",
         "climate_schedule", "direct_tuning", "area_science", "room_equipment_limit",
-        "area_shading",
+        "area_shading", "shade_device",
     ):
         raise HomeAssistantError("Unsupported settings editor")
     if kind in (
         "pid", "profile", "climate_profile", "pid_gain_source",
         "area_environment", "climate_operating", "climate_policy",
         "device_target", "device_policy", "climate_schedule", "direct_tuning", "area_science",
-        "room_equipment_limit", "area_shading",
+        "room_equipment_limit", "area_shading", "shade_device",
     ) and not area:
         raise HomeAssistantError("A configured Home Assistant area is required")
 
@@ -329,6 +329,74 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                 room["enabled"] = value
             else:
                 room[key] = _finite(value, SHADE_NUMBERS[key])
+            rooms[area] = room
+            options[CONF_SHADE_ROOMS] = rooms
+
+        elif kind == "shade_device":
+            from .shade_cooling import (
+                CONF_SHADE_ROOMS, SHADE_NUMBERS, eligible_shade, selectable_windows,
+            )
+            from .room_sources import selected
+            if area not in current.get(CONF_AREAS, []):
+                raise HomeAssistantError("Cover controller requires a selected room")
+            enrolled = selected(current, area, "shades") or ()
+            if not entity_id or entity_id not in enrolled:
+                raise HomeAssistantError("Select this cover in the room first")
+            if not eligible_shade(manager.hass, area, entity_id, enrolled)[0]:
+                raise HomeAssistantError("Only native indoor shades assigned to this room are supported")
+            if key not in ("enabled", "window_entity", "announce", "close_above_c"):
+                raise HomeAssistantError("Unsupported cover controller setting")
+            rooms = deepcopy(current.get(CONF_SHADE_ROOMS, {}))
+            rooms = rooms if isinstance(rooms, dict) else {}
+            room = deepcopy(rooms.get(area, {}))
+            room = room if isinstance(room, dict) else {}
+            devices = deepcopy(room.get("covers", {}))
+            devices = devices if isinstance(devices, dict) else {}
+            previous = devices.get(entity_id)
+            previous = deepcopy(previous) if isinstance(previous, dict) else {}
+            # Any newly touched cover becomes independently unarmed, even when
+            # it used to inherit the beta44 room-wide authorization.
+            draft = {"enabled": False, "announce": False, **previous}
+            if key == "enabled":
+                if type(value) is not bool:
+                    raise HomeAssistantError("Cover auto control requires an explicit switch")
+                if value:
+                    window = draft.get("window_entity")
+                    if window not in selectable_windows(manager.hass, current, area):
+                        raise HomeAssistantError("Assign one actual window contact from this room before enabling")
+                    history = getattr(getattr(manager, "shading", None), "_records", {})
+                    paused = isinstance(history, dict) and history.get(
+                        entity_id, {}).get("phase") in ("manual_override", "legacy_manual_hold")
+                    if draft.get("enabled") is not True or paused:
+                        draft["authorization_revision"] = int(
+                            draft.get("authorization_revision", room.get("authorization_revision", 0))
+                        ) + 1
+                draft["enabled"] = value
+            elif key == "window_entity":
+                if value in ("none", None):
+                    chosen = None
+                elif isinstance(value, str) and value in selectable_windows(
+                    manager.hass, current, area
+                ):
+                    chosen = value
+                else:
+                    raise HomeAssistantError("Window must be a selected same-room Window-class contact")
+                if chosen != draft.get("window_entity"):
+                    # A reassigned window is not a continuation of an existing
+                    # command/ownership lease. Re-enable deliberately afterwards.
+                    draft["enabled"] = False
+                    draft["authorization_revision"] = int(
+                        draft.get("authorization_revision", room.get("authorization_revision", 0))
+                    ) + 1
+                draft["window_entity"] = chosen
+            elif key == "announce":
+                if type(value) is not bool:
+                    raise HomeAssistantError("Pre-movement announcement must be on or off")
+                draft["announce"] = value
+            else:
+                draft["close_above_c"] = _finite(value, SHADE_NUMBERS["close_above_c"])
+            devices[entity_id] = draft
+            room["covers"] = devices
             rooms[area] = room
             options[CONF_SHADE_ROOMS] = rooms
 

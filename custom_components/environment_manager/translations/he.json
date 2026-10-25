@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "בית · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "סגירת תריסים מעל טמפרטורת החדר (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}חיישן · נדרש"
+      },
+      "shade_auto_control": {
+        "name": "סגירת תריסים אוטומטית לקירור"
+      },
+      "shade_announce": {
+        "name": "להודיע לפני פתיחה או סגירה של התריסים"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "מקור · מהירות · חוץ (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "חיישן חלון משויך"
       }
     },
     "time": {

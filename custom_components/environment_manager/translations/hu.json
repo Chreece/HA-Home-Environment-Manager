@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "Otthon · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "Redőnyök zárása e hőmérséklet felett (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}érzékelő · Kötelező"
+      },
+      "shade_auto_control": {
+        "name": "Automatikus árnyékolás a hűtéshez"
+      },
+      "shade_announce": {
+        "name": "Értesítés a redőnyök nyitása vagy zárása előtt"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "forrás · Sebesség · Kültéri (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "Hozzárendelt ablakérzékelő"
       }
     },
     "time": {

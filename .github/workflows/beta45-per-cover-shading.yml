@@ -1,0 +1,73 @@
+name: Beta45 independent per-cover window shading
+on:
+  push:
+    branches:
+      - 'feat/beta45-per-cover-shading-20261025'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: beta45-cover-controller
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install pytest
+      - name: Localize and verify all 38 languages
+        run: |
+          python generate_translations.py
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          base=Path('custom_components/environment_manager')
+          catalogs=[base/'strings.json',*sorted((base/'translations').glob('*.json'))]
+          assert len(catalogs)==39
+          for file in catalogs:
+              entity=json.loads(file.read_text(encoding='utf-8'))['entity']
+              for group,key in [
+                  ('switch','shade_auto_control'),
+                  ('switch','shade_announce'),
+                  ('number','shade_close_above_c'),
+                  ('select','shade_window_entity')
+              ]:
+                  assert len(entity[group][key]['name'])>=5,(file,group,key)
+          PY
+      - name: Full regression test suite
+        run: python -m pytest -q tests
+      - name: Compile Python
+        run: python -m compileall -q custom_components
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Frontend validation
+        run: |
+          node --check custom_components/environment_manager/frontend/air-quality-advisor-card.js
+          node tests/card_test.cjs
+      - name: Physical safety invariant smoke test
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          base=Path('custom_components/environment_manager')
+          shade=(base/'shade_cooling.py').read_text()
+          equipment=(base/'device_hierarchy.py').read_text()
+          for required in ('manual_override','window_not_assigned',
+                           'window_not_eligible','selectable_windows',
+                           'authorization_revision','_before_move',
+                           'window_safe'):
+              assert required in shade,required
+          assert 'managed_shade_devices' in equipment
+          assert '"cover", "toggle"' not in shade
+          assert '"cover", "set_cover_position"' not in shade
+          PY

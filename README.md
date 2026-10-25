@@ -23,6 +23,19 @@
 
 > **v0.6.0 beta 44 is available for opt-in testing.** Stable remains **v0.5.1**. Beta44 makes solar shade closing weather-aware, reopens only previously confirmed Manager-closed shades, permanently honors manual reopening until explicit room re-enable, and adds a Home-wide opt-in to announce before opening/closing. All safety controls, locales and beta31–43 fixes remain under the canonical `environment_manager` domain.
 
+## Beta 45 (in development) - one safe shade controller per selected cover
+
+Every native room **Shades** output now has its own **Window Shade Controller** child of that area's Home Environment hub. Select your supported covers in **Configure → Room sources → Shades**; their child devices then expose four independently persisted entities:
+
+- **Associated window contact** (dropdown): choose one actual same-room Window-class binary sensor that belongs to the room's window inputs. Its current `open`, `closed` or `unknown` value is also available as a diagnostic attribute. **Not assigned**, open, missing or uncertain contacts always block physical movement.
+- **Automatic solar shade cooling** (switch): defaults to OFF for newly commissioned covers; each cover can be enabled on its own after selecting a window. This is separate from the historical room-wide switch. The integration only closes during fresh hot/sunny evidence and only reopens a cover that it previously closed and confirmed; it never adopts a user-closed shade.
+- **Announce before moving window shades** (switch): per-cover opt-in independent of the Home-level legacy setting. Announces only this cover by name via configured Announcement Hub/notification/TTS channels, waits and checks conditions again. If opted in but unavailable, movement is blocked.
+- **Close shades above room temperature** (number, °C): this cover's closing threshold (default **25 °C**, allowed **18–36 °C**). It reuses the room's verified temperature sensor, sun angle, weather checks, and existing safe opening hysteresis.
+
+**Manual override:** user-initiated opening *or closing* pauses automatic movement for that exact cover. The pause is stored across Home Assistant restarts. The automatic control switch shows OFF while paused; turn it ON deliberately to rearm this cover. Other room covers keep running normally. Changing a cover's linked window disarms its automation until the newly selected window has been reviewed and explicitly enabled.
+
+This is a separate feature branch, not a released HACS beta until validation and packaging are complete. Legacy Beta44 room-wide configurations retain their existing safe behavior until their covers are individually configured; no source cover device is replaced or migrated.
+
 ## Beta 44 - weather-aware shade cooling, owned reopening and pre-movement announcements
 
 Closing now requires **verified current sunny or partly cloudy weather** from every configured Home Assistant weather entity as well as a high enough sun angle, fresh measured room temperature and confirmed closed window contacts. Cloudy, rainy, windy or unknown weather prevents new closures. The native Home Assistant condition list is the source of truth, not invented irradiance estimates.

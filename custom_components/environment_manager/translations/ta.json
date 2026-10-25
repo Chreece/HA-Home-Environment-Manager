@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "வீடு · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "அறை வெப்பநிலைக்கு மேல் திரைகளை மூடு (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}உணரி · தேவை"
+      },
+      "shade_auto_control": {
+        "name": "அறையைக் குளிர்விக்க திரைகளைத் தானாக மூடு"
+      },
+      "shade_announce": {
+        "name": "திரைகளைத் திறப்பதற்கு அல்லது மூடுவதற்கு முன் அறிவி"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "மூலம் · வேகம் · வெளிப்புற (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "தொடர்புடைய சன்னல் உணரி"
       }
     },
     "time": {

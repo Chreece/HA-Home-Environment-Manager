@@ -95,10 +95,52 @@ DETAIL = {
 }
 
 
+WINDOW_CONTACT_NAMES = {
+ "en": "Associated window contact",
+ "el": "Συνδεδεμένος αισθητήρας παραθύρου",
+ "de": "Zugeordneter Fensterkontakt",
+ "fr": "Contact de fenêtre associé",
+ "es": "Sensor de ventana asociado",
+ "it": "Contatto finestra associato",
+ "nl": "Gekoppeld raamcontact",
+ "pt": "Contacto da janela associado",
+ "pt-BR": "Sensor de janela associado",
+ "pl": "Powiązany czujnik okna",
+ "cs": "Přiřazený okenní kontakt",
+ "sk": "Priradený okenný kontakt",
+ "sv": "Kopplad fönsterkontakt",
+ "da": "Tilknyttet vindueskontakt",
+ "nb": "Tilknyttet vinduskontakt",
+ "fi": "Liitetty ikkunakosketin",
+ "hu": "Hozzárendelt ablakérzékelő",
+ "ro": "Contact de fereastră asociat",
+ "bg": "Свързан сензор за прозорец",
+ "hr": "Povezani senzor prozora",
+ "sr": "Повезани сензор прозора",
+ "ru": "Связанный датчик окна",
+ "uk": "Пов’язаний датчик вікна",
+ "tr": "İlişkili pencere sensörü",
+ "ar": "مستشعر النافذة المرتبط",
+ "he": "חיישן חלון משויך",
+ "fa": "حسگر پنجره مرتبط",
+ "hi": "संबंधित खिड़की सेंसर",
+ "bn": "সংযুক্ত জানালার সেন্সর",
+ "ta": "தொடர்புடைய சன்னல் உணரி",
+ "ur": "متعلقہ کھڑکی کا سینسر",
+ "id": "Sensor jendela terkait",
+ "vi": "Cảm biến cửa sổ được liên kết",
+ "ko": "연결된 창문 센서",
+ "ja": "対応する窓の開閉センサー",
+ "zh-Hans": "关联的窗户传感器",
+ "zh-Hant": "關聯的窗戶感測器",
+ "th": "เซ็นเซอร์หน้าต่างที่เชื่อมโยง"
+}
+
 def apply_shading_i18n(root: Path) -> None:
     files = [root/"strings.json", *sorted((root/"translations").glob("*.json"))]
     if (len(files) != 39 or set(LABELS) != set(SHADE_NAMES)
-            or set(ANNOUNCE_NAMES) != set(SHADE_NAMES)):
+            or set(ANNOUNCE_NAMES) != set(SHADE_NAMES)
+            or set(WINDOW_CONTACT_NAMES) != set(SHADE_NAMES)):
         raise ValueError("All 38 Home Assistant languages require shade controls")
     for path in files:
         lang = "en" if path.name == "strings.json" else path.stem
@@ -114,4 +156,11 @@ def apply_shading_i18n(root: Path) -> None:
         nums = entities.setdefault("number", {})
         nums["area_shading_close_above_c"] = {"name": temperature + " (°C)"}
         nums["area_shading_min_sun_elevation"] = {"name": solar + " (°)"}
+        # Per-cover controller entities live on each cover's own child device.
+        entities["switch"]["shade_auto_control"] = {"name": name}
+        entities["switch"]["shade_announce"] = {"name": ANNOUNCE_NAMES[lang]}
+        nums["shade_close_above_c"] = {"name": temperature + " (°C)"}
+        entities.setdefault("select", {})["shade_window_entity"] = {
+            "name": WINDOW_CONTACT_NAMES[lang],
+        }
         path.write_text(json.dumps(data, ensure_ascii=False, indent=2)+"\n",encoding="utf-8")

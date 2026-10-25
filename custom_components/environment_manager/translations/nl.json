@@ -1514,6 +1514,9 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "Thuis · Away · cooldown (min)"
+      },
+      "shade_close_above_c": {
+        "name": "Zonwering sluiten boven kamertemperatuur (°C)"
       }
     },
     "switch": {
@@ -1555,6 +1558,12 @@
       },
       "equipment_sensor_verified": {
         "name": "{channel}sensor · Vereist"
+      },
+      "shade_auto_control": {
+        "name": "Automatisch zonwering sluiten tegen hitte"
+      },
+      "shade_announce": {
+        "name": "Aankondigen voordat zonwering opent of sluit"
       }
     },
     "select": {
@@ -1625,6 +1634,9 @@
       },
       "area_area_science_air_speed_entity": {
         "name": "bron · Snelheid · Buiten (m/s)"
+      },
+      "shade_window_entity": {
+        "name": "Gekoppeld raamcontact"
       }
     },
     "time": {
