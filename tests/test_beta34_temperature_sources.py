@@ -43,41 +43,47 @@ def test_multiple_explicit_room_temperatures_give_verified_mean(evidence):
     assert not plan["automatic_actuation_enabled"]
 
 
-def test_explicit_pin_is_never_replaced_by_other_selected_temperature(evidence):
+def test_multi_room_sources_override_old_single_pin_and_legacy_pin_still_valid(evidence):
     from custom_components.environment_manager.climate_rooms import gather
     hass, settings, first, second, foreign = evidence
     temp, why = room_temperature_evidence(
         hass,settings,"room",pinned=second.entity_id,
     )
-    assert temp==23 and why["source"]=="pinned_sensor"
-    temp, invalid = room_temperature_evidence(
-        hass,settings,"room",pinned=foreign.entity_id,
-    )
-    assert temp is None and invalid["status"]=="pinned_sensor_not_selected"
-    room=Room("room","Room",(),())
-    report,_=gather(hass,room,{
+    assert temp == 22 and why["source"] == "room_selected_mean"
+    # Single-source rooms keep the explicit pin's exact identity.
+    settings["room_sources"]["room"]["temperature"] = [first.entity_id]
+    temp, valid = room_temperature_evidence(hass,settings,"room",pinned=first.entity_id)
+    assert temp == 21 and valid["source"] == "pinned_sensor"
+    temp, invalid = room_temperature_evidence(hass,settings,"room",pinned=foreign.entity_id)
+    assert temp is None and invalid["status"] == "pinned_sensor_not_selected"
+    room = Room("room","Room",(),())
+    report,_ = gather(hass,room,{
         "enabled":True,"controller":"environment","temperature_entity":foreign.entity_id,
-    },selected_temperature_c=temp,temperature_evidence=invalid)
+    }, selected_temperature_c=temp,temperature_evidence=invalid)
     assert report["temperature_c"] is None
-    assert report["temperature_evidence"]["status"]=="pinned_sensor_not_selected"
+    assert report["temperature_evidence"]["status"] == "pinned_sensor_not_selected"
 
 
-def test_selected_unavailable_and_wrong_room_temperature_never_fallback(evidence):
+def test_selected_unavailable_and_wrong_room_temperature_are_discarded(evidence):
     hass, settings, first, second, foreign = evidence
-    second.state="unavailable"
-    temp, metadata=room_temperature_evidence(hass,settings,"room")
-    assert temp is None
-    assert metadata["status"]=="selected_temperature_invalid"
-    assert metadata["invalid_sources"]==[
-        {"entity_id":second.entity_id,"reason":"sensor_unavailable"}
-    ]
-    second.state="23"
+    second.state = "unavailable"
+    temp, metadata = room_temperature_evidence(hass,settings,"room")
+    assert temp == 21
+    assert metadata["status"] == "ready" and metadata["partial"]
+    assert metadata["valid_count"] == 1 and metadata["ignored_count"] == 1
+    assert metadata["invalid_sources"] == [
+        {"entity_id": second.entity_id, "reason": "sensor_unavailable"}]
+    second.state = "23"
     settings["room_sources"]["room"]["temperature"].append(foreign.entity_id)
-    temp, metadata=room_temperature_evidence(hass,settings,"room")
-    assert temp is None
-    assert metadata["invalid_sources"]==[
-        {"entity_id":foreign.entity_id,"reason":"sensor_wrong_area"}
-    ]
+    temp, metadata = room_temperature_evidence(hass,settings,"room")
+    assert temp == 22 and metadata["partial"]
+    assert metadata["invalid_sources"] == [
+        {"entity_id": foreign.entity_id, "reason": "sensor_wrong_area"}]
+    first.state = "unknown"
+    second.state = "unavailable"
+    temp, metadata = room_temperature_evidence(hass,settings,"room")
+    assert temp is None and metadata["status"] == "selected_temperature_invalid"
+    assert metadata["valid_count"] == 0
 
 
 def test_no_selected_temperature_stays_unavailable(evidence):
