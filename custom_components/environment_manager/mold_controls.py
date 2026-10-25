@@ -1,6 +1,6 @@
 """Per-area mold calibration driven by explicit device inputs.
 
-The config flow owns temperature/weather entity selection. A room Number
+Room source selections own indoor temperature input. A room Number
 holds the measured coldest-surface temperature, and this opt-in calibration
 button computes the Magnus factor only after fresh simultaneous evidence.
 Never infer a surface temperature from an unrelated room sensor.
@@ -19,7 +19,8 @@ from .const import (
     CONF_AREAS, CONF_MOLD_ROOMS, CONF_USE_MOLD, CONF_WEATHER,
     DEFAULT_THRESHOLDS,
 )
-from .discovery import entity_area, temperature_sensor_c, weather
+from .discovery import weather
+from .room_sources import room_temperature_evidence, selected
 from .mold import calibration_factor
 
 
@@ -87,16 +88,31 @@ async def async_set_surface_temperature(manager: Any, area_id: str, value: float
 
 
 async def async_recalculate_mold_factor(manager: Any, area_id: str) -> float:
-    """Explicit button action; never overwrite valid calibration on errors."""
+    """Calibrate with the available selected sensor means; retain old factor on failure."""
     async with _editor_lock(manager):
         cfg = _calibration(manager, area_id)
-        source = cfg.get("indoor_temperature_entity")
-        from .room_sources import selected
-        allowed = selected(manager.settings, area_id, "temperature")
-        if allowed is not None and source not in allowed:
-            raise HomeAssistantError("Mold temperature source is not selected for this room")
-        if not isinstance(source, str) or entity_area(manager.hass, source) != area_id:
+        configured = selected(manager.settings, area_id, "temperature")
+        pinned = cfg.get("indoor_temperature_entity") if configured is None else None
+        age = float(manager.thresholds.get(
+            "max_age_minutes", DEFAULT_THRESHOLDS["max_age_minutes"]))
+        indoor_c, evidence = room_temperature_evidence(
+            manager.hass, manager.settings, area_id,
+            pinned=pinned if isinstance(pinned, str) else None,
+            age_minutes=age,
+        )
+        if configured is None and not isinstance(pinned, str):
             raise HomeAssistantError("Select a valid indoor temperature source for this area")
+        if indoor_c is None:
+            if evidence.get("status") == "pinned_sensor_not_selected":
+                raise HomeAssistantError("Mold temperature source is not selected for this room")
+            if evidence.get("status") == "selected_temperature_invalid" and pinned:
+                raise HomeAssistantError("Select a valid indoor temperature source for this area")
+            raise HomeAssistantError("Indoor temperature is unavailable or stale")
+
+        indoor_sources = list(configured) if configured is not None else [pinned]
+        # An existing legacy single-sensor pin never overrides two or more
+        # explicitly selected sensors for this room.
+        indoor_source = indoor_sources[0] if len(indoor_sources) == 1 else None
         surface = cfg.get("critical_temperature_c")
         if isinstance(surface, bool):
             raise HomeAssistantError("Measure the coldest surface and enter its temperature")
@@ -107,44 +123,42 @@ async def async_recalculate_mold_factor(manager: Any, area_id: str) -> float:
         if not math.isfinite(surface_c) or not -60 <= surface_c <= 85:
             raise HomeAssistantError("Measured cold-surface temperature is invalid")
 
-        age = float(manager.thresholds.get("max_age_minutes",
-                                          DEFAULT_THRESHOLDS["max_age_minutes"]))
-        indoor_c = temperature_sensor_c(manager.hass, source, age)
-        if indoor_c is None:
-            raise HomeAssistantError("Indoor temperature is unavailable or stale")
-
         choices = manager.settings.get(CONF_WEATHER, [])
-        if not isinstance(choices, list):
+        if not isinstance(choices, list) or not choices:
             raise HomeAssistantError("Configure outdoor weather sources first")
-        pinned = cfg.get("outdoor_weather_entity")
-        # A selected source stays pinned to prevent calibrating against a
-        # different outdoor provider behind the user's back.
-        if pinned and pinned in choices:
-            providers = [pinned]
-        elif pinned:
+        pinned_weather = cfg.get("outdoor_weather_entity")
+        # Preserve the legacy pin only with one selected provider. With
+        # multiple providers, average all available compatible temperatures.
+        if pinned_weather and len(choices) == 1 and pinned_weather not in choices:
             raise HomeAssistantError("Selected outdoor weather source is no longer configured")
-        else:
-            providers = choices
-        outdoor = next((data for entity_id in providers
-                        if (data := weather(manager.hass, entity_id, age)).temperature_c
-                        is not None), None)
-        if outdoor is None:
+        available = []
+        for entity in dict.fromkeys(choices):
+            data = weather(manager.hass, entity, age)
+            if (data.temperature_c is not None
+                    and math.isfinite(data.temperature_c)
+                    and -60 <= data.temperature_c <= 85):
+                available.append(data)
+        if not available:
             raise HomeAssistantError("Outdoor temperature is unavailable or stale")
+        outdoor_c = sum(data.temperature_c for data in available) / len(available)
 
-        factor = calibration_factor(indoor_c, outdoor.temperature_c, surface_c)
+        factor = calibration_factor(indoor_c, outdoor_c, surface_c)
         if factor is None:
             raise HomeAssistantError(
                 "Cannot calibrate: require at least 3°C indoors/outdoors difference, "
                 "a valid surface offset and a factor within physical limits"
             )
+        weather_sources = list(dict.fromkeys(choices))
         new = {
             **cfg,
             "calibration_factor": factor,
-            "indoor_temperature_entity": source,
-            "outdoor_weather_entity": outdoor.entity_id,
+            "indoor_temperature_entity": indoor_source,
+            "indoor_temperature_entities": indoor_sources,
+            "outdoor_weather_entity": weather_sources[0] if len(weather_sources) == 1 else None,
+            "outdoor_weather_entities": weather_sources,
             "critical_temperature_c": surface_c,
             "calibrated_indoor_c": indoor_c,
-            "calibrated_outdoor_c": outdoor.temperature_c,
+            "calibrated_outdoor_c": outdoor_c,
             "calibrated_at": datetime.now(timezone.utc).isoformat(),
         }
         _commit(manager, _options_with_room(manager, area_id, new))
