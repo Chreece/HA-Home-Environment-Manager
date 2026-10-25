@@ -40,7 +40,7 @@ def is_shading_cover(hass: Any, state: Any) -> bool:
         supported = int(state.attributes.get("supported_features", 0))
     except (TypeError, ValueError, OverflowError, AttributeError):
         return False
-    if not (supported & COVER_CLOSE_FEATURE):
+    if supported < 0 or not (supported & COVER_CLOSE_FEATURE):
         return False
     from .discovery import _device_class
     cover_class = _device_class(hass, state)
