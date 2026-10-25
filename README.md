@@ -21,9 +21,11 @@
 
 # Home Environment Manager for Home Assistant
 
-> **v0.6.0 beta 44 is available for opt-in testing.** Stable remains **v0.5.1**. Beta44 makes solar shade closing weather-aware, reopens only previously confirmed Manager-closed shades, permanently honors manual reopening until explicit room re-enable, and adds a Home-wide opt-in to announce before opening/closing. All safety controls, locales and beta31–43 fixes remain under the canonical `environment_manager` domain.
+> **New opt-in beta: [v0.6.0b45](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b45).** Stable remains **v0.5.1**. Beta45 includes all beta44/per-cover controls and fixes discovery for classless native roller shutters (like the reported `supported_features=15` covers). The room-device explanations now describe supported types and how controls are authorized in all 38 UI languages. Canonical integration domain remains `environment_manager` only.
 
-## Beta 45 (in development) - one safe shade controller per selected cover
+**Update with HACS:** Open Home Environment Manager → **Redownload / version selection** → enable **Show beta versions** → choose **v0.6.0b45** → restart Home Assistant. Check that each shade belongs to the correct HA area, then select it in Configure → Room sources → **Shades**. Newly selected shades cannot move until their individual window contact and auto-control settings are configured. Back up your Home Assistant configuration before changing beta versions.
+
+## Beta 45 - per-cover controls and generic roller shutters
 
 Every native room **Shades** output now has its own **Window Shade Controller** child of that area's Home Environment hub. Select your supported covers in **Configure → Room sources → Shades**; their child devices then expose four independently persisted entities:
 
@@ -34,7 +36,11 @@ Every native room **Shades** output now has its own **Window Shade Controller** 
 
 **Manual override:** user-initiated opening *or closing* pauses automatic movement for that exact cover. The pause is stored across Home Assistant restarts. The automatic control switch shows OFF while paused; turn it ON deliberately to rearm this cover. Other room covers keep running normally. Changing a cover's linked window disarms its automation until the newly selected window has been reviewed and explicitly enabled.
 
-This is a separate feature branch, not a released HACS beta until validation and packaging are complete. Legacy Beta44 room-wide configurations retain their existing safe behavior until their covers are individually configured; no source cover device is replaced or migrated.
+**Generic roller shutters:** `cover.*` entities with no `device_class` are available in the room's shade selector whenever their native CLOSE feature is advertised, including covers temporarily reporting `unknown`/`unavailable`. Known non-shading device classes (garage, gate, door, window, damper, awning) remain excluded. A selected cover in an unknown state cannot move until physical state is available and all safety checks pass. Entity-area overrides take priority over native device-area assignments. A generic cover must be verified by the user to be a real window shade.
+
+**Clearer setup guidance:** The **Devices** field supports native `climate.*`, `humidifier.*`, and `fan.*` devices. It explains temperature/humidity targets, HVAC modes, fan speeds and per-device opt-in. The **Shades** field explains supported/generic cover types, exclusions, safe window contacts, temperature threshold and optional pre-movement announcements. Greek, German, English and the remaining 35 supported languages have dedicated explanations.
+
+Legacy Beta44 room-wide configurations retain their existing safe behavior until their covers are individually configured; no source cover device is replaced or migrated.
 
 ## Beta 44 - weather-aware shade cooling, owned reopening and pre-movement announcements
 
