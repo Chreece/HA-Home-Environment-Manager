@@ -482,7 +482,9 @@ class AirQualityManager:
                     })
                 )
                 self._tracked.update(enrolled)
-                if config.get("shade_rooms", {}).get(area, {}).get("enabled") is True:
+                from .shade_cooling import cover_config
+                if any(cover_config(config, area, cover)["enabled"]
+                       for cover in enrolled):
                     self._tracked.add("sun.sun")
         air_plan=evaluate(
             outdoor_readings, current_weather, warnings, selected_rooms,
@@ -745,11 +747,11 @@ class AirQualityManager:
             return
         # Sun elevation and stable weather release timers need clock ticks
         # even when no physical climate equipment is selected in this room.
-        from .shade_cooling import config as shade_config
+        from .shade_cooling import cover_config
         from .room_sources import selected as selected_room
-        if any(shade_config(self.settings, area)["enabled"] and
-               selected_room(self.settings, area, "shades")
-               for area in self.settings.get(CONF_AREAS, [])):
+        if any(cover_config(self.settings, area, cover)["enabled"]
+               for area in self.settings.get(CONF_AREAS, [])
+               for cover in (selected_room(self.settings, area, "shades") or ())):
             self._recalculate()
             return
         if claimed_sources(self):
