@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0b45 - Generic native covers and per-device shade controls (beta)
+
+- Discover native `cover.*` roller shutters without `device_class` when `supported_features` advertises CLOSE (including the reported `15` bitmask), using entity-area override before device area.
+- Keep clearly non-shading covers such as garages, doors, gates, windows, dampers and exterior awnings out of the selector, as well as disabled, hidden or Manager-generated controls.
+- Allow unknown/unavailable native shutters to remain **selectable** while refusing any motion until state and safety evidence are verified.
+- Every selected room shade has its own logical controller, mapped window contact, auto-control/announcement switches, and minimum closing temperature (existing Beta45 per-cover feature).
+- Clarify `Devices` (climate/humidifier/fan) and `Shades` (native and generic window covers) form descriptions in all 38 languages including Greek, German and English.
+- Preserve weather/sun/temperature/window protection, manual-override pause, persistent exact-device ownership, independent per-cover authorizations, and legacy beta44 opt-in semantics.
+- Keep only canonical `environment_manager`; stable v0.5.1 and all earlier beta tags unchanged.
+
+
 ## 0.6.0b30 - Visible per-controller operational status (beta)
 
 - Create a per-controller **Control status** diagnostic sensor attached to each managed physical controller device.
