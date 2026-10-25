@@ -171,6 +171,25 @@ class AirQualityManager:
                 calibration = calibrations.get(room.area_id, {})
                 if not isinstance(calibration, dict):
                     calibration = {}
+                # A calibration factor is tied to the selected source set.
+                # Changing a room or weather selection requires recalibration;
+                # a temporarily offline source does not change that set.
+                from .room_sources import selected
+                current_temperature_ids = selected(config, room.area_id, "temperature")
+                saved_temperature_ids = calibration.get("indoor_temperature_entities")
+                saved_weather_ids = calibration.get("outdoor_weather_entities")
+                weather_ids = config.get(CONF_WEATHER, [])
+                selections_changed = (
+                    (isinstance(saved_temperature_ids, list)
+                     and current_temperature_ids is not None
+                     and list(current_temperature_ids) != saved_temperature_ids)
+                    or (isinstance(saved_weather_ids, list)
+                        and isinstance(weather_ids, list)
+                        and list(dict.fromkeys(weather_ids)) != saved_weather_ids)
+                )
+                if selections_changed:
+                    calibration = dict(calibration)
+                    calibration.pop("calibration_factor", None)
                 sensor_id = calibration.get("indoor_temperature_entity")
                 if isinstance(sensor_id, str):
                     mold_temperature_entities.add(sensor_id)
