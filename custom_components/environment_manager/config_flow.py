@@ -132,6 +132,7 @@ class _FlowMixin(RoomSetupMixin, CompactOptionsMixin):
             return ""
         room = discover_rooms(
             self.hass, [area_id], self._mold_source_age(),
+            source_selections=self._values.get("room_sources"),
             excluded_entities=set(excluded) |
                 set(self._values.get(CONF_EXCLUDED_WINDOWS, [])),
         )[0]
