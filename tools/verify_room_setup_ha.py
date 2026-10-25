@@ -126,8 +126,8 @@ async def check(config_dir):
     assert shade and hvac and shade != hvac
     for logical in (shade, hvac):
         identifier = next(iter(logical["identifiers"]))
-        controller = next((item for item in devices.devices.values()
-                           if identifier in item.identifiers), None)
+        controller_id = manager._device_hierarchy["controllers"][identifier[1]]["device_id"]
+        controller = devices.async_get(controller_id)
         assert controller is not None
         assert controller.area_id == living.id
     # Instantiate new entities with REAL Home Assistant 2026.10 bases.
