@@ -50,7 +50,7 @@ def test_room_moisture_drying_diagnostics_use_measured_paired_weather(adapter):
     assert h.samples("kitchen")[-1]["occupied"] is False
 
 
-def test_multiple_temperature_sources_without_calibration_fail_closed(adapter):
+def test_multiple_temperature_sources_without_calibration_use_mean(adapter):
     from custom_components.environment_manager.environment import build_environment
     rec = room()
     report, _ = build_environment(
@@ -59,9 +59,9 @@ def test_multiple_temperature_sources_without_calibration_fail_closed(adapter):
         history=EnvironmentHistory(), max_age_minutes=90, now=1000000,
     )
     e = report["kitchen"]
-    assert e["sources"]["indoor_temperature_status"] == "ambiguous_sensors"
-    assert e["moisture"]["status"] == "unavailable"
-    assert e["thermal_comfort"]["status"] == "unavailable"
+    assert e["sources"]["indoor_temperature_status"] == "room_sensor_mean"
+    assert e["moisture"]["status"] == "drying"
+    assert e["thermal_comfort"]["status"] == "unavailable"  # still requires history
 
 
 def test_configured_temperature_wins_when_multiple_sources(adapter):
@@ -76,7 +76,7 @@ def test_configured_temperature_wins_when_multiple_sources(adapter):
     assert report["kitchen"]["moisture"]["status"] == "drying"
 
 
-def test_ambiguous_outdoor_weather_sources_withheld(adapter):
+def test_multiple_outdoor_weather_sources_use_numeric_mean(adapter):
     from custom_components.environment_manager.environment import build_environment
     rec = room()
     report, _ = build_environment(
@@ -85,8 +85,9 @@ def test_ambiguous_outdoor_weather_sources_withheld(adapter):
         history=EnvironmentHistory(), max_age_minutes=90, now=1000000,
     )
     e = report["kitchen"]
-    assert e["sources"]["outdoor_weather_status"] == "multiple_sources"
-    assert e["moisture"]["status"] == "unavailable"
+    assert e["sources"]["outdoor_weather_status"] == "averaged_sources"
+    assert e["moisture"]["status"] != "unavailable"
+    assert e["sources"]["outdoor_weather_entities"] == ["weather.one", "weather.two"]
 
 
 def test_humidity_only_open_action_withheld_when_outside_more_humid():
