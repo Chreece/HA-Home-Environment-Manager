@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 import json
+import math
 
 from .const import DEFAULT_THRESHOLDS, WEATHER_CLEAR
 
@@ -136,6 +137,48 @@ def _reading_reason(prefix: str, reading: Reading) -> Reason:
     )
 
 
+def _averaged_readings(readings: tuple[Reading, ...]) -> tuple[Reading, ...]:
+    """One valid normalized mean per measured metric, keeping AQI scales separate.
+
+    Individual unavailable/invalid sensor readings are discarded, not counted
+    as zero. AQI is excluded because different provider scales are not
+    directly comparable; derived mold evidence also remains independent.
+    """
+    groups: dict[str, list[Reading]] = {}
+    for item in readings:
+        group_key = item.metric if item.metric not in ("aqi", "mold", "unknown") else item.entity_id
+        groups.setdefault(group_key, []).append(item)
+    result = []
+    for members in groups.values():
+        if len(members) == 1:
+            result.append(members[0])
+            continue
+        values = [
+            float(item.value) for item in members
+            if isinstance(item.value, (int, float)) and not isinstance(item.value, bool)
+            and math.isfinite(item.value)
+            and (0 < item.value <= 100 if item.metric == "humidity" else item.value >= 0)
+        ]
+        first = members[0]
+        value = sum(values) / len(values) if values else None
+        result.append(Reading(
+            first.entity_id, first.name, first.metric, value,
+            {"valid_sensor_count": len(values),
+             "source_entities": [item.entity_id for item in members],
+             "ignored_sensor_count": len(members) - len(values)},
+        ))
+    return tuple(result)
+
+
+def _numeric_weather_mean(weather: tuple[Weather, ...], attribute: str,
+                          minimum: float, maximum: float) -> float | None:
+    values = [float(value) for item in weather
+              if isinstance((value := getattr(item, attribute)), (int, float))
+              and not isinstance(value, bool)
+              and math.isfinite(value) and minimum <= value <= maximum]
+    return sum(values) / len(values) if values else None
+
+
 def evaluate(
     outdoor: tuple[Reading, ...],
     weather: tuple[Weather, ...],
@@ -155,7 +198,13 @@ def evaluate(
     # sensor currently reporting unknown/unavailable/stale.
     if not outdoor:
         outside.append(Reason("no_outdoor_data"))
-    for reading in outdoor:
+    # Retain per-device diagnostics even when a different source makes the
+    # same metric calculable.
+    unavailable_outdoor.extend(
+        item.entity_id for item in outdoor
+        if item.value is None and item.metric != "aqi"
+    )
+    for reading in _averaged_readings(outdoor):
         if reading.metric == "aqi" and reading.value is not None:
             classification = (reading.details or {}).get("aqi", {})
             if classification.get("status") != "ready":
@@ -167,27 +216,33 @@ def evaluate(
             continue
         limit = thresholds.get(f"outdoor_{reading.metric}")
         if reading.value is None or limit is None:
-            unavailable_outdoor.append(reading.entity_id)
+            if reading.value is None and reading.entity_id not in unavailable_outdoor:
+                unavailable_outdoor.append(reading.entity_id)
             continue  # Unknown is not unsafe and must not trigger 'close'.
         if reading.value > limit:
             outside.append(_reading_reason("outside", reading))
 
     if not weather:
         outside.append(Reason("no_weather_data"))
+    elif not any(item.condition is not None for item in weather):
+        # No valid current weather condition remains: keep ventilation blocked.
+        outside.append(Reason("unavailable_weather", weather[0].entity_id))
     for item in weather:
-        if item.condition is None:
-            outside.append(Reason("unavailable_weather", item.entity_id))
-            continue
-        if item.condition not in WEATHER_CLEAR:
+        # A rain/storm condition or active warning is not a numeric sample;
+        # keep every reported hazard even with multiple stations.
+        if item.condition is not None and item.condition not in WEATHER_CLEAR:
             outside.append(Reason("weather_condition", item.entity_id, item.condition))
-        if item.temperature_c is not None and item.temperature_c < thresholds["min_outdoor_temp"]:
-            outside.append(Reason("weather_cold", item.entity_id, f"{_number(item.temperature_c)} °C"))
-        if item.temperature_c is not None and item.temperature_c > thresholds["max_outdoor_temp"]:
-            outside.append(Reason("weather_hot", item.entity_id, f"{_number(item.temperature_c)} °C"))
-        if item.humidity is not None and item.humidity > thresholds["max_outdoor_humidity"]:
-            outside.append(Reason("weather_humid", item.entity_id, f"{_number(item.humidity)} %"))
-        if item.wind_kmh is not None and item.wind_kmh > thresholds["max_wind_kmh"]:
-            outside.append(Reason("weather_wind", item.entity_id, f"{_number(item.wind_kmh)} km/h"))
+    outdoor_temp = _numeric_weather_mean(weather, "temperature_c", -60, 85)
+    outdoor_humidity = _numeric_weather_mean(weather, "humidity", 0.00001, 100)
+    outdoor_wind = _numeric_weather_mean(weather, "wind_kmh", 0, 400)
+    if outdoor_temp is not None and outdoor_temp < thresholds["min_outdoor_temp"]:
+        outside.append(Reason("weather_cold", "Average weather temperature", f"{_number(outdoor_temp)} °C"))
+    if outdoor_temp is not None and outdoor_temp > thresholds["max_outdoor_temp"]:
+        outside.append(Reason("weather_hot", "Average weather temperature", f"{_number(outdoor_temp)} °C"))
+    if outdoor_humidity is not None and outdoor_humidity > thresholds["max_outdoor_humidity"]:
+        outside.append(Reason("weather_humid", "Average weather humidity", f"{_number(outdoor_humidity)} %"))
+    if outdoor_wind is not None and outdoor_wind > thresholds["max_wind_kmh"]:
+        outside.append(Reason("weather_wind", "Average weather wind", f"{_number(outdoor_wind)} km/h"))
 
     for warning in warnings:
         if warning.active is None:
@@ -230,7 +285,7 @@ def evaluate(
 
         indoor_reasons: list[Reason] = []
         moisture_status = environmental.get(room.area_id, {}).get("moisture", {}).get("status")
-        for reading in room.readings:
+        for reading in _averaged_readings(room.readings):
             limit = thresholds.get(f"indoor_{reading.metric}")
             if reading.value is None or limit is None:
                 continue

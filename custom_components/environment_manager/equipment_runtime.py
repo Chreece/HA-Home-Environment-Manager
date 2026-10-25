@@ -696,21 +696,27 @@ class EquipmentRuntime:
             if metric == "temperature" and not source:
                 source = self.manager.settings.get("pid_rooms", {}).get(spec.area_id, {}).get("temperature_entity")
             excluded = self.manager.settings.get(CONF_EXCLUDED_INDOOR, {}).get(spec.area_id, [])
+            legacy_mean = None
             if not source and metric in ("temperature", "humidity"):
                 candidates = []
                 for observed in self.hass.states.async_all("sensor"):
-                    if observed.entity_id in excluded or entity_area(self.hass, observed.entity_id) != spec.area_id:
+                    if (observed.entity_id in excluded
+                            or entity_area(self.hass, observed.entity_id) != spec.area_id):
                         continue
                     if metric == "temperature":
                         if observed.attributes.get("device_class") != "temperature":
                             continue
                         valid = temperature_sensor_c(self.hass, observed.entity_id, 10)
+                        if valid is not None and not -60 <= valid <= 85:
+                            valid = None
                     else:
                         sample = reading(self.hass, observed.entity_id, 10, outdoor=False)
                         valid = sample.value if sample.metric == metric else None
                     if valid is not None:
-                        candidates.append(observed.entity_id)
-                source = candidates[0] if len(candidates) == 1 else None
+                        candidates.append((observed.entity_id, valid))
+                if candidates:
+                    legacy_mean = sum(sample for _, sample in candidates) / len(candidates)
+                    source = candidates[0][0] if len(candidates) == 1 else None
             value = None
             if isinstance(source, str) and source not in excluded and entity_area(self.hass, source) == spec.area_id:
                 if metric == "temperature":
@@ -718,9 +724,14 @@ class EquipmentRuntime:
                 else:
                     observed = reading(self.hass, source, 10, outdoor=False)
                     value = observed.value if observed.metric == metric else None
+            if source is None:
+                value = legacy_mean
             values[metric] = value
             values[key] = source
-            values[metric + "_source"] = "legacy_fallback" if source else "unavailable"
+            values[metric + "_source"] = (
+                "legacy_fallback" if source else
+                "legacy_room_mean" if legacy_mean is not None else "unavailable"
+            )
         return values
 
     def _quiet_context(self, spec: model.ManagedDevice, cfg: dict, plan: dict) -> bool:

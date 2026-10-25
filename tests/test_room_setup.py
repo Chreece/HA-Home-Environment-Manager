@@ -176,7 +176,12 @@ def test_selected_temperatures_average_after_unit_conversion_and_no_fallback(mon
     assert result[2] == "selected_mean"
     assert _room_temperature(flow.hass, "living", {}, 90, selected_entities=[])[0] is None
     flow.hass.states.get("sensor.temp2").state = "unavailable"
-    assert _room_temperature(flow.hass, "living", {}, 90, selected_entities=["sensor.temp1", "sensor.temp2"])[0] is None
+    partial = _room_temperature(flow.hass, "living", {}, 90, selected_entities=["sensor.temp1", "sensor.temp2"])
+    assert partial[0] == 20
+    assert partial[2] == "selected_partial_sensor"
+    flow.hass.states.get("sensor.temp1").state = "unknown"
+    assert _room_temperature(flow.hass, "living", {}, 90,
+                             selected_entities=["sensor.temp1", "sensor.temp2"])[0] is None
 
 
 def test_pressure_is_normalized_and_retained_as_room_input(monkeypatch, adapter):

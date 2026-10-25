@@ -13,7 +13,8 @@ CURRENT_VERSION = json.loads((PKG / "manifest.json").read_text(encoding="utf-8")
 
 
 def _builder():
-    builder_version = ("beta46" if CURRENT_VERSION == "0.6.0b46" else
+    builder_version = ("beta47" if CURRENT_VERSION == "0.6.0b47" else
+                       "beta46" if CURRENT_VERSION == "0.6.0b46" else
                        "beta45" if CURRENT_VERSION == "0.6.0b45" else "beta44")
     path = ROOT / "tools" / f"build_{builder_version}_payload.py"
     spec = importlib.util.spec_from_file_location(f"{builder_version}_payload_builder", path)
@@ -131,4 +132,20 @@ def test_beta46_publisher_requires_no_em_or_en_dashes_after_regeneration():
     assert "git push origin HEAD:refs/heads/beta/v0.6.0b46" in workflow
     assert "gh release create v0.6.0b46" in workflow
     assert "needs: [test, hassfest, hacs, home_assistant]" in workflow
+    assert "no_typographic_dashes" in workflow
+
+
+def test_beta47_publisher_validates_sensor_average_regressions_before_release():
+    if CURRENT_VERSION != "0.6.0b47":
+        return
+    workflow = (ROOT / ".github/workflows/beta47-valid-sensor-averages.yml").read_text(
+        encoding="utf-8"
+    )
+    assert "python tools/build_beta47_payload.py" in workflow
+    assert "git checkout --orphan beta47-payload" in workflow
+    assert "git push origin HEAD:refs/heads/beta/v0.6.0b47" in workflow
+    assert "gh release create v0.6.0b47" in workflow
+    assert "needs: [test, hassfest, hacs, home_assistant]" in workflow
+    assert "github.event_name == 'push'" in workflow
+    assert "Generate catalogs and run full regression suite" in workflow
     assert "no_typographic_dashes" in workflow

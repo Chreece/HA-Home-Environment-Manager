@@ -1,8 +1,8 @@
 """Collect available HA room/weather inputs and build transparent physics metrics.
 
 This module intentionally never invents unknown sensors or occupant activity.
-With multiple eligible temperature sensors and no chosen mold calibration sensor,
-it withholds thermal assessments instead of selecting a random sensor.
+Multiple colocated, unit-normalized measurements contribute their valid mean.
+Unknown, stale and physically invalid samples never contribute a fake zero.
 """
 from __future__ import annotations
 
@@ -22,19 +22,21 @@ from .environment_extended import extend_room_inputs, room_science
 
 
 def _single_value(readings: Any, metric: str) -> float | None:
-    """Require compatible colocated values; reject disagreeing sensors."""
-    values = [float(s.value) for s in readings
-              if s.metric == metric and s.value is not None
-              and isinstance(s.value, (float, int)) and math.isfinite(s.value)]
-    if not values:
-        return None
-    if metric == "humidity":
-        return sum(v for v in values if 0 < v <= 100) / len(values) if all(
-            0 < v <= 100 for v in values) else None
-    spread_limit = max(5, 0.15 * max(values))
-    if max(values) - min(values) > spread_limit:
-        return None
-    return round(sum(values) / len(values), 3)
+    """Average only finite, physically valid values of one normalized metric."""
+    values = [
+        float(item.value) for item in readings
+        if item.metric == metric and isinstance(item.value, (float, int))
+        and not isinstance(item.value, bool) and math.isfinite(item.value)
+        and (0 < item.value <= 100 if metric == "humidity" else item.value >= 0)
+    ]
+    return round(sum(values) / len(values), 3) if values else None
+
+
+def _numeric_mean(values: Any, *, minimum: float, maximum: float) -> float | None:
+    valid = [float(value) for value in values
+             if isinstance(value, (float, int)) and not isinstance(value, bool)
+             and math.isfinite(value) and minimum <= value <= maximum]
+    return sum(valid) / len(valid) if valid else None
 
 
 def _room_temperature(hass: Any, area_id: str, calibration: dict, max_age: float,
@@ -53,9 +55,11 @@ def _room_temperature(hass: Any, area_id: str, calibration: dict, max_age: float
     active = [(item["value"], temperature_sensor_c(hass, item["value"], max_age))
               for item in choices]
     active = [(ent, value) for ent, value in active if value is not None]
-    if len(active) == 1:
-        return active[0][1], active[0][0], "unique_sensor"
-    return None, None, "ambiguous_sensors" if len(active) > 1 else "missing_sensor"
+    if active:
+        return (sum(value for _, value in active) / len(active),
+                active[0][0] if len(active) == 1 else None,
+                "unique_sensor" if len(active) == 1 else "room_sensor_mean")
+    return None, None, "missing_sensor"
 
 
 def _occupancy_state(hass: Any, area_id: str, max_age: float) -> bool | None:
@@ -89,11 +93,15 @@ def build_environment(
 ) -> tuple[dict[str, dict], bool]:
     """Return scientific diagnostics for dashboard and whether history changed."""
     stamp = time.time() if now is None else now
-    selected_weather = [w for w in weather if w.temperature_c is not None]
-    # Do not silently mix two different weather stations.
+    selected_weather = [
+        w for w in weather if _numeric_mean((w.temperature_c,),
+                                              minimum=-60, maximum=85) is not None
+    ]
     wx = selected_weather[0] if len(selected_weather) == 1 else None
-    outdoor_t = wx.temperature_c if wx else None
-    outdoor_rh = wx.humidity if wx and wx.humidity is not None and 0 < wx.humidity <= 100 else None
+    outdoor_t = _numeric_mean(
+        (w.temperature_c for w in weather), minimum=-60, maximum=85)
+    outdoor_rh = _numeric_mean(
+        (w.humidity for w in weather), minimum=0.00001, maximum=100)
     outdoor_co2 = _single_value(outdoor_readings, "co2")
     changed = history.add("__outside__", {
         "outdoor_temperature_c": outdoor_t,
@@ -177,8 +185,11 @@ def build_environment(
                 "selected_temperature_entities": list(temperature_inputs) if temperature_inputs is not None else None,
                 "indoor_temperature_status": temp_source_status,
                 "outdoor_weather_entity": wx.entity_id if wx else None,
-                "outdoor_weather_status": "one_source" if wx else
-                     "multiple_sources" if len(selected_weather) > 1 else "unavailable",
+                "outdoor_weather_entities": [w.entity_id for w in selected_weather],
+                "outdoor_weather_status": (
+                    "averaged_sources" if len(selected_weather) > 1
+                    else "one_source" if wx else "unavailable"
+                ),
                 "humidity_sensors": sum(r.metric == "humidity" and r.value is not None for r in room.readings),
                 "occupancy_known": occupied is not None,
                 "outdoor_co2_measured": outdoor_co2 is not None,

@@ -103,19 +103,28 @@ def estimate_mold_for_room(
     entity = f"derived.mold_{room.area_id}"
     factor = calibration.get("calibration_factor")
     outdoor_id = calibration.get("outdoor_weather_entity")
-    outdoor_c = next(
-        (item.temperature_c for item in weather if item.entity_id == outdoor_id),
-        None,
-    )
-    if not outdoor_id:
-        # A not-yet-calibrated room can still show whether any selected
-        # weather provider supplies the outdoor temperature needed for setup.
-        # Once calibrated, the original provider is pinned, never silently
-        # replaced with another weather source.
+    outdoor_ids = calibration.get("outdoor_weather_entities")
+    if isinstance(outdoor_ids, list) and outdoor_ids:
+        # Calibration used the selected weather sources as one numeric input.
+        # Temporarily unavailable providers do not poison a valid mean.
+        values = [
+            _temperature(item.temperature_c) for item in weather
+            if item.entity_id in outdoor_ids
+        ]
+        valid = [value for value in values if value is not None]
+        outdoor_c = sum(valid) / len(valid) if valid else None
+    elif outdoor_id:
+        # Backward compatibility: the old single-provider calibration stays
+        # pinned; never substitute an unrelated weather source.
         outdoor_c = next(
-            (item.temperature_c for item in weather if item.temperature_c is not None),
-            None,
+            (_temperature(item.temperature_c) for item in weather
+             if item.entity_id == outdoor_id), None,
         )
+    else:
+        # No completed calibration yet: show which inputs are available.
+        valid = [_temperature(item.temperature_c) for item in weather]
+        present = [value for value in valid if value is not None]
+        outdoor_c = sum(present) / len(present) if present else None
     avg, count = mean_valid_humidity(room.readings)
     result = estimate_mold(indoor_c, outdoor_c, avg, factor)
 
@@ -127,7 +136,8 @@ def estimate_mold_for_room(
     except (ValueError, TypeError, OverflowError):
         factor_number = float("nan")
     calibrated = (
-        isinstance(outdoor_id, str) and bool(outdoor_id)
+        (isinstance(outdoor_id, str) and bool(outdoor_id)
+         or isinstance(outdoor_ids, list) and bool(outdoor_ids))
         and math.isfinite(factor_number) and 0.5 <= abs(factor_number) <= 20
     )
     data_status = (
@@ -161,9 +171,14 @@ def estimate_mold_for_room(
         details["calibration_factor"] = factor_number
     if isinstance(outdoor_id, str):
         details["outdoor_weather_entity"] = outdoor_id
+    if isinstance(outdoor_ids, list):
+        details["outdoor_weather_entities"] = list(outdoor_ids)
     indoor_sensor = calibration.get("indoor_temperature_entity")
     if isinstance(indoor_sensor, str):
         details["indoor_temperature_entity"] = indoor_sensor
+    indoor_sensors = calibration.get("indoor_temperature_entities")
+    if isinstance(indoor_sensors, list):
+        details["indoor_temperature_entities"] = list(indoor_sensors)
     if avg is not None:
         details["average_indoor_humidity"] = round(avg, 1)
     if result:

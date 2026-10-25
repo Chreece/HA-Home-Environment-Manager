@@ -21,9 +21,15 @@
 
 # Home Environment Manager for Home Assistant
 
-> **New opt-in beta: [v0.6.0b46](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b46).** Stable remains **v0.5.1**. Beta46 retains all beta45 room and cover controllers and replaces AI-style long/doubled dashes with regular ASCII hyphens in announcements, dashboard text and all 38 translated locales.
+> **New opt-in beta: [v0.6.0b47](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b47).** Stable remains **v0.5.1**. Beta47 averages all valid selected room sensor readings, ignores temporarily unavailable sources and fixes multi-temperature mold recalibration while preserving the previous controller and shade behavior.
 
-**Update with HACS:** Open Home Environment Manager - **Redownload / version selection** - enable **Show beta versions** - select **v0.6.0b46** - restart Home Assistant. Back up your configuration before changing beta versions.
+**Update with HACS:** Open Home Environment Manager - **Redownload / version selection** - enable **Show beta versions** - select **v0.6.0b47** - restart Home Assistant. Back up your configuration before changing beta versions.
+
+## Beta 47 - valid-only sensor averages and mold recalibration
+
+When a room has multiple selected sensors for the same measurement, the integration now averages just the valid readings after unit normalization. Unavailable, unknown, stale, nonnumeric, invalid-unit and out-of-range inputs do not poison the result; if all selected sensors fail, the result remains unavailable. This applies to room temperature, humidity, CO2, PM, pressure, outdoor numerical conditions, ventilation decisions and controller feedback. Categorical warnings, window states, other safety gates and AQI scale isolation remain unchanged.
+
+The room **Recalculate with current measurements** mold button now uses the room's selected temperature sensor mean rather than requiring a single previously pinned thermometer. It also averages valid configured outdoor weather temperatures. Full source IDs and input means are included in the button attributes. A changed sensor selection invalidates an old calibration factor until the measured coldest wall-surface temperature is recalibrated. The physical surface measurement is still required; no wall temperature is invented.
 
 ## Beta 46 - plain hyphens in AI and UI text
 

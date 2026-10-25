@@ -1,15 +1,15 @@
 {
-  "version": "0.6.0b46",
+  "version": "0.6.0b47",
   "channel": "beta",
-  "release_branch": "beta/v0.6.0b46",
-  "intent": "Replace AI-style en/em and doubled en dashes with ASCII hyphens in all current Home Environment Manager UI, localized copy, generated catalogs, and direct AI announcement rewrites.",
-  "note": "AI output normalization happens after validation of action, room, windows and numeric measurements; no control decisions, equipment authorization or room routing are changed. Translators are normalized before regeneration, and the shipped 38 locales remain synchronized. Stable and earlier beta tags remain unchanged.",
+  "release_branch": "beta/v0.6.0b47",
+  "intent": "Average only fresh, finite, physically valid measurements of the same metric across room and weather sensors, including all mold calibration inputs and controllers.",
+  "note": "Ignore temporarily unavailable or stale selected numeric sensors without guessing missing values or weakening nonnumeric hazard alerts. Recalibration uses selected room temperature and outdoor weather means, not a stale single-sensor pin. Preserve original HA canonical domain, manual cold-surface measurement and hardware authorization safeguards.",
   "validation_attempt": 0,
   "changes": [
-    "Normalize en, doubled en and em dashes in direct validated AI rewritten messages to '-' and instruct the model to use a plain hyphen.",
-    "Replace long/doubled dash typography in dashboard, fixed recommendation/announcement text, 38 translations and all generating scripts so regenerated content remains clean.",
-    "Preserve separator parsing in the dashboard and update display-range regression tests.",
-    "Validate source and regenerated catalogs for zero long dashes, full Python 3.13/3.14 regression suites and frontend DOM/syntax.",
-    "Publish only a new immutable beta46 canonical root HACS package, with real HA 2026.10, HACS and hassfest checks."
+    "Average compatible temperature, humidity, pressure, CO2, PM and other normalized numeric room/outdoor metrics; discard invalid samples while retaining diagnostics.",
+    "Fix the room mold recalibration button so it accepts multiple room temperature sources and multiple weather providers, persisting calibration input provenance and preserving valid factors on failure.",
+    "Invalidate a previously calibrated mold factor when its selected sensor set changes, without actuating HVAC or covers.",
+    "Keep categorical warnings, rain, stale-all input safety, AQI scale distinction and hardware ownership/permission protections intact.",
+    "Verify sensor means, unit normalization, all-invalid scenarios, mold button and integration action logic with Python 3.13/3.14, Home Assistant 2026.10, frontend, HACS, hassfest, and flat beta HACS payload."
   ]
 }
