@@ -331,11 +331,11 @@ jobs:
           PY
       - name: Build exact flat HACS payload
         run: |
-          python tools/build_beta44_payload.py /tmp/beta44-payload
+          python tools/build_beta45_payload.py /tmp/beta45-payload
           python - <<'PY'
           import json
           from pathlib import Path
-          p=Path('/tmp/beta44-payload')
+          p=Path('/tmp/beta45-payload')
           assert (p/'manifest.json').is_file()
           assert (p/'__init__.py').is_file()
           assert (p/'hacs.json').is_file()
@@ -343,7 +343,7 @@ jobs:
           m=json.loads((p/'manifest.json').read_text())
           h=json.loads((p/'hacs.json').read_text())
           assert m['domain']=='environment_manager'
-          assert m['version']=='0.6.0b44'
+          assert m['version']=='0.6.0b45'
           assert h['content_in_root'] is True
           assert h.get('zip_release') is not True
           assert 'filename' not in h
@@ -505,7 +505,7 @@ jobs:
             /tmp/HA-Home-Environment-Manager-v0.6.0b45.zip \
             --repo "$GITHUB_REPOSITORY" \
             --target "$payload_sha" \
-            --title 'Home Environment Manager v0.6.0 beta 44' \
+            --title 'Home Environment Manager v0.6.0 beta 45' \
             --notes-file /tmp/v0.6.0b45-notes.md \
             --prerelease --latest=false
           echo "BETA45_PAYLOAD_SHA=$payload_sha"
