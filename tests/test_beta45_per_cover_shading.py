@@ -104,8 +104,7 @@ def test_manual_close_pauses_one_cover_across_ticks_until_rearmed(adapter):
     assert h.hass.services.calls == []
     # Re-enabling this exact cover (not another room device) clears its latch.
     previous = cover_config(h.manager.settings, "room", h.cover.entity_id)
-    _set(h, "enabled", False)
-    _set(h, "enabled", True)
+    _set(h, "enabled", True)  # A deliberate ON rearms a paused cover.
     assert cover_config(h.manager.settings, "room", h.cover.entity_id)[
         "authorization_revision"] > previous["authorization_revision"]
     asyncio.run(h.control._tick("room"))
