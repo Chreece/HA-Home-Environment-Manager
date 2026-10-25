@@ -71,21 +71,21 @@ def test_ventilation_uses_one_mean_per_pollutant_not_any_high_sensor():
         Window("binary_sensor.win","Window",False),
     ), (
         Reading("sensor.low","Low CO2","co2",700),
-        Reading("sensor.high","High CO2","co2",1700),
+        Reading("sensor.high","High CO2","co2",1300),
     ))
     outside=(Reading("sensor.pm","PM","pm25",8),)
     weather=(Weather("weather.home","sunny",20,45,8),)
     result=evaluate(outside,weather,(),(room,))
-    assert result.status == "open"  # mean = 1200, threshold includes equality
+    assert result.status == "open"  # mean = 1000, threshold includes equality
     with_missing=Room(room.area_id,room.name,room.windows,(
         Reading("sensor.low","Low CO2","co2",None),
-        Reading("sensor.high","High CO2","co2",1700),
+        Reading("sensor.high","High CO2","co2",1300),
     ))
     result=evaluate(outside,weather,(),(with_missing,))
     assert result.status == "open"
     with_valid_low=Room(room.area_id,room.name,room.windows,(
         Reading("sensor.low","Low CO2","co2",700),
-        Reading("sensor.high","High CO2","co2",1500),
+        Reading("sensor.high","High CO2","co2",1100),
     ))
     assert evaluate(outside,weather,(),(with_valid_low,)).status == "idle"
 
