@@ -380,7 +380,7 @@ for(const [lang,title] of [['en','Climate'],['de','Klima'],['el','Κλίμα']])
     'sensor.range_demo':{state:'idle',attributes:{dashboard:nativeRange}},
   }};
   assert.ok(rangeCard.shadowRoot.innerHTML.includes(title));
-  assert.ok(rangeCard.shadowRoot.innerHTML.includes('20–26 °C'));
+  assert.ok(rangeCard.shadowRoot.innerHTML.includes('20-26 °C'));
   assert.ok(rangeCard.shadowRoot.innerHTML.includes('data-climate-area="kitchen"'));
 }
 

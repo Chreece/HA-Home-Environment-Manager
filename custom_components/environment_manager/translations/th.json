@@ -71,7 +71,7 @@
           "language": "ภาษา",
           "automatic_tts": "อัตโนมัติ",
           "automatic_notifications": "อัตโนมัติ · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "การประกาศ (ไม่บังคับ) · 0–1440 min",
+          "announcement_repeat_minutes": "การประกาศ (ไม่บังคับ) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "การตั้งค่า · แหล่งข้อมูล",
           "tts_engine": "การตั้งค่า · แหล่งข้อมูล · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "ค่าขีดจำกัดขั้นสูง",
-        "description": "ค่าขีดจำกัดขั้นสูง. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "ค่าขีดจำกัดขั้นสูง. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "ภายนอก · AQI (≤)",
           "outdoor_co2": "ภายนอก · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "ตัวเลือกไม่ถูกต้อง: ยกเว้นเซ็นเซอร์อากาศภายใน.",
       "no_windows_after_exclusions": "ต้องเหลือเซ็นเซอร์หน้าต่างอย่างน้อยหนึ่งตัว.",
       "review_areas_after_exclusions": "ตรวจสอบ: ห้อง · ค่าที่วัด (0).",
-      "invalid_repeat_minutes": "ตัวเลือกไม่ถูกต้อง: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "ตัวเลือกไม่ถูกต้อง: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "ไม่พร้อมใช้งาน: conversation.process.",
       "invalid_ai_agent": "ตัวเลือกไม่ถูกต้อง: conversation.*.",
       "invalid_mold_temperature_sensor": "ห้อง · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "ไม่ถูกต้อง: ห้อง · แหล่งข้อมูล"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — ตั้งค่าแล้ว.",
+      "already_configured": "Home Environment Manager - ตั้งค่าแล้ว.",
       "setup_area_removed": "ไม่ถูกต้อง: ห้องที่จะตรวจสอบ",
       "setup_changed": "การตั้งค่า ↻ ห้องที่จะตรวจสอบ"
     }
@@ -337,7 +337,7 @@
           "language": "ภาษา",
           "automatic_tts": "อัตโนมัติ",
           "automatic_notifications": "อัตโนมัติ · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "การประกาศ (ไม่บังคับ) · 0–1440 min",
+          "announcement_repeat_minutes": "การประกาศ (ไม่บังคับ) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "การตั้งค่า · แหล่งข้อมูล",
           "tts_engine": "การตั้งค่า · แหล่งข้อมูล · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "ค่าขีดจำกัดขั้นสูง",
-        "description": "ค่าขีดจำกัดขั้นสูง. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "ค่าขีดจำกัดขั้นสูง. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "ภายนอก · AQI (≤)",
           "outdoor_co2": "ภายนอก · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "ตัวเลือกไม่ถูกต้อง: ยกเว้นเซ็นเซอร์อากาศภายใน.",
       "no_windows_after_exclusions": "ต้องเหลือเซ็นเซอร์หน้าต่างอย่างน้อยหนึ่งตัว.",
       "review_areas_after_exclusions": "ตรวจสอบ: ห้อง · ค่าที่วัด (0).",
-      "invalid_repeat_minutes": "ตัวเลือกไม่ถูกต้อง: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "ตัวเลือกไม่ถูกต้อง: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "ไม่พร้อมใช้งาน: conversation.process.",
       "invalid_ai_agent": "ตัวเลือกไม่ถูกต้อง: conversation.*.",
       "invalid_mold_temperature_sensor": "ห้อง · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · เปิด (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "การประกาศ (ไม่บังคับ) · 0–1440 min"
+        "name": "การประกาศ (ไม่บังคับ) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "เป้าหมาย (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "การประกาศ (ไม่บังคับ) — Home Environment Manager",
+      "name": "การประกาศ (ไม่บังคับ) - Home Environment Manager",
       "description": "การประกาศ (ไม่บังคับ) · ห้อง",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — ค่าเริ่มต้น",
+        "auto": "Home Assistant - ค่าเริ่มต้น",
         "en": "การตั้งค่า · แหล่งข้อมูล",
         "de": "การตั้งค่า · แหล่งข้อมูล",
         "el": "การตั้งค่า · แหล่งข้อมูล",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "แหล่งข้อมูล · ไม่ถูกต้อง",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "เป้าหมาย · การตั้งค่า"
       }
     }

@@ -1,4 +1,4 @@
-/* Air Quality Advisor for Home Assistant — native Lovelace card, no dependencies.
+/* Air Quality Advisor for Home Assistant - native Lovelace card, no dependencies.
  * Install with the integration; the integration registers this asset with HA.
  * The card ONLY displays information. It never controls windows or devices.
  */
@@ -932,7 +932,7 @@
     }
 
     _format(value, digits = 1) {
-      if (typeof value !== 'number' || !Number.isFinite(value)) return '–';
+      if (typeof value !== 'number' || !Number.isFinite(value)) return '-';
       try { return new Intl.NumberFormat(this._hass?.language || 'en', {
         maximumFractionDigits:digits, minimumFractionDigits:0
       }).format(value); } catch { return String(value); }
@@ -995,7 +995,7 @@
       if (name && !/^(sensor|binary_sensor|input_number)\.[\w.]+$/i.test(name)
           && name.length<=24) return name;
       if (name && !/^(sensor|binary_sensor|input_number)\.[\w.]+$/i.test(name)) {
-        const finalPart=name.split(/\s+[·:–-]\s+/).at(-1).trim();
+        const finalPart=name.split(/\s+[·:-]\s+/).at(-1).trim();
         if (finalPart.length<=24) return finalPart;
       }
       const words=slug.split(/[_.]+/).filter(Boolean).slice(-2)
@@ -1133,7 +1133,7 @@
     }
 
     _formatCalibration(value) {
-      if (typeof value !== 'number' || !Number.isFinite(value)) return '–';
+      if (typeof value !== 'number' || !Number.isFinite(value)) return '-';
       // Display precision only: this never changes the stored numeric factor.
       try {
         return new Intl.NumberFormat(this._hass?.language || 'en', {
@@ -1148,7 +1148,7 @@
           !Number.isFinite(details.calibration_factor)) return '';
       const labels = this._moldLabels();
       const temperature = (value) => typeof value === 'number' && Number.isFinite(value)
-        ? `${escape(this._format(value))}°C` : '–';
+        ? `${escape(this._format(value))}°C` : '-';
       return `<section class="mold-calibration-details" role="group"
           aria-label="${escape(labels[4])}">
         <div><span>${escape(labels[4])}</span>
@@ -1201,7 +1201,7 @@
       const pct = available && hasLimit ? clamp(item.value / limit * 100, 0, 100) : 0;
       const unit = item.unit || '';
       const level = !available ? 'unknown' : item.exceeded ? 'attention' : 'safe';
-      const display = available ? this._format(item.value) : '–';
+      const display = available ? this._format(item.value) : '-';
       const threshold = hasLimit ? `${this._t('limits')} ${this._format(limit)} ${escape(unit)}` : '';
       const details = item.metric === 'mold' && item.details && typeof item.details === 'object'
         ? item.details : null;
@@ -1296,7 +1296,7 @@
         </div>
         ${readings.length ? `<div class="out-metrics" aria-label="${escape(this._t('outdoorSensors'))}">
           ${readings.map((item) => `<span class="out-chip ${!item.available ? 'dim' : item.exceeded ? 'elevated' : ''}">
-            ${escape(this._metricName(item.metric))} <b>${item.available ? escape(this._format(item.value)) : '–'}</b>
+            ${escape(this._metricName(item.metric))} <b>${item.available ? escape(this._format(item.value)) : '-'}</b>
             <small>${escape(item.unit)}</small></span>`).join('')}
         </div>` : `<div class="out-empty">${escape(this._t('noOutdoor'))}</div>`}
         ${blockers.length ? `<div class="outside-alerts">${blockers.slice(0,5).map((item) => this._outsideBlocker(item)).join('')}
@@ -1386,7 +1386,7 @@
         add(labels.band + ' · ' +
             (t.status === 'above_band' ? labels.heat :
              t.status === 'below_band' ? labels.cool : labels.normal),
-          fmt(t.lower_80_c) + '–' + fmt(t.upper_80_c) + ' °C','band');
+          fmt(t.lower_80_c) + '-' + fmt(t.upper_80_c) + ' °C','band');
       }
       if (p.status === 'cooling_opportunity')
         add(labels.cooling, fmt(p.cooling_delta_c) + ' °C','cooling');
@@ -1455,17 +1455,17 @@
       const methods={existing:l.existing,automatic:l.automatic,manual:l.manual,
         pid:l.pid,off:l.off};
       const pidLabels={
-        en:['PID tuning method','Manual gains','IMC / Lambda','Cohen–Coon',
+        en:['PID tuning method','Manual gains','IMC / Lambda','Cohen-Coon',
           'Process gain (PV / full output)','Time constant (min)','Dead time (min)',
           'Lambda (min)','Save input','Apply calibration','Measured step response required'],
-        el:['Μέθοδος βαθμονόμησης PID','Χειροκίνητα','IMC / Λάμδα','Cohen–Coon',
+        el:['Μέθοδος βαθμονόμησης PID','Χειροκίνητα','IMC / Λάμδα','Cohen-Coon',
           'Κέρδος διεργασίας','Χρονική σταθερά (λεπτά)','Νεκρός χρόνος (λεπτά)',
           'Λάμδα (λεπτά)','Αποθήκευση εισόδου','Εφαρμογή βαθμονόμησης','Απαιτείται μετρημένη απόκριση'],
-        de:['PID-Abstimmverfahren','Manuell','IMC / Lambda','Cohen–Coon',
+        de:['PID-Abstimmverfahren','Manuell','IMC / Lambda','Cohen-Coon',
           'Prozessverstärkung','Zeitkonstante (min)','Totzeit (min)',
           'Lambda (min)','Eingabe speichern','PID-Werte anwenden','Gemessene Sprungantwort erforderlich'],
       }[this._language()] || [
-        'PID tuning method','Manual gains','IMC / Lambda','Cohen–Coon',
+        'PID tuning method','Manual gains','IMC / Lambda','Cohen-Coon',
         'Process gain','Time constant (min)','Dead time (min)','Lambda (min)',
         'Save input','Apply calibration','Measured response required',
       ];
@@ -1713,9 +1713,9 @@
         'unsupported_device'].includes(p.status);
       const target=(typeof p.low_target_c==='number' &&
                     typeof p.high_target_c==='number') ?
-        this._format(p.low_target_c)+'–'+this._format(p.high_target_c)+' °C' :
+        this._format(p.low_target_c)+'-'+this._format(p.high_target_c)+' °C' :
         typeof p.temperature_target_c==='number' ?
-        this._format(p.temperature_target_c)+' °C' : '—';
+        this._format(p.temperature_target_c)+' °C' : '-';
       const title=active ? (p.controller==='environment' ? l.environmentActive : l.active)
         : enabled.length ? l.holding : l.advisory;
       const command=allPaused?'resume':'pause';
@@ -1799,7 +1799,7 @@
         '<div class="pid-metrics">'+
         (p.controller==='environment' ? '' :
           '<span>'+escape(l.target)+': <b>'+escape(target)+'</b></span>'+
-          '<span>'+escape(l.mode)+': <b>'+escape(p.mode||'—')+'</b></span>')+
+          '<span>'+escape(l.mode)+': <b>'+escape(p.mode||'-')+'</b></span>')+
         '<span>'+escape(l[p.profile] || p.profile || 'home')+'</span>'+sources+'</div>'+
         measuredTemp+sourceDiagnostic+
         controllerDetails+priorityDetail+heldDetails+

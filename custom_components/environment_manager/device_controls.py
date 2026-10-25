@@ -205,7 +205,7 @@ def _finite(value: Any, bounds: tuple) -> float:
         raise HomeAssistantError("Invalid numeric controller setting") from error
     low, high = bounds[:2]
     if not math.isfinite(number) or not low <= number <= high:
-        raise HomeAssistantError(f"Setting outside supported range {low}–{high}")
+        raise HomeAssistantError(f"Setting outside supported range {low}-{high}")
     return number
 
 

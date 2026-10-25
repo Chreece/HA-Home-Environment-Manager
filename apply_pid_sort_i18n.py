@@ -64,7 +64,7 @@ def pid_first(name: str) -> str:
     # some labels, but not always at the start. Keep its one leading
     # occurrence, retaining all surrounding localized explanatory words.
     clean = re.sub(r"(?<![\w])PID(?![\w])", "", raw, flags=re.IGNORECASE)
-    clean = clean.strip(" \t\n:·–—-")
+    clean = clean.strip(" \t\n:·--")
     clean = re.sub(r" {2,}", " ", clean)
     return "PID" if not clean and not channel else (
         f"PID · {channel}{clean}" if clean else f"PID · {channel.rstrip()}"

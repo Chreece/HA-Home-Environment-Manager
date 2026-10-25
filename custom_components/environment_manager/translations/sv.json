@@ -71,7 +71,7 @@
           "language": "Språk",
           "automatic_tts": "Automatisk",
           "automatic_notifications": "Automatisk · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Meddelanden (valfritt) · 0–1440 min",
+          "announcement_repeat_minutes": "Meddelanden (valfritt) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "inställningar · källa",
           "tts_engine": "inställningar · källa · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Avancerade gränsvärden",
-        "description": "Avancerade gränsvärden. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Avancerade gränsvärden. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Utomhus · AQI (≤)",
           "outdoor_co2": "Utomhus · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "Ogiltigt val: Undanta inomhusluftsensorer.",
       "no_windows_after_exclusions": "Behåll minst en fönstersensor.",
       "review_areas_after_exclusions": "Kontrollera: Rum · Mätningar (0).",
-      "invalid_repeat_minutes": "Ogiltigt val: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Ogiltigt val: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Inte tillgänglig: conversation.process.",
       "invalid_ai_agent": "Ogiltigt val: conversation.*.",
       "invalid_mold_temperature_sensor": "Rum · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "Ogiltig: Rum · källa"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — redan konfigurerad.",
+      "already_configured": "Home Environment Manager - redan konfigurerad.",
       "setup_area_removed": "Ogiltig: Rum att övervaka",
       "setup_changed": "inställningar ↻ Rum att övervaka"
     }
@@ -337,7 +337,7 @@
           "language": "Språk",
           "automatic_tts": "Automatisk",
           "automatic_notifications": "Automatisk · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Meddelanden (valfritt) · 0–1440 min",
+          "announcement_repeat_minutes": "Meddelanden (valfritt) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "inställningar · källa",
           "tts_engine": "inställningar · källa · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Avancerade gränsvärden",
-        "description": "Avancerade gränsvärden. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Avancerade gränsvärden. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Utomhus · AQI (≤)",
           "outdoor_co2": "Utomhus · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "Ogiltigt val: Undanta inomhusluftsensorer.",
       "no_windows_after_exclusions": "Behåll minst en fönstersensor.",
       "review_areas_after_exclusions": "Kontrollera: Rum · Mätningar (0).",
-      "invalid_repeat_minutes": "Ogiltigt val: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Ogiltigt val: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Inte tillgänglig: conversation.process.",
       "invalid_ai_agent": "Ogiltigt val: conversation.*.",
       "invalid_mold_temperature_sensor": "Rum · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · Öppna (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Meddelanden (valfritt) · 0–1440 min"
+        "name": "Meddelanden (valfritt) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "mål (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "Meddelanden (valfritt) — Home Environment Manager",
+      "name": "Meddelanden (valfritt) - Home Environment Manager",
       "description": "Meddelanden (valfritt) · Rum",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — Standard",
+        "auto": "Home Assistant - Standard",
         "en": "inställningar · källa",
         "de": "inställningar · källa",
         "el": "inställningar · källa",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "källa · Ogiltig",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "mål · inställningar"
       }
     }

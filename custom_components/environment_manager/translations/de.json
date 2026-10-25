@@ -25,7 +25,7 @@
         }
       },
       "indoor_sensors": {
-        "title": "Raumeinstellungen – Innenluft und Schimmel",
+        "title": "Raumeinstellungen - Innenluft und Schimmel",
         "description": "Raum: {area_name} ({position}/{total}). Hier Luftsensoren ausschließen. Für die Schimmelanzeige die kälteste Oberfläche (z. B. Außenwandecke oder Fensterrahmen) jetzt mit einem Thermometer messen, während Raum- und Außentemperatur stabil sind. Temperatur unten in °C eingeben; leer lassen, um später zu kalibrieren.\n\n{mold_room_notice}",
         "data": {
           "excluded_indoor_entities": "In diesem Raum auszuschließende Sensoren",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Erweiterte Grenzwerte",
-        "description": "Diese Grenzwerte beziehen sich auf Momentanmessungen und sind keine medizinischen Expositionsgrenzen. AQI verwendet standardmäßig die US-Skala 0–500.",
+        "description": "Diese Grenzwerte beziehen sich auf Momentanmessungen und sind keine medizinischen Expositionsgrenzen. AQI verwendet standardmäßig die US-Skala 0-500.",
         "data": {
           "outdoor_aqi": "Maximaler Außen-AQI",
           "outdoor_co2": "Maximaler CO₂-Wert außen (ppm)",
@@ -102,9 +102,9 @@
           "outdoor_pm10": "Maximaler PM10-Wert außen (µg/m³)",
           "outdoor_voc": "Maximaler VOC-Wert außen (µg/m³)",
           "outdoor_voc_parts": "Maximaler VOC-Wert außen (ppb)",
-          "outdoor_no2": "Außenluft NO₂ — Richtwert (µg/m³)",
-          "outdoor_o3": "Außenluft O₃ — Richtwert (µg/m³)",
-          "outdoor_so2": "Außenluft SO₂ — Richtwert (µg/m³)",
+          "outdoor_no2": "Außenluft NO₂ - Richtwert (µg/m³)",
+          "outdoor_o3": "Außenluft O₃ - Richtwert (µg/m³)",
+          "outdoor_so2": "Außenluft SO₂ - Richtwert (µg/m³)",
           "indoor_aqi": "Innen-AQI als Lüftungsschwelle",
           "indoor_co2": "CO₂-Grenzwert innen für Lüftung (ppm)",
           "indoor_pm25": "PM2,5-Grenzwert innen für Lüftung (µg/m³)",
@@ -126,9 +126,9 @@
           "outdoor_pm10": "Dies ist ein Entscheidungswert für „Maximaler PM10-Wert außen (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "outdoor_voc": "Dies ist ein Entscheidungswert für „Maximaler VOC-Wert außen (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "outdoor_voc_parts": "Dies ist ein Entscheidungswert für „Maximaler VOC-Wert außen (ppb)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "outdoor_no2": "Dies ist ein Entscheidungswert für „Außenluft NO₂ — Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "outdoor_o3": "Dies ist ein Entscheidungswert für „Außenluft O₃ — Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "outdoor_so2": "Dies ist ein Entscheidungswert für „Außenluft SO₂ — Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "outdoor_no2": "Dies ist ein Entscheidungswert für „Außenluft NO₂ - Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "outdoor_o3": "Dies ist ein Entscheidungswert für „Außenluft O₃ - Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "outdoor_so2": "Dies ist ein Entscheidungswert für „Außenluft SO₂ - Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "indoor_aqi": "Dies ist ein Entscheidungswert für „Innen-AQI als Lüftungsschwelle“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "indoor_co2": "Dies ist ein Entscheidungswert für „CO₂-Grenzwert innen für Lüftung (ppm)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "indoor_pm25": "Dies ist ein Entscheidungswert für „PM2,5-Grenzwert innen für Lüftung (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
@@ -291,7 +291,7 @@
         }
       },
       "indoor_sensors": {
-        "title": "Raumeinstellungen – Innenluft und Schimmel",
+        "title": "Raumeinstellungen - Innenluft und Schimmel",
         "description": "Raum: {area_name} ({position}/{total}). Hier Luftsensoren ausschließen. Für die Schimmelanzeige die kälteste Oberfläche (z. B. Außenwandecke oder Fensterrahmen) jetzt mit einem Thermometer messen, während Raum- und Außentemperatur stabil sind. Temperatur unten in °C eingeben; leer lassen, um später zu kalibrieren.\n\n{mold_room_notice}",
         "data": {
           "excluded_indoor_entities": "In diesem Raum auszuschließende Sensoren",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Erweiterte Grenzwerte",
-        "description": "Diese Grenzwerte beziehen sich auf Momentanmessungen und sind keine medizinischen Expositionsgrenzen. AQI verwendet standardmäßig die US-Skala 0–500.",
+        "description": "Diese Grenzwerte beziehen sich auf Momentanmessungen und sind keine medizinischen Expositionsgrenzen. AQI verwendet standardmäßig die US-Skala 0-500.",
         "data": {
           "outdoor_aqi": "Maximaler Außen-AQI",
           "outdoor_co2": "Maximaler CO₂-Wert außen (ppm)",
@@ -368,9 +368,9 @@
           "outdoor_pm10": "Maximaler PM10-Wert außen (µg/m³)",
           "outdoor_voc": "Maximaler VOC-Wert außen (µg/m³)",
           "outdoor_voc_parts": "Maximaler VOC-Wert außen (ppb)",
-          "outdoor_no2": "Außenluft NO₂ — Richtwert (µg/m³)",
-          "outdoor_o3": "Außenluft O₃ — Richtwert (µg/m³)",
-          "outdoor_so2": "Außenluft SO₂ — Richtwert (µg/m³)",
+          "outdoor_no2": "Außenluft NO₂ - Richtwert (µg/m³)",
+          "outdoor_o3": "Außenluft O₃ - Richtwert (µg/m³)",
+          "outdoor_so2": "Außenluft SO₂ - Richtwert (µg/m³)",
           "indoor_aqi": "Innen-AQI als Lüftungsschwelle",
           "indoor_co2": "CO₂-Grenzwert innen für Lüftung (ppm)",
           "indoor_pm25": "PM2,5-Grenzwert innen für Lüftung (µg/m³)",
@@ -392,9 +392,9 @@
           "outdoor_pm10": "Dies ist ein Entscheidungswert für „Maximaler PM10-Wert außen (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "outdoor_voc": "Dies ist ein Entscheidungswert für „Maximaler VOC-Wert außen (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "outdoor_voc_parts": "Dies ist ein Entscheidungswert für „Maximaler VOC-Wert außen (ppb)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "outdoor_no2": "Dies ist ein Entscheidungswert für „Außenluft NO₂ — Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "outdoor_o3": "Dies ist ein Entscheidungswert für „Außenluft O₃ — Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "outdoor_so2": "Dies ist ein Entscheidungswert für „Außenluft SO₂ — Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "outdoor_no2": "Dies ist ein Entscheidungswert für „Außenluft NO₂ - Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "outdoor_o3": "Dies ist ein Entscheidungswert für „Außenluft O₃ - Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "outdoor_so2": "Dies ist ein Entscheidungswert für „Außenluft SO₂ - Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "indoor_aqi": "Dies ist ein Entscheidungswert für „Innen-AQI als Lüftungsschwelle“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "indoor_co2": "Dies ist ein Entscheidungswert für „CO₂-Grenzwert innen für Lüftung (ppm)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "indoor_pm25": "Dies ist ein Entscheidungswert für „PM2,5-Grenzwert innen für Lüftung (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
@@ -412,7 +412,7 @@
       },
       "environment": {
         "title": "Internationale Luftqualitätsquellen und Pollen",
-        "description": "Optional. Wähle je AQI-Sensor explizit US EPA (0–500), europäische Kategorien (1–6) oder einen eigenen Grenzwert. Unbekannte AQI-Skalen werden niemals automatisch als US-Skala interpretiert. Pollen stammen aus einer beliebigen Home-Assistant-Integration.",
+        "description": "Optional. Wähle je AQI-Sensor explizit US EPA (0-500), europäische Kategorien (1-6) oder einen eigenen Grenzwert. Unbekannte AQI-Skalen werden niemals automatisch als US-Skala interpretiert. Pollen stammen aus einer beliebigen Home-Assistant-Integration.",
         "data": {
           "pollen_entity": "Pollenprognose-Sensor (beliebiges Land)",
           "pollen_high_from": "Pollenindex ab diesem Wert hoch",
@@ -565,7 +565,7 @@
         }
       },
       "environment_room_air": {
-        "title": "Raum: {area_name} — Lüftung und Feuchtigkeit",
+        "title": "Raum: {area_name} - Lüftung und Feuchtigkeit",
         "description": "Optional. Raumtemperatursensor, Raumvolumen und veröffentlichten Partikel-CADR nur auswählen, wenn zuverlässig bekannt. Echtes NDIR-CO₂-Gerät bestätigen. Die Integration steuert keine Geräte.",
         "data": {
           "temperature_entity": "Temperatursensor im Raum (optional)",
@@ -589,7 +589,7 @@
         }
       },
       "environment_room_exposure": {
-        "title": "Raum: {area_name} — zusätzliche Spezialmessungen",
+        "title": "Raum: {area_name} - zusätzliche Spezialmessungen",
         "description": "Optional. Nur echte Messgeräte für Radon, Formaldehyd, Schall und Beleuchtung wählen. Für Leitwerte werden geprüfte Sensoren und ausreichend lange Messreihen benötigt.",
         "data": {
           "radon_entity": "Echter Radonmesssensor",
@@ -617,7 +617,7 @@
         }
       },
       "environment_room_comfort": {
-        "title": "Raum: {area_name} — vollständiger thermischer Komfort",
+        "title": "Raum: {area_name} - vollständiger thermischer Komfort",
         "description": "Optionales ISO-7730-Modell. Strahlungstemperatur, Luftgeschwindigkeit, Aktivität (met) und Bekleidung (clo) explizit angeben.",
         "data": {
           "enable_pmv": "ISO-7730-Komfort PMV/PPD aktivieren",
@@ -637,7 +637,7 @@
         }
       },
       "pid": {
-        "title": "Klima-PID — Raum wählen",
+        "title": "Klima-PID - Raum wählen",
         "description": "Optional und standardmäßig ausgeschaltet. Wähle einen überwachten Raum; fremde Räume werden nicht angesteuert.",
         "data": {
           "pid_area": "Zu konfigurierender Raum"
@@ -647,7 +647,7 @@
         }
       },
       "pid_room": {
-        "title": "Klima-PID in {area_name} — Geräte und Sollwert",
+        "title": "Klima-PID in {area_name} - Geräte und Sollwert",
         "description": "Aktiviere PID nur mit geeignetem Raumtemperatursensor und ausdrücklich gewählten Klimageräten. Der Heiz-/Kühlmodus muss bereits eingestellt sein. Geöffnete oder unbekannte Fenster halten die Regelung an. Kein Ein-/Ausschalten des Kompressors.",
         "data": {
           "pid_enabled": "Klima-PID für diesen Raum aktivieren",
@@ -667,7 +667,7 @@
         }
       },
       "pid_tuning": {
-        "title": "Klima-PID in {area_name} — Regelparameter und Sicherheit",
+        "title": "Klima-PID in {area_name} - Regelparameter und Sicherheit",
         "description": "Kp: %/°C; Ki: %/(°C·min), Kd: %·min/°C. Die Regelung verändert nur den begrenzten Sollwert. Standardwerte zunächst beibehalten; manuelle Änderungen pausieren den PID bis zum ausdrücklichen Fortsetzen.",
         "data": {
           "pid_kp": "Proportionalverstärkung Kp (%/°C)",
@@ -693,8 +693,8 @@
         }
       },
       "climate": {
-        "title": "Klima — Raum auswählen",
-        "description": "„Klima — Raum auswählen“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
+        "title": "Klima - Raum auswählen",
+        "description": "„Klima - Raum auswählen“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
         "data": {
           "climate_area": "Geräte"
         },
@@ -703,7 +703,7 @@
         }
       },
       "climate_room": {
-        "title": "Klima — Regelung, Anwesenheit und Abwesenheit",
+        "title": "Klima - Regelung, Anwesenheit und Abwesenheit",
         "description": "Bereich · Einstellungen · Geräte · Steuerung. Belegung · Sensor · Erforderlich.",
         "data": {
           "climate_enabled": "Klimaplaner für diesen Raum aktivieren",
@@ -729,7 +729,7 @@
         }
       },
       "climate_presence": {
-        "title": "Klima — Anwesenheit, Abwesenheit, Schlaf und Komfort",
+        "title": "Klima - Anwesenheit, Abwesenheit, Schlaf und Komfort",
         "description": "Bereich · Einstellungen · Geräte · Steuerung. Belegung · Sensor · Erforderlich.",
         "data": {
           "climate_occupancy_sensors": "Präsenzsensoren in diesem Raum",
@@ -763,7 +763,7 @@
         }
       },
       "climate_equipment": {
-        "title": "Klima — zusätzliche Geräte und Luftfeuchtigkeit",
+        "title": "Klima - zusätzliche Geräte und Luftfeuchtigkeit",
         "description": "Bereich · Einstellungen · Geräte · Steuerung. Belegung · Sensor · Erforderlich.",
         "data": {
           "climate_heat_climate_entity": "Zusätzlicher Heizthermostat / Heizkörper",
@@ -823,7 +823,7 @@
         }
       },
       "climate_air_strategy": {
-        "title": "Klima — Lüftung und Luftreinigung",
+        "title": "Klima - Lüftung und Luftreinigung",
         "description": "Bereich · Einstellungen · Geräte · Steuerung. Belegung · Sensor · Erforderlich.",
         "data": {
           "climate_fan_speed_auto": "Drehzahl bereits laufender Lüfter regeln (separate Freigabe)",
@@ -855,7 +855,7 @@
         }
       },
       "climate_profiles": {
-        "title": "Klima — Temperaturbereiche je Betriebsart",
+        "title": "Klima - Temperaturbereiche je Betriebsart",
         "description": "Bereich · Einstellungen · Geräte · Steuerung. Belegung · Sensor · Erforderlich.",
         "data": {
           "home_heat": "Heizen · Zuhause (°C)",
@@ -879,7 +879,7 @@
         }
       },
       "climate_actuators": {
-        "title": "Direktaktoren — Geräte und sichere Schaltzeiten",
+        "title": "Direktaktoren - Geräte und sichere Schaltzeiten",
         "description": "Bereich · Einstellungen · Geräte · Steuerung. Belegung · Sensor · Erforderlich.",
         "data": {
           "direct_hardware_confirmed": "Keine Kompressoren; unabhängiger Überhitzungsschutz bestätigt",
@@ -931,7 +931,7 @@
         "description": "Raumüberwachung, Fensterausschlüsse, Messungen und Geräte einzeln einstellen.",
         "menu_options": {
           "areas": "Bereiche",
-          "indoor_sensors": "Raumeinstellungen – Innenluft und Schimmel",
+          "indoor_sensors": "Raumeinstellungen - Innenluft und Schimmel",
           "window_sensors": "Fenstersensoren ausschließen",
           "environment_room": "Raum für Umweltanalysen wählen",
           "area_devices": "Klimageräte"
@@ -1286,13 +1286,13 @@
         "name": "Maximaler VOC-Wert außen (ppb)"
       },
       "global_threshold_outdoor_no2": {
-        "name": "Außenluft NO₂ — Richtwert (µg/m³)"
+        "name": "Außenluft NO₂ - Richtwert (µg/m³)"
       },
       "global_threshold_outdoor_o3": {
-        "name": "Außenluft O₃ — Richtwert (µg/m³)"
+        "name": "Außenluft O₃ - Richtwert (µg/m³)"
       },
       "global_threshold_outdoor_so2": {
-        "name": "Außenluft SO₂ — Richtwert (µg/m³)"
+        "name": "Außenluft SO₂ - Richtwert (µg/m³)"
       },
       "global_threshold_indoor_aqi": {
         "name": "Innen-AQI als Lüftungsschwelle"
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "Quelle · Ungültig",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "Sollwert · Einstellungen"
       }
     }

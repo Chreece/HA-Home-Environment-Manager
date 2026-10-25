@@ -66,9 +66,9 @@ def _tts_player_options(hass: Any) -> list[dict[str, str]]:
 
 
 ENV_AQI_SCALES = [
-    {"value": "not_configured", "label": "Unknown — disable comparison until identified"},
-    {"value": "us_epa", "label": "United States EPA AQI (0–500)"},
-    {"value": "eea_category", "label": "European Air Quality Index category (1–6)"},
+    {"value": "not_configured", "label": "Unknown - disable comparison until identified"},
+    {"value": "us_epa", "label": "United States EPA AQI (0-500)"},
+    {"value": "eea_category", "label": "European Air Quality Index category (1-6)"},
     {"value": "custom", "label": "Other international/provider scale (choose limit)"},
 ]
 
@@ -934,11 +934,11 @@ class _FlowMixin(RoomSetupMixin, CompactOptionsMixin):
             _marker("climate_controller",draft.get("controller","device")):
                 selector.SelectSelector(selector.SelectSelectorConfig(
                     options=[{"value":"device","label":"Device native thermostat / internal PID"},
-                             {"value":"environment","label":"Environmental devices only — no thermostat required"},
+                             {"value":"environment","label":"Environmental devices only - no thermostat required"},
                              {"value":"setpoint_pid","label":"Outer-loop PID setpoint (separate v0.5 controller)"},
                              {"value":"on_off","label":"On/off slow-load relay (requires independent safety)"},
                              {"value":"pwm","label":"Time-proportioning slow-load relay (non-compressor only)"},
-                             {"value":"proportional","label":"Verified 0–100% modulation output (number entity)"}],
+                             {"value":"proportional","label":"Verified 0-100% modulation output (number entity)"}],
                     multiple=False,custom_value=False,mode=selector.SelectSelectorMode.DROPDOWN)),
             _marker("climate_mode",draft.get("mode","auto")):
                 selector.SelectSelector(selector.SelectSelectorConfig(

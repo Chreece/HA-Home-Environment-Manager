@@ -63,7 +63,7 @@ def estimate_mold(
     indoor_c: float | None, outdoor_c: float | None,
     humidity: float | None, factor: float | None,
 ) -> MoldEstimate | None:
-    """Estimate surface RH, clamped to 0–100% (not percent probability)."""
+    """Estimate surface RH, clamped to 0-100% (not percent probability)."""
     inside, outside = _temperature(indoor_c), _temperature(outdoor_c)
     try:
         rh, f = float(humidity), float(factor)

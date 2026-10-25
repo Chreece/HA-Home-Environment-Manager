@@ -71,7 +71,7 @@
           "language": "語言",
           "automatic_tts": "自動",
           "automatic_notifications": "自動 · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "播報（選用） · 0–1440 min",
+          "announcement_repeat_minutes": "播報（選用） · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "設定 · 來源",
           "tts_engine": "設定 · 來源 · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "進階閾值",
-        "description": "進階閾值. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "進階閾值. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "室外 · AQI (≤)",
           "outdoor_co2": "室外 · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "選擇無效: 排除室內空氣感測器.",
       "no_windows_after_exclusions": "至少保留一個窗戶感測器.",
       "review_areas_after_exclusions": "請檢查: 房間 · 測量值 (0).",
-      "invalid_repeat_minutes": "選擇無效: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "選擇無效: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "無法使用: conversation.process.",
       "invalid_ai_agent": "選擇無效: conversation.*.",
       "invalid_mold_temperature_sensor": "房間 · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "無效: 房間 · 來源"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — 已設定.",
+      "already_configured": "Home Environment Manager - 已設定.",
       "setup_area_removed": "無效: 要監測的房間",
       "setup_changed": "設定 ↻ 要監測的房間"
     }
@@ -337,7 +337,7 @@
           "language": "語言",
           "automatic_tts": "自動",
           "automatic_notifications": "自動 · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "播報（選用） · 0–1440 min",
+          "announcement_repeat_minutes": "播報（選用） · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "設定 · 來源",
           "tts_engine": "設定 · 來源 · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "進階閾值",
-        "description": "進階閾值. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "進階閾值. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "室外 · AQI (≤)",
           "outdoor_co2": "室外 · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "選擇無效: 排除室內空氣感測器.",
       "no_windows_after_exclusions": "至少保留一個窗戶感測器.",
       "review_areas_after_exclusions": "請檢查: 房間 · 測量值 (0).",
-      "invalid_repeat_minutes": "選擇無效: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "選擇無效: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "無法使用: conversation.process.",
       "invalid_ai_agent": "選擇無效: conversation.*.",
       "invalid_mold_temperature_sensor": "房間 · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · 開啟 (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "播報（選用） · 0–1440 min"
+        "name": "播報（選用） · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "目標 (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "播報（選用） — Home Environment Manager",
+      "name": "播報（選用） - Home Environment Manager",
       "description": "播報（選用） · 房間",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — 預設",
+        "auto": "Home Assistant - 預設",
         "en": "設定 · 來源",
         "de": "設定 · 來源",
         "el": "設定 · 來源",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "來源 · 無效",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "目標 · 設定"
       }
     }

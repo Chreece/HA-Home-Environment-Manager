@@ -52,7 +52,7 @@ _WORDS = (
 )
 _LANGUAGE_NEUTRAL = {"AQI", "CO₂", "PM2.5", "PM10", "VOC", "HCHO",
                      "NO₂", "SO₂", "O₃", "PID", "PMV", "CADR",
-                     "US EPA AQI (0–500)", "EEA AQI (1–6)"}
+                     "US EPA AQI (0-500)", "EEA AQI (1-6)"}
 
 
 def _topic(field: str, en_label: str, vocab: dict[str, str]) -> str:

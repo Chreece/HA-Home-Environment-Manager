@@ -71,7 +71,7 @@
           "language": "ভাষা",
           "automatic_tts": "স্বয়ংক্রিয়",
           "automatic_notifications": "স্বয়ংক্রিয় · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "ঘোষণা (ঐচ্ছিক) · 0–1440 min",
+          "announcement_repeat_minutes": "ঘোষণা (ঐচ্ছিক) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "সেটিংস · উৎস",
           "tts_engine": "সেটিংস · উৎস · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "উন্নত সীমা",
-        "description": "উন্নত সীমা. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "উন্নত সীমা. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "বাইরে · AQI (≤)",
           "outdoor_co2": "বাইরে · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "ভুল নির্বাচন: ঘরের বায়ু সেন্সর বাদ দিন.",
       "no_windows_after_exclusions": "অন্তত একটি জানালার সেন্সর সক্রিয় রাখুন.",
       "review_areas_after_exclusions": "পরীক্ষা করুন: কক্ষ · পরিমাপ (0).",
-      "invalid_repeat_minutes": "ভুল নির্বাচন: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "ভুল নির্বাচন: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "পাওয়া যাচ্ছে না: conversation.process.",
       "invalid_ai_agent": "ভুল নির্বাচন: conversation.*.",
       "invalid_mold_temperature_sensor": "কক্ষ · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "অবৈধ: ঘর · উৎস"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — আগেই সেট করা হয়েছে.",
+      "already_configured": "Home Environment Manager - আগেই সেট করা হয়েছে.",
       "setup_area_removed": "অবৈধ: পর্যবেক্ষণের ঘর",
       "setup_changed": "সেটিংস ↻ পর্যবেক্ষণের ঘর"
     }
@@ -337,7 +337,7 @@
           "language": "ভাষা",
           "automatic_tts": "স্বয়ংক্রিয়",
           "automatic_notifications": "স্বয়ংক্রিয় · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "ঘোষণা (ঐচ্ছিক) · 0–1440 min",
+          "announcement_repeat_minutes": "ঘোষণা (ঐচ্ছিক) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "সেটিংস · উৎস",
           "tts_engine": "সেটিংস · উৎস · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "উন্নত সীমা",
-        "description": "উন্নত সীমা. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "উন্নত সীমা. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "বাইরে · AQI (≤)",
           "outdoor_co2": "বাইরে · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "ভুল নির্বাচন: ঘরের বায়ু সেন্সর বাদ দিন.",
       "no_windows_after_exclusions": "অন্তত একটি জানালার সেন্সর সক্রিয় রাখুন.",
       "review_areas_after_exclusions": "পরীক্ষা করুন: কক্ষ · পরিমাপ (0).",
-      "invalid_repeat_minutes": "ভুল নির্বাচন: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "ভুল নির্বাচন: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "পাওয়া যাচ্ছে না: conversation.process.",
       "invalid_ai_agent": "ভুল নির্বাচন: conversation.*.",
       "invalid_mold_temperature_sensor": "কক্ষ · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · খুলুন (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "ঘোষণা (ঐচ্ছিক) · 0–1440 min"
+        "name": "ঘোষণা (ঐচ্ছিক) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "লক্ষ্য (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "ঘোষণা (ঐচ্ছিক) — Home Environment Manager",
+      "name": "ঘোষণা (ঐচ্ছিক) - Home Environment Manager",
       "description": "ঘোষণা (ঐচ্ছিক) · কক্ষ",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — ডিফল্ট",
+        "auto": "Home Assistant - ডিফল্ট",
         "en": "সেটিংস · উৎস",
         "de": "সেটিংস · উৎস",
         "el": "সেটিংস · উৎস",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "উৎস · অবৈধ",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "লক্ষ্য · সেটিংস"
       }
     }

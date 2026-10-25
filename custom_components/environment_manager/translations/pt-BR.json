@@ -71,7 +71,7 @@
           "language": "Idioma",
           "automatic_tts": "Automático",
           "automatic_notifications": "Automático · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Avisos (opcional) · 0–1440 min",
+          "announcement_repeat_minutes": "Avisos (opcional) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "configurações · fonte",
           "tts_engine": "configurações · fonte · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Limites avançados",
-        "description": "Limites avançados. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Limites avançados. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Área externa · AQI (≤)",
           "outdoor_co2": "Área externa · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "Seleção inválida: Excluir sensores do ar interno.",
       "no_windows_after_exclusions": "Mantenha pelo menos um sensor de janela.",
       "review_areas_after_exclusions": "Verifique: Cômodos · Medições (0).",
-      "invalid_repeat_minutes": "Seleção inválida: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Seleção inválida: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Indisponível: conversation.process.",
       "invalid_ai_agent": "Seleção inválida: conversation.*.",
       "invalid_mold_temperature_sensor": "Cômodos · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "Inválido: Cômodo · fonte"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — já configurado.",
+      "already_configured": "Home Environment Manager - já configurado.",
       "setup_area_removed": "Inválido: Ambientes para monitorar",
       "setup_changed": "configurações ↻ Ambientes para monitorar"
     }
@@ -337,7 +337,7 @@
           "language": "Idioma",
           "automatic_tts": "Automático",
           "automatic_notifications": "Automático · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Avisos (opcional) · 0–1440 min",
+          "announcement_repeat_minutes": "Avisos (opcional) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "configurações · fonte",
           "tts_engine": "configurações · fonte · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Limites avançados",
-        "description": "Limites avançados. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Limites avançados. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Área externa · AQI (≤)",
           "outdoor_co2": "Área externa · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "Seleção inválida: Excluir sensores do ar interno.",
       "no_windows_after_exclusions": "Mantenha pelo menos um sensor de janela.",
       "review_areas_after_exclusions": "Verifique: Cômodos · Medições (0).",
-      "invalid_repeat_minutes": "Seleção inválida: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Seleção inválida: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Indisponível: conversation.process.",
       "invalid_ai_agent": "Seleção inválida: conversation.*.",
       "invalid_mold_temperature_sensor": "Cômodos · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · Abra (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Avisos (opcional) · 0–1440 min"
+        "name": "Avisos (opcional) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "meta (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "Avisos (opcional) — Home Environment Manager",
+      "name": "Avisos (opcional) - Home Environment Manager",
       "description": "Avisos (opcional) · Cômodos",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — Padrão",
+        "auto": "Home Assistant - Padrão",
         "en": "configurações · fonte",
         "de": "configurações · fonte",
         "el": "configurações · fonte",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "fonte · Inválido",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "meta · configurações"
       }
     }

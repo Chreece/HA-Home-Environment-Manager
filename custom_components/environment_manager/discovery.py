@@ -347,7 +347,7 @@ def window_exclusion_choices(
         seen.add(entity_id)
         area_id = entity_area(hass, entity_id)
         area = areas.async_get_area(area_id) if area_id else None
-        area_name = area.name if area else "—"
+        area_name = area.name if area else "-"
         label = f"{state.name or entity_id} · {area_name} · {entity_id}"
         choices.append({"value": entity_id, "label": ("⚠ " if entity_id in suggested else "") + label})
     # Keep saved exclusions if an entity is currently missing/renamed. It can

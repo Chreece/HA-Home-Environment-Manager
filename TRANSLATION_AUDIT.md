@@ -1,4 +1,4 @@
-# Configuration and Options translation audit — v0.2.4
+# Configuration and Options translation audit - v0.2.4
 
 ## Scope
 

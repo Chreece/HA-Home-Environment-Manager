@@ -71,7 +71,7 @@
           "language": "שפה",
           "automatic_tts": "אוטומטי",
           "automatic_notifications": "אוטומטי · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "הודעות (אופציונלי) · 0–1440 min",
+          "announcement_repeat_minutes": "הודעות (אופציונלי) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "הגדרות · מקור",
           "tts_engine": "הגדרות · מקור · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "ספי התראה מתקדמים",
-        "description": "ספי התראה מתקדמים. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "ספי התראה מתקדמים. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "בחוץ · AQI (≤)",
           "outdoor_co2": "בחוץ · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "בחירה לא תקינה: החרגת חיישני אוויר פנימיים.",
       "no_windows_after_exclusions": "השאירו לפחות חיישן חלון אחד פעיל.",
       "review_areas_after_exclusions": "בדקו: חדרים · מדידות (0).",
-      "invalid_repeat_minutes": "בחירה לא תקינה: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "בחירה לא תקינה: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "לא זמין: conversation.process.",
       "invalid_ai_agent": "בחירה לא תקינה: conversation.*.",
       "invalid_mold_temperature_sensor": "חדרים · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "לא תקין: חדר · מקור"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — כבר הוגדר.",
+      "already_configured": "Home Environment Manager - כבר הוגדר.",
       "setup_area_removed": "לא תקין: חדרים למעקב",
       "setup_changed": "הגדרות ↻ חדרים למעקב"
     }
@@ -337,7 +337,7 @@
           "language": "שפה",
           "automatic_tts": "אוטומטי",
           "automatic_notifications": "אוטומטי · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "הודעות (אופציונלי) · 0–1440 min",
+          "announcement_repeat_minutes": "הודעות (אופציונלי) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "הגדרות · מקור",
           "tts_engine": "הגדרות · מקור · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "ספי התראה מתקדמים",
-        "description": "ספי התראה מתקדמים. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "ספי התראה מתקדמים. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "בחוץ · AQI (≤)",
           "outdoor_co2": "בחוץ · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "בחירה לא תקינה: החרגת חיישני אוויר פנימיים.",
       "no_windows_after_exclusions": "השאירו לפחות חיישן חלון אחד פעיל.",
       "review_areas_after_exclusions": "בדקו: חדרים · מדידות (0).",
-      "invalid_repeat_minutes": "בחירה לא תקינה: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "בחירה לא תקינה: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "לא זמין: conversation.process.",
       "invalid_ai_agent": "בחירה לא תקינה: conversation.*.",
       "invalid_mold_temperature_sensor": "חדרים · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · פתחו (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "הודעות (אופציונלי) · 0–1440 min"
+        "name": "הודעות (אופציונלי) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "יעד (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "הודעות (אופציונלי) — Home Environment Manager",
+      "name": "הודעות (אופציונלי) - Home Environment Manager",
       "description": "הודעות (אופציונלי) · חדרים",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — ברירת מחדל",
+        "auto": "Home Assistant - ברירת מחדל",
         "en": "הגדרות · מקור",
         "de": "הגדרות · מקור",
         "el": "הגדרות · מקור",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "מקור · לא תקין",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "יעד · הגדרות"
       }
     }

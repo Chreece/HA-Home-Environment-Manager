@@ -296,7 +296,7 @@ def pmv_iso7730(air_c: Any, mean_radiant_c: Any, rh: Any,
             "note": "PMV/PPD estimates are model-based; not individual comfort predictions."}
 
 def nighttime_laeq(samples: Sequence[dict], now: float, tz_name: str) -> dict:
-    """Energy-averaged dB(A) over the last completed local 22:00–07:00 window."""
+    """Energy-averaged dB(A) over the last completed local 22:00-07:00 window."""
     from datetime import timedelta
     try:
         zone = ZoneInfo(tz_name)

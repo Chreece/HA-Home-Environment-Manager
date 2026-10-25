@@ -166,8 +166,8 @@
     "menuTitle": "Elegir ajustes para editar"
   },
   "it": {
-    "auto": "Home Assistant — Predefinito",
-    "agent": "Home Assistant — Agente predefinito",
+    "auto": "Home Assistant - Predefinito",
+    "agent": "Home Assistant - Agente predefinito",
     "menu": "Seleziona: Stanze / Meteo e allerte / Annunci (facoltativi) / Soglie avanzate",
     "help": {
       "areas": "Seleziona: Stanze · 🪟 binary_sensor (device_class: window).",
@@ -205,14 +205,14 @@
       "review_areas_after_exclusions": "Controlla: Stanze · Misurazioni (0).",
       "missing_ai_service": "Non disponibile: conversation.process.",
       "invalid_ai_agent": "Selezione non valida: conversation.*.",
-      "invalid_repeat_minutes": "Selezione non valida: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Selezione non valida: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — già configurato.",
+    "abort": "Air Quality Advisor - già configurato.",
     "menuTitle": "⚙️ Seleziona"
   },
   "nl": {
-    "auto": "Home Assistant — Standaard",
-    "agent": "Home Assistant — Standaardagent",
+    "auto": "Home Assistant - Standaard",
+    "agent": "Home Assistant - Standaardagent",
     "menu": "Kies: Kamers / Weer en waarschuwingen / Meldingen (optioneel) / Geavanceerde grenswaarden",
     "help": {
       "areas": "Kies: Kamers · 🪟 binary_sensor (device_class: window).",
@@ -250,14 +250,14 @@
       "review_areas_after_exclusions": "Controleer: Kamers · Metingen (0).",
       "missing_ai_service": "Niet beschikbaar: conversation.process.",
       "invalid_ai_agent": "Ongeldige selectie: conversation.*.",
-      "invalid_repeat_minutes": "Ongeldige selectie: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Ongeldige selectie: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — al ingesteld.",
+    "abort": "Air Quality Advisor - al ingesteld.",
     "menuTitle": "⚙️ Kies"
   },
   "pt": {
-    "auto": "Home Assistant — Predefinido",
-    "agent": "Home Assistant — Agente predefinido",
+    "auto": "Home Assistant - Predefinido",
+    "agent": "Home Assistant - Agente predefinido",
     "menu": "Selecione: Divisões / Tempo e avisos / Anúncios (opcional) / Limites avançados",
     "help": {
       "areas": "Selecione: Divisões · 🪟 binary_sensor (device_class: window).",
@@ -295,14 +295,14 @@
       "review_areas_after_exclusions": "Verifique: Divisões · Medições (0).",
       "missing_ai_service": "Indisponível: conversation.process.",
       "invalid_ai_agent": "Seleção inválida: conversation.*.",
-      "invalid_repeat_minutes": "Seleção inválida: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Seleção inválida: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — já configurado.",
+    "abort": "Air Quality Advisor - já configurado.",
     "menuTitle": "⚙️ Selecione"
   },
   "pt-BR": {
-    "auto": "Home Assistant — Padrão",
-    "agent": "Home Assistant — Agente padrão",
+    "auto": "Home Assistant - Padrão",
+    "agent": "Home Assistant - Agente padrão",
     "menu": "Selecione: Cômodos / Clima e alertas / Avisos (opcional) / Limites avançados",
     "help": {
       "areas": "Selecione: Cômodos · 🪟 binary_sensor (device_class: window).",
@@ -340,14 +340,14 @@
       "review_areas_after_exclusions": "Verifique: Cômodos · Medições (0).",
       "missing_ai_service": "Indisponível: conversation.process.",
       "invalid_ai_agent": "Seleção inválida: conversation.*.",
-      "invalid_repeat_minutes": "Seleção inválida: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Seleção inválida: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — já configurado.",
+    "abort": "Air Quality Advisor - já configurado.",
     "menuTitle": "⚙️ Selecione"
   },
   "pl": {
-    "auto": "Home Assistant — Domyślne",
-    "agent": "Home Assistant — Domyślny agent",
+    "auto": "Home Assistant - Domyślne",
+    "agent": "Home Assistant - Domyślny agent",
     "menu": "Wybierz: Pomieszczenia / Pogoda i ostrzeżenia / Komunikaty (opcjonalnie) / Zaawansowane progi",
     "help": {
       "areas": "Wybierz: Pomieszczenia · 🪟 binary_sensor (device_class: window).",
@@ -385,14 +385,14 @@
       "review_areas_after_exclusions": "Sprawdź: Pomieszczenia · Pomiary (0).",
       "missing_ai_service": "Niedostępne: conversation.process.",
       "invalid_ai_agent": "Nieprawidłowy wybór: conversation.*.",
-      "invalid_repeat_minutes": "Nieprawidłowy wybór: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Nieprawidłowy wybór: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — już skonfigurowano.",
+    "abort": "Air Quality Advisor - już skonfigurowano.",
     "menuTitle": "⚙️ Wybierz"
   },
   "ru": {
-    "auto": "Home Assistant — По умолчанию",
-    "agent": "Home Assistant — Агент по умолчанию",
+    "auto": "Home Assistant - По умолчанию",
+    "agent": "Home Assistant - Агент по умолчанию",
     "menu": "Выберите: Комнаты / Погода и предупреждения / Оповещения (необязательно) / Дополнительные пороги",
     "help": {
       "areas": "Выберите: Комнаты · 🪟 binary_sensor (device_class: window).",
@@ -430,14 +430,14 @@
       "review_areas_after_exclusions": "Проверьте: Комнаты · Измерения (0).",
       "missing_ai_service": "Недоступно: conversation.process.",
       "invalid_ai_agent": "Неверный выбор: conversation.*.",
-      "invalid_repeat_minutes": "Неверный выбор: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Неверный выбор: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — уже настроено.",
+    "abort": "Air Quality Advisor - уже настроено.",
     "menuTitle": "⚙️ Выберите"
   },
   "uk": {
-    "auto": "Home Assistant — Типово",
-    "agent": "Home Assistant — Типовий агент",
+    "auto": "Home Assistant - Типово",
+    "agent": "Home Assistant - Типовий агент",
     "menu": "Оберіть: Кімнати / Погода та попередження / Оголошення (необов’язково) / Додаткові пороги",
     "help": {
       "areas": "Оберіть: Кімнати · 🪟 binary_sensor (device_class: window).",
@@ -475,14 +475,14 @@
       "review_areas_after_exclusions": "Перевірте: Кімнати · Вимірювання (0).",
       "missing_ai_service": "Недоступно: conversation.process.",
       "invalid_ai_agent": "Неправильний вибір: conversation.*.",
-      "invalid_repeat_minutes": "Неправильний вибір: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Неправильний вибір: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — уже налаштовано.",
+    "abort": "Air Quality Advisor - уже налаштовано.",
     "menuTitle": "⚙️ Оберіть"
   },
   "tr": {
-    "auto": "Home Assistant — Varsayılan",
-    "agent": "Home Assistant — Varsayılan temsilci",
+    "auto": "Home Assistant - Varsayılan",
+    "agent": "Home Assistant - Varsayılan temsilci",
     "menu": "Seçin: Odalar / Hava durumu ve uyarılar / Duyurular (isteğe bağlı) / Gelişmiş eşikler",
     "help": {
       "areas": "Seçin: Odalar · 🪟 binary_sensor (device_class: window).",
@@ -520,14 +520,14 @@
       "review_areas_after_exclusions": "Kontrol edin: Odalar · Ölçümler (0).",
       "missing_ai_service": "Kullanılamıyor: conversation.process.",
       "invalid_ai_agent": "Geçersiz seçim: conversation.*.",
-      "invalid_repeat_minutes": "Geçersiz seçim: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Geçersiz seçim: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — zaten yapılandırılmış.",
+    "abort": "Air Quality Advisor - zaten yapılandırılmış.",
     "menuTitle": "⚙️ Seçin"
   },
   "cs": {
-    "auto": "Home Assistant — Výchozí",
-    "agent": "Home Assistant — Výchozí agent",
+    "auto": "Home Assistant - Výchozí",
+    "agent": "Home Assistant - Výchozí agent",
     "menu": "Vyberte: Místnosti / Počasí a výstrahy / Oznámení (volitelně) / Pokročilé limity",
     "help": {
       "areas": "Vyberte: Místnosti · 🪟 binary_sensor (device_class: window).",
@@ -565,14 +565,14 @@
       "review_areas_after_exclusions": "Zkontrolujte: Místnosti · Měření (0).",
       "missing_ai_service": "Nedostupné: conversation.process.",
       "invalid_ai_agent": "Neplatný výběr: conversation.*.",
-      "invalid_repeat_minutes": "Neplatný výběr: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Neplatný výběr: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — již nastaveno.",
+    "abort": "Air Quality Advisor - již nastaveno.",
     "menuTitle": "⚙️ Vyberte"
   },
   "sk": {
-    "auto": "Home Assistant — Predvolené",
-    "agent": "Home Assistant — Predvolený agent",
+    "auto": "Home Assistant - Predvolené",
+    "agent": "Home Assistant - Predvolený agent",
     "menu": "Vyberte: Miestnosti / Počasie a výstrahy / Oznámenia (voliteľné) / Pokročilé limity",
     "help": {
       "areas": "Vyberte: Miestnosti · 🪟 binary_sensor (device_class: window).",
@@ -610,14 +610,14 @@
       "review_areas_after_exclusions": "Skontrolujte: Miestnosti · Merania (0).",
       "missing_ai_service": "Nedostupné: conversation.process.",
       "invalid_ai_agent": "Neplatný výber: conversation.*.",
-      "invalid_repeat_minutes": "Neplatný výber: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Neplatný výber: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — už nastavené.",
+    "abort": "Air Quality Advisor - už nastavené.",
     "menuTitle": "⚙️ Vyberte"
   },
   "hu": {
-    "auto": "Home Assistant — Alapértelmezett",
-    "agent": "Home Assistant — Alapértelmezett ügynök",
+    "auto": "Home Assistant - Alapértelmezett",
+    "agent": "Home Assistant - Alapértelmezett ügynök",
     "menu": "Válassz: Helyiségek / Időjárás és riasztások / Értesítések (opcionális) / Speciális határértékek",
     "help": {
       "areas": "Válassz: Helyiségek · 🪟 binary_sensor (device_class: window).",
@@ -655,14 +655,14 @@
       "review_areas_after_exclusions": "Ellenőrizd: Helyiségek · Mérések (0).",
       "missing_ai_service": "Nem érhető el: conversation.process.",
       "invalid_ai_agent": "Érvénytelen választás: conversation.*.",
-      "invalid_repeat_minutes": "Érvénytelen választás: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Érvénytelen választás: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — már be van állítva.",
+    "abort": "Air Quality Advisor - már be van állítva.",
     "menuTitle": "⚙️ Válassz"
   },
   "ro": {
-    "auto": "Home Assistant — Implicit",
-    "agent": "Home Assistant — Agent implicit",
+    "auto": "Home Assistant - Implicit",
+    "agent": "Home Assistant - Agent implicit",
     "menu": "Alegeți: Camere / Vreme și avertizări / Anunțuri (opțional) / Praguri avansate",
     "help": {
       "areas": "Alegeți: Camere · 🪟 binary_sensor (device_class: window).",
@@ -700,14 +700,14 @@
       "review_areas_after_exclusions": "Verificați: Camere · Măsurători (0).",
       "missing_ai_service": "Indisponibil: conversation.process.",
       "invalid_ai_agent": "Selecție invalidă: conversation.*.",
-      "invalid_repeat_minutes": "Selecție invalidă: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Selecție invalidă: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — deja configurat.",
+    "abort": "Air Quality Advisor - deja configurat.",
     "menuTitle": "⚙️ Alegeți"
   },
   "bg": {
-    "auto": "Home Assistant — По подразбиране",
-    "agent": "Home Assistant — Агент по подразбиране",
+    "auto": "Home Assistant - По подразбиране",
+    "agent": "Home Assistant - Агент по подразбиране",
     "menu": "Изберете: Стаи / Време и предупреждения / Съобщения (по избор) / Разширени прагове",
     "help": {
       "areas": "Изберете: Стаи · 🪟 binary_sensor (device_class: window).",
@@ -745,14 +745,14 @@
       "review_areas_after_exclusions": "Проверете: Стаи · Измервания (0).",
       "missing_ai_service": "Недостъпно: conversation.process.",
       "invalid_ai_agent": "Невалиден избор: conversation.*.",
-      "invalid_repeat_minutes": "Невалиден избор: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Невалиден избор: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — вече е настроен.",
+    "abort": "Air Quality Advisor - вече е настроен.",
     "menuTitle": "⚙️ Изберете"
   },
   "hr": {
-    "auto": "Home Assistant — Zadano",
-    "agent": "Home Assistant — Zadani agent",
+    "auto": "Home Assistant - Zadano",
+    "agent": "Home Assistant - Zadani agent",
     "menu": "Odaberite: Prostorije / Vrijeme i upozorenja / Obavijesti (neobavezno) / Napredni pragovi",
     "help": {
       "areas": "Odaberite: Prostorije · 🪟 binary_sensor (device_class: window).",
@@ -790,14 +790,14 @@
       "review_areas_after_exclusions": "Provjerite: Prostorije · Mjerenja (0).",
       "missing_ai_service": "Nedostupno: conversation.process.",
       "invalid_ai_agent": "Nevažeći odabir: conversation.*.",
-      "invalid_repeat_minutes": "Nevažeći odabir: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Nevažeći odabir: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — već postavljeno.",
+    "abort": "Air Quality Advisor - već postavljeno.",
     "menuTitle": "⚙️ Odaberite"
   },
   "sr": {
-    "auto": "Home Assistant — Подразумевано",
-    "agent": "Home Assistant — Подразумевани агент",
+    "auto": "Home Assistant - Подразумевано",
+    "agent": "Home Assistant - Подразумевани агент",
     "menu": "Изаберите: Собе / Време и упозорења / Обавештења (опционо) / Напредни прагови",
     "help": {
       "areas": "Изаберите: Собе · 🪟 binary_sensor (device_class: window).",
@@ -835,14 +835,14 @@
       "review_areas_after_exclusions": "Проверите: Собе · Мерења (0).",
       "missing_ai_service": "Недоступно: conversation.process.",
       "invalid_ai_agent": "Неважећи избор: conversation.*.",
-      "invalid_repeat_minutes": "Неважећи избор: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Неважећи избор: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — већ подешено.",
+    "abort": "Air Quality Advisor - већ подешено.",
     "menuTitle": "⚙️ Изаберите"
   },
   "sv": {
-    "auto": "Home Assistant — Standard",
-    "agent": "Home Assistant — Standardagent",
+    "auto": "Home Assistant - Standard",
+    "agent": "Home Assistant - Standardagent",
     "menu": "Välj: Rum / Väder och varningar / Meddelanden (valfritt) / Avancerade gränsvärden",
     "help": {
       "areas": "Välj: Rum · 🪟 binary_sensor (device_class: window).",
@@ -880,14 +880,14 @@
       "review_areas_after_exclusions": "Kontrollera: Rum · Mätningar (0).",
       "missing_ai_service": "Inte tillgänglig: conversation.process.",
       "invalid_ai_agent": "Ogiltigt val: conversation.*.",
-      "invalid_repeat_minutes": "Ogiltigt val: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Ogiltigt val: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — redan konfigurerad.",
+    "abort": "Air Quality Advisor - redan konfigurerad.",
     "menuTitle": "⚙️ Välj"
   },
   "nb": {
-    "auto": "Home Assistant — Standard",
-    "agent": "Home Assistant — Standardagent",
+    "auto": "Home Assistant - Standard",
+    "agent": "Home Assistant - Standardagent",
     "menu": "Velg: Rom / Vær og varsler / Kunngjøringer (valgfritt) / Avanserte grenseverdier",
     "help": {
       "areas": "Velg: Rom · 🪟 binary_sensor (device_class: window).",
@@ -925,14 +925,14 @@
       "review_areas_after_exclusions": "Kontroller: Rom · Målinger (0).",
       "missing_ai_service": "Ikke tilgjengelig: conversation.process.",
       "invalid_ai_agent": "Ugyldig valg: conversation.*.",
-      "invalid_repeat_minutes": "Ugyldig valg: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Ugyldig valg: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — allerede konfigurert.",
+    "abort": "Air Quality Advisor - allerede konfigurert.",
     "menuTitle": "⚙️ Velg"
   },
   "da": {
-    "auto": "Home Assistant — Standard",
-    "agent": "Home Assistant — Standardagent",
+    "auto": "Home Assistant - Standard",
+    "agent": "Home Assistant - Standardagent",
     "menu": "Vælg: Rum / Vejr og advarsler / Meddelelser (valgfrit) / Avancerede grænser",
     "help": {
       "areas": "Vælg: Rum · 🪟 binary_sensor (device_class: window).",
@@ -970,14 +970,14 @@
       "review_areas_after_exclusions": "Kontrollér: Rum · Målinger (0).",
       "missing_ai_service": "Ikke tilgængelig: conversation.process.",
       "invalid_ai_agent": "Ugyldigt valg: conversation.*.",
-      "invalid_repeat_minutes": "Ugyldigt valg: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Ugyldigt valg: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — allerede konfigureret.",
+    "abort": "Air Quality Advisor - allerede konfigureret.",
     "menuTitle": "⚙️ Vælg"
   },
   "fi": {
-    "auto": "Home Assistant — Oletus",
-    "agent": "Home Assistant — Oletusavustaja",
+    "auto": "Home Assistant - Oletus",
+    "agent": "Home Assistant - Oletusavustaja",
     "menu": "Valitse: Huoneet / Sää ja varoitukset / Ilmoitukset (valinnainen) / Lisäraja-arvot",
     "help": {
       "areas": "Valitse: Huoneet · 🪟 binary_sensor (device_class: window).",
@@ -1015,14 +1015,14 @@
       "review_areas_after_exclusions": "Tarkista: Huoneet · Mittaukset (0).",
       "missing_ai_service": "Ei saatavilla: conversation.process.",
       "invalid_ai_agent": "Virheellinen valinta: conversation.*.",
-      "invalid_repeat_minutes": "Virheellinen valinta: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Virheellinen valinta: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — on jo määritetty.",
+    "abort": "Air Quality Advisor - on jo määritetty.",
     "menuTitle": "⚙️ Valitse"
   },
   "id": {
-    "auto": "Home Assistant — Bawaan",
-    "agent": "Home Assistant — Agen bawaan",
+    "auto": "Home Assistant - Bawaan",
+    "agent": "Home Assistant - Agen bawaan",
     "menu": "Pilih: Ruangan / Cuaca dan peringatan / Pengumuman (opsional) / Ambang batas lanjutan",
     "help": {
       "areas": "Pilih: Ruangan · 🪟 binary_sensor (device_class: window).",
@@ -1060,14 +1060,14 @@
       "review_areas_after_exclusions": "Periksa: Ruangan · Pengukuran (0).",
       "missing_ai_service": "Tidak tersedia: conversation.process.",
       "invalid_ai_agent": "Pilihan tidak valid: conversation.*.",
-      "invalid_repeat_minutes": "Pilihan tidak valid: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Pilihan tidak valid: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — sudah dikonfigurasi.",
+    "abort": "Air Quality Advisor - sudah dikonfigurasi.",
     "menuTitle": "⚙️ Pilih"
   },
   "vi": {
-    "auto": "Home Assistant — Mặc định",
-    "agent": "Home Assistant — Trợ lý mặc định",
+    "auto": "Home Assistant - Mặc định",
+    "agent": "Home Assistant - Trợ lý mặc định",
     "menu": "Chọn: Phòng / Thời tiết và cảnh báo / Thông báo (tùy chọn) / Ngưỡng nâng cao",
     "help": {
       "areas": "Chọn: Phòng · 🪟 binary_sensor (device_class: window).",
@@ -1105,14 +1105,14 @@
       "review_areas_after_exclusions": "Kiểm tra: Phòng · Đo lường (0).",
       "missing_ai_service": "Không khả dụng: conversation.process.",
       "invalid_ai_agent": "Lựa chọn không hợp lệ: conversation.*.",
-      "invalid_repeat_minutes": "Lựa chọn không hợp lệ: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "Lựa chọn không hợp lệ: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — đã được cấu hình.",
+    "abort": "Air Quality Advisor - đã được cấu hình.",
     "menuTitle": "⚙️ Chọn"
   },
   "th": {
-    "auto": "Home Assistant — ค่าเริ่มต้น",
-    "agent": "Home Assistant — ตัวแทนเริ่มต้น",
+    "auto": "Home Assistant - ค่าเริ่มต้น",
+    "agent": "Home Assistant - ตัวแทนเริ่มต้น",
     "menu": "เลือก: ห้อง / สภาพอากาศและคำเตือน / การประกาศ (ไม่บังคับ) / ค่าขีดจำกัดขั้นสูง",
     "help": {
       "areas": "เลือก: ห้อง · 🪟 binary_sensor (device_class: window).",
@@ -1150,14 +1150,14 @@
       "review_areas_after_exclusions": "ตรวจสอบ: ห้อง · ค่าที่วัด (0).",
       "missing_ai_service": "ไม่พร้อมใช้งาน: conversation.process.",
       "invalid_ai_agent": "ตัวเลือกไม่ถูกต้อง: conversation.*.",
-      "invalid_repeat_minutes": "ตัวเลือกไม่ถูกต้อง: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "ตัวเลือกไม่ถูกต้อง: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — ตั้งค่าแล้ว.",
+    "abort": "Air Quality Advisor - ตั้งค่าแล้ว.",
     "menuTitle": "⚙️ เลือก"
   },
   "hi": {
-    "auto": "Home Assistant — डिफ़ॉल्ट",
-    "agent": "Home Assistant — डिफ़ॉल्ट एजेंट",
+    "auto": "Home Assistant - डिफ़ॉल्ट",
+    "agent": "Home Assistant - डिफ़ॉल्ट एजेंट",
     "menu": "चुनें: कमरे / मौसम और चेतावनियाँ / घोषणाएँ (वैकल्पिक) / उन्नत सीमाएँ",
     "help": {
       "areas": "चुनें: कमरे · 🪟 binary_sensor (device_class: window).",
@@ -1195,14 +1195,14 @@
       "review_areas_after_exclusions": "जाँचें: कमरे · माप (0).",
       "missing_ai_service": "उपलब्ध नहीं: conversation.process.",
       "invalid_ai_agent": "अमान्य चयन: conversation.*.",
-      "invalid_repeat_minutes": "अमान्य चयन: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "अमान्य चयन: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — पहले से कॉन्फ़िगर है.",
+    "abort": "Air Quality Advisor - पहले से कॉन्फ़िगर है.",
     "menuTitle": "⚙️ चुनें"
   },
   "zh-Hans": {
-    "auto": "Home Assistant — 默认",
-    "agent": "Home Assistant — 默认会话代理",
+    "auto": "Home Assistant - 默认",
+    "agent": "Home Assistant - 默认会话代理",
     "menu": "请选择: 房间 / 天气与预警 / 播报（可选） / 高级阈值",
     "help": {
       "areas": "请选择: 房间 · 🪟 binary_sensor (device_class: window).",
@@ -1240,14 +1240,14 @@
       "review_areas_after_exclusions": "请检查: 房间 · 测量值 (0).",
       "missing_ai_service": "不可用: conversation.process.",
       "invalid_ai_agent": "选择无效: conversation.*.",
-      "invalid_repeat_minutes": "选择无效: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "选择无效: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — 已配置.",
+    "abort": "Air Quality Advisor - 已配置.",
     "menuTitle": "⚙️ 请选择"
   },
   "zh-Hant": {
-    "auto": "Home Assistant — 預設",
-    "agent": "Home Assistant — 預設對話代理",
+    "auto": "Home Assistant - 預設",
+    "agent": "Home Assistant - 預設對話代理",
     "menu": "請選擇: 房間 / 天氣與警報 / 播報（選用） / 進階閾值",
     "help": {
       "areas": "請選擇: 房間 · 🪟 binary_sensor (device_class: window).",
@@ -1285,14 +1285,14 @@
       "review_areas_after_exclusions": "請檢查: 房間 · 測量值 (0).",
       "missing_ai_service": "無法使用: conversation.process.",
       "invalid_ai_agent": "選擇無效: conversation.*.",
-      "invalid_repeat_minutes": "選擇無效: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "選擇無效: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — 已設定.",
+    "abort": "Air Quality Advisor - 已設定.",
     "menuTitle": "⚙️ 請選擇"
   },
   "ja": {
-    "auto": "Home Assistant — 既定",
-    "agent": "Home Assistant — 既定のエージェント",
+    "auto": "Home Assistant - 既定",
+    "agent": "Home Assistant - 既定のエージェント",
     "menu": "選択してください: 部屋 / 天気と警報 / 通知（任意） / 詳細なしきい値",
     "help": {
       "areas": "選択してください: 部屋 · 🪟 binary_sensor (device_class: window).",
@@ -1330,14 +1330,14 @@
       "review_areas_after_exclusions": "確認してください: 部屋 · 測定値 (0).",
       "missing_ai_service": "利用できません: conversation.process.",
       "invalid_ai_agent": "無効な選択: conversation.*.",
-      "invalid_repeat_minutes": "無効な選択: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "無効な選択: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — 設定済みです.",
+    "abort": "Air Quality Advisor - 設定済みです.",
     "menuTitle": "⚙️ 選択してください"
   },
   "ko": {
-    "auto": "Home Assistant — 기본값",
-    "agent": "Home Assistant — 기본 대화 에이전트",
+    "auto": "Home Assistant - 기본값",
+    "agent": "Home Assistant - 기본 대화 에이전트",
     "menu": "선택하세요: 방 / 날씨 및 경보 / 알림(선택 사항) / 고급 임계값",
     "help": {
       "areas": "선택하세요: 방 · 🪟 binary_sensor (device_class: window).",
@@ -1375,14 +1375,14 @@
       "review_areas_after_exclusions": "확인하세요: 방 · 측정값 (0).",
       "missing_ai_service": "사용할 수 없음: conversation.process.",
       "invalid_ai_agent": "잘못된 선택: conversation.*.",
-      "invalid_repeat_minutes": "잘못된 선택: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "잘못된 선택: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — 이미 설정됨.",
+    "abort": "Air Quality Advisor - 이미 설정됨.",
     "menuTitle": "⚙️ 선택하세요"
   },
   "ar": {
-    "auto": "Home Assistant — افتراضي",
-    "agent": "Home Assistant — الوكيل الافتراضي",
+    "auto": "Home Assistant - افتراضي",
+    "agent": "Home Assistant - الوكيل الافتراضي",
     "menu": "اختر: الغرف / الطقس والتحذيرات / الإعلانات (اختياري) / حدود متقدمة",
     "help": {
       "areas": "اختر: الغرف · 🪟 binary_sensor (device_class: window).",
@@ -1420,14 +1420,14 @@
       "review_areas_after_exclusions": "تحقق: الغرف · القياسات (0).",
       "missing_ai_service": "غير متاح: conversation.process.",
       "invalid_ai_agent": "اختيار غير صالح: conversation.*.",
-      "invalid_repeat_minutes": "اختيار غير صالح: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "اختيار غير صالح: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — تم الإعداد مسبقًا.",
+    "abort": "Air Quality Advisor - تم الإعداد مسبقًا.",
     "menuTitle": "⚙️ اختر"
   },
   "he": {
-    "auto": "Home Assistant — ברירת מחדל",
-    "agent": "Home Assistant — סוכן ברירת מחדל",
+    "auto": "Home Assistant - ברירת מחדל",
+    "agent": "Home Assistant - סוכן ברירת מחדל",
     "menu": "בחרו: חדרים / מזג אוויר ואזהרות / הודעות (אופציונלי) / ספי התראה מתקדמים",
     "help": {
       "areas": "בחרו: חדרים · 🪟 binary_sensor (device_class: window).",
@@ -1465,14 +1465,14 @@
       "review_areas_after_exclusions": "בדקו: חדרים · מדידות (0).",
       "missing_ai_service": "לא זמין: conversation.process.",
       "invalid_ai_agent": "בחירה לא תקינה: conversation.*.",
-      "invalid_repeat_minutes": "בחירה לא תקינה: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "בחירה לא תקינה: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — כבר הוגדר.",
+    "abort": "Air Quality Advisor - כבר הוגדר.",
     "menuTitle": "⚙️ בחרו"
   },
   "fa": {
-    "auto": "Home Assistant — پیش‌فرض",
-    "agent": "Home Assistant — عامل پیش‌فرض",
+    "auto": "Home Assistant - پیش‌فرض",
+    "agent": "Home Assistant - عامل پیش‌فرض",
     "menu": "انتخاب کنید: اتاق‌ها / آب‌وهوا و هشدارها / اعلان‌ها (اختیاری) / آستانه‌های پیشرفته",
     "help": {
       "areas": "انتخاب کنید: اتاق‌ها · 🪟 binary_sensor (device_class: window).",
@@ -1510,14 +1510,14 @@
       "review_areas_after_exclusions": "بررسی کنید: اتاق‌ها · اندازه‌گیری‌ها (0).",
       "missing_ai_service": "در دسترس نیست: conversation.process.",
       "invalid_ai_agent": "انتخاب نامعتبر: conversation.*.",
-      "invalid_repeat_minutes": "انتخاب نامعتبر: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "انتخاب نامعتبر: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — قبلاً تنظیم شده.",
+    "abort": "Air Quality Advisor - قبلاً تنظیم شده.",
     "menuTitle": "⚙️ انتخاب کنید"
   },
   "bn": {
-    "auto": "Home Assistant — ডিফল্ট",
-    "agent": "Home Assistant — ডিফল্ট এজেন্ট",
+    "auto": "Home Assistant - ডিফল্ট",
+    "agent": "Home Assistant - ডিফল্ট এজেন্ট",
     "menu": "নির্বাচন করুন: কক্ষ / আবহাওয়া ও সতর্কতা / ঘোষণা (ঐচ্ছিক) / উন্নত সীমা",
     "help": {
       "areas": "নির্বাচন করুন: কক্ষ · 🪟 binary_sensor (device_class: window).",
@@ -1555,14 +1555,14 @@
       "review_areas_after_exclusions": "পরীক্ষা করুন: কক্ষ · পরিমাপ (0).",
       "missing_ai_service": "পাওয়া যাচ্ছে না: conversation.process.",
       "invalid_ai_agent": "ভুল নির্বাচন: conversation.*.",
-      "invalid_repeat_minutes": "ভুল নির্বাচন: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "ভুল নির্বাচন: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — আগেই সেট করা হয়েছে.",
+    "abort": "Air Quality Advisor - আগেই সেট করা হয়েছে.",
     "menuTitle": "⚙️ নির্বাচন করুন"
   },
   "ur": {
-    "auto": "Home Assistant — پہلے سے طے شدہ",
-    "agent": "Home Assistant — پہلے سے طے شدہ ایجنٹ",
+    "auto": "Home Assistant - پہلے سے طے شدہ",
+    "agent": "Home Assistant - پہلے سے طے شدہ ایجنٹ",
     "menu": "منتخب کریں: کمرے / موسم اور انتباہات / اعلانات (اختیاری) / اعلیٰ حدود",
     "help": {
       "areas": "منتخب کریں: کمرے · 🪟 binary_sensor (device_class: window).",
@@ -1600,14 +1600,14 @@
       "review_areas_after_exclusions": "چیک کریں: کمرے · پیمائشیں (0).",
       "missing_ai_service": "دستیاب نہیں: conversation.process.",
       "invalid_ai_agent": "غلط انتخاب: conversation.*.",
-      "invalid_repeat_minutes": "غلط انتخاب: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "غلط انتخاب: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — پہلے سے ترتیب دیا گیا.",
+    "abort": "Air Quality Advisor - پہلے سے ترتیب دیا گیا.",
     "menuTitle": "⚙️ منتخب کریں"
   },
   "ta": {
-    "auto": "Home Assistant — இயல்புநிலை",
-    "agent": "Home Assistant — இயல்புநிலை முகவர்",
+    "auto": "Home Assistant - இயல்புநிலை",
+    "agent": "Home Assistant - இயல்புநிலை முகவர்",
     "menu": "தேர்ந்தெடுக்கவும்: அறைகள் / வானிலை மற்றும் எச்சரிக்கைகள் / அறிவிப்புகள் (விருப்பம்) / மேம்பட்ட வரம்புகள்",
     "help": {
       "areas": "தேர்ந்தெடுக்கவும்: அறைகள் · 🪟 binary_sensor (device_class: window).",
@@ -1645,9 +1645,9 @@
       "review_areas_after_exclusions": "சரிபார்க்கவும்: அறைகள் · அளவீடுகள் (0).",
       "missing_ai_service": "கிடைக்கவில்லை: conversation.process.",
       "invalid_ai_agent": "தவறான தேர்வு: conversation.*.",
-      "invalid_repeat_minutes": "தவறான தேர்வு: 0–1440 min (0 = ⛔)."
+      "invalid_repeat_minutes": "தவறான தேர்வு: 0-1440 min (0 = ⛔)."
     },
-    "abort": "Air Quality Advisor — ஏற்கெனவே அமைக்கப்பட்டது.",
+    "abort": "Air Quality Advisor - ஏற்கெனவே அமைக்கப்பட்டது.",
     "menuTitle": "⚙️ தேர்ந்தெடுக்கவும்"
   }
 }

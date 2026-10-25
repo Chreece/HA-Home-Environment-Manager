@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Chreece/HA-Home-Environment-Manager/main/.github/assets/home-environment-manager-banner.svg" alt="Home Environment Manager — room-aware ventilation recommendations for Home Assistant" width="100%">
+  <img src="https://raw.githubusercontent.com/Chreece/HA-Home-Environment-Manager/main/.github/assets/home-environment-manager-banner.svg" alt="Home Environment Manager - room-aware ventilation recommendations for Home Assistant" width="100%">
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@ Every native room **Shades** output now has its own **Window Shade Controller** 
 - **Associated window contact** (dropdown): choose one actual same-room Window-class binary sensor that belongs to the room's window inputs. Its current `open`, `closed` or `unknown` value is also available as a diagnostic attribute. **Not assigned**, open, missing or uncertain contacts always block physical movement.
 - **Automatic solar shade cooling** (switch): defaults to OFF for newly commissioned covers; each cover can be enabled on its own after selecting a window. This is separate from the historical room-wide switch. The integration only closes during fresh hot/sunny evidence and only reopens a cover that it previously closed and confirmed; it never adopts a user-closed shade.
 - **Announce before moving window shades** (switch): per-cover opt-in independent of the Home-level legacy setting. Announces only this cover by name via configured Announcement Hub/notification/TTS channels, waits and checks conditions again. If opted in but unavailable, movement is blocked.
-- **Close shades above room temperature** (number, °C): this cover's closing threshold (default **25 °C**, allowed **18–36 °C**). It reuses the room's verified temperature sensor, sun angle, weather checks, and existing safe opening hysteresis.
+- **Close shades above room temperature** (number, °C): this cover's closing threshold (default **25 °C**, allowed **18-36 °C**). It reuses the room's verified temperature sensor, sun angle, weather checks, and existing safe opening hysteresis.
 
 **Manual override:** user-initiated opening *or closing* pauses automatic movement for that exact cover. The pause is stored across Home Assistant restarts. The automatic control switch shows OFF while paused; turn it ON deliberately to rearm this cover. Other room covers keep running normally. Changing a cover's linked window disarms its automation until the newly selected window has been reviewed and explicitly enabled.
 
@@ -78,11 +78,11 @@ Per-device calibrated strategy, direction, measured fields, Apply button and rea
 
 ## Beta 40 - coordinated PID outputs and deterministic per-device calibration
 
-One PID demand now selects the output allocation appropriate to the actual device. Binary heaters/dehumidifiers retain protected slow PWM, real 0–100% valves and percentage fans use continuous modulation without double PWM, and native Low/Medium/High or numbered fan levels can follow the same PID demand when supported. The existing Quiet when sleeping and Quiet when occupied settings cap fan speeds and hold output changes while the quiet context is unknown. Model calculations do **not** bypass compressor, window, power or occupancy safety interlocks.
+One PID demand now selects the output allocation appropriate to the actual device. Binary heaters/dehumidifiers retain protected slow PWM, real 0-100% valves and percentage fans use continuous modulation without double PWM, and native Low/Medium/High or numbered fan levels can follow the same PID demand when supported. The existing Quiet when sleeping and Quiet when occupied settings cap fan speeds and hold output changes while the quiet context is unknown. Model calculations do **not** bypass compressor, window, power or occupancy safety interlocks.
 
-Select **PID** on a managed device to reveal its **PID calibration method**: Manual, **IMC / Lambda** or **Cohen–Coon**. Manual leaves current Kp/Ki/Kd untouched. The two deterministic choices require a measured first-order-plus-dead-time step-response model: absolute process gain per full actuator step, response time constant, dead time and (for IMC) desired response Lambda, all in minutes where applicable. Fill the model fields, then press **Apply PID calibration** while the physical device is OFF; invalid/unmeasured response or out-of-range gains are rejected without changing the existing tune. No device is automatically cycled, probed or oscillated during calibration.
+Select **PID** on a managed device to reveal its **PID calibration method**: Manual, **IMC / Lambda** or **Cohen-Coon**. Manual leaves current Kp/Ki/Kd untouched. The two deterministic choices require a measured first-order-plus-dead-time step-response model: absolute process gain per full actuator step, response time constant, dead time and (for IMC) desired response Lambda, all in minutes where applicable. Fill the model fields, then press **Apply PID calibration** while the physical device is OFF; invalid/unmeasured response or out-of-range gains are rejected without changing the existing tune. No device is automatically cycled, probed or oscillated during calibration.
 
-Reference: [ISA Lambda tuning](https://www.isa.org/intech-home/2016/may-june/departments/loop-tuning-basics-self-regulating-processes) and [NI Cohen–Coon](https://www.ni.com/docs/en-US/bundle/labview/page/cohen-coon-autotuning-method.html). Both are deterministic calculations from **measured** process dynamics, not automatic identification of unknown appliances. Preserve the same source/room controller IDs, authorization and safety bounds.
+Reference: [ISA Lambda tuning](https://www.isa.org/intech-home/2016/may-june/departments/loop-tuning-basics-self-regulating-processes) and [NI Cohen-Coon](https://www.ni.com/docs/en-US/bundle/labview/page/cohen-coon-autotuning-method.html). Both are deterministic calculations from **measured** process dynamics, not automatic identification of unknown appliances. Preserve the same source/room controller IDs, authorization and safety bounds.
 
 ## Beta 39 - Home when any device tracker or configured presence sensor is positive
 
@@ -287,21 +287,21 @@ empty lists mean no rooms; unknown/stale values never imply absence.
 Selectors display **Device name - Entity name (state)**, with a normal hyphen
 and empty parts omitted. The rooms-first wizard and hub layout are unchanged.
 
-## Beta 14 — Rooms, room inputs, general settings, done
+## Beta 14 - Rooms, room inputs, general settings, done
 
-**Select monitored rooms → one page per selected room → General settings → Finish.** Each room page has six separate multi-selects: windows, air-quality/environmental sensors, temperature, humidity, pressure and climate/fan/humidity devices. Options show **device name — entity name**, plus the exact entity ID. All real HA areas are selectable, including rooms without windows.
+**Select monitored rooms → one page per selected room → General settings → Finish.** Each room page has six separate multi-selects: windows, air-quality/environmental sensors, temperature, humidity, pressure and climate/fan/humidity devices. Options show **device name - entity name**, plus the exact entity ID. All real HA areas are selectable, including rooms without windows.
 
 Setup then creates or retains the Home hub with general input/output entities and each selected room hub with its general settings/overview device and one managed controller per physical product. No further Climate or PID configuration menu is part of this route. Targets, presets, control methods and quiet settings stay on the managed devices. Selecting equipment does not authorize automatic power.
 
 Explicit source lists govern actual monitoring; empty means unused. Selected missing inputs remain unavailable instead of silently falling back. Qualified temperatures are normalized before averaging; selected pressure readings appear in room input diagnostics in hPa. Cancelling writes nothing, and the final save preserves unrelated concurrent settings. Existing IDs and tuning are retained.
 
-## Beta 13 — One climate-device selection path
+## Beta 13 - One climate-device selection path
 
 **Configure → Area settings → Climate devices → room → physical devices → Save.** The separate Climate and Climate PID setup entries are removed. Saving creates the selected controller devices inside the room hub without a mandatory setup wizard. One physical product is one selector choice even when it exposes several native endpoints.
 
 Targets, presets, Automatic/Manual/Off/PID and quiet settings belong to the managed devices; general room settings remain on the room hub. The optional sensor/hardware commissioning checkbox continues in this same setup path. Selection is not an automatic-control grant. Deselecting a device also removes its old supervisory PID assignment without deleting tuning or changing other rooms. All 38 locales are included.
 
-## Beta 12 — Expandable room hubs with devices, not services
+## Beta 12 - Expandable room hubs with devices, not services
 
 The integration page now has **one native room group per configured area**.
 Expand that room to find its **general room settings device** and **one managed
@@ -318,7 +318,7 @@ permissions are unchanged. Removing a room group removes only its membership
 and control grants, not native hardware or another room's settings. Routine
 room target changes do not reload the integration.
 
-## Beta 11 — Area hubs and per-device climate control
+## Beta 11 - Area hubs and per-device climate control
 
 **Home hub → Area hub → managed equipment controller devices.** Room-wide
 entities/settings stay on the Area hub. Each supported physical controller
@@ -363,7 +363,7 @@ See [the controller implementation and test boundaries](docs/DEVICE_CONTROLLER_C
 The 38-language UI includes Greek. CI checks software behavior with mocked HA
 boundaries, not physical hardware certification.
 
-## Beta 10 — Sources in Configure, controls on devices
+## Beta 10 - Sources in Configure, controls on devices
 
 The **Configure** flow concentrates on areas, Home Assistant entities, outdoor
 data providers, measurement sensors, controlled equipment and hardware-specific
@@ -455,7 +455,7 @@ interlocks.
 If your HACS version cannot select prereleases, use the **Manual installation ZIP** attached to the [beta GitHub release](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b28). Extract it into the Home Assistant configuration directory, preserving `custom_components/environment_manager/`, then restart. **The ZIP is a manual-install asset; HACS installs the selected version from the GitHub tag.** To return to stable, use HACS to select **v0.5.1**, then restart. Beta-only settings may need review after downgrading.
 
 
-### Complete configuration translations and explanations — beta 9
+### Complete configuration translations and explanations - beta 9
 
 A field-by-field localization audit found that an old generator supplied
 the correct JSON keys while leaving many option descriptions in English or
@@ -511,7 +511,7 @@ an interrupted setup.
 | Safety | One room-purpose arbitration policy, exact output ownership across config entries, manual-override pauses and durable write-intent recovery |
 | UX | Room-by-room climate cards, German/Greek/English controls and notifications, localization support, dashboard coordination details and read-only diagnostics |
 
-Full setup and scientific measurement details are documented below. [Report a beta issue](https://github.com/Chreece/HA-Home-Environment-Manager/issues/new), including software version, relevant HA entity capabilities and redacted diagnostics—never credentials or personal addresses.
+Full setup and scientific measurement details are documented below. [Report a beta issue](https://github.com/Chreece/HA-Home-Environment-Manager/issues/new), including software version, relevant HA entity capabilities and redacted diagnostics-never credentials or personal addresses.
 
 **Home Environment Manager** combines local sensor data, international environmental sources,
 building physics and optional advanced comfort models to recommend how to keep a room
@@ -523,7 +523,7 @@ The Home Assistant integration domain, existing entity unique IDs and all
 saved configuration remain `air_quality_advisor` for upgrade compatibility.
 
 
-**New in beta 9 — controller/menu audit:** The room-aware entities from beta 6 remain minimal; this beta fixes stale device selections retaining control roles, checks real equipment features/timing limits, protects absence-OFF from deselected targets, corrects purifier-speed setpoints, moves fan purpose assignments safely, promotes replacement thermostats properly, excludes rejected sensors, and improves occupancy/AQI source editors.\n\n**Area devices introduced in beta 6:** Each selected monitoring room, and each active climate/PID-only room, gets its own Home Environment Manager device in the actual Home Assistant area. It contains one `Environment overview` sensor (assessment state with raw input/source values, window contacts, derived calculations and climate diagnostics as attributes). If calibrated mold indication is enabled for a monitored room, the device additionally exposes one genuine calculated `Surface humidity` percentage sensor; unknown inputs remain unavailable. The integration does **not** duplicate native thermostat setpoints, humidity, temperature, CO₂, PM or fan controls. Those remain on their original Home Assistant equipment entities. No new hardware control is authorized by the area devices.\n\n**One compatibility-preserving Home Assistant recommendation entity and one expandable dashboard card for all selected rooms.** It compares indoor CO₂, AQI, particles, VOCs and either room RH or an optional calibrated mold indicator against outdoor air quality, current weather and selected weather-warning entities, then recommends **which windows to open or close and why**. Announcements are entirely optional.
+**New in beta 9 - controller/menu audit:** The room-aware entities from beta 6 remain minimal; this beta fixes stale device selections retaining control roles, checks real equipment features/timing limits, protects absence-OFF from deselected targets, corrects purifier-speed setpoints, moves fan purpose assignments safely, promotes replacement thermostats properly, excludes rejected sensors, and improves occupancy/AQI source editors.\n\n**Area devices introduced in beta 6:** Each selected monitoring room, and each active climate/PID-only room, gets its own Home Environment Manager device in the actual Home Assistant area. It contains one `Environment overview` sensor (assessment state with raw input/source values, window contacts, derived calculations and climate diagnostics as attributes). If calibrated mold indication is enabled for a monitored room, the device additionally exposes one genuine calculated `Surface humidity` percentage sensor; unknown inputs remain unavailable. The integration does **not** duplicate native thermostat setpoints, humidity, temperature, CO₂, PM or fan controls. Those remain on their original Home Assistant equipment entities. No new hardware control is authorized by the area devices.\n\n**One compatibility-preserving Home Assistant recommendation entity and one expandable dashboard card for all selected rooms.** It compares indoor CO₂, AQI, particles, VOCs and either room RH or an optional calibrated mold indicator against outdoor air quality, current weather and selected weather-warning entities, then recommends **which windows to open or close and why**. Announcements are entirely optional.
 
 > This project is an advisor, **not an automatic window actuator**, medical device, emergency warning system, or authoritative weather alert. It never controls covers. Outdoor warnings and uncertain conditions are intentionally treated as blockers.
 
@@ -533,13 +533,13 @@ saved configuration remain `air_quality_advisor` for upgrade compatibility.
 
 The examples below are **real renders of the bundled Lovelace card** using *sample sensor values*, not screenshots of a live Home Assistant installation. They demonstrate the available room summary, ventilation recommendations, outdoor warnings, responsive layout and Greek localization.
 
-### Desktop overview — light theme
+### Desktop overview - light theme
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Chreece/HA-Home-Environment-Manager/main/.github/assets/screenshots/dashboard-overview-light.png" alt="Home Environment Manager light-theme dashboard: outdoor air conditions, good and attention rooms, four-room infographic and recommendation to open a window" width="850">
 </p>
 
-### Greek localization — dark theme
+### Greek localization - dark theme
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/Chreece/HA-Home-Environment-Manager/main/.github/assets/screenshots/dashboard-greek-dark.png" alt="Greek Home Environment Manager dashboard in Home Assistant dark theme, with measured CO2 and a window recommendation" width="800">
@@ -550,7 +550,7 @@ The examples below are **real renders of the bundled Lovelace card** using *samp
 <table>
   <tr>
     <td align="center" width="38%"><b>Responsive mobile dashboard</b></td>
-    <td align="center"><b>Unsafe outdoor conditions — close windows</b></td>
+    <td align="center"><b>Unsafe outdoor conditions - close windows</b></td>
   </tr>
   <tr>
     <td valign="top" align="center"><img src="https://raw.githubusercontent.com/Chreece/HA-Home-Environment-Manager/main/.github/assets/screenshots/dashboard-mobile.png" alt="Home Environment Manager mobile dashboard with room cards and sensor gauges" width="340"></td>
@@ -563,7 +563,7 @@ The examples below are **real renders of the bundled Lovelace card** using *samp
 Screenshots are generated with the bundled card source using [`tools/generate_readme_screenshots.py`](tools/generate_readme_screenshots.py). To refresh them after changing the card, run the one-time [README screenshots workflow](.github/workflows/readme-screenshots.yml) manually; it does not run on routine development pushes.
 
 
-### Scientific environment details — desktop and mobile
+### Scientific environment details - desktop and mobile
 
 The following examples show the **actual bundled Lovelace card** with
 illustrative, explicitly simulated sensor values and advanced room analysis.
@@ -596,7 +596,7 @@ Users supply and explicitly identify which scale and units each sensor uses.
 
 | Capability | Inputs and methods | Output and evidence limits |
 | --- | --- | --- |
-| Region-specific AQI | Explicit per-entity EPA 0–500, European categorical 1–6, or custom provider scale | Never guesses the country or misuses another scale. Unspecified scales remain *unknown* rather than declaring safe air. |
+| Region-specific AQI | Explicit per-entity EPA 0-500, European categorical 1-6, or custom provider scale | Never guesses the country or misuses another scale. Unspecified scales remain *unknown* rather than declaring safe air. |
 | Outdoor gases | Actual NO₂, O₃ and SO₂ sensors in µg/m³ | Configurable operational screening, not equivalent to a regulatory 24-hour or 8-hour mean. |
 | Pollen-aware airing | A user-selected numeric pollen forecast from any HA integration; user declares scale and high threshold | Informational by default. Blocking ventilation on high pollen is an **explicit opt-in** policy, not a global default. |
 | Ventilation learning | Real NDIR CO₂, calibrated history, window contacts | Reports *indicative* declining CO₂ and time to an operational target if the trend remains stable; no arbitrary prediction if windows are closed or data insufficient. |
@@ -677,7 +677,7 @@ The installer writes **only** the integration directory, makes a rollback backup
 
 Update through [HACS](https://my.home-assistant.io/redirect/hacs_repository/?owner=Chreece&repository=HA-Home-Environment-Manager&category=integration), then restart Home Assistant. Existing config entries and the single recommendation sensor retain their IDs. The bundled Lovelace card is refreshed automatically.
 
-## Internationalization — 38 languages
+## Internationalization - 38 languages
 
 Home Environment Manager supports **38 Home Assistant language choices**, including 33 new locale packs for setup, reconfiguration, room states, notification messages, announcement text and the built-in dashboard card. The card follows the signed-in **Home Assistant user's language**, while `environment_manager.announce` can override message language independently.
 
@@ -700,7 +700,7 @@ For example, the Greek Weather page explains directly that at least one weather 
 **Initial setup** starts with Rooms, then window exclusions, followed by the remaining guided steps:
 
 1. **Areas / rooms (multi-select).** Start by choosing which rooms to monitor. Rooms with Window-class `binary_sensor` contacts are suggested and automatically preselected. Window-class `cover` entities are never considered window contacts. You can remove unwanted rooms before continuing.
-2. **Window sensor exclusions (multi-select).** Next, review recognized window contacts. Likely thermostat-derived or virtual window signals are preselected for exclusion; uncheck any actual window contacts or add other exclusions. If these exclusions remove the last usable contact from a selected room, setup returns to Rooms for review. If all contacts would be excluded, setup explains that at least one must remain. Your choices—including an explicitly empty exclusion list—are saved.
+2. **Window sensor exclusions (multi-select).** Next, review recognized window contacts. Likely thermostat-derived or virtual window signals are preselected for exclusion; uncheck any actual window contacts or add other exclusions. If these exclusions remove the last usable contact from a selected room, setup returns to Rooms for review. If all contacts would be excluded, setup explains that at least one must remain. Your choices-including an explicitly empty exclusion list-are saved.
 3. **Indoor air-quality exclusions (one page per selected room).** Each room with supported indoor sensors has its own multi-select. Available candidates include **humidity, CO₂, US AQI, PM2.5, PM10, total VOC mass concentration and VOC parts concentration**, using only the supported device classes or recognized sensor IDs with compatible units. Options show **device name › entity name · measurement · entity ID**; entities without a registered device still show entity name, metric and ID. Select sensors to **exclude** from that specific room; **leave empty to monitor them all**. On reconfiguration the saved exclusions are checked. Previously excluded but now missing sensors remain selectable, so you can remove obsolete exclusions. Rooms without supported indoor sensors are skipped rather than showing a useless blank menu.
 4. **Outdoor air quality.** Select recognized outdoor entities not associated with monitored rooms. Unknown, unavailable and stale readings are reported as missing, not treated as dangerous. Valid high readings still block opening.
 5. **Weather and warnings.** Select one or more `weather.*` entities and optional recognized warning sensors. Unsafe weather and active or unknown warnings block window opening.
@@ -714,7 +714,7 @@ For an installed integration, open **Settings → Devices & services → Integra
 
 Check **Use mold indication instead of raw room RH** on the first **Rooms** setup page. The legacy 65% room-RH rule remains unchanged until you enable it. When enabled, the Advisor **prefers** the estimated relative humidity **at the coldest surface** (default trigger 70%); when mold estimation is unavailable, it **automatically falls back to the valid room RH average** (default trigger 65%). Both limits can be changed independently in **Advanced thresholds**. The mold indicator is a moisture/mold-growth indication, not a probability of having mold.
 
-For each room, first open **Weather and warnings** (second option in **Configure**) and choose a weather entity providing a current `temperature` attribute (°C/°F). The Advisor reads this attribute as outdoor temperature; it does **not** obtain temperature from the humidity sensor or the outdoor air-quality/pollution sensors. Then open **Room settings — indoor air and mold** (third option in Configure), choose a room temperature sensor (°C or °F), and measure the room's **coldest wall surface**, usually an outside corner or window frame, with a contact/infrared thermometer. Enter the measured critical-point temperature in **°C**. Measure at the same time as the room temperature sensor and selected weather entity's outdoor temperature. They should differ by at least 3 °C for a stable calibration. The integration calculates the same factor as Home Assistant's [Mold Indicator](https://www.home-assistant.io/integrations/mold_indicator/):
+For each room, first open **Weather and warnings** (second option in **Configure**) and choose a weather entity providing a current `temperature` attribute (°C/°F). The Advisor reads this attribute as outdoor temperature; it does **not** obtain temperature from the humidity sensor or the outdoor air-quality/pollution sensors. Then open **Room settings - indoor air and mold** (third option in Configure), choose a room temperature sensor (°C or °F), and measure the room's **coldest wall surface**, usually an outside corner or window frame, with a contact/infrared thermometer. Enter the measured critical-point temperature in **°C**. Measure at the same time as the room temperature sensor and selected weather entity's outdoor temperature. They should differ by at least 3 °C for a stable calibration. The integration calculates the same factor as Home Assistant's [Mold Indicator](https://www.home-assistant.io/integrations/mold_indicator/):
 
 ```text
 calibration_factor = (temperature_indoors - temperature_outdoors)
@@ -725,7 +725,7 @@ estimated_surface_temp = temperature_outdoors
 
 Until the coldest-surface measurement is entered, the mold indication is unavailable. **If there is at least one valid room RH reading, the card now displays an active RH fallback reading and its own 65% threshold**. The fallback is always an average of available valid room RH sensors, never a mold surface-humidity percentage. The room remains **partially verified (not green/safe)** while mold is missing; PM2.5, AQI, CO₂ and VOC continue independently. An RH average at or above its threshold can still recommend opening a closed window when outdoor conditions are suitable.
 
-On the dashboard, the compact mold gauge uses readable labels, for example **“Μέση υγρασία: 55% · 2 αισθητήρες”** and **“Εκτιμώμενη επιφάνεια: 17,1°C”** in Greek. The count is the number of valid room RH sensors, **not** the calibration factor. Select **More details** for the room—even when it has only three measurement cards—to view the saved **calibration factor** and the current indoor/outdoor temperatures used by the estimate. The factor is preserved at full floating-point precision in the sensor's dashboard metadata; the card formats it to up to six decimal places (minimum two) without changing the calculation.
+On the dashboard, the compact mold gauge uses readable labels, for example **“Μέση υγρασία: 55% · 2 αισθητήρες”** and **“Εκτιμώμενη επιφάνεια: 17,1°C”** in Greek. The count is the number of valid room RH sensors, **not** the calibration factor. Select **More details** for the room-even when it has only three measurement cards-to view the saved **calibration factor** and the current indoor/outdoor temperatures used by the estimate. The factor is preserved at full floating-point precision in the sensor's dashboard metadata; the card formats it to up to six decimal places (minimum two) without changing the calculation.
 
 The room's humidity sensors are discovered and filtered through the normal per-room exclusion list. **Only valid RH readings above 0% and at most 100% are averaged**; `unknown`, `unavailable`, out-of-range, NaN, stale and excluded readings do not contribute. The indoor average and the room/outdoor temperatures determine dew point and estimated surface RH via the Magnus formula. The dashboard shows the calculated indicator, number of valid RH contributors, their average and estimated surface temperature.
 
@@ -739,19 +739,19 @@ If calibration, room temperature, weather temperature, usable nonzero room humid
 
 | Measurement | Supported unit(s) | Outdoor good at or below | Indoor requires ventilation at or above |
 |---|---|---:|---:|
-| AQI — **US scale 0–500** | index / none / AQI | 50 | 100 |
+| AQI - **US scale 0-500** | index / none / AQI | 50 | 100 |
 | CO₂ | ppm | 800 | 1,000 |
 | PM2.5 | µg/m³ or mg/m³ | 15 | 25 |
 | PM10 | µg/m³ or mg/m³ | 45 | 45 |
 | Total VOC | µg/m³ or mg/m³ | 500 | 500 |
 | VOC concentration (parts) | ppb or ppm | 500 ppb | 500 ppb |
-| Relative humidity (legacy mode) | % | — | 65% |
-| Averaged room RH fallback (mold unavailable) | % | — | 65% |
-| Mold indication (opt-in, available) | estimated surface RH, % | — | 70% |
+| Relative humidity (legacy mode) | % | - | 65% |
+| Averaged room RH fallback (mold unavailable) | % | - | 65% |
+| Mold indication (opt-in, available) | estimated surface RH, % | - | 70% |
 
-Sensor values are normalised to the units above. Outdoor temperatures from weather entities must remain from **5–32 °C**, humidity at most **85%** and wind at most **35 km/h** when those attributes are provided. Supported fair weather states: `sunny`, `clear-night`, `partlycloudy`, `cloudy`. All other states, including rain, snow, thunderstorms, fog and high wind, block opening. Selected warnings that are active **or cannot be verified** also block opening. Weather providers with unknown state block opening. Selected outdoor data older than 90 minutes (using `last_reported` when available) are reported as unavailable, without blocking opening. Adjust the freshness interval by checking **Edit advanced thresholds** on the announcements page.
+Sensor values are normalised to the units above. Outdoor temperatures from weather entities must remain from **5-32 °C**, humidity at most **85%** and wind at most **35 km/h** when those attributes are provided. Supported fair weather states: `sunny`, `clear-night`, `partlycloudy`, `cloudy`. All other states, including rain, snow, thunderstorms, fog and high wind, block opening. Selected warnings that are active **or cannot be verified** also block opening. Weather providers with unknown state block opening. Selected outdoor data older than 90 minutes (using `last_reported` when available) are reported as unavailable, without blocking opening. Adjust the freshness interval by checking **Edit advanced thresholds** on the announcements page.
 
-**AQI scales differ internationally.** A European 1–5 index is *not* the US 0–500 AQI. For 1–5 index sensors, change the outdoor AQI limit (for example `2`) and indoor AQI trigger (for example `3`) using **Edit advanced thresholds**, or use the measured pollutant sensors instead. Numeric thresholds are configurable per installation, not per sensor, and do not represent exposure-duration standards.
+**AQI scales differ internationally.** A European 1-5 index is *not* the US 0-500 AQI. For 1-5 index sensors, change the outdoor AQI limit (for example `2`) and indoor AQI trigger (for example `3`) using **Edit advanced thresholds**, or use the measured pollutant sensors instead. Numeric thresholds are configurable per installation, not per sensor, and do not represent exposure-duration standards.
 
 ### Decision policy
 
@@ -1037,7 +1037,7 @@ thermostat with a relay:
 | Existing v0.5 setpoint PID (`climate.*`) | Rate-limited `climate.set_temperature` only | Can never run alongside another enabled room controller. |
 | Non-compressor heating/cooling relay (`switch.*`) | `switch.turn_on`/`turn_off` | Explicit non-compressor/independent-protection attestation, room ownership, hysteresis, minimum ON/OFF intervals and maximum ON watchdog. |
 | Slow thermal PWM relay (`switch.*`) | Bounded time-proportioning ON/OFF | Only loads documented as safe for repeated switching; fixed PWM period and minimum pulse durations. **Never attach a compressor or unprotected resistive heater.** |
-| True proportional actuator (`number.*`) | `number.set_value` | Sensor must expose a verified 0–100% output with unit `%`, range 0–100 and valid step; rate-limited commands. |
+| True proportional actuator (`number.*`) | `number.set_value` | Sensor must expose a verified 0-100% output with unit `%`, range 0-100 and valid step; rate-limited commands. |
 
 A `climate.*` entity that only exposes heat/off control is **not** assumed
 to be safe for rapid relay PWM. Direct actuators must be assigned to the
@@ -1208,7 +1208,7 @@ The new room air-treatment wizard selects actual same-room CO₂ and PM2.5
 sensors, an explicitly chosen short-term **operational** PM2.5 action threshold
 (not a WHO exposure threshold), and desired upper fan speeds. It records the
 user's NDIR/particle-sensor verification and only provides automatic
-percentage changes after separate consent. Indoor–outdoor moisture-ratio
+percentage changes after separate consent. Indoor-outdoor moisture-ratio
 evidence determines whether ventilation would remove or add moisture.
 
 The coordinator reports distinct **extraction** and **filtration** intentions.

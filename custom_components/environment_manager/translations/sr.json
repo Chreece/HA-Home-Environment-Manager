@@ -71,7 +71,7 @@
           "language": "Језик",
           "automatic_tts": "Automatsko",
           "automatic_notifications": "Automatsko · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Обавештења (опционо) · 0–1440 min",
+          "announcement_repeat_minutes": "Обавештења (опционо) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "podešavanja · izvor",
           "tts_engine": "podešavanja · izvor · TTS_ENGINE",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Напредни прагови",
-        "description": "Напредни прагови. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Напредни прагови. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Напољу · AQI (≤)",
           "outdoor_co2": "Напољу · CO₂ (ppm) (≤)",
@@ -236,7 +236,7 @@
       "invalid_indoor_exclusions": "Неважећи избор: Изузми сензоре унутрашњег ваздуха.",
       "no_windows_after_exclusions": "Оставите бар један сензор прозора.",
       "review_areas_after_exclusions": "Проверите: Собе · Мерења (0).",
-      "invalid_repeat_minutes": "Неважећи избор: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Неважећи избор: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Недоступно: conversation.process.",
       "invalid_ai_agent": "Неважећи избор: conversation.*.",
       "invalid_mold_temperature_sensor": "Собе · 🌡️ ⚠",
@@ -248,7 +248,7 @@
       "invalid_room_source": "Neispravno: Soba · izvor"
     },
     "abort": {
-      "already_configured": "Home Environment Manager — већ подешено.",
+      "already_configured": "Home Environment Manager - већ подешено.",
       "setup_area_removed": "Neispravno: Собе за праћење",
       "setup_changed": "podešavanja ↻ Собе за праћење"
     }
@@ -337,7 +337,7 @@
           "language": "Језик",
           "automatic_tts": "Automatsko",
           "automatic_notifications": "Automatsko · AUTOMATIC_NOTIFICATIONS",
-          "announcement_repeat_minutes": "Обавештења (опционо) · 0–1440 min",
+          "announcement_repeat_minutes": "Обавештења (опционо) · 0-1440 min",
           "use_announcement_hub": "Announcement Hub",
           "notify_entities": "podešavanja · izvor",
           "tts_engine": "podešavanja · izvor · TTS_ENGINE",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Напредни прагови",
-        "description": "Напредни прагови. AQI (US: 0–500), CO₂, PM2.5, PM10, VOC, RH.",
+        "description": "Напредни прагови. AQI (US: 0-500), CO₂, PM2.5, PM10, VOC, RH.",
         "data": {
           "outdoor_aqi": "Напољу · AQI (≤)",
           "outdoor_co2": "Напољу · CO₂ (ppm) (≤)",
@@ -1190,7 +1190,7 @@
       "invalid_indoor_exclusions": "Неважећи избор: Изузми сензоре унутрашњег ваздуха.",
       "no_windows_after_exclusions": "Оставите бар један сензор прозора.",
       "review_areas_after_exclusions": "Проверите: Собе · Мерења (0).",
-      "invalid_repeat_minutes": "Неважећи избор: 0–1440 min (0 = ⛔).",
+      "invalid_repeat_minutes": "Неважећи избор: 0-1440 min (0 = ⛔).",
       "missing_ai_service": "Недоступно: conversation.process.",
       "invalid_ai_agent": "Неважећи избор: conversation.*.",
       "invalid_mold_temperature_sensor": "Собе · 🌡️ ⚠",
@@ -1334,7 +1334,7 @@
         "name": "⏱ · Отворите (min, ≤)"
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Обавештења (опционо) · 0–1440 min"
+        "name": "Обавештења (опционо) · 0-1440 min"
       },
       "area_pid_target_c": {
         "name": "cilj (°C)"
@@ -1667,7 +1667,7 @@
   },
   "services": {
     "announce": {
-      "name": "Обавештења (опционо) — Home Environment Manager",
+      "name": "Обавештења (опционо) - Home Environment Manager",
       "description": "Обавештења (опционо) · Собе",
       "fields": {
         "language": {
@@ -1702,7 +1702,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant — Подразумевано",
+        "auto": "Home Assistant - Подразумевано",
         "en": "podešavanja · izvor",
         "de": "podešavanja · izvor",
         "el": "podešavanja · izvor",
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "izvor · Neispravno",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "cilj · podešavanja"
       }
     }

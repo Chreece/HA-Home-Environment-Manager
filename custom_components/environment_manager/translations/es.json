@@ -25,7 +25,7 @@
         }
       },
       "indoor_sensors": {
-        "title": "Configuración por habitación — aire y moho",
+        "title": "Configuración por habitación - aire y moho",
         "description": "Habitación: {area_name} ({position}/{total}). Excluye aquí sensores del aire. Para el indicador de moho, mide ahora la superficie más fría (esquina exterior o marco de ventana) con un termómetro, con las temperaturas interior y exterior estables. Introduce los °C o deja vacío para calibrar después.\n\n{mold_room_notice}",
         "data": {
           "excluded_indoor_entities": "Sensores que se excluyen en esta habitación",
@@ -94,7 +94,7 @@
       },
       "thresholds": {
         "title": "Umbrales avanzados",
-        "description": "Los límites se aplican a lecturas instantáneas, no a normas médicas. El AQI predeterminado usa la escala estadounidense 0–500.",
+        "description": "Los límites se aplican a lecturas instantáneas, no a normas médicas. El AQI predeterminado usa la escala estadounidense 0-500.",
         "data": {
           "outdoor_aqi": "AQI exterior máximo",
           "outdoor_co2": "CO₂ exterior máximo (ppm)",
@@ -102,9 +102,9 @@
           "outdoor_pm10": "PM10 exterior máximo (µg/m³)",
           "outdoor_voc": "COV exterior máximo (µg/m³)",
           "outdoor_voc_parts": "COV exterior máximo (ppb)",
-          "outdoor_no2": "NO₂ exterior — umbral de decisión (µg/m³)",
-          "outdoor_o3": "O₃ exterior — umbral de decisión (µg/m³)",
-          "outdoor_so2": "SO₂ exterior — umbral de decisión (µg/m³)",
+          "outdoor_no2": "NO₂ exterior - umbral de decisión (µg/m³)",
+          "outdoor_o3": "O₃ exterior - umbral de decisión (µg/m³)",
+          "outdoor_so2": "SO₂ exterior - umbral de decisión (µg/m³)",
           "indoor_aqi": "Umbral de AQI interior que activa la ventilación",
           "indoor_co2": "Umbral de CO₂ interior que activa la ventilación (ppm)",
           "indoor_pm25": "Umbral de PM2.5 interior que activa la ventilación (µg/m³)",
@@ -126,9 +126,9 @@
           "outdoor_pm10": "Umbral de decisión para «PM10 exterior máximo (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
           "outdoor_voc": "Umbral de decisión para «COV exterior máximo (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
           "outdoor_voc_parts": "Umbral de decisión para «COV exterior máximo (ppb)». Afecta las recomendaciones, no es un límite médico.",
-          "outdoor_no2": "Umbral de decisión para «NO₂ exterior — umbral de decisión (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
-          "outdoor_o3": "Umbral de decisión para «O₃ exterior — umbral de decisión (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
-          "outdoor_so2": "Umbral de decisión para «SO₂ exterior — umbral de decisión (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
+          "outdoor_no2": "Umbral de decisión para «NO₂ exterior - umbral de decisión (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
+          "outdoor_o3": "Umbral de decisión para «O₃ exterior - umbral de decisión (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
+          "outdoor_so2": "Umbral de decisión para «SO₂ exterior - umbral de decisión (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
           "indoor_aqi": "Umbral de decisión para «Umbral de AQI interior que activa la ventilación». Afecta las recomendaciones, no es un límite médico.",
           "indoor_co2": "Umbral de decisión para «Umbral de CO₂ interior que activa la ventilación (ppm)». Afecta las recomendaciones, no es un límite médico.",
           "indoor_pm25": "Umbral de decisión para «Umbral de PM2.5 interior que activa la ventilación (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
@@ -291,7 +291,7 @@
         }
       },
       "indoor_sensors": {
-        "title": "Configuración por habitación — aire y moho",
+        "title": "Configuración por habitación - aire y moho",
         "description": "Habitación: {area_name} ({position}/{total}). Excluye aquí sensores del aire. Para el indicador de moho, mide ahora la superficie más fría (esquina exterior o marco de ventana) con un termómetro, con las temperaturas interior y exterior estables. Introduce los °C o deja vacío para calibrar después.\n\n{mold_room_notice}",
         "data": {
           "excluded_indoor_entities": "Sensores que se excluyen en esta habitación",
@@ -360,7 +360,7 @@
       },
       "thresholds": {
         "title": "Umbrales avanzados",
-        "description": "Los límites se aplican a lecturas instantáneas, no a normas médicas. El AQI predeterminado usa la escala estadounidense 0–500.",
+        "description": "Los límites se aplican a lecturas instantáneas, no a normas médicas. El AQI predeterminado usa la escala estadounidense 0-500.",
         "data": {
           "outdoor_aqi": "AQI exterior máximo",
           "outdoor_co2": "CO₂ exterior máximo (ppm)",
@@ -368,9 +368,9 @@
           "outdoor_pm10": "PM10 exterior máximo (µg/m³)",
           "outdoor_voc": "COV exterior máximo (µg/m³)",
           "outdoor_voc_parts": "COV exterior máximo (ppb)",
-          "outdoor_no2": "NO₂ exterior — umbral de decisión (µg/m³)",
-          "outdoor_o3": "O₃ exterior — umbral de decisión (µg/m³)",
-          "outdoor_so2": "SO₂ exterior — umbral de decisión (µg/m³)",
+          "outdoor_no2": "NO₂ exterior - umbral de decisión (µg/m³)",
+          "outdoor_o3": "O₃ exterior - umbral de decisión (µg/m³)",
+          "outdoor_so2": "SO₂ exterior - umbral de decisión (µg/m³)",
           "indoor_aqi": "Umbral de AQI interior que activa la ventilación",
           "indoor_co2": "Umbral de CO₂ interior que activa la ventilación (ppm)",
           "indoor_pm25": "Umbral de PM2.5 interior que activa la ventilación (µg/m³)",
@@ -392,9 +392,9 @@
           "outdoor_pm10": "Umbral de decisión para «PM10 exterior máximo (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
           "outdoor_voc": "Umbral de decisión para «COV exterior máximo (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
           "outdoor_voc_parts": "Umbral de decisión para «COV exterior máximo (ppb)». Afecta las recomendaciones, no es un límite médico.",
-          "outdoor_no2": "Umbral de decisión para «NO₂ exterior — umbral de decisión (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
-          "outdoor_o3": "Umbral de decisión para «O₃ exterior — umbral de decisión (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
-          "outdoor_so2": "Umbral de decisión para «SO₂ exterior — umbral de decisión (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
+          "outdoor_no2": "Umbral de decisión para «NO₂ exterior - umbral de decisión (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
+          "outdoor_o3": "Umbral de decisión para «O₃ exterior - umbral de decisión (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
+          "outdoor_so2": "Umbral de decisión para «SO₂ exterior - umbral de decisión (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
           "indoor_aqi": "Umbral de decisión para «Umbral de AQI interior que activa la ventilación». Afecta las recomendaciones, no es un límite médico.",
           "indoor_co2": "Umbral de decisión para «Umbral de CO₂ interior que activa la ventilación (ppm)». Afecta las recomendaciones, no es un límite médico.",
           "indoor_pm25": "Umbral de decisión para «Umbral de PM2.5 interior que activa la ventilación (µg/m³)». Afecta las recomendaciones, no es un límite médico.",
@@ -565,7 +565,7 @@
         }
       },
       "environment_room_air": {
-        "title": "Habitación: {area_name} — ventilación y humedad",
+        "title": "Habitación: {area_name} - ventilación y humedad",
         "description": "Opcional. Proporciona sensores correctos, volumen real y CADR de partículas. Confirma que el sensor CO₂ es NDIR real.",
         "data": {
           "temperature_entity": "Temperatura · fuente",
@@ -589,7 +589,7 @@
         }
       },
       "environment_room_exposure": {
-        "title": "Habitación: {area_name} — sensores especializados",
+        "title": "Habitación: {area_name} - sensores especializados",
         "description": "Sensores opcionales de radón, formaldehído, ruido y luz. Los valores de referencia requieren mediciones verificadas.",
         "data": {
           "radon_entity": "RADON · Rn · fuente",
@@ -617,7 +617,7 @@
         }
       },
       "environment_room_comfort": {
-        "title": "Habitación: {area_name} — confort térmico completo",
+        "title": "Habitación: {area_name} - confort térmico completo",
         "description": "ISO 7730 opcional: temperatura radiante, velocidad del aire, actividad y ropa obligatorias.",
         "data": {
           "enable_pmv": "PMV / PPD · Automático",
@@ -637,7 +637,7 @@
         }
       },
       "pid": {
-        "title": "PID climático — elegir habitación",
+        "title": "PID climático - elegir habitación",
         "description": "Opcional y desactivado por defecto. Selecciona una habitación y sus dispositivos.",
         "data": {
           "pid_area": "Habitación a configurar"
@@ -647,7 +647,7 @@
         }
       },
       "pid_room": {
-        "title": "PID climático en {area_name} — dispositivos y objetivo",
+        "title": "PID climático en {area_name} - dispositivos y objetivo",
         "description": "Activa solo con un sensor de temperatura real y los dispositivos autorizados. El equipo debe estar ya en calefacción o refrigeración. Ventanas abiertas o desconocidas suspenden el control. No cambia el modo HVAC.",
         "data": {
           "pid_enabled": "Activar PID climático",
@@ -667,7 +667,7 @@
         }
       },
       "pid_tuning": {
-        "title": "PID climático en {area_name} — parámetros avanzados y seguridad",
+        "title": "PID climático en {area_name} - parámetros avanzados y seguridad",
         "description": "Kp en %/°C, Ki en %/(°C·min), Kd en %·min/°C. La consigna se limita. Los cambios manuales pausan el PID hasta reanudarlo explícitamente.",
         "data": {
           "pid_kp": "PID Kp · control (% per °C)",
@@ -693,8 +693,8 @@
         }
       },
       "climate": {
-        "title": "Clima — elegir habitación",
-        "description": "Configura «Clima — elegir habitación» solo en la habitación seleccionada. Datos incompatibles o ausentes bloquean la acción.",
+        "title": "Clima - elegir habitación",
+        "description": "Configura «Clima - elegir habitación» solo en la habitación seleccionada. Datos incompatibles o ausentes bloquean la acción.",
         "data": {
           "climate_area": "Dispositivos"
         },
@@ -703,7 +703,7 @@
         }
       },
       "climate_room": {
-        "title": "Clima — control, ocupación y ausencia",
+        "title": "Clima - control, ocupación y ausencia",
         "description": "Área · ajustes · Dispositivos · control. Ocupación · sensor · Obligatorio.",
         "data": {
           "climate_enabled": "Dispositivos · Automático · AUTO",
@@ -855,7 +855,7 @@
         }
       },
       "climate_profiles": {
-        "title": "Clima — temperaturas por modo",
+        "title": "Clima - temperaturas por modo",
         "description": "Área · ajustes · Dispositivos · control. Ocupación · sensor · Obligatorio.",
         "data": {
           "home_heat": "Calefacción · En casa (°C)",
@@ -931,7 +931,7 @@
         "description": "Área · ajustes: Elegir fuente, sensor / Dispositivos · control.",
         "menu_options": {
           "areas": "Áreas",
-          "indoor_sensors": "Configuración por habitación — aire y moho",
+          "indoor_sensors": "Configuración por habitación - aire y moho",
           "window_sensors": "Excluir sensores de ventana",
           "environment_room": "Elegir habitación para análisis ambiental",
           "area_devices": "Dispositivos climáticos"
@@ -1286,13 +1286,13 @@
         "name": "COV exterior máximo (ppb)"
       },
       "global_threshold_outdoor_no2": {
-        "name": "NO₂ exterior — umbral de decisión (µg/m³)"
+        "name": "NO₂ exterior - umbral de decisión (µg/m³)"
       },
       "global_threshold_outdoor_o3": {
-        "name": "O₃ exterior — umbral de decisión (µg/m³)"
+        "name": "O₃ exterior - umbral de decisión (µg/m³)"
       },
       "global_threshold_outdoor_so2": {
-        "name": "SO₂ exterior — umbral de decisión (µg/m³)"
+        "name": "SO₂ exterior - umbral de decisión (µg/m³)"
       },
       "global_threshold_indoor_aqi": {
         "name": "Umbral de AQI interior que activa la ventilación"
@@ -1786,8 +1786,8 @@
     "outside_aqi_scale": {
       "options": {
         "not_configured": "fuente · No válido",
-        "us_epa": "US EPA AQI (0–500)",
-        "eea_category": "EEA AQI (1–6)",
+        "us_epa": "US EPA AQI (0-500)",
+        "eea_category": "EEA AQI (1-6)",
         "custom": "objetivo · ajustes"
       }
     }
