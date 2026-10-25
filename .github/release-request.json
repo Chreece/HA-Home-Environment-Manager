@@ -1,16 +1,15 @@
 {
-  "version": "0.6.0b45",
+  "version": "0.6.0b46",
   "channel": "beta",
-  "release_branch": "beta/v0.6.0b45",
-  "intent": "Accept native same-room roller shutters without device_class when they advertise CLOSE; retain explicit non-shading class exclusion and runtime safety; ship independent per-cover controls and detailed managed-device/shade setup descriptions in all 38 languages.",
-  "note": "HACS pre-release of canonical environment_manager only. Includes beta44 safeguards, per-cover window association, auto-control, announcement opt-in, close temperature, persistent manual override; unknown shutters stay selectable but never actuate without verified state. Exact HACS flat payload, Python 3.13/3.14, HA 2026.10, HACS and hassfest required.",
+  "release_branch": "beta/v0.6.0b46",
+  "intent": "Replace AI-style en/em and doubled en dashes with ASCII hyphens in all current Home Environment Manager UI, localized copy, generated catalogs, and direct AI announcement rewrites.",
+  "note": "AI output normalization happens after validation of action, room, windows and numeric measurements; no control decisions, equipment authorization or room routing are changed. Translators are normalized before regeneration, and the shipped 38 locales remain synchronized. Stable and earlier beta tags remain unchanged.",
   "validation_attempt": 0,
   "changes": [
-    "Discover native classless cover.* entities with supported_features CLOSE, including six user examples with feature mask 15 and an unavailable kitchen shutter, without scanning other areas or auto-arming motors.",
-    "Retain exclusion of explicit non-shading cover classes, disabled/hidden sources, wrong-room and integration-owned controls.",
-    "Add individual Window Shade Controller children, same-room window contact assignment, per-cover auto/announce switches, closing temperature threshold and durable pause on manual override.",
-    "Update initial and Options room-source field descriptions for supported climate/humidifier/fan physical devices and native/generic shades in 38 locales.",
-    "Preserve beta44 weather/sun/temperature/window checks, per-cover ownership and auto-open only after confirmed integration-owned closure.",
-    "Release immutable v0.6.0b45 prerelease with flat canonical HACS payload; do not change stable/main, historical beta tags or the integration domain."
+    "Normalize en, doubled en and em dashes in direct validated AI rewritten messages to '-' and instruct the model to use a plain hyphen.",
+    "Replace long/doubled dash typography in dashboard, fixed recommendation/announcement text, 38 translations and all generating scripts so regenerated content remains clean.",
+    "Preserve separator parsing in the dashboard and update display-range regression tests.",
+    "Validate source and regenerated catalogs for zero long dashes, full Python 3.13/3.14 regression suites and frontend DOM/syntax.",
+    "Publish only a new immutable beta46 canonical root HACS package, with real HA 2026.10, HACS and hassfest checks."
   ]
 }

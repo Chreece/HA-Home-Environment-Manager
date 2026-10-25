@@ -13,7 +13,8 @@ CURRENT_VERSION = json.loads((PKG / "manifest.json").read_text(encoding="utf-8")
 
 
 def _builder():
-    builder_version = "beta45" if CURRENT_VERSION == "0.6.0b45" else "beta44"
+    builder_version = ("beta46" if CURRENT_VERSION == "0.6.0b46" else
+                       "beta45" if CURRENT_VERSION == "0.6.0b45" else "beta44")
     path = ROOT / "tools" / f"build_{builder_version}_payload.py"
     spec = importlib.util.spec_from_file_location(f"{builder_version}_payload_builder", path)
     module = importlib.util.module_from_spec(spec)
@@ -117,3 +118,17 @@ def test_beta45_publisher_keeps_flat_payload_and_reuses_all_safety_gates():
     assert "git push origin HEAD:refs/heads/beta/v0.6.0b45" in workflow
     assert "gh release create v0.6.0b45" in workflow
     assert "needs: [test, hassfest, hacs, home_assistant]" in workflow
+
+
+def test_beta46_publisher_requires_no_em_or_en_dashes_after_regeneration():
+    if CURRENT_VERSION != "0.6.0b46":
+        return
+    workflow = (ROOT / ".github/workflows/beta46-plain-hyphens-release.yml").read_text(
+        encoding="utf-8"
+    )
+    assert "python tools/build_beta46_payload.py" in workflow
+    assert "git checkout --orphan beta46-payload" in workflow
+    assert "git push origin HEAD:refs/heads/beta/v0.6.0b46" in workflow
+    assert "gh release create v0.6.0b46" in workflow
+    assert "needs: [test, hassfest, hacs, home_assistant]" in workflow
+    assert "no_typographic_dashes" in workflow

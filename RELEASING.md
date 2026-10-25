@@ -1,5 +1,16 @@
 # Releasing Home Environment Manager
 
+## v0.6.0b46 - AI/UI plain hyphens
+
+This is an opt-in, immutable HACS prerelease based on beta45. Publish only if
+Python 3.13/3.14, the regenerated 38 locale files (no en/em dashes), the
+frontend Node checks, real HA 2026.10 hardware-independent smoke tests,
+HACS and hassfest pass. Verify canonical `environment_manager`, the flat
+content_in_root HACS payload and manual ZIP. Do not overwrite stable or
+earlier beta tags. AI text changes are cosmetic and must not bypass
+safety or rewrite validation.
+
+
 ## v0.6.0b45 - Generic roller shutters and per-cover controllers
 
 Only create `v0.6.0b45` through the opt-in beta45 workflow after Python

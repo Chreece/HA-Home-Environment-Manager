@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0b46 - Plain hyphens in localized UI and AI announcement text (beta)
+
+- Normalize en dashes, doubled en dashes and em dashes to ASCII hyphens in displayed text, dashboard placeholders, fixed notifications, labels and all 38 language catalogs.
+- Update every translation-generating source to prevent old punctuation returning on regeneration.
+- In direct AI announcement rewrites, request plain hyphens and normalize validated output while retaining exact action, area, windows, and number checks.
+- Retain the 0.6.0b45 generic window-shade selector, per-cover controls and all physical-safety gates.
+- Preserve the single canonical `environment_manager` domain and immutable previous releases.
+
+
 ## 0.6.0b45 - Generic native covers and per-device shade controls (beta)
 
 - Discover native `cover.*` roller shutters without `device_class` when `supported_features` advertises CLOSE (including the reported `15` bitmask), using entity-area override before device area.

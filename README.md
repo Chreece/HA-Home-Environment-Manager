@@ -21,7 +21,13 @@
 
 # Home Environment Manager for Home Assistant
 
-> **New opt-in beta: [v0.6.0b45](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b45).** Stable remains **v0.5.1**. Beta45 includes all beta44/per-cover controls and fixes discovery for classless native roller shutters (like the reported `supported_features=15` covers). The room-device explanations now describe supported types and how controls are authorized in all 38 UI languages. Canonical integration domain remains `environment_manager` only.
+> **New opt-in beta: [v0.6.0b46](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b46).** Stable remains **v0.5.1**. Beta46 retains all beta45 room and cover controllers and replaces AI-style long/doubled dashes with regular ASCII hyphens in announcements, dashboard text and all 38 translated locales.
+
+**Update with HACS:** Open Home Environment Manager - **Redownload / version selection** - enable **Show beta versions** - select **v0.6.0b46** - restart Home Assistant. Back up your configuration before changing beta versions.
+
+## Beta 46 - plain hyphens in AI and UI text
+
+En dashes, doubled en dashes and em dashes are standardized to a plain ASCII hyphen `-` in text displayed by the Manager, including the native dashboard, translated labels, notifications, fixed announcements and regenerated translation catalogs. The direct AI conversation / AI Task rewriting prompt requests plain hyphens; validated model replies receive deterministic punctuation normalization without weakening window-action, room, name or numeric grounding checks. No entity IDs, domain, settings, automation logic, cover or HVAC permissions change.
 
 **Update with HACS:** Open Home Environment Manager → **Redownload / version selection** → enable **Show beta versions** → choose **v0.6.0b45** → restart Home Assistant. Check that each shade belongs to the correct HA area, then select it in Configure → Room sources → **Shades**. Newly selected shades cannot move until their individual window contact and auto-control settings are configured. Back up your Home Assistant configuration before changing beta versions.
 
