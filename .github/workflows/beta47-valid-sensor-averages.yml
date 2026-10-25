@@ -2,7 +2,7 @@ name: Beta47 valid-only room sensor averages and mold calibration
 on:
   push:
     branches:
-      - 'fix/beta47-valid-sensor-averages-20261025'
+      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
   pull_request:
     branches:
       - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
