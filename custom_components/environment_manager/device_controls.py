@@ -364,7 +364,10 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                     window = draft.get("window_entity")
                     if window not in selectable_windows(manager.hass, current, area):
                         raise HomeAssistantError("Assign one actual window contact from this room before enabling")
-                    if draft.get("enabled") is not True:
+                    history = getattr(getattr(manager, "shading", None), "_records", {})
+                    paused = isinstance(history, dict) and history.get(
+                        entity_id, {}).get("phase") in ("manual_override", "legacy_manual_hold")
+                    if draft.get("enabled") is not True or paused:
                         draft["authorization_revision"] = int(
                             draft.get("authorization_revision", room.get("authorization_revision", 0))
                         ) + 1
