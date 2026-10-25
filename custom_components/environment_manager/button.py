@@ -61,7 +61,11 @@ class AreaMoldCalibrationButton(ButtonEntity):
             "calibration_factor": saved.get("calibration_factor"),
             "calibrated_at": saved.get("calibrated_at"),
             "indoor_temperature_entity": saved.get("indoor_temperature_entity"),
+            "indoor_temperature_entities": saved.get("indoor_temperature_entities"),
             "outdoor_weather_entity": saved.get("outdoor_weather_entity"),
+            "outdoor_weather_entities": saved.get("outdoor_weather_entities"),
+            "calibrated_room_mean_c": saved.get("calibrated_indoor_c"),
+            "calibrated_outdoor_mean_c": saved.get("calibrated_outdoor_c"),
             "measured_cold_surface_c": saved.get("critical_temperature_c"),
             "status": "calibrated" if saved.get("calibration_factor") is not None
                       else "needs_calibration",
