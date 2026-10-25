@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - 'fix/beta47-valid-sensor-averages-20261025'
+  pull_request:
+    branches:
+      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
 
 permissions:
   contents: read
@@ -366,6 +369,7 @@ jobs:
           PY
 
   hassfest:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -380,6 +384,7 @@ jobs:
       - uses: home-assistant/actions/hassfest@master
 
   hacs:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -393,6 +398,7 @@ jobs:
           ignore: description topics
 
   home_assistant:
+    if: github.event_name == 'push'
     name: HA 2026.10 canonical setup and room/device checks
     runs-on: ubuntu-latest
     steps:
@@ -416,6 +422,7 @@ jobs:
           python tools/verify_beta37_dashboard_ws_ha.py
 
   publish_flat_beta:
+    if: github.event_name == 'push'
     needs: [test, hassfest, hacs, home_assistant]
     runs-on: ubuntu-latest
     permissions:
