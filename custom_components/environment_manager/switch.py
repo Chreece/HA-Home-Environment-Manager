@@ -260,7 +260,14 @@ class ShadeDeviceSwitch(SwitchEntity):
     @property
     def is_on(self) -> bool:
         from .shade_cooling import cover_config
-        return cover_config(self._manager.settings, self._area, self._cover)[self._key] is True
+        cfg = cover_config(self._manager.settings, self._area, self._cover)
+        if self._key == "enabled" and cfg["enabled"]:
+            # A resident override makes the automatic switch appear paused,
+            # allowing one deliberate turn-on to rearm this exact cover.
+            record = getattr(self._manager.shading, "_records", {}).get(self._cover, {})
+            if record.get("phase") in ("manual_override", "legacy_manual_hold"):
+                return False
+        return cfg[self._key] is True
 
     @property
     def extra_state_attributes(self):
