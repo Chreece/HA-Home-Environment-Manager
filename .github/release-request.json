@@ -1,19 +1,16 @@
 {
-  "version": "0.6.0b44",
+  "version": "0.6.0b45",
   "channel": "beta",
-  "release_branch": "beta/v0.6.0b44",
-  "intent": "Improve passive solar shading: require explicit current sunny/partlycloudy Home Assistant weather before auto-closing; automatically open only shades proven closed by this integration; permanently respect a user's subsequent manual opening unless room shading is explicitly disabled/re-enabled; add Home device global opt-in to announce before physically opening or closing shades.",
-  "note": "Physical shutter identity and source state checked at every transition; record ownership intent before service, confirm actual closed/open with strict acknowledgement timeout, migrate beta43 stored attempts conservatively without claiming ownership. Pre-notice uses existing Hub or HA notifications/TTS and fails closed if unavailable, with post-announcement revalidation. Preserve all PID/room controls and single environment_manager domain.",
+  "release_branch": "beta/v0.6.0b45",
+  "intent": "Accept native same-room roller shutters without device_class when they advertise CLOSE; retain explicit non-shading class exclusion and runtime safety; ship independent per-cover controls and detailed managed-device/shade setup descriptions in all 38 languages.",
+  "note": "HACS pre-release of canonical environment_manager only. Includes beta44 safeguards, per-cover window association, auto-control, announcement opt-in, close temperature, persistent manual override; unknown shutters stay selectable but never actuate without verified state. Exact HACS flat payload, Python 3.13/3.14, HA 2026.10, HACS and hassfest required.",
   "validation_attempt": 0,
   "changes": [
-    "Evaluate only the configured Home Assistant weather entities and documented condition states; permit closing in sunny/partlycloudy, never in cloudy/rain/fog/wind/severe or unavailable/stale/conflicting weather, with room temperature, sun angle and selected window contacts still required.",
-    "Add per-cover persisted lifecycle closing_requested -> confirmed owned_closed -> opening_requested -> released; a successful close_cover service acknowledgement by itself does not grant ownership.",
-    "Auto-open only a still-closed, exactly selected and previously confirmed owned shade after sunset/low sun or sustained benign cloudy weather/room cooling; never open a user-closed shade, or an unconfirmed beta43 legacy close attempt.",
-    "Treat an observed manual opening of an owned shade as durable manual_override. Never fight its reopening or automatically close that shade again merely because cooldown expires; allow explicit re-authorization by turning the room shade switch OFF then ON.",
-    "Halt movement on missing/unsafe weather or windows, unknown or mismatched source, unsupported OPEN/CLOSE native capability, changed control revision, user intervention or persistence failure; check again after announcement and after saving intent.",
-    "Home-wide shade_announce_before_movement switch on Home device, off by default, with all 38 translated names; localized Greek/English/German/French/Spanish pre-movement notice with room and direction.",
-    "Submit pre-movement notices through the configured Announcement Hub or native room-specific HA notify/TTS with visual fallback. Do not move if announced delivery was not accepted. Wait a short grace interval and revalidate all controls before physical action.",
-    "Retain b43 opt-in room cover selectors/sun temperature controls, independent 30-second shade evaluation, existing physical HVAC/PID permissions and beta42 PID-first 38-language labels; no migration or duplicate integration.",
-    "Gate on Python 3.13/3.14 suite including b43 and b44 weather/manual/ownership/delivery cases, Node card, real HA 2026.10, HACS/Hassfest, translated catalogs and exact immutable flat HACS prerelease."
+    "Discover native classless cover.* entities with supported_features CLOSE, including six user examples with feature mask 15 and an unavailable kitchen shutter, without scanning other areas or auto-arming motors.",
+    "Retain exclusion of explicit non-shading cover classes, disabled/hidden sources, wrong-room and integration-owned controls.",
+    "Add individual Window Shade Controller children, same-room window contact assignment, per-cover auto/announce switches, closing temperature threshold and durable pause on manual override.",
+    "Update initial and Options room-source field descriptions for supported climate/humidifier/fan physical devices and native/generic shades in 38 locales.",
+    "Preserve beta44 weather/sun/temperature/window checks, per-cover ownership and auto-open only after confirmed integration-owned closure.",
+    "Release immutable v0.6.0b45 prerelease with flat canonical HACS payload; do not change stable/main, historical beta tags or the integration domain."
   ]
 }

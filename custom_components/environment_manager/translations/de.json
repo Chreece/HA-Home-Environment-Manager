@@ -163,7 +163,8 @@
           "temperature": "Temperatur",
           "humidity": "Luftfeuchtigkeit",
           "pressure": "Drucksensoren",
-          "climate_devices": "Geräte"
+          "climate_devices": "Geräte",
+          "shades": "Fensterrollos, Jalousien und Rollläden"
         },
         "data_description": {
           "windows": "Fenster. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
@@ -171,7 +172,8 @@
           "temperature": "Temperatur. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
           "humidity": "Luftfeuchtigkeit. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
           "pressure": "Drucksensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
-          "climate_devices": "Geräte. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung."
+          "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
+          "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung."
         }
       },
       "setup_general": {
@@ -1115,7 +1117,8 @@
           "temperature": "Temperatur",
           "humidity": "Luftfeuchtigkeit",
           "pressure": "Drucksensoren",
-          "climate_devices": "Geräte"
+          "climate_devices": "Geräte",
+          "shades": "Fensterrollos, Jalousien und Rollläden"
         },
         "data_description": {
           "windows": "Fenster. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
@@ -1123,7 +1126,8 @@
           "temperature": "Temperatur. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
           "humidity": "Luftfeuchtigkeit. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
           "pressure": "Drucksensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
-          "climate_devices": "Geräte. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung."
+          "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
+          "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung."
         }
       },
       "setup_general": {

@@ -1,5 +1,17 @@
 # Releasing Home Environment Manager
 
+## v0.6.0b45 — Generic roller shutters and per-cover controllers
+
+Only create `v0.6.0b45` through the opt-in beta45 workflow after Python
+3.13/3.14 full regressions, all 38 generated-language help descriptions,
+frontend, real Home Assistant 2026.10 room and cover selector tests, HACS,
+hassfest, and flat extracted HACS payload checks pass. Publish an immutable
+`beta/v0.6.0b45` branch and matching tagged prerelease, never update
+`beta/v0.6.0b44`, stable `v0.5.1`, or main. Classless covers need
+human verification as window shades; selected/unknown covers never authorize
+motion without the linked closed physical window contact and safety rules.
+
+
 ## v0.6.0b15 - Device settings and selector fixes
 
 Publish only from `beta/v0.6.0b15` after the beta15 workflow validates Python

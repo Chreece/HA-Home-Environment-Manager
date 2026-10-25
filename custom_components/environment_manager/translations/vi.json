@@ -163,7 +163,8 @@
           "temperature": "Nhiệt độ",
           "humidity": "Độ ẩm",
           "pressure": "Cảm biến áp suất",
-          "climate_devices": "Thiết bị"
+          "climate_devices": "Thiết bị",
+          "shades": "Rèm, mành và cửa chớp"
         },
         "data_description": {
           "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
@@ -171,7 +172,8 @@
           "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "climate_devices": "Thiết bị. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động."
+          "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
+          "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động."
         }
       },
       "setup_general": {
@@ -1115,7 +1117,8 @@
           "temperature": "Nhiệt độ",
           "humidity": "Độ ẩm",
           "pressure": "Cảm biến áp suất",
-          "climate_devices": "Thiết bị"
+          "climate_devices": "Thiết bị",
+          "shades": "Rèm, mành và cửa chớp"
         },
         "data_description": {
           "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
@@ -1123,7 +1126,8 @@
           "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "climate_devices": "Thiết bị. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động."
+          "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
+          "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động."
         }
       },
       "setup_general": {

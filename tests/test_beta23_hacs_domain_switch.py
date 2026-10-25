@@ -9,11 +9,13 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 PKG = ROOT / "custom_components" / "environment_manager"
+CURRENT_VERSION = json.loads((PKG / "manifest.json").read_text(encoding="utf-8"))["version"]
 
 
 def _builder():
-    path = ROOT / "tools" / "build_beta44_payload.py"
-    spec = importlib.util.spec_from_file_location("beta44_payload_builder", path)
+    builder_version = "beta45" if CURRENT_VERSION == "0.6.0b45" else "beta44"
+    path = ROOT / "tools" / f"build_{builder_version}_payload.py"
+    spec = importlib.util.spec_from_file_location(f"{builder_version}_payload_builder", path)
     module = importlib.util.module_from_spec(spec)
     assert spec.loader is not None
     spec.loader.exec_module(module)
@@ -31,7 +33,7 @@ def test_hacs_root_discovery_is_canonical():
     assert hacs["hide_default_branch"] is True
     assert root_manifest == canonical
     assert canonical["domain"] == "environment_manager"
-    assert canonical["version"] == "0.6.0b44"
+    assert canonical["version"] == CURRENT_VERSION
 
 
 def test_flat_payload_contains_only_integration_root_plus_hacs_metadata():
@@ -85,7 +87,7 @@ def test_normal_hacs_tag_archive_extraction_lands_in_canonical_directory():
             (destination / "manifest.json").read_text(encoding="utf-8")
         )
         assert manifest["domain"] == "environment_manager"
-        assert manifest["version"] == "0.6.0b44"
+        assert manifest["version"] == CURRENT_VERSION
         assert (destination / "__init__.py").is_file()
         assert not (destination / "custom_components").exists()
 
@@ -101,3 +103,17 @@ def test_beta44_publisher_creates_flat_branch_and_no_zip_release():
     hacs = json.loads((ROOT / "hacs.json").read_text(encoding="utf-8"))
     assert hacs.get("zip_release") is not True
     assert "filename" not in hacs
+
+
+def test_beta45_publisher_keeps_flat_payload_and_reuses_all_safety_gates():
+    if CURRENT_VERSION != "0.6.0b45":
+        return
+    workflow = (ROOT / ".github/workflows/beta45-generic-roller-release.yml").read_text(
+        encoding="utf-8"
+    )
+    assert "python tools/build_beta45_payload.py" in workflow
+    assert "python tools/verify_beta45_generic_shade_ha.py" in workflow
+    assert "git checkout --orphan beta45-payload" in workflow
+    assert "git push origin HEAD:refs/heads/beta/v0.6.0b45" in workflow
+    assert "gh release create v0.6.0b45" in workflow
+    assert "needs: [test, hassfest, hacs, home_assistant]" in workflow
