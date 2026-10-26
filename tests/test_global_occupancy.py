@@ -166,7 +166,11 @@ def test_sleep_pause_takes_priority_over_absence_off(adapter):
     device["presence_requirement"]="home"
     assert device_permission(device,"unoccupied","away",False)[0]=="absent"
     device["sleep_behavior"]="sleep_targets"
-    assert device_permission(device,"unoccupied","away",None)[0]=="held"
+    # Sleep-target preference must not override the separate home-only
+    # equipment restriction, but does not add its own heating veto.
+    assert device_permission(device,"unoccupied","away",None)[0]=="absent"
+    device["presence_requirement"]="always"
+    assert device_permission(device,"unoccupied","away",None)[0]=="eligible"
 
 
 def test_empty_occupied_rooms_means_away_only_after_cooldown(adapter):
