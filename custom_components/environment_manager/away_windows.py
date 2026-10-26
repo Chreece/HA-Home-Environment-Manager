@@ -347,11 +347,21 @@ class AwayWindowAlert:
         if (self._episode != episode or not self._armed
                 or confirmed_home_state(self.manager.hass, self.manager.settings) != "away"):
             return
-        succeeded = await deliver_notice(self.manager, opened)
+        # Contacts can close during the debounce and async task scheduling.
+        # Snapshot again at the actual delivery boundary; never announce a
+        # window that has already closed or an unselected/unavailable contact.
+        remaining = {entity_id for entity_id, _ in opened} - self._sent
+        fresh = tuple(
+            item for item in open_windows(self.manager.hass, self.manager.settings)
+            if item[0] in remaining
+        )
+        if not fresh:
+            return
+        succeeded = await deliver_notice(self.manager, fresh)
         if self._episode != episode:
             return
         if succeeded:
-            self._sent.update(entity_id for entity_id, _ in opened)
+            self._sent.update(entity_id for entity_id, _ in fresh)
         else:
             # A temporary Hub outage must not broaden delivery to room audio
             # or spam the service every 30-second controller recomputation.
