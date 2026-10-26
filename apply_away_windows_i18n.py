@@ -100,6 +100,14 @@ def help_text(lang: str) -> tuple[str, str, str, str]:
     )
 
 
+PRESENCE_COUNT_HELP = {
+    "en": "Numbers and input_number helpers can be chosen as presence counts. A finite 0 means empty; a positive value means occupied. Unknown, stale or unavailable never means empty.",
+    "el": "Επιτρέπονται και οι αριθμητικές οντότητες number και input_number ως μετρητές παρουσίας: 0 σημαίνει κανείς, θετική τιμή σημαίνει παρουσία. Άγνωστες, παλιές ή μη διαθέσιμες τιμές δεν αποδεικνύουν απουσία.",
+    "de": "Auch number- und input_number-Helfer zählen als Anwesenheitszähler: 0 bedeutet niemand da, ein positiver Wert bedeutet anwesend. Unbekannte, veraltete oder nicht verfügbare Werte gelten nie als abwesend.",
+    "fr": "Les entités number et input_number peuvent compter les présences : 0 signifie pièce vide, une valeur positive indique une présence. Les données absentes ou périmées ne prouvent jamais l'absence.",
+    "es": "Se admiten entidades number e input_number como contadores de presencia: 0 significa vacío y un valor positivo indica presencia. Los valores desconocidos o no disponibles nunca prueban la ausencia.",
+}
+
 def apply_away_windows_i18n(root: Path) -> None:
     locale_dir = root / "translations"
     files = [root / "strings.json", *sorted(locale_dir.glob("*.json"))]
@@ -122,6 +130,15 @@ def apply_away_windows_i18n(root: Path) -> None:
                 "away_windows_target_people": desc_people,
                 "away_windows_delivery_channels": desc_channels,
             })
+            count_help = PRESENCE_COUNT_HELP.get(
+                lang, "number.*, input_number.*: 0 = empty, positive = occupied; "
+                      "unknown/unavailable/stale is not proof of absence.")
+            for presence_key in ("general_home_trackers", "general_room_occupancy_sensors"):
+                existing = step["data_description"].get(presence_key, "")
+                if count_help not in existing:
+                    step["data_description"][presence_key] = (
+                        f"{existing} {count_help}".strip()
+                    )
             doc[scope].setdefault("error", {})["invalid_away_windows_recipients"] = error
         doc.setdefault("entity", {}).setdefault("switch", {})["home_away_open_window_alert"] = {"name": title}
         pairs = {
