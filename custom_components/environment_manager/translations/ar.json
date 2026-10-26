@@ -206,8 +206,8 @@
           "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "اختر: جودة الهواء الخارجي · AQI, CO₂, PM2.5, PM10, VOC. غير متاح: ⚠",
           "weather_warnings": "الطقس والتحذيرات · ⚠ (غير متاح) → 🪟🔒",
-          "general_room_occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «غرفة · الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
-          "general_home_trackers": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الإشغال · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
+          "general_room_occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «غرفة · الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الإشغال · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "general_occupied_rooms_attribute": "اضبط «الإشغال · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "general_sleep_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «النوم · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
@@ -221,7 +221,7 @@
           "pollen_entities": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · حبوب اللقاح · المصدر · اختيار.",
           "use_announcement_hub": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · تلقائي · Announcement Hub.",
           "general_away_cooldown_minutes": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · المنزل · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع. الأشخاص المطلوب تنبيههم (person.*). 60 s. Announcement Hub. الهاتف, الساعة, الجهاز اللوحي.",
+          "away_open_window_alert": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع. الأشخاص المطلوب تنبيههم (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. الهاتف, الساعة, الجهاز اللوحي.",
           "away_windows_target_people": "الأشخاص المطلوب تنبيههم (person.*) - Announcement Hub: الهاتف, الساعة, الجهاز اللوحي, جهاز آخر. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "قنوات تنبيه النوافذ المفتوحة: الهاتف إشعار / صوت TTS, الساعة إشعار / صوت TTS, الجهاز اللوحي إشعار / صوت TTS. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "اختر: جودة الهواء الخارجي · AQI, CO₂, PM2.5, PM10, VOC. غير متاح: ⚠",
           "weather_warnings": "الطقس والتحذيرات · ⚠ (غير متاح) → 🪟🔒",
-          "general_room_occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «غرفة · الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
-          "general_home_trackers": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الإشغال · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
+          "general_room_occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «غرفة · الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الإشغال · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "general_occupied_rooms_attribute": "اضبط «الإشغال · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "general_sleep_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «النوم · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · حبوب اللقاح · المصدر · اختيار.",
           "use_announcement_hub": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · تلقائي · Announcement Hub.",
           "general_away_cooldown_minutes": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · المنزل · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع. الأشخاص المطلوب تنبيههم (person.*). 60 s. Announcement Hub. الهاتف, الساعة, الجهاز اللوحي.",
+          "away_open_window_alert": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع. الأشخاص المطلوب تنبيههم (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. الهاتف, الساعة, الجهاز اللوحي.",
           "away_windows_target_people": "الأشخاص المطلوب تنبيههم (person.*) - Announcement Hub: الهاتف, الساعة, الجهاز اللوحي, جهاز آخر. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "قنوات تنبيه النوافذ المفتوحة: الهاتف إشعار / صوت TTS, الساعة إشعار / صوت TTS, الجهاز اللوحي إشعار / صوت TTS. Person-specific, not room speakers."
         }

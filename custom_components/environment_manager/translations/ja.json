@@ -206,8 +206,8 @@
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "選択してください: 屋外の空気質 · AQI, CO₂, PM2.5, PM10, VOC. 利用できません: ⚠",
           "weather_warnings": "「気象警報」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
-          "general_room_occupancy_sensors": "「部屋 · 在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
-          "general_home_trackers": "「自宅 · 在室 · デバイス」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
+          "general_room_occupancy_sensors": "「部屋 · 在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "「自宅 · 在室 · デバイス」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "「在室 · 部屋 · 情報源 (state)」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
           "general_occupied_rooms_attribute": "「在室 · 部屋 · 情報源 (attribute)」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "general_sleep_rooms_entity": "「睡眠 · 部屋 · 情報源 (state)」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
@@ -221,7 +221,7 @@
           "pollen_entities": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 花粉 · 情報源 · 選択.",
           "use_announcement_hub": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自動 · Announcement Hub.",
           "general_away_cooldown_minutes": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自宅 · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "全員の外出後に開いた窓を通知. 通知する人物 (person.*). 60 s. Announcement Hub. スマートフォン, 腕時計, タブレット.",
+          "away_open_window_alert": "全員の外出後に開いた窓を通知. 通知する人物 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. スマートフォン, 腕時計, タブレット.",
           "away_windows_target_people": "通知する人物 (person.*) - Announcement Hub: スマートフォン, 腕時計, タブレット, その他の端末. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "窓の通知先と方法: スマートフォン 通知 / TTS 音声, 腕時計 通知 / TTS 音声, タブレット 通知 / TTS 音声. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "選択してください: 屋外の空気質 · AQI, CO₂, PM2.5, PM10, VOC. 利用できません: ⚠",
           "weather_warnings": "「気象警報」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
-          "general_room_occupancy_sensors": "「部屋 · 在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
-          "general_home_trackers": "「自宅 · 在室 · デバイス」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
+          "general_room_occupancy_sensors": "「部屋 · 在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "「自宅 · 在室 · デバイス」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "「在室 · 部屋 · 情報源 (state)」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
           "general_occupied_rooms_attribute": "「在室 · 部屋 · 情報源 (attribute)」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "general_sleep_rooms_entity": "「睡眠 · 部屋 · 情報源 (state)」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 花粉 · 情報源 · 選択.",
           "use_announcement_hub": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自動 · Announcement Hub.",
           "general_away_cooldown_minutes": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自宅 · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "全員の外出後に開いた窓を通知. 通知する人物 (person.*). 60 s. Announcement Hub. スマートフォン, 腕時計, タブレット.",
+          "away_open_window_alert": "全員の外出後に開いた窓を通知. 通知する人物 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. スマートフォン, 腕時計, タブレット.",
           "away_windows_target_people": "通知する人物 (person.*) - Announcement Hub: スマートフォン, 腕時計, タブレット, その他の端末. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "窓の通知先と方法: スマートフォン 通知 / TTS 音声, 腕時計 通知 / TTS 音声, タブレット 通知 / TTS 音声. Person-specific, not room speakers."
         }

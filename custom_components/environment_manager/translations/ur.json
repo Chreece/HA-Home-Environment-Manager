@@ -206,8 +206,8 @@
           "weather_entities": "منتخب کریں: موسم اور انتباہات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "منتخب کریں: بیرونی ہوا کا معیار · AQI, CO₂, PM2.5, PM10, VOC. دستیاب نہیں: ⚠",
           "weather_warnings": "موسم اور انتباہات · ⚠ (دستیاب نہیں) → 🪟🔒",
-          "general_room_occupancy_sensors": "«کمرہ · موجودگی · سینسر» کے لیے حقیقی Home Assistant ذریعہ منتخب کریں۔ گم شدہ یا پرانا ڈیٹا متعلقہ عمل روک دیتا ہے۔",
-          "general_home_trackers": "«گھر · موجودگی · آلات» کے لیے حقیقی Home Assistant ذریعہ منتخب کریں۔ گم شدہ یا پرانا ڈیٹا متعلقہ عمل روک دیتا ہے۔",
+          "general_room_occupancy_sensors": "«کمرہ · موجودگی · سینسر» کے لیے حقیقی Home Assistant ذریعہ منتخب کریں۔ گم شدہ یا پرانا ڈیٹا متعلقہ عمل روک دیتا ہے۔ number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "«گھر · موجودگی · آلات» کے لیے حقیقی Home Assistant ذریعہ منتخب کریں۔ گم شدہ یا پرانا ڈیٹا متعلقہ عمل روک دیتا ہے۔ number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "«موجودگی · کمرہ · ماخذ (state)» کے لیے حقیقی Home Assistant ذریعہ منتخب کریں۔ گم شدہ یا پرانا ڈیٹا متعلقہ عمل روک دیتا ہے۔",
           "general_occupied_rooms_attribute": "«موجودگی · کمرہ · ماخذ (attribute)» صرف منتخب کمرے میں مقرر کریں۔ غلط ڈیٹا عمل کو روکتا ہے۔",
           "general_sleep_rooms_entity": "«نیند · کمرہ · ماخذ (state)» کے لیے حقیقی Home Assistant ذریعہ منتخب کریں۔ گم شدہ یا پرانا ڈیٹا متعلقہ عمل روک دیتا ہے۔",
@@ -221,7 +221,7 @@
           "pollen_entities": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · زرگل · ماخذ · منتخب کریں.",
           "use_announcement_hub": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · خودکار · Announcement Hub.",
           "general_away_cooldown_minutes": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · گھر · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع. اطلاع پانے والے افراد (person.*). 60 s. Announcement Hub. فون, گھڑی, ٹیبلٹ.",
+          "away_open_window_alert": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع. اطلاع پانے والے افراد (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. فون, گھڑی, ٹیبلٹ.",
           "away_windows_target_people": "اطلاع پانے والے افراد (person.*) - Announcement Hub: فون, گھڑی, ٹیبلٹ, دوسرا آلہ. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع: فون اطلاع / TTS آواز, گھڑی اطلاع / TTS آواز, ٹیبلٹ اطلاع / TTS آواز. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "منتخب کریں: موسم اور انتباہات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "منتخب کریں: بیرونی ہوا کا معیار · AQI, CO₂, PM2.5, PM10, VOC. دستیاب نہیں: ⚠",
           "weather_warnings": "موسم اور انتباہات · ⚠ (دستیاب نہیں) → 🪟🔒",
-          "general_room_occupancy_sensors": "«کمرہ · موجودگی · سینسر» کے لیے حقیقی Home Assistant ذریعہ منتخب کریں۔ گم شدہ یا پرانا ڈیٹا متعلقہ عمل روک دیتا ہے۔",
-          "general_home_trackers": "«گھر · موجودگی · آلات» کے لیے حقیقی Home Assistant ذریعہ منتخب کریں۔ گم شدہ یا پرانا ڈیٹا متعلقہ عمل روک دیتا ہے۔",
+          "general_room_occupancy_sensors": "«کمرہ · موجودگی · سینسر» کے لیے حقیقی Home Assistant ذریعہ منتخب کریں۔ گم شدہ یا پرانا ڈیٹا متعلقہ عمل روک دیتا ہے۔ number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "«گھر · موجودگی · آلات» کے لیے حقیقی Home Assistant ذریعہ منتخب کریں۔ گم شدہ یا پرانا ڈیٹا متعلقہ عمل روک دیتا ہے۔ number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "«موجودگی · کمرہ · ماخذ (state)» کے لیے حقیقی Home Assistant ذریعہ منتخب کریں۔ گم شدہ یا پرانا ڈیٹا متعلقہ عمل روک دیتا ہے۔",
           "general_occupied_rooms_attribute": "«موجودگی · کمرہ · ماخذ (attribute)» صرف منتخب کمرے میں مقرر کریں۔ غلط ڈیٹا عمل کو روکتا ہے۔",
           "general_sleep_rooms_entity": "«نیند · کمرہ · ماخذ (state)» کے لیے حقیقی Home Assistant ذریعہ منتخب کریں۔ گم شدہ یا پرانا ڈیٹا متعلقہ عمل روک دیتا ہے۔",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · زرگل · ماخذ · منتخب کریں.",
           "use_announcement_hub": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · خودکار · Announcement Hub.",
           "general_away_cooldown_minutes": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · گھر · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع. اطلاع پانے والے افراد (person.*). 60 s. Announcement Hub. فون, گھڑی, ٹیبلٹ.",
+          "away_open_window_alert": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع. اطلاع پانے والے افراد (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. فون, گھڑی, ٹیبلٹ.",
           "away_windows_target_people": "اطلاع پانے والے افراد (person.*) - Announcement Hub: فون, گھڑی, ٹیبلٹ, دوسرا آلہ. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع: فون اطلاع / TTS آواز, گھڑی اطلاع / TTS آواز, ٹیبلٹ اطلاع / TTS آواز. Person-specific, not room speakers."
         }

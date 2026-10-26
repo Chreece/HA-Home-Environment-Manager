@@ -206,8 +206,8 @@
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Wybierz: Jakość powietrza na zewnątrz · AQI, CO₂, PM2.5, PM10, VOC. Niedostępne: ⚠",
           "weather_warnings": "Pogoda i ostrzeżenia · ⚠ (Niedostępne) → 🪟🔒",
-          "general_room_occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Pokój · Obecność · czujnik”. Brak lub stare dane wstrzymują działanie.",
-          "general_home_trackers": "Wybierz rzeczywiste źródło Home Assistant dla „Dom · Obecność · Urządzenia”. Brak lub stare dane wstrzymują działanie.",
+          "general_room_occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Pokój · Obecność · czujnik”. Brak lub stare dane wstrzymują działanie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Wybierz rzeczywiste źródło Home Assistant dla „Dom · Obecność · Urządzenia”. Brak lub stare dane wstrzymują działanie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · Pokój · źródło (state)”. Brak lub stare dane wstrzymują działanie.",
           "general_occupied_rooms_attribute": "Ustaw „Obecność · Pokój · źródło (attribute)” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
           "general_sleep_rooms_entity": "Wybierz rzeczywiste źródło Home Assistant dla „Sen · Pokój · źródło (state)”. Brak lub stare dane wstrzymują działanie.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń. · Pyłki · źródło · Wybierz.",
           "use_announcement_hub": "Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń. · Automatyczne · Announcement Hub.",
           "general_away_cooldown_minutes": "Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń. · Dom · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Ostrzegaj o otwartych oknach po wyjściu wszystkich. Osoby do powiadomienia (person.*). 60 s. Announcement Hub. Telefon, Zegarek, Tablet.",
+          "away_open_window_alert": "Ostrzegaj o otwartych oknach po wyjściu wszystkich. Osoby do powiadomienia (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Zegarek, Tablet.",
           "away_windows_target_people": "Osoby do powiadomienia (person.*) - Announcement Hub: Telefon, Zegarek, Tablet, Inne urządzenie. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kanały powiadomień o oknach: Telefon Powiadomienie / Mowa TTS, Zegarek Powiadomienie / Mowa TTS, Tablet Powiadomienie / Mowa TTS. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Wybierz: Jakość powietrza na zewnątrz · AQI, CO₂, PM2.5, PM10, VOC. Niedostępne: ⚠",
           "weather_warnings": "Pogoda i ostrzeżenia · ⚠ (Niedostępne) → 🪟🔒",
-          "general_room_occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Pokój · Obecność · czujnik”. Brak lub stare dane wstrzymują działanie.",
-          "general_home_trackers": "Wybierz rzeczywiste źródło Home Assistant dla „Dom · Obecność · Urządzenia”. Brak lub stare dane wstrzymują działanie.",
+          "general_room_occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Pokój · Obecność · czujnik”. Brak lub stare dane wstrzymują działanie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Wybierz rzeczywiste źródło Home Assistant dla „Dom · Obecność · Urządzenia”. Brak lub stare dane wstrzymują działanie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · Pokój · źródło (state)”. Brak lub stare dane wstrzymują działanie.",
           "general_occupied_rooms_attribute": "Ustaw „Obecność · Pokój · źródło (attribute)” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
           "general_sleep_rooms_entity": "Wybierz rzeczywiste źródło Home Assistant dla „Sen · Pokój · źródło (state)”. Brak lub stare dane wstrzymują działanie.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń. · Pyłki · źródło · Wybierz.",
           "use_announcement_hub": "Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń. · Automatyczne · Announcement Hub.",
           "general_away_cooldown_minutes": "Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń. · Dom · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Ostrzegaj o otwartych oknach po wyjściu wszystkich. Osoby do powiadomienia (person.*). 60 s. Announcement Hub. Telefon, Zegarek, Tablet.",
+          "away_open_window_alert": "Ostrzegaj o otwartych oknach po wyjściu wszystkich. Osoby do powiadomienia (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Zegarek, Tablet.",
           "away_windows_target_people": "Osoby do powiadomienia (person.*) - Announcement Hub: Telefon, Zegarek, Tablet, Inne urządzenie. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kanały powiadomień o oknach: Telefon Powiadomienie / Mowa TTS, Zegarek Powiadomienie / Mowa TTS, Tablet Powiadomienie / Mowa TTS. Person-specific, not room speakers."
         }

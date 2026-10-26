@@ -1339,28 +1339,13 @@ class EquipmentRuntime:
             self._status(spec, "manual_no_request")
             return
         if auto and not (cfg["control_mode"] == "pid" and mode in cap.modes and mode != "off"):
-            mode = None  # Full automatic chooses only verified native modes.
-            if cap.domain == "humidifier":
-                mode = "auto" if cap.humidifying else "dry"
-            elif cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}:
-                mode = "fan_only"
-            elif cap.temperature or cap.temperature_range:
-                t = measured["temperature"]
-                if t is not None:
-                    if "auto" in cap.modes and not (set(cap.modes) & {"heat", "cool", "heat_cool"}):
-                        mode = "auto"
-                    elif t < target["heat"]-.3 and "heat" in cap.modes:
-                        mode = "heat"
-                    elif t > target["cool"]+.3 and "cool" in cap.modes:
-                        mode = "cool"
-                    elif "heat_cool" in cap.modes and cfg["control_mode"] != "pid":
-                        mode = "heat_cool"
-                    elif state.state in ("heat", "cool"):
-                        mode = state.state  # Native thermostat retains regulation.
-                    elif set(cap.modes) & {"heat", "cool"}:
-                        mode = "heat" if "heat" in cap.modes else "cool"
-            elif "dry" in cap.modes:
-                mode = "dry"
+            from .dry_mode import automatic_mode
+            room = model.room_config(self.manager, spec)
+            mode = automatic_mode(
+                cap, state, measured, target,
+                dedicated_dry=room.get("dry_climate_entity") == cap.primary,
+                pid=cfg["control_mode"] == "pid",
+            )
         if mode is None:
             mode = state.state if cap.domain == "climate" else next((v for v in cap.modes if v != "off"), "off")
         if why := self._gate(spec, cap, cfg, plan, mode, automatic=auto):

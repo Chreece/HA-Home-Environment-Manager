@@ -206,8 +206,8 @@
           "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Selecione: Qualidade do ar exterior · AQI, CO₂, PM2.5, PM10, VOC. Indisponível: ⚠",
           "weather_warnings": "Tempo e avisos · ⚠ (Indisponível) → 🪟🔒",
-          "general_room_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Divisão · Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente.",
-          "general_home_trackers": "Escolha uma fonte real do Home Assistant para «Casa · Ocupação · Dispositivos». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "general_room_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Divisão · Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Escolha uma fonte real do Home Assistant para «Casa · Ocupação · Dispositivos». Dados ausentes ou antigos suspendem a ação correspondente. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Escolha uma fonte real do Home Assistant para «Ocupação · Divisão · fonte (state)». Dados ausentes ou antigos suspendem a ação correspondente.",
           "general_occupied_rooms_attribute": "Configure «Ocupação · Divisão · fonte (attribute)» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
           "general_sleep_rooms_entity": "Escolha uma fonte real do Home Assistant para «Sono · Divisão · fonte (state)». Dados ausentes ou antigos suspendem a ação correspondente.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Pólen · fonte · Selecionar.",
           "use_announcement_hub": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Automático · Announcement Hub.",
           "general_away_cooldown_minutes": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Casa · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Avisar sobre janelas abertas depois de todos saírem. Pessoas a avisar (person.*). 60 s. Announcement Hub. Telemóvel, Relógio, Tablet.",
+          "away_open_window_alert": "Avisar sobre janelas abertas depois de todos saírem. Pessoas a avisar (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telemóvel, Relógio, Tablet.",
           "away_windows_target_people": "Pessoas a avisar (person.*) - Announcement Hub: Telemóvel, Relógio, Tablet, Outro dispositivo. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Canais de aviso de janelas abertas: Telemóvel Notificação / Voz TTS, Relógio Notificação / Voz TTS, Tablet Notificação / Voz TTS. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Selecione: Qualidade do ar exterior · AQI, CO₂, PM2.5, PM10, VOC. Indisponível: ⚠",
           "weather_warnings": "Tempo e avisos · ⚠ (Indisponível) → 🪟🔒",
-          "general_room_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Divisão · Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente.",
-          "general_home_trackers": "Escolha uma fonte real do Home Assistant para «Casa · Ocupação · Dispositivos». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "general_room_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Divisão · Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Escolha uma fonte real do Home Assistant para «Casa · Ocupação · Dispositivos». Dados ausentes ou antigos suspendem a ação correspondente. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Escolha uma fonte real do Home Assistant para «Ocupação · Divisão · fonte (state)». Dados ausentes ou antigos suspendem a ação correspondente.",
           "general_occupied_rooms_attribute": "Configure «Ocupação · Divisão · fonte (attribute)» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
           "general_sleep_rooms_entity": "Escolha uma fonte real do Home Assistant para «Sono · Divisão · fonte (state)». Dados ausentes ou antigos suspendem a ação correspondente.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Pólen · fonte · Selecionar.",
           "use_announcement_hub": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Automático · Announcement Hub.",
           "general_away_cooldown_minutes": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Casa · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Avisar sobre janelas abertas depois de todos saírem. Pessoas a avisar (person.*). 60 s. Announcement Hub. Telemóvel, Relógio, Tablet.",
+          "away_open_window_alert": "Avisar sobre janelas abertas depois de todos saírem. Pessoas a avisar (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telemóvel, Relógio, Tablet.",
           "away_windows_target_people": "Pessoas a avisar (person.*) - Announcement Hub: Telemóvel, Relógio, Tablet, Outro dispositivo. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Canais de aviso de janelas abertas: Telemóvel Notificação / Voz TTS, Relógio Notificação / Voz TTS, Tablet Notificação / Voz TTS. Person-specific, not room speakers."
         }

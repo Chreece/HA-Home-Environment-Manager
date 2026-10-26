@@ -1,11 +1,8 @@
 name: Beta48 all-away open-window person notifications
+# The published beta48 source/tag is immutable. Preserve historical
+# verification but do not run its version-bound publisher on newer betas.
 on:
-  push:
-    branches:
-      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
-  pull_request:
-    branches:
-      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
+  workflow_dispatch:
 
 permissions:
   contents: read

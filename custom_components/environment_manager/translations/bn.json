@@ -206,8 +206,8 @@
           "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "নির্বাচন করুন: বাইরের বায়ুর মান · AQI, CO₂, PM2.5, PM10, VOC. পাওয়া যাচ্ছে না: ⚠",
           "weather_warnings": "আবহাওয়া ও সতর্কতা · ⚠ (পাওয়া যাচ্ছে না) → 🪟🔒",
-          "general_room_occupancy_sensors": "“ঘর · উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
-          "general_home_trackers": "“বাড়ি · উপস্থিতি · ডিভাইস” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
+          "general_room_occupancy_sensors": "“ঘর · উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে। number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "“বাড়ি · উপস্থিতি · ডিভাইস” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে। number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "“উপস্থিতি · ঘর · উৎস (state)” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
           "general_occupied_rooms_attribute": "“উপস্থিতি · ঘর · উৎস (attribute)” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
           "general_sleep_rooms_entity": "“ঘুম · ঘর · উৎস (state)” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
@@ -221,7 +221,7 @@
           "pollen_entities": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · পরাগ · উৎস · নির্বাচন.",
           "use_announcement_hub": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · স্বয়ংক্রিয় · Announcement Hub.",
           "general_away_cooldown_minutes": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · বাড়ি · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "সবাই বের হলে খোলা জানালার সতর্কতা দিন. বিজ্ঞপ্তি পাবেন যাঁরা (person.*). 60 s. Announcement Hub. ফোন, ঘড়ি, ট্যাবলেট.",
+          "away_open_window_alert": "সবাই বের হলে খোলা জানালার সতর্কতা দিন. বিজ্ঞপ্তি পাবেন যাঁরা (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. ফোন, ঘড়ি, ট্যাবলেট.",
           "away_windows_target_people": "বিজ্ঞপ্তি পাবেন যাঁরা (person.*) - Announcement Hub: ফোন, ঘড়ি, ট্যাবলেট, অন্য ডিভাইস. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম: ফোন বিজ্ঞপ্তি / TTS কথা, ঘড়ি বিজ্ঞপ্তি / TTS কথা, ট্যাবলেট বিজ্ঞপ্তি / TTS কথা. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "নির্বাচন করুন: বাইরের বায়ুর মান · AQI, CO₂, PM2.5, PM10, VOC. পাওয়া যাচ্ছে না: ⚠",
           "weather_warnings": "আবহাওয়া ও সতর্কতা · ⚠ (পাওয়া যাচ্ছে না) → 🪟🔒",
-          "general_room_occupancy_sensors": "“ঘর · উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
-          "general_home_trackers": "“বাড়ি · উপস্থিতি · ডিভাইস” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
+          "general_room_occupancy_sensors": "“ঘর · উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে। number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "“বাড়ি · উপস্থিতি · ডিভাইস” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে। number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "“উপস্থিতি · ঘর · উৎস (state)” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
           "general_occupied_rooms_attribute": "“উপস্থিতি · ঘর · উৎস (attribute)” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
           "general_sleep_rooms_entity": "“ঘুম · ঘর · উৎস (state)” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · পরাগ · উৎস · নির্বাচন.",
           "use_announcement_hub": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · স্বয়ংক্রিয় · Announcement Hub.",
           "general_away_cooldown_minutes": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · বাড়ি · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "সবাই বের হলে খোলা জানালার সতর্কতা দিন. বিজ্ঞপ্তি পাবেন যাঁরা (person.*). 60 s. Announcement Hub. ফোন, ঘড়ি, ট্যাবলেট.",
+          "away_open_window_alert": "সবাই বের হলে খোলা জানালার সতর্কতা দিন. বিজ্ঞপ্তি পাবেন যাঁরা (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. ফোন, ঘড়ি, ট্যাবলেট.",
           "away_windows_target_people": "বিজ্ঞপ্তি পাবেন যাঁরা (person.*) - Announcement Hub: ফোন, ঘড়ি, ট্যাবলেট, অন্য ডিভাইস. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম: ফোন বিজ্ঞপ্তি / TTS কথা, ঘড়ি বিজ্ঞপ্তি / TTS কথা, ট্যাবলেট বিজ্ঞপ্তি / TTS কথা. Person-specific, not room speakers."
         }

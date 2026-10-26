@@ -206,8 +206,8 @@
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Alegeți: Calitatea aerului exterior · AQI, CO₂, PM2.5, PM10, VOC. Indisponibil: ⚠",
           "weather_warnings": "Vreme și avertizări · ⚠ (Indisponibil) → 🪟🔒",
-          "general_room_occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Cameră · Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea.",
-          "general_home_trackers": "Alegeți o sursă Home Assistant reală pentru „Acasă · Ocupare · Dispozitive”. Datele lipsă sau vechi suspendă acțiunea.",
+          "general_room_occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Cameră · Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Alegeți o sursă Home Assistant reală pentru „Acasă · Ocupare · Dispozitive”. Datele lipsă sau vechi suspendă acțiunea. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Alegeți o sursă Home Assistant reală pentru „Ocupare · Cameră · sursă (state)”. Datele lipsă sau vechi suspendă acțiunea.",
           "general_occupied_rooms_attribute": "Configurați „Ocupare · Cameră · sursă (attribute)” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
           "general_sleep_rooms_entity": "Alegeți o sursă Home Assistant reală pentru „Somn · Cameră · sursă (state)”. Datele lipsă sau vechi suspendă acțiunea.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · Polen · sursă · Selectați.",
           "use_announcement_hub": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · Automat · Announcement Hub.",
           "general_away_cooldown_minutes": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · Acasă · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Avertizează pentru ferestre deschise după plecare. Persoane de anunțat (person.*). 60 s. Announcement Hub. Telefon, Ceas, Tabletă.",
+          "away_open_window_alert": "Avertizează pentru ferestre deschise după plecare. Persoane de anunțat (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Ceas, Tabletă.",
           "away_windows_target_people": "Persoane de anunțat (person.*) - Announcement Hub: Telefon, Ceas, Tabletă, Alt dispozitiv. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Canale pentru alerta ferestrelor: Telefon Notificare / Voce TTS, Ceas Notificare / Voce TTS, Tabletă Notificare / Voce TTS. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Alegeți: Calitatea aerului exterior · AQI, CO₂, PM2.5, PM10, VOC. Indisponibil: ⚠",
           "weather_warnings": "Vreme și avertizări · ⚠ (Indisponibil) → 🪟🔒",
-          "general_room_occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Cameră · Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea.",
-          "general_home_trackers": "Alegeți o sursă Home Assistant reală pentru „Acasă · Ocupare · Dispozitive”. Datele lipsă sau vechi suspendă acțiunea.",
+          "general_room_occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Cameră · Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Alegeți o sursă Home Assistant reală pentru „Acasă · Ocupare · Dispozitive”. Datele lipsă sau vechi suspendă acțiunea. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Alegeți o sursă Home Assistant reală pentru „Ocupare · Cameră · sursă (state)”. Datele lipsă sau vechi suspendă acțiunea.",
           "general_occupied_rooms_attribute": "Configurați „Ocupare · Cameră · sursă (attribute)” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
           "general_sleep_rooms_entity": "Alegeți o sursă Home Assistant reală pentru „Somn · Cameră · sursă (state)”. Datele lipsă sau vechi suspendă acțiunea.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · Polen · sursă · Selectați.",
           "use_announcement_hub": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · Automat · Announcement Hub.",
           "general_away_cooldown_minutes": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · Acasă · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Avertizează pentru ferestre deschise după plecare. Persoane de anunțat (person.*). 60 s. Announcement Hub. Telefon, Ceas, Tabletă.",
+          "away_open_window_alert": "Avertizează pentru ferestre deschise după plecare. Persoane de anunțat (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Ceas, Tabletă.",
           "away_windows_target_people": "Persoane de anunțat (person.*) - Announcement Hub: Telefon, Ceas, Tabletă, Alt dispozitiv. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Canale pentru alerta ferestrelor: Telefon Notificare / Voce TTS, Ceas Notificare / Voce TTS, Tabletă Notificare / Voce TTS. Person-specific, not room speakers."
         }

@@ -206,8 +206,8 @@
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Valitse: Ulkoilman laatu · AQI, CO₂, PM2.5, PM10, VOC. Ei saatavilla: ⚠",
           "weather_warnings": "Sää ja varoitukset · ⚠ (Ei saatavilla) → 🪟🔒",
-          "general_room_occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Huone · Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
-          "general_home_trackers": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Läsnäolo · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "general_room_occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Huone · Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Läsnäolo · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "general_occupied_rooms_attribute": "Määritä ”Läsnäolo · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "general_sleep_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Uni · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Siitepöly · lähde · Valitse.",
           "use_announcement_hub": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Automaattinen · Announcement Hub.",
           "general_away_cooldown_minutes": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Koti · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä. Ilmoituksen saavat henkilöt (person.*). 60 s. Announcement Hub. Puhelin, Kello, Tabletti.",
+          "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä. Ilmoituksen saavat henkilöt (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Puhelin, Kello, Tabletti.",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt (person.*) - Announcement Hub: Puhelin, Kello, Tabletti, Muu laite. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Ikkunavaroituksen kanavat: Puhelin Ilmoitus / TTS-puhe, Kello Ilmoitus / TTS-puhe, Tabletti Ilmoitus / TTS-puhe. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Valitse: Ulkoilman laatu · AQI, CO₂, PM2.5, PM10, VOC. Ei saatavilla: ⚠",
           "weather_warnings": "Sää ja varoitukset · ⚠ (Ei saatavilla) → 🪟🔒",
-          "general_room_occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Huone · Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
-          "general_home_trackers": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Läsnäolo · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "general_room_occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Huone · Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Läsnäolo · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "general_occupied_rooms_attribute": "Määritä ”Läsnäolo · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "general_sleep_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Uni · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Siitepöly · lähde · Valitse.",
           "use_announcement_hub": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Automaattinen · Announcement Hub.",
           "general_away_cooldown_minutes": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Koti · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä. Ilmoituksen saavat henkilöt (person.*). 60 s. Announcement Hub. Puhelin, Kello, Tabletti.",
+          "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä. Ilmoituksen saavat henkilöt (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Puhelin, Kello, Tabletti.",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt (person.*) - Announcement Hub: Puhelin, Kello, Tabletti, Muu laite. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Ikkunavaroituksen kanavat: Puhelin Ilmoitus / TTS-puhe, Kello Ilmoitus / TTS-puhe, Tabletti Ilmoitus / TTS-puhe. Person-specific, not room speakers."
         }

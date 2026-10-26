@@ -206,8 +206,8 @@
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Vyberte: Kvalita venkovního vzduchu · AQI, CO₂, PM2.5, PM10, VOC. Nedostupné: ⚠",
           "weather_warnings": "Počasí a výstrahy · ⚠ (Nedostupné) → 🪟🔒",
-          "general_room_occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Místnost · Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci.",
-          "general_home_trackers": "Vyberte skutečný zdroj Home Assistant pro „Domov · Obsazenost · Zařízení“. Chybějící nebo zastaralá data pozastaví akci.",
+          "general_room_occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Místnost · Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Vyberte skutečný zdroj Home Assistant pro „Domov · Obsazenost · Zařízení“. Chybějící nebo zastaralá data pozastaví akci. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · Místnost · zdroj (state)“. Chybějící nebo zastaralá data pozastaví akci.",
           "general_occupied_rooms_attribute": "Nastavte „Obsazenost · Místnost · zdroj (attribute)“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
           "general_sleep_rooms_entity": "Vyberte skutečný zdroj Home Assistant pro „Spánek · Místnost · zdroj (state)“. Chybějící nebo zastaralá data pozastaví akci.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · Pyl · zdroj · Vybrat.",
           "use_announcement_hub": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · Automatické · Announcement Hub.",
           "general_away_cooldown_minutes": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · Domov · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Upozornit na otevřená okna po odchodu všech. Příjemci upozornění (person.*). 60 s. Announcement Hub. Telefon, Hodinky, Tablet.",
+          "away_open_window_alert": "Upozornit na otevřená okna po odchodu všech. Příjemci upozornění (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Hodinky, Tablet.",
           "away_windows_target_people": "Příjemci upozornění (person.*) - Announcement Hub: Telefon, Hodinky, Tablet, Jiné zařízení. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kanály upozornění na okna: Telefon Oznámení / Hlas TTS, Hodinky Oznámení / Hlas TTS, Tablet Oznámení / Hlas TTS. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Vyberte: Kvalita venkovního vzduchu · AQI, CO₂, PM2.5, PM10, VOC. Nedostupné: ⚠",
           "weather_warnings": "Počasí a výstrahy · ⚠ (Nedostupné) → 🪟🔒",
-          "general_room_occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Místnost · Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci.",
-          "general_home_trackers": "Vyberte skutečný zdroj Home Assistant pro „Domov · Obsazenost · Zařízení“. Chybějící nebo zastaralá data pozastaví akci.",
+          "general_room_occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Místnost · Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Vyberte skutečný zdroj Home Assistant pro „Domov · Obsazenost · Zařízení“. Chybějící nebo zastaralá data pozastaví akci. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · Místnost · zdroj (state)“. Chybějící nebo zastaralá data pozastaví akci.",
           "general_occupied_rooms_attribute": "Nastavte „Obsazenost · Místnost · zdroj (attribute)“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
           "general_sleep_rooms_entity": "Vyberte skutečný zdroj Home Assistant pro „Spánek · Místnost · zdroj (state)“. Chybějící nebo zastaralá data pozastaví akci.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · Pyl · zdroj · Vybrat.",
           "use_announcement_hub": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · Automatické · Announcement Hub.",
           "general_away_cooldown_minutes": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · Domov · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Upozornit na otevřená okna po odchodu všech. Příjemci upozornění (person.*). 60 s. Announcement Hub. Telefon, Hodinky, Tablet.",
+          "away_open_window_alert": "Upozornit na otevřená okna po odchodu všech. Příjemci upozornění (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Hodinky, Tablet.",
           "away_windows_target_people": "Příjemci upozornění (person.*) - Announcement Hub: Telefon, Hodinky, Tablet, Jiné zařízení. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kanály upozornění na okna: Telefon Oznámení / Hlas TTS, Hodinky Oznámení / Hlas TTS, Tablet Oznámení / Hlas TTS. Person-specific, not room speakers."
         }

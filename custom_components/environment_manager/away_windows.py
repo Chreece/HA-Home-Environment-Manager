@@ -24,7 +24,6 @@ from .occupancy_policy import _bool_presence, home_presence
 from .room_sources import native, selected
 
 _LOGGER = logging.getLogger(__name__)
-DEPARTURE_STABLE_SECONDS = 60
 RETRY_SECONDS = 300
 
 # Mobile / Watch / Tablet are explicit Announcement Hub per-person slots.
@@ -69,39 +68,31 @@ def configured_recipients(hass: Any, settings: Mapping[str, Any]) -> tuple[list[
 
 
 def confirmed_home_state(hass: Any, settings: Mapping[str, Any]) -> str:
-    """All HA persons AND explicitly configured trackers must be confirmed away.
+    """Immediate departure evidence from the presence inputs the user selected.
 
-    A single real 'home' wins. Unknown, unavailable, missing, stale and an empty
-    tracker list without Person entities cannot prove that everyone left.
-    Also obey room/occupancy checks and the existing away cooldown.
+    Existing room/climate Away cooldowns remain unchanged. This *notification*
+    does not wait after all configured person, tracker, binary or number
+    inputs are explicitly negative. Numeric counts: 0=away, positive=home.
+    A stale/invalid/unknown value cannot prove absence. If no presence sources
+    were selected, fall back to *all* known Person entities, not a guessed away.
     """
     global_cfg = settings.get(CONF_OCCUPANCY_GLOBAL, {})
     if not isinstance(global_cfg, Mapping):
         global_cfg = {}
-    persons = [state.entity_id for state in hass.states.async_all("person")]
-    configured_trackers = global_cfg.get("home_trackers", [])
-    configured_trackers = configured_trackers if isinstance(configured_trackers, list) else []
-    ids = list(dict.fromkeys([
-        *persons,
-        *(entity for entity in configured_trackers if isinstance(entity, str)
-          and entity.startswith(("person.", "device_tracker.", "binary_sensor."))),
-    ]))
-    if not ids:
+    trackers = global_cfg.get("home_trackers", [])
+    room_sensors = global_cfg.get("room_occupancy_sensors", [])
+    trackers = trackers if isinstance(trackers, list) else []
+    room_sensors = room_sensors if isinstance(room_sensors, list) else []
+    room_entity = global_cfg.get("occupied_rooms_entity")
+    explicit = any((trackers, room_sensors, isinstance(room_entity, str) and bool(room_entity)))
+    fallbacks = [] if explicit else [state.entity_id for state in hass.states.async_all("person")]
+    if not explicit and not fallbacks:
         return "unknown"
-    max_age = global_cfg.get("source_stale_minutes", 240)
-    try:
-        age = min(1440.0, max(1.0, float(max_age)))
-    except (TypeError, ValueError, OverflowError):
-        age = 240.0
-    readings = [_bool_presence(hass.states.get(entity), age) for entity in ids]
-    if any(value is True for value in readings):
-        return "home"
-    if any(value is None for value in readings):
-        return "unknown"
-    # All explicitly configured persons/trackers are negative. Shared
-    # occupancy or occupied-room evidence can still veto a departure.
-    status, _, _ = home_presence(hass, global_cfg, fallback_trackers=persons)
-    return "away" if status == "away" else status if status == "home" else "unknown"
+    # No debounce/cooldown for a confirmed absence alert. Other climate/area
+    # controls still use their saved Away cooldown through the normal policy.
+    alert_policy = {**global_cfg, "away_cooldown_minutes": 0}
+    state, _, _ = home_presence(hass, alert_policy, fallback_trackers=fallbacks)
+    return state if state in ("home", "away") else "unknown"
 
 
 def open_windows(hass: Any, settings: Mapping[str, Any]) -> tuple[tuple[str, str], ...]:
@@ -305,8 +296,11 @@ class AwayWindowAlert:
             return
         opened = open_windows(self.manager.hass, settings)
         if any(entity_id not in self._sent for entity_id, _ in opened):
-            if self._pending_task is None:
-                self._schedule(DEPARTURE_STABLE_SECONDS)
+            # No artificial departure timer. The event that first proves every
+            # selected presence source is away triggers direct submission.
+            # A failure-retry timer still prevents flooding a stopped Hub.
+            if self._pending_task is None and self._timer is None:
+                self._fire(None)
         else:
             self._cancel_timer()
 

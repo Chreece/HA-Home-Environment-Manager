@@ -83,7 +83,7 @@ def platforms(monkeypatch, runtime_module):
 
 
 @pytest.mark.parametrize("domain,expected,has_temp,has_humidity", [
-    ("climate", {"off","heat","cool","dry","fan_only"}, True, False),
+    ("climate", {"off","heat","cool","dry","fan_only"}, True, True),
     ("fan", {"off","fan_only"}, False, False),
     ("humidifier", {"off","dry"}, False, True),
     ("switch", {"off","heat"}, True, False),

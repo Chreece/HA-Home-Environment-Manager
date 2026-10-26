@@ -206,8 +206,8 @@
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Chọn: Chất lượng không khí ngoài trời · AQI, CO₂, PM2.5, PM10, VOC. Không khả dụng: ⚠",
           "weather_warnings": "Thời tiết và cảnh báo · ⚠ (Không khả dụng) → 🪟🔒",
-          "general_room_occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Phòng · Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
-          "general_home_trackers": "Chọn nguồn Home Assistant thực cho “Nhà · Hiện diện · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "general_room_occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Phòng · Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Chọn nguồn Home Assistant thực cho “Nhà · Hiện diện · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Chọn nguồn Home Assistant thực cho “Hiện diện · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "general_occupied_rooms_attribute": "Chỉ thiết lập “Hiện diện · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "general_sleep_rooms_entity": "Chọn nguồn Home Assistant thực cho “Ngủ · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Phấn hoa · nguồn · Chọn.",
           "use_announcement_hub": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Tự động · Announcement Hub.",
           "general_away_cooldown_minutes": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Nhà · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà. Người nhận thông báo (person.*). 60 s. Announcement Hub. Điện thoại, Đồng hồ, Máy tính bảng.",
+          "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà. Người nhận thông báo (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Điện thoại, Đồng hồ, Máy tính bảng.",
           "away_windows_target_people": "Người nhận thông báo (person.*) - Announcement Hub: Điện thoại, Đồng hồ, Máy tính bảng, Thiết bị khác. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ: Điện thoại Thông báo / Giọng TTS, Đồng hồ Thông báo / Giọng TTS, Máy tính bảng Thông báo / Giọng TTS. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Chọn: Chất lượng không khí ngoài trời · AQI, CO₂, PM2.5, PM10, VOC. Không khả dụng: ⚠",
           "weather_warnings": "Thời tiết và cảnh báo · ⚠ (Không khả dụng) → 🪟🔒",
-          "general_room_occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Phòng · Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
-          "general_home_trackers": "Chọn nguồn Home Assistant thực cho “Nhà · Hiện diện · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "general_room_occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Phòng · Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Chọn nguồn Home Assistant thực cho “Nhà · Hiện diện · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Chọn nguồn Home Assistant thực cho “Hiện diện · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "general_occupied_rooms_attribute": "Chỉ thiết lập “Hiện diện · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "general_sleep_rooms_entity": "Chọn nguồn Home Assistant thực cho “Ngủ · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Phấn hoa · nguồn · Chọn.",
           "use_announcement_hub": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Tự động · Announcement Hub.",
           "general_away_cooldown_minutes": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Nhà · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà. Người nhận thông báo (person.*). 60 s. Announcement Hub. Điện thoại, Đồng hồ, Máy tính bảng.",
+          "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà. Người nhận thông báo (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Điện thoại, Đồng hồ, Máy tính bảng.",
           "away_windows_target_people": "Người nhận thông báo (person.*) - Announcement Hub: Điện thoại, Đồng hồ, Máy tính bảng, Thiết bị khác. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ: Điện thoại Thông báo / Giọng TTS, Đồng hồ Thông báo / Giọng TTS, Máy tính bảng Thông báo / Giọng TTS. Person-specific, not room speakers."
         }

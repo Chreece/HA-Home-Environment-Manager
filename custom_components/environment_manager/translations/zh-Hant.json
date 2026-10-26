@@ -206,8 +206,8 @@
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "請選擇: 室外空氣品質 · AQI, CO₂, PM2.5, PM10, VOC. 無法使用: ⚠",
           "weather_warnings": "僅為選定房間設定「天氣警報」。資料無效或缺失將停止操作。",
-          "general_room_occupancy_sensors": "為「房間 · 佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
-          "general_home_trackers": "為「家中 · 佔用 · 裝置」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
+          "general_room_occupancy_sensors": "為「房間 · 佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "為「家中 · 佔用 · 裝置」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "為「佔用 · 房間 · 來源 (state)」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
           "general_occupied_rooms_attribute": "僅為選定房間設定「佔用 · 房間 · 來源 (attribute)」。資料無效或缺失將停止操作。",
           "general_sleep_rooms_entity": "為「睡眠 · 房間 · 來源 (state)」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
@@ -221,7 +221,7 @@
           "pollen_entities": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 花粉 · 來源 · 選擇.",
           "use_announcement_hub": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 自動 · Announcement Hub.",
           "general_away_cooldown_minutes": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "所有人離家後提醒未關窗戶. 接收提醒的人員 (person.*). 60 s. Announcement Hub. 手機, 手錶, 平板.",
+          "away_open_window_alert": "所有人離家後提醒未關窗戶. 接收提醒的人員 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. 手機, 手錶, 平板.",
           "away_windows_target_people": "接收提醒的人員 (person.*) - Announcement Hub: 手機, 手錶, 平板, 其他裝置. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "窗戶提醒發送管道: 手機 通知 / TTS 語音, 手錶 通知 / TTS 語音, 平板 通知 / TTS 語音. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "請選擇: 室外空氣品質 · AQI, CO₂, PM2.5, PM10, VOC. 無法使用: ⚠",
           "weather_warnings": "僅為選定房間設定「天氣警報」。資料無效或缺失將停止操作。",
-          "general_room_occupancy_sensors": "為「房間 · 佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
-          "general_home_trackers": "為「家中 · 佔用 · 裝置」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
+          "general_room_occupancy_sensors": "為「房間 · 佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "為「家中 · 佔用 · 裝置」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "為「佔用 · 房間 · 來源 (state)」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
           "general_occupied_rooms_attribute": "僅為選定房間設定「佔用 · 房間 · 來源 (attribute)」。資料無效或缺失將停止操作。",
           "general_sleep_rooms_entity": "為「睡眠 · 房間 · 來源 (state)」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 花粉 · 來源 · 選擇.",
           "use_announcement_hub": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 自動 · Announcement Hub.",
           "general_away_cooldown_minutes": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "所有人離家後提醒未關窗戶. 接收提醒的人員 (person.*). 60 s. Announcement Hub. 手機, 手錶, 平板.",
+          "away_open_window_alert": "所有人離家後提醒未關窗戶. 接收提醒的人員 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. 手機, 手錶, 平板.",
           "away_windows_target_people": "接收提醒的人員 (person.*) - Announcement Hub: 手機, 手錶, 平板, 其他裝置. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "窗戶提醒發送管道: 手機 通知 / TTS 語音, 手錶 通知 / TTS 語音, 平板 通知 / TTS 語音. Person-specific, not room speakers."
         }

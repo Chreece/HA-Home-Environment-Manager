@@ -206,8 +206,8 @@
           "weather_entities": "Vælg: Vejr og advarsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Vælg: Udendørs luftkvalitet · AQI, CO₂, PM2.5, PM10, VOC. Ikke tilgængelig: ⚠",
           "weather_warnings": "Vejr og advarsler · ⚠ (Ikke tilgængelig) → 🪟🔒",
-          "general_room_occupancy_sensors": "Vælg en reel Home Assistant-kilde til »Rum · Tilstedeværelse · sensor«. Manglende eller gamle værdier standser handlingen.",
-          "general_home_trackers": "Vælg en reel Home Assistant-kilde til »Hjem · Tilstedeværelse · Enheder«. Manglende eller gamle værdier standser handlingen.",
+          "general_room_occupancy_sensors": "Vælg en reel Home Assistant-kilde til »Rum · Tilstedeværelse · sensor«. Manglende eller gamle værdier standser handlingen. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Vælg en reel Home Assistant-kilde til »Hjem · Tilstedeværelse · Enheder«. Manglende eller gamle værdier standser handlingen. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Vælg en reel Home Assistant-kilde til »Tilstedeværelse · Rum · kilde (state)«. Manglende eller gamle værdier standser handlingen.",
           "general_occupied_rooms_attribute": "Indstil »Tilstedeværelse · Rum · kilde (attribute)« kun for valgt rum. Ugyldige data blokerer handlingen.",
           "general_sleep_rooms_entity": "Vælg en reel Home Assistant-kilde til »Søvn · Rum · kilde (state)«. Manglende eller gamle værdier standser handlingen.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Pollen · kilde · Vælg.",
           "use_announcement_hub": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Automatisk · Announcement Hub.",
           "general_away_cooldown_minutes": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Hjem · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Advar om åbne vinduer når alle er gået. Personer der skal advares (person.*). 60 s. Announcement Hub. Telefon, Ur, Tablet.",
+          "away_open_window_alert": "Advar om åbne vinduer når alle er gået. Personer der skal advares (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Ur, Tablet.",
           "away_windows_target_people": "Personer der skal advares (person.*) - Announcement Hub: Telefon, Ur, Tablet, Anden enhed. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kanaler til vinduesadvarsler: Telefon Notifikation / TTS-tale, Ur Notifikation / TTS-tale, Tablet Notifikation / TTS-tale. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Vælg: Vejr og advarsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Vælg: Udendørs luftkvalitet · AQI, CO₂, PM2.5, PM10, VOC. Ikke tilgængelig: ⚠",
           "weather_warnings": "Vejr og advarsler · ⚠ (Ikke tilgængelig) → 🪟🔒",
-          "general_room_occupancy_sensors": "Vælg en reel Home Assistant-kilde til »Rum · Tilstedeværelse · sensor«. Manglende eller gamle værdier standser handlingen.",
-          "general_home_trackers": "Vælg en reel Home Assistant-kilde til »Hjem · Tilstedeværelse · Enheder«. Manglende eller gamle værdier standser handlingen.",
+          "general_room_occupancy_sensors": "Vælg en reel Home Assistant-kilde til »Rum · Tilstedeværelse · sensor«. Manglende eller gamle værdier standser handlingen. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Vælg en reel Home Assistant-kilde til »Hjem · Tilstedeværelse · Enheder«. Manglende eller gamle værdier standser handlingen. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Vælg en reel Home Assistant-kilde til »Tilstedeværelse · Rum · kilde (state)«. Manglende eller gamle værdier standser handlingen.",
           "general_occupied_rooms_attribute": "Indstil »Tilstedeværelse · Rum · kilde (attribute)« kun for valgt rum. Ugyldige data blokerer handlingen.",
           "general_sleep_rooms_entity": "Vælg en reel Home Assistant-kilde til »Søvn · Rum · kilde (state)«. Manglende eller gamle værdier standser handlingen.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Pollen · kilde · Vælg.",
           "use_announcement_hub": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Automatisk · Announcement Hub.",
           "general_away_cooldown_minutes": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Hjem · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Advar om åbne vinduer når alle er gået. Personer der skal advares (person.*). 60 s. Announcement Hub. Telefon, Ur, Tablet.",
+          "away_open_window_alert": "Advar om åbne vinduer når alle er gået. Personer der skal advares (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Ur, Tablet.",
           "away_windows_target_people": "Personer der skal advares (person.*) - Announcement Hub: Telefon, Ur, Tablet, Anden enhed. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kanaler til vinduesadvarsler: Telefon Notifikation / TTS-tale, Ur Notifikation / TTS-tale, Tablet Notifikation / TTS-tale. Person-specific, not room speakers."
         }

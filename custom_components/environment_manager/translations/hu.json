@@ -206,8 +206,8 @@
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Válassz: Kültéri levegőminőség · AQI, CO₂, PM2.5, PM10, VOC. Nem érhető el: ⚠",
           "weather_warnings": "Időjárás és riasztások · ⚠ (Nem érhető el) → 🪟🔒",
-          "general_room_occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Szoba · Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet.",
-          "general_home_trackers": "Válasszon valódi Home Assistant-forrást ehhez: „Otthon · Jelenlét · Eszközök”. A hiányzó vagy régi adat leállítja a műveletet.",
+          "general_room_occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Szoba · Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Válasszon valódi Home Assistant-forrást ehhez: „Otthon · Jelenlét · Eszközök”. A hiányzó vagy régi adat leállítja a műveletet. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · Szoba · forrás (state)”. A hiányzó vagy régi adat leállítja a műveletet.",
           "general_occupied_rooms_attribute": "„Jelenlét · Szoba · forrás (attribute)” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
           "general_sleep_rooms_entity": "Válasszon valódi Home Assistant-forrást ehhez: „Alvás · Szoba · forrás (state)”. A hiányzó vagy régi adat leállítja a műveletet.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Pollen · forrás · Választás.",
           "use_announcement_hub": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Automatikus · Announcement Hub.",
           "general_away_cooldown_minutes": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Otthon · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Figyelmeztessen a nyitott ablakokra távozáskor. Értesítendő személyek (person.*). 60 s. Announcement Hub. Telefon, Óra, Táblagép.",
+          "away_open_window_alert": "Figyelmeztessen a nyitott ablakokra távozáskor. Értesítendő személyek (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Óra, Táblagép.",
           "away_windows_target_people": "Értesítendő személyek (person.*) - Announcement Hub: Telefon, Óra, Táblagép, Más eszköz. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Ablakriasztás csatornái: Telefon Értesítés / TTS beszéd, Óra Értesítés / TTS beszéd, Táblagép Értesítés / TTS beszéd. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Válassz: Kültéri levegőminőség · AQI, CO₂, PM2.5, PM10, VOC. Nem érhető el: ⚠",
           "weather_warnings": "Időjárás és riasztások · ⚠ (Nem érhető el) → 🪟🔒",
-          "general_room_occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Szoba · Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet.",
-          "general_home_trackers": "Válasszon valódi Home Assistant-forrást ehhez: „Otthon · Jelenlét · Eszközök”. A hiányzó vagy régi adat leállítja a műveletet.",
+          "general_room_occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Szoba · Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Válasszon valódi Home Assistant-forrást ehhez: „Otthon · Jelenlét · Eszközök”. A hiányzó vagy régi adat leállítja a műveletet. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · Szoba · forrás (state)”. A hiányzó vagy régi adat leállítja a műveletet.",
           "general_occupied_rooms_attribute": "„Jelenlét · Szoba · forrás (attribute)” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
           "general_sleep_rooms_entity": "Válasszon valódi Home Assistant-forrást ehhez: „Alvás · Szoba · forrás (state)”. A hiányzó vagy régi adat leállítja a műveletet.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Pollen · forrás · Választás.",
           "use_announcement_hub": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Automatikus · Announcement Hub.",
           "general_away_cooldown_minutes": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Otthon · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Figyelmeztessen a nyitott ablakokra távozáskor. Értesítendő személyek (person.*). 60 s. Announcement Hub. Telefon, Óra, Táblagép.",
+          "away_open_window_alert": "Figyelmeztessen a nyitott ablakokra távozáskor. Értesítendő személyek (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Óra, Táblagép.",
           "away_windows_target_people": "Értesítendő személyek (person.*) - Announcement Hub: Telefon, Óra, Táblagép, Más eszköz. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Ablakriasztás csatornái: Telefon Értesítés / TTS beszéd, Óra Értesítés / TTS beszéd, Táblagép Értesítés / TTS beszéd. Person-specific, not room speakers."
         }

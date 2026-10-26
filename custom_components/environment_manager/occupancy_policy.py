@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import ast
 import json
+import math
 import re
 import unicodedata
 from datetime import datetime, timezone
@@ -127,6 +128,15 @@ def _bool_presence(state: Any, minutes: float = 240) -> bool | None:
             return True
         if state.state == "off":
             return False
+    if state.domain in ("number", "input_number", "sensor"):
+        # Only explicitly selected numeric occupancy sources reach this path:
+        # zero means vacant, positive finite counts mean occupied. Unavailable,
+        # NaN, negative and nonnumeric states remain unknown, never vacant.
+        try:
+            count = float(str(state.state).strip())
+        except (TypeError, ValueError, OverflowError):
+            return None
+        return count > 0 if math.isfinite(count) and count >= 0 else None
     if state.domain in ("person", "device_tracker"):
         if state.state == "home":
             return True
@@ -173,7 +183,8 @@ def home_presence(hass: Any, global_settings: Mapping,
     room_sources = global_settings.get("room_occupancy_sensors", [])
     allowed_rooms = list(dict.fromkeys(
         entity for entity in (room_sources if isinstance(room_sources, list) else [])
-        if isinstance(entity, str) and entity.startswith("binary_sensor.")
+        if isinstance(entity, str) and entity.startswith((
+            "binary_sensor.", "number.", "input_number.", "sensor."))
     ))
     global_trackers = global_settings.get("home_trackers", [])
     # Legacy area trackers are explicit sources too: a positive should not
@@ -185,7 +196,8 @@ def home_presence(hass: Any, global_settings: Mapping,
     allowed = list(dict.fromkeys(
         entity for entity in combined
         if isinstance(entity, str)
-        and entity.startswith(("person.", "device_tracker.", "binary_sensor."))
+        and entity.startswith(("person.", "device_tracker.", "binary_sensor.",
+                               "number.", "input_number.", "sensor."))
     ))
     all_sources = list(dict.fromkeys([
         *([room_entity] if isinstance(room_entity, str) and room_entity else []),
@@ -257,7 +269,8 @@ def room_presence(hass: Any, area: str, settings: Mapping,
                    str(state.attributes.get("device_class", "")).casefold()
                    in ("occupancy", "presence")]
     area_sensors = [e for e in sensors if isinstance(e, str) and
-                    e.startswith("binary_sensor.") and entity_area(hass, e) == area]
+                    e.startswith(("binary_sensor.", "number.", "input_number.", "sensor."))
+                     and entity_area(hass, e) == area]
     evidence: list[bool | None] = [
         _bool_presence(hass.states.get(e),
                        settings.get("occupancy_stale_minutes", 240))

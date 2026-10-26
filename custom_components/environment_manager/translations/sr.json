@@ -206,8 +206,8 @@
           "weather_entities": "Изаберите: Време и упозорења · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Изаберите: Квалитет спољног ваздуха · AQI, CO₂, PM2.5, PM10, VOC. Недоступно: ⚠",
           "weather_warnings": "Време и упозорења · ⚠ (Недоступно) → 🪟🔒",
-          "general_room_occupancy_sensors": "Izaberite stvarni Home Assistant izvor za „Soba · Prisustvo · senzor”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
-          "general_home_trackers": "Izaberite stvarni Home Assistant izvor za „Dom · Prisustvo · Uređaji”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
+          "general_room_occupancy_sensors": "Izaberite stvarni Home Assistant izvor za „Soba · Prisustvo · senzor”. Nepostojeći ili zastareli podaci zaustavljaju radnju. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Izaberite stvarni Home Assistant izvor za „Dom · Prisustvo · Uređaji”. Nepostojeći ili zastareli podaci zaustavljaju radnju. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Izaberite stvarni Home Assistant izvor za „Prisustvo · Soba · izvor (state)”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "general_occupied_rooms_attribute": "Podešavajte „Prisustvo · Soba · izvor (attribute)” samo za odabranu sobu. Nevažeći podaci blokiraju radnju.",
           "general_sleep_rooms_entity": "Izaberite stvarni Home Assistant izvor za „Spavanje · Soba · izvor (state)”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Polen · izvor · Izaberi.",
           "use_announcement_hub": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Automatsko · Announcement Hub.",
           "general_away_cooldown_minutes": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Dom · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Обавести о отвореним прозорима кад сви оду. Особе за обавештавање (person.*). 60 s. Announcement Hub. Телефон, Сат, Таблет.",
+          "away_open_window_alert": "Обавести о отвореним прозорима кад сви оду. Особе за обавештавање (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Сат, Таблет.",
           "away_windows_target_people": "Особе за обавештавање (person.*) - Announcement Hub: Телефон, Сат, Таблет, Други уређај. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Канали за обавештења о прозорима: Телефон Обавештење / TTS говор, Сат Обавештење / TTS говор, Таблет Обавештење / TTS говор. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Изаберите: Време и упозорења · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Изаберите: Квалитет спољног ваздуха · AQI, CO₂, PM2.5, PM10, VOC. Недоступно: ⚠",
           "weather_warnings": "Време и упозорења · ⚠ (Недоступно) → 🪟🔒",
-          "general_room_occupancy_sensors": "Izaberite stvarni Home Assistant izvor za „Soba · Prisustvo · senzor”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
-          "general_home_trackers": "Izaberite stvarni Home Assistant izvor za „Dom · Prisustvo · Uređaji”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
+          "general_room_occupancy_sensors": "Izaberite stvarni Home Assistant izvor za „Soba · Prisustvo · senzor”. Nepostojeći ili zastareli podaci zaustavljaju radnju. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Izaberite stvarni Home Assistant izvor za „Dom · Prisustvo · Uređaji”. Nepostojeći ili zastareli podaci zaustavljaju radnju. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Izaberite stvarni Home Assistant izvor za „Prisustvo · Soba · izvor (state)”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "general_occupied_rooms_attribute": "Podešavajte „Prisustvo · Soba · izvor (attribute)” samo za odabranu sobu. Nevažeći podaci blokiraju radnju.",
           "general_sleep_rooms_entity": "Izaberite stvarni Home Assistant izvor za „Spavanje · Soba · izvor (state)”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Polen · izvor · Izaberi.",
           "use_announcement_hub": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Automatsko · Announcement Hub.",
           "general_away_cooldown_minutes": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Dom · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Обавести о отвореним прозорима кад сви оду. Особе за обавештавање (person.*). 60 s. Announcement Hub. Телефон, Сат, Таблет.",
+          "away_open_window_alert": "Обавести о отвореним прозорима кад сви оду. Особе за обавештавање (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Сат, Таблет.",
           "away_windows_target_people": "Особе за обавештавање (person.*) - Announcement Hub: Телефон, Сат, Таблет, Други уређај. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Канали за обавештења о прозорима: Телефон Обавештење / TTS говор, Сат Обавештење / TTS говор, Таблет Обавештење / TTS говор. Person-specific, not room speakers."
         }

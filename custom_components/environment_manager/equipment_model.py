@@ -241,7 +241,7 @@ def capabilities(manager: Any, spec: ManagedDevice) -> Capabilities | None:
             bool(supported & TEMP) or not (supported & RANGE) and bool(set(modes) & {"heat", "cool"}))),
         temperature_range=domain == "climate" and bool(supported & RANGE),
         humidity=domain == "humidifier" or (domain == "climate" and (
-            bool(supported & HUMIDITY) or "dry" in modes and not (supported & (TEMP | RANGE)))),
+            bool(supported & HUMIDITY) or "dry" in modes)),
         fan_entity=fan_entity, fan_modes=fan_modes, fan_percentage=percentage,
         swing_modes=_strings(attrs.get("swing_modes")) if domain == "climate" and supported & SWING else (),
         swing_horizontal_modes=_strings(attrs.get("swing_horizontal_modes")) if domain == "climate" and supported & SWING_H else (),
@@ -458,7 +458,8 @@ def control_modes(manager: Any, spec: ManagedDevice) -> tuple[str, ...]:
     cap = capabilities(manager, spec)
     result = ("existing", "automatic", "manual", "off")
     if cap and (cap.temperature and bool(set(cap.modes) & {"heat", "cool"})
-                or cap.humidity and (cap.domain == "humidifier" or "dry" in cap.modes)
+                or cap.domain == "humidifier" and cap.humidity
+                or "dry" in cap.modes
                 or cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}):
         result += ("pid",)
     return result
