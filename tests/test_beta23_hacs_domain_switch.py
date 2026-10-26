@@ -13,7 +13,8 @@ CURRENT_VERSION = json.loads((PKG / "manifest.json").read_text(encoding="utf-8")
 
 
 def _builder():
-    builder_version = ("beta49" if CURRENT_VERSION == "0.6.0b49" else
+    builder_version = ("beta50" if CURRENT_VERSION == "0.6.0b50" else
+                       "beta49" if CURRENT_VERSION == "0.6.0b49" else
                        "beta48" if CURRENT_VERSION == "0.6.0b48" else
                        "beta47" if CURRENT_VERSION == "0.6.0b47" else
                        "beta46" if CURRENT_VERSION == "0.6.0b46" else
@@ -177,3 +178,16 @@ def test_beta49_publisher_requires_all_ha_hacs_and_sensor_regressions():
     assert "gh release create v0.6.0b49" in workflow
     assert "needs: [test, hassfest, hacs, home_assistant]" in workflow
     assert "github.ref == 'refs/heads/feat/beta44-shade-weather-owned-open-announcements-20261025'" in workflow
+
+
+def test_beta50_publisher_validates_all_climate_presets_before_release():
+    if CURRENT_VERSION != "0.6.0b50":
+        return
+    workflow = (ROOT / ".github/workflows/beta50-effective-climate-presets.yml").read_text(encoding="utf-8")
+    assert "python tools/build_beta50_payload.py" in workflow
+    assert "tests/test_beta50_active_climate_presets.py" in workflow
+    assert "git checkout --orphan beta50-payload" in workflow
+    assert "git push origin HEAD:refs/heads/beta/v0.6.0b50" in workflow
+    assert "gh release create v0.6.0b50" in workflow
+    assert "needs: [test, hassfest, hacs, home_assistant]" in workflow
+    assert "refs/heads/feat/beta44-shade-weather-owned-open-announcements-20261025" in workflow
