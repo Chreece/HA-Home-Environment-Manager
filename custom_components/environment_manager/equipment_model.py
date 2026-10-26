@@ -486,6 +486,9 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
                     and entity_area(manager.hass, e) == spec.area_id
                     and hass_state.attributes.get("device_class") == "window"]
     shared = manager.settings.get("occupancy_global", {})
+    continuity = getattr(manager, "presence_continuity", None)
+    if continuity is not None:
+        shared = continuity.context(shared)
     room = room_config(manager, spec)
     known = {item.area_id for item in specs(manager)}
     occupancy, evidence, sensors = room_presence(manager.hass, spec.area_id, room, shared, known_areas=known)
