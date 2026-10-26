@@ -197,7 +197,10 @@
           "use_mold_indicator": "カビ指標 · RH (%) → 70%",
           "pollen_entities": "花粉 · 情報源 · 選択",
           "use_announcement_hub": "自動 · Announcement Hub",
-          "general_away_cooldown_minutes": "自宅 · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "自宅 · Away · cooldown (min)",
+          "away_open_window_alert": "全員の外出後に開いた窓を通知",
+          "away_windows_target_people": "通知する人物",
+          "away_windows_delivery_channels": "窓の通知先と方法"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "「カビ指標 · RH (%) → 70%」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "pollen_entities": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 花粉 · 情報源 · 選択.",
           "use_announcement_hub": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自動 · Announcement Hub.",
-          "general_away_cooldown_minutes": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自宅 · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自宅 · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "全員の外出後に開いた窓を通知. 通知する人物 (person.*). 60 s. Announcement Hub. スマートフォン, 腕時計, タブレット.",
+          "away_windows_target_people": "通知する人物 (person.*) - Announcement Hub: スマートフォン, 腕時計, タブレット, その他の端末. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "窓の通知先と方法: スマートフォン 通知 / TTS 音声, 腕時計 通知 / TTS 音声, タブレット 通知 / TTS 音声. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "カビ指標 · 🧊 °C ⚠",
       "invalid_mold_calibration": "カビ指標 · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "無効: 監視する部屋",
-      "invalid_room_source": "無効: 部屋 · 情報源"
+      "invalid_room_source": "無効: 部屋 · 情報源",
+      "invalid_away_windows_recipients": "通知する人物; 窓の通知先と方法. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - 設定済みです.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "カビ指標 · RH (%) → 70%",
           "pollen_entities": "花粉 · 情報源 · 選択",
           "use_announcement_hub": "自動 · Announcement Hub",
-          "general_away_cooldown_minutes": "自宅 · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "自宅 · Away · cooldown (min)",
+          "away_open_window_alert": "全員の外出後に開いた窓を通知",
+          "away_windows_target_people": "通知する人物",
+          "away_windows_delivery_channels": "窓の通知先と方法"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "「カビ指標 · RH (%) → 70%」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "pollen_entities": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 花粉 · 情報源 · 選択.",
           "use_announcement_hub": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自動 · Announcement Hub.",
-          "general_away_cooldown_minutes": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自宅 · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自宅 · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "全員の外出後に開いた窓を通知. 通知する人物 (person.*). 60 s. Announcement Hub. スマートフォン, 腕時計, タブレット.",
+          "away_windows_target_people": "通知する人物 (person.*) - Announcement Hub: スマートフォン, 腕時計, タブレット, その他の端末. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "窓の通知先と方法: スマートフォン 通知 / TTS 音声, 腕時計 通知 / TTS 音声, タブレット 通知 / TTS 音声. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "無効 · 湿度 · 設定",
       "device_runtime_invalid": "無効 · 電力 · 設定",
       "invalid_setup_rooms": "無効: 監視する部屋",
-      "invalid_room_source": "無効: 部屋 · 情報源"
+      "invalid_room_source": "無効: 部屋 · 情報源",
+      "invalid_away_windows_recipients": "通知する人物; 窓の通知先と方法. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "無効: 監視する部屋",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "ブラインドを開閉する前に通知"
+      },
+      "home_away_open_window_alert": {
+        "name": "全員の外出後に開いた窓を通知"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "目標 · 設定"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "スマートフォン - 通知",
+        "mobile_tts": "スマートフォン - TTS 音声",
+        "watch_notification": "腕時計 - 通知",
+        "watch_tts": "腕時計 - TTS 音声",
+        "tablet_notification": "タブレット - 通知",
+        "tablet_tts": "タブレット - TTS 音声",
+        "other_notification": "その他の端末 - 通知",
+        "other_tts": "その他の端末 - TTS 音声"
       }
     }
   },
