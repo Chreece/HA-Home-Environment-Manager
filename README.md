@@ -21,10 +21,17 @@
 
 # Home Environment Manager for Home Assistant
 
-> **New opt-in beta: [v0.6.0b49](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b49).** Stable remains v0.5.1. Beta49 supports numerical presence counters for Home and room presence, sends the open-window alert immediately on verified empty-home evidence and repairs automatic/PID DRY selection for native dehumidifying climate devices.
+> **New opt-in beta: [v0.6.0b50](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b50).** Stable remains v0.5.1. Beta50 fixes the missing Away/Home/Sleep/Comfort preset on PID and Automatic managed climate entities, including native DRY-only dehumidifiers and all other supported equipment.
 
-**Update with HACS:** Home Environment Manager - Redownload/version selection - enable Show beta versions - select **v0.6.0b49** - restart Home Assistant.
+**Update with HACS:** Home Environment Manager - Redownload/version selection - enable Show beta versions - select **v0.6.0b50** - restart Home Assistant.
 
+## Beta 50 - Effective climate presets match actual room targets
+
+The logical managed climate UI previously showed **no saved preset** (`none`) even while the controller was actually regulating using Away targets, especially visible on PID DRY-only controllers. With **Automatic** or **PID**, `preset_mode` now always matches the effective **Home, Comfort, Away, Sleep, or Eco** profile used for that room's temperature/humidity targets. A saved explicit preset override still wins. Home Assistant Person/number occupancy and sleep transitions update the selected preset automatically; no physical HVAC commands are issued by reading or displaying it.
+
+This shared fix covers native heating/cooling/drying `climate.*`, native humidifiers/dehumidifiers, fans and logical switch/percentage controllers. With verified Away, a dry-only PID controller should show **HVAC mode DRY**, **preset Away**, its **current RH**, and the **Away target RH**, even when its physical compressor is safely OFF/Idle. Technical attributes identify the profile source, saved override, and room/home evidence for diagnostics.
+
+**Preset Away is not a command to switch off or bypass equipment safeguards.** The existing physical command authorization, window/contact safety, DRY mode qualifications, minimum compressor ON/OFF times, manual overrides and prior beta49 numeric occupancy behavior remain unchanged.
 ## Beta 49 - Numerical person counts and native climate drying
 
 Home and room presence options now accept explicit **number.***, **input_number.***, or recognized numeric person/occupancy sensors. A finite **0** means no occupants; positive numbers mean present; unavailable/unknown/non-numeric values never mean zero. Explicitly configured sources define who is home, rather than adding unrelated Person trackers. After the home transitions from presence to a confirmed zero-person state, the existing opt-in open-window message sends **immediately**, with no artificial 60-second wait. Existing climate Away settings and hardware permissions are unchanged.
