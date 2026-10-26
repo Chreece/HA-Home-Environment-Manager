@@ -145,6 +145,14 @@ def test_sleep_pause_takes_priority_over_absence_off(adapter):
         "held","sleep_room_control_paused"
     )
     assert device_permission(device,"unoccupied","away",None)==(
+        "eligible","device_policy_approved"
+    )
+    # Confirmed Away removes sleep uncertainty, but it never overrides a
+    # positive sleeping-room indication or the PAUSE policy at home.
+    assert device_permission(device,"unoccupied","away",True)==(
+        "held","sleep_room_control_paused"
+    )
+    assert device_permission(device,"unoccupied","home",None)==(
         "held","sleep_room_evidence_unknown"
     )
     assert device_permission(device,"unoccupied","away",False)[0]=="absent"
