@@ -264,6 +264,44 @@
   // localized measurement names and show universally understood sensor units.
   const MOLD_INPUT_WARNING_LABELS = {"en":{"calibration":"Measure and save the coldest-surface temperature in Room settings","indoor_temperature":"Room temperature sensor has no valid reading","outdoor_temperature":"Selected weather entity has no usable outdoor temperature","humidity":"No valid nonzero room humidity readings available","calculation":"Mold estimate cannot be calculated from current values"},"de":{"calibration":"Temperatur der kältesten Oberfläche in den Raumeinstellungen messen und speichern","indoor_temperature":"Raumtemperatursensor liefert keinen gültigen Messwert","outdoor_temperature":"Ausgewählte Wetterentität liefert keine gültige Außentemperatur","humidity":"Keine gültigen Raumfeuchtewerte über 0 % verfügbar","calculation":"Schimmelindikator kann nicht berechnet werden"},"el":{"calibration":"Μέτρησε και αποθήκευσε τη θερμοκρασία της πιο κρύας επιφάνειας στις ρυθμίσεις χώρου","indoor_temperature":"Δεν υπάρχει έγκυρη μέτρηση θερμοκρασίας δωματίου","outdoor_temperature":"Η επιλεγμένη οντότητα καιρού δεν δίνει έγκυρη εξωτερική θερμοκρασία","humidity":"Δεν υπάρχουν έγκυρες μετρήσεις υγρασίας δωματίου πάνω από 0%","calculation":"Δεν είναι δυνατός ο υπολογισμός της ένδειξης μούχλας"},"fr":{"calibration":"Mesurez et enregistrez la température du point le plus froid dans les paramètres de la pièce","indoor_temperature":"Aucune température intérieure valide n'est disponible","outdoor_temperature":"L'entité météo choisie ne fournit pas de température extérieure valide","humidity":"Aucune humidité ambiante valide supérieure à 0 % disponible","calculation":"Impossible de calculer l'indicateur de moisissure"},"es":{"calibration":"Mide y guarda la temperatura de la superficie más fría en la configuración de la habitación","indoor_temperature":"No hay una lectura válida de temperatura interior","outdoor_temperature":"La entidad meteorológica seleccionada no proporciona temperatura exterior válida","humidity":"No hay humedad interior válida superior al 0 % disponible","calculation":"No se puede calcular el indicador de moho"}};
 
+  // Home Assistant translates enum sensor states using the same keys. Keep
+  // short independent fallbacks for cards opened before the locale loads.
+  // New/unknown codes are still shown as words, never internal snake_case.
+  const CONTROLLER_STATUS_FALLBACK = {
+    en: {
+      startup_warmup:'Waiting for startup checks to finish',
+      pid_output_inactive:'PID demand is present, but the output is off',
+      within_target_band:'Within the configured target range',
+      sleep_room_evidence_unknown:'Cannot verify whether this room is sleeping',
+      minimum_off_hold:'Waiting for the minimum safe OFF time',
+      minimum_on_hold:'Waiting for the minimum safe ON time',
+      paused:'Automatic control is paused',
+      controlling:'Automatic control is active',
+      unrecognized_status:'Unknown controller state; see status_code',
+    },
+    de: {
+      startup_warmup:'Warte auf Abschluss der Startprüfung',
+      pid_output_inactive:'PID-Anforderung vorhanden, Ausgang derzeit ausgeschaltet',
+      within_target_band:'Innerhalb des eingestellten Zielbereichs',
+      sleep_room_evidence_unknown:'Schlafstatus dieses Raums ist unklar',
+      minimum_off_hold:'Warte auf sichere Mindest-Ausschaltzeit',
+      minimum_on_hold:'Warte auf sichere Mindestlaufzeit',
+      paused:'Automatische Regelung ist pausiert',
+      controlling:'Automatische Regelung ist aktiv',
+      unrecognized_status:'Unbekannter Reglerzustand; status_code prüfen',
+    },
+    el: {
+      startup_warmup:'Αναμονή ολοκλήρωσης ελέγχων εκκίνησης',
+      pid_output_inactive:'Το PID ζητά λειτουργία, αλλά η έξοδος είναι κλειστή',
+      within_target_band:'Εντός του καθορισμένου εύρους στόχου',
+      sleep_room_evidence_unknown:'Άγνωστη κατάσταση ύπνου δωματίου',
+      minimum_off_hold:'Αναμονή ελάχιστου χρόνου εκτός λειτουργίας',
+      minimum_on_hold:'Αναμονή ελάχιστου χρόνου λειτουργίας',
+      paused:'Η αυτόματη λειτουργία έχει τεθεί σε παύση',
+      controlling:'Η αυτόματη ρύθμιση λειτουργεί',
+      unrecognized_status:'Άγνωστη κατάσταση ελεγκτή· έλεγξε το status_code',
+    },
+  };
   const RTL_LANGUAGES = new Set(['ar', 'he', 'fa', 'ur']);
   function cardLanguage(code) {
     const tag = String(code || 'en').replaceAll('_','-').toLowerCase();
@@ -924,6 +962,23 @@
 
     _language() {
       return cardLanguage(this._hass?.language);
+    }
+    _controllerStatusLabel(code) {
+      const key=String(code ?? '').trim();
+      if (!key) return this._t('missing');
+      // Keep canonical internal codes in state/history/automations. Only the
+      // displayed text is translated. HA language may differ from integration
+      // announcement language; use the viewer's active locale.
+      const tr=this._hass?.localize?.(
+        'component.environment_manager.entity.sensor.equipment_control_status.state.'+key);
+      if (typeof tr==='string' && tr.trim() && tr!==key) return tr;
+      const root=this._language();
+      const fallback=CONTROLLER_STATUS_FALLBACK[root] || CONTROLLER_STATUS_FALLBACK.en;
+      if (fallback[key]) return fallback[key];
+      // Future statuses must remain intelligible before adding new strings.
+      const readable=key.replaceAll('_',' ').replace(/\b(pid|hvac|co2|rh|pwm|ac)\b/gi,
+        (part)=>part.toUpperCase());
+      return readable.charAt(0).toUpperCase()+readable.slice(1);
     }
 
     _t(key) {
@@ -1619,7 +1674,7 @@
           '>'+escape(fanCapacityLabels[13])+'</button>' : '';
         const capacityStatus=attrs.controller_status?.pid_fan_capacity;
         const capacitySummary=control==='pid' && capacityStatus ?
-          '<small>'+escape(capacityStatus.status||'')+
+          '<small>'+escape(this._controllerStatusLabel(capacityStatus.status))+
           (typeof capacityStatus.compensated_duty_percent==='number'
             ? ' · '+escape(fanCapacityLabels[15])+': '+
               escape(this._format(capacityStatus.compensated_duty_percent))+'%' : '')+
@@ -1663,7 +1718,7 @@
           '</strong> '+this._icon('mdi:open-in-new')+'</button>'+
           '<div class="managed-status">'+escape(entry.entityId)+
           ' · '+escape(state.state)+
-          (status ? ' · '+escape(status.replaceAll('_',' ')) : '')+'</div>'+
+          (status ? ' · '+escape(this._controllerStatusLabel(status)) : '')+'</div>'+
           method+calibrationMethod+pidInputs+apply+
           capSelectors+capacityInput+applyCapacity+capacitySummary+
           editors.join('')+'</section>';
@@ -1734,13 +1789,13 @@
       ].filter(Boolean).join('');
       const controllerDetails=controllers.filter((part)=>
         part.status!=='advisory_only' && part.status!=='disabled').map((part)=>
-        '<small>'+escape(part.label)+': '+escape(String(part.status).replaceAll('_',' '))+
+        '<small>'+escape(part.label)+': '+escape(this._controllerStatusLabel(part.status))+
         '</small>').join('');
       const humidityDetails=humidity.status==='advisory' ?
-        '<small>'+escape(l.moistureAction)+': '+escape(humidity.action||'idle')+
+        '<small>'+escape(l.moistureAction)+': '+escape(this._controllerStatusLabel(humidity.action||'idle'))+
         (typeof humidity.measured_rh==='number' ?
           ' · '+escape(l.currentHumidity)+': '+escape(this._format(humidity.measured_rh))+'%' : '')+
-        ' · '+escape(l.sourceStatus)+': '+escape(equipment.humidity_evidence||'unknown')+
+        ' · '+escape(l.sourceStatus)+': '+escape(this._controllerStatusLabel(equipment.humidity_evidence||'unknown'))+
         '</small>' : '';
       const air=p.air_actions || {};
       const extract=air.extraction || {};
@@ -1778,7 +1833,7 @@
       const heldDetails=Object.entries(purposes)
         .filter(([,data])=>data?.status==='held').slice(0,3)
         .map(([kind,data])=>'<small>'+escape(l.heldPurpose)+' · '+
-          escape(kind)+': '+escape(String(data.reason||'unverified').replaceAll('_',' '))+
+          escape(kind)+': '+escape(this._controllerStatusLabel(data.reason||'unverified'))+
           '</small>').join('');
       const reason=(p.reason==='secondary_thermal_driver_pending' && active)
         ? '' : p.reason==='environment_only_no_hvac' ? l.environmentOnly
@@ -1789,7 +1844,7 @@
         : '<span>'+escape(l.temperatureMissing)+'</span>';
       const selected=p.temperature_evidence || {};
       const sourceDiagnostic=p.temperature_c==null && selected.status &&
-        selected.status!=='ready' ? '<small>'+escape(selected.status.replaceAll('_',' '))+
+        selected.status!=='ready' ? '<small>'+escape(this._controllerStatusLabel(selected.status))+
           (selected.entity_ids?.length ? ' · '+
             escape(selected.entity_ids.slice(0,3).join(', ')) : '')+
           '</small>' : '';
@@ -1828,6 +1883,7 @@
       return '<section class="pid-panel"><div class="pid-title">' +
         this._icon('mdi:thermostat')+'<strong>'+escape(l.title)+'</strong><span>'+escape(title)+
         '</span></div><div class="pid-metrics">'+metrics.join('')+'</div>'+
+        '<small>'+escape(this._controllerStatusLabel(pid.status))+'</small>'+
         '<small>'+escape(l.caution)+'</small>'+button+'</section>';
     }
 
@@ -1869,7 +1925,7 @@
       const toggle=managed?'<button type="button" data-shade-switch="'+escape(managed.id)+
         '" data-shade-area="'+escape(room.area_id)+'" class="shade-toggle">'+
         escape(enabled?words[1]:words[2])+'</button>':'';
-      const status=String(report.status||'disabled').replaceAll('_',' ');
+      const status=this._controllerStatusLabel(report.status||'disabled');
       const list=covers.map((entityId)=>{
         const state=this._hass?.states?.[entityId];
         const title=state?.attributes?.friendly_name || entityId;
