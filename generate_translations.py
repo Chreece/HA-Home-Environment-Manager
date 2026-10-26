@@ -417,3 +417,7 @@ apply_shading_i18n(root)
 
 from apply_pid_sort_i18n import apply_pid_sort_i18n
 apply_pid_sort_i18n(root)
+
+# Final pass: personal away-window alert options and native Home switch.
+from apply_away_windows_i18n import apply_away_windows_i18n
+apply_away_windows_i18n(root)
