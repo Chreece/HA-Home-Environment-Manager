@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: beta49-numeric-presence-dry-mode
+  group: beta49-numeric-presence-dry-mode-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
