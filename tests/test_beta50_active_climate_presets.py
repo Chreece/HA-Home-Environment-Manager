@@ -147,3 +147,24 @@ def test_same_effective_profile_reported_for_dry_held_manual_and_native_capabili
         assert facade.preset_mode == facade.extra_state_attributes["active_profile"] == "away"
         assert facade.hvac_mode in facade.hvac_modes
         assert h.hass.services.calls == []
+
+
+def test_climate_only_pid_room_computes_away_from_selected_number_occupancy(platforms):
+    """No environment-history/climate_plan is required for Away on a device hub."""
+    from test_discovery import MockState
+    h = home(platforms.runtime, domain="climate", mode="pid", state="off")
+    h.state.attributes.update(hvac_modes=["off", "dry"], supported_features=0)
+    counter = MockState("number.residents_at_home", 0)
+    h.hass._values[counter.entity_id] = counter
+    h.manager.entry.data["occupancy_global"] = {
+        "home_trackers": [counter.entity_id], "away_cooldown_minutes": 0}
+    h.manager.plan.environment.clear()
+    facade = platforms.climate.ManagedClimate(h.manager, h.spec)
+    assert model.plan_for(h.manager, h.spec)["away"] == "away"
+    assert facade.hvac_mode == "dry"
+    assert facade.preset_mode == "away"
+    counter.state = "1"
+    assert facade.preset_mode != "away"
+    counter.state = "unavailable"
+    assert facade.preset_mode != "away"
+    assert h.hass.services.calls == []
