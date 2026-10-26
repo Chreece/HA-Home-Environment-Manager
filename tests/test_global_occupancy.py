@@ -163,6 +163,7 @@ def test_sleep_pause_takes_priority_over_absence_off(adapter):
     assert device_permission(device,"unoccupied","away",None)==(
         "eligible","device_policy_approved"
     )
+    device["presence_requirement"]="home"
     assert device_permission(device,"unoccupied","away",False)[0]=="absent"
     device["sleep_behavior"]="sleep_targets"
     assert device_permission(device,"unoccupied","away",None)[0]=="held"
