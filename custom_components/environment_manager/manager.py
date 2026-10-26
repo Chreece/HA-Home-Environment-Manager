@@ -58,6 +58,7 @@ from .logic import Reading, Reason, Recommendation
 from .logic import Plan, evaluate
 from .messages import announcement, language_code
 from .away_windows import AwayWindowAlert, watched_entities
+from .home_away_continuity import HomeAwayContinuity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -82,6 +83,7 @@ class AirQualityManager:
         self._environment_history = EnvironmentHistory()
         self._environment_store: Any | None = None
         self.away_windows = AwayWindowAlert(self)
+        self.home_away_continuity = HomeAwayContinuity(self.hass, self.entry.entry_id)
         self.equipment = EquipmentRuntime(self)
         from .shade_cooling import ShadeCoolingController
         self.shading = ShadeCoolingController(self)
@@ -112,6 +114,13 @@ class AirQualityManager:
     @property
     def settings(self) -> dict[str, Any]:
         return {**self.entry.data, **self.entry.options}
+
+    def effective_home_policy(self) -> dict[str, Any]:
+        """Fresh room/home evidence with a reboot-persistent Away timer."""
+        raw = self.settings.get(CONF_OCCUPANCY_GLOBAL, {})
+        return self.home_away_continuity.settings(
+            raw if isinstance(raw, dict) else {}
+        )
 
     @property
     def thresholds(self) -> dict[str, float]:
@@ -272,9 +281,7 @@ class AirQualityManager:
         environment["__outside__"] = {"pollen": pollen}
         from .device_activation import planning_rooms
         room_climate_configs=planning_rooms(self)
-        shared_presence=config.get(CONF_OCCUPANCY_GLOBAL,{})
-        if not isinstance(shared_presence,dict):
-            shared_presence={}
+        shared_presence=self.effective_home_policy()
         for key in ("occupied_rooms_entity","sleep_rooms_entity"):
             entity=shared_presence.get(key)
             if isinstance(entity,str):
@@ -552,6 +559,9 @@ class AirQualityManager:
             _LOGGER.debug("Home Assistant storage not available in test runtime")
         except Exception:
             _LOGGER.exception("Environment history could not be restored; starting empty")
+        # Reuse only source-verified empty-home intervals through restart;
+        # live presence will be rechecked before every profile/actuation.
+        await self.home_away_continuity.async_start()
         # Load latching PID manual overrides and expected targets first.
         # If its storage fails, the PID controller remains fail-closed.
         await self.pid.async_start()
@@ -1114,6 +1124,7 @@ class AirQualityManager:
             if pending:
                 await asyncio.gather(*pending,return_exceptions=True)
             self._tasks.clear()
+            await self.home_away_continuity.async_stop()
             if self._environment_store is not None:
                 try:
                     await self._environment_store.async_save(
