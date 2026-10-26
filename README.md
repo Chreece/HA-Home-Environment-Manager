@@ -21,10 +21,17 @@
 
 # Home Environment Manager for Home Assistant
 
-> **New opt-in beta: [v0.6.0b50](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b50).** Stable remains v0.5.1. Beta50 fixes the missing Away/Home/Sleep/Comfort preset on PID and Automatic managed climate entities, including native DRY-only dehumidifiers and all other supported equipment.
+> **New opt-in beta: [v0.6.0b51](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b51).** Stable remains v0.5.1. Beta51 fixes Home being incorrectly selected after a restart when the configured presence sources still show everyone away, and makes a room-only Away cooldown continue from its saved observation rather than restarting after reboot.
 
-**Update with HACS:** Home Environment Manager - Redownload/version selection - enable Show beta versions - select **v0.6.0b50** - restart Home Assistant.
+**Update with HACS:** Home Environment Manager - Redownload/version selection - enable Show beta versions - select **v0.6.0b51** - restart Home Assistant.
 
+## Beta 51 - Presence-aware Away continuity across reboot
+
+The Home Environment Manager now accepts **verified Away from your specifically selected people, trackers, and numeric household counters** without letting an empty room sensor's delayed cooldown misleadingly switch the house to Home. A positive selected tracker always wins, and any unknown/unavailable selected input blocks an unverified Away decision.
+
+With **only** room-occupancy sensors or a monitored occupied-rooms list, the Away cooldown still protects against transient vacancy. Its first confirmed all-negative timestamp is persisted in HA Store and used after reboot when the exact same configured sources are verified fresh and still empty; an established absence does not restart its full delay. A return Home or changed sources invalidates the saved period.
+
+The fix applies to all managed climate devices, including DRY-only PID dehumidifiers, heat/cool thermostats and fans, via the shared occupancy/profile path. The beta50 effective Away preset, original compressor/dwell/window safety, exact device permissions and every earlier feature remain unchanged.
 ## Beta 50 - Effective climate presets match actual room targets
 
 The logical managed climate UI previously showed **no saved preset** (`none`) even while the controller was actually regulating using Away targets, especially visible on PID DRY-only controllers. With **Automatic** or **PID**, `preset_mode` now always matches the effective **Home, Comfort, Away, Sleep, or Eco** profile used for that room's temperature/humidity targets. A saved explicit preset override still wins. Home Assistant Person/number occupancy and sleep transitions update the selected preset automatically; no physical HVAC commands are issued by reading or displaying it.

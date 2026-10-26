@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0b51 - Restart-safe Away and complete presence-source cooldown evidence (beta)
+
+- Fully verified Away from explicitly selected Person/device_tracker/numeric presence counters now overrides the independent room-only empty-rooms cooldown; never mislabel a confirmed empty household as Home because HA restarted.
+- Save the first verified all-empty interval in a private per-config-entry HA Store so a real room-only Away cooldown survives restart; carry its elapsed portion forward only after fresh, source-identity-matched negative revalidation.
+- Any selected positive home/occupied state takes priority. Unknown, unavailable, stale, negative counts, source edits, and unsupported entity states never produce unverified Away.
+- Count the all-room-sensor absence cooldown from the last relevant negative source, including the occupied-rooms list, rather than prematurely using an older first source.
+- Share persisted evidence between the Manager room plan and climate-only per-device plans. Restore without automatic actuation; preserve all beta50 PID/DRY preset display, controller commissioning, temperature/humidity limits and compressor protection.
+- Add regression tests for newly empty and long-empty rooms, reboot timestamp resets, store restore, changes to source selection, contradictory sources and validation gates. Keep canonical environment_manager only.
+
 ## 0.6.0b50 - Managed climate effective Away preset and cross-device audit (beta)
 
 - Fix the missing selected preset on PID/Automatic climate entities: show the effective Home/Comfort/Away/Sleep/Eco profile already used to calculate climate targets, not the optional stored override (`none`).

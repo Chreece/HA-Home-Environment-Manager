@@ -1,16 +1,16 @@
 {
-  "version": "0.6.0b50",
+  "version": "0.6.0b51",
   "channel": "beta",
-  "release_branch": "beta/v0.6.0b50",
-  "intent": "Correct the reported missing Away preset for PID-controlled dry-only climate entities and audit the same logical-climate preset state contract for all supported physical equipment domains.",
-  "note": "Use the already-active profile derived from verified Away/Home/Comfort/Sleep evidence rather than the optional saved preset override ('none') on Automatic/PID climate facades. Never make native HVAC mode, device commissioning, windows or compressor state changes to satisfy display. Show precise origin/evidence and preserve Manual/Existing/Off semantics.",
+  "release_branch": "beta/v0.6.0b51",
+  "intent": "Preserve already-established all-away evidence and the remaining absence cooldown through Home Assistant restart; prevent empty-room presence cooldown from overwriting directly verified Away from selected Persons, trackers or numeric home counts.",
+  "note": "Fresh positive Home evidence always wins; unavailable/stale/unknown selected sources cannot establish Away. Continue room-only cooldown across reboot only with persisted verified source-bound absence and fresh post-reboot all-negative confirmation. Explicit tracker Away is independently authoritative. Preserve native climate/PID modes, device-source permissions, compressor holds, windows, no double domain/migration and previous beta50 effective presets.",
   "validation_attempt": 0,
   "changes": [
-    "Correct climate.preset_mode to show actual calculated profile when control_mode is automatic or pid; preserve explicit stored preset overrides and never show automatic occupancy as a Manual/Existing/Off preset.",
-    "Apply to DRY-only climate dehumidifiers, multi-HVAC climate, native humidifiers/dehumidifiers, fans, switch and numeric actuator climate facades using the single existing ManagedClimate class.",
-    "Retain native mode truth (DRY/HEAT/COOL/FAN_ONLY), physical OFF/IDLE behavior and all original per-device PID/authorization/window/compressor safeguards.",
-    "Add bounded diagnostics for preset_override, effective_preset, origin and home/room/sleep evidence so mismatched settings are transparent.",
-    "Test all supported endpoint classes, Home/Comfort/Away/Sleep changes, direct numeric zero-person Away evidence in a climate-only room, legacy Manual/Existing/Off behavior, explicit override and clearing override, physical OFF + minimum-off hold without commands.",
-    "Require Python 3.13/3.14, 38-locale regeneration, Node frontend, HACS/hassfest, real HA2026.10 smoke and exact flat HACS archive simulation before publishing immutable beta50."
+    "Fix home_presence precedence: any fresh positive selected source means Home, any unknown among required selected sources keeps unknown; fully verified explicit home trackers (including numeric zero counts) return Away immediately even if occupied-room list's cooldown restarted after HA reboot.",
+    "For houses with only room sensors or an occupied-room list, persist the start of the all-negative period in per-entry HA Store; survive reboot and count time already elapsed without shortening genuine new vacancy delays.",
+    "Require exact same selected source identifiers/attribute and fresh negative readings to resume a persisted interval. Drop evidence after verified home arrival or source edit; retain it but do not claim Away during unknown/offline data.",
+    "When multiple selected room sources contribute to absence, start the cooldown from the last source to become negative. Rebuild climate plans and climate-only per-device fallback using the same trusted evidence.",
+    "Add regressions for restart state timestamp reset, resumed and still-pending cooldown, numeric and Person Away precedence, unknown/positive fail-closed, configuration changes, source timestamp uncertainty and no physical actuation.",
+    "Full 3.13/3.14, 38 locale generator, frontend/HA2026.10/HACS/hassfest/flat payload publish gates; canonical environment_manager only."
   ]
 }

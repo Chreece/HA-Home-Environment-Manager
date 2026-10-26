@@ -163,11 +163,11 @@ def test_empty_occupied_rooms_means_away_only_after_cooldown(adapter):
            "home_trackers": [resident.entity_id],
            "away_cooldown_minutes": 10}
     status, reason, sources = home_presence(h, cfg)
-    assert status == "home" and reason == "no_occupied_rooms_cooldown"
+    assert status == "away" and reason == "all_selected_home_trackers_away"
     assert sources == [empty.entity_id, resident.entity_id]
     empty.last_changed = datetime.now(timezone.utc) - timedelta(minutes=11)
     empty.last_updated = empty.last_changed
-    assert home_presence(h, cfg)[:2] == ("away", "occupied_rooms_empty")
+    assert home_presence(h, cfg)[:2] == ("away", "all_selected_home_trackers_away")
     empty.state = "unavailable"
     assert home_presence(h, cfg)[0] == "unknown"
     # A positive tracker always overrules the negative or unknown room-list.

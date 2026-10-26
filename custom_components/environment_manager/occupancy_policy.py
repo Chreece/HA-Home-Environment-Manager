@@ -145,19 +145,33 @@ def _bool_presence(state: Any, minutes: float = 240) -> bool | None:
     return None
 
 
-def _after_away_cooldown(states: list[Any], minutes: Any, reason: str
-                         ) -> tuple[str, str]:
+def _after_away_cooldown(states: list[Any], minutes: Any, reason: str,
+                         *, verified_since: Any = None) -> tuple[str, str]:
     try:
         cooldown = max(0.0, min(240.0, float(minutes)))
     except (TypeError, ValueError, OverflowError):
         cooldown = 10.0
     if cooldown <= 0:
         return "away", reason
+    now = datetime.now(timezone.utc)
+    # An already-observed, source-bound absence survives HA restarts. The
+    # built-in last_changed timestamp can reset when entities are restored.
+    # Continuity is supplied only after fresh ALL-NEGATIVE revalidation.
+    resumed = None
+    try:
+        stamp = float(verified_since)
+        if math.isfinite(stamp) and 0 < stamp <= now.timestamp():
+            resumed = datetime.fromtimestamp(stamp, timezone.utc)
+    except (ValueError, TypeError, OverflowError):
+        pass
     stamps = [getattr(state, "last_changed", None) for state in states if state is not None]
     stamps = [stamp for stamp in stamps if isinstance(stamp, datetime) and stamp.tzinfo is not None]
-    if not stamps:
+    if resumed is not None:
+        elapsed = (now - resumed).total_seconds()
+    elif stamps:
+        elapsed = (now - max(stamps)).total_seconds()
+    else:
         return "unknown", "away_cooldown_start_unknown"
-    elapsed = (datetime.now(timezone.utc) - max(stamps)).total_seconds()
     if elapsed < 0:
         return "unknown", "away_cooldown_clock_invalid"
     if elapsed < cooldown * 60:
@@ -205,6 +219,7 @@ def home_presence(hass: Any, global_settings: Mapping,
     ]))
     room_values = [_bool_presence(hass.states.get(e)) for e in allowed_rooms]
     tracker_values = [_bool_presence(hass.states.get(e)) for e in allowed]
+    resumed_since = global_settings.get("_verified_absence_since")
 
     # Positive evidence has unconditional priority over contradictory/unknown
     # negative sources and old all_home configuration (which no longer vetoes
@@ -215,7 +230,11 @@ def home_presence(hass: Any, global_settings: Mapping,
     if any(value is True for value in room_values):
         return "home", "room_sensor_occupied", all_sources
 
-    if isinstance(room_entity, str) and room_entity:
+    # Positive evidence was handled above. No negative source may establish
+    # "everyone away" while another *selected* source is unavailable/unknown.
+    # A fresh occupied-room list also has priority over apparently away trackers.
+    has_room_list = isinstance(room_entity, str) and bool(room_entity)
+    if has_room_list:
         rooms, why = configured_rooms(
             hass, room_entity, global_settings.get("occupied_rooms_attribute"),
             set(), max_age_minutes=global_settings.get("source_stale_minutes", 240))
@@ -223,30 +242,35 @@ def home_presence(hass: Any, global_settings: Mapping,
             return "unknown", why, all_sources
         if rooms:
             return "home", "occupied_rooms_present", all_sources
-        state = hass.states.get(room_entity)
-        # A list stored in an attribute may change while the state string stays
-        # constant, so use last_updated as the transition evidence in that case.
-        attr = global_settings.get("occupied_rooms_attribute")
-        if state is not None and isinstance(attr, str) and attr not in ("", "__state__"):
-            proxy = type("_Stamp", (), {"last_changed": getattr(state, "last_updated", None)})()
-            status, reason = _after_away_cooldown([proxy], cooldown, "occupied_rooms_empty")
-        else:
-            status, reason = _after_away_cooldown([state], cooldown, "occupied_rooms_empty")
-        return status, reason, all_sources
-
-    if room_values:
-        if all(value is False for value in room_values):
-            status, reason = _after_away_cooldown(
-                [hass.states.get(e) for e in allowed_rooms], cooldown,
-                "all_room_sensors_unoccupied")
-            return status, reason, all_sources
-        return "unknown", "room_presence_evidence_unknown", all_sources
-
-    if not allowed:
-        return "home", "no_trackers_assume_home", []
     if any(value is None for value in tracker_values):
         return "unknown", "unverified_home_trackers", all_sources
-    return "away", "any_home_policy", all_sources
+    if any(value is None for value in room_values):
+        return "unknown", "room_presence_evidence_unknown", all_sources
+
+    # Explicit HA persons, device trackers and household number counters are
+    # direct home/away evidence. An older empty-room cooldown must not falsely
+    # change an independently verified AWAY household into HOME after reboot.
+    if allowed and all(value is False for value in tracker_values):
+        return "away", "all_selected_home_trackers_away", all_sources
+
+    if has_room_list:
+        state = hass.states.get(room_entity)
+        # Attribute data may change without changing the entity's state.
+        attr = global_settings.get("occupied_rooms_attribute")
+        if state is not None and isinstance(attr, str) and attr not in ("", "__state__"):
+            state = type("_Stamp", (), {"last_changed": getattr(state, "last_updated", None)})()
+        status, reason = _after_away_cooldown(
+            [state, *(hass.states.get(e) for e in allowed_rooms)],
+            cooldown, "occupied_rooms_empty",
+            verified_since=resumed_since,
+        )
+        return status, reason, all_sources
+    if room_values:
+        return (*_after_away_cooldown(
+            [hass.states.get(e) for e in allowed_rooms], cooldown,
+            "all_room_sensors_unoccupied", verified_since=resumed_since,
+        ), all_sources)
+    return "home", "no_trackers_assume_home", []
 
 
 def room_presence(hass: Any, area: str, settings: Mapping,
