@@ -233,6 +233,7 @@ def test_room_setup_translation_generator_reproduces_every_catalog(tmp_path, mon
     monkeypatch.syspath_prepend(str(root))
     from apply_room_setup_i18n import apply_room_setup_i18n
     from apply_beta16_i18n import apply_beta16_i18n
+    from apply_away_windows_i18n import apply_away_windows_i18n
     component = root / "custom_components/environment_manager"
     for name in ("strings.json", "compact_locales.json"):
         shutil.copy(component / name, tmp_path / name)
@@ -241,6 +242,7 @@ def test_room_setup_translation_generator_reproduces_every_catalog(tmp_path, mon
     original = {p: p.read_bytes() for p in paths}
     apply_room_setup_i18n(tmp_path)
     apply_beta16_i18n(tmp_path)
+    apply_away_windows_i18n(tmp_path)
     assert {p: p.read_bytes() for p in paths} == original
 
 
