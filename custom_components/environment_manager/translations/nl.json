@@ -197,7 +197,10 @@
           "use_mold_indicator": "Schimmelindicator · RH (%) → 70%",
           "pollen_entities": "Pollen · bron · Kiezen",
           "use_announcement_hub": "Automatische · Announcement Hub",
-          "general_away_cooldown_minutes": "Thuis · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Thuis · Away · cooldown (min)",
+          "away_open_window_alert": "Waarschuw voor open ramen wanneer iedereen weg is",
+          "away_windows_target_people": "Personen voor waarschuwingen",
+          "away_windows_delivery_channels": "Meldingskanalen voor open ramen"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 Schimmelindicator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Pollen · bron · Kiezen.",
           "use_announcement_hub": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Automatische · Announcement Hub.",
-          "general_away_cooldown_minutes": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Thuis · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Thuis · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Waarschuw voor open ramen wanneer iedereen weg is. Personen voor waarschuwingen (person.*). 60 s. Announcement Hub. Telefoon, Horloge, Tablet.",
+          "away_windows_target_people": "Personen voor waarschuwingen (person.*) - Announcement Hub: Telefoon, Horloge, Tablet, Ander apparaat. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Meldingskanalen voor open ramen: Telefoon Melding / TTS-spraak, Horloge Melding / TTS-spraak, Tablet Melding / TTS-spraak. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Schimmelindicator · 🧊 °C ⚠",
       "invalid_mold_calibration": "Schimmelindicator · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "Ongeldig: Te bewaken kamers",
-      "invalid_room_source": "Ongeldig: Kamer · bron"
+      "invalid_room_source": "Ongeldig: Kamer · bron",
+      "invalid_away_windows_recipients": "Personen voor waarschuwingen; Meldingskanalen voor open ramen. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - al ingesteld.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Schimmelindicator · RH (%) → 70%",
           "pollen_entities": "Pollen · bron · Kiezen",
           "use_announcement_hub": "Automatische · Announcement Hub",
-          "general_away_cooldown_minutes": "Thuis · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Thuis · Away · cooldown (min)",
+          "away_open_window_alert": "Waarschuw voor open ramen wanneer iedereen weg is",
+          "away_windows_target_people": "Personen voor waarschuwingen",
+          "away_windows_delivery_channels": "Meldingskanalen voor open ramen"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 Schimmelindicator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Pollen · bron · Kiezen.",
           "use_announcement_hub": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Automatische · Announcement Hub.",
-          "general_away_cooldown_minutes": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Thuis · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Thuis · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Waarschuw voor open ramen wanneer iedereen weg is. Personen voor waarschuwingen (person.*). 60 s. Announcement Hub. Telefoon, Horloge, Tablet.",
+          "away_windows_target_people": "Personen voor waarschuwingen (person.*) - Announcement Hub: Telefoon, Horloge, Tablet, Ander apparaat. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Meldingskanalen voor open ramen: Telefoon Melding / TTS-spraak, Horloge Melding / TTS-spraak, Tablet Melding / TTS-spraak. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Ongeldig · Vochtigheid · instellingen",
       "device_runtime_invalid": "Ongeldig · Vermogen · instellingen",
       "invalid_setup_rooms": "Ongeldig: Te bewaken kamers",
-      "invalid_room_source": "Ongeldig: Kamer · bron"
+      "invalid_room_source": "Ongeldig: Kamer · bron",
+      "invalid_away_windows_recipients": "Personen voor waarschuwingen; Meldingskanalen voor open ramen. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "Ongeldig: Te bewaken kamers",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Aankondigen voordat zonwering opent of sluit"
+      },
+      "home_away_open_window_alert": {
+        "name": "Waarschuw voor open ramen wanneer iedereen weg is"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "doelwaarde · instellingen"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Telefoon - Melding",
+        "mobile_tts": "Telefoon - TTS-spraak",
+        "watch_notification": "Horloge - Melding",
+        "watch_tts": "Horloge - TTS-spraak",
+        "tablet_notification": "Tablet - Melding",
+        "tablet_tts": "Tablet - TTS-spraak",
+        "other_notification": "Ander apparaat - Melding",
+        "other_tts": "Ander apparaat - TTS-spraak"
       }
     }
   },
