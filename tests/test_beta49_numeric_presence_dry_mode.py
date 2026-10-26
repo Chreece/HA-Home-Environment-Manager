@@ -6,7 +6,7 @@ from types import SimpleNamespace
 
 import pytest
 from test_discovery import FakeHass, MockState, adapter
-from test_equipment_control import home, tick
+from test_equipment_control import home, tick, runtime_module
 from custom_components.environment_manager import equipment_model as model
 from custom_components.environment_manager.dry_mode import automatic_mode
 
@@ -77,6 +77,7 @@ def test_number_presence_choices_are_user_selectable(monkeypatch, adapter):
         state = MockState(entity,value)
         flow.hass._values[entity] = state
         flow.hass._entity_areas[entity] = "living"
+    asyncio.run(flow.async_step_init())
     sources=flow._general_options()
     for key in ("general_home_trackers","general_room_occupancy_sensors"):
         available={row["value"] for row in sources[key]}
