@@ -197,7 +197,10 @@
           "use_mold_indicator": "Pokazatelj plijesni · RH (%) → 70%",
           "pollen_entities": "Pelud · izvor · Odaberi",
           "use_announcement_hub": "Automatsko · Announcement Hub",
-          "general_away_cooldown_minutes": "Dom · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Dom · Away · cooldown (min)",
+          "away_open_window_alert": "Upozori na otvorene prozore kada svi odu",
+          "away_windows_target_people": "Osobe za obavijest",
+          "away_windows_delivery_channels": "Kanali obavijesti o prozorima"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 Pokazatelj plijesni · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · Pelud · izvor · Odaberi.",
           "use_announcement_hub": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · Automatsko · Announcement Hub.",
-          "general_away_cooldown_minutes": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · Dom · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · Dom · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Upozori na otvorene prozore kada svi odu. Osobe za obavijest (person.*). 60 s. Announcement Hub. Telefon, Sat, Tablet.",
+          "away_windows_target_people": "Osobe za obavijest (person.*) - Announcement Hub: Telefon, Sat, Tablet, Drugi uređaj. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Kanali obavijesti o prozorima: Telefon Obavijest / TTS govor, Sat Obavijest / TTS govor, Tablet Obavijest / TTS govor. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Pokazatelj plijesni · 🧊 °C ⚠",
       "invalid_mold_calibration": "Pokazatelj plijesni · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "Neispravno: Sobe za praćenje",
-      "invalid_room_source": "Neispravno: Soba · izvor"
+      "invalid_room_source": "Neispravno: Soba · izvor",
+      "invalid_away_windows_recipients": "Osobe za obavijest; Kanali obavijesti o prozorima. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - već postavljeno.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Pokazatelj plijesni · RH (%) → 70%",
           "pollen_entities": "Pelud · izvor · Odaberi",
           "use_announcement_hub": "Automatsko · Announcement Hub",
-          "general_away_cooldown_minutes": "Dom · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Dom · Away · cooldown (min)",
+          "away_open_window_alert": "Upozori na otvorene prozore kada svi odu",
+          "away_windows_target_people": "Osobe za obavijest",
+          "away_windows_delivery_channels": "Kanali obavijesti o prozorima"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 Pokazatelj plijesni · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · Pelud · izvor · Odaberi.",
           "use_announcement_hub": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · Automatsko · Announcement Hub.",
-          "general_away_cooldown_minutes": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · Dom · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · Dom · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Upozori na otvorene prozore kada svi odu. Osobe za obavijest (person.*). 60 s. Announcement Hub. Telefon, Sat, Tablet.",
+          "away_windows_target_people": "Osobe za obavijest (person.*) - Announcement Hub: Telefon, Sat, Tablet, Drugi uređaj. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Kanali obavijesti o prozorima: Telefon Obavijest / TTS govor, Sat Obavijest / TTS govor, Tablet Obavijest / TTS govor. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Neispravno · Vlažnost · postavke",
       "device_runtime_invalid": "Neispravno · Snaga · postavke",
       "invalid_setup_rooms": "Neispravno: Sobe za praćenje",
-      "invalid_room_source": "Neispravno: Soba · izvor"
+      "invalid_room_source": "Neispravno: Soba · izvor",
+      "invalid_away_windows_recipients": "Osobe za obavijest; Kanali obavijesti o prozorima. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "Neispravno: Sobe za praćenje",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Najavi prije otvaranja ili zatvaranja roleta"
+      },
+      "home_away_open_window_alert": {
+        "name": "Upozori na otvorene prozore kada svi odu"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "cilj · postavke"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Telefon - Obavijest",
+        "mobile_tts": "Telefon - TTS govor",
+        "watch_notification": "Sat - Obavijest",
+        "watch_tts": "Sat - TTS govor",
+        "tablet_notification": "Tablet - Obavijest",
+        "tablet_tts": "Tablet - TTS govor",
+        "other_notification": "Drugi uređaj - Obavijest",
+        "other_tts": "Drugi uređaj - TTS govor"
       }
     }
   },
