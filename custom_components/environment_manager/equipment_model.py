@@ -493,11 +493,23 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
     known = {item.area_id for item in specs(manager)}
     occupancy, evidence, sensors = room_presence(manager.hass, spec.area_id, room, shared, known_areas=known)
     home, home_evidence, trackers = home_presence(manager.hass, shared)
-    sleeping, sleep_evidence = sleep_presence(manager.hass, spec.area_id, shared, known)
+    # Climate-only controller hubs do not always have a room-wide plan.
+    # Reconstruct local sleep schedule and source evidence, not an accidental
+    # None returned simply because no optional sleeping-room list exists.
+    from .climate_schedule import scheduled_sleep
+    from .occupancy_policy import controlled_sleep_presence
+    import time
+    zone = getattr(getattr(manager.hass, "config", None), "time_zone", None) or "UTC"
+    local_sleeping, local_reason = scheduled_sleep(room, time.time(), zone)
+    sleeping, sleep_evidence = controlled_sleep_presence(
+        manager.hass, spec.area_id, shared, known, home_status=home,
+        local_sleeping=local_sleeping, local_reason=local_reason,
+    )
     return {"window_safe": (chosen_contacts is None or len(contacts) == len(chosen_contacts)) and all(s.state == "off" for s in contacts),
             "window_contacts": [s.entity_id for s in contacts],
             "occupancy": occupancy, "occupancy_evidence": evidence,
             "away": home, "away_evidence": home_evidence, "sleeping": sleeping,
+            "sleep_schedule_evidence": sleep_evidence,
             "presence_entities": sensors, "tracker_entities": trackers,
             "global_presence": shared, "known_presence_areas": sorted(known)}
 

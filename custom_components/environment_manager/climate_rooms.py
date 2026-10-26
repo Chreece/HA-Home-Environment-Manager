@@ -181,24 +181,16 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
                      else "no_contact_configured" if not room.windows else
                      "all_contacts_closed" if window_safe else "open_or_unavailable_contact")
     time_zone=getattr(getattr(hass,"config",None),"time_zone",None) or "UTC"
-    sleeping,sleep_evidence=scheduled_sleep(
+    local_sleeping,local_evidence=scheduled_sleep(
         settings,time.time() if now is None else now,time_zone,
     )
-    # Local schedule is trustworthy even when inactive. Only a CONFIGURED
-    # but broken global sleep-room source makes sleep evidence unknown.
-    sleep_verified=True
-    if isinstance(global_presence,dict) and global_presence.get("sleep_rooms_entity"):
-        from .occupancy_policy import sleep_presence
-        global_sleep,global_reason=sleep_presence(
-            hass,area,global_presence,known_areas or {area})
-        if global_sleep is True:
-            sleeping,sleep_evidence=True,global_reason
-            sleep_verified=True
-        elif global_sleep is None:
-            sleep_verified=False
-            sleep_evidence=global_reason
-        else:
-            sleep_verified=True
+    from .occupancy_policy import controlled_sleep_presence
+    sleeping,sleep_evidence=controlled_sleep_presence(
+        hass,area,global_presence or {},known_areas or {area},
+        home_status=at_home,local_sleeping=local_sleeping,
+        local_reason=local_evidence,
+    )
+    sleep_verified=sleeping is not None
     # The legacy diagnostic occupancy helper may conservatively report
     # "occupied" when evidence is missing/partial. That is safe for hold logic,
     # but Comfort must mean VERIFIED room presence. Feed unknown into profile

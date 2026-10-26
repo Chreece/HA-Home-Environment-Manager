@@ -21,10 +21,17 @@
 
 # Home Environment Manager for Home Assistant
 
-> **New opt-in beta: [v0.6.0b51](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b51).** Stable remains v0.5.1. Beta51 fixes Home being incorrectly selected after a restart when the configured presence sources still show everyone away, and makes a room-only Away cooldown continue from its saved observation rather than restarting after reboot.
+> **New opt-in beta: [v0.6.0b52](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b52).** Stable remains v0.5.1. Beta52 fixes PID/Automatic heating being blocked by an unknown or unconfigured sleeping-room source, including on Home Assistant restart while everyone is verified Away. It preserves the full native thermostat/PID safety logic.
 
-**Update with HACS:** Home Environment Manager - Redownload/version selection - enable Show beta versions - select **v0.6.0b51** - restart Home Assistant.
+**Update with HACS:** Home Environment Manager - Redownload/version selection - Show beta versions - select **v0.6.0b52** - restart Home Assistant.
 
+## Beta 52 - Sleeping-room evidence should not disable legitimate heating
+
+A managed climate previously reported `sleep_room_evidence_unknown` and refused to heat when an optional `sleep_rooms_entity` was missing/stale and a device had **Pause during sleep** or **Sleep targets** enabled. This could occur even when all selected household people/count sensors verified **Away** or when a climate-only room never had a sleep source configured.
+
+Beta52 now uses consistent live sleeping-room resolution during planning and physical command checks. Missing optional sleep-room configuration is normal, a confirmed empty house resolves an unavailable sleep source as no sleeping occupants, and **Sleep targets** never means stop heating. An explicitly active local sleep schedule, a positively detected sleeping occupant and an intentional Pause policy retain their protective behavior. The same fix applies to the quiet-fan context and to rooms using PID-only controllers.
+
+Check the new **Controller status** attributes `sleep_rooms_entity`, `sleep_rooms_source_state`, `sleeping`, `sleep_evidence`, `sleep_behavior`, `home_presence_status`, `home_presence_reason`, and `effective_preset`. Existing `within_target_band`, minimum-off, window and device-commissioning statuses still accurately block physical heating if their normal conditions are not satisfied.
 ## Beta 51 - Presence-aware Away continuity across reboot
 
 The Home Environment Manager now accepts **verified Away from your specifically selected people, trackers, and numeric household counters** without letting an empty room sensor's delayed cooldown misleadingly switch the house to Home. A positive selected tracker always wins, and any unknown/unavailable selected input blocks an unverified Away decision.

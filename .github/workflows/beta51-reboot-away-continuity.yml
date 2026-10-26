@@ -1,12 +1,8 @@
 name: Beta51 reboot-safe verified Away and presence cooldown
+# Historical beta51 validation remains manually runnable, without
+# attempting to publish the obsolete manifest on future beta52 pushes.
 on:
-  push:
-    branches:
-      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
-      - 'fix/beta51-presence-reboot-away-continuity-20261026'
-  pull_request:
-    branches:
-      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
+  workflow_dispatch:
 
 permissions:
   contents: read

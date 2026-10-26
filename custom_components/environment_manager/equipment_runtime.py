@@ -744,17 +744,28 @@ class EquipmentRuntime:
         if shared:
             occupied, _, _ = room_presence(self.hass, spec.area_id, room, shared,
                                             known_areas=known or {spec.area_id})
-            if shared.get("sleep_rooms_entity"):
-                value, _ = sleep_presence(self.hass, spec.area_id, shared, known or {spec.area_id})
-                # The configured live sleep-room source is authoritative.
-                sleeping = value
+            # Fan quiet behavior and the heating gate must evaluate the same
+            # refreshed sleep facts. A failed optional sleep source while
+            # everyone is verified away is not proof of a sleeping occupant.
+            from .occupancy_policy import controlled_sleep_presence, home_presence
+            from .climate_schedule import scheduled_sleep
+            home, _, _ = home_presence(
+                self.hass, shared, plan.get("tracker_entities", []))
+            zone = getattr(getattr(self.hass, "config", None), "time_zone", None) or "UTC"
+            local_sleep, local_reason = scheduled_sleep(room, self.clock(), zone)
+            sleeping, _ = controlled_sleep_presence(
+                self.hass, spec.area_id, shared, known or {spec.area_id},
+                home_status=home, local_sleeping=local_sleep,
+                local_reason=local_reason,
+            )
         else:
             sensors = plan.get("presence_entities", [])
             if sensors:
-                states = [self.hass.states.get(e) for e in sensors]
-                if any(st is not None and st.state == "on" for st in states):
+                from .occupancy_policy import _bool_presence
+                evidence = [_bool_presence(self.hass.states.get(e)) for e in sensors]
+                if any(value is True for value in evidence):
                     occupied = "occupied"
-                elif any(st is None or st.state != "off" for st in states):
+                elif any(value is None for value in evidence):
                     occupied = "unknown"
                 else:
                     occupied = "unoccupied"

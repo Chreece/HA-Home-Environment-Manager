@@ -133,7 +133,9 @@ def test_live_gate_rejects_entered_room_and_invalidated_sleep_after_planning(ada
     sleep.state="unavailable"
     assert live_device_permission(h,"living",room_config,plan,device)[0]=="held"
     device["sleep_behavior"]="sleep_targets"
-    assert live_device_permission(h,"living",room_config,plan,device)[0]=="held"
+    # An optional sleep-setpoint preference must not turn an otherwise
+    # permitted physical heater OFF when its sleep list is unavailable.
+    assert live_device_permission(h,"living",room_config,plan,device)[0]=="eligible"
 
 
 
@@ -144,12 +146,31 @@ def test_sleep_pause_takes_priority_over_absence_off(adapter):
     assert device_permission(device,"unoccupied","away",True)==(
         "held","sleep_room_control_paused"
     )
+    # The device's separate presence_requirement=home must STILL prohibit
+    # heating while Away. We remove only the spurious sleep evidence hold.
     assert device_permission(device,"unoccupied","away",None)==(
+        "absent","house_unoccupied"
+    )
+    # Confirmed Away removes sleep uncertainty, but it never overrides a
+    # positive sleeping-room indication or the PAUSE policy at home.
+    assert device_permission(device,"unoccupied","away",True)==(
+        "held","sleep_room_control_paused"
+    )
+    assert device_permission(device,"unoccupied","home",None)==(
         "held","sleep_room_evidence_unknown"
     )
+    device["presence_requirement"]="always"
+    assert device_permission(device,"unoccupied","away",None)==(
+        "eligible","device_policy_approved"
+    )
+    device["presence_requirement"]="home"
     assert device_permission(device,"unoccupied","away",False)[0]=="absent"
     device["sleep_behavior"]="sleep_targets"
-    assert device_permission(device,"unoccupied","away",None)[0]=="held"
+    # Sleep-target preference must not override the separate home-only
+    # equipment restriction, but does not add its own heating veto.
+    assert device_permission(device,"unoccupied","away",None)[0]=="absent"
+    device["presence_requirement"]="always"
+    assert device_permission(device,"unoccupied","away",None)[0]=="eligible"
 
 
 def test_empty_occupied_rooms_means_away_only_after_cooldown(adapter):

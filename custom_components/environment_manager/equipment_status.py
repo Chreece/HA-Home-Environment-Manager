@@ -58,11 +58,39 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             )
             for entity_id in self._spec.source_entities
         }
+        # HA may request a diagnostic state during partial setup, or an
+        # external status consumer may expose only states.get (not async_all).
+        # A read-only status must never crash setup or fabricate a room plan.
+        # In the fully running integration, compute the real live room plan.
+        states = getattr(self._manager.hass, "states", None)
+        plan = (equipment.plan_for(self._manager, self._spec)
+                if callable(getattr(states, "async_all", None)) else {})
+        shared = self._manager.settings.get("occupancy_global") or {}
+        sleep_id = shared.get("sleep_rooms_entity") if isinstance(shared, dict) else None
+        sleep_source = self._manager.hass.states.get(sleep_id) if (
+            isinstance(sleep_id, str) and sleep_id not in ("", "none")
+        ) else None
+        effective = equipment.profile_name(cfg, plan)
         return {
             "area_id": self._spec.area_id,
             "control_method": cfg.get("control_mode", "existing"),
-            "selected_preset": cfg.get("preset", "none"),
-            "status_reason": observed.get("reason"),
+            "selected_preset": (effective if cfg.get("control_mode")
+                                in ("automatic", "pid") else cfg.get("preset", "none")),
+            "preset_override": cfg.get("preset", "none"),
+            "effective_preset": effective,
+            "home_presence_status": plan.get("away", "unknown"),
+            "home_presence_reason": plan.get("away_evidence", "unknown"),
+            "room_occupancy": plan.get("occupancy", "unknown"),
+            "sleep_behavior": cfg.get("sleep_behavior", "normal"),
+            "sleep_rooms_entity": sleep_id,
+            "sleep_rooms_source_state": (sleep_source.state if sleep_source is not None
+                                         else "not_configured" if sleep_id in (None, "", "none")
+                                         else "unavailable"),
+            "sleeping": plan.get("sleeping"),
+            "sleep_evidence": plan.get("sleep_schedule_evidence"),
+            "status_reason": observed.get("reason") or (
+                observed.get("status") if observed.get("status") ==
+                "sleep_room_evidence_unknown" else None),
             "last_evaluated_mode": observed.get("mode"),
             "demand_percent": observed.get("demand_percent"),
             "pid_calibration_method": cfg.get("pid_calibration_method", "manual"),

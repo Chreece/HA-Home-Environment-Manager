@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.0b52 - Restore heating with optional or unavailable sleeping-room evidence (beta)
+
+- Fix `sleep_room_evidence_unknown` falsely blocking native managed thermostat heating while the configured house-presence sources confirm Away.
+- A sleeping-room entity that was never configured is not unknown sleep evidence; preserve local manual sleep and sleep schedules in all room and PID-only controller plans.
+- A positive sleeping-room signal still enforces explicit Pause during sleep, while confirmed Away allows a temporarily unavailable sleeping-room source to defer to the normal Away profile.
+- Treat Sleep targets as alternative setpoints, never an independent reason to suspend heating if the optional sleeping-room source is unknown.
+- Use the same live sleep evidence for the room plan, source-bound actuator permission and PID fan quiet-speed gate. Support numeric presence counters in the quiet context.
+- Expand read-only controller diagnostics to show active and saved preset, sleeping source/state/reason, home/room evidence and configured sleep behavior.
+- Keep all physical safety interlocks, startup warmup, native HVAC mode and commissioning guards, per-device PID and existing beta51 restart-safe Away continuity. Preserve only `environment_manager`.
+
 ## 0.6.0b51 - Restart-safe Away and complete presence-source cooldown evidence (beta)
 
 - Fully verified Away from explicitly selected Person/device_tracker/numeric presence counters now overrides the independent room-only empty-rooms cooldown; never mislabel a confirmed empty household as Home because HA restarted.
