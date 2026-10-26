@@ -206,8 +206,8 @@
           "weather_entities": "Изберете: Време и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Изберете: Качество на външния въздух · AQI, CO₂, PM2.5, PM10, VOC. Недостъпно: ⚠",
           "weather_warnings": "Време и предупреждения · ⚠ (Недостъпно) → 🪟🔒",
-          "general_room_occupancy_sensors": "Изберете реален източник Home Assistant за „Стая · Присъствие · сензор“. Липсващи или стари данни спират действието.",
-          "general_home_trackers": "Изберете реален източник Home Assistant за „Дом · Присъствие · Устройства“. Липсващи или стари данни спират действието.",
+          "general_room_occupancy_sensors": "Изберете реален източник Home Assistant за „Стая · Присъствие · сензор“. Липсващи или стари данни спират действието. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Изберете реален източник Home Assistant за „Дом · Присъствие · Устройства“. Липсващи или стари данни спират действието. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Изберете реален източник Home Assistant за „Присъствие · Стая · източник (state)“. Липсващи или стари данни спират действието.",
           "general_occupied_rooms_attribute": "Задайте „Присъствие · Стая · източник (attribute)“ само за избраната стая. Невалидните данни блокират действието.",
           "general_sleep_rooms_entity": "Изберете реален източник Home Assistant за „Сън · Стая · източник (state)“. Липсващи или стари данни спират действието.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Изберете общи източници и изходи за известия. Записването завършва настройката. Работните настройки остават на устройствата на дома и стаите. · Полени · източник · Избор.",
           "use_announcement_hub": "Изберете общи източници и изходи за известия. Записването завършва настройката. Работните настройки остават на устройствата на дома и стаите. · Автоматично · Announcement Hub.",
           "general_away_cooldown_minutes": "Изберете общи източници и изходи за известия. Записването завършва настройката. Работните настройки остават на устройствата на дома и стаите. · Дом · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Известявай за отворени прозорци след напускане. Хора за известяване (person.*). 60 s. Announcement Hub. Телефон, Часовник, Таблет.",
+          "away_open_window_alert": "Известявай за отворени прозорци след напускане. Хора за известяване (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Часовник, Таблет.",
           "away_windows_target_people": "Хора за известяване (person.*) - Announcement Hub: Телефон, Часовник, Таблет, Друго устройство. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Канали за известяване за прозорци: Телефон Известие / Глас TTS, Часовник Известие / Глас TTS, Таблет Известие / Глас TTS. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Изберете: Време и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Изберете: Качество на външния въздух · AQI, CO₂, PM2.5, PM10, VOC. Недостъпно: ⚠",
           "weather_warnings": "Време и предупреждения · ⚠ (Недостъпно) → 🪟🔒",
-          "general_room_occupancy_sensors": "Изберете реален източник Home Assistant за „Стая · Присъствие · сензор“. Липсващи или стари данни спират действието.",
-          "general_home_trackers": "Изберете реален източник Home Assistant за „Дом · Присъствие · Устройства“. Липсващи или стари данни спират действието.",
+          "general_room_occupancy_sensors": "Изберете реален източник Home Assistant за „Стая · Присъствие · сензор“. Липсващи или стари данни спират действието. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Изберете реален източник Home Assistant за „Дом · Присъствие · Устройства“. Липсващи или стари данни спират действието. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Изберете реален източник Home Assistant за „Присъствие · Стая · източник (state)“. Липсващи или стари данни спират действието.",
           "general_occupied_rooms_attribute": "Задайте „Присъствие · Стая · източник (attribute)“ само за избраната стая. Невалидните данни блокират действието.",
           "general_sleep_rooms_entity": "Изберете реален източник Home Assistant за „Сън · Стая · източник (state)“. Липсващи или стари данни спират действието.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Изберете общи източници и изходи за известия. Записването завършва настройката. Работните настройки остават на устройствата на дома и стаите. · Полени · източник · Избор.",
           "use_announcement_hub": "Изберете общи източници и изходи за известия. Записването завършва настройката. Работните настройки остават на устройствата на дома и стаите. · Автоматично · Announcement Hub.",
           "general_away_cooldown_minutes": "Изберете общи източници и изходи за известия. Записването завършва настройката. Работните настройки остават на устройствата на дома и стаите. · Дом · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Известявай за отворени прозорци след напускане. Хора за известяване (person.*). 60 s. Announcement Hub. Телефон, Часовник, Таблет.",
+          "away_open_window_alert": "Известявай за отворени прозорци след напускане. Хора за известяване (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Часовник, Таблет.",
           "away_windows_target_people": "Хора за известяване (person.*) - Announcement Hub: Телефон, Часовник, Таблет, Друго устройство. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Канали за известяване за прозорци: Телефон Известие / Глас TTS, Часовник Известие / Глас TTS, Таблет Известие / Глас TTS. Person-specific, not room speakers."
         }

@@ -206,8 +206,8 @@
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
           "outdoor_sensors": "Elige sensores realmente situados fuera. Las lecturas superiores a los límites impiden abrir; las desconocidas, no disponibles o antiguas se muestran como datos incompletos.",
           "weather_warnings": "Opcional. Las alertas seleccionadas activas o no disponibles impiden abrir las ventanas.",
-          "general_room_occupancy_sensors": "Elige una fuente real de Home Assistant para «Habitación · Ocupación · sensor». Los datos ausentes o antiguos detienen la acción asociada.",
-          "general_home_trackers": "Elige una fuente real de Home Assistant para «Casa · Ocupación · Dispositivos». Los datos ausentes o antiguos detienen la acción asociada.",
+          "general_room_occupancy_sensors": "Elige una fuente real de Home Assistant para «Habitación · Ocupación · sensor». Los datos ausentes o antiguos detienen la acción asociada. Se admiten entidades number e input_number como contadores de presencia: 0 significa vacío y un valor positivo indica presencia. Los valores desconocidos o no disponibles nunca prueban la ausencia.",
+          "general_home_trackers": "Elige una fuente real de Home Assistant para «Casa · Ocupación · Dispositivos». Los datos ausentes o antiguos detienen la acción asociada. Se admiten entidades number e input_number como contadores de presencia: 0 significa vacío y un valor positivo indica presencia. Los valores desconocidos o no disponibles nunca prueban la ausencia.",
           "general_occupied_rooms_entity": "Elige una fuente real de Home Assistant para «Ocupación · Habitación · fuente (state)». Los datos ausentes o antiguos detienen la acción asociada.",
           "general_occupied_rooms_attribute": "Configura «Ocupación · Habitación · fuente (attribute)» solo en la habitación seleccionada. Datos incompatibles o ausentes bloquean la acción.",
           "general_sleep_rooms_entity": "Elige una fuente real de Home Assistant para «Sueño · Habitación · fuente (state)». Los datos ausentes o antiguos detienen la acción asociada.",
@@ -221,7 +221,7 @@
           "pollen_entities": "En la primera configuración se preseleccionan todas las fuentes de polen encontradas. Una selección vacía explícita posterior permanece vacía.",
           "use_announcement_hub": "Solo aparece si Announcement Hub está instalado. Al activarlo, los anuncios usan el Hub cuando está disponible.",
           "general_away_cooldown_minutes": "Cuando una fuente válida de habitaciones ocupadas queda vacía, espera estos minutos antes de aplicar Away. Datos desconocidos o antiguos no activan Away.",
-          "away_open_window_alert": "Desactivado inicialmente. Tras confirmar que todos están fuera durante 60 segundos, avisa de los contactos de ventanas aún abiertos. No reenvía al reiniciar en ausencia y solo repite si se abren otras ventanas.",
+          "away_open_window_alert": "Desactivado inicialmente. Avisa de inmediato cuando todas las fuentes de presencia seleccionadas confirman ausencia. En number/input_number, 0 significa nadie y un número positivo indica presencia. Valores desconocidos no confirman ausencia. No reenvía al reiniciar en ausencia y solo repite si se abren otras ventanas.",
           "away_windows_target_people": "Selecciona personas person.* explícitas con sus dispositivos configurados en Announcement Hub. Nunca se envía un aviso general a habitaciones por destinos ausentes.",
           "away_windows_delivery_channels": "Permite varios canales: avisos escritos y voz Companion TTS en teléfono, reloj o tableta. Solo se usan los dispositivos asignados a cada persona elegida."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
           "outdoor_sensors": "Elige sensores realmente situados fuera. Las lecturas superiores a los límites impiden abrir; las desconocidas, no disponibles o antiguas se muestran como datos incompletos.",
           "weather_warnings": "Opcional. Las alertas seleccionadas activas o no disponibles impiden abrir las ventanas.",
-          "general_room_occupancy_sensors": "Elige una fuente real de Home Assistant para «Habitación · Ocupación · sensor». Los datos ausentes o antiguos detienen la acción asociada.",
-          "general_home_trackers": "Elige una fuente real de Home Assistant para «Casa · Ocupación · Dispositivos». Los datos ausentes o antiguos detienen la acción asociada.",
+          "general_room_occupancy_sensors": "Elige una fuente real de Home Assistant para «Habitación · Ocupación · sensor». Los datos ausentes o antiguos detienen la acción asociada. Se admiten entidades number e input_number como contadores de presencia: 0 significa vacío y un valor positivo indica presencia. Los valores desconocidos o no disponibles nunca prueban la ausencia.",
+          "general_home_trackers": "Elige una fuente real de Home Assistant para «Casa · Ocupación · Dispositivos». Los datos ausentes o antiguos detienen la acción asociada. Se admiten entidades number e input_number como contadores de presencia: 0 significa vacío y un valor positivo indica presencia. Los valores desconocidos o no disponibles nunca prueban la ausencia.",
           "general_occupied_rooms_entity": "Elige una fuente real de Home Assistant para «Ocupación · Habitación · fuente (state)». Los datos ausentes o antiguos detienen la acción asociada.",
           "general_occupied_rooms_attribute": "Configura «Ocupación · Habitación · fuente (attribute)» solo en la habitación seleccionada. Datos incompatibles o ausentes bloquean la acción.",
           "general_sleep_rooms_entity": "Elige una fuente real de Home Assistant para «Sueño · Habitación · fuente (state)». Los datos ausentes o antiguos detienen la acción asociada.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "En la primera configuración se preseleccionan todas las fuentes de polen encontradas. Una selección vacía explícita posterior permanece vacía.",
           "use_announcement_hub": "Solo aparece si Announcement Hub está instalado. Al activarlo, los anuncios usan el Hub cuando está disponible.",
           "general_away_cooldown_minutes": "Cuando una fuente válida de habitaciones ocupadas queda vacía, espera estos minutos antes de aplicar Away. Datos desconocidos o antiguos no activan Away.",
-          "away_open_window_alert": "Desactivado inicialmente. Tras confirmar que todos están fuera durante 60 segundos, avisa de los contactos de ventanas aún abiertos. No reenvía al reiniciar en ausencia y solo repite si se abren otras ventanas.",
+          "away_open_window_alert": "Desactivado inicialmente. Avisa de inmediato cuando todas las fuentes de presencia seleccionadas confirman ausencia. En number/input_number, 0 significa nadie y un número positivo indica presencia. Valores desconocidos no confirman ausencia. No reenvía al reiniciar en ausencia y solo repite si se abren otras ventanas.",
           "away_windows_target_people": "Selecciona personas person.* explícitas con sus dispositivos configurados en Announcement Hub. Nunca se envía un aviso general a habitaciones por destinos ausentes.",
           "away_windows_delivery_channels": "Permite varios canales: avisos escritos y voz Companion TTS en teléfono, reloj o tableta. Solo se usan los dispositivos asignados a cada persona elegida."
         }
