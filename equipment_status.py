@@ -11,9 +11,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.helpers.entity import EntityCategory
 
+from .controller_status_catalog import EQUIPMENT_SENSOR_STATUSES
 from .equipment_entity import EquipmentEntity
 from . import equipment_model as equipment
 
@@ -22,6 +23,8 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
     """Show the evaluated controller state beside its native climate facade."""
 
     _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options = sorted(EQUIPMENT_SENSOR_STATUSES)
     _attr_icon = "mdi:information-outline"
     _attr_should_poll = False
 
@@ -33,7 +36,8 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         runtime = self._manager.equipment
         observed = runtime.statuses.get(self._spec.identifier, {})
         if isinstance(observed, dict) and isinstance(observed.get("status"), str):
-            return observed["status"]
+            return (observed["status"] if observed["status"] in EQUIPMENT_SENSOR_STATUSES
+                    else "unrecognized_status")
         mode = self.controller_settings.get("control_mode", "existing")
         if mode in ("existing", "off"):
             return mode
@@ -73,6 +77,8 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         effective = equipment.profile_name(cfg, plan)
         return {
             "area_id": self._spec.area_id,
+            "status_code": observed.get("status"),
+            "status_reason_code": observed.get("reason"),
             "control_method": cfg.get("control_mode", "existing"),
             "selected_preset": (effective if cfg.get("control_mode")
                                 in ("automatic", "pid") else cfg.get("preset", "none")),
