@@ -206,8 +206,8 @@
           "weather_entities": "Seleziona: Meteo e allerte · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Seleziona: Qualità dell'aria esterna · AQI, CO₂, PM2.5, PM10, VOC. Non disponibile: ⚠",
           "weather_warnings": "Meteo e allerte · ⚠ (Non disponibile) → 🪟🔒",
-          "general_room_occupancy_sensors": "Seleziona una fonte Home Assistant reale per «Stanza · Presenza · sensore». Dati assenti o obsoleti bloccano l'azione relativa.",
-          "general_home_trackers": "Seleziona una fonte Home Assistant reale per «Casa · Presenza · Dispositivi». Dati assenti o obsoleti bloccano l'azione relativa.",
+          "general_room_occupancy_sensors": "Seleziona una fonte Home Assistant reale per «Stanza · Presenza · sensore». Dati assenti o obsoleti bloccano l'azione relativa. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Seleziona una fonte Home Assistant reale per «Casa · Presenza · Dispositivi». Dati assenti o obsoleti bloccano l'azione relativa. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Seleziona una fonte Home Assistant reale per «Presenza · Stanza · fonte (state)». Dati assenti o obsoleti bloccano l'azione relativa.",
           "general_occupied_rooms_attribute": "Configura «Presenza · Stanza · fonte (attribute)» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
           "general_sleep_rooms_entity": "Seleziona una fonte Home Assistant reale per «Sonno · Stanza · fonte (state)». Dati assenti o obsoleti bloccano l'azione relativa.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Polline · fonte · Seleziona.",
           "use_announcement_hub": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Automatico · Announcement Hub.",
           "general_away_cooldown_minutes": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Casa · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Avvisa se le finestre restano aperte dopo l'uscita. Persone da avvisare (person.*). 60 s. Announcement Hub. Telefono, Orologio, Tablet.",
+          "away_open_window_alert": "Avvisa se le finestre restano aperte dopo l'uscita. Persone da avvisare (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefono, Orologio, Tablet.",
           "away_windows_target_people": "Persone da avvisare (person.*) - Announcement Hub: Telefono, Orologio, Tablet, Altro dispositivo. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Canali di avviso finestre: Telefono Notifica / Voce TTS, Orologio Notifica / Voce TTS, Tablet Notifica / Voce TTS. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Seleziona: Meteo e allerte · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Seleziona: Qualità dell'aria esterna · AQI, CO₂, PM2.5, PM10, VOC. Non disponibile: ⚠",
           "weather_warnings": "Meteo e allerte · ⚠ (Non disponibile) → 🪟🔒",
-          "general_room_occupancy_sensors": "Seleziona una fonte Home Assistant reale per «Stanza · Presenza · sensore». Dati assenti o obsoleti bloccano l'azione relativa.",
-          "general_home_trackers": "Seleziona una fonte Home Assistant reale per «Casa · Presenza · Dispositivi». Dati assenti o obsoleti bloccano l'azione relativa.",
+          "general_room_occupancy_sensors": "Seleziona una fonte Home Assistant reale per «Stanza · Presenza · sensore». Dati assenti o obsoleti bloccano l'azione relativa. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Seleziona una fonte Home Assistant reale per «Casa · Presenza · Dispositivi». Dati assenti o obsoleti bloccano l'azione relativa. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Seleziona una fonte Home Assistant reale per «Presenza · Stanza · fonte (state)». Dati assenti o obsoleti bloccano l'azione relativa.",
           "general_occupied_rooms_attribute": "Configura «Presenza · Stanza · fonte (attribute)» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
           "general_sleep_rooms_entity": "Seleziona una fonte Home Assistant reale per «Sonno · Stanza · fonte (state)». Dati assenti o obsoleti bloccano l'azione relativa.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Polline · fonte · Seleziona.",
           "use_announcement_hub": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Automatico · Announcement Hub.",
           "general_away_cooldown_minutes": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Casa · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Avvisa se le finestre restano aperte dopo l'uscita. Persone da avvisare (person.*). 60 s. Announcement Hub. Telefono, Orologio, Tablet.",
+          "away_open_window_alert": "Avvisa se le finestre restano aperte dopo l'uscita. Persone da avvisare (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefono, Orologio, Tablet.",
           "away_windows_target_people": "Persone da avvisare (person.*) - Announcement Hub: Telefono, Orologio, Tablet, Altro dispositivo. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Canali di avviso finestre: Telefono Notifica / Voce TTS, Orologio Notifica / Voce TTS, Tablet Notifica / Voce TTS. Person-specific, not room speakers."
         }

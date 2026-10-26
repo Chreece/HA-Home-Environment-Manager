@@ -206,8 +206,8 @@
           "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Velg: Luftkvalitet ute · AQI, CO₂, PM2.5, PM10, VOC. Ikke tilgjengelig: ⚠",
           "weather_warnings": "Vær og varsler · ⚠ (Ikke tilgjengelig) → 🪟🔒",
-          "general_room_occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Rom · Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen.",
-          "general_home_trackers": "Velg en ekte Home Assistant-kilde for «Hjem · Tilstedeværelse · Enheter». Manglende eller gamle verdier stopper handlingen.",
+          "general_room_occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Rom · Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Velg en ekte Home Assistant-kilde for «Hjem · Tilstedeværelse · Enheter». Manglende eller gamle verdier stopper handlingen. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · Rom · kilde (state)». Manglende eller gamle verdier stopper handlingen.",
           "general_occupied_rooms_attribute": "Konfigurer «Tilstedeværelse · Rom · kilde (attribute)» bare for valgt rom. Feil data stopper handlingen.",
           "general_sleep_rooms_entity": "Velg en ekte Home Assistant-kilde for «Søvn · Rom · kilde (state)». Manglende eller gamle verdier stopper handlingen.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Velg felles kilder og varslingsutganger. Lagre fullfører oppsettet. Driftsinnstillingene blir på husets og rommenes enheter. · Pollen · kilde · Velg.",
           "use_announcement_hub": "Velg felles kilder og varslingsutganger. Lagre fullfører oppsettet. Driftsinnstillingene blir på husets og rommenes enheter. · Automatisk · Announcement Hub.",
           "general_away_cooldown_minutes": "Velg felles kilder og varslingsutganger. Lagre fullfører oppsettet. Driftsinnstillingene blir på husets og rommenes enheter. · Hjem · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Varsle om åpne vinduer når alle har gått. Personer som skal varsles (person.*). 60 s. Announcement Hub. Telefon, Klokke, Nettbrett.",
+          "away_open_window_alert": "Varsle om åpne vinduer når alle har gått. Personer som skal varsles (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Klokke, Nettbrett.",
           "away_windows_target_people": "Personer som skal varsles (person.*) - Announcement Hub: Telefon, Klokke, Nettbrett, Annen enhet. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kanaler for vindusvarsler: Telefon Varsel / TTS-tale, Klokke Varsel / TTS-tale, Nettbrett Varsel / TTS-tale. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Velg: Luftkvalitet ute · AQI, CO₂, PM2.5, PM10, VOC. Ikke tilgjengelig: ⚠",
           "weather_warnings": "Vær og varsler · ⚠ (Ikke tilgjengelig) → 🪟🔒",
-          "general_room_occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Rom · Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen.",
-          "general_home_trackers": "Velg en ekte Home Assistant-kilde for «Hjem · Tilstedeværelse · Enheter». Manglende eller gamle verdier stopper handlingen.",
+          "general_room_occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Rom · Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Velg en ekte Home Assistant-kilde for «Hjem · Tilstedeværelse · Enheter». Manglende eller gamle verdier stopper handlingen. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · Rom · kilde (state)». Manglende eller gamle verdier stopper handlingen.",
           "general_occupied_rooms_attribute": "Konfigurer «Tilstedeværelse · Rom · kilde (attribute)» bare for valgt rom. Feil data stopper handlingen.",
           "general_sleep_rooms_entity": "Velg en ekte Home Assistant-kilde for «Søvn · Rom · kilde (state)». Manglende eller gamle verdier stopper handlingen.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Velg felles kilder og varslingsutganger. Lagre fullfører oppsettet. Driftsinnstillingene blir på husets og rommenes enheter. · Pollen · kilde · Velg.",
           "use_announcement_hub": "Velg felles kilder og varslingsutganger. Lagre fullfører oppsettet. Driftsinnstillingene blir på husets og rommenes enheter. · Automatisk · Announcement Hub.",
           "general_away_cooldown_minutes": "Velg felles kilder og varslingsutganger. Lagre fullfører oppsettet. Driftsinnstillingene blir på husets og rommenes enheter. · Hjem · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Varsle om åpne vinduer når alle har gått. Personer som skal varsles (person.*). 60 s. Announcement Hub. Telefon, Klokke, Nettbrett.",
+          "away_open_window_alert": "Varsle om åpne vinduer når alle har gått. Personer som skal varsles (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Klokke, Nettbrett.",
           "away_windows_target_people": "Personer som skal varsles (person.*) - Announcement Hub: Telefon, Klokke, Nettbrett, Annen enhet. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kanaler for vindusvarsler: Telefon Varsel / TTS-tale, Klokke Varsel / TTS-tale, Nettbrett Varsel / TTS-tale. Person-specific, not room speakers."
         }
