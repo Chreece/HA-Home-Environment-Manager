@@ -197,7 +197,10 @@
           "use_mold_indicator": "پھپھوندی کی نشاندہی · RH (%) → 70%",
           "pollen_entities": "زرگل · ماخذ · منتخب کریں",
           "use_announcement_hub": "خودکار · Announcement Hub",
-          "general_away_cooldown_minutes": "گھر · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "گھر · Away · cooldown (min)",
+          "away_open_window_alert": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع",
+          "away_windows_target_people": "اطلاع پانے والے افراد",
+          "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع"
         },
         "data_description": {
           "weather_entities": "منتخب کریں: موسم اور انتباہات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 پھپھوندی کی نشاندہی · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · زرگل · ماخذ · منتخب کریں.",
           "use_announcement_hub": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · خودکار · Announcement Hub.",
-          "general_away_cooldown_minutes": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · گھر · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · گھر · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع. اطلاع پانے والے افراد (person.*). 60 s. Announcement Hub. فون, گھڑی, ٹیبلٹ.",
+          "away_windows_target_people": "اطلاع پانے والے افراد (person.*) - Announcement Hub: فون, گھڑی, ٹیبلٹ, دوسرا آلہ. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع: فون اطلاع / TTS آواز, گھڑی اطلاع / TTS آواز, ٹیبلٹ اطلاع / TTS آواز. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "پھپھوندی کی نشاندہی · 🧊 °C ⚠",
       "invalid_mold_calibration": "پھپھوندی کی نشاندہی · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "غلط: نگرانی کے کمرے",
-      "invalid_room_source": "غلط: کمرہ · ماخذ"
+      "invalid_room_source": "غلط: کمرہ · ماخذ",
+      "invalid_away_windows_recipients": "اطلاع پانے والے افراد; کھڑکی اطلاع کے ذرائع. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - پہلے سے ترتیب دیا گیا.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "پھپھوندی کی نشاندہی · RH (%) → 70%",
           "pollen_entities": "زرگل · ماخذ · منتخب کریں",
           "use_announcement_hub": "خودکار · Announcement Hub",
-          "general_away_cooldown_minutes": "گھر · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "گھر · Away · cooldown (min)",
+          "away_open_window_alert": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع",
+          "away_windows_target_people": "اطلاع پانے والے افراد",
+          "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع"
         },
         "data_description": {
           "weather_entities": "منتخب کریں: موسم اور انتباہات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 پھپھوندی کی نشاندہی · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · زرگل · ماخذ · منتخب کریں.",
           "use_announcement_hub": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · خودکار · Announcement Hub.",
-          "general_away_cooldown_minutes": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · گھر · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · گھر · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع. اطلاع پانے والے افراد (person.*). 60 s. Announcement Hub. فون, گھڑی, ٹیبلٹ.",
+          "away_windows_target_people": "اطلاع پانے والے افراد (person.*) - Announcement Hub: فون, گھڑی, ٹیبلٹ, دوسرا آلہ. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع: فون اطلاع / TTS آواز, گھڑی اطلاع / TTS آواز, ٹیبلٹ اطلاع / TTS آواز. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "غلط · نمی · ترتیبات",
       "device_runtime_invalid": "غلط · طاقت · ترتیبات",
       "invalid_setup_rooms": "غلط: نگرانی کے کمرے",
-      "invalid_room_source": "غلط: کمرہ · ماخذ"
+      "invalid_room_source": "غلط: کمرہ · ماخذ",
+      "invalid_away_windows_recipients": "اطلاع پانے والے افراد; کھڑکی اطلاع کے ذرائع. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "غلط: نگرانی کے کمرے",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "پردے کھولنے یا بند کرنے سے پہلے اطلاع دیں"
+      },
+      "home_away_open_window_alert": {
+        "name": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "ہدف · ترتیبات"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "فون - اطلاع",
+        "mobile_tts": "فون - TTS آواز",
+        "watch_notification": "گھڑی - اطلاع",
+        "watch_tts": "گھڑی - TTS آواز",
+        "tablet_notification": "ٹیبلٹ - اطلاع",
+        "tablet_tts": "ٹیبلٹ - TTS آواز",
+        "other_notification": "دوسرا آلہ - اطلاع",
+        "other_tts": "دوسرا آلہ - TTS آواز"
       }
     }
   },
