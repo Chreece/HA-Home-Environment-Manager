@@ -141,6 +141,20 @@ class RoomSetupMixin:
         pres = [{"value": s.entity_id, "label": sources.label(self.hass, s.entity_id)}
                 for s in self.hass.states.async_all("binary_sensor")
                 if _device_class(self.hass, s) in ("occupancy", "presence")]
+        # A selected Number/input_number is an explicit people counter.
+        # Numeric sensor counts are offered when their identities describe
+        # occupancy; never silently enroll arbitrary temperature sensors.
+        pres.extend({
+            "value": state.entity_id, "label": sources.label(self.hass, state.entity_id)}
+            for domain in ("number", "input_number", "sensor")
+            for state in self.hass.states.async_all(domain)
+            if sources.native(self.hass, state.entity_id)
+            and (domain != "sensor"
+                 or _device_class(self.hass, state) in ("occupancy", "presence")
+                 or any(word in state.entity_id.lower() for word in (
+                    "presence", "occupancy", "occupied", "people_count",
+                    "person_count", "persons_count", "home_count", "people_home")))
+        )
         room_entities = [{"value": "none", "label": "-"}, *self._room_source_options(self.hass)]
         env = self._values.get(CONF_ENVIRONMENT_GLOBAL, {})
         saved_pollen = set(env.get("pollen_entities", [])) if isinstance(env, dict) else set()
