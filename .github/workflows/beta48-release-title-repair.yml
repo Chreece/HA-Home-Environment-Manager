@@ -1,0 +1,23 @@
+name: Repair published beta48 release display title
+on:
+  push:
+    branches:
+      - 'chore/correct-beta48-release-title-20261026'
+
+permissions:
+  contents: write
+
+jobs:
+  correct_title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify immutable release identity and correct title
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh release view v0.6.0b48 --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)" = "v0.6.0b48"
+          test "$(gh release view v0.6.0b48 --repo "$GITHUB_REPOSITORY" --json isPrerelease --jq .isPrerelease)" = "true"
+          gh release edit v0.6.0b48 --repo "$GITHUB_REPOSITORY" --title 'Home Environment Manager v0.6.0 beta 48'
+          test "$(gh release view v0.6.0b48 --repo "$GITHUB_REPOSITORY" --json name --jq .name)" = 'Home Environment Manager v0.6.0 beta 48'
