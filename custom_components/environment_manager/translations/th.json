@@ -206,8 +206,8 @@
           "weather_entities": "เลือก: สภาพอากาศและคำเตือน · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "เลือก: คุณภาพอากาศภายนอก · AQI, CO₂, PM2.5, PM10, VOC. ไม่พร้อมใช้งาน: ⚠",
           "weather_warnings": "สภาพอากาศและคำเตือน · ⚠ (ไม่พร้อมใช้งาน) → 🪟🔒",
-          "general_room_occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “ห้อง · การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
-          "general_home_trackers": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “บ้าน · การมีคนอยู่ · อุปกรณ์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
+          "general_room_occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “ห้อง · การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “บ้าน · การมีคนอยู่ · อุปกรณ์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · ห้อง · แหล่งข้อมูล (state)” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
           "general_occupied_rooms_attribute": "ตั้งค่า “การมีคนอยู่ · ห้อง · แหล่งข้อมูล (attribute)” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
           "general_sleep_rooms_entity": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “นอน · ห้อง · แหล่งข้อมูล (state)” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
@@ -221,7 +221,7 @@
           "pollen_entities": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · ละอองเกสร · แหล่งข้อมูล · เลือก.",
           "use_announcement_hub": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · อัตโนมัติ · Announcement Hub.",
           "general_away_cooldown_minutes": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · บ้าน · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน. บุคคลที่จะรับการแจ้งเตือน (person.*). 60 s. Announcement Hub. โทรศัพท์, นาฬิกา, แท็บเล็ต.",
+          "away_open_window_alert": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน. บุคคลที่จะรับการแจ้งเตือน (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. โทรศัพท์, นาฬิกา, แท็บเล็ต.",
           "away_windows_target_people": "บุคคลที่จะรับการแจ้งเตือน (person.*) - Announcement Hub: โทรศัพท์, นาฬิกา, แท็บเล็ต, อุปกรณ์อื่น. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง: โทรศัพท์ การแจ้งเตือน / เสียง TTS, นาฬิกา การแจ้งเตือน / เสียง TTS, แท็บเล็ต การแจ้งเตือน / เสียง TTS. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "เลือก: สภาพอากาศและคำเตือน · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "เลือก: คุณภาพอากาศภายนอก · AQI, CO₂, PM2.5, PM10, VOC. ไม่พร้อมใช้งาน: ⚠",
           "weather_warnings": "สภาพอากาศและคำเตือน · ⚠ (ไม่พร้อมใช้งาน) → 🪟🔒",
-          "general_room_occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “ห้อง · การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
-          "general_home_trackers": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “บ้าน · การมีคนอยู่ · อุปกรณ์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
+          "general_room_occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “ห้อง · การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “บ้าน · การมีคนอยู่ · อุปกรณ์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · ห้อง · แหล่งข้อมูล (state)” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
           "general_occupied_rooms_attribute": "ตั้งค่า “การมีคนอยู่ · ห้อง · แหล่งข้อมูล (attribute)” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
           "general_sleep_rooms_entity": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “นอน · ห้อง · แหล่งข้อมูล (state)” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · ละอองเกสร · แหล่งข้อมูล · เลือก.",
           "use_announcement_hub": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · อัตโนมัติ · Announcement Hub.",
           "general_away_cooldown_minutes": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · บ้าน · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน. บุคคลที่จะรับการแจ้งเตือน (person.*). 60 s. Announcement Hub. โทรศัพท์, นาฬิกา, แท็บเล็ต.",
+          "away_open_window_alert": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน. บุคคลที่จะรับการแจ้งเตือน (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. โทรศัพท์, นาฬิกา, แท็บเล็ต.",
           "away_windows_target_people": "บุคคลที่จะรับการแจ้งเตือน (person.*) - Announcement Hub: โทรศัพท์, นาฬิกา, แท็บเล็ต, อุปกรณ์อื่น. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง: โทรศัพท์ การแจ้งเตือน / เสียง TTS, นาฬิกา การแจ้งเตือน / เสียง TTS, แท็บเล็ต การแจ้งเตือน / เสียง TTS. Person-specific, not room speakers."
         }

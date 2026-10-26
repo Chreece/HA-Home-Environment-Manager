@@ -206,8 +206,8 @@
           "weather_entities": "请选择: 天气与预警 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "请选择: 室外空气质量 · AQI, CO₂, PM2.5, PM10, VOC. 不可用: ⚠",
           "weather_warnings": "只为所选房间配置“天气预警”。缺失或无效数据会阻止相关操作。",
-          "general_room_occupancy_sensors": "为“房间 · 占用 · 传感器”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。",
-          "general_home_trackers": "为“家中 · 占用 · 设备”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。",
+          "general_room_occupancy_sensors": "为“房间 · 占用 · 传感器”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "为“家中 · 占用 · 设备”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "为“占用 · 房间 · 来源 (state)”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。",
           "general_occupied_rooms_attribute": "只为所选房间配置“占用 · 房间 · 来源 (attribute)”。缺失或无效数据会阻止相关操作。",
           "general_sleep_rooms_entity": "为“睡眠 · 房间 · 来源 (state)”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。",
@@ -221,7 +221,7 @@
           "pollen_entities": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 花粉 · 来源 · 选择.",
           "use_announcement_hub": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 自动 · Announcement Hub.",
           "general_away_cooldown_minutes": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "所有人离家后提醒未关窗户. 接收提醒的人员 (person.*). 60 s. Announcement Hub. 手机, 手表, 平板.",
+          "away_open_window_alert": "所有人离家后提醒未关窗户. 接收提醒的人员 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. 手机, 手表, 平板.",
           "away_windows_target_people": "接收提醒的人员 (person.*) - Announcement Hub: 手机, 手表, 平板, 其他设备. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "窗户提醒发送渠道: 手机 通知 / TTS 语音, 手表 通知 / TTS 语音, 平板 通知 / TTS 语音. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "请选择: 天气与预警 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "请选择: 室外空气质量 · AQI, CO₂, PM2.5, PM10, VOC. 不可用: ⚠",
           "weather_warnings": "只为所选房间配置“天气预警”。缺失或无效数据会阻止相关操作。",
-          "general_room_occupancy_sensors": "为“房间 · 占用 · 传感器”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。",
-          "general_home_trackers": "为“家中 · 占用 · 设备”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。",
+          "general_room_occupancy_sensors": "为“房间 · 占用 · 传感器”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "为“家中 · 占用 · 设备”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "为“占用 · 房间 · 来源 (state)”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。",
           "general_occupied_rooms_attribute": "只为所选房间配置“占用 · 房间 · 来源 (attribute)”。缺失或无效数据会阻止相关操作。",
           "general_sleep_rooms_entity": "为“睡眠 · 房间 · 来源 (state)”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 花粉 · 来源 · 选择.",
           "use_announcement_hub": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 自动 · Announcement Hub.",
           "general_away_cooldown_minutes": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "所有人离家后提醒未关窗户. 接收提醒的人员 (person.*). 60 s. Announcement Hub. 手机, 手表, 平板.",
+          "away_open_window_alert": "所有人离家后提醒未关窗户. 接收提醒的人员 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. 手机, 手表, 平板.",
           "away_windows_target_people": "接收提醒的人员 (person.*) - Announcement Hub: 手机, 手表, 平板, 其他设备. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "窗户提醒发送渠道: 手机 通知 / TTS 语音, 手表 通知 / TTS 语音, 平板 通知 / TTS 语音. Person-specific, not room speakers."
         }

@@ -206,8 +206,8 @@
           "weather_entities": "Оберіть: Погода та попередження · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Оберіть: Якість повітря надворі · AQI, CO₂, PM2.5, PM10, VOC. Недоступно: ⚠",
           "weather_warnings": "Погода та попередження · ⚠ (Недоступно) → 🪟🔒",
-          "general_room_occupancy_sensors": "Оберіть справжнє джерело Home Assistant для «Кімната · Присутність · датчик». Відсутні чи застарілі дані блокують дію.",
-          "general_home_trackers": "Оберіть справжнє джерело Home Assistant для «Дім · Присутність · Пристрої». Відсутні чи застарілі дані блокують дію.",
+          "general_room_occupancy_sensors": "Оберіть справжнє джерело Home Assistant для «Кімната · Присутність · датчик». Відсутні чи застарілі дані блокують дію. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Оберіть справжнє джерело Home Assistant для «Дім · Присутність · Пристрої». Відсутні чи застарілі дані блокують дію. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Оберіть справжнє джерело Home Assistant для «Присутність · Кімната · джерело (state)». Відсутні чи застарілі дані блокують дію.",
           "general_occupied_rooms_attribute": "Налаштовуйте «Присутність · Кімната · джерело (attribute)» лише для вибраної кімнати. Недійсні дані блокують дію.",
           "general_sleep_rooms_entity": "Оберіть справжнє джерело Home Assistant для «Сон · Кімната · джерело (state)». Відсутні чи застарілі дані блокують дію.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Пилок · джерело · Обрати.",
           "use_announcement_hub": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Автоматичне · Announcement Hub.",
           "general_away_cooldown_minutes": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Дім · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх. Особи для сповіщення (person.*). 60 s. Announcement Hub. Телефон, Годинник, Планшет.",
+          "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх. Особи для сповіщення (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Годинник, Планшет.",
           "away_windows_target_people": "Особи для сповіщення (person.*) - Announcement Hub: Телефон, Годинник, Планшет, Інший пристрій. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Канали сповіщень про вікна: Телефон Сповіщення / Голос TTS, Годинник Сповіщення / Голос TTS, Планшет Сповіщення / Голос TTS. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Оберіть: Погода та попередження · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Оберіть: Якість повітря надворі · AQI, CO₂, PM2.5, PM10, VOC. Недоступно: ⚠",
           "weather_warnings": "Погода та попередження · ⚠ (Недоступно) → 🪟🔒",
-          "general_room_occupancy_sensors": "Оберіть справжнє джерело Home Assistant для «Кімната · Присутність · датчик». Відсутні чи застарілі дані блокують дію.",
-          "general_home_trackers": "Оберіть справжнє джерело Home Assistant для «Дім · Присутність · Пристрої». Відсутні чи застарілі дані блокують дію.",
+          "general_room_occupancy_sensors": "Оберіть справжнє джерело Home Assistant для «Кімната · Присутність · датчик». Відсутні чи застарілі дані блокують дію. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Оберіть справжнє джерело Home Assistant для «Дім · Присутність · Пристрої». Відсутні чи застарілі дані блокують дію. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Оберіть справжнє джерело Home Assistant для «Присутність · Кімната · джерело (state)». Відсутні чи застарілі дані блокують дію.",
           "general_occupied_rooms_attribute": "Налаштовуйте «Присутність · Кімната · джерело (attribute)» лише для вибраної кімнати. Недійсні дані блокують дію.",
           "general_sleep_rooms_entity": "Оберіть справжнє джерело Home Assistant для «Сон · Кімната · джерело (state)». Відсутні чи застарілі дані блокують дію.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Пилок · джерело · Обрати.",
           "use_announcement_hub": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Автоматичне · Announcement Hub.",
           "general_away_cooldown_minutes": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Дім · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх. Особи для сповіщення (person.*). 60 s. Announcement Hub. Телефон, Годинник, Планшет.",
+          "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх. Особи для сповіщення (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Годинник, Планшет.",
           "away_windows_target_people": "Особи для сповіщення (person.*) - Announcement Hub: Телефон, Годинник, Планшет, Інший пристрій. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Канали сповіщень про вікна: Телефон Сповіщення / Голос TTS, Годинник Сповіщення / Голос TTS, Планшет Сповіщення / Голос TTS. Person-specific, not room speakers."
         }
