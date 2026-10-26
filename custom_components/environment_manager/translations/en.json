@@ -197,7 +197,10 @@
           "use_mold_indicator": "Use mold indication instead of raw room RH",
           "pollen_entities": "Pollen · source · Select",
           "use_announcement_hub": "Automatic · Announcement Hub",
-          "general_away_cooldown_minutes": "Home · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Home · Away · cooldown (min)",
+          "away_open_window_alert": "Alert when windows remain open after everyone leaves",
+          "away_windows_target_people": "People to notify after leaving",
+          "away_windows_delivery_channels": "Delivery channels for open-window alerts"
         },
         "data_description": {
           "weather_entities": "At least one weather provider. Rain, storms and extreme wind/temperature block opening. Mold indication uses the current temperature attribute (°C/°F) of a selected weather entity for outdoor temperature. Choose a source that reports temperature.",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "When enabled, humidity recommendations use the estimated relative humidity at each room's coldest surface instead of raw RH. Calibrate each room under the Room settings menu; an uncalibrated room remains unknown rather than safe.",
           "pollen_entities": "All discovered pollen providers are selected on first setup; later explicit empty selections stay empty.",
           "use_announcement_hub": "Shown only when Announcement Hub is installed. Enabling it routes announcements through the Hub when available.",
-          "general_away_cooldown_minutes": "After a fresh occupied-room source becomes empty, wait this many minutes before applying Away. Unknown or stale occupancy never starts Away."
+          "general_away_cooldown_minutes": "After a fresh occupied-room source becomes empty, wait this many minutes before applying Away. Unknown or stale occupancy never starts Away.",
+          "away_open_window_alert": "Off by default. After every known resident is confirmed away for 60 seconds, report still-open selected physical window contacts. No announcement at startup while already away. Report once per departure and again only for newly opened windows.",
+          "away_windows_target_people": "Select exactly which Home Assistant person.* identities receive this message. Each person must have the selected phone/watch/tablet destination configured in Announcement Hub. Missing destinations are never replaced by room-wide broadcasts.",
+          "away_windows_delivery_channels": "Choose multiple phone, watch, tablet or other device delivery modes. Notification is written push; TTS uses Companion App speech only. Each selected channel routes to its exact person's assigned output, even while away, not to room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Enter a finite measured surface temperature in °C.",
       "invalid_mold_calibration": "Calibration needs room, outdoor and cold-surface temperatures measured together, with at least 3°C difference between room and outside. Check the three readings.",
       "invalid_setup_rooms": "Invalid: Rooms to monitor",
-      "invalid_room_source": "Invalid: Room · source"
+      "invalid_room_source": "Invalid: Room · source",
+      "invalid_away_windows_recipients": "Select at least one person and one delivery channel for the open-window departure alert."
     },
     "abort": {
       "already_configured": "Home Environment Manager is already configured.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Use mold indication instead of raw room RH",
           "pollen_entities": "Pollen · source · Select",
           "use_announcement_hub": "Automatic · Announcement Hub",
-          "general_away_cooldown_minutes": "Home · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Home · Away · cooldown (min)",
+          "away_open_window_alert": "Alert when windows remain open after everyone leaves",
+          "away_windows_target_people": "People to notify after leaving",
+          "away_windows_delivery_channels": "Delivery channels for open-window alerts"
         },
         "data_description": {
           "weather_entities": "At least one weather provider. Rain, storms and extreme wind/temperature block opening. Mold indication uses the current temperature attribute (°C/°F) of a selected weather entity for outdoor temperature. Choose a source that reports temperature.",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "When enabled, humidity recommendations use the estimated relative humidity at each room's coldest surface instead of raw RH. Calibrate each room under the Room settings menu; an uncalibrated room remains unknown rather than safe.",
           "pollen_entities": "All discovered pollen providers are selected on first setup; later explicit empty selections stay empty.",
           "use_announcement_hub": "Shown only when Announcement Hub is installed. Enabling it routes announcements through the Hub when available.",
-          "general_away_cooldown_minutes": "After a fresh occupied-room source becomes empty, wait this many minutes before applying Away. Unknown or stale occupancy never starts Away."
+          "general_away_cooldown_minutes": "After a fresh occupied-room source becomes empty, wait this many minutes before applying Away. Unknown or stale occupancy never starts Away.",
+          "away_open_window_alert": "Off by default. After every known resident is confirmed away for 60 seconds, report still-open selected physical window contacts. No announcement at startup while already away. Report once per departure and again only for newly opened windows.",
+          "away_windows_target_people": "Select exactly which Home Assistant person.* identities receive this message. Each person must have the selected phone/watch/tablet destination configured in Announcement Hub. Missing destinations are never replaced by room-wide broadcasts.",
+          "away_windows_delivery_channels": "Choose multiple phone, watch, tablet or other device delivery modes. Notification is written push; TTS uses Companion App speech only. Each selected channel routes to its exact person's assigned output, even while away, not to room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Invalid · Humidity · settings",
       "device_runtime_invalid": "Invalid · Power · settings",
       "invalid_setup_rooms": "Invalid: Rooms to monitor",
-      "invalid_room_source": "Invalid: Room · source"
+      "invalid_room_source": "Invalid: Room · source",
+      "invalid_away_windows_recipients": "Select at least one person and one delivery channel for the open-window departure alert."
     },
     "abort": {
       "setup_area_removed": "Invalid: Rooms to monitor",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Announce before moving window shades"
+      },
+      "home_away_open_window_alert": {
+        "name": "Alert when windows remain open after everyone leaves"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "target · settings"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Phone - Notification",
+        "mobile_tts": "Phone - TTS speech",
+        "watch_notification": "Watch - Notification",
+        "watch_tts": "Watch - TTS speech",
+        "tablet_notification": "Tablet - Notification",
+        "tablet_tts": "Tablet - TTS speech",
+        "other_notification": "Other device - Notification",
+        "other_tts": "Other device - TTS speech"
       }
     }
   },
