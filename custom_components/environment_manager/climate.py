@@ -107,6 +107,22 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
             return HVACMode(evaluated)
         if method in ("manual", "pid", "automatic") and requested in cap.modes and requested != "off":
             return HVACMode(requested)
+        if method in ("automatic", "pid"):
+            # A DRY controller remains selected when its compressor is OFF
+            # during deadband/startup dwell. Show supervisory intent, not a
+            # misleading OFF for climate entities offering several modes.
+            from .dry_mode import automatic_mode
+            plan = model.plan_for(self._manager, self._spec)
+            targets = model.targets(self._manager, self._spec, cap, settings, plan)
+            measured = self._manager.equipment.measurements(self._spec, cap)
+            room = model.room_config(self._manager, self._spec)
+            preferred = automatic_mode(
+                cap, self._state, measured, targets,
+                dedicated_dry=room.get("dry_climate_entity") == cap.primary,
+                pid=method == "pid",
+            )
+            if preferred in cap.modes and preferred != "off":
+                return HVACMode(preferred)
         if native_mode is not None and native_mode != HVACMode.OFF:
             return native_mode
         active = [mode for mode in cap.modes if mode != "off"]
