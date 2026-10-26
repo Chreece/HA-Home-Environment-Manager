@@ -226,3 +226,57 @@ def test_away_alert_is_opt_in_and_not_a_motorized_window_command():
     assert '"notify", "send_message"' in notifier
     assert '"notify", "announcement_hub"' not in notifier or "async_submit_hub" in notifier
     assert "cover.close_cover" not in notifier and "cover.open_cover" not in notifier
+
+
+def test_general_setup_has_person_and_channel_multi_select_when_hub_installed(monkeypatch, adapter):
+    from test_room_setup import build
+    from test_area_config_flow import _make_options
+    options = _make_options(monkeypatch, adapter)
+    options.hass._values["person.alex"] = MockState("person.alex","home")
+    options.hass.config_entries = SimpleNamespace(async_entries=lambda domain:[
+        SimpleNamespace(state="loaded")] if domain=="announcement_hub" else [])
+    asyncio.run(options.async_step_init())
+    form = asyncio.run(options.async_step_setup_rooms({"areas":["living"]}))
+    assert form["step_id"] == "setup_room_sources"
+    answer = {str(key): key.default for key in form["data_schema"]}
+    form = asyncio.run(options.async_step_setup_room_sources(answer))
+    assert form["step_id"] == "setup_general"
+    fields = form["data_schema"]
+    assert "away_open_window_alert" in fields
+    assert fields["away_windows_target_people"].config.multiple is True
+    assert fields["away_windows_delivery_channels"].config.multiple is True
+    assert set(fields["away_windows_delivery_channels"].config.options) >= {
+        "mobile_notification","mobile_tts","watch_notification","watch_tts"}
+    options._values["away_open_window_alert"] = False
+    defaults = {str(key): key.default for key in fields}
+    invalid = asyncio.run(options.async_step_setup_general({
+        **defaults,"away_open_window_alert":True,
+        "away_windows_target_people":[]}))
+    assert invalid["errors"]["base"]=="invalid_away_windows_recipients"
+    valid = asyncio.run(options.async_step_setup_general({
+        **defaults,"away_open_window_alert":True,
+        "away_windows_target_people":["person.alex"],
+        "away_windows_delivery_channels":["mobile_notification","watch_tts"]}))
+    assert valid["completed"]["data"]["away_open_window_alert"] is True
+    assert valid["completed"]["data"]["away_windows_target_people"] == ["person.alex"]
+    assert valid["completed"]["data"]["away_windows_delivery_channels"] == [
+        "mobile_notification","watch_tts"]
+
+
+def test_all_shipped_locales_have_away_window_home_controls():
+    from pathlib import Path
+    import json
+    component = Path(__file__).parents[1] / "custom_components/environment_manager"
+    docs=[component/"strings.json",*sorted((component/"translations").glob("*.json"))]
+    assert len(docs)==39
+    for file in docs:
+        doc=json.loads(file.read_text(encoding="utf-8"))
+        assert "home_away_open_window_alert" in doc["entity"]["switch"],file
+        assert set(doc["selector"]["away_window_delivery"]["options"]) == {
+            "mobile_notification","mobile_tts","watch_notification","watch_tts",
+            "tablet_notification","tablet_tts","other_notification","other_tts"}
+        for key in ("away_open_window_alert","away_windows_target_people",
+                    "away_windows_delivery_channels"):
+            for section in ("config","options"):
+                page=doc[section]["step"]["setup_general"]
+                assert key in page["data"] and key in page["data_description"],(file,key)
