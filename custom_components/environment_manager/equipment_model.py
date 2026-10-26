@@ -458,7 +458,8 @@ def control_modes(manager: Any, spec: ManagedDevice) -> tuple[str, ...]:
     cap = capabilities(manager, spec)
     result = ("existing", "automatic", "manual", "off")
     if cap and (cap.temperature and bool(set(cap.modes) & {"heat", "cool"})
-                or cap.humidity and (cap.domain == "humidifier" or "dry" in cap.modes)
+                or cap.domain == "humidifier" and cap.humidity
+                or "dry" in cap.modes
                 or cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}):
         result += ("pid",)
     return result
