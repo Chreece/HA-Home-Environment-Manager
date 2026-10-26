@@ -142,6 +142,36 @@ def open_windows(hass: Any, settings: Mapping[str, Any]) -> tuple[tuple[str, str
     return tuple(sorted(by_area))
 
 
+def watched_entities(hass: Any, settings: Mapping[str, Any]) -> set[str]:
+    """Track every configured away-evidence source and eligible window contact."""
+    from .device_hierarchy import configured_area_ids
+
+    globals_ = settings.get(CONF_OCCUPANCY_GLOBAL, {})
+    globals_ = globals_ if isinstance(globals_, Mapping) else {}
+    tracked = {item.entity_id for item in hass.states.async_all("person")}
+    for field in ("home_trackers", "room_occupancy_sensors"):
+        values = globals_.get(field, [])
+        if isinstance(values, list):
+            tracked.update(item for item in values if isinstance(item, str))
+    rooms_id = globals_.get("occupied_rooms_entity")
+    if isinstance(rooms_id, str) and rooms_id:
+        tracked.add(rooms_id)
+    sources = settings.get("room_sources", {})
+    areas = list(configured_area_ids(settings))
+    if isinstance(sources, Mapping):
+        areas.extend(k for k in sources if isinstance(k, str))
+    for area in dict.fromkeys(areas):
+        choices = selected(settings, area, "windows")
+        if choices is not None:
+            tracked.update(choices)
+        else:
+            tracked.update(
+                item.entity_id for item in hass.states.async_all("binary_sensor")
+                if entity_area(hass, item.entity_id) == area and is_window(hass, item)
+            )
+    return tracked
+
+
 def compose_message(language: str, windows: tuple[tuple[str, str], ...]) -> tuple[str, str]:
     lang = str(language or "en").replace("_", "-").split("-", 1)[0].casefold()
     title, template = MESSAGES.get(lang, MESSAGES["en"])
