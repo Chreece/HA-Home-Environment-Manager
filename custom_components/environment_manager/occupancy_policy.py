@@ -375,8 +375,11 @@ def device_permission(device: Mapping, room_status: str, home_status: str,
     if sleep == "pause":
         if sleeping is True:
             return "held", "sleep_room_control_paused"
-        if sleeping is None:
+        if sleeping is None and home_status != "away":
             return "held", "sleep_room_evidence_unknown"
+        # Confirmed whole-house absence means no occupant can be sleeping,
+        # even if an optional sleeping-room entity stopped reporting. A live
+        # sleep=True above always wins over this derived negative evidence.
     elif sleep == "sleep_targets":
         # Sleep targets are setpoints, not a command to pause heating. If
         # sleeping is unverified, the profile already falls back to Home/Away
