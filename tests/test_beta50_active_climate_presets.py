@@ -9,6 +9,7 @@ from __future__ import annotations
 import asyncio
 import pytest
 
+from test_discovery import adapter
 from test_equipment_entities import platforms
 from test_equipment_control import home, runtime_module
 from custom_components.environment_manager import equipment_model as model
