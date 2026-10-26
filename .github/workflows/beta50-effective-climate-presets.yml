@@ -1,12 +1,8 @@
 name: Beta50 all managed climate effective Away presets
+# Beta50 already published. Keep manual audit without rerunning the older
+# immutable version-bound publisher against beta51's newer manifest.
 on:
-  push:
-    branches:
-      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
-      - 'fix/beta50-managed-climate-effective-presets-20261026'
-  pull_request:
-    branches:
-      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
+  workflow_dispatch:
 
 permissions:
   contents: read
