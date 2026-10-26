@@ -58,7 +58,13 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             )
             for entity_id in self._spec.source_entities
         }
-        plan = equipment.plan_for(self._manager, self._spec)
+        # HA may request a diagnostic state during partial setup, or an
+        # external status consumer may expose only states.get (not async_all).
+        # A read-only status must never crash setup or fabricate a room plan.
+        # In the fully running integration, compute the real live room plan.
+        states = getattr(self._manager.hass, "states", None)
+        plan = (equipment.plan_for(self._manager, self._spec)
+                if callable(getattr(states, "async_all", None)) else {})
         shared = self._manager.settings.get("occupancy_global") or {}
         sleep_id = shared.get("sleep_rooms_entity") if isinstance(shared, dict) else None
         sleep_source = self._manager.hass.states.get(sleep_id) if (
