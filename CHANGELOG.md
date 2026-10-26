@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0b49 - Numeric occupancy and immediate departure notice plus native climate DRY (beta)
+
+- Support explicit number/input_number and numeric person/occupancy count sensors for Home and room presence. Zero = empty/away; positive = occupied; stale, unavailable and invalid data are unknown.
+- Evaluate home absence only from user-selected presence sources, using all configured evidence, without adding unrelated Person entities; fall back to known Person states if no sources were selected.
+- Trigger opted-in open-window alerts immediately on confirmed all-away input without the old 60-second delay. Preserve startup-away suppression, duplicate prevention, exact Announcement Hub person/phone channels, and revalidate before delivery.
+- Fix Automatic/PID DRY selection for climate dehumidifiers with native temperature features and shared HVAC modes. Prioritize urgent thermal demand, then measured RH; show the virtual climate DRY intent and RH target correctly.
+- Retain exact advertised physical HVAC modes, missing-feedback interlocks, unchanged compressor ON/OFF timing, room contact safety, source identity/authorization, and all beta48+ features.
+- Preserve the sole canonical environment_manager domain without migrations or changing previous release tags.
+
 ## 0.6.0b48 - Optional all-away window warning and exact personal Announcement Hub delivery (beta)
 
 - Add an opt-in Home switch and matching General settings control to warn of actual selected open windows after all known people and trackers are confirmed away for 60 seconds. Never treat unknown/unavailable as away; reuse the existing away cooldown.
