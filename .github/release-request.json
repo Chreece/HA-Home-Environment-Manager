@@ -1,16 +1,16 @@
 {
-  "version": "0.6.0b48",
+  "version": "0.6.0b49",
   "channel": "beta",
-  "release_branch": "beta/v0.6.0b48",
-  "intent": "Opt-in all-persons-away open-window reminder and selective person/phone/watch/tablet Announcement Hub delivery.",
-  "note": "Use only authoritative HA Person + selected tracker absence and selected physical Window-class contacts. Alert after 60-second stable departure, deduplicate per departure, never broadcast to rooms, never open/close equipment. Preserve beta47 sensor averaging and beta46/45 controller/shading safety.",
+  "release_branch": "beta/v0.6.0b49",
+  "intent": "Accept real number/input_number and explicitly selected numeric occupancy counts for Home and room presence; notify directly on confirmed empty home; ensure a dry-capable native climate selects and starts supported dehumidification modes when room RH requires it.",
+  "note": "The absence alert uses only the selected presence inputs, bypasses its old 60-second delay and the separate HVAC Away cooldown, never assumes unavailable values mean zero. Native climate DRY respects actual advertised HVAC modes, selected controller authorizations, physical compressor time and window/competing-mode safeguards. Preserve canonical environment_manager, prior beta48 person delivery and all beta47 sensor averaging.",
   "validation_attempt": 0,
   "changes": [
-    "New disabled-by-default Home switch alerts only after all known people and selected home trackers are confirmed away and at least one selected native window contact stays open.",
-    "Add General settings per-person selector and multi-select delivery channels for phone/watch/tablet/other notification and companion TTS, shown only when Hub is installed.",
-    "Submit exact person destinations, restricted channels and occupied_only false through Announcement Hub; no room speakers, general outputs, unselected devices or accidental channel crossover.",
-    "One alert per departure/selected open window with recheck before delivery, no startup-away duplicate and conservative unknown/stale occupancy safety; eligible newly open contacts can alert again.",
-    "Retain direct Home Assistant notification fallback only when Announcement Hub is not installed, existing all other behavior and the single canonical environment_manager domain.",
-    "Verify Python 3.13/3.14 regressions, all 38 locale catalogs, HA 2026.10, HACS, hassfest and flat HACS archive before immutable beta48 publication."
+    "Offer Number, input_number and supported numeric occupancy sensor sources in Home/room presence selections; treat finite 0 as absent and positive as present, all other states as unknown.",
+    "Evaluate immediate away-window delivery from explicitly selected presence sources instead of every unrelated person entity. Keep no-send on startup away, per-trip deduplication and last-moment window evidence validation.",
+    "Select native DRY automatically on dry-only and dedicated drying climate endpoints even when temperature setpoint features coexist; on shared heat/cool/dry devices, retain real thermal-priority demand then use high room humidity.",
+    "Enable native DRY feedback PID and expose the controlled humidity setpoint and selected HVAC mode in managed climate UI, even when physical output is OFF waiting for a permissible operating interval.",
+    "Never invent device HVAC modes or native humidity services; block missing RH, open windows, uncommissioned outputs and minimum compressor dwell exactly as before.",
+    "Full Python 3.13/3.14, Home Assistant 2026.10, HACS/hassfest, 38-locale regeneration and exact flat HACS package checks precede immutable beta49 publication."
   ]
 }
