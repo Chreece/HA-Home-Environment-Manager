@@ -260,7 +260,8 @@ def home_presence(hass: Any, global_settings: Mapping,
         if state is not None and isinstance(attr, str) and attr not in ("", "__state__"):
             state = type("_Stamp", (), {"last_changed": getattr(state, "last_updated", None)})()
         status, reason = _after_away_cooldown(
-            [state], cooldown, "occupied_rooms_empty",
+            [state, *(hass.states.get(e) for e in allowed_rooms)],
+            cooldown, "occupied_rooms_empty",
             verified_since=resumed_since,
         )
         return status, reason, all_sources
