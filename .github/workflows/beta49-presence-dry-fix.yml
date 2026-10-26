@@ -427,7 +427,7 @@ jobs:
           python tools/verify_beta37_dashboard_ws_ha.py
 
   publish_flat_beta:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/feat/beta44-shade-weather-owned-open-announcements-20261025'
     needs: [test, hassfest, hacs, home_assistant]
     runs-on: ubuntu-latest
     permissions:
