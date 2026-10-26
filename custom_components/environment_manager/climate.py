@@ -240,7 +240,26 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
         cap = self._caps
         return model.device_limits(self._manager, self._spec, cap)["humidity_max_limit"] if cap else 80
     preset_modes = property(lambda self: list(model.PRESETS))
-    preset_mode = property(lambda self: self.controller_settings["preset"])
+
+    @property
+    def preset_mode(self):
+        """Show the *effective* profile, not the absent stored override.
+
+        Physical climate, humidifier, fan, switch and numeric controllers all
+        share this facade. For Automatic/PID, their current Home/Comfort/Away/
+        Sleep/Eco targets come from the room's live evidence unless a user
+        explicitly overrides the preset. The previous getter returned the
+        stored override ('none') even while the device used Away targets.
+        Existing/Manual/Off do not pretend to follow presence automatically.
+        """
+        settings = self.controller_settings
+        selected = settings.get("preset", "none")
+        if settings.get("control_mode") in ("automatic", "pid"):
+            effective = model.profile_name(
+                settings, model.plan_for(self._manager, self._spec))
+            return effective if effective in model.PRESETS else "none"
+        return selected if selected in model.PRESETS else "none"
+
     fan_modes = property(lambda self: list(self._caps.fan_modes) if self._caps else [])
     swing_modes = property(lambda self: list(self._caps.swing_modes) if self._caps else [])
     swing_horizontal_modes = property(lambda self: list(self._caps.swing_horizontal_modes) if self._caps else [])
@@ -261,9 +280,21 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
     def extra_state_attributes(self):
         cap = self._caps
         cfg = self.controller_settings
+        plan = model.plan_for(self._manager, self._spec)
+        active = model.profile_name(cfg, plan)
+        follows_presence = cfg["control_mode"] in ("automatic", "pid") and cfg["preset"] == "none"
         return {**super().extra_state_attributes, "control_mode": cfg["control_mode"],
                 "requested_hvac_mode": cfg["requested_mode"],
-                "active_profile": model.profile_name(cfg, model.plan_for(self._manager, self._spec)),
+                "active_profile": active,
+                "preset_override": cfg["preset"],
+                "effective_preset": self.preset_mode,
+                "preset_source": ("automatic_presence" if follows_presence
+                                  else "explicit_override" if cfg["preset"] != "none"
+                                  else "not_automatically_managed"),
+                "profile_home_status": plan.get("away", "unknown"),
+                "profile_home_evidence": plan.get("away_evidence", "unknown"),
+                "profile_room_occupancy": plan.get("occupancy", "unknown"),
+                "profile_sleeping": plan.get("sleeping"),
                 "physical_hvac_mode": self._physical_hvac_mode,
                 "physical_source_state": self._state.state if self._state else "unavailable",
                 "controller_mode_selected": cfg["control_mode"] in ("automatic", "pid", "manual"),
