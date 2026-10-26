@@ -485,7 +485,8 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
                     if (hass_state := manager.hass.states.get(e)) is not None
                     and entity_area(manager.hass, e) == spec.area_id
                     and hass_state.attributes.get("device_class") == "window"]
-    shared = manager.settings.get("occupancy_global", {})
+    policy = getattr(manager, "effective_home_policy", None)
+    shared = policy() if callable(policy) else manager.settings.get("occupancy_global", {})
     room = room_config(manager, spec)
     known = {item.area_id for item in specs(manager)}
     occupancy, evidence, sensors = room_presence(manager.hass, spec.area_id, room, shared, known_areas=known)
