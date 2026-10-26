@@ -197,7 +197,10 @@
           "use_mold_indicator": "Utiliser l’indicateur de moisissure au lieu de l’humidité relative",
           "pollen_entities": "Pollen · source · Choisir",
           "use_announcement_hub": "Automatique · Announcement Hub",
-          "general_away_cooldown_minutes": "Maison · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Maison · Away · cooldown (min)",
+          "away_open_window_alert": "Alerter si des fenêtres restent ouvertes après le départ",
+          "away_windows_target_people": "Personnes à prévenir",
+          "away_windows_delivery_channels": "Canaux d'alerte des fenêtres"
         },
         "data_description": {
           "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres. L'indicateur de moisissure utilise l'attribut temperature (°C/°F) d'une entité météo sélectionnée comme température extérieure. Sélectionnez une source qui fournit une température.",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "Les conseils d’aération reposent sur l’humidité estimée près de la surface la plus froide plutôt que sur l’humidité ambiante. Calibrez chaque pièce ; sinon l’indicateur reste indisponible.",
           "pollen_entities": "Au premier réglage, toutes les sources de pollen trouvées sont présélectionnées. Un choix vide explicite ultérieur reste vide.",
           "use_announcement_hub": "Affiché seulement si Announcement Hub est installé. Une fois activé, les annonces passent par le Hub lorsqu'il est disponible.",
-          "general_away_cooldown_minutes": "Après qu'une source valide de pièces occupées devient vide, attendez ce nombre de minutes avant Away. Les données inconnues ou anciennes ne déclenchent jamais Away."
+          "general_away_cooldown_minutes": "Après qu'une source valide de pièces occupées devient vide, attendez ce nombre de minutes avant Away. Les données inconnues ou anciennes ne déclenchent jamais Away.",
+          "away_open_window_alert": "Désactivé par défaut. Après 60 secondes d'absence confirmée de tous les occupants, signale les contacts de fenêtres encore ouverts. Pas d'alerte lors d'un redémarrage en absence; les nouvelles ouvertures peuvent être signalées.",
+          "away_windows_target_people": "Choisissez les personnes person.* concernées, dont les appareils doivent être configurés dans Announcement Hub. Aucun envoi général dans les pièces en cas de destination manquante.",
+          "away_windows_delivery_channels": "Sélection multiple des notifications ou de la voix TTS sur téléphone, montre et tablette. Chaque canal est limité aux appareils attribués aux personnes choisies."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Saisissez une température de surface mesurée valide en °C.",
       "invalid_mold_calibration": "Mesurez simultanément les températures intérieure, extérieure et de surface, avec au moins 3°C d’écart intérieur/extérieur.",
       "invalid_setup_rooms": "Invalide: Pièces à surveiller",
-      "invalid_room_source": "Invalide: Pièce · source"
+      "invalid_room_source": "Invalide: Pièce · source",
+      "invalid_away_windows_recipients": "Choisissez au moins une personne et un canal de livraison pour cet avertissement."
     },
     "abort": {
       "already_configured": "Home Environment Manager est déjà configuré.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Utiliser l’indicateur de moisissure au lieu de l’humidité relative",
           "pollen_entities": "Pollen · source · Choisir",
           "use_announcement_hub": "Automatique · Announcement Hub",
-          "general_away_cooldown_minutes": "Maison · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Maison · Away · cooldown (min)",
+          "away_open_window_alert": "Alerter si des fenêtres restent ouvertes après le départ",
+          "away_windows_target_people": "Personnes à prévenir",
+          "away_windows_delivery_channels": "Canaux d'alerte des fenêtres"
         },
         "data_description": {
           "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres. L'indicateur de moisissure utilise l'attribut temperature (°C/°F) d'une entité météo sélectionnée comme température extérieure. Sélectionnez une source qui fournit une température.",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "Les conseils d’aération reposent sur l’humidité estimée près de la surface la plus froide plutôt que sur l’humidité ambiante. Calibrez chaque pièce ; sinon l’indicateur reste indisponible.",
           "pollen_entities": "Au premier réglage, toutes les sources de pollen trouvées sont présélectionnées. Un choix vide explicite ultérieur reste vide.",
           "use_announcement_hub": "Affiché seulement si Announcement Hub est installé. Une fois activé, les annonces passent par le Hub lorsqu'il est disponible.",
-          "general_away_cooldown_minutes": "Après qu'une source valide de pièces occupées devient vide, attendez ce nombre de minutes avant Away. Les données inconnues ou anciennes ne déclenchent jamais Away."
+          "general_away_cooldown_minutes": "Après qu'une source valide de pièces occupées devient vide, attendez ce nombre de minutes avant Away. Les données inconnues ou anciennes ne déclenchent jamais Away.",
+          "away_open_window_alert": "Désactivé par défaut. Après 60 secondes d'absence confirmée de tous les occupants, signale les contacts de fenêtres encore ouverts. Pas d'alerte lors d'un redémarrage en absence; les nouvelles ouvertures peuvent être signalées.",
+          "away_windows_target_people": "Choisissez les personnes person.* concernées, dont les appareils doivent être configurés dans Announcement Hub. Aucun envoi général dans les pièces en cas de destination manquante.",
+          "away_windows_delivery_channels": "Sélection multiple des notifications ou de la voix TTS sur téléphone, montre et tablette. Chaque canal est limité aux appareils attribués aux personnes choisies."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Invalide · Humidité · paramètres",
       "device_runtime_invalid": "Invalide · Puissance · paramètres",
       "invalid_setup_rooms": "Invalide: Pièces à surveiller",
-      "invalid_room_source": "Invalide: Pièce · source"
+      "invalid_room_source": "Invalide: Pièce · source",
+      "invalid_away_windows_recipients": "Choisissez au moins une personne et un canal de livraison pour cet avertissement."
     },
     "abort": {
       "setup_area_removed": "Invalide: Pièces à surveiller",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Annoncer avant d’ouvrir ou fermer les stores"
+      },
+      "home_away_open_window_alert": {
+        "name": "Alerter si des fenêtres restent ouvertes après le départ"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "consigne · paramètres"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Téléphone - Notification",
+        "mobile_tts": "Téléphone - Voix TTS",
+        "watch_notification": "Montre - Notification",
+        "watch_tts": "Montre - Voix TTS",
+        "tablet_notification": "Tablette - Notification",
+        "tablet_tts": "Tablette - Voix TTS",
+        "other_notification": "Autre appareil - Notification",
+        "other_tts": "Autre appareil - Voix TTS"
       }
     }
   },
