@@ -21,10 +21,15 @@
 
 # Home Environment Manager for Home Assistant
 
-> **New opt-in beta: [v0.6.0b47](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b47).** Stable remains **v0.5.1**. Beta47 averages all valid selected room sensor readings, ignores temporarily unavailable sources and fixes multi-temperature mold recalibration while preserving the previous controller and shade behavior.
+> **New opt-in beta: [v0.6.0b48](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b48).** Stable remains **v0.5.1**. Beta48 adds an optional warning about open windows after **everyone** leaves, plus named person and mobile/watch/tablet delivery channels through Announcement Hub. Beta47 sensor averaging and all earlier climate/shade protections are retained.
 
-**Update with HACS:** Open Home Environment Manager - **Redownload / version selection** - enable **Show beta versions** - select **v0.6.0b47** - restart Home Assistant. Back up your configuration before changing beta versions.
+**Update with HACS:** Open Home Environment Manager - **Redownload / version selection** - enable **Show beta versions** - select **v0.6.0b48** - restart Home Assistant.
 
+## Beta 48 - Open windows when all residents leave home
+
+Enable **Alert when windows remain open after everyone leaves** in the Home device or General settings. After all configured Home Assistant people and home trackers are confirmed away, a 60-second confirmation checks the selected real Window-class binary contacts and lists any still-open windows by room. A missing, unavailable or unknown tracker never proves absence. Notifications are once per trip for each open window, suppress startup duplicates, and never move windows or shutters.
+
+If Announcement Hub is installed, choose **People to notify** (person.* multi-select) and **Delivery channels** (multi-select) in General settings. Available choices are phone push, phone Companion TTS, watch push/TTS, tablet push/TTS and other mapped personal outputs. Configure each person's device mappings in Announcement Hub -> People. A mixed selection such as **Phone notification + Watch TTS** routes exactly those channels to the selected people, without any Snapcast, room-speaker or household broadcast. When Hub is unavailable, Manager does not silently broaden targets. Without Hub, a configured native mobile-app notify endpoint or an HA persistent notification is used. This is off by default and independent of ordinary room announcements.
 ## Beta 47 - valid-only sensor averages and mold recalibration
 
 When a room has multiple selected sensors for the same measurement, the integration now averages just the valid readings after unit normalization. Unavailable, unknown, stale, nonnumeric, invalid-unit and out-of-range inputs do not poison the result; if all selected sensors fail, the result remains unavailable. This applies to room temperature, humidity, CO2, PM, pressure, outdoor numerical conditions, ventilation decisions and controller feedback. Categorical warnings, window states, other safety gates and AQI scale isolation remain unchanged.
