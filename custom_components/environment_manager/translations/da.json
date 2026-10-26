@@ -197,7 +197,10 @@
           "use_mold_indicator": "Skimmelindikator · RH (%) → 70%",
           "pollen_entities": "Pollen · kilde · Vælg",
           "use_announcement_hub": "Automatisk · Announcement Hub",
-          "general_away_cooldown_minutes": "Hjem · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Hjem · Away · cooldown (min)",
+          "away_open_window_alert": "Advar om åbne vinduer når alle er gået",
+          "away_windows_target_people": "Personer der skal advares",
+          "away_windows_delivery_channels": "Kanaler til vinduesadvarsler"
         },
         "data_description": {
           "weather_entities": "Vælg: Vejr og advarsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 Skimmelindikator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Pollen · kilde · Vælg.",
           "use_announcement_hub": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Automatisk · Announcement Hub.",
-          "general_away_cooldown_minutes": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Hjem · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Hjem · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Advar om åbne vinduer når alle er gået. Personer der skal advares (person.*). 60 s. Announcement Hub. Telefon, Ur, Tablet.",
+          "away_windows_target_people": "Personer der skal advares (person.*) - Announcement Hub: Telefon, Ur, Tablet, Anden enhed. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Kanaler til vinduesadvarsler: Telefon Notifikation / TTS-tale, Ur Notifikation / TTS-tale, Tablet Notifikation / TTS-tale. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Skimmelindikator · 🧊 °C ⚠",
       "invalid_mold_calibration": "Skimmelindikator · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "Ugyldig: Rum der skal overvåges",
-      "invalid_room_source": "Ugyldig: Rum · kilde"
+      "invalid_room_source": "Ugyldig: Rum · kilde",
+      "invalid_away_windows_recipients": "Personer der skal advares; Kanaler til vinduesadvarsler. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - allerede konfigureret.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Skimmelindikator · RH (%) → 70%",
           "pollen_entities": "Pollen · kilde · Vælg",
           "use_announcement_hub": "Automatisk · Announcement Hub",
-          "general_away_cooldown_minutes": "Hjem · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Hjem · Away · cooldown (min)",
+          "away_open_window_alert": "Advar om åbne vinduer når alle er gået",
+          "away_windows_target_people": "Personer der skal advares",
+          "away_windows_delivery_channels": "Kanaler til vinduesadvarsler"
         },
         "data_description": {
           "weather_entities": "Vælg: Vejr og advarsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 Skimmelindikator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Pollen · kilde · Vælg.",
           "use_announcement_hub": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Automatisk · Announcement Hub.",
-          "general_away_cooldown_minutes": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Hjem · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Hjem · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Advar om åbne vinduer når alle er gået. Personer der skal advares (person.*). 60 s. Announcement Hub. Telefon, Ur, Tablet.",
+          "away_windows_target_people": "Personer der skal advares (person.*) - Announcement Hub: Telefon, Ur, Tablet, Anden enhed. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Kanaler til vinduesadvarsler: Telefon Notifikation / TTS-tale, Ur Notifikation / TTS-tale, Tablet Notifikation / TTS-tale. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Ugyldig · Luftfugtighed · indstillinger",
       "device_runtime_invalid": "Ugyldig · Effekt · indstillinger",
       "invalid_setup_rooms": "Ugyldig: Rum der skal overvåges",
-      "invalid_room_source": "Ugyldig: Rum · kilde"
+      "invalid_room_source": "Ugyldig: Rum · kilde",
+      "invalid_away_windows_recipients": "Personer der skal advares; Kanaler til vinduesadvarsler. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "Ugyldig: Rum der skal overvåges",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Giv besked før solafskærmning åbnes eller lukkes"
+      },
+      "home_away_open_window_alert": {
+        "name": "Advar om åbne vinduer når alle er gået"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "mål · indstillinger"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Telefon - Notifikation",
+        "mobile_tts": "Telefon - TTS-tale",
+        "watch_notification": "Ur - Notifikation",
+        "watch_tts": "Ur - TTS-tale",
+        "tablet_notification": "Tablet - Notifikation",
+        "tablet_tts": "Tablet - TTS-tale",
+        "other_notification": "Anden enhed - Notifikation",
+        "other_tts": "Anden enhed - TTS-tale"
       }
     }
   },
