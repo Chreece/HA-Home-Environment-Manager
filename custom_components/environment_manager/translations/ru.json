@@ -197,7 +197,10 @@
           "use_mold_indicator": "Индикатор плесени · RH (%) → 70%",
           "pollen_entities": "Пыльца · источник · Выбрать",
           "use_announcement_hub": "Автоматическое · Announcement Hub",
-          "general_away_cooldown_minutes": "Дом · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Дом · Away · cooldown (min)",
+          "away_open_window_alert": "Предупреждать об открытых окнах после ухода всех",
+          "away_windows_target_people": "Получатели уведомления",
+          "away_windows_delivery_channels": "Каналы уведомления об окнах"
         },
         "data_description": {
           "weather_entities": "Выберите: Погода и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 Индикатор плесени · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · Пыльца · источник · Выбрать.",
           "use_announcement_hub": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · Автоматическое · Announcement Hub.",
-          "general_away_cooldown_minutes": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · Дом · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · Дом · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Предупреждать об открытых окнах после ухода всех. Получатели уведомления (person.*). 60 s. Announcement Hub. Телефон, Часы, Планшет.",
+          "away_windows_target_people": "Получатели уведомления (person.*) - Announcement Hub: Телефон, Часы, Планшет, Другое устройство. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Каналы уведомления об окнах: Телефон Уведомление / Голос TTS, Часы Уведомление / Голос TTS, Планшет Уведомление / Голос TTS. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Индикатор плесени · 🧊 °C ⚠",
       "invalid_mold_calibration": "Индикатор плесени · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "Ошибка: Комнаты для наблюдения",
-      "invalid_room_source": "Ошибка: Комната · источник"
+      "invalid_room_source": "Ошибка: Комната · источник",
+      "invalid_away_windows_recipients": "Получатели уведомления; Каналы уведомления об окнах. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - уже настроено.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Индикатор плесени · RH (%) → 70%",
           "pollen_entities": "Пыльца · источник · Выбрать",
           "use_announcement_hub": "Автоматическое · Announcement Hub",
-          "general_away_cooldown_minutes": "Дом · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Дом · Away · cooldown (min)",
+          "away_open_window_alert": "Предупреждать об открытых окнах после ухода всех",
+          "away_windows_target_people": "Получатели уведомления",
+          "away_windows_delivery_channels": "Каналы уведомления об окнах"
         },
         "data_description": {
           "weather_entities": "Выберите: Погода и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 Индикатор плесени · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · Пыльца · источник · Выбрать.",
           "use_announcement_hub": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · Автоматическое · Announcement Hub.",
-          "general_away_cooldown_minutes": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · Дом · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · Дом · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Предупреждать об открытых окнах после ухода всех. Получатели уведомления (person.*). 60 s. Announcement Hub. Телефон, Часы, Планшет.",
+          "away_windows_target_people": "Получатели уведомления (person.*) - Announcement Hub: Телефон, Часы, Планшет, Другое устройство. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Каналы уведомления об окнах: Телефон Уведомление / Голос TTS, Часы Уведомление / Голос TTS, Планшет Уведомление / Голос TTS. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Ошибка · Влажность · настройки",
       "device_runtime_invalid": "Ошибка · Мощность · настройки",
       "invalid_setup_rooms": "Ошибка: Комнаты для наблюдения",
-      "invalid_room_source": "Ошибка: Комната · источник"
+      "invalid_room_source": "Ошибка: Комната · источник",
+      "invalid_away_windows_recipients": "Получатели уведомления; Каналы уведомления об окнах. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "Ошибка: Комнаты для наблюдения",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Сообщать перед открытием или закрытием жалюзи"
+      },
+      "home_away_open_window_alert": {
+        "name": "Предупреждать об открытых окнах после ухода всех"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "цель · настройки"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Телефон - Уведомление",
+        "mobile_tts": "Телефон - Голос TTS",
+        "watch_notification": "Часы - Уведомление",
+        "watch_tts": "Часы - Голос TTS",
+        "tablet_notification": "Планшет - Уведомление",
+        "tablet_tts": "Планшет - Голос TTS",
+        "other_notification": "Другое устройство - Уведомление",
+        "other_tts": "Другое устройство - Голос TTS"
       }
     }
   },
