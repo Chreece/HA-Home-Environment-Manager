@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0b50 - Managed climate effective Away preset and cross-device audit (beta)
+
+- Fix the missing selected preset on PID/Automatic climate entities: show the effective Home/Comfort/Away/Sleep/Eco profile already used to calculate climate targets, not the optional stored override (`none`).
+- Audit and apply the shared fix to real DRY-only climate devices, other native HVAC climate, humidifier/dehumidifier, fans, switch and numeric-controller facades. Keep native DRY/HEAT/COOL/FAN_ONLY operating directions independent of the room preset.
+- Expose preset override, effective preset, origin and home/room/sleep evidence as read-only diagnostic attributes.
+- Preserve deliberate saved profile overrides, Manual/Existing/Off semantics, source validation, no invented compressor actions or modes, physical cooling/heating/dehumidifying checks and PID timing/commissioning.
+- Add comprehensive Away+PID and profile-transition regressions across managed device classes, including native DRY while physically Off/Idle and zero-person numeric Home evidence. Preserve beta49, beta48 and earlier behaviors.
+- Remain single-domain `environment_manager` and retain existing HACS/38-language structure.
+
 ## 0.6.0b49 - Numeric occupancy and immediate departure notice plus native climate DRY (beta)
 
 - Support explicit number/input_number and numeric person/occupancy count sensors for Home and room presence. Zero = empty/away; positive = occupied; stale, unavailable and invalid data are unknown.
