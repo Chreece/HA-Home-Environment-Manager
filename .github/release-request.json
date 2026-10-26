@@ -1,15 +1,16 @@
 {
-  "version": "0.6.0b47",
+  "version": "0.6.0b48",
   "channel": "beta",
-  "release_branch": "beta/v0.6.0b47",
-  "intent": "Average only fresh, finite, physically valid measurements of the same metric across room and weather sensors, including all mold calibration inputs and controllers.",
-  "note": "Ignore temporarily unavailable or stale selected numeric sensors without guessing missing values or weakening nonnumeric hazard alerts. Recalibration uses selected room temperature and outdoor weather means, not a stale single-sensor pin. Preserve original HA canonical domain, manual cold-surface measurement and hardware authorization safeguards.",
+  "release_branch": "beta/v0.6.0b48",
+  "intent": "Opt-in all-persons-away open-window reminder and selective person/phone/watch/tablet Announcement Hub delivery.",
+  "note": "Use only authoritative HA Person + selected tracker absence and selected physical Window-class contacts. Alert after 60-second stable departure, deduplicate per departure, never broadcast to rooms, never open/close equipment. Preserve beta47 sensor averaging and beta46/45 controller/shading safety.",
   "validation_attempt": 0,
   "changes": [
-    "Average compatible temperature, humidity, pressure, CO2, PM and other normalized numeric room/outdoor metrics; discard invalid samples while retaining diagnostics.",
-    "Fix the room mold recalibration button so it accepts multiple room temperature sources and multiple weather providers, persisting calibration input provenance and preserving valid factors on failure.",
-    "Invalidate a previously calibrated mold factor when its selected sensor set changes, without actuating HVAC or covers.",
-    "Keep categorical warnings, rain, stale-all input safety, AQI scale distinction and hardware ownership/permission protections intact.",
-    "Verify sensor means, unit normalization, all-invalid scenarios, mold button and integration action logic with Python 3.13/3.14, Home Assistant 2026.10, frontend, HACS, hassfest, and flat beta HACS payload."
+    "New disabled-by-default Home switch alerts only after all known people and selected home trackers are confirmed away and at least one selected native window contact stays open.",
+    "Add General settings per-person selector and multi-select delivery channels for phone/watch/tablet/other notification and companion TTS, shown only when Hub is installed.",
+    "Submit exact person destinations, restricted channels and occupied_only false through Announcement Hub; no room speakers, general outputs, unselected devices or accidental channel crossover.",
+    "One alert per departure/selected open window with recheck before delivery, no startup-away duplicate and conservative unknown/stale occupancy safety; eligible newly open contacts can alert again.",
+    "Retain direct Home Assistant notification fallback only when Announcement Hub is not installed, existing all other behavior and the single canonical environment_manager domain.",
+    "Verify Python 3.13/3.14 regressions, all 38 locale catalogs, HA 2026.10, HACS, hassfest and flat HACS archive before immutable beta48 publication."
   ]
 }
