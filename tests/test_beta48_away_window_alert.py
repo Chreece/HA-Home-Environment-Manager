@@ -179,21 +179,24 @@ def test_restart_while_away_does_not_alert_and_new_departure_deduplicates(adapte
         alert.observe()
         first.state="not_home"
         alert.observe()
-        assert timers[-1]["seconds"]==60
-        timers[-1]["callback"](None)
+        assert timers==[],"Confirmed departure must dispatch directly"
         await asyncio.sleep(0)
         await asyncio.sleep(0)
         assert len(service.calls)==1
         alert.observe()
-        assert len(timers)==1,"No repeat for the same open contacts"
+        assert timers==[],"Same open windows do not repeat"
         first.state="home"
         alert.observe()
         first.state="not_home"
         alert.observe()
-        assert len(timers)==2,"Next real departure may send"
+        # If evidence becomes unknown before the queued coroutine executes,
+        # the delivery boundary must cancel it instead of announcing.
         first.state="unavailable"
         alert.observe()
-        assert timers[-1]["cancel"],"Unknown person cancels the pending departure"
+        await asyncio.sleep(0)
+        await asyncio.sleep(0)
+        assert len(service.calls)==1
+        assert timers==[],"Unknown evidence never schedules a delayed departure"
         alert.stop()
     asyncio.run(scenario())
 
