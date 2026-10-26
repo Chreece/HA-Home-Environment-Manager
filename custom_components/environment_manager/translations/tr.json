@@ -197,7 +197,10 @@
           "use_mold_indicator": "Küf göstergesi · RH (%) → 70%",
           "pollen_entities": "Polen · kaynak · Seç",
           "use_announcement_hub": "Otomatik · Announcement Hub",
-          "general_away_cooldown_minutes": "Ev · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Ev · Away · cooldown (min)",
+          "away_open_window_alert": "Herkes çıktıktan sonra açık pencereleri bildir",
+          "away_windows_target_people": "Bildirim gönderilecek kişiler",
+          "away_windows_delivery_channels": "Pencere bildirim kanalları"
         },
         "data_description": {
           "weather_entities": "Seçin: Hava durumu ve uyarılar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 Küf göstergesi · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · Polen · kaynak · Seç.",
           "use_announcement_hub": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · Otomatik · Announcement Hub.",
-          "general_away_cooldown_minutes": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · Ev · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · Ev · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Herkes çıktıktan sonra açık pencereleri bildir. Bildirim gönderilecek kişiler (person.*). 60 s. Announcement Hub. Telefon, Saat, Tablet.",
+          "away_windows_target_people": "Bildirim gönderilecek kişiler (person.*) - Announcement Hub: Telefon, Saat, Tablet, Diğer cihaz. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Pencere bildirim kanalları: Telefon Bildirim / TTS ses, Saat Bildirim / TTS ses, Tablet Bildirim / TTS ses. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Küf göstergesi · 🧊 °C ⚠",
       "invalid_mold_calibration": "Küf göstergesi · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "Geçersiz: İzlenecek odalar",
-      "invalid_room_source": "Geçersiz: Oda · kaynak"
+      "invalid_room_source": "Geçersiz: Oda · kaynak",
+      "invalid_away_windows_recipients": "Bildirim gönderilecek kişiler; Pencere bildirim kanalları. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - zaten yapılandırılmış.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Küf göstergesi · RH (%) → 70%",
           "pollen_entities": "Polen · kaynak · Seç",
           "use_announcement_hub": "Otomatik · Announcement Hub",
-          "general_away_cooldown_minutes": "Ev · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Ev · Away · cooldown (min)",
+          "away_open_window_alert": "Herkes çıktıktan sonra açık pencereleri bildir",
+          "away_windows_target_people": "Bildirim gönderilecek kişiler",
+          "away_windows_delivery_channels": "Pencere bildirim kanalları"
         },
         "data_description": {
           "weather_entities": "Seçin: Hava durumu ve uyarılar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 Küf göstergesi · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · Polen · kaynak · Seç.",
           "use_announcement_hub": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · Otomatik · Announcement Hub.",
-          "general_away_cooldown_minutes": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · Ev · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · Ev · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Herkes çıktıktan sonra açık pencereleri bildir. Bildirim gönderilecek kişiler (person.*). 60 s. Announcement Hub. Telefon, Saat, Tablet.",
+          "away_windows_target_people": "Bildirim gönderilecek kişiler (person.*) - Announcement Hub: Telefon, Saat, Tablet, Diğer cihaz. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Pencere bildirim kanalları: Telefon Bildirim / TTS ses, Saat Bildirim / TTS ses, Tablet Bildirim / TTS ses. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Geçersiz · Nem · ayarlar",
       "device_runtime_invalid": "Geçersiz · Güç · ayarlar",
       "invalid_setup_rooms": "Geçersiz: İzlenecek odalar",
-      "invalid_room_source": "Geçersiz: Oda · kaynak"
+      "invalid_room_source": "Geçersiz: Oda · kaynak",
+      "invalid_away_windows_recipients": "Bildirim gönderilecek kişiler; Pencere bildirim kanalları. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "Geçersiz: İzlenecek odalar",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Panjurlar açılmadan veya kapanmadan önce duyur"
+      },
+      "home_away_open_window_alert": {
+        "name": "Herkes çıktıktan sonra açık pencereleri bildir"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "hedef · ayarlar"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Telefon - Bildirim",
+        "mobile_tts": "Telefon - TTS ses",
+        "watch_notification": "Saat - Bildirim",
+        "watch_tts": "Saat - TTS ses",
+        "tablet_notification": "Tablet - Bildirim",
+        "tablet_tts": "Tablet - TTS ses",
+        "other_notification": "Diğer cihaz - Bildirim",
+        "other_tts": "Diğer cihaz - TTS ses"
       }
     }
   },

@@ -197,7 +197,10 @@
           "use_mold_indicator": "곰팡이 지표 · RH (%) → 70%",
           "pollen_entities": "꽃가루 · 정보원 · 선택",
           "use_announcement_hub": "자동 · Announcement Hub",
-          "general_away_cooldown_minutes": "집 · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "집 · Away · cooldown (min)",
+          "away_open_window_alert": "모두 외출한 뒤 열린 창문 알림",
+          "away_windows_target_people": "알림을 받을 사람",
+          "away_windows_delivery_channels": "창문 알림 전송 채널"
         },
         "data_description": {
           "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "“곰팡이 지표 · RH (%) → 70%”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "pollen_entities": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · 꽃가루 · 정보원 · 선택.",
           "use_announcement_hub": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · 자동 · Announcement Hub.",
-          "general_away_cooldown_minutes": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · 집 · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · 집 · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "모두 외출한 뒤 열린 창문 알림. 알림을 받을 사람 (person.*). 60 s. Announcement Hub. 휴대폰, 시계, 태블릿.",
+          "away_windows_target_people": "알림을 받을 사람 (person.*) - Announcement Hub: 휴대폰, 시계, 태블릿, 기타 기기. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "창문 알림 전송 채널: 휴대폰 알림 / TTS 음성, 시계 알림 / TTS 음성, 태블릿 알림 / TTS 음성. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "곰팡이 지표 · 🧊 °C ⚠",
       "invalid_mold_calibration": "곰팡이 지표 · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "잘못됨: 모니터링할 방",
-      "invalid_room_source": "잘못됨: 방 · 정보원"
+      "invalid_room_source": "잘못됨: 방 · 정보원",
+      "invalid_away_windows_recipients": "알림을 받을 사람; 창문 알림 전송 채널. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - 이미 설정됨.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "곰팡이 지표 · RH (%) → 70%",
           "pollen_entities": "꽃가루 · 정보원 · 선택",
           "use_announcement_hub": "자동 · Announcement Hub",
-          "general_away_cooldown_minutes": "집 · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "집 · Away · cooldown (min)",
+          "away_open_window_alert": "모두 외출한 뒤 열린 창문 알림",
+          "away_windows_target_people": "알림을 받을 사람",
+          "away_windows_delivery_channels": "창문 알림 전송 채널"
         },
         "data_description": {
           "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "“곰팡이 지표 · RH (%) → 70%”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "pollen_entities": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · 꽃가루 · 정보원 · 선택.",
           "use_announcement_hub": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · 자동 · Announcement Hub.",
-          "general_away_cooldown_minutes": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · 집 · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · 집 · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "모두 외출한 뒤 열린 창문 알림. 알림을 받을 사람 (person.*). 60 s. Announcement Hub. 휴대폰, 시계, 태블릿.",
+          "away_windows_target_people": "알림을 받을 사람 (person.*) - Announcement Hub: 휴대폰, 시계, 태블릿, 기타 기기. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "창문 알림 전송 채널: 휴대폰 알림 / TTS 음성, 시계 알림 / TTS 음성, 태블릿 알림 / TTS 음성. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "잘못됨 · 습도 · 설정",
       "device_runtime_invalid": "잘못됨 · 전력 · 설정",
       "invalid_setup_rooms": "잘못됨: 모니터링할 방",
-      "invalid_room_source": "잘못됨: 방 · 정보원"
+      "invalid_room_source": "잘못됨: 방 · 정보원",
+      "invalid_away_windows_recipients": "알림을 받을 사람; 창문 알림 전송 채널. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "잘못됨: 모니터링할 방",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "블라인드를 열거나 닫기 전에 알림"
+      },
+      "home_away_open_window_alert": {
+        "name": "모두 외출한 뒤 열린 창문 알림"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "목표 · 설정"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "휴대폰 - 알림",
+        "mobile_tts": "휴대폰 - TTS 음성",
+        "watch_notification": "시계 - 알림",
+        "watch_tts": "시계 - TTS 음성",
+        "tablet_notification": "태블릿 - 알림",
+        "tablet_tts": "태블릿 - TTS 음성",
+        "other_notification": "기타 기기 - 알림",
+        "other_tts": "기타 기기 - TTS 음성"
       }
     }
   },

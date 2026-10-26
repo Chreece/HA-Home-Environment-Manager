@@ -197,7 +197,10 @@
           "use_mold_indicator": "Homeindikaattori · RH (%) → 70%",
           "pollen_entities": "Siitepöly · lähde · Valitse",
           "use_announcement_hub": "Automaattinen · Announcement Hub",
-          "general_away_cooldown_minutes": "Koti · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Koti · Away · cooldown (min)",
+          "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä",
+          "away_windows_target_people": "Ilmoituksen saavat henkilöt",
+          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 Homeindikaattori · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Siitepöly · lähde · Valitse.",
           "use_announcement_hub": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Automaattinen · Announcement Hub.",
-          "general_away_cooldown_minutes": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Koti · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Koti · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä. Ilmoituksen saavat henkilöt (person.*). 60 s. Announcement Hub. Puhelin, Kello, Tabletti.",
+          "away_windows_target_people": "Ilmoituksen saavat henkilöt (person.*) - Announcement Hub: Puhelin, Kello, Tabletti, Muu laite. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat: Puhelin Ilmoitus / TTS-puhe, Kello Ilmoitus / TTS-puhe, Tabletti Ilmoitus / TTS-puhe. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Homeindikaattori · 🧊 °C ⚠",
       "invalid_mold_calibration": "Homeindikaattori · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "Virheellinen: Valvottavat huoneet",
-      "invalid_room_source": "Virheellinen: Huone · lähde"
+      "invalid_room_source": "Virheellinen: Huone · lähde",
+      "invalid_away_windows_recipients": "Ilmoituksen saavat henkilöt; Ikkunavaroituksen kanavat. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - on jo määritetty.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Homeindikaattori · RH (%) → 70%",
           "pollen_entities": "Siitepöly · lähde · Valitse",
           "use_announcement_hub": "Automaattinen · Announcement Hub",
-          "general_away_cooldown_minutes": "Koti · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Koti · Away · cooldown (min)",
+          "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä",
+          "away_windows_target_people": "Ilmoituksen saavat henkilöt",
+          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 Homeindikaattori · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Siitepöly · lähde · Valitse.",
           "use_announcement_hub": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Automaattinen · Announcement Hub.",
-          "general_away_cooldown_minutes": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Koti · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Koti · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä. Ilmoituksen saavat henkilöt (person.*). 60 s. Announcement Hub. Puhelin, Kello, Tabletti.",
+          "away_windows_target_people": "Ilmoituksen saavat henkilöt (person.*) - Announcement Hub: Puhelin, Kello, Tabletti, Muu laite. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat: Puhelin Ilmoitus / TTS-puhe, Kello Ilmoitus / TTS-puhe, Tabletti Ilmoitus / TTS-puhe. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Virheellinen · Kosteus · asetukset",
       "device_runtime_invalid": "Virheellinen · Teho · asetukset",
       "invalid_setup_rooms": "Virheellinen: Valvottavat huoneet",
-      "invalid_room_source": "Virheellinen: Huone · lähde"
+      "invalid_room_source": "Virheellinen: Huone · lähde",
+      "invalid_away_windows_recipients": "Ilmoituksen saavat henkilöt; Ikkunavaroituksen kanavat. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "Virheellinen: Valvottavat huoneet",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Ilmoita ennen kaihtimien avaamista tai sulkemista"
+      },
+      "home_away_open_window_alert": {
+        "name": "Varoita avoimista ikkunoista kaikkien lähdettyä"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "tavoite · asetukset"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Puhelin - Ilmoitus",
+        "mobile_tts": "Puhelin - TTS-puhe",
+        "watch_notification": "Kello - Ilmoitus",
+        "watch_tts": "Kello - TTS-puhe",
+        "tablet_notification": "Tabletti - Ilmoitus",
+        "tablet_tts": "Tabletti - TTS-puhe",
+        "other_notification": "Muu laite - Ilmoitus",
+        "other_tts": "Muu laite - TTS-puhe"
       }
     }
   },

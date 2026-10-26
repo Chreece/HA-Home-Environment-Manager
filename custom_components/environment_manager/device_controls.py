@@ -16,7 +16,7 @@ from homeassistant.exceptions import HomeAssistantError
 from .const import (
     CONF_AREAS, CONF_CLIMATE_ROOMS, CONF_PID_ROOMS, CONF_THRESHOLDS,
     CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_TTS_ENGINE,
-    CONF_MEDIA_PLAYERS, CONF_HUB, CONF_AI_REWRITE, CONF_SHADE_ANNOUNCE,
+    CONF_MEDIA_PLAYERS, CONF_HUB, CONF_AI_REWRITE, CONF_SHADE_ANNOUNCE, CONF_AWAY_WINDOWS_ALERT,
     CONF_AI_AGENT, CONF_REPEAT_MINUTES,
     DEFAULT_THRESHOLDS, MAX_REPEAT_MINUTES,
 )
@@ -722,9 +722,19 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                     raise HomeAssistantError("Announcement interval must be whole minutes")
                 options[key] = int(number)
             elif key in (CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE,
-                              CONF_SHADE_ANNOUNCE):
+                              CONF_SHADE_ANNOUNCE, CONF_AWAY_WINDOWS_ALERT):
                 if type(value) is not bool:
                     raise HomeAssistantError("Global on/off settings require a boolean")
+                if value and key == CONF_AWAY_WINDOWS_ALERT:
+                    from .hub_delivery import hub_installed
+                    if hub_installed(manager.hass):
+                        from .away_windows import configured_recipients
+                        people, channels = configured_recipients(manager.hass, current)
+                        if not people or not channels:
+                            raise HomeAssistantError(
+                                "Choose at least one person and mobile/watch/tablet delivery "
+                                "channel in General settings before enabling away-window alerts"
+                            )
                 if value and key == CONF_HUB:
                     from .hub_delivery import hub_installed
                     if not hub_installed(manager.hass):

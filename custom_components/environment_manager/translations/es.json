@@ -197,7 +197,10 @@
           "use_mold_indicator": "Usar indicador de moho en lugar de humedad relativa",
           "pollen_entities": "Polen · fuente · Elegir",
           "use_announcement_hub": "Automático · Announcement Hub",
-          "general_away_cooldown_minutes": "Casa · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
+          "away_open_window_alert": "Avisar de ventanas abiertas cuando todos salgan",
+          "away_windows_target_people": "Personas destinatarias",
+          "away_windows_delivery_channels": "Canales del aviso de ventanas"
         },
         "data_description": {
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "Las recomendaciones se basan en la humedad estimada de la superficie más fría, no en la humedad relativa ambiental. Calibra cada habitación; sin calibración la lectura es desconocida.",
           "pollen_entities": "En la primera configuración se preseleccionan todas las fuentes de polen encontradas. Una selección vacía explícita posterior permanece vacía.",
           "use_announcement_hub": "Solo aparece si Announcement Hub está instalado. Al activarlo, los anuncios usan el Hub cuando está disponible.",
-          "general_away_cooldown_minutes": "Cuando una fuente válida de habitaciones ocupadas queda vacía, espera estos minutos antes de aplicar Away. Datos desconocidos o antiguos no activan Away."
+          "general_away_cooldown_minutes": "Cuando una fuente válida de habitaciones ocupadas queda vacía, espera estos minutos antes de aplicar Away. Datos desconocidos o antiguos no activan Away.",
+          "away_open_window_alert": "Desactivado inicialmente. Tras confirmar que todos están fuera durante 60 segundos, avisa de los contactos de ventanas aún abiertos. No reenvía al reiniciar en ausencia y solo repite si se abren otras ventanas.",
+          "away_windows_target_people": "Selecciona personas person.* explícitas con sus dispositivos configurados en Announcement Hub. Nunca se envía un aviso general a habitaciones por destinos ausentes.",
+          "away_windows_delivery_channels": "Permite varios canales: avisos escritos y voz Companion TTS en teléfono, reloj o tableta. Solo se usan los dispositivos asignados a cada persona elegida."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Introduce una temperatura superficial medida válida en °C.",
       "invalid_mold_calibration": "Mide simultáneamente interior, exterior y superficie fría, con al menos 3°C de diferencia entre dentro y fuera.",
       "invalid_setup_rooms": "No válido: Estancias que supervisar",
-      "invalid_room_source": "No válido: Habitación · fuente"
+      "invalid_room_source": "No válido: Habitación · fuente",
+      "invalid_away_windows_recipients": "Selecciona al menos una persona y un canal para recibir el aviso de ventanas."
     },
     "abort": {
       "already_configured": "Home Environment Manager ya está configurado.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Usar indicador de moho en lugar de humedad relativa",
           "pollen_entities": "Polen · fuente · Elegir",
           "use_announcement_hub": "Automático · Announcement Hub",
-          "general_away_cooldown_minutes": "Casa · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
+          "away_open_window_alert": "Avisar de ventanas abiertas cuando todos salgan",
+          "away_windows_target_people": "Personas destinatarias",
+          "away_windows_delivery_channels": "Canales del aviso de ventanas"
         },
         "data_description": {
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "Las recomendaciones se basan en la humedad estimada de la superficie más fría, no en la humedad relativa ambiental. Calibra cada habitación; sin calibración la lectura es desconocida.",
           "pollen_entities": "En la primera configuración se preseleccionan todas las fuentes de polen encontradas. Una selección vacía explícita posterior permanece vacía.",
           "use_announcement_hub": "Solo aparece si Announcement Hub está instalado. Al activarlo, los anuncios usan el Hub cuando está disponible.",
-          "general_away_cooldown_minutes": "Cuando una fuente válida de habitaciones ocupadas queda vacía, espera estos minutos antes de aplicar Away. Datos desconocidos o antiguos no activan Away."
+          "general_away_cooldown_minutes": "Cuando una fuente válida de habitaciones ocupadas queda vacía, espera estos minutos antes de aplicar Away. Datos desconocidos o antiguos no activan Away.",
+          "away_open_window_alert": "Desactivado inicialmente. Tras confirmar que todos están fuera durante 60 segundos, avisa de los contactos de ventanas aún abiertos. No reenvía al reiniciar en ausencia y solo repite si se abren otras ventanas.",
+          "away_windows_target_people": "Selecciona personas person.* explícitas con sus dispositivos configurados en Announcement Hub. Nunca se envía un aviso general a habitaciones por destinos ausentes.",
+          "away_windows_delivery_channels": "Permite varios canales: avisos escritos y voz Companion TTS en teléfono, reloj o tableta. Solo se usan los dispositivos asignados a cada persona elegida."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "No válido · Humedad · ajustes",
       "device_runtime_invalid": "No válido · Potencia · ajustes",
       "invalid_setup_rooms": "No válido: Estancias que supervisar",
-      "invalid_room_source": "No válido: Habitación · fuente"
+      "invalid_room_source": "No válido: Habitación · fuente",
+      "invalid_away_windows_recipients": "Selecciona al menos una persona y un canal para recibir el aviso de ventanas."
     },
     "abort": {
       "setup_area_removed": "No válido: Estancias que supervisar",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Anunciar antes de abrir o cerrar persianas"
+      },
+      "home_away_open_window_alert": {
+        "name": "Avisar de ventanas abiertas cuando todos salgan"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "objetivo · ajustes"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Teléfono - Notificación",
+        "mobile_tts": "Teléfono - Voz TTS",
+        "watch_notification": "Reloj - Notificación",
+        "watch_tts": "Reloj - Voz TTS",
+        "tablet_notification": "Tableta - Notificación",
+        "tablet_tts": "Tableta - Voz TTS",
+        "other_notification": "Otro dispositivo - Notificación",
+        "other_tts": "Otro dispositivo - Voz TTS"
       }
     }
   },

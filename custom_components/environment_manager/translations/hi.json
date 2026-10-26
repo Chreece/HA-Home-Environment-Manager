@@ -197,7 +197,10 @@
           "use_mold_indicator": "फफूंद संकेतक · RH (%) → 70%",
           "pollen_entities": "पराग · स्रोत · चुनें",
           "use_announcement_hub": "स्वचालित · Announcement Hub",
-          "general_away_cooldown_minutes": "घर · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "घर · Away · cooldown (min)",
+          "away_open_window_alert": "सबके जाने पर खुली खिड़कियों की सूचना दें",
+          "away_windows_target_people": "सूचना पाने वाले व्यक्ति",
+          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 फफूंद संकेतक · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · पराग · स्रोत · चुनें.",
           "use_announcement_hub": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · स्वचालित · Announcement Hub.",
-          "general_away_cooldown_minutes": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · घर · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · घर · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "सबके जाने पर खुली खिड़कियों की सूचना दें. सूचना पाने वाले व्यक्ति (person.*). 60 s. Announcement Hub. फ़ोन, घड़ी, टैबलेट.",
+          "away_windows_target_people": "सूचना पाने वाले व्यक्ति (person.*) - Announcement Hub: फ़ोन, घड़ी, टैबलेट, अन्य उपकरण. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम: फ़ोन सूचना / TTS आवाज़, घड़ी सूचना / TTS आवाज़, टैबलेट सूचना / TTS आवाज़. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "फफूंद संकेतक · 🧊 °C ⚠",
       "invalid_mold_calibration": "फफूंद संकेतक · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "अमान्य: निगरानी के कमरे",
-      "invalid_room_source": "अमान्य: कमरा · स्रोत"
+      "invalid_room_source": "अमान्य: कमरा · स्रोत",
+      "invalid_away_windows_recipients": "सूचना पाने वाले व्यक्ति; खिड़की सूचना के माध्यम. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - पहले से कॉन्फ़िगर है.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "फफूंद संकेतक · RH (%) → 70%",
           "pollen_entities": "पराग · स्रोत · चुनें",
           "use_announcement_hub": "स्वचालित · Announcement Hub",
-          "general_away_cooldown_minutes": "घर · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "घर · Away · cooldown (min)",
+          "away_open_window_alert": "सबके जाने पर खुली खिड़कियों की सूचना दें",
+          "away_windows_target_people": "सूचना पाने वाले व्यक्ति",
+          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 फफूंद संकेतक · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · पराग · स्रोत · चुनें.",
           "use_announcement_hub": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · स्वचालित · Announcement Hub.",
-          "general_away_cooldown_minutes": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · घर · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · घर · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "सबके जाने पर खुली खिड़कियों की सूचना दें. सूचना पाने वाले व्यक्ति (person.*). 60 s. Announcement Hub. फ़ोन, घड़ी, टैबलेट.",
+          "away_windows_target_people": "सूचना पाने वाले व्यक्ति (person.*) - Announcement Hub: फ़ोन, घड़ी, टैबलेट, अन्य उपकरण. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम: फ़ोन सूचना / TTS आवाज़, घड़ी सूचना / TTS आवाज़, टैबलेट सूचना / TTS आवाज़. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "अमान्य · आर्द्रता · सेटिंग",
       "device_runtime_invalid": "अमान्य · शक्ति · सेटिंग",
       "invalid_setup_rooms": "अमान्य: निगरानी के कमरे",
-      "invalid_room_source": "अमान्य: कमरा · स्रोत"
+      "invalid_room_source": "अमान्य: कमरा · स्रोत",
+      "invalid_away_windows_recipients": "सूचना पाने वाले व्यक्ति; खिड़की सूचना के माध्यम. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "अमान्य: निगरानी के कमरे",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "ब्लाइंड खोलने या बंद करने से पहले घोषणा करें"
+      },
+      "home_away_open_window_alert": {
+        "name": "सबके जाने पर खुली खिड़कियों की सूचना दें"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "लक्ष्य · सेटिंग"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "फ़ोन - सूचना",
+        "mobile_tts": "फ़ोन - TTS आवाज़",
+        "watch_notification": "घड़ी - सूचना",
+        "watch_tts": "घड़ी - TTS आवाज़",
+        "tablet_notification": "टैबलेट - सूचना",
+        "tablet_tts": "टैबलेट - TTS आवाज़",
+        "other_notification": "अन्य उपकरण - सूचना",
+        "other_tts": "अन्य उपकरण - TTS आवाज़"
       }
     }
   },

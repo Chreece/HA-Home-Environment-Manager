@@ -197,7 +197,10 @@
           "use_mold_indicator": "黴菌指標 · RH (%) → 70%",
           "pollen_entities": "花粉 · 來源 · 選擇",
           "use_announcement_hub": "自動 · Announcement Hub",
-          "general_away_cooldown_minutes": "家中 · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "家中 · Away · cooldown (min)",
+          "away_open_window_alert": "所有人離家後提醒未關窗戶",
+          "away_windows_target_people": "接收提醒的人員",
+          "away_windows_delivery_channels": "窗戶提醒發送管道"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "僅為選定房間設定「黴菌指標 · RH (%) → 70%」。資料無效或缺失將停止操作。",
           "pollen_entities": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 花粉 · 來源 · 選擇.",
           "use_announcement_hub": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 自動 · Announcement Hub.",
-          "general_away_cooldown_minutes": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 家中 · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "所有人離家後提醒未關窗戶. 接收提醒的人員 (person.*). 60 s. Announcement Hub. 手機, 手錶, 平板.",
+          "away_windows_target_people": "接收提醒的人員 (person.*) - Announcement Hub: 手機, 手錶, 平板, 其他裝置. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "窗戶提醒發送管道: 手機 通知 / TTS 語音, 手錶 通知 / TTS 語音, 平板 通知 / TTS 語音. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "黴菌指標 · 🧊 °C ⚠",
       "invalid_mold_calibration": "黴菌指標 · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "無效: 要監測的房間",
-      "invalid_room_source": "無效: 房間 · 來源"
+      "invalid_room_source": "無效: 房間 · 來源",
+      "invalid_away_windows_recipients": "接收提醒的人員; 窗戶提醒發送管道. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - 已設定.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "黴菌指標 · RH (%) → 70%",
           "pollen_entities": "花粉 · 來源 · 選擇",
           "use_announcement_hub": "自動 · Announcement Hub",
-          "general_away_cooldown_minutes": "家中 · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "家中 · Away · cooldown (min)",
+          "away_open_window_alert": "所有人離家後提醒未關窗戶",
+          "away_windows_target_people": "接收提醒的人員",
+          "away_windows_delivery_channels": "窗戶提醒發送管道"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "僅為選定房間設定「黴菌指標 · RH (%) → 70%」。資料無效或缺失將停止操作。",
           "pollen_entities": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 花粉 · 來源 · 選擇.",
           "use_announcement_hub": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 自動 · Announcement Hub.",
-          "general_away_cooldown_minutes": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 家中 · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "所有人離家後提醒未關窗戶. 接收提醒的人員 (person.*). 60 s. Announcement Hub. 手機, 手錶, 平板.",
+          "away_windows_target_people": "接收提醒的人員 (person.*) - Announcement Hub: 手機, 手錶, 平板, 其他裝置. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "窗戶提醒發送管道: 手機 通知 / TTS 語音, 手錶 通知 / TTS 語音, 平板 通知 / TTS 語音. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "無效 · 濕度 · 設定",
       "device_runtime_invalid": "無效 · 功率 · 設定",
       "invalid_setup_rooms": "無效: 要監測的房間",
-      "invalid_room_source": "無效: 房間 · 來源"
+      "invalid_room_source": "無效: 房間 · 來源",
+      "invalid_away_windows_recipients": "接收提醒的人員; 窗戶提醒發送管道. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "無效: 要監測的房間",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "開合窗簾前發送通知"
+      },
+      "home_away_open_window_alert": {
+        "name": "所有人離家後提醒未關窗戶"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "目標 · 設定"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "手機 - 通知",
+        "mobile_tts": "手機 - TTS 語音",
+        "watch_notification": "手錶 - 通知",
+        "watch_tts": "手錶 - TTS 語音",
+        "tablet_notification": "平板 - 通知",
+        "tablet_tts": "平板 - TTS 語音",
+        "other_notification": "其他裝置 - 通知",
+        "other_tts": "其他裝置 - TTS 語音"
       }
     }
   },

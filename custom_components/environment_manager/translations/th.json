@@ -197,7 +197,10 @@
           "use_mold_indicator": "ตัวชี้วัดเชื้อรา · RH (%) → 70%",
           "pollen_entities": "ละอองเกสร · แหล่งข้อมูล · เลือก",
           "use_announcement_hub": "อัตโนมัติ · Announcement Hub",
-          "general_away_cooldown_minutes": "บ้าน · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "บ้าน · Away · cooldown (min)",
+          "away_open_window_alert": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน",
+          "away_windows_target_people": "บุคคลที่จะรับการแจ้งเตือน",
+          "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง"
         },
         "data_description": {
           "weather_entities": "เลือก: สภาพอากาศและคำเตือน · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 ตัวชี้วัดเชื้อรา · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · ละอองเกสร · แหล่งข้อมูล · เลือก.",
           "use_announcement_hub": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · อัตโนมัติ · Announcement Hub.",
-          "general_away_cooldown_minutes": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · บ้าน · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · บ้าน · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน. บุคคลที่จะรับการแจ้งเตือน (person.*). 60 s. Announcement Hub. โทรศัพท์, นาฬิกา, แท็บเล็ต.",
+          "away_windows_target_people": "บุคคลที่จะรับการแจ้งเตือน (person.*) - Announcement Hub: โทรศัพท์, นาฬิกา, แท็บเล็ต, อุปกรณ์อื่น. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง: โทรศัพท์ การแจ้งเตือน / เสียง TTS, นาฬิกา การแจ้งเตือน / เสียง TTS, แท็บเล็ต การแจ้งเตือน / เสียง TTS. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "ตัวชี้วัดเชื้อรา · 🧊 °C ⚠",
       "invalid_mold_calibration": "ตัวชี้วัดเชื้อรา · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "ไม่ถูกต้อง: ห้องที่จะตรวจสอบ",
-      "invalid_room_source": "ไม่ถูกต้อง: ห้อง · แหล่งข้อมูล"
+      "invalid_room_source": "ไม่ถูกต้อง: ห้อง · แหล่งข้อมูล",
+      "invalid_away_windows_recipients": "บุคคลที่จะรับการแจ้งเตือน; ช่องทางแจ้งเตือนหน้าต่าง. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - ตั้งค่าแล้ว.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "ตัวชี้วัดเชื้อรา · RH (%) → 70%",
           "pollen_entities": "ละอองเกสร · แหล่งข้อมูล · เลือก",
           "use_announcement_hub": "อัตโนมัติ · Announcement Hub",
-          "general_away_cooldown_minutes": "บ้าน · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "บ้าน · Away · cooldown (min)",
+          "away_open_window_alert": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน",
+          "away_windows_target_people": "บุคคลที่จะรับการแจ้งเตือน",
+          "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง"
         },
         "data_description": {
           "weather_entities": "เลือก: สภาพอากาศและคำเตือน · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 ตัวชี้วัดเชื้อรา · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · ละอองเกสร · แหล่งข้อมูล · เลือก.",
           "use_announcement_hub": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · อัตโนมัติ · Announcement Hub.",
-          "general_away_cooldown_minutes": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · บ้าน · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · บ้าน · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน. บุคคลที่จะรับการแจ้งเตือน (person.*). 60 s. Announcement Hub. โทรศัพท์, นาฬิกา, แท็บเล็ต.",
+          "away_windows_target_people": "บุคคลที่จะรับการแจ้งเตือน (person.*) - Announcement Hub: โทรศัพท์, นาฬิกา, แท็บเล็ต, อุปกรณ์อื่น. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง: โทรศัพท์ การแจ้งเตือน / เสียง TTS, นาฬิกา การแจ้งเตือน / เสียง TTS, แท็บเล็ต การแจ้งเตือน / เสียง TTS. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "ไม่ถูกต้อง · ความชื้น · การตั้งค่า",
       "device_runtime_invalid": "ไม่ถูกต้อง · กำลังไฟ · การตั้งค่า",
       "invalid_setup_rooms": "ไม่ถูกต้อง: ห้องที่จะตรวจสอบ",
-      "invalid_room_source": "ไม่ถูกต้อง: ห้อง · แหล่งข้อมูล"
+      "invalid_room_source": "ไม่ถูกต้อง: ห้อง · แหล่งข้อมูล",
+      "invalid_away_windows_recipients": "บุคคลที่จะรับการแจ้งเตือน; ช่องทางแจ้งเตือนหน้าต่าง. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "ไม่ถูกต้อง: ห้องที่จะตรวจสอบ",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "แจ้งเตือนก่อนเปิดหรือปิดม่าน"
+      },
+      "home_away_open_window_alert": {
+        "name": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "เป้าหมาย · การตั้งค่า"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "โทรศัพท์ - การแจ้งเตือน",
+        "mobile_tts": "โทรศัพท์ - เสียง TTS",
+        "watch_notification": "นาฬิกา - การแจ้งเตือน",
+        "watch_tts": "นาฬิกา - เสียง TTS",
+        "tablet_notification": "แท็บเล็ต - การแจ้งเตือน",
+        "tablet_tts": "แท็บเล็ต - เสียง TTS",
+        "other_notification": "อุปกรณ์อื่น - การแจ้งเตือน",
+        "other_tts": "อุปกรณ์อื่น - เสียง TTS"
       }
     }
   },

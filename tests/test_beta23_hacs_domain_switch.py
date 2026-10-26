@@ -13,7 +13,8 @@ CURRENT_VERSION = json.loads((PKG / "manifest.json").read_text(encoding="utf-8")
 
 
 def _builder():
-    builder_version = ("beta47" if CURRENT_VERSION == "0.6.0b47" else
+    builder_version = ("beta48" if CURRENT_VERSION == "0.6.0b48" else
+                       "beta47" if CURRENT_VERSION == "0.6.0b47" else
                        "beta46" if CURRENT_VERSION == "0.6.0b46" else
                        "beta45" if CURRENT_VERSION == "0.6.0b45" else "beta44")
     path = ROOT / "tools" / f"build_{builder_version}_payload.py"
@@ -149,3 +150,16 @@ def test_beta47_publisher_validates_sensor_average_regressions_before_release():
     assert "github.event_name == 'push'" in workflow
     assert "Generate catalogs and run full regression suite" in workflow
     assert "no_typographic_dashes" in workflow
+
+ 
+def test_beta48_open_window_alert_publisher_is_flat_and_gated():
+    if CURRENT_VERSION != "0.6.0b48":
+        return
+    workflow = (ROOT/".github/workflows/beta48-away-window-alert.yml").read_text(encoding="utf-8")
+    assert "python tools/build_beta48_payload.py" in workflow
+    assert "git checkout --orphan beta48-payload" in workflow
+    assert "git push origin HEAD:refs/heads/beta/v0.6.0b48" in workflow
+    assert "gh release create v0.6.0b48" in workflow
+    assert "needs: [test, hassfest, hacs, home_assistant]" in workflow
+    assert "python -m pytest -q tests" in workflow
+    assert "tests/test_beta48_away_window_alert.py" in workflow

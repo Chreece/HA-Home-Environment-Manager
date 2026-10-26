@@ -197,7 +197,10 @@
           "use_mold_indicator": "Mögelindikator · RH (%) → 70%",
           "pollen_entities": "Pollen · källa · Välj",
           "use_announcement_hub": "Automatisk · Announcement Hub",
-          "general_away_cooldown_minutes": "Hem · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Hem · Away · cooldown (min)",
+          "away_open_window_alert": "Varna för öppna fönster när alla har gått",
+          "away_windows_target_people": "Personer som ska varnas",
+          "away_windows_delivery_channels": "Kanaler för fönstervarningar"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 Mögelindikator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Pollen · källa · Välj.",
           "use_announcement_hub": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Automatisk · Announcement Hub.",
-          "general_away_cooldown_minutes": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Hem · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Hem · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Varna för öppna fönster när alla har gått. Personer som ska varnas (person.*). 60 s. Announcement Hub. Telefon, Klocka, Surfplatta.",
+          "away_windows_target_people": "Personer som ska varnas (person.*) - Announcement Hub: Telefon, Klocka, Surfplatta, Annan enhet. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Kanaler för fönstervarningar: Telefon Avisering / TTS-tal, Klocka Avisering / TTS-tal, Surfplatta Avisering / TTS-tal. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Mögelindikator · 🧊 °C ⚠",
       "invalid_mold_calibration": "Mögelindikator · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "Ogiltig: Rum att övervaka",
-      "invalid_room_source": "Ogiltig: Rum · källa"
+      "invalid_room_source": "Ogiltig: Rum · källa",
+      "invalid_away_windows_recipients": "Personer som ska varnas; Kanaler för fönstervarningar. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - redan konfigurerad.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Mögelindikator · RH (%) → 70%",
           "pollen_entities": "Pollen · källa · Välj",
           "use_announcement_hub": "Automatisk · Announcement Hub",
-          "general_away_cooldown_minutes": "Hem · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Hem · Away · cooldown (min)",
+          "away_open_window_alert": "Varna för öppna fönster när alla har gått",
+          "away_windows_target_people": "Personer som ska varnas",
+          "away_windows_delivery_channels": "Kanaler för fönstervarningar"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 Mögelindikator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Pollen · källa · Välj.",
           "use_announcement_hub": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Automatisk · Announcement Hub.",
-          "general_away_cooldown_minutes": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Hem · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Hem · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Varna för öppna fönster när alla har gått. Personer som ska varnas (person.*). 60 s. Announcement Hub. Telefon, Klocka, Surfplatta.",
+          "away_windows_target_people": "Personer som ska varnas (person.*) - Announcement Hub: Telefon, Klocka, Surfplatta, Annan enhet. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Kanaler för fönstervarningar: Telefon Avisering / TTS-tal, Klocka Avisering / TTS-tal, Surfplatta Avisering / TTS-tal. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Ogiltig · Luftfuktighet · inställningar",
       "device_runtime_invalid": "Ogiltig · Effekt · inställningar",
       "invalid_setup_rooms": "Ogiltig: Rum att övervaka",
-      "invalid_room_source": "Ogiltig: Rum · källa"
+      "invalid_room_source": "Ogiltig: Rum · källa",
+      "invalid_away_windows_recipients": "Personer som ska varnas; Kanaler för fönstervarningar. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "Ogiltig: Rum att övervaka",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Meddela innan solskydd öppnas eller stängs"
+      },
+      "home_away_open_window_alert": {
+        "name": "Varna för öppna fönster när alla har gått"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "mål · inställningar"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Telefon - Avisering",
+        "mobile_tts": "Telefon - TTS-tal",
+        "watch_notification": "Klocka - Avisering",
+        "watch_tts": "Klocka - TTS-tal",
+        "tablet_notification": "Surfplatta - Avisering",
+        "tablet_tts": "Surfplatta - TTS-tal",
+        "other_notification": "Annan enhet - Avisering",
+        "other_tts": "Annan enhet - TTS-tal"
       }
     }
   },

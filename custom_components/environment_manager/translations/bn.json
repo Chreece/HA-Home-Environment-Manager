@@ -197,7 +197,10 @@
           "use_mold_indicator": "ছাঁচের সূচক · RH (%) → 70%",
           "pollen_entities": "পরাগ · উৎস · নির্বাচন",
           "use_announcement_hub": "স্বয়ংক্রিয় · Announcement Hub",
-          "general_away_cooldown_minutes": "বাড়ি · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "বাড়ি · Away · cooldown (min)",
+          "away_open_window_alert": "সবাই বের হলে খোলা জানালার সতর্কতা দিন",
+          "away_windows_target_people": "বিজ্ঞপ্তি পাবেন যাঁরা",
+          "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম"
         },
         "data_description": {
           "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 ছাঁচের সূচক · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · পরাগ · উৎস · নির্বাচন.",
           "use_announcement_hub": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · স্বয়ংক্রিয় · Announcement Hub.",
-          "general_away_cooldown_minutes": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · বাড়ি · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · বাড়ি · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "সবাই বের হলে খোলা জানালার সতর্কতা দিন. বিজ্ঞপ্তি পাবেন যাঁরা (person.*). 60 s. Announcement Hub. ফোন, ঘড়ি, ট্যাবলেট.",
+          "away_windows_target_people": "বিজ্ঞপ্তি পাবেন যাঁরা (person.*) - Announcement Hub: ফোন, ঘড়ি, ট্যাবলেট, অন্য ডিভাইস. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম: ফোন বিজ্ঞপ্তি / TTS কথা, ঘড়ি বিজ্ঞপ্তি / TTS কথা, ট্যাবলেট বিজ্ঞপ্তি / TTS কথা. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "ছাঁচের সূচক · 🧊 °C ⚠",
       "invalid_mold_calibration": "ছাঁচের সূচক · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "অবৈধ: পর্যবেক্ষণের ঘর",
-      "invalid_room_source": "অবৈধ: ঘর · উৎস"
+      "invalid_room_source": "অবৈধ: ঘর · উৎস",
+      "invalid_away_windows_recipients": "বিজ্ঞপ্তি পাবেন যাঁরা; জানালার সতর্কতার মাধ্যম. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - আগেই সেট করা হয়েছে.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "ছাঁচের সূচক · RH (%) → 70%",
           "pollen_entities": "পরাগ · উৎস · নির্বাচন",
           "use_announcement_hub": "স্বয়ংক্রিয় · Announcement Hub",
-          "general_away_cooldown_minutes": "বাড়ি · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "বাড়ি · Away · cooldown (min)",
+          "away_open_window_alert": "সবাই বের হলে খোলা জানালার সতর্কতা দিন",
+          "away_windows_target_people": "বিজ্ঞপ্তি পাবেন যাঁরা",
+          "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম"
         },
         "data_description": {
           "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 ছাঁচের সূচক · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · পরাগ · উৎস · নির্বাচন.",
           "use_announcement_hub": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · স্বয়ংক্রিয় · Announcement Hub.",
-          "general_away_cooldown_minutes": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · বাড়ি · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · বাড়ি · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "সবাই বের হলে খোলা জানালার সতর্কতা দিন. বিজ্ঞপ্তি পাবেন যাঁরা (person.*). 60 s. Announcement Hub. ফোন, ঘড়ি, ট্যাবলেট.",
+          "away_windows_target_people": "বিজ্ঞপ্তি পাবেন যাঁরা (person.*) - Announcement Hub: ফোন, ঘড়ি, ট্যাবলেট, অন্য ডিভাইস. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম: ফোন বিজ্ঞপ্তি / TTS কথা, ঘড়ি বিজ্ঞপ্তি / TTS কথা, ট্যাবলেট বিজ্ঞপ্তি / TTS কথা. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "অবৈধ · আর্দ্রতা · সেটিংস",
       "device_runtime_invalid": "অবৈধ · শক্তি · সেটিংস",
       "invalid_setup_rooms": "অবৈধ: পর্যবেক্ষণের ঘর",
-      "invalid_room_source": "অবৈধ: ঘর · উৎস"
+      "invalid_room_source": "অবৈধ: ঘর · উৎস",
+      "invalid_away_windows_recipients": "বিজ্ঞপ্তি পাবেন যাঁরা; জানালার সতর্কতার মাধ্যম. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "অবৈধ: পর্যবেক্ষণের ঘর",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "ব্লাইন্ড খোলা বা বন্ধের আগে ঘোষণা করুন"
+      },
+      "home_away_open_window_alert": {
+        "name": "সবাই বের হলে খোলা জানালার সতর্কতা দিন"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "লক্ষ্য · সেটিংস"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "ফোন - বিজ্ঞপ্তি",
+        "mobile_tts": "ফোন - TTS কথা",
+        "watch_notification": "ঘড়ি - বিজ্ঞপ্তি",
+        "watch_tts": "ঘড়ি - TTS কথা",
+        "tablet_notification": "ট্যাবলেট - বিজ্ঞপ্তি",
+        "tablet_tts": "ট্যাবলেট - TTS কথা",
+        "other_notification": "অন্য ডিভাইস - বিজ্ঞপ্তি",
+        "other_tts": "অন্য ডিভাইস - TTS কথা"
       }
     }
   },

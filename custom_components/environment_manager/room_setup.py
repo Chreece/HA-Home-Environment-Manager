@@ -15,6 +15,7 @@ from .const import (
     CONF_AREAS, CONF_WEATHER, CONF_OUTDOOR, CONF_WARNINGS, CONF_LANGUAGE,
     CONF_NOTIFY_TARGETS, CONF_MEDIA_PLAYERS, CONF_TTS_ENGINE, CONF_AI_AGENT, CONF_HUB,
     CONF_OCCUPANCY_GLOBAL, CONF_ENVIRONMENT_GLOBAL, CONF_USE_MOLD,
+    CONF_AWAY_WINDOWS_ALERT, CONF_AWAY_WINDOWS_PERSONS, CONF_AWAY_WINDOWS_DELIVERY,
 )
 from . import room_sources as sources
 
@@ -148,7 +149,17 @@ class RoomSetupMixin:
         pollen = [{"value": s.entity_id, "label": sources.label(self.hass, s.entity_id)}
                   for s in self.hass.states.async_all("sensor")
                   if "pollen" in s.entity_id.casefold() or s.entity_id in saved_pollen]
+        from .hub_delivery import hub_installed
+        if hub_installed(self.hass):
+            from .away_windows import DELIVERY_CHANNELS
+            away_options = {
+                CONF_AWAY_WINDOWS_PERSONS: state_options("person"),
+                CONF_AWAY_WINDOWS_DELIVERY: list(DELIVERY_CHANNELS),
+            }
+        else:
+            away_options = {}
         result = {
+            **away_options,
             CONF_WEATHER: state_options("weather"),
             CONF_OUTDOOR: outdoor_choices(self.hass, self._values.get(CONF_AREAS, [])),
             CONF_WARNINGS: warning_choices(self.hass),
@@ -164,6 +175,10 @@ class RoomSetupMixin:
         }
         for items in result.values():
             for item in items:
+                # Translated static SelectSelector options use string keys;
+                # HA person/entity choices use label dictionaries.
+                if not isinstance(item, dict):
+                    continue
                 entity = item["value"]
                 if self.hass.states.get(entity) is not None:
                     item["label"] = sources.label(self.hass, entity)
@@ -191,6 +206,9 @@ class RoomSetupMixin:
             CONF_AI_AGENT: self._values.get(CONF_AI_AGENT) or DEFAULT_AGENT,
             CONF_LANGUAGE: str(self._values.get(CONF_LANGUAGE, "auto")).lower(),
             CONF_USE_MOLD: self._values.get(CONF_USE_MOLD, False),
+            CONF_AWAY_WINDOWS_ALERT: self._values.get(CONF_AWAY_WINDOWS_ALERT, False),
+            CONF_AWAY_WINDOWS_PERSONS: self._values.get(CONF_AWAY_WINDOWS_PERSONS, []),
+            CONF_AWAY_WINDOWS_DELIVERY: self._values.get(CONF_AWAY_WINDOWS_DELIVERY, ["mobile_notification"]),
             "pollen_entities": saved_pollen if saved_pollen is not None else [x["value"] for x in options["pollen_entities"]],
             CONF_HUB: bool(self._values.get(CONF_HUB, False)),
             "general_room_occupancy_sensors": old.get("room_occupancy_sensors", []),
@@ -202,7 +220,8 @@ class RoomSetupMixin:
                for prefix in ("occupied", "sleep")},
         }
         multi = {CONF_WEATHER, CONF_OUTDOOR, CONF_WARNINGS, CONF_NOTIFY_TARGETS, CONF_MEDIA_PLAYERS,
-                 "general_room_occupancy_sensors", "general_home_trackers", "pollen_entities"}
+                 "general_room_occupancy_sensors", "general_home_trackers", "pollen_entities",
+                  CONF_AWAY_WINDOWS_PERSONS, CONF_AWAY_WINDOWS_DELIVERY}
         errors = {}
         value = {**defaults, **(user_input or {})}
         from .tts_languages import language_options, preferred_language
@@ -213,7 +232,7 @@ class RoomSetupMixin:
             value[CONF_LANGUAGE])
         if user_input is not None:
             for key, items in options.items():
-                allowed = {i["value"] for i in items}
+                allowed = {i["value"] if isinstance(i, dict) else i for i in items}
                 vals = value[key] if key in multi else [value[key]]
                 if (not isinstance(vals, list) or any(not isinstance(v, str) or v not in allowed for v in vals)):
                     errors[key] = "invalid_room_source"
@@ -221,6 +240,13 @@ class RoomSetupMixin:
                 errors[CONF_LANGUAGE] = "invalid_room_source"
             if type(value[CONF_USE_MOLD]) is not bool:
                 errors[CONF_USE_MOLD] = "invalid_room_source"
+            if type(value[CONF_AWAY_WINDOWS_ALERT]) is not bool:
+                errors[CONF_AWAY_WINDOWS_ALERT] = "invalid_room_source"
+            from .hub_delivery import hub_installed
+            if hub_installed(self.hass) and value[CONF_AWAY_WINDOWS_ALERT] is True:
+                if (not value.get(CONF_AWAY_WINDOWS_PERSONS)
+                        or not value.get(CONF_AWAY_WINDOWS_DELIVERY)):
+                    errors["base"] = "invalid_away_windows_recipients"
             try:
                 away_cooldown = float(value["general_away_cooldown_minutes"])
             except (TypeError, ValueError, OverflowError):
@@ -254,6 +280,13 @@ class RoomSetupMixin:
                 self._values[CONF_HUB] = bool(value.get(CONF_HUB, False) and hub_installed(self.hass))
                 self._values[CONF_LANGUAGE] = "auto" if value[CONF_LANGUAGE] == "auto" else resolve_language(value[CONF_LANGUAGE])
                 self._values[CONF_USE_MOLD] = value[CONF_USE_MOLD]
+                self._values[CONF_AWAY_WINDOWS_ALERT] = value[CONF_AWAY_WINDOWS_ALERT]
+                from .hub_delivery import hub_installed
+                if hub_installed(self.hass):
+                    self._values[CONF_AWAY_WINDOWS_PERSONS] = list(dict.fromkeys(
+                        value[CONF_AWAY_WINDOWS_PERSONS]))
+                    self._values[CONF_AWAY_WINDOWS_DELIVERY] = list(dict.fromkeys(
+                        value[CONF_AWAY_WINDOWS_DELIVERY]))
                 for area in self._setup_order:
                     calibration = self._values.setdefault("mold_rooms", {}).setdefault(area, {})
                     previous_weather = calibration.get("outdoor_weather_entity")
@@ -313,4 +346,13 @@ class RoomSetupMixin:
         if hub_installed(self.hass):
             fields[field(CONF_HUB, value.get(CONF_HUB, False))] = selector.BooleanSelector()
         fields[field(CONF_USE_MOLD, value[CONF_USE_MOLD])] = selector.BooleanSelector()
+        fields[field(CONF_AWAY_WINDOWS_ALERT, value[CONF_AWAY_WINDOWS_ALERT])] = selector.BooleanSelector()
+        if hub_installed(self.hass):
+            # Person and delivery modes are deliberately explicit, not all
+            # registered users or all physical output devices.
+            fields[field(CONF_AWAY_WINDOWS_PERSONS, value[CONF_AWAY_WINDOWS_PERSONS])] = (
+                select(options[CONF_AWAY_WINDOWS_PERSONS], multiple=True))
+            fields[field(CONF_AWAY_WINDOWS_DELIVERY, value[CONF_AWAY_WINDOWS_DELIVERY])] = (
+                select(options[CONF_AWAY_WINDOWS_DELIVERY], multiple=True,
+                       translation_key="away_window_delivery"))
         return self.async_show_form(step_id="setup_general", errors=errors, data_schema=probatio.Schema(fields))

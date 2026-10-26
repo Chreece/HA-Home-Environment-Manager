@@ -10,12 +10,12 @@ from homeassistant.helpers.entity import EntityCategory
 
 from .const import (
     CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE,
-    CONF_SHADE_ANNOUNCE, DOMAIN, SIGNAL_UPDATED,
+    CONF_SHADE_ANNOUNCE, CONF_AWAY_WINDOWS_ALERT, DOMAIN, SIGNAL_UPDATED,
 )
 from .device_controls import update_device_setting
 
 CONTROLS = (CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE,
-            CONF_SHADE_ANNOUNCE)
+            CONF_SHADE_ANNOUNCE, CONF_AWAY_WINDOWS_ALERT)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -99,6 +99,7 @@ class HomeSettingSwitch(SwitchEntity):
             CONF_HUB: "mdi:home-assistant",
             CONF_AI_REWRITE: "mdi:robot-outline",
             CONF_SHADE_ANNOUNCE: "mdi:blinds-horizontal",
+            CONF_AWAY_WINDOWS_ALERT: "mdi:window-open-variant",
             "pollen_avoid_ventilation": "mdi:flower-pollen",
             "sleep_room": "mdi:bed",
             "enable_pmv": "mdi:human-male-board-poll",

@@ -197,7 +197,10 @@
           "use_mold_indicator": "Penészesedési mutató · RH (%) → 70%",
           "pollen_entities": "Pollen · forrás · Választás",
           "use_announcement_hub": "Automatikus · Announcement Hub",
-          "general_away_cooldown_minutes": "Otthon · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Otthon · Away · cooldown (min)",
+          "away_open_window_alert": "Figyelmeztessen a nyitott ablakokra távozáskor",
+          "away_windows_target_people": "Értesítendő személyek",
+          "away_windows_delivery_channels": "Ablakriasztás csatornái"
         },
         "data_description": {
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 Penészesedési mutató · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Pollen · forrás · Választás.",
           "use_announcement_hub": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Automatikus · Announcement Hub.",
-          "general_away_cooldown_minutes": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Otthon · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Otthon · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Figyelmeztessen a nyitott ablakokra távozáskor. Értesítendő személyek (person.*). 60 s. Announcement Hub. Telefon, Óra, Táblagép.",
+          "away_windows_target_people": "Értesítendő személyek (person.*) - Announcement Hub: Telefon, Óra, Táblagép, Más eszköz. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Ablakriasztás csatornái: Telefon Értesítés / TTS beszéd, Óra Értesítés / TTS beszéd, Táblagép Értesítés / TTS beszéd. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Penészesedési mutató · 🧊 °C ⚠",
       "invalid_mold_calibration": "Penészesedési mutató · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "Érvénytelen: Figyelendő helyiségek",
-      "invalid_room_source": "Érvénytelen: Szoba · forrás"
+      "invalid_room_source": "Érvénytelen: Szoba · forrás",
+      "invalid_away_windows_recipients": "Értesítendő személyek; Ablakriasztás csatornái. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - már be van állítva.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Penészesedési mutató · RH (%) → 70%",
           "pollen_entities": "Pollen · forrás · Választás",
           "use_announcement_hub": "Automatikus · Announcement Hub",
-          "general_away_cooldown_minutes": "Otthon · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Otthon · Away · cooldown (min)",
+          "away_open_window_alert": "Figyelmeztessen a nyitott ablakokra távozáskor",
+          "away_windows_target_people": "Értesítendő személyek",
+          "away_windows_delivery_channels": "Ablakriasztás csatornái"
         },
         "data_description": {
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 Penészesedési mutató · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Pollen · forrás · Választás.",
           "use_announcement_hub": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Automatikus · Announcement Hub.",
-          "general_away_cooldown_minutes": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Otthon · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Otthon · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Figyelmeztessen a nyitott ablakokra távozáskor. Értesítendő személyek (person.*). 60 s. Announcement Hub. Telefon, Óra, Táblagép.",
+          "away_windows_target_people": "Értesítendő személyek (person.*) - Announcement Hub: Telefon, Óra, Táblagép, Más eszköz. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Ablakriasztás csatornái: Telefon Értesítés / TTS beszéd, Óra Értesítés / TTS beszéd, Táblagép Értesítés / TTS beszéd. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Érvénytelen · Páratartalom · beállítások",
       "device_runtime_invalid": "Érvénytelen · Teljesítmény · beállítások",
       "invalid_setup_rooms": "Érvénytelen: Figyelendő helyiségek",
-      "invalid_room_source": "Érvénytelen: Szoba · forrás"
+      "invalid_room_source": "Érvénytelen: Szoba · forrás",
+      "invalid_away_windows_recipients": "Értesítendő személyek; Ablakriasztás csatornái. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "Érvénytelen: Figyelendő helyiségek",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Értesítés a redőnyök nyitása vagy zárása előtt"
+      },
+      "home_away_open_window_alert": {
+        "name": "Figyelmeztessen a nyitott ablakokra távozáskor"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "cél · beállítások"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Telefon - Értesítés",
+        "mobile_tts": "Telefon - TTS beszéd",
+        "watch_notification": "Óra - Értesítés",
+        "watch_tts": "Óra - TTS beszéd",
+        "tablet_notification": "Táblagép - Értesítés",
+        "tablet_tts": "Táblagép - TTS beszéd",
+        "other_notification": "Más eszköz - Értesítés",
+        "other_tts": "Más eszköz - TTS beszéd"
       }
     }
   },

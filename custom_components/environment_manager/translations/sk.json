@@ -197,7 +197,10 @@
           "use_mold_indicator": "Indikátor plesní · RH (%) → 70%",
           "pollen_entities": "Peľ · zdroj · Vybrať",
           "use_announcement_hub": "Automatické · Announcement Hub",
-          "general_away_cooldown_minutes": "Domov · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Domov · Away · cooldown (min)",
+          "away_open_window_alert": "Upozorniť na otvorené okná po odchode všetkých",
+          "away_windows_target_people": "Osoby na upozornenie",
+          "away_windows_delivery_channels": "Kanály upozornení na okná"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasie a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 Indikátor plesní · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Peľ · zdroj · Vybrať.",
           "use_announcement_hub": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Automatické · Announcement Hub.",
-          "general_away_cooldown_minutes": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Domov · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Domov · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Upozorniť na otvorené okná po odchode všetkých. Osoby na upozornenie (person.*). 60 s. Announcement Hub. Telefón, Hodinky, Tablet.",
+          "away_windows_target_people": "Osoby na upozornenie (person.*) - Announcement Hub: Telefón, Hodinky, Tablet, Iné zariadenie. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Kanály upozornení na okná: Telefón Oznámenie / Hlas TTS, Hodinky Oznámenie / Hlas TTS, Tablet Oznámenie / Hlas TTS. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Indikátor plesní · 🧊 °C ⚠",
       "invalid_mold_calibration": "Indikátor plesní · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "Neplatné: Monitorované miestnosti",
-      "invalid_room_source": "Neplatné: Miestnosť · zdroj"
+      "invalid_room_source": "Neplatné: Miestnosť · zdroj",
+      "invalid_away_windows_recipients": "Osoby na upozornenie; Kanály upozornení na okná. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - už nastavené.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Indikátor plesní · RH (%) → 70%",
           "pollen_entities": "Peľ · zdroj · Vybrať",
           "use_announcement_hub": "Automatické · Announcement Hub",
-          "general_away_cooldown_minutes": "Domov · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Domov · Away · cooldown (min)",
+          "away_open_window_alert": "Upozorniť na otvorené okná po odchode všetkých",
+          "away_windows_target_people": "Osoby na upozornenie",
+          "away_windows_delivery_channels": "Kanály upozornení na okná"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasie a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 Indikátor plesní · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Peľ · zdroj · Vybrať.",
           "use_announcement_hub": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Automatické · Announcement Hub.",
-          "general_away_cooldown_minutes": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Domov · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Domov · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Upozorniť na otvorené okná po odchode všetkých. Osoby na upozornenie (person.*). 60 s. Announcement Hub. Telefón, Hodinky, Tablet.",
+          "away_windows_target_people": "Osoby na upozornenie (person.*) - Announcement Hub: Telefón, Hodinky, Tablet, Iné zariadenie. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Kanály upozornení na okná: Telefón Oznámenie / Hlas TTS, Hodinky Oznámenie / Hlas TTS, Tablet Oznámenie / Hlas TTS. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Neplatné · Vlhkosť · nastavenia",
       "device_runtime_invalid": "Neplatné · Výkon · nastavenia",
       "invalid_setup_rooms": "Neplatné: Monitorované miestnosti",
-      "invalid_room_source": "Neplatné: Miestnosť · zdroj"
+      "invalid_room_source": "Neplatné: Miestnosť · zdroj",
+      "invalid_away_windows_recipients": "Osoby na upozornenie; Kanály upozornení na okná. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "Neplatné: Monitorované miestnosti",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Oznámiť pred otvorením alebo zatvorením roliet"
+      },
+      "home_away_open_window_alert": {
+        "name": "Upozorniť na otvorené okná po odchode všetkých"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "cieľ · nastavenia"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Telefón - Oznámenie",
+        "mobile_tts": "Telefón - Hlas TTS",
+        "watch_notification": "Hodinky - Oznámenie",
+        "watch_tts": "Hodinky - Hlas TTS",
+        "tablet_notification": "Tablet - Oznámenie",
+        "tablet_tts": "Tablet - Hlas TTS",
+        "other_notification": "Iné zariadenie - Oznámenie",
+        "other_tts": "Iné zariadenie - Hlas TTS"
       }
     }
   },

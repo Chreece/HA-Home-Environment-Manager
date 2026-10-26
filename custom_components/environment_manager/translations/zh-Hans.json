@@ -197,7 +197,10 @@
           "use_mold_indicator": "霉菌指标 · RH (%) → 70%",
           "pollen_entities": "花粉 · 来源 · 选择",
           "use_announcement_hub": "自动 · Announcement Hub",
-          "general_away_cooldown_minutes": "家中 · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "家中 · Away · cooldown (min)",
+          "away_open_window_alert": "所有人离家后提醒未关窗户",
+          "away_windows_target_people": "接收提醒的人员",
+          "away_windows_delivery_channels": "窗户提醒发送渠道"
         },
         "data_description": {
           "weather_entities": "请选择: 天气与预警 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "只为所选房间配置“霉菌指标 · RH (%) → 70%”。缺失或无效数据会阻止相关操作。",
           "pollen_entities": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 花粉 · 来源 · 选择.",
           "use_announcement_hub": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 自动 · Announcement Hub.",
-          "general_away_cooldown_minutes": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 家中 · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "所有人离家后提醒未关窗户. 接收提醒的人员 (person.*). 60 s. Announcement Hub. 手机, 手表, 平板.",
+          "away_windows_target_people": "接收提醒的人员 (person.*) - Announcement Hub: 手机, 手表, 平板, 其他设备. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "窗户提醒发送渠道: 手机 通知 / TTS 语音, 手表 通知 / TTS 语音, 平板 通知 / TTS 语音. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "霉菌指标 · 🧊 °C ⚠",
       "invalid_mold_calibration": "霉菌指标 · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "无效: 要监测的房间",
-      "invalid_room_source": "无效: 房间 · 来源"
+      "invalid_room_source": "无效: 房间 · 来源",
+      "invalid_away_windows_recipients": "接收提醒的人员; 窗户提醒发送渠道. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - 已配置.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "霉菌指标 · RH (%) → 70%",
           "pollen_entities": "花粉 · 来源 · 选择",
           "use_announcement_hub": "自动 · Announcement Hub",
-          "general_away_cooldown_minutes": "家中 · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "家中 · Away · cooldown (min)",
+          "away_open_window_alert": "所有人离家后提醒未关窗户",
+          "away_windows_target_people": "接收提醒的人员",
+          "away_windows_delivery_channels": "窗户提醒发送渠道"
         },
         "data_description": {
           "weather_entities": "请选择: 天气与预警 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "只为所选房间配置“霉菌指标 · RH (%) → 70%”。缺失或无效数据会阻止相关操作。",
           "pollen_entities": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 花粉 · 来源 · 选择.",
           "use_announcement_hub": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 自动 · Announcement Hub.",
-          "general_away_cooldown_minutes": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 家中 · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "所有人离家后提醒未关窗户. 接收提醒的人员 (person.*). 60 s. Announcement Hub. 手机, 手表, 平板.",
+          "away_windows_target_people": "接收提醒的人员 (person.*) - Announcement Hub: 手机, 手表, 平板, 其他设备. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "窗户提醒发送渠道: 手机 通知 / TTS 语音, 手表 通知 / TTS 语音, 平板 通知 / TTS 语音. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "无效 · 湿度 · 设置",
       "device_runtime_invalid": "无效 · 功率 · 设置",
       "invalid_setup_rooms": "无效: 要监测的房间",
-      "invalid_room_source": "无效: 房间 · 来源"
+      "invalid_room_source": "无效: 房间 · 来源",
+      "invalid_away_windows_recipients": "接收提醒的人员; 窗户提醒发送渠道. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "无效: 要监测的房间",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "开合窗帘前发送通知"
+      },
+      "home_away_open_window_alert": {
+        "name": "所有人离家后提醒未关窗户"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "目标 · 设置"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "手机 - 通知",
+        "mobile_tts": "手机 - TTS 语音",
+        "watch_notification": "手表 - 通知",
+        "watch_tts": "手表 - TTS 语音",
+        "tablet_notification": "平板 - 通知",
+        "tablet_tts": "平板 - TTS 语音",
+        "other_notification": "其他设备 - 通知",
+        "other_tts": "其他设备 - TTS 语音"
       }
     }
   },

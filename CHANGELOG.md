@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0b48 - Optional all-away window warning and exact personal Announcement Hub delivery (beta)
+
+- Add an opt-in Home switch and matching General settings control to warn of actual selected open windows after all known people and trackers are confirmed away for 60 seconds. Never treat unknown/unavailable as away; reuse the existing away cooldown.
+- Group open real Window-class contacts by their registered room; no cover/shade/window motors, no auto commands.
+- Announce once per window per absence, allow alerts for newly opened windows, suppress restart-away duplicates and preserve strict rechecks before delivery.
+- With Announcement Hub installed, offer a multi-select of HA Person recipients plus phone/watch/tablet/other notification and Companion TTS delivery modes. Respect exact personal mappings while away, without room/snapcast broadcast, output guessing or channel crossover.
+- When Hub is absent, deliver to selected native mobile-app notify entities or HA persistent notification; when installed but unavailable, never broaden fallback recipients.
+- Preserve canonical environment_manager, beta47 sensor averaging, beta46 text cleanup and all physical controller and shade safeguards.
+
 ## 0.6.0b47 - Valid-only numerical room averages and multi-sensor mold calibration (beta)
 
 - Average multiple same-metric inputs after unit normalization, using only valid, finite, fresh samples. Ignore individual offline/unknown/stale/out-of-range sensors without fabricating zero or substituting other rooms.

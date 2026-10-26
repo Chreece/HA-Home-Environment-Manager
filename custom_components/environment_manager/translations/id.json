@@ -197,7 +197,10 @@
           "use_mold_indicator": "Indikator jamur · RH (%) → 70%",
           "pollen_entities": "Serbuk sari · sumber · Pilih",
           "use_announcement_hub": "Otomatis · Announcement Hub",
-          "general_away_cooldown_minutes": "Rumah · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Rumah · Away · cooldown (min)",
+          "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi",
+          "away_windows_target_people": "Orang yang diberi tahu",
+          "away_windows_delivery_channels": "Saluran peringatan jendela"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 Indikator jamur · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Serbuk sari · sumber · Pilih.",
           "use_announcement_hub": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Otomatis · Announcement Hub.",
-          "general_away_cooldown_minutes": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Rumah · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Rumah · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi. Orang yang diberi tahu (person.*). 60 s. Announcement Hub. Ponsel, Jam tangan, Tablet.",
+          "away_windows_target_people": "Orang yang diberi tahu (person.*) - Announcement Hub: Ponsel, Jam tangan, Tablet, Perangkat lain. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Saluran peringatan jendela: Ponsel Notifikasi / Suara TTS, Jam tangan Notifikasi / Suara TTS, Tablet Notifikasi / Suara TTS. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Indikator jamur · 🧊 °C ⚠",
       "invalid_mold_calibration": "Indikator jamur · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "Tidak valid: Ruangan untuk dipantau",
-      "invalid_room_source": "Tidak valid: Ruangan · sumber"
+      "invalid_room_source": "Tidak valid: Ruangan · sumber",
+      "invalid_away_windows_recipients": "Orang yang diberi tahu; Saluran peringatan jendela. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - sudah dikonfigurasi.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Indikator jamur · RH (%) → 70%",
           "pollen_entities": "Serbuk sari · sumber · Pilih",
           "use_announcement_hub": "Otomatis · Announcement Hub",
-          "general_away_cooldown_minutes": "Rumah · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Rumah · Away · cooldown (min)",
+          "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi",
+          "away_windows_target_people": "Orang yang diberi tahu",
+          "away_windows_delivery_channels": "Saluran peringatan jendela"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 Indikator jamur · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Serbuk sari · sumber · Pilih.",
           "use_announcement_hub": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Otomatis · Announcement Hub.",
-          "general_away_cooldown_minutes": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Rumah · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Rumah · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi. Orang yang diberi tahu (person.*). 60 s. Announcement Hub. Ponsel, Jam tangan, Tablet.",
+          "away_windows_target_people": "Orang yang diberi tahu (person.*) - Announcement Hub: Ponsel, Jam tangan, Tablet, Perangkat lain. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Saluran peringatan jendela: Ponsel Notifikasi / Suara TTS, Jam tangan Notifikasi / Suara TTS, Tablet Notifikasi / Suara TTS. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Tidak valid · Kelembapan · pengaturan",
       "device_runtime_invalid": "Tidak valid · Daya · pengaturan",
       "invalid_setup_rooms": "Tidak valid: Ruangan untuk dipantau",
-      "invalid_room_source": "Tidak valid: Ruangan · sumber"
+      "invalid_room_source": "Tidak valid: Ruangan · sumber",
+      "invalid_away_windows_recipients": "Orang yang diberi tahu; Saluran peringatan jendela. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "Tidak valid: Ruangan untuk dipantau",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Umumkan sebelum tirai dibuka atau ditutup"
+      },
+      "home_away_open_window_alert": {
+        "name": "Beri tahu jendela terbuka setelah semua pergi"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "target · pengaturan"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Ponsel - Notifikasi",
+        "mobile_tts": "Ponsel - Suara TTS",
+        "watch_notification": "Jam tangan - Notifikasi",
+        "watch_tts": "Jam tangan - Suara TTS",
+        "tablet_notification": "Tablet - Notifikasi",
+        "tablet_tts": "Tablet - Suara TTS",
+        "other_notification": "Perangkat lain - Notifikasi",
+        "other_tts": "Perangkat lain - Suara TTS"
       }
     }
   },

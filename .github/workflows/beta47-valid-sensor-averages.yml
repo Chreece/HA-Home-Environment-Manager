@@ -1,11 +1,8 @@
 name: Beta47 valid-only room sensor averages and mold calibration
+# Beta47 is published and immutable. Preserve its prior validation recipe
+# only for manual historical checks, not for beta48's new manifest.
 on:
-  push:
-    branches:
-      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
-  pull_request:
-    branches:
-      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
+  workflow_dispatch:
 
 permissions:
   contents: read

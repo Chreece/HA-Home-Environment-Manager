@@ -197,7 +197,10 @@
           "use_mold_indicator": "Indicador de bolor · RH (%) → 70%",
           "pollen_entities": "Pólen · fonte · Selecionar",
           "use_announcement_hub": "Automático · Announcement Hub",
-          "general_away_cooldown_minutes": "Casa · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
+          "away_open_window_alert": "Avisar sobre janelas abertas depois de todos saírem",
+          "away_windows_target_people": "Pessoas a avisar",
+          "away_windows_delivery_channels": "Canais de aviso de janelas abertas"
         },
         "data_description": {
           "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "🧱 Indicador de bolor · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Pólen · fonte · Selecionar.",
           "use_announcement_hub": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Automático · Announcement Hub.",
-          "general_away_cooldown_minutes": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Casa · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Casa · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Avisar sobre janelas abertas depois de todos saírem. Pessoas a avisar (person.*). 60 s. Announcement Hub. Telemóvel, Relógio, Tablet.",
+          "away_windows_target_people": "Pessoas a avisar (person.*) - Announcement Hub: Telemóvel, Relógio, Tablet, Outro dispositivo. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Canais de aviso de janelas abertas: Telemóvel Notificação / Voz TTS, Relógio Notificação / Voz TTS, Tablet Notificação / Voz TTS. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Indicador de bolor · 🧊 °C ⚠",
       "invalid_mold_calibration": "Indicador de bolor · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "Inválido: Divisões a monitorizar",
-      "invalid_room_source": "Inválido: Divisão · fonte"
+      "invalid_room_source": "Inválido: Divisão · fonte",
+      "invalid_away_windows_recipients": "Pessoas a avisar; Canais de aviso de janelas abertas. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - já configurado.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Indicador de bolor · RH (%) → 70%",
           "pollen_entities": "Pólen · fonte · Selecionar",
           "use_announcement_hub": "Automático · Announcement Hub",
-          "general_away_cooldown_minutes": "Casa · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
+          "away_open_window_alert": "Avisar sobre janelas abertas depois de todos saírem",
+          "away_windows_target_people": "Pessoas a avisar",
+          "away_windows_delivery_channels": "Canais de aviso de janelas abertas"
         },
         "data_description": {
           "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "🧱 Indicador de bolor · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Pólen · fonte · Selecionar.",
           "use_announcement_hub": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Automático · Announcement Hub.",
-          "general_away_cooldown_minutes": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Casa · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Casa · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "Avisar sobre janelas abertas depois de todos saírem. Pessoas a avisar (person.*). 60 s. Announcement Hub. Telemóvel, Relógio, Tablet.",
+          "away_windows_target_people": "Pessoas a avisar (person.*) - Announcement Hub: Telemóvel, Relógio, Tablet, Outro dispositivo. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "Canais de aviso de janelas abertas: Telemóvel Notificação / Voz TTS, Relógio Notificação / Voz TTS, Tablet Notificação / Voz TTS. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Inválido · Humidade · definições",
       "device_runtime_invalid": "Inválido · Potência · definições",
       "invalid_setup_rooms": "Inválido: Divisões a monitorizar",
-      "invalid_room_source": "Inválido: Divisão · fonte"
+      "invalid_room_source": "Inválido: Divisão · fonte",
+      "invalid_away_windows_recipients": "Pessoas a avisar; Canais de aviso de janelas abertas. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "Inválido: Divisões a monitorizar",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Anunciar antes de abrir ou fechar os estores"
+      },
+      "home_away_open_window_alert": {
+        "name": "Avisar sobre janelas abertas depois de todos saírem"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "objetivo · definições"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Telemóvel - Notificação",
+        "mobile_tts": "Telemóvel - Voz TTS",
+        "watch_notification": "Relógio - Notificação",
+        "watch_tts": "Relógio - Voz TTS",
+        "tablet_notification": "Tablet - Notificação",
+        "tablet_tts": "Tablet - Voz TTS",
+        "other_notification": "Outro dispositivo - Notificação",
+        "other_tts": "Outro dispositivo - Voz TTS"
       }
     }
   },
