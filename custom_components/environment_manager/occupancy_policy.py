@@ -326,6 +326,42 @@ def sleep_presence(hass: Any, area: str, global_settings: Mapping,
     return (area in rooms if rooms is not None else None), reason
 
 
+
+def controlled_sleep_presence(
+    hass: Any, area: str, global_settings: Mapping,
+    known_areas: set[str], *, home_status: str,
+    local_sleeping: bool | None = False,
+    local_reason: str = "sleep_schedule_disabled",
+) -> tuple[bool | None, str]:
+    """Resolve sleeping for BOTH profile planning and physical-write gating.
+
+    A deliberately active local sleep schedule always counts. An explicitly
+    configured sleeping-room list also counts when it affirmatively identifies
+    this room. If that list is unavailable while the whole home is VERIFIED
+    away, nobody can presently be sleeping: continue using the Away profile
+    instead of silently disabling essential heating. When presence is unknown,
+    an unknown sleep source remains unknown; an intentional PAUSE policy may
+    still hold rather than overriding possible sleep.
+    """
+    if local_sleeping is True:
+        return True, local_reason
+    source = global_settings.get("sleep_rooms_entity") if isinstance(global_settings, Mapping) else None
+    if isinstance(source, str) and source.strip().casefold() in ("", "none", "unknown", "unavailable"):
+        source = None
+    if not isinstance(source, str):
+        # The optional list was never configured. No negative proof is needed
+        # merely to keep a normal heating controller operating.
+        return False, "sleep_room_source_not_configured"
+    observed, reason = sleep_presence(hass, area, global_settings, known_areas)
+    if observed is True:
+        return True, reason
+    if observed is False:
+        return False, reason
+    if home_status == "away":
+        return False, "verified_home_away_no_sleeping_occupants"
+    return None, reason
+
+
 def device_permission(device: Mapping, room_status: str, home_status: str,
                       sleeping: bool | None) -> tuple[str, str]:
     """Prioritize explicit sleep pause over occupancy-triggered power OFF.
@@ -342,8 +378,10 @@ def device_permission(device: Mapping, room_status: str, home_status: str,
         if sleeping is None:
             return "held", "sleep_room_evidence_unknown"
     elif sleep == "sleep_targets":
-        if sleeping is None:
-            return "held", "sleep_room_evidence_unknown"
+        # Sleep targets are setpoints, not a command to pause heating. If
+        # sleeping is unverified, the profile already falls back to Home/Away
+        # normal targets. Only an explicit PAUSE policy requires sleep proof.
+        pass
     elif sleep != "normal":
         return "held", "invalid_sleep_policy"
     source = device.get("presence_requirement", "always")
@@ -391,15 +429,15 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
                                known_areas=known or {area})
         home,_,_=home_presence(hass,global_settings,
                                plan.get("tracker_entities",[]))
-        sleeping=plan.get("sleeping")
-        if global_settings.get("sleep_rooms_entity"):
-            value,_=sleep_presence(hass,area,global_settings,known or {area})
-            if value is None:
-                sleeping=None
-            elif value is True:
-                sleeping=True
-            elif sleeping is None:
-                sleeping=False
+        from time import time as _time
+        from .climate_schedule import scheduled_sleep
+        zone = getattr(getattr(hass, "config", None), "time_zone", None) or "UTC"
+        local_sleeping, local_reason = scheduled_sleep(room_config, _time(), zone)
+        sleeping, _ = controlled_sleep_presence(
+            hass, area, global_settings, known or {area},
+            home_status=home, local_sleeping=local_sleeping,
+            local_reason=local_reason,
+        )
         return device_permission(device,room,home,sleeping)
     room = plan.get("occupancy","unknown")
     sensors=plan.get("presence_entities")
@@ -415,4 +453,14 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
     trackers=plan.get("tracker_entities")
     if isinstance(trackers,list) and trackers:
         home,_,_=home_presence(hass,{"home_trackers":trackers})
-    return device_permission(device,room,home,plan.get("sleeping"))
+    # Even a climate-only room without General sleeping-room configuration
+    # has valid non-sleep evidence from its own disabled/local schedule.
+    from time import time as _time
+    from .climate_schedule import scheduled_sleep
+    zone = getattr(getattr(hass, "config", None), "time_zone", None) or "UTC"
+    local_sleeping, local_reason = scheduled_sleep(room_config, _time(), zone)
+    sleeping, _ = controlled_sleep_presence(
+        hass, area, {}, {area}, home_status=home,
+        local_sleeping=local_sleeping, local_reason=local_reason,
+    )
+    return device_permission(device,room,home,sleeping)
