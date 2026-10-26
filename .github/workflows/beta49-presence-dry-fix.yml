@@ -1,12 +1,8 @@
 name: Beta49 direct numeric presence and native climate DRY
+# Published beta49 workflow retained only for historical/manual verification.
+# Later source changes must use their own matching version-gated publisher.
 on:
-  push:
-    branches:
-      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
-      - 'fix/beta49-numeric-presence-and-dry-mode-20261026'
-  pull_request:
-    branches:
-      - 'feat/beta44-shade-weather-owned-open-announcements-20261025'
+  workflow_dispatch:
 
 permissions:
   contents: read
