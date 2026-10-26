@@ -57,6 +57,7 @@ from .environment_extended import global_pollen, global_aqi
 from .logic import Reading, Reason, Recommendation
 from .logic import Plan, evaluate
 from .messages import announcement, language_code
+from .away_windows import AwayWindowAlert, watched_entities
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -80,6 +81,7 @@ class AirQualityManager:
         self._tasks: set[asyncio.Task[Any]] = set()
         self._environment_history = EnvironmentHistory()
         self._environment_store: Any | None = None
+        self.away_windows = AwayWindowAlert(self)
         self.equipment = EquipmentRuntime(self)
         from .shade_cooling import ShadeCoolingController
         self.shading = ShadeCoolingController(self)
@@ -230,6 +232,7 @@ class AirQualityManager:
                if item.metric != "mold"
                and not (item.details or {}).get("fallback_for_mold")}
         )
+        self._tracked.update(watched_entities(self.hass, config))
         from .room_sources import selected, GROUPS
         for area in monitored_areas:
             for group in GROUPS:
@@ -907,6 +910,7 @@ class AirQualityManager:
         self.native_air_mode.schedule(native_configs,plans)
         self.equipment.schedule()
         self.shading.schedule()
+        self.away_windows.observe(initial=initial)
 
         previous = self._active_actions
         notices=(*new_plan.recommendations,*new_plan.climate_recommendations)
@@ -1068,6 +1072,7 @@ class AirQualityManager:
         convert a teardown failure into permission to re-energize equipment.
         """
         self._active = False
+        self.away_windows.stop()
         controllers = (
             ("equipment",self.equipment),
             ("shading",self.shading),
