@@ -175,6 +175,10 @@ class RoomSetupMixin:
         }
         for items in result.values():
             for item in items:
+                # Translated static SelectSelector options use string keys;
+                # HA person/entity choices use label dictionaries.
+                if not isinstance(item, dict):
+                    continue
                 entity = item["value"]
                 if self.hass.states.get(entity) is not None:
                     item["label"] = sources.label(self.hass, entity)
@@ -228,7 +232,7 @@ class RoomSetupMixin:
             value[CONF_LANGUAGE])
         if user_input is not None:
             for key, items in options.items():
-                allowed = {i["value"] for i in items}
+                allowed = {i["value"] if isinstance(i, dict) else i for i in items}
                 vals = value[key] if key in multi else [value[key]]
                 if (not isinstance(vals, list) or any(not isinstance(v, str) or v not in allowed for v in vals)):
                     errors[key] = "invalid_room_source"
