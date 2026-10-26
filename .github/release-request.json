@@ -1,16 +1,16 @@
 {
-  "version": "0.6.0b49",
+  "version": "0.6.0b50",
   "channel": "beta",
-  "release_branch": "beta/v0.6.0b49",
-  "intent": "Accept real number/input_number and explicitly selected numeric occupancy counts for Home and room presence; notify directly on confirmed empty home; ensure a dry-capable native climate selects and starts supported dehumidification modes when room RH requires it.",
-  "note": "The absence alert uses only the selected presence inputs, bypasses its old 60-second delay and the separate HVAC Away cooldown, never assumes unavailable values mean zero. Native climate DRY respects actual advertised HVAC modes, selected controller authorizations, physical compressor time and window/competing-mode safeguards. Preserve canonical environment_manager, prior beta48 person delivery and all beta47 sensor averaging.",
+  "release_branch": "beta/v0.6.0b50",
+  "intent": "Correct the reported missing Away preset for PID-controlled dry-only climate entities and audit the same logical-climate preset state contract for all supported physical equipment domains.",
+  "note": "Use the already-active profile derived from verified Away/Home/Comfort/Sleep evidence rather than the optional saved preset override ('none') on Automatic/PID climate facades. Never make native HVAC mode, device commissioning, windows or compressor state changes to satisfy display. Show precise origin/evidence and preserve Manual/Existing/Off semantics.",
   "validation_attempt": 0,
   "changes": [
-    "Offer Number, input_number and supported numeric occupancy sensor sources in Home/room presence selections; treat finite 0 as absent and positive as present, all other states as unknown.",
-    "Evaluate immediate away-window delivery from explicitly selected presence sources instead of every unrelated person entity. Keep no-send on startup away, per-trip deduplication and last-moment window evidence validation.",
-    "Select native DRY automatically on dry-only and dedicated drying climate endpoints even when temperature setpoint features coexist; on shared heat/cool/dry devices, retain real thermal-priority demand then use high room humidity.",
-    "Enable native DRY feedback PID and expose the controlled humidity setpoint and selected HVAC mode in managed climate UI, even when physical output is OFF waiting for a permissible operating interval.",
-    "Never invent device HVAC modes or native humidity services; block missing RH, open windows, uncommissioned outputs and minimum compressor dwell exactly as before.",
-    "Full Python 3.13/3.14, Home Assistant 2026.10, HACS/hassfest, 38-locale regeneration and exact flat HACS package checks precede immutable beta49 publication."
+    "Correct climate.preset_mode to show actual calculated profile when control_mode is automatic or pid; preserve explicit stored preset overrides and never show automatic occupancy as a Manual/Existing/Off preset.",
+    "Apply to DRY-only climate dehumidifiers, multi-HVAC climate, native humidifiers/dehumidifiers, fans, switch and numeric actuator climate facades using the single existing ManagedClimate class.",
+    "Retain native mode truth (DRY/HEAT/COOL/FAN_ONLY), physical OFF/IDLE behavior and all original per-device PID/authorization/window/compressor safeguards.",
+    "Add bounded diagnostics for preset_override, effective_preset, origin and home/room/sleep evidence so mismatched settings are transparent.",
+    "Test all supported endpoint classes, Home/Comfort/Away/Sleep changes, direct numeric zero-person Away evidence in a climate-only room, legacy Manual/Existing/Off behavior, explicit override and clearing override, physical OFF + minimum-off hold without commands.",
+    "Require Python 3.13/3.14, 38-locale regeneration, Node frontend, HACS/hassfest, real HA2026.10 smoke and exact flat HACS archive simulation before publishing immutable beta50."
   ]
 }
