@@ -13,7 +13,8 @@ CURRENT_VERSION = json.loads((PKG / "manifest.json").read_text(encoding="utf-8")
 
 
 def _builder():
-    builder_version = ("beta51" if CURRENT_VERSION == "0.6.0b51" else
+    builder_version = ("beta52" if CURRENT_VERSION == "0.6.0b52" else
+                       "beta51" if CURRENT_VERSION == "0.6.0b51" else
                        "beta50" if CURRENT_VERSION == "0.6.0b50" else
                        "beta49" if CURRENT_VERSION == "0.6.0b49" else
                        "beta48" if CURRENT_VERSION == "0.6.0b48" else
@@ -203,5 +204,18 @@ def test_beta51_reboot_away_publisher_is_version_gated_and_flat():
     assert "git checkout --orphan beta51-payload" in workflow
     assert "git push origin HEAD:refs/heads/beta/v0.6.0b51" in workflow
     assert "gh release create v0.6.0b51" in workflow
+    assert "needs: [test, hassfest, hacs, home_assistant]" in workflow
+    assert "github.ref == 'refs/heads/feat/beta44-shade-weather-owned-open-announcements-20261025'" in workflow
+
+
+def test_beta52_sleep_source_heating_publisher_is_gated():
+    if CURRENT_VERSION != "0.6.0b52":
+        return
+    workflow = (ROOT / ".github/workflows/beta52-sleep-source-heating.yml").read_text(encoding="utf-8")
+    assert "python tools/build_beta52_payload.py" in workflow
+    assert "tests/test_beta52_sleep_source_heating.py" in workflow
+    assert "git checkout --orphan beta52-payload" in workflow
+    assert "git push origin HEAD:refs/heads/beta/v0.6.0b52" in workflow
+    assert "gh release create v0.6.0b52" in workflow
     assert "needs: [test, hassfest, hacs, home_assistant]" in workflow
     assert "github.ref == 'refs/heads/feat/beta44-shade-weather-owned-open-announcements-20261025'" in workflow
