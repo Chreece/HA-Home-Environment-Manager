@@ -236,12 +236,14 @@ def test_controller_distinguishes_no_demand_from_pid_duty_idle(runtime_module):
     async def scenario():
         automatic = home(runtime_module, domain="climate", mode="automatic")
         automatic.hass.states.get("sensor.temp").state = "20"
+        automatic.hass.states.get("sensor.rh").state = "50"
         await tick(automatic)
         assert automatic.hass.services.calls == []
         assert automatic.runtime.statuses[automatic.spec.identifier]["status"] == "within_target_band"
 
         pid = home(runtime_module, domain="climate", mode="pid")
         pid.hass.states.get("sensor.temp").state = "19.8"
+        pid.hass.states.get("sensor.rh").state = "50"
         await tick(pid)
         assert pid.hass.services.calls == []
         status = pid.runtime.statuses[pid.spec.identifier]
