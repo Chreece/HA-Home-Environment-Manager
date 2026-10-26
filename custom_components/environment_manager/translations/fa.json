@@ -197,7 +197,10 @@
           "use_mold_indicator": "شاخص کپک · RH (%) → 70%",
           "pollen_entities": "گرده · منبع · انتخاب",
           "use_announcement_hub": "خودکار · Announcement Hub",
-          "general_away_cooldown_minutes": "خانه · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "خانه · Away · cooldown (min)",
+          "away_open_window_alert": "هشدار پنجره باز پس از خروج همه از خانه",
+          "away_windows_target_people": "افراد دریافت کننده هشدار",
+          "away_windows_delivery_channels": "کانال های هشدار پنجره"
         },
         "data_description": {
           "weather_entities": "انتخاب کنید: آب‌وهوا و هشدارها · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "«شاخص کپک · RH (%) → 70%» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "pollen_entities": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · گرده · منبع · انتخاب.",
           "use_announcement_hub": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · خودکار · Announcement Hub.",
-          "general_away_cooldown_minutes": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · خانه · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · خانه · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "هشدار پنجره باز پس از خروج همه از خانه. افراد دریافت کننده هشدار (person.*). 60 s. Announcement Hub. تلفن, ساعت, تبلت.",
+          "away_windows_target_people": "افراد دریافت کننده هشدار (person.*) - Announcement Hub: تلفن, ساعت, تبلت, دستگاه دیگر. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "کانال های هشدار پنجره: تلفن اعلان / گفتار TTS, ساعت اعلان / گفتار TTS, تبلت اعلان / گفتار TTS. Person-specific, not room speakers."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "شاخص کپک · 🧊 °C ⚠",
       "invalid_mold_calibration": "شاخص کپک · ΔT ≥ 3°C ⚠",
       "invalid_setup_rooms": "نامعتبر: اتاق‌های مورد پایش",
-      "invalid_room_source": "نامعتبر: اتاق · منبع"
+      "invalid_room_source": "نامعتبر: اتاق · منبع",
+      "invalid_away_windows_recipients": "افراد دریافت کننده هشدار; کانال های هشدار پنجره. Announcement Hub (person.*)."
     },
     "abort": {
       "already_configured": "Home Environment Manager - قبلاً تنظیم شده.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "شاخص کپک · RH (%) → 70%",
           "pollen_entities": "گرده · منبع · انتخاب",
           "use_announcement_hub": "خودکار · Announcement Hub",
-          "general_away_cooldown_minutes": "خانه · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "خانه · Away · cooldown (min)",
+          "away_open_window_alert": "هشدار پنجره باز پس از خروج همه از خانه",
+          "away_windows_target_people": "افراد دریافت کننده هشدار",
+          "away_windows_delivery_channels": "کانال های هشدار پنجره"
         },
         "data_description": {
           "weather_entities": "انتخاب کنید: آب‌وهوا و هشدارها · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "«شاخص کپک · RH (%) → 70%» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "pollen_entities": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · گرده · منبع · انتخاب.",
           "use_announcement_hub": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · خودکار · Announcement Hub.",
-          "general_away_cooldown_minutes": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · خانه · Away · cooldown (min) · occupancy transition delay."
+          "general_away_cooldown_minutes": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · خانه · Away · cooldown (min) · occupancy transition delay.",
+          "away_open_window_alert": "هشدار پنجره باز پس از خروج همه از خانه. افراد دریافت کننده هشدار (person.*). 60 s. Announcement Hub. تلفن, ساعت, تبلت.",
+          "away_windows_target_people": "افراد دریافت کننده هشدار (person.*) - Announcement Hub: تلفن, ساعت, تبلت, دستگاه دیگر. Only explicitly assigned personal endpoints.",
+          "away_windows_delivery_channels": "کانال های هشدار پنجره: تلفن اعلان / گفتار TTS, ساعت اعلان / گفتار TTS, تبلت اعلان / گفتار TTS. Person-specific, not room speakers."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "نامعتبر · رطوبت · تنظیمات",
       "device_runtime_invalid": "نامعتبر · توان · تنظیمات",
       "invalid_setup_rooms": "نامعتبر: اتاق‌های مورد پایش",
-      "invalid_room_source": "نامعتبر: اتاق · منبع"
+      "invalid_room_source": "نامعتبر: اتاق · منبع",
+      "invalid_away_windows_recipients": "افراد دریافت کننده هشدار; کانال های هشدار پنجره. Announcement Hub (person.*)."
     },
     "abort": {
       "setup_area_removed": "نامعتبر: اتاق‌های مورد پایش",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "اعلام پیش از باز یا بسته شدن پرده‌ها"
+      },
+      "home_away_open_window_alert": {
+        "name": "هشدار پنجره باز پس از خروج همه از خانه"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "هدف · تنظیمات"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "تلفن - اعلان",
+        "mobile_tts": "تلفن - گفتار TTS",
+        "watch_notification": "ساعت - اعلان",
+        "watch_tts": "ساعت - گفتار TTS",
+        "tablet_notification": "تبلت - اعلان",
+        "tablet_tts": "تبلت - گفتار TTS",
+        "other_notification": "دستگاه دیگر - اعلان",
+        "other_tts": "دستگاه دیگر - گفتار TTS"
       }
     }
   },
