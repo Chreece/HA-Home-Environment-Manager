@@ -121,8 +121,11 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
                 dedicated_dry=room.get("dry_climate_entity") == cap.primary,
                 pid=method == "pid",
             )
-            if preferred in cap.modes and preferred != "off":
-                return HVACMode(preferred)
+            # A calculated DRY mode is a genuine humidity-regulation
+            # intention. Do not predeclare HEAT/COOL on a multi-mode unit
+            # before its physical controller has selected that direction.
+            if preferred == "dry" and preferred in cap.modes:
+                return HVACMode.DRY
         if native_mode is not None and native_mode != HVACMode.OFF:
             return native_mode
         active = [mode for mode in cap.modes if mode != "off"]
