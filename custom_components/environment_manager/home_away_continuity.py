@@ -103,6 +103,7 @@ class HomeAwayContinuity:
         self._fingerprint: str | None = None
         self._loaded: dict[str, Any] | None = None
         self._unknown_since: float | None = None
+        self._reset_after_presence = False
 
     @classmethod
     def restore(cls, hass: Any, entry_id: str, data: Any, *, clock=None):
@@ -171,6 +172,7 @@ class HomeAwayContinuity:
         now = self.clock()
         if self._fingerprint != current_key:
             self._fingerprint, self._since, self._unknown_since = current_key, None, None
+            self._reset_after_presence = False
             if self._loaded and self._loaded.get("fingerprint") == current_key:
                 self._since = _timestamp(self._loaded.get("since"), now)
             self._loaded = None
@@ -179,6 +181,7 @@ class HomeAwayContinuity:
         status, _, _ = home_presence(self.hass, immediate)
         if status == "home":
             self._unknown_since = None
+            self._reset_after_presence = True
             if self._since is not None:
                 self._since = None
                 self._changed()
@@ -190,13 +193,19 @@ class HomeAwayContinuity:
                 # A sustained signal outage interrupts the verified-empty
                 # episode. Never resume a stale clock after ambiguous evidence.
                 self._since = None
+                self._reset_after_presence = True
                 self._changed()
             return raw
 
         # All selected room/trackers/list evidence has just been revalidated.
         if self._since is None:
-            self._since = first_verified_empty(self.hass, raw, now)
+            # A freshly observed positive or a sustained unknown breaks the
+            # continuity. Old OFF timestamps on other sources are not evidence
+            # that the house stayed empty after that episode.
+            self._since = (now if self._reset_after_presence
+                           else first_verified_empty(self.hass, raw, now))
             self._changed()
         self._unknown_since = None
+        self._reset_after_presence = False
         raw["_verified_empty_since"] = self._since
         return raw
