@@ -206,8 +206,8 @@
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Välj: Utomhusluftens kvalitet · AQI, CO₂, PM2.5, PM10, VOC. Inte tillgänglig: ⚠",
           "weather_warnings": "Väder och varningar · ⚠ (Inte tillgänglig) → 🪟🔒",
-          "general_room_occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Rum · Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden.",
-          "general_home_trackers": "Välj en riktig Home Assistant-källa för ”Hem · Närvaro · Enheter”. Saknade eller gamla värden stoppar åtgärden.",
+          "general_room_occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Rum · Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Välj en riktig Home Assistant-källa för ”Hem · Närvaro · Enheter”. Saknade eller gamla värden stoppar åtgärden. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Välj en riktig Home Assistant-källa för ”Närvaro · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
           "general_occupied_rooms_attribute": "Ställ in ”Närvaro · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "general_sleep_rooms_entity": "Välj en riktig Home Assistant-källa för ”Sömn · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Pollen · källa · Välj.",
           "use_announcement_hub": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Automatisk · Announcement Hub.",
           "general_away_cooldown_minutes": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Hem · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Varna för öppna fönster när alla har gått. Personer som ska varnas (person.*). 60 s. Announcement Hub. Telefon, Klocka, Surfplatta.",
+          "away_open_window_alert": "Varna för öppna fönster när alla har gått. Personer som ska varnas (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Klocka, Surfplatta.",
           "away_windows_target_people": "Personer som ska varnas (person.*) - Announcement Hub: Telefon, Klocka, Surfplatta, Annan enhet. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kanaler för fönstervarningar: Telefon Avisering / TTS-tal, Klocka Avisering / TTS-tal, Surfplatta Avisering / TTS-tal. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Välj: Utomhusluftens kvalitet · AQI, CO₂, PM2.5, PM10, VOC. Inte tillgänglig: ⚠",
           "weather_warnings": "Väder och varningar · ⚠ (Inte tillgänglig) → 🪟🔒",
-          "general_room_occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Rum · Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden.",
-          "general_home_trackers": "Välj en riktig Home Assistant-källa för ”Hem · Närvaro · Enheter”. Saknade eller gamla värden stoppar åtgärden.",
+          "general_room_occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Rum · Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Välj en riktig Home Assistant-källa för ”Hem · Närvaro · Enheter”. Saknade eller gamla värden stoppar åtgärden. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Välj en riktig Home Assistant-källa för ”Närvaro · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
           "general_occupied_rooms_attribute": "Ställ in ”Närvaro · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "general_sleep_rooms_entity": "Välj en riktig Home Assistant-källa för ”Sömn · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Pollen · källa · Välj.",
           "use_announcement_hub": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Automatisk · Announcement Hub.",
           "general_away_cooldown_minutes": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Hem · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Varna för öppna fönster när alla har gått. Personer som ska varnas (person.*). 60 s. Announcement Hub. Telefon, Klocka, Surfplatta.",
+          "away_open_window_alert": "Varna för öppna fönster när alla har gått. Personer som ska varnas (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Klocka, Surfplatta.",
           "away_windows_target_people": "Personer som ska varnas (person.*) - Announcement Hub: Telefon, Klocka, Surfplatta, Annan enhet. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kanaler för fönstervarningar: Telefon Avisering / TTS-tal, Klocka Avisering / TTS-tal, Surfplatta Avisering / TTS-tal. Person-specific, not room speakers."
         }

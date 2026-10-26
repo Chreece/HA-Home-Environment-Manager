@@ -206,8 +206,8 @@
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Kies: Buitenluchtkwaliteit · AQI, CO₂, PM2.5, PM10, VOC. Niet beschikbaar: ⚠",
           "weather_warnings": "Weer en waarschuwingen · ⚠ (Niet beschikbaar) → 🪟🔒",
-          "general_room_occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Kamer · Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
-          "general_home_trackers": "Kies een echte Home Assistant-bron voor ‘Thuis · Aanwezigheid · Apparaten’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "general_room_occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Kamer · Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Kies een echte Home Assistant-bron voor ‘Thuis · Aanwezigheid · Apparaten’. Ontbrekende of oude waarden blokkeren de bijbehorende actie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · Kamer · bron (state)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
           "general_occupied_rooms_attribute": "Stel ‘Aanwezigheid · Kamer · bron (attribute)’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
           "general_sleep_rooms_entity": "Kies een echte Home Assistant-bron voor ‘Slaap · Kamer · bron (state)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Pollen · bron · Kiezen.",
           "use_announcement_hub": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Automatische · Announcement Hub.",
           "general_away_cooldown_minutes": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Thuis · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Waarschuw voor open ramen wanneer iedereen weg is. Personen voor waarschuwingen (person.*). 60 s. Announcement Hub. Telefoon, Horloge, Tablet.",
+          "away_open_window_alert": "Waarschuw voor open ramen wanneer iedereen weg is. Personen voor waarschuwingen (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefoon, Horloge, Tablet.",
           "away_windows_target_people": "Personen voor waarschuwingen (person.*) - Announcement Hub: Telefoon, Horloge, Tablet, Ander apparaat. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Meldingskanalen voor open ramen: Telefoon Melding / TTS-spraak, Horloge Melding / TTS-spraak, Tablet Melding / TTS-spraak. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Kies: Buitenluchtkwaliteit · AQI, CO₂, PM2.5, PM10, VOC. Niet beschikbaar: ⚠",
           "weather_warnings": "Weer en waarschuwingen · ⚠ (Niet beschikbaar) → 🪟🔒",
-          "general_room_occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Kamer · Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
-          "general_home_trackers": "Kies een echte Home Assistant-bron voor ‘Thuis · Aanwezigheid · Apparaten’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "general_room_occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Kamer · Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Kies een echte Home Assistant-bron voor ‘Thuis · Aanwezigheid · Apparaten’. Ontbrekende of oude waarden blokkeren de bijbehorende actie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · Kamer · bron (state)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
           "general_occupied_rooms_attribute": "Stel ‘Aanwezigheid · Kamer · bron (attribute)’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
           "general_sleep_rooms_entity": "Kies een echte Home Assistant-bron voor ‘Slaap · Kamer · bron (state)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Pollen · bron · Kiezen.",
           "use_announcement_hub": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Automatische · Announcement Hub.",
           "general_away_cooldown_minutes": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Thuis · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Waarschuw voor open ramen wanneer iedereen weg is. Personen voor waarschuwingen (person.*). 60 s. Announcement Hub. Telefoon, Horloge, Tablet.",
+          "away_open_window_alert": "Waarschuw voor open ramen wanneer iedereen weg is. Personen voor waarschuwingen (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefoon, Horloge, Tablet.",
           "away_windows_target_people": "Personen voor waarschuwingen (person.*) - Announcement Hub: Telefoon, Horloge, Tablet, Ander apparaat. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Meldingskanalen voor open ramen: Telefoon Melding / TTS-spraak, Horloge Melding / TTS-spraak, Tablet Melding / TTS-spraak. Person-specific, not room speakers."
         }

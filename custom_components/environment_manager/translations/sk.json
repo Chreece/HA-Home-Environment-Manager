@@ -206,8 +206,8 @@
           "weather_entities": "Vyberte: Počasie a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Vyberte: Kvalita vonkajšieho vzduchu · AQI, CO₂, PM2.5, PM10, VOC. Nedostupné: ⚠",
           "weather_warnings": "Počasie a výstrahy · ⚠ (Nedostupné) → 🪟🔒",
-          "general_room_occupancy_sensors": "Vyberte skutočný zdroj Home Assistant pre „Miestnosť · Obsadenosť · senzor“. Chýbajúce alebo staré dáta pozastavia akciu.",
-          "general_home_trackers": "Vyberte skutočný zdroj Home Assistant pre „Domov · Obsadenosť · Zariadenia“. Chýbajúce alebo staré dáta pozastavia akciu.",
+          "general_room_occupancy_sensors": "Vyberte skutočný zdroj Home Assistant pre „Miestnosť · Obsadenosť · senzor“. Chýbajúce alebo staré dáta pozastavia akciu. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Vyberte skutočný zdroj Home Assistant pre „Domov · Obsadenosť · Zariadenia“. Chýbajúce alebo staré dáta pozastavia akciu. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Vyberte skutočný zdroj Home Assistant pre „Obsadenosť · Miestnosť · zdroj (state)“. Chýbajúce alebo staré dáta pozastavia akciu.",
           "general_occupied_rooms_attribute": "Nastavte „Obsadenosť · Miestnosť · zdroj (attribute)“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii.",
           "general_sleep_rooms_entity": "Vyberte skutočný zdroj Home Assistant pre „Spánok · Miestnosť · zdroj (state)“. Chýbajúce alebo staré dáta pozastavia akciu.",
@@ -221,7 +221,7 @@
           "pollen_entities": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Peľ · zdroj · Vybrať.",
           "use_announcement_hub": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Automatické · Announcement Hub.",
           "general_away_cooldown_minutes": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Domov · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Upozorniť na otvorené okná po odchode všetkých. Osoby na upozornenie (person.*). 60 s. Announcement Hub. Telefón, Hodinky, Tablet.",
+          "away_open_window_alert": "Upozorniť na otvorené okná po odchode všetkých. Osoby na upozornenie (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefón, Hodinky, Tablet.",
           "away_windows_target_people": "Osoby na upozornenie (person.*) - Announcement Hub: Telefón, Hodinky, Tablet, Iné zariadenie. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kanály upozornení na okná: Telefón Oznámenie / Hlas TTS, Hodinky Oznámenie / Hlas TTS, Tablet Oznámenie / Hlas TTS. Person-specific, not room speakers."
         }
@@ -1167,8 +1167,8 @@
           "weather_entities": "Vyberte: Počasie a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Vyberte: Kvalita vonkajšieho vzduchu · AQI, CO₂, PM2.5, PM10, VOC. Nedostupné: ⚠",
           "weather_warnings": "Počasie a výstrahy · ⚠ (Nedostupné) → 🪟🔒",
-          "general_room_occupancy_sensors": "Vyberte skutočný zdroj Home Assistant pre „Miestnosť · Obsadenosť · senzor“. Chýbajúce alebo staré dáta pozastavia akciu.",
-          "general_home_trackers": "Vyberte skutočný zdroj Home Assistant pre „Domov · Obsadenosť · Zariadenia“. Chýbajúce alebo staré dáta pozastavia akciu.",
+          "general_room_occupancy_sensors": "Vyberte skutočný zdroj Home Assistant pre „Miestnosť · Obsadenosť · senzor“. Chýbajúce alebo staré dáta pozastavia akciu. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_home_trackers": "Vyberte skutočný zdroj Home Assistant pre „Domov · Obsadenosť · Zariadenia“. Chýbajúce alebo staré dáta pozastavia akciu. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
           "general_occupied_rooms_entity": "Vyberte skutočný zdroj Home Assistant pre „Obsadenosť · Miestnosť · zdroj (state)“. Chýbajúce alebo staré dáta pozastavia akciu.",
           "general_occupied_rooms_attribute": "Nastavte „Obsadenosť · Miestnosť · zdroj (attribute)“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii.",
           "general_sleep_rooms_entity": "Vyberte skutočný zdroj Home Assistant pre „Spánok · Miestnosť · zdroj (state)“. Chýbajúce alebo staré dáta pozastavia akciu.",
@@ -1182,7 +1182,7 @@
           "pollen_entities": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Peľ · zdroj · Vybrať.",
           "use_announcement_hub": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Automatické · Announcement Hub.",
           "general_away_cooldown_minutes": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Domov · Away · cooldown (min) · occupancy transition delay.",
-          "away_open_window_alert": "Upozorniť na otvorené okná po odchode všetkých. Osoby na upozornenie (person.*). 60 s. Announcement Hub. Telefón, Hodinky, Tablet.",
+          "away_open_window_alert": "Upozorniť na otvorené okná po odchode všetkých. Osoby na upozornenie (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefón, Hodinky, Tablet.",
           "away_windows_target_people": "Osoby na upozornenie (person.*) - Announcement Hub: Telefón, Hodinky, Tablet, Iné zariadenie. Only explicitly assigned personal endpoints.",
           "away_windows_delivery_channels": "Kanály upozornení na okná: Telefón Oznámenie / Hlas TTS, Hodinky Oznámenie / Hlas TTS, Tablet Oznámenie / Hlas TTS. Person-specific, not room speakers."
         }
