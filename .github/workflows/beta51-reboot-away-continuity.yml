@@ -271,7 +271,7 @@ jobs:
           old=Path('custom_components/environment_manager/climate_strategy.py').read_text()
           assert 'any(value is True for value in tracker_values)' in src
           assert 'any(value is True for value in room_values)' in src
-          assert src.index('any(value is True for value in tracker_values)') < src.index('if isinstance(room_entity, str) and room_entity:')
+          assert src.index('any(value is True for value in tracker_values)') < src.index('if has_room_list:')
           assert '*(fallback_trackers if isinstance(fallback_trackers, list) else [])' in src
           assert 'if any(s is True for s in states): return "home","someone_home"' in old
           PY
