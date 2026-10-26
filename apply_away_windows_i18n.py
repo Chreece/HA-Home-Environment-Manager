@@ -53,31 +53,31 @@ TEXT = {
 
 HELP = {
     "en": (
-        "Off by default. After every known resident is confirmed away for 60 seconds, report still-open selected physical window contacts. No announcement at startup while already away. Report once per departure and again only for newly opened windows.",
+        "Off by default. Notify immediately when the selected presence entities all confirm zero people or away. Numeric number/input_number/person-count sensors use 0 for empty and a positive count for occupied; invalid values never prove absence. List actual open windows. No announcement at startup while already away. Report once per departure and again only for newly opened windows.",
         "Select exactly which Home Assistant person.* identities receive this message. Each person must have the selected phone/watch/tablet destination configured in Announcement Hub. Missing destinations are never replaced by room-wide broadcasts.",
         "Choose multiple phone, watch, tablet or other device delivery modes. Notification is written push; TTS uses Companion App speech only. Each selected channel routes to its exact person's assigned output, even while away, not to room speakers.",
         "Select at least one person and one delivery channel for the open-window departure alert.",
     ),
     "el": (
-        "Αρχικά ανενεργό. Μόνο όταν επιβεβαιωθεί ότι όλοι απουσιάζουν επί 60 δευτερόλεπτα, ειδοποιεί για πραγματικές ανοιχτές επαφές παραθύρων. Δεν ειδοποιεί ξανά μετά από επανεκκίνηση ενώ λείπουν όλοι. Νέα παράθυρα μπορούν να προκαλέσουν νέα ειδοποίηση.",
+        "Αρχικά ανενεργό. Ειδοποιεί αμέσως μόλις όλες οι επιλεγμένες πηγές παρουσίας επιβεβαιώσουν απουσία. Οι αριθμητικές οντότητες number/input_number με 0 σημαίνουν κανέναν, με θετικό αριθμό παρουσία. Οι άγνωστες τιμές δεν αποδεικνύουν απουσία. Αναφέρει τα πραγματικά ανοιχτά παράθυρα. Δεν ειδοποιεί ξανά μετά από επανεκκίνηση ενώ λείπουν όλοι. Νέα παράθυρα μπορούν να προκαλέσουν νέα ειδοποίηση.",
         "Επίλεξε συγκεκριμένα άτομα person.*. Κάθε άτομο πρέπει να έχει αντιστοιχισμένο κινητό, ρολόι ή άλλη συσκευή στο Announcement Hub. Δεν γίνεται μετάδοση σε δωμάτια ή άσχετους παραλήπτες.",
         "Πολλαπλή επιλογή γραπτής ειδοποίησης κινητού/ρολογιού ή ομιλίας Companion TTS. Κάθε συνδυασμός αποστέλλεται μόνο στη συσκευή του επιλεγμένου ατόμου, ακόμη και όταν απουσιάζει.",
         "Επίλεξε τουλάχιστον ένα άτομο και έναν τρόπο παράδοσης ειδοποίησης για τα ανοιχτά παράθυρα.",
     ),
     "de": (
-        "Standardmäßig aus. Erst wenn alle bekannten Bewohner 60 Sekunden nachweislich abwesend sind, werden echte noch offene Fensterkontakte gemeldet. Kein erneutes Senden beim Neustart während Abwesenheit; neue Fenster können erneut gemeldet werden.",
+        "Standardmäßig aus. Sofortige Meldung, sobald alle ausgewählten Anwesenheitsquellen Abwesenheit bestätigen. Number-/input_number-Zähler: 0 = niemand da, positiv = anwesend. Unbekannte Werte beweisen keine Abwesenheit. Es werden nur echte offene Fenster gemeldet. Kein erneutes Senden beim Neustart während Abwesenheit; neue Fenster können erneut gemeldet werden.",
         "Wähle konkrete person.*-Einträge in Home Assistant. Für jede Person muss das passende Handy/Uhr-Ziel in Announcement Hub zugeordnet sein. Eine fehlende Zuordnung führt niemals zu einem Raum-Rundruf.",
         "Mehrfachauswahl von Handy/Uhr/Tablet-Push oder Companion-App-Sprachausgabe. Jeder gewählte Kanal wird nur an die zugeordneten Geräte dieser Personen gesendet, nicht an Lautsprecher zu Hause.",
         "Mindestens eine Person und einen Zustellweg für die Fensterwarnung auswählen.",
     ),
     "fr": (
-        "Désactivé par défaut. Après 60 secondes d'absence confirmée de tous les occupants, signale les contacts de fenêtres encore ouverts. Pas d'alerte lors d'un redémarrage en absence; les nouvelles ouvertures peuvent être signalées.",
+        "Désactivé par défaut. Alerte immédiate lorsque toutes les sources de présence choisies confirment l'absence. Les compteurs number/input_number valent 0 si personne n'est là; un nombre positif signifie une présence. Les valeurs inconnues ne prouvent pas l'absence. Pas d'alerte lors d'un redémarrage en absence; les nouvelles ouvertures peuvent être signalées.",
         "Choisissez les personnes person.* concernées, dont les appareils doivent être configurés dans Announcement Hub. Aucun envoi général dans les pièces en cas de destination manquante.",
         "Sélection multiple des notifications ou de la voix TTS sur téléphone, montre et tablette. Chaque canal est limité aux appareils attribués aux personnes choisies.",
         "Choisissez au moins une personne et un canal de livraison pour cet avertissement.",
     ),
     "es": (
-        "Desactivado inicialmente. Tras confirmar que todos están fuera durante 60 segundos, avisa de los contactos de ventanas aún abiertos. No reenvía al reiniciar en ausencia y solo repite si se abren otras ventanas.",
+        "Desactivado inicialmente. Avisa de inmediato cuando todas las fuentes de presencia seleccionadas confirman ausencia. En number/input_number, 0 significa nadie y un número positivo indica presencia. Valores desconocidos no confirman ausencia. No reenvía al reiniciar en ausencia y solo repite si se abren otras ventanas.",
         "Selecciona personas person.* explícitas con sus dispositivos configurados en Announcement Hub. Nunca se envía un aviso general a habitaciones por destinos ausentes.",
         "Permite varios canales: avisos escritos y voz Companion TTS en teléfono, reloj o tableta. Solo se usan los dispositivos asignados a cada persona elegida.",
         "Selecciona al menos una persona y un canal para recibir el aviso de ventanas.",
@@ -90,7 +90,7 @@ def help_text(lang: str) -> tuple[str, str, str, str]:
         return HELP[lang]
     enabled, people, channels, phone, watch, tablet, other, notify, speech = TEXT[lang]
     return (
-        f"{enabled}. {people} (person.*). 60 s. Announcement Hub. "
+        f"{enabled}. {people} (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. "
         f"{phone}, {watch}, {tablet}.",
         f"{people} (person.*) - Announcement Hub: {phone}, {watch}, {tablet}, {other}. "
         "Only explicitly assigned personal endpoints.",
