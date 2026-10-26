@@ -197,7 +197,10 @@
           "use_mold_indicator": "Schimmelindikator statt relativer Raumluftfeuchte verwenden",
           "pollen_entities": "Pollen · Quelle · Auswählen",
           "use_announcement_hub": "Automatische · Announcement Hub",
-          "general_away_cooldown_minutes": "Zuhause · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Zuhause · Away · cooldown (min)",
+          "away_open_window_alert": "Bei offenen Fenstern nach Verlassen des Hauses warnen",
+          "away_windows_target_people": "Zu benachrichtigende Personen",
+          "away_windows_delivery_channels": "Zustellwege für offene Fenster"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -217,7 +220,10 @@
           "use_mold_indicator": "Die Lüftungsempfehlung berücksichtigt die geschätzte relative Feuchte an der kältesten Oberfläche statt der normalen Raumluftfeuchte. Pro Raum kalibrieren; ohne Kalibrierung wird der Wert als unbekannt angezeigt.",
           "pollen_entities": "Beim ersten Einrichten werden alle gefundenen Pollenquellen vorausgewählt. Eine später bewusst leere Auswahl bleibt leer.",
           "use_announcement_hub": "Wird nur angezeigt, wenn Announcement Hub installiert ist. Aktiviert wird darüber geroutet, sobald der Hub verfügbar ist.",
-          "general_away_cooldown_minutes": "Nach einer frisch bestätigten leeren Raumbelegung so viele Minuten warten, bevor Away gilt. Unbekannte oder veraltete Daten lösen Away nicht aus."
+          "general_away_cooldown_minutes": "Nach einer frisch bestätigten leeren Raumbelegung so viele Minuten warten, bevor Away gilt. Unbekannte oder veraltete Daten lösen Away nicht aus.",
+          "away_open_window_alert": "Standardmäßig aus. Erst wenn alle bekannten Bewohner 60 Sekunden nachweislich abwesend sind, werden echte noch offene Fensterkontakte gemeldet. Kein erneutes Senden beim Neustart während Abwesenheit; neue Fenster können erneut gemeldet werden.",
+          "away_windows_target_people": "Wähle konkrete person.*-Einträge in Home Assistant. Für jede Person muss das passende Handy/Uhr-Ziel in Announcement Hub zugeordnet sein. Eine fehlende Zuordnung führt niemals zu einem Raum-Rundruf.",
+          "away_windows_delivery_channels": "Mehrfachauswahl von Handy/Uhr/Tablet-Push oder Companion-App-Sprachausgabe. Jeder gewählte Kanal wird nur an die zugeordneten Geräte dieser Personen gesendet, nicht an Lautsprecher zu Hause."
         }
       }
     },
@@ -245,7 +251,8 @@
       "invalid_mold_surface_temperature": "Gib eine gültige gemessene Oberflächentemperatur in °C ein.",
       "invalid_mold_calibration": "Raum-, Außen- und Oberflächentemperatur müssen gleichzeitig gemessen werden; innen und außen mindestens 3°C Temperaturunterschied.",
       "invalid_setup_rooms": "Ungültig: Zu überwachende Räume",
-      "invalid_room_source": "Ungültig: Raum · Quelle"
+      "invalid_room_source": "Ungültig: Raum · Quelle",
+      "invalid_away_windows_recipients": "Mindestens eine Person und einen Zustellweg für die Fensterwarnung auswählen."
     },
     "abort": {
       "already_configured": "Home Environment Manager ist bereits eingerichtet.",
@@ -1151,7 +1158,10 @@
           "use_mold_indicator": "Schimmelindikator statt relativer Raumluftfeuchte verwenden",
           "pollen_entities": "Pollen · Quelle · Auswählen",
           "use_announcement_hub": "Automatische · Announcement Hub",
-          "general_away_cooldown_minutes": "Zuhause · Away · cooldown (min)"
+          "general_away_cooldown_minutes": "Zuhause · Away · cooldown (min)",
+          "away_open_window_alert": "Bei offenen Fenstern nach Verlassen des Hauses warnen",
+          "away_windows_target_people": "Zu benachrichtigende Personen",
+          "away_windows_delivery_channels": "Zustellwege für offene Fenster"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -1171,7 +1181,10 @@
           "use_mold_indicator": "Die Lüftungsempfehlung berücksichtigt die geschätzte relative Feuchte an der kältesten Oberfläche statt der normalen Raumluftfeuchte. Pro Raum kalibrieren; ohne Kalibrierung wird der Wert als unbekannt angezeigt.",
           "pollen_entities": "Beim ersten Einrichten werden alle gefundenen Pollenquellen vorausgewählt. Eine später bewusst leere Auswahl bleibt leer.",
           "use_announcement_hub": "Wird nur angezeigt, wenn Announcement Hub installiert ist. Aktiviert wird darüber geroutet, sobald der Hub verfügbar ist.",
-          "general_away_cooldown_minutes": "Nach einer frisch bestätigten leeren Raumbelegung so viele Minuten warten, bevor Away gilt. Unbekannte oder veraltete Daten lösen Away nicht aus."
+          "general_away_cooldown_minutes": "Nach einer frisch bestätigten leeren Raumbelegung so viele Minuten warten, bevor Away gilt. Unbekannte oder veraltete Daten lösen Away nicht aus.",
+          "away_open_window_alert": "Standardmäßig aus. Erst wenn alle bekannten Bewohner 60 Sekunden nachweislich abwesend sind, werden echte noch offene Fensterkontakte gemeldet. Kein erneutes Senden beim Neustart während Abwesenheit; neue Fenster können erneut gemeldet werden.",
+          "away_windows_target_people": "Wähle konkrete person.*-Einträge in Home Assistant. Für jede Person muss das passende Handy/Uhr-Ziel in Announcement Hub zugeordnet sein. Eine fehlende Zuordnung führt niemals zu einem Raum-Rundruf.",
+          "away_windows_delivery_channels": "Mehrfachauswahl von Handy/Uhr/Tablet-Push oder Companion-App-Sprachausgabe. Jeder gewählte Kanal wird nur an die zugeordneten Geräte dieser Personen gesendet, nicht an Lautsprecher zu Hause."
         }
       }
     },
@@ -1241,7 +1254,8 @@
       "device_humidity_invalid": "Ungültig · Luftfeuchtigkeit · Einstellungen",
       "device_runtime_invalid": "Ungültig · Leistung · Einstellungen",
       "invalid_setup_rooms": "Ungültig: Zu überwachende Räume",
-      "invalid_room_source": "Ungültig: Raum · Quelle"
+      "invalid_room_source": "Ungültig: Raum · Quelle",
+      "invalid_away_windows_recipients": "Mindestens eine Person und einen Zustellweg für die Fensterwarnung auswählen."
     },
     "abort": {
       "setup_area_removed": "Ungültig: Zu überwachende Räume",
@@ -1568,6 +1582,9 @@
       },
       "shade_announce": {
         "name": "Vor dem Öffnen oder Schließen der Rollos ankündigen"
+      },
+      "home_away_open_window_alert": {
+        "name": "Bei offenen Fenstern nach Verlassen des Hauses warnen"
       }
     },
     "select": {
@@ -1789,6 +1806,18 @@
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
         "custom": "Sollwert · Einstellungen"
+      }
+    },
+    "away_window_delivery": {
+      "options": {
+        "mobile_notification": "Handy - Benachrichtigung",
+        "mobile_tts": "Handy - Sprachausgabe TTS",
+        "watch_notification": "Uhr - Benachrichtigung",
+        "watch_tts": "Uhr - Sprachausgabe TTS",
+        "tablet_notification": "Tablet - Benachrichtigung",
+        "tablet_tts": "Tablet - Sprachausgabe TTS",
+        "other_notification": "Anderes Gerät - Benachrichtigung",
+        "other_tts": "Anderes Gerät - Sprachausgabe TTS"
       }
     }
   },
