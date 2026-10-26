@@ -1,0 +1,23 @@
+name: Correct published beta50 title
+on:
+  push:
+    branches:
+      - 'chore/correct-beta50-release-title-20261026'
+
+permissions:
+  contents: write
+
+jobs:
+  correct_title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm beta50 release identity and repair display label
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh release view v0.6.0b50 --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)" = "v0.6.0b50"
+          test "$(gh release view v0.6.0b50 --repo "$GITHUB_REPOSITORY" --json isPrerelease --jq .isPrerelease)" = "true"
+          gh release edit v0.6.0b50 --repo "$GITHUB_REPOSITORY" --title 'Home Environment Manager v0.6.0 beta 50'
+          test "$(gh release view v0.6.0b50 --repo "$GITHUB_REPOSITORY" --json name --jq .name)" = 'Home Environment Manager v0.6.0 beta 50'
