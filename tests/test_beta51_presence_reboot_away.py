@@ -82,6 +82,8 @@ def test_room_only_absence_still_honors_new_cooldown(adapter):
         "home", "no_occupied_rooms_cooldown",
         [empty.entity_id, room.entity_id])
     empty.last_changed = datetime.now(timezone.utc) - timedelta(minutes=11)
+    assert home_presence(h, cfg)[0] == "home", "Every selected room source must finish its cooldown"
+    room.last_changed = datetime.now(timezone.utc) - timedelta(minutes=11)
     assert home_presence(h, cfg)[0] == "away"
     room.state = "on"
     assert home_presence(h, cfg)[0] == "home"
