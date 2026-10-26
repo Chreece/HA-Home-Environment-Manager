@@ -133,7 +133,9 @@ def test_live_gate_rejects_entered_room_and_invalidated_sleep_after_planning(ada
     sleep.state="unavailable"
     assert live_device_permission(h,"living",room_config,plan,device)[0]=="held"
     device["sleep_behavior"]="sleep_targets"
-    assert live_device_permission(h,"living",room_config,plan,device)[0]=="held"
+    # An optional sleep-setpoint preference must not turn an otherwise
+    # permitted physical heater OFF when its sleep list is unavailable.
+    assert live_device_permission(h,"living",room_config,plan,device)[0]=="eligible"
 
 
 
