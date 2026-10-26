@@ -1,0 +1,23 @@
+name: Repair beta51 release display title
+on:
+  push:
+    branches:
+      - 'chore/fix-beta51-release-title-20261026'
+
+permissions:
+  contents: write
+
+jobs:
+  repair_title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm immutable beta51 identity and correct presentation title
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh release view v0.6.0b51 --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)" = "v0.6.0b51"
+          test "$(gh release view v0.6.0b51 --repo "$GITHUB_REPOSITORY" --json isPrerelease --jq .isPrerelease)" = "true"
+          gh release edit v0.6.0b51 --repo "$GITHUB_REPOSITORY" --title 'Home Environment Manager v0.6.0 beta 51'
+          test "$(gh release view v0.6.0b51 --repo "$GITHUB_REPOSITORY" --json name --jq .name)" = 'Home Environment Manager v0.6.0 beta 51'
