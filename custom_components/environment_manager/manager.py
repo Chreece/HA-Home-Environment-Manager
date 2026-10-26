@@ -58,6 +58,7 @@ from .logic import Reading, Reason, Recommendation
 from .logic import Plan, evaluate
 from .messages import announcement, language_code
 from .away_windows import AwayWindowAlert, watched_entities
+from .presence_continuity import PresenceContinuity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -82,6 +83,7 @@ class AirQualityManager:
         self._environment_history = EnvironmentHistory()
         self._environment_store: Any | None = None
         self.away_windows = AwayWindowAlert(self)
+        self.presence_continuity = PresenceContinuity(self.hass, self.entry.entry_id)
         self.equipment = EquipmentRuntime(self)
         from .shade_cooling import ShadeCoolingController
         self.shading = ShadeCoolingController(self)
@@ -272,9 +274,9 @@ class AirQualityManager:
         environment["__outside__"] = {"pollen": pollen}
         from .device_activation import planning_rooms
         room_climate_configs=planning_rooms(self)
-        shared_presence=config.get(CONF_OCCUPANCY_GLOBAL,{})
-        if not isinstance(shared_presence,dict):
-            shared_presence={}
+        shared_presence=self.presence_continuity.context(
+            config.get(CONF_OCCUPANCY_GLOBAL, {})
+        )
         for key in ("occupied_rooms_entity","sleep_rooms_entity"):
             entity=shared_presence.get(key)
             if isinstance(entity,str):
@@ -552,6 +554,9 @@ class AirQualityManager:
             _LOGGER.debug("Home Assistant storage not available in test runtime")
         except Exception:
             _LOGGER.exception("Environment history could not be restored; starting empty")
+        # Restore source-bound absence evidence before building any room plan.
+        # Every recovered interval is live-revalidated during _capture.
+        await self.presence_continuity.async_start()
         # Load latching PID manual overrides and expected targets first.
         # If its storage fails, the PID controller remains fail-closed.
         await self.pid.async_start()
@@ -1076,6 +1081,7 @@ class AirQualityManager:
         controllers = (
             ("equipment",self.equipment),
             ("shading",self.shading),
+            ("presence_continuity",self.presence_continuity),
             ("pid",self.pid),("native_climate",self.native_climate),
             ("direct_climate",self.direct_climate),
             ("native_humidity",self.native_humidity),
