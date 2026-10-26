@@ -13,7 +13,8 @@ CURRENT_VERSION = json.loads((PKG / "manifest.json").read_text(encoding="utf-8")
 
 
 def _builder():
-    builder_version = ("beta48" if CURRENT_VERSION == "0.6.0b48" else
+    builder_version = ("beta49" if CURRENT_VERSION == "0.6.0b49" else
+                       "beta48" if CURRENT_VERSION == "0.6.0b48" else
                        "beta47" if CURRENT_VERSION == "0.6.0b47" else
                        "beta46" if CURRENT_VERSION == "0.6.0b46" else
                        "beta45" if CURRENT_VERSION == "0.6.0b45" else "beta44")
@@ -163,3 +164,16 @@ def test_beta48_open_window_alert_publisher_is_flat_and_gated():
     assert "needs: [test, hassfest, hacs, home_assistant]" in workflow
     assert "python -m pytest -q tests" in workflow
     assert "tests/test_beta48_away_window_alert.py" in workflow
+
+
+def test_beta49_publisher_requires_all_ha_hacs_and_sensor_regressions():
+    if CURRENT_VERSION != "0.6.0b49":
+        return
+    workflow = (ROOT / ".github/workflows/beta49-presence-dry-fix.yml").read_text(encoding="utf-8")
+    assert "python tools/build_beta49_payload.py" in workflow
+    assert "tests/test_beta49_numeric_presence_dry_mode.py" in workflow
+    assert "git checkout --orphan beta49-payload" in workflow
+    assert "git push origin HEAD:refs/heads/beta/v0.6.0b49" in workflow
+    assert "gh release create v0.6.0b49" in workflow
+    assert "needs: [test, hassfest, hacs, home_assistant]" in workflow
+    assert "github.ref == 'refs/heads/feat/beta44-shade-weather-owned-open-announcements-20261025'" in workflow
