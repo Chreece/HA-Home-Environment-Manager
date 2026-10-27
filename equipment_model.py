@@ -663,6 +663,21 @@ def targets(manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict,
     )
     result={"heat":float(heat),"cool":float(cool),"humidity":float(humidity)}
 
+    # A room's simple automatic comfort policy also applies to the unified
+    # per-device controllers (PID, native DRY, heating and cooling), not only
+    # legacy room climate entities. Use an independent live selected RH
+    # reading; never synthesize ISO 7730 clothing or airflow measurements.
+    if profile in ("comfort", "sleep") and room.get("target_source")=="auto_comfort":
+        from .comfort_targets import automatic_comfort_band
+        runtime=getattr(manager,"equipment",None)
+        sample=(runtime.measurements(spec,cap) if runtime is not None else {})
+        comfort=automatic_comfort_band(
+            result["heat"],result["cool"],sample.get("humidity"),
+            maximum_adjustment_c=room.get("comfort_adjustment_max_c",1.5),
+        )
+        if comfort.get("status")=="humidity_aware_estimate":
+            result["heat"],result["cool"]=comfort["heat_c"],comfort["cool_c"]
+
     if profile == "manual":
         override=config.get("profile_targets",{}).get("manual",{})
         if isinstance(override,dict):
