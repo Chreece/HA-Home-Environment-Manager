@@ -1,0 +1,117 @@
+name: Publish verified Home Environment Manager Beta55
+
+on:
+  push:
+    branches:
+      - publish/v0.6.0b55-20261027
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-hem-beta55
+  cancel-in-progress: false
+
+jobs:
+  verify-package-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tested source and regressions
+        uses: actions/checkout@v4
+        with:
+          ref: fix/beta55-room-limits-pid-prefix-20261027
+          path: source
+          persist-credentials: false
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run room limit, PID, power switch and Greek mode regressions
+        run: cd source/tests && python -m unittest discover -s . -p 'test_beta55_*.py' -v
+
+      - name: Checkout immutable clean distribution
+        uses: actions/checkout@v4
+        with:
+          ref: 8b52364aceec2e27f03aba1daf9f32e3068d24d4
+          path: release
+          persist-credentials: false
+
+      - name: Validate clean integration and create flat HACS/manual ZIP
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, zipfile
+
+          root = Path("release")
+          assert (root / ".git").is_dir()
+          assert not (root / "tests").exists()
+          assert not (root / ".github").exists()
+          manifest = json.loads((root/"manifest.json").read_text(encoding="utf-8"))
+          assert manifest["domain"] == "environment_manager"
+          assert manifest["version"] == "0.6.0b55"
+          for item in ("__init__.py", "equipment_power_switch.py", "equipment_runtime.py",
+                       "equipment_model.py", "select.py", "number.py", "climate.py",
+                       "translations/el.json", "frontend/air-quality-advisor-card.js"):
+              assert (root/item).is_file(), item
+          languages = tuple((root/"translations").glob("*.json"))
+          assert len(languages) >= 35, len(languages)
+          for item in root.rglob("*.json"):
+              json.loads(item.read_text(encoding="utf-8"))
+          files = []
+          for item in root.iterdir():
+              if item.is_file() and item.suffix in (".py", ".json", ".yaml"):
+                  files.append(item)
+              elif item.is_dir() and item.name in ("translations", "frontend", "brand"):
+                  files.extend(p for p in item.rglob("*") if p.is_file())
+          for item in files:
+              if item.suffix == ".py":
+                  compile(item.read_text(encoding="utf-8"), str(item), "exec")
+          assert all(".github" not in p.parts and "tests" not in p.parts for p in files)
+          target = Path("dist/HA-Home-Environment-Manager-v0.6.0b55.zip")
+          target.parent.mkdir(exist_ok=True)
+          with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+              for item in sorted(files):
+                  archive.write(item, item.relative_to(root).as_posix())
+          with zipfile.ZipFile(target) as archive:
+              assert archive.testzip() is None
+              assert "manifest.json" in archive.namelist()
+              assert "equipment_power_switch.py" in archive.namelist()
+          print(f"Validated {len(files)} integration files, {len(languages)} locales, ZIP {target.stat().st_size} bytes")
+          PY
+
+      - name: Publish isolated Beta55 prerelease at clean commit only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v0.6.0b55 >/dev/null 2>&1; then
+            echo "Beta55 already exists: refusing to replace a published release"
+            exit 1
+          fi
+          cat > release-notes.md <<'NOTES'
+          # Home Environment Manager v0.6.0b55
+
+          Builds on Beta54. Keeps the canonical `environment_manager` domain and the existing entity IDs.
+
+          - Corrects Greek Away labels to **Απών**, distinct from Home (**Σπίτι**) and Off (**Απενεργοποίηση**), without changing stored profile keys or automations.
+          - Groups PID controls by engineering parameter immediately after the PID prefix (Kp, Ki, Kd, sampling, PWM, calibration, fan capacity) with the original localized descriptions.
+          - Restores room temperature and humidity minimum/maximum configuration after delayed HA device startup, and retains supported saved values while native capabilities temporarily disappear.
+          - Adds an **optional upstream power switch per managed physical output**, including native climate, humidifier, fan and explicit direct switch/number outputs. Choose only an independent same-room `switch.*` through the managed controller's **Power - Upstream supply switch** selector.
+          - The managed climate controller stays logically armed and visible when its external supply is intentionally OFF. Previously verified native capabilities can qualify a safe power-up using real room measurements; they never authorize native commands to unavailable equipment.
+          - Upstream supply OFF requires verified no-demand and every physical output confirmed OFF, then a configurable continuous cooldown (default **600 seconds**). The supply also has a minimum OFF interval of **600 seconds** and a 300-second restart warmup; defrost, uncertain feedback, stale sensors and outstanding native commands prevent a power cut.
+          - Switch selection is opt-in and exclusive across configured Home Environment Manager entries. Initial commissioning requires the native output and selected switch physically OFF; manual/uncertain states require explicit **Reconcile and resume** with the switch OFF. Existing setups with no supply switch work as before.
+
+          **Safety:** Do not use an external power switch on appliances requiring uninterrupted mains supply, post-run fans, standby protection, defrost, or compressor safety unless the manufacturer/qualified installer explicitly permits upstream disconnection. Electrical and equipment protections remain hardware responsibilities. Automatic tests passed on Python 3.13/3.14, but real Home Assistant equipment testing is still required for newly attached outlets.
+
+          The attached ZIP contains only flat custom component files. Extract them into `config/custom_components/environment_manager/` for a manual install, then restart Home Assistant. Do not install an additional legacy domain.
+          NOTES
+          gh release create v0.6.0b55 dist/HA-Home-Environment-Manager-v0.6.0b55.zip --target 8b52364aceec2e27f03aba1daf9f32e3068d24d4 --title "Home Environment Manager v0.6.0b55" --notes-file release-notes.md --prerelease
+
+      - name: Verify published tag and uploaded asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api repos/${{ github.repository }}/git/ref/tags/v0.6.0b55 --jq '.object.sha')" = "8b52364aceec2e27f03aba1daf9f32e3068d24d4"
+          gh release view v0.6.0b55 --json isPrerelease,assets --jq '.isPrerelease and any(.assets[]; .name == "HA-Home-Environment-Manager-v0.6.0b55.zip")' | grep -qx true
