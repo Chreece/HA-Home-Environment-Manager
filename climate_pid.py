@@ -298,7 +298,12 @@ class ClimatePidCoordinator:
             self._set_status(area, "temperature_sensor_wrong_area")
             return
         if settings.get("pause_on_window_open", True):
-            if not room.windows or any(w.opened is not False for w in room.windows):
+            # No registered/selected window contact is not an OPEN window.
+            # The shared room planner permits those rooms, while its discovery
+            # adds an explicit UNKNOWN Window for any selected missing
+            # contact. Preserve that fail-closed case without blocking every
+            # windowless room's PID forever.
+            if any(w.opened is not False for w in room.windows):
                 self._set_status(area, "window_open_or_unknown")
                 return
         # 10 minutes maximum regardless of the much larger monitoring max_age.
