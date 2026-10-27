@@ -1,0 +1,24 @@
+name: Beta55 dependency-free regressions
+
+on:
+  push:
+    branches:
+      - fix/beta55-room-limits-pid-prefix-20261027
+  pull_request:
+    branches:
+      - beta/v0.6.0b54
+  workflow_dispatch:
+
+jobs:
+  syntax-and-regressions:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m unittest discover -s tests -p 'test_beta55_*.py' -v
