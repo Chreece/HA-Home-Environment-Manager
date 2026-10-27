@@ -85,6 +85,7 @@ jobs:
       - name: Publish isolated Beta55 prerelease at clean commit only
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           if gh release view v0.6.0b55 >/dev/null 2>&1; then
             echo "Beta55 already exists: refusing to replace a published release"
@@ -112,6 +113,7 @@ jobs:
       - name: Verify published tag and uploaded asset
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           test "$(gh api repos/${{ github.repository }}/git/ref/tags/v0.6.0b55 --jq '.object.sha')" = "8b52364aceec2e27f03aba1daf9f32e3068d24d4"
           gh release view v0.6.0b55 --json isPrerelease,assets --jq '.isPrerelease and any(.assets[]; .name == "HA-Home-Environment-Manager-v0.6.0b55.zip")' | grep -qx true
