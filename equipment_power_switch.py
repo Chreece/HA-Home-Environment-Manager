@@ -378,6 +378,90 @@ async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
         return False
 
 
+def prepare_offline_pid(runtime: Any, spec: Any, cap: Any, cfg: dict,
+                        demand_verified: bool | None) -> dict:
+    """Prepare the *supervisor* from independent sensors while supply is OFF.
+
+    No native device command and no physical startup inferred here. Proportional
+    demand is estimated with live sensor readings; I and D are explicitly zero
+    because the disconnected plant cannot respond (anti-windup and bumpless
+    derivative restart). Re-seed the latest observed measurement on every
+    valid OFF evaluation so a disconnected interval is never integrated on
+    reconnect. Output PWM timing starts afresh when the outlet is energized.
+    """
+    if cfg.get("control_mode") != "pid" or demand_verified is None:
+        runtime._memory.pop(spec.identifier, None)
+        return {"status": "not_prepared", "reason": "not_pid_or_unverified_demand"}
+    now = runtime.clock()
+    plan = model.plan_for(runtime.manager, spec)
+    target = model.targets(runtime.manager, spec, cap, cfg, plan)
+    measured = runtime.measurements(spec, cap)
+    from .dry_mode import automatic_mode
+    mode = cfg.get("requested_mode")
+    if mode not in cap.modes or mode == "off":
+        mode = automatic_mode(
+            cap, None, measured, target,
+            dedicated_dry=model.room_config(runtime.manager, spec).get(
+                "dry_climate_entity") == cap.primary,
+            pid=True,
+        )
+    if mode not in cap.modes or mode in ("off", "auto", "heat_cool", None):
+        runtime._memory.pop(spec.identifier, None)
+        return {"status": "not_prepared", "reason": "explicit_single_direction_required"}
+    if cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}:
+        from .device_activation import effective_device
+        device = effective_device(runtime.manager, spec, cap.primary)
+        metric = ("co2" if device.get("fan_purpose") == "extraction" else
+                  "pm25" if device.get("fan_purpose") == "filtration" else None)
+        threshold = ("co2_operational_ppm" if metric == "co2" else
+                     "pm25_short_term_action_ug_m3")
+        goal = plan.get("air_actions", {}).get("thresholds", {}).get(threshold)
+        increasing = False
+    elif cap.domain == "humidifier" or mode == "dry":
+        metric = "humidity"
+        goal = target.get("humidity")
+        increasing = bool(cap.humidifying)
+    elif mode in ("heat", "cool"):
+        metric = "temperature"
+        goal = target.get(mode)
+        increasing = mode == "heat"
+    else:
+        metric, goal, increasing = None, None, False
+    value = finite(measured.get(metric), -50 if metric == "temperature" else 0,
+                   20000 if metric == "co2" else 2000 if metric == "pm25" else
+                   100 if metric == "humidity" else 0) if metric else None
+    goal = finite(goal, -50 if metric == "temperature" else 0,
+                  20000 if metric == "co2" else 2000 if metric == "pm25" else
+                  100 if metric == "humidity" else 0) if metric else None
+    if value is None or goal is None:
+        runtime._memory.pop(spec.identifier, None)
+        return {"status": "not_prepared", "reason": "fresh_independent_sensor_required"}
+    kp = finite(cfg.get("kp"), 0, 100)
+    if kp is None:
+        runtime._memory.pop(spec.identifier, None)
+        return {"status": "not_prepared", "reason": "invalid_pid_gain"}
+    error = (goal-value) if increasing else (value-goal)
+    proportional = round(max(0., min(100., kp*error)), 3)
+    signature = (
+        metric, goal, increasing, cfg.get("preset"),
+        cfg.get("kp"), cfg.get("ki"), cfg.get("kd"),
+    )
+    # Imported here to avoid coupling the independent supply module to a
+    # physical thermostat driver or the HA/PID scheduling implementation.
+    memory = model.PIDMemory(
+        integral=0., measured=value, stamp=now, derivative=0.,
+        demand=proportional,
+    )
+    runtime._memory[spec.identifier] = (signature, memory, now)
+    return {
+        "status": "prepared_proportional_only", "metric": metric,
+        "direction": mode, "sample_value": value, "target": goal,
+        "proportional_demand_percent": proportional,
+        "integral_frozen": True, "derivative_reseeded": True,
+        "native_output_active": False,
+    }
+
+
 async def before_tick(runtime: Any, spec: Any) -> bool:
     """Return True when outlet control handled/held the native control tick.
 
@@ -448,6 +532,10 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         return observed.state == "off"
     demand = approved_demand(runtime, spec, cfg, cap)
     if observed.state == "off":
+        # Keep independent room/PID preparation live before an unavailable
+        # physical appliance could stop the ordinary native control path.
+        preview = prepare_offline_pid(runtime, spec, cap, cfg, demand)
+        runtime._pid_offline_previews[spec.identifier] = preview
         if relay.get("idle_since") is not None:
             relay["idle_since"] = None
             await runtime._save()
@@ -479,6 +567,7 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         await _send(runtime, spec, record, identity, "on")
         return True
 
+    runtime._pid_offline_previews.pop(spec.identifier, None)
     # Switch is ON. Do not assume it belongs to us just because it is ON.
     if not relay.get("owned"):
         return False
