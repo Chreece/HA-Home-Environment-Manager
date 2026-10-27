@@ -182,7 +182,9 @@ def test_quiet_fan_context_uses_same_sleep_resolution_as_heater(runtime_module):
     cfg = model.settings(h.manager, h.spec)
     assert h.runtime._quiet_context(h.spec, cfg, plan) is False
     count.state = "1"
-    assert h.runtime._quiet_context(h.spec, cfg, plan) is None
+    # The optional sleeping-room source remains unknown; with beta53 the
+    # conservative quiet fan limit applies without vetoing HVAC power.
+    assert h.runtime._quiet_context(h.spec, cfg, plan) is True
 
 
 def test_controller_status_explains_home_and_sleep_source_without_commands(platforms):
