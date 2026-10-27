@@ -244,7 +244,9 @@ class HumidityPowerControl:
                 return "window_open_or_unavailable", None
         value, reason = live_room_humidity(self.hass, area, cfg, plan)
         if value is None:
-            return "humidity_sensor_stale_or_unselected:" + reason, None
+            return ("humidity_sensor_unverified" if reason in (
+                "no_selected_humidity_source", "invalid_humidity_source_selection")
+                else "humidity_sensor_stale"), None
         return "ready", value
 
     @staticmethod
