@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Затвори ролетне изнад собне температуре (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated purifier particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Dom · Uređaji · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Uređaji · izvor · cilj"
+        "name": "Uređaji · izvor · cilj",
+        "state": {
+          "temperature": "Фиксне температуре",
+          "auto_comfort": "Аутоматски комфор (температура и влажност)",
+          "pmv": "Напредни ISO 7730 (потребна мерења)"
+        }
       },
       "equipment_control_mode": {
         "name": "Контрола · {channel}Начин управљања",
