@@ -413,10 +413,18 @@ def approved_demand(runtime: Any, spec: Any, cfg: dict,
     live = effective_device(runtime.manager, spec, cap.primary)
     room = model.room_config(runtime.manager, spec)
     if method != "off":
-        approved, _reason = live_device_permission(
+        approved, reason = live_device_permission(
             runtime.hass, spec.area_id, room, plan, live
         )
+        if reason == "sleep_room_control_paused":
+            # Sleep Pause is a verified shutdown request, not missing demand.
+            # The native output must turn OFF first; only a subsequently
+            # confirmed idle and controller-owned relay may turn OFF after
+            # its configured power_switch_cooldown_seconds.
+            return False
         if approved != "eligible":
+            # Unknown sleep/presence still blocks ON but is NEVER proof that
+            # cutting the supply to a running device is safe.
             return None
     if method in ("automatic", "pid", "manual"):
         if (plan.get("window_safe") is not True
@@ -744,9 +752,22 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
             relay["idle_since"] = None
             await runtime._save()
         if demand is not True:
-            runtime._status(spec, "within_target_band" if demand is False
-                            else "waiting_for_physical_device",
-                            reason="upstream_switch_off_no_verified_demand")
+            from .device_activation import effective_device
+            from .occupancy_policy import live_device_permission
+            current_plan = model.plan_for(runtime.manager, spec)
+            current_room = model.room_config(runtime.manager, spec)
+            live = effective_device(runtime.manager, spec, cap.primary)
+            _, reason = live_device_permission(
+                runtime.hass, spec.area_id, current_room, current_plan, live
+            )
+            runtime._status(
+                spec,
+                "sleep_room_control_paused" if reason == "sleep_room_control_paused"
+                else "within_target_band" if demand is False
+                else "waiting_for_physical_device",
+                reason=(reason if reason == "sleep_room_control_paused"
+                        else "upstream_switch_off_no_verified_demand"),
+            )
             return True
         if now-runtime._started < 300:
             runtime._status(spec, "startup_warmup")
