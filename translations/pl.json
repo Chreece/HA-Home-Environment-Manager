@@ -750,7 +750,7 @@
           "climate_sleep_schedule_enabled": "Sen · Automatyczne",
           "climate_sleep_start": "Sen · Urządzenia · START",
           "climate_sleep_end": "Sen · Urządzenia · END",
-          "climate_target_source": "Urządzenia · źródło · cel",
+          "climate_target_source": "Podstawa komfortu",
           "climate_comfort_adjustment_max_c": "Urządzenia (°C)"
         },
         "data_description": {
@@ -765,7 +765,7 @@
           "climate_sleep_schedule_enabled": "Ta opcja steruje „Sen · Automatyczne”. Polecenia sprzętowe wymagają osobnej zgody i zabezpieczeń.",
           "climate_sleep_start": "Ten czas określa „Sen · Urządzenia · START”. Ogranicza częste przełączanie i nie zastępuje zabezpieczeń.",
           "climate_sleep_end": "Ten czas określa „Sen · Urządzenia · END”. Ogranicza częste przełączanie i nie zastępuje zabezpieczeń.",
-          "climate_target_source": "Próg decyzji dla „Urządzenia · źródło · cel”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "climate_target_source": "Automatyczny komfort (temperatura i wilgotność); ISO 7730 requires separately verified measurements.",
           "climate_comfort_adjustment_max_c": "Próg decyzji dla „Urządzenia (°C)”. Wpływa na zalecenia, lecz nie jest normą medyczną."
         }
       },
@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Zamknij rolety powyżej temperatury (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "CADR cząstek oczyszczacza (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Dom · Urządzenia · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Urządzenia · źródło · cel"
+        "name": "Podstawa komfortu",
+        "state": {
+          "temperature": "Stałe temperatury",
+          "auto_comfort": "Automatyczny komfort (temperatura i wilgotność)",
+          "pmv": "Zaawansowane ISO 7730 (wymaga pomiarów)"
+        }
       },
       "equipment_control_mode": {
         "name": "Sterowanie · {channel}Metoda sterowania",
