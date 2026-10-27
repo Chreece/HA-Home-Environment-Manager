@@ -224,6 +224,85 @@ def verified_capabilities(runtime: Any, spec: Any) -> Any:
     return cached
 
 
+def approved_demand(runtime: Any, spec: Any, cfg: dict,
+                    cap: Any) -> bool | None:
+    """Live policies and feedback must authorize EACH upstream decision."""
+    from .device_activation import authorized, effective_device
+    from .occupancy_policy import live_device_permission
+    from .climate_arbitration import _contact_interlock
+    if not authorized(runtime.manager, spec):
+        return None
+    method = cfg.get("control_mode")
+    if method not in ("automatic", "pid", "manual", "off"):
+        return None
+    plan = model.plan_for(runtime.manager, spec)
+    live = effective_device(runtime.manager, spec, cap.primary)
+    room = model.room_config(runtime.manager, spec)
+    if method != "off":
+        approved, _reason = live_device_permission(
+            runtime.hass, spec.area_id, room, plan, live
+        )
+        if approved != "eligible":
+            return None
+    if method in ("automatic", "pid", "manual"):
+        if (plan.get("window_safe") is not True
+                or (cap.domain != "fan" and
+                    not _contact_interlock(runtime.hass, spec.area_id, plan))):
+            return None
+    targets = model.targets(runtime.manager, spec, cap, cfg, plan)
+    observed = runtime.measurements(spec, cap)
+    return output_required(
+        cap, targets, observed, method=method,
+        requested_mode=cfg.get("requested_mode"),
+        fan_purpose=live.get("fan_purpose"), plan=plan,
+    )
+
+
+def _dispatch_safe(runtime: Any, spec: Any, record: dict, cfg: dict,
+                   entity: str, desired: str) -> bool:
+    """Re-evaluate physical and sensor truth AFTER every awaited Store write."""
+    cap = verified_capabilities(runtime, spec)
+    if cap is None or not runtime._current_spec(spec):
+        return False
+    now = runtime.clock()
+    relay = record.get("upstream", {})
+    state = runtime.hass.states.get(entity)
+    if state is None or state.state != ("off" if desired == "on" else "on"):
+        return False
+    if desired == "on":
+        if now-runtime._started < 300:
+            return False
+        since = max(finite(relay.get("off_at"), 0, 1e13) or 0,
+                    _observed_off_since(state, now))
+        if now-since < UPSTREAM_MIN_OFF_SECONDS:
+            return False
+        native = runtime.hass.states.get(cap.primary)
+        if native is not None and native.state not in ("off", "unknown", "unavailable"):
+            return False
+        return approved_demand(runtime, spec, cfg, cap) is True
+    if not relay.get("owned") or now-runtime._started < 300:
+        return False
+    started = finite(relay.get("idle_since"), 0, 1e13)
+    cooldown = finite(cfg.get("power_switch_cooldown_seconds"), 60, 86400)
+    if started is None or cooldown is None or now-started < cooldown:
+        return False
+    if approved_demand(runtime, spec, cfg, cap) is not False:
+        return False
+    if record.get("power") or record.get("pending"):
+        return False
+    for source in spec.source_entities:
+        native = runtime.hass.states.get(source)
+        if (native is None or native.state in ("unknown", "unavailable")
+                or native.attributes.get("hvac_action") == "defrosting"):
+            return False
+        if native.state != "off" and not (
+            source.startswith(("number.", "input_number."))
+            and finite(native.state, 0, 100) == 0
+        ):
+            return False
+    return True
+
+
 async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
                 desired: str) -> bool:
     """Save exact-switch intent before switching, then await real HA ACK."""
@@ -251,7 +330,8 @@ async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
             or not runtime._current_spec(spec)
             or permitted_supply(runtime.manager, spec, entity, identity) is None
             or runtime.hass.states.get(entity) is not observed
-            or runtime.manager.settings != before_settings):
+            or runtime.manager.settings != before_settings
+            or not _dispatch_safe(runtime, spec, record, cfg, entity, desired)):
         relay["pending"] = None
         await runtime._save()
         return False
@@ -260,7 +340,8 @@ async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
             if (not runtime._active or not runtime._ready
                     or cfg.get("power_switch_entity") != entity
                     or permitted_supply(runtime.manager, spec, entity, identity) is None
-                    or runtime.hass.states.get(entity) is not observed):
+                    or runtime.hass.states.get(entity) is not observed
+                    or not _dispatch_safe(runtime, spec, record, cfg, entity, desired)):
                 relay["pending"] = None
                 await runtime._save()
                 return False
@@ -347,37 +428,7 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         runtime._status(spec, "waiting_for_physical_device",
                         reason="upstream_switch_capabilities_not_verified")
         return observed.state == "off"
-    plan = model.plan_for(runtime.manager, spec)
-    from .device_activation import authorized, effective_device
-    from .occupancy_policy import live_device_permission
-    # A switch selection does not grant native controller ownership. An
-    # explicit current source-bound Automatic/PID/Manual authorization is required.
-    allowed = authorized(runtime.manager, spec)
-    mode = cfg.get("control_mode")
-    if not allowed or mode not in ("automatic", "pid", "manual", "off"):
-        demand = None
-    else:
-        live = effective_device(runtime.manager, spec, cap.primary)
-        room = model.room_config(runtime.manager, spec)
-        if mode != "off":
-            status, _ = live_device_permission(
-                runtime.hass, spec.area_id, room, plan, live
-            )
-            allowed = status == "eligible"
-        if not allowed or (
-            mode in ("automatic", "pid") and
-            plan.get("window_safe") is not True and
-            cap.domain not in ("fan",)
-        ):
-            demand = None
-        else:
-            target = model.targets(runtime.manager, spec, cap, cfg, plan)
-            measurements = runtime.measurements(spec, cap)
-            demand = output_required(
-                cap, target, measurements, method=mode,
-                requested_mode=cfg.get("requested_mode"),
-                fan_purpose=live.get("fan_purpose"), plan=plan,
-            )
+    demand = approved_demand(runtime, spec, cfg, cap)
     if observed.state == "off":
         if relay.get("idle_since") is not None:
             relay["idle_since"] = None
