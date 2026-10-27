@@ -116,6 +116,8 @@ class Harness:
             "_send": self.send,
             "UPSTREAM_MIN_OFF_SECONDS": 600,
             "UPSTREAM_ACK_SECONDS": 120,
+            "_SWITCH_STATES": ("off", "on"),
+            "observed_output_off": lambda state: state is not None and state.state == "off",
             "finite": finite,
         }
         functions = extract("_observed_off_since", "before_tick", injections=ns)
