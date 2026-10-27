@@ -291,7 +291,7 @@ class EquipmentRuntime:
                 upstream = record.get("upstream", {})
                 if selected != old.get("power_switch_entity"):
                     if (upstream.get("owned") or upstream.get("pending")
-                            or record.get("power") or record.get("pending")):
+                            or record.get("pending")):
                         raise HomeAssistantError(
                             "Reconcile the previously controlled output before changing its power supply"
                         )
@@ -459,7 +459,7 @@ class EquipmentRuntime:
             if selected_supply != old.get("power_switch_entity"):
                 upstream = self._record(spec).get("upstream", {})
                 if (upstream.get("pending") or upstream.get("owned")
-                        or self._record(spec).get("power") or self._record(spec).get("pending")):
+                        or self._record(spec).get("pending")):
                     raise HomeAssistantError(
                         "Reconcile previously controlled output before changing its power supply"
                     )
