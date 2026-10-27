@@ -2068,7 +2068,15 @@
         "name": "Γλώσσα"
       },
       "area_manual_profile": {
-        "name": "Χειροκίνητη επιλογή προφίλ παρουσίας/απουσίας"
+        "name": "Χειροκίνητη επιλογή προφίλ παρουσίας/απουσίας",
+        "state": {
+          "none": "Αυτόματο",
+          "home": "Σπίτι",
+          "away": "Απών",
+          "comfort": "Άνεση",
+          "sleep": "Ύπνος",
+          "eco": "Εξοικονόμηση"
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Πηγή κερδών",
@@ -2159,6 +2167,9 @@
       },
       "shade_window_entity": {
         "name": "Συνδεδεμένος αισθητήρας παραθύρου"
+      },
+      "equipment_power_switch_entity": {
+        "name": "Ισχύς · Εξωτερικός διακόπτης τροφοδοσίας"
       }
     },
     "time": {
@@ -2185,7 +2196,19 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "Κλίμα · {channel}"
+        "name": "Κλίμα · {channel}",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "none": "Αυτόματο",
+              "home": "Σπίτι",
+              "away": "Απών",
+              "comfort": "Άνεση",
+              "sleep": "Ύπνος",
+              "eco": "Εξοικονόμηση"
+            }
+          }
+        }
       }
     }
   },
