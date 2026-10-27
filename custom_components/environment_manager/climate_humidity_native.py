@@ -230,8 +230,13 @@ class HumiditySetpointControl:
             return
         live_rh, feedback_reason = live_room_humidity(self.hass, area, cfg, plan)
         if live_rh is None:
-            self._status(area, "humidity_measurement_stale_or_invalid",
-                         reason=feedback_reason)
+            # A missing selection differs from a temporarily unavailable
+            # selected RH sensor and keeps the historical readable status.
+            reason_code = ("explicit_fresh_humidity_sensor_required"
+                           if feedback_reason in ("no_selected_humidity_source",
+                                                  "invalid_humidity_source_selection")
+                           else "humidity_measurement_stale_or_invalid")
+            self._status(area, reason_code, reason=feedback_reason)
             return
         reading_advice = humidity_advice(
             live_rh, low_rh=cfg.get("humidity_low_rh",40),

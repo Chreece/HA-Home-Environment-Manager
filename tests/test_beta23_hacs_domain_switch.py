@@ -13,7 +13,8 @@ CURRENT_VERSION = json.loads((PKG / "manifest.json").read_text(encoding="utf-8")
 
 
 def _builder():
-    builder_version = ("beta52" if CURRENT_VERSION == "0.6.0b52" else
+    builder_version = ("beta53" if CURRENT_VERSION == "0.6.0b53" else
+                       "beta52" if CURRENT_VERSION == "0.6.0b52" else
                        "beta51" if CURRENT_VERSION == "0.6.0b51" else
                        "beta50" if CURRENT_VERSION == "0.6.0b50" else
                        "beta49" if CURRENT_VERSION == "0.6.0b49" else

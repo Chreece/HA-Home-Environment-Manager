@@ -181,12 +181,15 @@ def test_climate_pid_allocates_same_demand_to_native_discrete_fan_with_quiet_cap
     asyncio.run(scenario())
 
 
-def test_unverified_sleep_evidence_prevents_new_pid_power_activation(runtime_module):
+def test_optional_quiet_sleep_uncertainty_does_not_block_pid_heating(runtime_module):
     async def scenario():
         h=home(runtime_module,domain="climate",state="off",mode="pid",
                controls={"quiet_sleep":True})
         h.plan["sleeping"]=None
         await h.runtime.tick(h.spec)
-        assert h.hass.services.calls==[]
-        assert h.runtime.statuses[h.spec.identifier]["status"]=="quiet_context_unknown"
+        # Quiet speed must be conservative; it must not veto unrelated
+        # heater activation. Explicit sleep_behavior=pause remains separate.
+        assert any(call[1]=="set_hvac_mode" and call[2]["hvac_mode"]=="heat"
+                   for call in h.hass.services.calls)
+        assert h.runtime.statuses[h.spec.identifier]["status"]!="quiet_context_unknown"
     asyncio.run(scenario())

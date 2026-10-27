@@ -721,9 +721,11 @@ def test_quiet_unknown_presence_never_restores_high_speed(runtime_module):
         await tick(h, advance=30)
         assert h.state.attributes["percentage"] == 30
         h.state.attributes["percentage_step"] = 25
-        # Native capability changes are a manual reconciliation boundary.
+        # Passive capability changes must not latch a fictitious manual
+        # override; actual user-adjusted speed and power still require it.
         await tick(h)
-        assert h.runtime.records[h.spec.identifier]["paused"] == "physical_manual_override"
+        assert not h.runtime.records[h.spec.identifier].get("paused")
+        assert h.state.attributes["percentage"] == 30
     asyncio.run(run())
 
 
@@ -921,15 +923,16 @@ def test_percentage_fan_limits_override_normal_and_quiet_demands(runtime_module)
     asyncio.run(run())
 
 
-def test_unknown_quiet_context_holds_current_fan_speed_without_command(runtime_module):
+def test_unknown_quiet_context_selects_conservative_fan_speed(runtime_module):
     async def run():
         h = home(runtime_module, state="on", power=False, controls={"quiet_occupied": True})
         h.plan["occupancy"] = "unknown"
-        before = h.state.attributes["percentage"]
         await tick(h)
-        assert h.hass.services.calls == []
-        assert h.state.attributes["percentage"] == before
-        assert h.runtime.statuses[h.spec.identifier]["status"] == "quiet_context_unknown"
+        # Unavailable optional occupancy keeps the fan in its safe quiet
+        # range instead of blocking climate or restoring a higher speed.
+        assert h.state.attributes["percentage"] == 30
+        assert any(call[1] == "set_percentage" and call[2] == {"percentage": 30}
+                   for call in h.hass.services.calls)
     asyncio.run(run())
 
 

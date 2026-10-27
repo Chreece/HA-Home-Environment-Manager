@@ -96,8 +96,10 @@ def test_humidity_missing_or_ambiguous_fails_closed(coordinator):
     r = Reading("sensor.first", "First", "humidity", 72)
     s = Reading("sensor.second", "Second", "humidity", 31)
     item = coordinator.room_equipment_plan(h, "bedroom", cfg, idle, (r, s))
-    assert item["humidity_evidence"] == "multiple_sensors_choose_one"
-    assert item["humidity"]["status"] == "insufficient_data"
+    # Two independent valid sources are averaged, not rejected because
+    # there is more than one. 72% and 31% -> 51.5% RH.
+    assert item["humidity_evidence"] == "selected_mean"
+    assert item["humidity"]["measured_rh"] == 51.5
     cfg["humidity_entity"] = "sensor.first"
     item = coordinator.room_equipment_plan(h, "bedroom", cfg, idle, (r, s))
     assert item["moisture"]["action"] == "dry"

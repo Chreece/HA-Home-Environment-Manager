@@ -252,10 +252,16 @@ def room_equipment_plan(hass: Any, area: str, config: dict,
                 "inventory": inventory, "automatic_secondary_actuation": False}
     values = [(r.entity_id, r.value) for r in readings
               if getattr(r, "metric", None) == "humidity"]
-    # None means advisory auto-discovery for old rooms. An explicit empty
-    # selection means NO sensor was authorized; neither permits fabrication.
+    # Honor an explicit legacy single-sensor pin when the room's newer
+    # group selection was never configured. With no pin, valid room sensors
+    # may still inform read-only advice, but never imply actuator permission.
+    requested_sources = humidity_source_entities
+    if requested_sources is None:
+        pinned = config.get("humidity_entity")
+        if isinstance(pinned, str) and pinned:
+            requested_sources = [pinned]
     moisture_value, moisture_evidence = mean_valid_room_humidity(
-        values, humidity_source_entities
+        values, requested_sources
     )
     moisture_advice = humidity_advice(
         moisture_value, low_rh=config.get("humidity_low_rh", 40),

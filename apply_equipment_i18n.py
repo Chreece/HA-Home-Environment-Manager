@@ -147,7 +147,13 @@ def apply_equipment_i18n(root: Path) -> None:
         def add(domain, key, name, **extra):
             entities.setdefault(domain, {})["equipment_" + key] = {"name": "{channel}" + name, **extra}
         add("climate", "climate", words["climate"])
-        add("sensor", "control_status", STATUS_NAMES[lang])
+        # The controller-state language table is independently reviewed.
+        # Keep existing enum state labels rather than recreating a name-only
+        # entity every time this ordinary equipment-label pass runs.
+        existing_status = entities.get("sensor", {}).get("equipment_control_status", {})
+        existing_states = existing_status.get("state") if isinstance(existing_status, dict) else None
+        add("sensor", "control_status", STATUS_NAMES[lang],
+            **({"state": existing_states} if isinstance(existing_states, dict) else {}))
         add("select", "control_mode", words["control_mode"], state={
             "existing": words["existing"], "automatic": v["automatic"],
             "manual": words["manual"], "off": v["off"], "pid": "PID",
