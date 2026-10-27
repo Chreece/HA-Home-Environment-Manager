@@ -328,48 +328,100 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
 
 
 class EquipmentPowerSwitchSelect(EquipmentSelect):
-    """Select exactly one native upstream switch for this managed output.
+    """Dynamic friendly labels, with stable persisted native switch entity IDs.
 
-    The displayed option is the canonical HA entity ID so it remains stable
-    across localization and unambiguously identifies the physical supply.
-    This select remains visible even when its downstream appliance is offline.
+    Discover candidates once; only state changes for these exact candidate
+    switches invalidate the displayed options. Avoid global event listeners
+    and repeated whole-registry scans during HA startup and state updates.
     """
 
     _attr_icon = "mdi:power-plug"
 
     def __init__(self, manager, spec):
         super().__init__(manager, spec, "power_switch_entity")
-        # Never enumerate all physical switches from SelectEntity.options.
-        # Home Assistant reads options during initial registration, state
-        # serialization, dispatcher updates and frontend polling. A live
-        # query here froze large Beta55 installations even with no supply
-        # assigned. The resulting choices are stable until integration reload.
-        self._power_switch_options: tuple[str, ...] | None = None
+        self._power_switch_entity_ids: tuple[str, ...] | None = None
+        self._power_switch_display_options: tuple[str, ...] | None = None
+        self._power_switch_id_to_label: dict[str, str] = {}
+        self._power_switch_label_to_id: dict[str, str] = {}
 
     @property
     def available(self):
         return True
 
+    def _entity_ids(self) -> tuple[str, ...]:
+        if self._power_switch_entity_ids is None:
+            from .equipment_power_switch import supply_options
+            self._power_switch_entity_ids = supply_options(self._manager, self._spec)
+        return self._power_switch_entity_ids
+
+    def _display_options(self) -> tuple[str, ...]:
+        if self._power_switch_display_options is None:
+            from .equipment_power_switch import supply_option_labels
+            labels = supply_option_labels(self._manager.hass, self._entity_ids())
+            self._power_switch_id_to_label = labels
+            self._power_switch_label_to_id = {
+                label: entity for entity, label in labels.items()
+            }
+            self._power_switch_display_options = (
+                "none", *(labels[entity] for entity in self._entity_ids())
+            )
+        return self._power_switch_display_options
+
     @property
     def options(self):
-        if self._power_switch_options is None:
-            from .equipment_power_switch import supply_options
-            self._power_switch_options = ("none", *supply_options(
-                self._manager, self._spec))
-        return list(self._power_switch_options)
+        return list(self._display_options())
 
     @property
     def current_option(self):
-        choice = self.controller_settings.get("power_switch_entity")
-        return choice if choice in self.options else "none"
+        self._display_options()
+        selected = self.controller_settings.get("power_switch_entity")
+        return self._power_switch_id_to_label.get(selected, "none")
+
+    @property
+    def extra_state_attributes(self):
+        return {
+            **super().extra_state_attributes,
+            "selected_power_switch_entity_id": (
+                self.controller_settings.get("power_switch_entity")
+            ),
+        }
 
     async def async_select_option(self, option):
-        if option not in self.options:
-            raise ValueError("Unrecognized upstream power switch")
+        self._display_options()
+        if option == "none":
+            entity = None
+        else:
+            entity = self._power_switch_label_to_id.get(option)
+            # Support existing service callers supplying the native ID.
+            if entity is None and option in self._entity_ids():
+                entity = option
+            if entity is None:
+                raise ValueError("Unrecognized upstream power switch")
         await self._manager.equipment.async_update(
-            self._spec,
-            {"power_switch_entity": None if option == "none" else option},
+            self._spec, {"power_switch_entity": entity}
         )
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        entities = self._entity_ids()
+        if not entities:
+            return
+        from homeassistant.helpers.event import async_track_state_change_event
+
+        @callback
+        def _supply_state_changed(event):
+            previous = event.data.get("old_state")
+            current = event.data.get("new_state")
+            if (previous is not None and current is not None
+                    and previous.state == current.state
+                    and previous.name == current.name):
+                return
+            self._power_switch_display_options = None
+            self.async_write_ha_state()
+
+        self.async_on_remove(async_track_state_change_event(
+            self.hass, entities, _supply_state_changed
+        ))
 
 
 class AreaScienceSource(ConfigSelect):
