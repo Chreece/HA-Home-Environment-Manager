@@ -139,6 +139,14 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
                 if isinstance(upstream.get("pending"), dict) else None
             ),
             "upstream_pause_reason": upstream.get("paused"),
+            "upstream_idle_since": upstream.get("idle_since"),
+            "upstream_idle_cooldown_seconds": cfg.get(
+                "power_switch_cooldown_seconds"
+            ) if supply_id else None,
+            "sleep_pause_requested": (
+                cfg.get("sleep_behavior") == "pause"
+                and plan.get("sleeping") is True
+            ),
             "previous_native_capabilities_cached": isinstance(
                 record.get("capabilities"), dict),
             "native_sources_available": equipment.sources_available(
