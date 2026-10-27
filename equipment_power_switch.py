@@ -303,27 +303,54 @@ def verified_capabilities(runtime: Any, spec: Any) -> Any:
 
 
 def cold_start_direction_demand(runtime: Any, spec: Any, cfg: dict) -> bool | None:
-    """Demand-gated power restoration without pretending the appliance is online.
+    """Use explicit saved direction or uniquely identified native purpose.
 
-    This is ONLY for one previously user-selected single HVAC direction. The
-    stored requested_mode was validated against a native endpoint at setup,
-    and exact-device authorization is revalidated by approved_demand().
-    A minimal transient direction descriptor evaluates room targets only;
-    it is NEVER persisted as verified hardware capabilities, exposed in the
-    climate UI, or used for a native appliance service.
+    The trusted source ID, current exact-device authorization, active PID
+    selection and independent room measurements are required. HA sometimes
+    has only a DRY-capable native state that is marked unavailable, or an
+    explicit room "dry_climate_entity" mapping. Those hints are valid ONLY
+    for restoring the separate power relay - never native HVAC commands,
+    physical mode advertisements, or persistent verified capabilities.
     """
     if cfg.get("control_mode") not in ("automatic", "pid"):
-        return None
-    direction = cfg.get("requested_mode")
-    if direction not in ("heat", "cool", "dry"):
         return None
     if len(spec.source_entities) != 1:
         return None
     source = spec.source_entities[0]
-    if not source.startswith("climate."):
+    domain = source.partition(".")[0]
+    if domain not in ("climate", "humidifier"):
+        return None
+    direction = cfg.get("requested_mode")
+    if direction is None:
+        native = model.capabilities(runtime.manager, spec)
+        # An unavailable state with real HA-advertised HVAC modes may still
+        # identify a SINGLE physical purpose. It cannot authenticate a
+        # running appliance or qualify for native service dispatch.
+        if native is not None and native.primary == source:
+            modes = set(native.modes) - {"off"}
+            if len(modes) == 1 and next(iter(modes)) in (
+                    "heat", "cool", "dry"):
+                direction = next(iter(modes))
+        if direction is None:
+            room = model.room_config(runtime.manager, spec)
+            possible = []
+            for key, option in (
+                ("heat_climate_entity", "heat"),
+                ("cool_climate_entity", "cool"),
+                ("dry_climate_entity", "dry"),
+                ("dehumidifier_entity", "dry"),
+            ):
+                if room.get(key) == source:
+                    possible.append(option)
+            if len(set(possible)) == 1 and possible:
+                direction = possible[0]
+    if direction not in ("heat", "cool", "dry"):
+        return None
+    # A humidity-only HA endpoint cannot be assigned a temperature role.
+    if domain == "humidifier" and direction != "dry":
         return None
     provisional = model.Capabilities(
-        primary=source, domain="climate", modes=("off", direction),
+        primary=source, domain=domain, modes=("off", direction),
         temperature=direction in ("heat", "cool"),
         humidity=direction == "dry",
     )
