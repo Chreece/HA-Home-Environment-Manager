@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "அறை வெப்பநிலைக்கு மேல் திரைகளை மூடு (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "வீடு · சாதனங்கள் · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "சாதனங்கள் · மூலம் · இலக்கு"
+        "name": "சாதனங்கள் · மூலம் · இலக்கு",
+        "state": {
+          "temperature": "நிலையான வெப்பநிலை இலக்குகள்",
+          "auto_comfort": "தானியங்கி வசதி (வெப்பநிலை மற்றும் ஈரப்பதம்)",
+          "pmv": "மேம்பட்ட ISO 7730 (அளவீடுகள் தேவை)"
+        }
       },
       "equipment_control_mode": {
         "name": "கட்டுப்பாடு · {channel}கட்டுப்பாட்டு முறை",
