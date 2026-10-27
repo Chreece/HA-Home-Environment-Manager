@@ -131,6 +131,7 @@ class Simulator:
         self._started = BASE - 1800
         self._memory = {}
         self._fan_allocations = {}
+        self._invalidated = set()
         self._pid_offline_previews = {}
         self._commands = asyncio.Semaphore(1)
         self._save_log = []
@@ -256,6 +257,7 @@ power_env.update({
     "prepare_offline_pid": lambda *args: {},
 })
 power_mod.approved_demand = approved_demand
+power_mod.before_tick = before_tick
 
 runtime_env = {
     "__name__": "beta64_probe.equipment_runtime",
@@ -381,12 +383,14 @@ async def test_no_native_stop_on_races_or_unsafe_hardware():
     assert not sim.issued
     # Do not run native shutdown once sleep ended during the durable intent.
     sim = Simulator(sleeping=True)
+    sim.record["capabilities"] = asdict(sim.manager.cap)
     sim.on_save = lambda: sim.manager.plan.__setitem__("sleeping", False)
     await tick(sim, spec)
     assert not sim.issued
     assert sim.record.get("pending") is None
     # Likewise, changing IDLE demand during persistence invalidates stop.
     sim = Simulator(sleeping=False, humidity=53)
+    sim.record["capabilities"] = asdict(sim.manager.cap)
     sim.on_save = lambda: setattr(sim, "humidity", 69)
     await tick(sim, spec)
     assert not sim.issued
