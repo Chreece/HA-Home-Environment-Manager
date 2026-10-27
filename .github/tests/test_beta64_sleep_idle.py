@@ -263,6 +263,7 @@ runtime_env = {
     "__name__": "beta64_probe.equipment_runtime",
     "__package__": "beta64_probe",
     "Any": Any, "model": Model, "asdict": asdict, "finite": finite,
+    "live_device_permission": occupancy.live_device_permission,
     "asyncio": asyncio, "deepcopy": copy.deepcopy, "output_off": output_off,
     "snapshot": lambda item: (
         {"state": item.state, "attributes": dict(item.attributes)}
