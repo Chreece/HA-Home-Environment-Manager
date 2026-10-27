@@ -56,27 +56,38 @@ def relay_identity(hass: Any, spec: Any, entity: str) -> dict | None:
             "area": spec.area_id}
 
 
+def _configured_manager_entries(manager: Any) -> tuple[tuple[str, dict], ...]:
+    """Inspect unloaded HA config entries as well as loaded controller owners."""
+    from .config_data import mutable_copy
+    entries = []
+    loader = getattr(getattr(manager.hass, "config_entries", None), "async_entries", None)
+    if callable(loader):
+        for entry in loader(DOMAIN):
+            info = mutable_copy({**entry.data, **entry.options})
+            entries.append((entry.entry_id, info))
+    else:
+        entries.append((manager.entry.entry_id, manager.settings))
+    return tuple(entries)
+
+
 def _reserved_outputs(manager: Any) -> set[str]:
-    """An actuator, including a legacy on/off actuator, cannot be a supply."""
+    """Legacy direct actuators across ALL configured entries cannot be supplies."""
     from .device_hierarchy import configured_area_ids, configured_sources
-    return {entity for area in configured_area_ids(manager.settings)
-            for entity in configured_sources(manager.settings, area)}
+    outputs: set[str] = set()
+    for _entry_id, settings in _configured_manager_entries(manager):
+        for area in configured_area_ids(settings):
+            outputs.update(configured_sources(settings, area))
+    return outputs
 
 
 def _other_owners(manager: Any, spec: Any, switch: str) -> bool:
-    """Refuse a shared switched supply (also across other HEM entries)."""
-    managers = [manager]
-    for entry_manager in getattr(manager.hass, "data", {}).get(DOMAIN, {}).values():
-        if (entry_manager is not manager
-                and hasattr(entry_manager, "settings")
-                and entry_manager not in managers):
-            managers.append(entry_manager)
-    for owner in managers:
-        cfg = owner.settings.get(model.SETTINGS, {})
+    """Refuse a shared switched supply, even if another entry is not loaded."""
+    for entry_id, settings in _configured_manager_entries(manager):
+        cfg = settings.get(model.SETTINGS, {})
         if not isinstance(cfg, dict):
             continue
         for key, values in cfg.items():
-            if owner is manager and key == spec.identifier:
+            if entry_id == manager.entry.entry_id and key == spec.identifier:
                 continue
             if isinstance(values, dict) and values.get("power_switch_entity") == switch:
                 return True
