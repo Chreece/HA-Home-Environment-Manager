@@ -1278,6 +1278,407 @@
       },
       "area_surface_humidity": {
         "name": "Повърхностна влажност (изчислена)"
+      },
+      "equipment_control_status": {
+        "name": "{channel}Състояние на контролера",
+        "state": {
+          "above_horizon": "Above horizon",
+          "active_compressor_wait_for_idle": "Active compressor wait for idle",
+          "active_device_preset": "Device preset is active and prevents automatic adjustment",
+          "activity_blocked": "Activity blocked",
+          "actuator_not_binary": "Actuator not binary",
+          "actuator_unknown_or_unavailable": "Actuator unknown or unavailable",
+          "actuator_wrong_domain_or_area": "Actuator wrong domain or area",
+          "advisory_only": "Suggestions only - automatic changes are disabled",
+          "advisory_only_or_conflicting_driver": "Advisory only or conflicting driver",
+          "advisory_only_or_conflicting_humidity_driver": "Advisory only or conflicting humidity driver",
+          "air_quality_decision_expired": "Air quality decision expired",
+          "air_quality_policy_missing": "Air quality policy missing",
+          "already_in_suitable_mode": "Already in suitable mode",
+          "already_sufficient_speed": "Already sufficient speed",
+          "ambiguous_fan_roles": "Ambiguous fan roles",
+          "announcement_unavailable_hold": "Announcement unavailable hold",
+          "at_device_setpoint": "Device is already at its requested setting",
+          "at_setpoint": "Целевата стойност е достигната",
+          "at_target_speed": "Fan speed is already correct",
+          "authority_or_evidence_changed_before_dispatch": "Authority or evidence changed before dispatch",
+          "authorization_changed_during_persistence": "Authorization changed during persistence",
+          "authorization_withdrawn": "Authorization withdrawn",
+          "automatically_opened": "Shade was reopened automatically",
+          "awaiting_close_confirmation": "Waiting for shade to confirm it has closed",
+          "awaiting_evaluation": "Waiting for the first controller evaluation",
+          "awaiting_open_confirmation": "Waiting for shade to confirm it has opened",
+          "awaiting_physical_acknowledgement": "Waiting for physical device to confirm its state",
+          "away": "Away",
+          "below_horizon": "Below horizon",
+          "both_dry_and_fan_only_required": "Both dry and fan only required",
+          "climate_device_wrong_area": "Selected thermostat belongs to another room",
+          "climate_service_unavailable": "Thermostat control service is unavailable",
+          "climate_target_wrong_room": "Climate target wrong room",
+          "climate_unavailable": "Physical thermostat is unavailable",
+          "close_command_sent": "Shade close command sent",
+          "close_service_failed_hold": "Close service failed hold",
+          "close_service_unavailable": "Close service unavailable",
+          "closed": "Closed",
+          "closing_recommended": "Shade closure is recommended",
+          "closing_requested": "Closing requested",
+          "comfort_deadband_no_command": "Comfort deadband no command",
+          "command_sent": "Command sent to physical device; waiting for confirmation",
+          "commanded": "Command sent to physical output",
+          "competing_climate_active_or_armed": "Competing climate active or armed",
+          "competing_climate_unavailable": "Competing climate unavailable",
+          "competing_climate_wrong_room": "Competing climate wrong room",
+          "competing_hvac_unverified": "Competing HVAC unverified",
+          "compressor_idle_confirmation_pending": "Compressor idle confirmation pending",
+          "conditions_changed_after_announcement": "Conditions changed after announcement",
+          "conflicting_controller": "Another controller is already managing this device",
+          "conflicting_controller_or_equipment_owner": "Conflicting controller or equipment owner",
+          "conflicting_fan_power_owner": "Conflicting fan power owner",
+          "conflicting_humidity_power_owner": "Conflicting humidity power owner",
+          "conflicting_native_humidity_controller": "Conflicting native humidity controller",
+          "conflicting_or_missing_actuator": "Conflicting or missing actuator",
+          "conflicting_pid_room": "Conflicting PID room",
+          "control_measurement_missing_or_stale": "Required control measurement is unavailable or outdated",
+          "control_method_missing": "Control method missing",
+          "controller_exception": "Controller encountered an unexpected error",
+          "controller_inactive": "Controller is not running",
+          "controller_not_active_or_paused": "Controller is inactive or paused",
+          "controller_paused": "Controller is paused",
+          "controlling": "Автоматичното управление е активно",
+          "cooling_priority_defer_dehumidifier": "Cooling has priority; dehumidifier will wait",
+          "coordination_hold": "Waiting for another controller to release the device",
+          "cover_state_uncertain_hold": "Cover state uncertain hold",
+          "cross_entry_control_hold": "Cross entry control hold",
+          "dedicated_dry_climate_required": "Dedicated dry climate required",
+          "demand_within_tolerance": "Target is close enough; no adjustment needed",
+          "detected_override": "Detected override",
+          "device_does_not_support_single_setpoint": "Thermostat cannot accept a single temperature target",
+          "device_limits_or_resolution_unknown": "Device limits or resolution unknown",
+          "device_limits_or_temperature_unknown": "Device limits or temperature unknown",
+          "device_limits_unknown": "Device limits unknown",
+          "device_not_selected": "Device not selected",
+          "device_off_no_automatic_start": "Device OFF no automatic start",
+          "device_step_unknown": "Device step unknown",
+          "device_unavailable": "Device is unavailable",
+          "device_unavailable_or_not_verified": "Device unavailable or not verified",
+          "device_unit_conversion_failed": "Device unit conversion failed",
+          "disabled": "Controller is disabled",
+          "duplicate_device_owner": "Duplicate device owner",
+          "duplicate_equipment_owner": "More than one controller claims the same device",
+          "duplicate_fan_owner": "Duplicate fan owner",
+          "duplicate_humidity_device_owner": "Duplicate humidity device owner",
+          "duplicate_or_ambiguous_fan_assignment": "Duplicate or ambiguous fan assignment",
+          "duplicate_target": "The physical device is assigned to more than one controller",
+          "equipment_plan_unknown": "Equipment plan unknown",
+          "equipment_plan_unverified": "The room equipment plan is not verified",
+          "existing": "Control is handled by the existing device integration",
+          "existing_controller_selected": "Existing controller selected",
+          "explicit_fresh_humidity_sensor_required": "Explicit fresh humidity sensor required",
+          "explicit_room_humidity_sensor_required": "Explicit room humidity sensor required",
+          "fan_limits_have_no_supported_step": "Fan limits have no supported step",
+          "fan_off_no_automatic_power_on": "Fan is off; automatic power-on is not permitted",
+          "fan_percentage_or_step_unknown": "Fan percentage or step unknown",
+          "fan_power_commanded": "Fan power commanded",
+          "fan_power_off_acknowledged": "Fan power OFF acknowledged",
+          "fan_power_service_missing": "Fan power service missing",
+          "fan_power_unknown": "Fan power unknown",
+          "fan_speed_increased": "Fan speed increased to meet demand",
+          "fan_speed_not_supported": "Fan speed not supported",
+          "fan_speed_service_unavailable": "Fan speed control service is unavailable",
+          "fan_state_or_compressor_unknown": "Fan state or compressor unknown",
+          "fan_unavailable_or_wrong_room": "Fan unavailable or wrong room",
+          "foreign_equipment_owner": "Foreign equipment owner",
+          "hold": "Control paused until safety conditions are verified",
+          "holding": "Maintaining the current safe output",
+          "home": "Home",
+          "humidifier_service_missing": "Humidifier service missing",
+          "humidity_intent_changed": "Humidity intent changed",
+          "humidity_measurement_stale_or_invalid": "Humidity measurement is unavailable or invalid",
+          "humidity_parameters_invalid": "Humidity parameters invalid",
+          "humidity_sensor_invalid_or_stale": "Humidity sensor data is invalid or outdated",
+          "humidity_sensor_stale": "Humidity sensor stale",
+          "humidity_sensor_unverified": "Humidity sensor unverified",
+          "inactive": "Controller is not running",
+          "incompatible_speed_quantization": "Incompatible speed quantization",
+          "insufficient_pid_history": "Not enough valid measurements to calculate PID",
+          "interlock_unconfirmed": "Interlock unconfirmed",
+          "interlock_wait_opposite_off": "Interlock wait opposite OFF",
+          "invalid_ack_state": "Invalid ack state",
+          "invalid_configuration": "Invalid configuration",
+          "invalid_fan_or_sensor_assignment": "Invalid fan or sensor assignment",
+          "invalid_fan_power_timing": "Invalid fan power timing",
+          "invalid_hardware_dwell_config": "Invalid hardware dwell config",
+          "invalid_hysteresis": "Invalid hysteresis",
+          "invalid_maximum_runtime": "Invalid maximum runtime",
+          "invalid_mode_dwell": "Invalid mode dwell",
+          "invalid_moisture_intent": "Invalid moisture intent",
+          "invalid_percentage_step_or_rate": "Invalid percentage step or rate",
+          "invalid_pid_sample": "Invalid PID sample",
+          "invalid_proportional_input": "Invalid proportional input",
+          "invalid_pwm": "Invalid PWM",
+          "invalid_pwm_period": "Invalid PWM period",
+          "invalid_sample_seconds": "Invalid sample seconds",
+          "invalid_setpoint_result": "Invalid setpoint result",
+          "invalid_temperature_target": "Invalid temperature target",
+          "legacy_manual_hold": "Legacy manual hold",
+          "manual": "Device is in manual control",
+          "manual_change": "Manual change",
+          "manual_fan_preset_active": "Manual fan preset active",
+          "manual_hvac_mode_change_or_unacknowledged_write": "Manual HVAC mode change or unacknowledged write",
+          "manual_no_request": "Manual mode selected; no change requested",
+          "manual_or_unknown_cover_motion": "Cover was moved manually or its movement cannot be confirmed",
+          "manual_override": "Manual adjustment detected; automatic control is paused",
+          "manual_setpoint_or_unacknowledged_write": "Manual setpoint or unacknowledged write",
+          "measured_need_resolved": "Measured need resolved",
+          "minimum_fan_off_hold": "Waiting for fan minimum OFF time",
+          "minimum_fan_on_hold": "Waiting for fan minimum ON time",
+          "minimum_native_device_off_hold": "Waiting for minimum safe OFF time",
+          "minimum_off_hold": "Изчакване на минималното безопасно време за изключване",
+          "minimum_on_hold": "Уредът остава включен за минималното безопасно време",
+          "minimum_on_hold_before_safe_off": "Waiting for minimum safe ON time before stopping",
+          "missing_percent_or_native_step": "Missing percent or native step",
+          "missing_room_plan": "Missing room plan",
+          "missing_temperature_or_climate": "Temperature sensor or physical thermostat is not configured",
+          "mode_commanded": "Operating mode change requested",
+          "mode_dwell": "Mode dwell",
+          "mode_has_no_verified_actuator": "Mode has no verified actuator",
+          "mode_history_unavailable": "Mode history unavailable",
+          "mode_mismatch_auto_switch_disabled": "Mode mismatch auto switch disabled",
+          "mode_service_failure": "Mode service failure",
+          "mode_service_missing": "Mode service missing",
+          "mode_transfer_dwell": "Mode transfer dwell",
+          "mode_transition_dwell": "Mode transition dwell",
+          "modulating": "Adjusting output level",
+          "monitored_room_missing": "Monitored room missing",
+          "native_absence_off_mode_unsupported": "Native absence OFF mode unsupported",
+          "native_absence_off_wait_dwell": "Native absence OFF wait dwell",
+          "native_ac_drying_already_active": "Native AC drying already active",
+          "native_already_off": "Physical HVAC device is already off",
+          "native_defrost_protection": "Device is defrosting; changing output is blocked",
+          "native_fan_preset_active": "Native fan preset active",
+          "native_humidity_device_unavailable": "Native humidity device unavailable",
+          "native_mode_commanded": "Operating mode command sent",
+          "native_mode_dwell_not_met": "Native mode dwell not met",
+          "native_mode_dwell_policy_changed": "Native mode dwell policy changed",
+          "native_mode_mismatch_no_mode_switch": "Native mode mismatch no mode switch",
+          "native_mode_permission_revoked": "Native mode permission revoked",
+          "native_mode_service_missing": "Native mode service missing",
+          "native_mode_service_unavailable": "Native mode service unavailable",
+          "native_off_ack_storage_failed": "Native OFF ack storage failed",
+          "native_off_intent_storage_failed": "Native OFF intent storage failed",
+          "native_off_no_power_permission": "Device is off; controller cannot power it on",
+          "native_off_permission_revoked_after_intent": "Native OFF permission revoked after intent",
+          "native_off_requested_for_absence": "Device is being turned off because the home is empty",
+          "native_off_requires_manual_reconciliation": "Native OFF requires manual reconciliation",
+          "native_off_service_unacknowledged": "Native OFF service unacknowledged",
+          "native_off_state_changed_after_intent": "Native OFF state changed after intent",
+          "native_power_mode_unsupported": "Requested physical power mode is unsupported",
+          "native_preset_active": "Physical device preset prevents automatic adjustment",
+          "native_range_at_setpoint": "Native range at setpoint",
+          "native_range_commanded": "New target range sent to device",
+          "native_service_unavailable": "Native service unavailable",
+          "native_setpoint_limits_unknown": "Temperature target limits are unknown",
+          "native_setpoint_unavailable": "Current physical temperature setpoint is missing",
+          "native_step_exceeds_safe_ramp": "Native step exceeds safe ramp",
+          "native_step_exceeds_setpoint_rate_limit": "Native step exceeds setpoint rate limit",
+          "native_target_must_be_commissioned": "Native target must be commissioned",
+          "native_target_unavailable_or_ambiguous": "Native target unavailable or ambiguous",
+          "night": "Night",
+          "no_actuator": "No actuator",
+          "no_fresh_air_policy": "No fresh air policy",
+          "no_humidity_power_demand": "No dehumidification or humidification demand",
+          "no_meaningful_change": "No adjustment is necessary",
+          "no_room_plan": "No reliable room plan is available",
+          "no_selected_native_humidity_device": "No selected native humidity device",
+          "no_selected_shades": "No covers are selected for automatic shading",
+          "no_single_setpoint": "No single setpoint",
+          "no_target": "No valid target is configured",
+          "no_target_profile": "No target profile",
+          "no_verified_fan_speed_demand": "No verified need to change fan speed",
+          "no_verified_secondary_demand": "No verified demand for the secondary device",
+          "no_verified_selected_device": "No verified selected device",
+          "not_direct_strategy": "Not direct strategy",
+          "not_owned_already_closed": "Not owned already closed",
+          "occupied": "Occupied",
+          "off": "Controller is switched off",
+          "open": "Open",
+          "open_blocked_window_contact": "Open blocked window contact",
+          "open_command_failed_hold": "Open command failed hold",
+          "open_command_sent": "Shade open command sent",
+          "open_failed_hold": "Open failed hold",
+          "open_not_supported": "Open not supported",
+          "open_or_unknown_window": "Window is open or its state is unknown",
+          "open_service_unavailable": "Open service unavailable",
+          "opening": "Opening",
+          "opening_requested": "Opening requested",
+          "opposing_humidity_climate_active": "Opposing humidity climate active",
+          "opposing_humidity_device_active_or_unknown": "Opposing humidity device active or unknown",
+          "opposing_humidity_output_on_or_unknown": "Opposing humidity output ON or unknown",
+          "other_climate_unavailable": "Other climate unavailable",
+          "other_climate_wrong_room": "Other climate wrong room",
+          "other_endpoint_acknowledgement_pending": "Other endpoint acknowledgement pending",
+          "other_humidity_device_active_or_unverified": "Other humidity device active or unverified",
+          "other_hvac_active": "Other HVAC active",
+          "other_hvac_armed": "Other HVAC armed",
+          "other_thermostat_action_unknown": "Other thermostat action unknown",
+          "other_thermostat_active": "Other thermostat active",
+          "other_thermostat_opposing_mode_armed": "Other thermostat opposing mode armed",
+          "out_of_device_range": "Out of device range",
+          "outside_air_not_verified": "Outside air not verified",
+          "owned_closed": "Shade closed by automatic control",
+          "owned_closed_weather_still_warrants_shade": "Owned closed weather still warrants shade",
+          "owned_fan_running": "Managed fan is running",
+          "owned_running": "Managed device is running",
+          "owned_shutdown_identity_or_dwell_hold": "Owned shutdown identity or dwell hold",
+          "particle_sensor_not_verified": "Particle sensor not verified",
+          "particle_sensor_verification_required": "Particle sensor verification required",
+          "paused": "Автоматичното управление е на пауза",
+          "paused_away": "Paused away",
+          "physical_capabilities_unavailable": "Physical device capabilities cannot be read",
+          "physical_device_unavailable": "Physical device is unavailable",
+          "pid_already_owns_device": "The device is already managed by another PID controller",
+          "pid_not_ready": "PID needs more valid readings before it can control",
+          "pid_output_inactive": "PID изисква работа, но изходът е изключен",
+          "plan_missing": "Plan missing",
+          "plan_or_permission_changed": "Plan or permission changed",
+          "power_command_sent": "Power command sent; waiting for confirmation",
+          "power_control_not_commissioned": "Automatic power switching is not authorized",
+          "power_off_acknowledged": "Device shutdown confirmed",
+          "presence_changed_before_off": "Presence changed before OFF",
+          "presence_hold": "Presence hold",
+          "proportional_output_not_commissioned": "Proportional output is not authorized",
+          "proportional_output_not_verified": "Proportional output limits are not verified",
+          "proportional_rate_limit": "Proportional rate limit",
+          "quiet_context_unknown": "Quiet-hours conditions cannot be verified",
+          "ready": "Ready",
+          "recent_close_hold": "Waiting before changing the shade again",
+          "recent_fan_state_change": "Recent fan state change",
+          "reconciled_waiting_minimum_off": "Device verified; waiting before restarting",
+          "released": "Released",
+          "released_for_today": "Shade automation finished for today",
+          "restart_reconciliation_required": "After restart, verify the device is OFF before resuming control",
+          "retired_identity_requires_manual_reconciliation": "Retired identity requires manual reconciliation",
+          "retired_outputs_reconciled": "Retired outputs reconciled",
+          "retired_requires_manual_reconciliation": "Retired requires manual reconciliation",
+          "retiring_previous_output": "Retiring previous output",
+          "room_below_cooling_threshold": "Room is not warm enough to need shading",
+          "room_cooled": "Room has cooled sufficiently",
+          "room_occupied": "Room is occupied",
+          "room_permissions_or_equipment_changed": "Room permissions or equipment changed",
+          "room_pid_conflict": "Room PID conflict",
+          "room_plan_superseded": "Room plan superseded",
+          "room_unoccupied": "Room is confirmed empty",
+          "running_device_requires_off_before_automatic_power_ownership": "Turn off the running device before automatic control can take ownership",
+          "safe_off": "Device safely switched off",
+          "safety_history_unsupported": "Safety history unsupported",
+          "secondary_device_unavailable_or_unsupported": "Secondary device unavailable or unsupported",
+          "secondary_setpoint_conflict": "Secondary setpoint conflict",
+          "select_control_method_to_authorize_current_device_sources": "Select an authorized control method for this device",
+          "select_fan_purpose_on_controller_device": "Choose whether the fan extracts or filters air",
+          "select_single_direction_for_pid": "Select heating or cooling direction for PID",
+          "selected_source_missing": "Selected source missing",
+          "sensor_unknown_or_stale": "Sensor measurement is missing or too old",
+          "set_humidity_service_missing": "Set humidity service missing",
+          "setpoint_commanded": "New target sent to the device",
+          "setpoint_service_failure": "Setpoint service failure",
+          "settings_updated": "Controller settings saved",
+          "sleep_evidence_unknown": "Sleep status cannot be verified",
+          "sleep_room_evidence_unknown": "Не може да се потвърди дали стаята е в режим за сън",
+          "source_deselected_or_moved": "Physical device is no longer assigned to this room",
+          "stale_temperature": "Temperature measurement is out of date",
+          "startup_warmup": "Изчакване на проверките след стартиране",
+          "storage_failure_no_command": "Storage failure no command",
+          "storage_unavailable": "Историята за безопасност не може да се зареди; управлението е спряно",
+          "sun_below_shading_threshold": "Sun below shading threshold",
+          "sun_low": "Sun low",
+          "sun_not_verified": "Sun position cannot be verified",
+          "target_commanded": "New target sent to device",
+          "target_outside_device_limits": "Requested target exceeds device limits",
+          "target_outside_native_limits": "Requested target is outside the device operating range",
+          "target_unavailable": "Requested target is not available",
+          "temperature_controller_owns_same_device": "Temperature controller owns same device",
+          "temperature_not_verified": "Temperature not verified",
+          "temperature_sensor_wrong_area": "Temperature sensor belongs to another room",
+          "temperature_service_unavailable": "Temperature service unavailable",
+          "temperature_source_missing_or_wrong_area": "Temperature source missing or wrong area",
+          "temperature_stale_or_wrong_room": "Temperature stale or wrong room",
+          "temperature_unavailable_or_stale": "Temperature measurement is missing or too old",
+          "thermal_priority_defer_dry": "Heating or cooling has priority over drying",
+          "thermal_temperature_control_has_priority": "Thermal temperature control has priority",
+          "thermostat_turned_off": "Physical thermostat was turned off",
+          "unattributed_direct_write_intent": "Unattributed direct write intent",
+          "unavailable": "Controller data is unavailable",
+          "uncommissioned_absence_off": "Uncommissioned absence OFF",
+          "unconfirmed_close_manual_hold": "Unconfirmed close manual hold",
+          "unexpected_mode": "Unexpected mode",
+          "unexpected_task_exception": "Unexpected task exception",
+          "unit_must_be_running_dry_or_fan_only": "Unit must be running dry or fan only",
+          "unknown": "Unknown",
+          "unknown_native_power": "Unknown native power",
+          "unknown_presence_hold": "Unknown presence hold",
+          "unknown_window_contacts": "Window contacts are not confirmed closed",
+          "unoccupied": "Unoccupied",
+          "unrecognized_status": "Controller condition not recognized - check status_code",
+          "unsafe_mode_selection": "Unsafe mode selection",
+          "unsafe_or_unsupported_mode_change": "Unsafe or unsupported mode change",
+          "unsupported_action": "Unsupported action",
+          "unsupported_control_method": "Unsupported control method",
+          "unsupported_device": "The physical device is not supported",
+          "unsupported_fractional_humidity_steps": "Unsupported fractional humidity steps",
+          "unsupported_hvac_mode": "Device HVAC mode is not supported by this controller",
+          "unsupported_mode": "The selected operating mode is unsupported",
+          "unsupported_strategy": "Unsupported strategy",
+          "unsupported_temperature_unit": "Device temperature unit is unsupported",
+          "unsupported_unit": "Unsupported unit",
+          "unverified_equipment_plan": "Unverified equipment plan",
+          "unverified_humidity_device_or_area": "Unverified humidity device or area",
+          "unverified_proportional_range": "Unverified proportional range",
+          "user_paused": "User paused",
+          "waiting_for_ack": "Waiting for physical device to confirm the command",
+          "waiting_for_device_ack": "Waiting for device acknowledgement",
+          "waiting_for_fan_power_ack": "Waiting for fan power confirmation",
+          "waiting_for_fan_speed_ack": "Waiting for fan speed confirmation",
+          "waiting_for_first_control_cycle": "Waiting for the first control cycle",
+          "waiting_for_native_ack": "Waiting for thermostat acknowledgement",
+          "waiting_for_native_mode_ack": "Waiting for HVAC mode change confirmation",
+          "waiting_for_output_ack": "Waiting for output change confirmation",
+          "waiting_for_physical_device": "Waiting for the physical device to become available",
+          "waiting_for_pid_samples": "Waiting for enough temperature measurements for PID",
+          "waiting_for_power_ack": "Waiting for power state confirmation",
+          "waiting_for_stable_release": "Waiting for stable release",
+          "waiting_for_target_ack": "Waiting for target acknowledgement",
+          "weather_cloudy": "Weather cloudy",
+          "weather_hazard_hold": "Weather safety conditions are preventing a shade change",
+          "weather_no_solar_gain": "There is not enough solar heat to justify closing shades",
+          "weather_solar": "Weather solar",
+          "window_already_open_or_unknown": "Window already open or unknown",
+          "window_changed_since_plan": "Window changed since plan",
+          "window_contact_or_explicit_exception_required": "A confirmed closed window or configured exception is required",
+          "window_contacts_invalid": "Window contacts invalid",
+          "window_contacts_missing": "Required window sensors are missing",
+          "window_evidence_missing": "Window evidence missing",
+          "window_interlock": "Window safety lock prevents this action",
+          "window_interlock_or_missing_plan": "Window safety condition or room plan is missing",
+          "window_not_assigned": "Window not assigned",
+          "window_not_eligible": "This window is not eligible for the requested shading action",
+          "window_open_or_unavailable": "Window is open or sensor is unavailable",
+          "window_open_or_unknown": "Window is open or its sensor state is unknown",
+          "window_plan_blocked": "Window plan blocked",
+          "window_plan_unsafe": "Window plan unsafe",
+          "window_wrong_room": "Window wrong room",
+          "within_target_band": "В зададения целеви диапазон",
+          "wrong_room_window_contact": "Wrong room window contact",
+          "device_auto_control_disabled": "Automatic control is disabled for this device",
+          "device_policy_approved": "Device is approved for automatic control",
+          "house_occupancy_unknown": "Cannot verify whether anyone is home",
+          "house_unoccupied": "Nobody is home",
+          "invalid_presence_policy": "The selected presence policy is invalid",
+          "invalid_sleep_policy": "The selected sleep policy is invalid",
+          "room_not_absent": "Someone is in the room; absence-only control is held",
+          "room_not_occupied": "Room is empty; occupancy-only control is held",
+          "room_occupancy_unknown": "Room occupancy cannot be confirmed",
+          "sleep_room_control_paused": "Control is paused because this room is sleeping"
+        }
       }
     },
     "number": {
@@ -1351,34 +1752,34 @@
         "name": "Съобщения (по избор) · 0-1440 min"
       },
       "area_pid_target_c": {
-        "name": "цел (°C)"
+        "name": "PID · цел (°C)"
       },
       "area_pid_kp": {
-        "name": "PID Kp · управление (% per °C)"
+        "name": "PID · Kp · управление (% per °C)"
       },
       "area_pid_ki": {
-        "name": "PID Ki · управление (% per °C-minute)"
+        "name": "PID · Ki · управление (% per °C-minute)"
       },
       "area_pid_kd": {
-        "name": "PID Kd · управление (%·minute per °C)"
+        "name": "PID · Kd · управление (%·minute per °C)"
       },
       "area_pid_offset_c": {
-        "name": "PID (°C) · PID_OFFSET_C"
+        "name": "PID · (°C) · PID_OFFSET_C"
       },
       "area_pid_min_setpoint_c": {
-        "name": "PID (°C) · MIN TARGET"
+        "name": "PID · (°C) · MIN TARGET"
       },
       "area_pid_max_setpoint_c": {
-        "name": "PID (°C) · MAX TARGET"
+        "name": "PID · (°C) · MAX TARGET"
       },
       "area_pid_sample_seconds": {
-        "name": "PID (s)"
+        "name": "PID · (s)"
       },
       "area_pid_max_change_c": {
-        "name": "PID (°C) · MAX Δ"
+        "name": "PID · (°C) · MAX Δ"
       },
       "area_pid_min_change_c": {
-        "name": "PID (°C) · MIN Δ"
+        "name": "PID · (°C) · MIN Δ"
       },
       "area_climate_profile_comfort_heat": {
         "name": "Отопление · Стая · Присъствие"
@@ -1386,23 +1787,44 @@
       "area_climate_profile_comfort_cool": {
         "name": "Охлаждане · Стая · Присъствие"
       },
+      "area_climate_profile_comfort_humidity": {
+        "name": "Влажност · Стая · Присъствие · цел (%)"
+      },
       "area_climate_profile_home_heat": {
-        "name": "Отопление · Дом · Стая"
+        "name": "Отопление · Дом"
       },
       "area_climate_profile_home_cool": {
-        "name": "Охлаждане · Дом · Стая"
+        "name": "Охлаждане · Дом"
+      },
+      "area_climate_profile_home_humidity": {
+        "name": "Влажност · Дом · цел (%)"
+      },
+      "area_climate_profile_away_heat": {
+        "name": "Отопление · Дом · Изключване"
+      },
+      "area_climate_profile_away_cool": {
+        "name": "Охлаждане · Дом · Изключване"
+      },
+      "area_climate_profile_away_humidity": {
+        "name": "Влажност · Дом · Изключване · цел (%)"
       },
       "area_climate_profile_sleep_heat": {
-        "name": "Отопление · Стая · Сън"
+        "name": "Отопление · Сън"
       },
       "area_climate_profile_sleep_cool": {
-        "name": "Охлаждане · Стая · Сън"
+        "name": "Охлаждане · Сън"
+      },
+      "area_climate_profile_sleep_humidity": {
+        "name": "Влажност · Сън · цел (%)"
       },
       "area_climate_profile_eco_heat": {
-        "name": "Отопление · Дом · ECO"
+        "name": "Отопление · ECO"
       },
       "area_climate_profile_eco_cool": {
-        "name": "Охлаждане · Дом · ECO"
+        "name": "Охлаждане · ECO"
+      },
+      "area_climate_profile_eco_humidity": {
+        "name": "Влажност · ECO · цел (%)"
       },
       "global_environment_pollen_high_from": {
         "name": "POLLEN · Полени · HIGH"
@@ -1465,40 +1887,82 @@
         "name": "PURIFIER · Устройства · Скорост (%) · SPEED %"
       },
       "area_direct_tuning_kp": {
-        "name": "PID Kp · управление (percentage points/°C)"
+        "name": "PID · Kp · управление (percentage points/°C)"
       },
       "area_direct_tuning_ki": {
-        "name": "PID Ki · управление (percentage points/(°C·minute))"
+        "name": "PID · Ki · управление (percentage points/(°C·minute))"
       },
       "area_direct_tuning_kd": {
-        "name": "PID Kd · управление (percentage points·minute/°C)"
+        "name": "PID · Kd · управление (percentage points·minute/°C)"
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "настройки · източник (s) · SAMPLE"
+        "name": "PID · настройки · източник (s) · SAMPLE"
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "настройки · източник · MAX Δ"
+        "name": "PID · настройки · източник · MAX Δ"
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "настройки · източник · MIN Δ"
+        "name": "PID · настройки · източник · MIN Δ"
       },
       "area_mold_surface_critical_temperature_c": {
         "name": "Индикатор за мухъл · 🧊 °C"
       },
       "equipment_kp": {
-        "name": "{channel}PID Kp · управление (% per °C)"
+        "name": "PID · {channel}Kp · управление (% per °C)"
       },
       "equipment_ki": {
-        "name": "{channel}PID Ki · управление (% per °C-minute)"
+        "name": "PID · {channel}Ki · управление (% per °C-minute)"
       },
       "equipment_kd": {
-        "name": "{channel}PID Kd · управление (%·minute per °C)"
+        "name": "PID · {channel}Kd · управление (%·minute per °C)"
       },
       "equipment_sample_seconds": {
-        "name": "{channel}PID (s)"
+        "name": "PID · {channel}(s)"
+      },
+      "equipment_pid_process_gain": {
+        "name": "PID · {channel}Process gain (PV per full output)"
+      },
+      "equipment_pid_time_constant_minutes": {
+        "name": "PID · {channel}Response time constant"
+      },
+      "equipment_pid_dead_time_minutes": {
+        "name": "PID · {channel}Response dead time"
+      },
+      "equipment_pid_lambda_minutes": {
+        "name": "PID · {channel}IMC response Lambda"
+      },
+      "equipment_pid_capacity_stage_1": {
+        "name": "PID · {channel}Measured fan stage 1 · Measured delivered capacity (%)"
+      },
+      "equipment_pid_capacity_stage_2": {
+        "name": "PID · {channel}Measured fan stage 2 · Measured delivered capacity (%)"
+      },
+      "equipment_pid_capacity_stage_3": {
+        "name": "PID · {channel}Measured fan stage 3 · Measured delivered capacity (%)"
+      },
+      "equipment_pid_capacity_stage_4": {
+        "name": "PID · {channel}Measured fan stage 4 · Measured delivered capacity (%)"
+      },
+      "equipment_pid_capacity_speed_1": {
+        "name": "PID · {channel}Measured fan speed 1 (%)"
+      },
+      "equipment_pid_capacity_output_1": {
+        "name": "PID · {channel}Measured delivered capacity 1 (%)"
+      },
+      "equipment_pid_capacity_speed_2": {
+        "name": "PID · {channel}Measured fan speed 2 (%)"
+      },
+      "equipment_pid_capacity_output_2": {
+        "name": "PID · {channel}Measured delivered capacity 2 (%)"
+      },
+      "equipment_pid_capacity_speed_3": {
+        "name": "PID · {channel}Measured fan speed 3 (%)"
+      },
+      "equipment_pid_capacity_output_3": {
+        "name": "PID · {channel}Measured delivered capacity 3 (%)"
       },
       "equipment_cycle_seconds": {
-        "name": "{channel}настройки · източник (s) · PWM PERIOD"
+        "name": "PID · {channel}настройки · източник (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
         "name": "{channel}Ограничение за тих вентилатор (%)"
@@ -1532,6 +1996,12 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "Дом · Away · cooldown (min)"
+      },
+      "area_shading_close_above_c": {
+        "name": "Затваряне над стайна температура (°C)"
+      },
+      "area_shading_min_sun_elevation": {
+        "name": "Минимална височина на слънцето (°)"
       },
       "shade_close_above_c": {
         "name": "Затваряне над стайна температура (°C)"
@@ -1577,6 +2047,12 @@
       "equipment_sensor_verified": {
         "name": "{channel}сензор · Задължително"
       },
+      "area_shading_enabled": {
+        "name": "Автоматично затваряне на щори за охлаждане"
+      },
+      "home_shade_announce_before_movement": {
+        "name": "Извести преди отваряне или затваряне на щорите"
+      },
       "shade_auto_control": {
         "name": "Автоматично затваряне на щори за охлаждане"
       },
@@ -1595,7 +2071,7 @@
         "name": "Устройства · CLIMATE_MANUAL_PROFILE"
       },
       "area_pid_gain_source": {
-        "name": "Gain source",
+        "name": "PID · Gain source",
         "state": {
           "defaults": "Defaults",
           "manual": "Manual"
@@ -1625,6 +2101,31 @@
       },
       "equipment_quiet_fan_mode": {
         "name": "{channel}Вградена тиха скорост"
+      },
+      "equipment_pid_calibration_method": {
+        "name": "PID · {channel}calibration method",
+        "state": {
+          "manual": "Manual Kp/Ki/Kd",
+          "imc_lambda": "IMC / Lambda (measured response)",
+          "cohen_coon": "Cohen-Coon (measured response)"
+        }
+      },
+      "equipment_pid_fan_capacity_mode": {
+        "name": "PID · {channel}fan capacity strategy",
+        "state": {
+          "legacy": "Original PID allocation",
+          "measured": "Measured capacity compensation"
+        }
+      },
+      "equipment_pid_fan_capacity_for_mode": {
+        "name": "PID · {channel}Calibrate for HVAC mode",
+        "state": {
+          "choose": "Choose direction",
+          "heat": "Heating",
+          "cool": "Cooling",
+          "dry": "Drying",
+          "fan_only": "Fan only"
+        }
       },
       "equipment_presence_requirement": {
         "name": "{channel}управление · Присъствие",
@@ -1674,6 +2175,12 @@
       },
       "equipment_resume": {
         "name": "{channel}Проверка и продължаване"
+      },
+      "equipment_pid_apply_calibration": {
+        "name": "PID · {channel}Apply verified calibration"
+      },
+      "equipment_pid_apply_fan_capacity": {
+        "name": "PID · {channel}Apply measured fan capacity"
       }
     },
     "climate": {

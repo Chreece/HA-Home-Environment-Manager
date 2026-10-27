@@ -2,7 +2,7 @@
 
 Never sends turn_on, turn_off, set_mode, or climate.set_hvac_mode.
 This is a target-only helper, not a compressor/heater safety controller.
-Users explicitly opt in PER ROOM after selecting one fresh humidity sensor.
+Users explicitly opt in PER ROOM with physical RH feedback from selected sources.
 """
 from __future__ import annotations
 
@@ -11,10 +11,10 @@ import logging
 import time
 from typing import Any, Callable
 
-from .climate_coordination import duplicate_owners, device_inventory
+from .climate_coordination import duplicate_owners, device_inventory, live_room_humidity
 from .climate_equipment import humidity_advice
 from .climate_arbitration import new_command_gate
-from .discovery import entity_area, reading
+from .discovery import entity_area
 from .pid_math import finite
 from .const import DOMAIN
 
@@ -228,16 +228,13 @@ class HumiditySetpointControl:
                 entity_area(self.hass,entity)!=area):
             self._status(area, "unverified_humidity_device_or_area")
             return
-        sensor = cfg.get("humidity_entity")
-        if not isinstance(sensor,str) or entity_area(self.hass,sensor)!=area:
-            self._status(area, "explicit_fresh_humidity_sensor_required")
-            return
-        live = reading(self.hass,sensor,10,outdoor=False)
-        if live.metric!="humidity" or live.value is None:
-            self._status(area, "humidity_measurement_stale_or_invalid")
+        live_rh, feedback_reason = live_room_humidity(self.hass, area, cfg, plan)
+        if live_rh is None:
+            self._status(area, "humidity_measurement_stale_or_invalid",
+                         reason=feedback_reason)
             return
         reading_advice = humidity_advice(
-            live.value, low_rh=cfg.get("humidity_low_rh",40),
+            live_rh, low_rh=cfg.get("humidity_low_rh",40),
             high_rh=cfg.get("humidity_high_rh",60),
             hysteresis=cfg.get("humidity_hysteresis_rh",3),
         )

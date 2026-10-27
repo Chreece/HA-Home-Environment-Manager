@@ -158,7 +158,7 @@ class AirQualityManager:
             weather(self.hass, ent, max_age) for ent in config.get(CONF_WEATHER, [])
         )
         raw_rooms = selected_rooms  # Keep source RH before optional mold substitution.
-        from .room_sources import room_temperature_evidence
+        from .room_sources import room_temperature_evidence, selected as selected_room_sources
         mold_temperature_entities: set[str] = set()
         # Preserve the exact set of supported, included humidity sensors
         # before replacing them with the derived room mold indicator.
@@ -330,6 +330,8 @@ class AirQualityManager:
                     self.hass,raw_for_climate[monitored.area_id],settings,
                     selected_temperature_c=temperature_c,
                     temperature_evidence=temperature_meta,
+                    selected_humidity_entities=selected_room_sources(
+                        config,monitored.area_id,"humidity"),
                     prior_mode=prior,comfort_target_c=comfort,
                     outdoor_safe=base_plan.outdoor_safe,
                     duplicate_equipment=duplicate_devices,

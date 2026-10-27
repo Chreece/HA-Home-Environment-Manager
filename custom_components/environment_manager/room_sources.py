@@ -373,8 +373,12 @@ def numeric(hass: Any, entity: str, area: str, group: str, age: float) -> float 
         except (ValueError, TypeError, KeyError, OverflowError):
             return None
         return value if math.isfinite(value) and 300 <= value <= 1100 else None
-    value = reading(hass, entity, age, outdoor=False)
-    return value.value
+    observed = reading(hass, entity, age, outdoor=False)
+    # A sensor reclassified after setup must never contaminate an RH average
+    # with a CO2, PM2.5 or other unrelated numeric measurement.
+    if group == "humidity" and observed.metric != "humidity":
+        return None
+    return observed.value
 
 
 def aggregate(hass: Any, entities, area: str, group: str, age: float) -> tuple[float | None, str]:

@@ -16,12 +16,12 @@ import time
 from datetime import datetime
 from typing import Any, Callable
 
-from .climate_coordination import device_inventory, duplicate_owners
+from .climate_coordination import device_inventory, duplicate_owners, live_room_humidity
 from .const import DOMAIN
 from .climate_equipment import humidity_advice
 from .climate_arbitration import new_command_gate
 from .climate_humidity_native import _target as native_humidity_target
-from .discovery import entity_area, reading
+from .discovery import entity_area
 from .pid_math import finite
 
 _LOGGER = logging.getLogger(__name__)
@@ -223,7 +223,7 @@ class HumidityPowerControl:
         self._status(area, "power_command_sent", action=action, entity_id=entity)
         return True
 
-    def _evidence(self, area: str, cfg: dict, plan: dict) -> tuple[str, str | None]:
+    def _evidence(self, area: str, cfg: dict, plan: dict) -> tuple[str, float | None]:
         """Recheck the live sensor and each configured window every cycle."""
         if not isinstance(plan, dict):
             return "missing_room_plan", None
@@ -242,13 +242,12 @@ class HumidityPowerControl:
                     current.attributes.get("device_class") != "window" or
                     current.state != "off"):
                 return "window_open_or_unavailable", None
-        sensor = cfg.get("humidity_entity")
-        if not isinstance(sensor, str) or entity_area(self.hass, sensor) != area:
-            return "humidity_sensor_unverified", None
-        measured = reading(self.hass, sensor, 10, outdoor=False)
-        if measured.metric != "humidity" or measured.value is None:
-            return "humidity_sensor_stale", None
-        return "ready", sensor
+        value, reason = live_room_humidity(self.hass, area, cfg, plan)
+        if value is None:
+            return ("humidity_sensor_unverified" if reason in (
+                "no_selected_humidity_source", "invalid_humidity_source_selection")
+                else "humidity_sensor_stale"), None
+        return "ready", value
 
     @staticmethod
     def _internal_target_suitable(state: Any, demand: str, config: dict) -> bool:
@@ -310,11 +309,10 @@ class HumidityPowerControl:
                if isinstance(x, str)):
             self._status(area, "duplicate_humidity_device_owner")
             return
-        quality, sensor = self._evidence(area, cfg, plan)
+        quality, humidity = self._evidence(area, cfg, plan)
         if quality != "ready":
             self._status(area, quality)
             return
-        humidity = reading(self.hass, sensor, 10, outdoor=False).value
         intent = humidity_advice(
             humidity, low_rh=cfg.get("humidity_low_rh",40),
             high_rh=cfg.get("humidity_high_rh",60),
@@ -445,7 +443,7 @@ class HumidityPowerControl:
             if await self._send(area,record,"off",now):
                 self._pause(area,"maximum_owned_runtime_exceeded")
             return
-        evidence, sensor = self._evidence(area,cfg,plan)
+        evidence, live_rh = self._evidence(area,cfg,plan)
         power_enabled = (
             cfg.get("enabled") is True and cfg.get("allow_actuation") is True
             and cfg.get("humidity_power_auto") is True
@@ -455,10 +453,9 @@ class HumidityPowerControl:
         if area in self.paused or evidence!="ready" or not power_enabled:
             stop = True
         else:
-            latest = reading(self.hass,sensor,10,outdoor=False)
             action = "humidify" if role=="humidifier_entity" else "dry"
             persisted = humidity_advice(
-                latest.value, low_rh=cfg.get("humidity_low_rh",40),
+                live_rh, low_rh=cfg.get("humidity_low_rh",40),
                 high_rh=cfg.get("humidity_high_rh",60),
                 hysteresis=cfg.get("humidity_hysteresis_rh",3),
                 previous=action,

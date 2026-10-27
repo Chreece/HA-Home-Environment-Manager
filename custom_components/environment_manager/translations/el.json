@@ -1047,7 +1047,7 @@
       },
       "device_settings": {
         "title": "Συσκευές · έλεγχος",
-        "description": "Επίλεξε Αυτόματο, Χειροκίνητο ή PID σε αυτή τη συσκευή ελέγχου, χωρίς έγκριση από τη Ρύθμιση της ενσωμάτωσης. Η επιλογή μεθόδου επιτρέπει μόνο τους εγγενείς στόχους και την ταχύτητα αυτής της συσκευής. Ο ξεχωριστός διακόπτης εδώ επιτρέπει έλεγχο ισχύος και λειτουργίας κλιματισμού, αφού ελέγξεις τις προστασίες του εξοπλισμού. Διατηρούνται οι ελάχιστοι χρόνοι ON/OFF και η μέγιστη συνεχής λειτουργία. Αλλαγή αισθητήρων ή ταυτότητας απαιτεί νέα επιλογή μεθόδου. Συσκευή που λειτουργεί χειροκίνητα δεν αναλαμβάνεται αυτόματα. Ο σκοπός ανεμιστήρα και η επαλήθευση μέτρησης ρυθμίζονται επίσης εδώ. Τα προφίλ δεν αναιρούν παύση λόγω επανεκκίνησης ή χειροκίνητης παρέμβασης.\n\n{device_name} · {device_entity} · {area_name}",
+        "description": "Επίλεξε Αυτόματο, Χειροκίνητο ή PID σε αυτή τη συσκευή ελέγχου· δεν απαιτείται δεύτερος διακόπτης ισχύος. Η επιλογή της μεθόδου εξουσιοδοτεί αυτόν ακριβώς τον εγγενή ελεγκτή να ρυθμίζει στόχους/ταχύτητα και να ενεργοποιεί ή να απενεργοποιεί τη φυσική συσκευή ή την υποστηριζόμενη λειτουργία HVAC όταν υπάρχει ζήτηση. Οι ελάχιστοι χρόνοι ON/OFF, η μέγιστη λειτουργία, τα παράθυρα, η διαθεσιμότητα και οι προστασίες υλικού εξακολουθούν να εφαρμόζονται. Αλλαγή αισθητήρων ή ταυτότητας απαιτεί νέα επιλογή μεθόδου.\n\n{device_name} · {device_entity} · {area_name}",
         "data": {
           "device_auto_control": "Αυτόματος έλεγχος",
           "device_method": "έλεγχος · πηγή",
@@ -1278,6 +1278,407 @@
       },
       "area_surface_humidity": {
         "name": "Υγρασία επιφάνειας (υπολογισμένη)"
+      },
+      "equipment_control_status": {
+        "name": "{channel}Κατάσταση ελεγκτή",
+        "state": {
+          "above_horizon": "Above horizon",
+          "active_compressor_wait_for_idle": "Active compressor wait for idle",
+          "active_device_preset": "Η ενεργή προρύθμιση συσκευής εμποδίζει την αλλαγή",
+          "activity_blocked": "Activity blocked",
+          "actuator_not_binary": "Actuator not binary",
+          "actuator_unknown_or_unavailable": "Actuator unknown or unavailable",
+          "actuator_wrong_domain_or_area": "Actuator wrong domain or area",
+          "advisory_only": "Μόνο συστάσεις· δεν γίνονται αυτόματες αλλαγές",
+          "advisory_only_or_conflicting_driver": "Advisory only or conflicting driver",
+          "advisory_only_or_conflicting_humidity_driver": "Advisory only or conflicting humidity driver",
+          "air_quality_decision_expired": "Air quality decision expired",
+          "air_quality_policy_missing": "Air quality policy missing",
+          "already_in_suitable_mode": "Already in suitable mode",
+          "already_sufficient_speed": "Already sufficient speed",
+          "ambiguous_fan_roles": "Ambiguous fan roles",
+          "announcement_unavailable_hold": "Announcement unavailable hold",
+          "at_device_setpoint": "Η συσκευή βρίσκεται ήδη στην επιθυμητή ρύθμιση",
+          "at_setpoint": "Ο στόχος επιτεύχθηκε",
+          "at_target_speed": "Ο ανεμιστήρας είναι ήδη στη σωστή ταχύτητα",
+          "authority_or_evidence_changed_before_dispatch": "Authority or evidence changed before dispatch",
+          "authorization_changed_during_persistence": "Authorization changed during persistence",
+          "authorization_withdrawn": "Authorization withdrawn",
+          "automatically_opened": "Το ρολό άνοιξε αυτόματα",
+          "awaiting_close_confirmation": "Αναμονή επιβεβαίωσης ότι το ρολό έκλεισε",
+          "awaiting_evaluation": "Αναμονή πρώτου ελέγχου λειτουργίας",
+          "awaiting_open_confirmation": "Αναμονή επιβεβαίωσης ότι το ρολό άνοιξε",
+          "awaiting_physical_acknowledgement": "Αναμονή επιβεβαίωσης κατάστασης συσκευής",
+          "away": "Away",
+          "below_horizon": "Below horizon",
+          "both_dry_and_fan_only_required": "Both dry and fan only required",
+          "climate_device_wrong_area": "Ο θερμοστάτης ανήκει σε άλλο δωμάτιο",
+          "climate_service_unavailable": "Η υπηρεσία ελέγχου θερμοστάτη δεν είναι διαθέσιμη",
+          "climate_target_wrong_room": "Climate target wrong room",
+          "climate_unavailable": "Ο φυσικός θερμοστάτης δεν είναι διαθέσιμος",
+          "close_command_sent": "Στάλθηκε εντολή κλεισίματος ρολού",
+          "close_service_failed_hold": "Close service failed hold",
+          "close_service_unavailable": "Close service unavailable",
+          "closed": "Closed",
+          "closing_recommended": "Προτείνεται κλείσιμο των ρολών",
+          "closing_requested": "Closing requested",
+          "comfort_deadband_no_command": "Comfort deadband no command",
+          "command_sent": "Η εντολή στάλθηκε· αναμονή επιβεβαίωσης",
+          "commanded": "Η εντολή στάλθηκε στην έξοδο",
+          "competing_climate_active_or_armed": "Competing climate active or armed",
+          "competing_climate_unavailable": "Competing climate unavailable",
+          "competing_climate_wrong_room": "Competing climate wrong room",
+          "competing_hvac_unverified": "Competing HVAC unverified",
+          "compressor_idle_confirmation_pending": "Compressor idle confirmation pending",
+          "conditions_changed_after_announcement": "Conditions changed after announcement",
+          "conflicting_controller": "Άλλος ελεγκτής χειρίζεται ήδη τη συσκευή",
+          "conflicting_controller_or_equipment_owner": "Conflicting controller or equipment owner",
+          "conflicting_fan_power_owner": "Conflicting fan power owner",
+          "conflicting_humidity_power_owner": "Conflicting humidity power owner",
+          "conflicting_native_humidity_controller": "Conflicting native humidity controller",
+          "conflicting_or_missing_actuator": "Conflicting or missing actuator",
+          "conflicting_pid_room": "Conflicting PID room",
+          "control_measurement_missing_or_stale": "Λείπει πρόσφατη και έγκυρη μέτρηση ελέγχου",
+          "control_method_missing": "Control method missing",
+          "controller_exception": "Προέκυψε απρόσμενο σφάλμα του ελεγκτή",
+          "controller_inactive": "Ο ελεγκτής δεν λειτουργεί",
+          "controller_not_active_or_paused": "Ο ελεγκτής είναι ανενεργός ή σε παύση",
+          "controller_paused": "Ο ελεγκτής βρίσκεται σε παύση",
+          "controlling": "Η αυτόματη ρύθμιση λειτουργεί",
+          "cooling_priority_defer_dehumidifier": "Προτεραιότητα στην ψύξη· η αφύγρανση περιμένει",
+          "coordination_hold": "Αναμονή αποδέσμευσης της συσκευής από άλλο ελεγκτή",
+          "cover_state_uncertain_hold": "Cover state uncertain hold",
+          "cross_entry_control_hold": "Cross entry control hold",
+          "dedicated_dry_climate_required": "Dedicated dry climate required",
+          "demand_within_tolerance": "Εντός ανοχής· δεν χρειάζεται αλλαγή",
+          "detected_override": "Detected override",
+          "device_does_not_support_single_setpoint": "Ο θερμοστάτης δεν υποστηρίζει έναν στόχο θερμοκρασίας",
+          "device_limits_or_resolution_unknown": "Device limits or resolution unknown",
+          "device_limits_or_temperature_unknown": "Device limits or temperature unknown",
+          "device_limits_unknown": "Device limits unknown",
+          "device_not_selected": "Device not selected",
+          "device_off_no_automatic_start": "Device OFF no automatic start",
+          "device_step_unknown": "Device step unknown",
+          "device_unavailable": "Η συσκευή δεν είναι διαθέσιμη",
+          "device_unavailable_or_not_verified": "Device unavailable or not verified",
+          "device_unit_conversion_failed": "Device unit conversion failed",
+          "disabled": "Ο ελεγκτής είναι απενεργοποιημένος",
+          "duplicate_device_owner": "Duplicate device owner",
+          "duplicate_equipment_owner": "Πολλοί ελεγκτές διεκδικούν την ίδια συσκευή",
+          "duplicate_fan_owner": "Duplicate fan owner",
+          "duplicate_humidity_device_owner": "Duplicate humidity device owner",
+          "duplicate_or_ambiguous_fan_assignment": "Duplicate or ambiguous fan assignment",
+          "duplicate_target": "Η συσκευή έχει εκχωρηθεί σε περισσότερους ελεγκτές",
+          "equipment_plan_unknown": "Equipment plan unknown",
+          "equipment_plan_unverified": "Δεν έχουν επιβεβαιωθεί τα δεδομένα συσκευών του δωματίου",
+          "existing": "Η συσκευή ελέγχεται από την υπάρχουσα ενσωμάτωση",
+          "existing_controller_selected": "Existing controller selected",
+          "explicit_fresh_humidity_sensor_required": "Explicit fresh humidity sensor required",
+          "explicit_room_humidity_sensor_required": "Explicit room humidity sensor required",
+          "fan_limits_have_no_supported_step": "Fan limits have no supported step",
+          "fan_off_no_automatic_power_on": "Ο ανεμιστήρας είναι κλειστός· δεν επιτρέπεται αυτόματη εκκίνηση",
+          "fan_percentage_or_step_unknown": "Fan percentage or step unknown",
+          "fan_power_commanded": "Fan power commanded",
+          "fan_power_off_acknowledged": "Fan power OFF acknowledged",
+          "fan_power_service_missing": "Fan power service missing",
+          "fan_power_unknown": "Fan power unknown",
+          "fan_speed_increased": "Η ταχύτητα ανεμιστήρα αυξήθηκε",
+          "fan_speed_not_supported": "Fan speed not supported",
+          "fan_speed_service_unavailable": "Η υπηρεσία ρύθμισης ανεμιστήρα δεν είναι διαθέσιμη",
+          "fan_state_or_compressor_unknown": "Fan state or compressor unknown",
+          "fan_unavailable_or_wrong_room": "Fan unavailable or wrong room",
+          "foreign_equipment_owner": "Foreign equipment owner",
+          "hold": "Αναμονή επιβεβαίωσης των συνθηκών ασφαλείας",
+          "holding": "Διατήρηση της υπάρχουσας ασφαλούς εξόδου",
+          "home": "Home",
+          "humidifier_service_missing": "Humidifier service missing",
+          "humidity_intent_changed": "Humidity intent changed",
+          "humidity_measurement_stale_or_invalid": "Η μέτρηση υγρασίας είναι παλιά ή μη έγκυρη",
+          "humidity_parameters_invalid": "Humidity parameters invalid",
+          "humidity_sensor_invalid_or_stale": "Η μέτρηση υγρασίας είναι άκυρη ή παλιά",
+          "humidity_sensor_stale": "Humidity sensor stale",
+          "humidity_sensor_unverified": "Humidity sensor unverified",
+          "inactive": "Ο ελεγκτής δεν λειτουργεί",
+          "incompatible_speed_quantization": "Incompatible speed quantization",
+          "insufficient_pid_history": "Δεν υπάρχουν αρκετές μετρήσεις για υπολογισμό PID",
+          "interlock_unconfirmed": "Interlock unconfirmed",
+          "interlock_wait_opposite_off": "Interlock wait opposite OFF",
+          "invalid_ack_state": "Invalid ack state",
+          "invalid_configuration": "Invalid configuration",
+          "invalid_fan_or_sensor_assignment": "Invalid fan or sensor assignment",
+          "invalid_fan_power_timing": "Invalid fan power timing",
+          "invalid_hardware_dwell_config": "Invalid hardware dwell config",
+          "invalid_hysteresis": "Invalid hysteresis",
+          "invalid_maximum_runtime": "Invalid maximum runtime",
+          "invalid_mode_dwell": "Invalid mode dwell",
+          "invalid_moisture_intent": "Invalid moisture intent",
+          "invalid_percentage_step_or_rate": "Invalid percentage step or rate",
+          "invalid_pid_sample": "Invalid PID sample",
+          "invalid_proportional_input": "Invalid proportional input",
+          "invalid_pwm": "Invalid PWM",
+          "invalid_pwm_period": "Invalid PWM period",
+          "invalid_sample_seconds": "Invalid sample seconds",
+          "invalid_setpoint_result": "Invalid setpoint result",
+          "invalid_temperature_target": "Invalid temperature target",
+          "legacy_manual_hold": "Legacy manual hold",
+          "manual": "Χειροκίνητος έλεγχος συσκευής",
+          "manual_change": "Manual change",
+          "manual_fan_preset_active": "Manual fan preset active",
+          "manual_hvac_mode_change_or_unacknowledged_write": "Manual HVAC mode change or unacknowledged write",
+          "manual_no_request": "Χειροκίνητη λειτουργία χωρίς νέα εντολή",
+          "manual_or_unknown_cover_motion": "Το ρολό κινήθηκε χειροκίνητα ή με άγνωστο τρόπο",
+          "manual_override": "Εντοπίστηκε χειροκίνητη αλλαγή· η αυτοματοποίηση τέθηκε σε παύση",
+          "manual_setpoint_or_unacknowledged_write": "Manual setpoint or unacknowledged write",
+          "measured_need_resolved": "Measured need resolved",
+          "minimum_fan_off_hold": "Αναμονή ελάχιστου χρόνου με τον ανεμιστήρα κλειστό",
+          "minimum_fan_on_hold": "Αναμονή ελάχιστου χρόνου λειτουργίας ανεμιστήρα",
+          "minimum_native_device_off_hold": "Αναμονή ελάχιστου χρόνου εκτός λειτουργίας",
+          "minimum_off_hold": "Αναμονή ελάχιστου ασφαλούς χρόνου εκτός λειτουργίας",
+          "minimum_on_hold": "Η συσκευή παραμένει ενεργή για τον ελάχιστο ασφαλή χρόνο",
+          "minimum_on_hold_before_safe_off": "Αναμονή ελάχιστου ασφαλούς χρόνου πριν την απενεργοποίηση",
+          "missing_percent_or_native_step": "Missing percent or native step",
+          "missing_room_plan": "Missing room plan",
+          "missing_temperature_or_climate": "Λείπει αισθητήρας θερμοκρασίας ή φυσικός θερμοστάτης",
+          "mode_commanded": "Ζητήθηκε αλλαγή λειτουργίας",
+          "mode_dwell": "Mode dwell",
+          "mode_has_no_verified_actuator": "Mode has no verified actuator",
+          "mode_history_unavailable": "Mode history unavailable",
+          "mode_mismatch_auto_switch_disabled": "Mode mismatch auto switch disabled",
+          "mode_service_failure": "Mode service failure",
+          "mode_service_missing": "Mode service missing",
+          "mode_transfer_dwell": "Mode transfer dwell",
+          "mode_transition_dwell": "Mode transition dwell",
+          "modulating": "Σταδιακή ρύθμιση ισχύος",
+          "monitored_room_missing": "Monitored room missing",
+          "native_absence_off_mode_unsupported": "Native absence OFF mode unsupported",
+          "native_absence_off_wait_dwell": "Native absence OFF wait dwell",
+          "native_ac_drying_already_active": "Native AC drying already active",
+          "native_already_off": "Ο φυσικός θερμοστάτης είναι ήδη κλειστός",
+          "native_defrost_protection": "Η συσκευή κάνει απόψυξη· οι αλλαγές εμποδίζονται",
+          "native_fan_preset_active": "Native fan preset active",
+          "native_humidity_device_unavailable": "Native humidity device unavailable",
+          "native_mode_commanded": "Η εντολή αλλαγής λειτουργίας στάλθηκε",
+          "native_mode_dwell_not_met": "Native mode dwell not met",
+          "native_mode_dwell_policy_changed": "Native mode dwell policy changed",
+          "native_mode_mismatch_no_mode_switch": "Native mode mismatch no mode switch",
+          "native_mode_permission_revoked": "Native mode permission revoked",
+          "native_mode_service_missing": "Native mode service missing",
+          "native_mode_service_unavailable": "Native mode service unavailable",
+          "native_off_ack_storage_failed": "Native OFF ack storage failed",
+          "native_off_intent_storage_failed": "Native OFF intent storage failed",
+          "native_off_no_power_permission": "Η συσκευή είναι κλειστή και δεν επιτρέπεται αυτόματη εκκίνηση",
+          "native_off_permission_revoked_after_intent": "Native OFF permission revoked after intent",
+          "native_off_requested_for_absence": "Η συσκευή απενεργοποιείται επειδή δεν είναι κανείς στο σπίτι",
+          "native_off_requires_manual_reconciliation": "Native OFF requires manual reconciliation",
+          "native_off_service_unacknowledged": "Native OFF service unacknowledged",
+          "native_off_state_changed_after_intent": "Native OFF state changed after intent",
+          "native_power_mode_unsupported": "Η ζητούμενη λειτουργία συσκευής δεν υποστηρίζεται",
+          "native_preset_active": "Η προρύθμιση της φυσικής συσκευής εμποδίζει την αλλαγή",
+          "native_range_at_setpoint": "Native range at setpoint",
+          "native_range_commanded": "Το νέο εύρος στόχου στάλθηκε στη συσκευή",
+          "native_service_unavailable": "Native service unavailable",
+          "native_setpoint_limits_unknown": "Άγνωστα όρια θερμοκρασίας συσκευής",
+          "native_setpoint_unavailable": "Δεν είναι διαθέσιμος ο τρέχων στόχος θερμοκρασίας",
+          "native_step_exceeds_safe_ramp": "Native step exceeds safe ramp",
+          "native_step_exceeds_setpoint_rate_limit": "Native step exceeds setpoint rate limit",
+          "native_target_must_be_commissioned": "Native target must be commissioned",
+          "native_target_unavailable_or_ambiguous": "Native target unavailable or ambiguous",
+          "night": "Night",
+          "no_actuator": "No actuator",
+          "no_fresh_air_policy": "No fresh air policy",
+          "no_humidity_power_demand": "Δεν υπάρχει ζήτηση ρύθμισης υγρασίας",
+          "no_meaningful_change": "Δεν χρειάζεται αλλαγή",
+          "no_room_plan": "Δεν υπάρχουν επαρκή δεδομένα για το δωμάτιο",
+          "no_selected_native_humidity_device": "No selected native humidity device",
+          "no_selected_shades": "Δεν έχουν επιλεγεί ρολά για αυτόματη σκίαση",
+          "no_single_setpoint": "No single setpoint",
+          "no_target": "Δεν έχει οριστεί έγκυρος στόχος",
+          "no_target_profile": "No target profile",
+          "no_verified_fan_speed_demand": "Δεν χρειάζεται επιβεβαιωμένη αλλαγή ταχύτητας ανεμιστήρα",
+          "no_verified_secondary_demand": "Δεν υπάρχει επιβεβαιωμένη ζήτηση δεύτερης συσκευής",
+          "no_verified_selected_device": "No verified selected device",
+          "not_direct_strategy": "Not direct strategy",
+          "not_owned_already_closed": "Not owned already closed",
+          "occupied": "Occupied",
+          "off": "Ο ελεγκτής είναι απενεργοποιημένος",
+          "open": "Open",
+          "open_blocked_window_contact": "Open blocked window contact",
+          "open_command_failed_hold": "Open command failed hold",
+          "open_command_sent": "Στάλθηκε εντολή ανοίγματος ρολού",
+          "open_failed_hold": "Open failed hold",
+          "open_not_supported": "Open not supported",
+          "open_or_unknown_window": "Το παράθυρο είναι ανοιχτό ή άγνωστο",
+          "open_service_unavailable": "Open service unavailable",
+          "opening": "Opening",
+          "opening_requested": "Opening requested",
+          "opposing_humidity_climate_active": "Opposing humidity climate active",
+          "opposing_humidity_device_active_or_unknown": "Opposing humidity device active or unknown",
+          "opposing_humidity_output_on_or_unknown": "Opposing humidity output ON or unknown",
+          "other_climate_unavailable": "Other climate unavailable",
+          "other_climate_wrong_room": "Other climate wrong room",
+          "other_endpoint_acknowledgement_pending": "Other endpoint acknowledgement pending",
+          "other_humidity_device_active_or_unverified": "Other humidity device active or unverified",
+          "other_hvac_active": "Other HVAC active",
+          "other_hvac_armed": "Other HVAC armed",
+          "other_thermostat_action_unknown": "Other thermostat action unknown",
+          "other_thermostat_active": "Other thermostat active",
+          "other_thermostat_opposing_mode_armed": "Other thermostat opposing mode armed",
+          "out_of_device_range": "Out of device range",
+          "outside_air_not_verified": "Outside air not verified",
+          "owned_closed": "Το ρολό έκλεισε αυτόματα",
+          "owned_closed_weather_still_warrants_shade": "Owned closed weather still warrants shade",
+          "owned_fan_running": "Ο ελεγχόμενος ανεμιστήρας λειτουργεί",
+          "owned_running": "Η ελεγχόμενη συσκευή λειτουργεί",
+          "owned_shutdown_identity_or_dwell_hold": "Owned shutdown identity or dwell hold",
+          "particle_sensor_not_verified": "Particle sensor not verified",
+          "particle_sensor_verification_required": "Particle sensor verification required",
+          "paused": "Η αυτόματη λειτουργία έχει τεθεί σε παύση",
+          "paused_away": "Paused away",
+          "physical_capabilities_unavailable": "Δεν είναι διαθέσιμες οι δυνατότητες της συσκευής",
+          "physical_device_unavailable": "Η φυσική συσκευή δεν είναι διαθέσιμη",
+          "pid_already_owns_device": "Η συσκευή ελέγχεται ήδη από άλλο PID",
+          "pid_not_ready": "Το PID χρειάζεται περισσότερες έγκυρες μετρήσεις",
+          "pid_output_inactive": "Το PID ζητά θέρμανση ή ψύξη, αλλά η έξοδος παραμένει κλειστή",
+          "plan_missing": "Plan missing",
+          "plan_or_permission_changed": "Plan or permission changed",
+          "power_command_sent": "Η εντολή ενεργοποίησης ή απενεργοποίησης στάλθηκε",
+          "power_control_not_commissioned": "Δεν έχει εγκριθεί η αυτόματη ενεργοποίηση της συσκευής",
+          "power_off_acknowledged": "Επιβεβαιώθηκε η απενεργοποίηση",
+          "presence_changed_before_off": "Presence changed before OFF",
+          "presence_hold": "Presence hold",
+          "proportional_output_not_commissioned": "Δεν έχει εγκριθεί ο αναλογικός έλεγχος εξόδου",
+          "proportional_output_not_verified": "Δεν έχουν επιβεβαιωθεί τα όρια της αναλογικής εξόδου",
+          "proportional_rate_limit": "Proportional rate limit",
+          "quiet_context_unknown": "Δεν επιβεβαιώνονται οι συνθήκες αθόρυβης λειτουργίας",
+          "ready": "Ready",
+          "recent_close_hold": "Αναμονή πριν από νέα κίνηση ρολού",
+          "recent_fan_state_change": "Recent fan state change",
+          "reconciled_waiting_minimum_off": "Η συσκευή ελέγχθηκε· αναμονή για ασφαλή επανεκκίνηση",
+          "released": "Released",
+          "released_for_today": "Η αυτόματη σκίαση ολοκληρώθηκε για σήμερα",
+          "restart_reconciliation_required": "Μετά την επανεκκίνηση απαιτείται επιβεβαίωση ότι η συσκευή είναι κλειστή",
+          "retired_identity_requires_manual_reconciliation": "Retired identity requires manual reconciliation",
+          "retired_outputs_reconciled": "Retired outputs reconciled",
+          "retired_requires_manual_reconciliation": "Retired requires manual reconciliation",
+          "retiring_previous_output": "Retiring previous output",
+          "room_below_cooling_threshold": "Το δωμάτιο δεν χρειάζεται ακόμη σκίαση",
+          "room_cooled": "Το δωμάτιο έχει δροσιστεί επαρκώς",
+          "room_occupied": "Υπάρχει παρουσία στο δωμάτιο",
+          "room_permissions_or_equipment_changed": "Room permissions or equipment changed",
+          "room_pid_conflict": "Room PID conflict",
+          "room_plan_superseded": "Room plan superseded",
+          "room_unoccupied": "Το δωμάτιο είναι άδειο",
+          "running_device_requires_off_before_automatic_power_ownership": "Κλείσε πρώτα τη συσκευή για ασφαλή ανάληψη αυτόματου ελέγχου",
+          "safe_off": "Η συσκευή απενεργοποιήθηκε με ασφάλεια",
+          "safety_history_unsupported": "Safety history unsupported",
+          "secondary_device_unavailable_or_unsupported": "Secondary device unavailable or unsupported",
+          "secondary_setpoint_conflict": "Secondary setpoint conflict",
+          "select_control_method_to_authorize_current_device_sources": "Επίλεξε εγκεκριμένη μέθοδο ελέγχου για τη συσκευή",
+          "select_fan_purpose_on_controller_device": "Επίλεξε αν ο ανεμιστήρας κάνει εξαγωγή ή φιλτράρισμα αέρα",
+          "select_single_direction_for_pid": "Επίλεξε θέρμανση ή ψύξη για το PID",
+          "selected_source_missing": "Selected source missing",
+          "sensor_unknown_or_stale": "Η μέτρηση αισθητήρα λείπει ή είναι παλιά",
+          "set_humidity_service_missing": "Set humidity service missing",
+          "setpoint_commanded": "Ο νέος στόχος στάλθηκε στη συσκευή",
+          "setpoint_service_failure": "Setpoint service failure",
+          "settings_updated": "Οι ρυθμίσεις αποθηκεύτηκαν",
+          "sleep_evidence_unknown": "Δεν μπορεί να επιβεβαιωθεί η κατάσταση ύπνου",
+          "sleep_room_evidence_unknown": "Δεν μπορεί να επιβεβαιωθεί αν το δωμάτιο βρίσκεται σε λειτουργία ύπνου",
+          "source_deselected_or_moved": "Η φυσική συσκευή δεν ανήκει πλέον σε αυτό το δωμάτιο",
+          "stale_temperature": "Η μέτρηση θερμοκρασίας δεν είναι πρόσφατη",
+          "startup_warmup": "Αναμονή ολοκλήρωσης των ελέγχων εκκίνησης",
+          "storage_failure_no_command": "Storage failure no command",
+          "storage_unavailable": "Αδυναμία ανάκτησης ιστορικού ασφαλείας· η αυτόματη λειτουργία αναστέλλεται",
+          "sun_below_shading_threshold": "Sun below shading threshold",
+          "sun_low": "Sun low",
+          "sun_not_verified": "Δεν επιβεβαιώνεται η θέση του ήλιου",
+          "target_commanded": "Ο νέος στόχος στάλθηκε στη συσκευή",
+          "target_outside_device_limits": "Ο ζητούμενος στόχος ξεπερνά τα όρια της συσκευής",
+          "target_outside_native_limits": "Ο στόχος είναι εκτός ορίων λειτουργίας συσκευής",
+          "target_unavailable": "Ο επιθυμητός στόχος δεν είναι διαθέσιμος",
+          "temperature_controller_owns_same_device": "Temperature controller owns same device",
+          "temperature_not_verified": "Temperature not verified",
+          "temperature_sensor_wrong_area": "Ο αισθητήρας θερμοκρασίας ανήκει σε άλλο δωμάτιο",
+          "temperature_service_unavailable": "Temperature service unavailable",
+          "temperature_source_missing_or_wrong_area": "Temperature source missing or wrong area",
+          "temperature_stale_or_wrong_room": "Temperature stale or wrong room",
+          "temperature_unavailable_or_stale": "Η μέτρηση θερμοκρασίας λείπει ή είναι παλιά",
+          "thermal_priority_defer_dry": "Η θέρμανση ή η ψύξη έχει προτεραιότητα από την αφύγρανση",
+          "thermal_temperature_control_has_priority": "Thermal temperature control has priority",
+          "thermostat_turned_off": "Ο φυσικός θερμοστάτης απενεργοποιήθηκε",
+          "unattributed_direct_write_intent": "Unattributed direct write intent",
+          "unavailable": "Τα δεδομένα του ελεγκτή δεν είναι διαθέσιμα",
+          "uncommissioned_absence_off": "Uncommissioned absence OFF",
+          "unconfirmed_close_manual_hold": "Unconfirmed close manual hold",
+          "unexpected_mode": "Unexpected mode",
+          "unexpected_task_exception": "Unexpected task exception",
+          "unit_must_be_running_dry_or_fan_only": "Unit must be running dry or fan only",
+          "unknown": "Unknown",
+          "unknown_native_power": "Unknown native power",
+          "unknown_presence_hold": "Unknown presence hold",
+          "unknown_window_contacts": "Δεν έχει επιβεβαιωθεί ότι τα παράθυρα είναι κλειστά",
+          "unoccupied": "Unoccupied",
+          "unrecognized_status": "Άγνωστη κατάσταση ελεγκτή· έλεγξε το status_code",
+          "unsafe_mode_selection": "Unsafe mode selection",
+          "unsafe_or_unsupported_mode_change": "Unsafe or unsupported mode change",
+          "unsupported_action": "Unsupported action",
+          "unsupported_control_method": "Unsupported control method",
+          "unsupported_device": "Η συσκευή δεν υποστηρίζεται",
+          "unsupported_fractional_humidity_steps": "Unsupported fractional humidity steps",
+          "unsupported_hvac_mode": "Δεν υποστηρίζεται αυτή η λειτουργία θέρμανσης ή ψύξης",
+          "unsupported_mode": "Η επιλεγμένη λειτουργία δεν υποστηρίζεται",
+          "unsupported_strategy": "Unsupported strategy",
+          "unsupported_temperature_unit": "Η μονάδα θερμοκρασίας της συσκευής δεν υποστηρίζεται",
+          "unsupported_unit": "Unsupported unit",
+          "unverified_equipment_plan": "Unverified equipment plan",
+          "unverified_humidity_device_or_area": "Unverified humidity device or area",
+          "unverified_proportional_range": "Unverified proportional range",
+          "user_paused": "User paused",
+          "waiting_for_ack": "Αναμονή επιβεβαίωσης από τη συσκευή",
+          "waiting_for_device_ack": "Αναμονή επιβεβαίωσης από τη συσκευή",
+          "waiting_for_fan_power_ack": "Αναμονή επιβεβαίωσης λειτουργίας ανεμιστήρα",
+          "waiting_for_fan_speed_ack": "Αναμονή επιβεβαίωσης ταχύτητας ανεμιστήρα",
+          "waiting_for_first_control_cycle": "Αναμονή πρώτου κύκλου ελέγχου",
+          "waiting_for_native_ack": "Αναμονή επιβεβαίωσης από τον θερμοστάτη",
+          "waiting_for_native_mode_ack": "Αναμονή επιβεβαίωσης της αλλαγής λειτουργίας",
+          "waiting_for_output_ack": "Αναμονή επιβεβαίωσης της αλλαγής εξόδου",
+          "waiting_for_physical_device": "Αναμονή σύνδεσης της φυσικής συσκευής",
+          "waiting_for_pid_samples": "Αναμονή επαρκών μετρήσεων για το PID",
+          "waiting_for_power_ack": "Αναμονή επιβεβαίωσης ενεργοποίησης ή απενεργοποίησης",
+          "waiting_for_stable_release": "Waiting for stable release",
+          "waiting_for_target_ack": "Αναμονή επιβεβαίωσης του νέου στόχου",
+          "weather_cloudy": "Weather cloudy",
+          "weather_hazard_hold": "Οι καιρικές συνθήκες εμποδίζουν την κίνηση των ρολών",
+          "weather_no_solar_gain": "Δεν υπάρχει αρκετή ηλιακή θερμότητα για κλείσιμο των ρολών",
+          "weather_solar": "Weather solar",
+          "window_already_open_or_unknown": "Window already open or unknown",
+          "window_changed_since_plan": "Window changed since plan",
+          "window_contact_or_explicit_exception_required": "Απαιτείται επιβεβαιωμένα κλειστό παράθυρο ή ρητή εξαίρεση",
+          "window_contacts_invalid": "Window contacts invalid",
+          "window_contacts_missing": "Λείπουν οι απαιτούμενοι αισθητήρες παραθύρων",
+          "window_evidence_missing": "Window evidence missing",
+          "window_interlock": "Ο έλεγχος εμποδίζεται από την ασφάλεια παραθύρων",
+          "window_interlock_or_missing_plan": "Λείπουν ασφαλείς συνθήκες παραθύρων ή δεδομένα δωματίου",
+          "window_not_assigned": "Window not assigned",
+          "window_not_eligible": "Το παράθυρο δεν είναι κατάλληλο για αυτή την ενέργεια σκίασης",
+          "window_open_or_unavailable": "Το παράθυρο είναι ανοιχτό ή ο αισθητήρας δεν λειτουργεί",
+          "window_open_or_unknown": "Το παράθυρο είναι ανοιχτό ή δεν επιβεβαιώνεται ότι είναι κλειστό",
+          "window_plan_blocked": "Window plan blocked",
+          "window_plan_unsafe": "Window plan unsafe",
+          "window_wrong_room": "Window wrong room",
+          "within_target_band": "Εντός του καθορισμένου εύρους στόχου",
+          "wrong_room_window_contact": "Wrong room window contact",
+          "device_auto_control_disabled": "Ο αυτόματος έλεγχος αυτής της συσκευής είναι απενεργοποιημένος",
+          "device_policy_approved": "Εγκρίθηκε ο αυτόματος έλεγχος της συσκευής",
+          "house_occupancy_unknown": "Δεν μπορεί να επιβεβαιωθεί αν υπάρχει κάποιος στο σπίτι",
+          "house_unoccupied": "Δεν βρίσκεται κανείς στο σπίτι",
+          "invalid_presence_policy": "Μη έγκυρος κανόνας παρουσίας",
+          "invalid_sleep_policy": "Μη έγκυρος κανόνας ύπνου",
+          "room_not_absent": "Υπάρχει παρουσία στο δωμάτιο· αναμονή ελέγχου απουσίας",
+          "room_not_occupied": "Το δωμάτιο είναι άδειο· αναμονή επιβεβαιωμένης παρουσίας",
+          "room_occupancy_unknown": "Δεν μπορεί να επιβεβαιωθεί η παρουσία στο δωμάτιο",
+          "sleep_room_control_paused": "Ο έλεγχος τέθηκε σε παύση λόγω λειτουργίας ύπνου"
+        }
       }
     },
     "number": {
@@ -1351,34 +1752,34 @@
         "name": "Επανάληψη ανακοινώσεων (λεπτά)"
       },
       "area_pid_target_c": {
-        "name": "Επιθυμητή θερμοκρασία δωματίου (°C)"
+        "name": "PID · Επιθυμητή θερμοκρασία δωματίου (°C)"
       },
       "area_pid_kp": {
-        "name": "Αναλογικός συντελεστής Kp (%/°C)"
+        "name": "PID · Αναλογικός συντελεστής Kp (%/°C)"
       },
       "area_pid_ki": {
-        "name": "Ολοκληρωτικός συντελεστής Ki (%/(°C·λεπτό))"
+        "name": "PID · Ολοκληρωτικός συντελεστής Ki (%/(°C·λεπτό))"
       },
       "area_pid_kd": {
-        "name": "Διαφορικός συντελεστής Kd (%·λεπτό/°C)"
+        "name": "PID · Διαφορικός συντελεστής Kd (%·λεπτό/°C)"
       },
       "area_pid_offset_c": {
-        "name": "Μέγιστη μεταβολή επιθυμητής θερμοκρασίας (°C)"
+        "name": "PID · Μέγιστη μεταβολή επιθυμητής θερμοκρασίας (°C)"
       },
       "area_pid_min_setpoint_c": {
-        "name": "Κατώτατο επιτρεπόμενο setpoint (°C)"
+        "name": "PID · Κατώτατο επιτρεπόμενο setpoint (°C)"
       },
       "area_pid_max_setpoint_c": {
-        "name": "Ανώτατο επιτρεπόμενο setpoint (°C)"
+        "name": "PID · Ανώτατο επιτρεπόμενο setpoint (°C)"
       },
       "area_pid_sample_seconds": {
-        "name": "Διάστημα δειγματοληψίας PID (δευτ.)"
+        "name": "PID · Διάστημα δειγματοληψίας (δευτ.)"
       },
       "area_pid_max_change_c": {
-        "name": "Μέγιστη αλλαγή ανά κύκλο (°C)"
+        "name": "PID · Μέγιστη αλλαγή ανά κύκλο (°C)"
       },
       "area_pid_min_change_c": {
-        "name": "Ελάχιστη ουσιαστική αλλαγή (°C)"
+        "name": "PID · Ελάχιστη ουσιαστική αλλαγή (°C)"
       },
       "area_climate_profile_comfort_heat": {
         "name": "Θέρμανση · Δωμάτιο · Παρουσία"
@@ -1386,23 +1787,44 @@
       "area_climate_profile_comfort_cool": {
         "name": "Ψύξη · Δωμάτιο · Παρουσία"
       },
+      "area_climate_profile_comfort_humidity": {
+        "name": "Υγρασία · Δωμάτιο · Παρουσία · στόχος (%)"
+      },
       "area_climate_profile_home_heat": {
-        "name": "Θέρμανση · Σπίτι · Δωμάτιο"
+        "name": "Θέρμανση · Σπίτι"
       },
       "area_climate_profile_home_cool": {
-        "name": "Ψύξη · Σπίτι · Δωμάτιο"
+        "name": "Ψύξη · Σπίτι"
+      },
+      "area_climate_profile_home_humidity": {
+        "name": "Υγρασία · Σπίτι · στόχος (%)"
+      },
+      "area_climate_profile_away_heat": {
+        "name": "Θέρμανση · Σπίτι · Απενεργοποίηση"
+      },
+      "area_climate_profile_away_cool": {
+        "name": "Ψύξη · Σπίτι · Απενεργοποίηση"
+      },
+      "area_climate_profile_away_humidity": {
+        "name": "Υγρασία · Σπίτι · Απενεργοποίηση · στόχος (%)"
       },
       "area_climate_profile_sleep_heat": {
-        "name": "Θέρμανση · Δωμάτιο · Ύπνος"
+        "name": "Θέρμανση · Ύπνος"
       },
       "area_climate_profile_sleep_cool": {
-        "name": "Ψύξη · Δωμάτιο · Ύπνος"
+        "name": "Ψύξη · Ύπνος"
+      },
+      "area_climate_profile_sleep_humidity": {
+        "name": "Υγρασία · Ύπνος · στόχος (%)"
       },
       "area_climate_profile_eco_heat": {
-        "name": "Θέρμανση · Σπίτι · ECO"
+        "name": "Θέρμανση · ECO"
       },
       "area_climate_profile_eco_cool": {
-        "name": "Ψύξη · Σπίτι · ECO"
+        "name": "Ψύξη · ECO"
+      },
+      "area_climate_profile_eco_humidity": {
+        "name": "Υγρασία · ECO · στόχος (%)"
       },
       "global_environment_pollen_high_from": {
         "name": "Υψηλή γύρη από αυτή την τιμή"
@@ -1465,40 +1887,82 @@
         "name": "Επιθυμητή ταχύτητα ενεργού καθαριστή (%)"
       },
       "area_direct_tuning_kp": {
-        "name": "Αναλογικός συντελεστής PID (Kp)"
+        "name": "PID · Αναλογικός συντελεστής (Kp)"
       },
       "area_direct_tuning_ki": {
-        "name": "Ολοκληρωτικός συντελεστής PID (Ki)"
+        "name": "PID · Ολοκληρωτικός συντελεστής (Ki)"
       },
       "area_direct_tuning_kd": {
-        "name": "Παράγωγος συντελεστής PID (Kd)"
+        "name": "PID · Παράγωγος συντελεστής (Kd)"
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "Περίοδος δειγματοληψίας PID (δευτερόλεπτα)"
+        "name": "PID · Περίοδος δειγματοληψίας (δευτερόλεπτα)"
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "Μέγιστη μεταβολή ισχύος ανά κύκλο (%)"
+        "name": "PID · Μέγιστη μεταβολή ισχύος ανά κύκλο (%)"
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "Ελάχιστη ουσιαστική μεταβολή ισχύος (%)"
+        "name": "PID · Ελάχιστη ουσιαστική μεταβολή ισχύος (%)"
       },
       "area_mold_surface_critical_temperature_c": {
         "name": "Μετρημένη θερμοκρασία πιο κρύας επιφάνειας (°C)"
       },
       "equipment_kp": {
-        "name": "{channel}Αναλογικός συντελεστής Kp (%/°C)"
+        "name": "PID · {channel}Αναλογικός συντελεστής Kp (%/°C)"
       },
       "equipment_ki": {
-        "name": "{channel}Ολοκληρωτικός συντελεστής Ki (%/(°C·λεπτό))"
+        "name": "PID · {channel}Ολοκληρωτικός συντελεστής Ki (%/(°C·λεπτό))"
       },
       "equipment_kd": {
-        "name": "{channel}Διαφορικός συντελεστής Kd (%·λεπτό/°C)"
+        "name": "PID · {channel}Διαφορικός συντελεστής Kd (%·λεπτό/°C)"
       },
       "equipment_sample_seconds": {
-        "name": "{channel}Διάστημα δειγματοληψίας PID (δευτ.)"
+        "name": "PID · {channel}Διάστημα δειγματοληψίας (δευτ.)"
+      },
+      "equipment_pid_process_gain": {
+        "name": "PID · {channel}Κέρδος διεργασίας (μεταβολή μέτρησης / 100% εξόδου)"
+      },
+      "equipment_pid_time_constant_minutes": {
+        "name": "PID · {channel}Χρονική σταθερά απόκρισης"
+      },
+      "equipment_pid_dead_time_minutes": {
+        "name": "PID · {channel}Νεκρός χρόνος απόκρισης"
+      },
+      "equipment_pid_lambda_minutes": {
+        "name": "PID · {channel}Λάμδα επιθυμητής απόκρισης"
+      },
+      "equipment_pid_capacity_stage_1": {
+        "name": "PID · {channel}Μετρημένη βαθμίδα ανεμιστήρα 1 · Μετρημένη σχετική απόδοση (%)"
+      },
+      "equipment_pid_capacity_stage_2": {
+        "name": "PID · {channel}Μετρημένη βαθμίδα ανεμιστήρα 2 · Μετρημένη σχετική απόδοση (%)"
+      },
+      "equipment_pid_capacity_stage_3": {
+        "name": "PID · {channel}Μετρημένη βαθμίδα ανεμιστήρα 3 · Μετρημένη σχετική απόδοση (%)"
+      },
+      "equipment_pid_capacity_stage_4": {
+        "name": "PID · {channel}Μετρημένη βαθμίδα ανεμιστήρα 4 · Μετρημένη σχετική απόδοση (%)"
+      },
+      "equipment_pid_capacity_speed_1": {
+        "name": "PID · {channel}Μετρημένη ταχύτητα ανεμιστήρα 1 (%)"
+      },
+      "equipment_pid_capacity_output_1": {
+        "name": "PID · {channel}Μετρημένη σχετική απόδοση 1 (%)"
+      },
+      "equipment_pid_capacity_speed_2": {
+        "name": "PID · {channel}Μετρημένη ταχύτητα ανεμιστήρα 2 (%)"
+      },
+      "equipment_pid_capacity_output_2": {
+        "name": "PID · {channel}Μετρημένη σχετική απόδοση 2 (%)"
+      },
+      "equipment_pid_capacity_speed_3": {
+        "name": "PID · {channel}Μετρημένη ταχύτητα ανεμιστήρα 3 (%)"
+      },
+      "equipment_pid_capacity_output_3": {
+        "name": "PID · {channel}Μετρημένη σχετική απόδοση 3 (%)"
       },
       "equipment_cycle_seconds": {
-        "name": "{channel}Περίοδος κύκλου PWM (δευτερόλεπτα)"
+        "name": "PID · {channel}Περίοδος κύκλου PWM (δευτερόλεπτα)"
       },
       "equipment_quiet_percentage": {
         "name": "{channel}Ποσοστό ανεμιστήρα αθόρυβης λειτουργίας (%)"
@@ -1532,6 +1996,12 @@
       },
       "home_global_occupancy_away_cooldown_minutes": {
         "name": "Σπίτι · Away · cooldown (min)"
+      },
+      "area_shading_close_above_c": {
+        "name": "Κλείσιμο σκιάστρων πάνω από θερμοκρασία χώρου (°C)"
+      },
+      "area_shading_min_sun_elevation": {
+        "name": "Ελάχιστο ύψος ήλιου για σκίαση (°)"
       },
       "shade_close_above_c": {
         "name": "Κλείσιμο σκιάστρων πάνω από θερμοκρασία χώρου (°C)"
@@ -1577,6 +2047,12 @@
       "equipment_sensor_verified": {
         "name": "{channel}αισθητήρας · Απαιτείται"
       },
+      "area_shading_enabled": {
+        "name": "Αυτόματο κλείσιμο σκιάστρων για ψύξη"
+      },
+      "home_shade_announce_before_movement": {
+        "name": "Ανακοίνωση πριν από το άνοιγμα ή κλείσιμο σκιάστρων"
+      },
       "shade_auto_control": {
         "name": "Αυτόματο κλείσιμο σκιάστρων για ψύξη"
       },
@@ -1595,7 +2071,7 @@
         "name": "Χειροκίνητη επιλογή προφίλ παρουσίας/απουσίας"
       },
       "area_pid_gain_source": {
-        "name": "Πηγή κερδών PID",
+        "name": "PID · Πηγή κερδών",
         "state": {
           "defaults": "Προεπιλογές",
           "manual": "Χειροκίνητα"
@@ -1625,6 +2101,31 @@
       },
       "equipment_quiet_fan_mode": {
         "name": "{channel}Λειτουργία ανεμιστήρα αθόρυβης λειτουργίας"
+      },
+      "equipment_pid_calibration_method": {
+        "name": "PID · {channel}Μέθοδος βαθμονόμησης",
+        "state": {
+          "manual": "Χειροκίνητα Kp/Ki/Kd",
+          "imc_lambda": "IMC / Λάμδα (μετρημένη απόκριση)",
+          "cohen_coon": "Cohen-Coon (μετρημένη απόκριση)"
+        }
+      },
+      "equipment_pid_fan_capacity_mode": {
+        "name": "PID · {channel}Στρατηγική ισχύος ανεμιστήρα",
+        "state": {
+          "legacy": "Αρχική κατανομή PID",
+          "measured": "Αντιστάθμιση μετρημένης απόδοσης"
+        }
+      },
+      "equipment_pid_fan_capacity_for_mode": {
+        "name": "PID · {channel}Βαθμονόμηση για λειτουργία HVAC",
+        "state": {
+          "choose": "Επιλογή λειτουργίας",
+          "heat": "Θέρμανση",
+          "cool": "Ψύξη",
+          "dry": "Αφύγρανση",
+          "fan_only": "Ανεμιστήρας"
+        }
       },
       "equipment_presence_requirement": {
         "name": "{channel}έλεγχος · Παρουσία",
@@ -1674,6 +2175,12 @@
       },
       "equipment_resume": {
         "name": "{channel}Επαλήθευση και συνέχιση"
+      },
+      "equipment_pid_apply_calibration": {
+        "name": "PID · {channel}Εφαρμογή βαθμονόμησης"
+      },
+      "equipment_pid_apply_fan_capacity": {
+        "name": "PID · {channel}Εφαρμογή μετρημένης απόδοσης"
       }
     },
     "climate": {

@@ -7,10 +7,11 @@ Secondary equipment remains advisory until a verified driver owns it.
 from __future__ import annotations
 
 from collections import Counter
+import math
 from typing import Any
 
 from .climate_equipment import classify_hvac, humidity_advice
-from .discovery import entity_area
+from .discovery import entity_area, reading
 
 ROLE_KINDS = {
     "climate_entity": "climate",
@@ -179,10 +180,62 @@ def _pick_moisture(inventory: dict, advice: dict, thermal: dict) -> dict:
     return {"status": "no_verified_device", "action": action}
 
 
+def mean_valid_room_humidity(samples: list[tuple[str, Any]],
+                             selected: list[str] | tuple[str, ...] | None = None,
+                             ) -> tuple[float | None, str]:
+    """Use all valid distinct room RH sensors, ignoring missing/unknown/stale.
+
+    A selected set may be partially unavailable, but at least one real RH
+    measurement is still required. Invalid values are never replaced by zero.
+    """
+    allowed = (set(e for e in selected if isinstance(e, str) and e)
+               if selected is not None else None)
+    values: dict[str, float] = {}
+    for entity, value in samples:
+        if not isinstance(entity, str) or allowed is not None and entity not in allowed:
+            continue
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            continue
+        if math.isfinite(value) and 0 <= value <= 100:
+            values[entity] = float(value)
+    if not values:
+        return None, "no_valid_selected_humidity"
+    partial = allowed is not None and len(values) < len(allowed)
+    kind = "mean" if len(values) > 1 else "sensor"
+    return sum(values.values()) / len(values), (
+        f"selected_partial_{kind}" if partial else f"selected_{kind}"
+    )
+
+
+def live_room_humidity(hass: Any, area: str, config: dict,
+                       plan: dict) -> tuple[float | None, str]:
+    """Recheck configured room RH sources just before any physical write."""
+    selected = plan.get("humidity_source_entities") if isinstance(plan, dict) else None
+    if selected is None:
+        # Older room plans require the previously configured explicit pin;
+        # do not infer permission from arbitrary unselected room sensors.
+        pinned = config.get("humidity_entity")
+        selected = [pinned] if isinstance(pinned, str) and pinned else []
+    if not isinstance(selected, (list, tuple)):
+        return None, "invalid_humidity_source_selection"
+    sources = list(dict.fromkeys(e for e in selected if isinstance(e, str) and e))
+    if not sources:
+        return None, "no_selected_humidity_source"
+    live = []
+    for entity in sources:
+        if not entity.startswith("sensor.") or entity_area(hass, entity) != area:
+            continue
+        observed = reading(hass, entity, 10, outdoor=False)
+        if observed.metric == "humidity":
+            live.append((entity, observed.value))
+    return mean_valid_room_humidity(live, sources)
+
+
 def room_equipment_plan(hass: Any, area: str, config: dict,
                         temperature_plan: dict, readings: tuple,
                         *, outdoor_safe: bool | None = None,
-                        duplicates: dict | None = None) -> dict:
+                        duplicates: dict | None = None,
+                        humidity_source_entities: list[str] | None = None) -> dict:
     """Plan *exclusive* thermal and moisture intentions without device writes."""
     inventory = device_inventory(hass, area, config)
     chosen = assigned_entities(config)
@@ -198,22 +251,12 @@ def room_equipment_plan(hass: Any, area: str, config: dict,
         return {"status": "duplicate_equipment_owner", "entities": collision,
                 "inventory": inventory, "automatic_secondary_actuation": False}
     values = [(r.entity_id, r.value) for r in readings
-              if getattr(r, "metric", None) == "humidity"
-              and isinstance(r.value, (int, float)) and
-              not isinstance(r.value, bool)]
-    selected_sensor = config.get("humidity_entity")
-    if selected_sensor:
-        matching = [v for name, v in values if name == selected_sensor]
-        moisture_value = matching[0] if len(matching) == 1 else None
-        moisture_evidence = ("selected_sensor" if matching else
-                             "selected_sensor_unavailable")
-    elif len(values) == 1:
-        moisture_value = values[0][1]
-        moisture_evidence = "single_verified_room_sensor"
-    else:
-        moisture_value = None
-        moisture_evidence = ("multiple_sensors_choose_one" if values
-                             else "no_fresh_room_humidity")
+              if getattr(r, "metric", None) == "humidity"]
+    # None means advisory auto-discovery for old rooms. An explicit empty
+    # selection means NO sensor was authorized; neither permits fabrication.
+    moisture_value, moisture_evidence = mean_valid_room_humidity(
+        values, humidity_source_entities
+    )
     moisture_advice = humidity_advice(
         moisture_value, low_rh=config.get("humidity_low_rh", 40),
         high_rh=config.get("humidity_high_rh", 60),

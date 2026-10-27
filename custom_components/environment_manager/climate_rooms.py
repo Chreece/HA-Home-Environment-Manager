@@ -56,7 +56,8 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
            global_presence:dict|None=None,
            known_areas:set[str]|None=None,
            selected_temperature_c:float|None=None,
-           temperature_evidence:dict|None=None)->tuple[dict,set[str]]:
+           temperature_evidence:dict|None=None,
+           selected_humidity_entities:list[str]|None=None)->tuple[dict,set[str]]:
     """Expose what should happen, with provenance, without operating devices."""
     if not isinstance(settings,dict) or not settings.get("enabled"):
         return {"status":"disabled"},set()
@@ -209,15 +210,27 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
 
     temperature_intent={"status":result.state,"mode":result.desired_hvac_mode,
                         "window_safe":window_safe}
+    # Prefer the exact user-selected RH source group. The older single
+    # humidity_entity pin is used only where no room group was configured.
+    # A fully absent group must never authorize physical humidity control.
+    if selected_humidity_entities is not None:
+        humidity_sources=list(dict.fromkeys(
+            e for e in selected_humidity_entities if isinstance(e,str) and e
+        ))
+    else:
+        pin=settings.get("humidity_entity")
+        humidity_sources=[pin] if isinstance(pin,str) and pin else None
     equipment=room_equipment_plan(
         hass,area,settings,temperature_intent,room.readings,
         outdoor_safe=outdoor_safe,duplicates=duplicate_equipment,
+        humidity_source_entities=humidity_sources,
     )
     native_air=native_air_mode_advice(
         hass,area,settings,equipment,time.time() if now is None else now,
     )
 
     return {
+        "humidity_source_entities": humidity_sources if humidity_sources is not None else [],
         "humidity_management":equipment.get("humidity", {"status":"unavailable"}),
         "equipment_plan":equipment,
         "native_air_mode_advice":native_air,
