@@ -116,6 +116,9 @@ class EquipmentRuntime:
         self._locks: dict[str, asyncio.Lock] = {}
         self._memory: dict[str, tuple[Any, model.PIDMemory, float]] = {}
         self._fan_allocations: dict[str, dict] = {}
+        # Diagnostic-only snapshots while an independently powered device is
+        # OFF: PID P-term prepared, I held at zero, D reseeded from live sensor.
+        self._pid_offline_previews: dict[str, dict] = {}
         self._store = None
         self._ready = False
         self._active = False
@@ -129,6 +132,8 @@ class EquipmentRuntime:
         value = {"status": status, **data}
         if key in self._fan_allocations:
             value["pid_fan_capacity"] = self._fan_allocations[key]
+        if key in self._pid_offline_previews:
+            value["pid_prepared_while_unpowered"] = self._pid_offline_previews[key]
         if self.statuses.get(key) == value:
             return
         self.statuses[key] = value
@@ -190,6 +195,7 @@ class EquipmentRuntime:
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
         self._tasks.clear()
+        self._pid_offline_previews.clear()
         if self._ready:
             await self._save()
 
@@ -543,6 +549,7 @@ class EquipmentRuntime:
                 self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
             self._memory.pop(spec.identifier, None)
             self._fan_allocations.pop(spec.identifier, None)
+            self._pid_offline_previews.pop(spec.identifier, None)
             self._status(spec, "settings_updated", control_mode=new["control_mode"])
         if getattr(self.manager, "_active", False):
             self.manager._recalculate(initial=True)
