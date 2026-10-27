@@ -1280,7 +1280,7 @@
         "name": "ความชื้นพื้นผิว (คำนวณ)"
       },
       "equipment_control_status": {
-        "name": "สถานะ · {channel}สถานะตัวควบคุม",
+        "name": "สถานะ · {channel}สถานะ · สถานะตัวควบคุม",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,7 +1965,7 @@
         "name": "PID · {channel}การตั้งค่า · แหล่งข้อมูล (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "เงียบ · {channel}ขีดจำกัดพัดลมเสียงเบา (%)"
+        "name": "เงียบ · {channel}เงียบ · ขีดจำกัดพัดลมเสียงเบา (%)"
       },
       "equipment_min_on_seconds": {
         "name": "พลังงาน · {channel}min ON (s)"
@@ -2039,10 +2039,10 @@
         "name": "อุปกรณ์ · ภายนอก"
       },
       "equipment_quiet_sleep": {
-        "name": "เงียบ · {channel}เสียงเบาขณะนอนหลับ"
+        "name": "เงียบ · {channel}เงียบ · เสียงเบาขณะนอนหลับ"
       },
       "equipment_quiet_occupied": {
-        "name": "เงียบ · {channel}เสียงเบาขณะมีคนอยู่"
+        "name": "เงียบ · {channel}เงียบ · เสียงเบาขณะมีคนอยู่"
       },
       "equipment_sensor_verified": {
         "name": "เซนเซอร์ · {channel}จำเป็น"
@@ -2090,7 +2090,7 @@
         "name": "อุปกรณ์ · แหล่งข้อมูล · เป้าหมาย"
       },
       "equipment_control_mode": {
-        "name": "การควบคุม · {channel}วิธีควบคุม",
+        "name": "การควบคุม · {channel}การควบคุม · วิธีควบคุม",
         "state": {
           "existing": "ตัวควบคุมห้องเดิม",
           "automatic": "อัตโนมัติ",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "เงียบ · {channel}โหมดพัดลมเสียงเบาของอุปกรณ์"
+        "name": "เงียบ · {channel}เงียบ · โหมดพัดลมเสียงเบาของอุปกรณ์"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2174,7 +2174,7 @@
         "name": "ตัวชี้วัดเชื้อรา · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "การควบคุม · {channel}ตรวจสอบและทำงานต่อ"
+        "name": "การควบคุม · {channel}การควบคุม · ตรวจสอบและทำงานต่อ"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
