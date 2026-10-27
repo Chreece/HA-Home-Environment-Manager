@@ -71,7 +71,7 @@ class Model:
     CAP = None
     DEFAULTS = {
         "control_mode": "pid", "power_switch_entity": None,
-        "power_switch_cooldown_seconds": 600,
+        "power_switch_cooldown_seconds": 600, "cycle_seconds": 3600,
         "pid_calibration_method": "manual",
         "pid_fan_capacity_mode": "legacy", "pid_fan_capacity_for_mode": "choose",
         "pid_fan_capacity_models": {}, "preset": "none",
