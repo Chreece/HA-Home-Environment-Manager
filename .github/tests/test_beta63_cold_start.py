@@ -296,7 +296,8 @@ async def test_ui():
     for name in wanted:
         node = next(n for n in cls.body if isinstance(n, ast.FunctionDef) and n.name == name)
         node.decorator_list = []
-        ns = {"HVACMode": NS(OFF="off")}
+        ns = {"__name__": "beta63_runtime.climate",
+              "__package__": "beta63_runtime", "HVACMode": NS(OFF="off")}
         exec(compile(ast.Module(body=[node], type_ignores=[]), "climate.py", "exec"), ns)
         methods[name] = ns[name]
 
