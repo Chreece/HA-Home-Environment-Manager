@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Κλείσιμο σκιάστρων πάνω από θερμοκρασία χώρου (°C)"
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Ισχύς · Χρόνος αδράνειας πριν την αποκοπή (δευτ.)"
       }
     },
     "switch": {
@@ -2068,7 +2071,15 @@
         "name": "Γλώσσα"
       },
       "area_manual_profile": {
-        "name": "Χειροκίνητη επιλογή προφίλ παρουσίας/απουσίας"
+        "name": "Χειροκίνητη επιλογή προφίλ παρουσίας/απουσίας",
+        "state": {
+          "none": "Αυτόματο",
+          "comfort": "Άνεση",
+          "home": "Σπίτι",
+          "away": "Απών",
+          "sleep": "Ύπνος",
+          "eco": "Εξοικονόμηση"
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Πηγή κερδών",
@@ -2159,6 +2170,9 @@
       },
       "shade_window_entity": {
         "name": "Συνδεδεμένος αισθητήρας παραθύρου"
+      },
+      "equipment_power_switch_entity": {
+        "name": "Ισχύς · Εξωτερικός διακόπτης τροφοδοσίας"
       }
     },
     "time": {
@@ -2185,7 +2199,19 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "Κλίμα · {channel}"
+        "name": "Κλίμα · {channel}",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "none": "Αυτόματο",
+              "comfort": "Άνεση",
+              "home": "Σπίτι",
+              "away": "Απών",
+              "sleep": "Ύπνος",
+              "eco": "Εξοικονόμηση"
+            }
+          }
+        }
       }
     }
   },

@@ -1569,6 +1569,37 @@ EQUIPMENT_TRANSLATED_NAMES = {
 }
 
 
+# Stable technical identifiers are deliberately not localized: Kp/Ki/Kd and
+# sample/PWM/fan-stage parameters need to sort immediately after "PID" in
+# every one of the supported HA languages, before a source-device channel.
+_PID_PARAMETER_LABELS = {
+    "kp": "Kp", "ki": "Ki", "kd": "Kd",
+    "sample_seconds": "Sample", "cycle_seconds": "PWM",
+    "pid_calibration_method": "Calibration",
+    "pid_apply_calibration": "Apply calibration",
+    "pid_apply_fan_capacity": "Apply fan capacity",
+    "pid_dead_time_minutes": "Dead time",
+    "pid_fan_capacity_for_mode": "HVAC direction",
+    "pid_fan_capacity_mode": "Fan capacity",
+    "pid_lambda_minutes": "Lambda",
+    "pid_process_gain": "Process gain",
+    "pid_time_constant_minutes": "Time constant",
+}
+
+
+def _pid_parameter_label(key: str) -> str | None:
+    if key in _PID_PARAMETER_LABELS:
+        return _PID_PARAMETER_LABELS[key]
+    for kind, label in (
+        ("pid_capacity_output_", "Fan output"),
+        ("pid_capacity_speed_", "Fan speed"),
+        ("pid_capacity_stage_", "Fan stage"),
+    ):
+        if key.startswith(kind) and key[len(kind):].isdigit():
+            return f"{label} {key[len(kind):]}"
+    return None
+
+
 def localized_equipment_name(key: str, language: str, channel: str = "") -> str:
     """Translate full grouped name in HA's server language (not the user UI).
 
@@ -1588,7 +1619,26 @@ def localized_equipment_name(key: str, language: str, channel: str = "") -> str:
             (name for name in EQUIPMENT_TRANSLATED_NAMES
              if name.casefold() == base), "en"
         )
+    if key in ("power_switch_entity", "power_switch_cooldown_seconds"):
+        # Both new power settings exist for every managed output, including
+        # numeric and direct relay endpoints. No source-device name is placed
+        # ahead of the functional grouping prefix.
+        title = {
+            "el": ("Ισχύς", "Εξωτερικός διακόπτης τροφοδοσίας",
+                   "Χρόνος αδράνειας πριν την αποκοπή (δευτ.)"),
+            "de": ("Strom", "Vorgeschalteter Netzschalter",
+                   "Leerlauf-Nachlaufzeit (Sekunden)"),
+        }.get(canonical, ("Power", "Upstream supply switch",
+                          "Idle cooldown before supply OFF (seconds)"))
+        return (f"{title[0]} · {channel}" +
+                (title[1] if key == "power_switch_entity" else title[2])).strip()
     template = EQUIPMENT_TRANSLATED_NAMES[canonical].get(key)
     if template is None:
         template = EQUIPMENT_TRANSLATED_NAMES["en"].get(key, key.replace("_", " ").title())
-    return template.replace("{channel}", str(channel or "")).strip()
+    translated = template.replace("{channel}", str(channel or "")).strip()
+    parameter = _pid_parameter_label(key)
+    if parameter and translated.startswith("PID · "):
+        rest = translated[len("PID · "):]
+        if not rest.startswith(parameter + " · "):
+            return f"PID · {parameter} · {rest}"
+    return translated

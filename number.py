@@ -90,7 +90,9 @@ def _equipment_numbers(manager, spec, registry) -> tuple["EquipmentNumber", ...]
                         continue
             if key == "quiet_percentage" and not cap.fan_percentage:
                 continue
-            if key in equipment.POWER_FIELDS and cap.domain not in ("climate", "fan", "humidifier"):
+            if (key in equipment.POWER_FIELDS
+                    and key != "power_switch_cooldown_seconds"
+                    and cap.domain not in ("climate", "fan", "humidifier")):
                 continue
             if (key in equipment.PID_MODEL_FIELDS
                     and "pid" not in equipment.control_modes(manager, spec)):
@@ -168,7 +170,7 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
 
     for area_id in configured_area_ids(manager.settings):
         for key in equipment.available_room_limit_fields(manager, area_id):
-            bounds = equipment.room_limit_bounds(manager, area_id, key)
+            bounds = equipment.room_limit_edit_bounds(manager, area_id, key)
             if bounds is not None:
                 numbers.append(ConfigNumber(
                     manager, entry.entry_id, area_id, "room_equipment_limit", key, bounds,
@@ -259,6 +261,10 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
     # targets and device tuning without requiring another HA restart. Existing
     # entity IDs and unique IDs are never removed or recreated unnecessarily.
     added = {item.unique_id for item in numbers}
+    room_limit_numbers = {
+        item.unique_id: item for item in numbers
+        if isinstance(item, ConfigNumber) and item._kind == "room_equipment_limit"
+    }
     watched = {
         entity_id for spec in equipment.specs(manager)
         for entity_id in spec.source_entities
@@ -273,6 +279,19 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
                 return
             recovered = []
             for area_id in configured_area_ids(manager.settings):
+                # Room limit numbers were previously a one-shot setup snapshot.
+                # Recreate only missing unique IDs once native HA capability
+                # information arrives, preserving the room hub and registry IDs.
+                for key in equipment.available_room_limit_fields(manager, area_id):
+                    bounds = equipment.room_limit_edit_bounds(manager, area_id, key)
+                    if bounds is None:
+                        continue
+                    candidate = ConfigNumber(
+                        manager, entry.entry_id, area_id,
+                        "room_equipment_limit", key, bounds,
+                    )
+                    if candidate.unique_id not in added:
+                        recovered.append(candidate)
                 for key in _profile_fields(
                     manager, entry.entry_id, area_id, registry
                 ):
@@ -289,12 +308,24 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
                     )
                     if candidate.unique_id not in added
                 )
+            # Existing limits must also update their native UI edit range when
+            # a delayed source is restored or a device changes capabilities.
+            # They remain readable during transient native unavailability.
+            for number in room_limit_numbers.values():
+                if number._sync_room_limit_bounds() and getattr(number, "hass", None):
+                    number.async_write_ha_state()
+                elif getattr(number, "hass", None):
+                    number.async_write_ha_state()
             if not recovered:
                 return
             # Prevent a duplicate add when several native attributes arrive
             # in the same HA event loop iteration.
             unique = {item.unique_id: item for item in recovered}
             added.update(unique)
+            room_limit_numbers.update({
+                item.unique_id: item for item in unique.values()
+                if isinstance(item, ConfigNumber) and item._kind == "room_equipment_limit"
+            })
             async_add_grouped_entities(
                 manager, async_add_entities, unique.values()
             )
@@ -355,6 +386,28 @@ class ConfigNumber(NumberEntity):
         self._attr_native_step = bounds[2]
         self._attr_native_unit_of_measurement = bounds[3]
 
+    def _sync_room_limit_bounds(self) -> bool:
+        """Update the exposed edit range when the actual native state returns."""
+        if self._kind != "room_equipment_limit":
+            return False
+        from . import equipment_model as equipment
+        bounds = equipment.room_limit_edit_bounds(
+            self._manager, self._area_id, self._key
+        )
+        if bounds is None:
+            return False
+        old = (
+            self._attr_native_min_value, self._attr_native_max_value,
+            self._attr_native_step, self._attr_native_unit_of_measurement,
+        )
+        if old == bounds:
+            return False
+        (
+            self._attr_native_min_value, self._attr_native_max_value,
+            self._attr_native_step, self._attr_native_unit_of_measurement,
+        ) = bounds
+        return True
+
     @property
     def native_value(self):
         settings = self._manager.settings
@@ -374,7 +427,9 @@ class ConfigNumber(NumberEntity):
             return float(raw) if raw is not None else None
         if self._kind == "room_equipment_limit":
             from . import equipment_model as equipment
-            return equipment.room_limit_values(self._manager, self._area_id).get(self._key)
+            return equipment.room_limit_display_values(
+                self._manager, self._area_id
+            ).get(self._key)
         if self._kind in ("area_environment", "climate_operating"):
             section, bounds = (
                 ("environment_rooms", AREA_ENV_NUMBERS) if self._kind == "area_environment"
@@ -458,6 +513,7 @@ class ConfigNumber(NumberEntity):
 
     @callback
     def _update(self):
+        self._sync_room_limit_bounds()
         self.async_write_ha_state()
 
 

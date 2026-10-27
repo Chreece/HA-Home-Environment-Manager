@@ -512,11 +512,17 @@ async def update_device_setting(manager: Any, kind: str, key: str,
             from .device_hierarchy import configured_area_ids
             if area not in configured_area_ids(current):
                 raise HomeAssistantError("Select or configure the room before setting equipment limits")
-            bounds = equipment.room_limit_bounds(manager, area, key)
+            bounds = equipment.room_limit_edit_bounds(manager, area, key)
             if key not in equipment.LIMIT_FIELDS or bounds is None:
-                raise HomeAssistantError("No selected physical device supports this room limit")
+                raise HomeAssistantError(
+                    "No selected physical device supports this room limit "
+                    "or its previously configured capability is no longer available"
+                )
+            # This is a room-level configuration edit only. Provisional bounds
+            # never authorize physical actuation; device_limits() still checks
+            # real native capabilities at the actual write boundary.
             number = _finite(value, bounds)
-            effective = equipment.room_limit_values(manager, area)
+            effective = equipment.room_limit_display_values(manager, area)
             proposed = {**effective, key: number}
             for low_key, high_key, message in (
                 ("temperature_min_limit", "temperature_max_limit",

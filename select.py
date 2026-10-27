@@ -52,6 +52,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
     from . import equipment_model as equipment
     entities.extend(EquipmentSelect(manager, spec, "control_mode")
                     for spec in equipment.specs(manager))
+    # A dedicated optional physical relay for EVERY managed output, including
+    # switch, numeric, fan, humidifier and climate devices. Never auto-enroll.
+    entities.extend(EquipmentPowerSwitchSelect(manager, spec)
+                    for spec in equipment.specs(manager))
     from homeassistant.helpers import entity_registry as er
     from .equipment_feature_registration import (
         quiet_keys, register_late_capabilities, registered_control,
@@ -321,6 +325,42 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
 
     async def async_select_option(self, option):
         await self._manager.equipment.async_update(self._spec, {self._key: option})
+
+
+class EquipmentPowerSwitchSelect(EquipmentSelect):
+    """Select exactly one native upstream switch for this managed output.
+
+    The displayed option is the canonical HA entity ID so it remains stable
+    across localization and unambiguously identifies the physical supply.
+    This select remains visible even when its downstream appliance is offline.
+    """
+
+    _attr_icon = "mdi:power-plug"
+
+    def __init__(self, manager, spec):
+        super().__init__(manager, spec, "power_switch_entity")
+
+    @property
+    def available(self):
+        return True
+
+    @property
+    def options(self):
+        from .equipment_power_switch import supply_options
+        return ["none", *supply_options(self._manager, self._spec)]
+
+    @property
+    def current_option(self):
+        choice = self.controller_settings.get("power_switch_entity")
+        return choice if choice in self.options else "none"
+
+    async def async_select_option(self, option):
+        if option not in self.options:
+            raise ValueError("Unrecognized upstream power switch")
+        await self._manager.equipment.async_update(
+            self._spec,
+            {"power_switch_entity": None if option == "none" else option},
+        )
 
 
 class AreaScienceSource(ConfigSelect):
