@@ -269,7 +269,58 @@ class EquipmentRuntime:
                 raise HomeAssistantError("Controller sources are no longer assigned to this area")
             cap = model.capabilities(self.manager, spec)
             if cap is None:
-                raise HomeAssistantError("Device capabilities are unavailable")
+                # An intentionally unpowered native appliance has no live
+                # capabilities. Its optional supply configuration must remain
+                # editable, without granting ANY native HVAC authority.
+                if not changes or set(changes) - {
+                    "power_switch_entity", "power_switch_cooldown_seconds"
+                }:
+                    raise HomeAssistantError("Device capabilities are unavailable")
+                old = model.settings(self.manager, spec)
+                selected = changes.get("power_switch_entity",
+                                       old.get("power_switch_entity"))
+                if selected == "none":
+                    selected = None
+                if selected != old.get("power_switch_entity") and selected is not None:
+                    raise HomeAssistantError(
+                        "A new supply must be commissioned while the native device is available and OFF"
+                    )
+                record = self._record(spec)
+                upstream = record.get("upstream", {})
+                if selected is None and old.get("power_switch_entity") is not None:
+                    supply = self.hass.states.get(old["power_switch_entity"])
+                    if (upstream.get("owned") or upstream.get("pending")
+                            or supply is None or supply.state != "off"):
+                        raise HomeAssistantError(
+                            "Cannot unpair a powered, owned or unverified upstream supply"
+                        )
+                value = changes.get("power_switch_cooldown_seconds",
+                                    old["power_switch_cooldown_seconds"])
+                bounds = model.NUMBER_FIELDS["power_switch_cooldown_seconds"]
+                value = finite(value, bounds[0], bounds[1])
+                if value is None:
+                    raise HomeAssistantError("Invalid upstream idle cooldown")
+                adjusted = {**old, "power_switch_entity": selected,
+                            "power_switch_cooldown_seconds": value}
+                lock = getattr(self.manager, "_device_settings_write_lock", None)
+                if lock is None:
+                    lock = self.manager._device_settings_write_lock = asyncio.Lock()
+                async with lock:
+                    options = deepcopy(self.manager.entry.options)
+                    existing = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+                    existing = existing if isinstance(existing, dict) else {}
+                    existing[spec.identifier] = adjusted
+                    options[model.SETTINGS] = existing
+                    self.hass.config_entries.async_update_entry(
+                        self.manager.entry, options=options,
+                    )
+                self._status(spec, "settings_updated",
+                             control_mode=adjusted["control_mode"])
+                # Persisting a safe, offline-only edit must refresh UI/room
+                # settings. This is not permission to send physical commands.
+                if getattr(self.manager, "_active", False):
+                    self.manager._recalculate(initial=True)
+                return
             old = model.settings(self.manager, spec)
             new = {**old, **deepcopy(changes)}
             allowed = set(model.DEFAULTS) | {"fan_mode", "swing_mode", "swing_horizontal_mode",
@@ -367,6 +418,39 @@ class EquipmentRuntime:
             for key, choices in model.DEVICE_SELECTS.items():
                 if new.get(key) not in choices:
                     raise HomeAssistantError(f"Unsupported device policy: {key}")
+            # The relay is a separate physical device, never an alias for
+            # this controller's own output. It grants no independent native
+            # power authority and cannot be shared with other controllers.
+            from .equipment_power_switch import permitted_supply
+            selected_supply = new.get("power_switch_entity")
+            if selected_supply == "none":
+                selected_supply = None
+                new["power_switch_entity"] = None
+            if selected_supply is not None and not isinstance(selected_supply, str):
+                raise HomeAssistantError("Select a native same-room switch or None")
+            if selected_supply:
+                identity = permitted_supply(self.manager, spec, selected_supply)
+                if identity is None:
+                    raise HomeAssistantError(
+                        "Power switch must be a dedicated same-room physical switch, "
+                        "not a managed output or another controller's power supply"
+                    )
+            if selected_supply != old.get("power_switch_entity"):
+                upstream = self._record(spec).get("upstream", {})
+                if upstream.get("pending") or upstream.get("owned"):
+                    raise HomeAssistantError(
+                        "Previously controlled power switch must be confirmed OFF "
+                        "and reconciled before changing its assignment"
+                    )
+                if selected_supply:
+                    switch = self.hass.states.get(selected_supply)
+                    native_output = self.hass.states.get(cap.primary)
+                    if (switch is None or switch.state != "off"
+                            or not output_off(native_output)):
+                        raise HomeAssistantError(
+                            "Commissioning an upstream supply requires BOTH the "
+                            "physical output and selected power switch to be OFF"
+                        )
             if "sensor_verified" in changes and type(changes["sensor_verified"]) is not bool:
                 raise HomeAssistantError("Sensor verification must be a boolean")
             # The selector itself authorizes only this selected native endpoint.
@@ -408,6 +492,13 @@ class EquipmentRuntime:
                 # runtime retains its OFF/reconciliation hold without rejecting
                 # the requested method or resetting its ownership protection.
             record = self._record(spec)
+            if selected_supply:
+                # At commissioning the native device is OFF but present. Save
+                # its observed capabilities BEFORE an outlet may make it
+                # unavailable. The saved model is for demand classification,
+                # never permission to issue commands to offline hardware.
+                record["capabilities"] = asdict(cap)
+                await self._save()
             if record.get("pending") and not record.get("paused"):
                 await self._reconcile(spec)
             if record.get("pending"):
@@ -641,6 +732,31 @@ class EquipmentRuntime:
             if not self._ready or not self._current_spec(spec):
                 raise HomeAssistantError("Controller or its source identity is unavailable")
             record = self._record(spec)
+            supply = model.settings(self.manager, spec).get("power_switch_entity")
+            upstream = record.get("upstream", {})
+            if supply:
+                # Reconciliation is explicit and never starts power. It
+                # requires the upstream outlet OFF and the same original
+                # physical switch identity, not merely a writable entity ID.
+                from .equipment_power_switch import permitted_supply, observed_output_off
+                outlet = self.hass.states.get(supply)
+                if (not isinstance(upstream, dict) or
+                        permitted_supply(self.manager, spec, supply,
+                                         upstream.get("identity")) is None
+                        or outlet is None or outlet.state != "off"):
+                    raise HomeAssistantError(
+                        "Turn the commissioned upstream power switch OFF and verify "
+                        "its exact device identity before reconciling"
+                    )
+                if any(
+                    (state := self.hass.states.get(source)) is not None
+                    and state.state not in ("unknown", "unavailable")
+                    and not observed_output_off(state)
+                    for source in spec.source_entities
+                ):
+                    raise HomeAssistantError(
+                        "A physical controller still reports an energized output"
+                    )
             power = record.get("power", {})
             pending = record.get("pending")
             for entity in power:
@@ -653,6 +769,11 @@ class EquipmentRuntime:
             record.update(paused=None, pending=None, power={},
                           baseline={e: snapshot(self.hass.states.get(e)) for e in spec.source_entities},
                           off_at={e: self.clock() for e in spec.source_entities})
+            if supply:
+                upstream.update(
+                    paused=None, pending=None, owned=False,
+                    idle_since=None, off_at=self.clock(),
+                )
             self._memory.pop(spec.identifier, None)
             self._started = self.clock()
             await self._save()
@@ -1336,6 +1457,12 @@ class EquipmentRuntime:
         if not self._current_spec(spec):
             await self._retired(spec)
             return
+        # A smart supply may make the downstream device unavailable when it
+        # is intentionally OFF. Its own source-bound, durable controller
+        # therefore runs BEFORE the native-device availability gate.
+        from .equipment_power_switch import before_tick as power_switch_before_tick
+        if await power_switch_before_tick(self, spec):
+            return
         # The physical device must be available before ANY capability,
         # occupancy, target, measurement or PID calculation is performed.
         if not model.sources_available(self.manager, spec):
@@ -1346,6 +1473,13 @@ class EquipmentRuntime:
         if cap is None:
             self._status(spec, "physical_capabilities_unavailable")
             return
+        # Cache only observed real native capabilities, permitting future
+        # switch power-up from still-verified room sensors after outlet OFF.
+        # This cache NEVER authorizes native calls while that source is down.
+        actual_capabilities = asdict(cap)
+        if record.get("capabilities") != actual_capabilities:
+            record["capabilities"] = actual_capabilities
+            await self._save()
         if not await self._reconcile(spec):
             return
         state = self.hass.states.get(cap.primary)

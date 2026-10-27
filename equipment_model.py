@@ -34,6 +34,9 @@ NUMBER_FIELDS = {
     "min_on_seconds": (120.0, 7200.0, 60.0, "s", 600.0),
     "min_off_seconds": (120.0, 14400.0, 60.0, "s", 600.0),
     "max_on_seconds": (900.0, 86400.0, 60.0, "s", 7200.0),
+    # Upstream outlet remains separate from the native output. A continuously
+    # verified idle period is required before any controller-owned outlet OFF.
+    "power_switch_cooldown_seconds": (60.0, 86400.0, 60.0, "s", 600.0),
 }
 QUIET_FLAGS = ("quiet_sleep", "quiet_occupied")
 from .pid_calibration import METHODS as PID_CALIBRATION_METHODS, MODEL_FIELDS as PID_MODEL_FIELDS
@@ -42,7 +45,8 @@ from .pid_fan_capacity import (
     CAPACITY_METHODS as PID_FAN_CAPACITY_METHODS,
     CALIBRATION_DIRECTIONS as PID_FAN_DIRECTIONS,
 )
-POWER_FIELDS = ("min_on_seconds", "min_off_seconds", "max_on_seconds")
+POWER_FIELDS = ("min_on_seconds", "min_off_seconds", "max_on_seconds",
+                "power_switch_cooldown_seconds")
 LIMIT_FIELDS = (
     "temperature_min_limit", "temperature_max_limit",
     "humidity_min_limit", "humidity_max_limit",
@@ -53,6 +57,9 @@ DEVICE_SELECTS = {"presence_requirement": ("always", "occupied", "absent"),
                   "fan_purpose": ("auto", "extraction", "filtration")}
 ROOM_LIMITS_KEY = "equipment_limits"
 DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None,
+            # Optional physical switch supplying an individual managed output.
+            # 'None' preserves exact Beta54 behavior on every existing device.
+            "power_switch_entity": None,
             "quiet_sleep": False, "quiet_occupied": False,
             "quiet_fan_mode": None, "profile_targets": {}, "profile_fans": {},
             "pid_calibration_method": "manual", "pid_last_calibration": None,
@@ -307,8 +314,54 @@ def room_limit_bounds(manager: Any, area: str, key: str) -> tuple[float, float, 
     return None
 
 
+# Only temporary SETTINGS-editor bounds. Device actuation always uses the
+# observed, capability-intersected room_limit_bounds() above, never these.
+_OFFLINE_ROOM_LIMIT_BOUNDS = {
+    "temperature_min_limit": (5.0, 35.0, 0.5, "°C"),
+    "temperature_max_limit": (5.0, 35.0, 0.5, "°C"),
+    "humidity_min_limit": (20.0, 80.0, 1.0, "%"),
+    "humidity_max_limit": (20.0, 80.0, 1.0, "%"),
+    "fan_min_percentage": (1.0, 100.0, 1.0, "%"),
+    "fan_max_percentage": (1.0, 100.0, 1.0, "%"),
+}
+
+
+def room_limit_edit_bounds(
+    manager: Any, area: str, key: str
+) -> tuple[float, float, float, str | None] | None:
+    """Retain verified room settings while their selected native source restores.
+
+    Never advertise an uncommissioned control for a room without a selected
+    physical controller. Only a *previously registered* limit or explicitly
+    saved limit can use temporary UI bounds, and only while at least one
+    selected native controller has not restored its capabilities. This is NOT
+    evidence of a usable actuator or of supported physical setpoints.
+    """
+    current = room_limit_bounds(manager, area, key)
+    if current is not None:
+        return current
+    if key not in _OFFLINE_ROOM_LIMIT_BOUNDS:
+        return None
+    selected = tuple(spec for spec in specs(manager) if spec.area_id == area)
+    if not selected or all(capabilities(manager, spec) is not None for spec in selected):
+        return None
+    rooms = manager.settings.get("environment_rooms", {})
+    room = rooms.get(area, {}) if isinstance(rooms, dict) else {}
+    stored = room.get(ROOM_LIMITS_KEY, {}) if isinstance(room, dict) else {}
+    saved = isinstance(stored, dict) and key in stored
+    if not saved:
+        from homeassistant.helpers import entity_registry as er
+        registry = er.async_get(manager.hass)
+        lookup = getattr(registry, "async_get_entity_id", None)
+        entry_id = manager.entry.entry_id
+        unique_id = f"{entry_id}_area_{area}_room_equipment_limit_{key}"
+        saved = bool(lookup and lookup("number", DOMAIN, unique_id))
+    return _OFFLINE_ROOM_LIMIT_BOUNDS[key] if saved else None
+
+
 def available_room_limit_fields(manager: Any, area: str) -> tuple[str, ...]:
-    return tuple(key for key in LIMIT_FIELDS if room_limit_bounds(manager, area, key) is not None)
+    return tuple(key for key in LIMIT_FIELDS
+                 if room_limit_edit_bounds(manager, area, key) is not None)
 
 
 def _legacy_room_limit(manager: Any, area: str, key: str, bounds: tuple[float, float, float, str | None]) -> float | None:
@@ -357,6 +410,43 @@ def room_limit_values(manager: Any, area: str) -> dict[str, float]:
             high_bounds = room_limit_bounds(manager, area, high_key)
             result[low_key] = float(low_bounds[0])
             result[high_key] = float(high_bounds[1])
+    return result
+
+
+def room_limit_display_values(manager: Any, area: str) -> dict[str, float]:
+    """Number UI values survive offline equipment, without authorizing writes.
+
+    The runtime room_limit_values() above stays strictly capability-driven.
+    Offline values are provisional configuration only, replaced by native
+    intersections as soon as their physical sources become available again.
+    """
+    result = room_limit_values(manager, area)
+    rooms = manager.settings.get("environment_rooms", {})
+    room = rooms.get(area, {}) if isinstance(rooms, dict) else {}
+    saved = room.get(ROOM_LIMITS_KEY, {}) if isinstance(room, dict) else {}
+    saved = saved if isinstance(saved, dict) else {}
+    for key in LIMIT_FIELDS:
+        if key in result:
+            continue
+        bounds = room_limit_edit_bounds(manager, area, key)
+        if bounds is None:
+            continue
+        default = bounds[0] if "_min_" in key else bounds[1]
+        raw = saved.get(key)
+        value = finite(raw, bounds[0], bounds[1]) if raw is not None else None
+        if value is None:
+            value = _legacy_room_limit(manager, area, key, bounds)
+        result[key] = float(default if value is None else value)
+    for low_key, high_key in (
+        ("temperature_min_limit", "temperature_max_limit"),
+        ("humidity_min_limit", "humidity_max_limit"),
+        ("fan_min_percentage", "fan_max_percentage"),
+    ):
+        if low_key in result and high_key in result and result[low_key] > result[high_key]:
+            lo = room_limit_edit_bounds(manager, area, low_key)
+            hi = room_limit_edit_bounds(manager, area, high_key)
+            if lo is not None and hi is not None:
+                result[low_key], result[high_key] = float(lo[0]), float(hi[1])
     return result
 
 

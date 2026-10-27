@@ -2068,7 +2068,15 @@
         "name": "Language"
       },
       "area_manual_profile": {
-        "name": "Override occupancy/away profile (auto recommended)"
+        "name": "Override occupancy/away profile (auto recommended)",
+        "state": {
+          "none": "Automatic",
+          "home": "Home",
+          "away": "Away",
+          "comfort": "Comfort",
+          "sleep": "Sleep",
+          "eco": "Eco"
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Gain source",
@@ -2159,6 +2167,9 @@
       },
       "shade_window_entity": {
         "name": "Associated window contact"
+      },
+      "equipment_power_switch_entity": {
+        "name": "Power · Upstream supply switch"
       }
     },
     "time": {
@@ -2185,7 +2196,19 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "Climate · {channel}"
+        "name": "Climate · {channel}",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "none": "Automatic",
+              "home": "Home",
+              "away": "Away",
+              "comfort": "Comfort",
+              "sleep": "Sleep",
+              "eco": "Eco"
+            }
+          }
+        }
       }
     }
   },
