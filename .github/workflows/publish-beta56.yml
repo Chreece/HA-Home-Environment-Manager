@@ -52,7 +52,7 @@ jobs:
           manifest = json.loads((root/"manifest.json").read_text(encoding="utf-8"))
           assert manifest["domain"] == "environment_manager"
           assert manifest["version"] == "0.6.0b56"
-          for item in ("__init__.py", "equipment_power_switch.py", "purifier_capacity.py", "equipment_runtime.py"
+          for item in ("__init__.py", "equipment_power_switch.py", "purifier_capacity.py", "equipment_runtime.py",
                        "equipment_model.py", "select.py", "number.py", "climate.py",
                        "translations/el.json", "frontend/air-quality-advisor-card.js"):
               assert (root/item).is_file(), item
