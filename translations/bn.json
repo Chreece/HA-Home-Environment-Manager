@@ -1800,13 +1800,13 @@
         "name": "আর্দ্রতা · বাড়ি · লক্ষ্য (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "উত্তাপ · বাড়ি · বন্ধ"
+        "name": "উত্তাপ · বাড়ির বাইরে"
       },
       "area_climate_profile_away_cool": {
-        "name": "শীতলীকরণ · বাড়ি · বন্ধ"
+        "name": "শীতলীকরণ · বাড়ির বাইরে"
       },
       "area_climate_profile_away_humidity": {
-        "name": "আর্দ্রতা · বাড়ি · বন্ধ · লক্ষ্য (%)"
+        "name": "আর্দ্রতা · বাড়ির বাইরে · লক্ষ্য (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "উত্তাপ · ঘুম"
