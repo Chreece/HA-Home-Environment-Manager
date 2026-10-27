@@ -372,6 +372,18 @@ async def test_sleep_blocks_and_no_unowned_plug_off():
     assert approved_demand(sim, spec, Model.settings(sim.manager, spec), sim.manager.cap) is None
     assert not sim._stop_policy_verified(spec, sim.manager.cap, "sleep")
 
+    # A confirmed wake-up lifts the sleep-only hold automatically. The
+    # controller resumes qualified operation after the physical OFF dwell,
+    # without requiring a button press or manual reset.
+    sim = Simulator(sleeping=True, native="off", supply="off", owned=False)
+    await before_tick(sim, spec)
+    assert not sim.issued
+    sim.manager.plan["sleeping"] = False
+    sim.now += 1200
+    assert approved_demand(sim, spec, Model.settings(sim.manager, spec), sim.manager.cap) is True
+    await before_tick(sim, spec)
+    assert sim.issued[-1][:3] == ("switch", "turn_on", "switch.strip"), sim.issued
+
 
 async def test_no_native_stop_on_races_or_unsafe_hardware():
     # No native OFF for source which hasn't been explicitly authorized.
