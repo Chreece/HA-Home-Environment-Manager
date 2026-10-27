@@ -435,8 +435,6 @@ apply_shading_i18n(root)
 from apply_away_windows_i18n import apply_away_windows_i18n
 apply_away_windows_i18n(root)
 
-from apply_pid_sort_i18n import apply_pid_sort_i18n
-apply_pid_sort_i18n(root)
 
 
 # Restore translated controller enums after all other localization passes.
@@ -448,3 +446,7 @@ for _name, _states in _CONTROLLER_STATUS_BY_LANGUAGE.items():
     _data["entity"]["sensor"].setdefault("equipment_control_status", {})["state"] = _states
     _destination.write_text(
         json.dumps(_data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+# Keep PID-first names as the final unrelated entity-name normalization.
+from apply_pid_sort_i18n import apply_pid_sort_i18n
+apply_pid_sort_i18n(root)
