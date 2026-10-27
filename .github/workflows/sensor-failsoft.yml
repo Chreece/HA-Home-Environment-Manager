@@ -1,0 +1,38 @@
+name: Invalid sensor input regressions
+
+on:
+  pull_request:
+    paths:
+      - 'equipment_runtime.py'
+      - 'climate_coordination.py'
+      - 'climate_rooms.py'
+      - 'climate_humidity_native.py'
+      - 'climate_humidity_power.py'
+      - 'room_sources.py'
+      - 'manager.py'
+      - 'tests/test_sensor_failsoft.py'
+      - '.github/workflows/sensor-failsoft.yml'
+  push:
+    branches:
+      - 'fix/invalid-sensor-audit-20261027'
+
+permissions:
+  contents: read
+
+jobs:
+  sensor-failsoft:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Syntax-check changed integration modules
+        run: |
+          python -m py_compile equipment_runtime.py climate_coordination.py climate_rooms.py climate_humidity_native.py climate_humidity_power.py room_sources.py manager.py
+      - name: Validate invalid-sensor scenarios
+        run: python -m unittest discover -s tests -p 'test_sensor_failsoft.py' -v
