@@ -441,6 +441,13 @@ class EquipmentRuntime:
                 # runtime retains its OFF/reconciliation hold without rejecting
                 # the requested method or resetting its ownership protection.
             record = self._record(spec)
+            if selected_supply:
+                # At commissioning the native device is OFF but present. Save
+                # its observed capabilities BEFORE an outlet may make it
+                # unavailable. The saved model is for demand classification,
+                # never permission to issue commands to offline hardware.
+                record["capabilities"] = asdict(cap)
+                await self._save()
             if record.get("pending") and not record.get("paused"):
                 await self._reconcile(spec)
             if record.get("pending"):
