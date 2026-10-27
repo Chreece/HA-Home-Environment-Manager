@@ -75,6 +75,15 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             isinstance(sleep_id, str) and sleep_id not in ("", "none")
         ) else None
         effective = equipment.profile_name(cfg, plan)
+        # Surface both pieces of an externally powered controller. The HA
+        # native appliance may be unavailable precisely BECAUSE the supply
+        # is OFF. Neither observation implies that the logical controller
+        # is disabled or that an unsafe power command should be attempted.
+        supply_id = cfg.get("power_switch_entity")
+        upstream = record.get("upstream", {})
+        upstream = upstream if isinstance(upstream, dict) else {}
+        supply = self._manager.hass.states.get(supply_id) if (
+            isinstance(supply_id, str) and supply_id) else None
         return {
             "area_id": self._spec.area_id,
             "status_code": observed.get("status"),
@@ -122,4 +131,16 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "controller_owns_power": bool(record.get("power")),
             "paused_reason": record.get("paused"),
             "command_pending": bool(record.get("pending")),
+            "upstream_power_switch": supply_id,
+            "upstream_power_state": supply.state if supply is not None else "unavailable",
+            "upstream_owned_by_controller": upstream.get("owned") is True,
+            "upstream_pending_command": (
+                upstream.get("pending", {}).get("desired")
+                if isinstance(upstream.get("pending"), dict) else None
+            ),
+            "upstream_pause_reason": upstream.get("paused"),
+            "previous_native_capabilities_cached": isinstance(
+                record.get("capabilities"), dict),
+            "native_sources_available": equipment.sources_available(
+                self._manager, self._spec),
         }
