@@ -750,7 +750,7 @@
           "climate_sleep_schedule_enabled": "Sommeil · Automatique",
           "climate_sleep_start": "Sommeil · Appareils · START",
           "climate_sleep_end": "Sommeil · Appareils · END",
-          "climate_target_source": "Appareils · source · consigne",
+          "climate_target_source": "Base du confort",
           "climate_comfort_adjustment_max_c": "Appareils (°C)"
         },
         "data_description": {
@@ -765,7 +765,7 @@
           "climate_sleep_schedule_enabled": "Cette option règle « Sommeil · Automatique ». Les commandes physiques exigent un accord distinct et des protections indépendantes.",
           "climate_sleep_start": "Cette durée règle « Sommeil · Appareils · START ». Elle limite les commutations répétées sans remplacer les sécurités matérielles.",
           "climate_sleep_end": "Cette durée règle « Sommeil · Appareils · END ». Elle limite les commutations répétées sans remplacer les sécurités matérielles.",
-          "climate_target_source": "Seuil de décision pour « Appareils · source · consigne ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "climate_target_source": "Confort automatique (température et humidité); ISO 7730 requires separately verified measurements.",
           "climate_comfort_adjustment_max_c": "Seuil de décision pour « Appareils (°C) ». Il influence les conseils, mais ne constitue pas une limite médicale."
         }
       },
@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Fermer les stores au-dessus de cette température (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "CADR particules du purificateur (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Maison · Appareils · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Appareils · source · consigne"
+        "name": "Base du confort",
+        "state": {
+          "temperature": "Températures fixes",
+          "auto_comfort": "Confort automatique (température et humidité)",
+          "pmv": "ISO 7730 avancé (mesures requises)"
+        }
       },
       "equipment_control_mode": {
         "name": "Contrôle · {channel}Méthode",

@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "ปิดม่านเมื่ออุณหภูมิห้องสูงกว่าค่า (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "บ้าน · อุปกรณ์ · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "อุปกรณ์ · แหล่งข้อมูล · เป้าหมาย"
+        "name": "อุปกรณ์ · แหล่งข้อมูล · เป้าหมาย",
+        "state": {
+          "temperature": "อุณหภูมิเป้าหมายคงที่",
+          "auto_comfort": "ความสบายอัตโนมัติ (อุณหภูมิและความชื้น)",
+          "pmv": "ISO 7730 ขั้นสูง (ต้องมีค่าที่วัดจริง)"
+        }
       },
       "equipment_control_mode": {
         "name": "การควบคุม · {channel}วิธีควบคุม",

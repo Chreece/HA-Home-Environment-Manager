@@ -151,7 +151,8 @@ def policy(settings:dict, *, temp_c:float|None,
            capability:dict, at_home:str, occupied:str,
            sleeping:bool=False, manual_profile:str|None=None,
            prior_mode:str|None=None, window_safe:bool=True,
-           comfort_target_c:float|None=None) -> Output:
+           comfort_target_c:float|None=None,
+           comfort_humidity_rh:float|None=None) -> Output:
     default=Output("disabled","home",None,None,"not_enabled","none")
     if not isinstance(settings,dict) or settings.get("enabled") is not True: return default
     all_profiles,err=profiles(settings)
@@ -159,6 +160,29 @@ def policy(settings:dict, *, temp_c:float|None,
     name,why=select_profile(settings,at_home=at_home,occupied=occupied,
                             sleeping=sleeping,manual=manual_profile)
     band=all_profiles[name]
+    heat_target,cool_target=band.heat_c,band.cool_c
+    # "Auto comfort" is a bounded measured-humidity heuristic, not an ISO
+    # 7730 estimate. Advanced ISO remains separate, explicitly enabled.
+    if name in ("comfort","sleep"):
+        basis=settings.get("target_source")
+        if basis=="auto_comfort":
+            from .comfort_targets import automatic_comfort_band
+            adjusted=automatic_comfort_band(
+                heat_target,cool_target,comfort_humidity_rh,
+                maximum_adjustment_c=settings.get("comfort_adjustment_max_c",1.5),
+            )
+            if adjusted.get("status")=="humidity_aware_estimate":
+                heat_target,cool_target=adjusted["heat_c"],adjusted["cool_c"]
+        elif basis=="pmv":
+            comfort=_num(comfort_target_c,16,30)
+            influence=_num(settings.get("comfort_adjustment_max_c",1.5),0,2.5)
+            if comfort is not None and influence is not None:
+                adjusted_heat=min(band.heat_c+influence,max(
+                    band.heat_c,min(comfort-0.5,band.cool_c-1.0)))
+                adjusted_cool=max(band.cool_c-influence,min(
+                    band.cool_c,max(comfort+0.5,band.heat_c+1.0)))
+                if adjusted_cool-adjusted_heat>=1:
+                    heat_target,cool_target=round(adjusted_heat,2),round(adjusted_cool,2)
     if not window_safe:
         return Output("hold",name,None,None,"open_or_unknown_window","none")
     strategy=settings.get("controller","device")
@@ -191,7 +215,7 @@ def policy(settings:dict, *, temp_c:float|None,
     if mode_choice=="off":
         return Output("advisory",name,None,"off","explicit_off_requested",strategy)
     if mode_choice=="auto":
-        desired,reason=auto_mode(temp_c,band.heat_c,band.cool_c,prior_mode,
+        desired,reason=auto_mode(temp_c,heat_target,cool_target,prior_mode,
                                  hysteresis_c=float(settings.get("hysteresis_c",0.7)))
         if desired is None: return Output("hold",name,None,None,reason,strategy)
     else:
@@ -214,19 +238,6 @@ def policy(settings:dict, *, temp_c:float|None,
         status = "hold" if mode_choice=="auto" and single_mode else "unsupported_mode"
         return Output(status,name,None,None,
                       "no_configured_"+desired+"_capability",strategy)
-    heat_target,cool_target=band.heat_c,band.cool_c
-    # Apply PMV only to occupied Comfort/Sleep bands. Home/Away/Eco
-    # energy setpoints remain explicit room policy.
-    if settings.get("target_source")=="pmv" and name in ("comfort","sleep"):
-        comfort=_num(comfort_target_c,16,30)
-        influence=_num(settings.get("comfort_adjustment_max_c",1.5),0,2.5)
-        if comfort is not None and influence is not None:
-            adjusted_heat=min(band.heat_c+influence,max(
-                band.heat_c,min(comfort-0.5,band.cool_c-1.0)))
-            adjusted_cool=max(band.cool_c-influence,min(
-                band.cool_c,max(comfort+0.5,band.heat_c+1.0)))
-            if adjusted_cool-adjusted_heat>=1:
-                heat_target,cool_target=round(adjusted_heat,2),round(adjusted_cool,2)
     # Native dual-setpoint thermostats should use their own internal
     # heat/cool control whenever its range feature and mode are present.
     if (mode_choice=="auto" and strategy=="device"

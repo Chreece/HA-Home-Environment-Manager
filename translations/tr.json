@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Oda sıcaklığı eşiğinde panjurları kapat (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated purifier particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Ev · Cihazlar · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Cihazlar · kaynak · hedef"
+        "name": "Cihazlar · kaynak · hedef",
+        "state": {
+          "temperature": "Sabit sıcaklık hedefleri",
+          "auto_comfort": "Otomatik konfor (sıcaklık ve nem)",
+          "pmv": "Gelişmiş ISO 7730 (ölçümler gerekli)"
+        }
       },
       "equipment_control_mode": {
         "name": "Kontrol · {channel}Kontrol yöntemi",

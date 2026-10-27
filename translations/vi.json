@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Đóng rèm khi nhiệt độ phòng vượt ngưỡng (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated purifier particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Nhà · Thiết bị · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Thiết bị · nguồn · mục tiêu"
+        "name": "Thiết bị · nguồn · mục tiêu",
+        "state": {
+          "temperature": "Mục tiêu nhiệt độ cố định",
+          "auto_comfort": "Tiện nghi tự động (nhiệt độ và độ ẩm)",
+          "pmv": "ISO 7730 nâng cao (cần đo đạc)"
+        }
       },
       "equipment_control_mode": {
         "name": "Điều khiển · {channel}Phương pháp điều khiển",

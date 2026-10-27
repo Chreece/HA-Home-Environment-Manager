@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Lukk solskjerming over romtemperatur (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Hjem · Enheter · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Enheter · kilde · mål"
+        "name": "Enheter · kilde · mål",
+        "state": {
+          "temperature": "Faste temperaturmål",
+          "auto_comfort": "Automatisk komfort (temperatur og fuktighet)",
+          "pmv": "Avansert ISO 7730 (målinger kreves)"
+        }
       },
       "equipment_control_mode": {
         "name": "Styring · {channel}Styringsmetode",

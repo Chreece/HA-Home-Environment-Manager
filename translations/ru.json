@@ -750,7 +750,7 @@
           "climate_sleep_schedule_enabled": "Сон · Автоматическое",
           "climate_sleep_start": "Сон · Устройства · START",
           "climate_sleep_end": "Сон · Устройства · END",
-          "climate_target_source": "Устройства · источник · цель",
+          "climate_target_source": "Основа комфорта",
           "climate_comfort_adjustment_max_c": "Устройства (°C)"
         },
         "data_description": {
@@ -765,7 +765,7 @@
           "climate_sleep_schedule_enabled": "Эта опция управляет «Сон · Автоматическое». Команды устройству требуют отдельного разрешения и защиты.",
           "climate_sleep_start": "Этот интервал регулирует «Сон · Устройства · START». Он ограничивает частые переключения, но не заменяет аппаратную защиту.",
           "climate_sleep_end": "Этот интервал регулирует «Сон · Устройства · END». Он ограничивает частые переключения, но не заменяет аппаратную защиту.",
-          "climate_target_source": "Порог решения для «Устройства · источник · цель». Влияет на рекомендации, но не является медицинской нормой.",
+          "climate_target_source": "Автокомфорт (температура и влажность); ISO 7730 requires separately verified measurements.",
           "climate_comfort_adjustment_max_c": "Порог решения для «Устройства (°C)». Влияет на рекомендации, но не является медицинской нормой."
         }
       },
@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Закрывать жалюзи выше температуры комнаты (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "CADR частиц очистителя воздуха (м³/ч)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Дом · Устройства · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Устройства · источник · цель"
+        "name": "Основа комфорта",
+        "state": {
+          "temperature": "Фиксированные температуры",
+          "auto_comfort": "Автокомфорт (температура и влажность)",
+          "pmv": "Расширенный ISO 7730 (нужны измерения)"
+        }
       },
       "equipment_control_mode": {
         "name": "Управление · {channel}Способ управления",

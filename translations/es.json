@@ -750,7 +750,7 @@
           "climate_sleep_schedule_enabled": "Sueño · Automático",
           "climate_sleep_start": "Sueño · Dispositivos · START",
           "climate_sleep_end": "Sueño · Dispositivos · END",
-          "climate_target_source": "Dispositivos · fuente · objetivo",
+          "climate_target_source": "Método de confort",
           "climate_comfort_adjustment_max_c": "Dispositivos (°C)"
         },
         "data_description": {
@@ -765,7 +765,7 @@
           "climate_sleep_schedule_enabled": "Esta opción configura «Sueño · Automático». Las órdenes físicas exigen permiso individual y protecciones independientes.",
           "climate_sleep_start": "Este intervalo controla «Sueño · Dispositivos · START». Evita cambios rápidos sin sustituir la protección del equipo.",
           "climate_sleep_end": "Este intervalo controla «Sueño · Dispositivos · END». Evita cambios rápidos sin sustituir la protección del equipo.",
-          "climate_target_source": "Umbral de decisión para «Dispositivos · fuente · objetivo». Afecta las recomendaciones, no es un límite médico.",
+          "climate_target_source": "Confort automático (temperatura y humedad); ISO 7730 requires separately verified measurements.",
           "climate_comfort_adjustment_max_c": "Umbral de decisión para «Dispositivos (°C)». Afecta las recomendaciones, no es un límite médico."
         }
       },
@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Cerrar persianas por encima de la temperatura (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "CADR de partículas del purificador (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Casa · Dispositivos · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Dispositivos · fuente · objetivo"
+        "name": "Método de confort",
+        "state": {
+          "temperature": "Temperaturas fijas",
+          "auto_comfort": "Confort automático (temperatura y humedad)",
+          "pmv": "ISO 7730 avanzado (mediciones requeridas)"
+        }
       },
       "equipment_control_mode": {
         "name": "Control · {channel}Método",

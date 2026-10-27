@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "この室温を超えたらブラインドを閉じる (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "空気清浄機の粒子 CADR（m³/h）"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "自宅 · デバイス · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "デバイス · 情報源 · 目標"
+        "name": "デバイス · 情報源 · 目標",
+        "state": {
+          "temperature": "固定温度目標",
+          "auto_comfort": "自動快適（温度・湿度）",
+          "pmv": "高度な ISO 7730（測定値が必要）"
+        }
       },
       "equipment_control_mode": {
         "name": "制御 · {channel}制御方式",

@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "ঘরের তাপমাত্রার উপরে ব্লাইন্ড বন্ধ (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "বাড়ি · ডিভাইস · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "ডিভাইস · উৎস · লক্ষ্য"
+        "name": "ডিভাইস · উৎস · লক্ষ্য",
+        "state": {
+          "temperature": "নির্দিষ্ট তাপমাত্রা",
+          "auto_comfort": "স্বয়ংক্রিয় স্বাচ্ছন্দ্য (তাপমাত্রা ও আর্দ্রতা)",
+          "pmv": "উন্নত ISO 7730 (পরিমাপ প্রয়োজন)"
+        }
       },
       "equipment_control_mode": {
         "name": "নিয়ন্ত্রণ · {channel}নিয়ন্ত্রণ পদ্ধতি",

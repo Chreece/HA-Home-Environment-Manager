@@ -750,7 +750,7 @@
           "climate_sleep_schedule_enabled": "Sono · Automático",
           "climate_sleep_start": "Sono · Dispositivos · START",
           "climate_sleep_end": "Sono · Dispositivos · END",
-          "climate_target_source": "Dispositivos · fonte · objetivo",
+          "climate_target_source": "Método de conforto",
           "climate_comfort_adjustment_max_c": "Dispositivos (°C)"
         },
         "data_description": {
@@ -765,7 +765,7 @@
           "climate_sleep_schedule_enabled": "Esta opção controla «Sono · Automático». Comandos físicos exigem autorização separada e proteções independentes.",
           "climate_sleep_start": "Este intervalo regula «Sono · Dispositivos · START». Evita ciclos rápidos mas não substitui as proteções do equipamento.",
           "climate_sleep_end": "Este intervalo regula «Sono · Dispositivos · END». Evita ciclos rápidos mas não substitui as proteções do equipamento.",
-          "climate_target_source": "Limiar de decisão para «Dispositivos · fonte · objetivo». Afeta recomendações, não constitui limite médico.",
+          "climate_target_source": "Conforto automático (temperatura e humidade); ISO 7730 requires separately verified measurements.",
           "climate_comfort_adjustment_max_c": "Limiar de decisão para «Dispositivos (°C)». Afeta recomendações, não constitui limite médico."
         }
       },
@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Fechar estores acima desta temperatura (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "CADR de partículas do purificador (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Casa · Dispositivos · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Dispositivos · fonte · objetivo"
+        "name": "Método de conforto",
+        "state": {
+          "temperature": "Temperaturas fixas",
+          "auto_comfort": "Conforto automático (temperatura e humidade)",
+          "pmv": "ISO 7730 avançado (medições necessárias)"
+        }
       },
       "equipment_control_mode": {
         "name": "Controlo · {channel}Método de controlo",

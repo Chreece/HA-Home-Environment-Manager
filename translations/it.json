@@ -750,7 +750,7 @@
           "climate_sleep_schedule_enabled": "Sonno · Automatico",
           "climate_sleep_start": "Sonno · Dispositivi · START",
           "climate_sleep_end": "Sonno · Dispositivi · END",
-          "climate_target_source": "Dispositivi · fonte · obiettivo",
+          "climate_target_source": "Metodo di comfort",
           "climate_comfort_adjustment_max_c": "Dispositivi (°C)"
         },
         "data_description": {
@@ -765,7 +765,7 @@
           "climate_sleep_schedule_enabled": "Questa opzione regola «Sonno · Automatico». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
           "climate_sleep_start": "Questo intervallo regola «Sonno · Dispositivi · START». Riduce commutazioni frequenti senza sostituire le protezioni fisiche.",
           "climate_sleep_end": "Questo intervallo regola «Sonno · Dispositivi · END». Riduce commutazioni frequenti senza sostituire le protezioni fisiche.",
-          "climate_target_source": "Soglia decisionale per «Dispositivi · fonte · obiettivo». Influenza i suggerimenti, non è un limite sanitario.",
+          "climate_target_source": "Comfort automatico (temperatura e umidità); ISO 7730 requires separately verified measurements.",
           "climate_comfort_adjustment_max_c": "Soglia decisionale per «Dispositivi (°C)». Influenza i suggerimenti, non è un limite sanitario."
         }
       },
@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Chiudi tende sopra questa temperatura (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "CADR particolato del purificatore (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Casa · Dispositivi · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Dispositivi · fonte · obiettivo"
+        "name": "Metodo di comfort",
+        "state": {
+          "temperature": "Temperature fisse",
+          "auto_comfort": "Comfort automatico (temperatura e umidità)",
+          "pmv": "ISO 7730 avanzato (misure richieste)"
+        }
       },
       "equipment_control_mode": {
         "name": "Controllo · {channel}Metodo",

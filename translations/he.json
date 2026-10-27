@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "סגירת תריסים מעל טמפרטורת החדר (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "בית · התקנים · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "התקנים · מקור · יעד"
+        "name": "התקנים · מקור · יעד",
+        "state": {
+          "temperature": "טמפרטורות קבועות",
+          "auto_comfort": "נוחות אוטומטית (טמפרטורה ולחות)",
+          "pmv": "ISO 7730 מתקדם (נדרשות מדידות)"
+        }
       },
       "equipment_control_mode": {
         "name": "בקרה · {channel}שיטת בקרה",

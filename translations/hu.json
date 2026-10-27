@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Redőnyök zárása e hőmérséklet felett (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Otthon · Eszközök · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Eszközök · forrás · cél"
+        "name": "Eszközök · forrás · cél",
+        "state": {
+          "temperature": "Rögzített hőmérsékletek",
+          "auto_comfort": "Automatikus komfort (hőmérséklet és páratartalom)",
+          "pmv": "Haladó ISO 7730 (mérések szükségesek)"
+        }
       },
       "equipment_control_mode": {
         "name": "Vezérlés · {channel}Szabályozási mód",

@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Sulje kaihtimet yli huonelämpötilan (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Koti · Laitteet · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Laitteet · lähde · tavoite"
+        "name": "Laitteet · lähde · tavoite",
+        "state": {
+          "temperature": "Kiinteät lämpötilat",
+          "auto_comfort": "Automaattinen mukavuus (lämpötila ja kosteus)",
+          "pmv": "Edistynyt ISO 7730 (mittaukset vaaditaan)"
+        }
       },
       "equipment_control_mode": {
         "name": "Ohjaus · {channel}Ohjaustapa",

@@ -37,6 +37,9 @@ NUMBER_FIELDS = {
     # Upstream outlet remains separate from the native output. A continuously
     # verified idle period is required before any controller-owned outlet OFF.
     "power_switch_cooldown_seconds": (60.0, 86400.0, 60.0, "s", 600.0),
+    # Manufacturer-rated *particle* CADR for a purifier, not fan airflow
+    # or CO2 ventilation. Zero denotes unknown/unconfigured, never measured 0.
+    "particle_cadr_m3h": (0.0, 100000.0, 1.0, "m³/h", 0.0),
 }
 QUIET_FLAGS = ("quiet_sleep", "quiet_occupied")
 from .pid_calibration import METHODS as PID_CALIBRATION_METHODS, MODEL_FIELDS as PID_MODEL_FIELDS
@@ -662,6 +665,21 @@ def targets(manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict,
         legacy_humidity if legacy_humidity is not None else fallback["humidity"],
     )
     result={"heat":float(heat),"cool":float(cool),"humidity":float(humidity)}
+
+    # A room's simple automatic comfort policy also applies to the unified
+    # per-device controllers (PID, native DRY, heating and cooling), not only
+    # legacy room climate entities. Use an independent live selected RH
+    # reading; never synthesize ISO 7730 clothing or airflow measurements.
+    if profile in ("comfort", "sleep") and room.get("target_source")=="auto_comfort":
+        from .comfort_targets import automatic_comfort_band
+        runtime=getattr(manager,"equipment",None)
+        sample=(runtime.measurements(spec,cap) if runtime is not None else {})
+        comfort=automatic_comfort_band(
+            result["heat"],result["cool"],sample.get("humidity"),
+            maximum_adjustment_c=room.get("comfort_adjustment_max_c",1.5),
+        )
+        if comfort.get("status")=="humidity_aware_estimate":
+            result["heat"],result["cool"]=comfort["heat_c"],comfort["cool_c"]
 
     if profile == "manual":
         override=config.get("profile_targets",{}).get("manual",{})

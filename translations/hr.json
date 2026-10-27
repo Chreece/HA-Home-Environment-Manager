@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Zatvori rolete iznad sobne temperature (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated purifier particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Dom · Uređaji · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Uređaji · izvor · cilj"
+        "name": "Uređaji · izvor · cilj",
+        "state": {
+          "temperature": "Fiksne temperature",
+          "auto_comfort": "Automatska ugoda (temperatura i vlaga)",
+          "pmv": "Napredni ISO 7730 (potrebna mjerenja)"
+        }
       },
       "equipment_control_mode": {
         "name": "Upravljanje · {channel}Način upravljanja",
