@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Zatvoriť rolety nad izbovou teplotou (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Domov · Zariadenia · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Zariadenia · zdroj · cieľ"
+        "name": "Zariadenia · zdroj · cieľ",
+        "state": {
+          "temperature": "Pevné teploty",
+          "auto_comfort": "Automatický komfort (teplota a vlhkosť)",
+          "pmv": "Pokročilé ISO 7730 (vyžaduje merania)"
+        }
       },
       "equipment_control_mode": {
         "name": "Ovládanie · {channel}Spôsob riadenia",
