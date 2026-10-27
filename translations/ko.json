@@ -1800,13 +1800,13 @@
         "name": "습도 · 집 · 목표 (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "난방 · 집 · 끄기"
+        "name": "난방 · 외출"
       },
       "area_climate_profile_away_cool": {
-        "name": "냉방 · 집 · 끄기"
+        "name": "냉방 · 외출"
       },
       "area_climate_profile_away_humidity": {
-        "name": "습도 · 집 · 끄기 · 목표 (%)"
+        "name": "습도 · 외출 · 목표 (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "난방 · 수면"
