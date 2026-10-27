@@ -1800,13 +1800,13 @@
         "name": "Vlažnost · Dom · cilj (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Grijanje · Dom · Isključi"
+        "name": "Grijanje · Odsutan"
       },
       "area_climate_profile_away_cool": {
-        "name": "Hlađenje · Dom · Isključi"
+        "name": "Hlađenje · Odsutan"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Vlažnost · Dom · Isključi · cilj (%)"
+        "name": "Vlažnost · Odsutan · cilj (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Grijanje · Spavanje"
