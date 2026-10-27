@@ -244,8 +244,20 @@ class ClimatePidCoordinator:
             return {"accepted": False, "reason": "storage_unavailable"}
         task = self._tasks.get(area)
         if task is not None and not task.done():
-            task.cancel()
-            await asyncio.gather(task, return_exceptions=True)
+            # Cancellation is unsafe once climate.set_temperature has entered
+            # HA's service call: the command may reach physical hardware even
+            # though its awaited ACK and our expected target were discarded.
+            # PAUSE latches immediately, and the running task is allowed to
+            # finish recording any command already sent. RESET/RESUME cannot
+            # discard an in-flight expected target or PID ownership evidence.
+            if action != "pause":
+                return {"accepted": False, "area": area, "action": action,
+                        "reason": "command_in_progress"}
+            self._paused[area] = "user_pause"
+            self._set_status(area, "paused", reason="user_pause")
+            self._save()
+            return {"accepted": True, "area": area, "action": action,
+                    "command_finishing": True}
         if action == "pause":
             self._paused[area] = "user_pause"
             self._set_status(area, "paused", reason="user_pause")
@@ -419,6 +431,12 @@ class ClimatePidCoordinator:
             self._expected.setdefault(area, {})[entity] = {"value": native, "when": now}
             self._save()
         current.last_sent = now
+        if area in self._paused:
+            # User paused while HA was acknowledging a service call.
+            # Keep the newly persisted expected value for reconciliation but
+            # do not overwrite the visible PAUSED status with "controlling".
+            self._set_status(area, "paused", reason=self._paused[area])
+            return
         self._set_status(
             area, "controlling", mode=settings["mode"],
             measured_c=round(temp, 2), target_c=settings["target_c"],
