@@ -1280,7 +1280,7 @@
         "name": "表面濕度（計算值）"
       },
       "equipment_control_status": {
-        "name": "狀態 · {channel}狀態 · 控制器狀態",
+        "name": "狀態 · {channel}控制器狀態",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
