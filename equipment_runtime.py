@@ -316,7 +316,10 @@ class EquipmentRuntime:
                     )
                 self._status(spec, "settings_updated",
                              control_mode=adjusted["control_mode"])
-                # Never send physical commands from an offline edit.
+                # Persisting a safe, offline-only edit must refresh UI/room
+                # settings. This is not permission to send physical commands.
+                if getattr(self.manager, "_active", False):
+                    self.manager._recalculate(initial=True)
                 return
             old = model.settings(self.manager, spec)
             new = {**old, **deepcopy(changes)}
