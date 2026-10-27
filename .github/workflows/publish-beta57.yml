@@ -1,0 +1,123 @@
+name: Publish verified Home Environment Manager Beta57
+
+on:
+  push:
+    branches:
+      - publish/v0.6.0b57-20261027
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-hem-beta57
+  cancel-in-progress: false
+
+jobs:
+  verify-package-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tested source and regressions
+        uses: actions/checkout@v4
+        with:
+          ref: fix/beta57-startup-select-performance-20261027
+          path: source
+          persist-credentials: false
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run room limit, PID, power switch and Greek mode regressions
+        run: cd source/tests && python -m unittest discover -s . -p 'test_beta*.py' -v
+
+      - name: Checkout immutable clean distribution
+        uses: actions/checkout@v4
+        with:
+          ref: a9f888f8bc1368b32d278297d8d0de0d09735d7a
+          path: release
+          persist-credentials: false
+
+      - name: Validate clean integration and create flat HACS/manual ZIP
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, zipfile
+
+          root = Path("release")
+          assert (root / ".git").is_dir()
+          assert not (root / "tests").exists()
+          assert not (root / ".github").exists()
+          manifest = json.loads((root/"manifest.json").read_text(encoding="utf-8"))
+          assert manifest["domain"] == "environment_manager"
+          assert manifest["version"] == "0.6.0b57"
+          for item in ("__init__.py", "equipment_power_switch.py", "purifier_capacity.py", "equipment_runtime.py",
+                       "equipment_model.py", "select.py", "number.py", "climate.py",
+                       "translations/el.json", "frontend/air-quality-advisor-card.js"):
+              assert (root/item).is_file(), item
+          languages = tuple((root/"translations").glob("*.json"))
+          assert len(languages) >= 35, len(languages)
+          for item in root.rglob("*.json"):
+              json.loads(item.read_text(encoding="utf-8"))
+          files = []
+          for item in root.iterdir():
+              if item.is_file() and item.suffix in (".py", ".json", ".yaml"):
+                  files.append(item)
+              elif item.is_dir() and item.name in ("translations", "frontend", "brand"):
+                  files.extend(p for p in item.rglob("*") if p.is_file())
+          for item in files:
+              if item.suffix == ".py":
+                  compile(item.read_text(encoding="utf-8"), str(item), "exec")
+          assert all(".github" not in p.parts and "tests" not in p.parts for p in files)
+          target = Path("dist/HA-Home-Environment-Manager-v0.6.0b57.zip")
+          target.parent.mkdir(exist_ok=True)
+          with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+              for item in sorted(files):
+                  archive.write(item, item.relative_to(root).as_posix())
+          with zipfile.ZipFile(target) as archive:
+              assert archive.testzip() is None
+              assert "manifest.json" in archive.namelist()
+              assert "equipment_power_switch.py" in archive.namelist()
+          print(f"Validated {len(files)} integration files, {len(languages)} locales, ZIP {target.stat().st_size} bytes")
+          PY
+
+      - name: Publish isolated Beta57 prerelease at clean commit only
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view v0.6.0b57 >/dev/null 2>&1; then
+            echo "Beta57 already exists: refusing to replace a published release"
+            exit 1
+          fi
+          cat > release-notes.md <<'NOTES'
+          # Home Environment Manager v0.6.0b57 — Beta55/56 startup performance hotfix
+
+          Beta57 keeps all Beta56 changes, the canonical `environment_manager` domain, settings, stored controllers, and existing entity identifiers. It is intended as a recovery-test release for instances where Beta55 caused an unresponsive Home Assistant restart.
+
+          ### Event-loop and state-storm fixes
+          - The optional physical supply switch selector now caches its eligible options. It no longer re-evaluates every native switch every time Home Assistant serializes or updates a state.
+          - Switch eligibility collects the configured output and supply claims once, using shallow read-only snapshots. It does **not** deep-copy all HA entry options for every physical switch candidate.
+          - Each managed device ignores unrelated Home Assistant state events using a cached exact upstream switch ID. A real change of configured switch is picked up via the normal settings dispatcher.
+          - Late native capabilities and room-limit Number entities are reconsidered only for the affected physical device and room, instead of scanning all rooms and writing all entity states on every physical event.
+          - **Safety unchanged:** actual power commands still revalidate exact physical identity, room, controller ownership and live permission; no saved configuration or native protection is bypassed.
+
+          ### Incident evidence and testing limitations
+          - A user supplied a filtered log showing a MySQL/Recorder connection error: unable to connect to `127.0.0.1`, MySQL error (2002 / OS error 115). This is a **separate** service failure not resolved by the integration hotfix. The available log section does not prove whether integration-induced load triggered it or it occurred independently.
+          - 56 focused source/safety and scaling regressions passed on Python 3.13 and 3.14. These include 240-switch enumeration, 5,000 selector reads, cross-controller switch exclusivity and the previous PID/room/comfort tests.
+          - The fix has **not yet been verified on live hardware**. If testing after recovery, initially leave any new upstream switch assignments at `none`; monitor HA responsiveness, startup time and Recorder connectivity.
+          - An integration reload may be necessary for newly added physical power-switch entities to appear in the selector. No HA-wide restart is needed solely to refresh switch choices after an installation that has already booted.
+
+          ### Installation
+          The attached ZIP is the clean flat canonical custom component, without test scripts. Install in `config/custom_components/environment_manager/` and restart Home Assistant for code changes. Your existing config-entry settings are preserved.
+          NOTES
+          gh release create v0.6.0b57 dist/HA-Home-Environment-Manager-v0.6.0b57.zip --target a9f888f8bc1368b32d278297d8d0de0d09735d7a --title "Home Environment Manager v0.6.0b57" --notes-file release-notes.md --prerelease
+
+      - name: Verify published tag and uploaded asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          test "$(gh api repos/${{ github.repository }}/git/ref/tags/v0.6.0b57 --jq '.object.sha')" = "a9f888f8bc1368b32d278297d8d0de0d09735d7a"
+          gh release view v0.6.0b57 --json isPrerelease,assets --jq '.isPrerelease and any(.assets[]; .name == "HA-Home-Environment-Manager-v0.6.0b57.zip")' | grep -qx true
