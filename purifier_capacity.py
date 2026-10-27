@@ -50,8 +50,10 @@ def rated_purifiers(manager: Any, area: str, room_environment: dict | None = Non
         if not real_fan and not fan_only:
             continue  # Never credit a heater, dehumidifier or valve as a filter.
         source = real_fan or cap.primary
+        from .device_activation import effective_device
+        effective = effective_device(manager, spec, cap.primary if cap else source)
         is_purifier = (
-            cfg.get("fan_purpose") == "filtration" or
+            effective.get("fan_purpose") == "filtration" or
             source == legacy_source or
             legacy_source in spec.source_entities
         )
