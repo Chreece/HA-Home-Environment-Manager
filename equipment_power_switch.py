@@ -114,29 +114,68 @@ def permitted_supply(manager: Any, spec: Any, entity: str,
 
 
 def supply_options(manager: Any, spec: Any) -> tuple[str, ...]:
-    """List same-room native switches in one bounded, read-only pass.
+    """Discover registered same-room switches even when temporarily offline.
 
-    Called once to populate the selector's cached choices, not on every
-    Home Assistant state serialization or state-change event. Newly installed
-    switches can be picked after reloading this integration, no HA restart.
+    One lazy registry pass per selector, never on every state serialization.
+    Runtime actuation rechecks immutable registry identity, room and ownership.
     """
+    from homeassistant.helpers import entity_registry as er
+
     outputs, used_supplies = _switch_claims(manager, spec)
     candidates: list[str] = []
-    for state in manager.hass.states.async_all("switch"):
-        entity = state.entity_id
+    registry = er.async_get(manager.hass)
+    for entry in registry.entities.values():
+        entity = entry.entity_id
+        if not entity.startswith("switch."):
+            continue
         if entity in outputs or entity in used_supplies:
             continue
-        # Cheap domain/room restriction before asking the entity registry.
         if entity_area(manager.hass, entity) != spec.area_id:
             continue
         if relay_identity(manager.hass, spec, entity) is not None:
             candidates.append(entity)
     saved = model.settings(manager, spec).get("power_switch_entity")
     if isinstance(saved, str) and saved and saved not in candidates:
-        # Keep a previously selected physical identity visible for safe
-        # removal and error reporting; it still must pass permitted_supply().
+        # Keep a previously selected identity visible, even if unavailable
+        # or now outside the area. It does not gain dispatch permission.
         candidates.append(saved)
     return tuple(sorted(set(candidates)))
+
+
+def supply_option_labels(hass: Any, entities: tuple[str, ...]) -> dict[str, str]:
+    """Render Friendly Device - Friendly Entity (state), without losing IDs.
+
+    Standalone entities have no registered HA device name; use their friendly
+    entity name rather than inventing a device. Disambiguate duplicate labels.
+    This runs only against cached candidate IDs, never a global switch scan.
+    """
+    from collections import Counter
+    from homeassistant.helpers import device_registry as dr
+    from homeassistant.helpers import entity_registry as er
+
+    registry, devices = er.async_get(hass), dr.async_get(hass)
+    display: dict[str, str] = {}
+    for entity in entities:
+        registered = registry.async_get(entity)
+        state = hass.states.get(entity)
+        device = devices.async_get(registered.device_id) if (
+            registered is not None and registered.device_id) else None
+        device_name = (getattr(device, "name_by_user", None)
+                       or getattr(device, "name", None))
+        entity_name = (getattr(state, "name", None)
+                       or getattr(registered, "name", None)
+                       or getattr(registered, "original_name", None)
+                       or entity)
+        actual_state = state.state if state is not None else "unavailable"
+        display[entity] = (
+            f"{device_name} - {entity_name} ({actual_state})"
+            if device_name else f"{entity_name} ({actual_state})"
+        )
+    repetitions = Counter(display.values())
+    return {
+        entity: (f"{label} [{entity}]" if repetitions[label] > 1 else label)
+        for entity, label in display.items()
+    }
 
 
 def output_required(cap: Any, targets: Mapping, measurements: Mapping,
