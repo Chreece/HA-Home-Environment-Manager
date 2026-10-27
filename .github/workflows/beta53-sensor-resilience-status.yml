@@ -49,12 +49,13 @@ jobs:
           python -m pytest -q tests/test_sensor_failsoft.py
           python tests/check_controller_status_translations.py
           python - <<'PY'
-          from custom_components.environment_manager.controller_status_catalog import (
-              CONTROLLER_STATUS_CODES, EQUIPMENT_SENSOR_STATUSES
-          )
-          assert len(CONTROLLER_STATUS_CODES) > 350
-          assert EQUIPMENT_SENSOR_STATUSES <= CONTROLLER_STATUS_CODES
-          print("Validated controller enum sets:", len(CONTROLLER_STATUS_CODES))
+          import runpy
+          catalog = runpy.run_path("custom_components/environment_manager/controller_status_catalog.py")
+          codes = catalog["CONTROLLER_STATUS_CODES"]
+          equipment = catalog["EQUIPMENT_SENSOR_STATUSES"]
+          assert len(codes) > 350
+          assert equipment <= codes
+          print("Validated controller enum sets:", len(codes))
           PY
       - name: Canonical-only and active-controller assertions
         run: |
