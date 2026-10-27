@@ -113,6 +113,47 @@ class SensorEvidenceAudit(unittest.TestCase):
         self.assertIs(quiet(fake, spec, {"quiet_sleep": True, "quiet_occupied": False},
                             {"sleeping": False}), False)
 
+    def test_room_planner_uses_partial_valid_rh(self):
+        planner = load_function(
+            "climate_coordination.py", "room_equipment_plan",
+            env={
+                "device_inventory": lambda *_: {},
+                "assigned_entities": lambda _: set(),
+                "mean_valid_room_humidity": self.mean,
+                "humidity_advice": lambda measured, **_: {
+                    "status": "advisory", "measured_rh": measured, "action": "dry"},
+                "_usable": lambda *_: False,
+                "_pick_thermal": lambda *_: {"status": "none"},
+                "_pick_moisture": lambda *_: {"status": "none"},
+            })
+        readings = tuple(SimpleNamespace(entity_id=name, metric="humidity", value=value)
+                         for name, value in (("sensor.a", 58), ("sensor.b", None),
+                                             ("sensor.c", 64)))
+        planned = planner(
+            None, "badezimmer", {}, {"status": "ready", "window_safe": True},
+            readings, humidity_source_entities=["sensor.a", "sensor.b", "sensor.c"],
+        )
+        self.assertEqual(planned["humidity"]["measured_rh"], 61)
+        self.assertEqual(planned["humidity_evidence"], "selected_partial_mean")
+
+    def test_unknown_window_remains_a_safety_hold(self):
+        interlock = load_function(
+            "climate_arbitration.py", "_contact_interlock",
+            env={"entity_area": lambda *_: "badezimmer"})
+        states = {
+            "binary_sensor.window": SimpleNamespace(
+                domain="binary_sensor", attributes={"device_class": "window"},
+                state="off"),
+        }
+        hass = SimpleNamespace(states=SimpleNamespace(get=states.get))
+        self.assertIs(interlock(hass, "badezimmer", {
+            "window_safe": True, "window_contacts": ["binary_sensor.window"]}), True)
+        states.pop("binary_sensor.window")
+        self.assertIs(interlock(hass, "badezimmer", {
+            "window_safe": True, "window_contacts": ["binary_sensor.window"]}), False)
+        self.assertIs(interlock(hass, "badezimmer", {
+            "window_safe": False, "window_contacts": []}), False)
+
     def test_live_selected_feedback_falls_back_to_valid_peer(self):
         readings = {
             "sensor.a": SimpleNamespace(metric="humidity", value=58),
