@@ -1800,13 +1800,13 @@
         "name": "Υγρασία · Σπίτι · στόχος (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Θέρμανση · Σπίτι · Απενεργοποίηση"
+        "name": "Θέρμανση · Απών"
       },
       "area_climate_profile_away_cool": {
-        "name": "Ψύξη · Σπίτι · Απενεργοποίηση"
+        "name": "Ψύξη · Απών"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Υγρασία · Σπίτι · Απενεργοποίηση · στόχος (%)"
+        "name": "Υγρασία · Απών · στόχος (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Θέρμανση · Ύπνος"
