@@ -291,20 +291,33 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
         item.unique_id: item for item in numbers
         if isinstance(item, ConfigNumber) and item._kind == "room_equipment_limit"
     }
-    watched = {
-        entity_id for spec in equipment.specs(manager)
-        for entity_id in spec.source_entities
-    }
+    # Each physical source only affects its own exact managed controller
+    # and room. Beta55 recomputed limits/profiles for EVERY room and device
+    # and force-wrote ALL limits for every single native state change.
+    watched_specs = {}
+    for spec in equipment.specs(manager):
+        for native_entity in spec.source_entities:
+            watched_specs.setdefault(native_entity, []).append(spec)
 
-    if watched:
+    if watched_specs:
         from homeassistant.const import EVENT_STATE_CHANGED
 
         @callback
         def _source_updated(event) -> None:
-            if event.data.get("entity_id") not in watched:
+            affected_specs = watched_specs.get(event.data.get("entity_id"))
+            if not affected_specs:
                 return
+            affected_areas = {spec.area_id for spec in affected_specs}
+            old_state, new_state = (
+                event.data.get("old_state"), event.data.get("new_state")
+            )
+            old_ready = old_state is not None and old_state.state not in (
+                "unknown", "unavailable")
+            new_ready = new_state is not None and new_state.state not in (
+                "unknown", "unavailable")
+            availability_changed = old_ready != new_ready
             recovered = []
-            for area_id in configured_area_ids(manager.settings):
+            for area_id in affected_areas:
                 # Room limit numbers were previously a one-shot setup snapshot.
                 # Recreate only missing unique IDs once native HA capability
                 # information arrives, preserving the room hub and registry IDs.
@@ -327,20 +340,22 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
                     )
                     if candidate.unique_id not in added:
                         recovered.append(candidate)
-            for spec in equipment.specs(manager):
+            for spec in affected_specs:
                 recovered.extend(
                     candidate for candidate in _equipment_numbers(
                         manager, spec, registry
                     )
                     if candidate.unique_id not in added
                 )
-            # Existing limits must also update their native UI edit range when
-            # a delayed source is restored or a device changes capabilities.
-            # They remain readable during transient native unavailability.
+            # Rebuild only the impacted room's real edit bounds. Publishing
+            # unchanged Number states on each native attribute report can
+            # trigger feedback storms during HA startup and device restore.
             for number in room_limit_numbers.values():
-                if number._sync_room_limit_bounds() and getattr(number, "hass", None):
-                    number.async_write_ha_state()
-                elif getattr(number, "hass", None):
+                if number._area_id not in affected_areas:
+                    continue
+                changed = number._sync_room_limit_bounds()
+                if (changed or availability_changed) and getattr(
+                        number, "hass", None):
                     number.async_write_ha_state()
             if not recovered:
                 return
