@@ -263,12 +263,28 @@ class AirQualityManager:
         warnings = tuple(warning(self.hass, ent, max_age) for ent in config.get(CONF_WARNINGS, []))
         base_plan = evaluate(outdoor_readings, current_weather, warnings, selected_rooms,
                              self.thresholds, extra_outside=extra_outside)
+        # Purifier CADR belongs to its own physical controller, not the
+        # room. Track native outputs and separately controlled supplies so a
+        # reconnect immediately triggers a fresh supervisory evaluation.
+        from . import equipment_model as managed_equipment
+        from .purifier_capacity import rated_purifiers
+        for native_spec in managed_equipment.specs(self):
+            self._tracked.update(native_spec.source_entities)
+            upstream=managed_equipment.settings(self,native_spec).get("power_switch_entity")
+            if isinstance(upstream,str) and upstream:
+                self._tracked.add(upstream)
+        purifier_ratings={
+            monitored.area_id: rated_purifiers(
+                self,monitored.area_id,environment_rooms.get(monitored.area_id,{})
+            ) for monitored in raw_rooms
+        }
         environment, changed = build_environment(
             self.hass, raw_rooms, selected_rooms, current_weather, outdoor_readings,
             history=self._environment_history, max_age_minutes=max_age,
             mold_calibrations=config.get(CONF_MOLD_ROOMS, {}),
             room_profiles=environment_rooms,
             source_selections=config.get("room_sources"),
+            purifier_ratings_by_room=purifier_ratings,
             outside_safe=base_plan.outdoor_safe,
         )
         environment["__outside__"] = {"pollen": pollen}
