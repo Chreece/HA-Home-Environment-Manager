@@ -40,7 +40,11 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
 
     @property
     def _caps(self):
-        return model.capabilities(self._manager, self._spec)
+        # Retain only previously verified native capabilities while an
+        # optional upstream switch intentionally removes appliance power.
+        # This is read-only UI information, never native actuation consent.
+        from .equipment_power_switch import verified_capabilities
+        return verified_capabilities(self._manager.equipment, self._spec)
 
     @property
     def _state(self):
@@ -50,7 +54,23 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
     @property
     def available(self):
         state = self._state
-        return state is not None and state.state not in ("unknown", "unavailable") and self._manager.equipment._current_spec(self._spec)
+        if (state is not None and state.state not in ("unknown", "unavailable")
+                and self._manager.equipment._current_spec(self._spec)):
+            return True
+        cfg = self.controller_settings
+        upstream = cfg.get("power_switch_entity")
+        # Logical control is still enabled when its *deliberately selected*
+        # external power switch makes the real device unavailable. Never
+        # advertise an uncommissioned or unverified physical capability.
+        if (not upstream or cfg.get("control_mode") == "existing"
+                or self._caps is None
+                or not self._manager.equipment._ready
+                or not self._manager.equipment._current_spec(self._spec)):
+            return False
+        from .equipment_power_switch import permitted_supply
+        return (permitted_supply(self._manager, self._spec, upstream) is not None
+                and (outlet := self._manager.hass.states.get(upstream)) is not None
+                and outlet.state in ("on", "off"))
 
     @property
     def hvac_modes(self):
@@ -139,7 +159,13 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
     def hvac_action(self):
         state, cap = self._state, self._caps
         if state is None or cap is None or state.state in ("unknown", "unavailable"):
-            return None
+            # No fictitious native heating/drying. An armed upstream-powered
+            # controller can, however, report idle when its supply is OFF.
+            upstream = self.controller_settings.get("power_switch_entity")
+            outlet = self._manager.hass.states.get(upstream) if upstream else None
+            return (HVACAction.IDLE if self.available and outlet is not None
+                    and outlet.state == "off" and self.hvac_mode != HVACMode.OFF
+                    else None)
         selected = self.hvac_mode
         if selected is None:
             return None
@@ -196,6 +222,8 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
         manual_native = (cfg["control_mode"] == "manual" and cfg["preset"] == "none"
                          and kind not in cfg.get("profile_targets", {}).get("manual", {}))
         if cfg["control_mode"] == "existing" or manual_native:
+            if state is None or state.state in ("unknown", "unavailable"):
+                return None
             key = {"heat": "target_temp_low", "cool": "target_temp_high", "humidity": "humidity"}[kind]
             value = state.attributes.get(key)
             if value is None and kind != "humidity":
@@ -298,6 +326,10 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
                 "physical_hvac_mode": self._physical_hvac_mode,
                 "physical_source_state": self._state.state if self._state else "unavailable",
                 "controller_mode_selected": cfg["control_mode"] in ("automatic", "pid", "manual"),
+                "upstream_power_switch": cfg.get("power_switch_entity"),
+                "upstream_power_state": (self._manager.hass.states.get(cfg["power_switch_entity"]).state
+                    if cfg.get("power_switch_entity") and
+                    self._manager.hass.states.get(cfg["power_switch_entity"]) is not None else None),
                 "power_control_commissioned": model.permission(self._manager, self._spec, cap)[1] if cap else False,
                 "measurements": self._manager.equipment.measurements(self._spec, cap) if cap else {}}
 
