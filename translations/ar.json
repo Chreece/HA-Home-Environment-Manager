@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "إغلاق الستائر فوق درجة حرارة الغرفة (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "المنزل · الأجهزة · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "الأجهزة · المصدر · الهدف"
+        "name": "الأجهزة · المصدر · الهدف",
+        "state": {
+          "temperature": "درجات حرارة ثابتة",
+          "auto_comfort": "راحة تلقائية (الحرارة والرطوبة)",
+          "pmv": "ISO 7730 المتقدم (يتطلب قياسات)"
+        }
       },
       "equipment_control_mode": {
         "name": "التحكم · {channel}طريقة التحكم",
