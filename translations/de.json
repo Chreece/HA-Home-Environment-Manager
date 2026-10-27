@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Rollos schließen ab Raumtemperatur (°C)"
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Strom · Leerlauf-Nachlaufzeit (Sekunden)"
       }
     },
     "switch": {
@@ -2071,9 +2074,9 @@
         "name": "Geräte",
         "state": {
           "none": "Automatisch",
+          "comfort": "Komfort",
           "home": "Zuhause",
           "away": "Abwesend",
-          "comfort": "Komfort",
           "sleep": "Schlaf",
           "eco": "Sparbetrieb"
         }
@@ -2201,9 +2204,9 @@
           "preset_mode": {
             "state": {
               "none": "Automatisch",
+              "comfort": "Komfort",
               "home": "Zuhause",
               "away": "Abwesend",
-              "comfort": "Komfort",
               "sleep": "Schlaf",
               "eco": "Sparbetrieb"
             }
