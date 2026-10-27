@@ -358,8 +358,16 @@ class AirQualityManager:
                     global_presence=shared_presence,
                     known_areas=set(room_climate_configs) | set(monitored_areas),
                 )
-                state["target_source"]=settings.get("target_source","temperature")
-                state["comfort_target_evidence"]=pmv_air.get("status","not_configured")
+                basis=settings.get("target_source","temperature")
+                state["target_source"]=basis
+                state["comfort_target_evidence"]=(
+                    "measured_room_rh_bounded_heuristic"
+                    if basis=="auto_comfort" and state.get("automatic_comfort_input_rh") is not None
+                    else "fixed_targets_missing_rh"
+                    if basis=="auto_comfort"
+                    else pmv_air.get("status","not_configured")
+                    if basis=="pmv" else "user_configured_temperature_targets"
+                )
                 # Independent air-quality responses never command hardware.
                 # Use physical moisture-ratio evidence, not outdoor RH alone.
                 profile=environment_rooms.get(monitored.area_id,{})
