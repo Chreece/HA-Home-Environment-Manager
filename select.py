@@ -339,6 +339,12 @@ class EquipmentPowerSwitchSelect(EquipmentSelect):
 
     def __init__(self, manager, spec):
         super().__init__(manager, spec, "power_switch_entity")
+        # Never enumerate all physical switches from SelectEntity.options.
+        # Home Assistant reads options during initial registration, state
+        # serialization, dispatcher updates and frontend polling. A live
+        # query here froze large Beta55 installations even with no supply
+        # assigned. The resulting choices are stable until integration reload.
+        self._power_switch_options: tuple[str, ...] | None = None
 
     @property
     def available(self):
@@ -346,8 +352,11 @@ class EquipmentPowerSwitchSelect(EquipmentSelect):
 
     @property
     def options(self):
-        from .equipment_power_switch import supply_options
-        return ["none", *supply_options(self._manager, self._spec)]
+        if self._power_switch_options is None:
+            from .equipment_power_switch import supply_options
+            self._power_switch_options = ("none", *supply_options(
+                self._manager, self._spec))
+        return list(self._power_switch_options)
 
     @property
     def current_option(self):
