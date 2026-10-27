@@ -26,6 +26,15 @@ UPSTREAM_ACK_SECONDS = 120
 _SWITCH_STATES = ("off", "on")
 
 
+def observed_output_off(state: Any) -> bool:
+    """Native switch OFF or a real 0% proportional output, never unavailable."""
+    if state is None or state.state in ("unknown", "unavailable"):
+        return False
+    if getattr(state, "domain", "") in ("number", "input_number"):
+        return finite(state.state, 0, 100) == 0
+    return state.state == "off"
+
+
 def relay_identity(hass: Any, spec: Any, entity: str) -> dict | None:
     """Verify a native physical same-room switch and its immutable registry ID."""
     if not isinstance(entity, str) or not entity.startswith("switch."):
@@ -277,7 +286,8 @@ def _dispatch_safe(runtime: Any, spec: Any, record: dict, cfg: dict,
         if now-since < UPSTREAM_MIN_OFF_SECONDS:
             return False
         native = runtime.hass.states.get(cap.primary)
-        if native is not None and native.state not in ("off", "unknown", "unavailable"):
+        if (native is not None and native.state not in ("unknown", "unavailable")
+                and not observed_output_off(native)):
             return False
         return approved_demand(runtime, spec, cfg, cap) is True
     if not relay.get("owned") or now-runtime._started < 300:
@@ -295,10 +305,7 @@ def _dispatch_safe(runtime: Any, spec: Any, record: dict, cfg: dict,
         if (native is None or native.state in ("unknown", "unavailable")
                 or native.attributes.get("hvac_action") == "defrosting"):
             return False
-        if native.state != "off" and not (
-            source.startswith(("number.", "input_number."))
-            and finite(native.state, 0, 100) == 0
-        ):
+        if not observed_output_off(native):
             return False
     return True
 
@@ -450,7 +457,8 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         # No physical output can be assumed harmless if it reports active
         # while an external supply claims OFF.
         native = runtime.hass.states.get(cap.primary)
-        if native is not None and native.state not in ("off", "unknown", "unavailable"):
+        if (native is not None and native.state not in ("unknown", "unavailable")
+                and not observed_output_off(native)):
             runtime._status(spec, "paused",
                             reason="upstream_switch_off_but_native_reports_active")
             return True
@@ -465,7 +473,7 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         return False
     # An unknown downstream condition is never "no demand".
     native = runtime.hass.states.get(cap.primary)
-    native_off = native is not None and native.state == "off"
+    native_off = observed_output_off(native)
     no_native_write = not record.get("power") and not record.get("pending")
     no_defrost = native is not None and native.attributes.get("hvac_action") != "defrosting"
     no_active_output = all(
