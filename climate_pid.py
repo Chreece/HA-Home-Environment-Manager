@@ -14,7 +14,7 @@ import math
 import time
 from typing import Any, Callable
 
-from .discovery import entity_area, temperature_sensor_c
+from .discovery import entity_area, is_window, temperature_sensor_c
 from .const import DOMAIN
 from .climate_entry_ownership import foreign_owner_hold
 from .pid_math import (
@@ -431,13 +431,36 @@ class ClimatePidCoordinator:
                            for key in settable)):
                 await self._pause(area, "physical_state_changed_before_pid_write")
                 return
-            # Each awaited service may also outlive the sensor evidence used
-            # to compute the setpoint. A changed or stale measurement requires
-            # a fresh PID iteration, never a stale command.
+            # Window contacts are another live safety boundary. They may
+            # have opened while a previous device awaited service ACK.
+            if settings.get("pause_on_window_open", True):
+                if any(
+                    entity_area(self.hass, window.entity_id) != area
+                    or (observed_window := self.hass.states.get(window.entity_id)) is None
+                    or not is_window(self.hass, observed_window)
+                    or observed_window.state != "off"
+                    for window in room.windows
+                ):
+                    self._set_status(area, "window_open_or_unknown")
+                    return
+            # The user may have edited PID settings during the first awaited
+            # physical write. Re-check the active options, not only this
+            # task's captured original dictionary.
+            manager = getattr(self.hass, "data", {}).get(DOMAIN, {}).get(self.entry_id)
+            if manager is not None:
+                live_rooms = manager.settings.get("pid_rooms", {})
+                live_config = live_rooms.get(area) if isinstance(live_rooms, dict) else None
+                if (not isinstance(live_config, dict)
+                        or normalized_config(live_config) != settings):
+                    self._set_status(area, "pid_settings_changed_before_write")
+                    return
+            # Each awaited service may also outlive the temperature evidence
+            # used to compute the setpoint or the sensor's room ownership.
             live_temp = temperature_sensor_c(
                 self.hass, sensor, SENSOR_MAX_AGE_MINUTES
             )
-            if (live_temp is None or not math.isfinite(live_temp)
+            if (entity_area(self.hass, sensor) not in (None, area)
+                    or live_temp is None or not math.isfinite(live_temp)
                     or abs(live_temp - temp) > 0.05):
                 self._set_status(area, "temperature_changed_before_pid_write")
                 return
