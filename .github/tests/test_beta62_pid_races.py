@@ -58,6 +58,7 @@ class Control:
 
 class Controller:
     def __init__(self, *, two_devices=False):
+        self.entry_id = "pid-test-entry"
         self._active = True
         self._store_ready = True
         self._tasks = {}
