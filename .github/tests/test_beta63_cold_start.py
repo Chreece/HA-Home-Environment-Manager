@@ -197,7 +197,9 @@ class Simulator:
         self.status = (status, kwargs)
     async def _save(self):
         self._save_log.append(copy.deepcopy(self.records))
-        if self.on_save is not None:
+        # The first save initializes the relay's identity; the second
+        # persists intent immediately before the external service dispatch.
+        if self.on_save is not None and len(self._save_log) == 2:
             on_save = self.on_save
             self.on_save = None
             on_save()
