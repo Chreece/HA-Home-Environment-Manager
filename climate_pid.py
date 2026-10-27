@@ -105,6 +105,12 @@ class ClimatePidCoordinator:
     async def async_stop(self) -> None:
         self._active = False
         active = tuple(self._tasks.values())
+        # An interrupted HA service call may still reach physical equipment
+        # after cancellation. Persist a hold before cancelling so restart
+        # cannot silently issue a second, unreconciled setpoint command.
+        for area, task in tuple(self._tasks.items()):
+            if not task.done():
+                self._paused[area] = "shutdown_during_inflight_pid_cycle"
         for task in active:
             task.cancel()
         if active:
@@ -406,6 +412,34 @@ class ClimatePidCoordinator:
             return
         for entity, native in planned:
             if not self._active or area in self._paused:
+                return
+            # In multi-device rooms, an earlier awaited climate service may
+            # outlive a later manual adjustment to a different unit. Never
+            # overwrite a fresh physical change using the initial snapshot.
+            baseline = next(
+                (physical for item, physical, *_ in prepared if item == entity),
+                None,
+            )
+            latest = self.hass.states.get(entity)
+            settable = (
+                "temperature", "preset_mode", "temperature_unit",
+                "min_temp", "max_temp", "target_temp_step", "supported_features",
+            )
+            if (latest is None or baseline is None
+                    or latest.state != baseline.state
+                    or any(latest.attributes.get(key) != baseline.attributes.get(key)
+                           for key in settable)):
+                await self._pause(area, "physical_state_changed_before_pid_write")
+                return
+            # Each awaited service may also outlive the sensor evidence used
+            # to compute the setpoint. A changed or stale measurement requires
+            # a fresh PID iteration, never a stale command.
+            live_temp = temperature_sensor_c(
+                self.hass, sensor, SENSOR_MAX_AGE_MINUTES
+            )
+            if (live_temp is None or not math.isfinite(live_temp)
+                    or abs(live_temp - temp) > 0.05):
+                self._set_status(area, "temperature_changed_before_pid_write")
                 return
             from .equipment_model import legacy_hold
             if hold := legacy_hold(self.hass, self.entry_id, entity):
