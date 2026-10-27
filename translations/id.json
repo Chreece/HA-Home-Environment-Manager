@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Tutup tirai di atas suhu ruangan (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated purifier particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Rumah · Perangkat · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Perangkat · sumber · target"
+        "name": "Perangkat · sumber · target",
+        "state": {
+          "temperature": "Target suhu tetap",
+          "auto_comfort": "Kenyamanan otomatis (suhu dan kelembapan)",
+          "pmv": "ISO 7730 lanjutan (perlu pengukuran)"
+        }
       },
       "equipment_control_mode": {
         "name": "Kontrol · {channel}Metode kendali",
