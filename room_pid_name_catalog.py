@@ -730,6 +730,30 @@ ROOM_PID_NAMES = {
 }
 
 
+# Stable engineering parameter labels come before the translated description.
+# The original 38 localized catalog entries remain untouched.
+_ROOM_PID_PARAMETERS = {
+    "kd": "Kd", "ki": "Ki", "kp": "Kp",
+    "gain_source": "Gains",
+    "sample_seconds": "Sample",
+    "max_change_c": "Max Δ",
+    "max_setpoint_c": "Max target",
+    "min_change_c": "Min Δ",
+    "min_setpoint_c": "Min target",
+    "offset_c": "Offset",
+    "target_c": "Target",
+    "max_demand_change": "Max output Δ",
+    "min_demand_change": "Min output Δ",
+}
+
+
+def _room_pid_parameter(key: str) -> str | None:
+    for prefix in ("area_direct_tuning_", "area_pid_"):
+        if key.startswith(prefix):
+            return _ROOM_PID_PARAMETERS.get(key[len(prefix):])
+    return None
+
+
 def localized_room_pid_name(key: str, language: str) -> str:
     """Resolve the complete, already PID-prefixed name from in-memory strings."""
     locale = str(language or "en").replace("_", "-")
@@ -739,6 +763,12 @@ def localized_room_pid_name(key: str, language: str) -> str:
         base = locale.partition("-")[0].casefold()
         match = next((name for name in ROOM_PID_NAMES
                       if name.casefold() == base), "en")
-    return ROOM_PID_NAMES[match].get(
+    translated = ROOM_PID_NAMES[match].get(
         key, ROOM_PID_NAMES["en"].get(key, "PID · "+key.replace("_", " "))
     )
+    parameter = _room_pid_parameter(key)
+    if parameter and translated.startswith("PID · "):
+        rest = translated[len("PID · "):]
+        if not rest.startswith(parameter + " · "):
+            return f"PID · {parameter} · {rest}"
+    return translated
