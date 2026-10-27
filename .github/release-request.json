@@ -1,17 +1,17 @@
 {
-  "version": "0.6.0b52",
+  "version": "0.6.0b53",
   "channel": "beta",
-  "release_branch": "beta/v0.6.0b52",
-  "intent": "Restore reliable heating for PID and automatic managed climates when optional sleeping-room presence is unconfigured or unknown; do not let unavailable sleep state veto verified Away or a normal sleep-target policy.",
-  "note": "Fix source-resolution consistently at room planning, PID-only plan fallback and actual physical write boundary. Explicit sleep=True and user-requested Pause remain authoritative; unknown Pause while home remains held. Do not alter verified home evidence, compressor timing, window safety, authorizations or existing beta51 restart-safe away continuity.",
+  "release_branch": "beta/v0.6.0b53",
+  "intent": "Ship beta52 plus valid-only RH aggregation, nonblocking optional quiet occupancy sensors, false manual-override metadata detection correction, and localized controller diagnostic states",
+  "note": "Never bypass window contact, actuator identity, manual pause, hardware acknowledgment, verified absence, native compressor dwell, or all-sensors-invalid protections; HACS canonical content_in_root beta",
   "validation_attempt": 0,
   "changes": [
-    "Treat missing or unset sleeping-room sources as normal non-sleep evidence, not an unsafe/unverified configured sleep command; retain manual sleep and schedules.",
-    "When all selected home presence sources verify Away, a temporarily unavailable sleeping-room list does not block the heating controller. A positive sleeping source or explicit active local sleep schedule still enforces Pause.",
-    "Sleep targets are setpoint preferences, never power-off authorization: if the optional sleep list is unknown, continue using verified normal Home/Away profile targets instead of refusing heat.",
-    "Share the same refreshed sleep decision across room plans, PID-only fallback, physical command gate and quiet-capable fan context; number/count occupancy support remains valid.",
-    "Expose source/state/reason, effective preset, verified house status and active sleep policy on each room controller status entity for troubleshooting.",
-    "Test no sleep source, unavailable sleep source at verified Away, positive sleeping overrides, manual sleep pause, sleep-target fallback with Home known, physical heater starts with valid temperature and OFF dwell, quiet fan decisions and climate-only rooms.",
-    "Publish only after full Python 3.13/3.14, HA2026.10, HACS/hassfest, translations, Node and exact flat HACS install validation."
+    "Merge PR #29 sensor audit with PR #28 localized diagnostic states into one immutable beta53 payload",
+    "Unknown/unavailable optional quiet-room evidence conservatively limits fan speed instead of holding the whole physical appliance",
+    "Humidity selection/averaging takes valid readings; bad measurements are excluded and all-invalid stays unavailable",
+    "Passive native-device capability metadata changes are not interpreted as physical user overrides; actual writable-setting changes still pause",
+    "Preserve 396 localized controller status strings and 73 equipment sensor options across all 38 locales",
+    "Preserve all beta52 fixes, hardware safety interlocks and canonical environment_manager domain",
+    "Run full Python 3.13/3.14, Home Assistant 2026.10, HACS/hassfest, Node, translation, manual ZIP and flat tag archive smoke gates before publishing"
   ]
 }

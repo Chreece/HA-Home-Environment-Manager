@@ -4,6 +4,22 @@ import json
 from pathlib import Path
 
 root = Path(__file__).parent / 'custom_components' / 'environment_manager'
+
+# Retain the reviewed enum-state labels from the checked-in language files.
+# Later i18n passes rebuild most keys; status labels are maintained by the
+# independent controller-status catalog and must not revert to raw snake_case.
+_CONTROLLER_STATUS_BY_LANGUAGE = {}
+for _existing in [root / "strings.json", *sorted((root / "translations").glob("*.json"))]:
+    if not _existing.is_file():
+        continue
+    try:
+        _current = json.loads(_existing.read_text(encoding="utf-8"))
+        _states = _current.get("entity", {}).get("sensor", {}).get(
+            "equipment_control_status", {}).get("state")
+    except (ValueError, OSError):
+        continue
+    if isinstance(_states, dict) and "pid_output_inactive" in _states:
+        _CONTROLLER_STATUS_BY_LANGUAGE[_existing.name] = dict(_states)
 lang = {
 'en': {
  'title':'Home Environment Manager',
@@ -422,3 +438,13 @@ apply_away_windows_i18n(root)
 from apply_pid_sort_i18n import apply_pid_sort_i18n
 apply_pid_sort_i18n(root)
 
+
+# Restore translated controller enums after all other localization passes.
+# This preserves a stable 38-locale catalog on repeated generation.
+for _name, _states in _CONTROLLER_STATUS_BY_LANGUAGE.items():
+    _destination = root / ("strings.json" if _name == "strings.json"
+                           else "translations/" + _name)
+    _data = json.loads(_destination.read_text(encoding="utf-8"))
+    _data["entity"]["sensor"].setdefault("equipment_control_status", {})["state"] = _states
+    _destination.write_text(
+        json.dumps(_data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
