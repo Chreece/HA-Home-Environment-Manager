@@ -46,6 +46,9 @@ class Model:
     def targets(manager, spec, cap, cfg, plan):
         return {"humidity": manager.target_rh, "heat": 21, "cool": 27}
     @staticmethod
+    def plan_for(manager, spec):
+        return manager.plan
+    @staticmethod
     def sources_available(manager, spec):
         return manager.native_online
     @staticmethod
