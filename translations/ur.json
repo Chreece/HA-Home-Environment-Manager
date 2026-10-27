@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "کمرے کے درجہ حرارت پر پردے بند کریں (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "گھر · آلات · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "آلات · ماخذ · ہدف"
+        "name": "آلات · ماخذ · ہدف",
+        "state": {
+          "temperature": "مقررہ درجہ حرارت",
+          "auto_comfort": "خودکار آرام (درجہ حرارت اور نمی)",
+          "pmv": "جدید ISO 7730 (پیمائش ضروری)"
+        }
       },
       "equipment_control_mode": {
         "name": "کنٹرول · {channel}کنٹرول کا طریقہ",
