@@ -729,6 +729,31 @@ class EquipmentRuntime:
             if not self._ready or not self._current_spec(spec):
                 raise HomeAssistantError("Controller or its source identity is unavailable")
             record = self._record(spec)
+            supply = model.settings(self.manager, spec).get("power_switch_entity")
+            upstream = record.get("upstream", {})
+            if supply:
+                # Reconciliation is explicit and never starts power. It
+                # requires the upstream outlet OFF and the same original
+                # physical switch identity, not merely a writable entity ID.
+                from .equipment_power_switch import permitted_supply, observed_output_off
+                outlet = self.hass.states.get(supply)
+                if (not isinstance(upstream, dict) or
+                        permitted_supply(self.manager, spec, supply,
+                                         upstream.get("identity")) is None
+                        or outlet is None or outlet.state != "off"):
+                    raise HomeAssistantError(
+                        "Turn the commissioned upstream power switch OFF and verify "
+                        "its exact device identity before reconciling"
+                    )
+                if any(
+                    (state := self.hass.states.get(source)) is not None
+                    and state.state not in ("unknown", "unavailable")
+                    and not observed_output_off(state)
+                    for source in spec.source_entities
+                ):
+                    raise HomeAssistantError(
+                        "A physical controller still reports an energized output"
+                    )
             power = record.get("power", {})
             pending = record.get("pending")
             for entity in power:
@@ -741,6 +766,11 @@ class EquipmentRuntime:
             record.update(paused=None, pending=None, power={},
                           baseline={e: snapshot(self.hass.states.get(e)) for e in spec.source_entities},
                           off_at={e: self.clock() for e in spec.source_entities})
+            if supply:
+                upstream.update(
+                    paused=None, pending=None, owned=False,
+                    idle_since=None, off_at=self.clock(),
+                )
             self._memory.pop(spec.identifier, None)
             self._started = self.clock()
             await self._save()
