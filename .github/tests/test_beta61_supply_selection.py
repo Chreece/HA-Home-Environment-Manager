@@ -56,6 +56,8 @@ class NativeCap:
     domain: str = "climate"
     modes: tuple = ("off", "heat", "cool")
     fan_modes: tuple = ()
+    swing_modes: tuple = ()
+    swing_horizontal_modes: tuple = ()
     fan_entity: str | None = None
     fan_percentage: bool = False
     temperature: bool = True
