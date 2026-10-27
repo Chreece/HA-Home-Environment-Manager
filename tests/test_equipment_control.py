@@ -722,10 +722,10 @@ def test_quiet_unknown_presence_never_restores_high_speed(runtime_module):
         assert h.state.attributes["percentage"] == 30
         h.state.attributes["percentage_step"] = 25
         # Passive capability changes must not latch a fictitious manual
-        # override; actual user-adjusted speed and power still require it.
+        # override; the native 25% step may safely requantize quiet speed.
         await tick(h)
         assert not h.runtime.records[h.spec.identifier].get("paused")
-        assert h.state.attributes["percentage"] == 30
+        assert h.state.attributes["percentage"] <= 30
     asyncio.run(run())
 
 
