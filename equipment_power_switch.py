@@ -35,6 +35,27 @@ def observed_output_off(state: Any) -> bool:
     return state.state == "off"
 
 
+def supply_off_for_pairing(hass: Any, spec: Any, entity: str) -> bool:
+    """The supply is confirmed OFF; no downstream source is known active.
+
+    A downstream appliance deprived of power normally reports unavailable
+    or disappears from the state machine. This is acceptable for binding its
+    already-OFF upstream switch, NOT proof that a physical appliance is idle.
+    Automatic ON still requires independent *verified* cached capabilities,
+    fresh demand and full dispatch safety checks. No service is called here.
+    """
+    supply = hass.states.get(entity)
+    if supply is None or supply.state != "off":
+        return False
+    for source in spec.source_entities:
+        state = hass.states.get(source)
+        if state is None or state.state in ("unknown", "unavailable"):
+            continue
+        if not observed_output_off(state):
+            return False
+    return True
+
+
 def relay_identity(hass: Any, spec: Any, entity: str) -> dict | None:
     """Verify a native physical same-room switch and its immutable registry ID."""
     if not isinstance(entity, str) or not entity.startswith("switch."):
