@@ -203,7 +203,9 @@ def _observed_off_since(state: Any, now: float) -> float:
 def verified_capabilities(runtime: Any, spec: Any) -> Any:
     """Previously observed capabilities may guide power-up, never native I/O."""
     cap = model.capabilities(runtime.manager, spec)
-    if cap is not None:
+    # A stale 'unavailable' native HA state can retain attributes. Never
+    # promote those attributes into a newly verified capability source.
+    if cap is not None and model.sources_available(runtime.manager, spec):
         return cap
     record = runtime.records.get(spec.identifier, {})
     if record.get("sources") != list(spec.source_entities) or record.get("area") != spec.area_id:
@@ -377,7 +379,9 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
                 fan_purpose=live.get("fan_purpose"), plan=plan,
             )
     if observed.state == "off":
-        relay["idle_since"] = None
+        if relay.get("idle_since") is not None:
+            relay["idle_since"] = None
+            await runtime._save()
         if demand is not True:
             runtime._status(spec, "within_target_band" if demand is False
                             else "waiting_for_physical_device",
@@ -425,7 +429,9 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
                  and no_defrost and no_active_output
                  and now-runtime._started >= 300)
     if not safe_idle:
-        relay["idle_since"] = None
+        if relay.get("idle_since") is not None:
+            relay["idle_since"] = None
+            await runtime._save()
         return False
     if relay.get("idle_since") is None:
         relay["idle_since"] = now
