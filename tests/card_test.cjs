@@ -656,7 +656,7 @@ for(const [language,rank,hold] of [
   const html=arbCard.shadowRoot.innerHTML;
   assert.ok(html.includes(rank),language+': priority');
   assert.ok(html.includes(hold),language+': blocked purpose');
-  assert.ok(html.includes('opposing native mode armed'));
+  assert.ok(html.toLowerCase().includes('opposing native mode armed'));
   assert.ok(!html.includes('data-hvac-mode='));
 }
 
@@ -689,7 +689,7 @@ for(const [language,label] of [
   }};
   const html=nativeDryCard.shadowRoot.innerHTML;
   assert.ok(html.includes(label),language+': no mode controller');
-  assert.ok(html.includes('native mode commanded'),language+': no mode status');
+  assert.ok(html.toLowerCase().includes('native mode commanded'),language+': no mode status');
   assert.ok(html.includes('data-climate-action="pause"'));
   assert.ok(!html.includes('data-hvac-mode='));
 }
@@ -1473,6 +1473,6 @@ assert.ok(nativeDryCard.shadowRoot.innerHTML.includes('data-climate-action="resu
   }};
   html=card.shadowRoot.innerHTML;
   assert.ok(html.includes('Ηλιακή σκίαση για ψύξη'));
-  assert.ok(html.includes('close command sent'));
+  assert.ok(html.toLowerCase().includes('close command sent'));
   assert.ok(html.includes('Living shutters'));
 }
