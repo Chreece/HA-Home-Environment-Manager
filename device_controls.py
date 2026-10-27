@@ -164,7 +164,7 @@ DEVICE_TARGET_NUMBERS = {
 CLIMATE_POLICY_OPTIONS = {
     "unknown_occupancy": ("occupied", "hold"),
     "away_policy": ("any_home", "all_home"),
-    "target_source": ("temperature", "pmv"),
+    "target_source": ("temperature", "auto_comfort", "pmv"),
 }
 DEVICE_POLICY_OPTIONS = {
     "presence_requirement": ("always", "occupied", "absent"),
