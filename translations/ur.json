@@ -1280,7 +1280,7 @@
         "name": "سطح کی نمی (حساب شدہ)"
       },
       "equipment_control_status": {
-        "name": "{channel}کنٹرولر کی حالت",
+        "name": "حالت · {channel}کنٹرولر کی حالت",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}ترتیبات · ماخذ (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}کم شور والے پنکھے کی حد (%)"
+        "name": "خاموش · {channel}کم شور والے پنکھے کی حد (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}طاقت · min ON (s)"
+        "name": "بجلی · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}طاقت · min OFF (s)"
+        "name": "بجلی · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}طاقت · max ON (s)"
+        "name": "بجلی · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "کمرہ · درجہ حرارت · min"
@@ -2039,13 +2039,13 @@
         "name": "آلات · باہر"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}سوتے وقت کم شور"
+        "name": "خاموش · {channel}سوتے وقت کم شور"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}موجودگی میں کم شور"
+        "name": "خاموش · {channel}موجودگی میں کم شور"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}سینسر · ضروری"
+        "name": "سینسر · {channel}ضروری"
       },
       "area_shading_enabled": {
         "name": "کمرہ ٹھنڈا رکھنے کے لیے پردے خودکار بند"
@@ -2090,7 +2090,7 @@
         "name": "آلات · ماخذ · ہدف"
       },
       "equipment_control_mode": {
-        "name": "{channel}کنٹرول کا طریقہ",
+        "name": "کنٹرول · {channel}کنٹرول کا طریقہ",
         "state": {
           "existing": "موجودہ کمرے کا کنٹرولر",
           "automatic": "خودکار",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}آلے کا کم شور پنکھا موڈ"
+        "name": "خاموش · {channel}آلے کا کم شور پنکھا موڈ"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}کنٹرول · موجودگی",
+        "name": "موجودگی · {channel}موجودگی",
         "state": {
           "always": "خودکار",
           "occupied": "کمرہ · موجودگی",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}نیند · کنٹرول",
+        "name": "نیند · {channel}کنٹرول",
         "state": {
           "normal": "خودکار",
           "pause": "وقفہ",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}کنٹرول · آلات",
+        "name": "پنکھا · {channel}آلات",
         "state": {
           "extraction": "باہر · کنٹرول",
           "filtration": "PM2.5 · کنٹرول",
@@ -2174,7 +2174,7 @@
         "name": "پھپھوندی کی نشاندہی · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}تصدیق کریں اور دوبارہ شروع کریں"
+        "name": "کنٹرول · {channel}تصدیق کریں اور دوبارہ شروع کریں"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}آب و ہوا کنٹرولر"
+        "name": "آب و ہوا · {channel}"
       }
     }
   },

@@ -1280,7 +1280,7 @@
         "name": "सतह की आर्द्रता (गणना)"
       },
       "equipment_control_status": {
-        "name": "{channel}नियंत्रक की स्थिति",
+        "name": "स्थिति · {channel}नियंत्रक की स्थिति",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}सेटिंग · स्रोत (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}कम शोर वाले पंखे की सीमा (%)"
+        "name": "शांत · {channel}कम शोर वाले पंखे की सीमा (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}शक्ति · min ON (s)"
+        "name": "पावर · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}शक्ति · min OFF (s)"
+        "name": "पावर · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}शक्ति · max ON (s)"
+        "name": "पावर · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "कमरा · तापमान · min"
@@ -2039,13 +2039,13 @@
         "name": "उपकरण · बाहरी"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}सोते समय कम शोर"
+        "name": "शांत · {channel}सोते समय कम शोर"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}उपस्थिति में कम शोर"
+        "name": "शांत · {channel}उपस्थिति में कम शोर"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}सेंसर · आवश्यक"
+        "name": "सेंसर · {channel}आवश्यक"
       },
       "area_shading_enabled": {
         "name": "कमरा ठंडा रखने हेतु ब्लाइंड स्वतः बंद करें"
@@ -2090,7 +2090,7 @@
         "name": "उपकरण · स्रोत · लक्ष्य"
       },
       "equipment_control_mode": {
-        "name": "{channel}नियंत्रण विधि",
+        "name": "नियंत्रण · {channel}नियंत्रण विधि",
         "state": {
           "existing": "मौजूदा कमरे का नियंत्रक",
           "automatic": "स्वचालित",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}उपकरण का कम शोर पंखा मोड"
+        "name": "शांत · {channel}उपकरण का कम शोर पंखा मोड"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}नियंत्रण · उपस्थिति",
+        "name": "उपस्थिति · {channel}उपस्थिति",
         "state": {
           "always": "स्वचालित",
           "occupied": "कमरा · उपस्थिति",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}नींद · नियंत्रण",
+        "name": "नींद · {channel}नियंत्रण",
         "state": {
           "normal": "स्वचालित",
           "pause": "रोकें",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}नियंत्रण · उपकरण",
+        "name": "पंखा · {channel}उपकरण",
         "state": {
           "extraction": "बाहरी · नियंत्रण",
           "filtration": "PM2.5 · नियंत्रण",
@@ -2174,7 +2174,7 @@
         "name": "फफूंद संकेतक · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}जाँचें और फिर शुरू करें"
+        "name": "नियंत्रण · {channel}जाँचें और फिर शुरू करें"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}जलवायु नियंत्रक"
+        "name": "जलवायु · {channel}"
       }
     }
   },

@@ -1280,7 +1280,7 @@
         "name": "رطوبة السطح (محسوبة)"
       },
       "equipment_control_status": {
-        "name": "{channel}حالة وحدة التحكم",
+        "name": "الحالة · {channel}حالة وحدة التحكم",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}الإعدادات · المصدر (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}حد سرعة المروحة الهادئة (%)"
+        "name": "الهدوء · {channel}حد سرعة المروحة الهادئة (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}الطاقة · min ON (s)"
+        "name": "الطاقة · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}الطاقة · min OFF (s)"
+        "name": "الطاقة · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}الطاقة · max ON (s)"
+        "name": "الطاقة · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "غرفة · الحرارة · min"
@@ -2039,13 +2039,13 @@
         "name": "الأجهزة · خارجي"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}ضوضاء أقل أثناء النوم"
+        "name": "الهدوء · {channel}ضوضاء أقل أثناء النوم"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}ضوضاء أقل عند وجود أشخاص"
+        "name": "الهدوء · {channel}ضوضاء أقل عند وجود أشخاص"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}مستشعر · مطلوب"
+        "name": "المستشعر · {channel}مطلوب"
       },
       "area_shading_enabled": {
         "name": "الإغلاق التلقائي للستائر لتبريد الغرفة"
@@ -2090,7 +2090,7 @@
         "name": "الأجهزة · المصدر · الهدف"
       },
       "equipment_control_mode": {
-        "name": "{channel}طريقة التحكم",
+        "name": "التحكم · {channel}طريقة التحكم",
         "state": {
           "existing": "متحكم الغرفة الحالي",
           "automatic": "تلقائي",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}وضع المروحة الهادئ الأصلي"
+        "name": "الهدوء · {channel}وضع المروحة الهادئ الأصلي"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}التحكم · الإشغال",
+        "name": "التواجد · {channel}الإشغال",
         "state": {
           "always": "تلقائي",
           "occupied": "غرفة · الإشغال",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}النوم · التحكم",
+        "name": "النوم · {channel}التحكم",
         "state": {
           "normal": "تلقائي",
           "pause": "تعليق",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}التحكم · الأجهزة",
+        "name": "المروحة · {channel}الأجهزة",
         "state": {
           "extraction": "خارجي · التحكم",
           "filtration": "PM2.5 · التحكم",
@@ -2174,7 +2174,7 @@
         "name": "مؤشر العفن · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}تحقق واستأنف"
+        "name": "التحكم · {channel}تحقق واستأنف"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}متحكم المناخ"
+        "name": "المناخ · {channel}"
       }
     }
   },

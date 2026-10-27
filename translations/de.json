@@ -1280,7 +1280,7 @@
         "name": "Oberflächenfeuchte (berechnet)"
       },
       "equipment_control_status": {
-        "name": "{channel}Reglerstatus",
+        "name": "Status · {channel}Reglerzustand",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}Einstellungen · Quelle (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Lüftergrenze für leisen Betrieb (%)"
+        "name": "Leise · {channel}Lüfterleistung (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Leistung · min ON (s)"
+        "name": "Leistung · {channel}Mindest-EIN-Zeit (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Leistung · min OFF (s)"
+        "name": "Leistung · {channel}Mindest-AUS-Zeit (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Leistung · max ON (s)"
+        "name": "Leistung · {channel}Maximale Einschaltdauer (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Raum · Temperatur · min"
@@ -2039,13 +2039,13 @@
         "name": "Hinweis senden, wenn sich laufende Heizung, Kühlung oder Entfeuchtung durch sicheres Fensterlüften entlasten lässt"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Leiser Betrieb beim Schlafen"
+        "name": "Leise · {channel}Im Schlafmodus"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Leiser Betrieb bei Anwesenheit"
+        "name": "Leise · {channel}Bei Anwesenheit"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}Sensor · Erforderlich"
+        "name": "Sensor · {channel}Erforderlich"
       },
       "area_shading_enabled": {
         "name": "Automatische Fensterbeschattung zur Kühlung"
@@ -2090,7 +2090,7 @@
         "name": "Temperatursollwert oder ISO-7730-Komfort"
       },
       "equipment_control_mode": {
-        "name": "{channel}Regelverfahren",
+        "name": "Steuerung · {channel}Verfahren",
         "state": {
           "existing": "Bisherige Raumregelung",
           "automatic": "Automatische",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Native leise Lüfterstufe"
+        "name": "Leise · {channel}Lüftermodus"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}Kalibrierungsverfahren",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}Steuerung · Belegung",
+        "name": "Anwesenheit · {channel}Voraussetzung",
         "state": {
           "always": "Automatische",
           "occupied": "Raum · Belegung",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Schlaf · Steuerung",
+        "name": "Schlaf · {channel}Verhalten",
         "state": {
           "normal": "Automatische",
           "pause": "Pausieren",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}Steuerung · Geräte",
+        "name": "Lüfter · {channel}Einsatzzweck",
         "state": {
           "extraction": "Außen · Steuerung",
           "filtration": "PM2.5 · Steuerung",
@@ -2174,7 +2174,7 @@
         "name": "Mit aktuellen Temperaturwerten neu kalibrieren"
       },
       "equipment_resume": {
-        "name": "{channel}Abgleichen und fortsetzen"
+        "name": "Steuerung · {channel}Abgleichen und fortsetzen"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Geprüfte -Werte anwenden"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Klimaregler"
+        "name": "Klima · {channel}"
       }
     }
   },

@@ -1280,7 +1280,7 @@
         "name": "表面湿度（计算值）"
       },
       "equipment_control_status": {
-        "name": "{channel}控制器状态",
+        "name": "状态 · {channel}控制器状态",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}设置 · 来源 (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}低噪声风扇上限 (%)"
+        "name": "静音 · {channel}低噪声风扇上限 (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}功率 · min ON (s)"
+        "name": "功率 · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}功率 · min OFF (s)"
+        "name": "功率 · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}功率 · max ON (s)"
+        "name": "功率 · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "房间 · 温度 · min"
@@ -2039,13 +2039,13 @@
         "name": "设备 · 室外"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}睡眠时降低噪声"
+        "name": "静音 · {channel}睡眠时降低噪声"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}有人时降低噪声"
+        "name": "静音 · {channel}有人时降低噪声"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}传感器 · 必填"
+        "name": "传感器 · {channel}必填"
       },
       "area_shading_enabled": {
         "name": "自动关闭窗帘帮助降温"
@@ -2090,7 +2090,7 @@
         "name": "设备 · 来源 · 目标"
       },
       "equipment_control_mode": {
-        "name": "{channel}控制方式",
+        "name": "控制 · {channel}控制方式",
         "state": {
           "existing": "现有房间控制器",
           "automatic": "自动",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}设备原生低噪声风扇模式"
+        "name": "静音 · {channel}设备原生低噪声风扇模式"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}控制 · 占用",
+        "name": "在场 · {channel}占用",
         "state": {
           "always": "自动",
           "occupied": "房间 · 占用",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}睡眠 · 控制",
+        "name": "睡眠 · {channel}控制",
         "state": {
           "normal": "自动",
           "pause": "暂停",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}控制 · 设备",
+        "name": "风扇 · {channel}设备",
         "state": {
           "extraction": "室外 · 控制",
           "filtration": "PM2.5 · 控制",
@@ -2174,7 +2174,7 @@
         "name": "霉菌指标 · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}核实并恢复"
+        "name": "控制 · {channel}核实并恢复"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}室内环境控制器"
+        "name": "空调 · {channel}"
       }
     }
   },

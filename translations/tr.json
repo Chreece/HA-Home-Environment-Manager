@@ -1280,7 +1280,7 @@
         "name": "Yüzey nemi (hesaplanan)"
       },
       "equipment_control_status": {
-        "name": "{channel}Denetleyici durumu",
+        "name": "Durum · {channel}Denetleyici durumu",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}ayarlar · kaynak (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Sessiz fan sınırı (%)"
+        "name": "Sessiz · {channel}fan sınırı (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Güç · min ON (s)"
+        "name": "Güç · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Güç · min OFF (s)"
+        "name": "Güç · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Güç · max ON (s)"
+        "name": "Güç · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Oda · Sıcaklık · min"
@@ -2039,13 +2039,13 @@
         "name": "Cihazlar · Dış"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Uykuda düşük gürültü"
+        "name": "Sessiz · {channel}Uykuda düşük gürültü"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Odada biri varken düşük gürültü"
+        "name": "Sessiz · {channel}Odada biri varken düşük gürültü"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}sensör · Gerekli"
+        "name": "Sensör · {channel}Gerekli"
       },
       "area_shading_enabled": {
         "name": "Serinletmek için otomatik panjur kapatma"
@@ -2090,7 +2090,7 @@
         "name": "Cihazlar · kaynak · hedef"
       },
       "equipment_control_mode": {
-        "name": "{channel}Kontrol yöntemi",
+        "name": "Kontrol · {channel}Kontrol yöntemi",
         "state": {
           "existing": "Mevcut oda denetleyicisi",
           "automatic": "Otomatik",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Cihazın sessiz fan kademesi"
+        "name": "Sessiz · {channel}Cihazın sessiz fan kademesi"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}kontrol · Doluluk",
+        "name": "Varlık · {channel}Doluluk",
         "state": {
           "always": "Otomatik",
           "occupied": "Oda · Doluluk",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Uyku · kontrol",
+        "name": "Uyku · {channel}kontrol",
         "state": {
           "normal": "Otomatik",
           "pause": "Duraklat",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}kontrol · Cihazlar",
+        "name": "Fan · {channel}Cihazlar",
         "state": {
           "extraction": "Dış · kontrol",
           "filtration": "PM2.5 · kontrol",
@@ -2174,7 +2174,7 @@
         "name": "Küf göstergesi · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Doğrula ve sürdür"
+        "name": "Kontrol · {channel}Doğrula ve sürdür"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}İklim denetleyicisi"
+        "name": "İklim · {channel}"
       }
     }
   },

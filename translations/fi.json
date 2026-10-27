@@ -1280,7 +1280,7 @@
         "name": "Pintakosteus (laskettu)"
       },
       "equipment_control_status": {
-        "name": "{channel}Säätimen tila",
+        "name": "Tila · {channel}Säätimen tila",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}asetukset · lähde (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Hiljaisen puhalluksen raja (%)"
+        "name": "Hiljainen · {channel}Hiljaisen puhalluksen raja (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Teho · min ON (s)"
+        "name": "Teho · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Teho · min OFF (s)"
+        "name": "Teho · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Teho · max ON (s)"
+        "name": "Teho · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Huone · Lämpötila · min"
@@ -2039,13 +2039,13 @@
         "name": "Laitteet · Ulko"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Hiljaisempi toiminta nukuttaessa"
+        "name": "Hiljainen · {channel}Hiljaisempi toiminta nukuttaessa"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Hiljaisempi toiminta läsnä ollessa"
+        "name": "Hiljainen · {channel}Hiljaisempi toiminta läsnä ollessa"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}anturi · Vaaditaan"
+        "name": "Anturi · {channel}Vaaditaan"
       },
       "area_shading_enabled": {
         "name": "Automaattinen aurinkosuojaus viilennykseen"
@@ -2090,7 +2090,7 @@
         "name": "Laitteet · lähde · tavoite"
       },
       "equipment_control_mode": {
-        "name": "{channel}Ohjaustapa",
+        "name": "Ohjaus · {channel}Ohjaustapa",
         "state": {
           "existing": "Nykyinen huonesäädin",
           "automatic": "Automaattinen",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Laitteen hiljainen puhallustila"
+        "name": "Hiljainen · {channel}Laitteen hiljainen puhallustila"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}ohjaus · Läsnäolo",
+        "name": "Läsnäolo · {channel}Läsnäolo",
         "state": {
           "always": "Automaattinen",
           "occupied": "Huone · Läsnäolo",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Uni · ohjaus",
+        "name": "Uni · {channel}ohjaus",
         "state": {
           "normal": "Automaattinen",
           "pause": "Keskeytä",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}ohjaus · Laitteet",
+        "name": "Puhallin · {channel}Laitteet",
         "state": {
           "extraction": "Ulko · ohjaus",
           "filtration": "PM2.5 · ohjaus",
@@ -2174,7 +2174,7 @@
         "name": "Homeindikaattori · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Tarkista ja jatka"
+        "name": "Ohjaus · {channel}Tarkista ja jatka"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Ilmastonsäädin"
+        "name": "Ilmasto · {channel}"
       }
     }
   },

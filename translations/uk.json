@@ -1280,7 +1280,7 @@
         "name": "Вологість поверхні (розрахункова)"
       },
       "equipment_control_status": {
-        "name": "{channel}Стан контролера",
+        "name": "Стан · {channel}Стан контролера",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}налаштування · джерело (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Обмеження тихого вентилятора (%)"
+        "name": "Тихий режим · {channel}Обмеження тихого вентилятора (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Потужність · min ON (s)"
+        "name": "Потужність · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Потужність · min OFF (s)"
+        "name": "Потужність · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Потужність · max ON (s)"
+        "name": "Потужність · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Кімната · Температура · min"
@@ -2039,13 +2039,13 @@
         "name": "Пристрої · Зовнішні"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Менше шуму під час сну"
+        "name": "Тихий режим · {channel}Менше шуму під час сну"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Менше шуму за присутності"
+        "name": "Тихий режим · {channel}Менше шуму за присутності"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}датчик · Обов'язково"
+        "name": "Датчик · {channel}Обов'язково"
       },
       "area_shading_enabled": {
         "name": "Автоматичне закриття ролет для охолодження"
@@ -2090,7 +2090,7 @@
         "name": "Пристрої · джерело · ціль"
       },
       "equipment_control_mode": {
-        "name": "{channel}Спосіб керування",
+        "name": "Керування · {channel}Спосіб керування",
         "state": {
           "existing": "Наявний контролер кімнати",
           "automatic": "Автоматичне",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Вбудована тиха швидкість"
+        "name": "Тихий режим · {channel}Вбудована тиха швидкість"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}керування · Присутність",
+        "name": "Присутність · {channel}Присутність",
         "state": {
           "always": "Автоматичне",
           "occupied": "Кімната · Присутність",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Сон · керування",
+        "name": "Сон · {channel}керування",
         "state": {
           "normal": "Автоматичне",
           "pause": "Призупинити",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}керування · Пристрої",
+        "name": "Вентилятор · {channel}Пристрої",
         "state": {
           "extraction": "Зовнішні · керування",
           "filtration": "PM2.5 · керування",
@@ -2174,7 +2174,7 @@
         "name": "Індикатор цвілі · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Перевірити та продовжити"
+        "name": "Керування · {channel}Перевірити та продовжити"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Контролер клімату"
+        "name": "Клімат · {channel}"
       }
     }
   },

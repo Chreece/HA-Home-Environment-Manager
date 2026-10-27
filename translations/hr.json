@@ -1280,7 +1280,7 @@
         "name": "Površinska vlažnost (izračunata)"
       },
       "equipment_control_status": {
-        "name": "{channel}Stanje regulatora",
+        "name": "Stanje · {channel}Stanje regulatora",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}postavke · izvor (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Ograničenje tihog rada ventilatora (%)"
+        "name": "Tiho · {channel}Ograničenje tihog rada ventilatora (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Snaga · min ON (s)"
+        "name": "Snaga · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Snaga · min OFF (s)"
+        "name": "Snaga · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Snaga · max ON (s)"
+        "name": "Snaga · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Soba · Temperatura · min"
@@ -2039,13 +2039,13 @@
         "name": "Uređaji · Vanjski"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Manja buka tijekom spavanja"
+        "name": "Tiho · {channel}Manja buka tijekom spavanja"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Manja buka pri prisutnosti"
+        "name": "Tiho · {channel}Manja buka pri prisutnosti"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}senzor · Obavezno"
+        "name": "Senzor · {channel}Obavezno"
       },
       "area_shading_enabled": {
         "name": "Automatsko zatvaranje roleta za hlađenje"
@@ -2090,7 +2090,7 @@
         "name": "Uređaji · izvor · cilj"
       },
       "equipment_control_mode": {
-        "name": "{channel}Način upravljanja",
+        "name": "Upravljanje · {channel}Način upravljanja",
         "state": {
           "existing": "Postojeći sobni regulator",
           "automatic": "Automatsko",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Izvorna tiha brzina ventilatora"
+        "name": "Tiho · {channel}Izvorna tiha brzina ventilatora"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}upravljanje · Prisutnost",
+        "name": "Prisutnost · {channel}Prisutnost",
         "state": {
           "always": "Automatsko",
           "occupied": "Soba · Prisutnost",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Spavanje · upravljanje",
+        "name": "Spavanje · {channel}upravljanje",
         "state": {
           "normal": "Automatsko",
           "pause": "Pauza",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}upravljanje · Uređaji",
+        "name": "Ventilator · {channel}Uređaji",
         "state": {
           "extraction": "Vanjski · upravljanje",
           "filtration": "PM2.5 · upravljanje",
@@ -2174,7 +2174,7 @@
         "name": "Pokazatelj plijesni · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Provjeri i nastavi"
+        "name": "Upravljanje · {channel}Provjeri i nastavi"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Regulator klime"
+        "name": "Klima · {channel}"
       }
     }
   },

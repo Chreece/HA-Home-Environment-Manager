@@ -1280,7 +1280,7 @@
         "name": "表面湿度（計算値）"
       },
       "equipment_control_status": {
-        "name": "{channel}コントローラーの状態",
+        "name": "状態 · {channel}コントローラーの状態",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}設定 · 情報源 (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}低騒音ファンの上限 (%)"
+        "name": "静音 · {channel}低騒音ファンの上限 (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}電力 · min ON (s)"
+        "name": "電力 · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}電力 · min OFF (s)"
+        "name": "電力 · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}電力 · max ON (s)"
+        "name": "電力 · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "部屋 · 温度 · min"
@@ -2039,13 +2039,13 @@
         "name": "デバイス · 屋外"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}睡眠中の低騒音運転"
+        "name": "静音 · {channel}睡眠中の低騒音運転"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}在室中の低騒音運転"
+        "name": "静音 · {channel}在室中の低騒音運転"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}センサー · 必須"
+        "name": "センサー · {channel}必須"
       },
       "area_shading_enabled": {
         "name": "室内を涼しく保つため自動でブラインドを閉じる"
@@ -2090,7 +2090,7 @@
         "name": "デバイス · 情報源 · 目標"
       },
       "equipment_control_mode": {
-        "name": "{channel}制御方式",
+        "name": "制御 · {channel}制御方式",
         "state": {
           "existing": "既存の部屋コントローラー",
           "automatic": "自動",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}機器の低騒音ファンモード"
+        "name": "静音 · {channel}機器の低騒音ファンモード"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}制御 · 在室",
+        "name": "在室 · {channel}在室",
         "state": {
           "always": "自動",
           "occupied": "部屋 · 在室",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}睡眠 · 制御",
+        "name": "睡眠 · {channel}制御",
         "state": {
           "normal": "自動",
           "pause": "一時停止",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}制御 · デバイス",
+        "name": "ファン · {channel}デバイス",
         "state": {
           "extraction": "屋外 · 制御",
           "filtration": "PM2.5 · 制御",
@@ -2174,7 +2174,7 @@
         "name": "カビ指標 · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}確認して再開"
+        "name": "制御 · {channel}確認して再開"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}室内環境コントローラー"
+        "name": "空調 · {channel}"
       }
     }
   },

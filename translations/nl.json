@@ -1280,7 +1280,7 @@
         "name": "Oppervlaktevochtigheid (berekend)"
       },
       "equipment_control_status": {
-        "name": "{channel}Status van de regelaar",
+        "name": "Status · {channel}Status van de regelaar",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}instellingen · bron (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Ventilatorlimiet voor stille werking (%)"
+        "name": "Stil · {channel}Ventilatorlimiet voor stille werking (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Vermogen · min ON (s)"
+        "name": "Vermogen · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Vermogen · min OFF (s)"
+        "name": "Vermogen · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Vermogen · max ON (s)"
+        "name": "Vermogen · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Kamer · Temperatuur · min"
@@ -2039,13 +2039,13 @@
         "name": "Apparaten · Buiten"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Minder geluid tijdens slapen"
+        "name": "Stil · {channel}Minder geluid tijdens slapen"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Minder geluid bij aanwezigheid"
+        "name": "Stil · {channel}Minder geluid bij aanwezigheid"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}sensor · Vereist"
+        "name": "Sensor · {channel}Vereist"
       },
       "area_shading_enabled": {
         "name": "Automatisch zonwering sluiten tegen hitte"
@@ -2090,7 +2090,7 @@
         "name": "Apparaten · bron · doelwaarde"
       },
       "equipment_control_mode": {
-        "name": "{channel}Regelmethode",
+        "name": "Regeling · {channel}Regelmethode",
         "state": {
           "existing": "Bestaande ruimteregeling",
           "automatic": "Automatische",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Stille stand van de ventilator"
+        "name": "Stil · {channel}Stille stand van de ventilator"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}regeling · Aanwezigheid",
+        "name": "Aanwezigheid · {channel}Aanwezigheid",
         "state": {
           "always": "Automatische",
           "occupied": "Kamer · Aanwezigheid",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Slaap · regeling",
+        "name": "Slaap · {channel}regeling",
         "state": {
           "normal": "Automatische",
           "pause": "Pauzeren",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}regeling · Apparaten",
+        "name": "Ventilator · {channel}Apparaten",
         "state": {
           "extraction": "Buiten · regeling",
           "filtration": "PM2.5 · regeling",
@@ -2174,7 +2174,7 @@
         "name": "Schimmelindicator · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Controleren en hervatten"
+        "name": "Regeling · {channel}Controleren en hervatten"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Klimaatregelaar"
+        "name": "Klimaat · {channel}"
       }
     }
   },

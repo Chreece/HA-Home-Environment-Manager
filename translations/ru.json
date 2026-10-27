@@ -1280,7 +1280,7 @@
         "name": "Влажность поверхности (расчётная)"
       },
       "equipment_control_status": {
-        "name": "{channel}Состояние контроллера",
+        "name": "Состояние · {channel}Состояние контроллера",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}настройки · источник (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Ограничение тихого вентилятора (%)"
+        "name": "Тихий режим · {channel}Ограничение тихого вентилятора (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Мощность · min ON (s)"
+        "name": "Мощность · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Мощность · min OFF (s)"
+        "name": "Мощность · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Мощность · max ON (s)"
+        "name": "Мощность · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Комната · Температура · min"
@@ -2039,13 +2039,13 @@
         "name": "Устройства · Снаружи"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Меньше шума во время сна"
+        "name": "Тихий режим · {channel}Меньше шума во время сна"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Меньше шума при присутствии"
+        "name": "Тихий режим · {channel}Меньше шума при присутствии"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}датчик · Обязательно"
+        "name": "Датчик · {channel}Обязательно"
       },
       "area_shading_enabled": {
         "name": "Автоматическое закрытие жалюзи для охлаждения"
@@ -2090,7 +2090,7 @@
         "name": "Устройства · источник · цель"
       },
       "equipment_control_mode": {
-        "name": "{channel}Способ управления",
+        "name": "Управление · {channel}Способ управления",
         "state": {
           "existing": "Существующий контроллер комнаты",
           "automatic": "Автоматическое",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Встроенная тихая скорость"
+        "name": "Тихий режим · {channel}Встроенная тихая скорость"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}управление · Присутствие",
+        "name": "Присутствие · {channel}Присутствие",
         "state": {
           "always": "Автоматическое",
           "occupied": "Комната · Присутствие",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Сон · управление",
+        "name": "Сон · {channel}управление",
         "state": {
           "normal": "Автоматическое",
           "pause": "Приостановить",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}управление · Устройства",
+        "name": "Вентилятор · {channel}Устройства",
         "state": {
           "extraction": "Снаружи · управление",
           "filtration": "PM2.5 · управление",
@@ -2174,7 +2174,7 @@
         "name": "Индикатор плесени · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Проверить и возобновить"
+        "name": "Управление · {channel}Проверить и возобновить"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Контроллер климата"
+        "name": "Климат · {channel}"
       }
     }
   },

@@ -1280,7 +1280,7 @@
         "name": "Kelembapan permukaan (terhitung)"
       },
       "equipment_control_status": {
-        "name": "{channel}Status pengendali",
+        "name": "Status · {channel}Status pengendali",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}pengaturan · sumber (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Batas kipas senyap (%)"
+        "name": "Senyap · {channel}Batas kipas senyap (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Daya · min ON (s)"
+        "name": "Daya · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Daya · min OFF (s)"
+        "name": "Daya · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Daya · max ON (s)"
+        "name": "Daya · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Ruangan · Suhu · min"
@@ -2039,13 +2039,13 @@
         "name": "Perangkat · Luar"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Lebih senyap saat tidur"
+        "name": "Senyap · {channel}Lebih senyap saat tidur"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Lebih senyap saat ruangan terisi"
+        "name": "Senyap · {channel}Lebih senyap saat ruangan terisi"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}sensor · Wajib"
+        "name": "Sensor · {channel}Wajib"
       },
       "area_shading_enabled": {
         "name": "Tutup tirai otomatis untuk mendinginkan"
@@ -2090,7 +2090,7 @@
         "name": "Perangkat · sumber · target"
       },
       "equipment_control_mode": {
-        "name": "{channel}Metode kendali",
+        "name": "Kontrol · {channel}Metode kendali",
         "state": {
           "existing": "Pengendali ruangan yang ada",
           "automatic": "Otomatis",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Mode kipas senyap bawaan"
+        "name": "Senyap · {channel}Mode kipas senyap bawaan"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}kendali · Kehadiran",
+        "name": "Kehadiran · {channel}Kehadiran",
         "state": {
           "always": "Otomatis",
           "occupied": "Ruangan · Kehadiran",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Tidur · kendali",
+        "name": "Tidur · {channel}kendali",
         "state": {
           "normal": "Otomatis",
           "pause": "Jeda",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}kendali · Perangkat",
+        "name": "Kipas · {channel}Perangkat",
         "state": {
           "extraction": "Luar · kendali",
           "filtration": "PM2.5 · kendali",
@@ -2174,7 +2174,7 @@
         "name": "Indikator jamur · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Periksa dan lanjutkan"
+        "name": "Kontrol · {channel}Periksa dan lanjutkan"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Pengendali iklim"
+        "name": "Iklim · {channel}"
       }
     }
   },

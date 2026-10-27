@@ -1280,7 +1280,7 @@
         "name": "Υγρασία επιφάνειας (υπολογισμένη)"
       },
       "equipment_control_status": {
-        "name": "{channel}Κατάσταση ελεγκτή",
+        "name": "Κατάσταση · {channel}Ελεγκτή",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}Περίοδος κύκλου PWM (δευτερόλεπτα)"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Ποσοστό ανεμιστήρα αθόρυβης λειτουργίας (%)"
+        "name": "Αθόρυβο · {channel}Ποσοστό ανεμιστήρα (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Ισχύς · min ON (s)"
+        "name": "Ισχύς · {channel}Ελάχιστος χρόνος λειτουργίας (δευτ.)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Ισχύς · min OFF (s)"
+        "name": "Ισχύς · {channel}Ελάχιστος χρόνος εκτός λειτουργίας (δευτ.)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Ισχύς · max ON (s)"
+        "name": "Ισχύς · {channel}Μέγιστος χρόνος συνεχούς λειτουργίας (δευτ.)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Δωμάτιο · Θερμοκρασία · min"
@@ -2039,13 +2039,13 @@
         "name": "Ειδοποίηση όταν ασφαλής αερισμός από παράθυρο μπορεί να βοηθήσει αντί θέρμανσης, ψύξης ή αφύγρανσης"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Αθόρυβα όταν κοιμάται το δωμάτιο"
+        "name": "Αθόρυβο · {channel}Κατά τον ύπνο"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Αθόρυβα όταν υπάρχει παρουσία"
+        "name": "Αθόρυβο · {channel}Με παρουσία"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}αισθητήρας · Απαιτείται"
+        "name": "Αισθητήρας · {channel}Απαιτείται"
       },
       "area_shading_enabled": {
         "name": "Αυτόματο κλείσιμο σκιάστρων για ψύξη"
@@ -2090,7 +2090,7 @@
         "name": "Στόχος θερμοκρασίας ή άνεση ISO 7730"
       },
       "equipment_control_mode": {
-        "name": "{channel}Μέθοδος ελέγχου",
+        "name": "Έλεγχος · {channel}Μέθοδος",
         "state": {
           "existing": "Υφιστάμενος ελεγκτής χώρου",
           "automatic": "Αυτόματος",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Λειτουργία ανεμιστήρα αθόρυβης λειτουργίας"
+        "name": "Αθόρυβο · {channel}Λειτουργία ανεμιστήρα"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}Μέθοδος βαθμονόμησης",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}έλεγχος · Παρουσία",
+        "name": "Παρουσία · {channel}Κριτήριο",
         "state": {
           "always": "Αυτόματος",
           "occupied": "Δωμάτιο · Παρουσία",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Ύπνος · έλεγχος",
+        "name": "Ύπνος · {channel}Συμπεριφορά",
         "state": {
           "normal": "Αυτόματος",
           "pause": "Παύση",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}έλεγχος · Συσκευές",
+        "name": "Ανεμιστήρας · {channel}Σκοπός χρήσης",
         "state": {
           "extraction": "Εξωτερικά · έλεγχος",
           "filtration": "PM2.5 · έλεγχος",
@@ -2174,7 +2174,7 @@
         "name": "Επαναβαθμονόμηση με τις τρέχουσες θερμοκρασίες"
       },
       "equipment_resume": {
-        "name": "{channel}Επαλήθευση και συνέχιση"
+        "name": "Έλεγχος · {channel}Επαλήθευση και συνέχιση"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Εφαρμογή βαθμονόμησης"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Ελεγκτής κλίματος"
+        "name": "Κλίμα · {channel}"
       }
     }
   },

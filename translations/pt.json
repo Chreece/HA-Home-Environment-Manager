@@ -1280,7 +1280,7 @@
         "name": "Humidade da superfície (calculada)"
       },
       "equipment_control_status": {
-        "name": "{channel}Estado do controlador",
+        "name": "Estado · {channel}Estado do controlador",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}definições · fonte (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Limite de ventilação silenciosa (%)"
+        "name": "Silencioso · {channel}Limite de ventilação silenciosa (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Potência · min ON (s)"
+        "name": "Potência · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Potência · min OFF (s)"
+        "name": "Potência · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Potência · max ON (s)"
+        "name": "Potência · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Divisão · Temperatura · min"
@@ -2039,13 +2039,13 @@
         "name": "Dispositivos · Exterior"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Menos ruído durante o sono"
+        "name": "Silencioso · {channel}Menos ruído durante o sono"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Menos ruído com presença"
+        "name": "Silencioso · {channel}Menos ruído com presença"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}sensor · Obrigatório"
+        "name": "Sensor · {channel}Obrigatório"
       },
       "area_shading_enabled": {
         "name": "Fecho automático de estores para arrefecer"
@@ -2090,7 +2090,7 @@
         "name": "Dispositivos · fonte · objetivo"
       },
       "equipment_control_mode": {
-        "name": "{channel}Método de controlo",
+        "name": "Controlo · {channel}Método de controlo",
         "state": {
           "existing": "Controlador da divisão existente",
           "automatic": "Automático",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Velocidade silenciosa nativa"
+        "name": "Silencioso · {channel}Velocidade silenciosa nativa"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}controlo · Ocupação",
+        "name": "Presença · {channel}Ocupação",
         "state": {
           "always": "Automático",
           "occupied": "Divisão · Ocupação",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Sono · controlo",
+        "name": "Sono · {channel}controlo",
         "state": {
           "normal": "Automático",
           "pause": "Pausar",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}controlo · Dispositivos",
+        "name": "Ventoinha · {channel}Dispositivos",
         "state": {
           "extraction": "Exterior · controlo",
           "filtration": "PM2.5 · controlo",
@@ -2174,7 +2174,7 @@
         "name": "Indicador de bolor · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Verificar e retomar"
+        "name": "Controlo · {channel}Verificar e retomar"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Controlador climático"
+        "name": "Clima · {channel}"
       }
     }
   },

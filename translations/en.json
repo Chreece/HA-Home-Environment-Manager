@@ -1280,7 +1280,7 @@
         "name": "Surface humidity (calculated)"
       },
       "equipment_control_status": {
-        "name": "{channel}Controller status",
+        "name": "Status · {channel}Controller state",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}PWM cycle duration for slow thermal loads (seconds)"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Quiet fan percentage (%)"
+        "name": "Quiet · {channel}Fan percentage (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Power · min ON (s)"
+        "name": "Power · {channel}Minimum ON time (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Power · min OFF (s)"
+        "name": "Power · {channel}Minimum OFF time (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Power · max ON (s)"
+        "name": "Power · {channel}Maximum ON time (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Room · Temperature · min"
@@ -2039,13 +2039,13 @@
         "name": "Notify when a closed window could help replace active heating, cooling or dehumidification (requires trustworthy outdoor conditions)"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Quiet when sleeping"
+        "name": "Quiet · {channel}When sleeping"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Quiet when in room"
+        "name": "Quiet · {channel}When occupied"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}sensor · Required"
+        "name": "Sensor · {channel}Required"
       },
       "area_shading_enabled": {
         "name": "Automatic solar shade cooling"
@@ -2090,7 +2090,7 @@
         "name": "Fixed temperatures or optional ISO 7730 comfort"
       },
       "equipment_control_mode": {
-        "name": "{channel}Control method",
+        "name": "Control · {channel}Method",
         "state": {
           "existing": "Existing room controller",
           "automatic": "Automatic",
@@ -2100,10 +2100,10 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Quiet fan mode"
+        "name": "Quiet · {channel}Fan mode"
       },
       "equipment_pid_calibration_method": {
-        "name": "PID · {channel}calibration method",
+        "name": "PID · {channel}Calibration method",
         "state": {
           "manual": "Manual Kp/Ki/Kd",
           "imc_lambda": "IMC / Lambda (measured response)",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}control · Occupancy",
+        "name": "Presence · {channel}Requirement",
         "state": {
           "always": "Automatic",
           "occupied": "Room · Occupancy",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Sleep · control",
+        "name": "Sleep · {channel}Behavior",
         "state": {
           "normal": "Automatic",
           "pause": "Hold",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}control · Devices",
+        "name": "Fan · {channel}Purpose",
         "state": {
           "extraction": "Outside · control",
           "filtration": "PM2.5 · control",
@@ -2174,7 +2174,7 @@
         "name": "Recalibrate with current room and outdoor readings"
       },
       "equipment_resume": {
-        "name": "{channel}Reconcile and resume"
+        "name": "Control · {channel}Reconcile and resume"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Climate controller"
+        "name": "Climate · {channel}"
       }
     }
   },

@@ -1280,7 +1280,7 @@
         "name": "رطوبت سطح (محاسبه‌شده)"
       },
       "equipment_control_status": {
-        "name": "{channel}وضعیت کنترل‌کننده",
+        "name": "وضعیت · {channel}وضعیت کنترل‌کننده",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}تنظیمات · منبع (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}محدودیت فن کم‌صدا (%)"
+        "name": "بی‌صدا · {channel}محدودیت فن کم‌صدا (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}توان · min ON (s)"
+        "name": "توان · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}توان · min OFF (s)"
+        "name": "توان · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}توان · max ON (s)"
+        "name": "توان · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "اتاق · دما · min"
@@ -2039,13 +2039,13 @@
         "name": "دستگاه‌ها · بیرون"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}صدای کمتر هنگام خواب"
+        "name": "بی‌صدا · {channel}صدای کمتر هنگام خواب"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}صدای کمتر هنگام حضور"
+        "name": "بی‌صدا · {channel}صدای کمتر هنگام حضور"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}حسگر · الزامی"
+        "name": "حسگر · {channel}الزامی"
       },
       "area_shading_enabled": {
         "name": "بستن خودکار پرده برای خنک‌سازی"
@@ -2090,7 +2090,7 @@
         "name": "دستگاه‌ها · منبع · هدف"
       },
       "equipment_control_mode": {
-        "name": "{channel}روش کنترل",
+        "name": "کنترل · {channel}روش کنترل",
         "state": {
           "existing": "کنترل‌کنندهٔ فعلی اتاق",
           "automatic": "خودکار",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}حالت کم‌صدای اصلی فن"
+        "name": "بی‌صدا · {channel}حالت کم‌صدای اصلی فن"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}کنترل · حضور",
+        "name": "حضور · {channel}حضور",
         "state": {
           "always": "خودکار",
           "occupied": "اتاق · حضور",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}خواب · کنترل",
+        "name": "خواب · {channel}کنترل",
         "state": {
           "normal": "خودکار",
           "pause": "توقف",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}کنترل · دستگاه‌ها",
+        "name": "فن · {channel}دستگاه‌ها",
         "state": {
           "extraction": "بیرون · کنترل",
           "filtration": "PM2.5 · کنترل",
@@ -2174,7 +2174,7 @@
         "name": "شاخص کپک · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}بررسی و ادامه"
+        "name": "کنترل · {channel}بررسی و ادامه"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}کنترل‌کنندهٔ اقلیم"
+        "name": "تهویه · {channel}"
       }
     }
   },

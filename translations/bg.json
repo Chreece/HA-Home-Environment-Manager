@@ -1280,7 +1280,7 @@
         "name": "Повърхностна влажност (изчислена)"
       },
       "equipment_control_status": {
-        "name": "{channel}Състояние на контролера",
+        "name": "Състояние · {channel}Състояние на контролера",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}настройки · източник (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Ограничение за тих вентилатор (%)"
+        "name": "Тих режим · {channel}Ограничение за тих вентилатор (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Мощност · min ON (s)"
+        "name": "Мощност · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Мощност · min OFF (s)"
+        "name": "Мощност · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Мощност · max ON (s)"
+        "name": "Мощност · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Стая · Температура · min"
@@ -2039,13 +2039,13 @@
         "name": "Устройства · Външни"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Нисък шум по време на сън"
+        "name": "Тих режим · {channel}Нисък шум по време на сън"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Нисък шум при присъствие"
+        "name": "Тих режим · {channel}Нисък шум при присъствие"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}сензор · Задължително"
+        "name": "Сензор · {channel}Задължително"
       },
       "area_shading_enabled": {
         "name": "Автоматично затваряне на щори за охлаждане"
@@ -2090,7 +2090,7 @@
         "name": "Устройства · източник · цел"
       },
       "equipment_control_mode": {
-        "name": "{channel}Метод на управление",
+        "name": "Управление · {channel}Метод на управление",
         "state": {
           "existing": "Съществуващ контролер на стаята",
           "automatic": "Автоматично",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Вградена тиха скорост"
+        "name": "Тих режим · {channel}Вградена тиха скорост"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}управление · Присъствие",
+        "name": "Присъствие · {channel}Присъствие",
         "state": {
           "always": "Автоматично",
           "occupied": "Стая · Присъствие",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Сън · управление",
+        "name": "Сън · {channel}управление",
         "state": {
           "normal": "Автоматично",
           "pause": "Пауза",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}управление · Устройства",
+        "name": "Вентилатор · {channel}Устройства",
         "state": {
           "extraction": "Външни · управление",
           "filtration": "PM2.5 · управление",
@@ -2174,7 +2174,7 @@
         "name": "Индикатор за мухъл · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Проверка и продължаване"
+        "name": "Управление · {channel}Проверка и продължаване"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Климатичен контролер"
+        "name": "Климат · {channel}"
       }
     }
   },

@@ -1280,7 +1280,7 @@
         "name": "மேற்பரப்பு ஈரப்பதம் (கணக்கிடப்பட்டது)"
       },
       "equipment_control_status": {
-        "name": "{channel}கட்டுப்படுத்தி நிலை",
+        "name": "நிலை · {channel}கட்டுப்படுத்தி நிலை",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}அமைப்புகள் · மூலம் (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}குறைந்த ஒலி விசிறி வரம்பு (%)"
+        "name": "அமைதி · {channel}குறைந்த ஒலி விசிறி வரம்பு (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}சக்தி · min ON (s)"
+        "name": "சக்தி · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}சக்தி · min OFF (s)"
+        "name": "சக்தி · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}சக்தி · max ON (s)"
+        "name": "சக்தி · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "அறை · வெப்பநிலை · min"
@@ -2039,13 +2039,13 @@
         "name": "சாதனங்கள் · வெளிப்புற"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}தூங்கும்போது குறைந்த ஒலி"
+        "name": "அமைதி · {channel}தூங்கும்போது குறைந்த ஒலி"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}அறையில் இருக்கும்போது குறைந்த ஒலி"
+        "name": "அமைதி · {channel}அறையில் இருக்கும்போது குறைந்த ஒலி"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}உணரி · தேவை"
+        "name": "உணரி · {channel}தேவை"
       },
       "area_shading_enabled": {
         "name": "அறையைக் குளிர்விக்க திரைகளைத் தானாக மூடு"
@@ -2090,7 +2090,7 @@
         "name": "சாதனங்கள் · மூலம் · இலக்கு"
       },
       "equipment_control_mode": {
-        "name": "{channel}கட்டுப்பாட்டு முறை",
+        "name": "கட்டுப்பாடு · {channel}கட்டுப்பாட்டு முறை",
         "state": {
           "existing": "தற்போதைய அறைக் கட்டுப்படுத்தி",
           "automatic": "தானியங்கி",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}சாதனத்தின் குறைந்த ஒலி விசிறி முறை"
+        "name": "அமைதி · {channel}சாதனத்தின் குறைந்த ஒலி விசிறி முறை"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}கட்டுப்பாடு · இருப்பு",
+        "name": "இருப்பு · {channel}இருப்பு",
         "state": {
           "always": "தானியங்கி",
           "occupied": "அறை · இருப்பு",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}தூக்கம் · கட்டுப்பாடு",
+        "name": "உறக்கம் · {channel}கட்டுப்பாடு",
         "state": {
           "normal": "தானியங்கி",
           "pause": "இடைநிறுத்து",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}கட்டுப்பாடு · சாதனங்கள்",
+        "name": "விசிறி · {channel}சாதனங்கள்",
         "state": {
           "extraction": "வெளிப்புற · கட்டுப்பாடு",
           "filtration": "PM2.5 · கட்டுப்பாடு",
@@ -2174,7 +2174,7 @@
         "name": "பூஞ்சை குறியீடு · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}சரிபார்த்து மீண்டும் தொடங்கு"
+        "name": "கட்டுப்பாடு · {channel}சரிபார்த்து மீண்டும் தொடங்கு"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}காலநிலைக் கட்டுப்படுத்தி"
+        "name": "காலநிலை · {channel}"
       }
     }
   },

@@ -1280,7 +1280,7 @@
         "name": "表面濕度（計算值）"
       },
       "equipment_control_status": {
-        "name": "{channel}控制器狀態",
+        "name": "狀態 · {channel}控制器狀態",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}設定 · 來源 (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}低噪音風扇上限 (%)"
+        "name": "靜音 · {channel}低噪音風扇上限 (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}功率 · min ON (s)"
+        "name": "功率 · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}功率 · min OFF (s)"
+        "name": "功率 · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}功率 · max ON (s)"
+        "name": "功率 · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "房間 · 溫度 · min"
@@ -2039,13 +2039,13 @@
         "name": "裝置 · 室外"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}睡眠時降低噪音"
+        "name": "靜音 · {channel}睡眠時降低噪音"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}有人時降低噪音"
+        "name": "靜音 · {channel}有人時降低噪音"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}感測器 · 必填"
+        "name": "感測器 · {channel}必填"
       },
       "area_shading_enabled": {
         "name": "自動關閉窗簾以協助降溫"
@@ -2090,7 +2090,7 @@
         "name": "裝置 · 來源 · 目標"
       },
       "equipment_control_mode": {
-        "name": "{channel}控制方式",
+        "name": "控制 · {channel}控制方式",
         "state": {
           "existing": "現有房間控制器",
           "automatic": "自動",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}裝置原生低噪音風扇模式"
+        "name": "靜音 · {channel}裝置原生低噪音風扇模式"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}控制 · 佔用",
+        "name": "在場 · {channel}佔用",
         "state": {
           "always": "自動",
           "occupied": "房間 · 佔用",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}睡眠 · 控制",
+        "name": "睡眠 · {channel}控制",
         "state": {
           "normal": "自動",
           "pause": "暫停",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}控制 · 裝置",
+        "name": "風扇 · {channel}裝置",
         "state": {
           "extraction": "室外 · 控制",
           "filtration": "PM2.5 · 控制",
@@ -2174,7 +2174,7 @@
         "name": "黴菌指標 · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}核實並恢復"
+        "name": "控制 · {channel}核實並恢復"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}室內環境控制器"
+        "name": "空調 · {channel}"
       }
     }
   },
