@@ -715,10 +715,10 @@ class _FlowMixin(RoomSetupMixin, CompactOptionsMixin):
     async def async_step_environment_room_air(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Measured ventilation, occupant-supplied room volume and rated CADR."""
+        """Room volume/air sources only; purifier CADR is device-owned."""
         current = self._environment_room_data
         if user_input is not None:
-            for field in ("room_volume_m3", "particle_cadr_m3h", "co2_target_ppm"):
+            for field in ("room_volume_m3", "co2_target_ppm"):
                 if user_input.get(field) is not None:
                     try:
                         number = float(user_input[field])
