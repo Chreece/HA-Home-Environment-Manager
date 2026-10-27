@@ -1800,13 +1800,13 @@
         "name": "ஈரப்பதம் · வீடு · இலக்கு (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "வெப்பமூட்டல் · வீடு · அணை"
+        "name": "வெப்பமூட்டல் · வீட்டில் இல்லை"
       },
       "area_climate_profile_away_cool": {
-        "name": "குளிரூட்டல் · வீடு · அணை"
+        "name": "குளிரூட்டல் · வீட்டில் இல்லை"
       },
       "area_climate_profile_away_humidity": {
-        "name": "ஈரப்பதம் · வீடு · அணை · இலக்கு (%)"
+        "name": "ஈரப்பதம் · வீட்டில் இல்லை · இலக்கு (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "வெப்பமூட்டல் · தூக்கம்"

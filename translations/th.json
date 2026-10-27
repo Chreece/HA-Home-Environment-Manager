@@ -1800,13 +1800,13 @@
         "name": "ความชื้น · บ้าน · เป้าหมาย (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "ทำความร้อน · บ้าน · ปิด"
+        "name": "ทำความร้อน · ไม่อยู่บ้าน"
       },
       "area_climate_profile_away_cool": {
-        "name": "ทำความเย็น · บ้าน · ปิด"
+        "name": "ทำความเย็น · ไม่อยู่บ้าน"
       },
       "area_climate_profile_away_humidity": {
-        "name": "ความชื้น · บ้าน · ปิด · เป้าหมาย (%)"
+        "name": "ความชื้น · ไม่อยู่บ้าน · เป้าหมาย (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "ทำความร้อน · นอน"

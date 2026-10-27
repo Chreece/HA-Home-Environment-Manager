@@ -1800,13 +1800,13 @@
         "name": "Wilgotność · Dom · cel (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Ogrzewanie · Dom · Wyłącz"
+        "name": "Ogrzewanie · Poza domem"
       },
       "area_climate_profile_away_cool": {
-        "name": "Chłodzenie · Dom · Wyłącz"
+        "name": "Chłodzenie · Poza domem"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Wilgotność · Dom · Wyłącz · cel (%)"
+        "name": "Wilgotność · Poza domem · cel (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Ogrzewanie · Sen"

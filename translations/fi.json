@@ -1800,13 +1800,13 @@
         "name": "Kosteus · Koti · tavoite (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Lämmitys · Koti · Sammuta"
+        "name": "Lämmitys · Poissa"
       },
       "area_climate_profile_away_cool": {
-        "name": "Jäähdytys · Koti · Sammuta"
+        "name": "Jäähdytys · Poissa"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Kosteus · Koti · Sammuta · tavoite (%)"
+        "name": "Kosteus · Poissa · tavoite (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Lämmitys · Uni"

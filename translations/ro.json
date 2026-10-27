@@ -1800,13 +1800,13 @@
         "name": "Umiditate · Acasă · țintă (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Încălzire · Acasă · Oprire"
+        "name": "Încălzire · Absent"
       },
       "area_climate_profile_away_cool": {
-        "name": "Răcire · Acasă · Oprire"
+        "name": "Răcire · Absent"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Umiditate · Acasă · Oprire · țintă (%)"
+        "name": "Umiditate · Absent · țintă (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Încălzire · Somn"

@@ -1800,13 +1800,13 @@
         "name": "Luftfugtighed · Hjem · mål (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Opvarmning · Hjem · Sluk"
+        "name": "Opvarmning · Ikke hjemme"
       },
       "area_climate_profile_away_cool": {
-        "name": "Køling · Hjem · Sluk"
+        "name": "Køling · Ikke hjemme"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Luftfugtighed · Hjem · Sluk · mål (%)"
+        "name": "Luftfugtighed · Ikke hjemme · mål (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Opvarmning · Søvn"

@@ -1071,8 +1071,8 @@
           "device_home_cool_c": "Home · Temperature − · target (°C)",
           "device_unoccupied_heat_c": "Room · Off · Temperature + · target (°C)",
           "device_unoccupied_cool_c": "Room · Off · Temperature − · target (°C)",
-          "device_away_heat_c": "Home · Off · Temperature + · target (°C)",
-          "device_away_cool_c": "Home · Off · Temperature − · target (°C)",
+          "device_away_heat_c": "Heating · Away (°C)",
+          "device_away_cool_c": "Cooling · Away (°C)",
           "device_sleep_heat_c": "Sleep · Temperature + · target (°C)",
           "device_sleep_cool_c": "Sleep · Temperature − · target (°C)"
         },
@@ -1800,13 +1800,13 @@
         "name": "Humidity · Home · target (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Home heat · Home · Off"
+        "name": "Heating · Away"
       },
       "area_climate_profile_away_cool": {
-        "name": "Home cool · Home · Off"
+        "name": "Cooling · Away"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Humidity · Home · Off · target (%)"
+        "name": "Humidity · Away · target (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Home heat · Sleep"

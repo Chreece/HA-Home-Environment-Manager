@@ -1800,13 +1800,13 @@
         "name": "आर्द्रता · घर · लक्ष्य (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "हीटिंग · घर · बंद करें"
+        "name": "हीटिंग · घर से बाहर"
       },
       "area_climate_profile_away_cool": {
-        "name": "कूलिंग · घर · बंद करें"
+        "name": "कूलिंग · घर से बाहर"
       },
       "area_climate_profile_away_humidity": {
-        "name": "आर्द्रता · घर · बंद करें · लक्ष्य (%)"
+        "name": "आर्द्रता · घर से बाहर · लक्ष्य (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "हीटिंग · नींद"

@@ -1800,13 +1800,13 @@
         "name": "לחות · בית · יעד (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "חימום · בית · כיבוי"
+        "name": "חימום · מחוץ לבית"
       },
       "area_climate_profile_away_cool": {
-        "name": "קירור · בית · כיבוי"
+        "name": "קירור · מחוץ לבית"
       },
       "area_climate_profile_away_humidity": {
-        "name": "לחות · בית · כיבוי · יעד (%)"
+        "name": "לחות · מחוץ לבית · יעד (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "חימום · שינה"

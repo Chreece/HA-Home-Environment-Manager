@@ -1800,13 +1800,13 @@
         "name": "الرطوبة · المنزل · الهدف (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "تدفئة · المنزل · إيقاف"
+        "name": "تدفئة · خارج المنزل"
       },
       "area_climate_profile_away_cool": {
-        "name": "تبريد · المنزل · إيقاف"
+        "name": "تبريد · خارج المنزل"
       },
       "area_climate_profile_away_humidity": {
-        "name": "الرطوبة · المنزل · إيقاف · الهدف (%)"
+        "name": "الرطوبة · خارج المنزل · الهدف (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "تدفئة · النوم"

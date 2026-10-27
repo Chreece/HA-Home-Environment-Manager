@@ -1800,13 +1800,13 @@
         "name": "Vochtigheid · Thuis · doelwaarde (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Verwarmen · Thuis · Uitschakelen"
+        "name": "Verwarmen · Afwezig"
       },
       "area_climate_profile_away_cool": {
-        "name": "Koelen · Thuis · Uitschakelen"
+        "name": "Koelen · Afwezig"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Vochtigheid · Thuis · Uitschakelen · doelwaarde (%)"
+        "name": "Vochtigheid · Afwezig · doelwaarde (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Verwarmen · Slaap"
