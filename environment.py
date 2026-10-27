@@ -89,6 +89,7 @@ def build_environment(
     mold_calibrations: dict[str, Any] | None = None,
     room_profiles: dict[str, Any] | None = None,
     source_selections: dict[str, Any] | None = None,
+    purifier_ratings_by_room: dict[str, list[dict]] | None = None,
     outside_safe: bool = False, now: float | None = None,
 ) -> tuple[dict[str, dict], bool]:
     """Return scientific diagnostics for dashboard and whether history changed."""
@@ -202,6 +203,7 @@ def build_environment(
         extra, daily_saved = room_science(
             hass, room.area_id, profile, samples, stamp,
             history=history, outside_safe=outside_safe, existing=base_report,
+            purifier_ratings=(purifier_ratings_by_room or {}).get(room.area_id),
         )
         outdoor_mean = weighted_window(history.samples("__outside__"), "outdoor_pm25", stamp, DAY_S)
         indoor_mean = base_report["pm25_24h"]
