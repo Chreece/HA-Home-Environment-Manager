@@ -1800,13 +1800,13 @@
         "name": "Humidade · Casa · objetivo (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Aquecimento · Casa · Desligar"
+        "name": "Aquecimento · Ausente"
       },
       "area_climate_profile_away_cool": {
-        "name": "Arrefecimento · Casa · Desligar"
+        "name": "Arrefecimento · Ausente"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Humidade · Casa · Desligar · objetivo (%)"
+        "name": "Humidade · Ausente · objetivo (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Aquecimento · Sono"
