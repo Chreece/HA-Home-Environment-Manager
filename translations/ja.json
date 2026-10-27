@@ -1280,7 +1280,7 @@
         "name": "表面湿度（計算値）"
       },
       "equipment_control_status": {
-        "name": "状態 · {channel}コントローラーの状態",
+        "name": "状態 · {channel}状態 · コントローラーの状態",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,7 +1965,7 @@
         "name": "PID · {channel}設定 · 情報源 (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "静音 · {channel}低騒音ファンの上限 (%)"
+        "name": "静音 · {channel}静音 · 低騒音ファンの上限 (%)"
       },
       "equipment_min_on_seconds": {
         "name": "電力 · {channel}min ON (s)"
@@ -2039,10 +2039,10 @@
         "name": "デバイス · 屋外"
       },
       "equipment_quiet_sleep": {
-        "name": "静音 · {channel}睡眠中の低騒音運転"
+        "name": "静音 · {channel}静音 · 睡眠中の低騒音運転"
       },
       "equipment_quiet_occupied": {
-        "name": "静音 · {channel}在室中の低騒音運転"
+        "name": "静音 · {channel}静音 · 在室中の低騒音運転"
       },
       "equipment_sensor_verified": {
         "name": "センサー · {channel}必須"
@@ -2090,7 +2090,7 @@
         "name": "デバイス · 情報源 · 目標"
       },
       "equipment_control_mode": {
-        "name": "制御 · {channel}制御方式",
+        "name": "制御 · {channel}制御 · 制御方式",
         "state": {
           "existing": "既存の部屋コントローラー",
           "automatic": "自動",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "静音 · {channel}機器の低騒音ファンモード"
+        "name": "静音 · {channel}静音 · 機器の低騒音ファンモード"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2174,7 +2174,7 @@
         "name": "カビ指標 · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "制御 · {channel}確認して再開"
+        "name": "制御 · {channel}制御 · 確認して再開"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
