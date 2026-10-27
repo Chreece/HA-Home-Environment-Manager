@@ -1800,13 +1800,13 @@
         "name": "رطوبت · خانه · هدف (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "گرمایش · خانه · خاموش"
+        "name": "گرمایش · خارج از خانه"
       },
       "area_climate_profile_away_cool": {
-        "name": "سرمایش · خانه · خاموش"
+        "name": "سرمایش · خارج از خانه"
       },
       "area_climate_profile_away_humidity": {
-        "name": "رطوبت · خانه · خاموش · هدف (%)"
+        "name": "رطوبت · خارج از خانه · هدف (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "گرمایش · خواب"

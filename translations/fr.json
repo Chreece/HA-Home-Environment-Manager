@@ -1800,13 +1800,13 @@
         "name": "Humidité · Maison · consigne (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Chauffage · Maison · Arrêt"
+        "name": "Chauffage · Absent"
       },
       "area_climate_profile_away_cool": {
-        "name": "Refroidissement · Maison · Arrêt"
+        "name": "Refroidissement · Absent"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Humidité · Maison · Arrêt · consigne (%)"
+        "name": "Humidité · Absent · consigne (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Chauffage · Sommeil"

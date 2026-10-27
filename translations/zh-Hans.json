@@ -1800,13 +1800,13 @@
         "name": "湿度 · 家中 · 目标 (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "供暖 · 家中 · 关闭"
+        "name": "供暖 · 离家"
       },
       "area_climate_profile_away_cool": {
-        "name": "制冷 · 家中 · 关闭"
+        "name": "制冷 · 离家"
       },
       "area_climate_profile_away_humidity": {
-        "name": "湿度 · 家中 · 关闭 · 目标 (%)"
+        "name": "湿度 · 离家 · 目标 (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "供暖 · 睡眠"

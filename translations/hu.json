@@ -1800,13 +1800,13 @@
         "name": "Páratartalom · Otthon · cél (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Fűtés · Otthon · Kikapcsolás"
+        "name": "Fűtés · Távol"
       },
       "area_climate_profile_away_cool": {
-        "name": "Hűtés · Otthon · Kikapcsolás"
+        "name": "Hűtés · Távol"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Páratartalom · Otthon · Kikapcsolás · cél (%)"
+        "name": "Páratartalom · Távol · cél (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Fűtés · Alvás"

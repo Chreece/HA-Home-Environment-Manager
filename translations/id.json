@@ -1800,13 +1800,13 @@
         "name": "Kelembapan · Rumah · target (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Pemanasan · Rumah · Matikan"
+        "name": "Pemanasan · Tidak di rumah"
       },
       "area_climate_profile_away_cool": {
-        "name": "Pendinginan · Rumah · Matikan"
+        "name": "Pendinginan · Tidak di rumah"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Kelembapan · Rumah · Matikan · target (%)"
+        "name": "Kelembapan · Tidak di rumah · target (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Pemanasan · Tidur"

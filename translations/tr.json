@@ -1800,13 +1800,13 @@
         "name": "Nem · Ev · hedef (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Isıtma · Ev · Kapat"
+        "name": "Isıtma · Evde değil"
       },
       "area_climate_profile_away_cool": {
-        "name": "Soğutma · Ev · Kapat"
+        "name": "Soğutma · Evde değil"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Nem · Ev · Kapat · hedef (%)"
+        "name": "Nem · Evde değil · hedef (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Isıtma · Uyku"

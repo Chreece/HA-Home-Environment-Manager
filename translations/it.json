@@ -1800,13 +1800,13 @@
         "name": "Umidità · Casa · obiettivo (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Riscaldamento · Casa · Spegni"
+        "name": "Riscaldamento · Assente"
       },
       "area_climate_profile_away_cool": {
-        "name": "Raffrescamento · Casa · Spegni"
+        "name": "Raffrescamento · Assente"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Umidità · Casa · Spegni · obiettivo (%)"
+        "name": "Umidità · Assente · obiettivo (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Riscaldamento · Sonno"

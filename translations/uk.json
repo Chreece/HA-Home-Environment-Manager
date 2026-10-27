@@ -1800,13 +1800,13 @@
         "name": "Вологість · Дім · ціль (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Опалення · Дім · Вимкнути"
+        "name": "Опалення · Відсутній"
       },
       "area_climate_profile_away_cool": {
-        "name": "Охолодження · Дім · Вимкнути"
+        "name": "Охолодження · Відсутній"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Вологість · Дім · Вимкнути · ціль (%)"
+        "name": "Вологість · Відсутній · ціль (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Опалення · Сон"

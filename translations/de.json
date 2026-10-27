@@ -1800,13 +1800,13 @@
         "name": "Luftfeuchtigkeit · Zuhause · Sollwert (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Heizen · Zuhause · Ausschalten"
+        "name": "Heizen · Abwesend"
       },
       "area_climate_profile_away_cool": {
-        "name": "Kühlen · Zuhause · Ausschalten"
+        "name": "Kühlen · Abwesend"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Luftfeuchtigkeit · Zuhause · Ausschalten · Sollwert (%)"
+        "name": "Luftfeuchtigkeit · Abwesend · Sollwert (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Heizen · Schlaf"
