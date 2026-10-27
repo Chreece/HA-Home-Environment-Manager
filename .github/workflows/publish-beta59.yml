@@ -63,7 +63,9 @@ jobs:
         run: |
           python3 - <<'PY'
           import ast
-          import asyncio
+          import os
+          import sys
+          sys.path[:] = [p for p in sys.path if p not in ('', os.getcwd())]
           from pathlib import Path
           from types import ModuleType, SimpleNamespace as N
           from typing import Any
@@ -167,6 +169,9 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           import json
+          import os
+          import sys
+          sys.path[:] = [p for p in sys.path if p not in ('', os.getcwd())]
           import subprocess
           from pathlib import Path
           from zipfile import ZipFile, ZIP_DEFLATED
