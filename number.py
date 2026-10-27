@@ -90,7 +90,9 @@ def _equipment_numbers(manager, spec, registry) -> tuple["EquipmentNumber", ...]
                         continue
             if key == "quiet_percentage" and not cap.fan_percentage:
                 continue
-            if key in equipment.POWER_FIELDS and cap.domain not in ("climate", "fan", "humidifier"):
+            if (key in equipment.POWER_FIELDS
+                    and key != "power_switch_cooldown_seconds"
+                    and cap.domain not in ("climate", "fan", "humidifier")):
                 continue
             if (key in equipment.PID_MODEL_FIELDS
                     and "pid" not in equipment.control_modes(manager, spec)):
