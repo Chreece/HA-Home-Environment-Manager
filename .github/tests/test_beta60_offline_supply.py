@@ -21,6 +21,13 @@ def functions(file, names, globals_):
         node for node in nodes
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name in names
     ]
+    # Runtime methods live under EquipmentRuntime rather than module scope.
+    for cls in (node for node in nodes if isinstance(node, ast.ClassDef)):
+        chosen.extend(
+            node for node in cls.body
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and node.name in names
+        )
     assert {n.name for n in chosen} == set(names)
     exec(compile(ast.Module(body=chosen, type_ignores=[]), file, "exec"), globals_)
     return [globals_[name] for name in names]
