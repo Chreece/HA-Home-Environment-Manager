@@ -316,6 +316,8 @@ async def main():
         "UPSTREAM_ACK_SECONDS": 120,
         "verified_capabilities": lambda runtime, spec: NativeCap(),
         "approved_demand": lambda runtime, spec, cfg, cap: True,
+        "cold_start_direction_demand": lambda runtime, spec, cfg: None,
+        "cold_start_dispatch_safe": lambda runtime, spec, record, cfg, entity: False,
         "prepare_offline_pid": lambda runtime, spec, cap, cfg, demand: {},
         "observed_output_off": lambda native: native is not None
                                         and native.state == "off",
