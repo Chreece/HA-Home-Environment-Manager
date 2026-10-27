@@ -34,6 +34,9 @@ NUMBER_FIELDS = {
     "min_on_seconds": (120.0, 7200.0, 60.0, "s", 600.0),
     "min_off_seconds": (120.0, 14400.0, 60.0, "s", 600.0),
     "max_on_seconds": (900.0, 86400.0, 60.0, "s", 7200.0),
+    # Upstream outlet remains separate from the native output. A continuously
+    # verified idle period is required before any controller-owned outlet OFF.
+    "power_switch_cooldown_seconds": (60.0, 86400.0, 60.0, "s", 600.0),
 }
 QUIET_FLAGS = ("quiet_sleep", "quiet_occupied")
 from .pid_calibration import METHODS as PID_CALIBRATION_METHODS, MODEL_FIELDS as PID_MODEL_FIELDS
@@ -42,7 +45,8 @@ from .pid_fan_capacity import (
     CAPACITY_METHODS as PID_FAN_CAPACITY_METHODS,
     CALIBRATION_DIRECTIONS as PID_FAN_DIRECTIONS,
 )
-POWER_FIELDS = ("min_on_seconds", "min_off_seconds", "max_on_seconds")
+POWER_FIELDS = ("min_on_seconds", "min_off_seconds", "max_on_seconds",
+                "power_switch_cooldown_seconds")
 LIMIT_FIELDS = (
     "temperature_min_limit", "temperature_max_limit",
     "humidity_min_limit", "humidity_max_limit",
@@ -53,6 +57,9 @@ DEVICE_SELECTS = {"presence_requirement": ("always", "occupied", "absent"),
                   "fan_purpose": ("auto", "extraction", "filtration")}
 ROOM_LIMITS_KEY = "equipment_limits"
 DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None,
+            # Optional physical switch supplying an individual managed output.
+            # 'None' preserves exact Beta54 behavior on every existing device.
+            "power_switch_entity": None,
             "quiet_sleep": False, "quiet_occupied": False,
             "quiet_fan_mode": None, "profile_targets": {}, "profile_fans": {},
             "pid_calibration_method": "manual", "pid_last_calibration": None,
