@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Закривати ролети вище температури кімнати (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated purifier particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Дім · Пристрої · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Пристрої · джерело · ціль"
+        "name": "Пристрої · джерело · ціль",
+        "state": {
+          "temperature": "Фіксовані температури",
+          "auto_comfort": "Автоматичний комфорт (температура і вологість)",
+          "pmv": "Розширений ISO 7730 (потрібні вимірювання)"
+        }
       },
       "equipment_control_mode": {
         "name": "Керування · {channel}Спосіб керування",
