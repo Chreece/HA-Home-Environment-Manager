@@ -59,22 +59,29 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
             return True
         cfg = self.controller_settings
         upstream = cfg.get("power_switch_entity")
-        # Logical control is still enabled when its *deliberately selected*
-        # external power switch makes the real device unavailable. Never
-        # advertise an uncommissioned or unverified physical capability.
+        # The supervisory controller is present even if its intentionally
+        # unpowered native appliance has never advertised its capabilities.
+        # Availability is a read-only logical fact, not permission to issue
+        # HVAC commands or an inference about hardware modes. The runtime
+        # rechecks exclusive switch claims at every physical dispatch.
         if (not upstream or cfg.get("control_mode") == "existing"
-                or self._caps is None
                 or not self._manager.equipment._ready
                 or not self._manager.equipment._current_spec(self._spec)):
             return False
-        from .equipment_power_switch import permitted_supply
-        return (permitted_supply(self._manager, self._spec, upstream) is not None
+        from .equipment_power_switch import relay_identity
+        return (relay_identity(self._manager.hass, self._spec, upstream) is not None
                 and (outlet := self._manager.hass.states.get(upstream)) is not None
                 and outlet.state in ("on", "off"))
 
     @property
     def hvac_modes(self):
-        return [HVACMode(v) for v in self._caps.modes] if self._caps else []
+        if self._caps:
+            return [HVACMode(v) for v in self._caps.modes]
+        # OFF describes an observed OFF supply, NOT a guessed physical DRY /
+        # HEAT capability or permission to issue a native mode command.
+        upstream = self.controller_settings.get("power_switch_entity")
+        outlet = self._manager.hass.states.get(upstream) if upstream else None
+        return [HVACMode.OFF] if self.available and outlet and outlet.state == "off" else []
 
     @property
     def _physical_hvac_mode(self):
@@ -108,8 +115,15 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
         must belong to this exact physical endpoint's advertised modes.
         """
         cap = self._caps
-        if cap is None or not self.available:
+        if not self.available:
             return None
+        if cap is None:
+            # The external plug is physically OFF: show standby instead of
+            # making the logical controller itself Unavailable. No native
+            # feature, target, or HVAC direction is fabricated.
+            upstream = self.controller_settings.get("power_switch_entity")
+            outlet = self._manager.hass.states.get(upstream) if upstream else None
+            return HVACMode.OFF if outlet is not None and outlet.state == "off" else None
         settings = self.controller_settings
         method = settings["control_mode"]
         native_mode = self._physical_hvac_mode
