@@ -1,0 +1,33 @@
+name: Beta61 state-independent power switch pairing safety
+
+on:
+  push:
+    branches:
+      - 'fix/beta61-state-agnostic-switch-pairing-20261027'
+
+permissions:
+  contents: read
+
+jobs:
+  pairing-regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Syntax, metadata and locale JSON
+        run: |
+          python -I -m compileall -q .
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path("manifest.json").read_text())
+          assert manifest["domain"] == "environment_manager"
+          for path in Path(".").rglob("*.json"):
+              json.loads(path.read_text(encoding="utf-8"))
+          print("PASS canonical domain, source syntax and JSON")
+          PY
+          node --check frontend/air-quality-advisor-card.js
+      - name: Exercise OFF, ON and unavailable pairing and supply dispatch gates
+        run: python -I .github/tests/test_beta61_supply_selection.py
