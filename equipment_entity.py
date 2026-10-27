@@ -85,12 +85,18 @@ class EquipmentEntity:
         from homeassistant.const import EVENT_STATE_CHANGED
 
         selected = frozenset(self._spec.source_entities)
+        # Beta55 read the whole controller settings on EVERY HA state event
+        # for EVERY managed entity, including unrelated lights and sensors.
+        # Cache the exact switch ID instead; refresh it only when the managed
+        # controller sends its ordinary configuration-update dispatcher.
+        self._watched_upstream_switch = model.settings(
+            self._manager, self._spec).get("power_switch_entity")
 
         @callback
         def source_changed(event):
             updated = event.data.get("entity_id")
             if (updated not in selected and
-                    updated != model.settings(self._manager, self._spec).get("power_switch_entity")):
+                    updated != self._watched_upstream_switch):
                 return
             old, new = event.data.get("old_state"), event.data.get("new_state")
             if (old is not None and new is not None
@@ -105,4 +111,7 @@ class EquipmentEntity:
 
     @callback
     def _equipment_update(self):
+        if hasattr(self, "_watched_upstream_switch"):
+            self._watched_upstream_switch = model.settings(
+                self._manager, self._spec).get("power_switch_entity")
         self.async_write_ha_state()
