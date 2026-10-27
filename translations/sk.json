@@ -1800,13 +1800,13 @@
         "name": "Vlhkosť · Domov · cieľ (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Vykurovanie · Domov · Vypnúť"
+        "name": "Vykurovanie · Mimo domova"
       },
       "area_climate_profile_away_cool": {
-        "name": "Chladenie · Domov · Vypnúť"
+        "name": "Chladenie · Mimo domova"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Vlhkosť · Domov · Vypnúť · cieľ (%)"
+        "name": "Vlhkosť · Mimo domova · cieľ (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Vykurovanie · Spánok"
