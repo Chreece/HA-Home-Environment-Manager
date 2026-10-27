@@ -1,0 +1,42 @@
+name: Beta56 supervised power and comfort regressions
+
+on:
+  push:
+    branches:
+      - fix/beta56-supervisor-comfort-cadr-20261027
+  pull_request:
+    branches:
+      - release/v0.6.0b55
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  production-regressions:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      # The clean HACS package has a select.py file. Running asyncio-based
+      # tests from project root shadows Python's stdlib select extension.
+      - name: Native-source/PID/comfort/CADR tests
+        run: cd tests && python -m unittest discover -s . -p 'test_beta*.py' -v
+      - name: Syntax and translations
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path(".")
+          for p in root.glob("*.py"):
+              compile(p.read_text(encoding="utf-8"), str(p), "exec")
+          for p in root.rglob("*.json"):
+              json.loads(p.read_text(encoding="utf-8"))
+          print("Python/JSON verified")
+          PY
