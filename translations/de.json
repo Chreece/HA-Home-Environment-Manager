@@ -2068,7 +2068,15 @@
         "name": "Sprache"
       },
       "area_manual_profile": {
-        "name": "Geräte"
+        "name": "Geräte",
+        "state": {
+          "none": "Automatisch",
+          "home": "Zuhause",
+          "away": "Abwesend",
+          "comfort": "Komfort",
+          "sleep": "Schlaf",
+          "eco": "Sparbetrieb"
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Verstärkung",
@@ -2159,6 +2167,9 @@
       },
       "shade_window_entity": {
         "name": "Zugeordneter Fensterkontakt"
+      },
+      "equipment_power_switch_entity": {
+        "name": "Strom · Vorgeschalteter Netzschalter"
       }
     },
     "time": {
@@ -2185,7 +2196,19 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "Klima · {channel}"
+        "name": "Klima · {channel}",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "none": "Automatisch",
+              "home": "Zuhause",
+              "away": "Abwesend",
+              "comfort": "Komfort",
+              "sleep": "Schlaf",
+              "eco": "Sparbetrieb"
+            }
+          }
+        }
       }
     }
   },
