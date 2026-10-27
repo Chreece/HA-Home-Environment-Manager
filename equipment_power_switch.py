@@ -58,66 +58,85 @@ def relay_identity(hass: Any, spec: Any, entity: str) -> dict | None:
 
 def _configured_manager_entries(manager: Any) -> tuple[tuple[str, dict], ...]:
     """Inspect unloaded HA config entries as well as loaded controller owners."""
-    from .config_data import mutable_copy
-    entries = []
+    # This function runs on Home Assistant's main thread. Beta55 made a
+    # recursive deepcopy of every config entry for *each* switch candidate
+    # whenever a SelectEntity state was evaluated. That is unacceptable on
+    # large installations, and it was unnecessary: the claims are read-only.
     loader = getattr(getattr(manager.hass, "config_entries", None), "async_entries", None)
-    if callable(loader):
-        for entry in loader(DOMAIN):
-            info = mutable_copy({**entry.data, **entry.options})
-            entries.append((entry.entry_id, info))
-    else:
-        entries.append((manager.entry.entry_id, manager.settings))
-    return tuple(entries)
+    if not callable(loader):
+        return ((manager.entry.entry_id, manager.settings),)
+    return tuple(
+        (entry.entry_id, {**entry.data, **entry.options})
+        for entry in loader(DOMAIN)
+    )
 
 
-def _reserved_outputs(manager: Any) -> set[str]:
-    """Legacy direct actuators across ALL configured entries cannot be supplies."""
+def _switch_claims(manager: Any, spec: Any) -> tuple[set[str], set[str]]:
+    """Read all configured output/supply claims ONCE per request.
+
+    No deep copying, no repeated scans per candidate switch, no mutation.
+    Include unloaded config entries so a shared supply is never authorized.
+    This is for filtering choices only; every actual service command still
+    revalidates identity, ownership and live configuration.
+    """
     from .device_hierarchy import configured_area_ids, configured_sources
-    outputs: set[str] = set()
-    for _entry_id, settings in _configured_manager_entries(manager):
-        for area in configured_area_ids(settings):
-            outputs.update(configured_sources(settings, area))
-    return outputs
-
-
-def _other_owners(manager: Any, spec: Any, switch: str) -> bool:
-    """Refuse a shared switched supply, even if another entry is not loaded."""
+    reserved: set[str] = set()
+    assigned: set[str] = set()
     for entry_id, settings in _configured_manager_entries(manager):
-        cfg = settings.get(model.SETTINGS, {})
-        if not isinstance(cfg, dict):
+        for area in configured_area_ids(settings):
+            reserved.update(configured_sources(settings, area))
+        controllers = settings.get(model.SETTINGS, {})
+        if not isinstance(controllers, dict):
             continue
-        for key, values in cfg.items():
+        for key, values in controllers.items():
             if entry_id == manager.entry.entry_id and key == spec.identifier:
                 continue
-            if isinstance(values, dict) and values.get("power_switch_entity") == switch:
-                return True
-    return False
+            if not isinstance(values, dict):
+                continue
+            switch = values.get("power_switch_entity")
+            if isinstance(switch, str) and switch:
+                assigned.add(switch)
+    return reserved, assigned
 
 
 def permitted_supply(manager: Any, spec: Any, entity: str,
                      expected: Mapping | None = None) -> dict | None:
-    """One output, one exclusive supply, with stable physical identity."""
+    """Exact-device supply permission, independently rechecked at dispatch."""
     identity = relay_identity(manager.hass, spec, entity)
-    if (identity is None or entity in _reserved_outputs(manager)
-            or _other_owners(manager, spec, entity)
-            or expected is not None and dict(expected) != identity):
+    if identity is None:
+        return None
+    if expected is not None and dict(expected) != identity:
+        return None
+    outputs, used_supplies = _switch_claims(manager, spec)
+    if entity in outputs or entity in used_supplies:
         return None
     return identity
 
 
 def supply_options(manager: Any, spec: Any) -> tuple[str, ...]:
-    """Offer physical, exact-area switch entities without implicit adoption."""
-    candidates = []
+    """List same-room native switches in one bounded, read-only pass.
+
+    Called once to populate the selector's cached choices, not on every
+    Home Assistant state serialization or state-change event. Newly installed
+    switches can be picked after reloading this integration, no HA restart.
+    """
+    outputs, used_supplies = _switch_claims(manager, spec)
+    candidates: list[str] = []
     for state in manager.hass.states.async_all("switch"):
         entity = state.entity_id
-        if permitted_supply(manager, spec, entity) is not None:
+        if entity in outputs or entity in used_supplies:
+            continue
+        # Cheap domain/room restriction before asking the entity registry.
+        if entity_area(manager.hass, entity) != spec.area_id:
+            continue
+        if relay_identity(manager.hass, spec, entity) is not None:
             candidates.append(entity)
     saved = model.settings(manager, spec).get("power_switch_entity")
-    if saved and saved not in candidates:
-        # Keep an existing identity visible for safe removal/reconciliation,
-        # but selection and operation still require successful validation.
+    if isinstance(saved, str) and saved and saved not in candidates:
+        # Keep a previously selected physical identity visible for safe
+        # removal and error reporting; it still must pass permitted_supply().
         candidates.append(saved)
-    return tuple(dict.fromkeys(sorted(candidates)))
+    return tuple(sorted(set(candidates)))
 
 
 def output_required(cap: Any, targets: Mapping, measurements: Mapping,
