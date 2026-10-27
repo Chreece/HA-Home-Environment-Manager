@@ -37,6 +37,9 @@ NUMBER_FIELDS = {
     # Upstream outlet remains separate from the native output. A continuously
     # verified idle period is required before any controller-owned outlet OFF.
     "power_switch_cooldown_seconds": (60.0, 86400.0, 60.0, "s", 600.0),
+    # Manufacturer-rated *particle* CADR for a purifier, not fan airflow
+    # or CO2 ventilation. Zero denotes unknown/unconfigured, never measured 0.
+    "particle_cadr_m3h": (0.0, 100000.0, 1.0, "m³/h", 0.0),
 }
 QUIET_FLAGS = ("quiet_sleep", "quiet_occupied")
 from .pid_calibration import METHODS as PID_CALIBRATION_METHODS, MODEL_FIELDS as PID_MODEL_FIELDS
