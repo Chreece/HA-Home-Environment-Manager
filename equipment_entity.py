@@ -88,7 +88,9 @@ class EquipmentEntity:
 
         @callback
         def source_changed(event):
-            if event.data.get("entity_id") not in selected:
+            updated = event.data.get("entity_id")
+            if (updated not in selected and
+                    updated != model.settings(self._manager, self._spec).get("power_switch_entity")):
                 return
             old, new = event.data.get("old_state"), event.data.get("new_state")
             if (old is not None and new is not None
