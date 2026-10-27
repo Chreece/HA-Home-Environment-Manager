@@ -1,0 +1,33 @@
+name: Beta60 verify offline supply commissioning
+
+on:
+  push:
+    branches:
+      - 'fix/beta60-deferred-supply-commissioning-20261027'
+
+permissions:
+  contents: read
+
+jobs:
+  safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Syntax and canonical domain
+        run: |
+          python -I -m compileall -q .
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('manifest.json').read_text())
+          assert manifest['domain'] == 'environment_manager'
+          for path in Path('.').rglob('*.json'):
+              json.loads(path.read_text(encoding='utf-8'))
+          print('PASS: canonical domain, python and json')
+          PY
+          node --check frontend/air-quality-advisor-card.js
+      - name: Exercise real offline switch commissioning path
+        run: python -I .github/tests/test_beta60_offline_supply.py
