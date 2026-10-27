@@ -1015,7 +1015,7 @@ class _FlowMixin(RoomSetupMixin, CompactOptionsMixin):
                     or proposal["away_policy"] not in ("any_home","all_home")
                     or proposal["manual_profile"] not in
                       ("auto","comfort","home","away","sleep","eco")
-                    or proposal["target_source"] not in ("temperature","pmv")):
+                    or proposal["target_source"] not in ("temperature","auto_comfort","pmv")):
                 errors["base"]="climate_occupancy_invalid"
             elif not all(x in {s["value"] for s in sensor_options}
                          for x in proposal["occupancy_sensors"]):
