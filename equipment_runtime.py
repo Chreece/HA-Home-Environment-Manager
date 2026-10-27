@@ -956,6 +956,37 @@ class EquipmentRuntime:
                 uncertain = True
         return True if uncertain else False
 
+    def _stop_policy_verified(
+        self, spec: model.ManagedDevice, cap: model.Capabilities, kind: str,
+    ) -> bool:
+        """Recheck shutdown consent and live sleep/demand before native OFF.
+
+        Stop commands are a separate, narrowly scoped write path. A verified
+        sleep pause must turn an authorized native output OFF, not merely stop
+        PID adjustments. An IDLE stop needs independent qualified measurements;
+        an unknown reading never proves idle. Neither policy can power ON.
+        """
+        cfg = model.settings(self.manager, spec)
+        if "off" not in cap.modes or cfg.get("control_mode") not in (
+            "automatic", "pid", "manual"
+        ):
+            return False
+        room = model.room_config(self.manager, spec)
+        plan = model.plan_for(self.manager, spec)
+        if kind == "sleep":
+            from .device_activation import effective_device
+            dev = effective_device(self.manager, spec, cap.primary)
+            if dev.get("sleep_behavior") != "pause":
+                return False
+            _decision, reason = live_device_permission(
+                self.hass, spec.area_id, room, plan, dev,
+            )
+            return reason == "sleep_room_control_paused"
+        if kind == "idle" and cfg["control_mode"] in ("automatic", "pid"):
+            from .equipment_power_switch import approved_demand
+            return approved_demand(self, spec, cfg, cap) is False
+        return False
+
     def _shutdown_allowed(self, spec: model.ManagedDevice, entity: str, expected: dict) -> bool:
         """Only an already-owned OFF can survive deselection or removed rooms."""
         from homeassistant.helpers import entity_registry as er
@@ -1131,7 +1162,7 @@ class EquipmentRuntime:
     async def _send(self, spec: model.ManagedDevice, cap: model.Capabilities, entity: str,
                     service: str, data: dict, expected: dict, *, power: bool = False,
                     mode: str | None = None, automatic: bool = True,
-                    shutdown: bool = False) -> bool:
+                    shutdown: bool = False, policy_stop: str | None = None) -> bool:
         """Durable intent, exact target, live rechecks after *every* yield."""
         record = self._record(spec)
         if record.get("pending") or record.get("paused"):
@@ -1142,6 +1173,12 @@ class EquipmentRuntime:
         cfg = model.settings(self.manager, spec)
         plan = model.plan_for(self.manager, spec)
         action_mode = mode or primary.state
+        if policy_stop is not None:
+            if (policy_stop not in ("sleep", "idle")
+                    or not power or action_mode != "off"
+                    or not self._stop_policy_verified(spec, cap, policy_stop)):
+                self._status(spec, "authority_or_evidence_changed_before_dispatch")
+                return False
         if shutdown:
             if not self._shutdown_allowed(spec, entity, expected):
                 self._status(spec, "owned_shutdown_identity_or_dwell_hold")
@@ -1178,6 +1215,9 @@ class EquipmentRuntime:
             if not self._active or not self._ready or record.get("paused"):
                 return False
             if any(snapshot(self.hass.states.get(e)) != previous for e, previous in before_sources.items()):
+                return False
+            if (policy_stop is not None
+                    and not self._stop_policy_verified(spec, cap, policy_stop)):
                 return False
             if shutdown:
                 return self._shutdown_allowed(spec, entity, expected)
@@ -1216,7 +1256,8 @@ class EquipmentRuntime:
             return False
 
     async def _power(self, spec: model.ManagedDevice, cap: model.Capabilities,
-                     desired: str, *, automatic: bool, shutdown: bool = False) -> bool:
+                     desired: str, *, automatic: bool, shutdown: bool = False,
+                     policy_stop: str | None = None) -> bool:
         state = self.hass.states.get(cap.primary)
         if state is None or state.state in ("unknown", "unavailable"):
             return False
@@ -1281,7 +1322,8 @@ class EquipmentRuntime:
             service = "set_hvac_mode" if cap.domain == "climate" else "turn_off" if desired == "off" else "turn_on"
             data = {"hvac_mode": desired} if cap.domain == "climate" else {}
         return await self._send(spec, cap, cap.primary, service, data, {"state": target_state},
-                                power=True, mode=desired, automatic=automatic, shutdown=shutdown)
+                                power=True, mode=desired, automatic=automatic,
+                                shutdown=shutdown, policy_stop=policy_stop)
 
     async def _native_target(self, spec: model.ManagedDevice, cap: model.Capabilities,
                              mode: str, targets: dict, demand: float | None, automatic: bool) -> bool:
@@ -1518,6 +1560,37 @@ class EquipmentRuntime:
         measured = self.measurements(spec, cap)
         soft, power = model.permission(self.manager, spec, cap)
         owned = record["power"].get(cap.primary)
+        if self._stop_policy_verified(spec, cap, "sleep"):
+            # A sleeping room with Pause selected is OFF, not just deprived
+            # of PID/setpoint updates. Never re-tune its fan or targets while
+            # sleeping. Respect the native minimum ON/defrost interlocks,
+            # then let a controller-owned upstream relay idle out separately.
+            self._memory.pop(spec.identifier, None)
+            self._fan_allocations.pop(spec.identifier, None)
+            if output_off(state):
+                self._status(spec, "sleep_room_control_paused",
+                             reason="native_output_off_during_sleep")
+                return
+            if not power and not owned:
+                self._status(spec, "power_control_not_commissioned",
+                             reason="sleep_shutdown_needs_native_power_grant")
+                return
+            await self._power(
+                spec, cap, "off", automatic=False, shutdown=bool(owned),
+                policy_stop="sleep",
+            )
+            return
+        if (auto and power and not output_off(state)
+                and self._stop_policy_verified(spec, cap, "idle")):
+            # PID integral or PWM phase cannot keep an appliance energized
+            # once independent fresh measured demand is decisively FALSE.
+            # Native OFF still enforces the minimum runtime. The optional
+            # external supply remains on until a *separate* idle cooldown.
+            await self._power(
+                spec, cap, "off", automatic=False, shutdown=bool(owned),
+                policy_stop="idle",
+            )
+            return
         if auto and power and not owned and not output_off(state):
             self._status(spec, "running_device_requires_off_before_automatic_power_ownership")
             return
