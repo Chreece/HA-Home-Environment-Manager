@@ -103,7 +103,7 @@ class SensorEvidenceAudit(unittest.TestCase):
         quiet = load_function("equipment_runtime.py", "_quiet_context",
                               class_name="EquipmentRuntime", env={"model": model})
         fake = SimpleNamespace(manager=object())
-        spec = object()
+        spec = SimpleNamespace(area_id="badezimmer")
         cfg = {"quiet_sleep": False, "quiet_occupied": True}
         self.assertIs(quiet(fake, spec, cfg, {"occupancy": "unknown"}), True)
         self.assertIs(quiet(fake, spec, cfg, {"occupancy": "occupied"}), True)
