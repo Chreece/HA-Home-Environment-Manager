@@ -1800,13 +1800,13 @@
         "name": "Độ ẩm · Nhà · mục tiêu (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Sưởi · Nhà · Tắt"
+        "name": "Sưởi · Vắng nhà"
       },
       "area_climate_profile_away_cool": {
-        "name": "Làm mát · Nhà · Tắt"
+        "name": "Làm mát · Vắng nhà"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Độ ẩm · Nhà · Tắt · mục tiêu (%)"
+        "name": "Độ ẩm · Vắng nhà · mục tiêu (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Sưởi · Ngủ"
