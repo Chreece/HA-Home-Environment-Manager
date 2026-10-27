@@ -1,0 +1,123 @@
+name: Publish verified Home Environment Manager Beta58
+
+on:
+  push:
+    branches:
+      - publish/v0.6.0b58-20261027
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-hem-beta58
+  cancel-in-progress: false
+
+jobs:
+  verify-package-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tested source and regressions
+        uses: actions/checkout@v4
+        with:
+          ref: fix/beta58-away-profile-number-labels-20261027
+          path: source
+          persist-credentials: false
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Verify Greek and 38 locale Away profile target names
+        run: cd source/tests && python -m unittest discover -s . -p 'test_beta58_*.py' -v
+
+      - name: Checkout immutable clean distribution
+        uses: actions/checkout@v4
+        with:
+          ref: f363ba1ed93e06f177a56202d82be336f610acde
+          path: release
+          persist-credentials: false
+
+      - name: Validate clean integration and create flat HACS/manual ZIP
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, zipfile
+
+          root = Path("release")
+          assert (root / ".git").is_dir()
+          assert not (root / "tests").exists()
+          assert not (root / ".github").exists()
+          manifest = json.loads((root/"manifest.json").read_text(encoding="utf-8"))
+          assert manifest["domain"] == "environment_manager"
+          assert manifest["version"] == "0.6.0b58"
+          for item in ("__init__.py", "equipment_power_switch.py", "purifier_capacity.py", "equipment_runtime.py",
+                       "equipment_model.py", "select.py", "number.py", "climate.py",
+                       "translations/el.json", "frontend/air-quality-advisor-card.js"):
+              assert (root/item).is_file(), item
+          languages = tuple((root/"translations").glob("*.json"))
+          assert len(languages) >= 35, len(languages)
+          for item in root.rglob("*.json"):
+              json.loads(item.read_text(encoding="utf-8"))
+          files = []
+          for item in root.iterdir():
+              if item.is_file() and item.suffix in (".py", ".json", ".yaml"):
+                  files.append(item)
+              elif item.is_dir() and item.name in ("translations", "frontend", "brand"):
+                  files.extend(p for p in item.rglob("*") if p.is_file())
+          for item in files:
+              if item.suffix == ".py":
+                  compile(item.read_text(encoding="utf-8"), str(item), "exec")
+          assert all(".github" not in p.parts and "tests" not in p.parts for p in files)
+          target = Path("dist/HA-Home-Environment-Manager-v0.6.0b58.zip")
+          target.parent.mkdir(exist_ok=True)
+          with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+              for item in sorted(files):
+                  archive.write(item, item.relative_to(root).as_posix())
+          with zipfile.ZipFile(target) as archive:
+              assert archive.testzip() is None
+              assert "manifest.json" in archive.namelist()
+              assert "equipment_power_switch.py" in archive.namelist()
+          print(f"Validated {len(files)} integration files, {len(languages)} locales, ZIP {target.stat().st_size} bytes")
+          PY
+
+      - name: Publish isolated Beta58 prerelease at clean commit only
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view v0.6.0b58 >/dev/null 2>&1; then
+            echo "Beta58 already exists: refusing to replace a published release"
+            exit 1
+          fi
+          cat > release-notes.md <<'NOTES'
+          # Home Environment Manager v0.6.0b58 — correct Away profile labels
+
+          Beta58 is a translation-only hotfix based on v0.6.0b57. It keeps the canonical `environment_manager` domain and its existing startup performance fixes, automatic comfort, PID controls and other Beta57 functionality.
+
+          ### Fixed
+          - Greek: the Away heating, cooling and humidity Number entities now show **Θέρμανση · Απών**, **Ψύξη · Απών**, and **Υγρασία · Απών · στόχος (%)**.
+          - English: the same target names are now **Heating · Away**, **Cooling · Away**, and **Humidity · Away · target (%)** instead of the incorrect "Home · Off".
+          - The equivalent incorrect wording has been corrected in all **38 translated locale catalogs**; users should no longer interpret the Away profile as device OFF.
+          - English device configuration forms also use Away instead of Home Off when describing away heating and cooling targets.
+
+          ### Compatibility
+          - Only translations, canonical English strings and the manifest version changed from Beta57. **No Python control logic, numeric target, underlying preset/profile key, Home Assistant entity ID, entity unique ID or stored setting changed.**
+          - The Away profile is a separate temperature/humidity target used on confirmed absence (or when explicitly selected), not a command to turn a physical device OFF.
+          - Five source/translation regression tests passed on Python 3.13 and 3.14, covering all 38 locale catalogs and the unchanged numerical profiles.
+
+          ### Install
+          The downloadable ZIP contains the flat canonical Home Assistant integration at `config/custom_components/environment_manager/`. Restart Home Assistant (or reload as appropriate for the integration) to load the revised names. A previously user-customized entity name may override its generated translation.
+
+          **Existing incident note:** A user's v55 Recorder log also showed MySQL connection failures; this translation-only release cannot diagnose or fix a separate database connectivity issue. Live Home Assistant startup and hardware operation are not covered by the automated label tests.
+          NOTES
+          gh release create v0.6.0b58 dist/HA-Home-Environment-Manager-v0.6.0b58.zip --target f363ba1ed93e06f177a56202d82be336f610acde --title "Home Environment Manager v0.6.0b58" --notes-file release-notes.md --prerelease
+
+      - name: Verify published tag and uploaded asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          test "$(gh api repos/${{ github.repository }}/git/ref/tags/v0.6.0b58 --jq '.object.sha')" = "f363ba1ed93e06f177a56202d82be336f610acde"
+          gh release view v0.6.0b58 --json isPrerelease,assets --jq '.isPrerelease and any(.assets[]; .name == "HA-Home-Environment-Manager-v0.6.0b58.zip")' | grep -qx true
