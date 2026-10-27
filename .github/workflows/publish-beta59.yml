@@ -1,0 +1,229 @@
+name: Publish Home Environment Manager beta 59
+
+on:
+  push:
+    branches:
+      - 'release/v0.6.0b59'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: home-environment-manager-beta59
+  cancel-in-progress: false
+
+jobs:
+  validate-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Validate canonical integration source and metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m compileall -q .
+          python3 - <<'PY'
+          import ast
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(Path("manifest.json").read_text(encoding="utf-8"))
+          assert manifest["domain"] == "environment_manager", manifest
+          assert manifest["version"] == "0.6.0b59", manifest
+          assert not (Path("air_quality_advisor") / "manifest.json").exists()
+          for path in Path(".").rglob("*.json"):
+              json.loads(path.read_text(encoding="utf-8"))
+          power = Path("equipment_power_switch.py").read_text(encoding="utf-8")
+          selector = Path("select.py").read_text(encoding="utf-8")
+          power_tree = ast.parse(power)
+          select_tree = ast.parse(selector)
+          funcs = {n.name: n for n in power_tree.body if isinstance(n, ast.FunctionDef)}
+          classes = {n.name: n for n in select_tree.body if isinstance(n, ast.ClassDef)}
+          assert {"supply_options", "supply_option_labels", "permitted_supply", "relay_identity"} <= funcs.keys()
+          assert "EquipmentPowerSwitchSelect" in classes
+          inventory = ast.get_source_segment(power, funcs["supply_options"])
+          assert "registry.entities.values()" in inventory
+          assert 'hass.states.async_all("switch")' not in inventory
+          assert "_switch_claims(manager, spec)" in inventory
+          assert "relay_identity(manager.hass, spec, entity)" in inventory
+          assert "Counter(display.values())" in power
+          assert "async_track_state_change_event" in selector
+          assert "selected_power_switch_entity_id" in selector
+          assert '"power_switch_entity": entity' in selector
+          assert '"power_switch_entity": None if option == "none" else option' not in selector
+          print("PASS: manifest, domain, JSON, source syntax, registry inventory, ID-safe friendly labels")
+          PY
+          node --check frontend/air-quality-advisor-card.js
+
+      - name: Exercise actual selector inventory and labels with isolated HA registry stubs
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import ast
+          import asyncio
+          from pathlib import Path
+          from types import ModuleType, SimpleNamespace as N
+          from typing import Any
+          import sys
+
+          entries = [
+              N(entity_id="switch.live", id="live", device_id="plug", area_id=None, platform="physical", name="Relay", original_name="Relay"),
+              N(entity_id="switch.offline", id="offline", device_id="plug", area_id=None, platform="physical", name="Backup", original_name="Backup"),
+              N(entity_id="switch.virtual", id="virtual", device_id=None, area_id="guest", platform="physical", name="Virtual", original_name="Virtual"),
+              N(entity_id="switch.reserved", id="reserved", device_id="plug", area_id=None, platform="physical", name="Reserved", original_name="Reserved"),
+              N(entity_id="switch.assigned", id="assigned", device_id="plug", area_id=None, platform="physical", name="Assigned", original_name="Assigned"),
+              N(entity_id="switch.other", id="other", device_id="other", area_id=None, platform="physical", name="Other", original_name="Other"),
+              N(entity_id="switch.own", id="own", device_id="controlled", area_id=None, platform="physical", name="Own", original_name="Own"),
+              N(entity_id="switch.generated", id="generated", device_id="plug", area_id=None, platform="environment_manager", name="Generated", original_name="Generated"),
+          ]
+          registry = N(entities={e.entity_id: e for e in entries})
+          registry.async_get = registry.entities.get
+          devices = N(entities={
+              "plug": N(area_id="guest", name_by_user="Guest Plug", name="Physical Plug"),
+              "other": N(area_id="elsewhere", name_by_user=None, name="Other"),
+              "controlled": N(area_id="guest", name_by_user="Controller", name="Controller"),
+          })
+          devices.async_get = devices.entities.get
+          states = {
+              "switch.live": N(name="Socket", state="off"),
+              "switch.virtual": N(name="Adaptive Lighting", state="on"),
+          }
+          hass = N(states=N(get=states.get))
+          er = ModuleType("homeassistant.helpers.entity_registry")
+          dr = ModuleType("homeassistant.helpers.device_registry")
+          er.async_get = lambda _: registry
+          dr.async_get = lambda _: devices
+          helpers = ModuleType("homeassistant.helpers")
+          helpers.entity_registry = er
+          helpers.device_registry = dr
+          ha = ModuleType("homeassistant")
+          ha.helpers = helpers
+          sys.modules.update({
+              "homeassistant": ha,
+              "homeassistant.helpers": helpers,
+              "homeassistant.helpers.entity_registry": er,
+              "homeassistant.helpers.device_registry": dr,
+          })
+
+          def entity_area(_, entity):
+              entry = registry.async_get(entity)
+              if entry is None:
+                  return None
+              if entry.area_id:
+                  return entry.area_id
+              device = devices.async_get(entry.device_id) if entry.device_id else None
+              return device.area_id if device else None
+
+          calls = [0]
+          def _switch_claims(_, __):
+              calls[0] += 1
+              return {"switch.reserved"}, {"switch.assigned"}
+
+          class Model:
+              @staticmethod
+              def settings(_, __):
+                  return {"power_switch_entity": None}
+
+          source = Path("equipment_power_switch.py").read_text()
+          parsed = ast.parse(source)
+          names = {"relay_identity", "supply_options", "supply_option_labels"}
+          nodes = [node for node in parsed.body if isinstance(node, ast.FunctionDef) and node.name in names]
+          namespace = {
+              "Any": Any,
+              "DOMAIN": "environment_manager",
+              "entity_area": entity_area,
+              "_switch_claims": _switch_claims,
+              "model": Model,
+          }
+          exec(compile(ast.Module(body=nodes, type_ignores=[]), "equipment_power_switch.py", "exec"), namespace)
+          manager = N(hass=hass)
+          spec = N(area_id="guest", source_device_id="controlled", source_entities=())
+          choices = namespace["supply_options"](manager, spec)
+          assert choices == ("switch.live", "switch.offline", "switch.virtual"), choices
+          assert calls == [1], calls
+          labels = namespace["supply_option_labels"](hass, choices)
+          assert labels == {
+              "switch.live": "Guest Plug - Socket (off)",
+              "switch.offline": "Guest Plug - Backup (unavailable)",
+              "switch.virtual": "Adaptive Lighting (on)",
+          }, labels
+          states["switch.live"] = N(name="Socket", state="on")
+          assert namespace["supply_option_labels"](hass, choices)["switch.live"] == "Guest Plug - Socket (on)"
+          registry.entities["switch.duplicate"] = N(
+              entity_id="switch.duplicate", id="duplicate", device_id="plug",
+              area_id=None, platform="physical", name="Backup", original_name="Backup",
+          )
+          duplicate_labels = namespace["supply_option_labels"](hass, choices + ("switch.duplicate",))
+          assert len(set(duplicate_labels.values())) == len(duplicate_labels)
+          print("PASS: offline switch, same-room and claimed exclusions, physical identity, names, state transitions, duplicate labels")
+          PY
+
+      - name: Build and inspect canonical manual installation ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+
+          version = json.loads(Path("manifest.json").read_text())["version"]
+          tag = f"v{version}"
+          filename = Path("dist") / f"HA-Home-Environment-Manager-{tag}.zip"
+          filename.parent.mkdir(exist_ok=True)
+          tracked = subprocess.check_output(["git", "ls-files", "-z"]).decode().split("\0")
+          included = []
+          with ZipFile(filename, "w", ZIP_DEFLATED, compresslevel=8) as archive:
+              for name in sorted(filter(None, tracked)):
+                  if name.startswith((".github/", "tests/", "dist/")) or name == "hacs.json":
+                      continue
+                  if "__pycache__" in name or name.endswith((".pyc", ".pyo")):
+                      continue
+                  path = Path(name)
+                  if path.is_file():
+                      archive.write(path, f"custom_components/environment_manager/{name}")
+                      included.append(name)
+          for must in ("manifest.json", "__init__.py", "select.py",
+                       "equipment_power_switch.py", "frontend/air-quality-advisor-card.js",
+                       "translations/el.json", "strings.json"):
+              assert must in included, must
+          with ZipFile(filename) as archive:
+              assert not archive.testzip(), "Corrupt release ZIP"
+              manifest = json.loads(archive.read("custom_components/environment_manager/manifest.json"))
+              assert manifest["domain"] == "environment_manager"
+              assert manifest["version"] == "0.6.0b59"
+          print(f"PASS: packaged {len(included)} canonical files in {filename}")
+          PY
+
+      - name: Create GitHub/HACS prerelease at validated commit
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG=v0.6.0b59
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release already published; leaving it unchanged"
+            exit 0
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" >/dev/null 2>&1; then
+            echo "::error::Tag exists without a release; refusing to repoint it"
+            exit 1
+          fi
+          branch_sha="$(gh api "repos/$GITHUB_REPOSITORY/branches/release/v0.6.0b59" --jq '.commit.sha')"
+          if [[ "$branch_sha" != "$GITHUB_SHA" ]]; then
+            echo "::error::Branch moved during validation; refusing obsolete release"
+            exit 1
+          fi
+          gh release create "$TAG" \
+            "dist/HA-Home-Environment-Manager-$TAG.zip#Manual installation ZIP" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Home Environment Manager $TAG" \
+            --notes-file ".github/releases/$TAG.md" \
+            --prerelease
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json tagName,isPrerelease,assets
