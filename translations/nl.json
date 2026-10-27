@@ -750,7 +750,7 @@
           "climate_sleep_schedule_enabled": "Slaap · Automatische",
           "climate_sleep_start": "Slaap · Apparaten · START",
           "climate_sleep_end": "Slaap · Apparaten · END",
-          "climate_target_source": "Apparaten · bron · doelwaarde",
+          "climate_target_source": "Comfortmethode",
           "climate_comfort_adjustment_max_c": "Apparaten (°C)"
         },
         "data_description": {
@@ -765,7 +765,7 @@
           "climate_sleep_schedule_enabled": "Deze optie regelt ‘Slaap · Automatische’. Fysieke opdrachten vereisen afzonderlijke toestemming en beveiligingen.",
           "climate_sleep_start": "Deze tijd bepaalt ‘Slaap · Apparaten · START’. Het voorkomt te snel schakelen en vervangt geen hardwarebeveiliging.",
           "climate_sleep_end": "Deze tijd bepaalt ‘Slaap · Apparaten · END’. Het voorkomt te snel schakelen en vervangt geen hardwarebeveiliging.",
-          "climate_target_source": "Beslisdrempel voor ‘Apparaten · bron · doelwaarde’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "climate_target_source": "Automatisch comfort (temperatuur en vochtigheid); ISO 7730 requires separately verified measurements.",
           "climate_comfort_adjustment_max_c": "Beslisdrempel voor ‘Apparaten (°C)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde."
         }
       },
@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Zonwering sluiten boven kamertemperatuur (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Deeltjes-CADR van luchtreiniger (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Thuis · Apparaten · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Apparaten · bron · doelwaarde"
+        "name": "Comfortmethode",
+        "state": {
+          "temperature": "Vaste temperatuurdoelen",
+          "auto_comfort": "Automatisch comfort (temperatuur en vochtigheid)",
+          "pmv": "Geavanceerde ISO 7730 (metingen vereist)"
+        }
       },
       "equipment_control_mode": {
         "name": "Regeling · {channel}Regelmethode",
