@@ -287,12 +287,33 @@ class EquipmentRuntime:
                                        old.get("power_switch_entity"))
                 if selected == "none":
                     selected = None
-                if selected != old.get("power_switch_entity") and selected is not None:
-                    raise HomeAssistantError(
-                        "A new supply must be commissioned while the native device is available and OFF"
-                    )
                 record = self._record(spec)
                 upstream = record.get("upstream", {})
+                if selected != old.get("power_switch_entity"):
+                    if (upstream.get("owned") or upstream.get("pending")
+                            or record.get("power") or record.get("pending")):
+                        raise HomeAssistantError(
+                            "Reconcile the previously controlled output before changing its power supply"
+                        )
+                    if selected is not None:
+                        from .equipment_power_switch import (
+                            permitted_supply, supply_off_for_pairing,
+                        )
+                        if permitted_supply(self.manager, spec, selected) is None:
+                            raise HomeAssistantError(
+                                "Select a dedicated physical power switch in the same room"
+                            )
+                        if not supply_off_for_pairing(self.hass, spec, selected):
+                            raise HomeAssistantError(
+                                "The selected upstream power switch must report OFF, "
+                                "with no downstream output reporting active"
+                            )
+                    elif old.get("power_switch_entity"):
+                        old_supply = self.hass.states.get(old["power_switch_entity"])
+                        if old_supply is None or old_supply.state != "off":
+                            raise HomeAssistantError(
+                                "The previous upstream power switch must report OFF before removal"
+                            )
                 if selected is None and old.get("power_switch_entity") is not None:
                     supply = self.hass.states.get(old["power_switch_entity"])
                     if (upstream.get("owned") or upstream.get("pending")
@@ -317,6 +338,19 @@ class EquipmentRuntime:
                     existing = existing if isinstance(existing, dict) else {}
                     existing[spec.identifier] = adjusted
                     options[model.SETTINGS] = existing
+                    # The executor yielded while acquiring the options lock.
+                    # Revalidate right before persistence; never save a stale
+                    # newly selected ON or reassigned physical supply.
+                    if selected != old.get("power_switch_entity") and selected is not None:
+                        from .equipment_power_switch import (
+                            permitted_supply, supply_off_for_pairing,
+                        )
+                        if (not self._current_spec(spec)
+                                or permitted_supply(self.manager, spec, selected) is None
+                                or not supply_off_for_pairing(self.hass, spec, selected)):
+                            raise HomeAssistantError(
+                                "Power supply changed during selection; retry when the switch is OFF"
+                            )
                     self.hass.config_entries.async_update_entry(
                         self.manager.entry, options=options,
                     )
@@ -427,7 +461,7 @@ class EquipmentRuntime:
             # The relay is a separate physical device, never an alias for
             # this controller's own output. It grants no independent native
             # power authority and cannot be shared with other controllers.
-            from .equipment_power_switch import permitted_supply
+            from .equipment_power_switch import permitted_supply, supply_off_for_pairing
             selected_supply = new.get("power_switch_entity")
             if selected_supply == "none":
                 selected_supply = None
@@ -443,20 +477,17 @@ class EquipmentRuntime:
                     )
             if selected_supply != old.get("power_switch_entity"):
                 upstream = self._record(spec).get("upstream", {})
-                if upstream.get("pending") or upstream.get("owned"):
+                if (upstream.get("pending") or upstream.get("owned")
+                        or self._record(spec).get("power") or self._record(spec).get("pending")):
                     raise HomeAssistantError(
-                        "Previously controlled power switch must be confirmed OFF "
-                        "and reconciled before changing its assignment"
+                        "Reconcile previously controlled output before changing its power supply"
                     )
-                if selected_supply:
-                    switch = self.hass.states.get(selected_supply)
-                    native_output = self.hass.states.get(cap.primary)
-                    if (switch is None or switch.state != "off"
-                            or not output_off(native_output)):
-                        raise HomeAssistantError(
-                            "Commissioning an upstream supply requires BOTH the "
-                            "physical output and selected power switch to be OFF"
-                        )
+                if selected_supply and not supply_off_for_pairing(
+                    self.hass, spec, selected_supply
+                ):
+                    raise HomeAssistantError(
+                        "The upstream switch must report OFF and no native output may report active"
+                    )
             if "sensor_verified" in changes and type(changes["sensor_verified"]) is not bool:
                 raise HomeAssistantError("Sensor verification must be a boolean")
             # The selector itself authorizes only this selected native endpoint.
@@ -498,11 +529,10 @@ class EquipmentRuntime:
                 # runtime retains its OFF/reconciliation hold without rejecting
                 # the requested method or resetting its ownership protection.
             record = self._record(spec)
-            if selected_supply:
-                # At commissioning the native device is OFF but present. Save
-                # its observed capabilities BEFORE an outlet may make it
-                # unavailable. The saved model is for demand classification,
-                # never permission to issue commands to offline hardware.
+            if selected_supply and model.sources_available(self.manager, spec):
+                # Preserve only genuinely live, verified native capabilities.
+                # An OFF supply may leave stale attributes in unavailable HA
+                # states: never promote those into proof for automatic power ON.
                 record["capabilities"] = asdict(cap)
                 await self._save()
             if record.get("pending") and not record.get("paused"):
@@ -546,6 +576,15 @@ class EquipmentRuntime:
                 if authorizing and (not self._current_spec(spec) or
                         new["_native_authorization"] != authority_context(self.manager, spec)):
                     raise HomeAssistantError("Device sources changed; select the control method again")
+                if selected_supply != old.get("power_switch_entity") and selected_supply:
+                    # Never accept a new supply that came ON or changed identity
+                    # while the controller was awaiting durable Store writes.
+                    if (not self._current_spec(spec)
+                            or permitted_supply(self.manager, spec, selected_supply) is None
+                            or not supply_off_for_pairing(self.hass, spec, selected_supply)):
+                        raise HomeAssistantError(
+                            "Power supply changed during selection; retry when the switch is OFF"
+                        )
                 self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
             self._memory.pop(spec.identifier, None)
             self._fan_allocations.pop(spec.identifier, None)
