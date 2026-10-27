@@ -1800,13 +1800,13 @@
         "name": "نمی · گھر · ہدف (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "حرارت · گھر · بند"
+        "name": "حرارت · گھر سے باہر"
       },
       "area_climate_profile_away_cool": {
-        "name": "ٹھنڈک · گھر · بند"
+        "name": "ٹھنڈک · گھر سے باہر"
       },
       "area_climate_profile_away_humidity": {
-        "name": "نمی · گھر · بند · ہدف (%)"
+        "name": "نمی · گھر سے باہر · ہدف (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "حرارت · نیند"
