@@ -1619,6 +1619,19 @@ def localized_equipment_name(key: str, language: str, channel: str = "") -> str:
             (name for name in EQUIPMENT_TRANSLATED_NAMES
              if name.casefold() == base), "en"
         )
+    if key in ("power_switch_entity", "power_switch_cooldown_seconds"):
+        # Both new power settings exist for every managed output, including
+        # numeric and direct relay endpoints. No source-device name is placed
+        # ahead of the functional grouping prefix.
+        title = {
+            "el": ("Ισχύς", "Εξωτερικός διακόπτης τροφοδοσίας",
+                   "Χρόνος αδράνειας πριν την αποκοπή (δευτ.)"),
+            "de": ("Strom", "Vorgeschalteter Netzschalter",
+                   "Leerlauf-Nachlaufzeit (Sekunden)"),
+        }.get(canonical, ("Power", "Upstream supply switch",
+                          "Idle cooldown before supply OFF (seconds)"))
+        return (f"{title[0]} · {channel}" +
+                (title[1] if key == "power_switch_entity" else title[2])).strip()
     template = EQUIPMENT_TRANSLATED_NAMES[canonical].get(key)
     if template is None:
         template = EQUIPMENT_TRANSLATED_NAMES["en"].get(key, key.replace("_", " ").title())
