@@ -1280,7 +1280,7 @@
         "name": "Độ ẩm bề mặt (tính toán)"
       },
       "equipment_control_status": {
-        "name": "Trạng thái · {channel}Trạng thái · Trạng thái bộ điều khiển",
+        "name": "Trạng thái · {channel}Trạng thái bộ điều khiển",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,7 +1965,7 @@
         "name": "PID · {channel}cài đặt · nguồn (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "Yên tĩnh · {channel}Yên tĩnh · Giới hạn quạt chạy êm (%)"
+        "name": "Yên tĩnh · {channel}Giới hạn quạt chạy êm (%)"
       },
       "equipment_min_on_seconds": {
         "name": "Công suất · {channel}min ON (s)"
@@ -2039,10 +2039,10 @@
         "name": "Thiết bị · Bên ngoài"
       },
       "equipment_quiet_sleep": {
-        "name": "Yên tĩnh · {channel}Yên tĩnh · Giảm tiếng ồn khi ngủ"
+        "name": "Yên tĩnh · {channel}Giảm tiếng ồn khi ngủ"
       },
       "equipment_quiet_occupied": {
-        "name": "Yên tĩnh · {channel}Yên tĩnh · Giảm tiếng ồn khi có người"
+        "name": "Yên tĩnh · {channel}Giảm tiếng ồn khi có người"
       },
       "equipment_sensor_verified": {
         "name": "Cảm biến · {channel}Bắt buộc"
@@ -2090,7 +2090,7 @@
         "name": "Thiết bị · nguồn · mục tiêu"
       },
       "equipment_control_mode": {
-        "name": "Điều khiển · {channel}Điều khiển · Phương pháp điều khiển",
+        "name": "Điều khiển · {channel}Phương pháp điều khiển",
         "state": {
           "existing": "Bộ điều khiển phòng hiện có",
           "automatic": "Tự động",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "Yên tĩnh · {channel}Yên tĩnh · Chế độ quạt êm của thiết bị"
+        "name": "Yên tĩnh · {channel}Chế độ quạt êm của thiết bị"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2174,7 +2174,7 @@
         "name": "Chỉ số nấm mốc · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "Điều khiển · {channel}Điều khiển · Kiểm tra và tiếp tục"
+        "name": "Điều khiển · {channel}Kiểm tra và tiếp tục"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"

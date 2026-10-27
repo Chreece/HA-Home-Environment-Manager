@@ -1965,7 +1965,7 @@
         "name": "PID · {channel}設定 · 來源 (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "靜音 · {channel}靜音 · 低噪音風扇上限 (%)"
+        "name": "靜音 · {channel}低噪音風扇上限 (%)"
       },
       "equipment_min_on_seconds": {
         "name": "功率 · {channel}min ON (s)"
@@ -2039,10 +2039,10 @@
         "name": "裝置 · 室外"
       },
       "equipment_quiet_sleep": {
-        "name": "靜音 · {channel}靜音 · 睡眠時降低噪音"
+        "name": "靜音 · {channel}睡眠時降低噪音"
       },
       "equipment_quiet_occupied": {
-        "name": "靜音 · {channel}靜音 · 有人時降低噪音"
+        "name": "靜音 · {channel}有人時降低噪音"
       },
       "equipment_sensor_verified": {
         "name": "感測器 · {channel}必填"
@@ -2090,7 +2090,7 @@
         "name": "裝置 · 來源 · 目標"
       },
       "equipment_control_mode": {
-        "name": "控制 · {channel}控制 · 控制方式",
+        "name": "控制 · {channel}控制方式",
         "state": {
           "existing": "現有房間控制器",
           "automatic": "自動",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "靜音 · {channel}靜音 · 裝置原生低噪音風扇模式"
+        "name": "靜音 · {channel}裝置原生低噪音風扇模式"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2174,7 +2174,7 @@
         "name": "黴菌指標 · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "控制 · {channel}控制 · 核實並恢復"
+        "name": "控制 · {channel}核實並恢復"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"

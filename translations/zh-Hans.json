@@ -1280,7 +1280,7 @@
         "name": "表面湿度（计算值）"
       },
       "equipment_control_status": {
-        "name": "状态 · {channel}状态 · 控制器状态",
+        "name": "状态 · {channel}控制器状态",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,7 +1965,7 @@
         "name": "PID · {channel}设置 · 来源 (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "静音 · {channel}静音 · 低噪声风扇上限 (%)"
+        "name": "静音 · {channel}低噪声风扇上限 (%)"
       },
       "equipment_min_on_seconds": {
         "name": "功率 · {channel}min ON (s)"
@@ -2039,10 +2039,10 @@
         "name": "设备 · 室外"
       },
       "equipment_quiet_sleep": {
-        "name": "静音 · {channel}静音 · 睡眠时降低噪声"
+        "name": "静音 · {channel}睡眠时降低噪声"
       },
       "equipment_quiet_occupied": {
-        "name": "静音 · {channel}静音 · 有人时降低噪声"
+        "name": "静音 · {channel}有人时降低噪声"
       },
       "equipment_sensor_verified": {
         "name": "传感器 · {channel}必填"
@@ -2090,7 +2090,7 @@
         "name": "设备 · 来源 · 目标"
       },
       "equipment_control_mode": {
-        "name": "控制 · {channel}控制 · 控制方式",
+        "name": "控制 · {channel}控制方式",
         "state": {
           "existing": "现有房间控制器",
           "automatic": "自动",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "静音 · {channel}静音 · 设备原生低噪声风扇模式"
+        "name": "静音 · {channel}设备原生低噪声风扇模式"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2174,7 +2174,7 @@
         "name": "霉菌指标 · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "控制 · {channel}控制 · 核实并恢复"
+        "name": "控制 · {channel}核实并恢复"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
