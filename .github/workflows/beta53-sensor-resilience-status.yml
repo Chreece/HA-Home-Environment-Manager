@@ -384,7 +384,7 @@ jobs:
           m=json.loads((p/'manifest.json').read_text())
           h=json.loads((p/'hacs.json').read_text())
           assert m['domain']=='environment_manager'
-          assert m['version']=='0.6.0b52'
+          assert m['version']=='0.6.0b53'
           assert h['content_in_root'] is True
           assert h.get('zip_release') is not True
           assert 'filename' not in h
@@ -500,7 +500,7 @@ jobs:
                   z.extractall(dest, selected)
               m=json.loads((dest/'manifest.json').read_text())
               assert m['domain']=='environment_manager'
-              assert m['version']=='0.6.0b52'
+              assert m['version']=='0.6.0b53'
               assert (dest/'__init__.py').is_file()
               assert (dest/'equipment_status.py').is_file()
               assert not (dest/'custom_components').exists()
@@ -544,7 +544,7 @@ jobs:
           test "$(git ls-tree --name-only HEAD | grep -c '^custom_components$' || true)" = "0"
           test "$(git ls-tree -r --name-only HEAD | grep -c 'domain_migration.py' || true)" = "0"
           test "$(git ls-tree -r --name-only HEAD | grep -c '__pycache__' || true)" = "0"
-          test "$(git show HEAD:manifest.json | python -c 'import json,sys; d=json.load(sys.stdin); assert d["domain"]=="environment_manager" and d["version"]=="0.6.0b52"')" = ""
+          test "$(git show HEAD:manifest.json | python -c 'import json,sys; d=json.load(sys.stdin); assert d["domain"]=="environment_manager" and d["version"]=="0.6.0b53"')" = ""
           git push origin HEAD:refs/heads/beta/v0.6.0b53
           gh release create v0.6.0b53 \
             /tmp/HA-Home-Environment-Manager-v0.6.0b53.zip \
