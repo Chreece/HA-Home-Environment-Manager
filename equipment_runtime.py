@@ -36,6 +36,12 @@ from . import equipment_model as model
 _LOGGER = logging.getLogger(__name__)
 ACK_SECONDS = 120
 STARTUP_SECONDS = 300
+# Changes in passive device metadata are not evidence of a manual override.
+# Only physical mode/power and user-adjustable targets, speed and swing qualify.
+SETTABLE_OUTPUT_ATTRIBUTES = frozenset((
+    "temperature", "target_temp_low", "target_temp_high", "humidity",
+    "fan_mode", "percentage", "preset_mode", "swing_mode", "swing_horizontal_mode",
+))
 MONITORED = ("temperature", "target_temp_low", "target_temp_high", "humidity",
              "fan_mode", "percentage", "preset_mode", "swing_mode", "swing_horizontal_mode",
              "supported_features", "temperature_unit", "target_temp_step", "min_temp", "max_temp",
@@ -58,6 +64,25 @@ def snapshot(state: Any) -> dict | None:
         return None
     return {"state": state.state, "attributes": {
         k: state.attributes[k] for k in MONITORED if k in state.attributes}}
+
+
+def _manual_output_changes(previous: dict, observed: dict) -> tuple[str, ...]:
+    """Ignore passive capability metadata, but never hide a changed physical command.
+
+    Missing optional attributes do not constitute an observed override. Malformed
+    stored baselines still require reconciliation rather than assuming permission.
+    """
+    if not isinstance(previous, dict) or not isinstance(observed, dict):
+        return ("invalid_baseline",)
+    if previous.get("state") != observed.get("state"):
+        return ("state",)
+    old, new = previous.get("attributes"), observed.get("attributes")
+    if not isinstance(old, dict) or not isinstance(new, dict):
+        return ("invalid_baseline",)
+    return tuple(sorted(
+        key for key in SETTABLE_OUTPUT_ATTRIBUTES
+        if key in old and key in new and old[key] != new[key]
+    ))
 
 
 def matches(state: Any, expected: dict) -> bool:
@@ -769,9 +794,10 @@ class EquipmentRuntime:
                     occupied = "unknown"
                 else:
                     occupied = "unoccupied"
-        # Quiet automation is tri-state. Positive evidence enables it,
-        # negative evidence disables it, and unknown evidence must not cause
-        # either a speed reduction or a speed restoration.
+        # Unavailable optional presence/sleep sensors must never prevent a
+        # humidity or thermal output from operating. When they cannot prove
+        # whether quieting is needed, conservatively use the quiet fan limit.
+        # This does not override explicit occupied/absent actuator policies.
         uncertain = False
         if cfg["quiet_sleep"]:
             if sleeping is True:
@@ -783,7 +809,7 @@ class EquipmentRuntime:
                 return True
             if occupied not in ("occupied", "unoccupied"):
                 uncertain = True
-        return None if uncertain else False
+        return True if uncertain else False
 
     def _shutdown_allowed(self, spec: model.ManagedDevice, entity: str, expected: dict) -> bool:
         """Only an already-owned OFF can survive deselection or removed rooms."""
@@ -944,8 +970,17 @@ class EquipmentRuntime:
                 continue
             observed = snapshot(self.hass.states.get(entity))
             if observed is not None and observed != baseline:
-                await self._pause(spec, "physical_manual_override")
-                return False
+                changed = _manual_output_changes(baseline, observed)
+                if changed:
+                    await self._pause(spec, "physical_manual_override")
+                    self._status(spec, "paused", reason="physical_manual_override",
+                                 changed_controls=list(changed))
+                    return False
+                # ESPHome and HA can refresh capability metadata without the
+                # user touching a physical control. Keep that metadata current
+                # instead of permanently latching a false manual override.
+                record["baseline"][entity] = observed
+                await self._save()
         return True
 
     async def _send(self, spec: model.ManagedDevice, cap: model.Capabilities, entity: str,
