@@ -1,0 +1,39 @@
+name: Beta63 verified cold-start supply and managed climate regression
+
+on:
+  push:
+    branches:
+      - 'fix/beta63-verified-cold-start-supply-20261027'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-cold-start:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Check canonical manifest, full Python syntax and JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -I -m compileall -q .
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          meta = json.loads(Path("manifest.json").read_text(encoding="utf8"))
+          assert meta["domain"] == "environment_manager"
+          for path in Path(".").rglob("*.json"):
+              json.loads(path.read_text(encoding="utf8"))
+          print("PASS: canonical domain, source syntax and all JSON")
+          PY
+          node --check frontend/air-quality-advisor-card.js
+      - name: Cold-start actual source functions and read-only logical UI
+        run: python -I .github/tests/test_beta63_cold_start.py
+      - name: Preserve Beta61 supply enrollment and ownership checks
+        run: python -I .github/tests/test_beta61_supply_selection.py
+      - name: Preserve Beta62 legacy PID sensor/actuator race checks
+        run: python -I .github/tests/test_beta62_pid_races.py
