@@ -296,31 +296,15 @@ class EquipmentRuntime:
                             "Reconcile the previously controlled output before changing its power supply"
                         )
                     if selected is not None:
-                        from .equipment_power_switch import (
-                            permitted_supply, supply_off_for_pairing,
-                        )
+                        from .equipment_power_switch import permitted_supply
                         if permitted_supply(self.manager, spec, selected) is None:
                             raise HomeAssistantError(
                                 "Select a dedicated physical power switch in the same room"
                             )
-                        if not supply_off_for_pairing(self.hass, spec, selected):
-                            raise HomeAssistantError(
-                                "The selected upstream power switch must report OFF, "
-                                "with no downstream output reporting active"
-                            )
-                    elif old.get("power_switch_entity"):
-                        old_supply = self.hass.states.get(old["power_switch_entity"])
-                        if old_supply is None or old_supply.state != "off":
-                            raise HomeAssistantError(
-                                "The previous upstream power switch must report OFF before removal"
-                            )
-                if selected is None and old.get("power_switch_entity") is not None:
-                    supply = self.hass.states.get(old["power_switch_entity"])
-                    if (upstream.get("owned") or upstream.get("pending")
-                            or supply is None or supply.state != "off"):
-                        raise HomeAssistantError(
-                            "Cannot unpair a powered, owned or unverified upstream supply"
-                        )
+                    # Binding or unbinding is configuration only. An unowned
+                    # switch may be ON, OFF, unavailable or absent from states.
+                    # Existing controller-owned/pending power still requires
+                    # explicit OFF reconciliation, checked above.
                 value = changes.get("power_switch_cooldown_seconds",
                                     old["power_switch_cooldown_seconds"])
                 bounds = model.NUMBER_FIELDS["power_switch_cooldown_seconds"]
@@ -338,18 +322,15 @@ class EquipmentRuntime:
                     existing = existing if isinstance(existing, dict) else {}
                     existing[spec.identifier] = adjusted
                     options[model.SETTINGS] = existing
-                    # The executor yielded while acquiring the options lock.
-                    # Revalidate right before persistence; never save a stale
-                    # newly selected ON or reassigned physical supply.
+                    # Revalidate physical identity, area and competing claims
+                    # before saving, but never interpret switch state as consent
+                    # to operate an unowned supply.
                     if selected != old.get("power_switch_entity") and selected is not None:
-                        from .equipment_power_switch import (
-                            permitted_supply, supply_off_for_pairing,
-                        )
+                        from .equipment_power_switch import permitted_supply
                         if (not self._current_spec(spec)
-                                or permitted_supply(self.manager, spec, selected) is None
-                                or not supply_off_for_pairing(self.hass, spec, selected)):
+                                or permitted_supply(self.manager, spec, selected) is None):
                             raise HomeAssistantError(
-                                "Power supply changed during selection; retry when the switch is OFF"
+                                "Power supply identity or ownership changed during selection"
                             )
                     self.hass.config_entries.async_update_entry(
                         self.manager.entry, options=options,
@@ -461,7 +442,7 @@ class EquipmentRuntime:
             # The relay is a separate physical device, never an alias for
             # this controller's own output. It grants no independent native
             # power authority and cannot be shared with other controllers.
-            from .equipment_power_switch import permitted_supply, supply_off_for_pairing
+            from .equipment_power_switch import permitted_supply
             selected_supply = new.get("power_switch_entity")
             if selected_supply == "none":
                 selected_supply = None
@@ -482,12 +463,9 @@ class EquipmentRuntime:
                     raise HomeAssistantError(
                         "Reconcile previously controlled output before changing its power supply"
                     )
-                if selected_supply and not supply_off_for_pairing(
-                    self.hass, spec, selected_supply
-                ):
-                    raise HomeAssistantError(
-                        "The upstream switch must report OFF and no native output may report active"
-                    )
+                # Selecting an independent supply does not grant ownership.
+                # An unowned ON switch is left ON, an OFF switch left OFF,
+                # and an unavailable switch is held by before_tick().
             if "sensor_verified" in changes and type(changes["sensor_verified"]) is not bool:
                 raise HomeAssistantError("Sensor verification must be a boolean")
             # The selector itself authorizes only this selected native endpoint.
@@ -577,13 +555,13 @@ class EquipmentRuntime:
                         new["_native_authorization"] != authority_context(self.manager, spec)):
                     raise HomeAssistantError("Device sources changed; select the control method again")
                 if selected_supply != old.get("power_switch_entity") and selected_supply:
-                    # Never accept a new supply that came ON or changed identity
-                    # while the controller was awaiting durable Store writes.
+                    # Never save a reassigned or already-claimed supply after
+                    # awaiting storage. Live ON/OFF/unavailable transitions do
+                    # not block configuration, and never confer power ownership.
                     if (not self._current_spec(spec)
-                            or permitted_supply(self.manager, spec, selected_supply) is None
-                            or not supply_off_for_pairing(self.hass, spec, selected_supply)):
+                            or permitted_supply(self.manager, spec, selected_supply) is None):
                         raise HomeAssistantError(
-                            "Power supply changed during selection; retry when the switch is OFF"
+                            "Power supply identity or ownership changed during selection"
                         )
                 self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
             self._memory.pop(spec.identifier, None)
