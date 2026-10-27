@@ -1,0 +1,119 @@
+name: Publish verified Home Environment Manager Beta56
+
+on:
+  push:
+    branches:
+      - publish/v0.6.0b56-20261027
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-hem-beta56
+  cancel-in-progress: false
+
+jobs:
+  verify-package-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tested source and regressions
+        uses: actions/checkout@v4
+        with:
+          ref: fix/beta56-supervisor-comfort-cadr-20261027
+          path: source
+          persist-credentials: false
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run room limit, PID, power switch and Greek mode regressions
+        run: cd source/tests && python -m unittest discover -s . -p 'test_beta*.py' -v
+
+      - name: Checkout immutable clean distribution
+        uses: actions/checkout@v4
+        with:
+          ref: 48ba97fbc9bad891350d40bc39c8088a79ffd224
+          path: release
+          persist-credentials: false
+
+      - name: Validate clean integration and create flat HACS/manual ZIP
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, zipfile
+
+          root = Path("release")
+          assert (root / ".git").is_dir()
+          assert not (root / "tests").exists()
+          assert not (root / ".github").exists()
+          manifest = json.loads((root/"manifest.json").read_text(encoding="utf-8"))
+          assert manifest["domain"] == "environment_manager"
+          assert manifest["version"] == "0.6.0b56"
+          for item in ("__init__.py", "equipment_power_switch.py", "purifier_capacity.py", "equipment_runtime.py"
+                       "equipment_model.py", "select.py", "number.py", "climate.py",
+                       "translations/el.json", "frontend/air-quality-advisor-card.js"):
+              assert (root/item).is_file(), item
+          languages = tuple((root/"translations").glob("*.json"))
+          assert len(languages) >= 35, len(languages)
+          for item in root.rglob("*.json"):
+              json.loads(item.read_text(encoding="utf-8"))
+          files = []
+          for item in root.iterdir():
+              if item.is_file() and item.suffix in (".py", ".json", ".yaml"):
+                  files.append(item)
+              elif item.is_dir() and item.name in ("translations", "frontend", "brand"):
+                  files.extend(p for p in item.rglob("*") if p.is_file())
+          for item in files:
+              if item.suffix == ".py":
+                  compile(item.read_text(encoding="utf-8"), str(item), "exec")
+          assert all(".github" not in p.parts and "tests" not in p.parts for p in files)
+          target = Path("dist/HA-Home-Environment-Manager-v0.6.0b56.zip")
+          target.parent.mkdir(exist_ok=True)
+          with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+              for item in sorted(files):
+                  archive.write(item, item.relative_to(root).as_posix())
+          with zipfile.ZipFile(target) as archive:
+              assert archive.testzip() is None
+              assert "manifest.json" in archive.namelist()
+              assert "equipment_power_switch.py" in archive.namelist()
+          print(f"Validated {len(files)} integration files, {len(languages)} locales, ZIP {target.stat().st_size} bytes")
+          PY
+
+      - name: Publish isolated Beta56 prerelease at clean commit only
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view v0.6.0b56 >/dev/null 2>&1; then
+            echo "Beta56 already exists: refusing to replace a published release"
+            exit 1
+          fi
+          cat > release-notes.md <<'NOTES'
+          # Home Environment Manager v0.6.0b56
+
+          Beta56 extends the preceding beta and preserves the single canonical `environment_manager` domain and all existing entity IDs.
+
+          - **Always-on supervisor:** offline devices no longer prevent an independently powered controller from preparing a qualified proportional PID demand. The controller freezes integral at zero and re-seeds derivative from fresh sensor measurements while an optional upstream supply is OFF. Device reconnection does not restart the integration startup timer.
+          - **Automatic comfort:** new `auto_comfort` Room Environment method makes small, bounded adjustments to Comfort and Sleep temperature targets using measured RH and temperature. No guessed clothing, met, air speed or radiant temperature is required. If valid humidity data is missing, the chosen fixed targets remain in effect. Full ISO 7730 PMV/PPD remains an optional advanced method requiring real inputs.
+          - **Device-owned purifier CADR:** rated particle clean-air delivery (m³/h, 0=unknown) now belongs to each supported native purifier/fan controller, not to the room. The room still defines its measured air volume; multiple rated purifiers contribute a clear nominal particle clean-air-change estimate. The older room CADR value is retained only as a labeled migration fallback, not silently mixed with device ratings.
+          - All 38 locale option catalogs include understandable fixed/automatic/advanced comfort choices. Existing `temperature` and `pmv` preferences remain unchanged unless deliberately selected.
+          - Selected native equipment and optional upstream power switches are tracked for prompt refresh when their states change.
+
+          **Safety:** Unknown or stale input never authorizes electrical disconnection or native output commands. Existing exact-device permissions, minimum OFF, startup delay, window contact, compressor and reconciliation protections remain in force. Auto comfort is a measured-RH heuristic, not ISO certification. CADR measures rated particle filtration, not fresh-air exchange, CO2 removal or gases; actual CADR may be lower at reduced fan speed. Only attach external mains switches to devices permitted by the manufacturer or a qualified installer.
+
+          **Validation:** 50 real-production-function and regression tests passed on Python 3.13/3.14, including prior outlet safety checks. Live Home Assistant hardware commissioning is still required.
+
+          **Installation:** The attached ZIP contains the flat canonical integration. Extract into `config/custom_components/environment_manager/` and restart Home Assistant. Avoid installing an additional legacy integration domain.
+          NOTES
+          gh release create v0.6.0b56 dist/HA-Home-Environment-Manager-v0.6.0b56.zip --target 48ba97fbc9bad891350d40bc39c8088a79ffd224 --title "Home Environment Manager v0.6.0b56" --notes-file release-notes.md --prerelease
+
+      - name: Verify published tag and uploaded asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          test "$(gh api repos/${{ github.repository }}/git/ref/tags/v0.6.0b56 --jq '.object.sha')" = "48ba97fbc9bad891350d40bc39c8088a79ffd224"
+          gh release view v0.6.0b56 --json isPrerelease,assets --jq '.isPrerelease and any(.assets[]; .name == "HA-Home-Environment-Manager-v0.6.0b56.zip")' | grep -qx true
