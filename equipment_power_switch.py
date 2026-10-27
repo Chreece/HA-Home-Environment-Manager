@@ -396,9 +396,9 @@ def prepare_offline_pid(runtime: Any, spec: Any, cap: Any, cfg: dict,
     plan = model.plan_for(runtime.manager, spec)
     target = model.targets(runtime.manager, spec, cap, cfg, plan)
     measured = runtime.measurements(spec, cap)
-    from .dry_mode import automatic_mode
     mode = cfg.get("requested_mode")
     if mode not in cap.modes or mode == "off":
+        from .dry_mode import automatic_mode
         mode = automatic_mode(
             cap, None, measured, target,
             dedicated_dry=model.room_config(runtime.manager, spec).get(
