@@ -190,9 +190,11 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
     # purifier's new per-device CADR rating is configured.
     for area_id in configured_area_ids(manager.settings):
         old_unique_id = f"{entry.entry_id}_area_{area_id}_area_environment_particle_cadr_m3h"
-        if old_entity := registry.async_get_entity_id(
-                "number", DOMAIN, old_unique_id):
-            registry.async_remove(old_entity)
+        getter = getattr(registry, "async_get_entity_id", None)
+        remover = getattr(registry, "async_remove", None)
+        if callable(getter) and callable(remover):
+            if old_entity := getter("number", DOMAIN, old_unique_id):
+                remover(old_entity)
         for key in equipment.available_room_limit_fields(manager, area_id):
             bounds = equipment.room_limit_edit_bounds(manager, area_id, key)
             if bounds is not None:
