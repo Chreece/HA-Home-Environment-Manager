@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "室温超过此值时关闭窗帘 (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "净化器颗粒物 CADR（m³/h）"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "家中 · 设备 · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "设备 · 来源 · 目标"
+        "name": "设备 · 来源 · 目标",
+        "state": {
+          "temperature": "固定温度目标",
+          "auto_comfort": "自动舒适（温度和湿度）",
+          "pmv": "高级 ISO 7730（需真实测量）"
+        }
       },
       "equipment_control_mode": {
         "name": "控制 · {channel}控制方式",
