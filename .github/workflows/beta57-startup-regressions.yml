@@ -1,0 +1,37 @@
+name: Beta57 startup and power-switch safety regressions
+
+on:
+  push:
+    branches:
+      - fix/beta57-startup-select-performance-20261027
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      # Running at project root would shadow stdlib select with ./select.py.
+      - name: Beta55-57 regressions
+        run: cd tests && python -m unittest discover -s . -p 'test_beta*.py' -v
+      - name: Compile production source and verify JSON locale catalogs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          for p in Path(".").glob("*.py"):
+              compile(p.read_text(encoding="utf-8"), str(p), "exec")
+          for p in Path(".").rglob("*.json"):
+              json.loads(p.read_text(encoding="utf-8"))
+          print("Syntax/JSON pass")
+          PY
