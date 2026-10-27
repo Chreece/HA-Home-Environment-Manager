@@ -1800,13 +1800,13 @@
         "name": "Luftfuktighet · Hjem · mål (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Oppvarming · Hjem · Slå av"
+        "name": "Oppvarming · Borte"
       },
       "area_climate_profile_away_cool": {
-        "name": "Kjøling · Hjem · Slå av"
+        "name": "Kjøling · Borte"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Luftfuktighet · Hjem · Slå av · mål (%)"
+        "name": "Luftfuktighet · Borte · mål (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Oppvarming · Søvn"
