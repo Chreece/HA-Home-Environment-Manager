@@ -427,12 +427,14 @@ def prepare_offline_pid(runtime: Any, spec: Any, cap: Any, cfg: dict,
         increasing = mode == "heat"
     else:
         metric, goal, increasing = None, None, False
-    value = finite(measured.get(metric), -50 if metric == "temperature" else 0,
-                   20000 if metric == "co2" else 2000 if metric == "pm25" else
-                   100 if metric == "humidity" else 0) if metric else None
-    goal = finite(goal, -50 if metric == "temperature" else 0,
-                  20000 if metric == "co2" else 2000 if metric == "pm25" else
-                  100 if metric == "humidity" else 0) if metric else None
+    bounds = {
+        "temperature": (-50., 85.),
+        "humidity": (0., 100.),
+        "co2": (0., 20000.),
+        "pm25": (0., 2000.),
+    }.get(metric)
+    value = finite(measured.get(metric), *bounds) if bounds else None
+    goal = finite(goal, *bounds) if bounds else None
     if value is None or goal is None:
         runtime._memory.pop(spec.identifier, None)
         return {"status": "not_prepared", "reason": "fresh_independent_sensor_required"}
