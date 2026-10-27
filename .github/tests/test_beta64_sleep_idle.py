@@ -158,6 +158,7 @@ class Simulator:
                 ("climate", "set_hvac_mode"), ("switch", "turn_off"),
                 ("switch", "turn_on")))
         self.on_save = None
+        self.humidity = humidity
         async def invoke(domain, action, data, *, target, blocking):
             self.issued.append((domain, action, target["entity_id"], dict(data)))
             if domain == "climate" and action == "set_hvac_mode":
