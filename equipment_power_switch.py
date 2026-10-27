@@ -35,27 +35,6 @@ def observed_output_off(state: Any) -> bool:
     return state.state == "off"
 
 
-def supply_off_for_pairing(hass: Any, spec: Any, entity: str) -> bool:
-    """The supply is confirmed OFF; no downstream source is known active.
-
-    A downstream appliance deprived of power normally reports unavailable
-    or disappears from the state machine. This is acceptable for binding its
-    already-OFF upstream switch, NOT proof that a physical appliance is idle.
-    Automatic ON still requires independent *verified* cached capabilities,
-    fresh demand and full dispatch safety checks. No service is called here.
-    """
-    supply = hass.states.get(entity)
-    if supply is None or supply.state != "off":
-        return False
-    for source in spec.source_entities:
-        state = hass.states.get(source)
-        if state is None or state.state in ("unknown", "unavailable"):
-            continue
-        if not observed_output_off(state):
-            return False
-    return True
-
-
 def relay_identity(hass: Any, spec: Any, entity: str) -> dict | None:
     """Verify a native physical same-room switch and its immutable registry ID."""
     if not isinstance(entity, str) or not entity.startswith("switch."):
@@ -369,6 +348,11 @@ def _dispatch_safe(runtime: Any, spec: Any, record: dict, cfg: dict,
     if state is None or state.state != ("off" if desired == "on" else "on"):
         return False
     if desired == "on":
+        # Pairing while the native appliance is running is configuration
+        # only. Never energize an external supply during an unresolved native
+        # power command or while the manager still owns a native ON output.
+        if record.get("power") or record.get("pending"):
+            return False
         if now-runtime._started < 300:
             return False
         since = max(finite(relay.get("off_at"), 0, 1e13) or 0,
@@ -613,6 +597,13 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         return observed.state == "off"
     demand = approved_demand(runtime, spec, cfg, cap)
     if observed.state == "off":
+        # A supply may be selected even while a native appliance is running.
+        # If that supply later becomes OFF, never re-energize it while the
+        # physical appliance still has an owned or pending native output.
+        if record.get("power") or record.get("pending"):
+            runtime._status(spec, "owned_shutdown_identity_or_dwell_hold",
+                            reason="native_output_ownership_unreconciled")
+            return True
         # Keep independent room/PID preparation live before an unavailable
         # physical appliance could stop the ordinary native control path.
         preview = prepare_offline_pid(runtime, spec, cap, cfg, demand)
