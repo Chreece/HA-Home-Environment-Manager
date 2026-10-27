@@ -171,6 +171,19 @@ class SelectorCachingTests(unittest.TestCase):
                     sys.modules[name]=old
 
 
+class NativeRecoveryScopeTests(unittest.TestCase):
+    def test_every_native_event_only_revisits_its_affected_room(self):
+        source = (ROOT/"number.py").read_text(encoding="utf-8")
+        self.assertIn("watched_specs.setdefault(native_entity, []).append(spec)", source)
+        self.assertIn("affected_specs = watched_specs.get(", source)
+        self.assertIn("affected_areas = {spec.area_id for spec in affected_specs}", source)
+        self.assertIn("for area_id in affected_areas:", source)
+        self.assertIn("for spec in affected_specs:", source)
+        self.assertIn("if number._area_id not in affected_areas:", source)
+        self.assertIn("if (changed or availability_changed)", source)
+        self.assertNotIn("elif getattr(number, \"hass\", None):", source)
+
+
 class ListenerTests(unittest.TestCase):
     def test_irrelevant_state_events_do_not_read_controller_settings(self):
         text=(ROOT/"equipment_entity.py").read_text(encoding="utf-8")
