@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Închide jaluzelele peste temperatura camerei (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Acasă · Dispozitive · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Dispozitive · sursă · țintă"
+        "name": "Dispozitive · sursă · țintă",
+        "state": {
+          "temperature": "Temperaturi fixe",
+          "auto_comfort": "Confort automat (temperatură și umiditate)",
+          "pmv": "ISO 7730 avansat (necesită măsurători)"
+        }
       },
       "equipment_control_mode": {
         "name": "Control · {channel}Metodă de control",
