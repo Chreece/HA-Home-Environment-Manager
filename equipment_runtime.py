@@ -269,7 +269,55 @@ class EquipmentRuntime:
                 raise HomeAssistantError("Controller sources are no longer assigned to this area")
             cap = model.capabilities(self.manager, spec)
             if cap is None:
-                raise HomeAssistantError("Device capabilities are unavailable")
+                # An intentionally unpowered native appliance has no live
+                # capabilities. Its optional supply configuration must remain
+                # editable, without granting ANY native HVAC authority.
+                if not changes or set(changes) - {
+                    "power_switch_entity", "power_switch_cooldown_seconds"
+                }:
+                    raise HomeAssistantError("Device capabilities are unavailable")
+                old = model.settings(self.manager, spec)
+                selected = changes.get("power_switch_entity",
+                                       old.get("power_switch_entity"))
+                if selected == "none":
+                    selected = None
+                if selected != old.get("power_switch_entity") and selected is not None:
+                    raise HomeAssistantError(
+                        "A new supply must be commissioned while the native device is available and OFF"
+                    )
+                record = self._record(spec)
+                upstream = record.get("upstream", {})
+                if selected is None and old.get("power_switch_entity") is not None:
+                    supply = self.hass.states.get(old["power_switch_entity"])
+                    if (upstream.get("owned") or upstream.get("pending")
+                            or supply is None or supply.state != "off"):
+                        raise HomeAssistantError(
+                            "Cannot unpair a powered, owned or unverified upstream supply"
+                        )
+                value = changes.get("power_switch_cooldown_seconds",
+                                    old["power_switch_cooldown_seconds"])
+                bounds = model.NUMBER_FIELDS["power_switch_cooldown_seconds"]
+                value = finite(value, bounds[0], bounds[1])
+                if value is None:
+                    raise HomeAssistantError("Invalid upstream idle cooldown")
+                adjusted = {**old, "power_switch_entity": selected,
+                            "power_switch_cooldown_seconds": value}
+                lock = getattr(self.manager, "_device_settings_write_lock", None)
+                if lock is None:
+                    lock = self.manager._device_settings_write_lock = asyncio.Lock()
+                async with lock:
+                    options = deepcopy(self.manager.entry.options)
+                    existing = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+                    existing = existing if isinstance(existing, dict) else {}
+                    existing[spec.identifier] = adjusted
+                    options[model.SETTINGS] = existing
+                    self.hass.config_entries.async_update_entry(
+                        self.manager.entry, options=options,
+                    )
+                self._status(spec, "settings_updated",
+                             control_mode=adjusted["control_mode"])
+                # Never send physical commands from an offline edit.
+                return
             old = model.settings(self.manager, spec)
             new = {**old, **deepcopy(changes)}
             allowed = set(model.DEFAULTS) | {"fan_mode", "swing_mode", "swing_horizontal_mode",
