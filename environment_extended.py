@@ -110,15 +110,50 @@ def extend_room_inputs(hass: Any, area_id: str, profile: dict,
 
 def room_science(hass: Any, area_id: str, profile: dict, samples: list[dict],
                  now: float, *, history: Any, outside_safe: bool,
-                 existing: dict) -> tuple[dict, bool]:
+                 existing: dict, purifier_ratings: list[dict] | None = None
+                 ) -> tuple[dict, bool]:
     """New features remain informational unless a configured policy opts in."""
     if not profile:
         return {"status": "not_configured"}, False
     volume = profile.get("room_volume_m3")
-    cadr = profile.get("particle_cadr_m3h")
-    purification = particle_filtration(
-        volume, cadr, entity_on(hass, profile.get("purifier_entity")), samples, now,
-    ) if volume is not None or cadr is not None else {"status": "not_configured"}
+    # The room owns only its AIR VOLUME. Manufacturer particle CADR is now
+    # assigned individually to each managed native purifier. Aggregate
+    # installed capacity for diagnostics; count rated *operating* capacity
+    # separately and never interpret missing/offline fan data as running.
+    chosen = [item for item in purifier_ratings or ()
+              if isinstance(item, dict) and
+              _num(item.get("rated_particle_cadr_m3h")) is not None and
+              float(item["rated_particle_cadr_m3h"]) > 0]
+    if chosen:
+        total = sum(float(item["rated_particle_cadr_m3h"]) for item in chosen)
+        running = sum(float(item["rated_particle_cadr_m3h"])
+                      for item in chosen if item.get("operating") is True)
+        statuses = [item.get("operating") for item in chosen]
+        state = (True if any(x is True for x in statuses)
+                 else False if all(x is False for x in statuses) else None)
+        # Off/unknown purifiers are never added to the *running* capacity.
+        effective_rating = running if state is True else total
+        purification = particle_filtration(volume, effective_rating, state, samples, now)
+        purification.update({
+            "cad_ratings_source": "per_purifier_device",
+            "purifier_devices": chosen,
+            "installed_rated_particle_cadr_m3h": round(total, 1),
+            "running_rated_particle_cadr_m3h": round(running, 1),
+            "running_nominal_particle_clean_air_changes_h":
+                round(running/float(volume),2) if _num(volume) and float(volume)>0
+                else None,
+            "note": "Rated particle CADR only, not measured ventilation or removal of CO2.",
+        })
+    else:
+        # Preserve an old explicit room CADR while it is manually relocated to
+        # the exact purifier device. Do not silently discard calibration data
+        # or reinterpret a room value as an arbitrary active appliance.
+        cadr = profile.get("particle_cadr_m3h")
+        purification = particle_filtration(
+            volume, cadr, entity_on(hass, profile.get("purifier_entity")), samples, now,
+        ) if volume is not None or cadr is not None else {"status": "not_configured"}
+        if cadr is not None:
+            purification["cad_ratings_source"] = "legacy_room_pending_device_assignment"
     extractor = entity_on(hass, profile.get("extractor_entity"))
     moisture = moisture_event(samples, now, extractor_on=extractor)
     ventilation = (ventilation_learning(samples, now, target_co2=float(
