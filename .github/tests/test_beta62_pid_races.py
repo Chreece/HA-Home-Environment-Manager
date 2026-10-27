@@ -72,6 +72,10 @@ class Controller:
         self.states = {
             "climate.one": physical(20),
             "climate.two": physical(21),
+            "binary_sensor.window": NS(
+                state="off", domain="binary_sensor",
+                attributes={"device_class": "window"},
+            ),
         }
         self.sensor_value = 20.
         self.commands = []
@@ -92,6 +96,11 @@ class Controller:
                     self.states["climate.two"] = physical(25)
                 elif self.change_second == "sensor":
                     self.sensor_value = 22.
+                elif self.change_second == "window":
+                    self.states["binary_sensor.window"].state = "on"
+                elif self.change_second == "config":
+                    self.hass.data["environment_manager"][self.entry_id].settings[
+                        "pid_rooms"]["living"]["target_c"] = 25.
                 if self.block_first:
                     await self.release_first.wait()
         self.hass.services.async_call = send
@@ -134,6 +143,10 @@ def env_for(controller):
         "RoomControl": Control, "TARGET_TEMPERATURE_FEATURE": 1,
         "MANUAL_GRACE_SECONDS": 120, "SENSOR_MAX_AGE_MINUTES": 10,
         "entity_area": lambda hass, entity: "living",
+        "is_window": lambda hass, state: state.domain == "binary_sensor"
+                     and state.attributes.get("device_class") == "window",
+        "DOMAIN": "environment_manager",
+        "normalized_config": lambda raw: {**settings, **raw},
         "temperature_sensor_c": lambda hass, entity, age: controller.sensor_value,
         "validate_settings": lambda config: (True, "ready"),
         "target_from_unit": lambda temp, unit: temp,
@@ -221,17 +234,22 @@ async def run():
     for changed, expected in (
         ("native", "physical_state_changed_before_pid_write"),
         ("sensor", "temperature_changed_before_pid_write"),
+        ("window", "window_open_or_unknown"),
+        ("config", "pid_settings_changed_before_write"),
     ):
         c = Controller()
         c.change_second = changed
+        c.hass.data = {"environment_manager": {
+            c.entry_id: NS(settings={"pid_rooms": {"living": dict(cfg)}}),
+        }}
         e = env_for(c)
         e["__package__"] = "pid_bug_test"
         (t,) = extract("_tick", env=e)
-        await t(c, "living", room, cfg, 5000)
+        watched_room = (NS(windows=(
+            NS(entity_id="binary_sensor.window", opened=False),
+        )) if changed == "window" else room)
+        await t(c, "living", watched_room, cfg, 5000)
         assert c.commands == [("climate.one", 23.)], (changed, c.commands)
-        assert c.statuses["living"]["status"] in (
-            "paused", "temperature_changed_before_pid_write"
-        )
         if changed == "native":
             assert c._paused["living"] == expected
         else:
@@ -259,7 +277,7 @@ async def run():
         "shutdown_during_inflight_pid_cycle"
     )
 
-    print("PASS: paused service ACK retained; resume/reset do not cancel; windowless PID; unknown contacts block; native and sensor races; unload hold")
+    print("PASS: paused service ACK, reset/resume in-flight refusal, windowless PID, selected contacts, multi-device native/sensor/window/config races, durable unload hold")
 
 
 asyncio.run(run())
