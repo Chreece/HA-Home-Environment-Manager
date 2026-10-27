@@ -1800,13 +1800,13 @@
         "name": "Влажность · Дом · цель (%)"
       },
       "area_climate_profile_away_heat": {
-        "name": "Обогрев · Дом · Выключить"
+        "name": "Обогрев · Нет дома"
       },
       "area_climate_profile_away_cool": {
-        "name": "Охлаждение · Дом · Выключить"
+        "name": "Охлаждение · Нет дома"
       },
       "area_climate_profile_away_humidity": {
-        "name": "Влажность · Дом · Выключить · цель (%)"
+        "name": "Влажность · Нет дома · цель (%)"
       },
       "area_climate_profile_sleep_heat": {
         "name": "Обогрев · Сон"
