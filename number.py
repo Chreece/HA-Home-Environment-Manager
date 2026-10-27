@@ -592,6 +592,15 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
     @property
     def extra_state_attributes(self):
         attributes = super().extra_state_attributes
+        if self._key == "particle_cadr_m3h":
+            return {**attributes,
+                    "rating_source": "manufacturer_tested_particle_clean_air_delivery_rate",
+                    "zero_means": "not_configured",
+                    "physical_unit": "m³/h",
+                    "not_equivalent_to": ["total_fan_airflow",
+                                          "outside_air_changes",
+                                          "co2_removal"],
+                    "note": "Enter the published particle CADR at the relevant fan speed; do not estimate from fan RPM."}
         if self._key in equipment.PID_FAN_CAPACITY_FIELDS:
             return {**attributes, "pid_fan_capacity_field": self._key}
         if self._key in equipment.PID_MODEL_FIELDS:
