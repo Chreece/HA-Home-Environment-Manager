@@ -264,7 +264,7 @@ async def scenario(supply="off", native="unavailable", *, capabilities=False,
     assert controller.record["upstream"].get("owned") is not True, (
         "No selection may establish external supply ownership"
     )
-    if not capabilities or native in ("unknown", "unavailable", None):
+    if not capabilities or native in ("unknown", "unavailable", None) or remove:
         assert "capabilities" not in controller.record, (
             "A disconnected native appliance must not gain unverified capabilities"
         )
