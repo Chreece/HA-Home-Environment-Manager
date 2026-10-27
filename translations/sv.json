@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Stäng solskydd över rumstemperaturen (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Hem · Enheter · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Enheter · källa · mål"
+        "name": "Enheter · källa · mål",
+        "state": {
+          "temperature": "Fasta temperaturmål",
+          "auto_comfort": "Automatisk komfort (temperatur och luftfuktighet)",
+          "pmv": "Avancerad ISO 7730 (mätningar krävs)"
+        }
       },
       "equipment_control_mode": {
         "name": "Styrning · {channel}Styrmetod",

@@ -1619,6 +1619,12 @@ def localized_equipment_name(key: str, language: str, channel: str = "") -> str:
             (name for name in EQUIPMENT_TRANSLATED_NAMES
              if name.casefold() == base), "en"
         )
+    if key == "particle_cadr_m3h":
+        group, label = {
+            "el": ("Φίλτρο", "Ονομαστικό CADR σωματιδίων (m³/h)"),
+            "de": ("Filter", "Partikel-CADR des Luftreinigers (m³/h)"),
+        }.get(canonical, ("Filter", "Rated purifier particle CADR (m³/h)"))
+        return f"{group} · {channel}{label}".strip()
     if key in ("power_switch_entity", "power_switch_cooldown_seconds"):
         # Both new power settings exist for every managed output, including
         # numeric and direct relay endpoints. No source-device name is placed

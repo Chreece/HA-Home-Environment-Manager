@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "실내 온도가 이 값을 넘으면 블라인드 닫기 (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "집 · 장치 · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "장치 · 정보원 · 목표"
+        "name": "장치 · 정보원 · 목표",
+        "state": {
+          "temperature": "고정 온도 목표",
+          "auto_comfort": "자동 쾌적 (온도 및 습도)",
+          "pmv": "고급 ISO 7730 (실측 필요)"
+        }
       },
       "equipment_control_mode": {
         "name": "제어 · {channel}제어 방식",

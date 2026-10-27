@@ -8,8 +8,8 @@
     "el": "Πραγματικός όγκος αέρα χώρου σε m³ (ωφέλιμη επιφάνεια × ύψος). Χρειάζεται για εκτίμηση ονομαστικών εναλλαγών καθαρού αέρα από CADR."
   },
   "environment_room_air.particle_cadr_m3h": {
-    "en": "Manufacturer-rated particle clean-air delivery rate in m³/h at the selected fan speed, not simple fan airflow. Filter performance for gases is not inferred.",
-    "el": "Ονομαστική παροχή καθαρού αέρα σωματιδίων CADR σε m³/h στην αντίστοιχη ταχύτητα, όχι απλή παροχή ανεμιστήρα. Δεν τεκμαίρεται φιλτράρισμα αερίων."
+    "en": "Legacy room CADR is retained only as a migration fallback. Set new rated CADR in the actual air purifier's controller, not in this room.",
+    "el": "Το παλιό CADR δωματίου διατηρείται μόνο για συμβατότητα. Καταχώρισε την ονομαστική τιμή στη συγκεκριμένη συσκευή καθαριστή."
   },
   "environment_room_air.purifier_entity": {
     "en": "Choose the purifier's real power/fan state. The environmental analysis can describe nominal filtration while the device is running; merely selecting it does not switch it on.",
@@ -154,5 +154,13 @@
   "pid_tuning.pid_min_change_c": {
     "en": "Smallest meaningful setpoint difference (°C) before issuing a command. Avoids needless small repeated adjustments and device quantization noise.",
     "el": "Ελάχιστη σημαντική διαφορά στόχου (°C) πριν αποσταλεί εντολή. Αποτρέπει άσκοπες μικροαλλαγές και θόρυβο κβάντισης."
+  },
+  "equipment.particle_cadr_m3h": {
+    "en": "Manufacturer-rated clean-air delivery of THIS purifier for particles (m³/h). Prefer tested smoke/dust CADR at its actual fan speed. Enter 0 if unknown. Not fan airflow, outdoor ACH, CO₂ removal, or proof of gas filtration.",
+    "el": "Πιστοποιημένη ονομαστική παροχή καθαρού αέρα σωματιδίων της ΣΥΓΚΕΚΡΙΜΕΝΗΣ συσκευής (m³/h), στην αντίστοιχη ταχύτητα. Βάλε 0 αν δεν είναι γνωστή. Δεν είναι συνολική ροή ανεμιστήρα, εξωτερικός αερισμός, απομάκρυνση CO₂ ή απόδειξη φιλτραρίσματος αερίων."
+  },
+  "climate_target_source.auto_comfort": {
+    "en": "Automatic comfort uses measured room temperature and relative humidity with small bounded adjustments to your existing Comfort/Sleep targets. No guessed air speed, radiant temperature, clothing or metabolic activity. It is not ISO 7730.",
+    "el": "Η Αυτόματη άνεση χρησιμοποιεί πραγματική θερμοκρασία και σχετική υγρασία, κάνοντας μικρές διορθώσεις στους στόχους Άνεσης/Ύπνου. Δεν μαντεύει ταχύτητα αέρα, ρουχισμό ή δραστηριότητα και δεν ισχυρίζεται πιστοποίηση ISO 7730."
   }
 }

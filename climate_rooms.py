@@ -203,10 +203,24 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
         and occupied == "occupied"
         else occupied
     )
+    # Simple automatic comfort uses real room RH, not assumed clothing,
+    # metabolic rate, radiant temperature or fan wind speed.
+    from .pid_math import finite
+    comfort_rh=None
+    if selected_humidity_entities is not None:
+        from .room_sources import aggregate
+        comfort_rh,_=aggregate(hass,selected_humidity_entities,area,"humidity",10)
+    else:
+        observed=[finite(getattr(item,"value",None),0.1,100)
+                  for item in room.readings
+                  if getattr(item,"metric",None)=="humidity"]
+        observed=[value for value in observed if value is not None]
+        comfort_rh=(sum(observed)/len(observed)) if observed else None
     result=policy(settings,temp_c=temp,capability=cap,at_home=at_home,
                   occupied=profile_occupied,sleeping=sleeping,
                   manual_profile=settings.get("manual_profile"),prior_mode=prior_mode,
-                  window_safe=window_safe,comfort_target_c=comfort_target_c)
+                  window_safe=window_safe,comfort_target_c=comfort_target_c,
+                  comfort_humidity_rh=comfort_rh)
 
     temperature_intent={"status":result.state,"mode":result.desired_hvac_mode,
                         "window_safe":window_safe}
@@ -231,6 +245,7 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
 
     return {
         "humidity_source_entities": humidity_sources if humidity_sources is not None else [],
+        "automatic_comfort_input_rh": comfort_rh if settings.get("target_source")=="auto_comfort" else None,
         "humidity_management":equipment.get("humidity", {"status":"unavailable"}),
         "equipment_plan":equipment,
         "native_air_mode_advice":native_air,

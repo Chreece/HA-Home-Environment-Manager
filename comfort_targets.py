@@ -76,3 +76,39 @@ def solve_pmv_air_temperature(
             "target_pmv":desired,
             "method":"iso7730_fixed_radiant_and_airflow_bisection",
             "caveat":"Radiant temperature/airflow may change as equipment runs; verify actual comfort."}
+
+
+def automatic_comfort_band(
+    heat_c: Any, cool_c: Any, relative_humidity: Any,
+    *, maximum_adjustment_c: Any = 1.5,
+) -> dict:
+    """Bounded everyday comfort without imaginary air-speed/MET/CLO readings.
+
+    This is an explicitly named *humidity-aware setpoint heuristic*, NOT an
+    ISO 7730 PMV/PPD prediction or seasonal clothing estimate. Keep the user's
+    chosen Home/Away/Eco/Sleep settings authoritative and preserve minimum
+    1°C heating/cooling deadband. Higher humidity can modestly advance cooling;
+    unusually dry air can modestly advance heating. No RH => fixed targets.
+    """
+    heat = finite(heat_c, 5, 35)
+    cool = finite(cool_c, 6, 40)
+    limit = finite(maximum_adjustment_c, 0, 2.5)
+    if heat is None or cool is None or limit is None or cool-heat < 1:
+        return {"status": "invalid_config"}
+    rh = finite(relative_humidity, 0, 100)
+    if rh is None:
+        return {"status": "fixed_targets_missing_humidity",
+                "heat_c": heat, "cool_c": cool, "rh_used": None}
+    # Small measured-RH correction, not inferred skin evaporation or PMV.
+    warm_shift = min(limit, 0.6, max(0., (40.-rh)*0.03))
+    cooling_shift = min(limit, 0.9, max(0., (rh-60.)*0.045))
+    corrected_heat = min(heat + warm_shift, cool - 1.)
+    corrected_cool = max(cool - cooling_shift, corrected_heat + 1.)
+    return {
+        "status": "humidity_aware_estimate",
+        "heat_c": round(corrected_heat, 2),
+        "cool_c": round(corrected_cool, 2),
+        "rh_used": round(rh, 1),
+        "model": "bounded_room_humidity_heuristic_not_iso7730",
+        "note": "Personal comfort varies; activity/clothing/radiant temperature not measured.",
+    }

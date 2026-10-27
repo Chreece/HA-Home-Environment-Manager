@@ -126,7 +126,6 @@ GLOBAL_OCCUPANCY_NUMBERS = {
 }
 AREA_ENV_NUMBERS = {
     "room_volume_m3": (1.0, 30000.0, 1.0, "m³", None),
-    "particle_cadr_m3h": (0.1, 100000.0, 0.1, "m³/h", None),
     "co2_target_ppm": (400.0, 3000.0, 1.0, "ppm", 1000.0),
     "radon_reference_bq_m3": (25.0, 1000.0, 1.0, "Bq/m³", 100.0),
     "air_speed_m_s": (0.01, 0.99, 0.01, "m/s", None),
@@ -164,7 +163,7 @@ DEVICE_TARGET_NUMBERS = {
 CLIMATE_POLICY_OPTIONS = {
     "unknown_occupancy": ("occupied", "hold"),
     "away_policy": ("any_home", "all_home"),
-    "target_source": ("temperature", "pmv"),
+    "target_source": ("temperature", "auto_comfort", "pmv"),
 }
 DEVICE_POLICY_OPTIONS = {
     "presence_requirement": ("always", "occupied", "absent"),

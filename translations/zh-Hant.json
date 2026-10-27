@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "室溫高於此值時關閉窗簾 (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "空氣清淨機顆粒物 CADR（m³/h）"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "家中 · 裝置 · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "裝置 · 來源 · 目標"
+        "name": "裝置 · 來源 · 目標",
+        "state": {
+          "temperature": "固定溫度目標",
+          "auto_comfort": "自動舒適（溫度和濕度）",
+          "pmv": "進階 ISO 7730（需要實測資料）"
+        }
       },
       "equipment_control_mode": {
         "name": "控制 · {channel}控制方式",

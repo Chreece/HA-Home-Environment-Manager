@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Luk persienner over rumtemperaturen (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Hjem · Enheder · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Enheder · kilde · mål"
+        "name": "Enheder · kilde · mål",
+        "state": {
+          "temperature": "Faste temperaturmål",
+          "auto_comfort": "Automatisk komfort (temperatur og fugtighed)",
+          "pmv": "Avanceret ISO 7730 (målinger påkrævet)"
+        }
       },
       "equipment_control_mode": {
         "name": "Styring · {channel}Reguleringsmetode",

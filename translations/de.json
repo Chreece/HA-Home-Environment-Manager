@@ -573,7 +573,7 @@
       },
       "environment_room_air": {
         "title": "Raum: {area_name} - Lüftung und Feuchtigkeit",
-        "description": "Optional. Raumtemperatursensor, Raumvolumen und veröffentlichten Partikel-CADR nur auswählen, wenn zuverlässig bekannt. Echtes NDIR-CO₂-Gerät bestätigen. Die Integration steuert keine Geräte.",
+        "description": "Raumluftvolumen und Sensoren. CADR gehört zum einzelnen Luftreiniger.",
         "data": {
           "temperature_entity": "Temperatursensor im Raum (optional)",
           "room_volume_m3": "Raumluftvolumen (m³)",
@@ -625,7 +625,7 @@
       },
       "environment_room_comfort": {
         "title": "Raum: {area_name} - vollständiger thermischer Komfort",
-        "description": "Optionales ISO-7730-Modell. Strahlungstemperatur, Luftgeschwindigkeit, Aktivität (met) und Bekleidung (clo) explizit angeben.",
+        "description": "ISO 7730 ist optional. Automatischer Komfort benötigt nur Raumtemperatur und Luftfeuchte.",
         "data": {
           "enable_pmv": "ISO-7730-Komfort PMV/PPD aktivieren",
           "radiant_temperature_entity": "Mittlere Strahlungstemperatur (°C)",
@@ -750,7 +750,7 @@
           "climate_sleep_schedule_enabled": "Schlafprofil nach Uhrzeit",
           "climate_sleep_start": "Schlafbeginn (lokale Zeit)",
           "climate_sleep_end": "Schlafende (lokale Zeit)",
-          "climate_target_source": "Temperatursollwert oder ISO-7730-Komfort",
+          "climate_target_source": "Komfortregelung",
           "climate_comfort_adjustment_max_c": "Maximale Komfortkorrektur (°C)"
         },
         "data_description": {
@@ -765,7 +765,7 @@
           "climate_sleep_schedule_enabled": "Diese Option steuert „Schlafprofil nach Uhrzeit“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
           "climate_sleep_start": "Dieser Zeitwert regelt „Schlafbeginn (lokale Zeit)“. Er begrenzt häufiges Schalten und ersetzt keine Schutzschaltung.",
           "climate_sleep_end": "Dieser Zeitwert regelt „Schlafende (lokale Zeit)“. Er begrenzt häufiges Schalten und ersetzt keine Schutzschaltung.",
-          "climate_target_source": "Dies ist ein Entscheidungswert für „Temperatursollwert oder ISO-7730-Komfort“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "climate_target_source": "Feste Temperaturen, begrenzte Korrektur nach gemessener Luftfeuchte oder ISO 7730 mit echten Messwerten.",
           "climate_comfort_adjustment_max_c": "Dies ist ein Entscheidungswert für „Maximale Komfortkorrektur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert."
         }
       },
@@ -2008,6 +2008,9 @@
       },
       "equipment_power_switch_cooldown_seconds": {
         "name": "Strom · Leerlauf-Nachlaufzeit (Sekunden)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Partikel-CADR des Luftreinigers (m³/h)"
       }
     },
     "switch": {
@@ -2098,7 +2101,12 @@
         "name": "Zuhause · Geräte · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Temperatursollwert oder ISO-7730-Komfort"
+        "name": "Komfortregelung",
+        "state": {
+          "temperature": "Feste Temperaturziele",
+          "auto_comfort": "Automatischer Komfort (Temperatur/Luftfeuchte)",
+          "pmv": "Erweitert: ISO 7730 (Messungen erforderlich)"
+        }
       },
       "equipment_control_mode": {
         "name": "Steuerung · {channel}Verfahren",

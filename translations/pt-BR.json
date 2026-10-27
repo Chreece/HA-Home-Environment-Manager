@@ -750,7 +750,7 @@
           "climate_sleep_schedule_enabled": "Sono · Automático",
           "climate_sleep_start": "Sono · Dispositivos · START",
           "climate_sleep_end": "Sono · Dispositivos · END",
-          "climate_target_source": "Dispositivos · fonte · meta",
+          "climate_target_source": "Método de conforto",
           "climate_comfort_adjustment_max_c": "Dispositivos (°C)"
         },
         "data_description": {
@@ -765,7 +765,7 @@
           "climate_sleep_schedule_enabled": "Esta opção controla «Sono · Automático». Comandos físicos exigem autorização específica e proteções independentes.",
           "climate_sleep_start": "Este intervalo rege «Sono · Dispositivos · START». Evita ciclos rápidos, mas não substitui proteções físicas.",
           "climate_sleep_end": "Este intervalo rege «Sono · Dispositivos · END». Evita ciclos rápidos, mas não substitui proteções físicas.",
-          "climate_target_source": "Limite de decisão para «Dispositivos · fonte · meta». Afeta orientações, não é um limite médico.",
+          "climate_target_source": "Conforto automático (temperatura e umidade); ISO 7730 requires separately verified measurements.",
           "climate_comfort_adjustment_max_c": "Limite de decisão para «Dispositivos (°C)». Afeta orientações, não é um limite médico."
         }
       },
@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Fechar persianas acima da temperatura (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "CADR de partículas do purificador (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Casa · Dispositivos · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Dispositivos · fonte · meta"
+        "name": "Método de conforto",
+        "state": {
+          "temperature": "Temperaturas fixas",
+          "auto_comfort": "Conforto automático (temperatura e umidade)",
+          "pmv": "ISO 7730 avançado (medições necessárias)"
+        }
       },
       "equipment_control_mode": {
         "name": "Controle · {channel}Método de controle",

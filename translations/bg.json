@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "Затваряне над стайна температура (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated purifier particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "Дом · Устройства · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "Устройства · източник · цел"
+        "name": "Устройства · източник · цел",
+        "state": {
+          "temperature": "Фиксирани температури",
+          "auto_comfort": "Автоматичен комфорт (температура и влажност)",
+          "pmv": "Разширен ISO 7730 (нужни са измервания)"
+        }
       },
       "equipment_control_mode": {
         "name": "Управление · {channel}Метод на управление",

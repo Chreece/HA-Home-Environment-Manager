@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "कमरे के तापमान से ऊपर ब्लाइंड बंद करें (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "घर · उपकरण · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "उपकरण · स्रोत · लक्ष्य"
+        "name": "उपकरण · स्रोत · लक्ष्य",
+        "state": {
+          "temperature": "स्थिर तापमान लक्ष्य",
+          "auto_comfort": "स्वचालित आराम (तापमान और आर्द्रता)",
+          "pmv": "उन्नत ISO 7730 (माप आवश्यक)"
+        }
       },
       "equipment_control_mode": {
         "name": "नियंत्रण · {channel}नियंत्रण विधि",
