@@ -1280,7 +1280,7 @@
         "name": "Umidade da superfície (calculada)"
       },
       "equipment_control_status": {
-        "name": "{channel}Status do controlador",
+        "name": "Status · {channel}Status do controlador",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}configurações · fonte (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Limite de ventilação silenciosa (%)"
+        "name": "Silencioso · {channel}Limite de ventilação silenciosa (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Potência · min ON (s)"
+        "name": "Potência · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Potência · min OFF (s)"
+        "name": "Potência · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Potência · max ON (s)"
+        "name": "Potência · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Cômodo · Temperatura · min"
@@ -2039,13 +2039,13 @@
         "name": "Dispositivos · Externo"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Menos ruído durante o sono"
+        "name": "Silencioso · {channel}Menos ruído durante o sono"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Menos ruído com presença"
+        "name": "Silencioso · {channel}Menos ruído com presença"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}sensor · Obrigatório"
+        "name": "Sensor · {channel}Obrigatório"
       },
       "area_shading_enabled": {
         "name": "Fechamento automático das persianas para resfriar"
@@ -2090,7 +2090,7 @@
         "name": "Dispositivos · fonte · meta"
       },
       "equipment_control_mode": {
-        "name": "{channel}Método de controle",
+        "name": "Controle · {channel}Método de controle",
         "state": {
           "existing": "Controlador do ambiente existente",
           "automatic": "Automático",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Velocidade silenciosa nativa"
+        "name": "Silencioso · {channel}Velocidade silenciosa nativa"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}controle · Ocupação",
+        "name": "Presença · {channel}Ocupação",
         "state": {
           "always": "Automático",
           "occupied": "Cômodo · Ocupação",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Sono · controle",
+        "name": "Sono · {channel}controle",
         "state": {
           "normal": "Automático",
           "pause": "Pausar",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}controle · Dispositivos",
+        "name": "Ventilador · {channel}Dispositivos",
         "state": {
           "extraction": "Externo · controle",
           "filtration": "PM2.5 · controle",
@@ -2174,7 +2174,7 @@
         "name": "Indicador de mofo · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Verificar e retomar"
+        "name": "Controle · {channel}Verificar e retomar"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Controlador climático"
+        "name": "Clima · {channel}"
       }
     }
   },

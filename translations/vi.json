@@ -1280,7 +1280,7 @@
         "name": "Độ ẩm bề mặt (tính toán)"
       },
       "equipment_control_status": {
-        "name": "{channel}Trạng thái bộ điều khiển",
+        "name": "Trạng thái · {channel}Trạng thái bộ điều khiển",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}cài đặt · nguồn (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Giới hạn quạt chạy êm (%)"
+        "name": "Yên tĩnh · {channel}Giới hạn quạt chạy êm (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Công suất · min ON (s)"
+        "name": "Công suất · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Công suất · min OFF (s)"
+        "name": "Công suất · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Công suất · max ON (s)"
+        "name": "Công suất · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Phòng · Nhiệt độ · min"
@@ -2039,13 +2039,13 @@
         "name": "Thiết bị · Bên ngoài"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Giảm tiếng ồn khi ngủ"
+        "name": "Yên tĩnh · {channel}Giảm tiếng ồn khi ngủ"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Giảm tiếng ồn khi có người"
+        "name": "Yên tĩnh · {channel}Giảm tiếng ồn khi có người"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}cảm biến · Bắt buộc"
+        "name": "Cảm biến · {channel}Bắt buộc"
       },
       "area_shading_enabled": {
         "name": "Tự động đóng rèm để làm mát"
@@ -2090,7 +2090,7 @@
         "name": "Thiết bị · nguồn · mục tiêu"
       },
       "equipment_control_mode": {
-        "name": "{channel}Phương pháp điều khiển",
+        "name": "Điều khiển · {channel}Phương pháp điều khiển",
         "state": {
           "existing": "Bộ điều khiển phòng hiện có",
           "automatic": "Tự động",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Chế độ quạt êm của thiết bị"
+        "name": "Yên tĩnh · {channel}Chế độ quạt êm của thiết bị"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}điều khiển · Hiện diện",
+        "name": "Hiện diện · {channel}Hiện diện",
         "state": {
           "always": "Tự động",
           "occupied": "Phòng · Hiện diện",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Ngủ · điều khiển",
+        "name": "Giấc ngủ · {channel}điều khiển",
         "state": {
           "normal": "Tự động",
           "pause": "Tạm dừng",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}điều khiển · Thiết bị",
+        "name": "Quạt · {channel}Thiết bị",
         "state": {
           "extraction": "Bên ngoài · điều khiển",
           "filtration": "PM2.5 · điều khiển",
@@ -2174,7 +2174,7 @@
         "name": "Chỉ số nấm mốc · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Kiểm tra và tiếp tục"
+        "name": "Điều khiển · {channel}Kiểm tra và tiếp tục"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Bộ điều khiển khí hậu"
+        "name": "Điều hòa · {channel}"
       }
     }
   },

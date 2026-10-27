@@ -1280,7 +1280,7 @@
         "name": "Overflatefuktighet (beregnet)"
       },
       "equipment_control_status": {
-        "name": "{channel}Regulatorstatus",
+        "name": "Status · {channel}Regulatorstatus",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}innstillinger · kilde (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Viftegrense for stille drift (%)"
+        "name": "Stille · {channel}Viftegrense for stille drift (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Effekt · min ON (s)"
+        "name": "Effekt · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Effekt · min OFF (s)"
+        "name": "Effekt · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Effekt · max ON (s)"
+        "name": "Effekt · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Rom · Temperatur · min"
@@ -2039,13 +2039,13 @@
         "name": "Enheter · Utendørs"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Lavere støy under søvn"
+        "name": "Stille · {channel}Lavere støy under søvn"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Lavere støy ved tilstedeværelse"
+        "name": "Stille · {channel}Lavere støy ved tilstedeværelse"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}sensor · Påkrevd"
+        "name": "Sensor · {channel}Påkrevd"
       },
       "area_shading_enabled": {
         "name": "Automatisk lukking av solskjerming"
@@ -2090,7 +2090,7 @@
         "name": "Enheter · kilde · mål"
       },
       "equipment_control_mode": {
-        "name": "{channel}Styringsmetode",
+        "name": "Styring · {channel}Styringsmetode",
         "state": {
           "existing": "Eksisterende romstyring",
           "automatic": "Automatisk",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Innebygd stille viftehastighet"
+        "name": "Stille · {channel}Innebygd stille viftehastighet"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}styring · Tilstedeværelse",
+        "name": "Tilstedeværelse · {channel}Tilstedeværelse",
         "state": {
           "always": "Automatisk",
           "occupied": "Rom · Tilstedeværelse",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Søvn · styring",
+        "name": "Søvn · {channel}styring",
         "state": {
           "normal": "Automatisk",
           "pause": "Pause",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}styring · Enheter",
+        "name": "Vifte · {channel}Enheter",
         "state": {
           "extraction": "Utendørs · styring",
           "filtration": "PM2.5 · styring",
@@ -2174,7 +2174,7 @@
         "name": "Muggindikator · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Kontroller og gjenoppta"
+        "name": "Styring · {channel}Kontroller og gjenoppta"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Klimaregulator"
+        "name": "Klima · {channel}"
       }
     }
   },

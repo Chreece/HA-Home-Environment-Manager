@@ -1280,7 +1280,7 @@
         "name": "Ytfuktighet (beräknad)"
       },
       "equipment_control_status": {
-        "name": "{channel}Regulatorstatus",
+        "name": "Status · {channel}Regulatorstatus",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}inställningar · källa (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Fläktgräns för tyst drift (%)"
+        "name": "Tyst · {channel}Fläktgräns för tyst drift (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Effekt · min ON (s)"
+        "name": "Effekt · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Effekt · min OFF (s)"
+        "name": "Effekt · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Effekt · max ON (s)"
+        "name": "Effekt · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Rum · Temperatur · min"
@@ -2039,13 +2039,13 @@
         "name": "Enheter · Utomhus"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Lägre ljud under sömn"
+        "name": "Tyst · {channel}Lägre ljud under sömn"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Lägre ljud vid närvaro"
+        "name": "Tyst · {channel}Lägre ljud vid närvaro"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}sensor · Krävs"
+        "name": "Sensor · {channel}Krävs"
       },
       "area_shading_enabled": {
         "name": "Automatisk stängning av solskydd vid värme"
@@ -2090,7 +2090,7 @@
         "name": "Enheter · källa · mål"
       },
       "equipment_control_mode": {
-        "name": "{channel}Styrmetod",
+        "name": "Styrning · {channel}Styrmetod",
         "state": {
           "existing": "Befintlig rumsreglering",
           "automatic": "Automatisk",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Inbyggt tyst fläktläge"
+        "name": "Tyst · {channel}Inbyggt tyst fläktläge"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}styrning · Närvaro",
+        "name": "Närvaro · {channel}Närvaro",
         "state": {
           "always": "Automatisk",
           "occupied": "Rum · Närvaro",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Sömn · styrning",
+        "name": "Sömn · {channel}styrning",
         "state": {
           "normal": "Automatisk",
           "pause": "Pausa",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}styrning · Enheter",
+        "name": "Fläkt · {channel}Enheter",
         "state": {
           "extraction": "Utomhus · styrning",
           "filtration": "PM2.5 · styrning",
@@ -2174,7 +2174,7 @@
         "name": "Mögelindikator · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Kontrollera och återuppta"
+        "name": "Styrning · {channel}Kontrollera och återuppta"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Klimatregulator"
+        "name": "Klimat · {channel}"
       }
     }
   },

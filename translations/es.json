@@ -1280,7 +1280,7 @@
         "name": "Humedad superficial (calculada)"
       },
       "equipment_control_status": {
-        "name": "{channel}Estado del controlador",
+        "name": "Estado · {channel}Estado del controlador",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}ajustes · fuente (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Límite de ventilación silenciosa (%)"
+        "name": "Silencioso · {channel}Porcentaje de ventilador (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Potencia · min ON (s)"
+        "name": "Potencia · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Potencia · min OFF (s)"
+        "name": "Potencia · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Potencia · max ON (s)"
+        "name": "Potencia · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Habitación · Temperatura · min"
@@ -2039,13 +2039,13 @@
         "name": "Dispositivos · Exterior"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Menos ruido al dormir"
+        "name": "Silencioso · {channel}Durante el sueño"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Menos ruido con ocupación"
+        "name": "Silencioso · {channel}Con presencia"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}sensor · Obligatorio"
+        "name": "Sensor · {channel}Obligatorio"
       },
       "area_shading_enabled": {
         "name": "Cierre automático de persianas para enfriar"
@@ -2090,7 +2090,7 @@
         "name": "Dispositivos · fuente · objetivo"
       },
       "equipment_control_mode": {
-        "name": "{channel}Método de control",
+        "name": "Control · {channel}Método",
         "state": {
           "existing": "Controlador de estancia existente",
           "automatic": "Automático",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Velocidad silenciosa nativa"
+        "name": "Silencioso · {channel}Modo de ventilador"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}Método de ajuste",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}control · Ocupación",
+        "name": "Presencia · {channel}Ocupación",
         "state": {
           "always": "Automático",
           "occupied": "Habitación · Ocupación",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Sueño · control",
+        "name": "Sueño · {channel}control",
         "state": {
           "normal": "Automático",
           "pause": "Pausar",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}control · Dispositivos",
+        "name": "Ventilador · {channel}Función",
         "state": {
           "extraction": "Exterior · control",
           "filtration": "ajustes · fuente",
@@ -2174,7 +2174,7 @@
         "name": "Recalibrar con las temperaturas actuales"
       },
       "equipment_resume": {
-        "name": "{channel}Verificar y reanudar"
+        "name": "Control · {channel}Verificar y reanudar"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Aplicar calibración"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Controlador climático"
+        "name": "Clima · {channel}"
       }
     }
   },

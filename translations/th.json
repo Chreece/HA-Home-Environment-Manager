@@ -1280,7 +1280,7 @@
         "name": "ความชื้นพื้นผิว (คำนวณ)"
       },
       "equipment_control_status": {
-        "name": "{channel}สถานะตัวควบคุม",
+        "name": "สถานะ · {channel}สถานะตัวควบคุม",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}การตั้งค่า · แหล่งข้อมูล (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}ขีดจำกัดพัดลมเสียงเบา (%)"
+        "name": "เงียบ · {channel}ขีดจำกัดพัดลมเสียงเบา (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}กำลังไฟ · min ON (s)"
+        "name": "พลังงาน · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}กำลังไฟ · min OFF (s)"
+        "name": "พลังงาน · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}กำลังไฟ · max ON (s)"
+        "name": "พลังงาน · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "ห้อง · อุณหภูมิ · min"
@@ -2039,13 +2039,13 @@
         "name": "อุปกรณ์ · ภายนอก"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}เสียงเบาขณะนอนหลับ"
+        "name": "เงียบ · {channel}เสียงเบาขณะนอนหลับ"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}เสียงเบาขณะมีคนอยู่"
+        "name": "เงียบ · {channel}เสียงเบาขณะมีคนอยู่"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}เซนเซอร์ · จำเป็น"
+        "name": "เซนเซอร์ · {channel}จำเป็น"
       },
       "area_shading_enabled": {
         "name": "ปิดม่านอัตโนมัติเพื่อให้ห้องเย็น"
@@ -2090,7 +2090,7 @@
         "name": "อุปกรณ์ · แหล่งข้อมูล · เป้าหมาย"
       },
       "equipment_control_mode": {
-        "name": "{channel}วิธีควบคุม",
+        "name": "การควบคุม · {channel}วิธีควบคุม",
         "state": {
           "existing": "ตัวควบคุมห้องเดิม",
           "automatic": "อัตโนมัติ",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}โหมดพัดลมเสียงเบาของอุปกรณ์"
+        "name": "เงียบ · {channel}โหมดพัดลมเสียงเบาของอุปกรณ์"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}ควบคุม · การมีคนอยู่",
+        "name": "การอยู่ในห้อง · {channel}การมีคนอยู่",
         "state": {
           "always": "อัตโนมัติ",
           "occupied": "ห้อง · การมีคนอยู่",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}นอน · ควบคุม",
+        "name": "การนอน · {channel}ควบคุม",
         "state": {
           "normal": "อัตโนมัติ",
           "pause": "หยุดชั่วคราว",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}ควบคุม · อุปกรณ์",
+        "name": "พัดลม · {channel}อุปกรณ์",
         "state": {
           "extraction": "ภายนอก · ควบคุม",
           "filtration": "PM2.5 · ควบคุม",
@@ -2174,7 +2174,7 @@
         "name": "ตัวชี้วัดเชื้อรา · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}ตรวจสอบและทำงานต่อ"
+        "name": "การควบคุม · {channel}ตรวจสอบและทำงานต่อ"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}ตัวควบคุมสภาพอากาศ"
+        "name": "ปรับอากาศ · {channel}"
       }
     }
   },

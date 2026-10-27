@@ -1280,7 +1280,7 @@
         "name": "পৃষ্ঠের আর্দ্রতা (গণনাকৃত)"
       },
       "equipment_control_status": {
-        "name": "{channel}কন্ট্রোলারের অবস্থা",
+        "name": "অবস্থা · {channel}কন্ট্রোলারের অবস্থা",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}সেটিংস · উৎস (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}কম শব্দের ফ্যানের সীমা (%)"
+        "name": "নীরব · {channel}কম শব্দের ফ্যানের সীমা (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}শক্তি · min ON (s)"
+        "name": "শক্তি · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}শক্তি · min OFF (s)"
+        "name": "শক্তি · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}শক্তি · max ON (s)"
+        "name": "শক্তি · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "ঘর · তাপমাত্রা · min"
@@ -2039,13 +2039,13 @@
         "name": "ডিভাইস · বাইরের"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}ঘুমের সময় কম শব্দ"
+        "name": "নীরব · {channel}ঘুমের সময় কম শব্দ"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}উপস্থিতিতে কম শব্দ"
+        "name": "নীরব · {channel}উপস্থিতিতে কম শব্দ"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}সেন্সর · আবশ্যক"
+        "name": "সেন্সর · {channel}আবশ্যক"
       },
       "area_shading_enabled": {
         "name": "ঘর ঠান্ডা রাখতে ব্লাইন্ড স্বয়ংক্রিয় বন্ধ"
@@ -2090,7 +2090,7 @@
         "name": "ডিভাইস · উৎস · লক্ষ্য"
       },
       "equipment_control_mode": {
-        "name": "{channel}নিয়ন্ত্রণ পদ্ধতি",
+        "name": "নিয়ন্ত্রণ · {channel}নিয়ন্ত্রণ পদ্ধতি",
         "state": {
           "existing": "বিদ্যমান ঘরের নিয়ন্ত্রক",
           "automatic": "স্বয়ংক্রিয়",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}ডিভাইসের কম শব্দের ফ্যান মোড"
+        "name": "নীরব · {channel}ডিভাইসের কম শব্দের ফ্যান মোড"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}নিয়ন্ত্রণ · উপস্থিতি",
+        "name": "উপস্থিতি · {channel}উপস্থিতি",
         "state": {
           "always": "স্বয়ংক্রিয়",
           "occupied": "ঘর · উপস্থিতি",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}ঘুম · নিয়ন্ত্রণ",
+        "name": "ঘুম · {channel}নিয়ন্ত্রণ",
         "state": {
           "normal": "স্বয়ংক্রিয়",
           "pause": "বিরতি",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}নিয়ন্ত্রণ · ডিভাইস",
+        "name": "পাখা · {channel}ডিভাইস",
         "state": {
           "extraction": "বাইরের · নিয়ন্ত্রণ",
           "filtration": "PM2.5 · নিয়ন্ত্রণ",
@@ -2174,7 +2174,7 @@
         "name": "ছাঁচের সূচক · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}যাচাই করে আবার চালু করুন"
+        "name": "নিয়ন্ত্রণ · {channel}যাচাই করে আবার চালু করুন"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}জলবায়ু নিয়ন্ত্রক"
+        "name": "জলবায়ু · {channel}"
       }
     }
   },

@@ -1280,7 +1280,7 @@
         "name": "Felületi páratartalom (számított)"
       },
       "equipment_control_status": {
-        "name": "{channel}Vezérlő állapota",
+        "name": "Állapot · {channel}Vezérlő állapota",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}beállítások · forrás (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Csendes ventilátorfokozat korlátja (%)"
+        "name": "Csendes · {channel}ventilátorfokozat korlátja (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Teljesítmény · min ON (s)"
+        "name": "Teljesítmény · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Teljesítmény · min OFF (s)"
+        "name": "Teljesítmény · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Teljesítmény · max ON (s)"
+        "name": "Teljesítmény · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Szoba · Hőmérséklet · min"
@@ -2039,13 +2039,13 @@
         "name": "Eszközök · Kültéri"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Alacsonyabb zaj alváskor"
+        "name": "Csendes · {channel}Alacsonyabb zaj alváskor"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Alacsonyabb zaj jelenlétkor"
+        "name": "Csendes · {channel}Alacsonyabb zaj jelenlétkor"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}érzékelő · Kötelező"
+        "name": "Érzékelő · {channel}Kötelező"
       },
       "area_shading_enabled": {
         "name": "Automatikus árnyékolás a hűtéshez"
@@ -2090,7 +2090,7 @@
         "name": "Eszközök · forrás · cél"
       },
       "equipment_control_mode": {
-        "name": "{channel}Szabályozási mód",
+        "name": "Vezérlés · {channel}Szabályozási mód",
         "state": {
           "existing": "Meglévő helyiségszabályozó",
           "automatic": "Automatikus",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Natív csendes ventilátorfokozat"
+        "name": "Csendes · {channel}Natív csendes ventilátorfokozat"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}vezérlés · Jelenlét",
+        "name": "Jelenlét · {channel}Jelenlét",
         "state": {
           "always": "Automatikus",
           "occupied": "Szoba · Jelenlét",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Alvás · vezérlés",
+        "name": "Alvás · {channel}vezérlés",
         "state": {
           "normal": "Automatikus",
           "pause": "Szünet",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}vezérlés · Eszközök",
+        "name": "Ventilátor · {channel}Eszközök",
         "state": {
           "extraction": "Kültéri · vezérlés",
           "filtration": "PM2.5 · vezérlés",
@@ -2174,7 +2174,7 @@
         "name": "Penészesedési mutató · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Ellenőrzés és folytatás"
+        "name": "Vezérlés · {channel}Ellenőrzés és folytatás"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Klímaszabályozó"
+        "name": "Klíma · {channel}"
       }
     }
   },

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .room_hubs import async_add_grouped_entities
+from .room_pid_name_catalog import localized_room_pid_name
 
 from homeassistant.components.select import SelectEntity
 from homeassistant.core import callback
@@ -51,20 +52,18 @@ async def async_setup_entry(hass, entry, async_add_entities):
     from . import equipment_model as equipment
     entities.extend(EquipmentSelect(manager, spec, "control_mode")
                     for spec in equipment.specs(manager))
-    entities.extend(EquipmentSelect(manager, spec, "pid_calibration_method")
-                    for spec in equipment.specs(manager)
-                    if "pid" in equipment.control_modes(manager, spec))
     from homeassistant.helpers import entity_registry as er
     from .equipment_feature_registration import (
-        quiet_keys, register_late_capabilities,
+        quiet_keys, register_late_capabilities, registered_control,
+        pid_calibration_supported,
     )
     registry = er.async_get(hass)
 
-    from .equipment_feature_registration import registered_control
-
-    def native_quiet_selects():
+    def native_feature_selects():
         selection = []
         for spec in equipment.specs(manager):
+            if pid_calibration_supported(manager, registry, spec, platform="select"):
+                selection.append(EquipmentSelect(manager, spec, "pid_calibration_method"))
             selection.extend(EquipmentSelect(manager, spec, key)
                 for key in quiet_keys(manager, registry, spec, platform="select"))
             cap = equipment.capabilities(manager, spec)
@@ -77,7 +76,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
                     selection.append(EquipmentSelect(manager, spec, key))
         return selection
 
-    entities.extend(native_quiet_selects())
+    entities.extend(native_feature_selects())
     from .const import CONF_AREAS
     entities.extend(AreaScienceSource(manager, entry.entry_id, area, key)
                     for area in manager.settings.get(CONF_AREAS, [])
@@ -94,7 +93,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
             entities.append(ShadeWindowSelect(manager, entry.entry_id, area, cover))
     async_add_grouped_entities(entry.runtime_data, async_add_entities, entities)
     register_late_capabilities(
-        hass, entry, async_add_entities, entities, native_quiet_selects,
+        hass, entry, async_add_entities, entities, native_feature_selects,
     )
 
 
@@ -154,6 +153,10 @@ class ConfigSelect(SelectEntity):
         self._attr_options = list(options)
         if kind == "pid_gain_source":
             self._attr_has_entity_name = False
+            locale = getattr(getattr(manager.hass, "config", None), "language", "en")
+            self._attr_name = localized_room_pid_name(
+                "area_pid_gain_source", locale
+            )
         suffix = f"{kind}_{self._setting_key}" if setting_key else kind
         if entity_id:
             suffix = f"{kind}_{entity_id.replace('.', '_')}_{self._setting_key}"
@@ -260,7 +263,12 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
             cap = equipment.capabilities(self._manager, self._spec)
             return bool(cap and cap.fan_modes and not cap.fan_percentage)
         if self._key == "pid_calibration_method":
-            return self.controller_settings["control_mode"] == "pid"
+            # Show persisted setup across device startup, but allow edits only
+            # after the physical endpoint re-advertises native DRY/PID support.
+            cap = equipment.capabilities(self._manager, self._spec)
+            return bool(cap is not None and
+                        self.controller_settings["control_mode"] == "pid"
+                        and "pid" in equipment.control_modes(self._manager, self._spec))
         if self._key in ("pid_fan_capacity_mode", "pid_fan_capacity_for_mode"):
             cap = equipment.capabilities(self._manager, self._spec)
             return bool(cap and cap.fan_modes
@@ -270,7 +278,11 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
-        if self._key == "quiet_fan_mode":
+        if self._key in ("control_mode", "quiet_fan_mode",
+                         "pid_calibration_method", "pid_fan_capacity_mode",
+                         "pid_fan_capacity_for_mode"):
+            # Native mode/feature changes can turn DRY-only PID support on
+            # after integration setup. Refresh selector options immediately.
             self._watch_native_updates()
 
     @property

@@ -1280,7 +1280,7 @@
         "name": "Povrchová vlhkost (vypočtená)"
       },
       "equipment_control_status": {
-        "name": "{channel}Stav regulátoru",
+        "name": "Stav · {channel}Stav regulátoru",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}nastavení · zdroj (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Limit tichého chodu ventilátoru (%)"
+        "name": "Tichý režim · {channel}Limit tichého chodu ventilátoru (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Výkon · min ON (s)"
+        "name": "Výkon · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Výkon · min OFF (s)"
+        "name": "Výkon · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Výkon · max ON (s)"
+        "name": "Výkon · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Místnost · Teplota · min"
@@ -2039,13 +2039,13 @@
         "name": "Zařízení · Venkovní"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Nižší hluk při spánku"
+        "name": "Tichý režim · {channel}Nižší hluk při spánku"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Nižší hluk při přítomnosti"
+        "name": "Tichý režim · {channel}Nižší hluk při přítomnosti"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}senzor · Povinné"
+        "name": "Senzor · {channel}Povinné"
       },
       "area_shading_enabled": {
         "name": "Automatické zavírání rolet proti přehřívání"
@@ -2090,7 +2090,7 @@
         "name": "Zařízení · zdroj · cíl"
       },
       "equipment_control_mode": {
-        "name": "{channel}Způsob řízení",
+        "name": "Ovládání · {channel}Způsob řízení",
         "state": {
           "existing": "Stávající regulátor místnosti",
           "automatic": "Automatické",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Nativní tichá rychlost ventilátoru"
+        "name": "Tichý režim · {channel}Nativní tichá rychlost ventilátoru"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}řízení · Obsazenost",
+        "name": "Přítomnost · {channel}Obsazenost",
         "state": {
           "always": "Automatické",
           "occupied": "Místnost · Obsazenost",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Spánek · řízení",
+        "name": "Spánek · {channel}řízení",
         "state": {
           "normal": "Automatické",
           "pause": "Pozastavit",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}řízení · Zařízení",
+        "name": "Ventilátor · {channel}Zařízení",
         "state": {
           "extraction": "Venkovní · řízení",
           "filtration": "PM2.5 · řízení",
@@ -2174,7 +2174,7 @@
         "name": "Indikátor plísní · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Ověřit a pokračovat"
+        "name": "Ovládání · {channel}Ověřit a pokračovat"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Regulátor klimatu"
+        "name": "Klima · {channel}"
       }
     }
   },

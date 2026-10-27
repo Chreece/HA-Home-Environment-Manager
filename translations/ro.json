@@ -1280,7 +1280,7 @@
         "name": "Umiditate de suprafață (calculată)"
       },
       "equipment_control_status": {
-        "name": "{channel}Starea controlerului",
+        "name": "Stare · {channel}Starea controlerului",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}setări · sursă (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}Limită pentru ventilare silențioasă (%)"
+        "name": "Silențios · {channel}Limită pentru ventilare silențioasă (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}Putere · min ON (s)"
+        "name": "Putere · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}Putere · min OFF (s)"
+        "name": "Putere · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}Putere · max ON (s)"
+        "name": "Putere · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "Cameră · Temperatură · min"
@@ -2039,13 +2039,13 @@
         "name": "Dispozitive · Exterior"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}Zgomot redus în timpul somnului"
+        "name": "Silențios · {channel}Zgomot redus în timpul somnului"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}Zgomot redus la prezență"
+        "name": "Silențios · {channel}Zgomot redus la prezență"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}senzor · Obligatoriu"
+        "name": "Senzor · {channel}Obligatoriu"
       },
       "area_shading_enabled": {
         "name": "Închidere automată a jaluzelelor pentru răcire"
@@ -2090,7 +2090,7 @@
         "name": "Dispozitive · sursă · țintă"
       },
       "equipment_control_mode": {
-        "name": "{channel}Metodă de control",
+        "name": "Control · {channel}Metodă de control",
         "state": {
           "existing": "Controlerul existent al camerei",
           "automatic": "Automat",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}Treaptă silențioasă nativă"
+        "name": "Silențios · {channel}Treaptă silențioasă nativă"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}control · Ocupare",
+        "name": "Prezență · {channel}Ocupare",
         "state": {
           "always": "Automat",
           "occupied": "Cameră · Ocupare",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}Somn · control",
+        "name": "Somn · {channel}control",
         "state": {
           "normal": "Automat",
           "pause": "Pauză",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}control · Dispozitive",
+        "name": "Ventilator · {channel}Dispozitive",
         "state": {
           "extraction": "Exterior · control",
           "filtration": "setări · sursă",
@@ -2174,7 +2174,7 @@
         "name": "Indicator de mucegai · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}Verifică și reia"
+        "name": "Control · {channel}Verifică și reia"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}Controler climatic"
+        "name": "Climat · {channel}"
       }
     }
   },

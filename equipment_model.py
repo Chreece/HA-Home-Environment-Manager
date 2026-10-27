@@ -461,7 +461,15 @@ def control_modes(manager: Any, spec: ManagedDevice) -> tuple[str, ...]:
                 or cap.domain == "humidifier" and cap.humidity
                 or "dry" in cap.modes
                 or cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}):
-        result += ("pid",)
+        return (*result, "pid")
+    # A verified PID choice persists through an HA restart. When a climate
+    # (including native DRY-only) has not advertised its modes yet, preserve
+    # that selected option in the configuration UI; this grants no power or
+    # control permission. Runtime actuation still requires live capabilities.
+    if (cap is None and settings(manager, spec)["control_mode"] == "pid"
+            and any(entity.startswith(("climate.", "humidifier.", "fan."))
+                    for entity in spec.source_entities)):
+        return (*result, "pid")
     return result
 
 

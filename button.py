@@ -12,17 +12,39 @@ from .mold_controls import async_recalculate_mold_factor
 
 async def async_setup_entry(hass, entry, async_add_entities):
     settings = entry.runtime_data.settings
+    manager = entry.runtime_data
     from . import equipment_model as equipment
-    controllers = equipment.specs(entry.runtime_data)
-    async_add_grouped_entities(entry.runtime_data, async_add_entities, [
-        *[EquipmentResumeButton(entry.runtime_data, spec) for spec in controllers],
-        *[EquipmentCalibrationButton(entry.runtime_data, spec) for spec in controllers
-          if "pid" in equipment.control_modes(entry.runtime_data, spec)],
-        *[EquipmentFanCapacityButton(entry.runtime_data, spec) for spec in controllers
-          if (cap := equipment.capabilities(entry.runtime_data, spec)) is not None
-          and cap.domain in ("climate", "humidifier")
-          and cap.fan_modes and "pid" in equipment.control_modes(entry.runtime_data, spec)],
-    ])
+    from .equipment_feature_registration import (
+        pid_calibration_supported, registered_control, register_late_capabilities,
+    )
+    from homeassistant.helpers import entity_registry as er
+
+    registry = er.async_get(hass)
+    controllers = equipment.specs(manager)
+
+    def native_calibration_buttons():
+        result = []
+        for spec in equipment.specs(manager):
+            if pid_calibration_supported(manager, registry, spec, platform="button"):
+                result.append(EquipmentCalibrationButton(manager, spec))
+            cap = equipment.capabilities(manager, spec)
+            if (cap is not None and cap.domain in ("climate", "humidifier")
+                    and cap.fan_modes and "pid" in equipment.control_modes(manager, spec)
+                    or registered_control(registry, "button", spec,
+                                          "pid_apply_fan_capacity")):
+                result.append(EquipmentFanCapacityButton(manager, spec))
+        return result
+
+    buttons = [
+        *(EquipmentResumeButton(manager, spec) for spec in controllers),
+        *native_calibration_buttons(),
+    ]
+    async_add_grouped_entities(manager, async_add_entities, buttons)
+    # The physical climate/humidity attributes may arrive after platform
+    # forwarding. Register only newly qualified controls, never duplicate IDs.
+    register_late_capabilities(
+        hass, entry, async_add_entities, buttons, native_calibration_buttons,
+    )
     if settings.get(CONF_USE_MOLD) is not True:
         return
     async_add_grouped_entities(entry.runtime_data, async_add_entities, [
@@ -99,10 +121,18 @@ class EquipmentCalibrationButton(EquipmentEntity, ButtonEntity):
     def __init__(self, manager, spec):
         self._equipment_init(manager, spec, "pid_apply_calibration")
 
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self._watch_native_updates()
+
     @property
     def available(self):
         cfg = self.controller_settings
-        return cfg["control_mode"] == "pid" and cfg["pid_calibration_method"] != "manual"
+        from . import equipment_model as equipment
+        return (cfg["control_mode"] == "pid"
+                and cfg["pid_calibration_method"] != "manual"
+                and equipment.capabilities(self._manager, self._spec) is not None
+                and "pid" in equipment.control_modes(self._manager, self._spec))
 
     @property
     def extra_state_attributes(self):
@@ -149,6 +179,10 @@ class EquipmentFanCapacityButton(EquipmentEntity, ButtonEntity):
 
     def __init__(self, manager, spec):
         self._equipment_init(manager, spec, "pid_apply_fan_capacity")
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self._watch_native_updates()
 
     @property
     def available(self):

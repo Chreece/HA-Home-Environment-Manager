@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .room_hubs import async_add_grouped_entities
+from .room_pid_name_catalog import localized_room_pid_name
 
 from homeassistant.components.number import NumberEntity, NumberMode
 from homeassistant.core import callback
@@ -321,6 +322,10 @@ class ConfigNumber(NumberEntity):
         # avoid Home Assistant prefixing the room/device before "PID".
         if kind in ("pid", "direct_tuning"):
             self._attr_has_entity_name = False
+            locale = getattr(getattr(manager.hass, "config", None), "language", "en")
+            self._attr_name = localized_room_pid_name(
+                f"area_{kind}_{key}", locale
+            )
         if entity_id:
             self._attr_name = f"{entity_id} · {key.replace('_', ' ')}"
         else:

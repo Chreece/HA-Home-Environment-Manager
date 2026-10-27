@@ -7,28 +7,50 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from .const import DOMAIN, SIGNAL_UPDATED
 from . import equipment_model as model
 from .equipment_text import DEVICE_HELP
+from .equipment_name_catalog import localized_equipment_name
 
 
 class EquipmentEntity:
     """Mixin: all entities attach to the existing Area-hub child device."""
 
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_should_poll = False
 
     def _equipment_init(self, manager, spec, key):
         self._manager, self._spec, self._key = manager, spec, key
         self._attr_unique_id = f"{spec.identifier}_{key}"
         self._attr_translation_key = f"equipment_{key}"
-        # Home Assistant ordinarily prepends a device name to friendly_name
-        # when has_entity_name=True. Disable that ONLY for PID parameters so
-        # the real displayed friendly name begins with the translated "PID".
-        # The device association and unique ID remain exactly unchanged.
-        if key in ("kp", "ki", "kd", "sample_seconds", "cycle_seconds") or key.startswith("pid_"):
-            self._attr_has_entity_name = False
+        # All equipment entities sort by their functional leading group:
+        # PID, Power, Quiet, Control, Presence, etc. HA must not prepend the
+        # parent device name ahead of the translated category. Keep unique IDs
+        # and device registration unchanged, including user-customized names.
+        self._attr_has_entity_name = False
         self._attr_device_info = {"identifiers": {(DOMAIN, model.device_identifier(spec))}}
-        self._attr_translation_placeholders = {
-            "channel": f"{spec.name} · " if isinstance(spec, model.ManagedEndpoint) else ""
-        }
+
+        # Only the actual climate facade includes the source product name.
+        # Multi-endpoint products still need an individual channel in their
+        # tuning labels, AFTER the grouping prefix, to avoid duplicate titles.
+        if key == "climate":
+            if isinstance(spec, model.ManagedEndpoint) and spec.source_entities:
+                source = spec.source_entities[0]
+                native = manager.hass.states.get(source)
+                channel = getattr(native, "name", None) or source
+            else:
+                channel = spec.name
+        elif isinstance(spec, model.ManagedEndpoint):
+            source = spec.source_entities[0] if spec.source_entities else ""
+            native = manager.hass.states.get(source) if source else None
+            channel_name = getattr(native, "name", None) or source or spec.name
+            channel = f"{channel_name} · "
+        else:
+            channel = ""
+        self._attr_translation_placeholders = {"channel": channel}
+        # Home Assistant only translates the entity's name when
+        # has_entity_name=True, which would prepend the source device name
+        # before our category. Resolve the same translated names explicitly
+        # in memory and use a full legacy name instead.
+        locale = getattr(getattr(manager.hass, "config", None), "language", "en")
+        self._attr_name = localized_equipment_name(key, locale, channel)
 
     @property
     def controller_settings(self):

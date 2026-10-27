@@ -1,0 +1,101 @@
+name: Beta54 controller naming and DRY PID checks
+
+on:
+  push:
+    branches:
+      - fix/beta54-name-groups-dry-pid-recovery-20261027
+  pull_request:
+    branches:
+      - beta/v0.6.0b53
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Syntax-check integration modules
+        run: python -m compileall -q .
+      - name: Verify controller names and delayed DRY PID registration
+        run: python -m unittest discover -s tests -p 'test_beta54*.py' -v
+      - name: Check dashboard JavaScript syntax
+        run: node --check frontend/air-quality-advisor-card.js
+
+  publish-beta54:
+    # This runs only for the explicitly marked, tested release commit.
+    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-beta54]')
+    needs: regression
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: beta/v0.6.0b54
+      - name: Verify clean distribution
+        run: |
+          test "$(python3 -c 'import json; print(json.load(open("manifest.json"))["version"])')" = "0.6.0b54"
+          test ! -d tests
+          test ! -d .github
+          python3 -m compileall -q .
+      - name: Package manual-install archive
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+          name = "HA-Home-Environment-Manager-v0.6.0b54.zip"
+          with ZipFile(name, "w", ZIP_DEFLATED, compresslevel=7) as archive:
+              for source in sorted(Path(".").rglob("*")):
+                  if not source.is_file():
+                      continue
+                  if any(p in (".git", ".github", "tests", "__pycache__")
+                         for p in source.parts):
+                      continue
+                  if source.suffix in (".pyc", ".zip"):
+                      continue
+                  target = Path("custom_components/environment_manager") / source
+                  archive.write(source, target.as_posix())
+          print(f"Built {name}: {Path(name).stat().st_size} bytes")
+          PY
+      - name: Publish tagged prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test ! -z "$GH_TOKEN"
+          if gh release view v0.6.0b54 >/dev/null 2>&1; then
+            echo "Version v0.6.0b54 already exists - refusing duplicate release" >&2
+            exit 1
+          fi
+          cat > RELEASE_NOTES.md <<'NOTES'
+          # Home Environment Manager v0.6.0b54
+
+          This opt-in beta builds directly on beta53 and keeps the canonical
+          `environment_manager` integration domain.
+
+          - Controller entity names now sort by functional category: PID, Power,
+            Control, Status, Quiet, Presence, Sleep, Fan, Sensor and Climate.
+          - All 38 supported locales have full category-first names, including
+            the older room-level PID and direct tuning controls.
+          - DRY-only climate and humidity devices recover their PID calibration
+            selector and application button even when native HVAC mode
+            capabilities appear after Home Assistant startup.
+          - An explicitly selected PID remains visible while its physical
+            source temporarily reloads, without allowing unsafe control.
+          - Unique IDs, area/device hierarchy, and user-created entity IDs are
+            preserved. The feature does not change physical device outputs,
+            PID math, window interlocks, dwell times or power permissions.
+
+          PID calibration methods use real measured plant response data and
+          require an explicit Apply action. They do not automatically perform
+          an unsafe device step test. Fan-capacity calibration remains limited
+          to devices with a supported adjustable native fan.
+
+          After updating, reload or restart Home Assistant to register new
+          selector/button entities. User-customized entity names remain
+          under the user's control.
+          NOTES
+          gh release create v0.6.0b54             HA-Home-Environment-Manager-v0.6.0b54.zip             --target "$(git rev-parse HEAD)"             --title "Home Environment Manager v0.6.0 beta 54"             --prerelease --notes-file RELEASE_NOTES.md

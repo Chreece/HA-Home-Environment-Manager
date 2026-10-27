@@ -1280,7 +1280,7 @@
         "name": "표면 습도(계산값)"
       },
       "equipment_control_status": {
-        "name": "{channel}컨트롤러 상태",
+        "name": "상태 · {channel}컨트롤러 상태",
         "state": {
           "above_horizon": "Above horizon",
           "active_compressor_wait_for_idle": "Active compressor wait for idle",
@@ -1965,16 +1965,16 @@
         "name": "PID · {channel}설정 · 정보원 (s) · PWM PERIOD"
       },
       "equipment_quiet_percentage": {
-        "name": "{channel}저소음 팬 속도 제한 (%)"
+        "name": "저소음 · {channel}팬 속도 제한 (%)"
       },
       "equipment_min_on_seconds": {
-        "name": "{channel}전력 · min ON (s)"
+        "name": "전력 · {channel}min ON (s)"
       },
       "equipment_min_off_seconds": {
-        "name": "{channel}전력 · min OFF (s)"
+        "name": "전력 · {channel}min OFF (s)"
       },
       "equipment_max_on_seconds": {
-        "name": "{channel}전력 · max ON (s)"
+        "name": "전력 · {channel}max ON (s)"
       },
       "area_room_equipment_limit_temperature_min_limit": {
         "name": "방 · 온도 · min"
@@ -2039,13 +2039,13 @@
         "name": "장치 · 외부"
       },
       "equipment_quiet_sleep": {
-        "name": "{channel}수면 중 저소음"
+        "name": "저소음 · {channel}수면 중 저소음"
       },
       "equipment_quiet_occupied": {
-        "name": "{channel}재실 중 저소음"
+        "name": "저소음 · {channel}재실 중 저소음"
       },
       "equipment_sensor_verified": {
-        "name": "{channel}센서 · 필수"
+        "name": "센서 · {channel}필수"
       },
       "area_shading_enabled": {
         "name": "실내 냉방을 위한 블라인드 자동 닫기"
@@ -2090,7 +2090,7 @@
         "name": "장치 · 정보원 · 목표"
       },
       "equipment_control_mode": {
-        "name": "{channel}제어 방식",
+        "name": "제어 · {channel}제어 방식",
         "state": {
           "existing": "기존 방 제어기",
           "automatic": "자동",
@@ -2100,7 +2100,7 @@
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "{channel}기기 기본 저소음 팬 모드"
+        "name": "저소음 · {channel}기기 기본 저소음 팬 모드"
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}calibration method",
@@ -2128,7 +2128,7 @@
         }
       },
       "equipment_presence_requirement": {
-        "name": "{channel}제어 · 재실",
+        "name": "재실 · {channel}재실",
         "state": {
           "always": "자동",
           "occupied": "방 · 재실",
@@ -2136,7 +2136,7 @@
         }
       },
       "equipment_sleep_behavior": {
-        "name": "{channel}수면 · 제어",
+        "name": "수면 · {channel}제어",
         "state": {
           "normal": "자동",
           "pause": "일시 중지",
@@ -2144,7 +2144,7 @@
         }
       },
       "equipment_fan_purpose": {
-        "name": "{channel}제어 · 장치",
+        "name": "팬 · {channel}장치",
         "state": {
           "extraction": "외부 · 제어",
           "filtration": "PM2.5 · 제어",
@@ -2174,7 +2174,7 @@
         "name": "곰팡이 지표 · ↻ 🌡️"
       },
       "equipment_resume": {
-        "name": "{channel}확인 후 재개"
+        "name": "제어 · {channel}확인 후 재개"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply verified calibration"
@@ -2185,7 +2185,7 @@
     },
     "climate": {
       "equipment_climate": {
-        "name": "{channel}실내 환경 제어기"
+        "name": "냉난방 · {channel}"
       }
     }
   },

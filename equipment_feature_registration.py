@@ -25,6 +25,30 @@ def registered_control(registry: Any, platform: str, spec: Any, key: str) -> boo
     return bool(getter and getter(platform, DOMAIN, f"{spec.identifier}_{key}"))
 
 
+
+def pid_calibration_supported(manager: Any, registry: Any, spec: Any,
+                              *, platform: str) -> bool:
+    """Expose PID tuning only for a verified or previously configured endpoint.
+
+    A DRY-only climate exposes a genuine humidity PID capability; however,
+    its physical HVAC modes may arrive after the select/button platforms
+    finish setup. Keep a known PID controller's tuning controls registered
+    across that startup gap. Unproven devices obtain them only once their
+    advertised native features confirm PID support.
+    """
+    key = {"select": "pid_calibration_method",
+           "button": "pid_apply_calibration"}.get(platform)
+    if key is None:
+        raise ValueError("Only PID calibration select/button are supported")
+    if "pid" in equipment.control_modes(manager, spec):
+        return True
+    if registered_control(registry, platform, spec, key):
+        return True
+    return (equipment.settings(manager, spec).get("control_mode") == "pid"
+            and any(entity.startswith(("climate.", "humidifier.", "fan."))
+                    for entity in spec.source_entities))
+
+
 def quiet_keys(manager: Any, registry: Any, spec: Any,
                *, platform: str) -> tuple[str, ...]:
     """Capability-gated controls; never interpret a physical OFF as no fan.
