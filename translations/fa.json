@@ -2005,6 +2005,9 @@
       },
       "shade_close_above_c": {
         "name": "بستن پرده بالای دمای اتاق (°C)"
+      },
+      "equipment_particle_cadr_m3h": {
+        "name": "Filter · Rated particle CADR (m³/h)"
       }
     },
     "switch": {
@@ -2087,7 +2090,12 @@
         "name": "خانه · دستگاه‌ها · POLICY"
       },
       "area_climate_policy_target_source": {
-        "name": "دستگاه‌ها · منبع · هدف"
+        "name": "دستگاه‌ها · منبع · هدف",
+        "state": {
+          "temperature": "دمای ثابت",
+          "auto_comfort": "آسایش خودکار (دما و رطوبت)",
+          "pmv": "ISO 7730 پیشرفته (نیازمند اندازه‌گیری)"
+        }
       },
       "equipment_control_mode": {
         "name": "کنترل · {channel}روش کنترل",
