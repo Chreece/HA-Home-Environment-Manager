@@ -70,6 +70,23 @@ def _equipment_numbers(manager, spec, registry) -> tuple["EquipmentNumber", ...]
     keys: list[str] = []
     for key in (*equipment.NUMBER_FIELDS, *equipment.PID_MODEL_FIELDS,
                 *equipment.PID_FAN_CAPACITY_FIELDS):
+        if key == "particle_cadr_m3h":
+            # Rated filtration capacity is not a PID gain or room property.
+            # Publish it on actual native fan/purifier controllers, even when
+            # PID is not selected. Persist an existing Number across restarts.
+            registry_id = f"{spec.identifier}_{key}"
+            registered = _registered_number(registry, registry_id)
+            relevant = bool(
+                cap and (cap.domain == "fan" or
+                         "fan_only" in cap.modes or
+                         bool(cap.fan_entity) and
+                         equipment.settings(manager, spec).get("fan_purpose") == "filtration")
+            )
+            if relevant or registered or (
+                    cap is None and any(entity.startswith("fan.")
+                                        for entity in spec.source_entities)):
+                keys.append(key)
+            continue
         if cap is not None:
             if key in equipment.PID_FAN_CAPACITY_FIELDS:
                 if (cap.domain not in ("climate", "humidifier")
@@ -168,7 +185,14 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
     except (AttributeError, RuntimeError):
         pass
 
+    # Remove the superseded *room-owned* CADR editor. Its saved value
+    # remains in options as an explicit legacy fallback until the physical
+    # purifier's new per-device CADR rating is configured.
     for area_id in configured_area_ids(manager.settings):
+        old_unique_id = f"{entry.entry_id}_area_{area_id}_area_environment_particle_cadr_m3h"
+        if old_entity := registry.async_get_entity_id(
+                "number", DOMAIN, old_unique_id):
+            registry.async_remove(old_entity)
         for key in equipment.available_room_limit_fields(manager, area_id):
             bounds = equipment.room_limit_edit_bounds(manager, area_id, key)
             if bounds is not None:
