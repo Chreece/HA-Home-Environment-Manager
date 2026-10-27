@@ -1,0 +1,40 @@
+name: Correct beta53 GitHub release display title
+
+on:
+  push:
+    branches:
+      - 'feat/beta53-sensor-resilience-status-20261027'
+    paths:
+      - '.github/workflows/beta53-release-metadata.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  correct-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify already-published immutable beta and correct title only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          tag="v0.6.0b53"
+          release="$(gh api "repos/$repo/releases/tags/$tag")"
+          title="$(jq -r '.name' <<< "$release")"
+          is_prerelease="$(jq -r '.prerelease' <<< "$release")"
+          is_draft="$(jq -r '.draft' <<< "$release")"
+          tag_target="$(jq -r '.target_commitish' <<< "$release")"
+          expected="ed100f73c1dd4a8f9f1c817e13013bfd4437f898"
+          test "$is_prerelease" = true
+          test "$is_draft" = false
+          test "$tag_target" = "$expected"
+          test "$(jq '[.assets[] | select(.name=="HA-Home-Environment-Manager-v0.6.0b53.zip")] | length' <<< "$release")" = 1
+          desired="Home Environment Manager v0.6.0 beta 53"
+          if [[ "$title" != "$desired" ]]; then
+            gh release edit "$tag" --repo "$repo" --title "$desired"
+          fi
+          actual="$(gh api "repos/$repo/releases/tags/$tag" --jq .name)"
+          test "$actual" = "$desired"
+          echo "Release title is correct; tag and artifacts were not modified."
