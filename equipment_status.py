@@ -106,6 +106,9 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "pid_fan_capacity_calibrated_modes": sorted(cfg.get("pid_fan_capacity_models", {})),
             "pid_fan_capacity_allocation": getattr(runtime, "_fan_allocations", {}).get(
                 self._spec.identifier),
+            "pid_prepared_while_unpowered": getattr(
+                runtime, "_pid_offline_previews", {}
+            ).get(self._spec.identifier),
             "pid_output_strategy": (
                 "continuous_percentage_fan" if (cap := equipment.capabilities(self._manager, self._spec))
                 is not None and cap.domain == "fan" and cap.fan_percentage else
