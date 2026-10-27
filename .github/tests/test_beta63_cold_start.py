@@ -41,7 +41,10 @@ class Model:
         return manager.settings["controllers"][spec.identifier]
     @staticmethod
     def room_config(manager, spec):
-        return {"enabled": True}
+        return {
+            "enabled": True,
+            "dry_climate_entity": spec.source_entities[0] if manager.dry_role else None,
+        }
     @staticmethod
     def targets(manager, spec, cap, cfg, plan):
         return {"humidity": manager.target_rh, "heat": 21, "cool": 27}
@@ -53,7 +56,10 @@ class Model:
         return manager.native_online
     @staticmethod
     def capabilities(manager, spec):
-        return Cap(spec.source_entities[0], "climate", ("off", "dry"), humidity=True) if manager.native_online else None
+        if manager.native_online:
+            return Cap(spec.source_entities[0], "climate", ("off", "dry"), humidity=True)
+        return (Cap(spec.source_entities[0], "climate", manager.offline_modes, humidity=True)
+                if manager.offline_modes else None)
 
 
 pkg = ModuleType("beta63_runtime")
@@ -142,7 +148,8 @@ sys.modules[switch_mod.__name__] = switch_mod
 class Simulator:
     def __init__(self, *, supply="off", age=900, rh=68, target_rh=60,
                  direction="dry", method="pid", authorized=True,
-                 permission=True, window_safe=True):
+                 permission=True, window_safe=True,
+                 offline_modes=None, dry_role=False):
         self._active = True
         self._ready = True
         self._started = NOW - 1800
@@ -165,6 +172,8 @@ class Simulator:
             authorized=authorized,
             switch_valid=True,
             target_rh=target_rh,
+            offline_modes=offline_modes,
+            dry_role=dry_role,
             plan={"permission": permission, "window_safe": window_safe},
         )
         self.records = {}
@@ -238,12 +247,29 @@ async def test_cold_start():
     assert len(sim.service_calls) == 1
 
 
+async def test_single_mode_and_room_role():
+    # DRY-only Comfee sources commonly have no requested_mode configured.
+    # HA-advertised single DRY mode (not a verified live state) or explicit
+    # room dehumidifier role can be used only to restore its separate supply.
+    for hints in (
+        {"offline_modes": ("off", "dry")},
+        {"dry_role": True},
+    ):
+        sim = Simulator(direction=None, **hints)
+        assert await drive(sim) is True, hints
+        assert sim.service_calls == [("switch.power_strip", "turn_on")], hints
+        assert "capabilities" not in sim._record(spec), (
+            "Never promote stale native mode hints to verified capabilities"
+        )
+
+
 async def test_negative():
     # Unknown/absent native source is acceptable only when independently
     # measured demand and explicit mode authorization are both TRUE.
     for kw in (
         {"rh": None}, {"rh": 61}, {"target_rh": None},
         {"direction": None}, {"direction": "auto"},
+        {"direction": None, "offline_modes": ("off", "heat", "cool")},
         {"method": "existing"}, {"method": "off"},
         {"method": "manual"}, {"authorized": False},
         {"permission": False}, {"window_safe": False},
@@ -318,6 +344,7 @@ async def test_ui():
 
 async def main():
     await test_cold_start()
+    await test_single_mode_and_room_role()
     await test_negative()
     await test_ui()
     print("PASS: previously authorized DRY cold-start, intent before service, ACK ownership, native recovery, 14 holds, 4 dispatch races, UI availability")
