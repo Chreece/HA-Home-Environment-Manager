@@ -302,6 +302,75 @@ def verified_capabilities(runtime: Any, spec: Any) -> Any:
     return cached
 
 
+def cold_start_direction_demand(runtime: Any, spec: Any, cfg: dict) -> bool | None:
+    """Demand-gated power restoration without pretending the appliance is online.
+
+    This is ONLY for one previously user-selected single HVAC direction. The
+    stored requested_mode was validated against a native endpoint at setup,
+    and exact-device authorization is revalidated by approved_demand().
+    A minimal transient direction descriptor evaluates room targets only;
+    it is NEVER persisted as verified hardware capabilities, exposed in the
+    climate UI, or used for a native appliance service.
+    """
+    if cfg.get("control_mode") not in ("automatic", "pid"):
+        return None
+    direction = cfg.get("requested_mode")
+    if direction not in ("heat", "cool", "dry"):
+        return None
+    if len(spec.source_entities) != 1:
+        return None
+    source = spec.source_entities[0]
+    if not source.startswith("climate."):
+        return None
+    provisional = model.Capabilities(
+        primary=source, domain="climate", modes=("off", direction),
+        temperature=direction in ("heat", "cool"),
+        humidity=direction == "dry",
+    )
+    return approved_demand(runtime, spec, cfg, provisional)
+
+
+def cold_start_dispatch_safe(runtime: Any, spec: Any, record: dict,
+                             cfg: dict, entity: str) -> bool:
+    """Verify a single OFF->ON supply wake after every asynchronous yield.
+
+    The disconnected native source must never be considered OFF by itself.
+    A physically OFF upstream relay, exact area/identity, independent fresh
+    room demand and the hard OFF dwell are required. This path is not used
+    for supply OFF or ANY native climate control command.
+    """
+    if not runtime._active or not runtime._ready or not runtime._current_spec(spec):
+        return False
+    if cfg.get("power_switch_entity") != entity:
+        return False
+    relay = record.get("upstream", {})
+    if relay.get("paused") or relay.get("owned"):
+        return False
+    if record.get("power") or record.get("pending"):
+        return False
+    observed = runtime.hass.states.get(entity)
+    if observed is None or observed.state != "off":
+        return False
+    if verified_capabilities(runtime, spec) is not None:
+        return False  # The established capability-driven path owns this case.
+    now = runtime.clock()
+    if now - runtime._started < 300:
+        return False
+    since = max(
+        finite(relay.get("off_at"), 0, 1e13) or 0,
+        _observed_off_since(observed, now),
+    )
+    if now - since < UPSTREAM_MIN_OFF_SECONDS:
+        return False
+    for source in spec.source_entities:
+        native = runtime.hass.states.get(source)
+        if (native is not None
+                and native.state not in ("unknown", "unavailable")
+                and not observed_output_off(native)):
+            return False
+    return cold_start_direction_demand(runtime, spec, cfg) is True
+
+
 def approved_demand(runtime: Any, spec: Any, cfg: dict,
                     cap: Any) -> bool | None:
     """Live policies and feedback must authorize EACH upstream decision."""
@@ -385,13 +454,19 @@ def _dispatch_safe(runtime: Any, spec: Any, record: dict, cfg: dict,
 
 
 async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
-                desired: str) -> bool:
+                desired: str, *, cold_start: bool = False) -> bool:
     """Save exact-switch intent before switching, then await real HA ACK."""
     relay = record.setdefault("upstream", {})
     if (desired not in _SWITCH_STATES or relay.get("pending")
-            or relay.get("paused") or not runtime._active or not runtime._ready):
+            or relay.get("paused") or not runtime._active or not runtime._ready
+            or cold_start and desired != "on"):
         return False
     entity = identity["entity"]
+
+    def safe_to_dispatch(cfg: dict) -> bool:
+        return (cold_start_dispatch_safe(runtime, spec, record, cfg, entity)
+                if cold_start else
+                _dispatch_safe(runtime, spec, record, cfg, entity, desired))
     observed = runtime.hass.states.get(entity)
     if (observed is None or observed.state not in _SWITCH_STATES
             or not runtime.hass.services.has_service("switch", "turn_" + desired)):
@@ -401,7 +476,8 @@ async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
     before_settings = runtime.manager.settings
     when = runtime.clock()
     relay["pending"] = {"desired": desired, "when": when,
-                        "identity": identity, "phase": "intent"}
+                        "identity": identity, "phase": "intent",
+                        "cold_start": cold_start}
     await runtime._save()
     # All power work is serialized by the per-output lock in EquipmentRuntime.
     # Once persistence has yielded, reject any changed consent or source ID.
@@ -412,7 +488,7 @@ async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
             or permitted_supply(runtime.manager, spec, entity, identity) is None
             or runtime.hass.states.get(entity) is not observed
             or runtime.manager.settings != before_settings
-            or not _dispatch_safe(runtime, spec, record, cfg, entity, desired)):
+            or not safe_to_dispatch(cfg)):
         relay["pending"] = None
         await runtime._save()
         return False
@@ -422,7 +498,7 @@ async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
                     or cfg.get("power_switch_entity") != entity
                     or permitted_supply(runtime.manager, spec, entity, identity) is None
                     or runtime.hass.states.get(entity) is not observed
-                    or not _dispatch_safe(runtime, spec, record, cfg, entity, desired)):
+                    or not safe_to_dispatch(cfg)):
                 relay["pending"] = None
                 await runtime._save()
                 return False
@@ -592,9 +668,38 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
 
     cap = verified_capabilities(runtime, spec)
     if cap is None:
-        runtime._status(spec, "waiting_for_physical_device",
-                        reason="upstream_switch_capabilities_not_verified")
-        return observed.state == "off"
+        if observed.state != "off":
+            runtime._status(spec, "waiting_for_physical_device",
+                            reason="upstream_on_native_device_not_reporting")
+            return True
+        # The selected OFF supply can itself explain native unavailability.
+        # A previously authorized, explicit DRY/HEAT/COOL direction can be
+        # awakened from FRESH INDEPENDENT demand without native I/O. Without
+        # such evidence, hold and say why rather than waiting in a deadlock.
+        if record.get("power") or record.get("pending"):
+            runtime._status(spec, "owned_shutdown_identity_or_dwell_hold",
+                            reason="native_output_ownership_unreconciled")
+            return True
+        cold_demand = cold_start_direction_demand(runtime, spec, cfg)
+        if cold_demand is not True:
+            runtime._status(spec, "waiting_for_physical_device",
+                            reason="upstream_startup_needs_authorized_direction_and_fresh_demand")
+            return True
+        if now - runtime._started < 300:
+            runtime._status(spec, "startup_warmup")
+            return True
+        since = max(finite(relay.get("off_at"), 0, 1e13) or 0,
+                    _observed_off_since(observed, now))
+        if now - since < UPSTREAM_MIN_OFF_SECONDS:
+            runtime._status(spec, "minimum_off_hold",
+                            reason="upstream_switch_minimum_off")
+            return True
+        if not cold_start_dispatch_safe(runtime, spec, record, cfg, selected):
+            runtime._status(spec, "waiting_for_physical_device",
+                            reason="upstream_startup_conditions_changed")
+            return True
+        await _send(runtime, spec, record, identity, "on", cold_start=True)
+        return True
     demand = approved_demand(runtime, spec, cfg, cap)
     if observed.state == "off":
         # A supply may be selected even while a native appliance is running.
