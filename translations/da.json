@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Rumoversigt. Hver enhed nedenfor har sin egen regulator.",
           "sleep": "Søvn",
           "comfort": "Komfort",
-          "eco": "Energibesparelse"
+          "eco": "Energibesparelse",
+          "window_open_pause": "Pause på grund af åbent vindue",
+          "window_close_warmup": "Venter efter lukning af vinduer",
+          "window_state_unknown": "Venter på vinduesstatus"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Advar om åbne vinduer når alle er gået"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Sluk, når et vindue åbnes · {channel}"
       }
     },
     "select": {

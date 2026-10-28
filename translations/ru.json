@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Сводка по комнате. У каждого устройства ниже свой контроллер.",
           "sleep": "Сон",
           "comfort": "Комфорт",
-          "eco": "Энергосбережение"
+          "eco": "Энергосбережение",
+          "window_open_pause": "Пауза из-за открытого окна",
+          "window_close_warmup": "Ожидание после закрытия окон",
+          "window_state_unknown": "Ожидание состояния окон"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Предупреждать об открытых окнах после ухода всех"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Выключать при открытии окна · {channel}"
       }
     },
     "select": {

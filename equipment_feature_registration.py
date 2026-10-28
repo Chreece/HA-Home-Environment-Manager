@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections.abc import Callable, Iterable
 from typing import Any
 
-from homeassistant.const import EVENT_STATE_CHANGED
+from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.core import callback
 from homeassistant.helpers import entity_registry as er
 
@@ -99,10 +99,24 @@ def register_late_capabilities(
     if not watched:
         return
 
+    capability_fields = (
+        "supported_features", "hvac_modes", "fan_modes", "swing_modes",
+        "swing_horizontal_modes", "preset_modes", "min_temp", "max_temp",
+        "target_temp_step", "temperature_unit", "min_humidity", "max_humidity",
+        "percentage_step", "min", "max", "step", "unit_of_measurement",
+    )
+
+    def fingerprint(state):
+        if state is None:
+            return None
+        return {key: state.attributes.get(key) for key in capability_fields}
+
     @callback
     def native_changed(event: Any) -> None:
         if event.data.get("entity_id") not in watched:
             return
+        if fingerprint(event.data.get("old_state")) == fingerprint(event.data.get("new_state")):
+            return  # A numeric observation is not new hardware capability.
         missing = {}
         for candidate in candidates():
             unique_id = candidate._attr_unique_id
@@ -116,5 +130,5 @@ def register_late_capabilities(
         )
 
     entry.async_on_unload(
-        hass.bus.async_listen(EVENT_STATE_CHANGED, native_changed)
+        async_track_state_change_event(hass, watched, native_changed)
     )

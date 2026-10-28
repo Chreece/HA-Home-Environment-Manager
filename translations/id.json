@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Ringkasan ruangan. Setiap perangkat di bawah memiliki pengontrol sendiri.",
           "sleep": "Tidur",
           "comfort": "Nyaman",
-          "eco": "Hemat energi"
+          "eco": "Hemat energi",
+          "window_open_pause": "Dijeda karena jendela terbuka",
+          "window_close_warmup": "Menunggu setelah jendela ditutup",
+          "window_state_unknown": "Menunggu status jendela"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Beri tahu jendela terbuka setelah semua pergi"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Matikan saat jendela dibuka · {channel}"
       }
     },
     "select": {

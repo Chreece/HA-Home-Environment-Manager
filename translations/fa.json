@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "خلاصه اتاق. هر دستگاه زیر کنترل‌گر مستقل دارد.",
           "sleep": "خواب",
           "comfort": "آسایش",
-          "eco": "صرفه‌جویی انرژی"
+          "eco": "صرفه‌جویی انرژی",
+          "window_open_pause": "توقف به دلیل پنجره باز",
+          "window_close_warmup": "انتظار پس از بسته شدن پنجره‌ها",
+          "window_state_unknown": "در انتظار وضعیت پنجره‌ها"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "هشدار پنجره باز پس از خروج همه از خانه"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "خاموش کردن هنگام باز شدن پنجره · {channel}"
       }
     },
     "select": {

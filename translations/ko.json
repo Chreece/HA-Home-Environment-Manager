@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "방 요약입니다. 아래 각 기기에는 개별 제어기가 있습니다.",
           "sleep": "수면",
           "comfort": "쾌적",
-          "eco": "에너지 절약"
+          "eco": "에너지 절약",
+          "window_open_pause": "열린 창문으로 인해 일시 중지",
+          "window_close_warmup": "창문을 닫은 후 대기 중",
+          "window_state_unknown": "창문 상태를 기다리는 중"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "모두 외출한 뒤 열린 창문 알림"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "창문이 열리면 끄기 · {channel}"
       }
     },
     "select": {

@@ -1820,7 +1820,7 @@
           '<span>'+escape(l.target)+': <b>'+escape(target)+'</b></span>'+
           '<span>'+escape(l.mode)+': <b>'+escape(p.mode||'-')+'</b></span>')+
         '<span>'+escape(l[p.profile] || p.profile || 'home')+'</span>'+sources+'</div>'+
-        measuredTemp+sourceDiagnostic+
+        '<div class="hem-room-readings66">'+measuredTemp+this._roomHumidity66(room)+'</div>'+sourceDiagnostic+
         controllerDetails+priorityDetail+heldDetails+
         humidityDetails+airDetails+dryAdvice+windowAdvice+
         (blocked?'<small>'+escape(l.holding)+'</small>':'')+
@@ -2570,6 +2570,242 @@
   </style>`; };
 
 /* HEM_CARD65_END */
+/* HEM_CARD66_START */
+  /* Persist user disclosure choices synchronously, before live HA renders. */
+  const CARD66 = {"en":{"windowSwitch":"Stop when a window opens","windowOpen":"Paused for an open window","windowWarmup":"Waiting after windows closed","windowUnknown":"Waiting for window status","windowReady":"Windows closed","rawDetails":"Technical identifiers","controller":"Controller","source":"Physical device","status":"Status","aqiSetup":"AQI scale not configured","aqiHelp":"Select the provider's scale in outdoor AQI settings.","outsideIncomplete":"Outdoor air data incomplete","windowHelp":"Resume after 60 s continuously closed; device protection limits still apply."},"el":{"windowSwitch":"Διακοπή με ανοιχτό παράθυρο","windowOpen":"Παύση λόγω ανοιχτού παραθύρου","windowWarmup":"Αναμονή μετά το κλείσιμο παραθύρων","windowUnknown":"Αναμονή έγκυρης κατάστασης παραθύρων","windowReady":"Παράθυρα κλειστά","rawDetails":"Τεχνικά αναγνωριστικά","controller":"Ελεγκτής","source":"Φυσική συσκευή","status":"Κατάσταση","aqiSetup":"Δεν έχει οριστεί η κλίμακα AQI","aqiHelp":"Επίλεξε την κλίμακα του παρόχου στις ρυθμίσεις εξωτερικού AQI.","outsideIncomplete":"Ελλιπή δεδομένα εξωτερικού αέρα","windowHelp":"Συνέχιση μετά από 60 s με κλειστά παράθυρα, τηρώντας τα όρια προστασίας της συσκευής."},"de":{"windowSwitch":"Bei offenem Fenster ausschalten","windowOpen":"Wegen offenem Fenster pausiert","windowWarmup":"Wartezeit nach Fensterschließung","windowUnknown":"Warten auf Fensterstatus","windowReady":"Fenster geschlossen","rawDetails":"Technische Kennungen","controller":"Regler","source":"Physisches Gerät","status":"Status","aqiSetup":"AQI-Skala nicht eingerichtet","aqiHelp":"Skala des Anbieters in den Außen-AQI-Einstellungen wählen.","outsideIncomplete":"Außenluftdaten unvollständig","windowHelp":"Fortsetzen nach 60 s durchgehend geschlossenen Fenstern; Geräteschutzzeiten gelten weiterhin."},"fr":{"windowSwitch":"Arrêter à l’ouverture d’une fenêtre","windowOpen":"Pause : fenêtre ouverte","windowWarmup":"Attente après fermeture des fenêtres","windowUnknown":"En attente de l’état des fenêtres","windowReady":"Fenêtres fermées","rawDetails":"Identifiants techniques","controller":"Régulateur","source":"Appareil physique","status":"État","aqiSetup":"Échelle AQI non configurée","aqiHelp":"Choisir l’échelle du fournisseur dans les réglages AQI extérieurs.","outsideIncomplete":"Données d’air extérieur incomplètes","windowHelp":"Reprise après 60 s de fermeture continue ; les protections de l’appareil restent actives."},"es":{"windowSwitch":"Apagar al abrir una ventana","windowOpen":"Pausa por ventana abierta","windowWarmup":"Espera tras cerrar las ventanas","windowUnknown":"Esperando el estado de las ventanas","windowReady":"Ventanas cerradas","rawDetails":"Identificadores técnicos","controller":"Controlador","source":"Dispositivo físico","status":"Estado","aqiSetup":"Escala AQI sin configurar","aqiHelp":"Selecciona la escala del proveedor en los ajustes de AQI exterior.","outsideIncomplete":"Datos del aire exterior incompletos","windowHelp":"Se reanuda tras 60 s con las ventanas cerradas; se mantienen las protecciones del dispositivo."},"it":{"windowSwitch":"Spegnere quando si apre una finestra","windowOpen":"Pausa per finestra aperta","windowWarmup":"Attesa dopo la chiusura delle finestre","windowUnknown":"In attesa dello stato delle finestre","windowReady":"Finestre chiuse","rawDetails":"Identificativi tecnici","controller":"Regolatore","source":"Dispositivo fisico","status":"Stato","aqiSetup":"Scala AQI non configurata","aqiHelp":"Seleziona la scala del fornitore nelle impostazioni AQI esterne.","outsideIncomplete":"Dati dell’aria esterna incompleti","windowHelp":"Ripresa dopo 60 s di chiusura continua; restano valide le protezioni del dispositivo."},"pt":{"windowSwitch":"Desligar ao abrir uma janela","windowOpen":"Pausa por janela aberta","windowWarmup":"Espera após fechar as janelas","windowUnknown":"A aguardar o estado das janelas","windowReady":"Janelas fechadas","rawDetails":"Identificadores técnicos","controller":"Controlador","source":"Dispositivo físico","status":"Estado","aqiSetup":"Escala AQI não configurada","aqiHelp":"Selecione a escala do fornecedor nas definições de AQI exterior.","outsideIncomplete":"Dados do ar exterior incompletos","windowHelp":"Retoma após 60 s com as janelas fechadas; mantêm-se as proteções do dispositivo."},"pt-br":{"windowSwitch":"Desligar ao abrir uma janela","windowOpen":"Pausa por janela aberta","windowWarmup":"Espera após fechar as janelas","windowUnknown":"Aguardando o estado das janelas","windowReady":"Janelas fechadas","rawDetails":"Identificadores técnicos","controller":"Controlador","source":"Dispositivo físico","status":"Estado","aqiSetup":"Escala AQI não configurada","aqiHelp":"Selecione a escala do fornecedor nas configurações de AQI externo.","outsideIncomplete":"Dados do ar externo incompletos","windowHelp":"Retoma após 60 s com as janelas fechadas; as proteções do dispositivo continuam ativas."},"nl":{"windowSwitch":"Uitschakelen bij een open raam","windowOpen":"Gepauzeerd wegens open raam","windowWarmup":"Wachten na sluiten van ramen","windowUnknown":"Wachten op raamstatus","windowReady":"Ramen gesloten","rawDetails":"Technische identificaties","controller":"Regelaar","source":"Fysiek apparaat","status":"Status","aqiSetup":"AQI-schaal niet ingesteld","aqiHelp":"Kies de schaal van de aanbieder in de instellingen voor buiten-AQI.","outsideIncomplete":"Buitenluchtgegevens onvolledig","windowHelp":"Hervatten na 60 s onafgebroken gesloten ramen; apparaatbeveiligingen blijven gelden."},"da":{"windowSwitch":"Sluk, når et vindue åbnes","windowOpen":"Pause på grund af åbent vindue","windowWarmup":"Venter efter lukning af vinduer","windowUnknown":"Venter på vinduesstatus","windowReady":"Vinduer lukkede","rawDetails":"Tekniske identifikatorer","controller":"Styring","source":"Fysisk enhed","status":"Status","aqiSetup":"AQI-skala ikke konfigureret","aqiHelp":"Vælg udbyderens skala i indstillingerne for udendørs AQI.","outsideIncomplete":"Udendørs luftdata er ufuldstændige","windowHelp":"Genoptag efter 60 s med lukkede vinduer; enhedens beskyttelsesgrænser gælder stadig."},"nb":{"windowSwitch":"Slå av når et vindu åpnes","windowOpen":"Pause på grunn av åpent vindu","windowWarmup":"Venter etter at vinduene er lukket","windowUnknown":"Venter på vindusstatus","windowReady":"Vinduer lukket","rawDetails":"Tekniske identifikatorer","controller":"Kontroller","source":"Fysisk enhet","status":"Status","aqiSetup":"AQI-skala ikke konfigurert","aqiHelp":"Velg leverandørens skala i innstillingene for utendørs AQI.","outsideIncomplete":"Utendørs luftdata er ufullstendige","windowHelp":"Gjenoppta etter 60 s med lukkede vinduer; enhetens beskyttelsesgrenser gjelder fortsatt."},"sv":{"windowSwitch":"Stäng av när ett fönster öppnas","windowOpen":"Pausad på grund av öppet fönster","windowWarmup":"Väntar efter stängning av fönster","windowUnknown":"Väntar på fönsterstatus","windowReady":"Fönster stängda","rawDetails":"Tekniska identifierare","controller":"Styrenhet","source":"Fysisk enhet","status":"Status","aqiSetup":"AQI-skala inte konfigurerad","aqiHelp":"Välj leverantörens skala i inställningarna för utomhus-AQI.","outsideIncomplete":"Utomhusluftdata är ofullständiga","windowHelp":"Återuppta efter 60 s med stängda fönster; enhetens skyddsgränser gäller fortfarande."},"fi":{"windowSwitch":"Sammuta ikkunan avautuessa","windowOpen":"Tauko avoimen ikkunan vuoksi","windowWarmup":"Odotus ikkunoiden sulkemisen jälkeen","windowUnknown":"Odotetaan ikkunoiden tilatietoa","windowReady":"Ikkunat suljettu","rawDetails":"Tekniset tunnisteet","controller":"Säädin","source":"Fyysinen laite","status":"Tila","aqiSetup":"AQI-asteikkoa ei ole määritetty","aqiHelp":"Valitse palveluntarjoajan asteikko ulkoilman AQI-asetuksista.","outsideIncomplete":"Ulkoilman tiedot ovat puutteellisia","windowHelp":"Jatka ikkunoiden oltua kiinni 60 s; laitteen suojarajat ovat edelleen voimassa."},"pl":{"windowSwitch":"Wyłącz po otwarciu okna","windowOpen":"Wstrzymano z powodu otwartego okna","windowWarmup":"Oczekiwanie po zamknięciu okien","windowUnknown":"Oczekiwanie na stan okien","windowReady":"Okna zamknięte","rawDetails":"Identyfikatory techniczne","controller":"Sterownik","source":"Urządzenie fizyczne","status":"Stan","aqiSetup":"Nie skonfigurowano skali AQI","aqiHelp":"Wybierz skalę dostawcy w ustawieniach zewnętrznego AQI.","outsideIncomplete":"Niepełne dane o powietrzu na zewnątrz","windowHelp":"Wznowienie po 60 s przy zamkniętych oknach; zabezpieczenia urządzenia nadal obowiązują."},"cs":{"windowSwitch":"Vypnout při otevření okna","windowOpen":"Pozastaveno kvůli otevřenému oknu","windowWarmup":"Čekání po zavření oken","windowUnknown":"Čekání na stav oken","windowReady":"Okna zavřená","rawDetails":"Technické identifikátory","controller":"Regulátor","source":"Fyzické zařízení","status":"Stav","aqiSetup":"Stupnice AQI není nastavena","aqiHelp":"Vyberte stupnici poskytovatele v nastavení venkovního AQI.","outsideIncomplete":"Neúplná data o venkovním vzduchu","windowHelp":"Obnovení po 60 s se zavřenými okny; ochranné limity zařízení zůstávají platné."},"sk":{"windowSwitch":"Vypnúť pri otvorení okna","windowOpen":"Pozastavené pre otvorené okno","windowWarmup":"Čakanie po zatvorení okien","windowUnknown":"Čakanie na stav okien","windowReady":"Okná zatvorené","rawDetails":"Technické identifikátory","controller":"Regulátor","source":"Fyzické zariadenie","status":"Stav","aqiSetup":"Stupnica AQI nie je nastavená","aqiHelp":"Vyberte stupnicu poskytovateľa v nastaveniach vonkajšieho AQI.","outsideIncomplete":"Neúplné údaje o vonkajšom vzduchu","windowHelp":"Obnovenie po 60 s so zatvorenými oknami; ochranné limity zariadenia zostávajú platné."},"hr":{"windowSwitch":"Isključi pri otvaranju prozora","windowOpen":"Pauza zbog otvorenog prozora","windowWarmup":"Čekanje nakon zatvaranja prozora","windowUnknown":"Čekanje na stanje prozora","windowReady":"Prozori zatvoreni","rawDetails":"Tehnički identifikatori","controller":"Upravljač","source":"Fizički uređaj","status":"Stanje","aqiSetup":"AQI ljestvica nije postavljena","aqiHelp":"Odaberite ljestvicu pružatelja u postavkama vanjskog AQI-ja.","outsideIncomplete":"Nepotpuni podaci o vanjskom zraku","windowHelp":"Nastavak nakon 60 s sa zatvorenim prozorima; zaštitna ograničenja uređaja ostaju aktivna."},"sr":{"windowSwitch":"Искључи при отварању прозора","windowOpen":"Пауза због отвореног прозора","windowWarmup":"Чекање после затварања прозора","windowUnknown":"Чекање на стање прозора","windowReady":"Прозори затворени","rawDetails":"Технички идентификатори","controller":"Контролер","source":"Физички уређај","status":"Стање","aqiSetup":"AQI скала није подешена","aqiHelp":"Изаберите скалу добављача у подешавањима спољног AQI.","outsideIncomplete":"Непотпуни подаци о спољном ваздуху","windowHelp":"Наставак после 60 s са затвореним прозорима; заштитна ограничења уређаја остају активна."},"bg":{"windowSwitch":"Изключване при отваряне на прозорец","windowOpen":"Пауза заради отворен прозорец","windowWarmup":"Изчакване след затваряне на прозорците","windowUnknown":"Изчакване на състоянието на прозорците","windowReady":"Прозорците са затворени","rawDetails":"Технически идентификатори","controller":"Контролер","source":"Физическо устройство","status":"Състояние","aqiSetup":"Скалата AQI не е настроена","aqiHelp":"Изберете скалата на доставчика в настройките за външен AQI.","outsideIncomplete":"Непълни данни за външния въздух","windowHelp":"Продължаване след 60 s със затворени прозорци; защитните ограничения остават в сила."},"ro":{"windowSwitch":"Oprire la deschiderea unei ferestre","windowOpen":"Pauză din cauza ferestrei deschise","windowWarmup":"Așteptare după închiderea ferestrelor","windowUnknown":"Se așteaptă starea ferestrelor","windowReady":"Ferestre închise","rawDetails":"Identificatori tehnici","controller":"Controler","source":"Dispozitiv fizic","status":"Stare","aqiSetup":"Scala AQI nu este configurată","aqiHelp":"Selectați scala furnizorului în setările AQI exterior.","outsideIncomplete":"Date incomplete despre aerul exterior","windowHelp":"Reluare după 60 s cu ferestrele închise; protecțiile dispozitivului rămân valabile."},"hu":{"windowSwitch":"Kikapcsolás ablaknyitáskor","windowOpen":"Szünet nyitott ablak miatt","windowWarmup":"Várakozás az ablakok bezárása után","windowUnknown":"Várakozás az ablakok állapotára","windowReady":"Ablakok bezárva","rawDetails":"Műszaki azonosítók","controller":"Vezérlő","source":"Fizikai eszköz","status":"Állapot","aqiSetup":"Az AQI-skála nincs beállítva","aqiHelp":"Válassza ki a szolgáltató skáláját a kültéri AQI beállításaiban.","outsideIncomplete":"Hiányos kültéri levegőadatok","windowHelp":"Folytatás 60 s folyamatosan zárt ablak után; az eszköz védelmi korlátai továbbra is érvényesek."},"ru":{"windowSwitch":"Выключать при открытии окна","windowOpen":"Пауза из-за открытого окна","windowWarmup":"Ожидание после закрытия окон","windowUnknown":"Ожидание состояния окон","windowReady":"Окна закрыты","rawDetails":"Технические идентификаторы","controller":"Контроллер","source":"Физическое устройство","status":"Состояние","aqiSetup":"Шкала AQI не настроена","aqiHelp":"Выберите шкалу поставщика в настройках наружного AQI.","outsideIncomplete":"Неполные данные о наружном воздухе","windowHelp":"Возобновление через 60 с непрерывно закрытых окон; ограничения защиты устройства сохраняются."},"uk":{"windowSwitch":"Вимикати при відкритті вікна","windowOpen":"Пауза через відкрите вікно","windowWarmup":"Очікування після закриття вікон","windowUnknown":"Очікування стану вікон","windowReady":"Вікна закриті","rawDetails":"Технічні ідентифікатори","controller":"Контролер","source":"Фізичний пристрій","status":"Стан","aqiSetup":"Шкалу AQI не налаштовано","aqiHelp":"Виберіть шкалу постачальника в налаштуваннях зовнішнього AQI.","outsideIncomplete":"Неповні дані про зовнішнє повітря","windowHelp":"Відновлення через 60 с безперервно закритих вікон; захисні обмеження пристрою зберігаються."},"tr":{"windowSwitch":"Pencere açılınca kapat","windowOpen":"Açık pencere nedeniyle duraklatıldı","windowWarmup":"Pencereler kapandıktan sonra bekleniyor","windowUnknown":"Pencere durumu bekleniyor","windowReady":"Pencereler kapalı","rawDetails":"Teknik tanımlayıcılar","controller":"Denetleyici","source":"Fiziksel cihaz","status":"Durum","aqiSetup":"AQI ölçeği yapılandırılmamış","aqiHelp":"Dış ortam AQI ayarlarından sağlayıcının ölçeğini seçin.","outsideIncomplete":"Dış hava verileri eksik","windowHelp":"Pencereler 60 s kesintisiz kapalı kaldığında sürdürülür; cihaz koruma sınırları geçerlidir."},"ar":{"windowSwitch":"إيقاف عند فتح نافذة","windowOpen":"متوقف مؤقتًا بسبب نافذة مفتوحة","windowWarmup":"انتظار بعد إغلاق النوافذ","windowUnknown":"انتظار حالة النوافذ","windowReady":"النوافذ مغلقة","rawDetails":"المعرّفات التقنية","controller":"وحدة التحكم","source":"الجهاز الفعلي","status":"الحالة","aqiSetup":"مقياس AQI غير مضبوط","aqiHelp":"اختر مقياس المزود في إعدادات AQI الخارجي.","outsideIncomplete":"بيانات الهواء الخارجي غير مكتملة","windowHelp":"الاستئناف بعد إغلاق النوافذ باستمرار لمدة 60 ثانية؛ تبقى حدود حماية الجهاز سارية."},"fa":{"windowSwitch":"خاموش کردن هنگام باز شدن پنجره","windowOpen":"توقف به دلیل پنجره باز","windowWarmup":"انتظار پس از بسته شدن پنجره‌ها","windowUnknown":"در انتظار وضعیت پنجره‌ها","windowReady":"پنجره‌ها بسته‌اند","rawDetails":"شناسه‌های فنی","controller":"کنترل‌کننده","source":"دستگاه واقعی","status":"وضعیت","aqiSetup":"مقیاس AQI تنظیم نشده است","aqiHelp":"مقیاس ارائه‌دهنده را در تنظیمات AQI بیرون انتخاب کنید.","outsideIncomplete":"داده‌های هوای بیرون ناقص است","windowHelp":"ادامه پس از ۶۰ ثانیه بسته بودن پیوسته پنجره‌ها؛ محدودیت‌های حفاظتی دستگاه برقرارند."},"he":{"windowSwitch":"כיבוי בעת פתיחת חלון","windowOpen":"הושהה עקב חלון פתוח","windowWarmup":"המתנה לאחר סגירת החלונות","windowUnknown":"ממתין למצב החלונות","windowReady":"החלונות סגורים","rawDetails":"מזהים טכניים","controller":"בקר","source":"מכשיר פיזי","status":"מצב","aqiSetup":"סולם AQI לא הוגדר","aqiHelp":"יש לבחור את סולם הספק בהגדרות AQI חיצוני.","outsideIncomplete":"נתוני האוויר בחוץ אינם מלאים","windowHelp":"חידוש לאחר 60 שניות שבהן החלונות סגורים ברציפות; מגבלות ההגנה של המכשיר נשמרות."},"hi":{"windowSwitch":"खिड़की खुलने पर बंद करें","windowOpen":"खुली खिड़की के कारण रुका हुआ","windowWarmup":"खिड़कियाँ बंद होने के बाद प्रतीक्षा","windowUnknown":"खिड़कियों की स्थिति की प्रतीक्षा","windowReady":"खिड़कियाँ बंद हैं","rawDetails":"तकनीकी पहचानकर्ता","controller":"नियंत्रक","source":"वास्तविक उपकरण","status":"स्थिति","aqiSetup":"AQI पैमाना निर्धारित नहीं है","aqiHelp":"बाहरी AQI सेटिंग में प्रदाता का पैमाना चुनें।","outsideIncomplete":"बाहरी हवा के आँकड़े अधूरे हैं","windowHelp":"खिड़कियाँ लगातार 60 सेकंड बंद रहने पर फिर चालू होगा; उपकरण के सुरक्षा नियम लागू रहेंगे।"},"bn":{"windowSwitch":"জানালা খুললে বন্ধ করুন","windowOpen":"খোলা জানালার কারণে বিরতি","windowWarmup":"জানালা বন্ধ হওয়ার পর অপেক্ষা","windowUnknown":"জানালার অবস্থার জন্য অপেক্ষা","windowReady":"জানালা বন্ধ","rawDetails":"প্রযুক্তিগত শনাক্তকারী","controller":"নিয়ন্ত্রক","source":"বাস্তব যন্ত্র","status":"অবস্থা","aqiSetup":"AQI স্কেল নির্ধারিত নয়","aqiHelp":"বাইরের AQI সেটিংসে সরবরাহকারীর স্কেল বেছে নিন।","outsideIncomplete":"বাইরের বাতাসের তথ্য অসম্পূর্ণ","windowHelp":"জানালা একটানা 60 সেকেন্ড বন্ধ থাকলে আবার চলবে; যন্ত্রের সুরক্ষা সীমা বহাল থাকবে।"},"ur":{"windowSwitch":"کھڑکی کھلنے پر بند کریں","windowOpen":"کھلی کھڑکی کی وجہ سے توقف","windowWarmup":"کھڑکیاں بند ہونے کے بعد انتظار","windowUnknown":"کھڑکیوں کی حالت کا انتظار","windowReady":"کھڑکیاں بند ہیں","rawDetails":"تکنیکی شناخت کار","controller":"کنٹرولر","source":"اصل آلہ","status":"حالت","aqiSetup":"AQI پیمانہ مقرر نہیں","aqiHelp":"بیرونی AQI کی ترتیبات میں فراہم کنندہ کا پیمانہ منتخب کریں۔","outsideIncomplete":"بیرونی ہوا کا ڈیٹا نامکمل ہے","windowHelp":"کھڑکیاں مسلسل 60 سیکنڈ بند رہنے کے بعد دوبارہ چلے گا؛ آلے کی حفاظتی حدود برقرار رہیں گی۔"},"ta":{"windowSwitch":"சாளரம் திறந்தால் அணைக்கவும்","windowOpen":"திறந்த சாளரத்தால் இடைநிறுத்தப்பட்டது","windowWarmup":"சாளரங்கள் மூடிய பிறகு காத்திருப்பு","windowUnknown":"சாளர நிலைக்காகக் காத்திருக்கிறது","windowReady":"சாளரங்கள் மூடப்பட்டுள்ளன","rawDetails":"தொழில்நுட்ப அடையாளங்கள்","controller":"கட்டுப்படுத்தி","source":"உண்மையான சாதனம்","status":"நிலை","aqiSetup":"AQI அளவுகோல் அமைக்கப்படவில்லை","aqiHelp":"வெளிப்புற AQI அமைப்புகளில் வழங்குநரின் அளவுகோலைத் தேர்ந்தெடுக்கவும்.","outsideIncomplete":"வெளிப்புறக் காற்றுத் தரவு முழுமையில்லை","windowHelp":"சாளரங்கள் தொடர்ந்து 60 வினாடிகள் மூடிய பின் மீண்டும் இயங்கும்; சாதனப் பாதுகாப்பு வரம்புகள் தொடரும்."},"th":{"windowSwitch":"ปิดเมื่อเปิดหน้าต่าง","windowOpen":"หยุดชั่วคราวเพราะหน้าต่างเปิด","windowWarmup":"รอหลังจากปิดหน้าต่าง","windowUnknown":"รอสถานะหน้าต่าง","windowReady":"หน้าต่างปิด","rawDetails":"รหัสทางเทคนิค","controller":"ตัวควบคุม","source":"อุปกรณ์จริง","status":"สถานะ","aqiSetup":"ยังไม่ตั้งค่ามาตรา AQI","aqiHelp":"เลือกมาตราของผู้ให้บริการในการตั้งค่า AQI ภายนอก","outsideIncomplete":"ข้อมูลอากาศภายนอกไม่ครบถ้วน","windowHelp":"ทำงานต่อเมื่อหน้าต่างปิดต่อเนื่อง 60 วินาที โดยยังคงข้อจำกัดการป้องกันอุปกรณ์"},"vi":{"windowSwitch":"Tắt khi cửa sổ mở","windowOpen":"Tạm dừng vì cửa sổ mở","windowWarmup":"Chờ sau khi đóng cửa sổ","windowUnknown":"Đang chờ trạng thái cửa sổ","windowReady":"Cửa sổ đã đóng","rawDetails":"Mã định danh kỹ thuật","controller":"Bộ điều khiển","source":"Thiết bị vật lý","status":"Trạng thái","aqiSetup":"Chưa cấu hình thang AQI","aqiHelp":"Chọn thang của nhà cung cấp trong cài đặt AQI ngoài trời.","outsideIncomplete":"Dữ liệu không khí ngoài trời chưa đầy đủ","windowHelp":"Tiếp tục sau 60 giây cửa sổ đóng liên tục; vẫn tuân thủ giới hạn bảo vệ thiết bị."},"id":{"windowSwitch":"Matikan saat jendela dibuka","windowOpen":"Dijeda karena jendela terbuka","windowWarmup":"Menunggu setelah jendela ditutup","windowUnknown":"Menunggu status jendela","windowReady":"Jendela tertutup","rawDetails":"Pengenal teknis","controller":"Pengontrol","source":"Perangkat fisik","status":"Status","aqiSetup":"Skala AQI belum diatur","aqiHelp":"Pilih skala penyedia dalam pengaturan AQI luar ruangan.","outsideIncomplete":"Data udara luar belum lengkap","windowHelp":"Lanjut setelah jendela tertutup terus-menerus selama 60 detik; batas perlindungan perangkat tetap berlaku."},"ja":{"windowSwitch":"窓が開いたら停止","windowOpen":"窓が開いているため一時停止","windowWarmup":"窓を閉じた後の待機中","windowUnknown":"窓の状態を確認中","windowReady":"窓は閉じています","rawDetails":"技術識別子","controller":"コントローラー","source":"実機","status":"状態","aqiSetup":"AQIの尺度が未設定","aqiHelp":"屋外AQI設定で提供元の尺度を選択してください。","outsideIncomplete":"屋外空気のデータが不十分","windowHelp":"窓が連続して60秒閉じた後に再開します。機器の保護制限は引き続き適用されます。"},"ko":{"windowSwitch":"창문이 열리면 끄기","windowOpen":"열린 창문으로 인해 일시 중지","windowWarmup":"창문을 닫은 후 대기 중","windowUnknown":"창문 상태를 기다리는 중","windowReady":"창문 닫힘","rawDetails":"기술 식별자","controller":"제어기","source":"실제 장치","status":"상태","aqiSetup":"AQI 척도가 설정되지 않음","aqiHelp":"실외 AQI 설정에서 제공업체의 척도를 선택하세요.","outsideIncomplete":"실외 공기 데이터가 불완전함","windowHelp":"창문이 연속 60초 동안 닫힌 후 재개하며 장치 보호 제한은 계속 적용됩니다."},"zh-hans":{"windowSwitch":"开窗时停止","windowOpen":"因窗户打开而暂停","windowWarmup":"关窗后等待中","windowUnknown":"等待窗户状态","windowReady":"窗户已关闭","rawDetails":"技术标识符","controller":"控制器","source":"实体设备","status":"状态","aqiSetup":"未设置AQI标准","aqiHelp":"请在室外AQI设置中选择提供商的标准。","outsideIncomplete":"室外空气数据不完整","windowHelp":"窗户持续关闭60秒后恢复，设备保护限制仍然有效。"},"zh-hant":{"windowSwitch":"開窗時停止","windowOpen":"因窗戶開啟而暫停","windowWarmup":"關窗後等待中","windowUnknown":"等待窗戶狀態","windowReady":"窗戶已關閉","rawDetails":"技術識別碼","controller":"控制器","source":"實體裝置","status":"狀態","aqiSetup":"未設定AQI標準","aqiHelp":"請在室外AQI設定中選擇供應商的標準。","outsideIncomplete":"室外空氣資料不完整","windowHelp":"窗戶持續關閉60秒後恢復，裝置保護限制仍然有效。"}};
+  const proto66 = AirQualityAdvisorCard.prototype;
+  proto66._l66 = function(key) {return (CARD66[this._language()] || CARD66.en)[key] || CARD66.en[key] || '';};
+  proto66._installInteractions66 = function() {
+    if(this._interactions66) return;
+    this._interactions66=true;
+    this._detailsExpanded66=new Set();
+    this._windowSwitchPending66=new Set();
+    const identify=(node)=>{
+      if(!node?.getAttribute) return null;
+      const calibration=node.getAttribute('data-calibration-id');
+      if(calibration) return [this._calibrationExpanded65,calibration];
+      const id=node.getAttribute('data-detail-id');
+      return id ? [this._detailsExpanded66,id] : null;
+    };
+    const setOpen=(node,open)=>{
+      const item=identify(node);if(!item) return;
+      const [set,key]=item;if(open)set.add(key);else set.delete(key);
+    };
+    this.shadowRoot.addEventListener('pointerdown',(e)=>{
+      const summary=e.target.closest?.('summary');
+      if(summary && identify(summary.parentElement)) {
+        this._detailPointer66=true;clearTimeout(this._detailPointerTimer66);
+        this._detailPointerTimer66=setTimeout(()=>release(),1000);
+      }
+    },true);
+    const release=()=>{this._detailPointer66=false;clearTimeout(this._detailPointerTimer66);this._flushDeferredRenderSoon();};
+    this.shadowRoot.addEventListener('pointerup',()=>setTimeout(release,0),true);
+    this.shadowRoot.addEventListener('pointercancel',release,true);
+    this.shadowRoot.addEventListener('click',(e)=>{
+      const summary=e.target.closest?.('summary');
+      const node=summary?.parentElement;
+      if(summary && identify(node)) {
+        e.preventDefault();e.stopPropagation();
+        // Native toggle events are asynchronous. Store the intended choice
+        // now so a concurrent state refresh cannot rebuild it as CLOSED.
+        const open=!node.open;setOpen(node,open);node.open=open;
+        release();return;
+      }
+      const button=e.target.closest?.('[data-window-policy-switch]');
+      if(!button || !this._hass?.callService) return;
+      e.preventDefault();e.stopPropagation();
+      const area=button.dataset.controllerArea;
+      const device=button.dataset.windowController;
+      const id=button.dataset.windowPolicySwitch;
+      const match=this._managedControllers(area).find(x=>x.entityId===device);
+      const actual=match?.windowPolicyInfo;
+      if(!actual || actual.id!==id || !['on','off'].includes(actual.state.state) ||
+         this._windowSwitchPending66.has(id)) return;
+      const action=actual.state.state==='on'?'turn_off':'turn_on';
+      this._windowSwitchPending66.add(id);button.disabled=true;
+      Promise.resolve().then(()=>this._hass.callService('switch',action,{entity_id:id}))
+        .catch(()=>{this._climateEditError=this._climateLabels65().editFailed;})
+        .finally(()=>{this._windowSwitchPending66.delete(id);this._render(true);});
+    },true);
+    this.shadowRoot.addEventListener('toggle',(e)=>{
+      // Discard queued events belonging to a replaced DOM subtree.
+      if(!e.target.isConnected || e.target.getRootNode()!==this.shadowRoot) return;
+      setOpen(e.target,e.target.open);
+    },true);
+  };
+  const originalDisconnect66=proto66.disconnectedCallback;
+  proto66.disconnectedCallback=function(){this._detailPointer66=false;clearTimeout(this._detailPointerTimer66);return originalDisconnect66.call(this);};
+  const originalRender66=proto66._render;
+  proto66._render=function(force=false) {
+    if(this._detailPointer66){this._pendingRender=true;this._pendingForceRender ||= force;return;}
+    return originalRender66.call(this,force);
+  };
+  const originalStatus66=proto66._controllerStatusLabel;
+  proto66._controllerStatusLabel=function(code) {
+    const map={window_open_pause:'windowOpen',window_close_warmup:'windowWarmup',
+      window_state_unknown:'windowUnknown',window_closed_ready:'windowReady',
+      aqi_scale_unconfigured:'aqiSetup'};
+    return map[code]?this._l66(map[code]):originalStatus66.call(this,code);
+  };
+  const originalManaged66=proto66._managedControllers;
+  proto66._managedControllers=function(area) {
+    const states=this._hass?.states || {};
+    if(this._windowStates66!==states) {
+      this._windowStates66=states;this._windowIndex66=new Map();
+      for(const [id,state] of Object.entries(states)) {
+        const a=state?.attributes;
+        if(!id.startsWith('switch.') || a?.window_pause_role!=='policy' ||
+           typeof a.area_id!=='string' || !Array.isArray(a.source_entity_ids) || !a.source_entity_ids.length) continue;
+        const key=JSON.stringify([a.area_id,[...a.source_entity_ids].sort()]);
+        this._windowIndex66.set(key,this._windowIndex66.has(key)?null:{id,state});
+      }
+    }
+    return originalManaged66.call(this,area).map(entry=>({...entry,
+      windowPolicyInfo:this._windowIndex66.get(JSON.stringify([area,
+        [...entry.climate.attributes.source_entity_ids].sort()])) || null,
+    }));
+  };
+  // Include configuration-switch-only changes and window timers in rendering.
+  const originalSignature66=proto66._controllerSignature;
+  proto66._controllerSignature=function() {
+    return originalSignature66.call(this)+JSON.stringify(Object.entries(this._hass?.states || {})
+      .filter(([id,s])=>s?.attributes?.window_pause_role==='policy' ||
+        (id.startsWith('sensor.') && s?.attributes?.window_policy))
+      .map(([id,s])=>[id,s.state,s.attributes.window_policy,s.attributes.source_entity_ids]));
+  };
+  proto66._detail66=function(key,title,content,cls='hem-diagnostics') {
+    const opened=this._detailsExpanded66?.has(key)===true;
+    return '<details class="'+escape(cls)+'" data-detail-id="'+escape(key)+'" '+(opened?'open':'')+
+      '><summary>'+escape(title)+'</summary>'+content+'</details>';
+  };
+  const originalSummary66=proto66._deviceSummary65;
+  proto66._deviceSummary65=function(entry) {
+    this._installInteractions66();
+    const previous=originalSummary66.call(this,entry);
+    const marker=previous.indexOf('<details class="hem-diagnostics">');
+    const base=marker<0?previous:previous.slice(0,marker);
+    const a=entry.climate.attributes || {}, d=entry.statusInfo?.state?.attributes || {};
+    const c=a.controller_status || {}, id=entry.entityId;
+    const states=this._hass?.states || {};
+    const friendly=entity=>states[entity]?.attributes?.friendly_name || entity;
+    const row=(label,value)=>'<div><dt>'+escape(label)+'</dt><dd>'+escape(value)+'</dd></div>';
+    const status=d.status_code || c.status || entry.climate.state;
+    const reason=d.status_reason_code || c.reason;
+    const sources=safeArray(a.source_entity_ids);
+    const supply=d.upstream_power_switch || a.upstream_power_switch;
+    let diagnostics=row(this._l66('controller'),a.friendly_name || friendly(id));
+    diagnostics+=sources.map(entity=>row(this._l66('source'),friendly(entity))).join('');
+    diagnostics+=row(this._l66('status'),this._controllerStatusLabel(status));
+    if(reason && reason!==status)diagnostics+=row(this._l65('reason'),this._controllerStatusLabel(reason));
+    if(supply)diagnostics+=row(this._l65('supply'),friendly(supply));
+    const raw=[id,...sources,supply].filter(Boolean).map(escape).join('<br>');
+    diagnostics='<dl class="hem-diagnostic-data66">'+diagnostics+'</dl>'+
+      this._detail66('raw:'+id,this._l66('rawDetails'),'<code>'+raw+'</code>','hem-technical66');
+    const info=entry.windowPolicyInfo, w=d.window_policy || {};
+    let toggle='';
+    if(info) {
+      const on=info.state.state==='on';
+      const disabled=!['on','off'].includes(info.state.state) || this._windowSwitchPending66.has(info.id);
+      toggle='<div class="hem-window-policy66"><button type="button" role="switch" aria-checked="'+on+
+        '" aria-label="'+escape(this._l66('windowSwitch'))+'" title="'+escape(this._l66('windowHelp'))+
+        '" data-window-policy-switch="'+escape(info.id)+'" data-window-controller="'+escape(id)+
+        '" data-controller-area="'+escape(a.area_id)+'" '+(disabled?'disabled':'')+'>'+
+        this._icon('mdi:window-open-variant')+'<span>'+escape(this._l66('windowSwitch'))+'</span><b>'+
+        escape(this._controllerStatusLabel(info.state.state))+'</b></button><small>'+escape(this._l66('windowHelp'))+'</small>';
+      if(on && w.blocked) {
+        const remain=typeof w.closed_since==='number' && typeof w.resume_delay_seconds==='number'
+          ? Math.max(0,w.resume_delay_seconds-(Date.now()/1000-w.closed_since)):w.remaining_seconds;
+        toggle+='<small class="hem-window-hold66">'+escape(this._controllerStatusLabel(w.status))+
+          (typeof remain==='number' && remain>0?' · '+escape(this._format(remain,0))+' s':'')+'</small>';
+      }
+      toggle+='</div>';
+    }
+    return base+toggle+this._detail66('diagnostics:'+id,this._l65('details'),diagnostics);
+  };
+  proto66._roomHumidity66=function(room) {
+    const p=room?.environment?.climate_plan || {};
+    let rh=p.equipment_plan?.humidity?.measured_rh;
+    if(typeof rh!=='number' || !Number.isFinite(rh) || rh<=0 || rh>100) {
+      const readings=safeArray(room.readings).filter(r=>r.metric==='humidity' &&
+        r.available!==false && typeof r.value==='number' && Number.isFinite(r.value) && r.value>0 && r.value<=100);
+      rh=readings.length?readings.reduce((n,r)=>n+r.value,0)/readings.length:null;
+    }
+    return '<span class="hem-room-humidity66">'+escape(this._t('humidity'))+': <b>'+
+      (typeof rh==='number' && Number.isFinite(rh)?escape(this._format(rh))+' %':escape(this._t('missing')))+'</b></span>';
+  };
+  const originalClimate66=proto66._climatePanel;
+  proto66._climatePanel=function(room){this._installInteractions66();return originalClimate66.call(this,room);};
+  const originalBlocker66=proto66._outsideBlocker;
+  proto66._outsideBlocker=function(reason) {
+    if(reason.code==='aqi_scale_unconfigured') {
+      return '<span class="reason hem-aqi-setup66">'+this._icon('mdi:information-outline')+
+        escape(this._l66('aqiSetup'))+(reason.label?' · '+escape(reason.label):'')+'</span>'+
+        '<small class="hem-outside-help66">'+escape(this._l66('aqiHelp'))+'</small>';
+    }
+    return originalBlocker66.call(this,reason);
+  };
+  const originalOutside66=proto66._outside;
+  proto66._outside=function(outdoor) {
+    let html=originalOutside66.call(this,outdoor);
+    if(outdoor.status!=='unknown') return html;
+    const blockers=safeArray(outdoor.blockers);
+    const weather=safeArray(outdoor.weather).some(w=>!!w.condition);
+    const missingWeather=blockers.some(b=>['no_weather_data','unavailable_weather'].includes(b.code));
+    const aqi=blockers.some(b=>b.code==='aqi_scale_unconfigured');
+    const label=missingWeather?this._t('unavailableWeather'):aqi?this._l66('aqiSetup'):
+      weather?this._l66('outsideIncomplete'):this._t('missingOutside');
+    return html.replace('<div class="outside-title">'+escape(this._t('missingOutside'))+'</div>',
+      '<div class="outside-title">'+escape(label)+'</div>');
+  };
+  const originalStyles66=proto66._styles;
+  proto66._styles=function(){return originalStyles66.call(this)+`<style>
+    .hem-room-readings66{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
+    .hem-room-readings66>span{display:flex;flex-direction:column;gap:5px;font-size:13px;padding:10px;border-radius:10px;background:var(--secondary-background-color,rgba(127,127,127,.08));overflow-wrap:anywhere}
+    .hem-room-readings66 b{font-size:19px;color:var(--primary-text-color)}
+    .hem-window-policy66{margin-top:12px}.hem-window-policy66>button{width:100%;display:flex;align-items:center;gap:9px;padding:10px;border:1px solid var(--divider-color);border-radius:10px;background:transparent;color:inherit;font:inherit;text-align:start;cursor:pointer}
+    .hem-window-policy66>button[aria-checked=true]{border-color:var(--primary-color,#03a9f4)}
+    .hem-window-policy66>button span{flex:1}.hem-window-policy66 small,.hem-outside-help66{display:block;margin-top:5px;color:var(--secondary-text-color);font-size:12px;overflow-wrap:anywhere}
+    .hem-diagnostic-data66{margin:8px 0;font-size:12px}.hem-diagnostic-data66>div{margin:7px 0;overflow-wrap:anywhere}
+    .hem-diagnostic-data66 dt{color:var(--secondary-text-color)}.hem-diagnostic-data66 dd{margin:3px 0;font-weight:500}
+    .hem-technical66{margin-top:10px}.hem-technical66>summary{cursor:pointer;font-size:12px;padding:5px 0}.hem-technical66 code{font-size:11px}
+    .hem-outside-help66{flex-basis:100%}.hem-aqi-setup66{white-space:normal}
+    @media(max-width:340px){.hem-room-readings66{grid-template-columns:1fr}}
+  </style>`;};
+
+/* HEM_CARD66_END */
+
+  /* HEM_CARD68_START: coalesce display work, never physical control. */
+  const proto68 = AirQualityAdvisorCard.prototype;
+  const managed68 = proto68._managedControllers;
+  proto68._managedControllers = function(area) {
+    if (this._managedStates68 !== this._hass?.states) {
+      this._managedStates68 = this._hass?.states;
+      this._managedAreas68 = new Map();
+    }
+    if (!this._managedAreas68.has(area)) this._managedAreas68.set(area,managed68.call(this,area));
+    return this._managedAreas68.get(area);
+  };
+  const render68 = proto68._render;
+  proto68._render = function(force=false) {
+    if (!this.isConnected || !this._hass || !this._config) return;
+    this._frameForce68 = this._frameForce68 || force;
+    if (this._frameHandle68 != null) return;
+    this._frameHandle68 = requestAnimationFrame(()=>{
+      this._frameHandle68 = null;
+      const forced = this._frameForce68; this._frameForce68 = false;
+      if (this.isConnected) render68.call(this,forced);
+    });
+  };
+  const disconnect68 = proto68.disconnectedCallback;
+  proto68.disconnectedCallback = function() {
+    if (this._frameHandle68 != null) cancelAnimationFrame(this._frameHandle68);
+    this._frameHandle68 = null; this._frameForce68 = false;
+    disconnect68.call(this);
+  };
+  proto68.connectedCallback = function() {
+    if (this._hass) this._render(true);
+  };
+  /* HEM_CARD68_END */
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
   // New brand alias; old Lovelace YAML configurations keep working unmodified.

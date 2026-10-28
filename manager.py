@@ -72,6 +72,7 @@ class AirQualityManager:
         self.plan = Plan("blocked", False, (), (), ())
         self._tracked: set[str] = set()
         self._unsubs: list[Any] = []
+        self._source_refresh_handle = None
         # Timers are per room; unrelated sensor changes must not postpone
         # reminders in another room. Values are (action key, reason key).
         self._active_actions: dict[str, tuple[str, str]] = {}
@@ -786,7 +787,24 @@ class AirQualityManager:
                   hierarchy.get("controllers", {}).values()),
             }:
                 return
-        self._recalculate()
+        self._queue_source_refresh()
+
+    @callback
+    def _queue_source_refresh(self) -> None:
+        """Coalesce source/registry bursts without a polling loop or delay.
+
+        Command-time physical safety checks still read current HA states.
+        One room-plan rebuild sees the last state of every source in this
+        loop turn instead of rebuilding all rooms for every startup event.
+        """
+        if self._active and self._source_refresh_handle is None:
+            self._source_refresh_handle = self.hass.loop.call_soon(self._flush_source_refresh)
+
+    @callback
+    def _flush_source_refresh(self) -> None:
+        self._source_refresh_handle = None
+        if self._active:
+            self._recalculate()
 
     @callback
     def _on_interval(self, _now: Any) -> None:
@@ -860,7 +878,7 @@ class AirQualityManager:
         if (old is not None and new is not None and
                 old.state == new.state and old.attributes == new.attributes):
             return  # A repeated report has not changed the source evidence.
-        self._recalculate()
+        self._queue_source_refresh()
 
     def _automatic_channels_enabled(self) -> bool:
         """Automatic announcements are independent from AI/Hub selection."""
@@ -906,6 +924,9 @@ class AirQualityManager:
 
     @callback
     def _recalculate(self, *, initial: bool = False) -> None:
+        if self._source_refresh_handle is not None:
+            self._source_refresh_handle.cancel()
+            self._source_refresh_handle = None
         if not self._active:
             return
         new_plan = self._capture()
@@ -1103,6 +1124,9 @@ class AirQualityManager:
         convert a teardown failure into permission to re-energize equipment.
         """
         self._active = False
+        if self._source_refresh_handle is not None:
+            self._source_refresh_handle.cancel()
+            self._source_refresh_handle = None
         self.away_windows.stop()
         controllers = (
             ("equipment",self.equipment),

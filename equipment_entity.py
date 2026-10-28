@@ -71,47 +71,73 @@ class EquipmentEntity:
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
+        from .equipment_updates import controller_signal
+        self._equipment_write_handle = None
+        self._native_update_unsub = None
+        self._native_watch_enabled = False
+        self._native_watched_ids = frozenset()
+        self.async_on_remove(self._equipment_cleanup)
         self.async_on_remove(async_dispatcher_connect(
             self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}", self._equipment_update))
+        self.async_on_remove(async_dispatcher_connect(
+            self.hass, controller_signal(self._manager.entry.entry_id,
+                                         self._spec.identifier), self._equipment_update))
 
+    @callback
+    def _equipment_cleanup(self):
+        if self._equipment_write_handle is not None:
+            self._equipment_write_handle.cancel()
+            self._equipment_write_handle = None
+        if self._native_update_unsub is not None:
+            self._native_update_unsub()
+            self._native_update_unsub = None
+        self._native_watch_enabled = False
+        self._native_watched_ids = frozenset()
+
+    @callback
     def _watch_native_updates(self) -> None:
-        """Refresh physical facades/quiet controls only when their source changes.
+        """Only this controller's exact physical sources and selected supply."""
+        self._native_watch_enabled = True
+        self._bind_native_updates()
 
-        Stored controller preferences are independent of physical availability,
-        while available native options and physical HVAC truth are dynamic.
-        Subscribe only to this controller's exact physical inputs, never to the
-        generated Manager entities, to avoid dispatcher/event feedback loops.
-        """
-        from homeassistant.const import EVENT_STATE_CHANGED
-
-        selected = frozenset(self._spec.source_entities)
-        # Beta55 read the whole controller settings on EVERY HA state event
-        # for EVERY managed entity, including unrelated lights and sensors.
-        # Cache the exact switch ID instead; refresh it only when the managed
-        # controller sends its ordinary configuration-update dispatcher.
-        self._watched_upstream_switch = model.settings(
-            self._manager, self._spec).get("power_switch_entity")
+    @callback
+    def _bind_native_updates(self):
+        from homeassistant.helpers.event import async_track_state_change_event
+        upstream = model.settings(self._manager, self._spec).get("power_switch_entity")
+        sources = set(self._spec.source_entities)
+        if isinstance(upstream, str) and upstream.startswith("switch."):
+            sources.add(upstream)
+        watched = frozenset(sources)
+        if self._native_watched_ids == watched:
+            return
+        if self._native_update_unsub is not None:
+            self._native_update_unsub()
+            self._native_update_unsub = None
+        self._native_watched_ids = watched
+        self._watched_upstream_switch = upstream
 
         @callback
         def source_changed(event):
-            updated = event.data.get("entity_id")
-            if (updated not in selected and
-                    updated != self._watched_upstream_switch):
-                return
             old, new = event.data.get("old_state"), event.data.get("new_state")
-            if (old is not None and new is not None
-                    and old.state == new.state
+            if (old is not None and new is not None and old.state == new.state
                     and old.attributes == new.attributes):
                 return
-            self.async_write_ha_state()
+            self._equipment_update()
 
-        self.async_on_remove(
-            self.hass.bus.async_listen(EVENT_STATE_CHANGED, source_changed)
-        )
+        if watched:
+            self._native_update_unsub = async_track_state_change_event(
+                self.hass, watched, source_changed)
+
+    @callback
+    def _equipment_write(self):
+        self._equipment_write_handle = None
+        self.async_write_ha_state()
 
     @callback
     def _equipment_update(self):
-        if hasattr(self, "_watched_upstream_switch"):
-            self._watched_upstream_switch = model.settings(
-                self._manager, self._spec).get("power_switch_entity")
-        self.async_write_ha_state()
+        if self._native_watch_enabled:
+            self._bind_native_updates()
+        # One serialization for this entity per loop turn even when a native
+        # source, a config change and its controller status arrive together.
+        if self._equipment_write_handle is None:
+            self._equipment_write_handle = self.hass.loop.call_soon(self._equipment_write)

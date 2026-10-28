@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "ঘরের সারাংশ। নিচের প্রতিটি যন্ত্রের নিজস্ব নিয়ন্ত্রক আছে।",
           "sleep": "ঘুম",
           "comfort": "আরাম",
-          "eco": "শক্তি সাশ্রয়"
+          "eco": "শক্তি সাশ্রয়",
+          "window_open_pause": "খোলা জানালার কারণে বিরতি",
+          "window_close_warmup": "জানালা বন্ধ হওয়ার পর অপেক্ষা",
+          "window_state_unknown": "জানালার অবস্থার জন্য অপেক্ষা"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "সবাই বের হলে খোলা জানালার সতর্কতা দিন"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "জানালা খুললে বন্ধ করুন · {channel}"
       }
     },
     "select": {

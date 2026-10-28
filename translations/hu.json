@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "A szoba összefoglalója. Minden alábbi eszköz saját vezérlővel rendelkezik.",
           "sleep": "Alvás",
           "comfort": "Komfort",
-          "eco": "Energiatakarékosság"
+          "eco": "Energiatakarékosság",
+          "window_open_pause": "Szünet nyitott ablak miatt",
+          "window_close_warmup": "Várakozás az ablakok bezárása után",
+          "window_state_unknown": "Várakozás az ablakok állapotára"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Figyelmeztessen a nyitott ablakokra távozáskor"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Kikapcsolás ablaknyitáskor · {channel}"
       }
     },
     "select": {

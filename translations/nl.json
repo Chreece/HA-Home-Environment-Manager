@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Kamersamenvatting. Elk apparaat hieronder heeft een eigen regelaar.",
           "sleep": "Slaap",
           "comfort": "Comfort",
-          "eco": "Energiebesparing"
+          "eco": "Energiebesparing",
+          "window_open_pause": "Gepauzeerd wegens open raam",
+          "window_close_warmup": "Wachten na sluiten van ramen",
+          "window_state_unknown": "Wachten op raamstatus"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Waarschuw voor open ramen wanneer iedereen weg is"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Uitschakelen bij een open raam · {channel}"
       }
     },
     "select": {

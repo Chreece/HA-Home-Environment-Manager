@@ -409,6 +409,11 @@ def approved_demand(runtime: Any, spec: Any, cfg: dict,
     method = cfg.get("control_mode")
     if method not in ("automatic", "pid", "manual", "off"):
         return None
+    if cfg.get("pause_on_window_open", False):
+        from .equipment_window import evaluate as window_policy
+        window = window_policy(runtime, spec, cfg)
+        if window["blocked"]:
+            return None if window["status"] == "window_state_unknown" else False
     plan = model.plan_for(runtime.manager, spec)
     live = effective_device(runtime.manager, spec, cap.primary)
     room = model.room_config(runtime.manager, spec)
@@ -426,7 +431,7 @@ def approved_demand(runtime: Any, spec: Any, cfg: dict,
             # Unknown sleep/presence still blocks ON but is NEVER proof that
             # cutting the supply to a running device is safe.
             return None
-    if method in ("automatic", "pid", "manual"):
+    if method in ("automatic", "pid", "manual") and cfg.get("pause_on_window_open", True):
         if (plan.get("window_safe") is not True
                 or (cap.domain != "fan" and
                     not _contact_interlock(runtime.hass, spec.area_id, plan))):
@@ -701,6 +706,14 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         runtime._status(spec, "paused", reason=relay["paused"])
         return True
 
+    if cfg.get("pause_on_window_open", False):
+        from .equipment_window import evaluate as window_policy
+        window = window_policy(runtime, spec, cfg)
+        if observed.state == "off" and window["blocked"]:
+            runtime._pid_offline_previews.pop(spec.identifier, None)
+            runtime._status(spec, window["status"],
+                            window_resume_remaining_seconds=window["remaining_seconds"])
+            return True  # No supply wake during OPEN/UNKNOWN/post-close hold.
     cap = verified_capabilities(runtime, spec)
     if cap is None:
         if observed.state != "off":

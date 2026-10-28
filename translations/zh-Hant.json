@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "房間概覽。下方每台裝置都有獨立的控制器。",
           "sleep": "睡眠",
           "comfort": "舒適",
-          "eco": "節能"
+          "eco": "節能",
+          "window_open_pause": "因窗戶開啟而暫停",
+          "window_close_warmup": "關窗後等待中",
+          "window_state_unknown": "等待窗戶狀態"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "所有人離家後提醒未關窗戶"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "開窗時停止 · {channel}"
       }
     },
     "select": {

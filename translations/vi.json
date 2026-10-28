@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Tóm tắt phòng. Mỗi thiết bị bên dưới có bộ điều khiển riêng.",
           "sleep": "Ngủ",
           "comfort": "Thoải mái",
-          "eco": "Tiết kiệm năng lượng"
+          "eco": "Tiết kiệm năng lượng",
+          "window_open_pause": "Tạm dừng vì cửa sổ mở",
+          "window_close_warmup": "Chờ sau khi đóng cửa sổ",
+          "window_state_unknown": "Đang chờ trạng thái cửa sổ"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Tắt khi cửa sổ mở · {channel}"
       }
     },
     "select": {

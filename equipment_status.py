@@ -66,9 +66,10 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         # external status consumer may expose only states.get (not async_all).
         # A read-only status must never crash setup or fabricate a room plan.
         # In the fully running integration, compute the real live room plan.
-        states = getattr(self._manager.hass, "states", None)
-        plan = (equipment.plan_for(self._manager, self._spec)
-                if callable(getattr(states, "async_all", None)) else {})
+        environment = getattr(getattr(self._manager, "plan", None), "environment", {}) or {}
+        area = environment.get(self._spec.area_id, {})
+        plan = area.get("climate_plan", {}) if isinstance(area, dict) else {}
+        plan = plan if isinstance(plan, dict) else {}
         shared = self._manager.settings.get("occupancy_global") or {}
         sleep_id = shared.get("sleep_rooms_entity") if isinstance(shared, dict) else None
         sleep_source = self._manager.hass.states.get(sleep_id) if (
@@ -144,6 +145,9 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "upstream_idle_cooldown_seconds": cfg.get(
                 "power_switch_cooldown_seconds"
             ) if supply_id else None,
+            "window_pause_enabled": cfg.get("pause_on_window_open", True),
+            "window_policy": dict(getattr(runtime, "_window_policy_cache", {}).get(
+                self._spec.identifier, {})),
             "sleep_pause_requested": (
                 cfg.get("sleep_behavior") == "pause"
                 and plan.get("sleeping") is True

@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Rezumatul camerei. Fiecare dispozitiv de mai jos are propriul controler.",
           "sleep": "Somn",
           "comfort": "Confort",
-          "eco": "Economisire energie"
+          "eco": "Economisire energie",
+          "window_open_pause": "Pauză din cauza ferestrei deschise",
+          "window_close_warmup": "Așteptare după închiderea ferestrelor",
+          "window_state_unknown": "Se așteaptă starea ferestrelor"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Avertizează pentru ferestre deschise după plecare"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Oprire la deschiderea unei ferestre · {channel}"
       }
     },
     "select": {

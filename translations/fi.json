@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Huoneen yhteenveto. Jokaisella alla olevalla laitteella on oma ohjain.",
           "sleep": "Uni",
           "comfort": "Mukavuus",
-          "eco": "Energiansäästö"
+          "eco": "Energiansäästö",
+          "window_open_pause": "Tauko avoimen ikkunan vuoksi",
+          "window_close_warmup": "Odotus ikkunoiden sulkemisen jälkeen",
+          "window_state_unknown": "Odotetaan ikkunoiden tilatietoa"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Varoita avoimista ikkunoista kaikkien lähdettyä"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Sammuta ikkunan avautuessa · {channel}"
       }
     },
     "select": {
