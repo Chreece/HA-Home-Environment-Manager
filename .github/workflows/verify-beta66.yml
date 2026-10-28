@@ -1,0 +1,72 @@
+name: Beta66 window policy and stable dashboard regressions
+on:
+  push:
+    branches: ['fix/beta66-window-pause-dashboard-20261028']
+permissions:
+  contents: write
+concurrency:
+  group: beta66-verified-source
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Apply reviewed source edits
+        run: python -I .github/scripts/apply_beta66.py
+      - name: Syntax, canonical identity and all locale files
+        run: |
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I - <<'PY'
+          from pathlib import Path
+          import json
+          manifest=json.loads(Path('manifest.json').read_text())
+          assert manifest['domain']=='environment_manager' and manifest['version']=='0.6.0b66'
+          for p in Path('.').rglob('*.json'):
+              json.loads(p.read_text(encoding='utf-8'))
+          for p in Path('translations').glob('*.json'):
+              e=json.loads(p.read_text())['entity']
+              assert e['switch']['equipment_pause_on_window_open']['name']
+              for state in ('window_open_pause','window_close_warmup','window_state_unknown'):
+                  assert e['sensor']['equipment_control_status']['state'][state]
+          print('PASS source syntax, domain, manifest and localized window controls')
+          PY
+      - name: Actual window OFF, continuous close warmup and command-race behavior
+        run: python -I .github/tests/test_beta66_windows.py
+      - name: Retain earlier supply, PID, sleep, warnings and lighting regressions
+        run: |
+          python -I .github/tests/test_beta61_supply_selection.py
+          python -I .github/tests/test_beta62_pid_races.py
+          python -I .github/tests/test_beta63_cold_start.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+          python -I .github/tests/test_beta65_data.py
+      - name: Install browser tester on CI only
+        run: python -m pip install playwright==1.57.0
+      - name: Actual Chromium card rendering and interaction regressions
+        run: |
+          python -I .github/tests/test_beta65_browser.py
+          python -I .github/tests/test_beta66_browser.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: beta66-card-preview
+          path: dist/beta66-device-card.png
+          retention-days: 7
+      - name: Commit tested source only if branch has not moved
+        run: |
+          set -euo pipefail
+          git diff --check
+          current="$(git ls-remote origin refs/heads/fix/beta66-window-pause-dashboard-20261028 | cut -f1)"
+          test "$current" = "$GITHUB_SHA" || { echo 'Source branch moved during verification'; exit 1; }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add equipment_window.py equipment_model.py equipment_runtime.py equipment_power_switch.py switch.py equipment_status.py controller_status_catalog.py equipment_name_catalog.py strings.json translations frontend/air-quality-advisor-card.js manifest.json .github/tests/test_beta64_sleep_idle.py .github/patches/card66.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'Beta66: verified window OFF and 60-second recovery; stable localized diagnostics and clear outdoor evidence'
+            git push origin HEAD:refs/heads/fix/beta66-window-pause-dashboard-20261028
+          fi
+          git rev-parse HEAD
