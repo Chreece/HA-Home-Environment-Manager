@@ -28,7 +28,7 @@ jobs:
           with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tar:
               assert {m.name.removeprefix('./') for m in tar.getmembers()}==set(expected)
               for path,digest in expected.items():
-                  blob=tar.extractfile('./'+path).read()
+                  blob=tar.extractfile(path).read()
                   assert hashlib.sha256(blob).hexdigest()==digest
                   dest=Path(path);dest.parent.mkdir(exist_ok=True,parents=True);dest.write_bytes(blob)
           print('PASS exact reviewed bundle')
