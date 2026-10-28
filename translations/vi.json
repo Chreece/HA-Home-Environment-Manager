@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated purifier particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Độ rọi tối thiểu để đóng (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Tắt khi cửa sổ mở · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Dùng cảm biến ánh sáng cho che nắng"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Thang tùy chỉnh"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Cảm biến ánh sáng cho che nắng"
       }
     },
     "time": {

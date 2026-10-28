@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated purifier particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Pencahayaan minimum untuk menutup (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Matikan saat jendela dibuka · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Gunakan sensor cahaya untuk peneduh surya"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Skala khusus"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Sensor cahaya peneduh surya"
       }
     },
     "time": {

@@ -95,6 +95,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     for area in manager.settings.get(CONF_AREAS, []):
         for cover in selected(manager.settings, area, "shades") or ():
             entities.append(ShadeWindowSelect(manager, entry.entry_id, area, cover))
+            entities.append(ShadeIlluminanceSelect(manager, entry.entry_id, area, cover))
     async_add_grouped_entities(entry.runtime_data, async_add_entities, entities)
     from .aqi_sources import register_late_sources
     register_late_sources(manager, entry, async_add_entities, entities,
@@ -466,6 +467,96 @@ class AreaScienceSource(ConfigSelect):
 
     async def async_select_option(self, option):
         await update_device_setting(self._manager, "area_science", self._setting_key, option, area=self._area_id)
+        self.async_write_ha_state()
+
+
+class ShadeIlluminanceSelect(SelectEntity):
+    """Select one exact room sensor or the selected-room lux mean per cover."""
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_translation_key = "shade_lux_entity"
+    _attr_icon = "mdi:brightness-5"
+
+    def __init__(self, manager, entry_id: str, area: str, cover: str):
+        from .shade_cooling import selectable_lux_sensors, LUX_ROOM_MEAN
+        from .room_sources import selected
+        from .device_hierarchy import controller_device_info
+        from homeassistant.helpers import entity_registry as er, device_registry as dr
+        self._manager, self._area, self._cover = manager, area, cover
+        self._attr_unique_id = (
+            f"{entry_id}_area_{area}_shade_{cover.replace('.', '_')}_lux_entity")
+        self._attr_device_info = controller_device_info(manager, area, cover)
+        if self._attr_device_info is None:
+            raise ValueError("No registered child device for this window shade")
+        locale = str(getattr(getattr(manager.hass, "config", None), "language", "en")).split("-")[0]
+        self._none_label = {"el":"Χωρίς αισθητήρα", "de":"Kein Sensor", "en":"No sensor"}.get(locale, "No sensor")
+        self._mean_label = {"el":"Μέσος όρος επιλεγμένων lux δωματίου",
+                            "de":"Mittelwert der ausgewählten Raum-Lux-Sensoren",
+                            "en":"Selected room lux sensor mean"}.get(locale,"Selected room lux sensor mean")
+        # Inventory scan once per room and initial registration, never once
+        # per controller state update or each additional cover in this room.
+        inventory = getattr(manager, "_shade_lux_inventory_cache", None)
+        if inventory is None:
+            inventory = manager._shade_lux_inventory_cache = {}
+        if area not in inventory:
+            inventory[area] = selectable_lux_sensors(manager.hass, area)
+        valid = inventory[area]
+        self._options_map = {self._none_label: None}
+        if any(entity in valid for entity in (selected(manager.settings, area, "air_quality") or ())):
+            self._options_map[self._mean_label] = LUX_ROOM_MEAN
+        registry, devices = er.async_get(manager.hass), dr.async_get(manager.hass)
+        for entity in valid:
+            entry = registry.async_get(entity)
+            device = devices.async_get(entry.device_id) if (
+                entry is not None and entry.device_id) else None
+            device_name = (getattr(device, "name_by_user", None)
+                           or getattr(device, "name", None))
+            state = manager.hass.states.get(entity)
+            sensor_name = (getattr(entry, "name", None) or getattr(entry, "original_name", None)
+                           or getattr(state, "name", None) or entity)
+            friendly = " - ".join(part for part in (device_name, sensor_name) if part)
+            self._options_map[f"{friendly} [{entity}]"] = entity
+        from .shade_cooling import cover_config
+        saved = cover_config(manager.settings, area, cover)["lux_entity"]
+        if saved and saved not in self._options_map.values():
+            self._options_map[f"{saved} ({saved})"] = saved
+
+    @property
+    def options(self):
+        return list(self._options_map)
+
+    @property
+    def current_option(self):
+        from .shade_cooling import cover_config
+        source = cover_config(self._manager.settings, self._area, self._cover)["lux_entity"]
+        return next((text for text, entity in self._options_map.items()
+                     if entity == source), self._none_label)
+
+    @property
+    def extra_state_attributes(self):
+        from .shade_cooling import cover_config
+        cfg = cover_config(self._manager.settings, self._area, self._cover)
+        return {"source_cover": self._cover, "lux_entity": cfg["lux_entity"],
+                "minimum_lux": cfg["min_lux"], "use_lux_for_shading": cfg["lux_enabled"]}
+
+    async def async_select_option(self, option):
+        if option not in self._options_map:
+            raise ValueError("Unknown lux sensor option")
+        await update_device_setting(self._manager, "shade_device", "lux_entity",
+                                    self._options_map[option], area=self._area,
+                                    entity_id=self._cover)
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(async_dispatcher_connect(
+            self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}",
+            self._update,
+        ))
+
+    @callback
+    def _update(self):
         self.async_write_ha_state()
 
 

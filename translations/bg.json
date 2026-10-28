@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated purifier particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Минимална осветеност за затваряне (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Изключване при отваряне на прозорец · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Използване на сензор за осветеност за засенчване"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Персонализирана скала"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Сензор за осветеност за щори"
       }
     },
     "time": {

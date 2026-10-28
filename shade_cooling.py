@@ -39,6 +39,10 @@ ACK_GRACE_SECONDS = 300
 OPEN_STABLE_SECONDS = 300
 ANNOUNCEMENT_GRACE_SECONDS = 5
 COOLING_HYSTERESIS_C = 1.0
+# Lux is optional extra evidence to CLOSE; never an independent reason to OPEN.
+# Default disabled ensures existing shades are unchanged after upgrading.
+LUX_BOUNDS = (100., 100000., 100., "lx", 1000.)
+LUX_ROOM_MEAN = "room_selected_mean"
 STORE_VERSION = 2
 OWNED_PHASES = frozenset(("closing_requested", "owned_closed", "opening_requested"))
 FINAL_PHASES = frozenset(("manual_override", "released", "legacy_manual_hold", "open_failed_hold"))
@@ -81,7 +85,87 @@ def cover_config(settings: dict, area: str, entity_id: str) -> dict:
                      else saved.get("announce") is True),
         "close_above_c": room["close_above_c"] if threshold is None else threshold,
         "authorization_revision": revision,
+        "lux_enabled": saved.get("lux_enabled") is True,
+        "lux_entity": saved.get("lux_entity") if isinstance(
+            saved.get("lux_entity"), str) else None,
+        "min_lux": _numeric(saved.get("min_lux"), LUX_BOUNDS[0], LUX_BOUNDS[1])
+            or LUX_BOUNDS[4],
     }
+
+
+def _lux_candidate(hass: Any, area: str, entity: str) -> bool:
+    """A real same-room illuminance sensor, even if currently unavailable."""
+    if (not isinstance(entity, str) or not entity.startswith("sensor.")
+            or not native(hass, entity)):
+        return False
+    from .discovery import entity_area
+    if entity_area(hass, entity) != area:
+        return False
+    from homeassistant.helpers import entity_registry as er
+    registered = er.async_get(hass).async_get(entity)
+    state = hass.states.get(entity)
+    attrs = state.attributes if state is not None else {}
+    kind = (str(attrs.get("device_class") or getattr(registered, "device_class", None)
+                or getattr(registered, "original_device_class", None) or "").casefold())
+    unit = str(attrs.get("unit_of_measurement") or getattr(
+        registered, "unit_of_measurement", None) or getattr(
+        registered, "original_unit_of_measurement", None) or "").strip().casefold()
+    return kind == "illuminance" or unit in ("lx", "lux")
+
+
+def selectable_lux_sensors(hass: Any, area: str) -> tuple[str, ...]:
+    """Configuration inventory only; never called during shade tick/render.
+
+    Registry-backed lookup keeps temporarily offline physical lux sources in
+    the selector. This is intentionally NOT a repeated whole-home scan.
+    """
+    from homeassistant.helpers import entity_registry as er
+    registered = er.async_get(hass)
+    ids = {e.entity_id for e in registered.entities.values()
+           if e.entity_id.startswith("sensor.")}
+    # Some local template sensors have a live state without a registry entry.
+    ids.update(s.entity_id for s in hass.states.async_all("sensor"))
+    return tuple(sorted(e for e in ids if _lux_candidate(hass, area, e)))
+
+
+def lux_evidence(hass: Any, settings: dict, area: str, cfg: dict) -> dict:
+    """Read only exact selected source IDs; no global scans or lux->solar guess."""
+    result = {"enabled": cfg.get("lux_enabled") is True,
+              "entity": cfg.get("lux_entity"), "threshold_lx": cfg.get("min_lux", LUX_BOUNDS[4]),
+              "value_lx": None, "sources": [], "valid_count": 0,
+              "status": "lux_not_enabled"}
+    if not result["enabled"]:
+        return result
+    chosen = cfg.get("lux_entity")
+    if chosen == LUX_ROOM_MEAN:
+        # Average only explicitly selected, same-room real lux sensors.
+        candidates = selected(settings, area, "air_quality") or ()
+        ids = tuple(e for e in candidates if _lux_candidate(hass, area, e))
+    elif isinstance(chosen, str) and _lux_candidate(hass, area, chosen):
+        ids = (chosen,)
+    else:
+        ids = ()
+    result["sources"] = list(ids)
+    if not ids:
+        result["status"] = "lux_sensor_not_selected_or_ineligible"
+        return result
+    from .discovery import reading
+    values = [r.value for e in ids if (r := reading(
+        hass, e, 10, outdoor=False)).metric == "illuminance" and r.value is not None]
+    result["valid_count"] = len(values)
+    if not values:
+        result["status"] = "lux_sensor_unavailable_or_stale"
+        return result
+    level = round(sum(values) / len(values), 1)
+    result["value_lx"] = level
+    result["status"] = ("lux_threshold_met" if level >= result["threshold_lx"]
+                        else "lux_below_threshold")
+    return result
+
+
+def lux_signature(cfg: dict) -> tuple:
+    """Disallow an in-flight close after a user changed lux evidence policy."""
+    return cfg.get("lux_enabled"), cfg.get("lux_entity"), cfg.get("min_lux")
 
 
 def selectable_windows(hass: Any, settings: dict, area: str) -> tuple[str, ...]:
@@ -351,6 +435,13 @@ class ShadeCoolingController:
         )
         if not safe_contacts and windows:
             close_reason = "window_open_or_unknown"
+        if entity and cfg["lux_enabled"]:
+            # Extra permission for a new CLOSE only. Do not use lux for OPEN:
+            # the closed shade itself can darken the measured room.
+            measured_lux = lux_evidence(self.hass, settings, area, cfg)
+            details["illuminance"] = measured_lux
+            if close_reason == "closing_recommended" and measured_lux["status"] != "lux_threshold_met":
+                close_reason = measured_lux["status"]
         if entity and not cfg["legacy"] and not linked:
             close_reason = "window_not_assigned"
         elif entity and not cfg["legacy"] and not linked_valid:
@@ -412,6 +503,7 @@ class ShadeCoolingController:
             now = self.clock()
             latest = self.manager.settings
             revision = cover_config(latest, area, entity)["authorization_revision"]
+            evidence_signature = lux_signature(cfg)
             if (area not in latest.get("areas", [])
                     or not cover_config(latest, area, entity)["enabled"]
                     or entity not in (selected(latest, area, "shades") or ())):
@@ -648,6 +740,7 @@ class ShadeCoolingController:
                     or not new_cfg["enabled"]
                     or new_cfg["authorization_revision"] != revision
                     or not new_details["window_safe"] or newer is None
+                    or lux_signature(new_cfg) != evidence_signature
                     or newer.state != "open" or
                     self._records.get(entity, {}).get("phase") in (
                         "manual_override", "legacy_manual_hold")):
@@ -671,8 +764,10 @@ class ShadeCoolingController:
             if (not self._ready or not latest_cfg["enabled"]
                     or latest_cfg["authorization_revision"] != revision
                     or not fresh_allowed or physical is None
+                    or lux_signature(latest_cfg) != evidence_signature
                     or physical.state != "open" or not fresh_evidence["window_safe"]
                     or fresh_reason != "closing_recommended"):
+
                 await self._save(entity, {**attempt, "phase": "manual_override"})
                 outcomes[entity] = "authorization_changed_during_persistence"
                 continue

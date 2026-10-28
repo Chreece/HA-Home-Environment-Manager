@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "ความสว่างขั้นต่ำในการปิด (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "ปิดเมื่อเปิดหน้าต่าง · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "ใช้เซ็นเซอร์แสงสำหรับม่านกันแดด"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "มาตราส่วนที่กำหนดเอง"
         }
+      },
+      "shade_lux_entity": {
+        "name": "เซ็นเซอร์แสงสำหรับม่านกันแดด"
       }
     },
     "time": {

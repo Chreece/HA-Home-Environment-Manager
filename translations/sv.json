@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Minsta belysningsstyrka för stängning (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Stäng av när ett fönster öppnas · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Använd luxsensor för solskydd"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Anpassad skala"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Luxsensor för solskydd"
       }
     },
     "time": {

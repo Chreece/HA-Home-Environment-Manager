@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "বন্ধ করার ন্যূনতম আলোকমাত্রা (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "জানালা খুললে বন্ধ করুন · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "সূর্যের ছায়ার জন্য আলোর সেন্সর ব্যবহার করুন"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "কাস্টম স্কেল"
         }
+      },
+      "shade_lux_entity": {
+        "name": "ছায়ার জন্য আলোর সেন্সর"
       }
     },
     "time": {

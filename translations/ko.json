@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "닫기 위한 최소 조도 (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "창문이 열리면 끄기 · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "차양에 조도 센서 사용"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "사용자 지정 척도"
         }
+      },
+      "shade_lux_entity": {
+        "name": "차양 조도 센서"
       }
     },
     "time": {

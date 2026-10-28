@@ -2028,6 +2028,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Rated particle CADR of this air purifier (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Minimum illuminance to close (lx)"
       }
     },
     "switch": {
@@ -2087,6 +2090,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Stop when a window opens · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Use lux sensor for solar shading"
       }
     },
     "select": {
@@ -2211,6 +2217,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Custom scale"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Solar-shading lux sensor"
       }
     },
     "time": {

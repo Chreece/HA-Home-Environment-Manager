@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Minimálne osvetlenie na zatvorenie (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Vypnúť pri otvorení okna · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Použiť snímač osvetlenia pre tienenie"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Vlastná stupnica"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Snímač osvetlenia pre tienenie"
       }
     },
     "time": {

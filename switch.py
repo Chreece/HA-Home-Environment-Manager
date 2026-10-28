@@ -65,7 +65,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
         if covers:
             entities.append(ShadeCoolingSwitch(manager, entry.entry_id, area))
         for cover in covers:
-            for key in ("enabled", "announce"):
+            for key in ("enabled", "announce", "lux_enabled"):
                 entities.append(ShadeDeviceSwitch(manager, entry.entry_id, area, cover, key))
     async_add_grouped_entities(entry.runtime_data, async_add_entities, entities)
     register_late_capabilities(
@@ -282,8 +282,9 @@ class ShadeDeviceSwitch(SwitchEntity):
             manager, area, cover, key)
         self._attr_unique_id = (
             f"{entry_id}_area_{area}_shade_{cover.replace('.', '_')}_{key}")
-        self._attr_translation_key = f"shade_{'auto_control' if key == 'enabled' else 'announce'}"
-        self._attr_icon = "mdi:blinds" if key == "enabled" else "mdi:bullhorn-outline"
+        self._attr_translation_key = f"shade_{'auto_control' if key == 'enabled' else 'lux_enabled' if key == 'lux_enabled' else 'announce'}"
+        self._attr_icon = ("mdi:brightness-5" if key == "lux_enabled"
+                           else "mdi:blinds" if key == "enabled" else "mdi:bullhorn-outline")
         self._attr_device_info = controller_device_info(manager, area, cover)
         if self._attr_device_info is None:
             raise ValueError("Shade controller requires a registered same-room device")
@@ -311,6 +312,9 @@ class ShadeDeviceSwitch(SwitchEntity):
             "assigned_window": cfg["window_entity"],
             "cover_status": per_cover.get(self._cover),
             "manual_override_paused": per_cover.get(self._cover) == "manual_override",
+            "lux_sensor": cfg.get("lux_entity"),
+            "lux_threshold_lx": cfg.get("min_lux"),
+            "lux_enabled": cfg.get("lux_enabled"),
         }
 
     async def async_turn_on(self, **kwargs):

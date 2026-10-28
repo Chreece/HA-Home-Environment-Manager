@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "CADR частиц очистителя воздуха (м³/ч)"
+      },
+      "shade_min_lux": {
+        "name": "Минимальная освещённость для закрытия (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Выключать при открытии окна · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Использовать датчик освещённости для затенения"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Пользовательская шкала"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Датчик освещённости для штор"
       }
     },
     "time": {

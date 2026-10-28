@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Deeltjes-CADR van luchtreiniger (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Minimale verlichtingssterkte voor sluiten (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Uitschakelen bij een open raam · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Luxsensor gebruiken voor zonwering"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Aangepaste schaal"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Luxsensor voor zonwering"
       }
     },
     "time": {

@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "CADR de partículas do purificador (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Iluminância mínima para fechar (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Desligar ao abrir uma janela · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Usar sensor de luz para sombreamento solar"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Escala personalizada"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Sensor de luminosidade para sombreamento"
       }
     },
     "time": {

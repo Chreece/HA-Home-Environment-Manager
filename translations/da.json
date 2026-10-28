@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Mindste belysningsstyrke for lukning (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Sluk, når et vindue åbnes · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Brug luxsensor til solafskærmning"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Tilpasset skala"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Luxsensor til solafskærmning"
       }
     },
     "time": {

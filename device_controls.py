@@ -323,7 +323,8 @@ async def update_device_setting(manager: Any, kind: str, key: str,
 
         elif kind == "shade_device":
             from .shade_cooling import (
-                CONF_SHADE_ROOMS, SHADE_NUMBERS, eligible_shade, selectable_windows,
+                CONF_SHADE_ROOMS, SHADE_NUMBERS, LUX_BOUNDS, LUX_ROOM_MEAN,
+                eligible_shade, selectable_windows, selectable_lux_sensors,
             )
             from .room_sources import selected
             if area not in current.get(CONF_AREAS, []):
@@ -331,9 +332,18 @@ async def update_device_setting(manager: Any, kind: str, key: str,
             enrolled = selected(current, area, "shades") or ()
             if not entity_id or entity_id not in enrolled:
                 raise HomeAssistantError("Select this cover in the room first")
-            if not eligible_shade(manager.hass, area, entity_id, enrolled)[0]:
+            # Lux settings are configuration-only and remain editable when
+            # the physical shade has not restored its live state.
+            if key in ("lux_enabled", "lux_entity", "min_lux"):
+                from .discovery import entity_area
+                from .room_sources import native
+                if (not native(manager.hass, entity_id)
+                        or entity_area(manager.hass, entity_id) != area):
+                    raise HomeAssistantError("Lux settings require a registered same-room shade")
+            elif not eligible_shade(manager.hass, area, entity_id, enrolled)[0]:
                 raise HomeAssistantError("Only native indoor shades assigned to this room are supported")
-            if key not in ("enabled", "window_entity", "announce", "close_above_c"):
+            if key not in ("enabled", "window_entity", "announce", "close_above_c",
+                           "lux_enabled", "lux_entity", "min_lux"):
                 raise HomeAssistantError("Unsupported cover controller setting")
             rooms = deepcopy(current.get(CONF_SHADE_ROOMS, {}))
             rooms = rooms if isinstance(rooms, dict) else {}
@@ -382,6 +392,31 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                 if type(value) is not bool:
                     raise HomeAssistantError("Pre-movement announcement must be on or off")
                 draft["announce"] = value
+            elif key == "lux_entity":
+                available = selectable_lux_sensors(manager.hass, area)
+                room_selected = selected(current, area, "air_quality") or ()
+                if value in ("none", None):
+                    chosen = None
+                elif value == LUX_ROOM_MEAN and any(e in available for e in room_selected):
+                    chosen = LUX_ROOM_MEAN
+                elif isinstance(value, str) and value in available:
+                    chosen = value
+                else:
+                    raise HomeAssistantError("Choose a real, same-room illuminance sensor")
+                draft["lux_entity"] = chosen
+            elif key == "lux_enabled":
+                if type(value) is not bool:
+                    raise HomeAssistantError("Use lux must be on or off")
+                if value:
+                    available = selectable_lux_sensors(manager.hass, area)
+                    chosen = draft.get("lux_entity")
+                    if (chosen not in available and not (
+                            chosen == LUX_ROOM_MEAN and any(e in available for e in (
+                                selected(current, area, "air_quality") or ())))):
+                        raise HomeAssistantError("Choose a same-room lux sensor before enabling")
+                draft["lux_enabled"] = value
+            elif key == "min_lux":
+                draft["min_lux"] = _finite(value, LUX_BOUNDS)
             else:
                 draft["close_above_c"] = _finite(value, SHADE_NUMBERS["close_above_c"])
             devices[entity_id] = draft

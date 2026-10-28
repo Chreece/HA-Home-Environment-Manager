@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "CADR cząstek oczyszczacza (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Minimalne natężenie światła do zamknięcia (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Wyłącz po otwarciu okna · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Użyj czujnika natężenia światła do zacieniania"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Własna skala"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Czujnik światła do zacieniania"
       }
     },
     "time": {

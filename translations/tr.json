@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated purifier particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Kapanma için asgari aydınlık (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Pencere açılınca kapat · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Güneş gölgelemesinde ışık sensörü kullan"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Özel ölçek"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Gölgeleme için ışık sensörü"
       }
     },
     "time": {

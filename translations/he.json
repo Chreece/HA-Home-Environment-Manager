@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "רמת תאורה מינימלית לסגירה (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "כיבוי בעת פתיחת חלון · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "השתמש בחיישן תאורה להצללה"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "סולם מותאם"
         }
+      },
+      "shade_lux_entity": {
+        "name": "חיישן תאורה להצללה"
       }
     },
     "time": {

@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "बंद करने के लिए न्यूनतम प्रकाश (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "खिड़की खुलने पर बंद करें · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "धूप से बचाव के लिए प्रकाश सेंसर उपयोग करें"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "कस्टम पैमाना"
         }
+      },
+      "shade_lux_entity": {
+        "name": "छायांकन के लिए प्रकाश सेंसर"
       }
     },
     "time": {

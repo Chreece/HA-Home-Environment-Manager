@@ -2028,6 +2028,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Ονομαστικό CADR σωματιδίων καθαριστή (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Ελάχιστη φωτεινότητα για κλείσιμο (lx)"
       }
     },
     "switch": {
@@ -2087,6 +2090,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Διακοπή με ανοιχτό παράθυρο · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Χρήση αισθητήρα φωτεινότητας για σκίαση"
       }
     },
     "select": {
@@ -2211,6 +2217,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Προσαρμοσμένη κλίμακα"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Αισθητήρας φωτεινότητας σκίασης"
       }
     },
     "time": {

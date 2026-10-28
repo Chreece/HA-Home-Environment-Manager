@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "Filter · Rated particle CADR (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "மூடுவதற்கான குறைந்தபட்ச ஒளி அளவு (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "சாளரம் திறந்தால் அணைக்கவும் · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "சூரிய நிழலுக்கான ஒளி உணரியைப் பயன்படுத்து"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "தனிப்பயன் அளவுகோல்"
         }
+      },
+      "shade_lux_entity": {
+        "name": "நிழலுக்கான ஒளி உணரி"
       }
     },
     "time": {

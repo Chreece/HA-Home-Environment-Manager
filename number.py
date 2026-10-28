@@ -272,6 +272,8 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
             )
         numbers.extend(ShadeDeviceNumber(manager, entry.entry_id, area_id, cover)
                        for cover in covers)
+        numbers.extend(ShadeIlluminanceNumber(manager, entry.entry_id, area_id, cover)
+                       for cover in covers)
     if manager.settings.get(CONF_USE_MOLD) is True:
         for area_id in manager.settings.get(CONF_AREAS, []):
             numbers.append(ConfigNumber(
@@ -679,6 +681,47 @@ class ShadeCoolingNumber(NumberEntity):
             self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}",
             self._update,
         ))
+
+    @callback
+    def _update(self):
+        self.async_write_ha_state()
+
+
+class ShadeIlluminanceNumber(NumberEntity):
+    """Minimum measured indoor illuminance before this cover can auto-close."""
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_translation_key = "shade_min_lux"
+    _attr_mode = NumberMode.BOX
+    _attr_icon = "mdi:brightness-5"
+
+    def __init__(self, manager, entry_id: str, area: str, cover: str):
+        from .shade_cooling import LUX_BOUNDS
+        self._manager, self._area, self._cover = manager, area, cover
+        self._attr_unique_id = (
+            f"{entry_id}_area_{area}_shade_{cover.replace('.', '_')}_min_lux")
+        self._attr_device_info = controller_device_info(manager, area, cover)
+        if self._attr_device_info is None:
+            raise ValueError("No registered child device for this window shade")
+        self._attr_native_min_value, self._attr_native_max_value = LUX_BOUNDS[:2]
+        self._attr_native_step = LUX_BOUNDS[2]
+        self._attr_native_unit_of_measurement = LUX_BOUNDS[3]
+
+    @property
+    def native_value(self):
+        from .shade_cooling import cover_config
+        return cover_config(self._manager.settings, self._area, self._cover)["min_lux"]
+
+    async def async_set_native_value(self, value):
+        await update_device_setting(self._manager, "shade_device", "min_lux", value,
+                                    area=self._area, entity_id=self._cover)
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(async_dispatcher_connect(
+            self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}", self._update))
 
     @callback
     def _update(self):

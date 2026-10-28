@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "空気清浄機の粒子 CADR（m³/h）"
+      },
+      "shade_min_lux": {
+        "name": "閉じるための最低照度 (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "窓が開いたら停止 · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "日よけ制御に照度センサーを使用"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "カスタム尺度"
         }
+      },
+      "shade_lux_entity": {
+        "name": "日よけ用照度センサー"
       }
     },
     "time": {

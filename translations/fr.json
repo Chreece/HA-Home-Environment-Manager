@@ -2025,6 +2025,9 @@
       },
       "equipment_particle_cadr_m3h": {
         "name": "CADR particules du purificateur (m³/h)"
+      },
+      "shade_min_lux": {
+        "name": "Éclairement minimal pour fermer (lx)"
       }
     },
     "switch": {
@@ -2084,6 +2087,9 @@
       },
       "equipment_pause_on_window_open": {
         "name": "Arrêter à l’ouverture d’une fenêtre · {channel}"
+      },
+      "shade_lux_enabled": {
+        "name": "Utiliser le capteur de luminosité pour les stores"
       }
     },
     "select": {
@@ -2197,6 +2203,9 @@
           "eea_category": "EEA AQI (1-6)",
           "custom": "Échelle personnalisée"
         }
+      },
+      "shade_lux_entity": {
+        "name": "Capteur de luminosité pour les stores"
       }
     },
     "time": {
