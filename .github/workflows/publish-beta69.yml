@@ -35,6 +35,7 @@ jobs:
           assert 'if new in source:' in Path('.github/scripts/apply_beta69.py').read_text()
           print('PASS: canonical version, localized release, single optional lux implementation')
           PY
+          git fetch --no-tags --depth=1 origin 41df77a455bc8b664daf2fa6fca7cfb7480f8144
           git diff --exit-code 41df77a455bc8b664daf2fa6fca7cfb7480f8144 -- . ':!.github'
           git diff --check
       - name: Actual per-cover lux controller and existing protective behavior
