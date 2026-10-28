@@ -1,0 +1,18 @@
+name: Beta65 exact source for local tests
+on:
+  push:
+    branches: ['fix/beta65-card-locales-warnings-lux-20261028']
+    paths: ['.github/workflows/source-beta65.yml']
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: git archive --format=tar HEAD > source.tar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hem65-source
+          path: source.tar
+          retention-days: 1
