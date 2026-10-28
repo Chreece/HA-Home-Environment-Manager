@@ -1,0 +1,111 @@
+name: Publish Home Environment Manager beta 66
+on:
+  push:
+    branches: ['release/v0.6.0b66']
+permissions:
+  contents: write
+concurrency:
+  group: home-environment-manager-beta66
+  cancel-in-progress: false
+jobs:
+  validate-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Canonical source, metadata and all localized window controls
+        run: |
+          set -euo pipefail
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          manifest=json.loads(Path('manifest.json').read_text())
+          assert manifest['domain']=='environment_manager'
+          assert manifest['version']=='0.6.0b66'
+          for path in Path('.').rglob('*.json'):
+              json.loads(path.read_text(encoding='utf-8'))
+          catalogs=list(Path('translations').glob('*.json'))
+          assert len(catalogs)==38
+          for path in catalogs:
+              entity=json.loads(path.read_text())['entity']
+              assert entity['switch']['equipment_pause_on_window_open']['name']
+              for status in ('window_open_pause','window_close_warmup','window_state_unknown'):
+                  assert entity['sensor']['equipment_control_status']['state'][status]
+          assert Path('equipment_window.py').is_file()
+          card=Path('frontend/air-quality-advisor-card.js').read_text()
+          assert '/* HEM_CARD66_START */' in card and '__CARD66__' not in card
+          print('PASS canonical source, version, JavaScript and 38 locale catalogs')
+          PY
+      - name: Actual window stop, continuous closed warmup and dispatch race tests
+        run: python -I .github/tests/test_beta66_windows.py
+      - name: Previously released controller and optional evidence regressions
+        run: |
+          python -I .github/tests/test_beta61_supply_selection.py
+          python -I .github/tests/test_beta62_pid_races.py
+          python -I .github/tests/test_beta63_cold_start.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+          python -I .github/tests/test_beta65_data.py
+      - name: Install browser tester on CI only
+        run: python -m pip install playwright==1.57.0
+      - name: Real Chromium localization, live refresh, humidity and configuration switch tests
+        run: |
+          python -I .github/tests/test_beta65_browser.py
+          python -I .github/tests/test_beta66_browser.py
+      - name: Ensure tests did not modify release source
+        run: |
+          git diff --check
+          git diff --exit-code
+      - uses: actions/upload-artifact@v4
+        with:
+          name: beta66-release-card-preview
+          path: dist/beta66-device-card.png
+          retention-days: 7
+      - name: Package and inspect canonical integration ZIP
+        run: |
+          python -I - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          from zipfile import ZipFile,ZIP_DEFLATED
+          archive=Path('dist/HA-Home-Environment-Manager-v0.6.0b66.zip')
+          archive.parent.mkdir(exist_ok=True)
+          names=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
+          with ZipFile(archive,'w',ZIP_DEFLATED,compresslevel=8) as z:
+              for name in sorted(filter(None,names)):
+                  if name.startswith(('.github/','tests/','dist/')) or name=='hacs.json' or '__pycache__' in name or name.endswith(('.pyc','.pyo')):
+                      continue
+                  path=Path(name)
+                  if path.is_file():
+                      z.write(path,'custom_components/environment_manager/'+name)
+          with ZipFile(archive) as z:
+              assert z.testzip() is None
+              prefix='custom_components/environment_manager/'
+              manifest=json.loads(z.read(prefix+'manifest.json'))
+              assert manifest['domain']=='environment_manager' and manifest['version']=='0.6.0b66'
+              for name in ('__init__.py','logic.py','equipment_runtime.py','equipment_window.py','equipment_power_switch.py','equipment_status.py','switch.py','frontend/air-quality-advisor-card.js','translations/el.json','strings.json'):
+                  assert prefix+name in z.namelist(),name
+              assert all(name.startswith(prefix) for name in z.namelist())
+          print('PASS canonical integration ZIP',archive,archive.stat().st_size)
+          PY
+      - name: Publish verified HACS prerelease at the tested commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG=v0.6.0b66
+          current="$(git ls-remote origin refs/heads/release/v0.6.0b66 | cut -f1)"
+          test "$current" = "$GITHUB_SHA" || { echo 'Release branch moved during testing'; exit 1; }
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Release already exists; leaving unchanged'
+            exit 0
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" >/dev/null 2>&1; then
+            echo 'Tag exists without a release; refusing to repoint it'
+            exit 1
+          fi
+          gh release create "$TAG" "dist/HA-Home-Environment-Manager-$TAG.zip#Manual installation ZIP" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "Home Environment Manager $TAG" --notes-file ".github/releases/$TAG.md" --prerelease
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json tagName,isPrerelease,assets,url
