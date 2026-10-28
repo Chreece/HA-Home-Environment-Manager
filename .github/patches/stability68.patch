@@ -1,0 +1,373 @@
+--- a/equipment_entity.py
++++ b/equipment_entity.py
+@@ -71,47 +71,73 @@
+ 
+     async def async_added_to_hass(self):
+         await super().async_added_to_hass()
++        from .equipment_updates import controller_signal
++        self._equipment_write_handle = None
++        self._native_update_unsub = None
++        self._native_watch_enabled = False
++        self._native_watched_ids = frozenset()
++        self.async_on_remove(self._equipment_cleanup)
+         self.async_on_remove(async_dispatcher_connect(
+             self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}", self._equipment_update))
++        self.async_on_remove(async_dispatcher_connect(
++            self.hass, controller_signal(self._manager.entry.entry_id,
++                                         self._spec.identifier), self._equipment_update))
+ 
++    @callback
++    def _equipment_cleanup(self):
++        if self._equipment_write_handle is not None:
++            self._equipment_write_handle.cancel()
++            self._equipment_write_handle = None
++        if self._native_update_unsub is not None:
++            self._native_update_unsub()
++            self._native_update_unsub = None
++        self._native_watch_enabled = False
++        self._native_watched_ids = frozenset()
++
++    @callback
+     def _watch_native_updates(self) -> None:
+-        """Refresh physical facades/quiet controls only when their source changes.
++        """Only this controller's exact physical sources and selected supply."""
++        self._native_watch_enabled = True
++        self._bind_native_updates()
+ 
+-        Stored controller preferences are independent of physical availability,
+-        while available native options and physical HVAC truth are dynamic.
+-        Subscribe only to this controller's exact physical inputs, never to the
+-        generated Manager entities, to avoid dispatcher/event feedback loops.
+-        """
+-        from homeassistant.const import EVENT_STATE_CHANGED
+-
+-        selected = frozenset(self._spec.source_entities)
+-        # Beta55 read the whole controller settings on EVERY HA state event
+-        # for EVERY managed entity, including unrelated lights and sensors.
+-        # Cache the exact switch ID instead; refresh it only when the managed
+-        # controller sends its ordinary configuration-update dispatcher.
+-        self._watched_upstream_switch = model.settings(
+-            self._manager, self._spec).get("power_switch_entity")
++    @callback
++    def _bind_native_updates(self):
++        from homeassistant.helpers.event import async_track_state_change_event
++        upstream = model.settings(self._manager, self._spec).get("power_switch_entity")
++        sources = set(self._spec.source_entities)
++        if isinstance(upstream, str) and upstream.startswith("switch."):
++            sources.add(upstream)
++        watched = frozenset(sources)
++        if self._native_watched_ids == watched:
++            return
++        if self._native_update_unsub is not None:
++            self._native_update_unsub()
++            self._native_update_unsub = None
++        self._native_watched_ids = watched
++        self._watched_upstream_switch = upstream
+ 
+         @callback
+         def source_changed(event):
+-            updated = event.data.get("entity_id")
+-            if (updated not in selected and
+-                    updated != self._watched_upstream_switch):
+-                return
+             old, new = event.data.get("old_state"), event.data.get("new_state")
+-            if (old is not None and new is not None
+-                    and old.state == new.state
++            if (old is not None and new is not None and old.state == new.state
+                     and old.attributes == new.attributes):
+                 return
+-            self.async_write_ha_state()
++            self._equipment_update()
+ 
+-        self.async_on_remove(
+-            self.hass.bus.async_listen(EVENT_STATE_CHANGED, source_changed)
+-        )
++        if watched:
++            self._native_update_unsub = async_track_state_change_event(
++                self.hass, watched, source_changed)
++
++    @callback
++    def _equipment_write(self):
++        self._equipment_write_handle = None
++        self.async_write_ha_state()
+ 
+     @callback
+     def _equipment_update(self):
+-        if hasattr(self, "_watched_upstream_switch"):
+-            self._watched_upstream_switch = model.settings(
+-                self._manager, self._spec).get("power_switch_entity")
+-        self.async_write_ha_state()
++        if self._native_watch_enabled:
++            self._bind_native_updates()
++        # One serialization for this entity per loop turn even when a native
++        # source, a config change and its controller status arrive together.
++        if self._equipment_write_handle is None:
++            self._equipment_write_handle = self.hass.loop.call_soon(self._equipment_write)
+--- a/equipment_feature_registration.py
++++ b/equipment_feature_registration.py
+@@ -10,7 +10,7 @@
+ from collections.abc import Callable, Iterable
+ from typing import Any
+ 
+-from homeassistant.const import EVENT_STATE_CHANGED
++from homeassistant.helpers.event import async_track_state_change_event
+ from homeassistant.core import callback
+ from homeassistant.helpers import entity_registry as er
+ 
+@@ -99,10 +99,24 @@
+     if not watched:
+         return
+ 
++    capability_fields = (
++        "supported_features", "hvac_modes", "fan_modes", "swing_modes",
++        "swing_horizontal_modes", "preset_modes", "min_temp", "max_temp",
++        "target_temp_step", "temperature_unit", "min_humidity", "max_humidity",
++        "percentage_step", "min", "max", "step", "unit_of_measurement",
++    )
++
++    def fingerprint(state):
++        if state is None:
++            return None
++        return {key: state.attributes.get(key) for key in capability_fields}
++
+     @callback
+     def native_changed(event: Any) -> None:
+         if event.data.get("entity_id") not in watched:
+             return
++        if fingerprint(event.data.get("old_state")) == fingerprint(event.data.get("new_state")):
++            return  # A numeric observation is not new hardware capability.
+         missing = {}
+         for candidate in candidates():
+             unique_id = candidate._attr_unique_id
+@@ -116,5 +130,5 @@
+         )
+ 
+     entry.async_on_unload(
+-        hass.bus.async_listen(EVENT_STATE_CHANGED, native_changed)
++        async_track_state_change_event(hass, watched, native_changed)
+     )
+--- a/equipment_runtime.py
++++ b/equipment_runtime.py
+@@ -126,6 +126,8 @@
+         self._save_lock = asyncio.Lock()
+         self._commands = asyncio.Semaphore(8)
+         self._invalidated: set[str] = set()
++        from .equipment_updates import EquipmentUpdates
++        self._presentation_updates = EquipmentUpdates(self)
+ 
+     def _status(self, spec: Any, status: str, **data: Any) -> None:
+         key = spec if isinstance(spec, str) else spec.identifier
+@@ -138,8 +140,10 @@
+             return
+         self.statuses[key] = value
+         if self._active:
+-            from homeassistant.helpers.dispatcher import async_dispatcher_send
+-            async_dispatcher_send(self.hass, f"{SIGNAL_UPDATED}_{self.manager.entry.entry_id}")
++            # A status change belongs to this controller, not every room and
++            # configuration entity in the installation. Keep runtime evidence
++            # immediate; batch only its outward presentation until next turn.
++            self._presentation_updates.request(key)
+ 
+     async def _save(self) -> None:
+         if self._store is None or not self._ready:
+@@ -189,6 +193,7 @@
+ 
+     async def async_stop(self) -> None:
+         self._active = False
++        self._presentation_updates.close()
+         tasks = tuple(self._tasks.values())
+         for task in tasks:
+             task.cancel()
+--- a/equipment_status.py
++++ b/equipment_status.py
+@@ -66,9 +66,10 @@
+         # external status consumer may expose only states.get (not async_all).
+         # A read-only status must never crash setup or fabricate a room plan.
+         # In the fully running integration, compute the real live room plan.
+-        states = getattr(self._manager.hass, "states", None)
+-        plan = (equipment.plan_for(self._manager, self._spec)
+-                if callable(getattr(states, "async_all", None)) else {})
++        environment = getattr(getattr(self._manager, "plan", None), "environment", {}) or {}
++        area = environment.get(self._spec.area_id, {})
++        plan = area.get("climate_plan", {}) if isinstance(area, dict) else {}
++        plan = plan if isinstance(plan, dict) else {}
+         shared = self._manager.settings.get("occupancy_global") or {}
+         sleep_id = shared.get("sleep_rooms_entity") if isinstance(shared, dict) else None
+         sleep_source = self._manager.hass.states.get(sleep_id) if (
+--- /dev/null
++++ b/equipment_updates.py
+@@ -0,0 +1,42 @@
++"""Bounded, per-controller presentation updates. Never delays hardware decisions."""
++from __future__ import annotations
++from homeassistant.core import callback
++from homeassistant.helpers.dispatcher import async_dispatcher_send
++from .const import SIGNAL_UPDATED
++
++
++def controller_signal(entry_id: str, identifier: str) -> str:
++    return f"{SIGNAL_UPDATED}_{entry_id}_equipment_{identifier}"
++
++
++class EquipmentUpdates:
++    """At most one pending callback; repeated changes keep only latest state."""
++    def __init__(self, runtime):
++        self.runtime = runtime
++        self.pending: set[str] = set()
++        self.handle = None
++
++    @callback
++    def request(self, identifier: str) -> None:
++        if not self.runtime._active:
++            return
++        self.pending.add(identifier)
++        if self.handle is None:
++            self.handle = self.runtime.hass.loop.call_soon(self.flush)
++
++    @callback
++    def flush(self) -> None:
++        self.handle = None
++        changed, self.pending = self.pending, set()
++        if not self.runtime._active:
++            return
++        for identifier in changed:
++            async_dispatcher_send(self.runtime.hass, controller_signal(
++                self.runtime.manager.entry.entry_id, identifier))
++
++    @callback
++    def close(self) -> None:
++        if self.handle is not None:
++            self.handle.cancel()
++            self.handle = None
++        self.pending.clear()
+--- a/equipment_window.py
++++ b/equipment_window.py
+@@ -48,8 +48,20 @@
+         return result
+     contact_ids = selected(runtime.manager.settings, spec.area_id, "windows")
+     if contact_ids is None:
+-        # Legacy rooms use the same discovered contact inventory as the plan.
+-        contact_ids = model.plan_for(runtime.manager, spec).get("window_contacts", [])
++        # Use the already captured room inventory. Live states/registry area
++        # below are still revalidated at every physical command boundary.
++        # Never invoke plan_for's whole-home legacy discovery from this gate.
++        plan = getattr(runtime.manager, "plan", None)
++        environment = getattr(plan, "environment", {}) or {}
++        area = environment.get(spec.area_id, {})
++        climate = area.get("climate_plan", {}) if isinstance(area, dict) else {}
++        contact_ids = climate.get("window_contacts") if isinstance(climate, dict) else None
++        if contact_ids is None:
++            room = next((item for item in (*getattr(plan, "rooms", ()),
++                                          *getattr(plan, "climate_rooms", ()))
++                         if item.area_id == spec.area_id), None)
++            contact_ids = ([item.entity_id for item in room.windows]
++                           if room is not None else [""])
+     if not isinstance(contact_ids, (tuple, list)):
+         contact_ids = [""]  # malformed selection is not a verified closed room
+     contact_ids = tuple(dict.fromkeys(str(entity) for entity in contact_ids))
+--- a/manager.py
++++ b/manager.py
+@@ -72,6 +72,7 @@
+         self.plan = Plan("blocked", False, (), (), ())
+         self._tracked: set[str] = set()
+         self._unsubs: list[Any] = []
++        self._source_refresh_handle = None
+         # Timers are per room; unrelated sensor changes must not postpone
+         # reminders in another room. Values are (action key, reason key).
+         self._active_actions: dict[str, tuple[str, str]] = {}
+@@ -786,7 +787,24 @@
+                   hierarchy.get("controllers", {}).values()),
+             }:
+                 return
+-        self._recalculate()
++        self._queue_source_refresh()
++
++    @callback
++    def _queue_source_refresh(self) -> None:
++        """Coalesce source/registry bursts without a polling loop or delay.
++
++        Command-time physical safety checks still read current HA states.
++        One room-plan rebuild sees the last state of every source in this
++        loop turn instead of rebuilding all rooms for every startup event.
++        """
++        if self._active and self._source_refresh_handle is None:
++            self._source_refresh_handle = self.hass.loop.call_soon(self._flush_source_refresh)
++
++    @callback
++    def _flush_source_refresh(self) -> None:
++        self._source_refresh_handle = None
++        if self._active:
++            self._recalculate()
+ 
+     @callback
+     def _on_interval(self, _now: Any) -> None:
+@@ -860,7 +878,7 @@
+         if (old is not None and new is not None and
+                 old.state == new.state and old.attributes == new.attributes):
+             return  # A repeated report has not changed the source evidence.
+-        self._recalculate()
++        self._queue_source_refresh()
+ 
+     def _automatic_channels_enabled(self) -> bool:
+         """Automatic announcements are independent from AI/Hub selection."""
+@@ -906,6 +924,9 @@
+ 
+     @callback
+     def _recalculate(self, *, initial: bool = False) -> None:
++        if self._source_refresh_handle is not None:
++            self._source_refresh_handle.cancel()
++            self._source_refresh_handle = None
+         if not self._active:
+             return
+         new_plan = self._capture()
+@@ -1103,6 +1124,9 @@
+         convert a teardown failure into permission to re-energize equipment.
+         """
+         self._active = False
++        if self._source_refresh_handle is not None:
++            self._source_refresh_handle.cancel()
++            self._source_refresh_handle = None
+         self.away_windows.stop()
+         controllers = (
+             ("equipment",self.equipment),
+--- a/frontend/air-quality-advisor-card.js
++++ b/frontend/air-quality-advisor-card.js
+@@ -2773,6 +2773,39 @@
+   </style>`;};
+ 
+ /* HEM_CARD66_END */
++
++  /* HEM_CARD68_START: coalesce display work, never physical control. */
++  const proto68 = AirQualityAdvisorCard.prototype;
++  const managed68 = proto68._managedControllers;
++  proto68._managedControllers = function(area) {
++    if (this._managedStates68 !== this._hass?.states) {
++      this._managedStates68 = this._hass?.states;
++      this._managedAreas68 = new Map();
++    }
++    if (!this._managedAreas68.has(area)) this._managedAreas68.set(area,managed68.call(this,area));
++    return this._managedAreas68.get(area);
++  };
++  const render68 = proto68._render;
++  proto68._render = function(force=false) {
++    if (!this.isConnected || !this._hass || !this._config) return;
++    this._frameForce68 = this._frameForce68 || force;
++    if (this._frameHandle68 != null) return;
++    this._frameHandle68 = requestAnimationFrame(()=>{
++      this._frameHandle68 = null;
++      const forced = this._frameForce68; this._frameForce68 = false;
++      if (this.isConnected) render68.call(this,forced);
++    });
++  };
++  const disconnect68 = proto68.disconnectedCallback;
++  proto68.disconnectedCallback = function() {
++    if (this._frameHandle68 != null) cancelAnimationFrame(this._frameHandle68);
++    this._frameHandle68 = null; this._frameForce68 = false;
++    disconnect68.call(this);
++  };
++  proto68.connectedCallback = function() {
++    if (this._hass) this._render(true);
++  };
++  /* HEM_CARD68_END */
+   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
+   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
+   // New brand alias; old Lovelace YAML configurations keep working unmodified.
