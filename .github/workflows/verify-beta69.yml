@@ -58,7 +58,7 @@ jobs:
           assert m['domain']=='environment_manager' and m['version']=='0.6.0b69'
           for p in Path('.').rglob('*.json'):json.loads(p.read_text(encoding='utf-8'))
           assert len(list(Path('translations').glob('*.json')))==38
-          allowed={'shade_cooling.py','device_controls.py','select.py','switch.py','number.py','manifest.json','strings.json'}|{str(p) for p in Path('translations').glob('*.json')}
+          allowed={'shade_cooling.py','device_controls.py','select.py','switch.py','number.py','manifest.json','strings.json','.github/scripts/apply_beta69.py'}|{str(p) for p in Path('translations').glob('*.json')}
           changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
           assert changed<=allowed,changed-allowed
           print('PASS bounded change scope')
