@@ -1,0 +1,83 @@
+name: Beta67 recovery and AQI startup verification
+on:
+  push:
+    branches: ['fix/beta67-recovery-aqi-20261028']
+permissions:
+  contents: write
+concurrency:
+  group: hem-beta67-recovery
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Apply only reviewed AQI changes to pre-Beta66 baseline
+        run: python -I .github/scripts/apply_beta67.py
+      - name: Check source and all 38 locale catalogs
+        run: |
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('manifest.json').read_text())
+          assert m['domain']=='environment_manager' and m['version']=='0.6.0b67'
+          for p in Path('.').rglob('*.json'): json.loads(p.read_text(encoding='utf-8'))
+          assert len(list(Path('translations').glob('*.json')))==38
+          PY
+      - name: AQI startup ordering, offline settings, provider provenance and bounded-load regressions
+        run: |
+          set -eo pipefail
+          mkdir -p dist
+          python -I .github/tests/test_beta67_aqi.py | tee dist/aqi67-tests.log
+      - name: Preserve established supply, PID, sleep, cold-start, warning and lux behavior
+        run: |
+          set -eo pipefail
+          for test in test_beta61_supply_selection.py test_beta62_pid_races.py test_beta63_cold_start.py test_beta64_sleep_idle.py test_beta65_data.py; do
+            python -I .github/tests/$test | tee -a dist/previous-tests.log
+          done
+      - name: Browser test dependency on runner only
+        run: python -m pip install playwright==1.57.0
+      - name: Validate recovered Beta65 card using real Chromium
+        run: python -I .github/tests/test_beta65_browser.py
+      - name: Prove physical controller and card sources are unchanged from Beta65
+        run: |
+          git fetch --no-tags --depth=1 origin 96936bf590774355f83eeaaebe120f8153af2c41
+          git diff --exit-code 96936bf590774355f83eeaaebe120f8153af2c41 -- equipment_runtime.py equipment_power_switch.py equipment_model.py equipment_entity.py equipment_status.py switch.py climate.py climate_pid.py occupancy_policy.py device_activation.py shade_cooling.py frontend/air-quality-advisor-card.js
+          python -I - <<'PY'
+          import subprocess
+          from pathlib import Path
+          before=subprocess.check_output(['git','show','96936bf590774355f83eeaaebe120f8153af2c41:manager.py']).decode()
+          expected=before.replace('global_aqi(item, environment_global)','global_aqi(item, environment_global, hass=self.hass)')
+          assert Path('manager.py').read_text()==expected
+          assert not Path('equipment_window.py').exists()
+          assert 'HEM_CARD66_START' not in Path('frontend/air-quality-advisor-card.js').read_text()
+          print('PASS recovery baseline: no Beta66 native window evaluator or frontend interaction hooks; manager changed only to supply AQI provenance')
+          PY
+          git diff --check
+      - name: Commit tested source only if branch has not moved
+        run: |
+          set -euo pipefail
+          current="$(git ls-remote origin refs/heads/fix/beta67-recovery-aqi-20261028 | cut -f1)"
+          test "$current" = "$GITHUB_SHA" || { echo 'Concurrent source change: refusing stale commit'; exit 1; }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add aqi_names.py device_controls.py environment_extended.py manager.py select.py number.py compact_options.py manifest.json strings.json translations
+          git diff --cached --quiet || git commit -m 'Beta67 recovery: tested AQI registration and WAQI scale resolution on unchanged Beta65 controls'
+          git push origin HEAD:refs/heads/fix/beta67-recovery-aqi-20261028
+          git rev-parse HEAD | tee dist/validated-commit.txt
+          git archive --format=tar HEAD -o dist/beta67-tested-source.tar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: beta67-tested-source
+          path: |
+            dist/beta67-tested-source.tar
+            dist/validated-commit.txt
+            dist/aqi67-tests.log
+            dist/previous-tests.log
+          retention-days: 7
