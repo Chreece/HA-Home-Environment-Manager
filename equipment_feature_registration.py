@@ -100,7 +100,7 @@ def register_late_capabilities(
         return
 
     capability_fields = (
-        "supported_features", "hvac_modes", "fan_modes", "swing_modes",
+        "device_class", "supported_features", "hvac_modes", "fan_modes", "swing_modes",
         "swing_horizontal_modes", "preset_modes", "min_temp", "max_temp",
         "target_temp_step", "temperature_unit", "min_humidity", "max_humidity",
         "percentage_step", "min", "max", "step", "unit_of_measurement",
