@@ -11,7 +11,7 @@ ROOT=Path(__file__).resolve().parents[2]
 def patch(path, old, new):
     target=ROOT/path
     source=target.read_text(encoding='utf-8')
-    if new in source and old not in source:
+    if new in source:
         return
     assert source.count(old)==1, (path,source.count(old),old[:120])
     target.write_text(source.replace(old,new),encoding='utf-8')
