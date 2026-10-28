@@ -1,0 +1,27 @@
+name: Beta68 exact regression baselines
+on:
+  push:
+    branches: ['fix/beta68-feature-stability-20261028']
+    paths: ['.github/workflows/source-beta68.yml']
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Export immutable release sources
+        run: |
+          git fetch --no-tags --depth=1 origin ad16346883251683b379611763eed5ff1c24ca83 adb5029d2f02d6d9f445e9dbe2819a340580e097
+          mkdir -p dist
+          git archive --format=tar ad16346883251683b379611763eed5ff1c24ca83 > dist/beta66.tar
+          git archive --format=tar adb5029d2f02d6d9f445e9dbe2819a340580e097 > dist/beta67.tar
+          sha256sum dist/*.tar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: beta68-baselines
+          path: dist/*.tar
+          retention-days: 7
