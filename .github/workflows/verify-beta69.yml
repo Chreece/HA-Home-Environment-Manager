@@ -1,0 +1,93 @@
+name: Beta69 per-cover lux and controller stability checks
+on:
+  push:
+    branches: ['fix/beta69-lux-per-cover-20261028']
+permissions:
+  contents: write
+concurrency:
+  group: hem-beta69-validation
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Extract exactly reviewed source and tests
+        run: |
+          python -I - <<'PY'
+          import base64,hashlib,io,tarfile
+          from pathlib import Path
+          data=base64.b64decode(Path('.github/patches/beta69-source-regressions.b64').read_text().strip(),validate=True)
+          assert hashlib.sha256(data).hexdigest()=='84d74307751dc8a7dd2f97c708069315bc9b39542154de362a17557febe5dd38'
+          expected={'.github/scripts/apply_beta69.py':'2b34d3cb9459c606fec0a26fa9011c9ba5d3db0c9c7d5920a25c58ea97b37f87',
+                    '.github/tests/test_beta69_shade_lux.py':'6b997f82a4210746d86b63396a6f6525d1c85436d6cd17f08302adca9d714d84'}
+          with tarfile.open(fileobj=io.BytesIO(data),mode='r:gz') as tar:
+              assert {m.name.removeprefix('./') for m in tar.getmembers()}==set(expected)
+              for path,digest in expected.items():
+                  blob=tar.extractfile('./'+path).read()
+                  assert hashlib.sha256(blob).hexdigest()==digest
+                  dest=Path(path);dest.parent.mkdir(exist_ok=True,parents=True);dest.write_bytes(blob)
+          print('PASS exact reviewed bundle')
+          PY
+      - name: Apply guarded opt-in lux controls
+        run: python -I .github/scripts/apply_beta69.py
+      - name: Check source syntax, all 38 languages and scope
+        run: |
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          m=json.loads(Path('manifest.json').read_text())
+          assert m['domain']=='environment_manager' and m['version']=='0.6.0b69'
+          for p in Path('.').rglob('*.json'):json.loads(p.read_text(encoding='utf-8'))
+          assert len(list(Path('translations').glob('*.json')))==38
+          allowed={'shade_cooling.py','device_controls.py','select.py','switch.py','number.py','manifest.json','strings.json'}|{str(p) for p in Path('translations').glob('*.json')}
+          changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
+          assert changed<=allowed,changed-allowed
+          print('PASS bounded change scope')
+          PY
+          git diff --check
+      - name: Actual per-cover lux gating, races, and configuration
+        run: python -I .github/tests/test_beta69_shade_lux.py
+      - name: Preserve all previous control, sensor and AQI behavior
+        run: |
+          python -I .github/tests/test_beta61_supply_selection.py
+          python -I .github/tests/test_beta62_pid_races.py
+          python -I .github/tests/test_beta63_cold_start.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+          python -I .github/tests/test_beta65_data.py
+          python -I .github/tests/test_beta66_windows.py
+          python -I .github/tests/test_beta67_aqi.py
+          python -I .github/tests/test_beta68_scheduler.py
+          python -I .github/tests/test_beta68_metadata.py
+      - name: Install CI-only Home Assistant and browser dependencies
+        run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+      - name: Verify Home Assistant event lifecycle and heavy browser load
+        run: |
+          python -I .github/tests/test_beta68_events.py
+          python -I .github/tests/test_beta68_browser.py
+      - name: Commit only the tested source if branch is unchanged
+        run: |
+          set -euo pipefail
+          branch=fix/beta69-lux-per-cover-20261028
+          current="$(git ls-remote origin refs/heads/$branch | cut -f1)"
+          test "$current" = "$GITHUB_SHA" || { echo 'Branch moved during tests'; exit 1; }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add shade_cooling.py device_controls.py select.py switch.py number.py manifest.json strings.json translations .github/scripts/apply_beta69.py .github/tests/test_beta69_shade_lux.py
+          git diff --cached --check
+          test -n "$(git diff --cached --name-only)"
+          git commit -m 'Beta69: per-cover lux sensor, threshold and guarded close-only evidence'
+          git push origin HEAD:refs/heads/$branch
+      - uses: actions/upload-artifact@v4
+        with:
+          name: beta69-tested-sources
+          path: |
+            .github/scripts/apply_beta69.py
+            .github/tests/test_beta69_shade_lux.py
+          retention-days: 7
