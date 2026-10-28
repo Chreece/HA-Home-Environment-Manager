@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Resumo da divisão. Cada dispositivo abaixo tem o seu próprio controlador.",
           "sleep": "Sono",
           "comfort": "Conforto",
-          "eco": "Poupança de energia"
+          "eco": "Poupança de energia",
+          "window_open_pause": "Pausa por janela aberta",
+          "window_close_warmup": "Espera após fechar as janelas",
+          "window_state_unknown": "A aguardar o estado das janelas"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Avisar sobre janelas abertas depois de todos saírem"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Desligar ao abrir uma janela · {channel}"
       }
     },
     "select": {

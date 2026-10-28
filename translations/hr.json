@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Sažetak prostorije. Svaki uređaj ispod ima vlastiti upravljač.",
           "sleep": "Spavanje",
           "comfort": "Udobnost",
-          "eco": "Ušteda energije"
+          "eco": "Ušteda energije",
+          "window_open_pause": "Pauza zbog otvorenog prozora",
+          "window_close_warmup": "Čekanje nakon zatvaranja prozora",
+          "window_state_unknown": "Čekanje na stanje prozora"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Upozori na otvorene prozore kada svi odu"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Isključi pri otvaranju prozora · {channel}"
       }
     },
     "select": {

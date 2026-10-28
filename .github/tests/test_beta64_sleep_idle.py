@@ -198,7 +198,7 @@ class Simulator:
         if self.on_save is not None:
             cb, self.on_save = self.on_save, None
             cb()
-    def _gate(self, spec, cap, cfg, plan, mode, *, automatic=True):
+    def _gate(self, spec, cap, cfg, plan, mode, *, automatic=True, window_stop=False):
         if not self._active or not self._ready or self.record.get("paused"):
             return "controller_inactive"
         return None

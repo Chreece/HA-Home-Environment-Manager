@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Súhrn miestnosti. Každé zariadenie nižšie má vlastnú riadiacu jednotku.",
           "sleep": "Spánok",
           "comfort": "Pohodlie",
-          "eco": "Úspora energie"
+          "eco": "Úspora energie",
+          "window_open_pause": "Pozastavené pre otvorené okno",
+          "window_close_warmup": "Čakanie po zatvorení okien",
+          "window_state_unknown": "Čakanie na stav okien"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Upozorniť na otvorené okná po odchode všetkých"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Vypnúť pri otvorení okna · {channel}"
       }
     },
     "select": {

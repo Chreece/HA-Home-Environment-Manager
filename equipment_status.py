@@ -144,6 +144,9 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "upstream_idle_cooldown_seconds": cfg.get(
                 "power_switch_cooldown_seconds"
             ) if supply_id else None,
+            "window_pause_enabled": cfg.get("pause_on_window_open", True),
+            "window_policy": dict(getattr(runtime, "_window_policy_cache", {}).get(
+                self._spec.identifier, {})),
             "sleep_pause_requested": (
                 cfg.get("sleep_behavior") == "pause"
                 and plan.get("sleeping") is True

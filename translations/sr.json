@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Сажетак просторије. Сваки уређај испод има сопствени контролер.",
           "sleep": "Spavanje",
           "comfort": "Удобност",
-          "eco": "Уштеда енергије"
+          "eco": "Уштеда енергије",
+          "window_open_pause": "Пауза због отвореног прозора",
+          "window_close_warmup": "Чекање после затварања прозора",
+          "window_state_unknown": "Чекање на стање прозора"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Обавести о отвореним прозорима кад сви оду"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Искључи при отварању прозора · {channel}"
       }
     },
     "select": {

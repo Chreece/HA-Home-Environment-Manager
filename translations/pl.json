@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Podsumowanie pomieszczenia. Każde urządzenie poniżej ma własny sterownik.",
           "sleep": "Sen",
           "comfort": "Komfort",
-          "eco": "Oszczędzanie energii"
+          "eco": "Oszczędzanie energii",
+          "window_open_pause": "Wstrzymano z powodu otwartego okna",
+          "window_close_warmup": "Oczekiwanie po zamknięciu okien",
+          "window_state_unknown": "Oczekiwanie na stan okien"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Ostrzegaj o otwartych oknach po wyjściu wszystkich"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Wyłącz po otwarciu okna · {channel}"
       }
     },
     "select": {

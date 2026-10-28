@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "สรุปห้อง อุปกรณ์แต่ละตัวด้านล่างมีตัวควบคุมของตนเอง",
           "sleep": "นอน",
           "comfort": "สบาย",
-          "eco": "ประหยัดพลังงาน"
+          "eco": "ประหยัดพลังงาน",
+          "window_open_pause": "หยุดชั่วคราวเพราะหน้าต่างเปิด",
+          "window_close_warmup": "รอหลังจากปิดหน้าต่าง",
+          "window_state_unknown": "รอสถานะหน้าต่าง"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "ปิดเมื่อเปิดหน้าต่าง · {channel}"
       }
     },
     "select": {

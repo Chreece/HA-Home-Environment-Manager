@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Room summary only. Each device below has its own controller.",
           "sleep": "Sleep",
           "comfort": "Comfort",
-          "eco": "Energy saving"
+          "eco": "Energy saving",
+          "window_open_pause": "Paused for an open window",
+          "window_close_warmup": "Waiting after windows closed",
+          "window_state_unknown": "Waiting for window status"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Alert when windows remain open after everyone leaves"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Stop when a window opens · {channel}"
       }
     },
     "select": {

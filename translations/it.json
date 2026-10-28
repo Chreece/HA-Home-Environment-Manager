@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Riepilogo della stanza. Ogni dispositivo sotto ha un proprio controllore.",
           "sleep": "Sonno",
           "comfort": "Comfort",
-          "eco": "Risparmio energetico"
+          "eco": "Risparmio energetico",
+          "window_open_pause": "Pausa per finestra aperta",
+          "window_close_warmup": "Attesa dopo la chiusura delle finestre",
+          "window_state_unknown": "In attesa dello stato delle finestre"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Avvisa se le finestre restano aperte dopo l'uscita"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Spegnere quando si apre una finestra · {channel}"
       }
     },
     "select": {

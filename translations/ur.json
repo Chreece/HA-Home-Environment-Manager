@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "کمرے کا خلاصہ۔ نیچے ہر آلے کا اپنا کنٹرولر ہے۔",
           "sleep": "نیند",
           "comfort": "آرام",
-          "eco": "توانائی کی بچت"
+          "eco": "توانائی کی بچت",
+          "window_open_pause": "کھلی کھڑکی کی وجہ سے توقف",
+          "window_close_warmup": "کھڑکیاں بند ہونے کے بعد انتظار",
+          "window_state_unknown": "کھڑکیوں کی حالت کا انتظار"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "کھڑکی کھلنے پر بند کریں · {channel}"
       }
     },
     "select": {

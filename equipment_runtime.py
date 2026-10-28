@@ -273,6 +273,32 @@ class EquipmentRuntime:
                 raise HomeAssistantError("Controller state storage is unavailable")
             if not self._current_spec(spec):
                 raise HomeAssistantError("Controller sources are no longer assigned to this area")
+            if set(changes) == {"pause_on_window_open"}:
+                value = changes["pause_on_window_open"]
+                if type(value) is not bool:
+                    raise HomeAssistantError("Window pause must be a boolean")
+                lock = getattr(self.manager, "_device_settings_write_lock", None)
+                if lock is None:
+                    lock = self.manager._device_settings_write_lock = asyncio.Lock()
+                async with lock:
+                    if not self._current_spec(spec):
+                        raise HomeAssistantError("Controller sources changed during configuration")
+                    options = deepcopy(self.manager.entry.options)
+                    profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+                    profiles = profiles if isinstance(profiles, dict) else {}
+                    prior = profiles.get(spec.identifier, {})
+                    profiles[spec.identifier] = {
+                        **(prior if isinstance(prior, dict) else {}),
+                        "pause_on_window_open": value,
+                    }
+                    options[model.SETTINGS] = profiles
+                    self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
+                # Do not clear manual override or uncertain hardware latches.
+                getattr(self, "_window_policy_cache", {}).pop(spec.identifier, None)
+                self._status(spec, "settings_updated")
+                if getattr(self.manager, "_active", False):
+                    self.manager._recalculate(initial=True)
+                return
             cap = model.capabilities(self.manager, spec)
             if cap is None:
                 # An intentionally unpowered native appliance has no live
@@ -344,6 +370,9 @@ class EquipmentRuntime:
                 return
             old = model.settings(self.manager, spec)
             new = {**old, **deepcopy(changes)}
+            if ("pause_on_window_open" in new
+                    and type(new["pause_on_window_open"]) is not bool):
+                raise HomeAssistantError("Window pause must be a boolean")
             allowed = set(model.DEFAULTS) | {"fan_mode", "swing_mode", "swing_horizontal_mode",
                 "sensor_verified", *model.DEVICE_SELECTS}
             if set(changes) - allowed:
@@ -956,6 +985,10 @@ class EquipmentRuntime:
                 uncertain = True
         return True if uncertain else False
 
+    def _window_policy(self, spec, cfg=None):
+        from .equipment_window import evaluate
+        return evaluate(self, spec, cfg)
+
     def _stop_policy_verified(
         self, spec: model.ManagedDevice, cap: model.Capabilities, kind: str,
     ) -> bool:
@@ -973,6 +1006,9 @@ class EquipmentRuntime:
             return False
         room = model.room_config(self.manager, spec)
         plan = model.plan_for(self.manager, spec)
+        if kind == "window":
+            return (cfg.get("pause_on_window_open", False) is True
+                    and self._window_policy(spec, cfg).get("stop_requested") is True)
         if kind == "sleep":
             from .device_activation import effective_device
             dev = effective_device(self.manager, spec, cap.primary)
@@ -1036,7 +1072,7 @@ class EquipmentRuntime:
             self._status(spec, "retired_outputs_reconciled")
 
     def _gate(self, spec: model.ManagedDevice, cap: model.Capabilities, cfg: dict, plan: dict,
-              mode: str, *, automatic: bool = True) -> str | None:
+              mode: str, *, automatic: bool = True, window_stop: bool = False) -> str | None:
         if not self._active or not self._ready:
             return "controller_inactive"
         if not self._current_spec(spec):
@@ -1059,7 +1095,13 @@ class EquipmentRuntime:
         native = self.hass.states.get(cap.primary)
         if native is not None and native.attributes.get("hvac_action") == "defrosting":
             return "native_defrost_protection"
-        if mode != "off" and cap.domain != "fan" and not _contact_interlock(self.hass, spec.area_id, plan):
+        if cfg.get("pause_on_window_open", False):
+            window = self._window_policy(spec, cfg)
+            if window["blocked"] and not window_stop:
+                return window["status"]
+        if (mode != "off" and cap.domain != "fan"
+                and cfg.get("pause_on_window_open", True)
+                and not _contact_interlock(self.hass, spec.area_id, plan)):
             return "open_or_unknown_window"
         if mode in ("heat", "cool", "heat_cool"):
             if conflict := _physical_climate_conflict(self.hass, spec.area_id, room, cap.primary, mode):
@@ -1087,7 +1129,7 @@ class EquipmentRuntime:
                 if purpose == "extraction":
                     if plan.get("air_actions", {}).get("outdoor_air_verified") is not True:
                         return "outside_air_not_verified"
-                    if not _contact_interlock(self.hass, spec.area_id, plan):
+                    if cfg.get("pause_on_window_open", True) and not _contact_interlock(self.hass, spec.area_id, plan):
                         return "window_already_open_or_unknown"
                 elif not (dev.get("sensor_verified") is True or room.get("pm25_sensor_verified") is True):
                     return "particle_sensor_not_verified"
@@ -1174,7 +1216,7 @@ class EquipmentRuntime:
         plan = model.plan_for(self.manager, spec)
         action_mode = mode or primary.state
         if policy_stop is not None:
-            if (policy_stop not in ("sleep", "idle")
+            if (policy_stop not in ("sleep", "idle", "window")
                     or not power or action_mode != "off"
                     or not self._stop_policy_verified(spec, cap, policy_stop)):
                 self._status(spec, "authority_or_evidence_changed_before_dispatch")
@@ -1183,7 +1225,8 @@ class EquipmentRuntime:
             if not self._shutdown_allowed(spec, entity, expected):
                 self._status(spec, "owned_shutdown_identity_or_dwell_hold")
                 return False
-        elif why := self._gate(spec, cap, cfg, plan, action_mode, automatic=automatic):
+        elif why := self._gate(spec, cap, cfg, plan, action_mode, automatic=automatic,
+                              window_stop=power and action_mode == "off"):
             self._status(spec, why)
             return False
         if entity not in spec.source_entities or entity_area(self.hass, entity) != spec.area_id:
@@ -1227,7 +1270,8 @@ class EquipmentRuntime:
                 and model.capabilities(self.manager, spec) == cap and latest_plan == before_plan
                 and (not automatic or self.measurements(spec, cap) == before_feedback)
                 and self._quiet_context(spec, latest, latest_plan) == before_quiet
-                and not self._gate(spec, cap, latest, latest_plan, action_mode, automatic=automatic))
+                and not self._gate(spec, cap, latest, latest_plan, action_mode, automatic=automatic,
+                                   window_stop=power and action_mode == "off"))
 
         async def abort() -> bool:
             self._invalidated.add(spec.identifier)
@@ -1580,6 +1624,21 @@ class EquipmentRuntime:
                 policy_stop="sleep",
             )
             return
+        if cfg.get("pause_on_window_open", False) and cfg["control_mode"] not in ("existing", "off"):
+            window = self._window_policy(spec, cfg)
+            if window["blocked"]:
+                self._memory.pop(spec.identifier, None)
+                self._fan_allocations.pop(spec.identifier, None)
+                if (window["stop_requested"] and not output_off(state)
+                        and (power or owned)):
+                    await self._power(
+                        spec, cap, "off", automatic=False, shutdown=bool(owned),
+                        policy_stop="window",
+                    )
+                else:
+                    self._status(spec, window["status"],
+                                 window_resume_remaining_seconds=window["remaining_seconds"])
+                return  # No targets, fan, swing or mode control during hold.
         if (auto and power and not output_off(state)
                 and self._stop_policy_verified(spec, cap, "idle")):
             # PID integral or PWM phase cannot keep an appliance energized

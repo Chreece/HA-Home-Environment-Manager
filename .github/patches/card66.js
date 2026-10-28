@@ -64,7 +64,7 @@
   proto66.disconnectedCallback=function(){this._detailPointer66=false;clearTimeout(this._detailPointerTimer66);return originalDisconnect66.call(this);};
   const originalRender66=proto66._render;
   proto66._render=function(force=false) {
-    if(this._detailPointer66){this._pendingRender=true;this._pendingForceRender66 ||= force;return;}
+    if(this._detailPointer66){this._pendingRender=true;this._pendingForceRender ||= force;return;}
     return originalRender66.call(this,force);
   };
   const originalStatus66=proto66._controllerStatusLabel;

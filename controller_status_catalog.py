@@ -409,6 +409,7 @@ CONTROLLER_STATUS_CODES = frozenset((
 # Other room/shade codes remain in CONTROLLER_STATUS_CODES for translated cards.
 # Limiting options avoids bloating every Home Assistant recorder state event.
 EQUIPMENT_SENSOR_STATUSES = frozenset((
+    "window_open_pause", "window_close_warmup", "window_state_unknown",
     "air_quality_decision_expired",
     "authority_or_evidence_changed_before_dispatch",
     "awaiting_evaluation",

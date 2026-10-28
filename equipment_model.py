@@ -64,6 +64,7 @@ DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None
             # 'None' preserves exact Beta54 behavior on every existing device.
             "power_switch_entity": None,
             "quiet_sleep": False, "quiet_occupied": False,
+            "pause_on_window_open": True,
             "quiet_fan_mode": None, "profile_targets": {}, "profile_fans": {},
             "pid_calibration_method": "manual", "pid_last_calibration": None,
             "pid_fan_capacity_mode": "legacy",

@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "סיכום החדר. לכל מכשיר להלן יש בקר נפרד.",
           "sleep": "שינה",
           "comfort": "נוחות",
-          "eco": "חיסכון באנרגיה"
+          "eco": "חיסכון באנרגיה",
+          "window_open_pause": "הושהה עקב חלון פתוח",
+          "window_close_warmup": "המתנה לאחר סגירת החלונות",
+          "window_state_unknown": "ממתין למצב החלונות"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "התרעה על חלונות פתוחים לאחר שכולם יצאו"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "כיבוי בעת פתיחת חלון · {channel}"
       }
     },
     "select": {

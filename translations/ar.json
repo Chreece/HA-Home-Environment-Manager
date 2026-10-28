@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "ملخص الغرفة. لكل جهاز أدناه وحدة تحكم مستقلة.",
           "sleep": "النوم",
           "comfort": "راحة",
-          "eco": "توفير الطاقة"
+          "eco": "توفير الطاقة",
+          "window_open_pause": "متوقف مؤقتًا بسبب نافذة مفتوحة",
+          "window_close_warmup": "انتظار بعد إغلاق النوافذ",
+          "window_state_unknown": "انتظار حالة النوافذ"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "إيقاف عند فتح نافذة · {channel}"
       }
     },
     "select": {

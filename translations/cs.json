@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Souhrn místnosti. Každé zařízení níže má vlastní řadič.",
           "sleep": "Spánek",
           "comfort": "Pohodlí",
-          "eco": "Úspora energie"
+          "eco": "Úspora energie",
+          "window_open_pause": "Pozastaveno kvůli otevřenému oknu",
+          "window_close_warmup": "Čekání po zavření oken",
+          "window_state_unknown": "Čekání na stav oken"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Upozornit na otevřená okna po odchodu všech"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Vypnout při otevření okna · {channel}"
       }
     },
     "select": {

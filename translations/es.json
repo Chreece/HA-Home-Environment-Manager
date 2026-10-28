@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Resumen de la habitación. Cada dispositivo de abajo tiene su propio controlador.",
           "sleep": "Sueño",
           "comfort": "Confort",
-          "eco": "Ahorro de energía"
+          "eco": "Ahorro de energía",
+          "window_open_pause": "Pausa por ventana abierta",
+          "window_close_warmup": "Espera tras cerrar las ventanas",
+          "window_state_unknown": "Esperando el estado de las ventanas"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Avisar de ventanas abiertas cuando todos salgan"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Apagar al abrir una ventana · {channel}"
       }
     },
     "select": {

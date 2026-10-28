@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "कमरे का सारांश। नीचे हर उपकरण का अलग नियंत्रक है।",
           "sleep": "नींद",
           "comfort": "आराम",
-          "eco": "ऊर्जा बचत"
+          "eco": "ऊर्जा बचत",
+          "window_open_pause": "खुली खिड़की के कारण रुका हुआ",
+          "window_close_warmup": "खिड़कियाँ बंद होने के बाद प्रतीक्षा",
+          "window_state_unknown": "खिड़कियों की स्थिति की प्रतीक्षा"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "सबके जाने पर खुली खिड़कियों की सूचना दें"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "खिड़की खुलने पर बंद करें · {channel}"
       }
     },
     "select": {

@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Підсумок кімнати. Кожен пристрій нижче має власний контролер.",
           "sleep": "Сон",
           "comfort": "Комфорт",
-          "eco": "Енергозбереження"
+          "eco": "Енергозбереження",
+          "window_open_pause": "Пауза через відкрите вікно",
+          "window_close_warmup": "Очікування після закриття вікон",
+          "window_state_unknown": "Очікування стану вікон"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Сповіщати про відкриті вікна після виходу всіх"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Вимикати при відкритті вікна · {channel}"
       }
     },
     "select": {

@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Oda özeti. Aşağıdaki her cihazın kendi denetleyicisi vardır.",
           "sleep": "Uyku",
           "comfort": "Konfor",
-          "eco": "Enerji tasarrufu"
+          "eco": "Enerji tasarrufu",
+          "window_open_pause": "Açık pencere nedeniyle duraklatıldı",
+          "window_close_warmup": "Pencereler kapandıktan sonra bekleniyor",
+          "window_state_unknown": "Pencere durumu bekleniyor"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Herkes çıktıktan sonra açık pencereleri bildir"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Pencere açılınca kapat · {channel}"
       }
     },
     "select": {

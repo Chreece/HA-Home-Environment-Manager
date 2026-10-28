@@ -53,6 +53,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ]
 
     entities.extend(native_quiet_switches())
+    entities.extend(EquipmentWindowPauseSwitch(manager, spec)
+                    for spec in equipment.specs(manager))
     entities.extend(EquipmentQuietSwitch(manager, spec, "sensor_verified")
                     for spec in equipment.specs(manager)
                     if (cap := equipment.capabilities(manager, spec)) is not None
@@ -185,6 +187,34 @@ class EquipmentQuietSwitch(EquipmentEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs):
         await self._manager.equipment.async_update(self._spec, {self._key: False})
+
+
+class EquipmentWindowPauseSwitch(EquipmentEntity, SwitchEntity):
+    """Per-controller window stop policy; turning this on never switches hardware."""
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_icon = "mdi:window-open-variant"
+
+    def __init__(self, manager, spec):
+        self._equipment_init(manager, spec, "pause_on_window_open")
+
+    @property
+    def available(self):
+        return self._manager.equipment._ready
+
+    @property
+    def is_on(self):
+        return self.controller_settings.get("pause_on_window_open", True) is True
+
+    @property
+    def extra_state_attributes(self):
+        return {**super().extra_state_attributes, "window_pause_role": "policy",
+                "window_resume_delay_seconds": 60}
+
+    async def async_turn_on(self, **kwargs):
+        await self._manager.equipment.async_update(self._spec, {"pause_on_window_open": True})
+
+    async def async_turn_off(self, **kwargs):
+        await self._manager.equipment.async_update(self._spec, {"pause_on_window_open": False})
 
 
 class ShadeCoolingSwitch(SwitchEntity):

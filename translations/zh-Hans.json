@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "房间概览。下方每台设备都有独立的控制器。",
           "sleep": "睡眠",
           "comfort": "舒适",
-          "eco": "节能"
+          "eco": "节能",
+          "window_open_pause": "因窗户打开而暂停",
+          "window_close_warmup": "关窗后等待中",
+          "window_state_unknown": "等待窗户状态"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "所有人离家后提醒未关窗户"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "开窗时停止 · {channel}"
       }
     },
     "select": {

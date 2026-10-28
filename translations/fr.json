@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Résumé de la pièce. Chaque appareil ci-dessous possède son propre régulateur.",
           "sleep": "Sommeil",
           "comfort": "Confort",
-          "eco": "Économie d’énergie"
+          "eco": "Économie d’énergie",
+          "window_open_pause": "Pause : fenêtre ouverte",
+          "window_close_warmup": "Attente après fermeture des fenêtres",
+          "window_state_unknown": "En attente de l’état des fenêtres"
         }
       }
     },
@@ -2078,6 +2081,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Alerter si des fenêtres restent ouvertes après le départ"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Arrêter à l’ouverture d’une fenêtre · {channel}"
       }
     },
     "select": {

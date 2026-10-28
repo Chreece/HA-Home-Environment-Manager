@@ -1691,7 +1691,10 @@
           "environment_only_no_primary_hvac": "Nur Raumübersicht. Jedes Gerät unten hat einen eigenen Regler.",
           "sleep": "Schlaf",
           "comfort": "Komfort",
-          "eco": "Energiesparen"
+          "eco": "Energiesparen",
+          "window_open_pause": "Wegen offenem Fenster pausiert",
+          "window_close_warmup": "Wartezeit nach Fensterschließung",
+          "window_state_unknown": "Warten auf Fensterstatus"
         }
       }
     },
@@ -2081,6 +2084,9 @@
       },
       "home_away_open_window_alert": {
         "name": "Bei offenen Fenstern nach Verlassen des Hauses warnen"
+      },
+      "equipment_pause_on_window_open": {
+        "name": "Bei offenem Fenster ausschalten · {channel}"
       }
     },
     "select": {
