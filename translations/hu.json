@@ -1002,8 +1002,8 @@
         "description": "Kültéri · AQI: Választás forrás, érzékelő / Eszközök · vezérlés.",
         "data": {
           "outside_aqi_entity": "AQI · érzékelő",
-          "outside_aqi_scale": "AQI · forrás",
-          "outside_aqi_limit": "AQI · cél",
+          "outside_aqi_scale": "AQI-skála",
+          "outside_aqi_limit": "Egyéni AQI-határérték",
           "outside_aqi_no_sources": "AQI · érzékelő · Kötelező"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Hozzárendelt ablakérzékelő"
+      },
+      "home_aqi_scale": {
+        "name": "AQI-skála",
+        "state": {
+          "auto": "Automatikus (szolgáltató)",
+          "not_configured": "Ismeretlen - nincs összehasonlítás",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Egyéni skála"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "forrás · Érvénytelen",
+        "auto": "Automatikus (szolgáltató)",
+        "not_configured": "Ismeretlen - nincs összehasonlítás",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "cél · beállítások"
+        "custom": "Egyéni skála"
       }
     },
     "away_window_delivery": {

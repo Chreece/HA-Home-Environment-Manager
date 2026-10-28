@@ -1002,8 +1002,8 @@
         "description": "Zewnętrzne · AQI: Wybierz źródło, czujnik / Urządzenia · sterowanie.",
         "data": {
           "outside_aqi_entity": "AQI · czujnik",
-          "outside_aqi_scale": "AQI · źródło",
-          "outside_aqi_limit": "AQI · cel",
+          "outside_aqi_scale": "Skala AQI",
+          "outside_aqi_limit": "Własny limit AQI",
           "outside_aqi_no_sources": "AQI · czujnik · Wymagane"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Powiązany czujnik okna"
+      },
+      "home_aqi_scale": {
+        "name": "Skala AQI",
+        "state": {
+          "auto": "Automatycznie (dostawca)",
+          "not_configured": "Nieznana - bez porównania",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Własna skala"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "źródło · Nieprawidłowe",
+        "auto": "Automatycznie (dostawca)",
+        "not_configured": "Nieznana - bez porównania",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "cel · ustawienia"
+        "custom": "Własna skala"
       }
     },
     "away_window_delivery": {

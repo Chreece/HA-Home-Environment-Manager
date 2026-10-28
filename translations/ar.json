@@ -1002,8 +1002,8 @@
         "description": "خارجي · AQI: اختيار المصدر, مستشعر / الأجهزة · التحكم.",
         "data": {
           "outside_aqi_entity": "AQI · مستشعر",
-          "outside_aqi_scale": "AQI · المصدر",
-          "outside_aqi_limit": "AQI · الهدف",
+          "outside_aqi_scale": "مقياس AQI",
+          "outside_aqi_limit": "حد AQI مخصص",
           "outside_aqi_no_sources": "AQI · مستشعر · مطلوب"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "مستشعر النافذة المرتبط"
+      },
+      "home_aqi_scale": {
+        "name": "مقياس AQI",
+        "state": {
+          "auto": "تلقائي (المزود)",
+          "not_configured": "غير معروف - دون مقارنة",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "مقياس مخصص"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "المصدر · غير صالح",
+        "auto": "تلقائي (المزود)",
+        "not_configured": "غير معروف - دون مقارنة",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "الهدف · الإعدادات"
+        "custom": "مقياس مخصص"
       }
     },
     "away_window_delivery": {

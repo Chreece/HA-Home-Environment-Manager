@@ -1002,8 +1002,8 @@
         "description": "屋外 · AQI: 選択 情報源, センサー / デバイス · 制御.",
         "data": {
           "outside_aqi_entity": "AQI · センサー",
-          "outside_aqi_scale": "AQI · 情報源",
-          "outside_aqi_limit": "AQI · 目標",
+          "outside_aqi_scale": "AQI尺度",
+          "outside_aqi_limit": "カスタムAQI上限",
           "outside_aqi_no_sources": "AQI · センサー · 必須"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "対応する窓の開閉センサー"
+      },
+      "home_aqi_scale": {
+        "name": "AQI尺度",
+        "state": {
+          "auto": "自動（提供元）",
+          "not_configured": "不明 - 比較しない",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "カスタム尺度"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "情報源 · 無効",
+        "auto": "自動（提供元）",
+        "not_configured": "不明 - 比較しない",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "目標 · 設定"
+        "custom": "カスタム尺度"
       }
     },
     "away_window_delivery": {

@@ -1002,8 +1002,8 @@
         "description": "बाहरी · AQI: चुनें स्रोत, सेंसर / उपकरण · नियंत्रण.",
         "data": {
           "outside_aqi_entity": "AQI · सेंसर",
-          "outside_aqi_scale": "AQI · स्रोत",
-          "outside_aqi_limit": "AQI · लक्ष्य",
+          "outside_aqi_scale": "AQI पैमाना",
+          "outside_aqi_limit": "कस्टम AQI सीमा",
           "outside_aqi_no_sources": "AQI · सेंसर · आवश्यक"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "संबंधित खिड़की सेंसर"
+      },
+      "home_aqi_scale": {
+        "name": "AQI पैमाना",
+        "state": {
+          "auto": "स्वचालित (प्रदाता)",
+          "not_configured": "अज्ञात - तुलना नहीं",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "कस्टम पैमाना"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "स्रोत · अमान्य",
+        "auto": "स्वचालित (प्रदाता)",
+        "not_configured": "अज्ञात - तुलना नहीं",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "लक्ष्य · सेटिंग"
+        "custom": "कस्टम पैमाना"
       }
     },
     "away_window_delivery": {

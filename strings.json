@@ -1002,8 +1002,8 @@
         "description": "Assign a documented AQI provider scale to one sensor at a time. Unknown scales never mean safe outdoor air.",
         "data": {
           "outside_aqi_entity": "AQI · sensor",
-          "outside_aqi_scale": "AQI · source",
-          "outside_aqi_limit": "AQI · target",
+          "outside_aqi_scale": "AQI scale",
+          "outside_aqi_limit": "Custom AQI limit",
           "outside_aqi_no_sources": "AQI · sensor · Required"
         },
         "data_description": {
@@ -2192,6 +2192,16 @@
       },
       "equipment_power_switch_entity": {
         "name": "Power · Upstream supply switch"
+      },
+      "home_aqi_scale": {
+        "name": "AQI scale",
+        "state": {
+          "auto": "Automatic (provider)",
+          "not_configured": "Unknown - no comparison",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Custom scale"
+        }
       }
     },
     "time": {
@@ -2354,10 +2364,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "source · Invalid",
+        "auto": "Automatic (provider)",
+        "not_configured": "Unknown - no comparison",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "target · settings"
+        "custom": "Custom scale"
       }
     },
     "away_window_delivery": {

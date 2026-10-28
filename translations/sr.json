@@ -1002,8 +1002,8 @@
         "description": "Spoljašnji · AQI: Izaberi izvor, senzor / Uređaji · upravljanje.",
         "data": {
           "outside_aqi_entity": "AQI · senzor",
-          "outside_aqi_scale": "AQI · izvor",
-          "outside_aqi_limit": "AQI · cilj",
+          "outside_aqi_scale": "AQI скала",
+          "outside_aqi_limit": "Прилагођена AQI граница",
           "outside_aqi_no_sources": "AQI · senzor · Obavezno"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Повезани сензор прозора"
+      },
+      "home_aqi_scale": {
+        "name": "AQI скала",
+        "state": {
+          "auto": "Аутоматски (провајдер)",
+          "not_configured": "Непозната - без поређења",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Прилагођена скала"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "izvor · Neispravno",
+        "auto": "Аутоматски (провајдер)",
+        "not_configured": "Непозната - без поређења",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "cilj · podešavanja"
+        "custom": "Прилагођена скала"
       }
     },
     "away_window_delivery": {

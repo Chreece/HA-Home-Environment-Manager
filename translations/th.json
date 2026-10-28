@@ -1002,8 +1002,8 @@
         "description": "ภายนอก · AQI: เลือก แหล่งข้อมูล, เซนเซอร์ / อุปกรณ์ · ควบคุม.",
         "data": {
           "outside_aqi_entity": "AQI · เซนเซอร์",
-          "outside_aqi_scale": "AQI · แหล่งข้อมูล",
-          "outside_aqi_limit": "AQI · เป้าหมาย",
+          "outside_aqi_scale": "มาตราส่วน AQI",
+          "outside_aqi_limit": "เกณฑ์ AQI ที่กำหนดเอง",
           "outside_aqi_no_sources": "AQI · เซนเซอร์ · จำเป็น"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "เซ็นเซอร์หน้าต่างที่เชื่อมโยง"
+      },
+      "home_aqi_scale": {
+        "name": "มาตราส่วน AQI",
+        "state": {
+          "auto": "อัตโนมัติ (ผู้ให้บริการ)",
+          "not_configured": "ไม่ทราบ - ไม่เปรียบเทียบ",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "มาตราส่วนที่กำหนดเอง"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "แหล่งข้อมูล · ไม่ถูกต้อง",
+        "auto": "อัตโนมัติ (ผู้ให้บริการ)",
+        "not_configured": "ไม่ทราบ - ไม่เปรียบเทียบ",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "เป้าหมาย · การตั้งค่า"
+        "custom": "มาตราส่วนที่กำหนดเอง"
       }
     },
     "away_window_delivery": {

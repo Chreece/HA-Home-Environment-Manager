@@ -96,6 +96,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
         for cover in selected(manager.settings, area, "shades") or ():
             entities.append(ShadeWindowSelect(manager, entry.entry_id, area, cover))
     async_add_grouped_entities(entry.runtime_data, async_add_entities, entities)
+    from .aqi_sources import register_late_sources
+    register_late_sources(manager, entry, async_add_entities, entities,
+        lambda source: ConfigSelect(manager, entry.entry_id, None, "aqi_scale", AQI_SCALES,
+                                     setting_key="scale", entity_id=source))
     register_late_capabilities(
         hass, entry, async_add_entities, entities, native_feature_selects,
     )
@@ -165,6 +169,10 @@ class ConfigSelect(SelectEntity):
         if entity_id:
             suffix = f"{kind}_{entity_id.replace('.', '_')}_{self._setting_key}"
             self._attr_name = f"{entity_id} · {self._setting_key.replace('_', ' ')}"
+            if kind == "aqi_scale":
+                self._attr_translation_key = "home_aqi_scale"
+                self._attr_has_entity_name = False
+                self._attr_icon = "mdi:air-filter"
         else:
             self._attr_translation_key = (
                 f"home_{suffix}" if area is None else f"area_{suffix}"
@@ -188,6 +196,22 @@ class ConfigSelect(SelectEntity):
         )
 
     @property
+    def name(self):
+        if self._kind == "aqi_scale":
+            from .aqi_sources import control_name
+            return control_name(self._manager, self._entity_id, "scale")
+        return super().name
+
+    @property
+    def extra_state_attributes(self):
+        if self._kind == "aqi_scale":
+            from .aqi_sources import resolve_scale
+            profile = self._manager.settings.get("environment_global", {})
+            return {"aqi_source_entity_id": self._entity_id,
+                    **resolve_scale(self._manager.hass, profile, self._entity_id)}
+        return super().extra_state_attributes
+
+    @property
     def current_option(self):
         settings = self._manager.settings
         if self._kind == "language":
@@ -204,7 +228,8 @@ class ConfigSelect(SelectEntity):
             env = settings.get("environment_global", {})
             scales = env.get("aqi_scales", {}) if isinstance(env, dict) else {}
             cfg = scales.get(self._entity_id, {}) if isinstance(scales, dict) else {}
-            return cfg.get("scale", "not_configured") if isinstance(cfg, dict) else "not_configured"
+            from .aqi_sources import scale_selection
+            return scale_selection(env, self._entity_id)
         if self._kind == "global_policy":
             cfg = settings.get("occupancy_global", {})
             return cfg.get(self._setting_key, "any_home") if isinstance(cfg, dict) else "any_home"

@@ -1002,8 +1002,8 @@
         "description": "வெளிப்புற · AQI: தேர்வு மூலம், உணரி / சாதனங்கள் · கட்டுப்பாடு.",
         "data": {
           "outside_aqi_entity": "AQI · உணரி",
-          "outside_aqi_scale": "AQI · மூலம்",
-          "outside_aqi_limit": "AQI · இலக்கு",
+          "outside_aqi_scale": "AQI அளவுகோல்",
+          "outside_aqi_limit": "தனிப்பயன் AQI வரம்பு",
           "outside_aqi_no_sources": "AQI · உணரி · தேவை"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "தொடர்புடைய சன்னல் உணரி"
+      },
+      "home_aqi_scale": {
+        "name": "AQI அளவுகோல்",
+        "state": {
+          "auto": "தானியங்கி (வழங்குநர்)",
+          "not_configured": "தெரியவில்லை - ஒப்பீடு இல்லை",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "தனிப்பயன் அளவுகோல்"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "மூலம் · செல்லாதது",
+        "auto": "தானியங்கி (வழங்குநர்)",
+        "not_configured": "தெரியவில்லை - ஒப்பீடு இல்லை",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "இலக்கு · அமைப்புகள்"
+        "custom": "தனிப்பயன் அளவுகோல்"
       }
     },
     "away_window_delivery": {

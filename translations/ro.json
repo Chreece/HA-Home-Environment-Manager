@@ -1002,8 +1002,8 @@
         "description": "Exterior · AQI: Selectați sursă, senzor / Dispozitive · control.",
         "data": {
           "outside_aqi_entity": "AQI · senzor",
-          "outside_aqi_scale": "AQI · sursă",
-          "outside_aqi_limit": "AQI · țintă",
+          "outside_aqi_scale": "Scală AQI",
+          "outside_aqi_limit": "Limită AQI personalizată",
           "outside_aqi_no_sources": "AQI · senzor · Obligatoriu"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Contact de fereastră asociat"
+      },
+      "home_aqi_scale": {
+        "name": "Scală AQI",
+        "state": {
+          "auto": "Automat (furnizor)",
+          "not_configured": "Necunoscută - fără comparație",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Scală personalizată"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "sursă · Invalid",
+        "auto": "Automat (furnizor)",
+        "not_configured": "Necunoscută - fără comparație",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "țintă · setări"
+        "custom": "Scală personalizată"
       }
     },
     "away_window_delivery": {

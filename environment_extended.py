@@ -269,9 +269,9 @@ def global_pollen(hass: Any, profile: dict, max_age: float) -> tuple[dict, set[s
     return result, set(entities)
 
 
-def global_aqi(reading: Any, profile: dict) -> dict:
-    selectors = profile.get("aqi_scales", {})
-    entry = selectors.get(reading.entity_id, {}) if isinstance(selectors, dict) else {}
-    scale = entry.get("scale") if isinstance(entry, dict) else entry
-    limit = entry.get("custom_limit") if isinstance(entry, dict) else None
-    return aqi_category(reading.value, scale, custom_limit=limit)
+def global_aqi(reading: Any, profile: dict, *, hass: Any = None) -> dict:
+    from .aqi_sources import resolve_scale
+    evidence = resolve_scale(hass, profile, reading.entity_id)
+    result = aqi_category(reading.value, evidence["scale"],
+                          custom_limit=evidence.get("custom_limit"))
+    return {**result, "scale_source": evidence["scale_source"]}

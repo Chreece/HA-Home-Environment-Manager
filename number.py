@@ -281,6 +281,10 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
     for spec in equipment.specs(manager):
         numbers.extend(_equipment_numbers(manager, spec, registry))
     async_add_grouped_entities(entry.runtime_data, async_add_entities, numbers)
+    from .aqi_sources import register_late_sources
+    register_late_sources(manager, entry, async_add_entities, numbers,
+        lambda source: ConfigNumber(manager, entry.entry_id, None, "aqi_limit",
+            "custom_limit", (0.0, 10000.0, 1.0, None), entity_id=source))
 
     # Home Assistant restores physical devices asynchronously. If its source
     # state arrives *after* this platform setup, register newly supported room
@@ -400,6 +404,8 @@ class ConfigNumber(NumberEntity):
             )
         if entity_id:
             self._attr_name = f"{entity_id} · {key.replace('_', ' ')}"
+            if kind == "aqi_limit":
+                self._attr_has_entity_name = False
         else:
             self._attr_translation_key = (
                 f"{kind}_{key}" if area_id is None else
@@ -426,6 +432,13 @@ class ConfigNumber(NumberEntity):
         self._attr_native_max_value = bounds[1]
         self._attr_native_step = bounds[2]
         self._attr_native_unit_of_measurement = bounds[3]
+
+    @property
+    def name(self):
+        if self._kind == "aqi_limit":
+            from .aqi_sources import control_name
+            return control_name(self._manager, self._entity_id, "limit")
+        return super().name
 
     def _sync_room_limit_bounds(self) -> bool:
         """Update the exposed edit range when the actual native state returns."""

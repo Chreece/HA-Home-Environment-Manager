@@ -1002,8 +1002,8 @@
         "description": "Ulko · AQI: Valitse lähde, anturi / Laitteet · ohjaus.",
         "data": {
           "outside_aqi_entity": "AQI · anturi",
-          "outside_aqi_scale": "AQI · lähde",
-          "outside_aqi_limit": "AQI · tavoite",
+          "outside_aqi_scale": "AQI-asteikko",
+          "outside_aqi_limit": "Mukautettu AQI-raja",
           "outside_aqi_no_sources": "AQI · anturi · Vaaditaan"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Liitetty ikkunakosketin"
+      },
+      "home_aqi_scale": {
+        "name": "AQI-asteikko",
+        "state": {
+          "auto": "Automaattinen (palveluntarjoaja)",
+          "not_configured": "Tuntematon - ei vertailua",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Mukautettu asteikko"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "lähde · Virheellinen",
+        "auto": "Automaattinen (palveluntarjoaja)",
+        "not_configured": "Tuntematon - ei vertailua",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "tavoite · asetukset"
+        "custom": "Mukautettu asteikko"
       }
     },
     "away_window_delivery": {

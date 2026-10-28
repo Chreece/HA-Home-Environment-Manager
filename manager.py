@@ -249,7 +249,7 @@ class AirQualityManager:
         for ent in sorted(selected_outdoor):
             item = reading(self.hass, ent, max_age, outdoor=True)
             if item.metric == "aqi" and item.value is not None:
-                aqi = global_aqi(item, environment_global)
+                aqi = global_aqi(item, environment_global, hass=self.hass)
                 item = Reading(item.entity_id, item.name, item.metric, item.value,
                                {"aqi": aqi})
             normalized_outdoor.append(item)

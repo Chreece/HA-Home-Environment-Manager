@@ -1002,8 +1002,8 @@
         "description": "بیرون · AQI: انتخاب منبع, حسگر / دستگاه‌ها · کنترل.",
         "data": {
           "outside_aqi_entity": "AQI · حسگر",
-          "outside_aqi_scale": "AQI · منبع",
-          "outside_aqi_limit": "AQI · هدف",
+          "outside_aqi_scale": "مقیاس AQI",
+          "outside_aqi_limit": "حد سفارشی AQI",
           "outside_aqi_no_sources": "AQI · حسگر · الزامی"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "حسگر پنجره مرتبط"
+      },
+      "home_aqi_scale": {
+        "name": "مقیاس AQI",
+        "state": {
+          "auto": "خودکار (ارائه‌دهنده)",
+          "not_configured": "نامشخص - بدون مقایسه",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "مقیاس سفارشی"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "منبع · نامعتبر",
+        "auto": "خودکار (ارائه‌دهنده)",
+        "not_configured": "نامشخص - بدون مقایسه",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "هدف · تنظیمات"
+        "custom": "مقیاس سفارشی"
       }
     },
     "away_window_delivery": {

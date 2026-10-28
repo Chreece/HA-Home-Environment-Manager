@@ -1002,8 +1002,8 @@
         "description": "Dış · AQI: Seç kaynak, sensör / Cihazlar · kontrol.",
         "data": {
           "outside_aqi_entity": "AQI · sensör",
-          "outside_aqi_scale": "AQI · kaynak",
-          "outside_aqi_limit": "AQI · hedef",
+          "outside_aqi_scale": "AQI ölçeği",
+          "outside_aqi_limit": "Özel AQI sınırı",
           "outside_aqi_no_sources": "AQI · sensör · Gerekli"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "İlişkili pencere sensörü"
+      },
+      "home_aqi_scale": {
+        "name": "AQI ölçeği",
+        "state": {
+          "auto": "Otomatik (sağlayıcı)",
+          "not_configured": "Bilinmiyor - karşılaştırma yok",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Özel ölçek"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "kaynak · Geçersiz",
+        "auto": "Otomatik (sağlayıcı)",
+        "not_configured": "Bilinmiyor - karşılaştırma yok",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "hedef · ayarlar"
+        "custom": "Özel ölçek"
       }
     },
     "away_window_delivery": {

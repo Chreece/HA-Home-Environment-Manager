@@ -1002,8 +1002,8 @@
         "description": "باہر · AQI: منتخب کریں ماخذ, سینسر / آلات · کنٹرول.",
         "data": {
           "outside_aqi_entity": "AQI · سینسر",
-          "outside_aqi_scale": "AQI · ماخذ",
-          "outside_aqi_limit": "AQI · ہدف",
+          "outside_aqi_scale": "AQI پیمانہ",
+          "outside_aqi_limit": "حسب ضرورت AQI حد",
           "outside_aqi_no_sources": "AQI · سینسر · ضروری"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "متعلقہ کھڑکی کا سینسر"
+      },
+      "home_aqi_scale": {
+        "name": "AQI پیمانہ",
+        "state": {
+          "auto": "خودکار (فراہم کنندہ)",
+          "not_configured": "نامعلوم - موازنہ نہیں",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "حسب ضرورت پیمانہ"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "ماخذ · غلط",
+        "auto": "خودکار (فراہم کنندہ)",
+        "not_configured": "نامعلوم - موازنہ نہیں",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "ہدف · ترتیبات"
+        "custom": "حسب ضرورت پیمانہ"
       }
     },
     "away_window_delivery": {

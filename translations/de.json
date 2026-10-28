@@ -1002,8 +1002,8 @@
         "description": "Jedem AQI-Sensor seine dokumentierte Skala zuordnen. Unbekannte Skalen beweisen keine sichere Außenluft.",
         "data": {
           "outside_aqi_entity": "AQI · Sensor",
-          "outside_aqi_scale": "AQI · Quelle",
-          "outside_aqi_limit": "AQI · Sollwert",
+          "outside_aqi_scale": "AQI-Skala",
+          "outside_aqi_limit": "Benutzerdefinierter AQI-Grenzwert",
           "outside_aqi_no_sources": "AQI · Sensor · Erforderlich"
         },
         "data_description": {
@@ -2195,6 +2195,16 @@
       },
       "equipment_power_switch_entity": {
         "name": "Strom · Vorgeschalteter Netzschalter"
+      },
+      "home_aqi_scale": {
+        "name": "AQI-Skala",
+        "state": {
+          "auto": "Automatisch (Anbieter)",
+          "not_configured": "Unbekannt - kein Vergleich",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Benutzerdefinierte Skala"
+        }
       }
     },
     "time": {
@@ -2357,10 +2367,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "Quelle · Ungültig",
+        "auto": "Automatisch (Anbieter)",
+        "not_configured": "Unbekannt - kein Vergleich",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "Sollwert · Einstellungen"
+        "custom": "Benutzerdefinierte Skala"
       }
     },
     "away_window_delivery": {

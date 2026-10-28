@@ -1002,8 +1002,8 @@
         "description": "Extérieur · AQI: Choisir source, capteur / Appareils · contrôle.",
         "data": {
           "outside_aqi_entity": "AQI · capteur",
-          "outside_aqi_scale": "AQI · Extérieur",
-          "outside_aqi_limit": "AQI · consigne",
+          "outside_aqi_scale": "Échelle AQI",
+          "outside_aqi_limit": "Seuil AQI personnalisé",
           "outside_aqi_no_sources": "AQI · capteur · Obligatoire"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Contact de fenêtre associé"
+      },
+      "home_aqi_scale": {
+        "name": "Échelle AQI",
+        "state": {
+          "auto": "Automatique (fournisseur)",
+          "not_configured": "Inconnue - sans comparaison",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Échelle personnalisée"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "source · Invalide",
+        "auto": "Automatique (fournisseur)",
+        "not_configured": "Inconnue - sans comparaison",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "consigne · paramètres"
+        "custom": "Échelle personnalisée"
       }
     },
     "away_window_delivery": {

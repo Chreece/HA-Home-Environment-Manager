@@ -1002,8 +1002,8 @@
         "description": "Buiten · AQI: Kiezen bron, sensor / Apparaten · regeling.",
         "data": {
           "outside_aqi_entity": "AQI · bron · Buiten",
-          "outside_aqi_scale": "AQI · bron",
-          "outside_aqi_limit": "AQI · doelwaarde",
+          "outside_aqi_scale": "AQI-schaal",
+          "outside_aqi_limit": "Aangepaste AQI-grens",
           "outside_aqi_no_sources": "AQI · sensor · Vereist"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Gekoppeld raamcontact"
+      },
+      "home_aqi_scale": {
+        "name": "AQI-schaal",
+        "state": {
+          "auto": "Automatisch (aanbieder)",
+          "not_configured": "Onbekend - geen vergelijking",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Aangepaste schaal"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "bron · Ongeldig",
+        "auto": "Automatisch (aanbieder)",
+        "not_configured": "Onbekend - geen vergelijking",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "doelwaarde · instellingen"
+        "custom": "Aangepaste schaal"
       }
     },
     "away_window_delivery": {

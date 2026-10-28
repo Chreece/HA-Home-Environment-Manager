@@ -176,23 +176,13 @@ AREA_ENV_FLAGS = ("sleep_room", "enable_pmv")
 GLOBAL_ENV_FLAGS = ("pollen_avoid_ventilation",)
 
 
-AQI_SCALES = ("not_configured", "us_epa", "eea_category", "custom")
+from .aqi_sources import AQI_SCALES
 
 
 def configured_aqi_entities(manager: Any) -> tuple[str, ...]:
-    """Only selected outdoor AQI sources, not arbitrary sensor entities."""
-    configured = manager.settings.get("outdoor_sensors", [])
-    if not isinstance(configured, list):
-        return ()
-    result = []
-    for entity in configured:
-        state = manager.hass.states.get(entity) if isinstance(entity, str) else None
-        if not isinstance(entity, str) or not entity.startswith("sensor.") or state is None:
-            continue
-        if (str(state.attributes.get("device_class", "")).casefold() == "aqi"
-                or entity.endswith(("_aqi", "_air_quality_index"))):
-            result.append(entity)
-    return tuple(dict.fromkeys(result))
+    """Selected AQI inventory is independent of provider startup ordering."""
+    from .aqi_sources import configured_sources
+    return configured_sources(manager.hass, manager.settings)
 
 
 def _finite(value: Any, bounds: tuple) -> float:
@@ -573,7 +563,7 @@ async def update_device_setting(manager: Any, kind: str, key: str,
             if kind == "aqi_scale":
                 if key != "scale" or value not in AQI_SCALES:
                     raise HomeAssistantError("Invalid AQI classification")
-                if value == "not_configured":
+                if value == "auto":
                     scales.pop(entity_id, None)
                 else:
                     source_cfg["scale"] = value

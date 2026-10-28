@@ -1002,8 +1002,8 @@
         "description": "Bên ngoài · AQI: Chọn nguồn, cảm biến / Thiết bị · điều khiển.",
         "data": {
           "outside_aqi_entity": "AQI · cảm biến",
-          "outside_aqi_scale": "AQI · nguồn",
-          "outside_aqi_limit": "AQI · mục tiêu",
+          "outside_aqi_scale": "Thang AQI",
+          "outside_aqi_limit": "Ngưỡng AQI tùy chỉnh",
           "outside_aqi_no_sources": "AQI · cảm biến · Bắt buộc"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Cảm biến cửa sổ được liên kết"
+      },
+      "home_aqi_scale": {
+        "name": "Thang AQI",
+        "state": {
+          "auto": "Tự động (nhà cung cấp)",
+          "not_configured": "Chưa rõ - không so sánh",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Thang tùy chỉnh"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "nguồn · Không hợp lệ",
+        "auto": "Tự động (nhà cung cấp)",
+        "not_configured": "Chưa rõ - không so sánh",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "mục tiêu · cài đặt"
+        "custom": "Thang tùy chỉnh"
       }
     },
     "away_window_delivery": {

@@ -1002,8 +1002,8 @@
         "description": "Δήλωσε την πραγματική κλίμακα κάθε εξωτερικού αισθητήρα AQI. Άγνωστη κλίμακα δεν θεωρείται ασφαλής.",
         "data": {
           "outside_aqi_entity": "AQI · αισθητήρας",
-          "outside_aqi_scale": "AQI · πηγή",
-          "outside_aqi_limit": "AQI · στόχος",
+          "outside_aqi_scale": "Κλίμακα AQI",
+          "outside_aqi_limit": "Προσαρμοσμένο όριο AQI",
           "outside_aqi_no_sources": "AQI · αισθητήρας · Απαιτείται"
         },
         "data_description": {
@@ -2195,6 +2195,16 @@
       },
       "equipment_power_switch_entity": {
         "name": "Ισχύς · Εξωτερικός διακόπτης τροφοδοσίας"
+      },
+      "home_aqi_scale": {
+        "name": "Κλίμακα AQI",
+        "state": {
+          "auto": "Αυτόματα (πάροχος)",
+          "not_configured": "Άγνωστη - χωρίς σύγκριση",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Προσαρμοσμένη κλίμακα"
+        }
       }
     },
     "time": {
@@ -2357,10 +2367,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "πηγή · Μη έγκυρο",
+        "auto": "Αυτόματα (πάροχος)",
+        "not_configured": "Άγνωστη - χωρίς σύγκριση",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "στόχος · ρυθμίσεις"
+        "custom": "Προσαρμοσμένη κλίμακα"
       }
     },
     "away_window_delivery": {

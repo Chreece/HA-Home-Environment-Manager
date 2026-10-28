@@ -1002,8 +1002,8 @@
         "description": "室外 · AQI: 選擇 來源, 感測器 / 裝置 · 控制.",
         "data": {
           "outside_aqi_entity": "AQI · 感測器",
-          "outside_aqi_scale": "AQI · 來源",
-          "outside_aqi_limit": "AQI · 目標",
+          "outside_aqi_scale": "AQI尺度",
+          "outside_aqi_limit": "自訂AQI門檻",
           "outside_aqi_no_sources": "AQI · 感測器 · 必填"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "關聯的窗戶感測器"
+      },
+      "home_aqi_scale": {
+        "name": "AQI尺度",
+        "state": {
+          "auto": "自動（提供者）",
+          "not_configured": "未知 - 不比較",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "自訂尺度"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "來源 · 無效",
+        "auto": "自動（提供者）",
+        "not_configured": "未知 - 不比較",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "目標 · 設定"
+        "custom": "自訂尺度"
       }
     },
     "away_window_delivery": {

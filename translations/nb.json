@@ -1002,8 +1002,8 @@
         "description": "Utendørs · AQI: Velg kilde, sensor / Enheter · styring.",
         "data": {
           "outside_aqi_entity": "AQI · kilde · Utendørs",
-          "outside_aqi_scale": "AQI · kilde",
-          "outside_aqi_limit": "AQI · mål",
+          "outside_aqi_scale": "AQI-skala",
+          "outside_aqi_limit": "Egendefinert AQI-grense",
           "outside_aqi_no_sources": "AQI · sensor · Påkrevd"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Tilknyttet vinduskontakt"
+      },
+      "home_aqi_scale": {
+        "name": "AQI-skala",
+        "state": {
+          "auto": "Automatisk (leverandør)",
+          "not_configured": "Ukjent - ingen sammenligning",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Egendefinert skala"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "kilde · Ugyldig",
+        "auto": "Automatisk (leverandør)",
+        "not_configured": "Ukjent - ingen sammenligning",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "mål · innstillinger"
+        "custom": "Egendefinert skala"
       }
     },
     "away_window_delivery": {

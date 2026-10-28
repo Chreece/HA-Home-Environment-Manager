@@ -191,7 +191,7 @@ class CompactOptionsMixin:
     async def async_step_outside_data(self, user_input=None):
         return self.async_show_menu(
             step_id="outside_data",
-            menu_options=["weather", "outdoor", "pollen"],
+            menu_options=["weather", "outdoor", "outside_aqi", "pollen"],
         )
 
     async def async_step_area_settings(self, user_input=None):
@@ -426,15 +426,8 @@ class CompactOptionsMixin:
         current = dict(current) if isinstance(current, dict) else {}
         saved = current.get("aqi_scales", {})
         saved = dict(saved) if isinstance(saved, dict) else {}
-        selected = self._values.get(CONF_OUTDOOR, [])
-        selected = selected if isinstance(selected, list) else []
-        aqis = [
-            e for e in selected if isinstance(e, str) and e.startswith("sensor.")
-            and (st := self.hass.states.get(e)) is not None and (
-                str(st.attributes.get("device_class", "")).casefold() == "aqi"
-                or e.endswith(("_aqi", "_air_quality_index"))
-            )
-        ]
+        from .aqi_sources import configured_sources, source_name, scale_selection
+        aqis = list(configured_sources(self.hass, self._values))
         errors = {}
         shown = getattr(self, "_outside_aqi_selected", aqis[0] if aqis else "none")
         chosen = (user_input or {}).get("outside_aqi_entity") or shown
@@ -447,7 +440,7 @@ class CompactOptionsMixin:
         details = saved.get(chosen, {})
         details = details if isinstance(details, dict) else {}
         if user_input is not None:
-            scale = user_input.get("outside_aqi_scale", details.get("scale", "not_configured"))
+            scale = user_input.get("outside_aqi_scale", scale_selection(current, chosen))
             try:
                 limit = float(user_input.get("outside_aqi_limit", details.get("custom_limit", 100)))
             except (ValueError, TypeError, OverflowError):
@@ -455,12 +448,12 @@ class CompactOptionsMixin:
             if not aqis:
                 return await self._finish()
             if chosen not in aqis or scale not in (
-                "not_configured", "us_epa", "eea_category", "custom"
+                "auto", "not_configured", "us_epa", "eea_category", "custom"
             ) or (scale=="custom" and (not math.isfinite(limit) or
                                        not 0 <= limit <= 10000)):
                 errors["base"] = "invalid_environment_scale"
             else:
-                if scale == "not_configured":
+                if scale == "auto":
                     saved.pop(chosen, None)
                 else:
                     saved[chosen] = {"scale": scale, **(
@@ -470,8 +463,8 @@ class CompactOptionsMixin:
         fields = {}
         if aqis:
             fields[_field("outside_aqi_entity", chosen, required=True)] = _select([
-                {"value":e,"label":e} for e in aqis])
-            fields[_field("outside_aqi_scale", details.get("scale","not_configured"))] = _select([
+                {"value":e,"label":source_name(self.hass, e)} for e in aqis])
+            fields[_field("outside_aqi_scale", scale_selection(current, chosen))] = _select([
                 "not_configured","us_epa","eea_category","custom"],
                 translation_key="outside_aqi_scale")
             fields[_field("outside_aqi_limit",details.get("custom_limit",100))] = _number(0,10000)

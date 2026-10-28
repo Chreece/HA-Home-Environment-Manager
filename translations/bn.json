@@ -1002,8 +1002,8 @@
         "description": "বাইরের · AQI: নির্বাচন উৎস, সেন্সর / ডিভাইস · নিয়ন্ত্রণ.",
         "data": {
           "outside_aqi_entity": "AQI · সেন্সর",
-          "outside_aqi_scale": "AQI · উৎস",
-          "outside_aqi_limit": "AQI · লক্ষ্য",
+          "outside_aqi_scale": "AQI স্কেল",
+          "outside_aqi_limit": "কাস্টম AQI সীমা",
           "outside_aqi_no_sources": "AQI · সেন্সর · আবশ্যক"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "সংযুক্ত জানালার সেন্সর"
+      },
+      "home_aqi_scale": {
+        "name": "AQI স্কেল",
+        "state": {
+          "auto": "স্বয়ংক্রিয় (প্রদানকারী)",
+          "not_configured": "অজানা - তুলনা নয়",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "কাস্টম স্কেল"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "উৎস · অবৈধ",
+        "auto": "স্বয়ংক্রিয় (প্রদানকারী)",
+        "not_configured": "অজানা - তুলনা নয়",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "লক্ষ্য · সেটিংস"
+        "custom": "কাস্টম স্কেল"
       }
     },
     "away_window_delivery": {

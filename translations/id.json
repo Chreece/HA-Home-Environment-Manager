@@ -1002,8 +1002,8 @@
         "description": "Luar · AQI: Pilih sumber, sensor / Perangkat · kendali.",
         "data": {
           "outside_aqi_entity": "AQI · sumber · Luar",
-          "outside_aqi_scale": "AQI · sumber",
-          "outside_aqi_limit": "AQI · Luar · target",
+          "outside_aqi_scale": "Skala AQI",
+          "outside_aqi_limit": "Batas AQI khusus",
           "outside_aqi_no_sources": "AQI · sensor · Wajib"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Sensor jendela terkait"
+      },
+      "home_aqi_scale": {
+        "name": "Skala AQI",
+        "state": {
+          "auto": "Otomatis (penyedia)",
+          "not_configured": "Tidak diketahui - tanpa perbandingan",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Skala khusus"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "sumber · Tidak valid",
+        "auto": "Otomatis (penyedia)",
+        "not_configured": "Tidak diketahui - tanpa perbandingan",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "target · pengaturan"
+        "custom": "Skala khusus"
       }
     },
     "away_window_delivery": {

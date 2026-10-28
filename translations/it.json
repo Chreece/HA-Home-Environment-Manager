@@ -1002,8 +1002,8 @@
         "description": "Esterno · AQI: Seleziona fonte, sensore / Dispositivi · controllo.",
         "data": {
           "outside_aqi_entity": "AQI · sensore",
-          "outside_aqi_scale": "AQI · fonte",
-          "outside_aqi_limit": "AQI · obiettivo",
+          "outside_aqi_scale": "Scala AQI",
+          "outside_aqi_limit": "Limite AQI personalizzato",
           "outside_aqi_no_sources": "AQI · sensore · Richiesto"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Contatto finestra associato"
+      },
+      "home_aqi_scale": {
+        "name": "Scala AQI",
+        "state": {
+          "auto": "Automatica (fornitore)",
+          "not_configured": "Sconosciuta - nessun confronto",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Scala personalizzata"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "fonte · Non valido",
+        "auto": "Automatica (fornitore)",
+        "not_configured": "Sconosciuta - nessun confronto",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "obiettivo · impostazioni"
+        "custom": "Scala personalizzata"
       }
     },
     "away_window_delivery": {

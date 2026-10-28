@@ -1002,8 +1002,8 @@
         "description": "室外 · AQI: 选择 来源, 传感器 / 设备 · 控制.",
         "data": {
           "outside_aqi_entity": "AQI · 传感器",
-          "outside_aqi_scale": "AQI · 来源",
-          "outside_aqi_limit": "AQI · 目标",
+          "outside_aqi_scale": "AQI尺度",
+          "outside_aqi_limit": "自定义AQI阈值",
           "outside_aqi_no_sources": "AQI · 传感器 · 必填"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "关联的窗户传感器"
+      },
+      "home_aqi_scale": {
+        "name": "AQI尺度",
+        "state": {
+          "auto": "自动（提供方）",
+          "not_configured": "未知 - 不比较",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "自定义尺度"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "来源 · 无效",
+        "auto": "自动（提供方）",
+        "not_configured": "未知 - 不比较",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "目标 · 设置"
+        "custom": "自定义尺度"
       }
     },
     "away_window_delivery": {

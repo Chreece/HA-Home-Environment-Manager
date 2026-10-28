@@ -1002,8 +1002,8 @@
         "description": "Venkovní · AQI: Vybrat zdroj, senzor / Zařízení · řízení.",
         "data": {
           "outside_aqi_entity": "AQI · senzor",
-          "outside_aqi_scale": "AQI · zdroj",
-          "outside_aqi_limit": "AQI · cíl",
+          "outside_aqi_scale": "Stupnice AQI",
+          "outside_aqi_limit": "Vlastní limit AQI",
           "outside_aqi_no_sources": "AQI · senzor · Povinné"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Přiřazený okenní kontakt"
+      },
+      "home_aqi_scale": {
+        "name": "Stupnice AQI",
+        "state": {
+          "auto": "Automaticky (poskytovatel)",
+          "not_configured": "Neznámá - bez porovnání",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Vlastní stupnice"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "zdroj · Neplatné",
+        "auto": "Automaticky (poskytovatel)",
+        "not_configured": "Neznámá - bez porovnání",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "cíl · nastavení"
+        "custom": "Vlastní stupnice"
       }
     },
     "away_window_delivery": {

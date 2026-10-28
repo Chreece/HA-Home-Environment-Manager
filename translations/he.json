@@ -1002,8 +1002,8 @@
         "description": "חוץ · AQI: בחר מקור, חיישן / התקנים · בקרה.",
         "data": {
           "outside_aqi_entity": "AQI · חיישן",
-          "outside_aqi_scale": "AQI · מקור",
-          "outside_aqi_limit": "AQI · יעד",
+          "outside_aqi_scale": "סולם AQI",
+          "outside_aqi_limit": "סף AQI מותאם",
           "outside_aqi_no_sources": "AQI · חיישן · נדרש"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "חיישן חלון משויך"
+      },
+      "home_aqi_scale": {
+        "name": "סולם AQI",
+        "state": {
+          "auto": "אוטומטי (ספק)",
+          "not_configured": "לא ידוע - ללא השוואה",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "סולם מותאם"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "מקור · לא תקין",
+        "auto": "אוטומטי (ספק)",
+        "not_configured": "לא ידוע - ללא השוואה",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "יעד · הגדרות"
+        "custom": "סולם מותאם"
       }
     },
     "away_window_delivery": {

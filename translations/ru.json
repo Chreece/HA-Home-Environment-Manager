@@ -1002,8 +1002,8 @@
         "description": "Снаружи · AQI: Выбрать источник, датчик / Устройства · управление.",
         "data": {
           "outside_aqi_entity": "AQI · датчик",
-          "outside_aqi_scale": "AQI · источник",
-          "outside_aqi_limit": "AQI · цель",
+          "outside_aqi_scale": "Шкала AQI",
+          "outside_aqi_limit": "Пользовательский порог AQI",
           "outside_aqi_no_sources": "AQI · датчик · Обязательно"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Связанный датчик окна"
+      },
+      "home_aqi_scale": {
+        "name": "Шкала AQI",
+        "state": {
+          "auto": "Автоматически (поставщик)",
+          "not_configured": "Неизвестна - без сравнения",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Пользовательская шкала"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "источник · Ошибка",
+        "auto": "Автоматически (поставщик)",
+        "not_configured": "Неизвестна - без сравнения",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "цель · настройки"
+        "custom": "Пользовательская шкала"
       }
     },
     "away_window_delivery": {

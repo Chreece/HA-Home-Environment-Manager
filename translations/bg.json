@@ -1002,8 +1002,8 @@
         "description": "Външни · AQI: Избор източник, сензор / Устройства · управление.",
         "data": {
           "outside_aqi_entity": "AQI · сензор",
-          "outside_aqi_scale": "AQI · източник",
-          "outside_aqi_limit": "AQI · цел",
+          "outside_aqi_scale": "Скала AQI",
+          "outside_aqi_limit": "Персонализиран праг AQI",
           "outside_aqi_no_sources": "AQI · сензор · Задължително"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Свързан сензор за прозорец"
+      },
+      "home_aqi_scale": {
+        "name": "Скала AQI",
+        "state": {
+          "auto": "Автоматично (доставчик)",
+          "not_configured": "Неизвестна - без сравнение",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Персонализирана скала"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "източник · Невалидно",
+        "auto": "Автоматично (доставчик)",
+        "not_configured": "Неизвестна - без сравнение",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "цел · настройки"
+        "custom": "Персонализирана скала"
       }
     },
     "away_window_delivery": {

@@ -1002,8 +1002,8 @@
         "description": "Utomhus · AQI: Välj källa, sensor / Enheter · styrning.",
         "data": {
           "outside_aqi_entity": "AQI · källa · Utomhus",
-          "outside_aqi_scale": "AQI · källa",
-          "outside_aqi_limit": "AQI · mål",
+          "outside_aqi_scale": "AQI-skala",
+          "outside_aqi_limit": "Anpassad AQI-gräns",
           "outside_aqi_no_sources": "AQI · sensor · Krävs"
         },
         "data_description": {
@@ -2181,6 +2181,16 @@
       },
       "shade_window_entity": {
         "name": "Kopplad fönsterkontakt"
+      },
+      "home_aqi_scale": {
+        "name": "AQI-skala",
+        "state": {
+          "auto": "Automatisk (leverantör)",
+          "not_configured": "Okänd - ingen jämförelse",
+          "us_epa": "US EPA AQI (0-500)",
+          "eea_category": "EEA AQI (1-6)",
+          "custom": "Anpassad skala"
+        }
       }
     },
     "time": {
@@ -2343,10 +2353,11 @@
     },
     "outside_aqi_scale": {
       "options": {
-        "not_configured": "källa · Ogiltig",
+        "auto": "Automatisk (leverantör)",
+        "not_configured": "Okänd - ingen jämförelse",
         "us_epa": "US EPA AQI (0-500)",
         "eea_category": "EEA AQI (1-6)",
-        "custom": "mål · inställningar"
+        "custom": "Anpassad skala"
       }
     },
     "away_window_delivery": {
