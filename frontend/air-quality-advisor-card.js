@@ -2495,11 +2495,13 @@
     const observedRh=a.measurements?.humidity ?? a.current_humidity;
     if (numeric(observedRh)) add(this._t('humidity'),value(observedRh,'%'));
     if (numeric(a.humidity)) add(this._t('humidity')+' · '+t.target,value(a.humidity,'%'));
-    const observedTemp=a.measurements?.temperature ?? a.current_temperature;
-    if (numeric(observedTemp)) add(MOLD_DETAIL_LABELS[this._language()]?.[5] || t.physical,value(observedTemp,' °C'));
-    if (numeric(a.temperature)) add(t.target,value(a.temperature,' °C'));
+    const nativeUnit=a.temperature_unit || '°C';
+    const hasMeasuredTemp=numeric(a.measurements?.temperature);
+    const observedTemp=hasMeasuredTemp?a.measurements.temperature:a.current_temperature;
+    if (numeric(observedTemp)) add(MOLD_DETAIL_LABELS[this._language()]?.[5] || t.physical,value(observedTemp,' '+(hasMeasuredTemp?'°C':nativeUnit)));
+    if (numeric(a.temperature)) add(t.target,value(a.temperature,' '+nativeUnit));
     if (numeric(a.target_temp_low) && numeric(a.target_temp_high))
-      add(t.target,this._format(a.target_temp_low)+' - '+this._format(a.target_temp_high)+' °C');
+      add(t.target,this._format(a.target_temp_low)+' - '+this._format(a.target_temp_high)+' '+nativeUnit);
     add(t.demand,value(d.demand_percent ?? c.demand_percent,'%'));
     const supplyId=d.upstream_power_switch || a.upstream_power_switch;
     if (supplyId) {
