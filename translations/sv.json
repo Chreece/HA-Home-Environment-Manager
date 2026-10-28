@@ -1309,7 +1309,7 @@
           "awaiting_evaluation": "Waiting for the first controller evaluation",
           "awaiting_open_confirmation": "Waiting for shade to confirm it has opened",
           "awaiting_physical_acknowledgement": "Waiting for physical device to confirm its state",
-          "away": "Away",
+          "away": "Borta",
           "below_horizon": "Below horizon",
           "both_dry_and_fan_only_required": "Both dry and fan only required",
           "climate_device_wrong_area": "Selected thermostat belongs to another room",
@@ -1390,7 +1390,7 @@
           "foreign_equipment_owner": "Foreign equipment owner",
           "hold": "Control paused until safety conditions are verified",
           "holding": "Maintaining the current safe output",
-          "home": "Home",
+          "home": "Hem",
           "humidifier_service_missing": "Humidifier service missing",
           "humidity_intent_changed": "Humidity intent changed",
           "humidity_measurement_stale_or_invalid": "Humidity measurement is unavailable or invalid",
@@ -1677,7 +1677,21 @@
           "room_not_absent": "Someone is in the room; absence-only control is held",
           "room_not_occupied": "Room is empty; occupancy-only control is held",
           "room_occupancy_unknown": "Room occupancy cannot be confirmed",
-          "sleep_room_control_paused": "Control is paused because this room is sleeping"
+          "sleep_room_control_paused": "Control is paused because this room is sleeping",
+          "idle": "Viloläge",
+          "selected_mean": "Medelvärde för valda sensorer",
+          "selected_sensor": "Medelvärde för valda sensorer",
+          "selected_partial_mean": "Medelvärde för tillgängliga sensorer",
+          "selected_partial_sensor": "Medelvärde för tillgängliga sensorer",
+          "room_selected_mean": "Medelvärde för valda sensorer",
+          "complete_measured_stage_capacities_required": "Ange giltiga mätningar för varje steg",
+          "ready_to_apply_when_physical_off": "Klar",
+          "not_configured": "Inte konfigurerad",
+          "environment_only_no_hvac": "Rumsöversikt. Varje enhet nedan har en egen regulator.",
+          "environment_only_no_primary_hvac": "Rumsöversikt. Varje enhet nedan har en egen regulator.",
+          "sleep": "Sömn",
+          "comfort": "Komfort",
+          "eco": "Energisparläge"
         }
       }
     },
@@ -1920,46 +1934,46 @@
         "name": "PID · {channel}(s)"
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Process gain (PV per full output)"
+        "name": "PID · {channel}Processförstärkning"
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Response time constant"
+        "name": "PID · {channel}Tidskonstant"
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Response dead time"
+        "name": "PID · {channel}Dödtid"
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC response Lambda"
+        "name": "PID · {channel}IMC λ"
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Measured fan stage 1 · Measured delivered capacity (%)"
+        "name": "PID · {channel}Relativ kapacitet 1 (%)"
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Measured fan stage 2 · Measured delivered capacity (%)"
+        "name": "PID · {channel}Relativ kapacitet 2 (%)"
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Measured fan stage 3 · Measured delivered capacity (%)"
+        "name": "PID · {channel}Relativ kapacitet 3 (%)"
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Measured fan stage 4 · Measured delivered capacity (%)"
+        "name": "PID · {channel}Relativ kapacitet 4 (%)"
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Measured fan speed 1 (%)"
+        "name": "PID · {channel}Fläkthastighet 1 (%)"
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Measured delivered capacity 1 (%)"
+        "name": "PID · {channel}Relativ kapacitet 1 (%)"
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Measured fan speed 2 (%)"
+        "name": "PID · {channel}Fläkthastighet 2 (%)"
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Measured delivered capacity 2 (%)"
+        "name": "PID · {channel}Relativ kapacitet 2 (%)"
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Measured fan speed 3 (%)"
+        "name": "PID · {channel}Fläkthastighet 3 (%)"
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Measured delivered capacity 3 (%)"
+        "name": "PID · {channel}Relativ kapacitet 3 (%)"
       },
       "equipment_cycle_seconds": {
         "name": "PID · {channel}inställningar · källa (s) · PWM PERIOD"
@@ -2111,28 +2125,28 @@
         "name": "Tyst · {channel}Inbyggt tyst fläktläge"
       },
       "equipment_pid_calibration_method": {
-        "name": "PID · {channel}calibration method",
+        "name": "PID · {channel}Kalibrering",
         "state": {
-          "manual": "Manual Kp/Ki/Kd",
-          "imc_lambda": "IMC / Lambda (measured response)",
-          "cohen_coon": "Cohen-Coon (measured response)"
+          "manual": "Manuell Kp/Ki/Kd",
+          "imc_lambda": "IMC / λ",
+          "cohen_coon": "Cohen-Coon"
         }
       },
       "equipment_pid_fan_capacity_mode": {
-        "name": "PID · {channel}fan capacity strategy",
+        "name": "PID · {channel}Relativ kapacitet",
         "state": {
-          "legacy": "Original PID allocation",
-          "measured": "Measured capacity compensation"
+          "legacy": "Ursprunglig (okalibrerad)",
+          "measured": "Modell för uppmätt kapacitet"
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
-        "name": "PID · {channel}Calibrate for HVAC mode",
+        "name": "PID · {channel}Välj läge",
         "state": {
-          "choose": "Choose direction",
-          "heat": "Heating",
-          "cool": "Cooling",
-          "dry": "Drying",
-          "fan_only": "Fan only"
+          "choose": "Välj läge",
+          "heat": "Uppvärmning",
+          "cool": "Kylning",
+          "dry": "Avfuktning",
+          "fan_only": "Fläkt"
         }
       },
       "equipment_presence_requirement": {
@@ -2185,15 +2199,27 @@
         "name": "Styrning · {channel}Kontrollera och återuppta"
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Apply verified calibration"
+        "name": "PID · {channel}Tillämpa · Kalibrering"
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Apply measured fan capacity"
+        "name": "PID · {channel}Tillämpa · Kalibrering"
       }
     },
     "climate": {
       "equipment_climate": {
-        "name": "Klimat · {channel}"
+        "name": "Klimat · {channel}",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "none": "Automatisk",
+              "home": "Hem",
+              "sleep": "Sömn",
+              "away": "Borta",
+              "comfort": "Komfort",
+              "eco": "Energisparläge"
+            }
+          }
+        }
       }
     }
   },

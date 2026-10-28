@@ -74,8 +74,9 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
         for item in room.readings
     ]
     high = [item for item in readings if item["exceeded"]]
-    known = any(item["available"] for item in readings)
-    incomplete_air = any(not item["available"] for item in readings)
+    air_readings = [item for item in readings if item["metric"] != "illuminance"]
+    known = any(item["available"] for item in air_readings)
+    incomplete_air = any(not item["available"] for item in air_readings)
     opened = [item for item in room.windows if item.opened is True]
     incomplete_windows = not room.windows or any(item.opened is None for item in room.windows)
     recommended = next((rec for rec in plan.recommendations if rec.area_id == room.area_id), None)
@@ -209,7 +210,9 @@ def dashboard_snapshot(plan: Plan, limits: dict[str, float]) -> dict[str, Any]:
                 for item in plan.outdoor_readings
             ],
             "weather": [_weather(item) for item in plan.weather],
-            "warnings": [_warning(item) for item in plan.warnings],
+            "warnings": [_warning(item) for item in plan.warnings if item.active is not None],
+            "ignored_warning_entities": [item.entity_id for item in plan.warnings
+                                         if item.active is None],
             "blockers": [_reason(reason) for reason in plan.outside_reasons],
             "unavailable_sensors": list(plan.unavailable_outdoor),
         },

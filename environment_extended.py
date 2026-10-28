@@ -165,7 +165,9 @@ def room_science(hass: Any, area_id: str, profile: dict, samples: list[dict],
     sound = laeq_db_a(samples, now, DAY_S) if calibrated_noise and profile.get("noise_entity") else {
         "status": "sensor_calibration_required" if profile.get("noise_entity") else "not_configured"}
     night_sound = nighttime_laeq(samples, now, getattr(getattr(hass,"config",None),"time_zone",None) or "UTC") if calibrated_noise and profile.get("noise_entity") and profile.get("sleep_room") else {"status":"not_configured"}
-    light = daylight_exposure(samples, now) if profile.get("illuminance_entity") else {"status": "not_configured"}
+    light = daylight_exposure(samples, now) if (
+        profile.get("illuminance_entity") or profile.get("_selected_illuminance")
+    ) else {"status": "not_configured"}
     mel = [s.get("melanopic_edi") for s in samples[-1:] if isinstance(s.get("melanopic_edi"), (float,int))]
     if mel and profile.get("melanopic_spectral_verified"):
         light["melanopic_edi_lux"] = round(mel[0],1)

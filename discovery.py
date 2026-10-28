@@ -101,6 +101,8 @@ def _normalize(metric: str, value: float, unit: str | None) -> float | None:
         return value if u in ("", "aqi", "index") else None
     if metric == "humidity":
         return value if u in ("", "%") else None
+    if metric == "illuminance":
+        return value if u in ("lx", "lux") else None
     if metric == "co2":
         return value if u in ("ppm",) else None
     if metric in ("pm25", "pm10", "voc", "no2", "o3", "so2"):
@@ -116,6 +118,10 @@ def _normalize(metric: str, value: float, unit: str | None) -> float | None:
 
 def supported_metric(hass: HomeAssistant, state: State, *, outdoor: bool) -> str | None:
     """Expose only supported numeric units, and never list indoor humidity outside."""
+    unit = str(state.attributes.get("unit_of_measurement", "")).strip().casefold()
+    if (not outdoor and state.entity_id.startswith("sensor.")
+            and unit in ("lx", "lux")):
+        return "illuminance"  # Informational only, never an air-quality limit.
     metric = _metric(hass, state)
     if metric not in (SUPPORTED_AIR_METRICS if outdoor else INDOOR_METRICS):
         return None
@@ -192,6 +198,8 @@ def reading(hass: HomeAssistant, entity_id: str, max_age_minutes: float, *, outd
         normalized = None
     if metric == "humidity" and normalized is not None and not 0 < normalized <= 100:
         normalized = None
+    if metric == "illuminance" and normalized is not None and not 0 <= normalized <= 300000:
+        normalized = None
     return Reading(entity_id, name, metric, normalized)
 
 
@@ -205,10 +213,10 @@ def warning(hass: HomeAssistant, entity_id: str, max_age_minutes: float) -> Warn
     state = hass.states.get(entity_id)
     # Some warning sensors publish only on transitions: an unchanged 'off'
     # state is not stale simply because it has no periodic measurements.
-    # HA's unknown/unavailable signals still fail closed.
-    if state is None or state.state in ("unknown", "unavailable", "none", ""):
+    # An unavailable warning source is ignored, not treated as an alert.
+    lowered = str(state.state).strip().casefold() if state is not None else ""
+    if lowered in ("unknown", "unavailable", "none", "null", ""):
         return Warning(entity_id, state.name if state else entity_id, None)
-    lowered = str(state.state).strip().casefold()
     if state.domain == "binary_sensor":
         result = True if lowered == "on" else False if lowered == "off" else None
     elif lowered in INACTIVE_ALERT_STATES:
@@ -403,8 +411,13 @@ def rooms(
         for group in ("air_quality", "humidity"):
             for entity in selected(scoped, area, group) or ():
                 if entity not in seen:
-                    by_area_readings[area].append(Reading(entity, entity,
-                        "humidity" if group == "humidity" else "unknown", None))
+                    registered = er.async_get(hass).async_get(entity)
+                    sensor_class = (getattr(registered, "device_class", None)
+                                    or getattr(registered, "original_device_class", None))
+                    missing_metric = ("humidity" if group == "humidity" else
+                                      "illuminance" if sensor_class == "illuminance"
+                                      else "unknown")
+                    by_area_readings[area].append(Reading(entity, entity, missing_metric, None))
 
     return tuple(
         Room(

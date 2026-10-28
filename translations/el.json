@@ -1309,7 +1309,7 @@
           "awaiting_evaluation": "Αναμονή πρώτου ελέγχου λειτουργίας",
           "awaiting_open_confirmation": "Αναμονή επιβεβαίωσης ότι το ρολό άνοιξε",
           "awaiting_physical_acknowledgement": "Αναμονή επιβεβαίωσης κατάστασης συσκευής",
-          "away": "Away",
+          "away": "Απών",
           "below_horizon": "Below horizon",
           "both_dry_and_fan_only_required": "Both dry and fan only required",
           "climate_device_wrong_area": "Ο θερμοστάτης ανήκει σε άλλο δωμάτιο",
@@ -1390,7 +1390,7 @@
           "foreign_equipment_owner": "Foreign equipment owner",
           "hold": "Αναμονή επιβεβαίωσης των συνθηκών ασφαλείας",
           "holding": "Διατήρηση της υπάρχουσας ασφαλούς εξόδου",
-          "home": "Home",
+          "home": "Σπίτι",
           "humidifier_service_missing": "Humidifier service missing",
           "humidity_intent_changed": "Humidity intent changed",
           "humidity_measurement_stale_or_invalid": "Η μέτρηση υγρασίας είναι παλιά ή μη έγκυρη",
@@ -1677,7 +1677,21 @@
           "room_not_absent": "Υπάρχει παρουσία στο δωμάτιο· αναμονή ελέγχου απουσίας",
           "room_not_occupied": "Το δωμάτιο είναι άδειο· αναμονή επιβεβαιωμένης παρουσίας",
           "room_occupancy_unknown": "Δεν μπορεί να επιβεβαιωθεί η παρουσία στο δωμάτιο",
-          "sleep_room_control_paused": "Ο έλεγχος τέθηκε σε παύση λόγω λειτουργίας ύπνου"
+          "sleep_room_control_paused": "Ο έλεγχος τέθηκε σε παύση λόγω λειτουργίας ύπνου",
+          "idle": "Αδράνεια",
+          "selected_mean": "Μέσος όρος επιλεγμένων αισθητήρων",
+          "selected_sensor": "Μέσος όρος επιλεγμένων αισθητήρων",
+          "selected_partial_mean": "Μέσος όρος διαθέσιμων αισθητήρων",
+          "selected_partial_sensor": "Μέσος όρος διαθέσιμων αισθητήρων",
+          "room_selected_mean": "Μέσος όρος επιλεγμένων αισθητήρων",
+          "complete_measured_stage_capacities_required": "Συμπλήρωσε έγκυρες μετρήσεις για κάθε βαθμίδα",
+          "ready_to_apply_when_physical_off": "Έτοιμο",
+          "not_configured": "Δεν έχει ρυθμιστεί",
+          "environment_only_no_hvac": "Σύνοψη δωματίου. Κάθε συσκευή παρακάτω έχει ανεξάρτητο ελεγκτή.",
+          "environment_only_no_primary_hvac": "Σύνοψη δωματίου. Κάθε συσκευή παρακάτω έχει ανεξάρτητο ελεγκτή.",
+          "sleep": "Ύπνος",
+          "comfort": "Άνεση",
+          "eco": "Εξοικονόμηση"
         }
       }
     },
@@ -1920,46 +1934,46 @@
         "name": "PID · {channel}Διάστημα δειγματοληψίας (δευτ.)"
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Κέρδος διεργασίας (μεταβολή μέτρησης / 100% εξόδου)"
+        "name": "PID · {channel}Κέρδος διεργασίας"
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Χρονική σταθερά απόκρισης"
+        "name": "PID · {channel}Χρονική σταθερά"
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Νεκρός χρόνος απόκρισης"
+        "name": "PID · {channel}Νεκρός χρόνος"
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}Λάμδα επιθυμητής απόκρισης"
+        "name": "PID · {channel}IMC λ"
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Μετρημένη βαθμίδα ανεμιστήρα 1 · Μετρημένη σχετική απόδοση (%)"
+        "name": "PID · {channel}Σχετική απόδοση 1 (%)"
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Μετρημένη βαθμίδα ανεμιστήρα 2 · Μετρημένη σχετική απόδοση (%)"
+        "name": "PID · {channel}Σχετική απόδοση 2 (%)"
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Μετρημένη βαθμίδα ανεμιστήρα 3 · Μετρημένη σχετική απόδοση (%)"
+        "name": "PID · {channel}Σχετική απόδοση 3 (%)"
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Μετρημένη βαθμίδα ανεμιστήρα 4 · Μετρημένη σχετική απόδοση (%)"
+        "name": "PID · {channel}Σχετική απόδοση 4 (%)"
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Μετρημένη ταχύτητα ανεμιστήρα 1 (%)"
+        "name": "PID · {channel}Ταχύτητα ανεμιστήρα 1 (%)"
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Μετρημένη σχετική απόδοση 1 (%)"
+        "name": "PID · {channel}Σχετική απόδοση 1 (%)"
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Μετρημένη ταχύτητα ανεμιστήρα 2 (%)"
+        "name": "PID · {channel}Ταχύτητα ανεμιστήρα 2 (%)"
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Μετρημένη σχετική απόδοση 2 (%)"
+        "name": "PID · {channel}Σχετική απόδοση 2 (%)"
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Μετρημένη ταχύτητα ανεμιστήρα 3 (%)"
+        "name": "PID · {channel}Ταχύτητα ανεμιστήρα 3 (%)"
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Μετρημένη σχετική απόδοση 3 (%)"
+        "name": "PID · {channel}Σχετική απόδοση 3 (%)"
       },
       "equipment_cycle_seconds": {
         "name": "PID · {channel}Περίοδος κύκλου PWM (δευτερόλεπτα)"
@@ -2122,22 +2136,22 @@
         "name": "Αθόρυβο · {channel}Λειτουργία ανεμιστήρα"
       },
       "equipment_pid_calibration_method": {
-        "name": "PID · {channel}Μέθοδος βαθμονόμησης",
+        "name": "PID · {channel}Βαθμονόμηση",
         "state": {
           "manual": "Χειροκίνητα Kp/Ki/Kd",
-          "imc_lambda": "IMC / Λάμδα (μετρημένη απόκριση)",
-          "cohen_coon": "Cohen-Coon (μετρημένη απόκριση)"
+          "imc_lambda": "IMC / λ",
+          "cohen_coon": "Cohen-Coon"
         }
       },
       "equipment_pid_fan_capacity_mode": {
-        "name": "PID · {channel}Στρατηγική ισχύος ανεμιστήρα",
+        "name": "PID · {channel}Σχετική απόδοση",
         "state": {
-          "legacy": "Αρχική κατανομή PID",
-          "measured": "Αντιστάθμιση μετρημένης απόδοσης"
+          "legacy": "Αρχική κατανομή (χωρίς βαθμονόμηση)",
+          "measured": "Μοντέλο μετρημένης απόδοσης"
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
-        "name": "PID · {channel}Βαθμονόμηση για λειτουργία HVAC",
+        "name": "PID · {channel}Επιλογή λειτουργίας",
         "state": {
           "choose": "Επιλογή λειτουργίας",
           "heat": "Θέρμανση",
@@ -2199,10 +2213,10 @@
         "name": "Έλεγχος · {channel}Επαλήθευση και συνέχιση"
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Εφαρμογή βαθμονόμησης"
+        "name": "PID · {channel}Εφαρμογή · Βαθμονόμηση"
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Εφαρμογή μετρημένης απόδοσης"
+        "name": "PID · {channel}Εφαρμογή · Βαθμονόμηση"
       }
     },
     "climate": {
@@ -2211,11 +2225,11 @@
         "state_attributes": {
           "preset_mode": {
             "state": {
-              "none": "Αυτόματο",
-              "comfort": "Άνεση",
+              "none": "Αυτόματος",
               "home": "Σπίτι",
-              "away": "Απών",
               "sleep": "Ύπνος",
+              "away": "Απών",
+              "comfort": "Άνεση",
               "eco": "Εξοικονόμηση"
             }
           }

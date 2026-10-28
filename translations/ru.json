@@ -1309,7 +1309,7 @@
           "awaiting_evaluation": "Waiting for the first controller evaluation",
           "awaiting_open_confirmation": "Waiting for shade to confirm it has opened",
           "awaiting_physical_acknowledgement": "Waiting for physical device to confirm its state",
-          "away": "Away",
+          "away": "Вне дома",
           "below_horizon": "Below horizon",
           "both_dry_and_fan_only_required": "Both dry and fan only required",
           "climate_device_wrong_area": "Selected thermostat belongs to another room",
@@ -1390,7 +1390,7 @@
           "foreign_equipment_owner": "Foreign equipment owner",
           "hold": "Control paused until safety conditions are verified",
           "holding": "Maintaining the current safe output",
-          "home": "Home",
+          "home": "Дом",
           "humidifier_service_missing": "Humidifier service missing",
           "humidity_intent_changed": "Humidity intent changed",
           "humidity_measurement_stale_or_invalid": "Humidity measurement is unavailable or invalid",
@@ -1677,7 +1677,21 @@
           "room_not_absent": "Someone is in the room; absence-only control is held",
           "room_not_occupied": "Room is empty; occupancy-only control is held",
           "room_occupancy_unknown": "Room occupancy cannot be confirmed",
-          "sleep_room_control_paused": "Control is paused because this room is sleeping"
+          "sleep_room_control_paused": "Control is paused because this room is sleeping",
+          "idle": "Ожидание",
+          "selected_mean": "Среднее выбранных датчиков",
+          "selected_sensor": "Среднее выбранных датчиков",
+          "selected_partial_mean": "Среднее доступных датчиков",
+          "selected_partial_sensor": "Среднее доступных датчиков",
+          "room_selected_mean": "Среднее выбранных датчиков",
+          "complete_measured_stage_capacities_required": "Введите корректные измерения для каждой ступени",
+          "ready_to_apply_when_physical_off": "Готово",
+          "not_configured": "Не настроено",
+          "environment_only_no_hvac": "Сводка по комнате. У каждого устройства ниже свой контроллер.",
+          "environment_only_no_primary_hvac": "Сводка по комнате. У каждого устройства ниже свой контроллер.",
+          "sleep": "Сон",
+          "comfort": "Комфорт",
+          "eco": "Энергосбережение"
         }
       }
     },
@@ -1920,46 +1934,46 @@
         "name": "PID · {channel}(s)"
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Process gain (PV per full output)"
+        "name": "PID · {channel}Коэффициент усиления процесса"
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Response time constant"
+        "name": "PID · {channel}Постоянная времени"
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Response dead time"
+        "name": "PID · {channel}Время задержки"
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC response Lambda"
+        "name": "PID · {channel}IMC λ"
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Measured fan stage 1 · Measured delivered capacity (%)"
+        "name": "PID · {channel}Относительная мощность 1 (%)"
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Measured fan stage 2 · Measured delivered capacity (%)"
+        "name": "PID · {channel}Относительная мощность 2 (%)"
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Measured fan stage 3 · Measured delivered capacity (%)"
+        "name": "PID · {channel}Относительная мощность 3 (%)"
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Measured fan stage 4 · Measured delivered capacity (%)"
+        "name": "PID · {channel}Относительная мощность 4 (%)"
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Measured fan speed 1 (%)"
+        "name": "PID · {channel}Скорость вентилятора 1 (%)"
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Measured delivered capacity 1 (%)"
+        "name": "PID · {channel}Относительная мощность 1 (%)"
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Measured fan speed 2 (%)"
+        "name": "PID · {channel}Скорость вентилятора 2 (%)"
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Measured delivered capacity 2 (%)"
+        "name": "PID · {channel}Относительная мощность 2 (%)"
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Measured fan speed 3 (%)"
+        "name": "PID · {channel}Скорость вентилятора 3 (%)"
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Measured delivered capacity 3 (%)"
+        "name": "PID · {channel}Относительная мощность 3 (%)"
       },
       "equipment_cycle_seconds": {
         "name": "PID · {channel}настройки · источник (s) · PWM PERIOD"
@@ -2111,28 +2125,28 @@
         "name": "Тихий режим · {channel}Встроенная тихая скорость"
       },
       "equipment_pid_calibration_method": {
-        "name": "PID · {channel}calibration method",
+        "name": "PID · {channel}Калибровка",
         "state": {
-          "manual": "Manual Kp/Ki/Kd",
-          "imc_lambda": "IMC / Lambda (measured response)",
-          "cohen_coon": "Cohen-Coon (measured response)"
+          "manual": "Вручную Kp/Ki/Kd",
+          "imc_lambda": "IMC / λ",
+          "cohen_coon": "Cohen-Coon"
         }
       },
       "equipment_pid_fan_capacity_mode": {
-        "name": "PID · {channel}fan capacity strategy",
+        "name": "PID · {channel}Относительная мощность",
         "state": {
-          "legacy": "Original PID allocation",
-          "measured": "Measured capacity compensation"
+          "legacy": "Исходное (без калибровки)",
+          "measured": "Модель измеренной мощности"
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
-        "name": "PID · {channel}Calibrate for HVAC mode",
+        "name": "PID · {channel}Выбрать режим",
         "state": {
-          "choose": "Choose direction",
-          "heat": "Heating",
-          "cool": "Cooling",
-          "dry": "Drying",
-          "fan_only": "Fan only"
+          "choose": "Выбрать режим",
+          "heat": "Нагрев",
+          "cool": "Охлаждение",
+          "dry": "Осушение",
+          "fan_only": "Вентилятор"
         }
       },
       "equipment_presence_requirement": {
@@ -2185,15 +2199,27 @@
         "name": "Управление · {channel}Проверить и возобновить"
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Apply verified calibration"
+        "name": "PID · {channel}Применить · Калибровка"
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Apply measured fan capacity"
+        "name": "PID · {channel}Применить · Калибровка"
       }
     },
     "climate": {
       "equipment_climate": {
-        "name": "Климат · {channel}"
+        "name": "Климат · {channel}",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "none": "Автоматическое",
+              "home": "Дом",
+              "sleep": "Сон",
+              "away": "Вне дома",
+              "comfort": "Комфорт",
+              "eco": "Энергосбережение"
+            }
+          }
+        }
       }
     }
   },

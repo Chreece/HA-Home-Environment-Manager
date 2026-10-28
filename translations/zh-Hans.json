@@ -1309,7 +1309,7 @@
           "awaiting_evaluation": "Waiting for the first controller evaluation",
           "awaiting_open_confirmation": "Waiting for shade to confirm it has opened",
           "awaiting_physical_acknowledgement": "Waiting for physical device to confirm its state",
-          "away": "Away",
+          "away": "离家",
           "below_horizon": "Below horizon",
           "both_dry_and_fan_only_required": "Both dry and fan only required",
           "climate_device_wrong_area": "Selected thermostat belongs to another room",
@@ -1390,7 +1390,7 @@
           "foreign_equipment_owner": "Foreign equipment owner",
           "hold": "Control paused until safety conditions are verified",
           "holding": "Maintaining the current safe output",
-          "home": "Home",
+          "home": "家中",
           "humidifier_service_missing": "Humidifier service missing",
           "humidity_intent_changed": "Humidity intent changed",
           "humidity_measurement_stale_or_invalid": "Humidity measurement is unavailable or invalid",
@@ -1677,7 +1677,21 @@
           "room_not_absent": "Someone is in the room; absence-only control is held",
           "room_not_occupied": "Room is empty; occupancy-only control is held",
           "room_occupancy_unknown": "Room occupancy cannot be confirmed",
-          "sleep_room_control_paused": "Control is paused because this room is sleeping"
+          "sleep_room_control_paused": "Control is paused because this room is sleeping",
+          "idle": "待机",
+          "selected_mean": "所选传感器的平均值",
+          "selected_sensor": "所选传感器的平均值",
+          "selected_partial_mean": "可用传感器的平均值",
+          "selected_partial_sensor": "可用传感器的平均值",
+          "room_selected_mean": "所选传感器的平均值",
+          "complete_measured_stage_capacities_required": "请为每个档位输入有效测量值",
+          "ready_to_apply_when_physical_off": "就绪",
+          "not_configured": "未配置",
+          "environment_only_no_hvac": "房间概览。下方每台设备都有独立的控制器。",
+          "environment_only_no_primary_hvac": "房间概览。下方每台设备都有独立的控制器。",
+          "sleep": "睡眠",
+          "comfort": "舒适",
+          "eco": "节能"
         }
       }
     },
@@ -1920,46 +1934,46 @@
         "name": "PID · {channel}(s)"
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Process gain (PV per full output)"
+        "name": "PID · {channel}过程增益"
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Response time constant"
+        "name": "PID · {channel}时间常数"
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Response dead time"
+        "name": "PID · {channel}延迟时间"
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC response Lambda"
+        "name": "PID · {channel}IMC λ"
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Measured fan stage 1 · Measured delivered capacity (%)"
+        "name": "PID · {channel}相对能力 1 (%)"
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Measured fan stage 2 · Measured delivered capacity (%)"
+        "name": "PID · {channel}相对能力 2 (%)"
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Measured fan stage 3 · Measured delivered capacity (%)"
+        "name": "PID · {channel}相对能力 3 (%)"
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Measured fan stage 4 · Measured delivered capacity (%)"
+        "name": "PID · {channel}相对能力 4 (%)"
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Measured fan speed 1 (%)"
+        "name": "PID · {channel}风扇速度 1 (%)"
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Measured delivered capacity 1 (%)"
+        "name": "PID · {channel}相对能力 1 (%)"
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Measured fan speed 2 (%)"
+        "name": "PID · {channel}风扇速度 2 (%)"
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Measured delivered capacity 2 (%)"
+        "name": "PID · {channel}相对能力 2 (%)"
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Measured fan speed 3 (%)"
+        "name": "PID · {channel}风扇速度 3 (%)"
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Measured delivered capacity 3 (%)"
+        "name": "PID · {channel}相对能力 3 (%)"
       },
       "equipment_cycle_seconds": {
         "name": "PID · {channel}设置 · 来源 (s) · PWM PERIOD"
@@ -2111,28 +2125,28 @@
         "name": "静音 · {channel}设备原生低噪声风扇模式"
       },
       "equipment_pid_calibration_method": {
-        "name": "PID · {channel}calibration method",
+        "name": "PID · {channel}校准",
         "state": {
-          "manual": "Manual Kp/Ki/Kd",
-          "imc_lambda": "IMC / Lambda (measured response)",
-          "cohen_coon": "Cohen-Coon (measured response)"
+          "manual": "手动 Kp/Ki/Kd",
+          "imc_lambda": "IMC / λ",
+          "cohen_coon": "Cohen-Coon"
         }
       },
       "equipment_pid_fan_capacity_mode": {
-        "name": "PID · {channel}fan capacity strategy",
+        "name": "PID · {channel}相对能力",
         "state": {
-          "legacy": "Original PID allocation",
-          "measured": "Measured capacity compensation"
+          "legacy": "原始分配（未校准）",
+          "measured": "实测能力模型"
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
-        "name": "PID · {channel}Calibrate for HVAC mode",
+        "name": "PID · {channel}选择模式",
         "state": {
-          "choose": "Choose direction",
-          "heat": "Heating",
-          "cool": "Cooling",
-          "dry": "Drying",
-          "fan_only": "Fan only"
+          "choose": "选择模式",
+          "heat": "制热",
+          "cool": "制冷",
+          "dry": "除湿",
+          "fan_only": "风扇"
         }
       },
       "equipment_presence_requirement": {
@@ -2185,15 +2199,27 @@
         "name": "控制 · {channel}核实并恢复"
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Apply verified calibration"
+        "name": "PID · {channel}应用 · 校准"
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Apply measured fan capacity"
+        "name": "PID · {channel}应用 · 校准"
       }
     },
     "climate": {
       "equipment_climate": {
-        "name": "空调 · {channel}"
+        "name": "空调 · {channel}",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "none": "自动",
+              "home": "家中",
+              "sleep": "睡眠",
+              "away": "离家",
+              "comfort": "舒适",
+              "eco": "节能"
+            }
+          }
+        }
       }
     }
   },

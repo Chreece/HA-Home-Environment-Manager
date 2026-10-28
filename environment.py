@@ -136,6 +136,19 @@ def build_environment(
         optional_data, optional_sources, _optional_tracked = extend_room_inputs(
             hass, room.area_id, profile, max_age=max_age_minutes,
         )
+        light_sources = [r for r in room.readings if r.metric == "illuminance"]
+        if light_sources and not profile.get("illuminance_entity"):
+            # This transient report flag never changes persisted selections or
+            # gives an actuator any new permission. Missing light is not zero.
+            profile = {**profile, "_selected_illuminance": True}
+            light_value = _single_value(light_sources, "illuminance")
+            if light_value is not None:
+                optional_data["lux"] = light_value
+            optional_sources["illuminance_entities"] = {
+                "entities": [r.entity_id for r in light_sources],
+                "valid_count": sum(r.value is not None for r in light_sources),
+                "status": "selected_mean" if light_value is not None else "unavailable",
+            }
         indoor_rh = _single_value(room.readings, "humidity")
         pm25 = _single_value(room.readings, "pm25")
         pm10 = _single_value(room.readings, "pm10")

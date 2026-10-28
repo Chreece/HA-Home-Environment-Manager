@@ -1309,7 +1309,7 @@
           "awaiting_evaluation": "Waiting for the first controller evaluation",
           "awaiting_open_confirmation": "Waiting for shade to confirm it has opened",
           "awaiting_physical_acknowledgement": "Waiting for physical device to confirm its state",
-          "away": "Away",
+          "away": "خارج المنزل",
           "below_horizon": "Below horizon",
           "both_dry_and_fan_only_required": "Both dry and fan only required",
           "climate_device_wrong_area": "Selected thermostat belongs to another room",
@@ -1390,7 +1390,7 @@
           "foreign_equipment_owner": "Foreign equipment owner",
           "hold": "Control paused until safety conditions are verified",
           "holding": "Maintaining the current safe output",
-          "home": "Home",
+          "home": "المنزل",
           "humidifier_service_missing": "Humidifier service missing",
           "humidity_intent_changed": "Humidity intent changed",
           "humidity_measurement_stale_or_invalid": "Humidity measurement is unavailable or invalid",
@@ -1677,7 +1677,21 @@
           "room_not_absent": "Someone is in the room; absence-only control is held",
           "room_not_occupied": "Room is empty; occupancy-only control is held",
           "room_occupancy_unknown": "Room occupancy cannot be confirmed",
-          "sleep_room_control_paused": "Control is paused because this room is sleeping"
+          "sleep_room_control_paused": "Control is paused because this room is sleeping",
+          "idle": "خامل",
+          "selected_mean": "متوسط المستشعرات المختارة",
+          "selected_sensor": "متوسط المستشعرات المختارة",
+          "selected_partial_mean": "متوسط المستشعرات المتاحة",
+          "selected_partial_sensor": "متوسط المستشعرات المتاحة",
+          "room_selected_mean": "متوسط المستشعرات المختارة",
+          "complete_measured_stage_capacities_required": "أدخل قياسات صحيحة لكل مستوى",
+          "ready_to_apply_when_physical_off": "جاهز",
+          "not_configured": "غير مهيأ",
+          "environment_only_no_hvac": "ملخص الغرفة. لكل جهاز أدناه وحدة تحكم مستقلة.",
+          "environment_only_no_primary_hvac": "ملخص الغرفة. لكل جهاز أدناه وحدة تحكم مستقلة.",
+          "sleep": "النوم",
+          "comfort": "راحة",
+          "eco": "توفير الطاقة"
         }
       }
     },
@@ -1920,46 +1934,46 @@
         "name": "PID · {channel}(s)"
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Process gain (PV per full output)"
+        "name": "PID · {channel}كسب العملية"
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Response time constant"
+        "name": "PID · {channel}الثابت الزمني"
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Response dead time"
+        "name": "PID · {channel}زمن التأخير"
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC response Lambda"
+        "name": "PID · {channel}IMC λ"
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Measured fan stage 1 · Measured delivered capacity (%)"
+        "name": "PID · {channel}القدرة النسبية 1 (%)"
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Measured fan stage 2 · Measured delivered capacity (%)"
+        "name": "PID · {channel}القدرة النسبية 2 (%)"
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Measured fan stage 3 · Measured delivered capacity (%)"
+        "name": "PID · {channel}القدرة النسبية 3 (%)"
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Measured fan stage 4 · Measured delivered capacity (%)"
+        "name": "PID · {channel}القدرة النسبية 4 (%)"
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Measured fan speed 1 (%)"
+        "name": "PID · {channel}سرعة المروحة 1 (%)"
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Measured delivered capacity 1 (%)"
+        "name": "PID · {channel}القدرة النسبية 1 (%)"
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Measured fan speed 2 (%)"
+        "name": "PID · {channel}سرعة المروحة 2 (%)"
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Measured delivered capacity 2 (%)"
+        "name": "PID · {channel}القدرة النسبية 2 (%)"
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Measured fan speed 3 (%)"
+        "name": "PID · {channel}سرعة المروحة 3 (%)"
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Measured delivered capacity 3 (%)"
+        "name": "PID · {channel}القدرة النسبية 3 (%)"
       },
       "equipment_cycle_seconds": {
         "name": "PID · {channel}الإعدادات · المصدر (s) · PWM PERIOD"
@@ -2111,28 +2125,28 @@
         "name": "الهدوء · {channel}وضع المروحة الهادئ الأصلي"
       },
       "equipment_pid_calibration_method": {
-        "name": "PID · {channel}calibration method",
+        "name": "PID · {channel}المعايرة",
         "state": {
-          "manual": "Manual Kp/Ki/Kd",
-          "imc_lambda": "IMC / Lambda (measured response)",
-          "cohen_coon": "Cohen-Coon (measured response)"
+          "manual": "يدوي Kp/Ki/Kd",
+          "imc_lambda": "IMC / λ",
+          "cohen_coon": "Cohen-Coon"
         }
       },
       "equipment_pid_fan_capacity_mode": {
-        "name": "PID · {channel}fan capacity strategy",
+        "name": "PID · {channel}القدرة النسبية",
         "state": {
-          "legacy": "Original PID allocation",
-          "measured": "Measured capacity compensation"
+          "legacy": "الأصلي (غير معاير)",
+          "measured": "نموذج القدرة المقاسة"
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
-        "name": "PID · {channel}Calibrate for HVAC mode",
+        "name": "PID · {channel}اختر الوضع",
         "state": {
-          "choose": "Choose direction",
-          "heat": "Heating",
-          "cool": "Cooling",
-          "dry": "Drying",
-          "fan_only": "Fan only"
+          "choose": "اختر الوضع",
+          "heat": "تدفئة",
+          "cool": "تبريد",
+          "dry": "إزالة الرطوبة",
+          "fan_only": "مروحة"
         }
       },
       "equipment_presence_requirement": {
@@ -2185,15 +2199,27 @@
         "name": "التحكم · {channel}تحقق واستأنف"
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Apply verified calibration"
+        "name": "PID · {channel}تطبيق · المعايرة"
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Apply measured fan capacity"
+        "name": "PID · {channel}تطبيق · المعايرة"
       }
     },
     "climate": {
       "equipment_climate": {
-        "name": "المناخ · {channel}"
+        "name": "المناخ · {channel}",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "none": "تلقائي",
+              "home": "المنزل",
+              "sleep": "النوم",
+              "away": "خارج المنزل",
+              "comfort": "راحة",
+              "eco": "توفير الطاقة"
+            }
+          }
+        }
       }
     }
   },

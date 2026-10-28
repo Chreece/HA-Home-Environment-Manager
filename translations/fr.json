@@ -1309,7 +1309,7 @@
           "awaiting_evaluation": "Waiting for the first controller evaluation",
           "awaiting_open_confirmation": "Waiting for shade to confirm it has opened",
           "awaiting_physical_acknowledgement": "Waiting for physical device to confirm its state",
-          "away": "Away",
+          "away": "Absent",
           "below_horizon": "Below horizon",
           "both_dry_and_fan_only_required": "Both dry and fan only required",
           "climate_device_wrong_area": "Selected thermostat belongs to another room",
@@ -1390,7 +1390,7 @@
           "foreign_equipment_owner": "Foreign equipment owner",
           "hold": "Control paused until safety conditions are verified",
           "holding": "Maintaining the current safe output",
-          "home": "Home",
+          "home": "Maison",
           "humidifier_service_missing": "Humidifier service missing",
           "humidity_intent_changed": "Humidity intent changed",
           "humidity_measurement_stale_or_invalid": "Humidity measurement is unavailable or invalid",
@@ -1677,7 +1677,21 @@
           "room_not_absent": "Someone is in the room; absence-only control is held",
           "room_not_occupied": "Room is empty; occupancy-only control is held",
           "room_occupancy_unknown": "Room occupancy cannot be confirmed",
-          "sleep_room_control_paused": "Control is paused because this room is sleeping"
+          "sleep_room_control_paused": "Control is paused because this room is sleeping",
+          "idle": "Au repos",
+          "selected_mean": "Moyenne des capteurs sélectionnés",
+          "selected_sensor": "Moyenne des capteurs sélectionnés",
+          "selected_partial_mean": "Moyenne des capteurs disponibles",
+          "selected_partial_sensor": "Moyenne des capteurs disponibles",
+          "room_selected_mean": "Moyenne des capteurs sélectionnés",
+          "complete_measured_stage_capacities_required": "Saisissez des mesures valides pour chaque niveau",
+          "ready_to_apply_when_physical_off": "Prêt",
+          "not_configured": "Non configuré",
+          "environment_only_no_hvac": "Résumé de la pièce. Chaque appareil ci-dessous possède son propre régulateur.",
+          "environment_only_no_primary_hvac": "Résumé de la pièce. Chaque appareil ci-dessous possède son propre régulateur.",
+          "sleep": "Sommeil",
+          "comfort": "Confort",
+          "eco": "Économie d’énergie"
         }
       }
     },
@@ -1920,7 +1934,7 @@
         "name": "PID · {channel}(s)"
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Gain du procédé (mesure / sortie totale)"
+        "name": "PID · {channel}Gain du procédé"
       },
       "equipment_pid_time_constant_minutes": {
         "name": "PID · {channel}Constante de temps"
@@ -1929,37 +1943,37 @@
         "name": "PID · {channel}Temps mort"
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}Lambda de réponse"
+        "name": "PID · {channel}IMC λ"
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Niveau de ventilation mesuré 1 · Capacité relative mesurée (%)"
+        "name": "PID · {channel}Capacité relative 1 (%)"
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Niveau de ventilation mesuré 2 · Capacité relative mesurée (%)"
+        "name": "PID · {channel}Capacité relative 2 (%)"
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Niveau de ventilation mesuré 3 · Capacité relative mesurée (%)"
+        "name": "PID · {channel}Capacité relative 3 (%)"
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Niveau de ventilation mesuré 4 · Capacité relative mesurée (%)"
+        "name": "PID · {channel}Capacité relative 4 (%)"
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Vitesse mesurée 1 (%)"
+        "name": "PID · {channel}Vitesse du ventilateur 1 (%)"
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Capacité relative mesurée 1 (%)"
+        "name": "PID · {channel}Capacité relative 1 (%)"
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Vitesse mesurée 2 (%)"
+        "name": "PID · {channel}Vitesse du ventilateur 2 (%)"
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Capacité relative mesurée 2 (%)"
+        "name": "PID · {channel}Capacité relative 2 (%)"
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Vitesse mesurée 3 (%)"
+        "name": "PID · {channel}Vitesse du ventilateur 3 (%)"
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Capacité relative mesurée 3 (%)"
+        "name": "PID · {channel}Capacité relative 3 (%)"
       },
       "equipment_cycle_seconds": {
         "name": "PID · {channel}paramètres · source (s) · PWM PERIOD"
@@ -2111,22 +2125,22 @@
         "name": "Silencieux · {channel}Mode du ventilateur"
       },
       "equipment_pid_calibration_method": {
-        "name": "PID · {channel}Méthode de réglage",
+        "name": "PID · {channel}Étalonnage",
         "state": {
-          "manual": "Kp/Ki/Kd manuel",
-          "imc_lambda": "IMC / Lambda (réponse mesurée)",
-          "cohen_coon": "Cohen-Coon (réponse mesurée)"
+          "manual": "Manuel Kp/Ki/Kd",
+          "imc_lambda": "IMC / λ",
+          "cohen_coon": "Cohen-Coon"
         }
       },
       "equipment_pid_fan_capacity_mode": {
-        "name": "PID · {channel}Stratégie de capacité du ventilateur",
+        "name": "PID · {channel}Capacité relative",
         "state": {
-          "legacy": "Allocation PID actuelle",
-          "measured": "Compensation mesurée"
+          "legacy": "Allocation initiale (non étalonnée)",
+          "measured": "Modèle de capacité mesurée"
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
-        "name": "PID · {channel}Mode CVC à étalonner",
+        "name": "PID · {channel}Choisir le mode",
         "state": {
           "choose": "Choisir le mode",
           "heat": "Chauffage",
@@ -2185,15 +2199,27 @@
         "name": "Contrôle · {channel}Vérifier et reprendre"
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Appliquer les gains"
+        "name": "PID · {channel}Appliquer · Étalonnage"
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Appliquer les mesures de capacité"
+        "name": "PID · {channel}Appliquer · Étalonnage"
       }
     },
     "climate": {
       "equipment_climate": {
-        "name": "Climat · {channel}"
+        "name": "Climat · {channel}",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "none": "Automatique",
+              "home": "Maison",
+              "sleep": "Sommeil",
+              "away": "Absent",
+              "comfort": "Confort",
+              "eco": "Économie d’énergie"
+            }
+          }
+        }
       }
     }
   },

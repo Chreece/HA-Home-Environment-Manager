@@ -76,6 +76,7 @@ DEFAULT_THRESHOLDS = {
 }
 
 UNIT_LABEL = {
+    "illuminance": "lx",  # Read-only light context, not a ventilation criterion.
     "mold": "%",
     "aqi": "AQI",
     "co2": "ppm",

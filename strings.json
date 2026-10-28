@@ -1677,7 +1677,21 @@
           "room_not_absent": "Someone is in the room; absence-only control is held",
           "room_not_occupied": "Room is empty; occupancy-only control is held",
           "room_occupancy_unknown": "Room occupancy cannot be confirmed",
-          "sleep_room_control_paused": "Control is paused because this room is sleeping"
+          "sleep_room_control_paused": "Control is paused because this room is sleeping",
+          "idle": "Idle",
+          "selected_mean": "Mean of selected sensors",
+          "selected_sensor": "Mean of selected sensors",
+          "selected_partial_mean": "Mean of available sensors",
+          "selected_partial_sensor": "Mean of available sensors",
+          "room_selected_mean": "Mean of selected sensors",
+          "complete_measured_stage_capacities_required": "Enter valid measurements for every stage",
+          "ready_to_apply_when_physical_off": "Ready",
+          "not_configured": "Not configured",
+          "environment_only_no_hvac": "Room summary only. Each device below has its own controller.",
+          "environment_only_no_primary_hvac": "Room summary only. Each device below has its own controller.",
+          "sleep": "Sleep",
+          "comfort": "Comfort",
+          "eco": "Energy saving"
         }
       }
     },
@@ -1920,46 +1934,46 @@
         "name": "PID · {channel}measurement cycle (seconds)"
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Process gain (PV per full output)"
+        "name": "PID · {channel}Process gain"
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Response time constant"
+        "name": "PID · {channel}Time constant"
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Response dead time"
+        "name": "PID · {channel}Dead time"
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC response Lambda"
+        "name": "PID · {channel}IMC λ"
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Measured fan stage 1 · Measured delivered capacity (%)"
+        "name": "PID · {channel}Relative capacity 1 (%)"
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Measured fan stage 2 · Measured delivered capacity (%)"
+        "name": "PID · {channel}Relative capacity 2 (%)"
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Measured fan stage 3 · Measured delivered capacity (%)"
+        "name": "PID · {channel}Relative capacity 3 (%)"
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Measured fan stage 4 · Measured delivered capacity (%)"
+        "name": "PID · {channel}Relative capacity 4 (%)"
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Measured fan speed 1 (%)"
+        "name": "PID · {channel}Fan speed 1 (%)"
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Measured delivered capacity 1 (%)"
+        "name": "PID · {channel}Relative capacity 1 (%)"
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Measured fan speed 2 (%)"
+        "name": "PID · {channel}Fan speed 2 (%)"
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Measured delivered capacity 2 (%)"
+        "name": "PID · {channel}Relative capacity 2 (%)"
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Measured fan speed 3 (%)"
+        "name": "PID · {channel}Fan speed 3 (%)"
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Measured delivered capacity 3 (%)"
+        "name": "PID · {channel}Relative capacity 3 (%)"
       },
       "equipment_cycle_seconds": {
         "name": "PID · {channel}PWM cycle duration for slow thermal loads (seconds)"
@@ -2119,28 +2133,28 @@
         "name": "Quiet · {channel}Fan mode"
       },
       "equipment_pid_calibration_method": {
-        "name": "PID · {channel}Calibration method",
+        "name": "PID · {channel}Calibration",
         "state": {
           "manual": "Manual Kp/Ki/Kd",
-          "imc_lambda": "IMC / Lambda (measured response)",
-          "cohen_coon": "Cohen-Coon (measured response)"
+          "imc_lambda": "IMC / λ",
+          "cohen_coon": "Cohen-Coon"
         }
       },
       "equipment_pid_fan_capacity_mode": {
-        "name": "PID · {channel}fan capacity strategy",
+        "name": "PID · {channel}Relative capacity",
         "state": {
-          "legacy": "Original PID allocation",
-          "measured": "Measured capacity compensation"
+          "legacy": "Original (uncalibrated)",
+          "measured": "Measured capacity model"
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
-        "name": "PID · {channel}Calibrate for HVAC mode",
+        "name": "PID · {channel}Choose mode",
         "state": {
-          "choose": "Choose direction",
+          "choose": "Choose mode",
           "heat": "Heating",
           "cool": "Cooling",
           "dry": "Drying",
-          "fan_only": "Fan only"
+          "fan_only": "Fan"
         }
       },
       "equipment_presence_requirement": {
@@ -2196,10 +2210,10 @@
         "name": "Control · {channel}Reconcile and resume"
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Apply verified calibration"
+        "name": "PID · {channel}Apply · Calibration"
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Apply measured fan capacity"
+        "name": "PID · {channel}Apply · Calibration"
       }
     },
     "climate": {
@@ -2210,10 +2224,10 @@
             "state": {
               "none": "Automatic",
               "home": "Home",
+              "sleep": "Sleep",
               "away": "Away",
               "comfort": "Comfort",
-              "sleep": "Sleep",
-              "eco": "Eco"
+              "eco": "Energy saving"
             }
           }
         }

@@ -32,7 +32,7 @@ class Weather:
 class Warning:
     entity_id: str
     name: str
-    active: bool | None  # None means unavailable / ambiguous => fail closed.
+    active: bool | None  # None is unavailable/ambiguous and ignored, not an alert.
 
 
 @dataclass(frozen=True)
@@ -244,10 +244,11 @@ def evaluate(
     if outdoor_wind is not None and outdoor_wind > thresholds["max_wind_kmh"]:
         outside.append(Reason("weather_wind", "Average weather wind", f"{_number(outdoor_wind)} km/h"))
 
+    # Warning availability is optional evidence, not a weather hazard.
+    # Keep the unknown source for diagnostics, but never turn it into an
+    # active alert or block unrelated ventilation/climate decisions.
     for warning in warnings:
-        if warning.active is None:
-            outside.append(Reason("unavailable_warning", warning.name))
-        elif warning.active:
+        if warning.active is True:
             outside.append(Reason("active_warning", warning.name))
 
     outdoor_safe = not outside
@@ -318,7 +319,8 @@ def evaluate(
             # mechanical alternative is still visible within the TTS limit.
             position = 1 if indoor_reasons else 0
             indoor_reasons.insert(position, window_reason(option))
-        if not any(reading.value is not None for reading in room.readings) and not indoor_reasons:
+        if not any(reading.value is not None and reading.metric != "illuminance"
+                   for reading in room.readings) and not indoor_reasons:
             diagnostics.append((room.name, "no_indoor_data"))
         elif indoor_reasons and closed and not opened:
             recommendations.append(

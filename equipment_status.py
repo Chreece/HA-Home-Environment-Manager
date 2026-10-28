@@ -86,6 +86,7 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             isinstance(supply_id, str) and supply_id) else None
         return {
             "area_id": self._spec.area_id,
+            "source_entity_ids": list(self._spec.source_entities),
             "status_code": observed.get("status"),
             "status_reason_code": observed.get("reason"),
             "control_method": cfg.get("control_mode", "existing"),
