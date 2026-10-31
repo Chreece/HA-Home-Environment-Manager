@@ -267,6 +267,12 @@ class EquipmentRuntime:
         observed_in_session[key] = current
         if isinstance(old, dict) and old.get("state") == current:
             return
+        # No reason to write the entire durable controller Store merely to
+        # record the first OFF observation or repeat an ON timestamp already
+        # saved under confirmed power ownership. Session evidence above is
+        # enough to recognize a later real OFF->ON transition.
+        if old is None and current == "off":
+            return
         now = self.clock()
         if current == "on":
             owned = record.get("power", {}).get(cap.primary)
@@ -287,6 +293,10 @@ class EquipmentRuntime:
                     since = None
                 since = since if since is not None else now
             snapshots[cap.primary] = {"state": "on", "since": since}
+            if old is None and isinstance(owned, dict):
+                # The already persisted ownership interval IS our durable
+                # evidence; no extra full-store write is needed at startup.
+                return
             if isinstance(owned, dict) and since > owned.get("since", now):
                 # Source OFF->ON transition supersedes any earlier ownership
                 # interval without claiming an uninterrupted run.
