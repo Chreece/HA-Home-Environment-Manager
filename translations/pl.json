@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "Dom · Away · cooldown (min)",
           "away_open_window_alert": "Ostrzegaj o otwartych oknach po wyjściu wszystkich",
           "away_windows_target_people": "Osoby do powiadomienia",
-          "away_windows_delivery_channels": "Kanały powiadomień o oknach"
+          "away_windows_delivery_channels": "Kanały powiadomień o oknach",
+          "general_source_stale_minutes": "źródło · max (min)",
+          "general_home_policy": "Dom · Obecność · sterowanie"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń. · Dom · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Ostrzegaj o otwartych oknach po wyjściu wszystkich. Osoby do powiadomienia (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Zegarek, Tablet.",
           "away_windows_target_people": "Osoby do powiadomienia (person.*) - Announcement Hub: Telefon, Zegarek, Tablet, Inne urządzenie. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanały powiadomień o oknach: Telefon Powiadomienie / Mowa TTS, Zegarek Powiadomienie / Mowa TTS, Tablet Powiadomienie / Mowa TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanały powiadomień o oknach: Telefon Powiadomienie / Mowa TTS, Zegarek Powiadomienie / Mowa TTS, Tablet Powiadomienie / Mowa TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "źródło · Sen / Obecność · max 240 min. Nieprawidłowe · Wyłącz.",
+          "general_home_policy": "Ta opcja steruje „Dom · Obecność · sterowanie”. Polecenia sprzętowe wymagają osobnej zgody i zabezpieczeń."
         }
       },
       "reconfigure": {
         "title": "⚙️ Wybierz",
         "description": "Wybierz: Pomieszczenia / Pogoda i ostrzeżenia / Komunikaty (opcjonalnie) / Zaawansowane progi",
         "menu_options": {
-          "room_occupancy": "Obecność · czujnik",
-          "outside_data": "Zewnętrzne · źródło",
-          "general_settings": "Ogólne · ustawienia",
-          "area_settings": "Obszar · ustawienia",
-          "delivery": "Komunikaty (opcjonalnie)",
-          "thresholds": "Zaawansowane progi",
-          "climate": "ustawienia · Urządzenia",
-          "pid": "ustawienia · PID",
-          "setup_rooms": "Pomieszczenia do monitorowania"
+          "choose_rooms": "Pomieszczenia do monitorowania",
+          "general_settings": "Ogólne · ustawienia"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Pomieszczenia do monitorowania",
+        "description": "Pomieszczenia do monitorowania → źródło → Ogólne ustawienia",
+        "data": {
+          "areas": "Pomieszczenia do monitorowania"
+        },
+        "data_description": {
+          "areas": "Pomieszczenia do monitorowania. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania."
+        }
+      },
+      "room_settings": {
+        "title": "Obszar · ustawienia · {area_name}",
+        "description": "Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+        "data": {
+          "windows": "Okna",
+          "air_quality": "Czujniki jakości powietrza i otoczenia",
+          "temperature": "Temperatura",
+          "humidity": "Wilgotność",
+          "pressure": "Czujniki ciśnienia",
+          "climate_devices": "Urządzenia",
+          "shades": "Rolety, żaluzje i zasłony okienne",
+          "occupancy_sensors": "Obecność · czujnik"
+        },
+        "data_description": {
+          "windows": "Okna. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "air_quality": "Czujniki jakości powietrza i otoczenia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "temperature": "Temperatura. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "pressure": "Czujniki ciśnienia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
+          "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch.",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ Wybierz",
         "description": "Wybierz: Pomieszczenia / Pogoda i ostrzeżenia / Komunikaty (opcjonalnie) / Zaawansowane progi",
         "menu_options": {
-          "room_occupancy": "Obecność · czujnik",
-          "outside_data": "Zewnętrzne · źródło",
-          "general_settings": "Ogólne · ustawienia",
-          "area_settings": "Obszar · ustawienia",
-          "delivery": "Komunikaty (opcjonalnie)",
-          "thresholds": "Zaawansowane progi",
-          "climate": "ustawienia · Urządzenia",
-          "pid": "ustawienia · PID",
-          "setup_rooms": "Pomieszczenia do monitorowania"
+          "choose_rooms": "Pomieszczenia do monitorowania",
+          "general_settings": "Ogólne · ustawienia"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "Dom · Away · cooldown (min)",
           "away_open_window_alert": "Ostrzegaj o otwartych oknach po wyjściu wszystkich",
           "away_windows_target_people": "Osoby do powiadomienia",
-          "away_windows_delivery_channels": "Kanały powiadomień o oknach"
+          "away_windows_delivery_channels": "Kanały powiadomień o oknach",
+          "general_source_stale_minutes": "źródło · max (min)",
+          "general_home_policy": "Dom · Obecność · sterowanie"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń. · Dom · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Ostrzegaj o otwartych oknach po wyjściu wszystkich. Osoby do powiadomienia (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Zegarek, Tablet.",
           "away_windows_target_people": "Osoby do powiadomienia (person.*) - Announcement Hub: Telefon, Zegarek, Tablet, Inne urządzenie. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanały powiadomień o oknach: Telefon Powiadomienie / Mowa TTS, Zegarek Powiadomienie / Mowa TTS, Tablet Powiadomienie / Mowa TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanały powiadomień o oknach: Telefon Powiadomienie / Mowa TTS, Zegarek Powiadomienie / Mowa TTS, Tablet Powiadomienie / Mowa TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "źródło · Sen / Obecność · max 240 min. Nieprawidłowe · Wyłącz.",
+          "general_home_policy": "Ta opcja steruje „Dom · Obecność · sterowanie”. Polecenia sprzętowe wymagają osobnej zgody i zabezpieczeń."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Pomieszczenia do monitorowania",
+        "description": "Pomieszczenia do monitorowania → źródło → Ogólne ustawienia",
+        "data": {
+          "areas": "Pomieszczenia do monitorowania"
+        },
+        "data_description": {
+          "areas": "Pomieszczenia do monitorowania. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania."
+        }
+      },
+      "room_settings": {
+        "title": "Obszar · ustawienia · {area_name}",
+        "description": "Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+        "data": {
+          "windows": "Okna",
+          "air_quality": "Czujniki jakości powietrza i otoczenia",
+          "temperature": "Temperatura",
+          "humidity": "Wilgotność",
+          "pressure": "Czujniki ciśnienia",
+          "climate_devices": "Urządzenia",
+          "shades": "Rolety, żaluzje i zasłony okienne",
+          "occupancy_sensors": "Obecność · czujnik"
+        },
+        "data_description": {
+          "windows": "Okna. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "air_quality": "Czujniki jakości powietrza i otoczenia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "temperature": "Temperatura. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "pressure": "Czujniki ciśnienia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
+          "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch.",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
         }
       }
     },

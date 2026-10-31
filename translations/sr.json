@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "Dom · Away · cooldown (min)",
           "away_open_window_alert": "Обавести о отвореним прозорима кад сви оду",
           "away_windows_target_people": "Особе за обавештавање",
-          "away_windows_delivery_channels": "Канали за обавештења о прозорима"
+          "away_windows_delivery_channels": "Канали за обавештења о прозорима",
+          "general_source_stale_minutes": "izvor · max (min)",
+          "general_home_policy": "Dom · Prisustvo · upravljanje"
         },
         "data_description": {
           "weather_entities": "Изаберите: Време и упозорења · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Dom · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Обавести о отвореним прозорима кад сви оду. Особе за обавештавање (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Сат, Таблет.",
           "away_windows_target_people": "Особе за обавештавање (person.*) - Announcement Hub: Телефон, Сат, Таблет, Други уређај. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Канали за обавештења о прозорима: Телефон Обавештење / TTS говор, Сат Обавештење / TTS говор, Таблет Обавештење / TTS говор. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Канали за обавештења о прозорима: Телефон Обавештење / TTS говор, Сат Обавештење / TTS говор, Таблет Обавештење / TTS говор. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "izvor · Spavanje / Prisustvo · max 240 min. Neispravno · Isključi.",
+          "general_home_policy": "Ova opcija upravlja „Dom · Prisustvo · upravljanje”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu."
         }
       },
       "reconfigure": {
         "title": "⚙️ Изаберите",
         "description": "Изаберите: Собе / Време и упозорења / Обавештења (опционо) / Напредни прагови",
         "menu_options": {
-          "room_occupancy": "Prisustvo · senzor",
-          "outside_data": "Spoljašnji · izvor",
-          "general_settings": "Opšta · podešavanja",
-          "area_settings": "Oblast · podešavanja",
-          "delivery": "Обавештења (опционо)",
-          "thresholds": "Напредни прагови",
-          "climate": "podešavanja · Uređaji",
-          "pid": "podešavanja · PID",
-          "setup_rooms": "Собе за праћење"
+          "choose_rooms": "Собе за праћење",
+          "general_settings": "Opšta · podešavanja"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Собе за праћење",
+        "description": "Собе за праћење → izvor → Opšta podešavanja",
+        "data": {
+          "areas": "Собе за праћење"
+        },
+        "data_description": {
+          "areas": "Собе за праћење. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање."
+        }
+      },
+      "room_settings": {
+        "title": "Oblast · podešavanja · {area_name}",
+        "description": "Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+        "data": {
+          "windows": "Прозори",
+          "air_quality": "Сензори квалитета ваздуха и околине",
+          "temperature": "Temperatura",
+          "humidity": "Vlažnost",
+          "pressure": "Сензори притиска",
+          "climate_devices": "Uređaji",
+          "shades": "Прозорске ролетне, завесе и жалузине",
+          "occupancy_sensors": "Prisustvo · senzor"
+        },
+        "data_description": {
+          "windows": "Прозори. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "air_quality": "Сензори квалитета ваздуха и околине. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "temperature": "Temperatura. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "humidity": "Vlažnost. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "pressure": "Сензори притиска. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "climate_devices": "Uređaji. Изабери само физичке ентитете climate.*, humidifier.* и fan.* ове собе. Изворне могућности одређују грејање, хлађење, одвлаживање, циљеве и брзину вентилатора. Сам избор ништа не покреће; аутоматику укључи за сваки уређај посебно.",
+          "shades": "Прозорске ролетне, завесе и жалузине. Изабери ролетне, жалузине и завесе cover.* ове собе. Covers без device_class су дозвољени уз CLOSE ако заиста заклањају прозор. Гараже, капије, врата, прозори и тенде су искључени. Избор ништа не покреће: повежи сензор прозора и подеси аутоматику, најаву и температуру на контролеру. Непознато стање блокира кретање.",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ Изаберите",
         "description": "Изаберите: Собе / Време и упозорења / Обавештења (опционо) / Напредни прагови",
         "menu_options": {
-          "room_occupancy": "Prisustvo · senzor",
-          "outside_data": "Spoljašnji · izvor",
-          "general_settings": "Opšta · podešavanja",
-          "area_settings": "Oblast · podešavanja",
-          "delivery": "Обавештења (опционо)",
-          "thresholds": "Напредни прагови",
-          "climate": "podešavanja · Uređaji",
-          "pid": "podešavanja · PID",
-          "setup_rooms": "Собе за праћење"
+          "choose_rooms": "Собе за праћење",
+          "general_settings": "Opšta · podešavanja"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "Dom · Away · cooldown (min)",
           "away_open_window_alert": "Обавести о отвореним прозорима кад сви оду",
           "away_windows_target_people": "Особе за обавештавање",
-          "away_windows_delivery_channels": "Канали за обавештења о прозорима"
+          "away_windows_delivery_channels": "Канали за обавештења о прозорима",
+          "general_source_stale_minutes": "izvor · max (min)",
+          "general_home_policy": "Dom · Prisustvo · upravljanje"
         },
         "data_description": {
           "weather_entities": "Изаберите: Време и упозорења · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Dom · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Обавести о отвореним прозорима кад сви оду. Особе за обавештавање (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Сат, Таблет.",
           "away_windows_target_people": "Особе за обавештавање (person.*) - Announcement Hub: Телефон, Сат, Таблет, Други уређај. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Канали за обавештења о прозорима: Телефон Обавештење / TTS говор, Сат Обавештење / TTS говор, Таблет Обавештење / TTS говор. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Канали за обавештења о прозорима: Телефон Обавештење / TTS говор, Сат Обавештење / TTS говор, Таблет Обавештење / TTS говор. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "izvor · Spavanje / Prisustvo · max 240 min. Neispravno · Isključi.",
+          "general_home_policy": "Ova opcija upravlja „Dom · Prisustvo · upravljanje”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Собе за праћење",
+        "description": "Собе за праћење → izvor → Opšta podešavanja",
+        "data": {
+          "areas": "Собе за праћење"
+        },
+        "data_description": {
+          "areas": "Собе за праћење. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање."
+        }
+      },
+      "room_settings": {
+        "title": "Oblast · podešavanja · {area_name}",
+        "description": "Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+        "data": {
+          "windows": "Прозори",
+          "air_quality": "Сензори квалитета ваздуха и околине",
+          "temperature": "Temperatura",
+          "humidity": "Vlažnost",
+          "pressure": "Сензори притиска",
+          "climate_devices": "Uređaji",
+          "shades": "Прозорске ролетне, завесе и жалузине",
+          "occupancy_sensors": "Prisustvo · senzor"
+        },
+        "data_description": {
+          "windows": "Прозори. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "air_quality": "Сензори квалитета ваздуха и околине. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "temperature": "Temperatura. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "humidity": "Vlažnost. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "pressure": "Сензори притиска. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "climate_devices": "Uređaji. Изабери само физичке ентитете climate.*, humidifier.* и fan.* ове собе. Изворне могућности одређују грејање, хлађење, одвлаживање, циљеве и брзину вентилатора. Сам избор ништа не покреће; аутоматику укључи за сваки уређај посебно.",
+          "shades": "Прозорске ролетне, завесе и жалузине. Изабери ролетне, жалузине и завесе cover.* ове собе. Covers без device_class су дозвољени уз CLOSE ако заиста заклањају прозор. Гараже, капије, врата, прозори и тенде су искључени. Избор ништа не покреће: повежи сензор прозора и подеси аутоматику, најаву и температуру на контролеру. Непознато стање блокира кретање.",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
         }
       }
     },

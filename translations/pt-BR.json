@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
           "away_open_window_alert": "Avisar sobre janelas abertas depois que todos saírem",
           "away_windows_target_people": "Pessoas a avisar",
-          "away_windows_delivery_channels": "Canais de aviso de janelas abertas"
+          "away_windows_delivery_channels": "Canais de aviso de janelas abertas",
+          "general_source_stale_minutes": "fonte · max (min)",
+          "general_home_policy": "Casa · Ocupação · controle"
         },
         "data_description": {
           "weather_entities": "Selecione: Clima e alertas · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "Selecione fontes compartilhadas e saídas de notificação. Salvar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e dos ambientes. · Casa · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Avisar sobre janelas abertas depois que todos saírem. Pessoas a avisar (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Celular, Relógio, Tablet.",
           "away_windows_target_people": "Pessoas a avisar (person.*) - Announcement Hub: Celular, Relógio, Tablet, Outro dispositivo. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Canais de aviso de janelas abertas: Celular Notificação / Voz TTS, Relógio Notificação / Voz TTS, Tablet Notificação / Voz TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Canais de aviso de janelas abertas: Celular Notificação / Voz TTS, Relógio Notificação / Voz TTS, Tablet Notificação / Voz TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "fonte · Sono / Ocupação · max 240 min. Inválido · Desligar.",
+          "general_home_policy": "Esta opção controla «Casa · Ocupação · controle». Comandos físicos exigem autorização específica e proteções independentes."
         }
       },
       "reconfigure": {
         "title": "⚙️ Selecione",
         "description": "Selecione: Cômodos / Clima e alertas / Avisos (opcional) / Limites avançados",
         "menu_options": {
-          "room_occupancy": "Ocupação · sensor",
-          "outside_data": "Externo · fonte",
-          "general_settings": "Gerais · configurações",
-          "area_settings": "Área · configurações",
-          "delivery": "Avisos (opcional)",
-          "thresholds": "Limites avançados",
-          "climate": "configurações · Dispositivos",
-          "pid": "configurações · PID",
-          "setup_rooms": "Ambientes para monitorar"
+          "choose_rooms": "Ambientes para monitorar",
+          "general_settings": "Gerais · configurações"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Ambientes para monitorar",
+        "description": "Ambientes para monitorar → fonte → Gerais configurações",
+        "data": {
+          "areas": "Ambientes para monitorar"
+        },
+        "data_description": {
+          "areas": "Ambientes para monitorar. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático."
+        }
+      },
+      "room_settings": {
+        "title": "Área · configurações · {area_name}",
+        "description": "Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+        "data": {
+          "windows": "Janelas",
+          "air_quality": "Sensores de qualidade do ar e do ambiente",
+          "temperature": "Temperatura",
+          "humidity": "Umidade",
+          "pressure": "Sensores de pressão",
+          "climate_devices": "Dispositivos",
+          "shades": "Persianas, cortinas e venezianas de janela",
+          "occupancy_sensors": "Ocupação · sensor"
+        },
+        "data_description": {
+          "windows": "Janelas. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "air_quality": "Sensores de qualidade do ar e do ambiente. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "temperature": "Temperatura. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "humidity": "Umidade. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "pressure": "Sensores de pressão. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "climate_devices": "Dispositivos. Selecione apenas entidades físicas climate.*, humidifier.* e fan.* deste ambiente. Os recursos nativos determinam aquecimento, resfriamento, secagem, temperaturas, umidade e velocidades. Selecionar não aciona o equipamento; ative o controle automático individualmente.",
+          "shades": "Persianas, cortinas e venezianas de janela. Selecione persianas, venezianas e cortinas cover.* deste ambiente. Covers sem device_class são aceitos com CLOSE, após confirmar que realmente protegem janelas. Portas, garagens, portões, janelas e toldos são excluídos. Selecionar não movimenta nada: vincule o sensor da janela e configure automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ Selecione",
         "description": "Selecione: Cômodos / Clima e alertas / Avisos (opcional) / Limites avançados",
         "menu_options": {
-          "room_occupancy": "Ocupação · sensor",
-          "outside_data": "Externo · fonte",
-          "general_settings": "Gerais · configurações",
-          "area_settings": "Área · configurações",
-          "delivery": "Avisos (opcional)",
-          "thresholds": "Limites avançados",
-          "climate": "configurações · Dispositivos",
-          "pid": "configurações · PID",
-          "setup_rooms": "Ambientes para monitorar"
+          "choose_rooms": "Ambientes para monitorar",
+          "general_settings": "Gerais · configurações"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
           "away_open_window_alert": "Avisar sobre janelas abertas depois que todos saírem",
           "away_windows_target_people": "Pessoas a avisar",
-          "away_windows_delivery_channels": "Canais de aviso de janelas abertas"
+          "away_windows_delivery_channels": "Canais de aviso de janelas abertas",
+          "general_source_stale_minutes": "fonte · max (min)",
+          "general_home_policy": "Casa · Ocupação · controle"
         },
         "data_description": {
           "weather_entities": "Selecione: Clima e alertas · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "Selecione fontes compartilhadas e saídas de notificação. Salvar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e dos ambientes. · Casa · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Avisar sobre janelas abertas depois que todos saírem. Pessoas a avisar (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Celular, Relógio, Tablet.",
           "away_windows_target_people": "Pessoas a avisar (person.*) - Announcement Hub: Celular, Relógio, Tablet, Outro dispositivo. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Canais de aviso de janelas abertas: Celular Notificação / Voz TTS, Relógio Notificação / Voz TTS, Tablet Notificação / Voz TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Canais de aviso de janelas abertas: Celular Notificação / Voz TTS, Relógio Notificação / Voz TTS, Tablet Notificação / Voz TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "fonte · Sono / Ocupação · max 240 min. Inválido · Desligar.",
+          "general_home_policy": "Esta opção controla «Casa · Ocupação · controle». Comandos físicos exigem autorização específica e proteções independentes."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Ambientes para monitorar",
+        "description": "Ambientes para monitorar → fonte → Gerais configurações",
+        "data": {
+          "areas": "Ambientes para monitorar"
+        },
+        "data_description": {
+          "areas": "Ambientes para monitorar. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático."
+        }
+      },
+      "room_settings": {
+        "title": "Área · configurações · {area_name}",
+        "description": "Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+        "data": {
+          "windows": "Janelas",
+          "air_quality": "Sensores de qualidade do ar e do ambiente",
+          "temperature": "Temperatura",
+          "humidity": "Umidade",
+          "pressure": "Sensores de pressão",
+          "climate_devices": "Dispositivos",
+          "shades": "Persianas, cortinas e venezianas de janela",
+          "occupancy_sensors": "Ocupação · sensor"
+        },
+        "data_description": {
+          "windows": "Janelas. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "air_quality": "Sensores de qualidade do ar e do ambiente. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "temperature": "Temperatura. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "humidity": "Umidade. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "pressure": "Sensores de pressão. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "climate_devices": "Dispositivos. Selecione apenas entidades físicas climate.*, humidifier.* e fan.* deste ambiente. Os recursos nativos determinam aquecimento, resfriamento, secagem, temperaturas, umidade e velocidades. Selecionar não aciona o equipamento; ative o controle automático individualmente.",
+          "shades": "Persianas, cortinas e venezianas de janela. Selecione persianas, venezianas e cortinas cover.* deste ambiente. Covers sem device_class são aceitos com CLOSE, após confirmar que realmente protegem janelas. Portas, garagens, portões, janelas e toldos são excluídos. Selecionar não movimenta nada: vincule o sensor da janela e configure automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
         }
       }
     },
