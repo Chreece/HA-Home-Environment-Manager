@@ -98,6 +98,36 @@ async def evaluate():
         'New physical native OFF must observe new native min-OFF')
     assert off.status[0]=='minimum_off_hold'
 
+    # An OFF report recreated with a different last_changed after
+    # reconnection can hide an intervening manual ON->OFF. It must destroy
+    # the old supply-off credit and start a genuine new native hold.
+    changed_stamp=create()
+    assert await changed_stamp._reconcile_native_after_supply_wake(
+        spec,changed_stamp.manager.cap)
+    changed_stamp.now=NOW+15
+    changed_stamp.states['climate.heater']=state(
+        'off',changed=NOW+15)
+    await changed_stamp._observe_native_running(
+        spec,changed_stamp.manager.cap,
+        changed_stamp.states['climate.heater'])
+    assert 'native_wake' not in changed_stamp.record['upstream']
+    assert not await changed_stamp._power(
+        spec,changed_stamp.manager.cap,'heat',automatic=False)
+    assert changed_stamp.status[0]=='minimum_off_hold'
+
+    # HA restart with supply still ON cannot prove there was no physical
+    # native ON->OFF in the downtime. Discard credit, not the independent
+    # historical relay ON/OFF minimums.
+    after_restart=create()
+    after_restart.manager.original_store={
+        'version':1,'records':deepcopy(after_restart.records)
+    }
+    await after_restart.async_start()
+    assert 'native_wake' not in after_restart.record['upstream']
+    assert after_restart.record['upstream']['owned'] is True
+    assert not await after_restart._power(
+        spec,after_restart.manager.cap,'heat',automatic=False)
+
     # A powered device may itself restore an already-ON HEAT mode. That
     # ON came from HEM's explicitly acknowledged power restoration, not
     # a user-turned-on unrelated switch. It becomes supervised WITHOUT
