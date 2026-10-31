@@ -958,7 +958,12 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         native = runtime.hass.states.get(cap.primary)
         if (native is not None and native.state not in ("unknown", "unavailable")
                 and not observed_output_off(native)):
-            runtime._status(spec, "paused",
+            # A DRY/HEAT mode reported by an appliance behind an OFF relay
+            # does not prove it is physically running. Never energize the
+            # relay on that contradictory feedback, but do not present it as
+            # a latched user-override either. Resume stays logically armed
+            # and retries only after the native report becomes verifiable.
+            runtime._status(spec, "waiting_for_physical_device",
                             reason="upstream_switch_off_but_native_reports_active")
             return True
         if not runtime.hass.services.has_service("switch", "turn_on"):
