@@ -139,18 +139,12 @@ async def observe_supply_state(
         prior_on = finite(relay.get("on_at"), 0, now)
         transitioned = previous is not None and previous[0] == "off"
         if prior_on is None or transitioned:
-            # For a legacy previously-owned plug, native persisted ON history
-            # proves the plug was energized at least as long as the device.
-            # Otherwise default to the observed/recreated HA timestamp.
-            known_native = [
-                finite(item.get("since"), 0, now)
-                for item in record.get("power", {}).values()
-                if isinstance(item, dict)
-            ]
-            known_native = [value for value in known_native if value is not None]
-            since = (
-                now if transitioned else
-                max(known_native) if known_native else
+            # Legacy releases recorded owned=True but did not persist the
+            # supply's own ON start. A downstream appliance's older ON history
+            # cannot prove this independent plug was never switched off.
+            # Use the conservative observed supply state age, ONCE. Every
+            # subsequent confirmed HEM relay ACK stores the true on_at.
+            since = now if transitioned else (
                 stamp if stamp is not None else now
             )
             relay["on_at"] = since
