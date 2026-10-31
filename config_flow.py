@@ -30,6 +30,7 @@ from .const import (
 )
 from .room_setup import RoomSetupMixin
 from .compact_options import CompactOptionsMixin
+from .reconfigure_rooms import ReconfigureRoomsMixin
 from .mold import calibration_factor, estimate_mold_for_room
 from .climate_pid import DEFAULT_PID, ClimatePidCoordinator
 from .pid_math import validate_settings
@@ -88,8 +89,8 @@ def _real_number(low: float, high: float, unit: str | None = None) -> selector.N
     ))
 
 
-class _FlowMixin(RoomSetupMixin, CompactOptionsMixin):
-    """Use the same pages in initial setup and reconfiguration."""
+class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
+    """Initial setup and one room-centric configuration menu."""
 
     _values: dict[str, Any]
 
@@ -1842,7 +1843,7 @@ class AirQualityConfigFlow(_FlowMixin, config_entries.ConfigFlow, domain=DOMAIN)
             self._indoor_index = 0
             self._start_room_setup()
         return self.async_show_menu(
-            step_id="reconfigure", menu_options=self._edit_sections()
+            step_id="reconfigure", menu_options=self._room_edit_menu()
         )
 
     async def _finish(self) -> ConfigFlowResult:
@@ -1880,7 +1881,7 @@ class AirQualityConfigFlow(_FlowMixin, config_entries.ConfigFlow, domain=DOMAIN)
 
 
 class AirQualityOptionsFlow(_FlowMixin, OptionsFlowWithReload):
-    """Choose exactly one section of saved settings to modify."""
+    """Edit one selected room or shared configuration, without a wizard."""
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         self._editing = True
@@ -1889,8 +1890,17 @@ class AirQualityOptionsFlow(_FlowMixin, OptionsFlowWithReload):
         self._indoor_index = 0
         self._start_room_setup()
         return self.async_show_menu(
-            step_id="init", menu_options=self._edit_sections()
+            step_id="init", menu_options=self._room_edit_menu()
         )
 
     async def _finish(self) -> ConfigFlowResult:
-        return self.async_create_entry(data=self._values)
+        # A device entity can save options while the setup page is open.
+        # Reconcile only our edited keys; refuse conflicts instead of
+        # silently resetting a controller's newer hardware permissions.
+        from .room_setup import _merge
+        current = {**self.config_entry.data, **self.config_entry.options}
+        try:
+            updated = _merge(self._setup_base, self._values, current)
+        except ValueError:
+            return self.async_abort(reason="setup_changed")
+        return self.async_create_entry(data=updated)
