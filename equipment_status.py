@@ -108,6 +108,7 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             from .equipment_power_switch import (
                 device_supply_dwell, supply_off_since,
             )
+            from .pid_math import finite
             native_cap = equipment.capabilities(self._manager, self._spec)
             dwell = device_supply_dwell(runtime, self._spec, cfg, native_cap)
             if supply is not None and dwell is not None:
@@ -116,14 +117,17 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
                     if isinstance(started, (int, float)) and 0 <= started <= now:
                         on_elapsed = round(now-started)
                         on_remaining = round(max(
-                            0, max(dwell[0], upstream.get("on_min_seconds") or 0)
-                            - on_elapsed
+                            0, max(
+                                dwell[0],
+                                finite(upstream.get("on_min_seconds"), 0, 86400) or 0
+                            ) - on_elapsed
                         ))
                     idle_since = upstream.get("idle_since")
                     if (isinstance(idle_since, (int, float))
                             and 0 <= idle_since <= now):
                         cooldown_remaining = round(max(
-                            0, cfg.get("power_switch_cooldown_seconds", 600)
+                            0, (finite(cfg.get("power_switch_cooldown_seconds"),
+                                       60, 86400) or 600)
                             - (now-idle_since)
                         ))
                 elif supply.state == "off":
@@ -131,8 +135,10 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
                         0, now-supply_off_since(upstream, supply, now)
                     ))
                     off_remaining = round(max(
-                        0, max(dwell[1], upstream.get("off_min_seconds") or 0)
-                        - off_elapsed
+                        0, max(
+                            dwell[1],
+                            finite(upstream.get("off_min_seconds"), 0, 86400) or 0
+                        ) - off_elapsed
                     ))
         return {
             "area_id": self._spec.area_id,
