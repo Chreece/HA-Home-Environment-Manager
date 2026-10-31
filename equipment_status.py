@@ -96,6 +96,8 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         supply_id = cfg.get("power_switch_entity")
         upstream = record.get("upstream", {})
         upstream = upstream if isinstance(upstream, dict) else {}
+        wake = upstream.get("native_wake")
+        wake = wake if isinstance(wake, dict) else {}
         supply = self._manager.hass.states.get(supply_id) if (
             isinstance(supply_id, str) and supply_id) else None
         # Read-only timing diagnostics, O(1) in the cached physical record.
@@ -219,6 +221,13 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             ),
             "upstream_pause_reason": upstream.get("paused"),
             "upstream_idle_since": upstream.get("idle_since"),
+            "upstream_native_recovery_pending": bool(wake) and not wake.get("reconciled"),
+            "upstream_native_reconnected": wake.get("reconciled") is True,
+            "upstream_native_reconnected_mode": wake.get("native_state"),
+            "upstream_native_off_credit_since": (
+                wake.get("off_at") if wake.get("reconciled") is True
+                and wake.get("native_state") == "off" else None
+            ),
             "upstream_idle_cooldown_seconds": cfg.get(
                 "power_switch_cooldown_seconds"
             ) if supply_id else None,
