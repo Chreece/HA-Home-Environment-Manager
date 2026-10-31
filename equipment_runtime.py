@@ -187,8 +187,19 @@ class EquipmentRuntime:
                         raise ValueError("Invalid power recovery history")
             self._ready = True
             for record in self.records.values():
-                if record.get("pending") or record.get("power"):
+                # Previously CONFIRMED native power ON is not an in-flight
+                # command. Retain its durable timestamp and check the native
+                # source/registry before any new action. Only uncertain
+                # commands or already-manual pauses require a user action.
+                upstream = record.get("upstream", {})
+                if (record.get("pending") or
+                        isinstance(upstream, dict) and upstream.get("pending")):
                     record["paused"] = "restart_reconciliation_required"
+                    record.pop("restart_power_verification", None)
+                elif record.get("power") and record.get("paused") in (
+                        None, "restart_reconciliation_required"):
+                    record["restart_power_verification"] = True
+                    record.pop("paused", None)
             await self._save()
         except Exception:
             self._ready = False
@@ -224,6 +235,137 @@ class EquipmentRuntime:
             stamp = None
         stamp = finite(stamp, 0, 1e13)
         return stamp if stamp is not None and stamp <= now else now
+
+    async def _observe_native_running(
+        self, spec: model.ManagedDevice, cap: model.Capabilities, state: Any,
+    ) -> None:
+        """Persist transition-based ON evidence without per-tick Store writes.
+
+        HA 'last_changed' at startup often means *restored entity*, not
+        physical power ON. A prior durable ON observation is retained across
+        HA restarts; only an ACTUALLY OBSERVED OFF->ON transition in our own
+        polling history starts a fresh physical dwell.
+        """
+        record = self._record(spec)
+        snapshots = record.setdefault("native_power_observations", {})
+        if not isinstance(snapshots, dict):
+            raise HomeAssistantError("Invalid persisted physical observation history")
+        current = "off" if output_off(state) else "on"
+        old = snapshots.get(cap.primary)
+        if isinstance(old, dict) and old.get("state") == current:
+            return
+        now = self.clock()
+        if current == "on":
+            owned = record.get("power", {}).get(cap.primary)
+            if isinstance(old, dict) and old.get("state") == "off":
+                # This is a real OFF->ON transition observed while managing
+                # the device; never inherit the older uninterrupted ON time.
+                since = now
+            elif isinstance(owned, dict):
+                since = finite(owned.get("since"), 0, now) or now
+            else:
+                changed = getattr(state, "last_changed", None)
+                try:
+                    since = finite(changed.timestamp(), 0, now) if changed else None
+                except (AttributeError, TypeError, ValueError, OverflowError):
+                    since = None
+                since = since if since is not None else now
+            snapshots[cap.primary] = {"state": "on", "since": since}
+            if isinstance(owned, dict) and since > owned.get("since", now):
+                # Source OFF->ON transition supersedes any earlier ownership
+                # interval without claiming an uninterrupted run.
+                owned["since"] = since
+        else:
+            snapshots[cap.primary] = {"state": "off", "since": now}
+        await self._save()
+
+    async def _verify_restart_power(self, spec: model.ManagedDevice) -> bool:
+        """Resume only a persisted, acknowledged, unchanged physical output.
+
+        No HA service is called. Missing/unknown native sources are waited
+        for; a changed source, foreign owner or ambiguous pending command
+        remains paused rather than auto-adopted. Last_changed is NOT treated
+        as a new ON timestamp merely because HA restored its State object.
+        """
+        record = self._record(spec)
+        if not record.get("restart_power_verification"):
+            return True
+        if not self._current_spec(spec):
+            self._status(spec, "source_deselected_or_moved")
+            return False
+        if record.get("pending"):
+            await self._pause(spec, "restart_reconciliation_required")
+            record.pop("restart_power_verification", None)
+            return False
+        cfg = model.settings(self.manager, spec)
+        cap = model.capabilities(self.manager, spec)
+        if cap is None or not model.sources_available(self.manager, spec):
+            self._status(spec, "waiting_for_physical_device")
+            return False
+        if cfg.get("control_mode") not in ("automatic", "pid", "manual", "off"):
+            await self._pause(spec, "restart_reconciliation_required")
+            record.pop("restart_power_verification", None)
+            return False
+        _, authorized_power = model.permission(self.manager, spec, cap)
+        if not authorized_power or not self._identity_ok(spec):
+            await self._pause(spec, "restart_reconciliation_required")
+            record.pop("restart_power_verification", None)
+            return False
+        upstream = record.get("upstream", {})
+        if isinstance(upstream, dict) and upstream.get("pending"):
+            await self._pause(spec, "restart_reconciliation_required")
+            record.pop("restart_power_verification", None)
+            return False
+        supply = cfg.get("power_switch_entity")
+        if supply and isinstance(upstream, dict) and upstream.get("owned"):
+            from .equipment_power_switch import permitted_supply
+            physical_relay = self.hass.states.get(supply)
+            if physical_relay is None or physical_relay.state not in ("on", "off"):
+                self._status(spec, "waiting_for_physical_device")
+                return False
+            if (physical_relay.state != "on"
+                    or permitted_supply(
+                        self.manager, spec, supply, upstream.get("identity")
+                    ) is None):
+                await self._pause(spec, "restart_reconciliation_required")
+                record.pop("restart_power_verification", None)
+                return False
+        previous = record.get("baseline", {})
+        revised = {}
+        now = self.clock()
+        if not record.get("power"):
+            record.pop("restart_power_verification", None)
+            return True
+        for entity, owned in record["power"].items():
+            if entity not in spec.source_entities or cap.primary != entity:
+                await self._pause(spec, "restart_reconciliation_required")
+                record.pop("restart_power_verification", None)
+                return False
+            actual_state = self.hass.states.get(entity)
+            current = snapshot(actual_state)
+            if current is None:
+                self._status(spec, "waiting_for_physical_device")
+                return False
+            if (output_off(actual_state)
+                    or foreign_owner_hold(
+                        self.hass, self.manager.entry.entry_id, entity
+                    ) is not None
+                    or finite(owned.get("since"), 0, now) is None
+                    or not isinstance(previous.get(entity), dict)
+                    or previous[entity].get("state") != current["state"]
+                    or _manual_output_changes(previous[entity], current)):
+                # The known ON state/authorization is no longer established.
+                # Do not infer actual ON duration from a reset HA timestamp.
+                await self._pause(spec, "restart_reconciliation_required")
+                record.pop("restart_power_verification", None)
+                return False
+            revised[entity] = current
+        record["baseline"].update(revised)
+        record.pop("restart_power_verification", None)
+        await self._save()
+        self._status(spec, "awaiting_evaluation",
+                     reason="verified_owned_native_power_after_restart")
+        return True
 
     def _lock(self, key: str) -> asyncio.Lock:
         record = self.records.get(key)
@@ -946,20 +1088,43 @@ class EquipmentRuntime:
                     # restart the real physical ON interval. Use the LATER
                     # of recorded ownership and current observed ON start,
                     # so Resume cannot prematurely end a newly started cycle.
-                    observed_on = finite(
-                        self._observed_off_since(entity, now), 0, now
-                    )
                     owned_since = finite(owned.get("since"), 0, now)
                     if owned_since is None:
                         raise HomeAssistantError("Stored native power runtime is not verified")
+                    # Unlike a real OFF->ON transition recorded while running,
+                    # HA startup can reset last_changed when it re-creates an
+                    # already-ON thermostat. NEVER turn that timestamp into a
+                    # fabricated new minimum-ON period.
+                    observation = record.get("native_power_observations", {})
+                    observation = observation.get(entity) if isinstance(
+                        observation, dict) else None
+                    if (isinstance(observation, dict)
+                            and observation.get("state") == "on"):
+                        known_since = finite(observation.get("since"), 0, now)
+                    else:
+                        known_since = None
                     next_power[entity] = {
-                        **owned,
-                        "since": max(owned_since, observed_on or owned_since),
+                        **owned, "since": max(owned_since, known_since or owned_since),
                     }
             if active and cap.primary not in next_power:
                 on_min, _, max_on = model.timing(self.manager, spec, cap)
+                observation = record.get("native_power_observations", {})
+                observation = observation.get(cap.primary) if isinstance(
+                    observation, dict) else None
+                trusted_since = (
+                    finite(observation.get("since"), 0, now)
+                    if isinstance(observation, dict)
+                    and observation.get("state") == "on" else None
+                )
+                if trusted_since is None:
+                    changed = getattr(live_primary, "last_changed", None)
+                    try:
+                        trusted_since = finite(changed.timestamp(), 0, now) if changed else None
+                    except (AttributeError, TypeError, ValueError, OverflowError):
+                        trusted_since = None
                 next_power[cap.primary] = {
-                    "since": now, "min_on": on_min, "max_on": max_on,
+                    "since": trusted_since if trusted_since is not None else now,
+                    "min_on": on_min, "max_on": max_on,
                 }
             next_off_at = dict(record.get("off_at", {}))
             for entity, value in physical.items():
@@ -972,6 +1137,15 @@ class EquipmentRuntime:
                 paused=None, pending=None, power=next_power,
                 baseline=observed, off_at=next_off_at,
             )
+            record.pop("restart_power_verification", None)
+            native_history = record.setdefault("native_power_observations", {})
+            if not isinstance(native_history, dict):
+                raise HomeAssistantError("Stored native power observations are invalid")
+            if active:
+                native_history[cap.primary] = {
+                    "state": "on",
+                    "since": next_power[cap.primary]["since"],
+                }
             if supply:
                 # Never claim an already-ON, previously unowned smart plug.
                 # Its own history is independent of the native actuator.
@@ -1786,6 +1960,9 @@ class EquipmentRuntime:
             return
         self._invalidated.discard(spec.identifier)
         record = self._record(spec)
+        if record.get("restart_power_verification"):
+            if not await self._verify_restart_power(spec):
+                return
         if record.get("paused"):
             self._status(spec, "paused", reason=record["paused"])
             return
@@ -1824,6 +2001,7 @@ class EquipmentRuntime:
             self._status(spec, "waiting_for_physical_device")
             return
         record["baseline"].setdefault(cap.primary, snapshot(state))
+        await self._observe_native_running(spec, cap, state)
         plan = model.plan_for(self.manager, spec)
         target = model.targets(self.manager, spec, cap, cfg, plan)
         mode = cfg.get("requested_mode")
