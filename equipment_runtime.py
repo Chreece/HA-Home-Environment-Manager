@@ -258,6 +258,12 @@ class EquipmentRuntime:
         if not isinstance(snapshots, dict):
             raise HomeAssistantError("Invalid persisted physical observation history")
         current = "off" if output_off(state) else "on"
+        if current == "on":
+            wake = record.get("upstream", {}).get("native_wake")
+            if isinstance(wake, dict) and wake.get("reconciled"):
+                # Once this appliance has truly appeared ON, the prior
+                # supply-off credit is consumed permanently for this cycle.
+                record["upstream"].pop("native_wake", None)
         old = snapshots.get(cap.primary)
         observed_in_session = getattr(self, "_native_session_observations", None)
         if observed_in_session is None:
@@ -304,6 +310,120 @@ class EquipmentRuntime:
         else:
             snapshots[cap.primary] = {"state": "off", "since": now}
         await self._save()
+
+    async def _reconcile_native_after_supply_wake(
+        self, spec: model.ManagedDevice, cap: model.Capabilities,
+    ) -> bool:
+        """Bridge a HEM-ACKed supply ON to its newly reconnected native device.
+
+        This is not general-purpose adoption of manually operated hardware.
+        HEM must itself have previously switched ON and ACKed the exact,
+        dedicated supply for qualified demand. A verified dedicated supply
+        held OFF for the entire native minimum-OFF interval, so a new HA
+        State.last_changed at reconnect is NOT a new physical OFF moment.
+        No service is sent by this reconciliation.
+        """
+        record = self._record(spec)
+        relay = record.get("upstream", {})
+        wake = relay.get("native_wake") if isinstance(relay, dict) else None
+        if not isinstance(wake, dict) or wake.get("reconciled"):
+            return True
+        cfg = model.settings(self.manager, spec)
+        supply = cfg.get("power_switch_entity")
+        if not supply or not relay.get("owned") or relay.get("pending"):
+            self._status(spec, "waiting_for_physical_device",
+                         reason="native_supply_wake_not_acknowledged")
+            return False
+        from .equipment_power_switch import (
+            permitted_supply, device_supply_dwell,
+        )
+        identity = wake.get("identity")
+        if (not isinstance(identity, dict)
+                or identity != relay.get("identity")
+                or permitted_supply(self.manager, spec, supply, identity) is None):
+            self._status(spec, "paused",
+                         reason="native_supply_wake_identity_changed")
+            return False
+        switch = self.hass.states.get(supply)
+        on_at = finite(wake.get("on_at"), 0, self.clock())
+        off_at = finite(wake.get("off_at"), 0, self.clock())
+        if (switch is None or switch.state != "on"
+                or on_at is None or off_at is None
+                or relay.get("on_at") != on_at or not 0 <= off_at <= on_at):
+            self._status(spec, "waiting_for_physical_device",
+                         reason="native_supply_wake_not_verified")
+            return False
+        dwell = device_supply_dwell(self, spec, cfg, cap)
+        if dwell is None or on_at - off_at < dwell[1]:
+            self._status(spec, "minimum_off_hold",
+                         reason="native_supply_wake_off_history_insufficient")
+            return False
+        if (not self._current_spec(spec) or record.get("pending")
+                or record.get("power")):
+            self._status(spec, "owned_shutdown_identity_or_dwell_hold",
+                         reason="native_supply_wake_existing_output_ownership")
+            return False
+        _, power = model.permission(self.manager, spec, cap)
+        if not power or cap.primary not in spec.source_entities:
+            self._status(spec, "power_control_not_commissioned",
+                         reason="native_supply_wake_requires_exact_authorization")
+            return False
+        from .device_activation import authorized
+        if (cap.domain in ("climate", "fan", "humidifier")
+                and not authorized(self.manager, spec)):
+            self._status(spec, "power_control_not_commissioned",
+                         reason="native_supply_wake_authorization_missing")
+            return False
+        current = self.hass.states.get(cap.primary)
+        if (current is None or current.state in ("unknown", "unavailable")
+                or current.state not in cap.modes
+                or any(snapshot(self.hass.states.get(e)) is None
+                       for e in spec.source_entities)
+                or any(foreign_owner_hold(
+                    self.hass, self.manager.entry.entry_id, e
+                ) for e in spec.source_entities)):
+            self._status(spec, "waiting_for_physical_device",
+                         reason="native_supply_wake_sources_not_verified")
+            return False
+        if not output_off(current):
+            # Auto-restoration of an already-running native mode is accepted
+            # ONLY when the exact requested direction matches, or when this
+            # is a uniquely single-purpose physical native device.
+            allowed = set(cap.modes) - {"off"}
+            selected = cfg.get("requested_mode")
+            if (selected is not None and current.state != selected
+                    or selected is None and allowed != {current.state}):
+                self._status(spec, "paused",
+                             reason="native_supply_wake_mode_unverified")
+                return False
+            min_on, _, max_on = model.timing(self.manager, spec, cap)
+            # Reconnected state.last_changed can mean HA discovery, not
+            # actual ON. Using the *later* of relay ON and native discovery
+            # is conservative: it will not prematurely shut a compressor.
+            try:
+                observed_on = finite(
+                    current.last_changed.timestamp(), 0, self.clock()
+                )
+            except (AttributeError, TypeError, ValueError, OverflowError):
+                observed_on = None
+            start = max(on_at, observed_on or self.clock())
+            record["power"][cap.primary] = {
+                "since": start, "min_on": min_on, "max_on": max_on,
+            }
+            wake["native_state"] = "on"
+        else:
+            # The supply's physical OFF history already satisfied the
+            # native OFF dwell. Retain that evidence instead of creating a
+            # second minimum-OFF timer from HA's new entity timestamp.
+            record.setdefault("off_at", {})[cap.primary] = off_at
+            wake["native_state"] = "off"
+        record["baseline"] = {
+            entity: snapshot(self.hass.states.get(entity))
+            for entity in spec.source_entities
+        }
+        wake["reconciled"] = True
+        await self._save()
+        return True
 
     async def _verify_restart_power(self, spec: model.ManagedDevice) -> bool:
         """Resume only a persisted, acknowledged, unchanged physical output.
@@ -1782,18 +1902,38 @@ class EquipmentRuntime:
                 self._status(spec, "minimum_on_hold")
                 return False
         else:
-            changed = getattr(state, "last_changed", None)
-            try:
-                observed = changed.timestamp() if changed is not None else None
-            except (AttributeError, TypeError, ValueError, OverflowError):
-                observed = None
-            observed = finite(observed, 0, 1e13)
-            stamp = record["off_at"].get(cap.primary)
-            if stamp is None:
-                stamp = observed if observed is not None and observed <= now else now
-            elif observed is not None and stamp < observed <= now:
-                # A newer HA state transition proves a later physical OFF.
-                stamp = observed
+            relay = record.get("upstream", {})
+            wake = relay.get("native_wake") if isinstance(relay, dict) else None
+            certified = (
+                isinstance(wake, dict) and wake.get("reconciled") is True
+                and wake.get("native_state") == "off"
+                and relay.get("owned") is True
+                and relay.get("on_at") == wake.get("on_at")
+                and model.settings(self.manager, spec).get("power_switch_entity")
+                    == relay.get("entity")
+                and finite(wake.get("off_at"), 0, now) is not None
+            )
+            if certified:
+                # This OFF existed continuously while the dedicated HEM-owned
+                # supply itself was disconnected. HA rediscovery cannot
+                # invalidate a *completed* physical OFF interval.
+                stamp = max(
+                    finite(record["off_at"].get(cap.primary), 0, now) or 0,
+                    float(wake["off_at"]),
+                )
+            else:
+                changed = getattr(state, "last_changed", None)
+                try:
+                    observed = changed.timestamp() if changed is not None else None
+                except (AttributeError, TypeError, ValueError, OverflowError):
+                    observed = None
+                observed = finite(observed, 0, 1e13)
+                stamp = record["off_at"].get(cap.primary)
+                if stamp is None:
+                    stamp = observed if observed is not None and observed <= now else now
+                elif observed is not None and stamp < observed <= now:
+                    # A true later native OFF still creates a new dwell.
+                    stamp = observed
             record["off_at"][cap.primary] = stamp
             if not 0 <= now-stamp or now-stamp < off_min:
                 self._status(spec, "minimum_off_hold")
@@ -2037,6 +2177,11 @@ class EquipmentRuntime:
         if record.get("capabilities") != actual_capabilities:
             record["capabilities"] = actual_capabilities
             await self._save()
+        # Native discovery after a HEM-owned supply ON must not fabricate
+        # another OFF period or indefinitely reject the same just-powered
+        # device as an unrelated unowned manual source.
+        if not await self._reconcile_native_after_supply_wake(spec, cap):
+            return
         if not await self._reconcile(spec):
             return
         state = self.hass.states.get(cap.primary)
