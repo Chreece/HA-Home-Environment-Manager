@@ -76,6 +76,19 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             isinstance(sleep_id, str) and sleep_id not in ("", "none")
         ) else None
         effective = equipment.profile_name(cfg, plan)
+        pid_state = getattr(runtime, "_memory", {}).get(self._spec.identifier)
+        pid_state = pid_state if isinstance(pid_state, tuple) and len(pid_state) == 3 else ()
+        pid_signature = pid_state[0] if pid_state else None
+        pid_signature = pid_signature if isinstance(pid_signature, tuple) else ()
+        pid_anchor = pid_state[2] if pid_state else None
+        cycle = cfg.get("cycle_seconds")
+        if (isinstance(pid_anchor, (float, int))
+                and isinstance(cycle, (float, int)) and cycle > 0
+                and 0 <= runtime.clock() - pid_anchor):
+            pid_phase = round((runtime.clock() - pid_anchor) % cycle, 1)
+        else:
+            pid_phase = None
+        pid_wake = getattr(runtime, "_profile_wake", {}).get(self._spec.identifier)
         # Surface both pieces of an externally powered controller. The HA
         # native appliance may be unavailable precisely BECAUSE the supply
         # is OFF. Neither observation implies that the logical controller
@@ -110,6 +123,11 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
                 "sleep_room_evidence_unknown" else None),
             "last_evaluated_mode": observed.get("mode"),
             "demand_percent": observed.get("demand_percent"),
+            "pid_effective_profile": pid_signature[3] if len(pid_signature) >= 4 else None,
+            "pid_pwm_phase_seconds": pid_phase,
+            "pid_pwm_cycle_seconds": cycle if cfg.get("control_mode") == "pid" else None,
+            "pid_comfort_wake_pending": bool(pid_wake),
+            "pid_comfort_wake_until": pid_wake.get("until") if isinstance(pid_wake, dict) else None,
             "pid_calibration_method": cfg.get("pid_calibration_method", "manual"),
             "pid_last_calibration": cfg.get("pid_last_calibration"),
             "pid_fan_capacity_strategy": cfg.get("pid_fan_capacity_mode", "legacy"),
