@@ -61,7 +61,7 @@ def field(key,value=None,*,required=False):
 ns={'__name__':'beta78_fixture.config_flow','__package__':'beta78_fixture',
     'probatio':Probatio,'_field':field,'_select':lambda choices,**kw:choices,
     'CONF_AREAS':'areas','CONF_CLIMATE_ROOMS':'climate_rooms',
-    'deepcopy':copy.deepcopy}
+    'deepcopy':copy.deepcopy,'Any':object,'ConfigFlowResult':dict}
 
 merge_node=next(n for n in setup.body if isinstance(n,ast.FunctionDef)
                 and n.name=='_merge')
