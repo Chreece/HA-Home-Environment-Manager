@@ -87,6 +87,7 @@ async def run():
     await rejects(pending,'pending native command')
     relay_owned=create_offline()
     relay_owned.record['upstream']['owned']=True
+    relay_owned.record['upstream']['identity']=dict(base['identity'])
     await rejects(relay_owned,'unresolved controller power ownership')
     unauthorized=create_offline()
     unauthorized.manager.switch_permission=False
