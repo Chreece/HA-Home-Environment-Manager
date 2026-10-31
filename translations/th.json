@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "บ้าน · Away · cooldown (min)",
           "away_open_window_alert": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน",
           "away_windows_target_people": "บุคคลที่จะรับการแจ้งเตือน",
-          "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง"
+          "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง",
+          "global_threshold_outdoor_aqi": "ภายนอก · AQI (≤)",
+          "global_threshold_outdoor_co2": "ภายนอก · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "ภายนอก · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "ภายนอก · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "ภายนอก · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "ภายนอก · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · ภายนอก (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · ภายนอก (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · ภายนอก (µg/m³)",
+          "global_threshold_indoor_aqi": "คุณภาพอากาศ · AQI (≥)",
+          "global_threshold_indoor_co2": "คุณภาพอากาศ · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "คุณภาพอากาศ · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "คุณภาพอากาศ · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "คุณภาพอากาศ · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "คุณภาพอากาศ · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "คุณภาพอากาศ · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "ภายนอก · °C (≥)",
+          "global_threshold_max_outdoor_temp": "ภายนอก · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "ภายนอก · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "สภาพอากาศและคำเตือน · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · เปิด (min, ≤)",
+          "global_threshold_indoor_mold": "ตัวชี้วัดเชื้อรา · ≥ 70%",
+          "pollen_high_from": "POLLEN · ละอองเกสร · HIGH",
+          "pollen_max_scale": "POLLEN · ละอองเกสร · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · ละอองเกสร · NO VENT",
+          "general_source_stale_minutes": "แหล่งข้อมูล · max (min)",
+          "general_home_policy": "บ้าน · การมีคนอยู่ · ควบคุม"
         },
         "data_description": {
           "weather_entities": "เลือก: สภาพอากาศและคำเตือน · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · บ้าน · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน. บุคคลที่จะรับการแจ้งเตือน (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. โทรศัพท์, นาฬิกา, แท็บเล็ต.",
           "away_windows_target_people": "บุคคลที่จะรับการแจ้งเตือน (person.*) - Announcement Hub: โทรศัพท์, นาฬิกา, แท็บเล็ต, อุปกรณ์อื่น. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง: โทรศัพท์ การแจ้งเตือน / เสียง TTS, นาฬิกา การแจ้งเตือน / เสียง TTS, แท็บเล็ต การแจ้งเตือน / เสียง TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง: โทรศัพท์ การแจ้งเตือน / เสียง TTS, นาฬิกา การแจ้งเตือน / เสียง TTS, แท็บเล็ต การแจ้งเตือน / เสียง TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · AQI (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_co2": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · CO₂ (ppm) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_pm25": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · PM2.5 (µg/m³) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_pm10": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · PM10 (µg/m³) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_voc": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · VOC (µg/m³) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_voc_parts": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · VOC (ppb) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_no2": "ค่าเกณฑ์ตัดสินใจสำหรับ “NO₂ · ภายนอก (µg/m³)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_o3": "ค่าเกณฑ์ตัดสินใจสำหรับ “O₃ · ภายนอก (µg/m³)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_so2": "ค่าเกณฑ์ตัดสินใจสำหรับ “SO₂ · ภายนอก (µg/m³)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_aqi": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · AQI (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_co2": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · CO₂ (ppm) (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_pm25": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · PM2.5 (µg/m³) (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_pm10": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · PM10 (µg/m³) (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_voc": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · VOC (µg/m³) (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_voc_parts": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · VOC (ppb) (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_humidity": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · RH (%) (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_min_outdoor_temp": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · °C (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_max_outdoor_temp": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · °C (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_max_outdoor_humidity": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · RH (%) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_max_wind_kmh": "ค่าเกณฑ์ตัดสินใจสำหรับ “สภาพอากาศและคำเตือน · km/h (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_max_age_minutes": "ค่าเกณฑ์ตัดสินใจสำหรับ “⏱ · เปิด (min, ≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_mold": "ค่าเกณฑ์ตัดสินใจสำหรับ “ตัวชี้วัดเชื้อรา · ≥ 70%” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "pollen_high_from": "ตั้งค่า “POLLEN · ละอองเกสร · HIGH” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
+          "pollen_max_scale": "ตั้งค่า “POLLEN · ละอองเกสร · SCALE” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
+          "pollen_avoid_ventilation": "ตั้งค่า “POLLEN · ละอองเกสร · NO VENT” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
+          "general_source_stale_minutes": "แหล่งข้อมูล · นอน / การมีคนอยู่ · max 240 min. ไม่ถูกต้อง · ปิด.",
+          "general_home_policy": "ตัวเลือกนี้ควบคุม “บ้าน · การมีคนอยู่ · ควบคุม” คำสั่งอุปกรณ์ต้องได้รับอนุญาตแยกและมีระบบป้องกันอิสระ"
         }
       },
       "reconfigure": {
         "title": "⚙️ เลือก",
         "description": "เลือก: ห้อง / สภาพอากาศและคำเตือน / การประกาศ (ไม่บังคับ) / ค่าขีดจำกัดขั้นสูง",
         "menu_options": {
-          "room_occupancy": "การมีคนอยู่ · เซนเซอร์",
-          "outside_data": "ภายนอก · แหล่งข้อมูล",
-          "general_settings": "ทั่วไป · การตั้งค่า",
-          "area_settings": "พื้นที่ · การตั้งค่า",
-          "delivery": "การประกาศ (ไม่บังคับ)",
-          "thresholds": "ค่าขีดจำกัดขั้นสูง",
-          "climate": "การตั้งค่า · อุปกรณ์",
-          "pid": "การตั้งค่า · PID",
-          "setup_rooms": "ห้องที่จะตรวจสอบ"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "ทั่วไป การตั้งค่า"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "ห้องที่จะตรวจสอบ → แหล่งข้อมูล → ทั่วไป การตั้งค่า",
+        "data": {
+          "areas": "ห้องที่จะตรวจสอบ"
+        },
+        "data_description": {
+          "areas": "ห้องที่จะตรวจสอบ. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ"
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
+        "data": {
+          "windows": "หน้าต่าง",
+          "air_quality": "เซ็นเซอร์คุณภาพอากาศและสิ่งแวดล้อม",
+          "temperature": "อุณหภูมิ",
+          "humidity": "ความชื้น",
+          "pressure": "เซ็นเซอร์ความดัน",
+          "climate_devices": "อุปกรณ์",
+          "shades": "ม่าน มู่ลี่ และบานเกล็ดหน้าต่าง",
+          "occupancy_sensors": "การมีคนอยู่ · เซนเซอร์"
+        },
+        "data_description": {
+          "windows": "หน้าต่าง. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
+          "air_quality": "เซ็นเซอร์คุณภาพอากาศและสิ่งแวดล้อม. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
+          "temperature": "อุณหภูมิ. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
+          "humidity": "ความชื้น. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
+          "pressure": "เซ็นเซอร์ความดัน. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
+          "climate_devices": "อุปกรณ์. เลือกเฉพาะเอนทิตีอุปกรณ์จริง climate.*, humidifier.* และ fan.* ในห้องนี้ ความสามารถของอุปกรณ์กำหนดการทำความร้อน ความเย็น ลดความชื้น ค่าเป้าหมาย และความเร็วพัดลม การเลือกยังไม่สั่งงาน ต้องเปิดระบบอัตโนมัติแยกในแต่ละตัวควบคุม",
+          "shades": "ม่าน มู่ลี่ และบานเกล็ดหน้าต่าง. เลือกม่าน มู่ลี่ และบานเกล็ดหน้าต่าง cover.* ของห้อง Covers ที่ไม่มี device_class ใช้ได้เมื่อรองรับ CLOSE และเป็นอุปกรณ์บังแดดหน้าต่างจริง โรงรถ ประตู รั้ว หน้าต่างและกันสาดภายนอกถูกยกเว้น การเลือกไม่ทำให้เคลื่อนที่: เชื่อมเซ็นเซอร์หน้าต่างแล้วตั้งค่าอัตโนมัติ การแจ้งล่วงหน้า และอุณหภูมิที่ตัวควบคุม สถานะไม่ทราบห้ามเคลื่อนไหว",
+          "occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน"
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ เลือก",
         "description": "เลือก: ห้อง / สภาพอากาศและคำเตือน / การประกาศ (ไม่บังคับ) / ค่าขีดจำกัดขั้นสูง",
         "menu_options": {
-          "room_occupancy": "การมีคนอยู่ · เซนเซอร์",
-          "outside_data": "ภายนอก · แหล่งข้อมูล",
-          "general_settings": "ทั่วไป · การตั้งค่า",
-          "area_settings": "พื้นที่ · การตั้งค่า",
-          "delivery": "การประกาศ (ไม่บังคับ)",
-          "thresholds": "ค่าขีดจำกัดขั้นสูง",
-          "climate": "การตั้งค่า · อุปกรณ์",
-          "pid": "การตั้งค่า · PID",
-          "setup_rooms": "ห้องที่จะตรวจสอบ"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "ทั่วไป การตั้งค่า"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "บ้าน · Away · cooldown (min)",
           "away_open_window_alert": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน",
           "away_windows_target_people": "บุคคลที่จะรับการแจ้งเตือน",
-          "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง"
+          "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง",
+          "global_threshold_outdoor_aqi": "ภายนอก · AQI (≤)",
+          "global_threshold_outdoor_co2": "ภายนอก · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "ภายนอก · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "ภายนอก · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "ภายนอก · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "ภายนอก · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · ภายนอก (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · ภายนอก (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · ภายนอก (µg/m³)",
+          "global_threshold_indoor_aqi": "คุณภาพอากาศ · AQI (≥)",
+          "global_threshold_indoor_co2": "คุณภาพอากาศ · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "คุณภาพอากาศ · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "คุณภาพอากาศ · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "คุณภาพอากาศ · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "คุณภาพอากาศ · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "คุณภาพอากาศ · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "ภายนอก · °C (≥)",
+          "global_threshold_max_outdoor_temp": "ภายนอก · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "ภายนอก · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "สภาพอากาศและคำเตือน · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · เปิด (min, ≤)",
+          "global_threshold_indoor_mold": "ตัวชี้วัดเชื้อรา · ≥ 70%",
+          "pollen_high_from": "POLLEN · ละอองเกสร · HIGH",
+          "pollen_max_scale": "POLLEN · ละอองเกสร · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · ละอองเกสร · NO VENT",
+          "general_source_stale_minutes": "แหล่งข้อมูล · max (min)",
+          "general_home_policy": "บ้าน · การมีคนอยู่ · ควบคุม"
         },
         "data_description": {
           "weather_entities": "เลือก: สภาพอากาศและคำเตือน · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · บ้าน · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "แจ้งเตือนหน้าต่างเปิดหลังทุกคนออกจากบ้าน. บุคคลที่จะรับการแจ้งเตือน (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. โทรศัพท์, นาฬิกา, แท็บเล็ต.",
           "away_windows_target_people": "บุคคลที่จะรับการแจ้งเตือน (person.*) - Announcement Hub: โทรศัพท์, นาฬิกา, แท็บเล็ต, อุปกรณ์อื่น. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง: โทรศัพท์ การแจ้งเตือน / เสียง TTS, นาฬิกา การแจ้งเตือน / เสียง TTS, แท็บเล็ต การแจ้งเตือน / เสียง TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "ช่องทางแจ้งเตือนหน้าต่าง: โทรศัพท์ การแจ้งเตือน / เสียง TTS, นาฬิกา การแจ้งเตือน / เสียง TTS, แท็บเล็ต การแจ้งเตือน / เสียง TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · AQI (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_co2": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · CO₂ (ppm) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_pm25": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · PM2.5 (µg/m³) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_pm10": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · PM10 (µg/m³) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_voc": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · VOC (µg/m³) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_voc_parts": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · VOC (ppb) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_no2": "ค่าเกณฑ์ตัดสินใจสำหรับ “NO₂ · ภายนอก (µg/m³)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_o3": "ค่าเกณฑ์ตัดสินใจสำหรับ “O₃ · ภายนอก (µg/m³)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_outdoor_so2": "ค่าเกณฑ์ตัดสินใจสำหรับ “SO₂ · ภายนอก (µg/m³)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_aqi": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · AQI (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_co2": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · CO₂ (ppm) (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_pm25": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · PM2.5 (µg/m³) (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_pm10": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · PM10 (µg/m³) (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_voc": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · VOC (µg/m³) (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_voc_parts": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · VOC (ppb) (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_humidity": "ค่าเกณฑ์ตัดสินใจสำหรับ “คุณภาพอากาศ · RH (%) (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_min_outdoor_temp": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · °C (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_max_outdoor_temp": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · °C (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_max_outdoor_humidity": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · RH (%) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_max_wind_kmh": "ค่าเกณฑ์ตัดสินใจสำหรับ “สภาพอากาศและคำเตือน · km/h (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_max_age_minutes": "ค่าเกณฑ์ตัดสินใจสำหรับ “⏱ · เปิด (min, ≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "global_threshold_indoor_mold": "ค่าเกณฑ์ตัดสินใจสำหรับ “ตัวชี้วัดเชื้อรา · ≥ 70%” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
+          "pollen_high_from": "ตั้งค่า “POLLEN · ละอองเกสร · HIGH” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
+          "pollen_max_scale": "ตั้งค่า “POLLEN · ละอองเกสร · SCALE” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
+          "pollen_avoid_ventilation": "ตั้งค่า “POLLEN · ละอองเกสร · NO VENT” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
+          "general_source_stale_minutes": "แหล่งข้อมูล · นอน / การมีคนอยู่ · max 240 min. ไม่ถูกต้อง · ปิด.",
+          "general_home_policy": "ตัวเลือกนี้ควบคุม “บ้าน · การมีคนอยู่ · ควบคุม” คำสั่งอุปกรณ์ต้องได้รับอนุญาตแยกและมีระบบป้องกันอิสระ"
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "ห้องที่จะตรวจสอบ → แหล่งข้อมูล → ทั่วไป การตั้งค่า",
+        "data": {
+          "areas": "ห้องที่จะตรวจสอบ"
+        },
+        "data_description": {
+          "areas": "ห้องที่จะตรวจสอบ. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ"
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
+        "data": {
+          "windows": "หน้าต่าง",
+          "air_quality": "เซ็นเซอร์คุณภาพอากาศและสิ่งแวดล้อม",
+          "temperature": "อุณหภูมิ",
+          "humidity": "ความชื้น",
+          "pressure": "เซ็นเซอร์ความดัน",
+          "climate_devices": "อุปกรณ์",
+          "shades": "ม่าน มู่ลี่ และบานเกล็ดหน้าต่าง",
+          "occupancy_sensors": "การมีคนอยู่ · เซนเซอร์"
+        },
+        "data_description": {
+          "windows": "หน้าต่าง. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
+          "air_quality": "เซ็นเซอร์คุณภาพอากาศและสิ่งแวดล้อม. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
+          "temperature": "อุณหภูมิ. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
+          "humidity": "ความชื้น. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
+          "pressure": "เซ็นเซอร์ความดัน. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
+          "climate_devices": "อุปกรณ์. เลือกเฉพาะเอนทิตีอุปกรณ์จริง climate.*, humidifier.* และ fan.* ในห้องนี้ ความสามารถของอุปกรณ์กำหนดการทำความร้อน ความเย็น ลดความชื้น ค่าเป้าหมาย และความเร็วพัดลม การเลือกยังไม่สั่งงาน ต้องเปิดระบบอัตโนมัติแยกในแต่ละตัวควบคุม",
+          "shades": "ม่าน มู่ลี่ และบานเกล็ดหน้าต่าง. เลือกม่าน มู่ลี่ และบานเกล็ดหน้าต่าง cover.* ของห้อง Covers ที่ไม่มี device_class ใช้ได้เมื่อรองรับ CLOSE และเป็นอุปกรณ์บังแดดหน้าต่างจริง โรงรถ ประตู รั้ว หน้าต่างและกันสาดภายนอกถูกยกเว้น การเลือกไม่ทำให้เคลื่อนที่: เชื่อมเซ็นเซอร์หน้าต่างแล้วตั้งค่าอัตโนมัติ การแจ้งล่วงหน้า และอุณหภูมิที่ตัวควบคุม สถานะไม่ทราบห้ามเคลื่อนไหว",
+          "occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน"
         }
       }
     },

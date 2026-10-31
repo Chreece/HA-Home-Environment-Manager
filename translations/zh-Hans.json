@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "家中 · Away · cooldown (min)",
           "away_open_window_alert": "所有人离家后提醒未关窗户",
           "away_windows_target_people": "接收提醒的人员",
-          "away_windows_delivery_channels": "窗户提醒发送渠道"
+          "away_windows_delivery_channels": "窗户提醒发送渠道",
+          "global_threshold_outdoor_aqi": "室外 · AQI (≤)",
+          "global_threshold_outdoor_co2": "室外 · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "室外 · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "室外 · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "室外 · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "室外 · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · 室外 (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · 室外 (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · 室外 (µg/m³)",
+          "global_threshold_indoor_aqi": "空气质量 · AQI (≥)",
+          "global_threshold_indoor_co2": "空气质量 · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "空气质量 · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "空气质量 · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "空气质量 · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "空气质量 · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "空气质量 · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "室外 · °C (≥)",
+          "global_threshold_max_outdoor_temp": "室外 · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "室外 · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "天气与预警 · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · 打开 (min, ≤)",
+          "global_threshold_indoor_mold": "霉菌指标 · ≥ 70%",
+          "pollen_high_from": "POLLEN · 花粉 · HIGH",
+          "pollen_max_scale": "POLLEN · 花粉 · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · 花粉 · NO VENT",
+          "general_source_stale_minutes": "来源 · max (min)",
+          "general_home_policy": "家中 · 占用 · 控制"
         },
         "data_description": {
           "weather_entities": "请选择: 天气与预警 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "所有人离家后提醒未关窗户. 接收提醒的人员 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. 手机, 手表, 平板.",
           "away_windows_target_people": "接收提醒的人员 (person.*) - Announcement Hub: 手机, 手表, 平板, 其他设备. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "窗户提醒发送渠道: 手机 通知 / TTS 语音, 手表 通知 / TTS 语音, 平板 通知 / TTS 语音. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "窗户提醒发送渠道: 手机 通知 / TTS 语音, 手表 通知 / TTS 语音, 平板 通知 / TTS 语音. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "“室外 · AQI (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_co2": "“室外 · CO₂ (ppm) (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_pm25": "“室外 · PM2.5 (µg/m³) (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_pm10": "“室外 · PM10 (µg/m³) (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_voc": "“室外 · VOC (µg/m³) (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_voc_parts": "“室外 · VOC (ppb) (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_no2": "“NO₂ · 室外 (µg/m³)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_o3": "“O₃ · 室外 (µg/m³)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_so2": "“SO₂ · 室外 (µg/m³)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_aqi": "“空气质量 · AQI (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_co2": "“空气质量 · CO₂ (ppm) (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_pm25": "“空气质量 · PM2.5 (µg/m³) (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_pm10": "“空气质量 · PM10 (µg/m³) (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_voc": "“空气质量 · VOC (µg/m³) (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_voc_parts": "“空气质量 · VOC (ppb) (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_humidity": "“空气质量 · RH (%) (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_min_outdoor_temp": "“室外 · °C (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_max_outdoor_temp": "“室外 · °C (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_max_outdoor_humidity": "“室外 · RH (%) (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_max_wind_kmh": "“天气与预警 · km/h (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_max_age_minutes": "“⏱ · 打开 (min, ≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_mold": "“霉菌指标 · ≥ 70%”的决策阈值会影响建议，但不属于医学限值。",
+          "pollen_high_from": "只为所选房间配置“POLLEN · 花粉 · HIGH”。缺失或无效数据会阻止相关操作。",
+          "pollen_max_scale": "只为所选房间配置“POLLEN · 花粉 · SCALE”。缺失或无效数据会阻止相关操作。",
+          "pollen_avoid_ventilation": "只为所选房间配置“POLLEN · 花粉 · NO VENT”。缺失或无效数据会阻止相关操作。",
+          "general_source_stale_minutes": "来源 · 睡眠 / 占用 · max 240 min. 无效 · 关闭.",
+          "general_home_policy": "该选项控制“家中 · 占用 · 控制”。实际设备命令必须单独授权并具有独立保护。"
         }
       },
       "reconfigure": {
         "title": "⚙️ 请选择",
         "description": "请选择: 房间 / 天气与预警 / 播报（可选） / 高级阈值",
         "menu_options": {
-          "room_occupancy": "占用 · 传感器",
-          "outside_data": "室外 · 来源",
-          "general_settings": "常规 · 设置",
-          "area_settings": "区域 · 设置",
-          "delivery": "播报（可选）",
-          "thresholds": "高级阈值",
-          "climate": "设置 · 设备",
-          "pid": "设置 · PID",
-          "setup_rooms": "要监测的房间"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "常规 设置"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "要监测的房间 → 来源 → 常规 设置",
+        "data": {
+          "areas": "要监测的房间"
+        },
+        "data_description": {
+          "areas": "要监测的房间. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。"
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+        "data": {
+          "windows": "窗户",
+          "air_quality": "空气质量与环境传感器",
+          "temperature": "温度",
+          "humidity": "湿度",
+          "pressure": "压力传感器",
+          "climate_devices": "设备",
+          "shades": "窗帘、百叶帘及卷帘",
+          "occupancy_sensors": "占用 · 传感器"
+        },
+        "data_description": {
+          "windows": "窗户. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "air_quality": "空气质量与环境传感器. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "temperature": "温度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "humidity": "湿度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "pressure": "压力传感器. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "climate_devices": "设备. 只选择本房间实际的 climate.*、humidifier.* 和 fan.* 实体。设备自身的能力决定供暖、制冷、除湿、温湿度目标和风扇速度。选择不会立即控制设备；须在每台设备控制器中分别启用自动控制。",
+          "shades": "窗帘、百叶帘及卷帘. 选择本房间的 cover.* 百叶帘、卷帘、卷闸和窗帘。没有 device_class 的 covers 只要支持 CLOSE 且确实用于窗户遮阳，也可以选择。车库门、门、闸门、窗户及室外遮阳棚均排除。仅选择不会移动：请在控制器中指定窗户传感器、自动控制、提前通知和温度阈值。状态未知时禁止移动。",
+          "occupancy_sensors": "为“占用 · 传感器”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。"
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ 请选择",
         "description": "请选择: 房间 / 天气与预警 / 播报（可选） / 高级阈值",
         "menu_options": {
-          "room_occupancy": "占用 · 传感器",
-          "outside_data": "室外 · 来源",
-          "general_settings": "常规 · 设置",
-          "area_settings": "区域 · 设置",
-          "delivery": "播报（可选）",
-          "thresholds": "高级阈值",
-          "climate": "设置 · 设备",
-          "pid": "设置 · PID",
-          "setup_rooms": "要监测的房间"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "常规 设置"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "家中 · Away · cooldown (min)",
           "away_open_window_alert": "所有人离家后提醒未关窗户",
           "away_windows_target_people": "接收提醒的人员",
-          "away_windows_delivery_channels": "窗户提醒发送渠道"
+          "away_windows_delivery_channels": "窗户提醒发送渠道",
+          "global_threshold_outdoor_aqi": "室外 · AQI (≤)",
+          "global_threshold_outdoor_co2": "室外 · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "室外 · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "室外 · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "室外 · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "室外 · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · 室外 (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · 室外 (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · 室外 (µg/m³)",
+          "global_threshold_indoor_aqi": "空气质量 · AQI (≥)",
+          "global_threshold_indoor_co2": "空气质量 · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "空气质量 · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "空气质量 · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "空气质量 · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "空气质量 · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "空气质量 · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "室外 · °C (≥)",
+          "global_threshold_max_outdoor_temp": "室外 · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "室外 · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "天气与预警 · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · 打开 (min, ≤)",
+          "global_threshold_indoor_mold": "霉菌指标 · ≥ 70%",
+          "pollen_high_from": "POLLEN · 花粉 · HIGH",
+          "pollen_max_scale": "POLLEN · 花粉 · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · 花粉 · NO VENT",
+          "general_source_stale_minutes": "来源 · max (min)",
+          "general_home_policy": "家中 · 占用 · 控制"
         },
         "data_description": {
           "weather_entities": "请选择: 天气与预警 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "所有人离家后提醒未关窗户. 接收提醒的人员 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. 手机, 手表, 平板.",
           "away_windows_target_people": "接收提醒的人员 (person.*) - Announcement Hub: 手机, 手表, 平板, 其他设备. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "窗户提醒发送渠道: 手机 通知 / TTS 语音, 手表 通知 / TTS 语音, 平板 通知 / TTS 语音. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "窗户提醒发送渠道: 手机 通知 / TTS 语音, 手表 通知 / TTS 语音, 平板 通知 / TTS 语音. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "“室外 · AQI (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_co2": "“室外 · CO₂ (ppm) (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_pm25": "“室外 · PM2.5 (µg/m³) (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_pm10": "“室外 · PM10 (µg/m³) (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_voc": "“室外 · VOC (µg/m³) (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_voc_parts": "“室外 · VOC (ppb) (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_no2": "“NO₂ · 室外 (µg/m³)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_o3": "“O₃ · 室外 (µg/m³)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_outdoor_so2": "“SO₂ · 室外 (µg/m³)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_aqi": "“空气质量 · AQI (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_co2": "“空气质量 · CO₂ (ppm) (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_pm25": "“空气质量 · PM2.5 (µg/m³) (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_pm10": "“空气质量 · PM10 (µg/m³) (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_voc": "“空气质量 · VOC (µg/m³) (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_voc_parts": "“空气质量 · VOC (ppb) (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_humidity": "“空气质量 · RH (%) (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_min_outdoor_temp": "“室外 · °C (≥)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_max_outdoor_temp": "“室外 · °C (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_max_outdoor_humidity": "“室外 · RH (%) (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_max_wind_kmh": "“天气与预警 · km/h (≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_max_age_minutes": "“⏱ · 打开 (min, ≤)”的决策阈值会影响建议，但不属于医学限值。",
+          "global_threshold_indoor_mold": "“霉菌指标 · ≥ 70%”的决策阈值会影响建议，但不属于医学限值。",
+          "pollen_high_from": "只为所选房间配置“POLLEN · 花粉 · HIGH”。缺失或无效数据会阻止相关操作。",
+          "pollen_max_scale": "只为所选房间配置“POLLEN · 花粉 · SCALE”。缺失或无效数据会阻止相关操作。",
+          "pollen_avoid_ventilation": "只为所选房间配置“POLLEN · 花粉 · NO VENT”。缺失或无效数据会阻止相关操作。",
+          "general_source_stale_minutes": "来源 · 睡眠 / 占用 · max 240 min. 无效 · 关闭.",
+          "general_home_policy": "该选项控制“家中 · 占用 · 控制”。实际设备命令必须单独授权并具有独立保护。"
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "要监测的房间 → 来源 → 常规 设置",
+        "data": {
+          "areas": "要监测的房间"
+        },
+        "data_description": {
+          "areas": "要监测的房间. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。"
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+        "data": {
+          "windows": "窗户",
+          "air_quality": "空气质量与环境传感器",
+          "temperature": "温度",
+          "humidity": "湿度",
+          "pressure": "压力传感器",
+          "climate_devices": "设备",
+          "shades": "窗帘、百叶帘及卷帘",
+          "occupancy_sensors": "占用 · 传感器"
+        },
+        "data_description": {
+          "windows": "窗户. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "air_quality": "空气质量与环境传感器. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "temperature": "温度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "humidity": "湿度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "pressure": "压力传感器. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "climate_devices": "设备. 只选择本房间实际的 climate.*、humidifier.* 和 fan.* 实体。设备自身的能力决定供暖、制冷、除湿、温湿度目标和风扇速度。选择不会立即控制设备；须在每台设备控制器中分别启用自动控制。",
+          "shades": "窗帘、百叶帘及卷帘. 选择本房间的 cover.* 百叶帘、卷帘、卷闸和窗帘。没有 device_class 的 covers 只要支持 CLOSE 且确实用于窗户遮阳，也可以选择。车库门、门、闸门、窗户及室外遮阳棚均排除。仅选择不会移动：请在控制器中指定窗户传感器、自动控制、提前通知和温度阈值。状态未知时禁止移动。",
+          "occupancy_sensors": "为“占用 · 传感器”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。"
         }
       }
     },

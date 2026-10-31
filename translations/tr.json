@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Ev · Away · cooldown (min)",
           "away_open_window_alert": "Herkes çıktıktan sonra açık pencereleri bildir",
           "away_windows_target_people": "Bildirim gönderilecek kişiler",
-          "away_windows_delivery_channels": "Pencere bildirim kanalları"
+          "away_windows_delivery_channels": "Pencere bildirim kanalları",
+          "global_threshold_outdoor_aqi": "Dışarısı · AQI (≤)",
+          "global_threshold_outdoor_co2": "Dışarısı · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Dışarısı · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Dışarısı · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Dışarısı · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Dışarısı · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Dış (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Dış (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Dış (µg/m³)",
+          "global_threshold_indoor_aqi": "Hava kalitesi · AQI (≥)",
+          "global_threshold_indoor_co2": "Hava kalitesi · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Hava kalitesi · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Hava kalitesi · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Hava kalitesi · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Hava kalitesi · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Hava kalitesi · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Dışarısı · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Dışarısı · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Dışarısı · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Hava durumu ve uyarılar · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Açın (min, ≤)",
+          "global_threshold_indoor_mold": "Küf göstergesi · ≥ 70%",
+          "pollen_high_from": "POLLEN · Polen · HIGH",
+          "pollen_max_scale": "POLLEN · Polen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Polen · NO VENT",
+          "general_source_stale_minutes": "kaynak · max (min)",
+          "general_home_policy": "Ev · Doluluk · kontrol"
         },
         "data_description": {
           "weather_entities": "Seçin: Hava durumu ve uyarılar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · Ev · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Herkes çıktıktan sonra açık pencereleri bildir. Bildirim gönderilecek kişiler (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Saat, Tablet.",
           "away_windows_target_people": "Bildirim gönderilecek kişiler (person.*) - Announcement Hub: Telefon, Saat, Tablet, Diğer cihaz. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Pencere bildirim kanalları: Telefon Bildirim / TTS ses, Saat Bildirim / TTS ses, Tablet Bildirim / TTS ses. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Pencere bildirim kanalları: Telefon Bildirim / TTS ses, Saat Bildirim / TTS ses, Tablet Bildirim / TTS ses. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "«Dışarısı · AQI (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_co2": "«Dışarısı · CO₂ (ppm) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_pm25": "«Dışarısı · PM2.5 (µg/m³) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_pm10": "«Dışarısı · PM10 (µg/m³) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_voc": "«Dışarısı · VOC (µg/m³) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_voc_parts": "«Dışarısı · VOC (ppb) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_no2": "«NO₂ · Dış (µg/m³)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_o3": "«O₃ · Dış (µg/m³)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_so2": "«SO₂ · Dış (µg/m³)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_aqi": "«Hava kalitesi · AQI (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_co2": "«Hava kalitesi · CO₂ (ppm) (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_pm25": "«Hava kalitesi · PM2.5 (µg/m³) (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_pm10": "«Hava kalitesi · PM10 (µg/m³) (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_voc": "«Hava kalitesi · VOC (µg/m³) (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_voc_parts": "«Hava kalitesi · VOC (ppb) (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_humidity": "«Hava kalitesi · RH (%) (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_min_outdoor_temp": "«Dışarısı · °C (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_max_outdoor_temp": "«Dışarısı · °C (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_max_outdoor_humidity": "«Dışarısı · RH (%) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_max_wind_kmh": "«Hava durumu ve uyarılar · km/h (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_max_age_minutes": "«⏱ · Açın (min, ≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_mold": "«Küf göstergesi · ≥ 70%» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "pollen_high_from": "«POLLEN · Polen · HIGH» yalnızca seçilen oda için ayarlanır. Eksik veya uyumsuz veri işlemi engeller.",
+          "pollen_max_scale": "«POLLEN · Polen · SCALE» yalnızca seçilen oda için ayarlanır. Eksik veya uyumsuz veri işlemi engeller.",
+          "pollen_avoid_ventilation": "«POLLEN · Polen · NO VENT» yalnızca seçilen oda için ayarlanır. Eksik veya uyumsuz veri işlemi engeller.",
+          "general_source_stale_minutes": "kaynak · Uyku / Doluluk · max 240 min. Geçersiz · Kapat.",
+          "general_home_policy": "Bu ayar «Ev · Doluluk · kontrol» için geçerlidir. Fiziksel komutlar ayrı onay ve bağımsız koruma gerektirir."
         }
       },
       "reconfigure": {
         "title": "⚙️ Seçin",
         "description": "Seçin: Odalar / Hava durumu ve uyarılar / Duyurular (isteğe bağlı) / Gelişmiş eşikler",
         "menu_options": {
-          "room_occupancy": "Doluluk · sensör",
-          "outside_data": "Dış · kaynak",
-          "general_settings": "Genel · ayarlar",
-          "area_settings": "Alan · ayarlar",
-          "delivery": "Duyurular (isteğe bağlı)",
-          "thresholds": "Gelişmiş eşikler",
-          "climate": "ayarlar · Cihazlar",
-          "pid": "ayarlar · PID",
-          "setup_rooms": "İzlenecek odalar"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Genel ayarlar"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "İzlenecek odalar → kaynak → Genel ayarlar",
+        "data": {
+          "areas": "İzlenecek odalar"
+        },
+        "data_description": {
+          "areas": "İzlenecek odalar. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+        "data": {
+          "windows": "Pencereler",
+          "air_quality": "Hava kalitesi ve çevre sensörleri",
+          "temperature": "Sıcaklık",
+          "humidity": "Nem",
+          "pressure": "Basınç sensörleri",
+          "climate_devices": "Cihazlar",
+          "shades": "Pencere perdeleri, panjurlar ve jaluziler",
+          "occupancy_sensors": "Doluluk · sensör"
+        },
+        "data_description": {
+          "windows": "Pencereler. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "air_quality": "Hava kalitesi ve çevre sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "temperature": "Sıcaklık. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "humidity": "Nem. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "pressure": "Basınç sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "climate_devices": "Cihazlar. Yalnızca odadaki fiziksel climate.*, humidifier.* ve fan.* varlıklarını seçin. Cihazın yerel özellikleri ısıtma, soğutma, nem alma, hedefler ve fan hızını belirler. Seçim cihazı çalıştırmaz; otomatik kontrolü her cihazda ayrıca etkinleştirin.",
+          "shades": "Pencere perdeleri, panjurlar ve jaluziler. Odadaki cover.* panjur, stor ve perdeleri seçin. device_class olmayan covers, CLOSE destekliyorsa ve gerçekten pencere gölgeliyorsa kabul edilir. Garajlar, kapılar, geçitler, pencereler ve tenteler hariçtir. Seçim hareket ettirmez: pencere sensörünü bağlayın, otomatik kontrolü, duyuruyu ve sıcaklığı ayarlayın. Bilinmeyen durum hareketi engeller.",
+          "occupancy_sensors": "«Doluluk · sensör» için gerçek bir Home Assistant kaynağı seçin. Eski veya eksik veriler ilgili işlemi durdurur."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Seçin",
         "description": "Seçin: Odalar / Hava durumu ve uyarılar / Duyurular (isteğe bağlı) / Gelişmiş eşikler",
         "menu_options": {
-          "room_occupancy": "Doluluk · sensör",
-          "outside_data": "Dış · kaynak",
-          "general_settings": "Genel · ayarlar",
-          "area_settings": "Alan · ayarlar",
-          "delivery": "Duyurular (isteğe bağlı)",
-          "thresholds": "Gelişmiş eşikler",
-          "climate": "ayarlar · Cihazlar",
-          "pid": "ayarlar · PID",
-          "setup_rooms": "İzlenecek odalar"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Genel ayarlar"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Ev · Away · cooldown (min)",
           "away_open_window_alert": "Herkes çıktıktan sonra açık pencereleri bildir",
           "away_windows_target_people": "Bildirim gönderilecek kişiler",
-          "away_windows_delivery_channels": "Pencere bildirim kanalları"
+          "away_windows_delivery_channels": "Pencere bildirim kanalları",
+          "global_threshold_outdoor_aqi": "Dışarısı · AQI (≤)",
+          "global_threshold_outdoor_co2": "Dışarısı · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Dışarısı · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Dışarısı · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Dışarısı · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Dışarısı · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Dış (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Dış (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Dış (µg/m³)",
+          "global_threshold_indoor_aqi": "Hava kalitesi · AQI (≥)",
+          "global_threshold_indoor_co2": "Hava kalitesi · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Hava kalitesi · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Hava kalitesi · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Hava kalitesi · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Hava kalitesi · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Hava kalitesi · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Dışarısı · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Dışarısı · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Dışarısı · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Hava durumu ve uyarılar · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Açın (min, ≤)",
+          "global_threshold_indoor_mold": "Küf göstergesi · ≥ 70%",
+          "pollen_high_from": "POLLEN · Polen · HIGH",
+          "pollen_max_scale": "POLLEN · Polen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Polen · NO VENT",
+          "general_source_stale_minutes": "kaynak · max (min)",
+          "general_home_policy": "Ev · Doluluk · kontrol"
         },
         "data_description": {
           "weather_entities": "Seçin: Hava durumu ve uyarılar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · Ev · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Herkes çıktıktan sonra açık pencereleri bildir. Bildirim gönderilecek kişiler (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Saat, Tablet.",
           "away_windows_target_people": "Bildirim gönderilecek kişiler (person.*) - Announcement Hub: Telefon, Saat, Tablet, Diğer cihaz. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Pencere bildirim kanalları: Telefon Bildirim / TTS ses, Saat Bildirim / TTS ses, Tablet Bildirim / TTS ses. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Pencere bildirim kanalları: Telefon Bildirim / TTS ses, Saat Bildirim / TTS ses, Tablet Bildirim / TTS ses. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "«Dışarısı · AQI (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_co2": "«Dışarısı · CO₂ (ppm) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_pm25": "«Dışarısı · PM2.5 (µg/m³) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_pm10": "«Dışarısı · PM10 (µg/m³) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_voc": "«Dışarısı · VOC (µg/m³) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_voc_parts": "«Dışarısı · VOC (ppb) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_no2": "«NO₂ · Dış (µg/m³)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_o3": "«O₃ · Dış (µg/m³)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_outdoor_so2": "«SO₂ · Dış (µg/m³)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_aqi": "«Hava kalitesi · AQI (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_co2": "«Hava kalitesi · CO₂ (ppm) (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_pm25": "«Hava kalitesi · PM2.5 (µg/m³) (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_pm10": "«Hava kalitesi · PM10 (µg/m³) (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_voc": "«Hava kalitesi · VOC (µg/m³) (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_voc_parts": "«Hava kalitesi · VOC (ppb) (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_humidity": "«Hava kalitesi · RH (%) (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_min_outdoor_temp": "«Dışarısı · °C (≥)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_max_outdoor_temp": "«Dışarısı · °C (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_max_outdoor_humidity": "«Dışarısı · RH (%) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_max_wind_kmh": "«Hava durumu ve uyarılar · km/h (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_max_age_minutes": "«⏱ · Açın (min, ≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "global_threshold_indoor_mold": "«Küf göstergesi · ≥ 70%» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "pollen_high_from": "«POLLEN · Polen · HIGH» yalnızca seçilen oda için ayarlanır. Eksik veya uyumsuz veri işlemi engeller.",
+          "pollen_max_scale": "«POLLEN · Polen · SCALE» yalnızca seçilen oda için ayarlanır. Eksik veya uyumsuz veri işlemi engeller.",
+          "pollen_avoid_ventilation": "«POLLEN · Polen · NO VENT» yalnızca seçilen oda için ayarlanır. Eksik veya uyumsuz veri işlemi engeller.",
+          "general_source_stale_minutes": "kaynak · Uyku / Doluluk · max 240 min. Geçersiz · Kapat.",
+          "general_home_policy": "Bu ayar «Ev · Doluluk · kontrol» için geçerlidir. Fiziksel komutlar ayrı onay ve bağımsız koruma gerektirir."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "İzlenecek odalar → kaynak → Genel ayarlar",
+        "data": {
+          "areas": "İzlenecek odalar"
+        },
+        "data_description": {
+          "areas": "İzlenecek odalar. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+        "data": {
+          "windows": "Pencereler",
+          "air_quality": "Hava kalitesi ve çevre sensörleri",
+          "temperature": "Sıcaklık",
+          "humidity": "Nem",
+          "pressure": "Basınç sensörleri",
+          "climate_devices": "Cihazlar",
+          "shades": "Pencere perdeleri, panjurlar ve jaluziler",
+          "occupancy_sensors": "Doluluk · sensör"
+        },
+        "data_description": {
+          "windows": "Pencereler. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "air_quality": "Hava kalitesi ve çevre sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "temperature": "Sıcaklık. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "humidity": "Nem. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "pressure": "Basınç sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "climate_devices": "Cihazlar. Yalnızca odadaki fiziksel climate.*, humidifier.* ve fan.* varlıklarını seçin. Cihazın yerel özellikleri ısıtma, soğutma, nem alma, hedefler ve fan hızını belirler. Seçim cihazı çalıştırmaz; otomatik kontrolü her cihazda ayrıca etkinleştirin.",
+          "shades": "Pencere perdeleri, panjurlar ve jaluziler. Odadaki cover.* panjur, stor ve perdeleri seçin. device_class olmayan covers, CLOSE destekliyorsa ve gerçekten pencere gölgeliyorsa kabul edilir. Garajlar, kapılar, geçitler, pencereler ve tenteler hariçtir. Seçim hareket ettirmez: pencere sensörünü bağlayın, otomatik kontrolü, duyuruyu ve sıcaklığı ayarlayın. Bilinmeyen durum hareketi engeller.",
+          "occupancy_sensors": "«Doluluk · sensör» için gerçek bir Home Assistant kaynağı seçin. Eski veya eksik veriler ilgili işlemi durdurur."
         }
       }
     },

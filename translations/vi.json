@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Nhà · Away · cooldown (min)",
           "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà",
           "away_windows_target_people": "Người nhận thông báo",
-          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ"
+          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ",
+          "global_threshold_outdoor_aqi": "Ngoài trời · AQI (≤)",
+          "global_threshold_outdoor_co2": "Ngoài trời · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Ngoài trời · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Ngoài trời · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Ngoài trời · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Ngoài trời · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Bên ngoài (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Bên ngoài (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Bên ngoài (µg/m³)",
+          "global_threshold_indoor_aqi": "Chất lượng không khí · AQI (≥)",
+          "global_threshold_indoor_co2": "Chất lượng không khí · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Chất lượng không khí · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Chất lượng không khí · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Chất lượng không khí · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Chất lượng không khí · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Chất lượng không khí · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Ngoài trời · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Ngoài trời · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Ngoài trời · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Thời tiết và cảnh báo · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Mở (min, ≤)",
+          "global_threshold_indoor_mold": "Chỉ số nấm mốc · ≥ 70%",
+          "pollen_high_from": "POLLEN · Phấn hoa · HIGH",
+          "pollen_max_scale": "POLLEN · Phấn hoa · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Phấn hoa · NO VENT",
+          "general_source_stale_minutes": "nguồn · max (min)",
+          "general_home_policy": "Nhà · Hiện diện · điều khiển"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Nhà · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà. Người nhận thông báo (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Điện thoại, Đồng hồ, Máy tính bảng.",
           "away_windows_target_people": "Người nhận thông báo (person.*) - Announcement Hub: Điện thoại, Đồng hồ, Máy tính bảng, Thiết bị khác. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ: Điện thoại Thông báo / Giọng TTS, Đồng hồ Thông báo / Giọng TTS, Máy tính bảng Thông báo / Giọng TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ: Điện thoại Thông báo / Giọng TTS, Đồng hồ Thông báo / Giọng TTS, Máy tính bảng Thông báo / Giọng TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Ngưỡng quyết định cho “Ngoài trời · AQI (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_co2": "Ngưỡng quyết định cho “Ngoài trời · CO₂ (ppm) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_pm25": "Ngưỡng quyết định cho “Ngoài trời · PM2.5 (µg/m³) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_pm10": "Ngưỡng quyết định cho “Ngoài trời · PM10 (µg/m³) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_voc": "Ngưỡng quyết định cho “Ngoài trời · VOC (µg/m³) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_voc_parts": "Ngưỡng quyết định cho “Ngoài trời · VOC (ppb) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_no2": "Ngưỡng quyết định cho “NO₂ · Bên ngoài (µg/m³)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_o3": "Ngưỡng quyết định cho “O₃ · Bên ngoài (µg/m³)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_so2": "Ngưỡng quyết định cho “SO₂ · Bên ngoài (µg/m³)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_aqi": "Ngưỡng quyết định cho “Chất lượng không khí · AQI (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_co2": "Ngưỡng quyết định cho “Chất lượng không khí · CO₂ (ppm) (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_pm25": "Ngưỡng quyết định cho “Chất lượng không khí · PM2.5 (µg/m³) (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_pm10": "Ngưỡng quyết định cho “Chất lượng không khí · PM10 (µg/m³) (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_voc": "Ngưỡng quyết định cho “Chất lượng không khí · VOC (µg/m³) (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_voc_parts": "Ngưỡng quyết định cho “Chất lượng không khí · VOC (ppb) (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_humidity": "Ngưỡng quyết định cho “Chất lượng không khí · RH (%) (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_min_outdoor_temp": "Ngưỡng quyết định cho “Ngoài trời · °C (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_max_outdoor_temp": "Ngưỡng quyết định cho “Ngoài trời · °C (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_max_outdoor_humidity": "Ngưỡng quyết định cho “Ngoài trời · RH (%) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_max_wind_kmh": "Ngưỡng quyết định cho “Thời tiết và cảnh báo · km/h (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_max_age_minutes": "Ngưỡng quyết định cho “⏱ · Mở (min, ≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_mold": "Ngưỡng quyết định cho “Chỉ số nấm mốc · ≥ 70%”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "pollen_high_from": "Chỉ thiết lập “POLLEN · Phấn hoa · HIGH” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
+          "pollen_max_scale": "Chỉ thiết lập “POLLEN · Phấn hoa · SCALE” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
+          "pollen_avoid_ventilation": "Chỉ thiết lập “POLLEN · Phấn hoa · NO VENT” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
+          "general_source_stale_minutes": "nguồn · Ngủ / Hiện diện · max 240 min. Không hợp lệ · Tắt.",
+          "general_home_policy": "Tùy chọn này điều khiển “Nhà · Hiện diện · điều khiển”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập."
         }
       },
       "reconfigure": {
         "title": "⚙️ Chọn",
         "description": "Chọn: Phòng / Thời tiết và cảnh báo / Thông báo (tùy chọn) / Ngưỡng nâng cao",
         "menu_options": {
-          "room_occupancy": "Hiện diện · cảm biến",
-          "outside_data": "Bên ngoài · nguồn",
-          "general_settings": "Chung · cài đặt",
-          "area_settings": "Khu vực · cài đặt",
-          "delivery": "Thông báo (tùy chọn)",
-          "thresholds": "Ngưỡng nâng cao",
-          "climate": "cài đặt · Thiết bị",
-          "pid": "cài đặt · PID",
-          "setup_rooms": "Phòng cần giám sát"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Chung cài đặt"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Phòng cần giám sát → nguồn → Chung cài đặt",
+        "data": {
+          "areas": "Phòng cần giám sát"
+        },
+        "data_description": {
+          "areas": "Phòng cần giám sát. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+        "data": {
+          "windows": "Cửa sổ",
+          "air_quality": "Cảm biến chất lượng không khí và môi trường",
+          "temperature": "Nhiệt độ",
+          "humidity": "Độ ẩm",
+          "pressure": "Cảm biến áp suất",
+          "climate_devices": "Thiết bị",
+          "shades": "Rèm, mành và cửa chớp",
+          "occupancy_sensors": "Hiện diện · cảm biến"
+        },
+        "data_description": {
+          "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "air_quality": "Cảm biến chất lượng không khí và môi trường. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
+          "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
+          "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Chọn",
         "description": "Chọn: Phòng / Thời tiết và cảnh báo / Thông báo (tùy chọn) / Ngưỡng nâng cao",
         "menu_options": {
-          "room_occupancy": "Hiện diện · cảm biến",
-          "outside_data": "Bên ngoài · nguồn",
-          "general_settings": "Chung · cài đặt",
-          "area_settings": "Khu vực · cài đặt",
-          "delivery": "Thông báo (tùy chọn)",
-          "thresholds": "Ngưỡng nâng cao",
-          "climate": "cài đặt · Thiết bị",
-          "pid": "cài đặt · PID",
-          "setup_rooms": "Phòng cần giám sát"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Chung cài đặt"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Nhà · Away · cooldown (min)",
           "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà",
           "away_windows_target_people": "Người nhận thông báo",
-          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ"
+          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ",
+          "global_threshold_outdoor_aqi": "Ngoài trời · AQI (≤)",
+          "global_threshold_outdoor_co2": "Ngoài trời · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Ngoài trời · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Ngoài trời · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Ngoài trời · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Ngoài trời · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Bên ngoài (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Bên ngoài (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Bên ngoài (µg/m³)",
+          "global_threshold_indoor_aqi": "Chất lượng không khí · AQI (≥)",
+          "global_threshold_indoor_co2": "Chất lượng không khí · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Chất lượng không khí · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Chất lượng không khí · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Chất lượng không khí · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Chất lượng không khí · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Chất lượng không khí · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Ngoài trời · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Ngoài trời · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Ngoài trời · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Thời tiết và cảnh báo · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Mở (min, ≤)",
+          "global_threshold_indoor_mold": "Chỉ số nấm mốc · ≥ 70%",
+          "pollen_high_from": "POLLEN · Phấn hoa · HIGH",
+          "pollen_max_scale": "POLLEN · Phấn hoa · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Phấn hoa · NO VENT",
+          "general_source_stale_minutes": "nguồn · max (min)",
+          "general_home_policy": "Nhà · Hiện diện · điều khiển"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Nhà · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà. Người nhận thông báo (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Điện thoại, Đồng hồ, Máy tính bảng.",
           "away_windows_target_people": "Người nhận thông báo (person.*) - Announcement Hub: Điện thoại, Đồng hồ, Máy tính bảng, Thiết bị khác. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ: Điện thoại Thông báo / Giọng TTS, Đồng hồ Thông báo / Giọng TTS, Máy tính bảng Thông báo / Giọng TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ: Điện thoại Thông báo / Giọng TTS, Đồng hồ Thông báo / Giọng TTS, Máy tính bảng Thông báo / Giọng TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Ngưỡng quyết định cho “Ngoài trời · AQI (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_co2": "Ngưỡng quyết định cho “Ngoài trời · CO₂ (ppm) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_pm25": "Ngưỡng quyết định cho “Ngoài trời · PM2.5 (µg/m³) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_pm10": "Ngưỡng quyết định cho “Ngoài trời · PM10 (µg/m³) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_voc": "Ngưỡng quyết định cho “Ngoài trời · VOC (µg/m³) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_voc_parts": "Ngưỡng quyết định cho “Ngoài trời · VOC (ppb) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_no2": "Ngưỡng quyết định cho “NO₂ · Bên ngoài (µg/m³)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_o3": "Ngưỡng quyết định cho “O₃ · Bên ngoài (µg/m³)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_outdoor_so2": "Ngưỡng quyết định cho “SO₂ · Bên ngoài (µg/m³)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_aqi": "Ngưỡng quyết định cho “Chất lượng không khí · AQI (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_co2": "Ngưỡng quyết định cho “Chất lượng không khí · CO₂ (ppm) (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_pm25": "Ngưỡng quyết định cho “Chất lượng không khí · PM2.5 (µg/m³) (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_pm10": "Ngưỡng quyết định cho “Chất lượng không khí · PM10 (µg/m³) (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_voc": "Ngưỡng quyết định cho “Chất lượng không khí · VOC (µg/m³) (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_voc_parts": "Ngưỡng quyết định cho “Chất lượng không khí · VOC (ppb) (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_humidity": "Ngưỡng quyết định cho “Chất lượng không khí · RH (%) (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_min_outdoor_temp": "Ngưỡng quyết định cho “Ngoài trời · °C (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_max_outdoor_temp": "Ngưỡng quyết định cho “Ngoài trời · °C (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_max_outdoor_humidity": "Ngưỡng quyết định cho “Ngoài trời · RH (%) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_max_wind_kmh": "Ngưỡng quyết định cho “Thời tiết và cảnh báo · km/h (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_max_age_minutes": "Ngưỡng quyết định cho “⏱ · Mở (min, ≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "global_threshold_indoor_mold": "Ngưỡng quyết định cho “Chỉ số nấm mốc · ≥ 70%”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "pollen_high_from": "Chỉ thiết lập “POLLEN · Phấn hoa · HIGH” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
+          "pollen_max_scale": "Chỉ thiết lập “POLLEN · Phấn hoa · SCALE” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
+          "pollen_avoid_ventilation": "Chỉ thiết lập “POLLEN · Phấn hoa · NO VENT” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
+          "general_source_stale_minutes": "nguồn · Ngủ / Hiện diện · max 240 min. Không hợp lệ · Tắt.",
+          "general_home_policy": "Tùy chọn này điều khiển “Nhà · Hiện diện · điều khiển”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Phòng cần giám sát → nguồn → Chung cài đặt",
+        "data": {
+          "areas": "Phòng cần giám sát"
+        },
+        "data_description": {
+          "areas": "Phòng cần giám sát. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+        "data": {
+          "windows": "Cửa sổ",
+          "air_quality": "Cảm biến chất lượng không khí và môi trường",
+          "temperature": "Nhiệt độ",
+          "humidity": "Độ ẩm",
+          "pressure": "Cảm biến áp suất",
+          "climate_devices": "Thiết bị",
+          "shades": "Rèm, mành và cửa chớp",
+          "occupancy_sensors": "Hiện diện · cảm biến"
+        },
+        "data_description": {
+          "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "air_quality": "Cảm biến chất lượng không khí và môi trường. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
+          "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
+          "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."
         }
       }
     },

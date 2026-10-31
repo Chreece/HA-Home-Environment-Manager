@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Дім · Away · cooldown (min)",
           "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх",
           "away_windows_target_people": "Особи для сповіщення",
-          "away_windows_delivery_channels": "Канали сповіщень про вікна"
+          "away_windows_delivery_channels": "Канали сповіщень про вікна",
+          "global_threshold_outdoor_aqi": "Надворі · AQI (≤)",
+          "global_threshold_outdoor_co2": "Надворі · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Надворі · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Надворі · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Надворі · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Надворі · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Зовнішні (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Зовнішні (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Зовнішні (µg/m³)",
+          "global_threshold_indoor_aqi": "Якість повітря · AQI (≥)",
+          "global_threshold_indoor_co2": "Якість повітря · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Якість повітря · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Якість повітря · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Якість повітря · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Якість повітря · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Якість повітря · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Надворі · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Надворі · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Надворі · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Погода та попередження · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Відкрийте (min, ≤)",
+          "global_threshold_indoor_mold": "Індикатор цвілі · ≥ 70%",
+          "pollen_high_from": "POLLEN · Пилок · HIGH",
+          "pollen_max_scale": "POLLEN · Пилок · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Пилок · NO VENT",
+          "general_source_stale_minutes": "джерело · max (min)",
+          "general_home_policy": "Дім · Присутність · керування"
         },
         "data_description": {
           "weather_entities": "Оберіть: Погода та попередження · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Дім · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх. Особи для сповіщення (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Годинник, Планшет.",
           "away_windows_target_people": "Особи для сповіщення (person.*) - Announcement Hub: Телефон, Годинник, Планшет, Інший пристрій. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Канали сповіщень про вікна: Телефон Сповіщення / Голос TTS, Годинник Сповіщення / Голос TTS, Планшет Сповіщення / Голос TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Канали сповіщень про вікна: Телефон Сповіщення / Голос TTS, Годинник Сповіщення / Голос TTS, Планшет Сповіщення / Голос TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Поріг рішення для «Надворі · AQI (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_co2": "Поріг рішення для «Надворі · CO₂ (ppm) (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_pm25": "Поріг рішення для «Надворі · PM2.5 (µg/m³) (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_pm10": "Поріг рішення для «Надворі · PM10 (µg/m³) (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_voc": "Поріг рішення для «Надворі · VOC (µg/m³) (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_voc_parts": "Поріг рішення для «Надворі · VOC (ppb) (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_no2": "Поріг рішення для «NO₂ · Зовнішні (µg/m³)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_o3": "Поріг рішення для «O₃ · Зовнішні (µg/m³)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_so2": "Поріг рішення для «SO₂ · Зовнішні (µg/m³)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_aqi": "Поріг рішення для «Якість повітря · AQI (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_co2": "Поріг рішення для «Якість повітря · CO₂ (ppm) (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_pm25": "Поріг рішення для «Якість повітря · PM2.5 (µg/m³) (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_pm10": "Поріг рішення для «Якість повітря · PM10 (µg/m³) (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_voc": "Поріг рішення для «Якість повітря · VOC (µg/m³) (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_voc_parts": "Поріг рішення для «Якість повітря · VOC (ppb) (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_humidity": "Поріг рішення для «Якість повітря · RH (%) (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_min_outdoor_temp": "Поріг рішення для «Надворі · °C (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_max_outdoor_temp": "Поріг рішення для «Надворі · °C (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_max_outdoor_humidity": "Поріг рішення для «Надворі · RH (%) (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_max_wind_kmh": "Поріг рішення для «Погода та попередження · km/h (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_max_age_minutes": "Поріг рішення для «⏱ · Відкрийте (min, ≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_mold": "Поріг рішення для «Індикатор цвілі · ≥ 70%». Впливає на поради, але не є медичною нормою.",
+          "pollen_high_from": "Налаштовуйте «POLLEN · Пилок · HIGH» лише для вибраної кімнати. Недійсні дані блокують дію.",
+          "pollen_max_scale": "Налаштовуйте «POLLEN · Пилок · SCALE» лише для вибраної кімнати. Недійсні дані блокують дію.",
+          "pollen_avoid_ventilation": "Налаштовуйте «POLLEN · Пилок · NO VENT» лише для вибраної кімнати. Недійсні дані блокують дію.",
+          "general_source_stale_minutes": "джерело · Сон / Присутність · max 240 min. Неправильно · Вимкнути.",
+          "general_home_policy": "Це налаштування керує «Дім · Присутність · керування». Фізичні команди потребують окремого дозволу й захисту."
         }
       },
       "reconfigure": {
         "title": "⚙️ Оберіть",
         "description": "Оберіть: Кімнати / Погода та попередження / Оголошення (необов’язково) / Додаткові пороги",
         "menu_options": {
-          "room_occupancy": "Присутність · датчик",
-          "outside_data": "Зовнішні · джерело",
-          "general_settings": "Загальні · налаштування",
-          "area_settings": "Зона · налаштування",
-          "delivery": "Оголошення (необов’язково)",
-          "thresholds": "Додаткові пороги",
-          "climate": "налаштування · Пристрої",
-          "pid": "налаштування · PID",
-          "setup_rooms": "Кімнати для спостереження"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Загальні налаштування"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Кімнати для спостереження → джерело → Загальні налаштування",
+        "data": {
+          "areas": "Кімнати для спостереження"
+        },
+        "data_description": {
+          "areas": "Кімнати для спостереження. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+        "data": {
+          "windows": "Вікна",
+          "air_quality": "Датчики якості повітря й середовища",
+          "temperature": "Температура",
+          "humidity": "Вологість",
+          "pressure": "Датчики тиску",
+          "climate_devices": "Пристрої",
+          "shades": "Віконні жалюзі, штори та ролети",
+          "occupancy_sensors": "Присутність · датчик"
+        },
+        "data_description": {
+          "windows": "Вікна. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "air_quality": "Датчики якості повітря й середовища. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "temperature": "Температура. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "humidity": "Вологість. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "pressure": "Датчики тиску. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "climate_devices": "Пристрої. Виберіть лише фізичні climate.*, humidifier.* і fan.* цієї кімнати. Можливості пристрою визначають опалення, охолодження, осушення, цільові значення й швидкість вентилятора. Вибір нічого не вмикає; автоматичне керування дозволяється окремо для кожного пристрою.",
+          "shades": "Віконні жалюзі, штори та ролети. Виберіть ролети, жалюзі та штори cover.* цієї кімнати. Covers без device_class дозволені за наявності CLOSE, якщо вони справді затінюють вікно. Гаражі, ворота, двері, вікна та маркізи виключені. Вибір нічого не рухає: прив’яжіть датчик вікна й налаштуйте автоматику, оголошення та температуру на контролері. Невідомий стан блокує рух.",
+          "occupancy_sensors": "Оберіть справжнє джерело Home Assistant для «Присутність · датчик». Відсутні чи застарілі дані блокують дію."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Оберіть",
         "description": "Оберіть: Кімнати / Погода та попередження / Оголошення (необов’язково) / Додаткові пороги",
         "menu_options": {
-          "room_occupancy": "Присутність · датчик",
-          "outside_data": "Зовнішні · джерело",
-          "general_settings": "Загальні · налаштування",
-          "area_settings": "Зона · налаштування",
-          "delivery": "Оголошення (необов’язково)",
-          "thresholds": "Додаткові пороги",
-          "climate": "налаштування · Пристрої",
-          "pid": "налаштування · PID",
-          "setup_rooms": "Кімнати для спостереження"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Загальні налаштування"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Дім · Away · cooldown (min)",
           "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх",
           "away_windows_target_people": "Особи для сповіщення",
-          "away_windows_delivery_channels": "Канали сповіщень про вікна"
+          "away_windows_delivery_channels": "Канали сповіщень про вікна",
+          "global_threshold_outdoor_aqi": "Надворі · AQI (≤)",
+          "global_threshold_outdoor_co2": "Надворі · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Надворі · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Надворі · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Надворі · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Надворі · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Зовнішні (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Зовнішні (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Зовнішні (µg/m³)",
+          "global_threshold_indoor_aqi": "Якість повітря · AQI (≥)",
+          "global_threshold_indoor_co2": "Якість повітря · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Якість повітря · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Якість повітря · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Якість повітря · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Якість повітря · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Якість повітря · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Надворі · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Надворі · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Надворі · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Погода та попередження · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Відкрийте (min, ≤)",
+          "global_threshold_indoor_mold": "Індикатор цвілі · ≥ 70%",
+          "pollen_high_from": "POLLEN · Пилок · HIGH",
+          "pollen_max_scale": "POLLEN · Пилок · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Пилок · NO VENT",
+          "general_source_stale_minutes": "джерело · max (min)",
+          "general_home_policy": "Дім · Присутність · керування"
         },
         "data_description": {
           "weather_entities": "Оберіть: Погода та попередження · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Дім · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх. Особи для сповіщення (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Годинник, Планшет.",
           "away_windows_target_people": "Особи для сповіщення (person.*) - Announcement Hub: Телефон, Годинник, Планшет, Інший пристрій. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Канали сповіщень про вікна: Телефон Сповіщення / Голос TTS, Годинник Сповіщення / Голос TTS, Планшет Сповіщення / Голос TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Канали сповіщень про вікна: Телефон Сповіщення / Голос TTS, Годинник Сповіщення / Голос TTS, Планшет Сповіщення / Голос TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Поріг рішення для «Надворі · AQI (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_co2": "Поріг рішення для «Надворі · CO₂ (ppm) (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_pm25": "Поріг рішення для «Надворі · PM2.5 (µg/m³) (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_pm10": "Поріг рішення для «Надворі · PM10 (µg/m³) (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_voc": "Поріг рішення для «Надворі · VOC (µg/m³) (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_voc_parts": "Поріг рішення для «Надворі · VOC (ppb) (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_no2": "Поріг рішення для «NO₂ · Зовнішні (µg/m³)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_o3": "Поріг рішення для «O₃ · Зовнішні (µg/m³)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_outdoor_so2": "Поріг рішення для «SO₂ · Зовнішні (µg/m³)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_aqi": "Поріг рішення для «Якість повітря · AQI (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_co2": "Поріг рішення для «Якість повітря · CO₂ (ppm) (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_pm25": "Поріг рішення для «Якість повітря · PM2.5 (µg/m³) (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_pm10": "Поріг рішення для «Якість повітря · PM10 (µg/m³) (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_voc": "Поріг рішення для «Якість повітря · VOC (µg/m³) (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_voc_parts": "Поріг рішення для «Якість повітря · VOC (ppb) (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_humidity": "Поріг рішення для «Якість повітря · RH (%) (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_min_outdoor_temp": "Поріг рішення для «Надворі · °C (≥)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_max_outdoor_temp": "Поріг рішення для «Надворі · °C (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_max_outdoor_humidity": "Поріг рішення для «Надворі · RH (%) (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_max_wind_kmh": "Поріг рішення для «Погода та попередження · km/h (≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_max_age_minutes": "Поріг рішення для «⏱ · Відкрийте (min, ≤)». Впливає на поради, але не є медичною нормою.",
+          "global_threshold_indoor_mold": "Поріг рішення для «Індикатор цвілі · ≥ 70%». Впливає на поради, але не є медичною нормою.",
+          "pollen_high_from": "Налаштовуйте «POLLEN · Пилок · HIGH» лише для вибраної кімнати. Недійсні дані блокують дію.",
+          "pollen_max_scale": "Налаштовуйте «POLLEN · Пилок · SCALE» лише для вибраної кімнати. Недійсні дані блокують дію.",
+          "pollen_avoid_ventilation": "Налаштовуйте «POLLEN · Пилок · NO VENT» лише для вибраної кімнати. Недійсні дані блокують дію.",
+          "general_source_stale_minutes": "джерело · Сон / Присутність · max 240 min. Неправильно · Вимкнути.",
+          "general_home_policy": "Це налаштування керує «Дім · Присутність · керування». Фізичні команди потребують окремого дозволу й захисту."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Кімнати для спостереження → джерело → Загальні налаштування",
+        "data": {
+          "areas": "Кімнати для спостереження"
+        },
+        "data_description": {
+          "areas": "Кімнати для спостереження. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+        "data": {
+          "windows": "Вікна",
+          "air_quality": "Датчики якості повітря й середовища",
+          "temperature": "Температура",
+          "humidity": "Вологість",
+          "pressure": "Датчики тиску",
+          "climate_devices": "Пристрої",
+          "shades": "Віконні жалюзі, штори та ролети",
+          "occupancy_sensors": "Присутність · датчик"
+        },
+        "data_description": {
+          "windows": "Вікна. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "air_quality": "Датчики якості повітря й середовища. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "temperature": "Температура. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "humidity": "Вологість. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "pressure": "Датчики тиску. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "climate_devices": "Пристрої. Виберіть лише фізичні climate.*, humidifier.* і fan.* цієї кімнати. Можливості пристрою визначають опалення, охолодження, осушення, цільові значення й швидкість вентилятора. Вибір нічого не вмикає; автоматичне керування дозволяється окремо для кожного пристрою.",
+          "shades": "Віконні жалюзі, штори та ролети. Виберіть ролети, жалюзі та штори cover.* цієї кімнати. Covers без device_class дозволені за наявності CLOSE, якщо вони справді затінюють вікно. Гаражі, ворота, двері, вікна та маркізи виключені. Вибір нічого не рухає: прив’яжіть датчик вікна й налаштуйте автоматику, оголошення та температуру на контролері. Невідомий стан блокує рух.",
+          "occupancy_sensors": "Оберіть справжнє джерело Home Assistant для «Присутність · датчик». Відсутні чи застарілі дані блокують дію."
         }
       }
     },
