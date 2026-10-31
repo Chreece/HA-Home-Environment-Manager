@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
           "away_open_window_alert": "Avisar de ventanas abiertas cuando todos salgan",
           "away_windows_target_people": "Personas destinatarias",
-          "away_windows_delivery_channels": "Canales del aviso de ventanas"
+          "away_windows_delivery_channels": "Canales del aviso de ventanas",
+          "general_source_stale_minutes": "fuente · max (min)",
+          "general_home_policy": "Casa · Ocupación · control"
         },
         "data_description": {
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "Cuando una fuente válida de habitaciones ocupadas queda vacía, espera estos minutos antes de aplicar Away. Datos desconocidos o antiguos no activan Away.",
           "away_open_window_alert": "Desactivado inicialmente. Avisa de inmediato cuando todas las fuentes de presencia seleccionadas confirman ausencia. En number/input_number, 0 significa nadie y un número positivo indica presencia. Valores desconocidos no confirman ausencia. No reenvía al reiniciar en ausencia y solo repite si se abren otras ventanas.",
           "away_windows_target_people": "Selecciona personas person.* explícitas con sus dispositivos configurados en Announcement Hub. Nunca se envía un aviso general a habitaciones por destinos ausentes.",
-          "away_windows_delivery_channels": "Permite varios canales: avisos escritos y voz Companion TTS en teléfono, reloj o tableta. Solo se usan los dispositivos asignados a cada persona elegida."
+          "away_windows_delivery_channels": "Permite varios canales: avisos escritos y voz Companion TTS en teléfono, reloj o tableta. Solo se usan los dispositivos asignados a cada persona elegida.",
+          "general_source_stale_minutes": "fuente · Sueño / Ocupación · max 240 min. No válido · Apagar.",
+          "general_home_policy": "Esta opción configura «Casa · Ocupación · control». Las órdenes físicas exigen permiso individual y protecciones independientes."
         }
       },
       "reconfigure": {
         "title": "Elegir ajustes para editar",
         "description": "Elige una sección. El resto de ajustes permanecerá sin cambios.",
         "menu_options": {
-          "room_occupancy": "Ocupación · sensor",
-          "outside_data": "Exterior · fuente",
-          "general_settings": "General · ajustes",
-          "area_settings": "Área · ajustes",
-          "delivery": "Anuncios (opcional)",
-          "thresholds": "Umbrales avanzados",
-          "climate": "Clima - elegir habitación",
-          "pid": "PID climático - elegir habitación",
-          "setup_rooms": "Estancias que supervisar"
+          "choose_rooms": "Elegir habitaciones",
+          "general_settings": "General · ajustes"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Elegir habitaciones",
+        "description": "Elige las habitaciones supervisadas. Quitar una desactiva sus dispositivos sin borrar los ajustes.",
+        "data": {
+          "areas": "Estancias que supervisar"
+        },
+        "data_description": {
+          "areas": "Estancias que supervisar. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático."
+        }
+      },
+      "room_settings": {
+        "title": "Ajustes de habitación · {area_name}",
+        "description": "Selecciona ventanas, sensores, equipos climáticos, persianas y sensores de presencia de respaldo.",
+        "data": {
+          "windows": "Ventanas",
+          "air_quality": "Sensores de calidad del aire y del entorno",
+          "temperature": "Temperatura",
+          "humidity": "Humedad",
+          "pressure": "Sensores de presión",
+          "climate_devices": "Dispositivos",
+          "shades": "Persianas, estores y cortinas de ventana",
+          "occupancy_sensors": "Ocupación · sensor"
+        },
+        "data_description": {
+          "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "air_quality": "Sensores de calidad del aire y del entorno. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "temperature": "Temperatura. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "pressure": "Sensores de presión. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
+          "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "Elegir ajustes para editar",
         "description": "Elige una sección. El resto de ajustes permanecerá sin cambios.",
         "menu_options": {
-          "room_occupancy": "Ocupación · sensor",
-          "outside_data": "Exterior · fuente",
-          "general_settings": "General · ajustes",
-          "area_settings": "Área · ajustes",
-          "delivery": "Anuncios (opcional)",
-          "thresholds": "Umbrales avanzados",
-          "climate": "Clima - elegir habitación",
-          "pid": "PID climático - elegir habitación",
-          "setup_rooms": "Estancias que supervisar"
+          "choose_rooms": "Elegir habitaciones",
+          "general_settings": "General · ajustes"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
           "away_open_window_alert": "Avisar de ventanas abiertas cuando todos salgan",
           "away_windows_target_people": "Personas destinatarias",
-          "away_windows_delivery_channels": "Canales del aviso de ventanas"
+          "away_windows_delivery_channels": "Canales del aviso de ventanas",
+          "general_source_stale_minutes": "fuente · max (min)",
+          "general_home_policy": "Casa · Ocupación · control"
         },
         "data_description": {
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "Cuando una fuente válida de habitaciones ocupadas queda vacía, espera estos minutos antes de aplicar Away. Datos desconocidos o antiguos no activan Away.",
           "away_open_window_alert": "Desactivado inicialmente. Avisa de inmediato cuando todas las fuentes de presencia seleccionadas confirman ausencia. En number/input_number, 0 significa nadie y un número positivo indica presencia. Valores desconocidos no confirman ausencia. No reenvía al reiniciar en ausencia y solo repite si se abren otras ventanas.",
           "away_windows_target_people": "Selecciona personas person.* explícitas con sus dispositivos configurados en Announcement Hub. Nunca se envía un aviso general a habitaciones por destinos ausentes.",
-          "away_windows_delivery_channels": "Permite varios canales: avisos escritos y voz Companion TTS en teléfono, reloj o tableta. Solo se usan los dispositivos asignados a cada persona elegida."
+          "away_windows_delivery_channels": "Permite varios canales: avisos escritos y voz Companion TTS en teléfono, reloj o tableta. Solo se usan los dispositivos asignados a cada persona elegida.",
+          "general_source_stale_minutes": "fuente · Sueño / Ocupación · max 240 min. No válido · Apagar.",
+          "general_home_policy": "Esta opción configura «Casa · Ocupación · control». Las órdenes físicas exigen permiso individual y protecciones independientes."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Elegir habitaciones",
+        "description": "Elige las habitaciones supervisadas. Quitar una desactiva sus dispositivos sin borrar los ajustes.",
+        "data": {
+          "areas": "Estancias que supervisar"
+        },
+        "data_description": {
+          "areas": "Estancias que supervisar. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático."
+        }
+      },
+      "room_settings": {
+        "title": "Ajustes de habitación · {area_name}",
+        "description": "Selecciona ventanas, sensores, equipos climáticos, persianas y sensores de presencia de respaldo.",
+        "data": {
+          "windows": "Ventanas",
+          "air_quality": "Sensores de calidad del aire y del entorno",
+          "temperature": "Temperatura",
+          "humidity": "Humedad",
+          "pressure": "Sensores de presión",
+          "climate_devices": "Dispositivos",
+          "shades": "Persianas, estores y cortinas de ventana",
+          "occupancy_sensors": "Ocupación · sensor"
+        },
+        "data_description": {
+          "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "air_quality": "Sensores de calidad del aire y del entorno. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "temperature": "Temperatura. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "pressure": "Sensores de presión. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
+          "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
       }
     },

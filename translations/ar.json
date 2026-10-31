@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "المنزل · Away · cooldown (min)",
           "away_open_window_alert": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع",
           "away_windows_target_people": "الأشخاص المطلوب تنبيههم",
-          "away_windows_delivery_channels": "قنوات تنبيه النوافذ المفتوحة"
+          "away_windows_delivery_channels": "قنوات تنبيه النوافذ المفتوحة",
+          "general_source_stale_minutes": "المصدر · max (min)",
+          "general_home_policy": "المنزل · الإشغال · التحكم"
         },
         "data_description": {
           "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · المنزل · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع. الأشخاص المطلوب تنبيههم (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. الهاتف, الساعة, الجهاز اللوحي.",
           "away_windows_target_people": "الأشخاص المطلوب تنبيههم (person.*) - Announcement Hub: الهاتف, الساعة, الجهاز اللوحي, جهاز آخر. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "قنوات تنبيه النوافذ المفتوحة: الهاتف إشعار / صوت TTS, الساعة إشعار / صوت TTS, الجهاز اللوحي إشعار / صوت TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "قنوات تنبيه النوافذ المفتوحة: الهاتف إشعار / صوت TTS, الساعة إشعار / صوت TTS, الجهاز اللوحي إشعار / صوت TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "المصدر · النوم / الإشغال · max 240 min. غير صالح · إيقاف.",
+          "general_home_policy": "يتحكم هذا الخيار في «المنزل · الإشغال · التحكم». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية."
         }
       },
       "reconfigure": {
         "title": "⚙️ اختر",
         "description": "اختر: الغرف / الطقس والتحذيرات / الإعلانات (اختياري) / حدود متقدمة",
         "menu_options": {
-          "room_occupancy": "الإشغال · مستشعر",
-          "outside_data": "خارجي · المصدر",
-          "general_settings": "عام · الإعدادات",
-          "area_settings": "منطقة · الإعدادات",
-          "delivery": "الإعلانات (اختياري)",
-          "thresholds": "حدود متقدمة",
-          "climate": "الإعدادات · الأجهزة",
-          "pid": "الإعدادات · PID",
-          "setup_rooms": "الغرف المراد مراقبتها"
+          "choose_rooms": "الغرف المراد مراقبتها",
+          "general_settings": "عام · الإعدادات"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "الغرف المراد مراقبتها",
+        "description": "Select monitored rooms. Removing a room disables its outputs but retains saved preferences.",
+        "data": {
+          "areas": "الغرف المراد مراقبتها"
+        },
+        "data_description": {
+          "areas": "الغرف المراد مراقبتها. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي."
+        }
+      },
+      "room_settings": {
+        "title": "منطقة · الإعدادات · {area_name}",
+        "description": "Select this room's windows, sensors, climate devices, shades and occupancy fallback. Unselected devices are not enabled automatically.",
+        "data": {
+          "windows": "النوافذ",
+          "air_quality": "مستشعرات جودة الهواء والبيئة",
+          "temperature": "الحرارة",
+          "humidity": "الرطوبة",
+          "pressure": "مستشعرات الضغط",
+          "climate_devices": "الأجهزة",
+          "shades": "ستائر النوافذ والمصاريع والستائر الدوارة",
+          "occupancy_sensors": "الإشغال · مستشعر"
+        },
+        "data_description": {
+          "windows": "النوافذ. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
+          "air_quality": "مستشعرات جودة الهواء والبيئة. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
+          "temperature": "الحرارة. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
+          "humidity": "الرطوبة. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
+          "pressure": "مستشعرات الضغط. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
+          "climate_devices": "الأجهزة. اختر فقط كيانات climate.* و humidifier.* و fan.* الفعلية في الغرفة. تحدد قدرات الجهاز أوضاع التدفئة والتبريد وإزالة الرطوبة والقيم المستهدفة وسرعات المروحة. الاختيار لا يشغّل أي جهاز؛ فعّل التحكم الآلي لكل جهاز بشكل مستقل.",
+          "shades": "ستائر النوافذ والمصاريع والستائر الدوارة. اختر ستائر ونوافذ التظليل من نوع cover.* في الغرفة. تُقبل covers دون device_class إذا دعمت CLOSE وكانت فعلًا لتظليل النافذة. تُستبعد أبواب المرآب والبوابات والأبواب والنوافذ والمظلات الخارجية. الاختيار لا يحرك شيئًا: اربط مستشعر النافذة واضبط التحكم والإعلان ودرجة الحرارة في وحدة التحكم. الحالة غير المعروفة تمنع الحركة.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ اختر",
         "description": "اختر: الغرف / الطقس والتحذيرات / الإعلانات (اختياري) / حدود متقدمة",
         "menu_options": {
-          "room_occupancy": "الإشغال · مستشعر",
-          "outside_data": "خارجي · المصدر",
-          "general_settings": "عام · الإعدادات",
-          "area_settings": "منطقة · الإعدادات",
-          "delivery": "الإعلانات (اختياري)",
-          "thresholds": "حدود متقدمة",
-          "climate": "الإعدادات · الأجهزة",
-          "pid": "الإعدادات · PID",
-          "setup_rooms": "الغرف المراد مراقبتها"
+          "choose_rooms": "الغرف المراد مراقبتها",
+          "general_settings": "عام · الإعدادات"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "المنزل · Away · cooldown (min)",
           "away_open_window_alert": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع",
           "away_windows_target_people": "الأشخاص المطلوب تنبيههم",
-          "away_windows_delivery_channels": "قنوات تنبيه النوافذ المفتوحة"
+          "away_windows_delivery_channels": "قنوات تنبيه النوافذ المفتوحة",
+          "general_source_stale_minutes": "المصدر · max (min)",
+          "general_home_policy": "المنزل · الإشغال · التحكم"
         },
         "data_description": {
           "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · المنزل · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع. الأشخاص المطلوب تنبيههم (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. الهاتف, الساعة, الجهاز اللوحي.",
           "away_windows_target_people": "الأشخاص المطلوب تنبيههم (person.*) - Announcement Hub: الهاتف, الساعة, الجهاز اللوحي, جهاز آخر. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "قنوات تنبيه النوافذ المفتوحة: الهاتف إشعار / صوت TTS, الساعة إشعار / صوت TTS, الجهاز اللوحي إشعار / صوت TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "قنوات تنبيه النوافذ المفتوحة: الهاتف إشعار / صوت TTS, الساعة إشعار / صوت TTS, الجهاز اللوحي إشعار / صوت TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "المصدر · النوم / الإشغال · max 240 min. غير صالح · إيقاف.",
+          "general_home_policy": "يتحكم هذا الخيار في «المنزل · الإشغال · التحكم». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "الغرف المراد مراقبتها",
+        "description": "Select monitored rooms. Removing a room disables its outputs but retains saved preferences.",
+        "data": {
+          "areas": "الغرف المراد مراقبتها"
+        },
+        "data_description": {
+          "areas": "الغرف المراد مراقبتها. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي."
+        }
+      },
+      "room_settings": {
+        "title": "منطقة · الإعدادات · {area_name}",
+        "description": "Select this room's windows, sensors, climate devices, shades and occupancy fallback. Unselected devices are not enabled automatically.",
+        "data": {
+          "windows": "النوافذ",
+          "air_quality": "مستشعرات جودة الهواء والبيئة",
+          "temperature": "الحرارة",
+          "humidity": "الرطوبة",
+          "pressure": "مستشعرات الضغط",
+          "climate_devices": "الأجهزة",
+          "shades": "ستائر النوافذ والمصاريع والستائر الدوارة",
+          "occupancy_sensors": "الإشغال · مستشعر"
+        },
+        "data_description": {
+          "windows": "النوافذ. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
+          "air_quality": "مستشعرات جودة الهواء والبيئة. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
+          "temperature": "الحرارة. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
+          "humidity": "الرطوبة. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
+          "pressure": "مستشعرات الضغط. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
+          "climate_devices": "الأجهزة. اختر فقط كيانات climate.* و humidifier.* و fan.* الفعلية في الغرفة. تحدد قدرات الجهاز أوضاع التدفئة والتبريد وإزالة الرطوبة والقيم المستهدفة وسرعات المروحة. الاختيار لا يشغّل أي جهاز؛ فعّل التحكم الآلي لكل جهاز بشكل مستقل.",
+          "shades": "ستائر النوافذ والمصاريع والستائر الدوارة. اختر ستائر ونوافذ التظليل من نوع cover.* في الغرفة. تُقبل covers دون device_class إذا دعمت CLOSE وكانت فعلًا لتظليل النافذة. تُستبعد أبواب المرآب والبوابات والأبواب والنوافذ والمظلات الخارجية. الاختيار لا يحرك شيئًا: اربط مستشعر النافذة واضبط التحكم والإعلان ودرجة الحرارة في وحدة التحكم. الحالة غير المعروفة تمنع الحركة.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
       }
     },

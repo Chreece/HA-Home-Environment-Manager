@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "Home · Away · cooldown (min)",
           "away_open_window_alert": "Alert when windows remain open after everyone leaves",
           "away_windows_target_people": "People to notify after leaving",
-          "away_windows_delivery_channels": "Delivery channels for open-window alerts"
+          "away_windows_delivery_channels": "Delivery channels for open-window alerts",
+          "general_source_stale_minutes": "Maximum room/sleep source age (minutes)",
+          "general_home_policy": "Home · Occupancy · control"
         },
         "data_description": {
           "weather_entities": "At least one weather provider. Rain, storms and extreme wind/temperature block opening. Mold indication uses the current temperature attribute (°C/°F) of a selected weather entity for outdoor temperature. Choose a source that reports temperature.",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "After a fresh occupied-room source becomes empty, wait this many minutes before applying Away. Unknown or stale occupancy never starts Away.",
           "away_open_window_alert": "Off by default. Notify immediately when the selected presence entities all confirm zero people or away. Numeric number/input_number/person-count sensors use 0 for empty and a positive count for occupied; invalid values never prove absence. List actual open windows. No announcement at startup while already away. Report once per departure and again only for newly opened windows.",
           "away_windows_target_people": "Select exactly which Home Assistant person.* identities receive this message. Each person must have the selected phone/watch/tablet destination configured in Announcement Hub. Missing destinations are never replaced by room-wide broadcasts.",
-          "away_windows_delivery_channels": "Choose multiple phone, watch, tablet or other device delivery modes. Notification is written push; TTS uses Companion App speech only. Each selected channel routes to its exact person's assigned output, even while away, not to room speakers."
+          "away_windows_delivery_channels": "Choose multiple phone, watch, tablet or other device delivery modes. Notification is written push; TTS uses Companion App speech only. Each selected channel routes to its exact person's assigned output, even while away, not to room speakers.",
+          "general_source_stale_minutes": "Maximum time since either occupied-room or sleep-room source last updated (default 240 min). This is NOT how long someone must sleep; stale sources cannot authorize power OFF.",
+          "general_home_policy": "Choose whether any tracked resident at home means Home, or all selected trackers must be home. Confirm the logic matches your household."
         }
       },
       "reconfigure": {
         "title": "Choose settings to edit",
         "description": "Choose one section. All other settings stay unchanged.",
         "menu_options": {
-          "room_occupancy": "Room occupancy sensors",
-          "outside_data": "Outside data",
-          "general_settings": "General settings",
-          "area_settings": "Area settings",
-          "delivery": "Announcements (optional)",
-          "thresholds": "Advanced thresholds",
-          "climate": "Climate - select room",
-          "pid": "Climate PID - select a room",
-          "setup_rooms": "Rooms to monitor"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "General settings"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Select monitored rooms. Removing a room disables its outputs but retains saved preferences.",
+        "data": {
+          "areas": "Rooms to monitor"
+        },
+        "data_description": {
+          "areas": "Rooms to monitor. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control."
+        }
+      },
+      "room_settings": {
+        "title": "Room settings · {area_name}",
+        "description": "Select this room's windows, sensors, climate devices, shades and occupancy fallback. Unselected devices are not enabled automatically.",
+        "data": {
+          "windows": "Windows",
+          "air_quality": "Air quality and environmental sensors",
+          "temperature": "Temperature",
+          "humidity": "Humidity",
+          "pressure": "Pressure sensors",
+          "climate_devices": "Devices",
+          "shades": "Window blinds, shades and shutters",
+          "occupancy_sensors": "Selected occupancy/presence sensors"
+        },
+        "data_description": {
+          "windows": "Windows. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "air_quality": "Air quality and environmental sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "temperature": "Temperature. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "humidity": "Humidity. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "pressure": "Pressure sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
+          "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "Choose settings to edit",
         "description": "Choose one section. All other settings stay unchanged.",
         "menu_options": {
-          "room_occupancy": "Room occupancy sensors",
-          "outside_data": "Outside data",
-          "general_settings": "General settings",
-          "area_settings": "Area settings",
-          "delivery": "Announcements (optional)",
-          "thresholds": "Advanced thresholds",
-          "climate": "Climate - select room",
-          "pid": "Climate PID - select a room",
-          "setup_rooms": "Rooms to monitor"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "General settings"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "Home · Away · cooldown (min)",
           "away_open_window_alert": "Alert when windows remain open after everyone leaves",
           "away_windows_target_people": "People to notify after leaving",
-          "away_windows_delivery_channels": "Delivery channels for open-window alerts"
+          "away_windows_delivery_channels": "Delivery channels for open-window alerts",
+          "general_source_stale_minutes": "Maximum room/sleep source age (minutes)",
+          "general_home_policy": "Home · Occupancy · control"
         },
         "data_description": {
           "weather_entities": "At least one weather provider. Rain, storms and extreme wind/temperature block opening. Mold indication uses the current temperature attribute (°C/°F) of a selected weather entity for outdoor temperature. Choose a source that reports temperature.",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "After a fresh occupied-room source becomes empty, wait this many minutes before applying Away. Unknown or stale occupancy never starts Away.",
           "away_open_window_alert": "Off by default. Notify immediately when the selected presence entities all confirm zero people or away. Numeric number/input_number/person-count sensors use 0 for empty and a positive count for occupied; invalid values never prove absence. List actual open windows. No announcement at startup while already away. Report once per departure and again only for newly opened windows.",
           "away_windows_target_people": "Select exactly which Home Assistant person.* identities receive this message. Each person must have the selected phone/watch/tablet destination configured in Announcement Hub. Missing destinations are never replaced by room-wide broadcasts.",
-          "away_windows_delivery_channels": "Choose multiple phone, watch, tablet or other device delivery modes. Notification is written push; TTS uses Companion App speech only. Each selected channel routes to its exact person's assigned output, even while away, not to room speakers."
+          "away_windows_delivery_channels": "Choose multiple phone, watch, tablet or other device delivery modes. Notification is written push; TTS uses Companion App speech only. Each selected channel routes to its exact person's assigned output, even while away, not to room speakers.",
+          "general_source_stale_minutes": "Maximum time since either occupied-room or sleep-room source last updated (default 240 min). This is NOT how long someone must sleep; stale sources cannot authorize power OFF.",
+          "general_home_policy": "Choose whether any tracked resident at home means Home, or all selected trackers must be home. Confirm the logic matches your household."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Select monitored rooms. Removing a room disables its outputs but retains saved preferences.",
+        "data": {
+          "areas": "Rooms to monitor"
+        },
+        "data_description": {
+          "areas": "Rooms to monitor. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control."
+        }
+      },
+      "room_settings": {
+        "title": "Room settings · {area_name}",
+        "description": "Select this room's windows, sensors, climate devices, shades and occupancy fallback. Unselected devices are not enabled automatically.",
+        "data": {
+          "windows": "Windows",
+          "air_quality": "Air quality and environmental sensors",
+          "temperature": "Temperature",
+          "humidity": "Humidity",
+          "pressure": "Pressure sensors",
+          "climate_devices": "Devices",
+          "shades": "Window blinds, shades and shutters",
+          "occupancy_sensors": "Selected occupancy/presence sensors"
+        },
+        "data_description": {
+          "windows": "Windows. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "air_quality": "Air quality and environmental sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "temperature": "Temperature. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "humidity": "Humidity. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "pressure": "Pressure sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
+          "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
       }
     },

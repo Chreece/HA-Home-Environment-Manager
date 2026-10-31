@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "Hjem · Away · cooldown (min)",
           "away_open_window_alert": "Advar om åbne vinduer når alle er gået",
           "away_windows_target_people": "Personer der skal advares",
-          "away_windows_delivery_channels": "Kanaler til vinduesadvarsler"
+          "away_windows_delivery_channels": "Kanaler til vinduesadvarsler",
+          "general_source_stale_minutes": "kilde · max (min)",
+          "general_home_policy": "Hjem · Tilstedeværelse · styring"
         },
         "data_description": {
           "weather_entities": "Vælg: Vejr og advarsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Hjem · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Advar om åbne vinduer når alle er gået. Personer der skal advares (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Ur, Tablet.",
           "away_windows_target_people": "Personer der skal advares (person.*) - Announcement Hub: Telefon, Ur, Tablet, Anden enhed. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanaler til vinduesadvarsler: Telefon Notifikation / TTS-tale, Ur Notifikation / TTS-tale, Tablet Notifikation / TTS-tale. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanaler til vinduesadvarsler: Telefon Notifikation / TTS-tale, Ur Notifikation / TTS-tale, Tablet Notifikation / TTS-tale. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "kilde · Søvn / Tilstedeværelse · max 240 min. Ugyldig · Sluk.",
+          "general_home_policy": "Denne indstilling styrer »Hjem · Tilstedeværelse · styring«. Fysiske kommandoer kræver særskilt samtykke og sikring."
         }
       },
       "reconfigure": {
         "title": "⚙️ Vælg",
         "description": "Vælg: Rum / Vejr og advarsler / Meddelelser (valgfrit) / Avancerede grænser",
         "menu_options": {
-          "room_occupancy": "Tilstedeværelse · sensor",
-          "outside_data": "Udendørs · kilde",
-          "general_settings": "Generelle · indstillinger",
-          "area_settings": "Område · indstillinger",
-          "delivery": "Meddelelser (valgfrit)",
-          "thresholds": "Avancerede grænser",
-          "climate": "indstillinger · Enheder",
-          "pid": "indstillinger · PID",
-          "setup_rooms": "Rum der skal overvåges"
+          "choose_rooms": "Rum der skal overvåges",
+          "general_settings": "Generelle · indstillinger"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Rum der skal overvåges",
+        "description": "Select monitored rooms. Removing a room disables its outputs but retains saved preferences.",
+        "data": {
+          "areas": "Rum der skal overvåges"
+        },
+        "data_description": {
+          "areas": "Rum der skal overvåges. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring."
+        }
+      },
+      "room_settings": {
+        "title": "Område · indstillinger · {area_name}",
+        "description": "Select this room's windows, sensors, climate devices, shades and occupancy fallback. Unselected devices are not enabled automatically.",
+        "data": {
+          "windows": "Vinduer",
+          "air_quality": "Luftkvalitets- og miljøsensorer",
+          "temperature": "Temperatur",
+          "humidity": "Luftfugtighed",
+          "pressure": "Tryksensorer",
+          "climate_devices": "Enheder",
+          "shades": "Persienner, rullegardiner og skodder",
+          "occupancy_sensors": "Tilstedeværelse · sensor"
+        },
+        "data_description": {
+          "windows": "Vinduer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "air_quality": "Luftkvalitets- og miljøsensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "temperature": "Temperatur. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "humidity": "Luftfugtighed. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "pressure": "Tryksensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "climate_devices": "Enheder. Vælg kun fysiske climate.*, humidifier.* og fan.* i rummet. De indbyggede funktioner afgør varme, køling, affugtning, temperaturmål og blæserhastighed. Valget betjener intet; aktiver automatik særskilt på hver enhed.",
+          "shades": "Persienner, rullegardiner og skodder. Vælg rullegardiner, persienner og skodder som cover.* i rummet. Covers uden device_class er tilladt med CLOSE, hvis de reelt skygger vinduer. Garager, porte, døre, vinduer og markiser er udelukket. Valget flytter intet: tilknyt vindueskontakt og indstil automatik, annoncering og temperatur på controlleren. Ukendt status forhindrer bevægelse.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ Vælg",
         "description": "Vælg: Rum / Vejr og advarsler / Meddelelser (valgfrit) / Avancerede grænser",
         "menu_options": {
-          "room_occupancy": "Tilstedeværelse · sensor",
-          "outside_data": "Udendørs · kilde",
-          "general_settings": "Generelle · indstillinger",
-          "area_settings": "Område · indstillinger",
-          "delivery": "Meddelelser (valgfrit)",
-          "thresholds": "Avancerede grænser",
-          "climate": "indstillinger · Enheder",
-          "pid": "indstillinger · PID",
-          "setup_rooms": "Rum der skal overvåges"
+          "choose_rooms": "Rum der skal overvåges",
+          "general_settings": "Generelle · indstillinger"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "Hjem · Away · cooldown (min)",
           "away_open_window_alert": "Advar om åbne vinduer når alle er gået",
           "away_windows_target_people": "Personer der skal advares",
-          "away_windows_delivery_channels": "Kanaler til vinduesadvarsler"
+          "away_windows_delivery_channels": "Kanaler til vinduesadvarsler",
+          "general_source_stale_minutes": "kilde · max (min)",
+          "general_home_policy": "Hjem · Tilstedeværelse · styring"
         },
         "data_description": {
           "weather_entities": "Vælg: Vejr og advarsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Hjem · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Advar om åbne vinduer når alle er gået. Personer der skal advares (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Ur, Tablet.",
           "away_windows_target_people": "Personer der skal advares (person.*) - Announcement Hub: Telefon, Ur, Tablet, Anden enhed. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanaler til vinduesadvarsler: Telefon Notifikation / TTS-tale, Ur Notifikation / TTS-tale, Tablet Notifikation / TTS-tale. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanaler til vinduesadvarsler: Telefon Notifikation / TTS-tale, Ur Notifikation / TTS-tale, Tablet Notifikation / TTS-tale. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "kilde · Søvn / Tilstedeværelse · max 240 min. Ugyldig · Sluk.",
+          "general_home_policy": "Denne indstilling styrer »Hjem · Tilstedeværelse · styring«. Fysiske kommandoer kræver særskilt samtykke og sikring."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Rum der skal overvåges",
+        "description": "Select monitored rooms. Removing a room disables its outputs but retains saved preferences.",
+        "data": {
+          "areas": "Rum der skal overvåges"
+        },
+        "data_description": {
+          "areas": "Rum der skal overvåges. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring."
+        }
+      },
+      "room_settings": {
+        "title": "Område · indstillinger · {area_name}",
+        "description": "Select this room's windows, sensors, climate devices, shades and occupancy fallback. Unselected devices are not enabled automatically.",
+        "data": {
+          "windows": "Vinduer",
+          "air_quality": "Luftkvalitets- og miljøsensorer",
+          "temperature": "Temperatur",
+          "humidity": "Luftfugtighed",
+          "pressure": "Tryksensorer",
+          "climate_devices": "Enheder",
+          "shades": "Persienner, rullegardiner og skodder",
+          "occupancy_sensors": "Tilstedeværelse · sensor"
+        },
+        "data_description": {
+          "windows": "Vinduer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "air_quality": "Luftkvalitets- og miljøsensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "temperature": "Temperatur. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "humidity": "Luftfugtighed. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "pressure": "Tryksensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "climate_devices": "Enheder. Vælg kun fysiske climate.*, humidifier.* og fan.* i rummet. De indbyggede funktioner afgør varme, køling, affugtning, temperaturmål og blæserhastighed. Valget betjener intet; aktiver automatik særskilt på hver enhed.",
+          "shades": "Persienner, rullegardiner og skodder. Vælg rullegardiner, persienner og skodder som cover.* i rummet. Covers uden device_class er tilladt med CLOSE, hvis de reelt skygger vinduer. Garager, porte, døre, vinduer og markiser er udelukket. Valget flytter intet: tilknyt vindueskontakt og indstil automatik, annoncering og temperatur på controlleren. Ukendt status forhindrer bevægelse.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
       }
     },
