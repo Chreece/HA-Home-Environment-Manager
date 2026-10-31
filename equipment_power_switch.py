@@ -440,11 +440,9 @@ def cold_start_dispatch_safe(runtime: Any, spec: Any, record: dict,
     now = runtime.clock()
     if now - runtime._started < 300:
         return False
-    since = max(
-        finite(relay.get("off_at"), 0, 1e13) or 0,
-        _observed_off_since(observed, now),
-    )
-    if now - since < UPSTREAM_MIN_OFF_SECONDS:
+    if not supply_minimum_off(
+        runtime, spec, cfg, None, relay, observed, now
+    ):
         return False
     for source in spec.source_entities:
         native = runtime.hass.states.get(source)
@@ -521,16 +519,21 @@ def _dispatch_safe(runtime: Any, spec: Any, record: dict, cfg: dict,
             return False
         if now-runtime._started < 300:
             return False
-        since = max(finite(relay.get("off_at"), 0, 1e13) or 0,
-                    _observed_off_since(state, now))
-        if now-since < UPSTREAM_MIN_OFF_SECONDS:
+        if not supply_minimum_off(
+            runtime, spec, cfg, cap, relay, state, now
+        ):
             return False
         native = runtime.hass.states.get(cap.primary)
         if (native is not None and native.state not in ("unknown", "unavailable")
                 and not observed_output_off(native)):
             return False
         return approved_demand(runtime, spec, cfg, cap) is True
-    if not relay.get("owned") or now-runtime._started < 300:
+    if not relay.get("owned"):
+        return False
+    # Safe owned OFF is allowed once true native evidence, idle cooldown and
+    # the device's complete ON dwell have passed. Startup settling remains
+    # required for physical ON, not for a confirmed-demand-free OFF.
+    if not supply_minimum_on(runtime, spec, cfg, cap, relay, now):
         return False
     started = finite(relay.get("idle_since"), 0, 1e13)
     cooldown = finite(cfg.get("power_switch_cooldown_seconds"), 60, 86400)
@@ -572,9 +575,17 @@ async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
         return False
     before_settings = runtime.manager.settings
     when = runtime.clock()
-    relay["pending"] = {"desired": desired, "when": when,
-                        "identity": identity, "phase": "intent",
-                        "cold_start": cold_start}
+    cfg = model.settings(runtime.manager, spec)
+    dwell = device_supply_dwell(runtime, spec, cfg)
+    if dwell is None:
+        return False
+    relay["pending"] = {
+        "desired": desired, "when": when,
+        "identity": identity, "phase": "intent",
+        "cold_start": cold_start,
+        "min_on_seconds": dwell[0],
+        "min_off_seconds": dwell[1],
+    }
     await runtime._save()
     # All power work is serialized by the per-output lock in EquipmentRuntime.
     # Once persistence has yielded, reject any changed consent or source ID.
@@ -740,7 +751,21 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         if observed.state == pending["desired"]:
             relay["pending"] = None
             relay["owned"] = pending["desired"] == "on"
-            relay["off_at"] = now if observed.state == "off" else relay.get("off_at", now)
+            # The switch's actual ACK, not its HA-restored last_changed,
+            # establishes durable timestamps across HA restarts.
+            limits = device_supply_dwell(runtime, spec, cfg)
+            if observed.state == "on":
+                relay["on_at"] = now
+                relay["on_min_seconds"] = (
+                    finite(pending.get("min_on_seconds"), 120, 86400)
+                    or (limits[0] if limits else UPSTREAM_MIN_OFF_SECONDS)
+                )
+            else:
+                relay["off_at"] = now
+                relay["off_min_seconds"] = (
+                    finite(pending.get("min_off_seconds"), 120, 86400)
+                    or (limits[1] if limits else UPSTREAM_MIN_OFF_SECONDS)
+                )
             relay["idle_since"] = None
             await runtime._save()
         elif now-pending["when"] > UPSTREAM_ACK_SECONDS:
@@ -842,11 +867,11 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         if now-runtime._started < 300:
             runtime._status(spec, "startup_warmup")
             return True
-        since = max(finite(relay.get("off_at"), 0, 1e13) or 0,
-                    _observed_off_since(observed, now))
-        if now-since < UPSTREAM_MIN_OFF_SECONDS:
+        if not supply_minimum_off(
+            runtime, spec, cfg, cap, relay, observed, now
+        ):
             runtime._status(spec, "minimum_off_hold",
-                            reason="upstream_switch_minimum_off")
+                            reason="upstream_switch_device_minimum_off")
             return True
         # No physical output can be assumed harmless if it reports active
         # while an external supply claims OFF.
@@ -880,8 +905,7 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         for entity in spec.source_entities
     )
     safe_idle = (demand is False and native_off and no_native_write
-                 and no_defrost and no_active_output
-                 and now-runtime._started >= 300)
+                 and no_defrost and no_active_output)
     if not safe_idle:
         if relay.get("idle_since") is not None:
             relay["idle_since"] = None
@@ -893,6 +917,10 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         return False
     if now-relay["idle_since"] < cfg["power_switch_cooldown_seconds"]:
         return False
+    if not supply_minimum_on(runtime, spec, cfg, cap, relay, now):
+        runtime._status(spec, "minimum_on_hold",
+                        reason="upstream_switch_device_minimum_on")
+        return True
     if not runtime.hass.services.has_service("switch", "turn_off"):
         runtime._status(spec, "native_service_unavailable")
         return True
