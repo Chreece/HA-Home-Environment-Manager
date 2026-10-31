@@ -143,6 +143,7 @@ class Runtime:
         self.hass.config_entries.async_update_entry=update_entry
         self.record={
             "sources":list(spec.source_entities),"area":spec.area_id,
+            "source_device_id":spec.source_device_id,
             "baseline":{"climate.heater":snapshot(self.states.get("climate.heater"))},
             "paused":"physical_manual_override",
             "pending":None,
@@ -233,6 +234,12 @@ async def run():
     assert unplugged.record["upstream"]["owned"] is False
     assert not unplugged.record["power"] and unplugged.scheduled==1
 
+    old_device=Runtime(prior_owned=True)
+    old_device.record["source_device_id"]="previous-device"
+    await must_reject(old_device,"Stored physical controller identity changed")
+    orphan_relay=Runtime(supply="on",supply_owned=True)
+    orphan_relay.record["upstream"].pop("identity")
+    await must_reject(orphan_relay,"ownership identity")
     failed=Runtime()
     failed.manager.native_permission=False
     await must_reject(failed,"not authorized")
