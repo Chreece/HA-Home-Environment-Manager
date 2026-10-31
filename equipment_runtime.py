@@ -810,7 +810,7 @@ class EquipmentRuntime:
             record = self._record(spec)
             now = self.clock()
             supply = cfg.get("power_switch_entity")
-            upstream = record.get("upstream", {})
+            upstream = record.setdefault("upstream", {})
             if not isinstance(upstream, dict):
                 raise HomeAssistantError("Invalid upstream supply history")
             from .equipment_power_switch import permitted_supply
@@ -1016,10 +1016,16 @@ class EquipmentRuntime:
                 raise HomeAssistantError(
                     "Physical state or identity changed during Resume; retry after verification"
                 )
+            effective_method = restore_mode or cfg["control_mode"]
+            # Prefer existing localized statuses rather than creating an
+            # untranslated diagnostic enum and another recorder schema.
             self._status(
-                spec, "reconciled_running" if active else "reconciled",
+                spec, "manual" if active and effective_method == "manual"
+                else "controlling" if active else "awaiting_evaluation",
+                reason="explicit_resume_verified_running" if active
+                else "explicit_resume_awaiting_evaluation",
                 physical_mode=live_primary.state if active else "off",
-                controller_method=restore_mode or cfg["control_mode"],
+                controller_method=effective_method,
             )
         # No new hardware command or artificial five-minute startup hold.
         # Trigger one eligible controller evaluation on the next event loop
