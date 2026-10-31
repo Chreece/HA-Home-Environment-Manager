@@ -207,6 +207,10 @@ class Simulator:
     async def _observe_native_running(self, spec, cap, state):
         # Persistence semantics tested by Beta73's independent real-method tests.
         return None
+    async def _reconcile_native_after_supply_wake(self, spec, cap):
+        # Beta75 tests the real native handoff separately; legacy fixtures
+        # have no supply wake record unless its tests explicitly create one.
+        return True
 
     async def _reconcile(self, spec):
         pending = self.record.get("pending")
