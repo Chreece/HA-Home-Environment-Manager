@@ -69,6 +69,9 @@ def _merge(base, edited, current):
     raise ValueError("setup_changed")
 
 
+_ROOM_MENU_SLOTS = 64
+
+
 class RoomSetupMixin:
     """Source selection, never hardware operations or control-method menus."""
 
@@ -79,9 +82,38 @@ class RoomSetupMixin:
         self._setup_index = 0
 
     def _room_edit_menu(self):
-        """Stable per-area menu IDs; room names are translated by the flow."""
+        """List each selected area directly, using frontend-localized labels.
+
+        Home Assistant menu descriptions translate room_{slot} with the
+        corresponding room_{slot}_name placeholder. Never use an HA area name
+        as an executable flow step or infer it from an entity ID.
+        """
         selected = self._values.get(CONF_AREAS, [])
-        return ["choose_rooms", "select_room", "setup_general"]
+        registry = ar.async_get(self.hass)
+        room_ids = [
+            area for area in selected if isinstance(area, str)
+            and registry.async_get_area(area) is not None
+        ] if isinstance(selected, list) else []
+        self._room_menu_ids = list(dict.fromkeys(room_ids))
+        count = min(len(self._room_menu_ids), _ROOM_MENU_SLOTS)
+        self._room_menu_placeholders = {
+            f"room_{index}_name":
+                registry.async_get_area(self._room_menu_ids[index]).name
+            for index in range(count)
+        }
+        # If an installation exceeds the available stable slot keys, retain
+        # access to the remaining rooms through the old explicit selector.
+        return (["choose_rooms", *(f"room_{i}" for i in range(count))]
+                + (["select_room"] if len(self._room_menu_ids) > count else [])
+                + ["setup_general"])
+
+    async def _open_room_menu_slot(self, index: int):
+        room_ids = getattr(self, "_room_menu_ids", [])
+        if not 0 <= index < len(room_ids):
+            return self.async_abort(reason="setup_area_removed")
+        self._edit_room_area = room_ids[index]
+        return await self.async_step_edit_room()
+
 
     async def async_step_choose_rooms(self, user_input=None):
         """Edit monitored rooms without entering the entire setup wizard."""
@@ -556,3 +588,19 @@ class RoomSetupMixin:
                 select(options[CONF_AWAY_WINDOWS_DELIVERY], multiple=True,
                        translation_key="away_window_delivery"))
         return self.async_show_form(step_id="setup_general", errors=errors, data_schema=probatio.Schema(fields))
+
+
+# Data-entry flow step IDs are fixed methods, while each flow instance selects
+# its existing room order and supplies translated name placeholders. Defining
+# these methods once (not dynamically on a live flow instance) is compatible
+# with Home Assistant's async_step_<next_step_id> dispatch.
+def _room_slot_step(index: int):
+    async def handler(self, user_input=None):
+        return await self._open_room_menu_slot(index)
+    handler.__name__ = f"async_step_room_{index}"
+    return handler
+
+
+for _room_slot in range(_ROOM_MENU_SLOTS):
+    setattr(RoomSetupMixin, f"async_step_room_{_room_slot}",
+            _room_slot_step(_room_slot))
