@@ -92,6 +92,76 @@ def supply_minimum_on(runtime: Any, spec: Any, cfg: dict, cap: Any,
                 and now - since >= max(limits[0], retained))
 
 
+async def observe_supply_state(
+    runtime: Any, spec: Any, record: dict, observed: Any, cfg: dict,
+    now: float,
+) -> None:
+    """Persist one real supply transition; never reset it on HA restart.
+
+    Memory-local observations distinguish OFF->ON or ON->OFF seen while
+    running from a restored HA State with a fresh last_changed timestamp.
+    Missing legacy ON/OFF history uses conservative evidence ONCE; an
+    identical state read later must not write Store again.
+    """
+    relay = record["upstream"]
+    memory = getattr(runtime, "_supply_state_seen", None)
+    if memory is None:
+        memory = runtime._supply_state_seen = {}
+    key = (spec.identifier, relay.get("entity"))
+    try:
+        stamp = finite(observed.last_changed.timestamp(), 0, now)
+    except (AttributeError, TypeError, ValueError, OverflowError):
+        stamp = None
+    previous = memory.get(key)
+    memory[key] = (observed.state, stamp)
+    limits = device_supply_dwell(runtime, spec, cfg)
+    if limits is None:
+        return
+    changed = False
+    if observed.state == "off":
+        prior_off = finite(relay.get("off_at"), 0, now)
+        transitioned = previous is not None and (
+            previous[0] == "on" or
+            previous[0] == "off" and previous[1] != stamp
+        )
+        if prior_off is None or transitioned:
+            # A first-ever observation may use the known State age, but on
+            # every in-session real change the conservative OFF moment is
+            # when the controller observed it, not an HA-retained timestamp.
+            relay["off_at"] = (
+                now if transitioned else stamp if stamp is not None else now
+            )
+            relay["off_min_seconds"] = max(
+                limits[1], finite(relay.get("off_min_seconds"), 0, 86400) or 0
+            )
+            changed = True
+    elif observed.state == "on" and relay.get("owned"):
+        prior_on = finite(relay.get("on_at"), 0, now)
+        transitioned = previous is not None and previous[0] == "off"
+        if prior_on is None or transitioned:
+            # For a legacy previously-owned plug, native persisted ON history
+            # proves the plug was energized at least as long as the device.
+            # Otherwise default to the observed/recreated HA timestamp.
+            known_native = [
+                finite(item.get("since"), 0, now)
+                for item in record.get("power", {}).values()
+                if isinstance(item, dict)
+            ]
+            known_native = [value for value in known_native if value is not None]
+            since = (
+                now if transitioned else
+                max(known_native) if known_native else
+                stamp if stamp is not None else now
+            )
+            relay["on_at"] = since
+            relay["on_min_seconds"] = max(
+                limits[0], finite(relay.get("on_min_seconds"), 0, 86400) or 0
+            )
+            changed = True
+    if changed:
+        await runtime._save()
+
+
 def relay_identity(hass: Any, spec: Any, entity: str) -> dict | None:
     """Verify a native physical same-room switch and its immutable registry ID."""
     if not isinstance(entity, str) or not entity.startswith("switch."):
@@ -780,6 +850,10 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
     if relay.get("paused"):
         runtime._status(spec, "paused", reason=relay["paused"])
         return True
+    # One-time identity-checked physical-state observation. ACK handling
+    # above already persists commanded transitions. This detects *manual*
+    # state changes between ticks without confusing HA reboot restamps.
+    await observe_supply_state(runtime, spec, record, observed, cfg, now)
     if observed.state == "off" and relay.get("owned"):
         # A third party switched OFF a previously controller-owned outlet.
         # Never switch it on again without the user's intervention.
