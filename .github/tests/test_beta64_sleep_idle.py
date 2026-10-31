@@ -130,6 +130,7 @@ class Simulator:
         self._active = True
         self._started = BASE - 1800
         self._memory = {}
+        self._profile_wake = {}  # Present on EquipmentRuntime since Beta70.
         self._fan_allocations = {}
         self._invalidated = set()
         self._pid_offline_previews = {}
