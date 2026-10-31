@@ -33,7 +33,10 @@ def make(*,opened=True,supply='on',native='dry',enabled=True):
  s=Simulator(sleeping=False,supply=supply,native=native)
  s.manager.entry=NS(entry_id='entry')
  s.manager.settings['room_sources']={spec.area_id:{'windows':['binary_sensor.window']}}
- cfg=Model.settings(s.manager,spec);cfg['pause_on_window_open']=enabled
+ # The real controller reads its persisted settings each tick. Never edit
+ # the temporary DEFAULTS+stored copy returned by Model.settings(): doing so
+ # previously disabled the supply's window subscriber in this test harness.
+ s.manager.settings[Model.SETTINGS][spec.identifier]['pause_on_window_open']=enabled
  s.manager.plan.update(window_contacts=['binary_sensor.window'],window_safe=not opened)
  contact(s,'on' if opened else 'off',when=BASE-1800)
  return s
