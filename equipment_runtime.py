@@ -394,7 +394,6 @@ class EquipmentRuntime:
             return False
         current = self.hass.states.get(cap.primary)
         if (current is None or current.state in ("unknown", "unavailable")
-                or current.state not in cap.modes
                 or any(snapshot(self.hass.states.get(e)) is None
                        for e in spec.source_entities)
                 or any(foreign_owner_hold(
@@ -403,14 +402,37 @@ class EquipmentRuntime:
             self._status(spec, "waiting_for_physical_device",
                          reason="native_supply_wake_sources_not_verified")
             return False
+        # Actual HA physical states vary by domain: climate says "heat",
+        # while a heat-assigned native switch/fan/humidifier says "on" and
+        # a proportional valve says "35". Capabilities describe the DEVICE
+        # ROLE, not the raw ON state for those non-climate domains.
+        if cap.domain == "climate":
+            valid = current.state in cap.modes
+        elif cap.domain in ("switch", "input_boolean", "fan", "humidifier"):
+            valid = current.state in ("off", "on")
+        elif cap.domain in ("number", "input_number"):
+            attrs = current.attributes
+            valid = (finite(current.state, 0, 100) is not None
+                     and attrs.get("unit_of_measurement") == "%"
+                     and attrs.get("min") == 0 and attrs.get("max") == 100)
+        else:
+            valid = False
+        if not valid:
+            self._status(spec, "paused",
+                         reason="native_supply_wake_unsupported_physical_state")
+            return False
         if not output_off(current):
-            # Auto-restoration of an already-running native mode is accepted
-            # ONLY when the exact requested direction matches, or when this
-            # is a uniquely single-purpose physical native device.
+            # Auto-restoration after our own acknowledged ON accepts only the
+            # selected heat/cool/dry/fan role, or an unambiguous single-purpose
+            # controller. Never infer mode ownership from a generic ON value.
             allowed = set(cap.modes) - {"off"}
             selected = cfg.get("requested_mode")
-            if (selected is not None and current.state != selected
-                    or selected is None and allowed != {current.state}):
+            if (selected is not None and (
+                    selected not in allowed or
+                    cap.domain == "climate" and current.state != selected)
+                    or selected is None and (
+                        (cap.domain == "climate" and allowed != {current.state})
+                        or (cap.domain != "climate" and len(allowed) != 1))):
                 self._status(spec, "paused",
                              reason="native_supply_wake_mode_unverified")
                 return False
