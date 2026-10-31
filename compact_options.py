@@ -258,6 +258,89 @@ class CompactOptionsMixin:
                 values.append({"value": key, "label": key})
         return values or [{"value": "__state__", "label": state_name}]
 
+    async def async_step_room_occupancy(self, user_input=None):
+        """Select one area: a room's occupancy sensors are not global inputs."""
+        from homeassistant.helpers import area_registry
+        known = set(self._values.get(CONF_AREAS, []))
+        saved = self._values.get(CONF_CLIMATE_ROOMS, {})
+        if isinstance(saved, dict):
+            known.update(saved)
+        registry = area_registry.async_get(self.hass)
+        choices = sorted((
+            {"value": area, "label": registry.async_get_area(area).name}
+            for area in known
+            if registry.async_get_area(area) is not None
+        ), key=lambda entry: entry["label"].casefold())
+        if not choices:
+            return await self._finish()
+        errors = {}
+        if user_input is not None:
+            area = user_input.get("room_occupancy_area")
+            if area in {choice["value"] for choice in choices}:
+                self._room_occupancy_area = area
+                return await self.async_step_room_occupancy_sources()
+            errors["base"] = "invalid_areas"
+        return self.async_show_form(
+            step_id="room_occupancy", errors=errors,
+            data_schema=probatio.Schema({
+                _field("room_occupancy_area", choices[0]["value"], required=True):
+                    _select(choices),
+            }),
+        )
+
+    async def async_step_room_occupancy_sources(self, user_input=None):
+        """Auto-select real presence sensors *once* as the editable default.
+
+        An explicitly saved empty list stays empty. Merely opening this page
+        never rewrites a config entry; saving affects only this room's sources.
+        """
+        from .occupancy_policy import room_sensor_choices
+        from .room_sources import label
+        area = self._room_occupancy_area
+        rooms = self._values.get(CONF_CLIMATE_ROOMS, {})
+        rooms = rooms if isinstance(rooms, dict) else {}
+        old = rooms.get(area, {})
+        old = old if isinstance(old, dict) else {}
+        discovered = room_sensor_choices(self.hass, area)
+        selected = old.get("occupancy_sensors")
+        defaults = selected if isinstance(selected, list) else discovered
+        # Show previously saved unavailable identifiers, rather than silently
+        # discarding a choice when a device temporarily disconnects.
+        choices = sorted(
+            ({"value": eid, "label": label(self.hass, eid)}
+             for eid in set(discovered) | set(defaults)
+             if isinstance(eid, str) and eid.startswith("binary_sensor.")),
+            key=lambda item: item["label"].casefold(),
+        )
+        allowed = {item["value"] for item in choices}
+        errors = {}
+        if user_input is not None:
+            chosen = user_input.get("room_occupancy_sensors", [])
+            if (not isinstance(chosen, list)
+                    or any(not isinstance(eid, str) or eid not in allowed
+                           for eid in chosen)):
+                errors["base"] = "climate_occupancy_invalid"
+            else:
+                updated_rooms = deepcopy(rooms)
+                updated = dict(old)
+                updated["occupancy_sensors"] = list(dict.fromkeys(chosen))
+                updated_rooms[area] = updated
+                self._values[CONF_CLIMATE_ROOMS] = updated_rooms
+                return await self._finish()
+        return self.async_show_form(
+            step_id="room_occupancy_sources", errors=errors,
+            description_placeholders={
+                "area_name": next(
+                    (x["label"] for x in self._device_areas()
+                     if x["value"] == area), area
+                ),
+            },
+            data_schema=probatio.Schema({
+                _field("room_occupancy_sensors", defaults):
+                    _select(choices, multi=True),
+            }),
+        )
+
     async def async_step_general_settings(self, user_input=None):
         """Shared presence and sleep sources, independent of any HVAC device."""
         old = self._values.get(CONF_OCCUPANCY_GLOBAL, {})
