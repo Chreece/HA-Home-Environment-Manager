@@ -149,6 +149,23 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             ) if cfg.get("control_mode") == "pid" else "not_pid",
             "physical_entity_states": physical,
             "controller_owns_power": bool(record.get("power")),
+            "native_owned_power_since": {
+                entity: owned.get("since")
+                for entity, owned in record.get("power", {}).items()
+                if isinstance(owned, dict)
+            },
+            "native_owned_power_elapsed_seconds": {
+                entity: round(max(0, runtime.clock()-owned["since"]))
+                for entity, owned in record.get("power", {}).items()
+                if isinstance(owned, dict)
+                and isinstance(owned.get("since"), (int, float))
+                and owned["since"] <= runtime.clock()
+            },
+            "restart_power_verification_pending": (
+                record.get("restart_power_verification") is True
+            ),
+            "restart_recovery_blocked": record.get(
+                "restart_recovery_blocked") is True,
             "paused_reason": record.get("paused"),
             "command_pending": bool(record.get("pending")),
             "upstream_power_switch": supply_id,
