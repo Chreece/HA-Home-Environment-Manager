@@ -1,0 +1,61 @@
+name: Beta79 room-centric Configure and Reconfigure validation
+on:
+  push:
+    branches: ['feat/reconfigure-room-centric-20261031']
+permissions:
+  contents: read
+jobs:
+  room-centric:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Syntax, room pages, General settings and translated menus
+        run: |
+          set -euo pipefail
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I .github/tests/test_beta79_room_reconfigure.py
+          python -I .github/tests/test_beta79_general_form.py
+          python -I - <<'PY'
+          from pathlib import Path
+          import json
+          names=list(Path('translations').glob('*.json'))
+          assert len(names)==38
+          for f in [Path('strings.json'),*names]:
+              data=json.loads(f.read_text(encoding='utf-8'))
+              for section in ('config','options'):
+                  steps=data[section]['step']
+                  assert 'choose_rooms' in steps
+                  assert 'room_settings' in steps
+                  assert 'occupancy_sensors' in steps['room_settings']['data']
+                  assert len(steps['setup_general']['data'])>=45
+                  assert all('global_threshold_'+k in steps['setup_general']['data']
+                             for k in data[section]['step']['thresholds']['data'])
+                  if section=='options':
+                      assert list(steps['init']['menu_options'])==['choose_rooms','general_settings']
+          print('PASS: 38 locale menu and all room/general labels')
+          PY
+          git diff --check
+      - name: Existing occupancy, native compressor and power safety regression
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta78_room_occupancy.py
+          python -I .github/tests/test_beta72_resume_running.py
+          python -I .github/tests/test_beta73_restart_power_history.py
+          python -I .github/tests/test_beta74_upstream_dwell.py
+          python -I .github/tests/test_beta75_native_supply_recovery.py
+          python -I .github/tests/test_beta77_offline_supply_resume.py
+          python -I .github/tests/test_beta77_dry_only_target.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+      - name: Actual Home Assistant events and Chromium card
+        run: |
+          set -euo pipefail
+          python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+          python -I .github/tests/test_beta68_events.py
+          python -I .github/tests/test_beta66_browser.py
+          python -I .github/tests/test_beta68_browser.py
+          python -I .github/tests/test_beta76_compact_browser.py
