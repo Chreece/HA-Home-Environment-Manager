@@ -18,4 +18,9 @@ jobs:
           set -euo pipefail
           python -I -m compileall -q .
           node --check frontend/air-quality-advisor-card.js
+          python -I .github/tests/test_beta72_resume_running.py
+          python -I .github/tests/test_beta73_restart_power_history.py
+          python -I .github/tests/test_beta74_upstream_dwell.py
+          python -I .github/tests/test_beta75_native_supply_recovery.py
+          python -I .github/tests/test_beta77_offline_supply_resume.py
           python -I .github/tests/test_beta77_dry_only_target.py
