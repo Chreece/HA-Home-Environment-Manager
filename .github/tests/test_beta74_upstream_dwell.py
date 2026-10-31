@@ -87,7 +87,9 @@ async def tests():
     assert len(supply_calls(sim,'on'))==1
     assert relay['pending']['min_on_seconds']==900
     sim.now+=1
-    assert await before_tick(sim,spec) is True
+    # The acknowledged ON relay now hands normal control to the native
+    # appliance (False means no upstream hold, not a failed ACK).
+    assert await before_tick(sim,spec) is False
     assert relay['owned'] is True and relay['pending'] is None
     assert relay['on_at']==sim.now
     assert relay['on_min_seconds']==900
