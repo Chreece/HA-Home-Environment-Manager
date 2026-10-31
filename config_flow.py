@@ -29,6 +29,7 @@ from .const import (
     CONF_ENVIRONMENT_GLOBAL, CONF_ENVIRONMENT_ROOMS, CONF_PID_ROOMS, CONF_CLIMATE_ROOMS,
 )
 from .room_setup import RoomSetupMixin
+from .reconfigure_sections import ReconfigureSectionsMixin
 from .compact_options import CompactOptionsMixin
 from .mold import calibration_factor, estimate_mold_for_room
 from .climate_pid import DEFAULT_PID, ClimatePidCoordinator
@@ -88,7 +89,7 @@ def _real_number(low: float, high: float, unit: str | None = None) -> selector.N
     ))
 
 
-class _FlowMixin(RoomSetupMixin, CompactOptionsMixin):
+class _FlowMixin(ReconfigureSectionsMixin, RoomSetupMixin, CompactOptionsMixin):
     """Use the same pages in initial setup and reconfiguration."""
 
     _values: dict[str, Any]
@@ -1841,9 +1842,7 @@ class AirQualityConfigFlow(_FlowMixin, config_entries.ConfigFlow, domain=DOMAIN)
             self._values = {**entry.data, **entry.options}
             self._indoor_index = 0
             self._start_room_setup()
-        return self.async_show_menu(
-            step_id="reconfigure", menu_options=self._edit_sections()
-        )
+        return self._settings_menu("reconfigure")
 
     async def _finish(self) -> ConfigFlowResult:
         if getattr(self, "_reconfigure_initialized", False):
@@ -1888,9 +1887,7 @@ class AirQualityOptionsFlow(_FlowMixin, OptionsFlowWithReload):
         self._values = {**self.config_entry.data, **self.config_entry.options}
         self._indoor_index = 0
         self._start_room_setup()
-        return self.async_show_menu(
-            step_id="init", menu_options=self._edit_sections()
-        )
+        return self._settings_menu("init")
 
     async def _finish(self) -> ConfigFlowResult:
         return self.async_create_entry(data=self._values)
