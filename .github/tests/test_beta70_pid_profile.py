@@ -163,9 +163,10 @@ class Harness:
         )
         self.plan = {"away":"away", "occupancy":"unoccupied"}
         self.manager._harness = self
+        self._last_physical_off = self.now - off_age
         self.state = N(state="off", domain="climate",
                        attributes={"hvac_action":"idle"}, last_changed=N(
-                         timestamp=lambda: self.now-off_age))
+                         timestamp=lambda: self._last_physical_off))
         self.hass = N(states=N(get=lambda entity: self.state if entity == Cap().primary else None))
         self.records = {"power": {}, "baseline": {}, "off_at": {}, "pending": None}
         self.actions = []
