@@ -341,8 +341,9 @@ class EquipmentRuntime:
                     or permitted_supply(
                         self.manager, spec, supply, upstream.get("identity")
                     ) is None):
-                await self._pause(spec, "restart_reconciliation_required")
                 record.pop("restart_power_verification", None)
+                record["restart_recovery_blocked"] = True
+                await self._pause(spec, "restart_reconciliation_required")
                 return False
         previous = record.get("baseline", {})
         revised = {}
@@ -352,8 +353,9 @@ class EquipmentRuntime:
             return True
         for entity, owned in record["power"].items():
             if entity not in spec.source_entities or cap.primary != entity:
-                await self._pause(spec, "restart_reconciliation_required")
                 record.pop("restart_power_verification", None)
+                record["restart_recovery_blocked"] = True
+                await self._pause(spec, "restart_reconciliation_required")
                 return False
             actual_state = self.hass.states.get(entity)
             current = snapshot(actual_state)
@@ -370,8 +372,9 @@ class EquipmentRuntime:
                     or _manual_output_changes(previous[entity], current)):
                 # The known ON state/authorization is no longer established.
                 # Do not infer actual ON duration from a reset HA timestamp.
-                await self._pause(spec, "restart_reconciliation_required")
                 record.pop("restart_power_verification", None)
+                record["restart_recovery_blocked"] = True
+                await self._pause(spec, "restart_reconciliation_required")
                 return False
             revised[entity] = current
         record["baseline"].update(revised)
