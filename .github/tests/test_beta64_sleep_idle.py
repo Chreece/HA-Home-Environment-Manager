@@ -204,6 +204,10 @@ class Simulator:
             return "controller_inactive"
         return None
 
+    async def _observe_native_running(self, spec, cap, state):
+        # Persistence semantics tested by Beta73's independent real-method tests.
+        return None
+
     async def _reconcile(self, spec):
         pending = self.record.get("pending")
         if not pending:
