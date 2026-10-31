@@ -228,6 +228,8 @@ class RoomSetupMixin:
             "general_room_occupancy_sensors": old.get("room_occupancy_sensors", []),
             "general_home_trackers": old.get("home_trackers", []),
             "general_away_cooldown_minutes": old.get("away_cooldown_minutes", 10),
+            "general_source_stale_minutes": old.get("source_stale_minutes", 240),
+            "general_home_policy": old.get("home_policy", "any_home"),
             **{f"general_{prefix}_rooms_entity": old.get(f"{prefix}_rooms_entity") or "none"
                for prefix in ("occupied", "sleep")},
             **{f"general_{prefix}_rooms_attribute": old.get(f"{prefix}_rooms_attribute") or "__state__"
@@ -261,6 +263,15 @@ class RoomSetupMixin:
                 if (not value.get(CONF_AWAY_WINDOWS_PERSONS)
                         or not value.get(CONF_AWAY_WINDOWS_DELIVERY)):
                     errors["base"] = "invalid_away_windows_recipients"
+            if value["general_home_policy"] not in ("any_home", "all_home"):
+                errors["general_home_policy"] = "invalid_room_source"
+            try:
+                source_age = float(value["general_source_stale_minutes"])
+            except (TypeError, ValueError, OverflowError):
+                errors["general_source_stale_minutes"] = "invalid_room_source"
+            else:
+                if not 10 <= source_age <= 1440:
+                    errors["general_source_stale_minutes"] = "invalid_room_source"
             try:
                 away_cooldown = float(value["general_away_cooldown_minutes"])
             except (TypeError, ValueError, OverflowError):
@@ -318,6 +329,8 @@ class RoomSetupMixin:
                 for name in ("room_occupancy_sensors", "home_trackers"):
                     occupancy[name] = list(dict.fromkeys(value["general_"+name]))
                 occupancy["away_cooldown_minutes"] = float(value["general_away_cooldown_minutes"])
+                occupancy["source_stale_minutes"] = float(value["general_source_stale_minutes"])
+                occupancy["home_policy"] = value["general_home_policy"]
                 for prefix in ("occupied", "sleep"):
                     entity = value[f"general_{prefix}_rooms_entity"]
                     attr = value[f"general_{prefix}_rooms_attribute"]
@@ -351,6 +364,14 @@ class RoomSetupMixin:
                 attrs = list(attrs_by_value.values())
                 chosen = value[attr_key] if value[attr_key] in attrs_by_value else "__state__"
                 fields[field(attr_key, chosen)] = select(attrs)
+        fields[field("general_home_policy", value["general_home_policy"])] = select([
+            {"value": "any_home", "label": "Any verified person at home"},
+            {"value": "all_home", "label": "All selected trackers home"},
+        ])
+        fields[field("general_source_stale_minutes", value["general_source_stale_minutes"])] = (
+            selector.NumberSelector(selector.NumberSelectorConfig(
+                min=10, max=1440, step=5, unit_of_measurement="min",
+                mode=selector.NumberSelectorMode.BOX)))
         fields[field("general_away_cooldown_minutes", value["general_away_cooldown_minutes"])] = (
             selector.NumberSelector(selector.NumberSelectorConfig(
                 min=0, max=240, step=1, unit_of_measurement="min",
