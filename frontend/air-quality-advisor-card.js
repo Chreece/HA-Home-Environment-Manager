@@ -2488,7 +2488,8 @@
     const value=(v,unit='')=>numeric(v)?this._format(v)+unit:null;
     const rows=[];
     const add=(label,display)=>{if(display!==null && display!==undefined && display!=='')
-      rows.push('<div><span>'+escape(label)+'</span><b>'+escape(display)+'</b></div>');};
+      rows.push('<div title="'+escape(label+': '+display)+'"><span>'+escape(label)+'</span><b>'+
+        escape(display)+'</b></div>');};
     const physical=a.physical_source_state;
     add(t.physical,this._controllerStatusLabel(physical ?? 'unavailable'));
     add(t.choose,this._controllerStatusLabel(a.requested_hvac_mode || entry.climate.state));
@@ -2914,6 +2915,12 @@
     const reason=d.status_reason_code || c.reason;
     if (reason && reason!==state)
       info.push('<div>'+escape(t.reason)+': '+escape(this._controllerStatusLabel(reason))+'</div>');
+    // All truncated mini-tile values remain fully readable on touch as well
+    // as hover, without repeating them permanently below the measurements.
+    const tileDetails=[...html.matchAll(
+      /<div title="([^"]*)"><span>[^<]*<\/span><b>[^<]*<\/b><\/div>/g
+    )].map(match=>'<div>'+match[1]+'</div>');
+    info.push(...tileDetails);
     const supplyId=d.upstream_power_switch || a.upstream_power_switch;
     const supply=this._hass?.states?.[supplyId];
     if(supplyId && supply)
@@ -3026,8 +3033,14 @@
       gap:5px;margin:5px 0 6px
     }
     .hem-compact-device76 .hem-device-data>div{padding:6px 7px;border-radius:7px}
-    .hem-compact-device76 .hem-device-data span{font-size:10px;line-height:1.15}
-    .hem-compact-device76 .hem-device-data b{font-size:13px;margin-top:3px;line-height:1.2}
+    .hem-compact-device76 .hem-device-data span{
+      font-size:10px;line-height:1.15;white-space:nowrap;
+      overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal
+    }
+    .hem-compact-device76 .hem-device-data b{
+      font-size:13px;margin-top:3px;line-height:1.2;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal
+    }
     .hem-compact-device76 .managed-method-label{margin-top:6px;gap:3px}
     .hem-compact-device76 .managed-method-label select{padding:6px}
     .hem-window-policy66{margin-top:5px}
