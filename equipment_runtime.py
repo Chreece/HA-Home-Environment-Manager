@@ -1217,13 +1217,20 @@ class EquipmentRuntime:
                 raise HomeAssistantError(
                     "Physical equipment is unavailable; Resume cannot verify its output"
                 )
-            if offline and any(
-                value is not None and not output_off(value)
-                for value in physical.values()
-            ):
-                raise HomeAssistantError(
-                    "The upstream supply is OFF but a downstream output reports active"
-                )
+            if offline:
+                # An OFF physical supply cannot authenticate a live downstream
+                # output. ESPHome/native climate may keep its last DRY/HEAT
+                # mode while the relay is disconnected; never count that mode
+                # as running, claim ownership, or send a service during Resume.
+                # Conversely, a previously owned/pending native command (or
+                # controller-owned supply that unexpectedly went OFF) remains
+                # a real safety conflict, not a stale-state recovery.
+                if (record.get("power") or record.get("pending")
+                        or upstream.get("owned")):
+                    raise HomeAssistantError(
+                        "The upstream supply is OFF with unresolved controller "
+                        "power ownership or a pending native command"
+                    )
 
             pending = record.get("pending")
             if pending:
@@ -1248,7 +1255,8 @@ class EquipmentRuntime:
                 )
 
             live_primary = physical.get(cap.primary) if cap is not None else None
-            active = cap is not None and live_primary is not None and not output_off(live_primary)
+            active = (not offline and cap is not None and live_primary is not None
+                      and not output_off(live_primary))
             if active:
                 if (cap.primary not in spec.source_entities or "off" not in cap.modes
                         or (cap.domain == "climate" and live_primary.state not in cap.modes)
@@ -1772,6 +1780,14 @@ class EquipmentRuntime:
 
     async def _reconcile(self, spec: model.ManagedDevice) -> bool:
         record, now = self._record(spec), self.clock()
+        # The supply can change between the earlier relay check and native
+        # reconciliation. Never mistake an offline appliance's restored mode
+        # for a physical manual override, or accept its stale ACK as live.
+        supply = model.settings(self.manager, spec).get("power_switch_entity")
+        if supply and (relay := self.hass.states.get(supply)) is not None and relay.state == "off":
+            self._status(spec, "waiting_for_physical_device",
+                         reason="upstream_switch_off_native_state_unverified")
+            return False
         pending = record.get("pending")
         if pending:
             if not self._identity_ok(spec):
