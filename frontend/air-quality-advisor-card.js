@@ -2961,7 +2961,7 @@
   };
 
   const originalStyles76=proto76._styles;
-  proto76._styles=function() { return originalStyles76.call(this)+\`<style>
+  proto76._styles=function() { return originalStyles76.call(this)+`<style>
     /* Density only: preserve source elements and all existing controls. */
     .card-heading{padding:16px 18px 12px;gap:10px}
     .card-logo{width:38px;height:38px;border-radius:11px}
@@ -3045,7 +3045,7 @@
       .hem-status-pill76>span{max-width:100px}
     }
     @media(prefers-reduced-motion:reduce){.hem-context-body76{scroll-behavior:auto}}
-  </style>\`; };
+  </style>`; };
   /* HEM_COMPACT76_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
