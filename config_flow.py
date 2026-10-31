@@ -161,6 +161,15 @@ class _FlowMixin(RoomSetupMixin, CompactOptionsMixin):
             return "✓ 🌡️ °C · RH (%)"
         return "⚠️ " + " · ".join(names.get(code, code) for code in missing)
 
+    @staticmethod
+    def _edit_sections() -> list[str]:
+        """Entry menu: choose one settings flow, not a forced setup wizard."""
+        return [
+            "room_occupancy", "general_settings", "area_settings",
+            "outside_data", "delivery", "thresholds",
+            "climate", "pid", "setup_rooms",
+        ]
+
     async def _advance(self, next_step: str) -> ConfigFlowResult:
         """Finish a selected options section; initial setup continues normally."""
         if getattr(self, "_menu_mode", False):
@@ -968,11 +977,16 @@ class _FlowMixin(RoomSetupMixin, CompactOptionsMixin):
         from .climate_schedule import local_interval_active
         draft=self._climate_draft
         area=self._climate_area
+        from .occupancy_policy import room_sensor_choices
+        # The first editor visit auto-selects local HA presence/occupancy
+        # entities, but a previously saved [] must remain explicitly empty.
+        candidates=room_sensor_choices(self.hass,area)
+        existing=draft.get("occupancy_sensors")
+        initial_sensors=existing if isinstance(existing,list) else candidates
         sensor_options=[
-            {"value":state.entity_id,"label":(state.name or state.entity_id)}
-            for state in self.hass.states.async_all("binary_sensor")
-            if entity_area(self.hass,state.entity_id)==area
-            and str(state.attributes.get("device_class","")).casefold() in ("occupancy","presence")
+            {"value":eid,"label":(
+                getattr(self.hass.states.get(eid),"name",None) or eid
+            )} for eid in sorted(set(candidates)|set(initial_sensors))
         ]
         # This is independent of the room Area Registry: people / mobile
         # trackers represent home presence, not room occupancy.
@@ -984,8 +998,7 @@ class _FlowMixin(RoomSetupMixin, CompactOptionsMixin):
         errors={}
         if user_input is not None:
             proposal={**draft,
-                "occupancy_sensors":user_input.get("climate_occupancy_sensors",
-                                                 draft.get("occupancy_sensors",[])),
+                "occupancy_sensors":user_input.get("climate_occupancy_sensors",[]),
                 "away_entities":user_input.get("climate_away_entities",
                                                draft.get("away_entities",[])),
                 "unknown_occupancy":user_input.get("climate_unknown_occupancy",
@@ -1054,7 +1067,7 @@ class _FlowMixin(RoomSetupMixin, CompactOptionsMixin):
                     return await self.async_step_climate_equipment()
                 return await self.async_step_climate_profiles()
         fields={
-            _marker("climate_occupancy_sensors",draft.get("occupancy_sensors",[])):
+            _marker("climate_occupancy_sensors",initial_sensors):
                 _multi(sensor_options),
             _marker("climate_away_entities",draft.get("away_entities",[])):
                 _multi(away_options),
@@ -1816,7 +1829,41 @@ class AirQualityConfigFlow(_FlowMixin, config_entries.ConfigFlow, domain=DOMAIN)
         self._values = {}
         return await self.async_step_setup_rooms()
 
+    async def async_step_reconfigure(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Native HA Reconfigure opens a menu of independent edit sections."""
+        entry = self._get_reconfigure_entry()
+        if not getattr(self, "_reconfigure_initialized", False):
+            self._reconfigure_initialized = True
+            self._editing = True
+            self._menu_mode = True
+            self._values = {**entry.data, **entry.options}
+            self._indoor_index = 0
+            self._start_room_setup()
+        return self.async_show_menu(
+            step_id="reconfigure", menu_options=self._edit_sections()
+        )
+
     async def _finish(self) -> ConfigFlowResult:
+        if getattr(self, "_reconfigure_initialized", False):
+            # ConfigFlow Reconfigure must UPDATE, never create another entry.
+            # Other per-device options may change during an open wizard;
+            # merge only edits from our saved starting snapshot.
+            from .room_setup import _merge
+            entry = self._get_reconfigure_entry()
+            current = {**entry.data, **entry.options}
+            try:
+                updated = _merge(self._setup_base, self._values, current)
+            except ValueError:
+                return self.async_abort(reason="setup_changed")
+            if entry.unique_id is not None:
+                await self.async_set_unique_id(entry.unique_id, raise_on_progress=False)
+                self._abort_if_unique_id_mismatch()
+            return self.async_update_reload_and_abort(
+                entry, options=updated,
+                reload_even_if_entry_is_unchanged=False,
+            )
         # A stale, unfinished setup flow must not prevent a fresh attempt
         # from completing. Conversely, an entry installed while this flow was
         # open must never be duplicated. Recheck immediately before creation.
@@ -1841,7 +1888,9 @@ class AirQualityOptionsFlow(_FlowMixin, OptionsFlowWithReload):
         self._values = {**self.config_entry.data, **self.config_entry.options}
         self._indoor_index = 0
         self._start_room_setup()
-        return await self.async_step_setup_rooms()
+        return self.async_show_menu(
+            step_id="init", menu_options=self._edit_sections()
+        )
 
     async def _finish(self) -> ConfigFlowResult:
         return self.async_create_entry(data=self._values)
