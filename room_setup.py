@@ -91,10 +91,19 @@ class RoomSetupMixin:
         errors = {}
         if user_input is not None:
             chosen = user_input.get(CONF_AREAS, [])
-            if not isinstance(chosen, list) or any(x not in allowed for x in chosen):
+            if (not isinstance(chosen, list) or not chosen
+                    or any(not isinstance(x, str) or x not in allowed for x in chosen)):
                 errors["base"] = "invalid_setup_rooms"
             else:
-                self._values[CONF_AREAS] = list(dict.fromkeys(chosen))
+                chosen = list(dict.fromkeys(chosen))
+                previous = set(self._values.get(CONF_AREAS, []))
+                # Revoke automatic grants only for rooms deliberately removed
+                # from this monitoring selection. Never disable unrelated
+                # pre-existing climate-only rooms on opening this menu.
+                removed = previous - set(chosen)
+                self._values[CONF_AREAS] = chosen
+                if removed:
+                    sources.revoke_removed_rooms(self._values, removed)
                 return await self._finish()
         return self.async_show_form(
             step_id="choose_rooms", errors=errors,
@@ -479,13 +488,9 @@ class RoomSetupMixin:
                     occupancy[prefix+"_rooms_entity"] = None if entity == "none" else entity
                     occupancy[prefix+"_rooms_attribute"] = "" if attr == "__state__" else attr
                 self._values[CONF_OCCUPANCY_GLOBAL] = occupancy
-                # Last-page commit only: a cancelled or invalid setup writes nothing.
-                if getattr(self, "_editing", False):
-                    current = {**self.config_entry.data, **self.config_entry.options}
-                    try:
-                        self._values = _merge(self._setup_base, self._values, current)
-                    except ValueError:
-                        return self.async_abort(reason="setup_changed")
+                # Keep changes in the draft. Options and native Reconfigure
+                # each merge against the latest entry exactly once in _finish;
+                # a native ConfigFlow intentionally has no self.config_entry.
                 return await self._finish()
         fields = {}
         for key in (CONF_WEATHER, CONF_OUTDOOR, CONF_WARNINGS, "general_room_occupancy_sensors",
