@@ -16,8 +16,8 @@ from types import ModuleType, SimpleNamespace as N
 ROOT=Path(__file__).resolve().parents[2]
 source=ast.parse((ROOT/"reconfigure_rooms.py").read_text(encoding="utf-8"))
 nodes=[n for n in source.body if isinstance(n,(ast.ClassDef,ast.FunctionDef))
-       and n.name in ("ReconfigureRoomsMixin","_room_label","_menu_labels")]
-assert len(nodes)==3
+       and n.name in ("ReconfigureRoomsMixin","_locale_menu")]
+assert len(nodes)==2
 
 group_names=("windows","air_quality","temperature","humidity",
              "pressure","climate_devices","shades")
@@ -76,6 +76,8 @@ class Probatio:
     def Required(key,default=None):return key
 ns={
  "__name__":"beta79_fixture.reconfigure_rooms","__package__":"beta79_fixture",
+ "__file__":str(ROOT/"reconfigure_rooms.py"),
+ "json":__import__("json"),"Path":Path,
  "Any":object,"probatio":Probatio,"ar":N(async_get=lambda hass:N(
       async_get_area=lambda area:N(name=rooms[area]) if area in rooms else None)),
  "er":N(),"deepcopy":deepcopy,"sources":module_source,
