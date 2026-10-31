@@ -81,10 +81,7 @@ class RoomSetupMixin:
     def _room_edit_menu(self):
         """Stable per-area menu IDs; room names are translated by the flow."""
         selected = self._values.get(CONF_AREAS, [])
-        return ["choose_rooms", *(
-            f"edit_room_{area}" for area in selected
-            if isinstance(area, str) and area
-        ), "setup_general"]
+        return ["choose_rooms", "select_room", "setup_general"]
 
     async def async_step_choose_rooms(self, user_input=None):
         """Edit monitored rooms without entering the entire setup wizard."""
@@ -104,6 +101,29 @@ class RoomSetupMixin:
             data_schema=probatio.Schema({
                 probatio.Required(CONF_AREAS, default=[x for x in selected if x in allowed]):
                     select(options, multiple=True)
+            }),
+        )
+
+    async def async_step_select_room(self, user_input=None):
+        """Only previously monitored rooms are offered for source editing."""
+        options = [
+            item for item in areas(self.hass)
+            if item["value"] in self._values.get(CONF_AREAS, [])
+        ]
+        if not options:
+            return await self.async_step_choose_rooms()
+        errors = {}
+        if user_input is not None:
+            chosen = user_input.get("edit_room_area")
+            if chosen in {item["value"] for item in options}:
+                self._edit_room_area = chosen
+                return await self.async_step_edit_room()
+            errors["base"] = "invalid_areas"
+        return self.async_show_form(
+            step_id="select_room", errors=errors,
+            data_schema=probatio.Schema({
+                probatio.Required("edit_room_area", default=options[0]["value"]):
+                    select(options),
             }),
         )
 
