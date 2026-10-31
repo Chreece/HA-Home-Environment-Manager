@@ -129,6 +129,10 @@ async def main():
  contact(s,'off');start=s.now
  s.now+=59;assert await b['before_tick'](s,spec);assert not s.issued
  s.now=start+60;assert await b['before_tick'](s,spec)
+ assert s.issued, {'policy':s._window_policy(spec),
+                   'status':s.statuses.get(spec.identifier),
+                   'relay':s.record.get('upstream'),
+                   'now':s.now}
  assert s.issued[-1][:3]==('switch','turn_on','switch.strip')
 
  # Unknown contact is not closed; recovery restarts 60 seconds.
