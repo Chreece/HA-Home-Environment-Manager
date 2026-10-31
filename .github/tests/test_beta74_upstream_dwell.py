@@ -216,6 +216,44 @@ async def tests():
     blind.manager.cap=None
     assert device_supply_dwell(
        blind,spec,Model.settings(blind.manager,spec),None)==(1800,2400)
+    # Each configured device/supply retains its own minimums; a 10-minute
+    # radiator cannot shorten an 30-minute compressor's ON protection.
+    radiator=simulate(on=600,off=1800,cooldown=60,on_age=1200)
+    compressor=simulate(on=1800,off=2400,cooldown=60,on_age=1200)
+    for device in (radiator,compressor):
+        await before_tick(device,spec)
+        device.now=clock+60
+        await before_tick(device,spec)
+    assert len(supply_calls(radiator,'off'))==1
+    assert not supply_calls(compressor,'off')
+    compressor.now=clock+600
+    await before_tick(compressor,spec)
+    assert len(supply_calls(compressor,'off'))==1
+
+    # Status attributes expose the actual persisted ON/OFF history and
+    # calculated wait. The diagnostic read must never command hardware.
+    import ast
+    from types import SimpleNamespace as N
+    tree=ast.parse((ROOT/'equipment_status.py').read_text())
+    klass=next(n for n in tree.body if isinstance(n,ast.ClassDef)
+               and n.name=='ControllerStatusSensor')
+    method=next(n for n in klass.body if isinstance(n,ast.FunctionDef)
+                and n.name=='extra_state_attributes')
+    method.decorator_list=[]
+    Model.profile_name=staticmethod(lambda cfg,plan:'home')
+    ns={'equipment':Model}
+    exec(compile(ast.Module(body=[method],type_ignores=[]),
+                 'equipment_status.py','exec'),ns)
+    radiator.manager.plan=N(environment={})
+    view=N(_manager=radiator.manager,_spec=spec,
+           controller_settings=Model.settings(radiator.manager,spec))
+    commands_before=len(radiator.issued)
+    attrs=ns['extra_state_attributes'](view)
+    assert attrs['upstream_device_minimum_on_seconds']==600
+    assert attrs['upstream_device_minimum_off_seconds']==1800
+    assert attrs['upstream_power_state']=='off' or attrs['upstream_power_state']=='on'
+    assert len(radiator.issued)==commands_before
+
     print('PASS Beta74: actual relay native minimum ON/OFF, ACK timestamps, '
           'demand-safe cooldown, no premature OFF/ON, legacy state recovery, '
           'manual transitions, unowned and unknown-source safeguards, '
