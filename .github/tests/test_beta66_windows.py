@@ -46,6 +46,48 @@ def contact(s,value,when=None,entity='binary_sensor.window'):
  return w
 
 async def main():
+ # Regression: HA recreates a CLOSED binary_sensor on restart and gives its
+ # brand-new HA State a recent last_changed even though the window never
+ # actually moved. This is NOT an open->close transition: zero extra delay.
+ for restored_age in (0, 1, 20, 50):
+  restored=make(opened=False,native='off')
+  contact(restored,'off',when=restored.now-restored_age)
+  initial=restored._window_policy(spec)
+  assert initial['status']=='window_closed_ready', (restored_age,initial)
+  assert initial['blocked'] is False and initial['remaining_seconds']==0
+  # Repeated ticks, plus a harmless OFF metadata restamp, cannot re-arm it.
+  for elapsed in (1,10,30,59,61):
+   restored.now=BASE+elapsed
+   next_state=restored._window_policy(spec)
+   assert next_state['status']=='window_closed_ready', (elapsed,next_state)
+  contact(restored,'off',when=restored.now)
+  assert restored._window_policy(spec)['status']=='window_closed_ready'
+
+ # Real open->closed and unknown->closed transitions must still wait 60s.
+ for first in ('on','unknown'):
+  cold=make(opened=True,native='off')
+  contact(cold,first,when=BASE)
+  first_result=cold._window_policy(spec)
+  assert first_result['blocked'] is True
+  contact(cold,'off',when=BASE)
+  closing=cold._window_policy(spec)
+  assert closing['status']=='window_close_warmup' and closing['remaining_seconds']==60
+  cold.now=BASE+59
+  assert cold._window_policy(spec)['blocked'] is True
+  cold.now=BASE+60
+  assert cold._window_policy(spec)['status']=='window_closed_ready'
+
+ # Adding a new source is NOT an already-verified continuous closure.
+ changed=make(opened=False,native='off')
+ assert changed._window_policy(spec)['status']=='window_closed_ready'
+ changed.manager.settings['room_sources'][spec.area_id]['windows'].append(
+  'binary_sensor.window2'
+ )
+ contact(changed,'off',when=BASE-100,entity='binary_sensor.window2')
+ assert changed._window_policy(spec)['status']=='window_close_warmup'
+ changed.now=BASE+60
+ assert changed._window_policy(spec)['status']=='window_closed_ready'
+
  s=make();cfg=Model.settings(s.manager,spec)
  assert s._window_policy(spec)['status']=='window_open_pause'
  assert b['approved_demand'](s,spec,cfg,s.manager.cap) is False
