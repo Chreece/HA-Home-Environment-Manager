@@ -2806,6 +2806,248 @@
     if (this._hass) this._render(true);
   };
   /* HEM_CARD68_END */
+
+  /* HEM_COMPACT76_START: display-only; no new listeners or physical services. */
+  const proto76 = AirQualityAdvisorCard.prototype;
+  const badge76 = (icon,label,tone='normal',title=label) =>
+    '<span class="hem-status-pill76 hem-tone-'+escape(tone)+'" title="'+escape(title)+
+    '" aria-label="'+escape(title)+'">'+
+    '<ha-icon icon="'+escape(icon)+'"></ha-icon>'+
+    '<span>'+escape(label)+'</span></span>';
+
+  // The Beta66 delegated disclosure handler saves this key BEFORE the DOM
+  // changes. It also handles touch, keyboard, and full state-frame refresh.
+  proto76._info76 = function(key,label,details) {
+    const opened=this._detailsExpanded66?.has(key) === true;
+    return '<details class="hem-context76" data-detail-id="'+escape(key)+'" '+
+      (opened?'open':'')+'><summary aria-label="'+escape(label)+'" title="'+escape(label)+'">'+
+      '<ha-icon icon="mdi:information-outline"></ha-icon></summary>'+
+      '<div class="hem-context-body76">'+details+'</div></details>';
+  };
+  const originalClimate76=proto76._climatePanel;
+  proto76._climatePanel=function(room) {
+    const rendered=originalClimate76.call(this,room);
+    if (!rendered || !rendered.includes('<div class="hem-room-readings66">')) return rendered;
+    const p=room?.environment?.climate_plan || {};
+    const lang=this._language();
+    const t=CARD65[lang]?.text || CARD65.en.text;
+    const w=CARD65[lang]?.words || CARD65.en.words;
+    const deviceAttrs=(this._managedControllers(room.area_id) || [])
+      .map(entry=>entry.statusInfo?.state?.attributes)
+      .find(a=>a && typeof a==='object') || {};
+    const profile=p.profile || deviceAttrs.effective_preset || 'home';
+    const occupancy=p.occupancy ?? deviceAttrs.room_occupancy;
+    const home=p.away ?? deviceAttrs.home_presence_status;
+    const sleeping=p.sleeping ?? deviceAttrs.sleeping;
+    const chips=[];
+    const profileName=this._controllerStatusLabel(profile);
+    if (profile && profile!=='none')
+      chips.push(badge76('mdi:home-outline',profileName,'neutral'));
+    if (home==='away'||home==='unoccupied')
+      chips.push(badge76('mdi:home-export-outline',
+        this._controllerStatusLabel('away'),'neutral'));
+    if (occupancy==='occupied')
+      chips.push(badge76('mdi:account-check-outline',w.presence || t.information,'good'));
+    else if (occupancy==='unoccupied')
+      chips.push(badge76('mdi:account-off-outline',w.presence || t.information,'neutral',
+        this._controllerStatusLabel('room_unoccupied')));
+    else if (occupancy==='unknown')
+      chips.push(badge76('mdi:account-question-outline',w.presence || t.information,'warn',
+        this._controllerStatusLabel('room_occupancy_unknown')));
+    if (sleeping===true)
+      chips.push(badge76('mdi:power-sleep',t.sleep,'warn',
+        this._controllerStatusLabel('sleep_room_control_paused')));
+    const windows=safeArray(room.windows).filter(win=>typeof win.entity_id==='string');
+    if (windows.length) {
+      const raw=windows.map(win=>{
+        const source=this._hass?.states?.[win.entity_id];
+        if (source && ['on','off'].includes(source.state)) return source.state;
+        if (source && !['on','off'].includes(source.state)) return 'unknown';
+        return typeof win.opened==='boolean' ? (win.opened?'on':'off') : 'unknown';
+      });
+      const situation=raw.includes('on')?'windowOpen':
+        raw.includes('unknown')?'windowUnknown':'windowReady';
+      chips.push(badge76(
+        situation==='windowReady'?'mdi:window-closed-variant':'mdi:window-open-variant',
+        this._l66(situation),situation==='windowReady'?'good':'warn'
+      ));
+    }
+    if (p.status && ['hold','unavailable','unsupported_mode','unsupported_device'].includes(p.status))
+      chips.push(badge76('mdi:alert-outline',this._controllerStatusLabel(p.status),'warn'));
+    const header='<div class="hem-room-readings66">';
+    const open=rendered.indexOf(header),close=rendered.indexOf('</div>',open);
+    if (open<0||close<0) return rendered;
+    const split=rendered.indexOf('<div class="managed-controllers">',close);
+    let top=rendered.slice(0,split<0?rendered.length:split);
+    const bottom=split<0?'':rendered.slice(split);
+    const explanatory=[...top.matchAll(/<small(?:\s[^>]*)?>[\s\S]*?<\/small>/g)]
+      .map(match=>match[0]);
+    // The source explanations are preserved inside the info disclosure,
+    // not removed from the UI or flattened into a tooltip-only message.
+    top=top.replace(/<small(?:\s[^>]*)?>[\s\S]*?<\/small>/g,'');
+    top=top.replace('<section class="pid-panel"',
+      '<section class="pid-panel hem-compact-climate76"');
+    const insertAt=top.indexOf('</div>',top.indexOf(header))+'</div>'.length;
+    const information=explanatory.length ? explanatory.join('') :
+      '<span>'+escape(this._controllerStatusLabel(p.reason||p.status||'within_target_band'))+'</span>';
+    const context='<div class="hem-context-row76" role="group" aria-label="'+escape(t.information)+'">'+
+      chips.join('')+this._info76('room-info:'+room.area_id,t.information,information)+'</div>';
+    return top.slice(0,insertAt)+context+top.slice(insertAt)+bottom;
+  };
+
+  // A mini-data grid with one readable status and clickable explanations.
+  // The original summary still builds exact live data, supply/window states,
+  // diagnostics, and the existing controlled switch; we only reflow it.
+  const originalDevice76=proto76._deviceSummary65;
+  proto76._deviceSummary65=function(entry) {
+    let html=originalDevice76.call(this,entry);
+    const a=entry.climate?.attributes || {};
+    const d=entry.statusInfo?.state?.attributes || {};
+    const c=a.controller_status || {};
+    const t=CARD65[this._language()]?.text || CARD65.en.text;
+    const id=entry.entityId, state=d.status_code || c.status || entry.climate.state;
+    const label=this._controllerStatusLabel(state);
+    const tone=/(paused|hold|unavailable|unknown|failed|error|blocked|inactive|missing)/.test(
+      String(state))?'warn':/^(controlling|ready|within_target_band|manual)$/.test(
+      String(state))?'good':'neutral';
+    const info=[];
+    const reason=d.status_reason_code || c.reason;
+    if (reason && reason!==state)
+      info.push('<div>'+escape(t.reason)+': '+escape(this._controllerStatusLabel(reason))+'</div>');
+    const supplyId=d.upstream_power_switch || a.upstream_power_switch;
+    const supply=this._hass?.states?.[supplyId];
+    if(supplyId && supply)
+      info.push('<div>'+escape(t.supply)+': '+escape(supply.attributes?.friendly_name || supplyId)+'</div>');
+    const toggle=entry.windowPolicyInfo;
+    const windowState=d.window_policy || {};
+    if (toggle && windowState.status && windowState.status!=='window_closed_ready')
+      info.push('<div>'+escape(this._l66('windowSwitch'))+': '+
+        escape(this._controllerStatusLabel(windowState.status))+'</div>');
+    const badge=badge76(
+      tone==='warn'?'mdi:alert-circle-outline':'mdi:check-circle-outline',
+      label,tone
+    );
+    let chips='<div class="hem-device-state76" role="status">'+badge;
+    if (supplyId) {
+      const text=this._controllerStatusLabel(supply?.state || d.upstream_power_state || 'unavailable');
+      chips+=badge76('mdi:power-plug-outline',t.supply,'neutral',t.supply+': '+text);
+    }
+    if (d.sleep_pause_requested===true)
+      chips+=badge76('mdi:power-sleep',t.sleep,'warn');
+    if (toggle)
+      chips+=badge76('mdi:window-open-variant',
+        windowState.blocked===true?this._l66('windowOpen'):this._l66('windowSwitch'),
+        windowState.blocked===true?'warn':'neutral');
+    chips+=this._info76('device-info:'+id,t.information,
+      info.length?info.join(''):'<div>'+escape(label)+'</div>');
+    chips+='</div>';
+    // The old full-width status and repeated text rows are replaced with
+    // compact, accessible pills. The technical/details disclosure is retained.
+    const statusNode=/<div class="managed-status">[\s\S]*?<\/div>/;
+    if (statusNode.test(html)) html=html.replace(statusNode,chips);
+    const control=html.indexOf('<div class="hem-window-policy66">');
+    const detail=html.indexOf('<details class="hem-diagnostics"');
+    const limit=[control,detail].filter(x=>x>=0).reduce(
+      (min,value)=>Math.min(min,value),html.length);
+    html=html.slice(0,limit).replace(/<small(?:\s[^>]*)?>[\s\S]*?<\/small>/g,'')+
+      html.slice(limit);
+    return html;
+  };
+  const originalController76=proto76._controllerPanel;
+  proto76._controllerPanel=function(room) {
+    return originalController76.call(this,room)
+      .replaceAll('<section class="managed-controller">',
+        '<section class="managed-controller hem-compact-device76">');
+  };
+
+  const originalStyles76=proto76._styles;
+  proto76._styles=function() { return originalStyles76.call(this)+\`<style>
+    /* Density only: preserve source elements and all existing controls. */
+    .card-heading{padding:16px 18px 12px;gap:10px}
+    .card-logo{width:38px;height:38px;border-radius:11px}
+    .card-logo ha-icon{--mdc-icon-size:23px}
+    h2{font-size:22px}
+    .content{padding:0 11px 10px}
+    .outside{padding:12px;border-radius:14px}
+    .outdoor-icon{height:45px;width:45px;flex-basis:45px;border-radius:12px}
+    .outdoor-icon ha-icon{--mdc-icon-size:28px}
+    .out-metrics{margin-top:9px;padding-top:8px}
+    .section-head{margin:14px 3px 9px}
+    .rooms-list{gap:9px;margin-top:10px}
+    .room{padding:11px;border-radius:13px}
+    .room-heading{margin-bottom:8px}
+    .metric-grid{gap:6px;grid-template-columns:repeat(auto-fit,minmax(min(100%,105px),1fr))}
+    .metric{padding:7px 8px;border-radius:9px}
+    .metric-number{font-size:14px}
+    .metric-name{font-size:10px;gap:3px}
+    .metric-name>ha-icon{--mdc-icon-size:13px;flex-basis:13px}
+    .metric-title{-webkit-line-clamp:1}
+    .meter{margin-top:7px;height:4px}
+    .metric-limit{margin-top:3px}
+    .hem-source{font-size:9px;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .hem-compact-climate76{padding:9px;margin:7px 0}
+    .hem-compact-climate76>.pid-metrics{display:none}
+    .hem-compact-climate76>.pid-title{margin-bottom:5px}
+    .hem-room-readings66{gap:6px;margin:6px 0}
+    .hem-room-readings66>span{padding:7px 8px;gap:3px;border-radius:8px;font-size:10px}
+    .hem-room-readings66 b{font-size:17px;line-height:1.15}
+    .hem-context-row76,.hem-device-state76{
+      display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin:5px 0
+    }
+    .hem-status-pill76{
+      display:inline-flex;align-items:center;gap:3px;max-width:100%;min-width:0;
+      padding:4px 6px;border-radius:999px;font-size:10px;line-height:1.1;
+      background:color-mix(in srgb,var(--aqa-muted),transparent 89%);
+      color:var(--aqa-text)
+    }
+    .hem-status-pill76>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:185px}
+    .hem-status-pill76 ha-icon{--mdc-icon-size:13px;width:13px;height:13px;flex:0 0 13px}
+    .hem-tone-warn{color:var(--aqa-amber);
+      background:color-mix(in srgb,var(--aqa-amber),transparent 88%)}
+    .hem-tone-good{color:var(--aqa-green);
+      background:color-mix(in srgb,var(--aqa-green),transparent 90%)}
+    .hem-context76{position:relative;display:inline-flex;flex:0 0 auto;margin-inline-start:auto}
+    .hem-context76>summary{cursor:pointer;list-style:none;display:grid;place-items:center;
+      width:27px;height:27px;border-radius:8px;border:1px solid var(--aqa-edge);
+      color:var(--primary-color,var(--aqa-blue));background:var(--aqa-surface)}
+    .hem-context76>summary::-webkit-details-marker{display:none}
+    .hem-context76>summary ha-icon{--mdc-icon-size:16px}
+    .hem-context76>summary:focus-visible{outline:2px solid var(--aqa-blue);outline-offset:2px}
+    .hem-context-body76{position:absolute;z-index:30;inset-inline-end:0;top:31px;
+      width:min(300px,76vw);max-height:230px;overflow-y:auto;
+      padding:10px 11px;border-radius:10px;border:1px solid var(--aqa-edge);
+      background:var(--card-background-color,#23282d);
+      box-shadow:0 9px 22px #0006;color:var(--aqa-text);font-size:11px;line-height:1.4}
+    .hem-context-body76 small{display:block;font-size:11px;line-height:1.4;margin:3px 0}
+    .hem-compact-device76{padding:7px;border-radius:9px}
+    .hem-compact-device76 .climate-entity-link{font-size:11px;line-height:1.2;padding:2px}
+    .hem-compact-device76 .hem-device-data{
+      grid-template-columns:repeat(auto-fit,minmax(min(100%,104px),1fr));
+      gap:5px;margin:5px 0 6px
+    }
+    .hem-compact-device76 .hem-device-data>div{padding:6px 7px;border-radius:7px}
+    .hem-compact-device76 .hem-device-data span{font-size:10px;line-height:1.15}
+    .hem-compact-device76 .hem-device-data b{font-size:13px;margin-top:3px;line-height:1.2}
+    .hem-compact-device76 .managed-method-label{margin-top:6px;gap:3px}
+    .hem-compact-device76 .managed-method-label select{padding:6px}
+    .hem-window-policy66{margin-top:5px}
+    .hem-window-policy66>button{padding:6px 7px;gap:6px;font-size:11px}
+    .hem-window-policy66>button ha-icon{--mdc-icon-size:15px}
+    .hem-window-policy66>small:not(.hem-window-hold66){display:none}
+    .hem-window-policy66 .hem-window-hold66{font-size:10px;margin-top:2px}
+    .hem-diagnostics,.hem-calibration{margin-top:6px;padding-top:4px}
+    .hem-diagnostics>summary,.hem-calibration>summary{padding:4px 0;font-size:12px}
+    .managed-controllers{margin-top:8px;gap:6px;padding-top:7px}
+    .managed-controller .hem-context76{margin-inline-start:0}
+    @media(max-width:370px) {
+      .hem-compact-device76 .hem-device-data{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .hem-room-readings66{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .hem-status-pill76>span{max-width:100px}
+    }
+    @media(prefers-reduced-motion:reduce){.hem-context-body76{scroll-behavior:auto}}
+  </style>\`; };
+  /* HEM_COMPACT76_END */
+
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
   // New brand alias; old Lovelace YAML configurations keep working unmodified.
