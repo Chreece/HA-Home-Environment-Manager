@@ -329,6 +329,51 @@ def store_selection(hass: Any, settings: dict, area: str, inputs: dict) -> None:
     exclusions[area] = [e for e in exclusions.get(area, []) if e not in included]
 
 
+
+def revoke_removed_rooms(settings: dict, removed: set[str]) -> None:
+    """Disable only explicitly removed monitored rooms, never unrelated rooms.
+
+    Room selection is a scope reduction. Keep configuration for possible
+    re-enrollment, but revoke automation and power grants before saving.
+    This changes only the draft and never directly commands an actuator.
+    """
+    if not removed:
+        return
+    shade_rooms = settings.get("shade_rooms")
+    if isinstance(shade_rooms, dict):
+        for area in removed:
+            cfg = shade_rooms.get(area)
+            if not isinstance(cfg, dict):
+                continue
+            cfg["enabled"] = False
+            per_cover = cfg.get("covers")
+            if isinstance(per_cover, dict):
+                cfg["covers"] = {
+                    entity: {**data, "enabled": False}
+                    for entity, data in per_cover.items()
+                    if isinstance(data, dict)
+                }
+    for key in ("climate_rooms", "pid_rooms"):
+        rooms = settings.get(key)
+        if not isinstance(rooms, dict):
+            continue
+        for area in removed:
+            cfg = rooms.get(area)
+            if not isinstance(cfg, dict):
+                continue
+            cfg["enabled"] = False
+            if key == "climate_rooms":
+                cfg["allow_actuation"] = False
+                # Do not erase formerly selected sources or per-device
+                # preferences. Disarm those grants until deliberately enabled.
+                for data in (cfg.get("device_settings") or {}).values():
+                    if isinstance(data, dict):
+                        data["auto_control"] = False
+            else:
+                cfg["enabled"] = False
+
+
+
 def restrict_rooms(settings: dict, areas: list[str]) -> None:
     settings["areas"] = list(areas)
     if isinstance(shades := settings.get("shade_rooms"), dict):
