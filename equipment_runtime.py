@@ -184,6 +184,14 @@ class EquipmentRuntime:
                     or not isinstance(record.get("power"), dict)
                     or not isinstance(record.get("off_at"), dict)):
                     raise ValueError("Invalid equipment recovery records")
+                # An ACKed relay can remain ON across HA restarts, but we
+                # cannot prove native continuity while HEM was offline.
+                # Clear any pre-restart OFF-credit; ordinary persisted relay
+                # minimums still survive. This prevents bypassing a genuine
+                # intervening native ON->OFF during HA downtime.
+                upstream = record.get("upstream", {})
+                if isinstance(upstream, dict):
+                    upstream.pop("native_wake", None)
                 for entity, owned in record["power"].items():
                     if (entity not in record["sources"] or not isinstance(owned, dict)
                         or any(finite(owned.get(k), 0, 1e13) is None for k in ("since", "min_on", "max_on"))
@@ -258,12 +266,22 @@ class EquipmentRuntime:
         if not isinstance(snapshots, dict):
             raise HomeAssistantError("Invalid persisted physical observation history")
         current = "off" if output_off(state) else "on"
-        if current == "on":
-            wake = record.get("upstream", {}).get("native_wake")
-            if isinstance(wake, dict) and wake.get("reconciled"):
-                # Once this appliance has truly appeared ON, the prior
-                # supply-off credit is consumed permanently for this cycle.
+        wake = record.get("upstream", {}).get("native_wake")
+        if isinstance(wake, dict) and wake.get("reconciled"):
+            if current == "on":
+                # Once this appliance has appeared ON, its prior supply-OFF
+                # credit is permanently consumed for this power cycle.
                 record["upstream"].pop("native_wake", None)
+            elif wake.get("native_state") == "off":
+                try:
+                    stamp = finite(state.last_changed.timestamp(), 0, self.clock())
+                except (AttributeError, TypeError, ValueError, OverflowError):
+                    stamp = None
+                if stamp is None or stamp != wake.get("native_off_stamp"):
+                    # A later OFF last_changed may hide an ON->OFF transition
+                    # between controller ticks. Do not reuse an older dwell.
+                    record["upstream"].pop("native_wake", None)
+                    await self._save()
         old = snapshots.get(cap.primary)
         observed_in_session = getattr(self, "_native_session_observations", None)
         if observed_in_session is None:
@@ -412,11 +430,22 @@ class EquipmentRuntime:
             }
             wake["native_state"] = "on"
         else:
-            # The supply's physical OFF history already satisfied the
-            # native OFF dwell. Retain that evidence instead of creating a
-            # second minimum-OFF timer from HA's new entity timestamp.
-            record.setdefault("off_at", {})[cap.primary] = off_at
-            wake["native_state"] = "off"
+            # A trustworthy native OFF state stamp lets the running HEM
+            # detect a later new OFF event. If HA supplies no timestamp,
+            # do not grant an exemption from native physical protection.
+            try:
+                native_stamp = finite(
+                    current.last_changed.timestamp(), 0, self.clock()
+                )
+            except (AttributeError, TypeError, ValueError, OverflowError):
+                native_stamp = None
+            if native_stamp is not None:
+                record.setdefault("off_at", {})[cap.primary] = off_at
+                wake["native_state"] = "off"
+                wake["native_off_stamp"] = native_stamp
+            else:
+                record.setdefault("off_at", {})[cap.primary] = self.clock()
+                wake["native_state"] = "off_no_credit"
         record["baseline"] = {
             entity: snapshot(self.hass.states.get(entity))
             for entity in spec.source_entities
@@ -1904,9 +1933,17 @@ class EquipmentRuntime:
         else:
             relay = record.get("upstream", {})
             wake = relay.get("native_wake") if isinstance(relay, dict) else None
+            try:
+                live_native_stamp = finite(
+                    state.last_changed.timestamp(), 0, now
+                )
+            except (AttributeError, TypeError, ValueError, OverflowError):
+                live_native_stamp = None
             certified = (
                 isinstance(wake, dict) and wake.get("reconciled") is True
                 and wake.get("native_state") == "off"
+                and live_native_stamp is not None
+                and live_native_stamp == wake.get("native_off_stamp")
                 and relay.get("owned") is True
                 and relay.get("on_at") == wake.get("on_at")
                 and model.settings(self.manager, spec).get("power_switch_entity")
