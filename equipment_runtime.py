@@ -115,6 +115,9 @@ class EquipmentRuntime:
         self._tasks: dict[str, asyncio.Task] = {}
         self._locks: dict[str, asyncio.Lock] = {}
         self._memory: dict[str, tuple[Any, model.PIDMemory, float]] = {}
+        # A short, bounded request to re-evaluate comfort immediately after
+        # a verified profile/target rise. Never owns physical power by itself.
+        self._profile_wake: dict[str, dict] = {}
         self._fan_allocations: dict[str, dict] = {}
         # Diagnostic-only snapshots while an independently powered device is
         # OFF: PID P-term prepared, I held at zero, D reseeded from live sensor.
@@ -200,6 +203,7 @@ class EquipmentRuntime:
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
         self._tasks.clear()
+        self._profile_wake.clear()
         self._pid_offline_previews.clear()
         if self._ready:
             await self._save()
@@ -1584,6 +1588,8 @@ class EquipmentRuntime:
             self._status(spec, "waiting_for_physical_device")
             return
         cfg = model.settings(self.manager, spec)
+        if cfg["control_mode"] != "pid":
+            self._profile_wake.pop(spec.identifier, None)
         cap = model.capabilities(self.manager, spec)
         if cap is None:
             self._status(spec, "physical_capabilities_unavailable")
@@ -1727,15 +1733,42 @@ class EquipmentRuntime:
                 self._status(spec, "select_single_direction_for_pid")
                 return
             if cfg["control_mode"] == "pid":
-                signature = (metric, goal, increasing, cfg["preset"], cfg["kp"], cfg["ki"], cfg["kd"])
-                previous, memory, anchor = self._memory.get(spec.identifier, (None, None, self.clock()))
-                if previous != signature:
+                from .pid_phase import phase_decision
+                previous, memory, anchor = self._memory.get(
+                    spec.identifier, (None, None, self.clock())
+                )
+                profile = model.profile_name(cfg, plan)
+                on_min, off_min, _ = model.timing(self.manager, spec, cap)
+                signature, rebased, priority_wake = phase_decision(
+                    previous, metric=metric, target=goal, increasing=increasing,
+                    profile=profile, mode=mode, preset=cfg["preset"],
+                    kp=cfg["kp"], ki=cfg["ki"], kd=cfg["kd"],
+                    cycle_s=cfg["cycle_seconds"],
+                    min_on_s=on_min, min_off_s=off_min, measured=value,
+                )
+                if rebased:
                     memory, anchor = None, self.clock()
-                memory = model.pid_step(value, goal, self.clock(), increasing=increasing,
-                    kp=cfg["kp"], ki=cfg["ki"], kd=cfg["kd"], sample=cfg["sample_seconds"], memory=memory)
+                    # A new comfort demand starts a fresh logical phase.
+                    # Keep the one-time wake request until the physical output
+                    # is seen ON or its bounded validity window expires. This
+                    # survives a minimum-OFF hold without resetting that hold.
+                    self._profile_wake.pop(spec.identifier, None)
+                    if (priority_wake and power and output_off(state)
+                            and cap.domain in ("climate", "switch", "input_boolean")):
+                        self._profile_wake[spec.identifier] = {
+                            "profile": profile, "mode": mode,
+                            "until": self.clock() + max(
+                                off_min + cfg["sample_seconds"],
+                                cfg["cycle_seconds"],
+                            ),
+                        }
+                memory = model.pid_step(
+                    value, goal, self.clock(), increasing=increasing,
+                    kp=cfg["kp"], ki=cfg["ki"], kd=cfg["kd"],
+                    sample=cfg["sample_seconds"], memory=memory,
+                )
                 self._memory[spec.identifier] = (signature, memory, anchor)
                 demand = memory.demand
-                on_min, off_min, _ = model.timing(self.manager, spec, cap)
                 if (cfg.get("pid_fan_capacity_mode") == "measured"
                         and cap.domain in ("climate", "humidifier")
                         and cap.fan_entity and cap.fan_modes and demand > 0):
@@ -1803,6 +1836,27 @@ class EquipmentRuntime:
                         duty_demand, self.clock()-anchor, cfg["cycle_seconds"],
                         on_min, off_min, starting=output_off(state),
                     )
+                    recovery = self._profile_wake.get(spec.identifier)
+                    if recovery:
+                        still_qualified = (
+                            self.clock() <= recovery["until"]
+                            and recovery["profile"] == profile
+                            and recovery["mode"] == mode
+                            and metric == "temperature"
+                            and error >= 0.5
+                            and demand > 0
+                            and power
+                            and output_off(state)
+                        )
+                        if still_qualified:
+                            # A brief priority pulse is permissible after a
+                            # MORE demanding comfort profile, even when its
+                            # proportional PWM duty is below minimum ON time.
+                            # _power() separately checks actual off-min dwell,
+                            # grants, ACK, opposite-mode and live room policy.
+                            wanted = True
+                        else:
+                            self._profile_wake.pop(spec.identifier, None)
             else:
                 # Hysteresis preserves current output until the opposite boundary.
                 band = .3 if metric == "temperature" else 2 if metric == "humidity" else 50 if metric == "co2" else 2
