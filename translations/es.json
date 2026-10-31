@@ -285,7 +285,8 @@
         "description": "Elige una sección. El resto de ajustes permanecerá sin cambios.",
         "menu_options": {
           "choose_rooms": "Elegir habitaciones",
-          "general_settings": "Configuración general"
+          "select_room": "Área · ajustes",
+          "setup_general": "General ajustes"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve.",
           "occupancy_sensors": "Elige una fuente real de Home Assistant para «Ocupación · sensor». Los datos ausentes o antiguos detienen la acción asociada."
         }
+      },
+      "select_room": {
+        "title": "Área · ajustes",
+        "description": "Área · ajustes",
+        "data": {
+          "edit_room_area": "Dispositivos"
+        }
+      },
+      "edit_room": {
+        "title": "Ajustes · {area_name}",
+        "description": "Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+        "data": {
+          "windows": "Ventanas",
+          "air_quality": "Sensores de calidad del aire y del entorno",
+          "temperature": "Temperatura",
+          "humidity": "Humedad",
+          "pressure": "Sensores de presión",
+          "climate_devices": "Dispositivos",
+          "shades": "Persianas, estores y cortinas de ventana",
+          "occupancy_sensors": "Ocupación · sensor"
+        },
+        "data_description": {
+          "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "air_quality": "Sensores de calidad del aire y del entorno. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "temperature": "Temperatura. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "pressure": "Sensores de presión. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
+          "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve.",
+          "occupancy_sensors": "Elige una fuente real de Home Assistant para «Ocupación · sensor». Los datos ausentes o antiguos detienen la acción asociada."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Elige una sección. El resto de ajustes permanecerá sin cambios.",
         "menu_options": {
           "choose_rooms": "Elegir habitaciones",
-          "general_settings": "Configuración general"
+          "select_room": "Área · ajustes",
+          "setup_general": "General ajustes"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Ajustes · {area_name}",
+        "description": "Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+        "data": {
+          "windows": "Ventanas",
+          "air_quality": "Sensores de calidad del aire y del entorno",
+          "temperature": "Temperatura",
+          "humidity": "Humedad",
+          "pressure": "Sensores de presión",
+          "climate_devices": "Dispositivos",
+          "shades": "Persianas, estores y cortinas de ventana",
+          "occupancy_sensors": "Ocupación · sensor"
+        },
+        "data_description": {
+          "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "air_quality": "Sensores de calidad del aire y del entorno. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "temperature": "Temperatura. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "pressure": "Sensores de presión. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
+          "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve.",
+          "occupancy_sensors": "Elige una fuente real de Home Assistant para «Ocupación · sensor». Los datos ausentes o antiguos detienen la acción asociada."
+        }
+      },
+      "select_room": {
+        "title": "Área · ajustes",
+        "description": "Área · ajustes",
+        "data": {
+          "edit_room_area": "Dispositivos"
+        }
+      },
+      "edit_room": {
         "title": "Ajustes · {area_name}",
         "description": "Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
         "data": {

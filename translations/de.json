@@ -285,7 +285,8 @@
         "description": "Wähle eine Einstellungsgruppe. Alle anderen Einstellungen bleiben unverändert.",
         "menu_options": {
           "choose_rooms": "Räume auswählen",
-          "general_settings": "Allgemeine Einstellungen"
+          "select_room": "Raumeinstellungen",
+          "setup_general": "Allgemeine Einstellungen"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
           "occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Präsenzsensoren in diesem Raum“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion."
         }
+      },
+      "select_room": {
+        "title": "Raumeinstellungen",
+        "description": "Raumeinstellungen",
+        "data": {
+          "edit_room_area": "Raum"
+        }
+      },
+      "edit_room": {
+        "title": "Einstellungen · {area_name}",
+        "description": "Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+        "data": {
+          "windows": "Fenster",
+          "air_quality": "Luftqualitäts- und Umgebungssensoren",
+          "temperature": "Temperatur",
+          "humidity": "Luftfeuchtigkeit",
+          "pressure": "Drucksensoren",
+          "climate_devices": "Geräte",
+          "shades": "Fensterrollos, Jalousien und Rollläden",
+          "occupancy_sensors": "Präsenzsensoren in diesem Raum"
+        },
+        "data_description": {
+          "windows": "Fenster. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "air_quality": "Luftqualitäts- und Umgebungssensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "temperature": "Temperatur. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "humidity": "Luftfeuchtigkeit. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "pressure": "Drucksensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
+          "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
+          "occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Präsenzsensoren in diesem Raum“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Wähle eine Einstellungsgruppe. Alle anderen Einstellungen bleiben unverändert.",
         "menu_options": {
           "choose_rooms": "Räume auswählen",
-          "general_settings": "Allgemeine Einstellungen"
+          "select_room": "Raumeinstellungen",
+          "setup_general": "Allgemeine Einstellungen"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Einstellungen · {area_name}",
+        "description": "Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+        "data": {
+          "windows": "Fenster",
+          "air_quality": "Luftqualitäts- und Umgebungssensoren",
+          "temperature": "Temperatur",
+          "humidity": "Luftfeuchtigkeit",
+          "pressure": "Drucksensoren",
+          "climate_devices": "Geräte",
+          "shades": "Fensterrollos, Jalousien und Rollläden",
+          "occupancy_sensors": "Präsenzsensoren in diesem Raum"
+        },
+        "data_description": {
+          "windows": "Fenster. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "air_quality": "Luftqualitäts- und Umgebungssensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "temperature": "Temperatur. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "humidity": "Luftfeuchtigkeit. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "pressure": "Drucksensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
+          "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
+          "occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Präsenzsensoren in diesem Raum“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion."
+        }
+      },
+      "select_room": {
+        "title": "Raumeinstellungen",
+        "description": "Raumeinstellungen",
+        "data": {
+          "edit_room_area": "Raum"
+        }
+      },
+      "edit_room": {
         "title": "Einstellungen · {area_name}",
         "description": "Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
         "data": {
