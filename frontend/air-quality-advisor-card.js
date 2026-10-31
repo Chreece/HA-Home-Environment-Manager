@@ -1652,13 +1652,16 @@
               escape(this._format(capacityStatus.unmet_demand_percent))+'%' : '')+
           '</small>' : '';
         const features=Number(attrs.supported_features) || 0;
+        const thermalModes=Array.isArray(attrs.hvac_modes) &&
+          attrs.hvac_modes.some(mode=>['heat','cool','heat_cool','auto'].includes(mode));
         const editable=available && control==='manual';
         const editors=[];
         for(const [kind,bit,label,minKey,maxKey,fallbackLow,fallbackHigh,step] of [
           ['temperature',1,l.manualTemperature,'min_temp','max_temp',5,35,0.5],
           ['humidity',4,l.manualHumidity,'min_humidity','max_humidity',20,80,1],
         ]) {
-          if (!(features & bit) || !editable) continue;
+          if (!(features & bit) || !editable ||
+              (kind==='temperature' && !thermalModes)) continue;
           const minimum=Number(attrs[minKey] ?? fallbackLow);
           const maximum=Number(attrs[maxKey] ?? fallbackHigh);
           const value=attrs[kind];
@@ -2497,11 +2500,14 @@
     if (numeric(observedRh)) add(this._t('humidity'),value(observedRh,'%'));
     if (numeric(a.humidity)) add(this._t('humidity')+' · '+t.target,value(a.humidity,'%'));
     const nativeUnit=a.temperature_unit || '°C';
+    const thermalTarget=Array.isArray(a.hvac_modes) &&
+      a.hvac_modes.some(mode=>['heat','cool','heat_cool','auto'].includes(mode)) &&
+      !!((Number(a.supported_features) || 0) & 3);
     const hasMeasuredTemp=numeric(a.measurements?.temperature);
     const observedTemp=hasMeasuredTemp?a.measurements.temperature:a.current_temperature;
     if (numeric(observedTemp)) add(MOLD_DETAIL_LABELS[this._language()]?.[5] || t.physical,value(observedTemp,' '+(hasMeasuredTemp?'°C':nativeUnit)));
-    if (numeric(a.temperature)) add(t.target,value(a.temperature,' '+nativeUnit));
-    if (numeric(a.target_temp_low) && numeric(a.target_temp_high))
+    if (thermalTarget && numeric(a.temperature)) add(t.target,value(a.temperature,' '+nativeUnit));
+    if (thermalTarget && numeric(a.target_temp_low) && numeric(a.target_temp_high))
       add(t.target,this._format(a.target_temp_low)+' - '+this._format(a.target_temp_high)+' '+nativeUnit);
     add(t.demand,value(d.demand_percent ?? c.demand_percent,'%'));
     const supplyId=d.upstream_power_switch || a.upstream_power_switch;
