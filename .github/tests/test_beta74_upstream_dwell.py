@@ -59,7 +59,9 @@ async def tests():
     assert not supply_calls(sim)
     for elapsed in (60,599):
         sim.now=clock+elapsed
-        assert await before_tick(sim,spec) is False
+        # After cooldown it reports a physical minimum-ON hold; that is
+        # a handled controller status (True), not a new physical command.
+        assert await before_tick(sim,spec) is True
         assert not supply_calls(sim),elapsed
     sim.now=clock+600
     assert await before_tick(sim,spec) is True
