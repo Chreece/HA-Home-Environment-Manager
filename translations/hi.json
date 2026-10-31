@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "घर · Away · cooldown (min)",
           "away_open_window_alert": "सबके जाने पर खुली खिड़कियों की सूचना दें",
           "away_windows_target_people": "सूचना पाने वाले व्यक्ति",
-          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम"
+          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम",
+          "general_source_stale_minutes": "स्रोत · max (min)",
+          "general_home_policy": "घर · उपस्थिति · नियंत्रण"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · घर · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "सबके जाने पर खुली खिड़कियों की सूचना दें. सूचना पाने वाले व्यक्ति (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. फ़ोन, घड़ी, टैबलेट.",
           "away_windows_target_people": "सूचना पाने वाले व्यक्ति (person.*) - Announcement Hub: फ़ोन, घड़ी, टैबलेट, अन्य उपकरण. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम: फ़ोन सूचना / TTS आवाज़, घड़ी सूचना / TTS आवाज़, टैबलेट सूचना / TTS आवाज़. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम: फ़ोन सूचना / TTS आवाज़, घड़ी सूचना / TTS आवाज़, टैबलेट सूचना / TTS आवाज़. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "स्रोत · नींद / उपस्थिति · max 240 min. अमान्य · बंद करें.",
+          "general_home_policy": "यह विकल्प “घर · उपस्थिति · नियंत्रण” नियंत्रित करता है। उपकरण आदेशों के लिए अलग अनुमति और सुरक्षा आवश्यक है।"
         }
       },
       "reconfigure": {
         "title": "⚙️ चुनें",
         "description": "चुनें: कमरे / मौसम और चेतावनियाँ / घोषणाएँ (वैकल्पिक) / उन्नत सीमाएँ",
         "menu_options": {
-          "room_occupancy": "उपस्थिति · सेंसर",
-          "outside_data": "बाहरी · स्रोत",
-          "general_settings": "सामान्य · सेटिंग",
-          "area_settings": "क्षेत्र · सेटिंग",
-          "delivery": "घोषणाएँ (वैकल्पिक)",
-          "thresholds": "उन्नत सीमाएँ",
-          "climate": "सेटिंग · उपकरण",
-          "pid": "सेटिंग · PID",
-          "setup_rooms": "निगरानी के कमरे"
+          "choose_rooms": "निगरानी के कमरे",
+          "general_settings": "सामान्य · सेटिंग"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "निगरानी के कमरे",
+        "description": "निगरानी के कमरे → स्रोत → सामान्य सेटिंग",
+        "data": {
+          "areas": "निगरानी के कमरे"
+        },
+        "data_description": {
+          "areas": "निगरानी के कमरे. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।"
+        }
+      },
+      "room_settings": {
+        "title": "क्षेत्र · सेटिंग · {area_name}",
+        "description": "कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+        "data": {
+          "windows": "खिड़कियाँ",
+          "air_quality": "वायु गुणवत्ता और पर्यावरण सेंसर",
+          "temperature": "तापमान",
+          "humidity": "आर्द्रता",
+          "pressure": "दबाव सेंसर",
+          "climate_devices": "उपकरण",
+          "shades": "खिड़की के परदे, ब्लाइंड और शटर",
+          "occupancy_sensors": "उपस्थिति · सेंसर"
+        },
+        "data_description": {
+          "windows": "खिड़कियाँ. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "air_quality": "वायु गुणवत्ता और पर्यावरण सेंसर. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "temperature": "तापमान. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "humidity": "आर्द्रता. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "pressure": "दबाव सेंसर. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "climate_devices": "उपकरण. इस कमरे के वास्तविक climate.*, humidifier.* और fan.* उपकरण चुनें। उनकी मूल क्षमताएँ हीटिंग, कूलिंग, नमी हटाने, लक्ष्य मान और पंखे की गति तय करती हैं। चुनने से उपकरण नहीं चलता; प्रत्येक नियंत्रक पर स्वचालन अलग से सक्षम करें।",
+          "shades": "खिड़की के परदे, ब्लाइंड और शटर. कमरे की cover.* खिड़की की ब्लाइंड, रोलर शटर और पर्दे चुनें। device_class के बिना covers भी CLOSE समर्थन पर मान्य हैं, यदि वे सचमुच खिड़की पर लगे हों। गैराज, गेट, दरवाज़े, खिड़कियाँ और बाहरी शामियाने मान्य नहीं हैं। चयन कुछ नहीं हिलाता; विंडो सेंसर, ऑटो नियंत्रण, घोषणा और ताप सीमा नियंत्रक पर सेट करें। अज्ञात स्थिति में गति निषिद्ध है।",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ चुनें",
         "description": "चुनें: कमरे / मौसम और चेतावनियाँ / घोषणाएँ (वैकल्पिक) / उन्नत सीमाएँ",
         "menu_options": {
-          "room_occupancy": "उपस्थिति · सेंसर",
-          "outside_data": "बाहरी · स्रोत",
-          "general_settings": "सामान्य · सेटिंग",
-          "area_settings": "क्षेत्र · सेटिंग",
-          "delivery": "घोषणाएँ (वैकल्पिक)",
-          "thresholds": "उन्नत सीमाएँ",
-          "climate": "सेटिंग · उपकरण",
-          "pid": "सेटिंग · PID",
-          "setup_rooms": "निगरानी के कमरे"
+          "choose_rooms": "निगरानी के कमरे",
+          "general_settings": "सामान्य · सेटिंग"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "घर · Away · cooldown (min)",
           "away_open_window_alert": "सबके जाने पर खुली खिड़कियों की सूचना दें",
           "away_windows_target_people": "सूचना पाने वाले व्यक्ति",
-          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम"
+          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम",
+          "general_source_stale_minutes": "स्रोत · max (min)",
+          "general_home_policy": "घर · उपस्थिति · नियंत्रण"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · घर · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "सबके जाने पर खुली खिड़कियों की सूचना दें. सूचना पाने वाले व्यक्ति (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. फ़ोन, घड़ी, टैबलेट.",
           "away_windows_target_people": "सूचना पाने वाले व्यक्ति (person.*) - Announcement Hub: फ़ोन, घड़ी, टैबलेट, अन्य उपकरण. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम: फ़ोन सूचना / TTS आवाज़, घड़ी सूचना / TTS आवाज़, टैबलेट सूचना / TTS आवाज़. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम: फ़ोन सूचना / TTS आवाज़, घड़ी सूचना / TTS आवाज़, टैबलेट सूचना / TTS आवाज़. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "स्रोत · नींद / उपस्थिति · max 240 min. अमान्य · बंद करें.",
+          "general_home_policy": "यह विकल्प “घर · उपस्थिति · नियंत्रण” नियंत्रित करता है। उपकरण आदेशों के लिए अलग अनुमति और सुरक्षा आवश्यक है।"
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "निगरानी के कमरे",
+        "description": "निगरानी के कमरे → स्रोत → सामान्य सेटिंग",
+        "data": {
+          "areas": "निगरानी के कमरे"
+        },
+        "data_description": {
+          "areas": "निगरानी के कमरे. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।"
+        }
+      },
+      "room_settings": {
+        "title": "क्षेत्र · सेटिंग · {area_name}",
+        "description": "कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+        "data": {
+          "windows": "खिड़कियाँ",
+          "air_quality": "वायु गुणवत्ता और पर्यावरण सेंसर",
+          "temperature": "तापमान",
+          "humidity": "आर्द्रता",
+          "pressure": "दबाव सेंसर",
+          "climate_devices": "उपकरण",
+          "shades": "खिड़की के परदे, ब्लाइंड और शटर",
+          "occupancy_sensors": "उपस्थिति · सेंसर"
+        },
+        "data_description": {
+          "windows": "खिड़कियाँ. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "air_quality": "वायु गुणवत्ता और पर्यावरण सेंसर. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "temperature": "तापमान. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "humidity": "आर्द्रता. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "pressure": "दबाव सेंसर. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "climate_devices": "उपकरण. इस कमरे के वास्तविक climate.*, humidifier.* और fan.* उपकरण चुनें। उनकी मूल क्षमताएँ हीटिंग, कूलिंग, नमी हटाने, लक्ष्य मान और पंखे की गति तय करती हैं। चुनने से उपकरण नहीं चलता; प्रत्येक नियंत्रक पर स्वचालन अलग से सक्षम करें।",
+          "shades": "खिड़की के परदे, ब्लाइंड और शटर. कमरे की cover.* खिड़की की ब्लाइंड, रोलर शटर और पर्दे चुनें। device_class के बिना covers भी CLOSE समर्थन पर मान्य हैं, यदि वे सचमुच खिड़की पर लगे हों। गैराज, गेट, दरवाज़े, खिड़कियाँ और बाहरी शामियाने मान्य नहीं हैं। चयन कुछ नहीं हिलाता; विंडो सेंसर, ऑटो नियंत्रण, घोषणा और ताप सीमा नियंत्रक पर सेट करें। अज्ञात स्थिति में गति निषिद्ध है।",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
       }
     },

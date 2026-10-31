@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "自宅 · Away · cooldown (min)",
           "away_open_window_alert": "全員の外出後に開いた窓を通知",
           "away_windows_target_people": "通知する人物",
-          "away_windows_delivery_channels": "窓の通知先と方法"
+          "away_windows_delivery_channels": "窓の通知先と方法",
+          "general_source_stale_minutes": "情報源 · max (min)",
+          "general_home_policy": "自宅 · 在室 · 制御"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自宅 · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "全員の外出後に開いた窓を通知. 通知する人物 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. スマートフォン, 腕時計, タブレット.",
           "away_windows_target_people": "通知する人物 (person.*) - Announcement Hub: スマートフォン, 腕時計, タブレット, その他の端末. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "窓の通知先と方法: スマートフォン 通知 / TTS 音声, 腕時計 通知 / TTS 音声, タブレット 通知 / TTS 音声. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "窓の通知先と方法: スマートフォン 通知 / TTS 音声, 腕時計 通知 / TTS 音声, タブレット 通知 / TTS 音声. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "情報源 · 睡眠 / 在室 · max 240 min. 無効 · オフ.",
+          "general_home_policy": "この項目は「自宅 · 在室 · 制御」を設定します。機器への指示には個別の許可と独立した保護が必要です。"
         }
       },
       "reconfigure": {
         "title": "⚙️ 選択してください",
         "description": "選択してください: 部屋 / 天気と警報 / 通知（任意） / 詳細なしきい値",
         "menu_options": {
-          "room_occupancy": "在室 · センサー",
-          "outside_data": "屋外 · 情報源",
-          "general_settings": "一般 · 設定",
-          "area_settings": "エリア · 設定",
-          "delivery": "通知（任意）",
-          "thresholds": "詳細なしきい値",
-          "climate": "設定 · デバイス",
-          "pid": "設定 · PID",
-          "setup_rooms": "監視する部屋"
+          "choose_rooms": "監視する部屋",
+          "general_settings": "一般 · 設定"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "監視する部屋",
+        "description": "監視する部屋 → 情報源 → 一般 設定",
+        "data": {
+          "areas": "監視する部屋"
+        },
+        "data_description": {
+          "areas": "監視する部屋. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。"
+        }
+      },
+      "room_settings": {
+        "title": "エリア · 設定 · {area_name}",
+        "description": "部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+        "data": {
+          "windows": "窓",
+          "air_quality": "空気質・環境センサー",
+          "temperature": "温度",
+          "humidity": "湿度",
+          "pressure": "気圧センサー",
+          "climate_devices": "デバイス",
+          "shades": "窓のブラインド・シェード・シャッター",
+          "occupancy_sensors": "在室 · センサー"
+        },
+        "data_description": {
+          "windows": "窓. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "air_quality": "空気質・環境センサー. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "temperature": "温度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "humidity": "湿度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "pressure": "気圧センサー. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "climate_devices": "デバイス. この部屋の実機 climate.*、humidifier.*、fan.* のエンティティだけを選択します。対応する暖房・冷房・除湿、設定温湿度、ファン速度は機器の機能に依存します。選択だけでは動作せず、各コントローラーで自動制御を個別に有効にします。",
+          "shades": "窓のブラインド・シェード・シャッター. 部屋の cover.* ブラインド、ローラーシャッター、カーテンを選択します。device_class がなくても CLOSE に対応し、実際の窓の日除けなら選択できます。ガレージ、門、ドア、窓、屋外オーニングは除外します。選択だけでは動かず、コントローラーで窓センサー、自動制御、事前通知、温度しきい値を設定します。状態不明時は動作しません。",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ 選択してください",
         "description": "選択してください: 部屋 / 天気と警報 / 通知（任意） / 詳細なしきい値",
         "menu_options": {
-          "room_occupancy": "在室 · センサー",
-          "outside_data": "屋外 · 情報源",
-          "general_settings": "一般 · 設定",
-          "area_settings": "エリア · 設定",
-          "delivery": "通知（任意）",
-          "thresholds": "詳細なしきい値",
-          "climate": "設定 · デバイス",
-          "pid": "設定 · PID",
-          "setup_rooms": "監視する部屋"
+          "choose_rooms": "監視する部屋",
+          "general_settings": "一般 · 設定"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "自宅 · Away · cooldown (min)",
           "away_open_window_alert": "全員の外出後に開いた窓を通知",
           "away_windows_target_people": "通知する人物",
-          "away_windows_delivery_channels": "窓の通知先と方法"
+          "away_windows_delivery_channels": "窓の通知先と方法",
+          "general_source_stale_minutes": "情報源 · max (min)",
+          "general_home_policy": "自宅 · 在室 · 制御"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自宅 · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "全員の外出後に開いた窓を通知. 通知する人物 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. スマートフォン, 腕時計, タブレット.",
           "away_windows_target_people": "通知する人物 (person.*) - Announcement Hub: スマートフォン, 腕時計, タブレット, その他の端末. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "窓の通知先と方法: スマートフォン 通知 / TTS 音声, 腕時計 通知 / TTS 音声, タブレット 通知 / TTS 音声. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "窓の通知先と方法: スマートフォン 通知 / TTS 音声, 腕時計 通知 / TTS 音声, タブレット 通知 / TTS 音声. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "情報源 · 睡眠 / 在室 · max 240 min. 無効 · オフ.",
+          "general_home_policy": "この項目は「自宅 · 在室 · 制御」を設定します。機器への指示には個別の許可と独立した保護が必要です。"
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "監視する部屋",
+        "description": "監視する部屋 → 情報源 → 一般 設定",
+        "data": {
+          "areas": "監視する部屋"
+        },
+        "data_description": {
+          "areas": "監視する部屋. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。"
+        }
+      },
+      "room_settings": {
+        "title": "エリア · 設定 · {area_name}",
+        "description": "部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+        "data": {
+          "windows": "窓",
+          "air_quality": "空気質・環境センサー",
+          "temperature": "温度",
+          "humidity": "湿度",
+          "pressure": "気圧センサー",
+          "climate_devices": "デバイス",
+          "shades": "窓のブラインド・シェード・シャッター",
+          "occupancy_sensors": "在室 · センサー"
+        },
+        "data_description": {
+          "windows": "窓. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "air_quality": "空気質・環境センサー. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "temperature": "温度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "humidity": "湿度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "pressure": "気圧センサー. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "climate_devices": "デバイス. この部屋の実機 climate.*、humidifier.*、fan.* のエンティティだけを選択します。対応する暖房・冷房・除湿、設定温湿度、ファン速度は機器の機能に依存します。選択だけでは動作せず、各コントローラーで自動制御を個別に有効にします。",
+          "shades": "窓のブラインド・シェード・シャッター. 部屋の cover.* ブラインド、ローラーシャッター、カーテンを選択します。device_class がなくても CLOSE に対応し、実際の窓の日除けなら選択できます。ガレージ、門、ドア、窓、屋外オーニングは除外します。選択だけでは動かず、コントローラーで窓センサー、自動制御、事前通知、温度しきい値を設定します。状態不明時は動作しません。",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
       }
     },

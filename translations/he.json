@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "בית · Away · cooldown (min)",
           "away_open_window_alert": "התרעה על חלונות פתוחים לאחר שכולם יצאו",
           "away_windows_target_people": "אנשים לקבלת התראה",
-          "away_windows_delivery_channels": "ערוצי התרעה על חלונות"
+          "away_windows_delivery_channels": "ערוצי התרעה על חלונות",
+          "general_source_stale_minutes": "מקור · max (min)",
+          "general_home_policy": "בית · נוכחות · בקרה"
         },
         "data_description": {
           "weather_entities": "בחרו: מזג אוויר ואזהרות · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "בחר מקורות משותפים ופלטי התראות. שמירה מסיימת את ההגדרה. הגדרות התפעול נשארות במכשירי הבית והחדרים. · בית · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "התרעה על חלונות פתוחים לאחר שכולם יצאו. אנשים לקבלת התראה (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. טלפון, שעון, טאבלט.",
           "away_windows_target_people": "אנשים לקבלת התראה (person.*) - Announcement Hub: טלפון, שעון, טאבלט, מכשיר אחר. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "ערוצי התרעה על חלונות: טלפון התראה / דיבור TTS, שעון התראה / דיבור TTS, טאבלט התראה / דיבור TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "ערוצי התרעה על חלונות: טלפון התראה / דיבור TTS, שעון התראה / דיבור TTS, טאבלט התראה / דיבור TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "מקור · שינה / נוכחות · max 240 min. לא תקין · כיבוי.",
+          "general_home_policy": "האפשרות שולטת ב־„בית · נוכחות · בקרה”. פקודות למכשיר דורשות אישור נפרד והגנות עצמאיות."
         }
       },
       "reconfigure": {
         "title": "⚙️ בחרו",
         "description": "בחרו: חדרים / מזג אוויר ואזהרות / הודעות (אופציונלי) / ספי התראה מתקדמים",
         "menu_options": {
-          "room_occupancy": "נוכחות · חיישן",
-          "outside_data": "חוץ · מקור",
-          "general_settings": "כלליות · הגדרות",
-          "area_settings": "אזור · הגדרות",
-          "delivery": "הודעות (אופציונלי)",
-          "thresholds": "ספי התראה מתקדמים",
-          "climate": "הגדרות · התקנים",
-          "pid": "הגדרות · PID",
-          "setup_rooms": "חדרים למעקב"
+          "choose_rooms": "חדרים למעקב",
+          "general_settings": "כלליות · הגדרות"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "חדרים למעקב",
+        "description": "חדרים למעקב → מקור → כלליות הגדרות",
+        "data": {
+          "areas": "חדרים למעקב"
+        },
+        "data_description": {
+          "areas": "חדרים למעקב. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים."
+        }
+      },
+      "room_settings": {
+        "title": "אזור · הגדרות · {area_name}",
+        "description": "בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+        "data": {
+          "windows": "חלונות",
+          "air_quality": "חיישני איכות אוויר וסביבה",
+          "temperature": "טמפרטורה",
+          "humidity": "לחות",
+          "pressure": "חיישני לחץ",
+          "climate_devices": "התקנים",
+          "shades": "תריסים, וילונות וצלונים לחלונות",
+          "occupancy_sensors": "נוכחות · חיישן"
+        },
+        "data_description": {
+          "windows": "חלונות. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "air_quality": "חיישני איכות אוויר וסביבה. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "temperature": "טמפרטורה. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "humidity": "לחות. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "pressure": "חיישני לחץ. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "climate_devices": "התקנים. בחר רק ישויות פיזיות climate.*, humidifier.* ו־fan.* בחדר. יכולות המכשיר קובעות חימום, קירור, ייבוש, ערכי יעד ומהירות מאוורר. הבחירה אינה מפעילה דבר; יש לאפשר שליטה אוטומטית לכל מכשיר בנפרד.",
+          "shades": "תריסים, וילונות וצלונים לחלונות. בחר תריסים, וילונות והצללות cover.* בחדר. Covers ללא device_class מותרים אם CLOSE נתמך והם אכן הצללת חלון. דלתות, שערים, חניות, חלונות וסוככים מוחרגים. הבחירה אינה מזיזה דבר: שייך חיישן חלון והגדר אוטומציה, הודעה וטמפרטורה בבקר. מצב לא ידוע חוסם תנועה.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ בחרו",
         "description": "בחרו: חדרים / מזג אוויר ואזהרות / הודעות (אופציונלי) / ספי התראה מתקדמים",
         "menu_options": {
-          "room_occupancy": "נוכחות · חיישן",
-          "outside_data": "חוץ · מקור",
-          "general_settings": "כלליות · הגדרות",
-          "area_settings": "אזור · הגדרות",
-          "delivery": "הודעות (אופציונלי)",
-          "thresholds": "ספי התראה מתקדמים",
-          "climate": "הגדרות · התקנים",
-          "pid": "הגדרות · PID",
-          "setup_rooms": "חדרים למעקב"
+          "choose_rooms": "חדרים למעקב",
+          "general_settings": "כלליות · הגדרות"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "בית · Away · cooldown (min)",
           "away_open_window_alert": "התרעה על חלונות פתוחים לאחר שכולם יצאו",
           "away_windows_target_people": "אנשים לקבלת התראה",
-          "away_windows_delivery_channels": "ערוצי התרעה על חלונות"
+          "away_windows_delivery_channels": "ערוצי התרעה על חלונות",
+          "general_source_stale_minutes": "מקור · max (min)",
+          "general_home_policy": "בית · נוכחות · בקרה"
         },
         "data_description": {
           "weather_entities": "בחרו: מזג אוויר ואזהרות · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "בחר מקורות משותפים ופלטי התראות. שמירה מסיימת את ההגדרה. הגדרות התפעול נשארות במכשירי הבית והחדרים. · בית · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "התרעה על חלונות פתוחים לאחר שכולם יצאו. אנשים לקבלת התראה (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. טלפון, שעון, טאבלט.",
           "away_windows_target_people": "אנשים לקבלת התראה (person.*) - Announcement Hub: טלפון, שעון, טאבלט, מכשיר אחר. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "ערוצי התרעה על חלונות: טלפון התראה / דיבור TTS, שעון התראה / דיבור TTS, טאבלט התראה / דיבור TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "ערוצי התרעה על חלונות: טלפון התראה / דיבור TTS, שעון התראה / דיבור TTS, טאבלט התראה / דיבור TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "מקור · שינה / נוכחות · max 240 min. לא תקין · כיבוי.",
+          "general_home_policy": "האפשרות שולטת ב־„בית · נוכחות · בקרה”. פקודות למכשיר דורשות אישור נפרד והגנות עצמאיות."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "חדרים למעקב",
+        "description": "חדרים למעקב → מקור → כלליות הגדרות",
+        "data": {
+          "areas": "חדרים למעקב"
+        },
+        "data_description": {
+          "areas": "חדרים למעקב. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים."
+        }
+      },
+      "room_settings": {
+        "title": "אזור · הגדרות · {area_name}",
+        "description": "בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+        "data": {
+          "windows": "חלונות",
+          "air_quality": "חיישני איכות אוויר וסביבה",
+          "temperature": "טמפרטורה",
+          "humidity": "לחות",
+          "pressure": "חיישני לחץ",
+          "climate_devices": "התקנים",
+          "shades": "תריסים, וילונות וצלונים לחלונות",
+          "occupancy_sensors": "נוכחות · חיישן"
+        },
+        "data_description": {
+          "windows": "חלונות. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "air_quality": "חיישני איכות אוויר וסביבה. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "temperature": "טמפרטורה. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "humidity": "לחות. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "pressure": "חיישני לחץ. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "climate_devices": "התקנים. בחר רק ישויות פיזיות climate.*, humidifier.* ו־fan.* בחדר. יכולות המכשיר קובעות חימום, קירור, ייבוש, ערכי יעד ומהירות מאוורר. הבחירה אינה מפעילה דבר; יש לאפשר שליטה אוטומטית לכל מכשיר בנפרד.",
+          "shades": "תריסים, וילונות וצלונים לחלונות. בחר תריסים, וילונות והצללות cover.* בחדר. Covers ללא device_class מותרים אם CLOSE נתמך והם אכן הצללת חלון. דלתות, שערים, חניות, חלונות וסוככים מוחרגים. הבחירה אינה מזיזה דבר: שייך חיישן חלון והגדר אוטומציה, הודעה וטמפרטורה בבקר. מצב לא ידוע חוסם תנועה.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
       }
     },

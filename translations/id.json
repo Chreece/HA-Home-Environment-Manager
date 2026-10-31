@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "Rumah · Away · cooldown (min)",
           "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi",
           "away_windows_target_people": "Orang yang diberi tahu",
-          "away_windows_delivery_channels": "Saluran peringatan jendela"
+          "away_windows_delivery_channels": "Saluran peringatan jendela",
+          "general_source_stale_minutes": "sumber · max (min)",
+          "general_home_policy": "Rumah · Kehadiran · kendali"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Rumah · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi. Orang yang diberi tahu (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Ponsel, Jam tangan, Tablet.",
           "away_windows_target_people": "Orang yang diberi tahu (person.*) - Announcement Hub: Ponsel, Jam tangan, Tablet, Perangkat lain. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Saluran peringatan jendela: Ponsel Notifikasi / Suara TTS, Jam tangan Notifikasi / Suara TTS, Tablet Notifikasi / Suara TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Saluran peringatan jendela: Ponsel Notifikasi / Suara TTS, Jam tangan Notifikasi / Suara TTS, Tablet Notifikasi / Suara TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "sumber · Tidur / Kehadiran · max 240 min. Tidak valid · Matikan.",
+          "general_home_policy": "Opsi ini mengatur “Rumah · Kehadiran · kendali”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri."
         }
       },
       "reconfigure": {
         "title": "⚙️ Pilih",
         "description": "Pilih: Ruangan / Cuaca dan peringatan / Pengumuman (opsional) / Ambang batas lanjutan",
         "menu_options": {
-          "room_occupancy": "Kehadiran · sensor",
-          "outside_data": "Luar · sumber",
-          "general_settings": "Umum · pengaturan",
-          "area_settings": "Area · pengaturan",
-          "delivery": "Pengumuman (opsional)",
-          "thresholds": "Ambang batas lanjutan",
-          "climate": "pengaturan · Perangkat",
-          "pid": "pengaturan · PID",
-          "setup_rooms": "Ruangan untuk dipantau"
+          "choose_rooms": "Ruangan untuk dipantau",
+          "general_settings": "Umum · pengaturan"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Ruangan untuk dipantau",
+        "description": "Ruangan untuk dipantau → sumber → Umum pengaturan",
+        "data": {
+          "areas": "Ruangan untuk dipantau"
+        },
+        "data_description": {
+          "areas": "Ruangan untuk dipantau. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis."
+        }
+      },
+      "room_settings": {
+        "title": "Area · pengaturan · {area_name}",
+        "description": "Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+        "data": {
+          "windows": "Jendela",
+          "air_quality": "Sensor kualitas udara dan lingkungan",
+          "temperature": "Suhu",
+          "humidity": "Kelembapan",
+          "pressure": "Sensor tekanan",
+          "climate_devices": "Perangkat",
+          "shades": "Tirai, gorden, dan penutup jendela",
+          "occupancy_sensors": "Kehadiran · sensor"
+        },
+        "data_description": {
+          "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "air_quality": "Sensor kualitas udara dan lingkungan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "temperature": "Suhu. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "pressure": "Sensor tekanan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
+          "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ Pilih",
         "description": "Pilih: Ruangan / Cuaca dan peringatan / Pengumuman (opsional) / Ambang batas lanjutan",
         "menu_options": {
-          "room_occupancy": "Kehadiran · sensor",
-          "outside_data": "Luar · sumber",
-          "general_settings": "Umum · pengaturan",
-          "area_settings": "Area · pengaturan",
-          "delivery": "Pengumuman (opsional)",
-          "thresholds": "Ambang batas lanjutan",
-          "climate": "pengaturan · Perangkat",
-          "pid": "pengaturan · PID",
-          "setup_rooms": "Ruangan untuk dipantau"
+          "choose_rooms": "Ruangan untuk dipantau",
+          "general_settings": "Umum · pengaturan"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "Rumah · Away · cooldown (min)",
           "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi",
           "away_windows_target_people": "Orang yang diberi tahu",
-          "away_windows_delivery_channels": "Saluran peringatan jendela"
+          "away_windows_delivery_channels": "Saluran peringatan jendela",
+          "general_source_stale_minutes": "sumber · max (min)",
+          "general_home_policy": "Rumah · Kehadiran · kendali"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Rumah · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi. Orang yang diberi tahu (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Ponsel, Jam tangan, Tablet.",
           "away_windows_target_people": "Orang yang diberi tahu (person.*) - Announcement Hub: Ponsel, Jam tangan, Tablet, Perangkat lain. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Saluran peringatan jendela: Ponsel Notifikasi / Suara TTS, Jam tangan Notifikasi / Suara TTS, Tablet Notifikasi / Suara TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Saluran peringatan jendela: Ponsel Notifikasi / Suara TTS, Jam tangan Notifikasi / Suara TTS, Tablet Notifikasi / Suara TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "sumber · Tidur / Kehadiran · max 240 min. Tidak valid · Matikan.",
+          "general_home_policy": "Opsi ini mengatur “Rumah · Kehadiran · kendali”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Ruangan untuk dipantau",
+        "description": "Ruangan untuk dipantau → sumber → Umum pengaturan",
+        "data": {
+          "areas": "Ruangan untuk dipantau"
+        },
+        "data_description": {
+          "areas": "Ruangan untuk dipantau. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis."
+        }
+      },
+      "room_settings": {
+        "title": "Area · pengaturan · {area_name}",
+        "description": "Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+        "data": {
+          "windows": "Jendela",
+          "air_quality": "Sensor kualitas udara dan lingkungan",
+          "temperature": "Suhu",
+          "humidity": "Kelembapan",
+          "pressure": "Sensor tekanan",
+          "climate_devices": "Perangkat",
+          "shades": "Tirai, gorden, dan penutup jendela",
+          "occupancy_sensors": "Kehadiran · sensor"
+        },
+        "data_description": {
+          "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "air_quality": "Sensor kualitas udara dan lingkungan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "temperature": "Suhu. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "pressure": "Sensor tekanan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
+          "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
       }
     },

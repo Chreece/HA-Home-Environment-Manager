@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "Koti · Away · cooldown (min)",
           "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt",
-          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat"
+          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat",
+          "general_source_stale_minutes": "lähde · max (min)",
+          "general_home_policy": "Koti · Läsnäolo · ohjaus"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Koti · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä. Ilmoituksen saavat henkilöt (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Puhelin, Kello, Tabletti.",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt (person.*) - Announcement Hub: Puhelin, Kello, Tabletti, Muu laite. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat: Puhelin Ilmoitus / TTS-puhe, Kello Ilmoitus / TTS-puhe, Tabletti Ilmoitus / TTS-puhe. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat: Puhelin Ilmoitus / TTS-puhe, Kello Ilmoitus / TTS-puhe, Tabletti Ilmoitus / TTS-puhe. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "lähde · Uni / Läsnäolo · max 240 min. Virheellinen · Sammuta.",
+          "general_home_policy": "Tämä asetus ohjaa kohtaa ”Koti · Läsnäolo · ohjaus”. Fyysiset komennot vaativat erillisen luvan ja suojaukset."
         }
       },
       "reconfigure": {
         "title": "⚙️ Valitse",
         "description": "Valitse: Huoneet / Sää ja varoitukset / Ilmoitukset (valinnainen) / Lisäraja-arvot",
         "menu_options": {
-          "room_occupancy": "Läsnäolo · anturi",
-          "outside_data": "Ulko · lähde",
-          "general_settings": "Yleiset · asetukset",
-          "area_settings": "Alue · asetukset",
-          "delivery": "Ilmoitukset (valinnainen)",
-          "thresholds": "Lisäraja-arvot",
-          "climate": "asetukset · Laitteet",
-          "pid": "asetukset · PID",
-          "setup_rooms": "Valvottavat huoneet"
+          "choose_rooms": "Valvottavat huoneet",
+          "general_settings": "Yleiset · asetukset"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Valvottavat huoneet",
+        "description": "Valvottavat huoneet → lähde → Yleiset asetukset",
+        "data": {
+          "areas": "Valvottavat huoneet"
+        },
+        "data_description": {
+          "areas": "Valvottavat huoneet. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta."
+        }
+      },
+      "room_settings": {
+        "title": "Alue · asetukset · {area_name}",
+        "description": "Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+        "data": {
+          "windows": "Ikkunat",
+          "air_quality": "Ilmanlaatu- ja ympäristöanturit",
+          "temperature": "Lämpötila",
+          "humidity": "Kosteus",
+          "pressure": "Paineanturit",
+          "climate_devices": "Laitteet",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut",
+          "occupancy_sensors": "Läsnäolo · anturi"
+        },
+        "data_description": {
+          "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "air_quality": "Ilmanlaatu- ja ympäristöanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ Valitse",
         "description": "Valitse: Huoneet / Sää ja varoitukset / Ilmoitukset (valinnainen) / Lisäraja-arvot",
         "menu_options": {
-          "room_occupancy": "Läsnäolo · anturi",
-          "outside_data": "Ulko · lähde",
-          "general_settings": "Yleiset · asetukset",
-          "area_settings": "Alue · asetukset",
-          "delivery": "Ilmoitukset (valinnainen)",
-          "thresholds": "Lisäraja-arvot",
-          "climate": "asetukset · Laitteet",
-          "pid": "asetukset · PID",
-          "setup_rooms": "Valvottavat huoneet"
+          "choose_rooms": "Valvottavat huoneet",
+          "general_settings": "Yleiset · asetukset"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "Koti · Away · cooldown (min)",
           "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt",
-          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat"
+          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat",
+          "general_source_stale_minutes": "lähde · max (min)",
+          "general_home_policy": "Koti · Läsnäolo · ohjaus"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Koti · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä. Ilmoituksen saavat henkilöt (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Puhelin, Kello, Tabletti.",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt (person.*) - Announcement Hub: Puhelin, Kello, Tabletti, Muu laite. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat: Puhelin Ilmoitus / TTS-puhe, Kello Ilmoitus / TTS-puhe, Tabletti Ilmoitus / TTS-puhe. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat: Puhelin Ilmoitus / TTS-puhe, Kello Ilmoitus / TTS-puhe, Tabletti Ilmoitus / TTS-puhe. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "lähde · Uni / Läsnäolo · max 240 min. Virheellinen · Sammuta.",
+          "general_home_policy": "Tämä asetus ohjaa kohtaa ”Koti · Läsnäolo · ohjaus”. Fyysiset komennot vaativat erillisen luvan ja suojaukset."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Valvottavat huoneet",
+        "description": "Valvottavat huoneet → lähde → Yleiset asetukset",
+        "data": {
+          "areas": "Valvottavat huoneet"
+        },
+        "data_description": {
+          "areas": "Valvottavat huoneet. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta."
+        }
+      },
+      "room_settings": {
+        "title": "Alue · asetukset · {area_name}",
+        "description": "Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+        "data": {
+          "windows": "Ikkunat",
+          "air_quality": "Ilmanlaatu- ja ympäristöanturit",
+          "temperature": "Lämpötila",
+          "humidity": "Kosteus",
+          "pressure": "Paineanturit",
+          "climate_devices": "Laitteet",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut",
+          "occupancy_sensors": "Läsnäolo · anturi"
+        },
+        "data_description": {
+          "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "air_quality": "Ilmanlaatu- ja ympäristöanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
+          "occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
       }
     },
