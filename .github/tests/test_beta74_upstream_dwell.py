@@ -241,7 +241,11 @@ async def tests():
                 and n.name=='extra_state_attributes')
     method.decorator_list=[]
     Model.profile_name=staticmethod(lambda cfg,plan:'home')
-    ns={'equipment':Model}
+    b['power_mod'].device_supply_dwell=device_supply_dwell
+    b['power_mod'].supply_off_since=b['supply_off_since']
+    ns={'equipment':Model,
+        '__package__':'beta64_probe',
+        '__name__':'beta64_probe.equipment_status'}
     exec(compile(ast.Module(body=[method],type_ignores=[]),
                  'equipment_status.py','exec'),ns)
     radiator.manager.plan=N(environment={})
