@@ -20,6 +20,8 @@ from .discovery import entity_area
 from .pid_math import finite
 from . import equipment_model as model
 
+# Legacy fallback for an unverified/offline device; verified per-device
+# minimums take precedence, including any stricter physical room/device rule.
 UPSTREAM_MIN_OFF_SECONDS = 600
 UPSTREAM_ACK_SECONDS = 120
 # External power is never cycled to diagnose or clear a failed device.
@@ -33,6 +35,61 @@ def observed_output_off(state: Any) -> bool:
     if getattr(state, "domain", "") in ("number", "input_number"):
         return finite(state.state, 0, 100) == 0
     return state.state == "off"
+
+
+def device_supply_dwell(
+    runtime: Any, spec: Any, cfg: dict, cap: Any = None,
+) -> tuple[float, float] | None:
+    """Minimum ON/OFF for this device's *physical upstream supply*.
+
+    Use native controller timing (including the legacy physical and room
+    minimums) when capabilities are verified/cached. For a first unpowered
+    setup with no native capabilities, use the actual per-device settings
+    with conservative physical baseline; never assume a sub-600s compressor
+    minimum just because the external switch is a generic switch.*.
+    Invalid settings HOLD, they do not become permissive timing.
+    """
+    if cap is None:
+        cap = verified_capabilities(runtime, spec)
+    if cap is not None:
+        try:
+            on, off, _ = model.timing(runtime.manager, spec, cap, config=cfg)
+        except (ValueError, TypeError, KeyError, AttributeError):
+            return None
+        return (on, off) if on > 0 and off > 0 else None
+    # Only a native fan-only controller has the shorter fan baseline.
+    fan_only = bool(spec.source_entities) and all(
+        entity.startswith("fan.") for entity in spec.source_entities
+    )
+    baseline = 120.0 if fan_only else float(UPSTREAM_MIN_OFF_SECONDS)
+    on = finite(cfg.get("min_on_seconds"), 120, 7200)
+    off = finite(cfg.get("min_off_seconds"), 120, 14400)
+    if on is None or off is None:
+        return None
+    return max(baseline, on), max(baseline, off)
+
+
+def supply_off_since(relay: dict, state: Any, now: float) -> float:
+    """Use persisted confirmed OFF time, not a synthetic HA startup stamp."""
+    saved = finite(relay.get("off_at"), 0, now)
+    return saved if saved is not None else _observed_off_since(state, now)
+
+
+def supply_minimum_off(runtime: Any, spec: Any, cfg: dict, cap: Any,
+                       relay: dict, state: Any, now: float) -> bool:
+    limits = device_supply_dwell(runtime, spec, cfg, cap)
+    since = supply_off_since(relay, state, now)
+    retained = finite(relay.get("off_min_seconds"), 0, 86400) or 0
+    return bool(limits and now - since >= max(limits[1], retained))
+
+
+def supply_minimum_on(runtime: Any, spec: Any, cfg: dict, cap: Any,
+                      relay: dict, now: float) -> bool:
+    limits = device_supply_dwell(runtime, spec, cfg, cap)
+    since = finite(relay.get("on_at"), 0, now)
+    retained = finite(relay.get("on_min_seconds"), 0, 86400) or 0
+    return bool(limits and since is not None
+                and now - since >= max(limits[0], retained))
 
 
 def relay_identity(hass: Any, spec: Any, entity: str) -> dict | None:
