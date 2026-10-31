@@ -84,8 +84,11 @@ supply = ModuleType("test_beta70.equipment_power_switch")
 async def supply_tick(runtime, spec):
     return False
 supply.before_tick = supply_tick
+phase_module = ModuleType("test_beta70.pid_phase")
+phase_module.phase_decision = phase_decision
 sys.modules[pkg.__name__] = pkg
 sys.modules[supply.__name__] = supply
+sys.modules[phase_module.__name__] = phase_module
 
 
 @dataclass(frozen=True)
