@@ -98,6 +98,42 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         upstream = upstream if isinstance(upstream, dict) else {}
         supply = self._manager.hass.states.get(supply_id) if (
             isinstance(supply_id, str) and supply_id) else None
+        # Read-only timing diagnostics, O(1) in the cached physical record.
+        # Do NOT read every device/recorder or schedule hardware commands.
+        dwell = None
+        now = runtime.clock()
+        on_elapsed = off_elapsed = on_remaining = off_remaining = None
+        cooldown_remaining = None
+        if isinstance(supply_id, str) and supply_id:
+            from .equipment_power_switch import (
+                device_supply_dwell, supply_off_since,
+            )
+            native_cap = equipment.capabilities(self._manager, self._spec)
+            dwell = device_supply_dwell(runtime, self._spec, cfg, native_cap)
+            if supply is not None and dwell is not None:
+                if supply.state == "on" and upstream.get("owned"):
+                    started = upstream.get("on_at")
+                    if isinstance(started, (int, float)) and 0 <= started <= now:
+                        on_elapsed = round(now-started)
+                        on_remaining = round(max(
+                            0, max(dwell[0], upstream.get("on_min_seconds") or 0)
+                            - on_elapsed
+                        ))
+                    idle_since = upstream.get("idle_since")
+                    if (isinstance(idle_since, (int, float))
+                            and 0 <= idle_since <= now):
+                        cooldown_remaining = round(max(
+                            0, cfg.get("power_switch_cooldown_seconds", 600)
+                            - (now-idle_since)
+                        ))
+                elif supply.state == "off":
+                    off_elapsed = round(max(
+                        0, now-supply_off_since(upstream, supply, now)
+                    ))
+                    off_remaining = round(max(
+                        0, max(dwell[1], upstream.get("off_min_seconds") or 0)
+                        - off_elapsed
+                    ))
         return {
             "area_id": self._spec.area_id,
             "source_entity_ids": list(self._spec.source_entities),
@@ -180,6 +216,15 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "upstream_idle_cooldown_seconds": cfg.get(
                 "power_switch_cooldown_seconds"
             ) if supply_id else None,
+            "upstream_on_at": upstream.get("on_at"),
+            "upstream_off_at": upstream.get("off_at"),
+            "upstream_device_minimum_on_seconds": dwell[0] if dwell else None,
+            "upstream_device_minimum_off_seconds": dwell[1] if dwell else None,
+            "upstream_on_elapsed_seconds": on_elapsed,
+            "upstream_off_elapsed_seconds": off_elapsed,
+            "upstream_minimum_on_remaining_seconds": on_remaining,
+            "upstream_minimum_off_remaining_seconds": off_remaining,
+            "upstream_idle_cooldown_remaining_seconds": cooldown_remaining,
             "window_pause_enabled": cfg.get("pause_on_window_open", True),
             "window_policy": dict(getattr(runtime, "_window_policy_cache", {}).get(
                 self._spec.identifier, {})),
