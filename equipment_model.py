@@ -246,11 +246,14 @@ def capabilities(manager: Any, spec: ManagedDevice) -> Capabilities | None:
     if unit in ("°F", "F"):
         temp_step *= 5 / 9
     direct = domain in ("switch", "input_boolean", "number", "input_number")
+    # A native DRY/FAN-only appliance may publish a generic temperature feature
+    # bit without supporting any thermal setpoint. Never expose a target for it.
+    thermal_mode = bool(set(modes) & {"heat", "cool", "heat_cool", "auto"})
     return Capabilities(
         primary, domain, modes,
-        temperature=direct or (domain == "climate" and (
+        temperature=direct or (domain == "climate" and thermal_mode and (
             bool(supported & TEMP) or not (supported & RANGE) and bool(set(modes) & {"heat", "cool"}))),
-        temperature_range=domain == "climate" and bool(supported & RANGE),
+        temperature_range=domain == "climate" and thermal_mode and bool(supported & RANGE),
         humidity=domain == "humidifier" or (domain == "climate" and (
             bool(supported & HUMIDITY) or "dry" in modes)),
         fan_entity=fan_entity, fan_modes=fan_modes, fan_percentage=percentage,
