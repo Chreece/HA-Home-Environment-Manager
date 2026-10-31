@@ -118,6 +118,9 @@ class EquipmentRuntime:
         # A short, bounded request to re-evaluate comfort immediately after
         # a verified profile/target rise. Never owns physical power by itself.
         self._profile_wake: dict[str, dict] = {}
+        # Session-local observations distinguish a real ON transition
+        # recorded by HEM from an HA-restored native State at startup.
+        self._native_session_observations: dict[tuple[str, str], str] = {}
         self._fan_allocations: dict[str, dict] = {}
         # Diagnostic-only snapshots while an independently powered device is
         # OFF: PID P-term prepared, I held at zero, D reseeded from live sensor.
@@ -161,6 +164,7 @@ class EquipmentRuntime:
     async def async_start(self) -> None:
         self._active = True
         self._started = self.clock()
+        self._native_session_observations = {}
         try:
             from homeassistant.helpers.storage import Store
             self._store = Store(
@@ -217,6 +221,7 @@ class EquipmentRuntime:
             await asyncio.gather(*tasks, return_exceptions=True)
         self._tasks.clear()
         self._profile_wake.clear()
+        self._native_session_observations.clear()
         self._pid_offline_previews.clear()
         if self._ready:
             await self._save()
@@ -254,16 +259,25 @@ class EquipmentRuntime:
             raise HomeAssistantError("Invalid persisted physical observation history")
         current = "off" if output_off(state) else "on"
         old = snapshots.get(cap.primary)
+        observed_in_session = getattr(self, "_native_session_observations", None)
+        if observed_in_session is None:
+            observed_in_session = self._native_session_observations = {}
+        key = (spec.identifier, cap.primary)
+        prior_live = observed_in_session.get(key)
+        observed_in_session[key] = current
         if isinstance(old, dict) and old.get("state") == current:
             return
         now = self.clock()
         if current == "on":
             owned = record.get("power", {}).get(cap.primary)
-            if isinstance(old, dict) and old.get("state") == "off":
-                # This is a real OFF->ON transition observed while managing
-                # the device; never inherit the older uninterrupted ON time.
+            if prior_live == "off":
+                # A genuine OFF->ON transition observed in THIS process,
+                # not just an OFF snapshot retained from before a restart.
                 since = now
             elif isinstance(owned, dict):
+                # Previously confirmed owned ON across HA startup: preserve
+                # the durable timestamp even if the older observation cache
+                # was still OFF when the application stopped.
                 since = finite(owned.get("since"), 0, now) or now
             else:
                 changed = getattr(state, "last_changed", None)
