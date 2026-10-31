@@ -31,7 +31,7 @@ def extract(file, names, ns):
     return tuple(ns[x] for x in names)
 
 
-phase_ns = {"math": math}
+phase_ns = {"math": math, "TARGET_CHANGE_C": 0.25, "COMFORT_ERROR_C": 0.5}
 (phase_decision,) = extract("pid_phase.py", ("phase_decision",), phase_ns)
 model_ns = {"math": math, "dataclass": dataclass}
 PIDMemory, pid_step, duty_on, profile_name = extract(
