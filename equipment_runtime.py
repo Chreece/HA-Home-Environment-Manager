@@ -808,6 +808,12 @@ class EquipmentRuntime:
             cfg = model.settings(self.manager, spec)
             cap = model.capabilities(self.manager, spec)
             record = self._record(spec)
+            if (record.get("area") != spec.area_id
+                    or tuple(record.get("sources", ())) != tuple(spec.source_entities)
+                    or record.get("source_device_id") != spec.source_device_id):
+                raise HomeAssistantError(
+                    "Stored physical controller identity changed; Resume is not authorized"
+                )
             now = self.clock()
             supply = cfg.get("power_switch_entity")
             upstream = record.setdefault("upstream", {})
@@ -831,6 +837,11 @@ class EquipmentRuntime:
                         "The selected supply identity or physical state cannot be verified"
                     )
                 previous_switch_intent = upstream.get("pending")
+                if ((upstream.get("owned") or previous_switch_intent)
+                        and upstream.get("identity") != identity):
+                    raise HomeAssistantError(
+                        "Stored power-switch ownership identity cannot be verified"
+                    )
                 if previous_switch_intent:
                     if (not isinstance(previous_switch_intent, dict)
                             or previous_switch_intent.get("phase") != "commanded"
