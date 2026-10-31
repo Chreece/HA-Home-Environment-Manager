@@ -1,0 +1,57 @@
+name: Beta75 native reconnection after HEM-owned supply ON
+
+on:
+  push:
+    branches: ['fix/beta75-native-recovery-after-supply-on-20261031']
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Verify canonical domain and source syntax
+        run: |
+          set -euo pipefail
+          python -I -m compileall -q .
+          python -I - <<'PY'
+          from pathlib import Path
+          import json
+          assert json.loads(Path('manifest.json').read_text())['domain']=='environment_manager'
+          for p in Path('.').rglob('*.json'):json.loads(p.read_text())
+          PY
+          node --check frontend/air-quality-advisor-card.js
+      - name: Native reattachment, supply OFF time credit and restored mode ownership
+        run: python -I .github/tests/test_beta75_native_supply_recovery.py
+      - name: Legacy power/PID/window/sleep/AQI/shade and restart regressions
+        run: |
+          set -euo pipefail
+          for t in \
+            .github/tests/test_beta61_supply_selection.py \
+            .github/tests/test_beta62_pid_races.py \
+            .github/tests/test_beta63_cold_start.py \
+            .github/tests/test_beta64_sleep_idle.py \
+            .github/tests/test_beta65_data.py \
+            .github/tests/test_beta66_windows.py \
+            .github/tests/test_beta67_aqi.py \
+            .github/tests/test_beta68_scheduler.py \
+            .github/tests/test_beta68_metadata.py \
+            .github/tests/test_beta69_shade_lux.py \
+            .github/tests/test_beta70_pid_profile.py \
+            .github/tests/test_beta72_resume_running.py \
+            .github/tests/test_beta73_restart_power_history.py \
+            .github/tests/test_beta74_upstream_dwell.py; do
+              echo "TEST $t"
+              python -I "$t"
+          done
+      - name: Actual Home Assistant state events and Chromium load
+        run: |
+          python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+          python -I .github/tests/test_beta68_events.py
+          python -I .github/tests/test_beta68_browser.py
