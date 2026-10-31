@@ -819,12 +819,24 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
             # establishes durable timestamps across HA restarts.
             limits = device_supply_dwell(runtime, spec, cfg)
             if observed.state == "on":
+                # A successful, previously demand-authorized HEM supply ON is
+                # the only origin of native boot recovery. A user-operated ON
+                # relay never creates this record or grants native ownership.
+                # This remembers the *already completed* physical OFF dwell,
+                # so a recreated OFF native entity cannot force another full
+                # minimum-OFF interval merely because it reconnected.
+                acknowledged_off = finite(relay.get("off_at"), 0, now)
+                relay["native_wake"] = {
+                    "off_at": acknowledged_off, "on_at": now,
+                    "identity": dict(identity), "reconciled": False,
+                } if acknowledged_off is not None else None
                 relay["on_at"] = now
                 relay["on_min_seconds"] = (
                     finite(pending.get("min_on_seconds"), 120, 86400)
                     or (limits[0] if limits else UPSTREAM_MIN_OFF_SECONDS)
                 )
             else:
+                relay.pop("native_wake", None)
                 relay["off_at"] = now
                 relay["off_min_seconds"] = (
                     finite(pending.get("min_off_seconds"), 120, 86400)
