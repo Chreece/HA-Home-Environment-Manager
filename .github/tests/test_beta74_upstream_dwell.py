@@ -185,9 +185,10 @@ async def tests():
     # If a user toggles an unowned relay ON then back OFF between separate
     # controller ticks, the old OFF dwell must not authorize an immediate ON.
     manual=simulate(on=600,off=1800,cooldown=60,
-                    on_age=4000,supply='off',owned=False,humidity=68)
+                    on_age=4000,supply='off',owned=False,humidity=53)
     manual.states['switch.strip']=state('off',when=clock-4000)
     await before_tick(manual,spec)
+    assert not supply_calls(manual), "Unowned relay must not be powered without demand"
     manual.humidity=53
     manual.states['switch.strip']=state('on',when=clock+5)
     manual.now=clock+5
