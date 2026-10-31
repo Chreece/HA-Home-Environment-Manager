@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Zuhause · Away · cooldown (min)",
           "away_open_window_alert": "Bei offenen Fenstern nach Verlassen des Hauses warnen",
           "away_windows_target_people": "Zu benachrichtigende Personen",
-          "away_windows_delivery_channels": "Zustellwege für offene Fenster"
+          "away_windows_delivery_channels": "Zustellwege für offene Fenster",
+          "global_threshold_outdoor_aqi": "Maximaler Außen-AQI",
+          "global_threshold_outdoor_co2": "Maximaler CO₂-Wert außen (ppm)",
+          "global_threshold_outdoor_pm25": "Maximaler PM2,5-Wert außen (µg/m³)",
+          "global_threshold_outdoor_pm10": "Maximaler PM10-Wert außen (µg/m³)",
+          "global_threshold_outdoor_voc": "Maximaler VOC-Wert außen (µg/m³)",
+          "global_threshold_outdoor_voc_parts": "Maximaler VOC-Wert außen (ppb)",
+          "global_threshold_outdoor_no2": "Außenluft NO₂ - Richtwert (µg/m³)",
+          "global_threshold_outdoor_o3": "Außenluft O₃ - Richtwert (µg/m³)",
+          "global_threshold_outdoor_so2": "Außenluft SO₂ - Richtwert (µg/m³)",
+          "global_threshold_indoor_aqi": "Innen-AQI als Lüftungsschwelle",
+          "global_threshold_indoor_co2": "CO₂-Grenzwert innen für Lüftung (ppm)",
+          "global_threshold_indoor_pm25": "PM2,5-Grenzwert innen für Lüftung (µg/m³)",
+          "global_threshold_indoor_pm10": "PM10-Grenzwert innen für Lüftung (µg/m³)",
+          "global_threshold_indoor_voc": "VOC-Grenzwert innen für Lüftung (µg/m³)",
+          "global_threshold_indoor_voc_parts": "VOC-Grenzwert innen für Lüftung (ppb)",
+          "global_threshold_indoor_humidity": "Luftfeuchte innen als Lüftungsschwelle (%)",
+          "global_threshold_min_outdoor_temp": "Minimale Außentemperatur (°C)",
+          "global_threshold_max_outdoor_temp": "Maximale Außentemperatur (°C)",
+          "global_threshold_max_outdoor_humidity": "Maximale Außenluftfeuchte (%)",
+          "global_threshold_max_wind_kmh": "Maximale Windgeschwindigkeit (km/h)",
+          "global_threshold_max_age_minutes": "Höchstalter einer Außenmessung (Minuten)",
+          "global_threshold_indoor_mold": "Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)",
+          "pollen_high_from": "Pollenindex ab diesem Wert hoch",
+          "pollen_max_scale": "Maximalwert der Pollen-Skala",
+          "pollen_avoid_ventilation": "Bei hoher Pollenbelastung Lüften vermeiden",
+          "general_source_stale_minutes": "Maximales Datenalter für Raumbelegung/Schlaf (Minuten)",
+          "general_home_policy": "Zuhause · Belegung · Steuerung"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Nach einer frisch bestätigten leeren Raumbelegung so viele Minuten warten, bevor Away gilt. Unbekannte oder veraltete Daten lösen Away nicht aus.",
           "away_open_window_alert": "Standardmäßig aus. Sofortige Meldung, sobald alle ausgewählten Anwesenheitsquellen Abwesenheit bestätigen. Number-/input_number-Zähler: 0 = niemand da, positiv = anwesend. Unbekannte Werte beweisen keine Abwesenheit. Es werden nur echte offene Fenster gemeldet. Kein erneutes Senden beim Neustart während Abwesenheit; neue Fenster können erneut gemeldet werden.",
           "away_windows_target_people": "Wähle konkrete person.*-Einträge in Home Assistant. Für jede Person muss das passende Handy/Uhr-Ziel in Announcement Hub zugeordnet sein. Eine fehlende Zuordnung führt niemals zu einem Raum-Rundruf.",
-          "away_windows_delivery_channels": "Mehrfachauswahl von Handy/Uhr/Tablet-Push oder Companion-App-Sprachausgabe. Jeder gewählte Kanal wird nur an die zugeordneten Geräte dieser Personen gesendet, nicht an Lautsprecher zu Hause."
+          "away_windows_delivery_channels": "Mehrfachauswahl von Handy/Uhr/Tablet-Push oder Companion-App-Sprachausgabe. Jeder gewählte Kanal wird nur an die zugeordneten Geräte dieser Personen gesendet, nicht an Lautsprecher zu Hause.",
+          "global_threshold_outdoor_aqi": "Dies ist ein Entscheidungswert für „Maximaler Außen-AQI“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_co2": "Dies ist ein Entscheidungswert für „Maximaler CO₂-Wert außen (ppm)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_pm25": "Dies ist ein Entscheidungswert für „Maximaler PM2,5-Wert außen (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_pm10": "Dies ist ein Entscheidungswert für „Maximaler PM10-Wert außen (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_voc": "Dies ist ein Entscheidungswert für „Maximaler VOC-Wert außen (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_voc_parts": "Dies ist ein Entscheidungswert für „Maximaler VOC-Wert außen (ppb)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_no2": "Dies ist ein Entscheidungswert für „Außenluft NO₂ - Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_o3": "Dies ist ein Entscheidungswert für „Außenluft O₃ - Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_so2": "Dies ist ein Entscheidungswert für „Außenluft SO₂ - Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_aqi": "Dies ist ein Entscheidungswert für „Innen-AQI als Lüftungsschwelle“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_co2": "Dies ist ein Entscheidungswert für „CO₂-Grenzwert innen für Lüftung (ppm)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_pm25": "Dies ist ein Entscheidungswert für „PM2,5-Grenzwert innen für Lüftung (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_pm10": "Dies ist ein Entscheidungswert für „PM10-Grenzwert innen für Lüftung (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_voc": "Dies ist ein Entscheidungswert für „VOC-Grenzwert innen für Lüftung (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_voc_parts": "Dies ist ein Entscheidungswert für „VOC-Grenzwert innen für Lüftung (ppb)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_humidity": "Dies ist ein Entscheidungswert für „Luftfeuchte innen als Lüftungsschwelle (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_min_outdoor_temp": "Dies ist ein Entscheidungswert für „Minimale Außentemperatur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_max_outdoor_temp": "Dies ist ein Entscheidungswert für „Maximale Außentemperatur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_max_outdoor_humidity": "Dies ist ein Entscheidungswert für „Maximale Außenluftfeuchte (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_max_wind_kmh": "Dies ist ein Entscheidungswert für „Maximale Windgeschwindigkeit (km/h)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_max_age_minutes": "Dies ist ein Entscheidungswert für „Höchstalter einer Außenmessung (Minuten)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_mold": "Dies ist ein Entscheidungswert für „Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "pollen_high_from": "Die Pollen-Warnschwelle hängt von der Skala des Anbieters ab.",
+          "pollen_max_scale": "Oberster Zahlenwert der Anbieterskala, z. B. 5.",
+          "pollen_avoid_ventilation": "Hohe Pollenwerte können die Empfehlung zum Fensteröffnen optional sperren.",
+          "general_source_stale_minutes": "Maximales Alter der letzten Quellenaktualisierung, bevor die Raum-/Schlafliste als unbekannt gilt. Keine Mindestschlafdauer. Standard: 240 Minuten. Veraltete Daten dürfen kein automatisches Ausschalten auslösen.",
+          "general_home_policy": "Diese Option steuert „Zuhause · Belegung · Steuerung“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen."
         }
       },
       "reconfigure": {
         "title": "Einstellungen auswählen",
         "description": "Wähle eine Einstellungsgruppe. Alle anderen Einstellungen bleiben unverändert.",
         "menu_options": {
-          "room_occupancy": "Präsenzsensoren pro Raum",
-          "outside_data": "Außendaten",
-          "general_settings": "Allgemeine Einstellungen",
-          "area_settings": "Bereichseinstellungen",
-          "delivery": "Ansagen (optional)",
-          "thresholds": "Erweiterte Grenzwerte",
-          "climate": "Klima - Raum auswählen",
-          "pid": "Klima-PID - Raum wählen",
-          "setup_rooms": "Zu überwachende Räume"
+          "choose_rooms": "Räume auswählen",
+          "general_settings": "Allgemeine Einstellungen"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Raumsensoren werden vorausgewählt und können entfernt werden. Eine gültige Raumliste, auch leer, hat Vorrang. Nur bei unbekannter, nicht verfügbarer oder veralteter Liste werden gewählte Sensoren verwendet."
         }
+      },
+      "choose_rooms": {
+        "title": "Räume auswählen",
+        "description": "Zu überwachende Räume → Quelle → Allgemeine Einstellungen",
+        "data": {
+          "areas": "Zu überwachende Räume"
+        },
+        "data_description": {
+          "areas": "Zu überwachende Räume. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung."
+        }
+      },
+      "room_settings": {
+        "title": "Einstellungen · {area_name}",
+        "description": "Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+        "data": {
+          "windows": "Fenster",
+          "air_quality": "Luftqualitäts- und Umgebungssensoren",
+          "temperature": "Temperatur",
+          "humidity": "Luftfeuchtigkeit",
+          "pressure": "Drucksensoren",
+          "climate_devices": "Geräte",
+          "shades": "Fensterrollos, Jalousien und Rollläden",
+          "occupancy_sensors": "Präsenzsensoren in diesem Raum"
+        },
+        "data_description": {
+          "windows": "Fenster. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "air_quality": "Luftqualitäts- und Umgebungssensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "temperature": "Temperatur. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "humidity": "Luftfeuchtigkeit. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "pressure": "Drucksensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
+          "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
+          "occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Präsenzsensoren in diesem Raum“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "Einstellungen auswählen",
         "description": "Wähle eine Einstellungsgruppe. Alle anderen Einstellungen bleiben unverändert.",
         "menu_options": {
-          "room_occupancy": "Präsenzsensoren pro Raum",
-          "outside_data": "Außendaten",
-          "general_settings": "Allgemeine Einstellungen",
-          "area_settings": "Bereichseinstellungen",
-          "delivery": "Ansagen (optional)",
-          "thresholds": "Erweiterte Grenzwerte",
-          "climate": "Klima - Raum auswählen",
-          "pid": "Klima-PID - Raum wählen",
-          "setup_rooms": "Zu überwachende Räume"
+          "choose_rooms": "Räume auswählen",
+          "general_settings": "Allgemeine Einstellungen"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Zuhause · Away · cooldown (min)",
           "away_open_window_alert": "Bei offenen Fenstern nach Verlassen des Hauses warnen",
           "away_windows_target_people": "Zu benachrichtigende Personen",
-          "away_windows_delivery_channels": "Zustellwege für offene Fenster"
+          "away_windows_delivery_channels": "Zustellwege für offene Fenster",
+          "global_threshold_outdoor_aqi": "Maximaler Außen-AQI",
+          "global_threshold_outdoor_co2": "Maximaler CO₂-Wert außen (ppm)",
+          "global_threshold_outdoor_pm25": "Maximaler PM2,5-Wert außen (µg/m³)",
+          "global_threshold_outdoor_pm10": "Maximaler PM10-Wert außen (µg/m³)",
+          "global_threshold_outdoor_voc": "Maximaler VOC-Wert außen (µg/m³)",
+          "global_threshold_outdoor_voc_parts": "Maximaler VOC-Wert außen (ppb)",
+          "global_threshold_outdoor_no2": "Außenluft NO₂ - Richtwert (µg/m³)",
+          "global_threshold_outdoor_o3": "Außenluft O₃ - Richtwert (µg/m³)",
+          "global_threshold_outdoor_so2": "Außenluft SO₂ - Richtwert (µg/m³)",
+          "global_threshold_indoor_aqi": "Innen-AQI als Lüftungsschwelle",
+          "global_threshold_indoor_co2": "CO₂-Grenzwert innen für Lüftung (ppm)",
+          "global_threshold_indoor_pm25": "PM2,5-Grenzwert innen für Lüftung (µg/m³)",
+          "global_threshold_indoor_pm10": "PM10-Grenzwert innen für Lüftung (µg/m³)",
+          "global_threshold_indoor_voc": "VOC-Grenzwert innen für Lüftung (µg/m³)",
+          "global_threshold_indoor_voc_parts": "VOC-Grenzwert innen für Lüftung (ppb)",
+          "global_threshold_indoor_humidity": "Luftfeuchte innen als Lüftungsschwelle (%)",
+          "global_threshold_min_outdoor_temp": "Minimale Außentemperatur (°C)",
+          "global_threshold_max_outdoor_temp": "Maximale Außentemperatur (°C)",
+          "global_threshold_max_outdoor_humidity": "Maximale Außenluftfeuchte (%)",
+          "global_threshold_max_wind_kmh": "Maximale Windgeschwindigkeit (km/h)",
+          "global_threshold_max_age_minutes": "Höchstalter einer Außenmessung (Minuten)",
+          "global_threshold_indoor_mold": "Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)",
+          "pollen_high_from": "Pollenindex ab diesem Wert hoch",
+          "pollen_max_scale": "Maximalwert der Pollen-Skala",
+          "pollen_avoid_ventilation": "Bei hoher Pollenbelastung Lüften vermeiden",
+          "general_source_stale_minutes": "Maximales Datenalter für Raumbelegung/Schlaf (Minuten)",
+          "general_home_policy": "Zuhause · Belegung · Steuerung"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Nach einer frisch bestätigten leeren Raumbelegung so viele Minuten warten, bevor Away gilt. Unbekannte oder veraltete Daten lösen Away nicht aus.",
           "away_open_window_alert": "Standardmäßig aus. Sofortige Meldung, sobald alle ausgewählten Anwesenheitsquellen Abwesenheit bestätigen. Number-/input_number-Zähler: 0 = niemand da, positiv = anwesend. Unbekannte Werte beweisen keine Abwesenheit. Es werden nur echte offene Fenster gemeldet. Kein erneutes Senden beim Neustart während Abwesenheit; neue Fenster können erneut gemeldet werden.",
           "away_windows_target_people": "Wähle konkrete person.*-Einträge in Home Assistant. Für jede Person muss das passende Handy/Uhr-Ziel in Announcement Hub zugeordnet sein. Eine fehlende Zuordnung führt niemals zu einem Raum-Rundruf.",
-          "away_windows_delivery_channels": "Mehrfachauswahl von Handy/Uhr/Tablet-Push oder Companion-App-Sprachausgabe. Jeder gewählte Kanal wird nur an die zugeordneten Geräte dieser Personen gesendet, nicht an Lautsprecher zu Hause."
+          "away_windows_delivery_channels": "Mehrfachauswahl von Handy/Uhr/Tablet-Push oder Companion-App-Sprachausgabe. Jeder gewählte Kanal wird nur an die zugeordneten Geräte dieser Personen gesendet, nicht an Lautsprecher zu Hause.",
+          "global_threshold_outdoor_aqi": "Dies ist ein Entscheidungswert für „Maximaler Außen-AQI“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_co2": "Dies ist ein Entscheidungswert für „Maximaler CO₂-Wert außen (ppm)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_pm25": "Dies ist ein Entscheidungswert für „Maximaler PM2,5-Wert außen (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_pm10": "Dies ist ein Entscheidungswert für „Maximaler PM10-Wert außen (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_voc": "Dies ist ein Entscheidungswert für „Maximaler VOC-Wert außen (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_voc_parts": "Dies ist ein Entscheidungswert für „Maximaler VOC-Wert außen (ppb)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_no2": "Dies ist ein Entscheidungswert für „Außenluft NO₂ - Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_o3": "Dies ist ein Entscheidungswert für „Außenluft O₃ - Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_outdoor_so2": "Dies ist ein Entscheidungswert für „Außenluft SO₂ - Richtwert (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_aqi": "Dies ist ein Entscheidungswert für „Innen-AQI als Lüftungsschwelle“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_co2": "Dies ist ein Entscheidungswert für „CO₂-Grenzwert innen für Lüftung (ppm)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_pm25": "Dies ist ein Entscheidungswert für „PM2,5-Grenzwert innen für Lüftung (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_pm10": "Dies ist ein Entscheidungswert für „PM10-Grenzwert innen für Lüftung (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_voc": "Dies ist ein Entscheidungswert für „VOC-Grenzwert innen für Lüftung (µg/m³)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_voc_parts": "Dies ist ein Entscheidungswert für „VOC-Grenzwert innen für Lüftung (ppb)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_humidity": "Dies ist ein Entscheidungswert für „Luftfeuchte innen als Lüftungsschwelle (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_min_outdoor_temp": "Dies ist ein Entscheidungswert für „Minimale Außentemperatur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_max_outdoor_temp": "Dies ist ein Entscheidungswert für „Maximale Außentemperatur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_max_outdoor_humidity": "Dies ist ein Entscheidungswert für „Maximale Außenluftfeuchte (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_max_wind_kmh": "Dies ist ein Entscheidungswert für „Maximale Windgeschwindigkeit (km/h)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_max_age_minutes": "Dies ist ein Entscheidungswert für „Höchstalter einer Außenmessung (Minuten)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "global_threshold_indoor_mold": "Dies ist ein Entscheidungswert für „Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "pollen_high_from": "Die Pollen-Warnschwelle hängt von der Skala des Anbieters ab.",
+          "pollen_max_scale": "Oberster Zahlenwert der Anbieterskala, z. B. 5.",
+          "pollen_avoid_ventilation": "Hohe Pollenwerte können die Empfehlung zum Fensteröffnen optional sperren.",
+          "general_source_stale_minutes": "Maximales Alter der letzten Quellenaktualisierung, bevor die Raum-/Schlafliste als unbekannt gilt. Keine Mindestschlafdauer. Standard: 240 Minuten. Veraltete Daten dürfen kein automatisches Ausschalten auslösen.",
+          "general_home_policy": "Diese Option steuert „Zuhause · Belegung · Steuerung“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Raumsensoren werden vorausgewählt und können entfernt werden. Eine gültige Raumliste, auch leer, hat Vorrang. Nur bei unbekannter, nicht verfügbarer oder veralteter Liste werden gewählte Sensoren verwendet."
+        }
+      },
+      "choose_rooms": {
+        "title": "Räume auswählen",
+        "description": "Zu überwachende Räume → Quelle → Allgemeine Einstellungen",
+        "data": {
+          "areas": "Zu überwachende Räume"
+        },
+        "data_description": {
+          "areas": "Zu überwachende Räume. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung."
+        }
+      },
+      "room_settings": {
+        "title": "Einstellungen · {area_name}",
+        "description": "Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+        "data": {
+          "windows": "Fenster",
+          "air_quality": "Luftqualitäts- und Umgebungssensoren",
+          "temperature": "Temperatur",
+          "humidity": "Luftfeuchtigkeit",
+          "pressure": "Drucksensoren",
+          "climate_devices": "Geräte",
+          "shades": "Fensterrollos, Jalousien und Rollläden",
+          "occupancy_sensors": "Präsenzsensoren in diesem Raum"
+        },
+        "data_description": {
+          "windows": "Fenster. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "air_quality": "Luftqualitäts- und Umgebungssensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "temperature": "Temperatur. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "humidity": "Luftfeuchtigkeit. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "pressure": "Drucksensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
+          "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
+          "occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Präsenzsensoren in diesem Raum“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion."
         }
       }
     },

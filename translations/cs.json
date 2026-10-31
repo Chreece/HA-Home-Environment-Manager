@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Domov · Away · cooldown (min)",
           "away_open_window_alert": "Upozornit na otevřená okna po odchodu všech",
           "away_windows_target_people": "Příjemci upozornění",
-          "away_windows_delivery_channels": "Kanály upozornění na okna"
+          "away_windows_delivery_channels": "Kanály upozornění na okna",
+          "global_threshold_outdoor_aqi": "Venku · AQI (≤)",
+          "global_threshold_outdoor_co2": "Venku · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Venku · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Venku · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Venku · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Venku · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Venkovní (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Venkovní (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Venkovní (µg/m³)",
+          "global_threshold_indoor_aqi": "Kvalita vzduchu · AQI (≥)",
+          "global_threshold_indoor_co2": "Kvalita vzduchu · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Kvalita vzduchu · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Kvalita vzduchu · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Kvalita vzduchu · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Kvalita vzduchu · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Kvalita vzduchu · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Venku · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Venku · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Venku · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Počasí a výstrahy · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Otevřete (min, ≤)",
+          "global_threshold_indoor_mold": "Indikátor plísní · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pyl · HIGH",
+          "pollen_max_scale": "POLLEN · Pyl · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pyl · NO VENT",
+          "general_source_stale_minutes": "zdroj · max (min)",
+          "general_home_policy": "Domov · Obsazenost · řízení"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · Domov · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Upozornit na otevřená okna po odchodu všech. Příjemci upozornění (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Hodinky, Tablet.",
           "away_windows_target_people": "Příjemci upozornění (person.*) - Announcement Hub: Telefon, Hodinky, Tablet, Jiné zařízení. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanály upozornění na okna: Telefon Oznámení / Hlas TTS, Hodinky Oznámení / Hlas TTS, Tablet Oznámení / Hlas TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanály upozornění na okna: Telefon Oznámení / Hlas TTS, Hodinky Oznámení / Hlas TTS, Tablet Oznámení / Hlas TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Rozhodovací práh pro „Venku · AQI (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_co2": "Rozhodovací práh pro „Venku · CO₂ (ppm) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_pm25": "Rozhodovací práh pro „Venku · PM2.5 (µg/m³) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_pm10": "Rozhodovací práh pro „Venku · PM10 (µg/m³) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_voc": "Rozhodovací práh pro „Venku · VOC (µg/m³) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_voc_parts": "Rozhodovací práh pro „Venku · VOC (ppb) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_no2": "Rozhodovací práh pro „NO₂ · Venkovní (µg/m³)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_o3": "Rozhodovací práh pro „O₃ · Venkovní (µg/m³)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_so2": "Rozhodovací práh pro „SO₂ · Venkovní (µg/m³)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_aqi": "Rozhodovací práh pro „Kvalita vzduchu · AQI (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_co2": "Rozhodovací práh pro „Kvalita vzduchu · CO₂ (ppm) (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_pm25": "Rozhodovací práh pro „Kvalita vzduchu · PM2.5 (µg/m³) (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_pm10": "Rozhodovací práh pro „Kvalita vzduchu · PM10 (µg/m³) (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_voc": "Rozhodovací práh pro „Kvalita vzduchu · VOC (µg/m³) (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_voc_parts": "Rozhodovací práh pro „Kvalita vzduchu · VOC (ppb) (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_humidity": "Rozhodovací práh pro „Kvalita vzduchu · RH (%) (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_min_outdoor_temp": "Rozhodovací práh pro „Venku · °C (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_max_outdoor_temp": "Rozhodovací práh pro „Venku · °C (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_max_outdoor_humidity": "Rozhodovací práh pro „Venku · RH (%) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_max_wind_kmh": "Rozhodovací práh pro „Počasí a výstrahy · km/h (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_max_age_minutes": "Rozhodovací práh pro „⏱ · Otevřete (min, ≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_mold": "Rozhodovací práh pro „Indikátor plísní · ≥ 70%“. Ovlivňuje doporučení, není lékařským limitem.",
+          "pollen_high_from": "Nastavte „POLLEN · Pyl · HIGH“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
+          "pollen_max_scale": "Nastavte „POLLEN · Pyl · SCALE“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
+          "pollen_avoid_ventilation": "Nastavte „POLLEN · Pyl · NO VENT“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
+          "general_source_stale_minutes": "zdroj · Spánek / Obsazenost · max 240 min. Neplatné · Vypnout.",
+          "general_home_policy": "Tato volba řídí „Domov · Obsazenost · řízení“. Fyzické příkazy vyžadují samostatný souhlas a ochrany."
         }
       },
       "reconfigure": {
         "title": "⚙️ Vyberte",
         "description": "Vyberte: Místnosti / Počasí a výstrahy / Oznámení (volitelně) / Pokročilé limity",
         "menu_options": {
-          "room_occupancy": "Obsazenost · senzor",
-          "outside_data": "Venkovní · zdroj",
-          "general_settings": "Obecná · nastavení",
-          "area_settings": "Oblast · nastavení",
-          "delivery": "Oznámení (volitelně)",
-          "thresholds": "Pokročilé limity",
-          "climate": "nastavení · Zařízení",
-          "pid": "nastavení · PID",
-          "setup_rooms": "Sledované místnosti"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Obecná nastavení"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Sledované místnosti → zdroj → Obecná nastavení",
+        "data": {
+          "areas": "Sledované místnosti"
+        },
+        "data_description": {
+          "areas": "Sledované místnosti. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+        "data": {
+          "windows": "Okna",
+          "air_quality": "Snímače kvality vzduchu a prostředí",
+          "temperature": "Teplota",
+          "humidity": "Vlhkost",
+          "pressure": "Snímače tlaku",
+          "climate_devices": "Zařízení",
+          "shades": "Okenní rolety, žaluzie a závěsy",
+          "occupancy_sensors": "Obsazenost · senzor"
+        },
+        "data_description": {
+          "windows": "Okna. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "air_quality": "Snímače kvality vzduchu a prostředí. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "temperature": "Teplota. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "pressure": "Snímače tlaku. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
+          "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje.",
+          "occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Vyberte",
         "description": "Vyberte: Místnosti / Počasí a výstrahy / Oznámení (volitelně) / Pokročilé limity",
         "menu_options": {
-          "room_occupancy": "Obsazenost · senzor",
-          "outside_data": "Venkovní · zdroj",
-          "general_settings": "Obecná · nastavení",
-          "area_settings": "Oblast · nastavení",
-          "delivery": "Oznámení (volitelně)",
-          "thresholds": "Pokročilé limity",
-          "climate": "nastavení · Zařízení",
-          "pid": "nastavení · PID",
-          "setup_rooms": "Sledované místnosti"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Obecná nastavení"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Domov · Away · cooldown (min)",
           "away_open_window_alert": "Upozornit na otevřená okna po odchodu všech",
           "away_windows_target_people": "Příjemci upozornění",
-          "away_windows_delivery_channels": "Kanály upozornění na okna"
+          "away_windows_delivery_channels": "Kanály upozornění na okna",
+          "global_threshold_outdoor_aqi": "Venku · AQI (≤)",
+          "global_threshold_outdoor_co2": "Venku · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Venku · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Venku · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Venku · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Venku · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Venkovní (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Venkovní (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Venkovní (µg/m³)",
+          "global_threshold_indoor_aqi": "Kvalita vzduchu · AQI (≥)",
+          "global_threshold_indoor_co2": "Kvalita vzduchu · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Kvalita vzduchu · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Kvalita vzduchu · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Kvalita vzduchu · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Kvalita vzduchu · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Kvalita vzduchu · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Venku · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Venku · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Venku · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Počasí a výstrahy · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Otevřete (min, ≤)",
+          "global_threshold_indoor_mold": "Indikátor plísní · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pyl · HIGH",
+          "pollen_max_scale": "POLLEN · Pyl · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pyl · NO VENT",
+          "general_source_stale_minutes": "zdroj · max (min)",
+          "general_home_policy": "Domov · Obsazenost · řízení"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · Domov · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Upozornit na otevřená okna po odchodu všech. Příjemci upozornění (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Hodinky, Tablet.",
           "away_windows_target_people": "Příjemci upozornění (person.*) - Announcement Hub: Telefon, Hodinky, Tablet, Jiné zařízení. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanály upozornění na okna: Telefon Oznámení / Hlas TTS, Hodinky Oznámení / Hlas TTS, Tablet Oznámení / Hlas TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanály upozornění na okna: Telefon Oznámení / Hlas TTS, Hodinky Oznámení / Hlas TTS, Tablet Oznámení / Hlas TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Rozhodovací práh pro „Venku · AQI (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_co2": "Rozhodovací práh pro „Venku · CO₂ (ppm) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_pm25": "Rozhodovací práh pro „Venku · PM2.5 (µg/m³) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_pm10": "Rozhodovací práh pro „Venku · PM10 (µg/m³) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_voc": "Rozhodovací práh pro „Venku · VOC (µg/m³) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_voc_parts": "Rozhodovací práh pro „Venku · VOC (ppb) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_no2": "Rozhodovací práh pro „NO₂ · Venkovní (µg/m³)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_o3": "Rozhodovací práh pro „O₃ · Venkovní (µg/m³)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_outdoor_so2": "Rozhodovací práh pro „SO₂ · Venkovní (µg/m³)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_aqi": "Rozhodovací práh pro „Kvalita vzduchu · AQI (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_co2": "Rozhodovací práh pro „Kvalita vzduchu · CO₂ (ppm) (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_pm25": "Rozhodovací práh pro „Kvalita vzduchu · PM2.5 (µg/m³) (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_pm10": "Rozhodovací práh pro „Kvalita vzduchu · PM10 (µg/m³) (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_voc": "Rozhodovací práh pro „Kvalita vzduchu · VOC (µg/m³) (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_voc_parts": "Rozhodovací práh pro „Kvalita vzduchu · VOC (ppb) (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_humidity": "Rozhodovací práh pro „Kvalita vzduchu · RH (%) (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_min_outdoor_temp": "Rozhodovací práh pro „Venku · °C (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_max_outdoor_temp": "Rozhodovací práh pro „Venku · °C (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_max_outdoor_humidity": "Rozhodovací práh pro „Venku · RH (%) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_max_wind_kmh": "Rozhodovací práh pro „Počasí a výstrahy · km/h (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_max_age_minutes": "Rozhodovací práh pro „⏱ · Otevřete (min, ≤)“. Ovlivňuje doporučení, není lékařským limitem.",
+          "global_threshold_indoor_mold": "Rozhodovací práh pro „Indikátor plísní · ≥ 70%“. Ovlivňuje doporučení, není lékařským limitem.",
+          "pollen_high_from": "Nastavte „POLLEN · Pyl · HIGH“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
+          "pollen_max_scale": "Nastavte „POLLEN · Pyl · SCALE“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
+          "pollen_avoid_ventilation": "Nastavte „POLLEN · Pyl · NO VENT“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
+          "general_source_stale_minutes": "zdroj · Spánek / Obsazenost · max 240 min. Neplatné · Vypnout.",
+          "general_home_policy": "Tato volba řídí „Domov · Obsazenost · řízení“. Fyzické příkazy vyžadují samostatný souhlas a ochrany."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Sledované místnosti → zdroj → Obecná nastavení",
+        "data": {
+          "areas": "Sledované místnosti"
+        },
+        "data_description": {
+          "areas": "Sledované místnosti. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+        "data": {
+          "windows": "Okna",
+          "air_quality": "Snímače kvality vzduchu a prostředí",
+          "temperature": "Teplota",
+          "humidity": "Vlhkost",
+          "pressure": "Snímače tlaku",
+          "climate_devices": "Zařízení",
+          "shades": "Okenní rolety, žaluzie a závěsy",
+          "occupancy_sensors": "Obsazenost · senzor"
+        },
+        "data_description": {
+          "windows": "Okna. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "air_quality": "Snímače kvality vzduchu a prostředí. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "temperature": "Teplota. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "pressure": "Snímače tlaku. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
+          "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje.",
+          "occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci."
         }
       }
     },

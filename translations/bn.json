@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "বাড়ি · Away · cooldown (min)",
           "away_open_window_alert": "সবাই বের হলে খোলা জানালার সতর্কতা দিন",
           "away_windows_target_people": "বিজ্ঞপ্তি পাবেন যাঁরা",
-          "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম"
+          "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম",
+          "global_threshold_outdoor_aqi": "বাইরে · AQI (≤)",
+          "global_threshold_outdoor_co2": "বাইরে · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "বাইরে · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "বাইরে · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "বাইরে · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "বাইরে · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · বাইরের (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · বাইরের (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · বাইরের (µg/m³)",
+          "global_threshold_indoor_aqi": "বায়ুর মান · AQI (≥)",
+          "global_threshold_indoor_co2": "বায়ুর মান · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "বায়ুর মান · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "বায়ুর মান · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "বায়ুর মান · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "বায়ুর মান · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "বায়ুর মান · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "বাইরে · °C (≥)",
+          "global_threshold_max_outdoor_temp": "বাইরে · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "বাইরে · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "আবহাওয়া ও সতর্কতা · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · খুলুন (min, ≤)",
+          "global_threshold_indoor_mold": "ছাঁচের সূচক · ≥ 70%",
+          "pollen_high_from": "POLLEN · পরাগ · HIGH",
+          "pollen_max_scale": "POLLEN · পরাগ · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · পরাগ · NO VENT",
+          "general_source_stale_minutes": "উৎস · max (min)",
+          "general_home_policy": "বাড়ি · উপস্থিতি · নিয়ন্ত্রণ"
         },
         "data_description": {
           "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · বাড়ি · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "সবাই বের হলে খোলা জানালার সতর্কতা দিন. বিজ্ঞপ্তি পাবেন যাঁরা (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. ফোন, ঘড়ি, ট্যাবলেট.",
           "away_windows_target_people": "বিজ্ঞপ্তি পাবেন যাঁরা (person.*) - Announcement Hub: ফোন, ঘড়ি, ট্যাবলেট, অন্য ডিভাইস. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম: ফোন বিজ্ঞপ্তি / TTS কথা, ঘড়ি বিজ্ঞপ্তি / TTS কথা, ট্যাবলেট বিজ্ঞপ্তি / TTS কথা. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম: ফোন বিজ্ঞপ্তি / TTS কথা, ঘড়ি বিজ্ঞপ্তি / TTS কথা, ট্যাবলেট বিজ্ঞপ্তি / TTS কথা. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "“বাইরে · AQI (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_co2": "“বাইরে · CO₂ (ppm) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_pm25": "“বাইরে · PM2.5 (µg/m³) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_pm10": "“বাইরে · PM10 (µg/m³) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_voc": "“বাইরে · VOC (µg/m³) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_voc_parts": "“বাইরে · VOC (ppb) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_no2": "“NO₂ · বাইরের (µg/m³)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_o3": "“O₃ · বাইরের (µg/m³)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_so2": "“SO₂ · বাইরের (µg/m³)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_aqi": "“বায়ুর মান · AQI (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_co2": "“বায়ুর মান · CO₂ (ppm) (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_pm25": "“বায়ুর মান · PM2.5 (µg/m³) (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_pm10": "“বায়ুর মান · PM10 (µg/m³) (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_voc": "“বায়ুর মান · VOC (µg/m³) (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_voc_parts": "“বায়ুর মান · VOC (ppb) (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_humidity": "“বায়ুর মান · RH (%) (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_min_outdoor_temp": "“বাইরে · °C (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_max_outdoor_temp": "“বাইরে · °C (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_max_outdoor_humidity": "“বাইরে · RH (%) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_max_wind_kmh": "“আবহাওয়া ও সতর্কতা · km/h (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_max_age_minutes": "“⏱ · খুলুন (min, ≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_mold": "“ছাঁচের সূচক · ≥ 70%” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "pollen_high_from": "“POLLEN · পরাগ · HIGH” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
+          "pollen_max_scale": "“POLLEN · পরাগ · SCALE” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
+          "pollen_avoid_ventilation": "“POLLEN · পরাগ · NO VENT” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
+          "general_source_stale_minutes": "উৎস · ঘুম / উপস্থিতি · max 240 min. অবৈধ · বন্ধ.",
+          "general_home_policy": "এই বিকল্প “বাড়ি · উপস্থিতি · নিয়ন্ত্রণ” নিয়ন্ত্রণ করে। যন্ত্রে আদেশ দিতে আলাদা অনুমতি ও স্বাধীন সুরক্ষা দরকার।"
         }
       },
       "reconfigure": {
         "title": "⚙️ নির্বাচন করুন",
         "description": "নির্বাচন করুন: কক্ষ / আবহাওয়া ও সতর্কতা / ঘোষণা (ঐচ্ছিক) / উন্নত সীমা",
         "menu_options": {
-          "room_occupancy": "উপস্থিতি · সেন্সর",
-          "outside_data": "বাইরের · উৎস",
-          "general_settings": "সাধারণ · সেটিংস",
-          "area_settings": "এলাকা · সেটিংস",
-          "delivery": "ঘোষণা (ঐচ্ছিক)",
-          "thresholds": "উন্নত সীমা",
-          "climate": "সেটিংস · ডিভাইস",
-          "pid": "সেটিংস · PID",
-          "setup_rooms": "পর্যবেক্ষণের ঘর"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "সাধারণ সেটিংস"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "পর্যবেক্ষণের ঘর → উৎস → সাধারণ সেটিংস",
+        "data": {
+          "areas": "পর্যবেক্ষণের ঘর"
+        },
+        "data_description": {
+          "areas": "পর্যবেক্ষণের ঘর. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।"
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
+        "data": {
+          "windows": "জানালা",
+          "air_quality": "বায়ুর গুণমান ও পরিবেশের সেন্সর",
+          "temperature": "তাপমাত্রা",
+          "humidity": "আর্দ্রতা",
+          "pressure": "চাপের সেন্সর",
+          "climate_devices": "ডিভাইস",
+          "shades": "জানালার পর্দা, ব্লাইন্ড ও শাটার",
+          "occupancy_sensors": "উপস্থিতি · সেন্সর"
+        },
+        "data_description": {
+          "windows": "জানালা. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
+          "air_quality": "বায়ুর গুণমান ও পরিবেশের সেন্সর. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
+          "temperature": "তাপমাত্রা. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
+          "humidity": "আর্দ্রতা. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
+          "pressure": "চাপের সেন্সর. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
+          "climate_devices": "ডিভাইস. এই ঘরের প্রকৃত climate.*, humidifier.* এবং fan.* সত্তা নির্বাচন করুন। ডিভাইসের নিজস্ব ক্ষমতা গরম, ঠান্ডা, আর্দ্রতা কমানো, লক্ষ্য মান ও ফ্যানের গতি নির্ধারণ করে। নির্বাচন করলে কিছু চালু হয় না; প্রতিটি নিয়ন্ত্রকে স্বয়ংক্রিয় নিয়ন্ত্রণ আলাদাভাবে চালু করুন।",
+          "shades": "জানালার পর্দা, ব্লাইন্ড ও শাটার. এই ঘরের cover.* জানালার ব্লাইন্ড, রোলার শাটার ও পর্দা নির্বাচন করুন। device_class না থাকলেও CLOSE সমর্থিত এবং এটি সত্যিকারের জানালার ছায়া হলে গ্রহণযোগ্য। গ্যারেজ, গেট, দরজা, জানালা ও বাইরের ছাউনি বাদ। নির্বাচন কিছু নড়ায় না; জানালার সেন্সর যুক্ত করে স্বয়ংক্রিয় নিয়ন্ত্রণ, ঘোষণা ও তাপমাত্রা নির্ধারণ করুন। অজানা অবস্থায় চলাচল বন্ধ।",
+          "occupancy_sensors": "“উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।"
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ নির্বাচন করুন",
         "description": "নির্বাচন করুন: কক্ষ / আবহাওয়া ও সতর্কতা / ঘোষণা (ঐচ্ছিক) / উন্নত সীমা",
         "menu_options": {
-          "room_occupancy": "উপস্থিতি · সেন্সর",
-          "outside_data": "বাইরের · উৎস",
-          "general_settings": "সাধারণ · সেটিংস",
-          "area_settings": "এলাকা · সেটিংস",
-          "delivery": "ঘোষণা (ঐচ্ছিক)",
-          "thresholds": "উন্নত সীমা",
-          "climate": "সেটিংস · ডিভাইস",
-          "pid": "সেটিংস · PID",
-          "setup_rooms": "পর্যবেক্ষণের ঘর"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "সাধারণ সেটিংস"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "বাড়ি · Away · cooldown (min)",
           "away_open_window_alert": "সবাই বের হলে খোলা জানালার সতর্কতা দিন",
           "away_windows_target_people": "বিজ্ঞপ্তি পাবেন যাঁরা",
-          "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম"
+          "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম",
+          "global_threshold_outdoor_aqi": "বাইরে · AQI (≤)",
+          "global_threshold_outdoor_co2": "বাইরে · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "বাইরে · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "বাইরে · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "বাইরে · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "বাইরে · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · বাইরের (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · বাইরের (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · বাইরের (µg/m³)",
+          "global_threshold_indoor_aqi": "বায়ুর মান · AQI (≥)",
+          "global_threshold_indoor_co2": "বায়ুর মান · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "বায়ুর মান · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "বায়ুর মান · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "বায়ুর মান · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "বায়ুর মান · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "বায়ুর মান · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "বাইরে · °C (≥)",
+          "global_threshold_max_outdoor_temp": "বাইরে · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "বাইরে · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "আবহাওয়া ও সতর্কতা · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · খুলুন (min, ≤)",
+          "global_threshold_indoor_mold": "ছাঁচের সূচক · ≥ 70%",
+          "pollen_high_from": "POLLEN · পরাগ · HIGH",
+          "pollen_max_scale": "POLLEN · পরাগ · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · পরাগ · NO VENT",
+          "general_source_stale_minutes": "উৎস · max (min)",
+          "general_home_policy": "বাড়ি · উপস্থিতি · নিয়ন্ত্রণ"
         },
         "data_description": {
           "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · বাড়ি · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "সবাই বের হলে খোলা জানালার সতর্কতা দিন. বিজ্ঞপ্তি পাবেন যাঁরা (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. ফোন, ঘড়ি, ট্যাবলেট.",
           "away_windows_target_people": "বিজ্ঞপ্তি পাবেন যাঁরা (person.*) - Announcement Hub: ফোন, ঘড়ি, ট্যাবলেট, অন্য ডিভাইস. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম: ফোন বিজ্ঞপ্তি / TTS কথা, ঘড়ি বিজ্ঞপ্তি / TTS কথা, ট্যাবলেট বিজ্ঞপ্তি / TTS কথা. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "জানালার সতর্কতার মাধ্যম: ফোন বিজ্ঞপ্তি / TTS কথা, ঘড়ি বিজ্ঞপ্তি / TTS কথা, ট্যাবলেট বিজ্ঞপ্তি / TTS কথা. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "“বাইরে · AQI (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_co2": "“বাইরে · CO₂ (ppm) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_pm25": "“বাইরে · PM2.5 (µg/m³) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_pm10": "“বাইরে · PM10 (µg/m³) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_voc": "“বাইরে · VOC (µg/m³) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_voc_parts": "“বাইরে · VOC (ppb) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_no2": "“NO₂ · বাইরের (µg/m³)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_o3": "“O₃ · বাইরের (µg/m³)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_outdoor_so2": "“SO₂ · বাইরের (µg/m³)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_aqi": "“বায়ুর মান · AQI (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_co2": "“বায়ুর মান · CO₂ (ppm) (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_pm25": "“বায়ুর মান · PM2.5 (µg/m³) (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_pm10": "“বায়ুর মান · PM10 (µg/m³) (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_voc": "“বায়ুর মান · VOC (µg/m³) (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_voc_parts": "“বায়ুর মান · VOC (ppb) (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_humidity": "“বায়ুর মান · RH (%) (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_min_outdoor_temp": "“বাইরে · °C (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_max_outdoor_temp": "“বাইরে · °C (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_max_outdoor_humidity": "“বাইরে · RH (%) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_max_wind_kmh": "“আবহাওয়া ও সতর্কতা · km/h (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_max_age_minutes": "“⏱ · খুলুন (min, ≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "global_threshold_indoor_mold": "“ছাঁচের সূচক · ≥ 70%” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
+          "pollen_high_from": "“POLLEN · পরাগ · HIGH” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
+          "pollen_max_scale": "“POLLEN · পরাগ · SCALE” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
+          "pollen_avoid_ventilation": "“POLLEN · পরাগ · NO VENT” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
+          "general_source_stale_minutes": "উৎস · ঘুম / উপস্থিতি · max 240 min. অবৈধ · বন্ধ.",
+          "general_home_policy": "এই বিকল্প “বাড়ি · উপস্থিতি · নিয়ন্ত্রণ” নিয়ন্ত্রণ করে। যন্ত্রে আদেশ দিতে আলাদা অনুমতি ও স্বাধীন সুরক্ষা দরকার।"
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "পর্যবেক্ষণের ঘর → উৎস → সাধারণ সেটিংস",
+        "data": {
+          "areas": "পর্যবেক্ষণের ঘর"
+        },
+        "data_description": {
+          "areas": "পর্যবেক্ষণের ঘর. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।"
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
+        "data": {
+          "windows": "জানালা",
+          "air_quality": "বায়ুর গুণমান ও পরিবেশের সেন্সর",
+          "temperature": "তাপমাত্রা",
+          "humidity": "আর্দ্রতা",
+          "pressure": "চাপের সেন্সর",
+          "climate_devices": "ডিভাইস",
+          "shades": "জানালার পর্দা, ব্লাইন্ড ও শাটার",
+          "occupancy_sensors": "উপস্থিতি · সেন্সর"
+        },
+        "data_description": {
+          "windows": "জানালা. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
+          "air_quality": "বায়ুর গুণমান ও পরিবেশের সেন্সর. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
+          "temperature": "তাপমাত্রা. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
+          "humidity": "আর্দ্রতা. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
+          "pressure": "চাপের সেন্সর. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
+          "climate_devices": "ডিভাইস. এই ঘরের প্রকৃত climate.*, humidifier.* এবং fan.* সত্তা নির্বাচন করুন। ডিভাইসের নিজস্ব ক্ষমতা গরম, ঠান্ডা, আর্দ্রতা কমানো, লক্ষ্য মান ও ফ্যানের গতি নির্ধারণ করে। নির্বাচন করলে কিছু চালু হয় না; প্রতিটি নিয়ন্ত্রকে স্বয়ংক্রিয় নিয়ন্ত্রণ আলাদাভাবে চালু করুন।",
+          "shades": "জানালার পর্দা, ব্লাইন্ড ও শাটার. এই ঘরের cover.* জানালার ব্লাইন্ড, রোলার শাটার ও পর্দা নির্বাচন করুন। device_class না থাকলেও CLOSE সমর্থিত এবং এটি সত্যিকারের জানালার ছায়া হলে গ্রহণযোগ্য। গ্যারেজ, গেট, দরজা, জানালা ও বাইরের ছাউনি বাদ। নির্বাচন কিছু নড়ায় না; জানালার সেন্সর যুক্ত করে স্বয়ংক্রিয় নিয়ন্ত্রণ, ঘোষণা ও তাপমাত্রা নির্ধারণ করুন। অজানা অবস্থায় চলাচল বন্ধ।",
+          "occupancy_sensors": "“উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।"
         }
       }
     },
