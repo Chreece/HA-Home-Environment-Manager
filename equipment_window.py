@@ -100,15 +100,38 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
     else:
         latest = max(closed_times)
         previous_since = previous.get("closed_since") if same else None
-        if previous.get("status") == "window_state_unknown" and same:
-            # A return of valid evidence is not proof it stayed closed while
-            # that evidence was unavailable.
+        if not previous:
+            # First valid observation of an already-CLOSED contact is a
+            # baseline, not proof of an OPEN -> CLOSED transition. HA often
+            # recreates all State objects on startup with last_changed=now,
+            # even though the physical contact never opened. Applying a 60s
+            # window-closure hold here mislabels every restart as a closure.
+            # The separate 300s startup hardware protection still applies.
+            latest = now - RESUME_SECONDS
+        elif not same:
+            # Adding/reassigning a selected contact cannot reuse evidence
+            # from the old selection, even when both currently report OFF.
             latest = now
-        if isinstance(previous_since, (float, int)) and 0 <= previous_since <= now:
+        elif previous.get("status") in ("window_open_pause",
+                                        "window_state_unknown"):
+            # This controller really observed an OPEN or UNKNOWN state.
+            # Require sixty *continuous* seconds of verified closure after
+            # it reappears as closed. No stale last_changed shortcut.
+            latest = now
+        elif previous.get("status") == "window_closed_ready":
+            # A previously verified continuous CLOSED observation stays ready
+            # without reopening. A refreshed HA last_changed timestamp alone
+            # is NOT a window transition and must not create a new hold.
+            latest = (previous_since
+                      if isinstance(previous_since, (int, float))
+                      and 0 <= previous_since <= now
+                      else now - RESUME_SECONDS)
+        elif (isinstance(previous_since, (float, int))
+              and 0 <= previous_since <= now):
+            # Ongoing real post-close warmup cannot be shortened by an
+            # unrelated state update. A newer genuine OFF timestamp may
+            # extend it, but can never bypass this safety hold.
             latest = max(latest, previous_since)
-        # Identity changes do not inherit another contact's completed hold.
-        if previous and not same:
-            latest = now
         remaining = max(0.0, RESUME_SECONDS - (now - latest))
         result.update(
             closed_since=latest, remaining_seconds=remaining,
