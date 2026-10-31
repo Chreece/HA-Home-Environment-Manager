@@ -1,4 +1,4 @@
-name: Publish Home Environment Manager beta 69
+name: Publish Home Environment Manager beta 70
 on:
   push:
     branches: ['release/v0.6.0b70']
