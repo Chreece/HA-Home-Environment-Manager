@@ -196,8 +196,10 @@ class EquipmentRuntime:
                         isinstance(upstream, dict) and upstream.get("pending")):
                     record["paused"] = "restart_reconciliation_required"
                     record.pop("restart_power_verification", None)
-                elif record.get("power") and record.get("paused") in (
-                        None, "restart_reconciliation_required"):
+                elif (record.get("power")
+                        and not record.get("restart_recovery_blocked")
+                        and record.get("paused") in (
+                            None, "restart_reconciliation_required")):
                     record["restart_power_verification"] = True
                     record.pop("paused", None)
             await self._save()
@@ -294,8 +296,11 @@ class EquipmentRuntime:
             self._status(spec, "source_deselected_or_moved")
             return False
         if record.get("pending"):
-            await self._pause(spec, "restart_reconciliation_required")
+            # Latch the failure DURABLY before saving the pause. Do not
+            # auto-clear it during the next HA restart.
             record.pop("restart_power_verification", None)
+            record["restart_recovery_blocked"] = True
+            await self._pause(spec, "restart_reconciliation_required")
             return False
         cfg = model.settings(self.manager, spec)
         cap = model.capabilities(self.manager, spec)
@@ -303,18 +308,27 @@ class EquipmentRuntime:
             self._status(spec, "waiting_for_physical_device")
             return False
         if cfg.get("control_mode") not in ("automatic", "pid", "manual", "off"):
-            await self._pause(spec, "restart_reconciliation_required")
+            # Latch the failure DURABLY before saving the pause. Do not
+            # auto-clear it during the next HA restart.
             record.pop("restart_power_verification", None)
+            record["restart_recovery_blocked"] = True
+            await self._pause(spec, "restart_reconciliation_required")
             return False
         _, authorized_power = model.permission(self.manager, spec, cap)
         if not authorized_power or not self._identity_ok(spec):
-            await self._pause(spec, "restart_reconciliation_required")
+            # Latch the failure DURABLY before saving the pause. Do not
+            # auto-clear it during the next HA restart.
             record.pop("restart_power_verification", None)
+            record["restart_recovery_blocked"] = True
+            await self._pause(spec, "restart_reconciliation_required")
             return False
         upstream = record.get("upstream", {})
         if isinstance(upstream, dict) and upstream.get("pending"):
-            await self._pause(spec, "restart_reconciliation_required")
+            # Latch the failure DURABLY before saving the pause. Do not
+            # auto-clear it during the next HA restart.
             record.pop("restart_power_verification", None)
+            record["restart_recovery_blocked"] = True
+            await self._pause(spec, "restart_reconciliation_required")
             return False
         supply = cfg.get("power_switch_entity")
         if supply and isinstance(upstream, dict) and upstream.get("owned"):
@@ -362,6 +376,7 @@ class EquipmentRuntime:
             revised[entity] = current
         record["baseline"].update(revised)
         record.pop("restart_power_verification", None)
+        record.pop("restart_recovery_blocked", None)
         await self._save()
         self._status(spec, "awaiting_evaluation",
                      reason="verified_owned_native_power_after_restart")
@@ -1138,6 +1153,7 @@ class EquipmentRuntime:
                 baseline=observed, off_at=next_off_at,
             )
             record.pop("restart_power_verification", None)
+            record.pop("restart_recovery_blocked", None)
             native_history = record.setdefault("native_power_observations", {})
             if not isinstance(native_history, dict):
                 raise HomeAssistantError("Stored native power observations are invalid")
