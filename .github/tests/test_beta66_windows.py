@@ -63,7 +63,14 @@ async def main():
    restored.now=BASE+elapsed
    next_state=restored._window_policy(spec)
    assert next_state['status']=='window_closed_ready', (elapsed,next_state)
+  # A NEW last_changed timestamp on a verified contact can hide a
+  # brief open->closed transition between control ticks. Conservatively
+  # enforce recovery in this situation (unlike the very first HA snapshot).
   contact(restored,'off',when=restored.now)
+  assert restored._window_policy(spec)['status']=='window_close_warmup'
+  restored.now+=59
+  assert restored._window_policy(spec)['blocked']
+  restored.now+=1
   assert restored._window_policy(spec)['status']=='window_closed_ready'
 
  # Real open->closed and unknown->closed transitions must still wait 60s.
