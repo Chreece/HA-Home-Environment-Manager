@@ -273,47 +273,86 @@ def home_presence(hass: Any, global_settings: Mapping,
     return "home", "no_trackers_assume_home", []
 
 
+def room_sensor_choices(hass: Any, area: str) -> list[str]:
+    """Default room occupancy selection from real HA area/device assignments.
+
+    Only binary sensors *explicitly classified* as presence or occupancy are
+    candidates. This is a default for legacy/unconfigured rooms, not an
+    authorization to override an explicit [] saved by the user.
+    """
+    return sorted(
+        state.entity_id for state in hass.states.async_all("binary_sensor")
+        if entity_area(hass, state.entity_id) == area
+        and str(state.attributes.get("device_class", "")).casefold()
+        in ("occupancy", "presence")
+    )
+
+
+def selected_room_sensors(hass: Any, area: str, settings: Mapping,
+                          global_settings: Mapping) -> list[str]:
+    """An explicit per-room selection (including []) overrides all defaults."""
+    local = settings.get("occupancy_sensors")
+    if isinstance(local, list):
+        candidates = local
+    else:
+        global_selected = global_settings.get("room_occupancy_sensors")
+        # Preserve explicitly configured legacy global room sensors until
+        # each room is saved; new room pickers use per-room settings only.
+        candidates = (
+            global_selected if isinstance(global_selected, list) and global_selected
+            else room_sensor_choices(hass, area)
+        )
+    return list(dict.fromkeys(
+        eid for eid in candidates
+        if isinstance(eid, str) and eid.startswith("binary_sensor.")
+        and entity_area(hass, eid) == area
+        and (state := hass.states.get(eid)) is not None
+        and str(state.attributes.get("device_class", "")).casefold()
+        in ("occupancy", "presence")
+    ))
+
+
 def room_presence(hass: Any, area: str, settings: Mapping,
                   global_settings: Mapping, *, known_areas: set[str],
                   ) -> tuple[str, str, list[str]]:
-    """Combine configured room sensor evidence and selected room-list entity.
+    """Authoritative room list, then selected local sensor fallback only.
 
-    Any affirmative evidence wins; negative evidence is valid only when every
-    configured source gives a fresh, explicit negative reading.
+    Valid list: a room omitted from it is immediately UNoccupied, regardless
+    of another sensor's ON reading. Valid empty string/list: all rooms are
+    unoccupied. Missing/unavailable/stale list: use the sensors explicitly
+    selected for this area; any fresh ON qualifies, all fresh OFF is negative.
+    Other broken list formats/unknown room names fail UNKNOWN and never
+    grant inferred presence or absence. An explicit [] sensor selection is
+    honoured even during fallback.
     """
-    local = settings.get("occupancy_sensors")
-    chosen = global_settings.get("room_occupancy_sensors", [])
-    if isinstance(local, list) and local:
-        sensors = local
-    elif isinstance(chosen, list) and chosen:
-        sensors = chosen
-    else:
-        sensors = [state.entity_id for state in hass.states.async_all("binary_sensor")
-                   if entity_area(hass, state.entity_id) == area and
-                   str(state.attributes.get("device_class", "")).casefold()
-                   in ("occupancy", "presence")]
-    area_sensors = [e for e in sensors if isinstance(e, str) and
-                    e.startswith(("binary_sensor.", "number.", "input_number.", "sensor."))
-                     and entity_area(hass, e) == area]
-    evidence: list[bool | None] = [
-        _bool_presence(hass.states.get(e),
-                       settings.get("occupancy_stale_minutes", 240))
-        for e in area_sensors
-    ]
+    sensors = selected_room_sensors(hass, area, settings, global_settings)
     entity = global_settings.get("occupied_rooms_entity")
-    if entity:
-        occupied, reason = configured_rooms(
+    has_list = isinstance(entity, str) and bool(entity) and entity != "none"
+    sources = list(dict.fromkeys(([entity] if has_list else []) + sensors))
+    if has_list:
+        rooms, reason = configured_rooms(
             hass, entity, global_settings.get("occupied_rooms_attribute"),
-            known_areas, max_age_minutes=global_settings.get("source_stale_minutes", 240))
-        evidence.append(None if occupied is None else area in occupied)
-    if any(value is True for value in evidence):
-        return "occupied", "verified_room_occupied", area_sensors
-    if evidence and all(value is False for value in evidence):
-        return "unoccupied", "all_configured_room_sources_empty", area_sensors
-    if evidence:
-        return "unknown", "room_occupancy_source_unknown", area_sensors
-    return "occupied", "no_room_presence_source_conservative", area_sensors
+            known_areas, max_age_minutes=global_settings.get("source_stale_minutes", 240),
+        )
+        if rooms is not None:
+            if area in rooms:
+                return "occupied", "verified_room_occupied", sources
+            return "unoccupied", "verified_room_list_unoccupied", sources
+        # Only absence of a trustworthy live report authorizes sensor fallback;
+        # malformed data and ambiguous area aliases must remain UNKNOWN.
+        if reason != "missing_or_stale_rooms_source":
+            return "unknown", reason, sources
 
+    values = [
+        _bool_presence(hass.states.get(eid),
+                       settings.get("occupancy_stale_minutes", 240))
+        for eid in sensors
+    ]
+    if any(value is True for value in values):
+        return "occupied", "selected_room_sensor_on", sources
+    if values and all(value is False for value in values):
+        return "unoccupied", "all_selected_room_sensors_off", sources
+    return "unknown", "room_occupancy_source_unknown", sources
 
 def sleep_presence(hass: Any, area: str, global_settings: Mapping,
                    known_areas: set[str]) -> tuple[bool | None, str]:
