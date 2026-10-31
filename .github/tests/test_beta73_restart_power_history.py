@@ -93,7 +93,11 @@ sys.modules.update({
 
 
 class Controller(Parent):
-    async_start=namespace['async_start']
+    async def async_start(self):
+        await namespace['async_start'](self)
+        # Real async_start restores records from the durable Store and swaps
+        # the dictionary. Keep the simulator's convenience alias in sync.
+        self.record = self.records[spec.identifier]
     _verify_restart_power=namespace['_verify_restart_power']
     _observe_native_running=namespace['_observe_native_running']
     _power=namespace['_power']
