@@ -1,0 +1,44 @@
+name: Beta79 three-section named-room Reconfigure tests
+on:
+  push:
+    branches: ['feat/beta79-room-reconfigure-sections-20261031']
+permissions:
+  contents: read
+jobs:
+  sections:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Source syntax, all 38 locales and real section implementation
+        run: |
+          set -euo pipefail
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I .github/tests/test_beta79_room_reconfigure.py
+          python -I .github/tests/test_beta78_room_occupancy.py
+      - name: Retain hardware, occupancy, state and restart protections
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta72_resume_running.py
+          python -I .github/tests/test_beta73_restart_power_history.py
+          python -I .github/tests/test_beta74_upstream_dwell.py
+          python -I .github/tests/test_beta75_native_supply_recovery.py
+          python -I .github/tests/test_beta77_offline_supply_resume.py
+          python -I .github/tests/test_beta77_dry_only_target.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+      - name: Real Home Assistant FlowHandler semantics, event stream and Chromium
+        run: |
+          set -euo pipefail
+          python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+          python -I .github/tests/test_beta68_events.py
+          python -I .github/tests/test_beta66_browser.py
+          python -I .github/tests/test_beta76_compact_browser.py
+          python -I - <<'PY'
+          from homeassistant.data_entry_flow import FlowHandler
+          assert 'menu_options' in FlowHandler.async_show_menu.__code__.co_varnames
+          print('HA_FLOW_MENU_MAPPING_INTERFACE=PASS')
+          PY
