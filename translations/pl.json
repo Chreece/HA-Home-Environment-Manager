@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Dom · Away · cooldown (min)",
           "away_open_window_alert": "Ostrzegaj o otwartych oknach po wyjściu wszystkich",
           "away_windows_target_people": "Osoby do powiadomienia",
-          "away_windows_delivery_channels": "Kanały powiadomień o oknach"
+          "away_windows_delivery_channels": "Kanały powiadomień o oknach",
+          "global_threshold_outdoor_aqi": "Na zewnątrz · AQI (≤)",
+          "global_threshold_outdoor_co2": "Na zewnątrz · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Na zewnątrz · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Na zewnątrz · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Na zewnątrz · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Na zewnątrz · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Zewnętrzne (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Zewnętrzne (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Zewnętrzne (µg/m³)",
+          "global_threshold_indoor_aqi": "Jakość powietrza · AQI (≥)",
+          "global_threshold_indoor_co2": "Jakość powietrza · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Jakość powietrza · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Jakość powietrza · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Jakość powietrza · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Jakość powietrza · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Jakość powietrza · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Na zewnątrz · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Na zewnątrz · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Na zewnątrz · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Pogoda i ostrzeżenia · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Otwórz (min, ≤)",
+          "global_threshold_indoor_mold": "Wskaźnik pleśni · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pyłki · HIGH",
+          "pollen_max_scale": "POLLEN · Pyłki · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pyłki · NO VENT",
+          "general_source_stale_minutes": "źródło · max (min)",
+          "general_home_policy": "Dom · Obecność · sterowanie"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń. · Dom · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Ostrzegaj o otwartych oknach po wyjściu wszystkich. Osoby do powiadomienia (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Zegarek, Tablet.",
           "away_windows_target_people": "Osoby do powiadomienia (person.*) - Announcement Hub: Telefon, Zegarek, Tablet, Inne urządzenie. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanały powiadomień o oknach: Telefon Powiadomienie / Mowa TTS, Zegarek Powiadomienie / Mowa TTS, Tablet Powiadomienie / Mowa TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanały powiadomień o oknach: Telefon Powiadomienie / Mowa TTS, Zegarek Powiadomienie / Mowa TTS, Tablet Powiadomienie / Mowa TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Próg decyzji dla „Na zewnątrz · AQI (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_co2": "Próg decyzji dla „Na zewnątrz · CO₂ (ppm) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_pm25": "Próg decyzji dla „Na zewnątrz · PM2.5 (µg/m³) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_pm10": "Próg decyzji dla „Na zewnątrz · PM10 (µg/m³) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_voc": "Próg decyzji dla „Na zewnątrz · VOC (µg/m³) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_voc_parts": "Próg decyzji dla „Na zewnątrz · VOC (ppb) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_no2": "Próg decyzji dla „NO₂ · Zewnętrzne (µg/m³)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_o3": "Próg decyzji dla „O₃ · Zewnętrzne (µg/m³)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_so2": "Próg decyzji dla „SO₂ · Zewnętrzne (µg/m³)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_aqi": "Próg decyzji dla „Jakość powietrza · AQI (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_co2": "Próg decyzji dla „Jakość powietrza · CO₂ (ppm) (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_pm25": "Próg decyzji dla „Jakość powietrza · PM2.5 (µg/m³) (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_pm10": "Próg decyzji dla „Jakość powietrza · PM10 (µg/m³) (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_voc": "Próg decyzji dla „Jakość powietrza · VOC (µg/m³) (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_voc_parts": "Próg decyzji dla „Jakość powietrza · VOC (ppb) (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_humidity": "Próg decyzji dla „Jakość powietrza · RH (%) (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_min_outdoor_temp": "Próg decyzji dla „Na zewnątrz · °C (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_max_outdoor_temp": "Próg decyzji dla „Na zewnątrz · °C (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_max_outdoor_humidity": "Próg decyzji dla „Na zewnątrz · RH (%) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_max_wind_kmh": "Próg decyzji dla „Pogoda i ostrzeżenia · km/h (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_max_age_minutes": "Próg decyzji dla „⏱ · Otwórz (min, ≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_mold": "Próg decyzji dla „Wskaźnik pleśni · ≥ 70%”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "pollen_high_from": "Ustaw „POLLEN · Pyłki · HIGH” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
+          "pollen_max_scale": "Ustaw „POLLEN · Pyłki · SCALE” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
+          "pollen_avoid_ventilation": "Ustaw „POLLEN · Pyłki · NO VENT” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
+          "general_source_stale_minutes": "źródło · Sen / Obecność · max 240 min. Nieprawidłowe · Wyłącz.",
+          "general_home_policy": "Ta opcja steruje „Dom · Obecność · sterowanie”. Polecenia sprzętowe wymagają osobnej zgody i zabezpieczeń."
         }
       },
       "reconfigure": {
         "title": "⚙️ Wybierz",
         "description": "Wybierz: Pomieszczenia / Pogoda i ostrzeżenia / Komunikaty (opcjonalnie) / Zaawansowane progi",
         "menu_options": {
-          "room_occupancy": "Obecność · czujnik",
-          "outside_data": "Zewnętrzne · źródło",
-          "general_settings": "Ogólne · ustawienia",
-          "area_settings": "Obszar · ustawienia",
-          "delivery": "Komunikaty (opcjonalnie)",
-          "thresholds": "Zaawansowane progi",
-          "climate": "ustawienia · Urządzenia",
-          "pid": "ustawienia · PID",
-          "setup_rooms": "Pomieszczenia do monitorowania"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Ogólne ustawienia"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Pomieszczenia do monitorowania → źródło → Ogólne ustawienia",
+        "data": {
+          "areas": "Pomieszczenia do monitorowania"
+        },
+        "data_description": {
+          "areas": "Pomieszczenia do monitorowania. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+        "data": {
+          "windows": "Okna",
+          "air_quality": "Czujniki jakości powietrza i otoczenia",
+          "temperature": "Temperatura",
+          "humidity": "Wilgotność",
+          "pressure": "Czujniki ciśnienia",
+          "climate_devices": "Urządzenia",
+          "shades": "Rolety, żaluzje i zasłony okienne",
+          "occupancy_sensors": "Obecność · czujnik"
+        },
+        "data_description": {
+          "windows": "Okna. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "air_quality": "Czujniki jakości powietrza i otoczenia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "temperature": "Temperatura. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "pressure": "Czujniki ciśnienia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
+          "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch.",
+          "occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · czujnik”. Brak lub stare dane wstrzymują działanie."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Wybierz",
         "description": "Wybierz: Pomieszczenia / Pogoda i ostrzeżenia / Komunikaty (opcjonalnie) / Zaawansowane progi",
         "menu_options": {
-          "room_occupancy": "Obecność · czujnik",
-          "outside_data": "Zewnętrzne · źródło",
-          "general_settings": "Ogólne · ustawienia",
-          "area_settings": "Obszar · ustawienia",
-          "delivery": "Komunikaty (opcjonalnie)",
-          "thresholds": "Zaawansowane progi",
-          "climate": "ustawienia · Urządzenia",
-          "pid": "ustawienia · PID",
-          "setup_rooms": "Pomieszczenia do monitorowania"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Ogólne ustawienia"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Dom · Away · cooldown (min)",
           "away_open_window_alert": "Ostrzegaj o otwartych oknach po wyjściu wszystkich",
           "away_windows_target_people": "Osoby do powiadomienia",
-          "away_windows_delivery_channels": "Kanały powiadomień o oknach"
+          "away_windows_delivery_channels": "Kanały powiadomień o oknach",
+          "global_threshold_outdoor_aqi": "Na zewnątrz · AQI (≤)",
+          "global_threshold_outdoor_co2": "Na zewnątrz · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Na zewnątrz · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Na zewnątrz · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Na zewnątrz · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Na zewnątrz · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Zewnętrzne (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Zewnętrzne (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Zewnętrzne (µg/m³)",
+          "global_threshold_indoor_aqi": "Jakość powietrza · AQI (≥)",
+          "global_threshold_indoor_co2": "Jakość powietrza · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Jakość powietrza · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Jakość powietrza · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Jakość powietrza · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Jakość powietrza · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Jakość powietrza · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Na zewnątrz · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Na zewnątrz · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Na zewnątrz · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Pogoda i ostrzeżenia · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Otwórz (min, ≤)",
+          "global_threshold_indoor_mold": "Wskaźnik pleśni · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pyłki · HIGH",
+          "pollen_max_scale": "POLLEN · Pyłki · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pyłki · NO VENT",
+          "general_source_stale_minutes": "źródło · max (min)",
+          "general_home_policy": "Dom · Obecność · sterowanie"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń. · Dom · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Ostrzegaj o otwartych oknach po wyjściu wszystkich. Osoby do powiadomienia (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Zegarek, Tablet.",
           "away_windows_target_people": "Osoby do powiadomienia (person.*) - Announcement Hub: Telefon, Zegarek, Tablet, Inne urządzenie. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanały powiadomień o oknach: Telefon Powiadomienie / Mowa TTS, Zegarek Powiadomienie / Mowa TTS, Tablet Powiadomienie / Mowa TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanały powiadomień o oknach: Telefon Powiadomienie / Mowa TTS, Zegarek Powiadomienie / Mowa TTS, Tablet Powiadomienie / Mowa TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Próg decyzji dla „Na zewnątrz · AQI (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_co2": "Próg decyzji dla „Na zewnątrz · CO₂ (ppm) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_pm25": "Próg decyzji dla „Na zewnątrz · PM2.5 (µg/m³) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_pm10": "Próg decyzji dla „Na zewnątrz · PM10 (µg/m³) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_voc": "Próg decyzji dla „Na zewnątrz · VOC (µg/m³) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_voc_parts": "Próg decyzji dla „Na zewnątrz · VOC (ppb) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_no2": "Próg decyzji dla „NO₂ · Zewnętrzne (µg/m³)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_o3": "Próg decyzji dla „O₃ · Zewnętrzne (µg/m³)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_outdoor_so2": "Próg decyzji dla „SO₂ · Zewnętrzne (µg/m³)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_aqi": "Próg decyzji dla „Jakość powietrza · AQI (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_co2": "Próg decyzji dla „Jakość powietrza · CO₂ (ppm) (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_pm25": "Próg decyzji dla „Jakość powietrza · PM2.5 (µg/m³) (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_pm10": "Próg decyzji dla „Jakość powietrza · PM10 (µg/m³) (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_voc": "Próg decyzji dla „Jakość powietrza · VOC (µg/m³) (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_voc_parts": "Próg decyzji dla „Jakość powietrza · VOC (ppb) (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_humidity": "Próg decyzji dla „Jakość powietrza · RH (%) (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_min_outdoor_temp": "Próg decyzji dla „Na zewnątrz · °C (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_max_outdoor_temp": "Próg decyzji dla „Na zewnątrz · °C (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_max_outdoor_humidity": "Próg decyzji dla „Na zewnątrz · RH (%) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_max_wind_kmh": "Próg decyzji dla „Pogoda i ostrzeżenia · km/h (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_max_age_minutes": "Próg decyzji dla „⏱ · Otwórz (min, ≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "global_threshold_indoor_mold": "Próg decyzji dla „Wskaźnik pleśni · ≥ 70%”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
+          "pollen_high_from": "Ustaw „POLLEN · Pyłki · HIGH” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
+          "pollen_max_scale": "Ustaw „POLLEN · Pyłki · SCALE” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
+          "pollen_avoid_ventilation": "Ustaw „POLLEN · Pyłki · NO VENT” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
+          "general_source_stale_minutes": "źródło · Sen / Obecność · max 240 min. Nieprawidłowe · Wyłącz.",
+          "general_home_policy": "Ta opcja steruje „Dom · Obecność · sterowanie”. Polecenia sprzętowe wymagają osobnej zgody i zabezpieczeń."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Pomieszczenia do monitorowania → źródło → Ogólne ustawienia",
+        "data": {
+          "areas": "Pomieszczenia do monitorowania"
+        },
+        "data_description": {
+          "areas": "Pomieszczenia do monitorowania. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+        "data": {
+          "windows": "Okna",
+          "air_quality": "Czujniki jakości powietrza i otoczenia",
+          "temperature": "Temperatura",
+          "humidity": "Wilgotność",
+          "pressure": "Czujniki ciśnienia",
+          "climate_devices": "Urządzenia",
+          "shades": "Rolety, żaluzje i zasłony okienne",
+          "occupancy_sensors": "Obecność · czujnik"
+        },
+        "data_description": {
+          "windows": "Okna. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "air_quality": "Czujniki jakości powietrza i otoczenia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "temperature": "Temperatura. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "pressure": "Czujniki ciśnienia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
+          "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch.",
+          "occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · czujnik”. Brak lub stare dane wstrzymują działanie."
         }
       }
     },

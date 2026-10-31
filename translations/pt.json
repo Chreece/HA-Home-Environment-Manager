@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
           "away_open_window_alert": "Avisar sobre janelas abertas depois de todos saírem",
           "away_windows_target_people": "Pessoas a avisar",
-          "away_windows_delivery_channels": "Canais de aviso de janelas abertas"
+          "away_windows_delivery_channels": "Canais de aviso de janelas abertas",
+          "global_threshold_outdoor_aqi": "Exterior · AQI (≤)",
+          "global_threshold_outdoor_co2": "Exterior · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Exterior · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Exterior · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Exterior · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Exterior · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Exterior (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Exterior (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Exterior (µg/m³)",
+          "global_threshold_indoor_aqi": "Qualidade do ar · AQI (≥)",
+          "global_threshold_indoor_co2": "Qualidade do ar · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Qualidade do ar · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Qualidade do ar · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Qualidade do ar · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Qualidade do ar · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Qualidade do ar · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Exterior · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Exterior · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Exterior · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Tempo e avisos · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Abra (min, ≤)",
+          "global_threshold_indoor_mold": "Indicador de bolor · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pólen · HIGH",
+          "pollen_max_scale": "POLLEN · Pólen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pólen · NO VENT",
+          "general_source_stale_minutes": "fonte · max (min)",
+          "general_home_policy": "Casa · Ocupação · controlo"
         },
         "data_description": {
           "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Casa · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Avisar sobre janelas abertas depois de todos saírem. Pessoas a avisar (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telemóvel, Relógio, Tablet.",
           "away_windows_target_people": "Pessoas a avisar (person.*) - Announcement Hub: Telemóvel, Relógio, Tablet, Outro dispositivo. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Canais de aviso de janelas abertas: Telemóvel Notificação / Voz TTS, Relógio Notificação / Voz TTS, Tablet Notificação / Voz TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Canais de aviso de janelas abertas: Telemóvel Notificação / Voz TTS, Relógio Notificação / Voz TTS, Tablet Notificação / Voz TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Limiar de decisão para «Exterior · AQI (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_co2": "Limiar de decisão para «Exterior · CO₂ (ppm) (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_pm25": "Limiar de decisão para «Exterior · PM2.5 (µg/m³) (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_pm10": "Limiar de decisão para «Exterior · PM10 (µg/m³) (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_voc": "Limiar de decisão para «Exterior · VOC (µg/m³) (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_voc_parts": "Limiar de decisão para «Exterior · VOC (ppb) (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_no2": "Limiar de decisão para «NO₂ · Exterior (µg/m³)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_o3": "Limiar de decisão para «O₃ · Exterior (µg/m³)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_so2": "Limiar de decisão para «SO₂ · Exterior (µg/m³)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_aqi": "Limiar de decisão para «Qualidade do ar · AQI (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_co2": "Limiar de decisão para «Qualidade do ar · CO₂ (ppm) (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_pm25": "Limiar de decisão para «Qualidade do ar · PM2.5 (µg/m³) (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_pm10": "Limiar de decisão para «Qualidade do ar · PM10 (µg/m³) (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_voc": "Limiar de decisão para «Qualidade do ar · VOC (µg/m³) (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_voc_parts": "Limiar de decisão para «Qualidade do ar · VOC (ppb) (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_humidity": "Limiar de decisão para «Qualidade do ar · RH (%) (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_min_outdoor_temp": "Limiar de decisão para «Exterior · °C (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_max_outdoor_temp": "Limiar de decisão para «Exterior · °C (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_max_outdoor_humidity": "Limiar de decisão para «Exterior · RH (%) (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_max_wind_kmh": "Limiar de decisão para «Tempo e avisos · km/h (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_max_age_minutes": "Limiar de decisão para «⏱ · Abra (min, ≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_mold": "Limiar de decisão para «Indicador de bolor · ≥ 70%». Afeta recomendações, não constitui limite médico.",
+          "pollen_high_from": "Configure «POLLEN · Pólen · HIGH» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
+          "pollen_max_scale": "Configure «POLLEN · Pólen · SCALE» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
+          "pollen_avoid_ventilation": "Configure «POLLEN · Pólen · NO VENT» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
+          "general_source_stale_minutes": "fonte · Sono / Ocupação · max 240 min. Inválido · Desligar.",
+          "general_home_policy": "Esta opção controla «Casa · Ocupação · controlo». Comandos físicos exigem autorização separada e proteções independentes."
         }
       },
       "reconfigure": {
         "title": "⚙️ Selecione",
         "description": "Selecione: Divisões / Tempo e avisos / Anúncios (opcional) / Limites avançados",
         "menu_options": {
-          "room_occupancy": "Ocupação · sensor",
-          "outside_data": "Exterior · fonte",
-          "general_settings": "Gerais · definições",
-          "area_settings": "Área · definições",
-          "delivery": "Anúncios (opcional)",
-          "thresholds": "Limites avançados",
-          "climate": "definições · Dispositivos",
-          "pid": "definições · PID",
-          "setup_rooms": "Divisões a monitorizar"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Gerais definições"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Divisões a monitorizar → fonte → Gerais definições",
+        "data": {
+          "areas": "Divisões a monitorizar"
+        },
+        "data_description": {
+          "areas": "Divisões a monitorizar. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+        "data": {
+          "windows": "Janelas",
+          "air_quality": "Sensores de qualidade do ar e do ambiente",
+          "temperature": "Temperatura",
+          "humidity": "Humidade",
+          "pressure": "Sensores de pressão",
+          "climate_devices": "Dispositivos",
+          "shades": "Estores, persianas e cortinas de janela",
+          "occupancy_sensors": "Ocupação · sensor"
+        },
+        "data_description": {
+          "windows": "Janelas. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "air_quality": "Sensores de qualidade do ar e do ambiente. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "temperature": "Temperatura. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "pressure": "Sensores de pressão. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
+          "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
+          "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Selecione",
         "description": "Selecione: Divisões / Tempo e avisos / Anúncios (opcional) / Limites avançados",
         "menu_options": {
-          "room_occupancy": "Ocupação · sensor",
-          "outside_data": "Exterior · fonte",
-          "general_settings": "Gerais · definições",
-          "area_settings": "Área · definições",
-          "delivery": "Anúncios (opcional)",
-          "thresholds": "Limites avançados",
-          "climate": "definições · Dispositivos",
-          "pid": "definições · PID",
-          "setup_rooms": "Divisões a monitorizar"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Gerais definições"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
           "away_open_window_alert": "Avisar sobre janelas abertas depois de todos saírem",
           "away_windows_target_people": "Pessoas a avisar",
-          "away_windows_delivery_channels": "Canais de aviso de janelas abertas"
+          "away_windows_delivery_channels": "Canais de aviso de janelas abertas",
+          "global_threshold_outdoor_aqi": "Exterior · AQI (≤)",
+          "global_threshold_outdoor_co2": "Exterior · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Exterior · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Exterior · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Exterior · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Exterior · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Exterior (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Exterior (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Exterior (µg/m³)",
+          "global_threshold_indoor_aqi": "Qualidade do ar · AQI (≥)",
+          "global_threshold_indoor_co2": "Qualidade do ar · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Qualidade do ar · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Qualidade do ar · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Qualidade do ar · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Qualidade do ar · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Qualidade do ar · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Exterior · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Exterior · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Exterior · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Tempo e avisos · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Abra (min, ≤)",
+          "global_threshold_indoor_mold": "Indicador de bolor · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pólen · HIGH",
+          "pollen_max_scale": "POLLEN · Pólen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pólen · NO VENT",
+          "general_source_stale_minutes": "fonte · max (min)",
+          "general_home_policy": "Casa · Ocupação · controlo"
         },
         "data_description": {
           "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Casa · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Avisar sobre janelas abertas depois de todos saírem. Pessoas a avisar (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telemóvel, Relógio, Tablet.",
           "away_windows_target_people": "Pessoas a avisar (person.*) - Announcement Hub: Telemóvel, Relógio, Tablet, Outro dispositivo. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Canais de aviso de janelas abertas: Telemóvel Notificação / Voz TTS, Relógio Notificação / Voz TTS, Tablet Notificação / Voz TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Canais de aviso de janelas abertas: Telemóvel Notificação / Voz TTS, Relógio Notificação / Voz TTS, Tablet Notificação / Voz TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Limiar de decisão para «Exterior · AQI (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_co2": "Limiar de decisão para «Exterior · CO₂ (ppm) (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_pm25": "Limiar de decisão para «Exterior · PM2.5 (µg/m³) (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_pm10": "Limiar de decisão para «Exterior · PM10 (µg/m³) (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_voc": "Limiar de decisão para «Exterior · VOC (µg/m³) (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_voc_parts": "Limiar de decisão para «Exterior · VOC (ppb) (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_no2": "Limiar de decisão para «NO₂ · Exterior (µg/m³)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_o3": "Limiar de decisão para «O₃ · Exterior (µg/m³)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_outdoor_so2": "Limiar de decisão para «SO₂ · Exterior (µg/m³)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_aqi": "Limiar de decisão para «Qualidade do ar · AQI (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_co2": "Limiar de decisão para «Qualidade do ar · CO₂ (ppm) (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_pm25": "Limiar de decisão para «Qualidade do ar · PM2.5 (µg/m³) (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_pm10": "Limiar de decisão para «Qualidade do ar · PM10 (µg/m³) (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_voc": "Limiar de decisão para «Qualidade do ar · VOC (µg/m³) (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_voc_parts": "Limiar de decisão para «Qualidade do ar · VOC (ppb) (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_humidity": "Limiar de decisão para «Qualidade do ar · RH (%) (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_min_outdoor_temp": "Limiar de decisão para «Exterior · °C (≥)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_max_outdoor_temp": "Limiar de decisão para «Exterior · °C (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_max_outdoor_humidity": "Limiar de decisão para «Exterior · RH (%) (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_max_wind_kmh": "Limiar de decisão para «Tempo e avisos · km/h (≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_max_age_minutes": "Limiar de decisão para «⏱ · Abra (min, ≤)». Afeta recomendações, não constitui limite médico.",
+          "global_threshold_indoor_mold": "Limiar de decisão para «Indicador de bolor · ≥ 70%». Afeta recomendações, não constitui limite médico.",
+          "pollen_high_from": "Configure «POLLEN · Pólen · HIGH» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
+          "pollen_max_scale": "Configure «POLLEN · Pólen · SCALE» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
+          "pollen_avoid_ventilation": "Configure «POLLEN · Pólen · NO VENT» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
+          "general_source_stale_minutes": "fonte · Sono / Ocupação · max 240 min. Inválido · Desligar.",
+          "general_home_policy": "Esta opção controla «Casa · Ocupação · controlo». Comandos físicos exigem autorização separada e proteções independentes."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Divisões a monitorizar → fonte → Gerais definições",
+        "data": {
+          "areas": "Divisões a monitorizar"
+        },
+        "data_description": {
+          "areas": "Divisões a monitorizar. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+        "data": {
+          "windows": "Janelas",
+          "air_quality": "Sensores de qualidade do ar e do ambiente",
+          "temperature": "Temperatura",
+          "humidity": "Humidade",
+          "pressure": "Sensores de pressão",
+          "climate_devices": "Dispositivos",
+          "shades": "Estores, persianas e cortinas de janela",
+          "occupancy_sensors": "Ocupação · sensor"
+        },
+        "data_description": {
+          "windows": "Janelas. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "air_quality": "Sensores de qualidade do ar e do ambiente. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "temperature": "Temperatura. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "pressure": "Sensores de pressão. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
+          "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
+          "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente."
         }
       }
     },

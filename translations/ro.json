@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Acasă · Away · cooldown (min)",
           "away_open_window_alert": "Avertizează pentru ferestre deschise după plecare",
           "away_windows_target_people": "Persoane de anunțat",
-          "away_windows_delivery_channels": "Canale pentru alerta ferestrelor"
+          "away_windows_delivery_channels": "Canale pentru alerta ferestrelor",
+          "global_threshold_outdoor_aqi": "Exterior · AQI (≤)",
+          "global_threshold_outdoor_co2": "Exterior · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Exterior · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Exterior · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Exterior · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Exterior · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Exterior (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Exterior (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Exterior (µg/m³)",
+          "global_threshold_indoor_aqi": "Calitatea aerului · AQI (≥)",
+          "global_threshold_indoor_co2": "Calitatea aerului · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Calitatea aerului · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Calitatea aerului · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Calitatea aerului · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Calitatea aerului · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Calitatea aerului · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Exterior · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Exterior · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Exterior · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Vreme și avertizări · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Deschideți (min, ≤)",
+          "global_threshold_indoor_mold": "Indicator de mucegai · ≥ 70%",
+          "pollen_high_from": "POLLEN · Polen · HIGH",
+          "pollen_max_scale": "POLLEN · Polen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Polen · NO VENT",
+          "general_source_stale_minutes": "sursă · max (min)",
+          "general_home_policy": "Acasă · Ocupare · control"
         },
         "data_description": {
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · Acasă · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Avertizează pentru ferestre deschise după plecare. Persoane de anunțat (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Ceas, Tabletă.",
           "away_windows_target_people": "Persoane de anunțat (person.*) - Announcement Hub: Telefon, Ceas, Tabletă, Alt dispozitiv. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Canale pentru alerta ferestrelor: Telefon Notificare / Voce TTS, Ceas Notificare / Voce TTS, Tabletă Notificare / Voce TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Canale pentru alerta ferestrelor: Telefon Notificare / Voce TTS, Ceas Notificare / Voce TTS, Tabletă Notificare / Voce TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Prag de decizie pentru „Exterior · AQI (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_co2": "Prag de decizie pentru „Exterior · CO₂ (ppm) (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_pm25": "Prag de decizie pentru „Exterior · PM2.5 (µg/m³) (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_pm10": "Prag de decizie pentru „Exterior · PM10 (µg/m³) (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_voc": "Prag de decizie pentru „Exterior · VOC (µg/m³) (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_voc_parts": "Prag de decizie pentru „Exterior · VOC (ppb) (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_no2": "Prag de decizie pentru „NO₂ · Exterior (µg/m³)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_o3": "Prag de decizie pentru „O₃ · Exterior (µg/m³)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_so2": "Prag de decizie pentru „SO₂ · Exterior (µg/m³)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_aqi": "Prag de decizie pentru „Calitatea aerului · AQI (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_co2": "Prag de decizie pentru „Calitatea aerului · CO₂ (ppm) (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_pm25": "Prag de decizie pentru „Calitatea aerului · PM2.5 (µg/m³) (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_pm10": "Prag de decizie pentru „Calitatea aerului · PM10 (µg/m³) (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_voc": "Prag de decizie pentru „Calitatea aerului · VOC (µg/m³) (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_voc_parts": "Prag de decizie pentru „Calitatea aerului · VOC (ppb) (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_humidity": "Prag de decizie pentru „Calitatea aerului · RH (%) (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_min_outdoor_temp": "Prag de decizie pentru „Exterior · °C (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_max_outdoor_temp": "Prag de decizie pentru „Exterior · °C (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_max_outdoor_humidity": "Prag de decizie pentru „Exterior · RH (%) (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_max_wind_kmh": "Prag de decizie pentru „Vreme și avertizări · km/h (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_max_age_minutes": "Prag de decizie pentru „⏱ · Deschideți (min, ≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_mold": "Prag de decizie pentru „Indicator de mucegai · ≥ 70%”. Influențează recomandările, nu este limită medicală.",
+          "pollen_high_from": "Configurați „POLLEN · Polen · HIGH” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
+          "pollen_max_scale": "Configurați „POLLEN · Polen · SCALE” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
+          "pollen_avoid_ventilation": "Configurați „POLLEN · Polen · NO VENT” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
+          "general_source_stale_minutes": "sursă · Somn / Ocupare · max 240 min. Invalid · Oprire.",
+          "general_home_policy": "Această opțiune controlează „Acasă · Ocupare · control”. Comenzile fizice cer acord separat și protecții independente."
         }
       },
       "reconfigure": {
         "title": "⚙️ Alegeți",
         "description": "Alegeți: Camere / Vreme și avertizări / Anunțuri (opțional) / Praguri avansate",
         "menu_options": {
-          "room_occupancy": "Ocupare · senzor",
-          "outside_data": "Exterior · sursă",
-          "general_settings": "Generale · setări",
-          "area_settings": "Zonă · setări",
-          "delivery": "Anunțuri (opțional)",
-          "thresholds": "Praguri avansate",
-          "climate": "setări · Dispozitive",
-          "pid": "setări · PID",
-          "setup_rooms": "Camere de monitorizat"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Generale setări"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Camere de monitorizat → sursă → Generale setări",
+        "data": {
+          "areas": "Camere de monitorizat"
+        },
+        "data_description": {
+          "areas": "Camere de monitorizat. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+        "data": {
+          "windows": "Ferestre",
+          "air_quality": "Senzori de calitate a aerului și de mediu",
+          "temperature": "Temperatură",
+          "humidity": "Umiditate",
+          "pressure": "Senzori de presiune",
+          "climate_devices": "Dispozitive",
+          "shades": "Jaluzele, rulouri și obloane",
+          "occupancy_sensors": "Ocupare · senzor"
+        },
+        "data_description": {
+          "windows": "Ferestre. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "air_quality": "Senzori de calitate a aerului și de mediu. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "temperature": "Temperatură. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "pressure": "Senzori de presiune. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
+          "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea.",
+          "occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Alegeți",
         "description": "Alegeți: Camere / Vreme și avertizări / Anunțuri (opțional) / Praguri avansate",
         "menu_options": {
-          "room_occupancy": "Ocupare · senzor",
-          "outside_data": "Exterior · sursă",
-          "general_settings": "Generale · setări",
-          "area_settings": "Zonă · setări",
-          "delivery": "Anunțuri (opțional)",
-          "thresholds": "Praguri avansate",
-          "climate": "setări · Dispozitive",
-          "pid": "setări · PID",
-          "setup_rooms": "Camere de monitorizat"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Generale setări"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Acasă · Away · cooldown (min)",
           "away_open_window_alert": "Avertizează pentru ferestre deschise după plecare",
           "away_windows_target_people": "Persoane de anunțat",
-          "away_windows_delivery_channels": "Canale pentru alerta ferestrelor"
+          "away_windows_delivery_channels": "Canale pentru alerta ferestrelor",
+          "global_threshold_outdoor_aqi": "Exterior · AQI (≤)",
+          "global_threshold_outdoor_co2": "Exterior · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Exterior · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Exterior · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Exterior · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Exterior · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Exterior (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Exterior (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Exterior (µg/m³)",
+          "global_threshold_indoor_aqi": "Calitatea aerului · AQI (≥)",
+          "global_threshold_indoor_co2": "Calitatea aerului · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Calitatea aerului · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Calitatea aerului · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Calitatea aerului · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Calitatea aerului · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Calitatea aerului · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Exterior · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Exterior · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Exterior · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Vreme și avertizări · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Deschideți (min, ≤)",
+          "global_threshold_indoor_mold": "Indicator de mucegai · ≥ 70%",
+          "pollen_high_from": "POLLEN · Polen · HIGH",
+          "pollen_max_scale": "POLLEN · Polen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Polen · NO VENT",
+          "general_source_stale_minutes": "sursă · max (min)",
+          "general_home_policy": "Acasă · Ocupare · control"
         },
         "data_description": {
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · Acasă · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Avertizează pentru ferestre deschise după plecare. Persoane de anunțat (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Ceas, Tabletă.",
           "away_windows_target_people": "Persoane de anunțat (person.*) - Announcement Hub: Telefon, Ceas, Tabletă, Alt dispozitiv. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Canale pentru alerta ferestrelor: Telefon Notificare / Voce TTS, Ceas Notificare / Voce TTS, Tabletă Notificare / Voce TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Canale pentru alerta ferestrelor: Telefon Notificare / Voce TTS, Ceas Notificare / Voce TTS, Tabletă Notificare / Voce TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Prag de decizie pentru „Exterior · AQI (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_co2": "Prag de decizie pentru „Exterior · CO₂ (ppm) (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_pm25": "Prag de decizie pentru „Exterior · PM2.5 (µg/m³) (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_pm10": "Prag de decizie pentru „Exterior · PM10 (µg/m³) (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_voc": "Prag de decizie pentru „Exterior · VOC (µg/m³) (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_voc_parts": "Prag de decizie pentru „Exterior · VOC (ppb) (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_no2": "Prag de decizie pentru „NO₂ · Exterior (µg/m³)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_o3": "Prag de decizie pentru „O₃ · Exterior (µg/m³)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_outdoor_so2": "Prag de decizie pentru „SO₂ · Exterior (µg/m³)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_aqi": "Prag de decizie pentru „Calitatea aerului · AQI (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_co2": "Prag de decizie pentru „Calitatea aerului · CO₂ (ppm) (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_pm25": "Prag de decizie pentru „Calitatea aerului · PM2.5 (µg/m³) (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_pm10": "Prag de decizie pentru „Calitatea aerului · PM10 (µg/m³) (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_voc": "Prag de decizie pentru „Calitatea aerului · VOC (µg/m³) (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_voc_parts": "Prag de decizie pentru „Calitatea aerului · VOC (ppb) (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_humidity": "Prag de decizie pentru „Calitatea aerului · RH (%) (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_min_outdoor_temp": "Prag de decizie pentru „Exterior · °C (≥)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_max_outdoor_temp": "Prag de decizie pentru „Exterior · °C (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_max_outdoor_humidity": "Prag de decizie pentru „Exterior · RH (%) (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_max_wind_kmh": "Prag de decizie pentru „Vreme și avertizări · km/h (≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_max_age_minutes": "Prag de decizie pentru „⏱ · Deschideți (min, ≤)”. Influențează recomandările, nu este limită medicală.",
+          "global_threshold_indoor_mold": "Prag de decizie pentru „Indicator de mucegai · ≥ 70%”. Influențează recomandările, nu este limită medicală.",
+          "pollen_high_from": "Configurați „POLLEN · Polen · HIGH” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
+          "pollen_max_scale": "Configurați „POLLEN · Polen · SCALE” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
+          "pollen_avoid_ventilation": "Configurați „POLLEN · Polen · NO VENT” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
+          "general_source_stale_minutes": "sursă · Somn / Ocupare · max 240 min. Invalid · Oprire.",
+          "general_home_policy": "Această opțiune controlează „Acasă · Ocupare · control”. Comenzile fizice cer acord separat și protecții independente."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Camere de monitorizat → sursă → Generale setări",
+        "data": {
+          "areas": "Camere de monitorizat"
+        },
+        "data_description": {
+          "areas": "Camere de monitorizat. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+        "data": {
+          "windows": "Ferestre",
+          "air_quality": "Senzori de calitate a aerului și de mediu",
+          "temperature": "Temperatură",
+          "humidity": "Umiditate",
+          "pressure": "Senzori de presiune",
+          "climate_devices": "Dispozitive",
+          "shades": "Jaluzele, rulouri și obloane",
+          "occupancy_sensors": "Ocupare · senzor"
+        },
+        "data_description": {
+          "windows": "Ferestre. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "air_quality": "Senzori de calitate a aerului și de mediu. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "temperature": "Temperatură. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "pressure": "Senzori de presiune. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
+          "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea.",
+          "occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea."
         }
       }
     },

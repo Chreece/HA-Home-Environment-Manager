@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Hjem · Away · cooldown (min)",
           "away_open_window_alert": "Varsle om åpne vinduer når alle har gått",
           "away_windows_target_people": "Personer som skal varsles",
-          "away_windows_delivery_channels": "Kanaler for vindusvarsler"
+          "away_windows_delivery_channels": "Kanaler for vindusvarsler",
+          "global_threshold_outdoor_aqi": "Ute · AQI (≤)",
+          "global_threshold_outdoor_co2": "Ute · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Ute · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Ute · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Ute · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Ute · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Utendørs (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Utendørs (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Utendørs (µg/m³)",
+          "global_threshold_indoor_aqi": "Luftkvalitet · AQI (≥)",
+          "global_threshold_indoor_co2": "Luftkvalitet · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Luftkvalitet · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Luftkvalitet · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Luftkvalitet · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Luftkvalitet · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Luftkvalitet · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Ute · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Ute · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Ute · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Vær og varsler · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Åpne (min, ≤)",
+          "global_threshold_indoor_mold": "Muggindikator · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pollen · HIGH",
+          "pollen_max_scale": "POLLEN · Pollen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
+          "general_source_stale_minutes": "kilde · max (min)",
+          "general_home_policy": "Hjem · Tilstedeværelse · styring"
         },
         "data_description": {
           "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Velg felles kilder og varslingsutganger. Lagre fullfører oppsettet. Driftsinnstillingene blir på husets og rommenes enheter. · Hjem · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Varsle om åpne vinduer når alle har gått. Personer som skal varsles (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Klokke, Nettbrett.",
           "away_windows_target_people": "Personer som skal varsles (person.*) - Announcement Hub: Telefon, Klokke, Nettbrett, Annen enhet. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanaler for vindusvarsler: Telefon Varsel / TTS-tale, Klokke Varsel / TTS-tale, Nettbrett Varsel / TTS-tale. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanaler for vindusvarsler: Telefon Varsel / TTS-tale, Klokke Varsel / TTS-tale, Nettbrett Varsel / TTS-tale. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Beslutningsterskel for «Ute · AQI (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_co2": "Beslutningsterskel for «Ute · CO₂ (ppm) (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_pm25": "Beslutningsterskel for «Ute · PM2.5 (µg/m³) (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_pm10": "Beslutningsterskel for «Ute · PM10 (µg/m³) (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_voc": "Beslutningsterskel for «Ute · VOC (µg/m³) (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_voc_parts": "Beslutningsterskel for «Ute · VOC (ppb) (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_no2": "Beslutningsterskel for «NO₂ · Utendørs (µg/m³)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_o3": "Beslutningsterskel for «O₃ · Utendørs (µg/m³)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_so2": "Beslutningsterskel for «SO₂ · Utendørs (µg/m³)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_aqi": "Beslutningsterskel for «Luftkvalitet · AQI (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_co2": "Beslutningsterskel for «Luftkvalitet · CO₂ (ppm) (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_pm25": "Beslutningsterskel for «Luftkvalitet · PM2.5 (µg/m³) (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_pm10": "Beslutningsterskel for «Luftkvalitet · PM10 (µg/m³) (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_voc": "Beslutningsterskel for «Luftkvalitet · VOC (µg/m³) (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_voc_parts": "Beslutningsterskel for «Luftkvalitet · VOC (ppb) (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_humidity": "Beslutningsterskel for «Luftkvalitet · RH (%) (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_min_outdoor_temp": "Beslutningsterskel for «Ute · °C (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_max_outdoor_temp": "Beslutningsterskel for «Ute · °C (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_max_outdoor_humidity": "Beslutningsterskel for «Ute · RH (%) (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_max_wind_kmh": "Beslutningsterskel for «Vær og varsler · km/h (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_max_age_minutes": "Beslutningsterskel for «⏱ · Åpne (min, ≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_mold": "Beslutningsterskel for «Muggindikator · ≥ 70%». Påvirker råd, men er ikke en medisinsk grense.",
+          "pollen_high_from": "Konfigurer «POLLEN · Pollen · HIGH» bare for valgt rom. Feil data stopper handlingen.",
+          "pollen_max_scale": "Konfigurer «POLLEN · Pollen · SCALE» bare for valgt rom. Feil data stopper handlingen.",
+          "pollen_avoid_ventilation": "Konfigurer «POLLEN · Pollen · NO VENT» bare for valgt rom. Feil data stopper handlingen.",
+          "general_source_stale_minutes": "kilde · Søvn / Tilstedeværelse · max 240 min. Ugyldig · Slå av.",
+          "general_home_policy": "Dette valget styrer «Hjem · Tilstedeværelse · styring». Fysiske kommandoer krever separat tillatelse og sikkerhet."
         }
       },
       "reconfigure": {
         "title": "⚙️ Velg",
         "description": "Velg: Rom / Vær og varsler / Kunngjøringer (valgfritt) / Avanserte grenseverdier",
         "menu_options": {
-          "room_occupancy": "Tilstedeværelse · sensor",
-          "outside_data": "Utendørs · kilde",
-          "general_settings": "Generelle · innstillinger",
-          "area_settings": "Område · innstillinger",
-          "delivery": "Kunngjøringer (valgfritt)",
-          "thresholds": "Avanserte grenseverdier",
-          "climate": "innstillinger · Enheter",
-          "pid": "innstillinger · PID",
-          "setup_rooms": "Rom som skal overvåkes"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Generelle innstillinger"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Rom som skal overvåkes → kilde → Generelle innstillinger",
+        "data": {
+          "areas": "Rom som skal overvåkes"
+        },
+        "data_description": {
+          "areas": "Rom som skal overvåkes. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+        "data": {
+          "windows": "Vinduer",
+          "air_quality": "Luftkvalitets- og miljøsensorer",
+          "temperature": "Temperatur",
+          "humidity": "Luftfuktighet",
+          "pressure": "Trykksensorer",
+          "climate_devices": "Enheter",
+          "shades": "Persienner, rullegardiner og skodder",
+          "occupancy_sensors": "Tilstedeværelse · sensor"
+        },
+        "data_description": {
+          "windows": "Vinduer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "air_quality": "Luftkvalitets- og miljøsensorer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "temperature": "Temperatur. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "humidity": "Luftfuktighet. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "pressure": "Trykksensorer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "climate_devices": "Enheter. Velg bare fysiske climate.*, humidifier.* og fan.* i rommet. Enhetens egne funksjoner bestemmer varme, kjøling, avfukting, målverdier og viftehastighet. Valget betjener ingenting; automatikken aktiveres separat på hver enhet.",
+          "shades": "Persienner, rullegardiner og skodder. Velg rullegardiner, persienner og skodder som cover.* i rommet. Covers uten device_class støttes med CLOSE hvis de faktisk skjermer vinduer. Garasjer, porter, dører, vinduer og markiser er utelukket. Valget beveger ingenting: koble vinduskontakt og konfigurer automatikk, kunngjøring og temperatur i kontrolleren. Ukjent status hindrer bevegelse.",
+          "occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Velg",
         "description": "Velg: Rom / Vær og varsler / Kunngjøringer (valgfritt) / Avanserte grenseverdier",
         "menu_options": {
-          "room_occupancy": "Tilstedeværelse · sensor",
-          "outside_data": "Utendørs · kilde",
-          "general_settings": "Generelle · innstillinger",
-          "area_settings": "Område · innstillinger",
-          "delivery": "Kunngjøringer (valgfritt)",
-          "thresholds": "Avanserte grenseverdier",
-          "climate": "innstillinger · Enheter",
-          "pid": "innstillinger · PID",
-          "setup_rooms": "Rom som skal overvåkes"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Generelle innstillinger"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Hjem · Away · cooldown (min)",
           "away_open_window_alert": "Varsle om åpne vinduer når alle har gått",
           "away_windows_target_people": "Personer som skal varsles",
-          "away_windows_delivery_channels": "Kanaler for vindusvarsler"
+          "away_windows_delivery_channels": "Kanaler for vindusvarsler",
+          "global_threshold_outdoor_aqi": "Ute · AQI (≤)",
+          "global_threshold_outdoor_co2": "Ute · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Ute · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Ute · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Ute · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Ute · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Utendørs (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Utendørs (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Utendørs (µg/m³)",
+          "global_threshold_indoor_aqi": "Luftkvalitet · AQI (≥)",
+          "global_threshold_indoor_co2": "Luftkvalitet · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Luftkvalitet · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Luftkvalitet · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Luftkvalitet · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Luftkvalitet · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Luftkvalitet · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Ute · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Ute · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Ute · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Vær og varsler · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Åpne (min, ≤)",
+          "global_threshold_indoor_mold": "Muggindikator · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pollen · HIGH",
+          "pollen_max_scale": "POLLEN · Pollen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
+          "general_source_stale_minutes": "kilde · max (min)",
+          "general_home_policy": "Hjem · Tilstedeværelse · styring"
         },
         "data_description": {
           "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Velg felles kilder og varslingsutganger. Lagre fullfører oppsettet. Driftsinnstillingene blir på husets og rommenes enheter. · Hjem · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Varsle om åpne vinduer når alle har gått. Personer som skal varsles (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Klokke, Nettbrett.",
           "away_windows_target_people": "Personer som skal varsles (person.*) - Announcement Hub: Telefon, Klokke, Nettbrett, Annen enhet. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanaler for vindusvarsler: Telefon Varsel / TTS-tale, Klokke Varsel / TTS-tale, Nettbrett Varsel / TTS-tale. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanaler for vindusvarsler: Telefon Varsel / TTS-tale, Klokke Varsel / TTS-tale, Nettbrett Varsel / TTS-tale. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Beslutningsterskel for «Ute · AQI (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_co2": "Beslutningsterskel for «Ute · CO₂ (ppm) (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_pm25": "Beslutningsterskel for «Ute · PM2.5 (µg/m³) (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_pm10": "Beslutningsterskel for «Ute · PM10 (µg/m³) (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_voc": "Beslutningsterskel for «Ute · VOC (µg/m³) (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_voc_parts": "Beslutningsterskel for «Ute · VOC (ppb) (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_no2": "Beslutningsterskel for «NO₂ · Utendørs (µg/m³)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_o3": "Beslutningsterskel for «O₃ · Utendørs (µg/m³)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_outdoor_so2": "Beslutningsterskel for «SO₂ · Utendørs (µg/m³)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_aqi": "Beslutningsterskel for «Luftkvalitet · AQI (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_co2": "Beslutningsterskel for «Luftkvalitet · CO₂ (ppm) (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_pm25": "Beslutningsterskel for «Luftkvalitet · PM2.5 (µg/m³) (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_pm10": "Beslutningsterskel for «Luftkvalitet · PM10 (µg/m³) (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_voc": "Beslutningsterskel for «Luftkvalitet · VOC (µg/m³) (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_voc_parts": "Beslutningsterskel for «Luftkvalitet · VOC (ppb) (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_humidity": "Beslutningsterskel for «Luftkvalitet · RH (%) (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_min_outdoor_temp": "Beslutningsterskel for «Ute · °C (≥)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_max_outdoor_temp": "Beslutningsterskel for «Ute · °C (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_max_outdoor_humidity": "Beslutningsterskel for «Ute · RH (%) (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_max_wind_kmh": "Beslutningsterskel for «Vær og varsler · km/h (≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_max_age_minutes": "Beslutningsterskel for «⏱ · Åpne (min, ≤)». Påvirker råd, men er ikke en medisinsk grense.",
+          "global_threshold_indoor_mold": "Beslutningsterskel for «Muggindikator · ≥ 70%». Påvirker råd, men er ikke en medisinsk grense.",
+          "pollen_high_from": "Konfigurer «POLLEN · Pollen · HIGH» bare for valgt rom. Feil data stopper handlingen.",
+          "pollen_max_scale": "Konfigurer «POLLEN · Pollen · SCALE» bare for valgt rom. Feil data stopper handlingen.",
+          "pollen_avoid_ventilation": "Konfigurer «POLLEN · Pollen · NO VENT» bare for valgt rom. Feil data stopper handlingen.",
+          "general_source_stale_minutes": "kilde · Søvn / Tilstedeværelse · max 240 min. Ugyldig · Slå av.",
+          "general_home_policy": "Dette valget styrer «Hjem · Tilstedeværelse · styring». Fysiske kommandoer krever separat tillatelse og sikkerhet."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Rom som skal overvåkes → kilde → Generelle innstillinger",
+        "data": {
+          "areas": "Rom som skal overvåkes"
+        },
+        "data_description": {
+          "areas": "Rom som skal overvåkes. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+        "data": {
+          "windows": "Vinduer",
+          "air_quality": "Luftkvalitets- og miljøsensorer",
+          "temperature": "Temperatur",
+          "humidity": "Luftfuktighet",
+          "pressure": "Trykksensorer",
+          "climate_devices": "Enheter",
+          "shades": "Persienner, rullegardiner og skodder",
+          "occupancy_sensors": "Tilstedeværelse · sensor"
+        },
+        "data_description": {
+          "windows": "Vinduer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "air_quality": "Luftkvalitets- og miljøsensorer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "temperature": "Temperatur. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "humidity": "Luftfuktighet. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "pressure": "Trykksensorer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "climate_devices": "Enheter. Velg bare fysiske climate.*, humidifier.* og fan.* i rommet. Enhetens egne funksjoner bestemmer varme, kjøling, avfukting, målverdier og viftehastighet. Valget betjener ingenting; automatikken aktiveres separat på hver enhet.",
+          "shades": "Persienner, rullegardiner og skodder. Velg rullegardiner, persienner og skodder som cover.* i rommet. Covers uten device_class støttes med CLOSE hvis de faktisk skjermer vinduer. Garasjer, porter, dører, vinduer og markiser er utelukket. Valget beveger ingenting: koble vinduskontakt og konfigurer automatikk, kunngjøring og temperatur i kontrolleren. Ukjent status hindrer bevegelse.",
+          "occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen."
         }
       }
     },

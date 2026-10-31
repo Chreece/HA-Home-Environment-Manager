@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Thuis · Away · cooldown (min)",
           "away_open_window_alert": "Waarschuw voor open ramen wanneer iedereen weg is",
           "away_windows_target_people": "Personen voor waarschuwingen",
-          "away_windows_delivery_channels": "Meldingskanalen voor open ramen"
+          "away_windows_delivery_channels": "Meldingskanalen voor open ramen",
+          "global_threshold_outdoor_aqi": "Buiten · AQI (≤)",
+          "global_threshold_outdoor_co2": "Buiten · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Buiten · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Buiten · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Buiten · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Buiten · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Buiten (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Buiten (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Buiten (µg/m³)",
+          "global_threshold_indoor_aqi": "Luchtkwaliteit · AQI (≥)",
+          "global_threshold_indoor_co2": "Luchtkwaliteit · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Luchtkwaliteit · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Luchtkwaliteit · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Luchtkwaliteit · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Luchtkwaliteit · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Luchtkwaliteit · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Buiten · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Buiten · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Buiten · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Weer en waarschuwingen · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Open (min, ≤)",
+          "global_threshold_indoor_mold": "Schimmelindicator · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pollen · HIGH",
+          "pollen_max_scale": "POLLEN · Pollen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
+          "general_source_stale_minutes": "bron · max (min)",
+          "general_home_policy": "Thuis · Aanwezigheid · regeling"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Thuis · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Waarschuw voor open ramen wanneer iedereen weg is. Personen voor waarschuwingen (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefoon, Horloge, Tablet.",
           "away_windows_target_people": "Personen voor waarschuwingen (person.*) - Announcement Hub: Telefoon, Horloge, Tablet, Ander apparaat. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Meldingskanalen voor open ramen: Telefoon Melding / TTS-spraak, Horloge Melding / TTS-spraak, Tablet Melding / TTS-spraak. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Meldingskanalen voor open ramen: Telefoon Melding / TTS-spraak, Horloge Melding / TTS-spraak, Tablet Melding / TTS-spraak. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Beslisdrempel voor ‘Buiten · AQI (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_co2": "Beslisdrempel voor ‘Buiten · CO₂ (ppm) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_pm25": "Beslisdrempel voor ‘Buiten · PM2.5 (µg/m³) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_pm10": "Beslisdrempel voor ‘Buiten · PM10 (µg/m³) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_voc": "Beslisdrempel voor ‘Buiten · VOC (µg/m³) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_voc_parts": "Beslisdrempel voor ‘Buiten · VOC (ppb) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_no2": "Beslisdrempel voor ‘NO₂ · Buiten (µg/m³)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_o3": "Beslisdrempel voor ‘O₃ · Buiten (µg/m³)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_so2": "Beslisdrempel voor ‘SO₂ · Buiten (µg/m³)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_aqi": "Beslisdrempel voor ‘Luchtkwaliteit · AQI (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_co2": "Beslisdrempel voor ‘Luchtkwaliteit · CO₂ (ppm) (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_pm25": "Beslisdrempel voor ‘Luchtkwaliteit · PM2.5 (µg/m³) (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_pm10": "Beslisdrempel voor ‘Luchtkwaliteit · PM10 (µg/m³) (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_voc": "Beslisdrempel voor ‘Luchtkwaliteit · VOC (µg/m³) (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_voc_parts": "Beslisdrempel voor ‘Luchtkwaliteit · VOC (ppb) (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_humidity": "Beslisdrempel voor ‘Luchtkwaliteit · RH (%) (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_min_outdoor_temp": "Beslisdrempel voor ‘Buiten · °C (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_max_outdoor_temp": "Beslisdrempel voor ‘Buiten · °C (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_max_outdoor_humidity": "Beslisdrempel voor ‘Buiten · RH (%) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_max_wind_kmh": "Beslisdrempel voor ‘Weer en waarschuwingen · km/h (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_max_age_minutes": "Beslisdrempel voor ‘⏱ · Open (min, ≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_mold": "Beslisdrempel voor ‘Schimmelindicator · ≥ 70%’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "pollen_high_from": "Stel ‘POLLEN · Pollen · HIGH’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
+          "pollen_max_scale": "Stel ‘POLLEN · Pollen · SCALE’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
+          "pollen_avoid_ventilation": "Stel ‘POLLEN · Pollen · NO VENT’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
+          "general_source_stale_minutes": "bron · Slaap / Aanwezigheid · max 240 min. Ongeldig · Uitschakelen.",
+          "general_home_policy": "Deze optie regelt ‘Thuis · Aanwezigheid · regeling’. Fysieke opdrachten vereisen afzonderlijke toestemming en beveiligingen."
         }
       },
       "reconfigure": {
         "title": "⚙️ Kies",
         "description": "Kies: Kamers / Weer en waarschuwingen / Meldingen (optioneel) / Geavanceerde grenswaarden",
         "menu_options": {
-          "room_occupancy": "Aanwezigheid · sensor",
-          "outside_data": "Buiten · bron",
-          "general_settings": "Algemene · instellingen",
-          "area_settings": "Ruimte · instellingen",
-          "delivery": "Meldingen (optioneel)",
-          "thresholds": "Geavanceerde grenswaarden",
-          "climate": "instellingen · Apparaten",
-          "pid": "instellingen · PID",
-          "setup_rooms": "Te bewaken kamers"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Algemene instellingen"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Te bewaken kamers → bron → Algemene instellingen",
+        "data": {
+          "areas": "Te bewaken kamers"
+        },
+        "data_description": {
+          "areas": "Te bewaken kamers. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+        "data": {
+          "windows": "Ramen",
+          "air_quality": "Luchtkwaliteits- en omgevingssensoren",
+          "temperature": "Temperatuur",
+          "humidity": "Vochtigheid",
+          "pressure": "Druksensoren",
+          "climate_devices": "Apparaten",
+          "shades": "Raamzonwering, jaloezieën en rolluiken",
+          "occupancy_sensors": "Aanwezigheid · sensor"
+        },
+        "data_description": {
+          "windows": "Ramen. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "air_quality": "Luchtkwaliteits- en omgevingssensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "temperature": "Temperatuur. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "pressure": "Druksensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
+          "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
+          "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Kies",
         "description": "Kies: Kamers / Weer en waarschuwingen / Meldingen (optioneel) / Geavanceerde grenswaarden",
         "menu_options": {
-          "room_occupancy": "Aanwezigheid · sensor",
-          "outside_data": "Buiten · bron",
-          "general_settings": "Algemene · instellingen",
-          "area_settings": "Ruimte · instellingen",
-          "delivery": "Meldingen (optioneel)",
-          "thresholds": "Geavanceerde grenswaarden",
-          "climate": "instellingen · Apparaten",
-          "pid": "instellingen · PID",
-          "setup_rooms": "Te bewaken kamers"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Algemene instellingen"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Thuis · Away · cooldown (min)",
           "away_open_window_alert": "Waarschuw voor open ramen wanneer iedereen weg is",
           "away_windows_target_people": "Personen voor waarschuwingen",
-          "away_windows_delivery_channels": "Meldingskanalen voor open ramen"
+          "away_windows_delivery_channels": "Meldingskanalen voor open ramen",
+          "global_threshold_outdoor_aqi": "Buiten · AQI (≤)",
+          "global_threshold_outdoor_co2": "Buiten · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Buiten · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Buiten · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Buiten · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Buiten · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Buiten (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Buiten (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Buiten (µg/m³)",
+          "global_threshold_indoor_aqi": "Luchtkwaliteit · AQI (≥)",
+          "global_threshold_indoor_co2": "Luchtkwaliteit · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Luchtkwaliteit · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Luchtkwaliteit · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Luchtkwaliteit · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Luchtkwaliteit · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Luchtkwaliteit · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Buiten · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Buiten · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Buiten · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Weer en waarschuwingen · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Open (min, ≤)",
+          "global_threshold_indoor_mold": "Schimmelindicator · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pollen · HIGH",
+          "pollen_max_scale": "POLLEN · Pollen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
+          "general_source_stale_minutes": "bron · max (min)",
+          "general_home_policy": "Thuis · Aanwezigheid · regeling"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Thuis · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Waarschuw voor open ramen wanneer iedereen weg is. Personen voor waarschuwingen (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefoon, Horloge, Tablet.",
           "away_windows_target_people": "Personen voor waarschuwingen (person.*) - Announcement Hub: Telefoon, Horloge, Tablet, Ander apparaat. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Meldingskanalen voor open ramen: Telefoon Melding / TTS-spraak, Horloge Melding / TTS-spraak, Tablet Melding / TTS-spraak. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Meldingskanalen voor open ramen: Telefoon Melding / TTS-spraak, Horloge Melding / TTS-spraak, Tablet Melding / TTS-spraak. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Beslisdrempel voor ‘Buiten · AQI (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_co2": "Beslisdrempel voor ‘Buiten · CO₂ (ppm) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_pm25": "Beslisdrempel voor ‘Buiten · PM2.5 (µg/m³) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_pm10": "Beslisdrempel voor ‘Buiten · PM10 (µg/m³) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_voc": "Beslisdrempel voor ‘Buiten · VOC (µg/m³) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_voc_parts": "Beslisdrempel voor ‘Buiten · VOC (ppb) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_no2": "Beslisdrempel voor ‘NO₂ · Buiten (µg/m³)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_o3": "Beslisdrempel voor ‘O₃ · Buiten (µg/m³)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_outdoor_so2": "Beslisdrempel voor ‘SO₂ · Buiten (µg/m³)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_aqi": "Beslisdrempel voor ‘Luchtkwaliteit · AQI (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_co2": "Beslisdrempel voor ‘Luchtkwaliteit · CO₂ (ppm) (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_pm25": "Beslisdrempel voor ‘Luchtkwaliteit · PM2.5 (µg/m³) (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_pm10": "Beslisdrempel voor ‘Luchtkwaliteit · PM10 (µg/m³) (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_voc": "Beslisdrempel voor ‘Luchtkwaliteit · VOC (µg/m³) (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_voc_parts": "Beslisdrempel voor ‘Luchtkwaliteit · VOC (ppb) (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_humidity": "Beslisdrempel voor ‘Luchtkwaliteit · RH (%) (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_min_outdoor_temp": "Beslisdrempel voor ‘Buiten · °C (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_max_outdoor_temp": "Beslisdrempel voor ‘Buiten · °C (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_max_outdoor_humidity": "Beslisdrempel voor ‘Buiten · RH (%) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_max_wind_kmh": "Beslisdrempel voor ‘Weer en waarschuwingen · km/h (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_max_age_minutes": "Beslisdrempel voor ‘⏱ · Open (min, ≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "global_threshold_indoor_mold": "Beslisdrempel voor ‘Schimmelindicator · ≥ 70%’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
+          "pollen_high_from": "Stel ‘POLLEN · Pollen · HIGH’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
+          "pollen_max_scale": "Stel ‘POLLEN · Pollen · SCALE’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
+          "pollen_avoid_ventilation": "Stel ‘POLLEN · Pollen · NO VENT’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
+          "general_source_stale_minutes": "bron · Slaap / Aanwezigheid · max 240 min. Ongeldig · Uitschakelen.",
+          "general_home_policy": "Deze optie regelt ‘Thuis · Aanwezigheid · regeling’. Fysieke opdrachten vereisen afzonderlijke toestemming en beveiligingen."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Te bewaken kamers → bron → Algemene instellingen",
+        "data": {
+          "areas": "Te bewaken kamers"
+        },
+        "data_description": {
+          "areas": "Te bewaken kamers. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+        "data": {
+          "windows": "Ramen",
+          "air_quality": "Luchtkwaliteits- en omgevingssensoren",
+          "temperature": "Temperatuur",
+          "humidity": "Vochtigheid",
+          "pressure": "Druksensoren",
+          "climate_devices": "Apparaten",
+          "shades": "Raamzonwering, jaloezieën en rolluiken",
+          "occupancy_sensors": "Aanwezigheid · sensor"
+        },
+        "data_description": {
+          "windows": "Ramen. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "air_quality": "Luchtkwaliteits- en omgevingssensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "temperature": "Temperatuur. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "pressure": "Druksensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
+          "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
+          "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."
         }
       }
     },

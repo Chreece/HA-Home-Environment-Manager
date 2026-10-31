@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "집 · Away · cooldown (min)",
           "away_open_window_alert": "모두 외출한 뒤 열린 창문 알림",
           "away_windows_target_people": "알림을 받을 사람",
-          "away_windows_delivery_channels": "창문 알림 전송 채널"
+          "away_windows_delivery_channels": "창문 알림 전송 채널",
+          "global_threshold_outdoor_aqi": "실외 · AQI (≤)",
+          "global_threshold_outdoor_co2": "실외 · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "실외 · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "실외 · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "실외 · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "실외 · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · 외부 (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · 외부 (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · 외부 (µg/m³)",
+          "global_threshold_indoor_aqi": "공기질 · AQI (≥)",
+          "global_threshold_indoor_co2": "공기질 · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "공기질 · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "공기질 · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "공기질 · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "공기질 · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "공기질 · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "실외 · °C (≥)",
+          "global_threshold_max_outdoor_temp": "실외 · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "실외 · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "날씨 및 경보 · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · 열기 (min, ≤)",
+          "global_threshold_indoor_mold": "곰팡이 지표 · ≥ 70%",
+          "pollen_high_from": "POLLEN · 꽃가루 · HIGH",
+          "pollen_max_scale": "POLLEN · 꽃가루 · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · 꽃가루 · NO VENT",
+          "general_source_stale_minutes": "정보원 · max (min)",
+          "general_home_policy": "집 · 재실 · 제어"
         },
         "data_description": {
           "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · 집 · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "모두 외출한 뒤 열린 창문 알림. 알림을 받을 사람 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. 휴대폰, 시계, 태블릿.",
           "away_windows_target_people": "알림을 받을 사람 (person.*) - Announcement Hub: 휴대폰, 시계, 태블릿, 기타 기기. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "창문 알림 전송 채널: 휴대폰 알림 / TTS 음성, 시계 알림 / TTS 음성, 태블릿 알림 / TTS 음성. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "창문 알림 전송 채널: 휴대폰 알림 / TTS 음성, 시계 알림 / TTS 음성, 태블릿 알림 / TTS 음성. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "“실외 · AQI (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_co2": "“실외 · CO₂ (ppm) (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_pm25": "“실외 · PM2.5 (µg/m³) (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_pm10": "“실외 · PM10 (µg/m³) (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_voc": "“실외 · VOC (µg/m³) (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_voc_parts": "“실외 · VOC (ppb) (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_no2": "“NO₂ · 외부 (µg/m³)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_o3": "“O₃ · 외부 (µg/m³)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_so2": "“SO₂ · 외부 (µg/m³)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_aqi": "“공기질 · AQI (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_co2": "“공기질 · CO₂ (ppm) (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_pm25": "“공기질 · PM2.5 (µg/m³) (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_pm10": "“공기질 · PM10 (µg/m³) (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_voc": "“공기질 · VOC (µg/m³) (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_voc_parts": "“공기질 · VOC (ppb) (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_humidity": "“공기질 · RH (%) (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_min_outdoor_temp": "“실외 · °C (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_max_outdoor_temp": "“실외 · °C (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_max_outdoor_humidity": "“실외 · RH (%) (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_max_wind_kmh": "“날씨 및 경보 · km/h (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_max_age_minutes": "“⏱ · 열기 (min, ≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_mold": "“곰팡이 지표 · ≥ 70%”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "pollen_high_from": "“POLLEN · 꽃가루 · HIGH”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
+          "pollen_max_scale": "“POLLEN · 꽃가루 · SCALE”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
+          "pollen_avoid_ventilation": "“POLLEN · 꽃가루 · NO VENT”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
+          "general_source_stale_minutes": "정보원 · 수면 / 재실 · max 240 min. 잘못됨 · 끄기.",
+          "general_home_policy": "이 옵션은 “집 · 재실 · 제어”을 제어합니다. 물리적 명령에는 별도 승인과 독립 보호가 필요합니다."
         }
       },
       "reconfigure": {
         "title": "⚙️ 선택하세요",
         "description": "선택하세요: 방 / 날씨 및 경보 / 알림(선택 사항) / 고급 임계값",
         "menu_options": {
-          "room_occupancy": "재실 · 센서",
-          "outside_data": "외부 · 정보원",
-          "general_settings": "일반 · 설정",
-          "area_settings": "구역 · 설정",
-          "delivery": "알림(선택 사항)",
-          "thresholds": "고급 임계값",
-          "climate": "설정 · 장치",
-          "pid": "설정 · PID",
-          "setup_rooms": "모니터링할 방"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "일반 설정"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "모니터링할 방 → 정보원 → 일반 설정",
+        "data": {
+          "areas": "모니터링할 방"
+        },
+        "data_description": {
+          "areas": "모니터링할 방. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
+        "data": {
+          "windows": "창문",
+          "air_quality": "공기질 및 환경 센서",
+          "temperature": "온도",
+          "humidity": "습도",
+          "pressure": "압력 센서",
+          "climate_devices": "장치",
+          "shades": "창문 블라인드, 차양 및 셔터",
+          "occupancy_sensors": "재실 · 센서"
+        },
+        "data_description": {
+          "windows": "창문. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
+          "air_quality": "공기질 및 환경 센서. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
+          "temperature": "온도. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
+          "humidity": "습도. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
+          "pressure": "압력 센서. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
+          "climate_devices": "장치. 방에 속한 실제 climate.*, humidifier.*, fan.* 엔티티만 선택하세요. 기기의 기본 기능에 따라 난방, 냉방, 제습, 목표값, 팬 속도를 제어할 수 있습니다. 선택만으로 기기는 동작하지 않으며 각 컨트롤러에서 자동 제어를 별도로 켜야 합니다.",
+          "shades": "창문 블라인드, 차양 및 셔터. 이 방의 cover.* 블라인드, 롤러 셔터, 커튼을 선택하세요. device_class가 없어도 CLOSE를 지원하고 실제 창문 차양이라면 선택할 수 있습니다. 차고문, 대문, 출입문, 창문 및 외부 차양은 제외합니다. 선택만으로 움직이지 않으며 컨트롤러에서 창문 센서, 자동 제어, 사전 알림 및 온도 기준을 설정하세요. 알 수 없는 상태에서는 작동하지 않습니다.",
+          "occupancy_sensors": "“재실 · 센서”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ 선택하세요",
         "description": "선택하세요: 방 / 날씨 및 경보 / 알림(선택 사항) / 고급 임계값",
         "menu_options": {
-          "room_occupancy": "재실 · 센서",
-          "outside_data": "외부 · 정보원",
-          "general_settings": "일반 · 설정",
-          "area_settings": "구역 · 설정",
-          "delivery": "알림(선택 사항)",
-          "thresholds": "고급 임계값",
-          "climate": "설정 · 장치",
-          "pid": "설정 · PID",
-          "setup_rooms": "모니터링할 방"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "일반 설정"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "집 · Away · cooldown (min)",
           "away_open_window_alert": "모두 외출한 뒤 열린 창문 알림",
           "away_windows_target_people": "알림을 받을 사람",
-          "away_windows_delivery_channels": "창문 알림 전송 채널"
+          "away_windows_delivery_channels": "창문 알림 전송 채널",
+          "global_threshold_outdoor_aqi": "실외 · AQI (≤)",
+          "global_threshold_outdoor_co2": "실외 · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "실외 · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "실외 · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "실외 · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "실외 · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · 외부 (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · 외부 (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · 외부 (µg/m³)",
+          "global_threshold_indoor_aqi": "공기질 · AQI (≥)",
+          "global_threshold_indoor_co2": "공기질 · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "공기질 · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "공기질 · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "공기질 · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "공기질 · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "공기질 · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "실외 · °C (≥)",
+          "global_threshold_max_outdoor_temp": "실외 · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "실외 · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "날씨 및 경보 · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · 열기 (min, ≤)",
+          "global_threshold_indoor_mold": "곰팡이 지표 · ≥ 70%",
+          "pollen_high_from": "POLLEN · 꽃가루 · HIGH",
+          "pollen_max_scale": "POLLEN · 꽃가루 · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · 꽃가루 · NO VENT",
+          "general_source_stale_minutes": "정보원 · max (min)",
+          "general_home_policy": "집 · 재실 · 제어"
         },
         "data_description": {
           "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · 집 · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "모두 외출한 뒤 열린 창문 알림. 알림을 받을 사람 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. 휴대폰, 시계, 태블릿.",
           "away_windows_target_people": "알림을 받을 사람 (person.*) - Announcement Hub: 휴대폰, 시계, 태블릿, 기타 기기. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "창문 알림 전송 채널: 휴대폰 알림 / TTS 음성, 시계 알림 / TTS 음성, 태블릿 알림 / TTS 음성. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "창문 알림 전송 채널: 휴대폰 알림 / TTS 음성, 시계 알림 / TTS 음성, 태블릿 알림 / TTS 음성. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "“실외 · AQI (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_co2": "“실외 · CO₂ (ppm) (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_pm25": "“실외 · PM2.5 (µg/m³) (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_pm10": "“실외 · PM10 (µg/m³) (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_voc": "“실외 · VOC (µg/m³) (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_voc_parts": "“실외 · VOC (ppb) (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_no2": "“NO₂ · 외부 (µg/m³)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_o3": "“O₃ · 외부 (µg/m³)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_outdoor_so2": "“SO₂ · 외부 (µg/m³)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_aqi": "“공기질 · AQI (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_co2": "“공기질 · CO₂ (ppm) (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_pm25": "“공기질 · PM2.5 (µg/m³) (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_pm10": "“공기질 · PM10 (µg/m³) (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_voc": "“공기질 · VOC (µg/m³) (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_voc_parts": "“공기질 · VOC (ppb) (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_humidity": "“공기질 · RH (%) (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_min_outdoor_temp": "“실외 · °C (≥)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_max_outdoor_temp": "“실외 · °C (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_max_outdoor_humidity": "“실외 · RH (%) (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_max_wind_kmh": "“날씨 및 경보 · km/h (≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_max_age_minutes": "“⏱ · 열기 (min, ≤)”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "global_threshold_indoor_mold": "“곰팡이 지표 · ≥ 70%”의 판단 기준값입니다. 권고에 영향을 주지만 의료 기준은 아닙니다.",
+          "pollen_high_from": "“POLLEN · 꽃가루 · HIGH”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
+          "pollen_max_scale": "“POLLEN · 꽃가루 · SCALE”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
+          "pollen_avoid_ventilation": "“POLLEN · 꽃가루 · NO VENT”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
+          "general_source_stale_minutes": "정보원 · 수면 / 재실 · max 240 min. 잘못됨 · 끄기.",
+          "general_home_policy": "이 옵션은 “집 · 재실 · 제어”을 제어합니다. 물리적 명령에는 별도 승인과 독립 보호가 필요합니다."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are the selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "모니터링할 방 → 정보원 → 일반 설정",
+        "data": {
+          "areas": "모니터링할 방"
+        },
+        "data_description": {
+          "areas": "모니터링할 방. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
+        "data": {
+          "windows": "창문",
+          "air_quality": "공기질 및 환경 센서",
+          "temperature": "온도",
+          "humidity": "습도",
+          "pressure": "압력 센서",
+          "climate_devices": "장치",
+          "shades": "창문 블라인드, 차양 및 셔터",
+          "occupancy_sensors": "재실 · 센서"
+        },
+        "data_description": {
+          "windows": "창문. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
+          "air_quality": "공기질 및 환경 센서. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
+          "temperature": "온도. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
+          "humidity": "습도. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
+          "pressure": "압력 센서. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
+          "climate_devices": "장치. 방에 속한 실제 climate.*, humidifier.*, fan.* 엔티티만 선택하세요. 기기의 기본 기능에 따라 난방, 냉방, 제습, 목표값, 팬 속도를 제어할 수 있습니다. 선택만으로 기기는 동작하지 않으며 각 컨트롤러에서 자동 제어를 별도로 켜야 합니다.",
+          "shades": "창문 블라인드, 차양 및 셔터. 이 방의 cover.* 블라인드, 롤러 셔터, 커튼을 선택하세요. device_class가 없어도 CLOSE를 지원하고 실제 창문 차양이라면 선택할 수 있습니다. 차고문, 대문, 출입문, 창문 및 외부 차양은 제외합니다. 선택만으로 움직이지 않으며 컨트롤러에서 창문 센서, 자동 제어, 사전 알림 및 온도 기준을 설정하세요. 알 수 없는 상태에서는 작동하지 않습니다.",
+          "occupancy_sensors": "“재실 · 센서”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다."
         }
       }
     },
