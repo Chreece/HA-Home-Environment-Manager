@@ -149,6 +149,63 @@ async def evaluate():
     assert await active._power(
         spec,active.manager.cap,'off',automatic=False,shutdown=True)
 
+    # Non-climate physical endpoints report HA "on" or an actual %
+    # rather than their assigned "heat"/"dry"/"fan_only" capability role.
+    # The same exact-device handoff must work for all supported domains.
+    from types import SimpleNamespace as N
+    for domain,entity,raw,role in (
+        ('switch','switch.heater','on','heat'),
+        ('input_boolean','input_boolean.heater','on','heat'),
+        ('fan','fan.ventilator','on','fan_only'),
+        ('humidifier','humidifier.dryer','on','dry'),
+        ('number','number.valve','65','heat'),
+        ('input_number','input_number.valve','55','cool'),
+    ):
+        variant=create('off')
+        source=N(
+            identifier=spec.identifier,area_id=spec.area_id,
+            source_device_id=spec.source_device_id,
+            source_entities=(entity,),
+        )
+        variant.states.pop('climate.heater')
+        native=state(raw,domain=domain,changed=NOW-2)
+        if domain in ('number','input_number'):
+            native.attributes.update(
+                unit_of_measurement='%', min=0, max=100,
+            )
+        variant.states[entity]=native
+        variant.record['sources']=[entity]
+        variant.record['baseline']={entity:b['snap'](native)}
+        variant.manager.cap=N(
+            primary=entity,domain=domain,modes=('off',role),
+        )
+        variant.manager.settings[M.SETTINGS][spec.identifier]['requested_mode']=role
+        assert await variant._reconcile_native_after_supply_wake(
+            source,variant.manager.cap), (domain,variant.status)
+        assert entity in variant.record['power'],(domain,variant.record)
+        assert not variant.actual_commands
+
+    # A native proportional endpoint that actually reports 0% was OFF
+    # through the external supply's disconnected interval as well.
+    valve=create('off')
+    valve_source=N(
+        identifier=spec.identifier,area_id=spec.area_id,
+        source_device_id=spec.source_device_id,
+        source_entities=('number.valve',),
+    )
+    valve.states.pop('climate.heater')
+    valve_off=state('0',domain='number',changed=NOW-2)
+    valve_off.attributes.update(unit_of_measurement='%',min=0,max=100)
+    valve.states['number.valve']=valve_off
+    valve.record['sources']=['number.valve']
+    valve.manager.cap=N(primary='number.valve',domain='number',
+                          modes=('off','heat'))
+    assert await valve._reconcile_native_after_supply_wake(
+        valve_source,valve.manager.cap)
+    assert valve.record['off_at']['number.valve']==NOW-1800
+    assert await valve._power(
+        valve_source,valve.manager.cap,'heat',automatic=False)
+
     # The startup check should run ONLY ONCE for an ACKed relay.
     n=len(active._saved)
     assert await active._reconcile_native_after_supply_wake(
