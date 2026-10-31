@@ -178,6 +178,7 @@ class Harness:
     async def _save(self): pass
     async def _reconcile(self, spec): return True
     async def _observe_native_running(self, spec, cap, state): pass
+    async def _reconcile_native_after_supply_wake(self, spec, cap): return True
     def _stop_policy_verified(self, spec, cap, policy): return False
     def _gate(self, spec, cap, cfg, plan, mode, *, automatic=True): return None
     def measurements(self, spec, cap): return {"temperature":self.measurement,"humidity":51.28,"pm25":None,"co2":None}
