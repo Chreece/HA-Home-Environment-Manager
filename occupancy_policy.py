@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 from collections.abc import Mapping
 from typing import Any
 
-from .discovery import entity_area
+from .discovery import entity_area, _device_class
 
 
 def _fresh(state: Any, max_age_minutes: float = 240, *, allow_empty: bool = False) -> bool:
@@ -283,8 +283,7 @@ def room_sensor_choices(hass: Any, area: str) -> list[str]:
     return sorted(
         state.entity_id for state in hass.states.async_all("binary_sensor")
         if entity_area(hass, state.entity_id) == area
-        and str(state.attributes.get("device_class", "")).casefold()
-        in ("occupancy", "presence")
+        and _device_class(hass, state).casefold() in ("occupancy", "presence")
     )
 
 
@@ -307,8 +306,7 @@ def selected_room_sensors(hass: Any, area: str, settings: Mapping,
         if isinstance(eid, str) and eid.startswith("binary_sensor.")
         and entity_area(hass, eid) == area
         and (state := hass.states.get(eid)) is not None
-        and str(state.attributes.get("device_class", "")).casefold()
-        in ("occupancy", "presence")
+        and _device_class(hass, state).casefold() in ("occupancy", "presence")
     ))
 
 
