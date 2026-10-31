@@ -99,7 +99,7 @@ jobs:
           python -I .github/tests/test_beta68_events.py
           python -I .github/tests/test_beta66_browser.py
           python -I .github/tests/test_beta68_browser.py
-          python -I .github/tests/test_beta77_compact_browser.py
+          python -I .github/tests/test_beta76_compact_browser.py
       - name: Package and inspect canonical HACS integration
         run: |
           python -I - <<'PY'
