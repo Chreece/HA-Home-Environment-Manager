@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Koti · Away · cooldown (min)",
           "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt",
-          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat"
+          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat",
+          "global_threshold_outdoor_aqi": "Ulkona · AQI (≤)",
+          "global_threshold_outdoor_co2": "Ulkona · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Ulkona · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Ulkona · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Ulkona · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Ulkona · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Ulko (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Ulko (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Ulko (µg/m³)",
+          "global_threshold_indoor_aqi": "Ilmanlaatu · AQI (≥)",
+          "global_threshold_indoor_co2": "Ilmanlaatu · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Ilmanlaatu · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Ilmanlaatu · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Ilmanlaatu · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Ilmanlaatu · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Ilmanlaatu · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Ulkona · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Ulkona · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Ulkona · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Sää ja varoitukset · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Avaa (min, ≤)",
+          "global_threshold_indoor_mold": "Homeindikaattori · ≥ 70%",
+          "pollen_high_from": "POLLEN · Siitepöly · HIGH",
+          "pollen_max_scale": "POLLEN · Siitepöly · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Siitepöly · NO VENT",
+          "general_source_stale_minutes": "lähde · max (min)",
+          "general_home_policy": "Koti · Läsnäolo · ohjaus"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Koti · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä. Ilmoituksen saavat henkilöt (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Puhelin, Kello, Tabletti.",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt (person.*) - Announcement Hub: Puhelin, Kello, Tabletti, Muu laite. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat: Puhelin Ilmoitus / TTS-puhe, Kello Ilmoitus / TTS-puhe, Tabletti Ilmoitus / TTS-puhe. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat: Puhelin Ilmoitus / TTS-puhe, Kello Ilmoitus / TTS-puhe, Tabletti Ilmoitus / TTS-puhe. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Päätösraja kohdalle ”Ulkona · AQI (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_co2": "Päätösraja kohdalle ”Ulkona · CO₂ (ppm) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_pm25": "Päätösraja kohdalle ”Ulkona · PM2.5 (µg/m³) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_pm10": "Päätösraja kohdalle ”Ulkona · PM10 (µg/m³) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_voc": "Päätösraja kohdalle ”Ulkona · VOC (µg/m³) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_voc_parts": "Päätösraja kohdalle ”Ulkona · VOC (ppb) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_no2": "Päätösraja kohdalle ”NO₂ · Ulko (µg/m³)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_o3": "Päätösraja kohdalle ”O₃ · Ulko (µg/m³)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_so2": "Päätösraja kohdalle ”SO₂ · Ulko (µg/m³)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_aqi": "Päätösraja kohdalle ”Ilmanlaatu · AQI (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_co2": "Päätösraja kohdalle ”Ilmanlaatu · CO₂ (ppm) (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_pm25": "Päätösraja kohdalle ”Ilmanlaatu · PM2.5 (µg/m³) (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_pm10": "Päätösraja kohdalle ”Ilmanlaatu · PM10 (µg/m³) (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_voc": "Päätösraja kohdalle ”Ilmanlaatu · VOC (µg/m³) (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_voc_parts": "Päätösraja kohdalle ”Ilmanlaatu · VOC (ppb) (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_humidity": "Päätösraja kohdalle ”Ilmanlaatu · RH (%) (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_min_outdoor_temp": "Päätösraja kohdalle ”Ulkona · °C (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_max_outdoor_temp": "Päätösraja kohdalle ”Ulkona · °C (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_max_outdoor_humidity": "Päätösraja kohdalle ”Ulkona · RH (%) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_max_wind_kmh": "Päätösraja kohdalle ”Sää ja varoitukset · km/h (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_max_age_minutes": "Päätösraja kohdalle ”⏱ · Avaa (min, ≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_mold": "Päätösraja kohdalle ”Homeindikaattori · ≥ 70%”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "pollen_high_from": "Määritä ”POLLEN · Siitepöly · HIGH” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
+          "pollen_max_scale": "Määritä ”POLLEN · Siitepöly · SCALE” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
+          "pollen_avoid_ventilation": "Määritä ”POLLEN · Siitepöly · NO VENT” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
+          "general_source_stale_minutes": "lähde · Uni / Läsnäolo · max 240 min. Virheellinen · Sammuta.",
+          "general_home_policy": "Tämä asetus ohjaa kohtaa ”Koti · Läsnäolo · ohjaus”. Fyysiset komennot vaativat erillisen luvan ja suojaukset."
         }
       },
       "reconfigure": {
         "title": "⚙️ Valitse",
         "description": "Valitse: Huoneet / Sää ja varoitukset / Ilmoitukset (valinnainen) / Lisäraja-arvot",
         "menu_options": {
-          "room_occupancy": "Läsnäolo · anturi",
-          "outside_data": "Ulko · lähde",
-          "general_settings": "Yleiset · asetukset",
-          "area_settings": "Alue · asetukset",
-          "delivery": "Ilmoitukset (valinnainen)",
-          "thresholds": "Lisäraja-arvot",
-          "climate": "asetukset · Laitteet",
-          "pid": "asetukset · PID",
-          "setup_rooms": "Valvottavat huoneet"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Yleiset asetukset"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Valvottavat huoneet → lähde → Yleiset asetukset",
+        "data": {
+          "areas": "Valvottavat huoneet"
+        },
+        "data_description": {
+          "areas": "Valvottavat huoneet. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+        "data": {
+          "windows": "Ikkunat",
+          "air_quality": "Ilmanlaatu- ja ympäristöanturit",
+          "temperature": "Lämpötila",
+          "humidity": "Kosteus",
+          "pressure": "Paineanturit",
+          "climate_devices": "Laitteet",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut",
+          "occupancy_sensors": "Läsnäolo · anturi"
+        },
+        "data_description": {
+          "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "air_quality": "Ilmanlaatu- ja ympäristöanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
+          "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Valitse",
         "description": "Valitse: Huoneet / Sää ja varoitukset / Ilmoitukset (valinnainen) / Lisäraja-arvot",
         "menu_options": {
-          "room_occupancy": "Läsnäolo · anturi",
-          "outside_data": "Ulko · lähde",
-          "general_settings": "Yleiset · asetukset",
-          "area_settings": "Alue · asetukset",
-          "delivery": "Ilmoitukset (valinnainen)",
-          "thresholds": "Lisäraja-arvot",
-          "climate": "asetukset · Laitteet",
-          "pid": "asetukset · PID",
-          "setup_rooms": "Valvottavat huoneet"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Yleiset asetukset"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Koti · Away · cooldown (min)",
           "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt",
-          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat"
+          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat",
+          "global_threshold_outdoor_aqi": "Ulkona · AQI (≤)",
+          "global_threshold_outdoor_co2": "Ulkona · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Ulkona · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Ulkona · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Ulkona · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Ulkona · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Ulko (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Ulko (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Ulko (µg/m³)",
+          "global_threshold_indoor_aqi": "Ilmanlaatu · AQI (≥)",
+          "global_threshold_indoor_co2": "Ilmanlaatu · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Ilmanlaatu · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Ilmanlaatu · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Ilmanlaatu · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Ilmanlaatu · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Ilmanlaatu · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Ulkona · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Ulkona · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Ulkona · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Sää ja varoitukset · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Avaa (min, ≤)",
+          "global_threshold_indoor_mold": "Homeindikaattori · ≥ 70%",
+          "pollen_high_from": "POLLEN · Siitepöly · HIGH",
+          "pollen_max_scale": "POLLEN · Siitepöly · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Siitepöly · NO VENT",
+          "general_source_stale_minutes": "lähde · max (min)",
+          "general_home_policy": "Koti · Läsnäolo · ohjaus"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Koti · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä. Ilmoituksen saavat henkilöt (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Puhelin, Kello, Tabletti.",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt (person.*) - Announcement Hub: Puhelin, Kello, Tabletti, Muu laite. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat: Puhelin Ilmoitus / TTS-puhe, Kello Ilmoitus / TTS-puhe, Tabletti Ilmoitus / TTS-puhe. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Ikkunavaroituksen kanavat: Puhelin Ilmoitus / TTS-puhe, Kello Ilmoitus / TTS-puhe, Tabletti Ilmoitus / TTS-puhe. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Päätösraja kohdalle ”Ulkona · AQI (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_co2": "Päätösraja kohdalle ”Ulkona · CO₂ (ppm) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_pm25": "Päätösraja kohdalle ”Ulkona · PM2.5 (µg/m³) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_pm10": "Päätösraja kohdalle ”Ulkona · PM10 (µg/m³) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_voc": "Päätösraja kohdalle ”Ulkona · VOC (µg/m³) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_voc_parts": "Päätösraja kohdalle ”Ulkona · VOC (ppb) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_no2": "Päätösraja kohdalle ”NO₂ · Ulko (µg/m³)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_o3": "Päätösraja kohdalle ”O₃ · Ulko (µg/m³)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_outdoor_so2": "Päätösraja kohdalle ”SO₂ · Ulko (µg/m³)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_aqi": "Päätösraja kohdalle ”Ilmanlaatu · AQI (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_co2": "Päätösraja kohdalle ”Ilmanlaatu · CO₂ (ppm) (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_pm25": "Päätösraja kohdalle ”Ilmanlaatu · PM2.5 (µg/m³) (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_pm10": "Päätösraja kohdalle ”Ilmanlaatu · PM10 (µg/m³) (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_voc": "Päätösraja kohdalle ”Ilmanlaatu · VOC (µg/m³) (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_voc_parts": "Päätösraja kohdalle ”Ilmanlaatu · VOC (ppb) (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_humidity": "Päätösraja kohdalle ”Ilmanlaatu · RH (%) (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_min_outdoor_temp": "Päätösraja kohdalle ”Ulkona · °C (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_max_outdoor_temp": "Päätösraja kohdalle ”Ulkona · °C (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_max_outdoor_humidity": "Päätösraja kohdalle ”Ulkona · RH (%) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_max_wind_kmh": "Päätösraja kohdalle ”Sää ja varoitukset · km/h (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_max_age_minutes": "Päätösraja kohdalle ”⏱ · Avaa (min, ≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "global_threshold_indoor_mold": "Päätösraja kohdalle ”Homeindikaattori · ≥ 70%”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "pollen_high_from": "Määritä ”POLLEN · Siitepöly · HIGH” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
+          "pollen_max_scale": "Määritä ”POLLEN · Siitepöly · SCALE” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
+          "pollen_avoid_ventilation": "Määritä ”POLLEN · Siitepöly · NO VENT” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
+          "general_source_stale_minutes": "lähde · Uni / Läsnäolo · max 240 min. Virheellinen · Sammuta.",
+          "general_home_policy": "Tämä asetus ohjaa kohtaa ”Koti · Läsnäolo · ohjaus”. Fyysiset komennot vaativat erillisen luvan ja suojaukset."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Valvottavat huoneet → lähde → Yleiset asetukset",
+        "data": {
+          "areas": "Valvottavat huoneet"
+        },
+        "data_description": {
+          "areas": "Valvottavat huoneet. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+        "data": {
+          "windows": "Ikkunat",
+          "air_quality": "Ilmanlaatu- ja ympäristöanturit",
+          "temperature": "Lämpötila",
+          "humidity": "Kosteus",
+          "pressure": "Paineanturit",
+          "climate_devices": "Laitteet",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut",
+          "occupancy_sensors": "Läsnäolo · anturi"
+        },
+        "data_description": {
+          "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "air_quality": "Ilmanlaatu- ja ympäristöanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
+          "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."
         }
       }
     },

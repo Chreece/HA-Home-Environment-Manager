@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Dom · Away · cooldown (min)",
           "away_open_window_alert": "Upozori na otvorene prozore kada svi odu",
           "away_windows_target_people": "Osobe za obavijest",
-          "away_windows_delivery_channels": "Kanali obavijesti o prozorima"
+          "away_windows_delivery_channels": "Kanali obavijesti o prozorima",
+          "global_threshold_outdoor_aqi": "Vani · AQI (≤)",
+          "global_threshold_outdoor_co2": "Vani · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Vani · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Vani · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Vani · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Vani · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Vanjski (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Vanjski (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Vanjski (µg/m³)",
+          "global_threshold_indoor_aqi": "Kvaliteta zraka · AQI (≥)",
+          "global_threshold_indoor_co2": "Kvaliteta zraka · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Kvaliteta zraka · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Kvaliteta zraka · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Kvaliteta zraka · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Kvaliteta zraka · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Kvaliteta zraka · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Vani · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Vani · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Vani · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Vrijeme i upozorenja · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Otvorite (min, ≤)",
+          "global_threshold_indoor_mold": "Pokazatelj plijesni · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pelud · HIGH",
+          "pollen_max_scale": "POLLEN · Pelud · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pelud · NO VENT",
+          "general_source_stale_minutes": "izvor · max (min)",
+          "general_home_policy": "Dom · Prisutnost · upravljanje"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · Dom · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Upozori na otvorene prozore kada svi odu. Osobe za obavijest (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Sat, Tablet.",
           "away_windows_target_people": "Osobe za obavijest (person.*) - Announcement Hub: Telefon, Sat, Tablet, Drugi uređaj. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanali obavijesti o prozorima: Telefon Obavijest / TTS govor, Sat Obavijest / TTS govor, Tablet Obavijest / TTS govor. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanali obavijesti o prozorima: Telefon Obavijest / TTS govor, Sat Obavijest / TTS govor, Tablet Obavijest / TTS govor. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Prag odluke za „Vani · AQI (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_co2": "Prag odluke za „Vani · CO₂ (ppm) (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_pm25": "Prag odluke za „Vani · PM2.5 (µg/m³) (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_pm10": "Prag odluke za „Vani · PM10 (µg/m³) (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_voc": "Prag odluke za „Vani · VOC (µg/m³) (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_voc_parts": "Prag odluke za „Vani · VOC (ppb) (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_no2": "Prag odluke za „NO₂ · Vanjski (µg/m³)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_o3": "Prag odluke za „O₃ · Vanjski (µg/m³)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_so2": "Prag odluke za „SO₂ · Vanjski (µg/m³)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_aqi": "Prag odluke za „Kvaliteta zraka · AQI (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_co2": "Prag odluke za „Kvaliteta zraka · CO₂ (ppm) (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_pm25": "Prag odluke za „Kvaliteta zraka · PM2.5 (µg/m³) (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_pm10": "Prag odluke za „Kvaliteta zraka · PM10 (µg/m³) (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_voc": "Prag odluke za „Kvaliteta zraka · VOC (µg/m³) (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_voc_parts": "Prag odluke za „Kvaliteta zraka · VOC (ppb) (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_humidity": "Prag odluke za „Kvaliteta zraka · RH (%) (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_min_outdoor_temp": "Prag odluke za „Vani · °C (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_max_outdoor_temp": "Prag odluke za „Vani · °C (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_max_outdoor_humidity": "Prag odluke za „Vani · RH (%) (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_max_wind_kmh": "Prag odluke za „Vrijeme i upozorenja · km/h (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_max_age_minutes": "Prag odluke za „⏱ · Otvorite (min, ≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_mold": "Prag odluke za „Pokazatelj plijesni · ≥ 70%”. Utječe na preporuke, nije medicinska granica.",
+          "pollen_high_from": "Postavite „POLLEN · Pelud · HIGH” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
+          "pollen_max_scale": "Postavite „POLLEN · Pelud · SCALE” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
+          "pollen_avoid_ventilation": "Postavite „POLLEN · Pelud · NO VENT” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
+          "general_source_stale_minutes": "izvor · Spavanje / Prisutnost · max 240 min. Neispravno · Isključi.",
+          "general_home_policy": "Ova opcija upravlja „Dom · Prisutnost · upravljanje”. Fizičke naredbe traže zasebno odobrenje i zaštitu."
         }
       },
       "reconfigure": {
         "title": "⚙️ Odaberite",
         "description": "Odaberite: Prostorije / Vrijeme i upozorenja / Obavijesti (neobavezno) / Napredni pragovi",
         "menu_options": {
-          "room_occupancy": "Prisutnost · senzor",
-          "outside_data": "Vanjski · izvor",
-          "general_settings": "Opće · postavke",
-          "area_settings": "Područje · postavke",
-          "delivery": "Obavijesti (neobavezno)",
-          "thresholds": "Napredni pragovi",
-          "climate": "postavke · Uređaji",
-          "pid": "postavke · PID",
-          "setup_rooms": "Sobe za praćenje"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Opće postavke"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Sobe za praćenje → izvor → Opće postavke",
+        "data": {
+          "areas": "Sobe za praćenje"
+        },
+        "data_description": {
+          "areas": "Sobe za praćenje. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+        "data": {
+          "windows": "Prozori",
+          "air_quality": "Senzori kvalitete zraka i okoliša",
+          "temperature": "Temperatura",
+          "humidity": "Vlažnost",
+          "pressure": "Senzori tlaka",
+          "climate_devices": "Uređaji",
+          "shades": "Prozorske rolete, sjenila i žaluzine",
+          "occupancy_sensors": "Prisutnost · senzor"
+        },
+        "data_description": {
+          "windows": "Prozori. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "air_quality": "Senzori kvalitete zraka i okoliša. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "temperature": "Temperatura. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "humidity": "Vlažnost. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "pressure": "Senzori tlaka. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "climate_devices": "Uređaji. Odaberi samo fizičke entitete climate.*, humidifier.* i fan.* ove sobe. Izvorne funkcije određuju grijanje, hlađenje, odvlaživanje, zadane vrijednosti i brzinu ventilatora. Sam odabir ništa ne pokreće; automatiku uključi zasebno za uređaj.",
+          "shades": "Prozorske rolete, sjenila i žaluzine. Odaberi rolete, žaluzine i zavjese cover.* ove sobe. Covers bez device_class prihvaćaju se uz CLOSE ako su stvarno zasjenjivači prozora. Garaže, vrata, kapije, prozori i tende su isključeni. Odabir ništa ne pomiče: dodijeli senzor prozora i postavi automatiku, najavu i temperaturu na kontroleru. Nepoznato stanje blokira pokret.",
+          "occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Odaberite",
         "description": "Odaberite: Prostorije / Vrijeme i upozorenja / Obavijesti (neobavezno) / Napredni pragovi",
         "menu_options": {
-          "room_occupancy": "Prisutnost · senzor",
-          "outside_data": "Vanjski · izvor",
-          "general_settings": "Opće · postavke",
-          "area_settings": "Područje · postavke",
-          "delivery": "Obavijesti (neobavezno)",
-          "thresholds": "Napredni pragovi",
-          "climate": "postavke · Uređaji",
-          "pid": "postavke · PID",
-          "setup_rooms": "Sobe za praćenje"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Opće postavke"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Dom · Away · cooldown (min)",
           "away_open_window_alert": "Upozori na otvorene prozore kada svi odu",
           "away_windows_target_people": "Osobe za obavijest",
-          "away_windows_delivery_channels": "Kanali obavijesti o prozorima"
+          "away_windows_delivery_channels": "Kanali obavijesti o prozorima",
+          "global_threshold_outdoor_aqi": "Vani · AQI (≤)",
+          "global_threshold_outdoor_co2": "Vani · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Vani · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Vani · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Vani · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Vani · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Vanjski (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Vanjski (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Vanjski (µg/m³)",
+          "global_threshold_indoor_aqi": "Kvaliteta zraka · AQI (≥)",
+          "global_threshold_indoor_co2": "Kvaliteta zraka · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Kvaliteta zraka · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Kvaliteta zraka · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Kvaliteta zraka · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Kvaliteta zraka · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Kvaliteta zraka · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Vani · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Vani · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Vani · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Vrijeme i upozorenja · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Otvorite (min, ≤)",
+          "global_threshold_indoor_mold": "Pokazatelj plijesni · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pelud · HIGH",
+          "pollen_max_scale": "POLLEN · Pelud · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pelud · NO VENT",
+          "general_source_stale_minutes": "izvor · max (min)",
+          "general_home_policy": "Dom · Prisutnost · upravljanje"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · Dom · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Upozori na otvorene prozore kada svi odu. Osobe za obavijest (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Sat, Tablet.",
           "away_windows_target_people": "Osobe za obavijest (person.*) - Announcement Hub: Telefon, Sat, Tablet, Drugi uređaj. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanali obavijesti o prozorima: Telefon Obavijest / TTS govor, Sat Obavijest / TTS govor, Tablet Obavijest / TTS govor. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanali obavijesti o prozorima: Telefon Obavijest / TTS govor, Sat Obavijest / TTS govor, Tablet Obavijest / TTS govor. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Prag odluke za „Vani · AQI (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_co2": "Prag odluke za „Vani · CO₂ (ppm) (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_pm25": "Prag odluke za „Vani · PM2.5 (µg/m³) (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_pm10": "Prag odluke za „Vani · PM10 (µg/m³) (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_voc": "Prag odluke za „Vani · VOC (µg/m³) (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_voc_parts": "Prag odluke za „Vani · VOC (ppb) (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_no2": "Prag odluke za „NO₂ · Vanjski (µg/m³)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_o3": "Prag odluke za „O₃ · Vanjski (µg/m³)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_outdoor_so2": "Prag odluke za „SO₂ · Vanjski (µg/m³)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_aqi": "Prag odluke za „Kvaliteta zraka · AQI (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_co2": "Prag odluke za „Kvaliteta zraka · CO₂ (ppm) (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_pm25": "Prag odluke za „Kvaliteta zraka · PM2.5 (µg/m³) (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_pm10": "Prag odluke za „Kvaliteta zraka · PM10 (µg/m³) (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_voc": "Prag odluke za „Kvaliteta zraka · VOC (µg/m³) (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_voc_parts": "Prag odluke za „Kvaliteta zraka · VOC (ppb) (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_humidity": "Prag odluke za „Kvaliteta zraka · RH (%) (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_min_outdoor_temp": "Prag odluke za „Vani · °C (≥)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_max_outdoor_temp": "Prag odluke za „Vani · °C (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_max_outdoor_humidity": "Prag odluke za „Vani · RH (%) (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_max_wind_kmh": "Prag odluke za „Vrijeme i upozorenja · km/h (≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_max_age_minutes": "Prag odluke za „⏱ · Otvorite (min, ≤)”. Utječe na preporuke, nije medicinska granica.",
+          "global_threshold_indoor_mold": "Prag odluke za „Pokazatelj plijesni · ≥ 70%”. Utječe na preporuke, nije medicinska granica.",
+          "pollen_high_from": "Postavite „POLLEN · Pelud · HIGH” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
+          "pollen_max_scale": "Postavite „POLLEN · Pelud · SCALE” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
+          "pollen_avoid_ventilation": "Postavite „POLLEN · Pelud · NO VENT” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
+          "general_source_stale_minutes": "izvor · Spavanje / Prisutnost · max 240 min. Neispravno · Isključi.",
+          "general_home_policy": "Ova opcija upravlja „Dom · Prisutnost · upravljanje”. Fizičke naredbe traže zasebno odobrenje i zaštitu."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Sobe za praćenje → izvor → Opće postavke",
+        "data": {
+          "areas": "Sobe za praćenje"
+        },
+        "data_description": {
+          "areas": "Sobe za praćenje. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+        "data": {
+          "windows": "Prozori",
+          "air_quality": "Senzori kvalitete zraka i okoliša",
+          "temperature": "Temperatura",
+          "humidity": "Vlažnost",
+          "pressure": "Senzori tlaka",
+          "climate_devices": "Uređaji",
+          "shades": "Prozorske rolete, sjenila i žaluzine",
+          "occupancy_sensors": "Prisutnost · senzor"
+        },
+        "data_description": {
+          "windows": "Prozori. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "air_quality": "Senzori kvalitete zraka i okoliša. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "temperature": "Temperatura. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "humidity": "Vlažnost. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "pressure": "Senzori tlaka. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "climate_devices": "Uređaji. Odaberi samo fizičke entitete climate.*, humidifier.* i fan.* ove sobe. Izvorne funkcije određuju grijanje, hlađenje, odvlaživanje, zadane vrijednosti i brzinu ventilatora. Sam odabir ništa ne pokreće; automatiku uključi zasebno za uređaj.",
+          "shades": "Prozorske rolete, sjenila i žaluzine. Odaberi rolete, žaluzine i zavjese cover.* ove sobe. Covers bez device_class prihvaćaju se uz CLOSE ako su stvarno zasjenjivači prozora. Garaže, vrata, kapije, prozori i tende su isključeni. Odabir ništa ne pomiče: dodijeli senzor prozora i postavi automatiku, najavu i temperaturu na kontroleru. Nepoznato stanje blokira pokret.",
+          "occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju."
         }
       }
     },

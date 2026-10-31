@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Rumah · Away · cooldown (min)",
           "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi",
           "away_windows_target_people": "Orang yang diberi tahu",
-          "away_windows_delivery_channels": "Saluran peringatan jendela"
+          "away_windows_delivery_channels": "Saluran peringatan jendela",
+          "global_threshold_outdoor_aqi": "Di luar · AQI (≤)",
+          "global_threshold_outdoor_co2": "Di luar · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Di luar · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Di luar · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Di luar · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Di luar · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Luar (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Luar (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Luar (µg/m³)",
+          "global_threshold_indoor_aqi": "Kualitas udara · AQI (≥)",
+          "global_threshold_indoor_co2": "Kualitas udara · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Kualitas udara · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Kualitas udara · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Kualitas udara · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Kualitas udara · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Kualitas udara · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Di luar · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Di luar · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Di luar · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Cuaca dan peringatan · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Buka (min, ≤)",
+          "global_threshold_indoor_mold": "Indikator jamur · ≥ 70%",
+          "pollen_high_from": "POLLEN · Serbuk sari · HIGH",
+          "pollen_max_scale": "POLLEN · Serbuk sari · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Serbuk sari · NO VENT",
+          "general_source_stale_minutes": "sumber · max (min)",
+          "general_home_policy": "Rumah · Kehadiran · kendali"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Rumah · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi. Orang yang diberi tahu (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Ponsel, Jam tangan, Tablet.",
           "away_windows_target_people": "Orang yang diberi tahu (person.*) - Announcement Hub: Ponsel, Jam tangan, Tablet, Perangkat lain. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Saluran peringatan jendela: Ponsel Notifikasi / Suara TTS, Jam tangan Notifikasi / Suara TTS, Tablet Notifikasi / Suara TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Saluran peringatan jendela: Ponsel Notifikasi / Suara TTS, Jam tangan Notifikasi / Suara TTS, Tablet Notifikasi / Suara TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Ambang keputusan untuk “Di luar · AQI (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_co2": "Ambang keputusan untuk “Di luar · CO₂ (ppm) (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_pm25": "Ambang keputusan untuk “Di luar · PM2.5 (µg/m³) (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_pm10": "Ambang keputusan untuk “Di luar · PM10 (µg/m³) (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_voc": "Ambang keputusan untuk “Di luar · VOC (µg/m³) (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_voc_parts": "Ambang keputusan untuk “Di luar · VOC (ppb) (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_no2": "Ambang keputusan untuk “NO₂ · Luar (µg/m³)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_o3": "Ambang keputusan untuk “O₃ · Luar (µg/m³)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_so2": "Ambang keputusan untuk “SO₂ · Luar (µg/m³)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_aqi": "Ambang keputusan untuk “Kualitas udara · AQI (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_co2": "Ambang keputusan untuk “Kualitas udara · CO₂ (ppm) (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_pm25": "Ambang keputusan untuk “Kualitas udara · PM2.5 (µg/m³) (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_pm10": "Ambang keputusan untuk “Kualitas udara · PM10 (µg/m³) (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_voc": "Ambang keputusan untuk “Kualitas udara · VOC (µg/m³) (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_voc_parts": "Ambang keputusan untuk “Kualitas udara · VOC (ppb) (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_humidity": "Ambang keputusan untuk “Kualitas udara · RH (%) (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_min_outdoor_temp": "Ambang keputusan untuk “Di luar · °C (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_max_outdoor_temp": "Ambang keputusan untuk “Di luar · °C (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_max_outdoor_humidity": "Ambang keputusan untuk “Di luar · RH (%) (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_max_wind_kmh": "Ambang keputusan untuk “Cuaca dan peringatan · km/h (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_max_age_minutes": "Ambang keputusan untuk “⏱ · Buka (min, ≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_mold": "Ambang keputusan untuk “Indikator jamur · ≥ 70%”. Memengaruhi saran, bukan batas medis.",
+          "pollen_high_from": "Atur “POLLEN · Serbuk sari · HIGH” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
+          "pollen_max_scale": "Atur “POLLEN · Serbuk sari · SCALE” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
+          "pollen_avoid_ventilation": "Atur “POLLEN · Serbuk sari · NO VENT” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
+          "general_source_stale_minutes": "sumber · Tidur / Kehadiran · max 240 min. Tidak valid · Matikan.",
+          "general_home_policy": "Opsi ini mengatur “Rumah · Kehadiran · kendali”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri."
         }
       },
       "reconfigure": {
         "title": "⚙️ Pilih",
         "description": "Pilih: Ruangan / Cuaca dan peringatan / Pengumuman (opsional) / Ambang batas lanjutan",
         "menu_options": {
-          "room_occupancy": "Kehadiran · sensor",
-          "outside_data": "Luar · sumber",
-          "general_settings": "Umum · pengaturan",
-          "area_settings": "Area · pengaturan",
-          "delivery": "Pengumuman (opsional)",
-          "thresholds": "Ambang batas lanjutan",
-          "climate": "pengaturan · Perangkat",
-          "pid": "pengaturan · PID",
-          "setup_rooms": "Ruangan untuk dipantau"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Umum pengaturan"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Ruangan untuk dipantau → sumber → Umum pengaturan",
+        "data": {
+          "areas": "Ruangan untuk dipantau"
+        },
+        "data_description": {
+          "areas": "Ruangan untuk dipantau. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+        "data": {
+          "windows": "Jendela",
+          "air_quality": "Sensor kualitas udara dan lingkungan",
+          "temperature": "Suhu",
+          "humidity": "Kelembapan",
+          "pressure": "Sensor tekanan",
+          "climate_devices": "Perangkat",
+          "shades": "Tirai, gorden, dan penutup jendela",
+          "occupancy_sensors": "Kehadiran · sensor"
+        },
+        "data_description": {
+          "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "air_quality": "Sensor kualitas udara dan lingkungan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "temperature": "Suhu. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "pressure": "Sensor tekanan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
+          "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
+          "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Pilih",
         "description": "Pilih: Ruangan / Cuaca dan peringatan / Pengumuman (opsional) / Ambang batas lanjutan",
         "menu_options": {
-          "room_occupancy": "Kehadiran · sensor",
-          "outside_data": "Luar · sumber",
-          "general_settings": "Umum · pengaturan",
-          "area_settings": "Area · pengaturan",
-          "delivery": "Pengumuman (opsional)",
-          "thresholds": "Ambang batas lanjutan",
-          "climate": "pengaturan · Perangkat",
-          "pid": "pengaturan · PID",
-          "setup_rooms": "Ruangan untuk dipantau"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Umum pengaturan"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Rumah · Away · cooldown (min)",
           "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi",
           "away_windows_target_people": "Orang yang diberi tahu",
-          "away_windows_delivery_channels": "Saluran peringatan jendela"
+          "away_windows_delivery_channels": "Saluran peringatan jendela",
+          "global_threshold_outdoor_aqi": "Di luar · AQI (≤)",
+          "global_threshold_outdoor_co2": "Di luar · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Di luar · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Di luar · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Di luar · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Di luar · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Luar (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Luar (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Luar (µg/m³)",
+          "global_threshold_indoor_aqi": "Kualitas udara · AQI (≥)",
+          "global_threshold_indoor_co2": "Kualitas udara · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Kualitas udara · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Kualitas udara · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Kualitas udara · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Kualitas udara · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Kualitas udara · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Di luar · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Di luar · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Di luar · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Cuaca dan peringatan · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Buka (min, ≤)",
+          "global_threshold_indoor_mold": "Indikator jamur · ≥ 70%",
+          "pollen_high_from": "POLLEN · Serbuk sari · HIGH",
+          "pollen_max_scale": "POLLEN · Serbuk sari · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Serbuk sari · NO VENT",
+          "general_source_stale_minutes": "sumber · max (min)",
+          "general_home_policy": "Rumah · Kehadiran · kendali"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Rumah · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi. Orang yang diberi tahu (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Ponsel, Jam tangan, Tablet.",
           "away_windows_target_people": "Orang yang diberi tahu (person.*) - Announcement Hub: Ponsel, Jam tangan, Tablet, Perangkat lain. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Saluran peringatan jendela: Ponsel Notifikasi / Suara TTS, Jam tangan Notifikasi / Suara TTS, Tablet Notifikasi / Suara TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Saluran peringatan jendela: Ponsel Notifikasi / Suara TTS, Jam tangan Notifikasi / Suara TTS, Tablet Notifikasi / Suara TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Ambang keputusan untuk “Di luar · AQI (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_co2": "Ambang keputusan untuk “Di luar · CO₂ (ppm) (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_pm25": "Ambang keputusan untuk “Di luar · PM2.5 (µg/m³) (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_pm10": "Ambang keputusan untuk “Di luar · PM10 (µg/m³) (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_voc": "Ambang keputusan untuk “Di luar · VOC (µg/m³) (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_voc_parts": "Ambang keputusan untuk “Di luar · VOC (ppb) (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_no2": "Ambang keputusan untuk “NO₂ · Luar (µg/m³)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_o3": "Ambang keputusan untuk “O₃ · Luar (µg/m³)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_outdoor_so2": "Ambang keputusan untuk “SO₂ · Luar (µg/m³)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_aqi": "Ambang keputusan untuk “Kualitas udara · AQI (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_co2": "Ambang keputusan untuk “Kualitas udara · CO₂ (ppm) (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_pm25": "Ambang keputusan untuk “Kualitas udara · PM2.5 (µg/m³) (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_pm10": "Ambang keputusan untuk “Kualitas udara · PM10 (µg/m³) (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_voc": "Ambang keputusan untuk “Kualitas udara · VOC (µg/m³) (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_voc_parts": "Ambang keputusan untuk “Kualitas udara · VOC (ppb) (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_humidity": "Ambang keputusan untuk “Kualitas udara · RH (%) (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_min_outdoor_temp": "Ambang keputusan untuk “Di luar · °C (≥)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_max_outdoor_temp": "Ambang keputusan untuk “Di luar · °C (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_max_outdoor_humidity": "Ambang keputusan untuk “Di luar · RH (%) (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_max_wind_kmh": "Ambang keputusan untuk “Cuaca dan peringatan · km/h (≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_max_age_minutes": "Ambang keputusan untuk “⏱ · Buka (min, ≤)”. Memengaruhi saran, bukan batas medis.",
+          "global_threshold_indoor_mold": "Ambang keputusan untuk “Indikator jamur · ≥ 70%”. Memengaruhi saran, bukan batas medis.",
+          "pollen_high_from": "Atur “POLLEN · Serbuk sari · HIGH” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
+          "pollen_max_scale": "Atur “POLLEN · Serbuk sari · SCALE” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
+          "pollen_avoid_ventilation": "Atur “POLLEN · Serbuk sari · NO VENT” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
+          "general_source_stale_minutes": "sumber · Tidur / Kehadiran · max 240 min. Tidak valid · Matikan.",
+          "general_home_policy": "Opsi ini mengatur “Rumah · Kehadiran · kendali”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Ruangan untuk dipantau → sumber → Umum pengaturan",
+        "data": {
+          "areas": "Ruangan untuk dipantau"
+        },
+        "data_description": {
+          "areas": "Ruangan untuk dipantau. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+        "data": {
+          "windows": "Jendela",
+          "air_quality": "Sensor kualitas udara dan lingkungan",
+          "temperature": "Suhu",
+          "humidity": "Kelembapan",
+          "pressure": "Sensor tekanan",
+          "climate_devices": "Perangkat",
+          "shades": "Tirai, gorden, dan penutup jendela",
+          "occupancy_sensors": "Kehadiran · sensor"
+        },
+        "data_description": {
+          "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "air_quality": "Sensor kualitas udara dan lingkungan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "temperature": "Suhu. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "pressure": "Sensor tekanan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
+          "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
+          "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."
         }
       }
     },

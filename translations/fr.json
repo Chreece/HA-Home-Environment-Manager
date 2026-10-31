@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Maison · Away · cooldown (min)",
           "away_open_window_alert": "Alerter si des fenêtres restent ouvertes après le départ",
           "away_windows_target_people": "Personnes à prévenir",
-          "away_windows_delivery_channels": "Canaux d'alerte des fenêtres"
+          "away_windows_delivery_channels": "Canaux d'alerte des fenêtres",
+          "global_threshold_outdoor_aqi": "AQI extérieur maximal",
+          "global_threshold_outdoor_co2": "CO₂ extérieur maximal (ppm)",
+          "global_threshold_outdoor_pm25": "PM2,5 extérieur maximal (µg/m³)",
+          "global_threshold_outdoor_pm10": "PM10 extérieur maximal (µg/m³)",
+          "global_threshold_outdoor_voc": "COV extérieur maximal (µg/m³)",
+          "global_threshold_outdoor_voc_parts": "COV extérieur maximal (ppb)",
+          "global_threshold_outdoor_no2": "NO₂ extérieur - seuil opérationnel (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ extérieur - seuil opérationnel (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ extérieur - seuil opérationnel (µg/m³)",
+          "global_threshold_indoor_aqi": "Seuil d'AQI intérieur déclenchant l'aération",
+          "global_threshold_indoor_co2": "Seuil de CO₂ intérieur déclenchant l'aération (ppm)",
+          "global_threshold_indoor_pm25": "Seuil de PM2,5 intérieur déclenchant l'aération (µg/m³)",
+          "global_threshold_indoor_pm10": "Seuil de PM10 intérieur déclenchant l'aération (µg/m³)",
+          "global_threshold_indoor_voc": "Seuil de COV intérieur déclenchant l'aération (µg/m³)",
+          "global_threshold_indoor_voc_parts": "Seuil de COV intérieur déclenchant l'aération (ppb)",
+          "global_threshold_indoor_humidity": "Seuil d'humidité intérieure déclenchant l'aération (%)",
+          "global_threshold_min_outdoor_temp": "Température extérieure minimale (°C)",
+          "global_threshold_max_outdoor_temp": "Température extérieure maximale (°C)",
+          "global_threshold_max_outdoor_humidity": "Humidité extérieure maximale (%)",
+          "global_threshold_max_wind_kmh": "Vitesse maximale du vent (km/h)",
+          "global_threshold_max_age_minutes": "Âge maximal d'une mesure extérieure (minutes)",
+          "global_threshold_indoor_mold": "Seuil de moisissure pour aérer (humidité de surface estimée, %)",
+          "pollen_high_from": "POLLEN · Pollen · HIGH",
+          "pollen_max_scale": "POLLEN · Pollen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
+          "general_source_stale_minutes": "source · max (min)",
+          "general_home_policy": "Maison · Présence · contrôle"
         },
         "data_description": {
           "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres. L'indicateur de moisissure utilise l'attribut temperature (°C/°F) d'une entité météo sélectionnée comme température extérieure. Sélectionnez une source qui fournit une température.",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Après qu'une source valide de pièces occupées devient vide, attendez ce nombre de minutes avant Away. Les données inconnues ou anciennes ne déclenchent jamais Away.",
           "away_open_window_alert": "Désactivé par défaut. Alerte immédiate lorsque toutes les sources de présence choisies confirment l'absence. Les compteurs number/input_number valent 0 si personne n'est là; un nombre positif signifie une présence. Les valeurs inconnues ne prouvent pas l'absence. Pas d'alerte lors d'un redémarrage en absence; les nouvelles ouvertures peuvent être signalées.",
           "away_windows_target_people": "Choisissez les personnes person.* concernées, dont les appareils doivent être configurés dans Announcement Hub. Aucun envoi général dans les pièces en cas de destination manquante.",
-          "away_windows_delivery_channels": "Sélection multiple des notifications ou de la voix TTS sur téléphone, montre et tablette. Chaque canal est limité aux appareils attribués aux personnes choisies."
+          "away_windows_delivery_channels": "Sélection multiple des notifications ou de la voix TTS sur téléphone, montre et tablette. Chaque canal est limité aux appareils attribués aux personnes choisies.",
+          "global_threshold_outdoor_aqi": "Seuil de décision pour « AQI extérieur maximal ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_co2": "Seuil de décision pour « CO₂ extérieur maximal (ppm) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_pm25": "Seuil de décision pour « PM2,5 extérieur maximal (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_pm10": "Seuil de décision pour « PM10 extérieur maximal (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_voc": "Seuil de décision pour « COV extérieur maximal (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_voc_parts": "Seuil de décision pour « COV extérieur maximal (ppb) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_no2": "Seuil de décision pour « NO₂ extérieur - seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_o3": "Seuil de décision pour « O₃ extérieur - seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_so2": "Seuil de décision pour « SO₂ extérieur - seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_aqi": "Seuil de décision pour « Seuil d'AQI intérieur déclenchant l'aération ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_co2": "Seuil de décision pour « Seuil de CO₂ intérieur déclenchant l'aération (ppm) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_pm25": "Seuil de décision pour « Seuil de PM2,5 intérieur déclenchant l'aération (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_pm10": "Seuil de décision pour « Seuil de PM10 intérieur déclenchant l'aération (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_voc": "Seuil de décision pour « Seuil de COV intérieur déclenchant l'aération (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_voc_parts": "Seuil de décision pour « Seuil de COV intérieur déclenchant l'aération (ppb) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_humidity": "Seuil de décision pour « Seuil d'humidité intérieure déclenchant l'aération (%) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_min_outdoor_temp": "Seuil de décision pour « Température extérieure minimale (°C) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_max_outdoor_temp": "Seuil de décision pour « Température extérieure maximale (°C) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_max_outdoor_humidity": "Seuil de décision pour « Humidité extérieure maximale (%) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_max_wind_kmh": "Seuil de décision pour « Vitesse maximale du vent (km/h) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_max_age_minutes": "Seuil de décision pour « Âge maximal d'une mesure extérieure (minutes) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_mold": "Seuil de décision pour « Seuil de moisissure pour aérer (humidité de surface estimée, %) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "pollen_high_from": "Configurez « POLLEN · Pollen · HIGH » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
+          "pollen_max_scale": "Configurez « POLLEN · Pollen · SCALE » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
+          "pollen_avoid_ventilation": "Configurez « POLLEN · Pollen · NO VENT » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
+          "general_source_stale_minutes": "source · Sommeil / Présence · max 240 min. Invalide · Arrêt.",
+          "general_home_policy": "Cette option règle « Maison · Présence · contrôle ». Les commandes physiques exigent un accord distinct et des protections indépendantes."
         }
       },
       "reconfigure": {
         "title": "Choisir les paramètres à modifier",
         "description": "Choisissez une rubrique. Les autres paramètres restent inchangés.",
         "menu_options": {
-          "room_occupancy": "Capteurs de présence par pièce",
-          "outside_data": "Extérieur · source",
-          "general_settings": "Général · paramètres",
-          "area_settings": "Zone · paramètres",
-          "delivery": "Annonces (facultatif)",
-          "thresholds": "Seuils avancés",
-          "climate": "Climat - choisir une pièce",
-          "pid": "PID climatique - choisir une pièce",
-          "setup_rooms": "Pièces à surveiller"
+          "choose_rooms": "Choisir les pièces",
+          "general_settings": "Paramètres généraux"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "Les capteurs de présence sont présélectionnés. La liste valide des pièces occupées (même vide) a priorité; les capteurs servent seulement si la liste est indisponible."
         }
+      },
+      "choose_rooms": {
+        "title": "Choisir les pièces",
+        "description": "Pièces à surveiller → source → Général paramètres",
+        "data": {
+          "areas": "Pièces à surveiller"
+        },
+        "data_description": {
+          "areas": "Pièces à surveiller. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande."
+        }
+      },
+      "room_settings": {
+        "title": "Paramètres · {area_name}",
+        "description": "Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+        "data": {
+          "windows": "Fenêtres",
+          "air_quality": "Capteurs de qualité de l’air et d’environnement",
+          "temperature": "Température",
+          "humidity": "Humidité",
+          "pressure": "Capteurs de pression",
+          "climate_devices": "Appareils",
+          "shades": "Stores, rideaux et volets de fenêtre",
+          "occupancy_sensors": "Présence · capteur"
+        },
+        "data_description": {
+          "windows": "Fenêtres. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "air_quality": "Capteurs de qualité de l’air et d’environnement. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "temperature": "Température. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "pressure": "Capteurs de pression. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
+          "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
+          "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "Choisir les paramètres à modifier",
         "description": "Choisissez une rubrique. Les autres paramètres restent inchangés.",
         "menu_options": {
-          "room_occupancy": "Capteurs de présence par pièce",
-          "outside_data": "Extérieur · source",
-          "general_settings": "Général · paramètres",
-          "area_settings": "Zone · paramètres",
-          "delivery": "Annonces (facultatif)",
-          "thresholds": "Seuils avancés",
-          "climate": "Climat - choisir une pièce",
-          "pid": "PID climatique - choisir une pièce",
-          "setup_rooms": "Pièces à surveiller"
+          "choose_rooms": "Choisir les pièces",
+          "general_settings": "Paramètres généraux"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Maison · Away · cooldown (min)",
           "away_open_window_alert": "Alerter si des fenêtres restent ouvertes après le départ",
           "away_windows_target_people": "Personnes à prévenir",
-          "away_windows_delivery_channels": "Canaux d'alerte des fenêtres"
+          "away_windows_delivery_channels": "Canaux d'alerte des fenêtres",
+          "global_threshold_outdoor_aqi": "AQI extérieur maximal",
+          "global_threshold_outdoor_co2": "CO₂ extérieur maximal (ppm)",
+          "global_threshold_outdoor_pm25": "PM2,5 extérieur maximal (µg/m³)",
+          "global_threshold_outdoor_pm10": "PM10 extérieur maximal (µg/m³)",
+          "global_threshold_outdoor_voc": "COV extérieur maximal (µg/m³)",
+          "global_threshold_outdoor_voc_parts": "COV extérieur maximal (ppb)",
+          "global_threshold_outdoor_no2": "NO₂ extérieur - seuil opérationnel (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ extérieur - seuil opérationnel (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ extérieur - seuil opérationnel (µg/m³)",
+          "global_threshold_indoor_aqi": "Seuil d'AQI intérieur déclenchant l'aération",
+          "global_threshold_indoor_co2": "Seuil de CO₂ intérieur déclenchant l'aération (ppm)",
+          "global_threshold_indoor_pm25": "Seuil de PM2,5 intérieur déclenchant l'aération (µg/m³)",
+          "global_threshold_indoor_pm10": "Seuil de PM10 intérieur déclenchant l'aération (µg/m³)",
+          "global_threshold_indoor_voc": "Seuil de COV intérieur déclenchant l'aération (µg/m³)",
+          "global_threshold_indoor_voc_parts": "Seuil de COV intérieur déclenchant l'aération (ppb)",
+          "global_threshold_indoor_humidity": "Seuil d'humidité intérieure déclenchant l'aération (%)",
+          "global_threshold_min_outdoor_temp": "Température extérieure minimale (°C)",
+          "global_threshold_max_outdoor_temp": "Température extérieure maximale (°C)",
+          "global_threshold_max_outdoor_humidity": "Humidité extérieure maximale (%)",
+          "global_threshold_max_wind_kmh": "Vitesse maximale du vent (km/h)",
+          "global_threshold_max_age_minutes": "Âge maximal d'une mesure extérieure (minutes)",
+          "global_threshold_indoor_mold": "Seuil de moisissure pour aérer (humidité de surface estimée, %)",
+          "pollen_high_from": "POLLEN · Pollen · HIGH",
+          "pollen_max_scale": "POLLEN · Pollen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
+          "general_source_stale_minutes": "source · max (min)",
+          "general_home_policy": "Maison · Présence · contrôle"
         },
         "data_description": {
           "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres. L'indicateur de moisissure utilise l'attribut temperature (°C/°F) d'une entité météo sélectionnée comme température extérieure. Sélectionnez une source qui fournit une température.",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Après qu'une source valide de pièces occupées devient vide, attendez ce nombre de minutes avant Away. Les données inconnues ou anciennes ne déclenchent jamais Away.",
           "away_open_window_alert": "Désactivé par défaut. Alerte immédiate lorsque toutes les sources de présence choisies confirment l'absence. Les compteurs number/input_number valent 0 si personne n'est là; un nombre positif signifie une présence. Les valeurs inconnues ne prouvent pas l'absence. Pas d'alerte lors d'un redémarrage en absence; les nouvelles ouvertures peuvent être signalées.",
           "away_windows_target_people": "Choisissez les personnes person.* concernées, dont les appareils doivent être configurés dans Announcement Hub. Aucun envoi général dans les pièces en cas de destination manquante.",
-          "away_windows_delivery_channels": "Sélection multiple des notifications ou de la voix TTS sur téléphone, montre et tablette. Chaque canal est limité aux appareils attribués aux personnes choisies."
+          "away_windows_delivery_channels": "Sélection multiple des notifications ou de la voix TTS sur téléphone, montre et tablette. Chaque canal est limité aux appareils attribués aux personnes choisies.",
+          "global_threshold_outdoor_aqi": "Seuil de décision pour « AQI extérieur maximal ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_co2": "Seuil de décision pour « CO₂ extérieur maximal (ppm) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_pm25": "Seuil de décision pour « PM2,5 extérieur maximal (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_pm10": "Seuil de décision pour « PM10 extérieur maximal (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_voc": "Seuil de décision pour « COV extérieur maximal (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_voc_parts": "Seuil de décision pour « COV extérieur maximal (ppb) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_no2": "Seuil de décision pour « NO₂ extérieur - seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_o3": "Seuil de décision pour « O₃ extérieur - seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_outdoor_so2": "Seuil de décision pour « SO₂ extérieur - seuil opérationnel (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_aqi": "Seuil de décision pour « Seuil d'AQI intérieur déclenchant l'aération ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_co2": "Seuil de décision pour « Seuil de CO₂ intérieur déclenchant l'aération (ppm) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_pm25": "Seuil de décision pour « Seuil de PM2,5 intérieur déclenchant l'aération (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_pm10": "Seuil de décision pour « Seuil de PM10 intérieur déclenchant l'aération (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_voc": "Seuil de décision pour « Seuil de COV intérieur déclenchant l'aération (µg/m³) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_voc_parts": "Seuil de décision pour « Seuil de COV intérieur déclenchant l'aération (ppb) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_humidity": "Seuil de décision pour « Seuil d'humidité intérieure déclenchant l'aération (%) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_min_outdoor_temp": "Seuil de décision pour « Température extérieure minimale (°C) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_max_outdoor_temp": "Seuil de décision pour « Température extérieure maximale (°C) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_max_outdoor_humidity": "Seuil de décision pour « Humidité extérieure maximale (%) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_max_wind_kmh": "Seuil de décision pour « Vitesse maximale du vent (km/h) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_max_age_minutes": "Seuil de décision pour « Âge maximal d'une mesure extérieure (minutes) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "global_threshold_indoor_mold": "Seuil de décision pour « Seuil de moisissure pour aérer (humidité de surface estimée, %) ». Il influence les conseils, mais ne constitue pas une limite médicale.",
+          "pollen_high_from": "Configurez « POLLEN · Pollen · HIGH » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
+          "pollen_max_scale": "Configurez « POLLEN · Pollen · SCALE » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
+          "pollen_avoid_ventilation": "Configurez « POLLEN · Pollen · NO VENT » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
+          "general_source_stale_minutes": "source · Sommeil / Présence · max 240 min. Invalide · Arrêt.",
+          "general_home_policy": "Cette option règle « Maison · Présence · contrôle ». Les commandes physiques exigent un accord distinct et des protections indépendantes."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Les capteurs de présence sont présélectionnés. La liste valide des pièces occupées (même vide) a priorité; les capteurs servent seulement si la liste est indisponible."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choisir les pièces",
+        "description": "Pièces à surveiller → source → Général paramètres",
+        "data": {
+          "areas": "Pièces à surveiller"
+        },
+        "data_description": {
+          "areas": "Pièces à surveiller. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande."
+        }
+      },
+      "room_settings": {
+        "title": "Paramètres · {area_name}",
+        "description": "Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+        "data": {
+          "windows": "Fenêtres",
+          "air_quality": "Capteurs de qualité de l’air et d’environnement",
+          "temperature": "Température",
+          "humidity": "Humidité",
+          "pressure": "Capteurs de pression",
+          "climate_devices": "Appareils",
+          "shades": "Stores, rideaux et volets de fenêtre",
+          "occupancy_sensors": "Présence · capteur"
+        },
+        "data_description": {
+          "windows": "Fenêtres. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "air_quality": "Capteurs de qualité de l’air et d’environnement. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "temperature": "Température. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "pressure": "Capteurs de pression. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
+          "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
+          "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
         }
       }
     },

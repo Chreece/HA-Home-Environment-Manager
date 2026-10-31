@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "خانه · Away · cooldown (min)",
           "away_open_window_alert": "هشدار پنجره باز پس از خروج همه از خانه",
           "away_windows_target_people": "افراد دریافت کننده هشدار",
-          "away_windows_delivery_channels": "کانال های هشدار پنجره"
+          "away_windows_delivery_channels": "کانال های هشدار پنجره",
+          "global_threshold_outdoor_aqi": "بیرون · AQI (≤)",
+          "global_threshold_outdoor_co2": "بیرون · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "بیرون · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "بیرون · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "بیرون · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "بیرون · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · بیرون (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · بیرون (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · بیرون (µg/m³)",
+          "global_threshold_indoor_aqi": "کیفیت هوا · AQI (≥)",
+          "global_threshold_indoor_co2": "کیفیت هوا · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "کیفیت هوا · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "کیفیت هوا · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "کیفیت هوا · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "کیفیت هوا · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "کیفیت هوا · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "بیرون · °C (≥)",
+          "global_threshold_max_outdoor_temp": "بیرون · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "بیرون · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "آب‌وهوا و هشدارها · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · باز کنید (min, ≤)",
+          "global_threshold_indoor_mold": "شاخص کپک · ≥ 70%",
+          "pollen_high_from": "POLLEN · گرده · HIGH",
+          "pollen_max_scale": "POLLEN · گرده · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · گرده · NO VENT",
+          "general_source_stale_minutes": "منبع · max (min)",
+          "general_home_policy": "خانه · حضور · کنترل"
         },
         "data_description": {
           "weather_entities": "انتخاب کنید: آب‌وهوا و هشدارها · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · خانه · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "هشدار پنجره باز پس از خروج همه از خانه. افراد دریافت کننده هشدار (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. تلفن, ساعت, تبلت.",
           "away_windows_target_people": "افراد دریافت کننده هشدار (person.*) - Announcement Hub: تلفن, ساعت, تبلت, دستگاه دیگر. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "کانال های هشدار پنجره: تلفن اعلان / گفتار TTS, ساعت اعلان / گفتار TTS, تبلت اعلان / گفتار TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "کانال های هشدار پنجره: تلفن اعلان / گفتار TTS, ساعت اعلان / گفتار TTS, تبلت اعلان / گفتار TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "این آستانهٔ تصمیم برای «بیرون · AQI (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_co2": "این آستانهٔ تصمیم برای «بیرون · CO₂ (ppm) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_pm25": "این آستانهٔ تصمیم برای «بیرون · PM2.5 (µg/m³) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_pm10": "این آستانهٔ تصمیم برای «بیرون · PM10 (µg/m³) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_voc": "این آستانهٔ تصمیم برای «بیرون · VOC (µg/m³) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_voc_parts": "این آستانهٔ تصمیم برای «بیرون · VOC (ppb) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_no2": "این آستانهٔ تصمیم برای «NO₂ · بیرون (µg/m³)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_o3": "این آستانهٔ تصمیم برای «O₃ · بیرون (µg/m³)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_so2": "این آستانهٔ تصمیم برای «SO₂ · بیرون (µg/m³)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_aqi": "این آستانهٔ تصمیم برای «کیفیت هوا · AQI (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_co2": "این آستانهٔ تصمیم برای «کیفیت هوا · CO₂ (ppm) (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_pm25": "این آستانهٔ تصمیم برای «کیفیت هوا · PM2.5 (µg/m³) (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_pm10": "این آستانهٔ تصمیم برای «کیفیت هوا · PM10 (µg/m³) (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_voc": "این آستانهٔ تصمیم برای «کیفیت هوا · VOC (µg/m³) (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_voc_parts": "این آستانهٔ تصمیم برای «کیفیت هوا · VOC (ppb) (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_humidity": "این آستانهٔ تصمیم برای «کیفیت هوا · RH (%) (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_min_outdoor_temp": "این آستانهٔ تصمیم برای «بیرون · °C (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_max_outdoor_temp": "این آستانهٔ تصمیم برای «بیرون · °C (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_max_outdoor_humidity": "این آستانهٔ تصمیم برای «بیرون · RH (%) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_max_wind_kmh": "این آستانهٔ تصمیم برای «آب‌وهوا و هشدارها · km/h (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_max_age_minutes": "این آستانهٔ تصمیم برای «⏱ · باز کنید (min, ≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_mold": "این آستانهٔ تصمیم برای «شاخص کپک · ≥ 70%» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "pollen_high_from": "«POLLEN · گرده · HIGH» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
+          "pollen_max_scale": "«POLLEN · گرده · SCALE» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
+          "pollen_avoid_ventilation": "«POLLEN · گرده · NO VENT» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
+          "general_source_stale_minutes": "منبع · خواب / حضور · max 240 min. نامعتبر · خاموش.",
+          "general_home_policy": "این گزینه «خانه · حضور · کنترل» را کنترل می‌کند. فرمان دستگاه نیازمند مجوز جداگانه و حفاظت مستقل است."
         }
       },
       "reconfigure": {
         "title": "⚙️ انتخاب کنید",
         "description": "انتخاب کنید: اتاق‌ها / آب‌وهوا و هشدارها / اعلان‌ها (اختیاری) / آستانه‌های پیشرفته",
         "menu_options": {
-          "room_occupancy": "حضور · حسگر",
-          "outside_data": "بیرون · منبع",
-          "general_settings": "عمومی · تنظیمات",
-          "area_settings": "ناحیه · تنظیمات",
-          "delivery": "اعلان‌ها (اختیاری)",
-          "thresholds": "آستانه‌های پیشرفته",
-          "climate": "تنظیمات · دستگاه‌ها",
-          "pid": "تنظیمات · PID",
-          "setup_rooms": "اتاق‌های مورد پایش"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "عمومی تنظیمات"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "اتاق‌های مورد پایش → منبع → عمومی تنظیمات",
+        "data": {
+          "areas": "اتاق‌های مورد پایش"
+        },
+        "data_description": {
+          "areas": "اتاق‌های مورد پایش. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
+        "data": {
+          "windows": "پنجره‌ها",
+          "air_quality": "حسگرهای کیفیت هوا و محیط",
+          "temperature": "دما",
+          "humidity": "رطوبت",
+          "pressure": "حسگرهای فشار",
+          "climate_devices": "دستگاه‌ها",
+          "shades": "پرده‌ها، کرکره‌ها و سایه‌بان‌های پنجره",
+          "occupancy_sensors": "حضور · حسگر"
+        },
+        "data_description": {
+          "windows": "پنجره‌ها. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
+          "air_quality": "حسگرهای کیفیت هوا و محیط. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
+          "temperature": "دما. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
+          "humidity": "رطوبت. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
+          "pressure": "حسگرهای فشار. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
+          "climate_devices": "دستگاه‌ها. فقط موجودیت‌های فیزیکی climate.*، humidifier.* و fan.* اتاق را انتخاب کنید. توانایی دستگاه نوع گرمایش، سرمایش، خشک‌سازی، هدف‌ها و سرعت فن را تعیین می‌کند. انتخاب دستگاه را روشن نمی‌کند؛ کنترل خودکار را جداگانه برای هر دستگاه فعال کنید.",
+          "shades": "پرده‌ها، کرکره‌ها و سایه‌بان‌های پنجره. پرده، کرکره و سایه‌بان پنجره از نوع cover.* این اتاق را انتخاب کنید. Covers بدون device_class با قابلیت CLOSE و پس از تأیید کاربرد پنجره پذیرفته می‌شوند. درها، دروازه‌ها، گاراژ، پنجره و سایبان بیرونی مجاز نیستند. انتخاب حرکتی ایجاد نمی‌کند: حسگر پنجره، کنترل خودکار، اعلان و دما را در کنترل‌کننده تنظیم کنید. وضعیت نامعلوم مانع حرکت است.",
+          "occupancy_sensors": "برای «حضور · حسگر» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ انتخاب کنید",
         "description": "انتخاب کنید: اتاق‌ها / آب‌وهوا و هشدارها / اعلان‌ها (اختیاری) / آستانه‌های پیشرفته",
         "menu_options": {
-          "room_occupancy": "حضور · حسگر",
-          "outside_data": "بیرون · منبع",
-          "general_settings": "عمومی · تنظیمات",
-          "area_settings": "ناحیه · تنظیمات",
-          "delivery": "اعلان‌ها (اختیاری)",
-          "thresholds": "آستانه‌های پیشرفته",
-          "climate": "تنظیمات · دستگاه‌ها",
-          "pid": "تنظیمات · PID",
-          "setup_rooms": "اتاق‌های مورد پایش"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "عمومی تنظیمات"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "خانه · Away · cooldown (min)",
           "away_open_window_alert": "هشدار پنجره باز پس از خروج همه از خانه",
           "away_windows_target_people": "افراد دریافت کننده هشدار",
-          "away_windows_delivery_channels": "کانال های هشدار پنجره"
+          "away_windows_delivery_channels": "کانال های هشدار پنجره",
+          "global_threshold_outdoor_aqi": "بیرون · AQI (≤)",
+          "global_threshold_outdoor_co2": "بیرون · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "بیرون · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "بیرون · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "بیرون · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "بیرون · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · بیرون (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · بیرون (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · بیرون (µg/m³)",
+          "global_threshold_indoor_aqi": "کیفیت هوا · AQI (≥)",
+          "global_threshold_indoor_co2": "کیفیت هوا · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "کیفیت هوا · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "کیفیت هوا · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "کیفیت هوا · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "کیفیت هوا · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "کیفیت هوا · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "بیرون · °C (≥)",
+          "global_threshold_max_outdoor_temp": "بیرون · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "بیرون · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "آب‌وهوا و هشدارها · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · باز کنید (min, ≤)",
+          "global_threshold_indoor_mold": "شاخص کپک · ≥ 70%",
+          "pollen_high_from": "POLLEN · گرده · HIGH",
+          "pollen_max_scale": "POLLEN · گرده · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · گرده · NO VENT",
+          "general_source_stale_minutes": "منبع · max (min)",
+          "general_home_policy": "خانه · حضور · کنترل"
         },
         "data_description": {
           "weather_entities": "انتخاب کنید: آب‌وهوا و هشدارها · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · خانه · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "هشدار پنجره باز پس از خروج همه از خانه. افراد دریافت کننده هشدار (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. تلفن, ساعت, تبلت.",
           "away_windows_target_people": "افراد دریافت کننده هشدار (person.*) - Announcement Hub: تلفن, ساعت, تبلت, دستگاه دیگر. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "کانال های هشدار پنجره: تلفن اعلان / گفتار TTS, ساعت اعلان / گفتار TTS, تبلت اعلان / گفتار TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "کانال های هشدار پنجره: تلفن اعلان / گفتار TTS, ساعت اعلان / گفتار TTS, تبلت اعلان / گفتار TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "این آستانهٔ تصمیم برای «بیرون · AQI (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_co2": "این آستانهٔ تصمیم برای «بیرون · CO₂ (ppm) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_pm25": "این آستانهٔ تصمیم برای «بیرون · PM2.5 (µg/m³) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_pm10": "این آستانهٔ تصمیم برای «بیرون · PM10 (µg/m³) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_voc": "این آستانهٔ تصمیم برای «بیرون · VOC (µg/m³) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_voc_parts": "این آستانهٔ تصمیم برای «بیرون · VOC (ppb) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_no2": "این آستانهٔ تصمیم برای «NO₂ · بیرون (µg/m³)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_o3": "این آستانهٔ تصمیم برای «O₃ · بیرون (µg/m³)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_outdoor_so2": "این آستانهٔ تصمیم برای «SO₂ · بیرون (µg/m³)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_aqi": "این آستانهٔ تصمیم برای «کیفیت هوا · AQI (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_co2": "این آستانهٔ تصمیم برای «کیفیت هوا · CO₂ (ppm) (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_pm25": "این آستانهٔ تصمیم برای «کیفیت هوا · PM2.5 (µg/m³) (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_pm10": "این آستانهٔ تصمیم برای «کیفیت هوا · PM10 (µg/m³) (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_voc": "این آستانهٔ تصمیم برای «کیفیت هوا · VOC (µg/m³) (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_voc_parts": "این آستانهٔ تصمیم برای «کیفیت هوا · VOC (ppb) (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_humidity": "این آستانهٔ تصمیم برای «کیفیت هوا · RH (%) (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_min_outdoor_temp": "این آستانهٔ تصمیم برای «بیرون · °C (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_max_outdoor_temp": "این آستانهٔ تصمیم برای «بیرون · °C (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_max_outdoor_humidity": "این آستانهٔ تصمیم برای «بیرون · RH (%) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_max_wind_kmh": "این آستانهٔ تصمیم برای «آب‌وهوا و هشدارها · km/h (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_max_age_minutes": "این آستانهٔ تصمیم برای «⏱ · باز کنید (min, ≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "global_threshold_indoor_mold": "این آستانهٔ تصمیم برای «شاخص کپک · ≥ 70%» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
+          "pollen_high_from": "«POLLEN · گرده · HIGH» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
+          "pollen_max_scale": "«POLLEN · گرده · SCALE» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
+          "pollen_avoid_ventilation": "«POLLEN · گرده · NO VENT» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
+          "general_source_stale_minutes": "منبع · خواب / حضور · max 240 min. نامعتبر · خاموش.",
+          "general_home_policy": "این گزینه «خانه · حضور · کنترل» را کنترل می‌کند. فرمان دستگاه نیازمند مجوز جداگانه و حفاظت مستقل است."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "اتاق‌های مورد پایش → منبع → عمومی تنظیمات",
+        "data": {
+          "areas": "اتاق‌های مورد پایش"
+        },
+        "data_description": {
+          "areas": "اتاق‌های مورد پایش. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
+        "data": {
+          "windows": "پنجره‌ها",
+          "air_quality": "حسگرهای کیفیت هوا و محیط",
+          "temperature": "دما",
+          "humidity": "رطوبت",
+          "pressure": "حسگرهای فشار",
+          "climate_devices": "دستگاه‌ها",
+          "shades": "پرده‌ها، کرکره‌ها و سایه‌بان‌های پنجره",
+          "occupancy_sensors": "حضور · حسگر"
+        },
+        "data_description": {
+          "windows": "پنجره‌ها. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
+          "air_quality": "حسگرهای کیفیت هوا و محیط. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
+          "temperature": "دما. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
+          "humidity": "رطوبت. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
+          "pressure": "حسگرهای فشار. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
+          "climate_devices": "دستگاه‌ها. فقط موجودیت‌های فیزیکی climate.*، humidifier.* و fan.* اتاق را انتخاب کنید. توانایی دستگاه نوع گرمایش، سرمایش، خشک‌سازی، هدف‌ها و سرعت فن را تعیین می‌کند. انتخاب دستگاه را روشن نمی‌کند؛ کنترل خودکار را جداگانه برای هر دستگاه فعال کنید.",
+          "shades": "پرده‌ها، کرکره‌ها و سایه‌بان‌های پنجره. پرده، کرکره و سایه‌بان پنجره از نوع cover.* این اتاق را انتخاب کنید. Covers بدون device_class با قابلیت CLOSE و پس از تأیید کاربرد پنجره پذیرفته می‌شوند. درها، دروازه‌ها، گاراژ، پنجره و سایبان بیرونی مجاز نیستند. انتخاب حرکتی ایجاد نمی‌کند: حسگر پنجره، کنترل خودکار، اعلان و دما را در کنترل‌کننده تنظیم کنید. وضعیت نامعلوم مانع حرکت است.",
+          "occupancy_sensors": "برای «حضور · حسگر» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند."
         }
       }
     },

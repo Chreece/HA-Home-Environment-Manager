@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "自宅 · Away · cooldown (min)",
           "away_open_window_alert": "全員の外出後に開いた窓を通知",
           "away_windows_target_people": "通知する人物",
-          "away_windows_delivery_channels": "窓の通知先と方法"
+          "away_windows_delivery_channels": "窓の通知先と方法",
+          "global_threshold_outdoor_aqi": "屋外 · AQI (≤)",
+          "global_threshold_outdoor_co2": "屋外 · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "屋外 · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "屋外 · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "屋外 · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "屋外 · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · 屋外 (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · 屋外 (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · 屋外 (µg/m³)",
+          "global_threshold_indoor_aqi": "空気質 · AQI (≥)",
+          "global_threshold_indoor_co2": "空気質 · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "空気質 · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "空気質 · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "空気質 · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "空気質 · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "空気質 · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "屋外 · °C (≥)",
+          "global_threshold_max_outdoor_temp": "屋外 · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "屋外 · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "天気と警報 · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · 開ける (min, ≤)",
+          "global_threshold_indoor_mold": "カビ指標 · ≥ 70%",
+          "pollen_high_from": "POLLEN · 花粉 · HIGH",
+          "pollen_max_scale": "POLLEN · 花粉 · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · 花粉 · NO VENT",
+          "general_source_stale_minutes": "情報源 · max (min)",
+          "general_home_policy": "自宅 · 在室 · 制御"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自宅 · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "全員の外出後に開いた窓を通知. 通知する人物 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. スマートフォン, 腕時計, タブレット.",
           "away_windows_target_people": "通知する人物 (person.*) - Announcement Hub: スマートフォン, 腕時計, タブレット, その他の端末. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "窓の通知先と方法: スマートフォン 通知 / TTS 音声, 腕時計 通知 / TTS 音声, タブレット 通知 / TTS 音声. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "窓の通知先と方法: スマートフォン 通知 / TTS 音声, 腕時計 通知 / TTS 音声, タブレット 通知 / TTS 音声. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "「屋外 · AQI (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_co2": "「屋外 · CO₂ (ppm) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_pm25": "「屋外 · PM2.5 (µg/m³) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_pm10": "「屋外 · PM10 (µg/m³) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_voc": "「屋外 · VOC (µg/m³) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_voc_parts": "「屋外 · VOC (ppb) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_no2": "「NO₂ · 屋外 (µg/m³)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_o3": "「O₃ · 屋外 (µg/m³)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_so2": "「SO₂ · 屋外 (µg/m³)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_aqi": "「空気質 · AQI (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_co2": "「空気質 · CO₂ (ppm) (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_pm25": "「空気質 · PM2.5 (µg/m³) (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_pm10": "「空気質 · PM10 (µg/m³) (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_voc": "「空気質 · VOC (µg/m³) (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_voc_parts": "「空気質 · VOC (ppb) (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_humidity": "「空気質 · RH (%) (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_min_outdoor_temp": "「屋外 · °C (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_max_outdoor_temp": "「屋外 · °C (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_max_outdoor_humidity": "「屋外 · RH (%) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_max_wind_kmh": "「天気と警報 · km/h (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_max_age_minutes": "「⏱ · 開ける (min, ≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_mold": "「カビ指標 · ≥ 70%」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "pollen_high_from": "「POLLEN · 花粉 · HIGH」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
+          "pollen_max_scale": "「POLLEN · 花粉 · SCALE」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
+          "pollen_avoid_ventilation": "「POLLEN · 花粉 · NO VENT」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
+          "general_source_stale_minutes": "情報源 · 睡眠 / 在室 · max 240 min. 無効 · オフ.",
+          "general_home_policy": "この項目は「自宅 · 在室 · 制御」を設定します。機器への指示には個別の許可と独立した保護が必要です。"
         }
       },
       "reconfigure": {
         "title": "⚙️ 選択してください",
         "description": "選択してください: 部屋 / 天気と警報 / 通知（任意） / 詳細なしきい値",
         "menu_options": {
-          "room_occupancy": "在室 · センサー",
-          "outside_data": "屋外 · 情報源",
-          "general_settings": "一般 · 設定",
-          "area_settings": "エリア · 設定",
-          "delivery": "通知（任意）",
-          "thresholds": "詳細なしきい値",
-          "climate": "設定 · デバイス",
-          "pid": "設定 · PID",
-          "setup_rooms": "監視する部屋"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "一般 設定"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "監視する部屋 → 情報源 → 一般 設定",
+        "data": {
+          "areas": "監視する部屋"
+        },
+        "data_description": {
+          "areas": "監視する部屋. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。"
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+        "data": {
+          "windows": "窓",
+          "air_quality": "空気質・環境センサー",
+          "temperature": "温度",
+          "humidity": "湿度",
+          "pressure": "気圧センサー",
+          "climate_devices": "デバイス",
+          "shades": "窓のブラインド・シェード・シャッター",
+          "occupancy_sensors": "在室 · センサー"
+        },
+        "data_description": {
+          "windows": "窓. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "air_quality": "空気質・環境センサー. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "temperature": "温度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "humidity": "湿度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "pressure": "気圧センサー. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "climate_devices": "デバイス. この部屋の実機 climate.*、humidifier.*、fan.* のエンティティだけを選択します。対応する暖房・冷房・除湿、設定温湿度、ファン速度は機器の機能に依存します。選択だけでは動作せず、各コントローラーで自動制御を個別に有効にします。",
+          "shades": "窓のブラインド・シェード・シャッター. 部屋の cover.* ブラインド、ローラーシャッター、カーテンを選択します。device_class がなくても CLOSE に対応し、実際の窓の日除けなら選択できます。ガレージ、門、ドア、窓、屋外オーニングは除外します。選択だけでは動かず、コントローラーで窓センサー、自動制御、事前通知、温度しきい値を設定します。状態不明時は動作しません。",
+          "occupancy_sensors": "「在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。"
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ 選択してください",
         "description": "選択してください: 部屋 / 天気と警報 / 通知（任意） / 詳細なしきい値",
         "menu_options": {
-          "room_occupancy": "在室 · センサー",
-          "outside_data": "屋外 · 情報源",
-          "general_settings": "一般 · 設定",
-          "area_settings": "エリア · 設定",
-          "delivery": "通知（任意）",
-          "thresholds": "詳細なしきい値",
-          "climate": "設定 · デバイス",
-          "pid": "設定 · PID",
-          "setup_rooms": "監視する部屋"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "一般 設定"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "自宅 · Away · cooldown (min)",
           "away_open_window_alert": "全員の外出後に開いた窓を通知",
           "away_windows_target_people": "通知する人物",
-          "away_windows_delivery_channels": "窓の通知先と方法"
+          "away_windows_delivery_channels": "窓の通知先と方法",
+          "global_threshold_outdoor_aqi": "屋外 · AQI (≤)",
+          "global_threshold_outdoor_co2": "屋外 · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "屋外 · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "屋外 · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "屋外 · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "屋外 · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · 屋外 (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · 屋外 (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · 屋外 (µg/m³)",
+          "global_threshold_indoor_aqi": "空気質 · AQI (≥)",
+          "global_threshold_indoor_co2": "空気質 · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "空気質 · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "空気質 · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "空気質 · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "空気質 · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "空気質 · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "屋外 · °C (≥)",
+          "global_threshold_max_outdoor_temp": "屋外 · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "屋外 · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "天気と警報 · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · 開ける (min, ≤)",
+          "global_threshold_indoor_mold": "カビ指標 · ≥ 70%",
+          "pollen_high_from": "POLLEN · 花粉 · HIGH",
+          "pollen_max_scale": "POLLEN · 花粉 · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · 花粉 · NO VENT",
+          "general_source_stale_minutes": "情報源 · max (min)",
+          "general_home_policy": "自宅 · 在室 · 制御"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 自宅 · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "全員の外出後に開いた窓を通知. 通知する人物 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. スマートフォン, 腕時計, タブレット.",
           "away_windows_target_people": "通知する人物 (person.*) - Announcement Hub: スマートフォン, 腕時計, タブレット, その他の端末. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "窓の通知先と方法: スマートフォン 通知 / TTS 音声, 腕時計 通知 / TTS 音声, タブレット 通知 / TTS 音声. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "窓の通知先と方法: スマートフォン 通知 / TTS 音声, 腕時計 通知 / TTS 音声, タブレット 通知 / TTS 音声. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "「屋外 · AQI (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_co2": "「屋外 · CO₂ (ppm) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_pm25": "「屋外 · PM2.5 (µg/m³) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_pm10": "「屋外 · PM10 (µg/m³) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_voc": "「屋外 · VOC (µg/m³) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_voc_parts": "「屋外 · VOC (ppb) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_no2": "「NO₂ · 屋外 (µg/m³)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_o3": "「O₃ · 屋外 (µg/m³)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_outdoor_so2": "「SO₂ · 屋外 (µg/m³)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_aqi": "「空気質 · AQI (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_co2": "「空気質 · CO₂ (ppm) (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_pm25": "「空気質 · PM2.5 (µg/m³) (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_pm10": "「空気質 · PM10 (µg/m³) (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_voc": "「空気質 · VOC (µg/m³) (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_voc_parts": "「空気質 · VOC (ppb) (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_humidity": "「空気質 · RH (%) (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_min_outdoor_temp": "「屋外 · °C (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_max_outdoor_temp": "「屋外 · °C (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_max_outdoor_humidity": "「屋外 · RH (%) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_max_wind_kmh": "「天気と警報 · km/h (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_max_age_minutes": "「⏱ · 開ける (min, ≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "global_threshold_indoor_mold": "「カビ指標 · ≥ 70%」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "pollen_high_from": "「POLLEN · 花粉 · HIGH」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
+          "pollen_max_scale": "「POLLEN · 花粉 · SCALE」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
+          "pollen_avoid_ventilation": "「POLLEN · 花粉 · NO VENT」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
+          "general_source_stale_minutes": "情報源 · 睡眠 / 在室 · max 240 min. 無効 · オフ.",
+          "general_home_policy": "この項目は「自宅 · 在室 · 制御」を設定します。機器への指示には個別の許可と独立した保護が必要です。"
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "監視する部屋 → 情報源 → 一般 設定",
+        "data": {
+          "areas": "監視する部屋"
+        },
+        "data_description": {
+          "areas": "監視する部屋. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。"
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+        "data": {
+          "windows": "窓",
+          "air_quality": "空気質・環境センサー",
+          "temperature": "温度",
+          "humidity": "湿度",
+          "pressure": "気圧センサー",
+          "climate_devices": "デバイス",
+          "shades": "窓のブラインド・シェード・シャッター",
+          "occupancy_sensors": "在室 · センサー"
+        },
+        "data_description": {
+          "windows": "窓. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "air_quality": "空気質・環境センサー. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "temperature": "温度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "humidity": "湿度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "pressure": "気圧センサー. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
+          "climate_devices": "デバイス. この部屋の実機 climate.*、humidifier.*、fan.* のエンティティだけを選択します。対応する暖房・冷房・除湿、設定温湿度、ファン速度は機器の機能に依存します。選択だけでは動作せず、各コントローラーで自動制御を個別に有効にします。",
+          "shades": "窓のブラインド・シェード・シャッター. 部屋の cover.* ブラインド、ローラーシャッター、カーテンを選択します。device_class がなくても CLOSE に対応し、実際の窓の日除けなら選択できます。ガレージ、門、ドア、窓、屋外オーニングは除外します。選択だけでは動かず、コントローラーで窓センサー、自動制御、事前通知、温度しきい値を設定します。状態不明時は動作しません。",
+          "occupancy_sensors": "「在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。"
         }
       }
     },

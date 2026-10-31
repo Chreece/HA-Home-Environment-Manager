@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Otthon · Away · cooldown (min)",
           "away_open_window_alert": "Figyelmeztessen a nyitott ablakokra távozáskor",
           "away_windows_target_people": "Értesítendő személyek",
-          "away_windows_delivery_channels": "Ablakriasztás csatornái"
+          "away_windows_delivery_channels": "Ablakriasztás csatornái",
+          "global_threshold_outdoor_aqi": "Kint · AQI (≤)",
+          "global_threshold_outdoor_co2": "Kint · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Kint · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Kint · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Kint · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Kint · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Kültéri (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Kültéri (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Kültéri (µg/m³)",
+          "global_threshold_indoor_aqi": "Levegőminőség · AQI (≥)",
+          "global_threshold_indoor_co2": "Levegőminőség · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Levegőminőség · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Levegőminőség · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Levegőminőség · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Levegőminőség · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Levegőminőség · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Kint · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Kint · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Kint · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Időjárás és riasztások · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Nyisd ki (min, ≤)",
+          "global_threshold_indoor_mold": "Penészesedési mutató · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pollen · HIGH",
+          "pollen_max_scale": "POLLEN · Pollen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
+          "general_source_stale_minutes": "forrás · max (min)",
+          "general_home_policy": "Otthon · Jelenlét · vezérlés"
         },
         "data_description": {
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Otthon · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Figyelmeztessen a nyitott ablakokra távozáskor. Értesítendő személyek (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Óra, Táblagép.",
           "away_windows_target_people": "Értesítendő személyek (person.*) - Announcement Hub: Telefon, Óra, Táblagép, Más eszköz. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Ablakriasztás csatornái: Telefon Értesítés / TTS beszéd, Óra Értesítés / TTS beszéd, Táblagép Értesítés / TTS beszéd. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Ablakriasztás csatornái: Telefon Értesítés / TTS beszéd, Óra Értesítés / TTS beszéd, Táblagép Értesítés / TTS beszéd. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "„Kint · AQI (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_co2": "„Kint · CO₂ (ppm) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_pm25": "„Kint · PM2.5 (µg/m³) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_pm10": "„Kint · PM10 (µg/m³) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_voc": "„Kint · VOC (µg/m³) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_voc_parts": "„Kint · VOC (ppb) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_no2": "„NO₂ · Kültéri (µg/m³)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_o3": "„O₃ · Kültéri (µg/m³)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_so2": "„SO₂ · Kültéri (µg/m³)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_aqi": "„Levegőminőség · AQI (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_co2": "„Levegőminőség · CO₂ (ppm) (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_pm25": "„Levegőminőség · PM2.5 (µg/m³) (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_pm10": "„Levegőminőség · PM10 (µg/m³) (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_voc": "„Levegőminőség · VOC (µg/m³) (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_voc_parts": "„Levegőminőség · VOC (ppb) (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_humidity": "„Levegőminőség · RH (%) (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_min_outdoor_temp": "„Kint · °C (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_max_outdoor_temp": "„Kint · °C (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_max_outdoor_humidity": "„Kint · RH (%) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_max_wind_kmh": "„Időjárás és riasztások · km/h (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_max_age_minutes": "„⏱ · Nyisd ki (min, ≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_mold": "„Penészesedési mutató · ≥ 70%” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "pollen_high_from": "„POLLEN · Pollen · HIGH” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
+          "pollen_max_scale": "„POLLEN · Pollen · SCALE” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
+          "pollen_avoid_ventilation": "„POLLEN · Pollen · NO VENT” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
+          "general_source_stale_minutes": "forrás · Alvás / Jelenlét · max 240 min. Érvénytelen · Kikapcsolás.",
+          "general_home_policy": "Ez a beállítás ezt vezérli: „Otthon · Jelenlét · vezérlés”. Fizikai parancshoz külön engedély és védelem kell."
         }
       },
       "reconfigure": {
         "title": "⚙️ Válassz",
         "description": "Válassz: Helyiségek / Időjárás és riasztások / Értesítések (opcionális) / Speciális határértékek",
         "menu_options": {
-          "room_occupancy": "Jelenlét · érzékelő",
-          "outside_data": "Kültéri · forrás",
-          "general_settings": "Általános · beállítások",
-          "area_settings": "Terület · beállítások",
-          "delivery": "Értesítések (opcionális)",
-          "thresholds": "Speciális határértékek",
-          "climate": "beállítások · Eszközök",
-          "pid": "beállítások · PID",
-          "setup_rooms": "Figyelendő helyiségek"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Általános beállítások"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Figyelendő helyiségek → forrás → Általános beállítások",
+        "data": {
+          "areas": "Figyelendő helyiségek"
+        },
+        "data_description": {
+          "areas": "Figyelendő helyiségek. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+        "data": {
+          "windows": "Ablakok",
+          "air_quality": "Levegőminőség- és környezeti érzékelők",
+          "temperature": "Hőmérséklet",
+          "humidity": "Páratartalom",
+          "pressure": "Nyomásérzékelők",
+          "climate_devices": "Eszközök",
+          "shades": "Ablakredőnyök, reluxák és függönyök",
+          "occupancy_sensors": "Jelenlét · érzékelő"
+        },
+        "data_description": {
+          "windows": "Ablakok. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "air_quality": "Levegőminőség- és környezeti érzékelők. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "temperature": "Hőmérséklet. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "humidity": "Páratartalom. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "pressure": "Nyomásérzékelők. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "climate_devices": "Eszközök. Csak a szoba valódi climate.*, humidifier.* és fan.* entitásait válaszd. A natív képességek határozzák meg a fűtést, hűtést, párátlanítást, célértékeket és ventilátorsebességet. A kiválasztás nem kapcsol be semmit; az automatika eszközönként engedélyezhető.",
+          "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás.",
+          "occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Válassz",
         "description": "Válassz: Helyiségek / Időjárás és riasztások / Értesítések (opcionális) / Speciális határértékek",
         "menu_options": {
-          "room_occupancy": "Jelenlét · érzékelő",
-          "outside_data": "Kültéri · forrás",
-          "general_settings": "Általános · beállítások",
-          "area_settings": "Terület · beállítások",
-          "delivery": "Értesítések (opcionális)",
-          "thresholds": "Speciális határértékek",
-          "climate": "beállítások · Eszközök",
-          "pid": "beállítások · PID",
-          "setup_rooms": "Figyelendő helyiségek"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "Általános beállítások"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Otthon · Away · cooldown (min)",
           "away_open_window_alert": "Figyelmeztessen a nyitott ablakokra távozáskor",
           "away_windows_target_people": "Értesítendő személyek",
-          "away_windows_delivery_channels": "Ablakriasztás csatornái"
+          "away_windows_delivery_channels": "Ablakriasztás csatornái",
+          "global_threshold_outdoor_aqi": "Kint · AQI (≤)",
+          "global_threshold_outdoor_co2": "Kint · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Kint · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Kint · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Kint · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Kint · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Kültéri (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Kültéri (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Kültéri (µg/m³)",
+          "global_threshold_indoor_aqi": "Levegőminőség · AQI (≥)",
+          "global_threshold_indoor_co2": "Levegőminőség · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Levegőminőség · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Levegőminőség · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Levegőminőség · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Levegőminőség · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Levegőminőség · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Kint · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Kint · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Kint · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Időjárás és riasztások · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Nyisd ki (min, ≤)",
+          "global_threshold_indoor_mold": "Penészesedési mutató · ≥ 70%",
+          "pollen_high_from": "POLLEN · Pollen · HIGH",
+          "pollen_max_scale": "POLLEN · Pollen · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
+          "general_source_stale_minutes": "forrás · max (min)",
+          "general_home_policy": "Otthon · Jelenlét · vezérlés"
         },
         "data_description": {
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Otthon · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Figyelmeztessen a nyitott ablakokra távozáskor. Értesítendő személyek (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Óra, Táblagép.",
           "away_windows_target_people": "Értesítendő személyek (person.*) - Announcement Hub: Telefon, Óra, Táblagép, Más eszköz. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Ablakriasztás csatornái: Telefon Értesítés / TTS beszéd, Óra Értesítés / TTS beszéd, Táblagép Értesítés / TTS beszéd. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Ablakriasztás csatornái: Telefon Értesítés / TTS beszéd, Óra Értesítés / TTS beszéd, Táblagép Értesítés / TTS beszéd. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "„Kint · AQI (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_co2": "„Kint · CO₂ (ppm) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_pm25": "„Kint · PM2.5 (µg/m³) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_pm10": "„Kint · PM10 (µg/m³) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_voc": "„Kint · VOC (µg/m³) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_voc_parts": "„Kint · VOC (ppb) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_no2": "„NO₂ · Kültéri (µg/m³)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_o3": "„O₃ · Kültéri (µg/m³)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_outdoor_so2": "„SO₂ · Kültéri (µg/m³)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_aqi": "„Levegőminőség · AQI (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_co2": "„Levegőminőség · CO₂ (ppm) (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_pm25": "„Levegőminőség · PM2.5 (µg/m³) (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_pm10": "„Levegőminőség · PM10 (µg/m³) (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_voc": "„Levegőminőség · VOC (µg/m³) (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_voc_parts": "„Levegőminőség · VOC (ppb) (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_humidity": "„Levegőminőség · RH (%) (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_min_outdoor_temp": "„Kint · °C (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_max_outdoor_temp": "„Kint · °C (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_max_outdoor_humidity": "„Kint · RH (%) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_max_wind_kmh": "„Időjárás és riasztások · km/h (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_max_age_minutes": "„⏱ · Nyisd ki (min, ≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "global_threshold_indoor_mold": "„Penészesedési mutató · ≥ 70%” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
+          "pollen_high_from": "„POLLEN · Pollen · HIGH” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
+          "pollen_max_scale": "„POLLEN · Pollen · SCALE” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
+          "pollen_avoid_ventilation": "„POLLEN · Pollen · NO VENT” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
+          "general_source_stale_minutes": "forrás · Alvás / Jelenlét · max 240 min. Érvénytelen · Kikapcsolás.",
+          "general_home_policy": "Ez a beállítás ezt vezérli: „Otthon · Jelenlét · vezérlés”. Fizikai parancshoz külön engedély és védelem kell."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "Figyelendő helyiségek → forrás → Általános beállítások",
+        "data": {
+          "areas": "Figyelendő helyiségek"
+        },
+        "data_description": {
+          "areas": "Figyelendő helyiségek. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+        "data": {
+          "windows": "Ablakok",
+          "air_quality": "Levegőminőség- és környezeti érzékelők",
+          "temperature": "Hőmérséklet",
+          "humidity": "Páratartalom",
+          "pressure": "Nyomásérzékelők",
+          "climate_devices": "Eszközök",
+          "shades": "Ablakredőnyök, reluxák és függönyök",
+          "occupancy_sensors": "Jelenlét · érzékelő"
+        },
+        "data_description": {
+          "windows": "Ablakok. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "air_quality": "Levegőminőség- és környezeti érzékelők. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "temperature": "Hőmérséklet. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "humidity": "Páratartalom. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "pressure": "Nyomásérzékelők. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "climate_devices": "Eszközök. Csak a szoba valódi climate.*, humidifier.* és fan.* entitásait válaszd. A natív képességek határozzák meg a fűtést, hűtést, párátlanítást, célértékeket és ventilátorsebességet. A kiválasztás nem kapcsol be semmit; az automatika eszközönként engedélyezhető.",
+          "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás.",
+          "occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet."
         }
       }
     },

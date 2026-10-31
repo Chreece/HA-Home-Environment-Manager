@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "घर · Away · cooldown (min)",
           "away_open_window_alert": "सबके जाने पर खुली खिड़कियों की सूचना दें",
           "away_windows_target_people": "सूचना पाने वाले व्यक्ति",
-          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम"
+          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम",
+          "global_threshold_outdoor_aqi": "बाहर · AQI (≤)",
+          "global_threshold_outdoor_co2": "बाहर · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "बाहर · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "बाहर · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "बाहर · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "बाहर · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · बाहरी (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · बाहरी (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · बाहरी (µg/m³)",
+          "global_threshold_indoor_aqi": "वायु गुणवत्ता · AQI (≥)",
+          "global_threshold_indoor_co2": "वायु गुणवत्ता · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "वायु गुणवत्ता · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "वायु गुणवत्ता · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "वायु गुणवत्ता · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "वायु गुणवत्ता · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "वायु गुणवत्ता · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "बाहर · °C (≥)",
+          "global_threshold_max_outdoor_temp": "बाहर · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "बाहर · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "मौसम और चेतावनियाँ · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · खोलें (min, ≤)",
+          "global_threshold_indoor_mold": "फफूंद संकेतक · ≥ 70%",
+          "pollen_high_from": "POLLEN · पराग · HIGH",
+          "pollen_max_scale": "POLLEN · पराग · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · पराग · NO VENT",
+          "general_source_stale_minutes": "स्रोत · max (min)",
+          "general_home_policy": "घर · उपस्थिति · नियंत्रण"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · घर · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "सबके जाने पर खुली खिड़कियों की सूचना दें. सूचना पाने वाले व्यक्ति (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. फ़ोन, घड़ी, टैबलेट.",
           "away_windows_target_people": "सूचना पाने वाले व्यक्ति (person.*) - Announcement Hub: फ़ोन, घड़ी, टैबलेट, अन्य उपकरण. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम: फ़ोन सूचना / TTS आवाज़, घड़ी सूचना / TTS आवाज़, टैबलेट सूचना / TTS आवाज़. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम: फ़ोन सूचना / TTS आवाज़, घड़ी सूचना / TTS आवाज़, टैबलेट सूचना / TTS आवाज़. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "“बाहर · AQI (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_co2": "“बाहर · CO₂ (ppm) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_pm25": "“बाहर · PM2.5 (µg/m³) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_pm10": "“बाहर · PM10 (µg/m³) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_voc": "“बाहर · VOC (µg/m³) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_voc_parts": "“बाहर · VOC (ppb) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_no2": "“NO₂ · बाहरी (µg/m³)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_o3": "“O₃ · बाहरी (µg/m³)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_so2": "“SO₂ · बाहरी (µg/m³)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_aqi": "“वायु गुणवत्ता · AQI (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_co2": "“वायु गुणवत्ता · CO₂ (ppm) (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_pm25": "“वायु गुणवत्ता · PM2.5 (µg/m³) (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_pm10": "“वायु गुणवत्ता · PM10 (µg/m³) (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_voc": "“वायु गुणवत्ता · VOC (µg/m³) (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_voc_parts": "“वायु गुणवत्ता · VOC (ppb) (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_humidity": "“वायु गुणवत्ता · RH (%) (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_min_outdoor_temp": "“बाहर · °C (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_max_outdoor_temp": "“बाहर · °C (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_max_outdoor_humidity": "“बाहर · RH (%) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_max_wind_kmh": "“मौसम और चेतावनियाँ · km/h (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_max_age_minutes": "“⏱ · खोलें (min, ≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_mold": "“फफूंद संकेतक · ≥ 70%” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "pollen_high_from": "“POLLEN · पराग · HIGH” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
+          "pollen_max_scale": "“POLLEN · पराग · SCALE” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
+          "pollen_avoid_ventilation": "“POLLEN · पराग · NO VENT” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
+          "general_source_stale_minutes": "स्रोत · नींद / उपस्थिति · max 240 min. अमान्य · बंद करें.",
+          "general_home_policy": "यह विकल्प “घर · उपस्थिति · नियंत्रण” नियंत्रित करता है। उपकरण आदेशों के लिए अलग अनुमति और सुरक्षा आवश्यक है।"
         }
       },
       "reconfigure": {
         "title": "⚙️ चुनें",
         "description": "चुनें: कमरे / मौसम और चेतावनियाँ / घोषणाएँ (वैकल्पिक) / उन्नत सीमाएँ",
         "menu_options": {
-          "room_occupancy": "उपस्थिति · सेंसर",
-          "outside_data": "बाहरी · स्रोत",
-          "general_settings": "सामान्य · सेटिंग",
-          "area_settings": "क्षेत्र · सेटिंग",
-          "delivery": "घोषणाएँ (वैकल्पिक)",
-          "thresholds": "उन्नत सीमाएँ",
-          "climate": "सेटिंग · उपकरण",
-          "pid": "सेटिंग · PID",
-          "setup_rooms": "निगरानी के कमरे"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "सामान्य सेटिंग"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "निगरानी के कमरे → स्रोत → सामान्य सेटिंग",
+        "data": {
+          "areas": "निगरानी के कमरे"
+        },
+        "data_description": {
+          "areas": "निगरानी के कमरे. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।"
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+        "data": {
+          "windows": "खिड़कियाँ",
+          "air_quality": "वायु गुणवत्ता और पर्यावरण सेंसर",
+          "temperature": "तापमान",
+          "humidity": "आर्द्रता",
+          "pressure": "दबाव सेंसर",
+          "climate_devices": "उपकरण",
+          "shades": "खिड़की के परदे, ब्लाइंड और शटर",
+          "occupancy_sensors": "उपस्थिति · सेंसर"
+        },
+        "data_description": {
+          "windows": "खिड़कियाँ. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "air_quality": "वायु गुणवत्ता और पर्यावरण सेंसर. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "temperature": "तापमान. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "humidity": "आर्द्रता. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "pressure": "दबाव सेंसर. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "climate_devices": "उपकरण. इस कमरे के वास्तविक climate.*, humidifier.* और fan.* उपकरण चुनें। उनकी मूल क्षमताएँ हीटिंग, कूलिंग, नमी हटाने, लक्ष्य मान और पंखे की गति तय करती हैं। चुनने से उपकरण नहीं चलता; प्रत्येक नियंत्रक पर स्वचालन अलग से सक्षम करें।",
+          "shades": "खिड़की के परदे, ब्लाइंड और शटर. कमरे की cover.* खिड़की की ब्लाइंड, रोलर शटर और पर्दे चुनें। device_class के बिना covers भी CLOSE समर्थन पर मान्य हैं, यदि वे सचमुच खिड़की पर लगे हों। गैराज, गेट, दरवाज़े, खिड़कियाँ और बाहरी शामियाने मान्य नहीं हैं। चयन कुछ नहीं हिलाता; विंडो सेंसर, ऑटो नियंत्रण, घोषणा और ताप सीमा नियंत्रक पर सेट करें। अज्ञात स्थिति में गति निषिद्ध है।",
+          "occupancy_sensors": "“उपस्थिति · सेंसर” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।"
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ चुनें",
         "description": "चुनें: कमरे / मौसम और चेतावनियाँ / घोषणाएँ (वैकल्पिक) / उन्नत सीमाएँ",
         "menu_options": {
-          "room_occupancy": "उपस्थिति · सेंसर",
-          "outside_data": "बाहरी · स्रोत",
-          "general_settings": "सामान्य · सेटिंग",
-          "area_settings": "क्षेत्र · सेटिंग",
-          "delivery": "घोषणाएँ (वैकल्पिक)",
-          "thresholds": "उन्नत सीमाएँ",
-          "climate": "सेटिंग · उपकरण",
-          "pid": "सेटिंग · PID",
-          "setup_rooms": "निगरानी के कमरे"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "सामान्य सेटिंग"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "घर · Away · cooldown (min)",
           "away_open_window_alert": "सबके जाने पर खुली खिड़कियों की सूचना दें",
           "away_windows_target_people": "सूचना पाने वाले व्यक्ति",
-          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम"
+          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम",
+          "global_threshold_outdoor_aqi": "बाहर · AQI (≤)",
+          "global_threshold_outdoor_co2": "बाहर · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "बाहर · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "बाहर · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "बाहर · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "बाहर · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · बाहरी (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · बाहरी (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · बाहरी (µg/m³)",
+          "global_threshold_indoor_aqi": "वायु गुणवत्ता · AQI (≥)",
+          "global_threshold_indoor_co2": "वायु गुणवत्ता · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "वायु गुणवत्ता · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "वायु गुणवत्ता · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "वायु गुणवत्ता · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "वायु गुणवत्ता · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "वायु गुणवत्ता · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "बाहर · °C (≥)",
+          "global_threshold_max_outdoor_temp": "बाहर · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "बाहर · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "मौसम और चेतावनियाँ · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · खोलें (min, ≤)",
+          "global_threshold_indoor_mold": "फफूंद संकेतक · ≥ 70%",
+          "pollen_high_from": "POLLEN · पराग · HIGH",
+          "pollen_max_scale": "POLLEN · पराग · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · पराग · NO VENT",
+          "general_source_stale_minutes": "स्रोत · max (min)",
+          "general_home_policy": "घर · उपस्थिति · नियंत्रण"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · घर · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "सबके जाने पर खुली खिड़कियों की सूचना दें. सूचना पाने वाले व्यक्ति (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. फ़ोन, घड़ी, टैबलेट.",
           "away_windows_target_people": "सूचना पाने वाले व्यक्ति (person.*) - Announcement Hub: फ़ोन, घड़ी, टैबलेट, अन्य उपकरण. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम: फ़ोन सूचना / TTS आवाज़, घड़ी सूचना / TTS आवाज़, टैबलेट सूचना / TTS आवाज़. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "खिड़की सूचना के माध्यम: फ़ोन सूचना / TTS आवाज़, घड़ी सूचना / TTS आवाज़, टैबलेट सूचना / TTS आवाज़. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "“बाहर · AQI (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_co2": "“बाहर · CO₂ (ppm) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_pm25": "“बाहर · PM2.5 (µg/m³) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_pm10": "“बाहर · PM10 (µg/m³) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_voc": "“बाहर · VOC (µg/m³) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_voc_parts": "“बाहर · VOC (ppb) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_no2": "“NO₂ · बाहरी (µg/m³)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_o3": "“O₃ · बाहरी (µg/m³)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_outdoor_so2": "“SO₂ · बाहरी (µg/m³)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_aqi": "“वायु गुणवत्ता · AQI (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_co2": "“वायु गुणवत्ता · CO₂ (ppm) (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_pm25": "“वायु गुणवत्ता · PM2.5 (µg/m³) (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_pm10": "“वायु गुणवत्ता · PM10 (µg/m³) (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_voc": "“वायु गुणवत्ता · VOC (µg/m³) (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_voc_parts": "“वायु गुणवत्ता · VOC (ppb) (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_humidity": "“वायु गुणवत्ता · RH (%) (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_min_outdoor_temp": "“बाहर · °C (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_max_outdoor_temp": "“बाहर · °C (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_max_outdoor_humidity": "“बाहर · RH (%) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_max_wind_kmh": "“मौसम और चेतावनियाँ · km/h (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_max_age_minutes": "“⏱ · खोलें (min, ≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "global_threshold_indoor_mold": "“फफूंद संकेतक · ≥ 70%” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "pollen_high_from": "“POLLEN · पराग · HIGH” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
+          "pollen_max_scale": "“POLLEN · पराग · SCALE” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
+          "pollen_avoid_ventilation": "“POLLEN · पराग · NO VENT” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
+          "general_source_stale_minutes": "स्रोत · नींद / उपस्थिति · max 240 min. अमान्य · बंद करें.",
+          "general_home_policy": "यह विकल्प “घर · उपस्थिति · नियंत्रण” नियंत्रित करता है। उपकरण आदेशों के लिए अलग अनुमति और सुरक्षा आवश्यक है।"
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "निगरानी के कमरे → स्रोत → सामान्य सेटिंग",
+        "data": {
+          "areas": "निगरानी के कमरे"
+        },
+        "data_description": {
+          "areas": "निगरानी के कमरे. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।"
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+        "data": {
+          "windows": "खिड़कियाँ",
+          "air_quality": "वायु गुणवत्ता और पर्यावरण सेंसर",
+          "temperature": "तापमान",
+          "humidity": "आर्द्रता",
+          "pressure": "दबाव सेंसर",
+          "climate_devices": "उपकरण",
+          "shades": "खिड़की के परदे, ब्लाइंड और शटर",
+          "occupancy_sensors": "उपस्थिति · सेंसर"
+        },
+        "data_description": {
+          "windows": "खिड़कियाँ. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "air_quality": "वायु गुणवत्ता और पर्यावरण सेंसर. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "temperature": "तापमान. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "humidity": "आर्द्रता. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "pressure": "दबाव सेंसर. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
+          "climate_devices": "उपकरण. इस कमरे के वास्तविक climate.*, humidifier.* और fan.* उपकरण चुनें। उनकी मूल क्षमताएँ हीटिंग, कूलिंग, नमी हटाने, लक्ष्य मान और पंखे की गति तय करती हैं। चुनने से उपकरण नहीं चलता; प्रत्येक नियंत्रक पर स्वचालन अलग से सक्षम करें।",
+          "shades": "खिड़की के परदे, ब्लाइंड और शटर. कमरे की cover.* खिड़की की ब्लाइंड, रोलर शटर और पर्दे चुनें। device_class के बिना covers भी CLOSE समर्थन पर मान्य हैं, यदि वे सचमुच खिड़की पर लगे हों। गैराज, गेट, दरवाज़े, खिड़कियाँ और बाहरी शामियाने मान्य नहीं हैं। चयन कुछ नहीं हिलाता; विंडो सेंसर, ऑटो नियंत्रण, घोषणा और ताप सीमा नियंत्रक पर सेट करें। अज्ञात स्थिति में गति निषिद्ध है।",
+          "occupancy_sensors": "“उपस्थिति · सेंसर” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।"
         }
       }
     },

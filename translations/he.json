@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "בית · Away · cooldown (min)",
           "away_open_window_alert": "התרעה על חלונות פתוחים לאחר שכולם יצאו",
           "away_windows_target_people": "אנשים לקבלת התראה",
-          "away_windows_delivery_channels": "ערוצי התרעה על חלונות"
+          "away_windows_delivery_channels": "ערוצי התרעה על חלונות",
+          "global_threshold_outdoor_aqi": "בחוץ · AQI (≤)",
+          "global_threshold_outdoor_co2": "בחוץ · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "בחוץ · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "בחוץ · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "בחוץ · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "בחוץ · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · חוץ (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · חוץ (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · חוץ (µg/m³)",
+          "global_threshold_indoor_aqi": "איכות האוויר · AQI (≥)",
+          "global_threshold_indoor_co2": "איכות האוויר · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "איכות האוויר · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "איכות האוויר · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "איכות האוויר · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "איכות האוויר · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "איכות האוויר · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "בחוץ · °C (≥)",
+          "global_threshold_max_outdoor_temp": "בחוץ · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "בחוץ · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "מזג אוויר ואזהרות · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · פתחו (min, ≤)",
+          "global_threshold_indoor_mold": "מדד עובש · ≥ 70%",
+          "pollen_high_from": "POLLEN · אבקנים · HIGH",
+          "pollen_max_scale": "POLLEN · אבקנים · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · אבקנים · NO VENT",
+          "general_source_stale_minutes": "מקור · max (min)",
+          "general_home_policy": "בית · נוכחות · בקרה"
         },
         "data_description": {
           "weather_entities": "בחרו: מזג אוויר ואזהרות · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "בחר מקורות משותפים ופלטי התראות. שמירה מסיימת את ההגדרה. הגדרות התפעול נשארות במכשירי הבית והחדרים. · בית · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "התרעה על חלונות פתוחים לאחר שכולם יצאו. אנשים לקבלת התראה (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. טלפון, שעון, טאבלט.",
           "away_windows_target_people": "אנשים לקבלת התראה (person.*) - Announcement Hub: טלפון, שעון, טאבלט, מכשיר אחר. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "ערוצי התרעה על חלונות: טלפון התראה / דיבור TTS, שעון התראה / דיבור TTS, טאבלט התראה / דיבור TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "ערוצי התרעה על חלונות: טלפון התראה / דיבור TTS, שעון התראה / דיבור TTS, טאבלט התראה / דיבור TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "זהו סף החלטה עבור „בחוץ · AQI (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_co2": "זהו סף החלטה עבור „בחוץ · CO₂ (ppm) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_pm25": "זהו סף החלטה עבור „בחוץ · PM2.5 (µg/m³) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_pm10": "זהו סף החלטה עבור „בחוץ · PM10 (µg/m³) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_voc": "זהו סף החלטה עבור „בחוץ · VOC (µg/m³) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_voc_parts": "זהו סף החלטה עבור „בחוץ · VOC (ppb) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_no2": "זהו סף החלטה עבור „NO₂ · חוץ (µg/m³)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_o3": "זהו סף החלטה עבור „O₃ · חוץ (µg/m³)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_so2": "זהו סף החלטה עבור „SO₂ · חוץ (µg/m³)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_aqi": "זהו סף החלטה עבור „איכות האוויר · AQI (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_co2": "זהו סף החלטה עבור „איכות האוויר · CO₂ (ppm) (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_pm25": "זהו סף החלטה עבור „איכות האוויר · PM2.5 (µg/m³) (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_pm10": "זהו סף החלטה עבור „איכות האוויר · PM10 (µg/m³) (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_voc": "זהו סף החלטה עבור „איכות האוויר · VOC (µg/m³) (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_voc_parts": "זהו סף החלטה עבור „איכות האוויר · VOC (ppb) (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_humidity": "זהו סף החלטה עבור „איכות האוויר · RH (%) (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_min_outdoor_temp": "זהו סף החלטה עבור „בחוץ · °C (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_max_outdoor_temp": "זהו סף החלטה עבור „בחוץ · °C (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_max_outdoor_humidity": "זהו סף החלטה עבור „בחוץ · RH (%) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_max_wind_kmh": "זהו סף החלטה עבור „מזג אוויר ואזהרות · km/h (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_max_age_minutes": "זהו סף החלטה עבור „⏱ · פתחו (min, ≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_mold": "זהו סף החלטה עבור „מדד עובש · ≥ 70%”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "pollen_high_from": "הגדר „POLLEN · אבקנים · HIGH” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
+          "pollen_max_scale": "הגדר „POLLEN · אבקנים · SCALE” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
+          "pollen_avoid_ventilation": "הגדר „POLLEN · אבקנים · NO VENT” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
+          "general_source_stale_minutes": "מקור · שינה / נוכחות · max 240 min. לא תקין · כיבוי.",
+          "general_home_policy": "האפשרות שולטת ב־„בית · נוכחות · בקרה”. פקודות למכשיר דורשות אישור נפרד והגנות עצמאיות."
         }
       },
       "reconfigure": {
         "title": "⚙️ בחרו",
         "description": "בחרו: חדרים / מזג אוויר ואזהרות / הודעות (אופציונלי) / ספי התראה מתקדמים",
         "menu_options": {
-          "room_occupancy": "נוכחות · חיישן",
-          "outside_data": "חוץ · מקור",
-          "general_settings": "כלליות · הגדרות",
-          "area_settings": "אזור · הגדרות",
-          "delivery": "הודעות (אופציונלי)",
-          "thresholds": "ספי התראה מתקדמים",
-          "climate": "הגדרות · התקנים",
-          "pid": "הגדרות · PID",
-          "setup_rooms": "חדרים למעקב"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "כלליות הגדרות"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "חדרים למעקב → מקור → כלליות הגדרות",
+        "data": {
+          "areas": "חדרים למעקב"
+        },
+        "data_description": {
+          "areas": "חדרים למעקב. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+        "data": {
+          "windows": "חלונות",
+          "air_quality": "חיישני איכות אוויר וסביבה",
+          "temperature": "טמפרטורה",
+          "humidity": "לחות",
+          "pressure": "חיישני לחץ",
+          "climate_devices": "התקנים",
+          "shades": "תריסים, וילונות וצלונים לחלונות",
+          "occupancy_sensors": "נוכחות · חיישן"
+        },
+        "data_description": {
+          "windows": "חלונות. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "air_quality": "חיישני איכות אוויר וסביבה. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "temperature": "טמפרטורה. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "humidity": "לחות. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "pressure": "חיישני לחץ. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "climate_devices": "התקנים. בחר רק ישויות פיזיות climate.*, humidifier.* ו־fan.* בחדר. יכולות המכשיר קובעות חימום, קירור, ייבוש, ערכי יעד ומהירות מאוורר. הבחירה אינה מפעילה דבר; יש לאפשר שליטה אוטומטית לכל מכשיר בנפרד.",
+          "shades": "תריסים, וילונות וצלונים לחלונות. בחר תריסים, וילונות והצללות cover.* בחדר. Covers ללא device_class מותרים אם CLOSE נתמך והם אכן הצללת חלון. דלתות, שערים, חניות, חלונות וסוככים מוחרגים. הבחירה אינה מזיזה דבר: שייך חיישן חלון והגדר אוטומציה, הודעה וטמפרטורה בבקר. מצב לא ידוע חוסם תנועה.",
+          "occupancy_sensors": "בחר מקור Home Assistant אמיתי עבור „נוכחות · חיישן”. נתונים חסרים או ישנים עוצרים את הפעולה."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ בחרו",
         "description": "בחרו: חדרים / מזג אוויר ואזהרות / הודעות (אופציונלי) / ספי התראה מתקדמים",
         "menu_options": {
-          "room_occupancy": "נוכחות · חיישן",
-          "outside_data": "חוץ · מקור",
-          "general_settings": "כלליות · הגדרות",
-          "area_settings": "אזור · הגדרות",
-          "delivery": "הודעות (אופציונלי)",
-          "thresholds": "ספי התראה מתקדמים",
-          "climate": "הגדרות · התקנים",
-          "pid": "הגדרות · PID",
-          "setup_rooms": "חדרים למעקב"
+          "choose_rooms": "Choose rooms",
+          "general_settings": "כלליות הגדרות"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "בית · Away · cooldown (min)",
           "away_open_window_alert": "התרעה על חלונות פתוחים לאחר שכולם יצאו",
           "away_windows_target_people": "אנשים לקבלת התראה",
-          "away_windows_delivery_channels": "ערוצי התרעה על חלונות"
+          "away_windows_delivery_channels": "ערוצי התרעה על חלונות",
+          "global_threshold_outdoor_aqi": "בחוץ · AQI (≤)",
+          "global_threshold_outdoor_co2": "בחוץ · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "בחוץ · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "בחוץ · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "בחוץ · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "בחוץ · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · חוץ (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · חוץ (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · חוץ (µg/m³)",
+          "global_threshold_indoor_aqi": "איכות האוויר · AQI (≥)",
+          "global_threshold_indoor_co2": "איכות האוויר · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "איכות האוויר · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "איכות האוויר · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "איכות האוויר · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "איכות האוויר · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "איכות האוויר · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "בחוץ · °C (≥)",
+          "global_threshold_max_outdoor_temp": "בחוץ · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "בחוץ · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "מזג אוויר ואזהרות · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · פתחו (min, ≤)",
+          "global_threshold_indoor_mold": "מדד עובש · ≥ 70%",
+          "pollen_high_from": "POLLEN · אבקנים · HIGH",
+          "pollen_max_scale": "POLLEN · אבקנים · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · אבקנים · NO VENT",
+          "general_source_stale_minutes": "מקור · max (min)",
+          "general_home_policy": "בית · נוכחות · בקרה"
         },
         "data_description": {
           "weather_entities": "בחרו: מזג אוויר ואזהרות · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "בחר מקורות משותפים ופלטי התראות. שמירה מסיימת את ההגדרה. הגדרות התפעול נשארות במכשירי הבית והחדרים. · בית · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "התרעה על חלונות פתוחים לאחר שכולם יצאו. אנשים לקבלת התראה (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. טלפון, שעון, טאבלט.",
           "away_windows_target_people": "אנשים לקבלת התראה (person.*) - Announcement Hub: טלפון, שעון, טאבלט, מכשיר אחר. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "ערוצי התרעה על חלונות: טלפון התראה / דיבור TTS, שעון התראה / דיבור TTS, טאבלט התראה / דיבור TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "ערוצי התרעה על חלונות: טלפון התראה / דיבור TTS, שעון התראה / דיבור TTS, טאבלט התראה / דיבור TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "זהו סף החלטה עבור „בחוץ · AQI (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_co2": "זהו סף החלטה עבור „בחוץ · CO₂ (ppm) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_pm25": "זהו סף החלטה עבור „בחוץ · PM2.5 (µg/m³) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_pm10": "זהו סף החלטה עבור „בחוץ · PM10 (µg/m³) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_voc": "זהו סף החלטה עבור „בחוץ · VOC (µg/m³) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_voc_parts": "זהו סף החלטה עבור „בחוץ · VOC (ppb) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_no2": "זהו סף החלטה עבור „NO₂ · חוץ (µg/m³)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_o3": "זהו סף החלטה עבור „O₃ · חוץ (µg/m³)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_outdoor_so2": "זהו סף החלטה עבור „SO₂ · חוץ (µg/m³)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_aqi": "זהו סף החלטה עבור „איכות האוויר · AQI (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_co2": "זהו סף החלטה עבור „איכות האוויר · CO₂ (ppm) (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_pm25": "זהו סף החלטה עבור „איכות האוויר · PM2.5 (µg/m³) (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_pm10": "זהו סף החלטה עבור „איכות האוויר · PM10 (µg/m³) (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_voc": "זהו סף החלטה עבור „איכות האוויר · VOC (µg/m³) (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_voc_parts": "זהו סף החלטה עבור „איכות האוויר · VOC (ppb) (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_humidity": "זהו סף החלטה עבור „איכות האוויר · RH (%) (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_min_outdoor_temp": "זהו סף החלטה עבור „בחוץ · °C (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_max_outdoor_temp": "זהו סף החלטה עבור „בחוץ · °C (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_max_outdoor_humidity": "זהו סף החלטה עבור „בחוץ · RH (%) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_max_wind_kmh": "זהו סף החלטה עבור „מזג אוויר ואזהרות · km/h (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_max_age_minutes": "זהו סף החלטה עבור „⏱ · פתחו (min, ≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "global_threshold_indoor_mold": "זהו סף החלטה עבור „מדד עובש · ≥ 70%”. הוא משפיע על המלצות ואינו גבול רפואי.",
+          "pollen_high_from": "הגדר „POLLEN · אבקנים · HIGH” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
+          "pollen_max_scale": "הגדר „POLLEN · אבקנים · SCALE” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
+          "pollen_avoid_ventilation": "הגדר „POLLEN · אבקנים · NO VENT” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
+          "general_source_stale_minutes": "מקור · שינה / נוכחות · max 240 min. לא תקין · כיבוי.",
+          "general_home_policy": "האפשרות שולטת ב־„בית · נוכחות · בקרה”. פקודות למכשיר דורשות אישור נפרד והגנות עצמאיות."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "This room's occupancy/presence binary sensors are preselected by default. Edit or clear them. A valid occupied-rooms list, even empty, has priority; only when unavailable, unknown or stale are selected per-room sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Choose rooms",
+        "description": "חדרים למעקב → מקור → כלליות הגדרות",
+        "data": {
+          "areas": "חדרים למעקב"
+        },
+        "data_description": {
+          "areas": "חדרים למעקב. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים."
+        }
+      },
+      "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+        "data": {
+          "windows": "חלונות",
+          "air_quality": "חיישני איכות אוויר וסביבה",
+          "temperature": "טמפרטורה",
+          "humidity": "לחות",
+          "pressure": "חיישני לחץ",
+          "climate_devices": "התקנים",
+          "shades": "תריסים, וילונות וצלונים לחלונות",
+          "occupancy_sensors": "נוכחות · חיישן"
+        },
+        "data_description": {
+          "windows": "חלונות. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "air_quality": "חיישני איכות אוויר וסביבה. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "temperature": "טמפרטורה. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "humidity": "לחות. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "pressure": "חיישני לחץ. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
+          "climate_devices": "התקנים. בחר רק ישויות פיזיות climate.*, humidifier.* ו־fan.* בחדר. יכולות המכשיר קובעות חימום, קירור, ייבוש, ערכי יעד ומהירות מאוורר. הבחירה אינה מפעילה דבר; יש לאפשר שליטה אוטומטית לכל מכשיר בנפרד.",
+          "shades": "תריסים, וילונות וצלונים לחלונות. בחר תריסים, וילונות והצללות cover.* בחדר. Covers ללא device_class מותרים אם CLOSE נתמך והם אכן הצללת חלון. דלתות, שערים, חניות, חלונות וסוככים מוחרגים. הבחירה אינה מזיזה דבר: שייך חיישן חלון והגדר אוטומציה, הודעה וטמפרטורה בבקר. מצב לא ידוע חוסם תנועה.",
+          "occupancy_sensors": "בחר מקור Home Assistant אמיתי עבור „נוכחות · חיישן”. נתונים חסרים או ישנים עוצרים את הפעולה."
         }
       }
     },

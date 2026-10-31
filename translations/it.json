@@ -200,7 +200,34 @@
           "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
           "away_open_window_alert": "Avvisa se le finestre restano aperte dopo l'uscita",
           "away_windows_target_people": "Persone da avvisare",
-          "away_windows_delivery_channels": "Canali di avviso finestre"
+          "away_windows_delivery_channels": "Canali di avviso finestre",
+          "global_threshold_outdoor_aqi": "Esterno · AQI (≤)",
+          "global_threshold_outdoor_co2": "Esterno · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Esterno · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Esterno · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Esterno · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Esterno · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Esterno (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Esterno (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Esterno (µg/m³)",
+          "global_threshold_indoor_aqi": "Qualità dell'aria · AQI (≥)",
+          "global_threshold_indoor_co2": "Qualità dell'aria · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Qualità dell'aria · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Qualità dell'aria · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Qualità dell'aria · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Qualità dell'aria · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Qualità dell'aria · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Esterno · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Esterno · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Esterno · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Meteo e allerte · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Apri (min, ≤)",
+          "global_threshold_indoor_mold": "Indicatore muffa · ≥ 70%",
+          "pollen_high_from": "POLLEN · Polline · HIGH",
+          "pollen_max_scale": "POLLEN · Polline · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Polline · NO VENT",
+          "general_source_stale_minutes": "fonte · max (min)",
+          "general_home_policy": "Casa · Presenza · controllo"
         },
         "data_description": {
           "weather_entities": "Seleziona: Meteo e allerte · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +250,42 @@
           "general_away_cooldown_minutes": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Casa · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Avvisa se le finestre restano aperte dopo l'uscita. Persone da avvisare (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefono, Orologio, Tablet.",
           "away_windows_target_people": "Persone da avvisare (person.*) - Announcement Hub: Telefono, Orologio, Tablet, Altro dispositivo. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Canali di avviso finestre: Telefono Notifica / Voce TTS, Orologio Notifica / Voce TTS, Tablet Notifica / Voce TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Canali di avviso finestre: Telefono Notifica / Voce TTS, Orologio Notifica / Voce TTS, Tablet Notifica / Voce TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Soglia decisionale per «Esterno · AQI (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_co2": "Soglia decisionale per «Esterno · CO₂ (ppm) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_pm25": "Soglia decisionale per «Esterno · PM2.5 (µg/m³) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_pm10": "Soglia decisionale per «Esterno · PM10 (µg/m³) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_voc": "Soglia decisionale per «Esterno · VOC (µg/m³) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_voc_parts": "Soglia decisionale per «Esterno · VOC (ppb) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_no2": "Soglia decisionale per «NO₂ · Esterno (µg/m³)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_o3": "Soglia decisionale per «O₃ · Esterno (µg/m³)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_so2": "Soglia decisionale per «SO₂ · Esterno (µg/m³)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_aqi": "Soglia decisionale per «Qualità dell'aria · AQI (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_co2": "Soglia decisionale per «Qualità dell'aria · CO₂ (ppm) (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_pm25": "Soglia decisionale per «Qualità dell'aria · PM2.5 (µg/m³) (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_pm10": "Soglia decisionale per «Qualità dell'aria · PM10 (µg/m³) (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_voc": "Soglia decisionale per «Qualità dell'aria · VOC (µg/m³) (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_voc_parts": "Soglia decisionale per «Qualità dell'aria · VOC (ppb) (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_humidity": "Soglia decisionale per «Qualità dell'aria · RH (%) (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_min_outdoor_temp": "Soglia decisionale per «Esterno · °C (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_max_outdoor_temp": "Soglia decisionale per «Esterno · °C (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_max_outdoor_humidity": "Soglia decisionale per «Esterno · RH (%) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_max_wind_kmh": "Soglia decisionale per «Meteo e allerte · km/h (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_max_age_minutes": "Soglia decisionale per «⏱ · Apri (min, ≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_mold": "Soglia decisionale per «Indicatore muffa · ≥ 70%». Influenza i suggerimenti, non è un limite sanitario.",
+          "pollen_high_from": "Configura «POLLEN · Polline · HIGH» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
+          "pollen_max_scale": "Configura «POLLEN · Polline · SCALE» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
+          "pollen_avoid_ventilation": "Configura «POLLEN · Polline · NO VENT» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
+          "general_source_stale_minutes": "fonte · Sonno / Presenza · max 240 min. Non valido · Spegni.",
+          "general_home_policy": "Questa opzione regola «Casa · Presenza · controllo». I comandi fisici richiedono consenso separato e protezioni indipendenti."
         }
       },
       "reconfigure": {
         "title": "⚙️ Seleziona",
         "description": "Seleziona: Stanze / Meteo e allerte / Annunci (facoltativi) / Soglie avanzate",
         "menu_options": {
-          "room_occupancy": "Sensori di presenza per stanza",
-          "outside_data": "Esterno · fonte",
-          "general_settings": "Generali · impostazioni",
-          "area_settings": "Area · impostazioni",
-          "delivery": "Annunci (facoltativi)",
-          "thresholds": "Soglie avanzate",
-          "climate": "impostazioni · Dispositivi",
-          "pid": "impostazioni · PID",
-          "setup_rooms": "Stanze da monitorare"
+          "choose_rooms": "Seleziona stanze",
+          "general_settings": "Impostazioni generali"
         }
       },
       "init": {
@@ -963,6 +1010,40 @@
         "data_description": {
           "room_occupancy_sensors": "I sensori di presenza sono preselezionati. L'elenco valido delle stanze occupate, anche vuoto, ha priorità. I sensori servono solo se l'elenco non è disponibile."
         }
+      },
+      "choose_rooms": {
+        "title": "Seleziona stanze",
+        "description": "Stanze da monitorare → fonte → Generali impostazioni",
+        "data": {
+          "areas": "Stanze da monitorare"
+        },
+        "data_description": {
+          "areas": "Stanze da monitorare. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico."
+        }
+      },
+      "room_settings": {
+        "title": "Impostazioni · {area_name}",
+        "description": "Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
+        "data": {
+          "windows": "Finestre",
+          "air_quality": "Sensori della qualità dell’aria e ambientali",
+          "temperature": "Temperatura",
+          "humidity": "Umidità",
+          "pressure": "Sensori di pressione",
+          "climate_devices": "Dispositivi",
+          "shades": "Tende, persiane e tapparelle",
+          "occupancy_sensors": "Presenza · sensore"
+        },
+        "data_description": {
+          "windows": "Finestre. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
+          "air_quality": "Sensori della qualità dell’aria e ambientali. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
+          "temperature": "Temperatura. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
+          "humidity": "Umidità. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
+          "pressure": "Sensori di pressione. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
+          "climate_devices": "Dispositivi. Seleziona solo entità fisiche climate.*, humidifier.* e fan.* di questa stanza. Le capacità native definiscono riscaldamento, raffrescamento, deumidificazione, setpoint e velocità. La selezione non comanda nulla: abilita l'automazione nel singolo controller.",
+          "shades": "Tende, persiane e tapparelle. Seleziona tapparelle, tende, veneziane e persiane cover.* della stanza. Sono ammessi cover senza device_class se supportano CLOSE, dopo aver verificato che siano schermature di finestre. Porte, garage, cancelli, finestre e tende da sole esterne sono esclusi. La selezione non provoca movimenti: associa il contatto finestra e configura automazione, avviso e temperatura nel controller. Stato sconosciuto: nessun movimento.",
+          "occupancy_sensors": "Seleziona una fonte Home Assistant reale per «Presenza · sensore». Dati assenti o obsoleti bloccano l'azione relativa."
+        }
       }
     },
     "error": {
@@ -1046,15 +1127,8 @@
         "title": "⚙️ Seleziona",
         "description": "Seleziona: Stanze / Meteo e allerte / Annunci (facoltativi) / Soglie avanzate",
         "menu_options": {
-          "room_occupancy": "Sensori di presenza per stanza",
-          "outside_data": "Esterno · fonte",
-          "general_settings": "Generali · impostazioni",
-          "area_settings": "Area · impostazioni",
-          "delivery": "Annunci (facoltativi)",
-          "thresholds": "Soglie avanzate",
-          "climate": "impostazioni · Dispositivi",
-          "pid": "impostazioni · PID",
-          "setup_rooms": "Stanze da monitorare"
+          "choose_rooms": "Seleziona stanze",
+          "general_settings": "Impostazioni generali"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +2020,34 @@
           "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
           "away_open_window_alert": "Avvisa se le finestre restano aperte dopo l'uscita",
           "away_windows_target_people": "Persone da avvisare",
-          "away_windows_delivery_channels": "Canali di avviso finestre"
+          "away_windows_delivery_channels": "Canali di avviso finestre",
+          "global_threshold_outdoor_aqi": "Esterno · AQI (≤)",
+          "global_threshold_outdoor_co2": "Esterno · CO₂ (ppm) (≤)",
+          "global_threshold_outdoor_pm25": "Esterno · PM2.5 (µg/m³) (≤)",
+          "global_threshold_outdoor_pm10": "Esterno · PM10 (µg/m³) (≤)",
+          "global_threshold_outdoor_voc": "Esterno · VOC (µg/m³) (≤)",
+          "global_threshold_outdoor_voc_parts": "Esterno · VOC (ppb) (≤)",
+          "global_threshold_outdoor_no2": "NO₂ · Esterno (µg/m³)",
+          "global_threshold_outdoor_o3": "O₃ · Esterno (µg/m³)",
+          "global_threshold_outdoor_so2": "SO₂ · Esterno (µg/m³)",
+          "global_threshold_indoor_aqi": "Qualità dell'aria · AQI (≥)",
+          "global_threshold_indoor_co2": "Qualità dell'aria · CO₂ (ppm) (≥)",
+          "global_threshold_indoor_pm25": "Qualità dell'aria · PM2.5 (µg/m³) (≥)",
+          "global_threshold_indoor_pm10": "Qualità dell'aria · PM10 (µg/m³) (≥)",
+          "global_threshold_indoor_voc": "Qualità dell'aria · VOC (µg/m³) (≥)",
+          "global_threshold_indoor_voc_parts": "Qualità dell'aria · VOC (ppb) (≥)",
+          "global_threshold_indoor_humidity": "Qualità dell'aria · RH (%) (≥)",
+          "global_threshold_min_outdoor_temp": "Esterno · °C (≥)",
+          "global_threshold_max_outdoor_temp": "Esterno · °C (≤)",
+          "global_threshold_max_outdoor_humidity": "Esterno · RH (%) (≤)",
+          "global_threshold_max_wind_kmh": "Meteo e allerte · km/h (≤)",
+          "global_threshold_max_age_minutes": "⏱ · Apri (min, ≤)",
+          "global_threshold_indoor_mold": "Indicatore muffa · ≥ 70%",
+          "pollen_high_from": "POLLEN · Polline · HIGH",
+          "pollen_max_scale": "POLLEN · Polline · SCALE",
+          "pollen_avoid_ventilation": "POLLEN · Polline · NO VENT",
+          "general_source_stale_minutes": "fonte · max (min)",
+          "general_home_policy": "Casa · Presenza · controllo"
         },
         "data_description": {
           "weather_entities": "Seleziona: Meteo e allerte · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +2070,34 @@
           "general_away_cooldown_minutes": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Casa · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Avvisa se le finestre restano aperte dopo l'uscita. Persone da avvisare (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefono, Orologio, Tablet.",
           "away_windows_target_people": "Persone da avvisare (person.*) - Announcement Hub: Telefono, Orologio, Tablet, Altro dispositivo. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Canali di avviso finestre: Telefono Notifica / Voce TTS, Orologio Notifica / Voce TTS, Tablet Notifica / Voce TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Canali di avviso finestre: Telefono Notifica / Voce TTS, Orologio Notifica / Voce TTS, Tablet Notifica / Voce TTS. Person-specific, not room speakers.",
+          "global_threshold_outdoor_aqi": "Soglia decisionale per «Esterno · AQI (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_co2": "Soglia decisionale per «Esterno · CO₂ (ppm) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_pm25": "Soglia decisionale per «Esterno · PM2.5 (µg/m³) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_pm10": "Soglia decisionale per «Esterno · PM10 (µg/m³) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_voc": "Soglia decisionale per «Esterno · VOC (µg/m³) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_voc_parts": "Soglia decisionale per «Esterno · VOC (ppb) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_no2": "Soglia decisionale per «NO₂ · Esterno (µg/m³)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_o3": "Soglia decisionale per «O₃ · Esterno (µg/m³)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_outdoor_so2": "Soglia decisionale per «SO₂ · Esterno (µg/m³)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_aqi": "Soglia decisionale per «Qualità dell'aria · AQI (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_co2": "Soglia decisionale per «Qualità dell'aria · CO₂ (ppm) (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_pm25": "Soglia decisionale per «Qualità dell'aria · PM2.5 (µg/m³) (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_pm10": "Soglia decisionale per «Qualità dell'aria · PM10 (µg/m³) (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_voc": "Soglia decisionale per «Qualità dell'aria · VOC (µg/m³) (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_voc_parts": "Soglia decisionale per «Qualità dell'aria · VOC (ppb) (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_humidity": "Soglia decisionale per «Qualità dell'aria · RH (%) (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_min_outdoor_temp": "Soglia decisionale per «Esterno · °C (≥)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_max_outdoor_temp": "Soglia decisionale per «Esterno · °C (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_max_outdoor_humidity": "Soglia decisionale per «Esterno · RH (%) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_max_wind_kmh": "Soglia decisionale per «Meteo e allerte · km/h (≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_max_age_minutes": "Soglia decisionale per «⏱ · Apri (min, ≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "global_threshold_indoor_mold": "Soglia decisionale per «Indicatore muffa · ≥ 70%». Influenza i suggerimenti, non è un limite sanitario.",
+          "pollen_high_from": "Configura «POLLEN · Polline · HIGH» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
+          "pollen_max_scale": "Configura «POLLEN · Polline · SCALE» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
+          "pollen_avoid_ventilation": "Configura «POLLEN · Polline · NO VENT» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
+          "general_source_stale_minutes": "fonte · Sonno / Presenza · max 240 min. Non valido · Spegni.",
+          "general_home_policy": "Questa opzione regola «Casa · Presenza · controllo». I comandi fisici richiedono consenso separato e protezioni indipendenti."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2115,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "I sensori di presenza sono preselezionati. L'elenco valido delle stanze occupate, anche vuoto, ha priorità. I sensori servono solo se l'elenco non è disponibile."
+        }
+      },
+      "choose_rooms": {
+        "title": "Seleziona stanze",
+        "description": "Stanze da monitorare → fonte → Generali impostazioni",
+        "data": {
+          "areas": "Stanze da monitorare"
+        },
+        "data_description": {
+          "areas": "Stanze da monitorare. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico."
+        }
+      },
+      "room_settings": {
+        "title": "Impostazioni · {area_name}",
+        "description": "Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
+        "data": {
+          "windows": "Finestre",
+          "air_quality": "Sensori della qualità dell’aria e ambientali",
+          "temperature": "Temperatura",
+          "humidity": "Umidità",
+          "pressure": "Sensori di pressione",
+          "climate_devices": "Dispositivi",
+          "shades": "Tende, persiane e tapparelle",
+          "occupancy_sensors": "Presenza · sensore"
+        },
+        "data_description": {
+          "windows": "Finestre. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
+          "air_quality": "Sensori della qualità dell’aria e ambientali. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
+          "temperature": "Temperatura. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
+          "humidity": "Umidità. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
+          "pressure": "Sensori di pressione. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
+          "climate_devices": "Dispositivi. Seleziona solo entità fisiche climate.*, humidifier.* e fan.* di questa stanza. Le capacità native definiscono riscaldamento, raffrescamento, deumidificazione, setpoint e velocità. La selezione non comanda nulla: abilita l'automazione nel singolo controller.",
+          "shades": "Tende, persiane e tapparelle. Seleziona tapparelle, tende, veneziane e persiane cover.* della stanza. Sono ammessi cover senza device_class se supportano CLOSE, dopo aver verificato che siano schermature di finestre. Porte, garage, cancelli, finestre e tende da sole esterne sono esclusi. La selezione non provoca movimenti: associa il contatto finestra e configura automazione, avviso e temperatura nel controller. Stato sconosciuto: nessun movimento.",
+          "occupancy_sensors": "Seleziona una fonte Home Assistant reale per «Presenza · sensore». Dati assenti o obsoleti bloccano l'azione relativa."
         }
       }
     },
