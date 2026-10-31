@@ -285,7 +285,8 @@
         "description": "Selecione: Cômodos / Clima e alertas / Avisos (opcional) / Limites avançados",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Gerais configurações"
+          "select_room": "Área · configurações",
+          "setup_general": "Gerais configurações"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Persianas, cortinas e venezianas de janela. Selecione persianas, venezianas e cortinas cover.* deste ambiente. Covers sem device_class são aceitos com CLOSE, após confirmar que realmente protegem janelas. Portas, garagens, portões, janelas e toldos são excluídos. Selecionar não movimenta nada: vincule o sensor da janela e configure automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
           "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação."
         }
+      },
+      "select_room": {
+        "title": "Área · configurações",
+        "description": "Área · configurações",
+        "data": {
+          "edit_room_area": "Dispositivos"
+        }
+      },
+      "edit_room": {
+        "title": "Settings · {area_name}",
+        "description": "Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+        "data": {
+          "windows": "Janelas",
+          "air_quality": "Sensores de qualidade do ar e do ambiente",
+          "temperature": "Temperatura",
+          "humidity": "Umidade",
+          "pressure": "Sensores de pressão",
+          "climate_devices": "Dispositivos",
+          "shades": "Persianas, cortinas e venezianas de janela",
+          "occupancy_sensors": "Ocupação · sensor"
+        },
+        "data_description": {
+          "windows": "Janelas. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "air_quality": "Sensores de qualidade do ar e do ambiente. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "temperature": "Temperatura. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "humidity": "Umidade. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "pressure": "Sensores de pressão. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "climate_devices": "Dispositivos. Selecione apenas entidades físicas climate.*, humidifier.* e fan.* deste ambiente. Os recursos nativos determinam aquecimento, resfriamento, secagem, temperaturas, umidade e velocidades. Selecionar não aciona o equipamento; ative o controle automático individualmente.",
+          "shades": "Persianas, cortinas e venezianas de janela. Selecione persianas, venezianas e cortinas cover.* deste ambiente. Covers sem device_class são aceitos com CLOSE, após confirmar que realmente protegem janelas. Portas, garagens, portões, janelas e toldos são excluídos. Selecionar não movimenta nada: vincule o sensor da janela e configure automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
+          "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Selecione: Cômodos / Clima e alertas / Avisos (opcional) / Limites avançados",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Gerais configurações"
+          "select_room": "Área · configurações",
+          "setup_general": "Gerais configurações"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+        "data": {
+          "windows": "Janelas",
+          "air_quality": "Sensores de qualidade do ar e do ambiente",
+          "temperature": "Temperatura",
+          "humidity": "Umidade",
+          "pressure": "Sensores de pressão",
+          "climate_devices": "Dispositivos",
+          "shades": "Persianas, cortinas e venezianas de janela",
+          "occupancy_sensors": "Ocupação · sensor"
+        },
+        "data_description": {
+          "windows": "Janelas. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "air_quality": "Sensores de qualidade do ar e do ambiente. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "temperature": "Temperatura. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "humidity": "Umidade. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "pressure": "Sensores de pressão. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
+          "climate_devices": "Dispositivos. Selecione apenas entidades físicas climate.*, humidifier.* e fan.* deste ambiente. Os recursos nativos determinam aquecimento, resfriamento, secagem, temperaturas, umidade e velocidades. Selecionar não aciona o equipamento; ative o controle automático individualmente.",
+          "shades": "Persianas, cortinas e venezianas de janela. Selecione persianas, venezianas e cortinas cover.* deste ambiente. Covers sem device_class são aceitos com CLOSE, após confirmar que realmente protegem janelas. Portas, garagens, portões, janelas e toldos são excluídos. Selecionar não movimenta nada: vincule o sensor da janela e configure automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
+          "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação."
+        }
+      },
+      "select_room": {
+        "title": "Área · configurações",
+        "description": "Área · configurações",
+        "data": {
+          "edit_room_area": "Dispositivos"
+        }
+      },
+      "edit_room": {
         "title": "Settings · {area_name}",
         "description": "Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
         "data": {

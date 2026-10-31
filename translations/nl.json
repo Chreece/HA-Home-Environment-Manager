@@ -285,7 +285,8 @@
         "description": "Kies: Kamers / Weer en waarschuwingen / Meldingen (optioneel) / Geavanceerde grenswaarden",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Algemene instellingen"
+          "select_room": "Ruimte · instellingen",
+          "setup_general": "Algemene instellingen"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
           "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."
         }
+      },
+      "select_room": {
+        "title": "Ruimte · instellingen",
+        "description": "Ruimte · instellingen",
+        "data": {
+          "edit_room_area": "Apparaten"
+        }
+      },
+      "edit_room": {
+        "title": "Settings · {area_name}",
+        "description": "Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+        "data": {
+          "windows": "Ramen",
+          "air_quality": "Luchtkwaliteits- en omgevingssensoren",
+          "temperature": "Temperatuur",
+          "humidity": "Vochtigheid",
+          "pressure": "Druksensoren",
+          "climate_devices": "Apparaten",
+          "shades": "Raamzonwering, jaloezieën en rolluiken",
+          "occupancy_sensors": "Aanwezigheid · sensor"
+        },
+        "data_description": {
+          "windows": "Ramen. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "air_quality": "Luchtkwaliteits- en omgevingssensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "temperature": "Temperatuur. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "pressure": "Druksensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
+          "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
+          "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Kies: Kamers / Weer en waarschuwingen / Meldingen (optioneel) / Geavanceerde grenswaarden",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Algemene instellingen"
+          "select_room": "Ruimte · instellingen",
+          "setup_general": "Algemene instellingen"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+        "data": {
+          "windows": "Ramen",
+          "air_quality": "Luchtkwaliteits- en omgevingssensoren",
+          "temperature": "Temperatuur",
+          "humidity": "Vochtigheid",
+          "pressure": "Druksensoren",
+          "climate_devices": "Apparaten",
+          "shades": "Raamzonwering, jaloezieën en rolluiken",
+          "occupancy_sensors": "Aanwezigheid · sensor"
+        },
+        "data_description": {
+          "windows": "Ramen. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "air_quality": "Luchtkwaliteits- en omgevingssensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "temperature": "Temperatuur. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "pressure": "Druksensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
+          "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
+          "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."
+        }
+      },
+      "select_room": {
+        "title": "Ruimte · instellingen",
+        "description": "Ruimte · instellingen",
+        "data": {
+          "edit_room_area": "Apparaten"
+        }
+      },
+      "edit_room": {
         "title": "Settings · {area_name}",
         "description": "Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
         "data": {

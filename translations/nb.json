@@ -285,7 +285,8 @@
         "description": "Velg: Rom / Vær og varsler / Kunngjøringer (valgfritt) / Avanserte grenseverdier",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Generelle innstillinger"
+          "select_room": "Område · innstillinger",
+          "setup_general": "Generelle innstillinger"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Persienner, rullegardiner og skodder. Velg rullegardiner, persienner og skodder som cover.* i rommet. Covers uten device_class støttes med CLOSE hvis de faktisk skjermer vinduer. Garasjer, porter, dører, vinduer og markiser er utelukket. Valget beveger ingenting: koble vinduskontakt og konfigurer automatikk, kunngjøring og temperatur i kontrolleren. Ukjent status hindrer bevegelse.",
           "occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen."
         }
+      },
+      "select_room": {
+        "title": "Område · innstillinger",
+        "description": "Område · innstillinger",
+        "data": {
+          "edit_room_area": "Enheter"
+        }
+      },
+      "edit_room": {
+        "title": "Settings · {area_name}",
+        "description": "Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+        "data": {
+          "windows": "Vinduer",
+          "air_quality": "Luftkvalitets- og miljøsensorer",
+          "temperature": "Temperatur",
+          "humidity": "Luftfuktighet",
+          "pressure": "Trykksensorer",
+          "climate_devices": "Enheter",
+          "shades": "Persienner, rullegardiner og skodder",
+          "occupancy_sensors": "Tilstedeværelse · sensor"
+        },
+        "data_description": {
+          "windows": "Vinduer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "air_quality": "Luftkvalitets- og miljøsensorer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "temperature": "Temperatur. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "humidity": "Luftfuktighet. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "pressure": "Trykksensorer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "climate_devices": "Enheter. Velg bare fysiske climate.*, humidifier.* og fan.* i rommet. Enhetens egne funksjoner bestemmer varme, kjøling, avfukting, målverdier og viftehastighet. Valget betjener ingenting; automatikken aktiveres separat på hver enhet.",
+          "shades": "Persienner, rullegardiner og skodder. Velg rullegardiner, persienner og skodder som cover.* i rommet. Covers uten device_class støttes med CLOSE hvis de faktisk skjermer vinduer. Garasjer, porter, dører, vinduer og markiser er utelukket. Valget beveger ingenting: koble vinduskontakt og konfigurer automatikk, kunngjøring og temperatur i kontrolleren. Ukjent status hindrer bevegelse.",
+          "occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Velg: Rom / Vær og varsler / Kunngjøringer (valgfritt) / Avanserte grenseverdier",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Generelle innstillinger"
+          "select_room": "Område · innstillinger",
+          "setup_general": "Generelle innstillinger"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+        "data": {
+          "windows": "Vinduer",
+          "air_quality": "Luftkvalitets- og miljøsensorer",
+          "temperature": "Temperatur",
+          "humidity": "Luftfuktighet",
+          "pressure": "Trykksensorer",
+          "climate_devices": "Enheter",
+          "shades": "Persienner, rullegardiner og skodder",
+          "occupancy_sensors": "Tilstedeværelse · sensor"
+        },
+        "data_description": {
+          "windows": "Vinduer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "air_quality": "Luftkvalitets- og miljøsensorer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "temperature": "Temperatur. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "humidity": "Luftfuktighet. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "pressure": "Trykksensorer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
+          "climate_devices": "Enheter. Velg bare fysiske climate.*, humidifier.* og fan.* i rommet. Enhetens egne funksjoner bestemmer varme, kjøling, avfukting, målverdier og viftehastighet. Valget betjener ingenting; automatikken aktiveres separat på hver enhet.",
+          "shades": "Persienner, rullegardiner og skodder. Velg rullegardiner, persienner og skodder som cover.* i rommet. Covers uten device_class støttes med CLOSE hvis de faktisk skjermer vinduer. Garasjer, porter, dører, vinduer og markiser er utelukket. Valget beveger ingenting: koble vinduskontakt og konfigurer automatikk, kunngjøring og temperatur i kontrolleren. Ukjent status hindrer bevegelse.",
+          "occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen."
+        }
+      },
+      "select_room": {
+        "title": "Område · innstillinger",
+        "description": "Område · innstillinger",
+        "data": {
+          "edit_room_area": "Enheter"
+        }
+      },
+      "edit_room": {
         "title": "Settings · {area_name}",
         "description": "Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
         "data": {

@@ -285,7 +285,8 @@
         "description": "Vyberte: Miestnosti / Počasie a výstrahy / Oznámenia (voliteľné) / Pokročilé limity",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Všeobecné nastavenia"
+          "select_room": "Oblasť · nastavenia",
+          "setup_general": "Všeobecné nastavenia"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Okenné rolety, žalúzie a závesy. Vyberte rolety, žalúzie a závesy cover.* tejto miestnosti. Cover bez device_class je možné použiť s funkciou CLOSE, ak naozaj tieni okno. Garáže, brány, dvere, okná a markízy sú vylúčené. Výber ničím nepohybuje: priraďte okenný kontakt a nastavte automatiku, oznámenie a teplotu na ovládači. Neznámy stav blokuje pohyb.",
           "occupancy_sensors": "Vyberte skutočný zdroj Home Assistant pre „Obsadenosť · senzor“. Chýbajúce alebo staré dáta pozastavia akciu."
         }
+      },
+      "select_room": {
+        "title": "Oblasť · nastavenia",
+        "description": "Oblasť · nastavenia",
+        "data": {
+          "edit_room_area": "Zariadenia"
+        }
+      },
+      "edit_room": {
+        "title": "Settings · {area_name}",
+        "description": "Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
+        "data": {
+          "windows": "Okná",
+          "air_quality": "Snímače kvality vzduchu a prostredia",
+          "temperature": "Teplota",
+          "humidity": "Vlhkosť",
+          "pressure": "Snímače tlaku",
+          "climate_devices": "Zariadenia",
+          "shades": "Okenné rolety, žalúzie a závesy",
+          "occupancy_sensors": "Obsadenosť · senzor"
+        },
+        "data_description": {
+          "windows": "Okná. Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
+          "air_quality": "Snímače kvality vzduchu a prostredia. Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
+          "temperature": "Teplota. Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
+          "humidity": "Vlhkosť. Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
+          "pressure": "Snímače tlaku. Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
+          "climate_devices": "Zariadenia. Vyberte iba fyzické entity climate.*, humidifier.* a fan.* tejto miestnosti. Natívne možnosti určujú kúrenie, chladenie, odvlhčovanie, cieľové hodnoty a rýchlosti ventilátora. Výber nič nespustí; automatiku povoľte zvlášť pre každé zariadenie.",
+          "shades": "Okenné rolety, žalúzie a závesy. Vyberte rolety, žalúzie a závesy cover.* tejto miestnosti. Cover bez device_class je možné použiť s funkciou CLOSE, ak naozaj tieni okno. Garáže, brány, dvere, okná a markízy sú vylúčené. Výber ničím nepohybuje: priraďte okenný kontakt a nastavte automatiku, oznámenie a teplotu na ovládači. Neznámy stav blokuje pohyb.",
+          "occupancy_sensors": "Vyberte skutočný zdroj Home Assistant pre „Obsadenosť · senzor“. Chýbajúce alebo staré dáta pozastavia akciu."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Vyberte: Miestnosti / Počasie a výstrahy / Oznámenia (voliteľné) / Pokročilé limity",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Všeobecné nastavenia"
+          "select_room": "Oblasť · nastavenia",
+          "setup_general": "Všeobecné nastavenia"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
+        "data": {
+          "windows": "Okná",
+          "air_quality": "Snímače kvality vzduchu a prostredia",
+          "temperature": "Teplota",
+          "humidity": "Vlhkosť",
+          "pressure": "Snímače tlaku",
+          "climate_devices": "Zariadenia",
+          "shades": "Okenné rolety, žalúzie a závesy",
+          "occupancy_sensors": "Obsadenosť · senzor"
+        },
+        "data_description": {
+          "windows": "Okná. Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
+          "air_quality": "Snímače kvality vzduchu a prostredia. Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
+          "temperature": "Teplota. Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
+          "humidity": "Vlhkosť. Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
+          "pressure": "Snímače tlaku. Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
+          "climate_devices": "Zariadenia. Vyberte iba fyzické entity climate.*, humidifier.* a fan.* tejto miestnosti. Natívne možnosti určujú kúrenie, chladenie, odvlhčovanie, cieľové hodnoty a rýchlosti ventilátora. Výber nič nespustí; automatiku povoľte zvlášť pre každé zariadenie.",
+          "shades": "Okenné rolety, žalúzie a závesy. Vyberte rolety, žalúzie a závesy cover.* tejto miestnosti. Cover bez device_class je možné použiť s funkciou CLOSE, ak naozaj tieni okno. Garáže, brány, dvere, okná a markízy sú vylúčené. Výber ničím nepohybuje: priraďte okenný kontakt a nastavte automatiku, oznámenie a teplotu na ovládači. Neznámy stav blokuje pohyb.",
+          "occupancy_sensors": "Vyberte skutočný zdroj Home Assistant pre „Obsadenosť · senzor“. Chýbajúce alebo staré dáta pozastavia akciu."
+        }
+      },
+      "select_room": {
+        "title": "Oblasť · nastavenia",
+        "description": "Oblasť · nastavenia",
+        "data": {
+          "edit_room_area": "Zariadenia"
+        }
+      },
+      "edit_room": {
         "title": "Settings · {area_name}",
         "description": "Vyberte vstupy miestnosti: názov zariadenia - názov entity. Prázdne skupiny sa nepoužívajú a nezapínajú automatické vyhľadávanie ani riadenie.",
         "data": {
