@@ -243,6 +243,11 @@ async def tests():
     Model.profile_name=staticmethod(lambda cfg,plan:'home')
     b['power_mod'].device_supply_dwell=device_supply_dwell
     b['power_mod'].supply_off_since=b['supply_off_since']
+    from types import ModuleType
+    import sys
+    pid_stub=ModuleType('beta64_probe.pid_math')
+    pid_stub.finite=b['finite']
+    sys.modules[pid_stub.__name__]=pid_stub
     ns={'equipment':Model,
         '__package__':'beta64_probe',
         '__name__':'beta64_probe.equipment_status'}
