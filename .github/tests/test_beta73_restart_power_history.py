@@ -69,7 +69,8 @@ namespace={
  'asyncio':asyncio, 'deepcopy':deepcopy,
  'HomeAssistantError':HomeAssistantError,
  'model':ExtendedModel, 'snapshot':snap, 'output_off':off,
- 'finite':finite, '_manual_output_changes':physical_changes,
+ 'finite':finite, 'matches':base['matches'],
+ '_manual_output_changes':physical_changes,
  'foreign_owner_hold':lambda hass,owner,e: hass.manager.foreign_owner,
  'DOMAIN':'environment_manager',
 }
@@ -177,6 +178,21 @@ async def run():
     assert r.actual_commands[-1][0]=='set_hvac_mode'
     assert r.actual_commands[-1][1]=={'hvac_mode':'off'}
 
+    # A persisted OFF observation can be stale after an acknowledged
+    # physical ON operation immediately before the HA process stopped.
+    # The first post-restart ON reading must keep confirmed owned runtime.
+    resumed=Controller()
+    resumed.record['native_power_observations']={
+        'climate.heater':{'state':'off','since':NOW-1000}
+    }
+    resumed.manager.original_store={'version':1,'records':deepcopy(resumed.records)}
+    await resumed.async_start()
+    assert await resumed._verify_restart_power(spec)
+    await resumed._observe_native_running(
+        spec,resumed.manager.cap,resumed.states['climate.heater']
+    )
+    assert resumed.record['power']['climate.heater']['since']==NOW-750
+
     # A REAL recently switched-ON device must still complete its minimum
     # ON duration even after a restart, regardless of thermostat setpoint.
     recent=Controller(known_since=NOW-120)
@@ -246,6 +262,12 @@ async def run():
     changed.record['native_power_observations']={
        'climate.heater':{'state':'off','since':NOW-90}
     }
+    # First observe OFF inside this process. A later real ON transition
+    # differs from a stale persisted OFF snapshot restored at startup.
+    changed.states['climate.heater']=state('off',changed=NOW-90)
+    await changed._observe_native_running(spec,changed.manager.cap,
+                                          changed.states['climate.heater'])
+    changed.states['climate.heater']=state('heat',changed=NOW-20)
     await changed._observe_native_running(spec,changed.manager.cap,
                                           changed.states['climate.heater'])
     assert changed.record['power']['climate.heater']['since']==NOW
