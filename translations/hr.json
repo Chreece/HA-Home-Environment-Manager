@@ -285,7 +285,8 @@
         "description": "Odaberite: Prostorije / Vrijeme i upozorenja / Obavijesti (neobavezno) / Napredni pragovi",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Opće postavke"
+          "select_room": "Područje · postavke",
+          "setup_general": "Opće postavke"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Prozorske rolete, sjenila i žaluzine. Odaberi rolete, žaluzine i zavjese cover.* ove sobe. Covers bez device_class prihvaćaju se uz CLOSE ako su stvarno zasjenjivači prozora. Garaže, vrata, kapije, prozori i tende su isključeni. Odabir ništa ne pomiče: dodijeli senzor prozora i postavi automatiku, najavu i temperaturu na kontroleru. Nepoznato stanje blokira pokret.",
           "occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju."
         }
+      },
+      "select_room": {
+        "title": "Područje · postavke",
+        "description": "Područje · postavke",
+        "data": {
+          "edit_room_area": "Uređaji"
+        }
+      },
+      "edit_room": {
+        "title": "Settings · {area_name}",
+        "description": "Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+        "data": {
+          "windows": "Prozori",
+          "air_quality": "Senzori kvalitete zraka i okoliša",
+          "temperature": "Temperatura",
+          "humidity": "Vlažnost",
+          "pressure": "Senzori tlaka",
+          "climate_devices": "Uređaji",
+          "shades": "Prozorske rolete, sjenila i žaluzine",
+          "occupancy_sensors": "Prisutnost · senzor"
+        },
+        "data_description": {
+          "windows": "Prozori. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "air_quality": "Senzori kvalitete zraka i okoliša. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "temperature": "Temperatura. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "humidity": "Vlažnost. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "pressure": "Senzori tlaka. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "climate_devices": "Uređaji. Odaberi samo fizičke entitete climate.*, humidifier.* i fan.* ove sobe. Izvorne funkcije određuju grijanje, hlađenje, odvlaživanje, zadane vrijednosti i brzinu ventilatora. Sam odabir ništa ne pokreće; automatiku uključi zasebno za uređaj.",
+          "shades": "Prozorske rolete, sjenila i žaluzine. Odaberi rolete, žaluzine i zavjese cover.* ove sobe. Covers bez device_class prihvaćaju se uz CLOSE ako su stvarno zasjenjivači prozora. Garaže, vrata, kapije, prozori i tende su isključeni. Odabir ništa ne pomiče: dodijeli senzor prozora i postavi automatiku, najavu i temperaturu na kontroleru. Nepoznato stanje blokira pokret.",
+          "occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Odaberite: Prostorije / Vrijeme i upozorenja / Obavijesti (neobavezno) / Napredni pragovi",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Opće postavke"
+          "select_room": "Područje · postavke",
+          "setup_general": "Opće postavke"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+        "data": {
+          "windows": "Prozori",
+          "air_quality": "Senzori kvalitete zraka i okoliša",
+          "temperature": "Temperatura",
+          "humidity": "Vlažnost",
+          "pressure": "Senzori tlaka",
+          "climate_devices": "Uređaji",
+          "shades": "Prozorske rolete, sjenila i žaluzine",
+          "occupancy_sensors": "Prisutnost · senzor"
+        },
+        "data_description": {
+          "windows": "Prozori. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "air_quality": "Senzori kvalitete zraka i okoliša. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "temperature": "Temperatura. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "humidity": "Vlažnost. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "pressure": "Senzori tlaka. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
+          "climate_devices": "Uređaji. Odaberi samo fizičke entitete climate.*, humidifier.* i fan.* ove sobe. Izvorne funkcije određuju grijanje, hlađenje, odvlaživanje, zadane vrijednosti i brzinu ventilatora. Sam odabir ništa ne pokreće; automatiku uključi zasebno za uređaj.",
+          "shades": "Prozorske rolete, sjenila i žaluzine. Odaberi rolete, žaluzine i zavjese cover.* ove sobe. Covers bez device_class prihvaćaju se uz CLOSE ako su stvarno zasjenjivači prozora. Garaže, vrata, kapije, prozori i tende su isključeni. Odabir ništa ne pomiče: dodijeli senzor prozora i postavi automatiku, najavu i temperaturu na kontroleru. Nepoznato stanje blokira pokret.",
+          "occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju."
+        }
+      },
+      "select_room": {
+        "title": "Područje · postavke",
+        "description": "Područje · postavke",
+        "data": {
+          "edit_room_area": "Uređaji"
+        }
+      },
+      "edit_room": {
         "title": "Settings · {area_name}",
         "description": "Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
         "data": {

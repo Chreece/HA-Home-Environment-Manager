@@ -285,7 +285,8 @@
         "description": "Válassz: Helyiségek / Időjárás és riasztások / Értesítések (opcionális) / Speciális határértékek",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Általános beállítások"
+          "select_room": "Terület · beállítások",
+          "setup_general": "Általános beállítások"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás.",
           "occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet."
         }
+      },
+      "select_room": {
+        "title": "Terület · beállítások",
+        "description": "Terület · beállítások",
+        "data": {
+          "edit_room_area": "Eszközök"
+        }
+      },
+      "edit_room": {
+        "title": "Settings · {area_name}",
+        "description": "Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+        "data": {
+          "windows": "Ablakok",
+          "air_quality": "Levegőminőség- és környezeti érzékelők",
+          "temperature": "Hőmérséklet",
+          "humidity": "Páratartalom",
+          "pressure": "Nyomásérzékelők",
+          "climate_devices": "Eszközök",
+          "shades": "Ablakredőnyök, reluxák és függönyök",
+          "occupancy_sensors": "Jelenlét · érzékelő"
+        },
+        "data_description": {
+          "windows": "Ablakok. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "air_quality": "Levegőminőség- és környezeti érzékelők. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "temperature": "Hőmérséklet. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "humidity": "Páratartalom. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "pressure": "Nyomásérzékelők. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "climate_devices": "Eszközök. Csak a szoba valódi climate.*, humidifier.* és fan.* entitásait válaszd. A natív képességek határozzák meg a fűtést, hűtést, párátlanítást, célértékeket és ventilátorsebességet. A kiválasztás nem kapcsol be semmit; az automatika eszközönként engedélyezhető.",
+          "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás.",
+          "occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Válassz: Helyiségek / Időjárás és riasztások / Értesítések (opcionális) / Speciális határértékek",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Általános beállítások"
+          "select_room": "Terület · beállítások",
+          "setup_general": "Általános beállítások"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+        "data": {
+          "windows": "Ablakok",
+          "air_quality": "Levegőminőség- és környezeti érzékelők",
+          "temperature": "Hőmérséklet",
+          "humidity": "Páratartalom",
+          "pressure": "Nyomásérzékelők",
+          "climate_devices": "Eszközök",
+          "shades": "Ablakredőnyök, reluxák és függönyök",
+          "occupancy_sensors": "Jelenlét · érzékelő"
+        },
+        "data_description": {
+          "windows": "Ablakok. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "air_quality": "Levegőminőség- és környezeti érzékelők. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "temperature": "Hőmérséklet. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "humidity": "Páratartalom. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "pressure": "Nyomásérzékelők. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
+          "climate_devices": "Eszközök. Csak a szoba valódi climate.*, humidifier.* és fan.* entitásait válaszd. A natív képességek határozzák meg a fűtést, hűtést, párátlanítást, célértékeket és ventilátorsebességet. A kiválasztás nem kapcsol be semmit; az automatika eszközönként engedélyezhető.",
+          "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás.",
+          "occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet."
+        }
+      },
+      "select_room": {
+        "title": "Terület · beállítások",
+        "description": "Terület · beállítások",
+        "data": {
+          "edit_room_area": "Eszközök"
+        }
+      },
+      "edit_room": {
         "title": "Settings · {area_name}",
         "description": "Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
         "data": {

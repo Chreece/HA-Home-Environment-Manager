@@ -285,7 +285,8 @@
         "description": "Valitse: Huoneet / Sää ja varoitukset / Ilmoitukset (valinnainen) / Lisäraja-arvot",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Yleiset asetukset"
+          "select_room": "Alue · asetukset",
+          "setup_general": "Yleiset asetukset"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
           "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."
         }
+      },
+      "select_room": {
+        "title": "Alue · asetukset",
+        "description": "Alue · asetukset",
+        "data": {
+          "edit_room_area": "Laitteet"
+        }
+      },
+      "edit_room": {
+        "title": "Settings · {area_name}",
+        "description": "Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+        "data": {
+          "windows": "Ikkunat",
+          "air_quality": "Ilmanlaatu- ja ympäristöanturit",
+          "temperature": "Lämpötila",
+          "humidity": "Kosteus",
+          "pressure": "Paineanturit",
+          "climate_devices": "Laitteet",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut",
+          "occupancy_sensors": "Läsnäolo · anturi"
+        },
+        "data_description": {
+          "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "air_quality": "Ilmanlaatu- ja ympäristöanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
+          "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Valitse: Huoneet / Sää ja varoitukset / Ilmoitukset (valinnainen) / Lisäraja-arvot",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Yleiset asetukset"
+          "select_room": "Alue · asetukset",
+          "setup_general": "Yleiset asetukset"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+        "data": {
+          "windows": "Ikkunat",
+          "air_quality": "Ilmanlaatu- ja ympäristöanturit",
+          "temperature": "Lämpötila",
+          "humidity": "Kosteus",
+          "pressure": "Paineanturit",
+          "climate_devices": "Laitteet",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut",
+          "occupancy_sensors": "Läsnäolo · anturi"
+        },
+        "data_description": {
+          "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "air_quality": "Ilmanlaatu- ja ympäristöanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
+          "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
+          "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."
+        }
+      },
+      "select_room": {
+        "title": "Alue · asetukset",
+        "description": "Alue · asetukset",
+        "data": {
+          "edit_room_area": "Laitteet"
+        }
+      },
+      "edit_room": {
         "title": "Settings · {area_name}",
         "description": "Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
         "data": {

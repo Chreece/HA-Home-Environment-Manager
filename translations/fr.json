@@ -285,7 +285,8 @@
         "description": "Choisissez une rubrique. Les autres paramètres restent inchangés.",
         "menu_options": {
           "choose_rooms": "Choisir les pièces",
-          "general_settings": "Paramètres généraux"
+          "select_room": "Zone · paramètres",
+          "setup_general": "Général paramètres"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
           "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
         }
+      },
+      "select_room": {
+        "title": "Zone · paramètres",
+        "description": "Zone · paramètres",
+        "data": {
+          "edit_room_area": "Appareils"
+        }
+      },
+      "edit_room": {
+        "title": "Paramètres · {area_name}",
+        "description": "Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+        "data": {
+          "windows": "Fenêtres",
+          "air_quality": "Capteurs de qualité de l’air et d’environnement",
+          "temperature": "Température",
+          "humidity": "Humidité",
+          "pressure": "Capteurs de pression",
+          "climate_devices": "Appareils",
+          "shades": "Stores, rideaux et volets de fenêtre",
+          "occupancy_sensors": "Présence · capteur"
+        },
+        "data_description": {
+          "windows": "Fenêtres. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "air_quality": "Capteurs de qualité de l’air et d’environnement. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "temperature": "Température. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "pressure": "Capteurs de pression. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
+          "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
+          "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Choisissez une rubrique. Les autres paramètres restent inchangés.",
         "menu_options": {
           "choose_rooms": "Choisir les pièces",
-          "general_settings": "Paramètres généraux"
+          "select_room": "Zone · paramètres",
+          "setup_general": "Général paramètres"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Paramètres · {area_name}",
+        "description": "Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+        "data": {
+          "windows": "Fenêtres",
+          "air_quality": "Capteurs de qualité de l’air et d’environnement",
+          "temperature": "Température",
+          "humidity": "Humidité",
+          "pressure": "Capteurs de pression",
+          "climate_devices": "Appareils",
+          "shades": "Stores, rideaux et volets de fenêtre",
+          "occupancy_sensors": "Présence · capteur"
+        },
+        "data_description": {
+          "windows": "Fenêtres. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "air_quality": "Capteurs de qualité de l’air et d’environnement. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "temperature": "Température. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "pressure": "Capteurs de pression. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
+          "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
+          "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
+        }
+      },
+      "select_room": {
+        "title": "Zone · paramètres",
+        "description": "Zone · paramètres",
+        "data": {
+          "edit_room_area": "Appareils"
+        }
+      },
+      "edit_room": {
         "title": "Paramètres · {area_name}",
         "description": "Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
         "data": {

@@ -285,7 +285,8 @@
         "description": "Pilih: Ruangan / Cuaca dan peringatan / Pengumuman (opsional) / Ambang batas lanjutan",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Umum pengaturan"
+          "select_room": "Area · pengaturan",
+          "setup_general": "Umum pengaturan"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
           "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."
         }
+      },
+      "select_room": {
+        "title": "Area · pengaturan",
+        "description": "Area · pengaturan",
+        "data": {
+          "edit_room_area": "Perangkat"
+        }
+      },
+      "edit_room": {
+        "title": "Settings · {area_name}",
+        "description": "Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+        "data": {
+          "windows": "Jendela",
+          "air_quality": "Sensor kualitas udara dan lingkungan",
+          "temperature": "Suhu",
+          "humidity": "Kelembapan",
+          "pressure": "Sensor tekanan",
+          "climate_devices": "Perangkat",
+          "shades": "Tirai, gorden, dan penutup jendela",
+          "occupancy_sensors": "Kehadiran · sensor"
+        },
+        "data_description": {
+          "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "air_quality": "Sensor kualitas udara dan lingkungan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "temperature": "Suhu. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "pressure": "Sensor tekanan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
+          "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
+          "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Pilih: Ruangan / Cuaca dan peringatan / Pengumuman (opsional) / Ambang batas lanjutan",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Umum pengaturan"
+          "select_room": "Area · pengaturan",
+          "setup_general": "Umum pengaturan"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+        "data": {
+          "windows": "Jendela",
+          "air_quality": "Sensor kualitas udara dan lingkungan",
+          "temperature": "Suhu",
+          "humidity": "Kelembapan",
+          "pressure": "Sensor tekanan",
+          "climate_devices": "Perangkat",
+          "shades": "Tirai, gorden, dan penutup jendela",
+          "occupancy_sensors": "Kehadiran · sensor"
+        },
+        "data_description": {
+          "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "air_quality": "Sensor kualitas udara dan lingkungan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "temperature": "Suhu. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "pressure": "Sensor tekanan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
+          "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
+          "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."
+        }
+      },
+      "select_room": {
+        "title": "Area · pengaturan",
+        "description": "Area · pengaturan",
+        "data": {
+          "edit_room_area": "Perangkat"
+        }
+      },
+      "edit_room": {
         "title": "Settings · {area_name}",
         "description": "Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
         "data": {
