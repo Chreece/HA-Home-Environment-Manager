@@ -159,7 +159,11 @@ async def run():
     assert r.record.get('restart_power_verification') is True
     assert r.record.get('paused') is None
     assert r.record['power']['climate.heater']['since']==NOW-750
-    assert await r._verify_restart_power(spec)
+    assert await r._verify_restart_power(spec), {
+        "record":r.record,"status":r.status,
+        "settings":r.manager.settings,
+        "state":r.states.get("climate.heater"),
+    }
     assert r.record.get('restart_power_verification') is None
     assert r.record['power']['climate.heater']['since']==NOW-750
     assert r.actual_commands==[]
