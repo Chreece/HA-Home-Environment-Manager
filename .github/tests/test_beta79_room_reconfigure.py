@@ -75,6 +75,7 @@ class Probatio:
     @staticmethod
     def Required(key,default=None):return key
 ns={
+ "__name__":"beta79_fixture.reconfigure_rooms","__package__":"beta79_fixture",
  "Any":object,"probatio":Probatio,"ar":N(async_get=lambda hass:N(
       async_get_area=lambda area:N(name=rooms[area]) if area in rooms else None)),
  "er":N(),"deepcopy":deepcopy,"sources":module_source,
