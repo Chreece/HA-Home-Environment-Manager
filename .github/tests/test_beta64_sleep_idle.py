@@ -251,6 +251,13 @@ power_env = {
     "_observed_off_since": lambda state, now: state.last_changed.timestamp(),
     "verified_capabilities": lambda runtime, spec: runtime.manager.cap,
 }
+(device_supply_dwell, supply_off_since, supply_minimum_on,
+ supply_minimum_off, observe_supply_state) = extract(
+    "equipment_power_switch.py",
+    ("device_supply_dwell", "supply_off_since", "supply_minimum_on",
+     "supply_minimum_off", "observe_supply_state"),
+    power_env,
+)
 (approved_demand, dispatch_safe, before_tick, send) = extract(
     "equipment_power_switch.py",
     ("approved_demand", "_dispatch_safe", "before_tick", "_send"),
