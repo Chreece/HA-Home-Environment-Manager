@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "家中 · Away · cooldown (min)",
           "away_open_window_alert": "所有人离家后提醒未关窗户",
           "away_windows_target_people": "接收提醒的人员",
-          "away_windows_delivery_channels": "窗户提醒发送渠道"
+          "away_windows_delivery_channels": "窗户提醒发送渠道",
+          "general_source_stale_minutes": "来源 · max (min)",
+          "general_home_policy": "家中 · 占用 · 控制"
         },
         "data_description": {
           "weather_entities": "请选择: 天气与预警 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "所有人离家后提醒未关窗户. 接收提醒的人员 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. 手机, 手表, 平板.",
           "away_windows_target_people": "接收提醒的人员 (person.*) - Announcement Hub: 手机, 手表, 平板, 其他设备. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "窗户提醒发送渠道: 手机 通知 / TTS 语音, 手表 通知 / TTS 语音, 平板 通知 / TTS 语音. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "窗户提醒发送渠道: 手机 通知 / TTS 语音, 手表 通知 / TTS 语音, 平板 通知 / TTS 语音. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "来源 · 睡眠 / 占用 · max 240 min. 无效 · 关闭.",
+          "general_home_policy": "该选项控制“家中 · 占用 · 控制”。实际设备命令必须单独授权并具有独立保护。"
         }
       },
       "reconfigure": {
         "title": "⚙️ 请选择",
         "description": "请选择: 房间 / 天气与预警 / 播报（可选） / 高级阈值",
         "menu_options": {
-          "room_occupancy": "占用 · 传感器",
-          "outside_data": "室外 · 来源",
-          "general_settings": "常规 · 设置",
-          "area_settings": "区域 · 设置",
-          "delivery": "播报（可选）",
-          "thresholds": "高级阈值",
-          "climate": "设置 · 设备",
-          "pid": "设置 · PID",
-          "setup_rooms": "要监测的房间"
+          "choose_rooms": "要监测的房间",
+          "general_settings": "常规 · 设置"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "要监测的房间",
+        "description": "要监测的房间 → 来源 → 常规 设置",
+        "data": {
+          "areas": "要监测的房间"
+        },
+        "data_description": {
+          "areas": "要监测的房间. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。"
+        }
+      },
+      "room_settings": {
+        "title": "区域 · 设置 · {area_name}",
+        "description": "选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+        "data": {
+          "windows": "窗户",
+          "air_quality": "空气质量与环境传感器",
+          "temperature": "温度",
+          "humidity": "湿度",
+          "pressure": "压力传感器",
+          "climate_devices": "设备",
+          "shades": "窗帘、百叶帘及卷帘",
+          "occupancy_sensors": "占用 · 传感器"
+        },
+        "data_description": {
+          "windows": "窗户. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "air_quality": "空气质量与环境传感器. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "temperature": "温度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "humidity": "湿度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "pressure": "压力传感器. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "climate_devices": "设备. 只选择本房间实际的 climate.*、humidifier.* 和 fan.* 实体。设备自身的能力决定供暖、制冷、除湿、温湿度目标和风扇速度。选择不会立即控制设备；须在每台设备控制器中分别启用自动控制。",
+          "shades": "窗帘、百叶帘及卷帘. 选择本房间的 cover.* 百叶帘、卷帘、卷闸和窗帘。没有 device_class 的 covers 只要支持 CLOSE 且确实用于窗户遮阳，也可以选择。车库门、门、闸门、窗户及室外遮阳棚均排除。仅选择不会移动：请在控制器中指定窗户传感器、自动控制、提前通知和温度阈值。状态未知时禁止移动。",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ 请选择",
         "description": "请选择: 房间 / 天气与预警 / 播报（可选） / 高级阈值",
         "menu_options": {
-          "room_occupancy": "占用 · 传感器",
-          "outside_data": "室外 · 来源",
-          "general_settings": "常规 · 设置",
-          "area_settings": "区域 · 设置",
-          "delivery": "播报（可选）",
-          "thresholds": "高级阈值",
-          "climate": "设置 · 设备",
-          "pid": "设置 · PID",
-          "setup_rooms": "要监测的房间"
+          "choose_rooms": "要监测的房间",
+          "general_settings": "常规 · 设置"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "家中 · Away · cooldown (min)",
           "away_open_window_alert": "所有人离家后提醒未关窗户",
           "away_windows_target_people": "接收提醒的人员",
-          "away_windows_delivery_channels": "窗户提醒发送渠道"
+          "away_windows_delivery_channels": "窗户提醒发送渠道",
+          "general_source_stale_minutes": "来源 · max (min)",
+          "general_home_policy": "家中 · 占用 · 控制"
         },
         "data_description": {
           "weather_entities": "请选择: 天气与预警 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "所有人离家后提醒未关窗户. 接收提醒的人员 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. 手机, 手表, 平板.",
           "away_windows_target_people": "接收提醒的人员 (person.*) - Announcement Hub: 手机, 手表, 平板, 其他设备. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "窗户提醒发送渠道: 手机 通知 / TTS 语音, 手表 通知 / TTS 语音, 平板 通知 / TTS 语音. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "窗户提醒发送渠道: 手机 通知 / TTS 语音, 手表 通知 / TTS 语音, 平板 通知 / TTS 语音. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "来源 · 睡眠 / 占用 · max 240 min. 无效 · 关闭.",
+          "general_home_policy": "该选项控制“家中 · 占用 · 控制”。实际设备命令必须单独授权并具有独立保护。"
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "要监测的房间",
+        "description": "要监测的房间 → 来源 → 常规 设置",
+        "data": {
+          "areas": "要监测的房间"
+        },
+        "data_description": {
+          "areas": "要监测的房间. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。"
+        }
+      },
+      "room_settings": {
+        "title": "区域 · 设置 · {area_name}",
+        "description": "选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+        "data": {
+          "windows": "窗户",
+          "air_quality": "空气质量与环境传感器",
+          "temperature": "温度",
+          "humidity": "湿度",
+          "pressure": "压力传感器",
+          "climate_devices": "设备",
+          "shades": "窗帘、百叶帘及卷帘",
+          "occupancy_sensors": "占用 · 传感器"
+        },
+        "data_description": {
+          "windows": "窗户. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "air_quality": "空气质量与环境传感器. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "temperature": "温度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "humidity": "湿度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "pressure": "压力传感器. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "climate_devices": "设备. 只选择本房间实际的 climate.*、humidifier.* 和 fan.* 实体。设备自身的能力决定供暖、制冷、除湿、温湿度目标和风扇速度。选择不会立即控制设备；须在每台设备控制器中分别启用自动控制。",
+          "shades": "窗帘、百叶帘及卷帘. 选择本房间的 cover.* 百叶帘、卷帘、卷闸和窗帘。没有 device_class 的 covers 只要支持 CLOSE 且确实用于窗户遮阳，也可以选择。车库门、门、闸门、窗户及室外遮阳棚均排除。仅选择不会移动：请在控制器中指定窗户传感器、自动控制、提前通知和温度阈值。状态未知时禁止移动。",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
       }
     },

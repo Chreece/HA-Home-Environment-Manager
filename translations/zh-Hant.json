@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "家中 · Away · cooldown (min)",
           "away_open_window_alert": "所有人離家後提醒未關窗戶",
           "away_windows_target_people": "接收提醒的人員",
-          "away_windows_delivery_channels": "窗戶提醒發送管道"
+          "away_windows_delivery_channels": "窗戶提醒發送管道",
+          "general_source_stale_minutes": "來源 · max (min)",
+          "general_home_policy": "家中 · 佔用 · 控制"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "所有人離家後提醒未關窗戶. 接收提醒的人員 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. 手機, 手錶, 平板.",
           "away_windows_target_people": "接收提醒的人員 (person.*) - Announcement Hub: 手機, 手錶, 平板, 其他裝置. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "窗戶提醒發送管道: 手機 通知 / TTS 語音, 手錶 通知 / TTS 語音, 平板 通知 / TTS 語音. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "窗戶提醒發送管道: 手機 通知 / TTS 語音, 手錶 通知 / TTS 語音, 平板 通知 / TTS 語音. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "來源 · 睡眠 / 佔用 · max 240 min. 無效 · 關閉.",
+          "general_home_policy": "此選項控制「家中 · 佔用 · 控制」。實際裝置指令需個別授權並有獨立保護。"
         }
       },
       "reconfigure": {
         "title": "⚙️ 請選擇",
         "description": "請選擇: 房間 / 天氣與警報 / 播報（選用） / 進階閾值",
         "menu_options": {
-          "room_occupancy": "佔用 · 感測器",
-          "outside_data": "室外 · 來源",
-          "general_settings": "一般 · 設定",
-          "area_settings": "區域 · 設定",
-          "delivery": "播報（選用）",
-          "thresholds": "進階閾值",
-          "climate": "設定 · 裝置",
-          "pid": "設定 · PID",
-          "setup_rooms": "要監測的房間"
+          "choose_rooms": "要監測的房間",
+          "general_settings": "一般 · 設定"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "要監測的房間",
+        "description": "要監測的房間 → 來源 → 一般 設定",
+        "data": {
+          "areas": "要監測的房間"
+        },
+        "data_description": {
+          "areas": "要監測的房間. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。"
+        }
+      },
+      "room_settings": {
+        "title": "區域 · 設定 · {area_name}",
+        "description": "選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
+        "data": {
+          "windows": "窗戶",
+          "air_quality": "空氣品質與環境感測器",
+          "temperature": "溫度",
+          "humidity": "濕度",
+          "pressure": "壓力感測器",
+          "climate_devices": "裝置",
+          "shades": "窗簾、百葉簾及捲簾",
+          "occupancy_sensors": "佔用 · 感測器"
+        },
+        "data_description": {
+          "windows": "窗戶. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
+          "air_quality": "空氣品質與環境感測器. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
+          "temperature": "溫度. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
+          "humidity": "濕度. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
+          "pressure": "壓力感測器. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
+          "climate_devices": "裝置. 只選擇本房間實際的 climate.*、humidifier.* 和 fan.* 實體。裝置本身的能力決定暖氣、冷房、除濕、溫濕度目標與風扇速度。選取不會立即控制裝置；須在各裝置控制器內分別啟用自動控制。",
+          "shades": "窗簾、百葉簾及捲簾. 選擇本房間的 cover.* 百葉簾、捲簾、捲閘與窗簾。沒有 device_class 的 covers 只要支援 CLOSE 且確實用於窗戶遮陽，也可選擇。車庫門、門、閘門、窗戶與室外遮陽棚均排除。僅選取不會移動：請在控制器中指定窗戶感測器、自動控制、提前通知及溫度門檻。狀態未知時禁止移動。",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ 請選擇",
         "description": "請選擇: 房間 / 天氣與警報 / 播報（選用） / 進階閾值",
         "menu_options": {
-          "room_occupancy": "佔用 · 感測器",
-          "outside_data": "室外 · 來源",
-          "general_settings": "一般 · 設定",
-          "area_settings": "區域 · 設定",
-          "delivery": "播報（選用）",
-          "thresholds": "進階閾值",
-          "climate": "設定 · 裝置",
-          "pid": "設定 · PID",
-          "setup_rooms": "要監測的房間"
+          "choose_rooms": "要監測的房間",
+          "general_settings": "一般 · 設定"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "家中 · Away · cooldown (min)",
           "away_open_window_alert": "所有人離家後提醒未關窗戶",
           "away_windows_target_people": "接收提醒的人員",
-          "away_windows_delivery_channels": "窗戶提醒發送管道"
+          "away_windows_delivery_channels": "窗戶提醒發送管道",
+          "general_source_stale_minutes": "來源 · max (min)",
+          "general_home_policy": "家中 · 佔用 · 控制"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 家中 · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "所有人離家後提醒未關窗戶. 接收提醒的人員 (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. 手機, 手錶, 平板.",
           "away_windows_target_people": "接收提醒的人員 (person.*) - Announcement Hub: 手機, 手錶, 平板, 其他裝置. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "窗戶提醒發送管道: 手機 通知 / TTS 語音, 手錶 通知 / TTS 語音, 平板 通知 / TTS 語音. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "窗戶提醒發送管道: 手機 通知 / TTS 語音, 手錶 通知 / TTS 語音, 平板 通知 / TTS 語音. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "來源 · 睡眠 / 佔用 · max 240 min. 無效 · 關閉.",
+          "general_home_policy": "此選項控制「家中 · 佔用 · 控制」。實際裝置指令需個別授權並有獨立保護。"
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "要監測的房間",
+        "description": "要監測的房間 → 來源 → 一般 設定",
+        "data": {
+          "areas": "要監測的房間"
+        },
+        "data_description": {
+          "areas": "要監測的房間. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。"
+        }
+      },
+      "room_settings": {
+        "title": "區域 · 設定 · {area_name}",
+        "description": "選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
+        "data": {
+          "windows": "窗戶",
+          "air_quality": "空氣品質與環境感測器",
+          "temperature": "溫度",
+          "humidity": "濕度",
+          "pressure": "壓力感測器",
+          "climate_devices": "裝置",
+          "shades": "窗簾、百葉簾及捲簾",
+          "occupancy_sensors": "佔用 · 感測器"
+        },
+        "data_description": {
+          "windows": "窗戶. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
+          "air_quality": "空氣品質與環境感測器. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
+          "temperature": "溫度. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
+          "humidity": "濕度. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
+          "pressure": "壓力感測器. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
+          "climate_devices": "裝置. 只選擇本房間實際的 climate.*、humidifier.* 和 fan.* 實體。裝置本身的能力決定暖氣、冷房、除濕、溫濕度目標與風扇速度。選取不會立即控制裝置；須在各裝置控制器內分別啟用自動控制。",
+          "shades": "窗簾、百葉簾及捲簾. 選擇本房間的 cover.* 百葉簾、捲簾、捲閘與窗簾。沒有 device_class 的 covers 只要支援 CLOSE 且確實用於窗戶遮陽，也可選擇。車庫門、門、閘門、窗戶與室外遮陽棚均排除。僅選取不會移動：請在控制器中指定窗戶感測器、自動控制、提前通知及溫度門檻。狀態未知時禁止移動。",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
       }
     },

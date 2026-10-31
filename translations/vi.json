@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "Nhà · Away · cooldown (min)",
           "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà",
           "away_windows_target_people": "Người nhận thông báo",
-          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ"
+          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ",
+          "general_source_stale_minutes": "nguồn · max (min)",
+          "general_home_policy": "Nhà · Hiện diện · điều khiển"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Nhà · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà. Người nhận thông báo (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Điện thoại, Đồng hồ, Máy tính bảng.",
           "away_windows_target_people": "Người nhận thông báo (person.*) - Announcement Hub: Điện thoại, Đồng hồ, Máy tính bảng, Thiết bị khác. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ: Điện thoại Thông báo / Giọng TTS, Đồng hồ Thông báo / Giọng TTS, Máy tính bảng Thông báo / Giọng TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ: Điện thoại Thông báo / Giọng TTS, Đồng hồ Thông báo / Giọng TTS, Máy tính bảng Thông báo / Giọng TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "nguồn · Ngủ / Hiện diện · max 240 min. Không hợp lệ · Tắt.",
+          "general_home_policy": "Tùy chọn này điều khiển “Nhà · Hiện diện · điều khiển”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập."
         }
       },
       "reconfigure": {
         "title": "⚙️ Chọn",
         "description": "Chọn: Phòng / Thời tiết và cảnh báo / Thông báo (tùy chọn) / Ngưỡng nâng cao",
         "menu_options": {
-          "room_occupancy": "Hiện diện · cảm biến",
-          "outside_data": "Bên ngoài · nguồn",
-          "general_settings": "Chung · cài đặt",
-          "area_settings": "Khu vực · cài đặt",
-          "delivery": "Thông báo (tùy chọn)",
-          "thresholds": "Ngưỡng nâng cao",
-          "climate": "cài đặt · Thiết bị",
-          "pid": "cài đặt · PID",
-          "setup_rooms": "Phòng cần giám sát"
+          "choose_rooms": "Phòng cần giám sát",
+          "general_settings": "Chung · cài đặt"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Phòng cần giám sát",
+        "description": "Phòng cần giám sát → nguồn → Chung cài đặt",
+        "data": {
+          "areas": "Phòng cần giám sát"
+        },
+        "data_description": {
+          "areas": "Phòng cần giám sát. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động."
+        }
+      },
+      "room_settings": {
+        "title": "Khu vực · cài đặt · {area_name}",
+        "description": "Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+        "data": {
+          "windows": "Cửa sổ",
+          "air_quality": "Cảm biến chất lượng không khí và môi trường",
+          "temperature": "Nhiệt độ",
+          "humidity": "Độ ẩm",
+          "pressure": "Cảm biến áp suất",
+          "climate_devices": "Thiết bị",
+          "shades": "Rèm, mành và cửa chớp",
+          "occupancy_sensors": "Hiện diện · cảm biến"
+        },
+        "data_description": {
+          "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "air_quality": "Cảm biến chất lượng không khí và môi trường. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
+          "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ Chọn",
         "description": "Chọn: Phòng / Thời tiết và cảnh báo / Thông báo (tùy chọn) / Ngưỡng nâng cao",
         "menu_options": {
-          "room_occupancy": "Hiện diện · cảm biến",
-          "outside_data": "Bên ngoài · nguồn",
-          "general_settings": "Chung · cài đặt",
-          "area_settings": "Khu vực · cài đặt",
-          "delivery": "Thông báo (tùy chọn)",
-          "thresholds": "Ngưỡng nâng cao",
-          "climate": "cài đặt · Thiết bị",
-          "pid": "cài đặt · PID",
-          "setup_rooms": "Phòng cần giám sát"
+          "choose_rooms": "Phòng cần giám sát",
+          "general_settings": "Chung · cài đặt"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "Nhà · Away · cooldown (min)",
           "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà",
           "away_windows_target_people": "Người nhận thông báo",
-          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ"
+          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ",
+          "general_source_stale_minutes": "nguồn · max (min)",
+          "general_home_policy": "Nhà · Hiện diện · điều khiển"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Nhà · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà. Người nhận thông báo (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Điện thoại, Đồng hồ, Máy tính bảng.",
           "away_windows_target_people": "Người nhận thông báo (person.*) - Announcement Hub: Điện thoại, Đồng hồ, Máy tính bảng, Thiết bị khác. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ: Điện thoại Thông báo / Giọng TTS, Đồng hồ Thông báo / Giọng TTS, Máy tính bảng Thông báo / Giọng TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kênh cảnh báo cửa sổ: Điện thoại Thông báo / Giọng TTS, Đồng hồ Thông báo / Giọng TTS, Máy tính bảng Thông báo / Giọng TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "nguồn · Ngủ / Hiện diện · max 240 min. Không hợp lệ · Tắt.",
+          "general_home_policy": "Tùy chọn này điều khiển “Nhà · Hiện diện · điều khiển”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Phòng cần giám sát",
+        "description": "Phòng cần giám sát → nguồn → Chung cài đặt",
+        "data": {
+          "areas": "Phòng cần giám sát"
+        },
+        "data_description": {
+          "areas": "Phòng cần giám sát. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động."
+        }
+      },
+      "room_settings": {
+        "title": "Khu vực · cài đặt · {area_name}",
+        "description": "Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+        "data": {
+          "windows": "Cửa sổ",
+          "air_quality": "Cảm biến chất lượng không khí và môi trường",
+          "temperature": "Nhiệt độ",
+          "humidity": "Độ ẩm",
+          "pressure": "Cảm biến áp suất",
+          "climate_devices": "Thiết bị",
+          "shades": "Rèm, mành và cửa chớp",
+          "occupancy_sensors": "Hiện diện · cảm biến"
+        },
+        "data_description": {
+          "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "air_quality": "Cảm biến chất lượng không khí và môi trường. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
+          "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
       }
     },

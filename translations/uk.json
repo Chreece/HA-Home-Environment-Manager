@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "Дім · Away · cooldown (min)",
           "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх",
           "away_windows_target_people": "Особи для сповіщення",
-          "away_windows_delivery_channels": "Канали сповіщень про вікна"
+          "away_windows_delivery_channels": "Канали сповіщень про вікна",
+          "general_source_stale_minutes": "джерело · max (min)",
+          "general_home_policy": "Дім · Присутність · керування"
         },
         "data_description": {
           "weather_entities": "Оберіть: Погода та попередження · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Дім · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх. Особи для сповіщення (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Годинник, Планшет.",
           "away_windows_target_people": "Особи для сповіщення (person.*) - Announcement Hub: Телефон, Годинник, Планшет, Інший пристрій. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Канали сповіщень про вікна: Телефон Сповіщення / Голос TTS, Годинник Сповіщення / Голос TTS, Планшет Сповіщення / Голос TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Канали сповіщень про вікна: Телефон Сповіщення / Голос TTS, Годинник Сповіщення / Голос TTS, Планшет Сповіщення / Голос TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "джерело · Сон / Присутність · max 240 min. Неправильно · Вимкнути.",
+          "general_home_policy": "Це налаштування керує «Дім · Присутність · керування». Фізичні команди потребують окремого дозволу й захисту."
         }
       },
       "reconfigure": {
         "title": "⚙️ Оберіть",
         "description": "Оберіть: Кімнати / Погода та попередження / Оголошення (необов’язково) / Додаткові пороги",
         "menu_options": {
-          "room_occupancy": "Присутність · датчик",
-          "outside_data": "Зовнішні · джерело",
-          "general_settings": "Загальні · налаштування",
-          "area_settings": "Зона · налаштування",
-          "delivery": "Оголошення (необов’язково)",
-          "thresholds": "Додаткові пороги",
-          "climate": "налаштування · Пристрої",
-          "pid": "налаштування · PID",
-          "setup_rooms": "Кімнати для спостереження"
+          "choose_rooms": "Кімнати для спостереження",
+          "general_settings": "Загальні · налаштування"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Кімнати для спостереження",
+        "description": "Кімнати для спостереження → джерело → Загальні налаштування",
+        "data": {
+          "areas": "Кімнати для спостереження"
+        },
+        "data_description": {
+          "areas": "Кімнати для спостереження. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування."
+        }
+      },
+      "room_settings": {
+        "title": "Зона · налаштування · {area_name}",
+        "description": "Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+        "data": {
+          "windows": "Вікна",
+          "air_quality": "Датчики якості повітря й середовища",
+          "temperature": "Температура",
+          "humidity": "Вологість",
+          "pressure": "Датчики тиску",
+          "climate_devices": "Пристрої",
+          "shades": "Віконні жалюзі, штори та ролети",
+          "occupancy_sensors": "Присутність · датчик"
+        },
+        "data_description": {
+          "windows": "Вікна. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "air_quality": "Датчики якості повітря й середовища. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "temperature": "Температура. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "humidity": "Вологість. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "pressure": "Датчики тиску. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "climate_devices": "Пристрої. Виберіть лише фізичні climate.*, humidifier.* і fan.* цієї кімнати. Можливості пристрою визначають опалення, охолодження, осушення, цільові значення й швидкість вентилятора. Вибір нічого не вмикає; автоматичне керування дозволяється окремо для кожного пристрою.",
+          "shades": "Віконні жалюзі, штори та ролети. Виберіть ролети, жалюзі та штори cover.* цієї кімнати. Covers без device_class дозволені за наявності CLOSE, якщо вони справді затінюють вікно. Гаражі, ворота, двері, вікна та маркізи виключені. Вибір нічого не рухає: прив’яжіть датчик вікна й налаштуйте автоматику, оголошення та температуру на контролері. Невідомий стан блокує рух.",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ Оберіть",
         "description": "Оберіть: Кімнати / Погода та попередження / Оголошення (необов’язково) / Додаткові пороги",
         "menu_options": {
-          "room_occupancy": "Присутність · датчик",
-          "outside_data": "Зовнішні · джерело",
-          "general_settings": "Загальні · налаштування",
-          "area_settings": "Зона · налаштування",
-          "delivery": "Оголошення (необов’язково)",
-          "thresholds": "Додаткові пороги",
-          "climate": "налаштування · Пристрої",
-          "pid": "налаштування · PID",
-          "setup_rooms": "Кімнати для спостереження"
+          "choose_rooms": "Кімнати для спостереження",
+          "general_settings": "Загальні · налаштування"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "Дім · Away · cooldown (min)",
           "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх",
           "away_windows_target_people": "Особи для сповіщення",
-          "away_windows_delivery_channels": "Канали сповіщень про вікна"
+          "away_windows_delivery_channels": "Канали сповіщень про вікна",
+          "general_source_stale_minutes": "джерело · max (min)",
+          "general_home_policy": "Дім · Присутність · керування"
         },
         "data_description": {
           "weather_entities": "Оберіть: Погода та попередження · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Дім · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх. Особи для сповіщення (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Годинник, Планшет.",
           "away_windows_target_people": "Особи для сповіщення (person.*) - Announcement Hub: Телефон, Годинник, Планшет, Інший пристрій. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Канали сповіщень про вікна: Телефон Сповіщення / Голос TTS, Годинник Сповіщення / Голос TTS, Планшет Сповіщення / Голос TTS. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Канали сповіщень про вікна: Телефон Сповіщення / Голос TTS, Годинник Сповіщення / Голос TTS, Планшет Сповіщення / Голос TTS. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "джерело · Сон / Присутність · max 240 min. Неправильно · Вимкнути.",
+          "general_home_policy": "Це налаштування керує «Дім · Присутність · керування». Фізичні команди потребують окремого дозволу й захисту."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Кімнати для спостереження",
+        "description": "Кімнати для спостереження → джерело → Загальні налаштування",
+        "data": {
+          "areas": "Кімнати для спостереження"
+        },
+        "data_description": {
+          "areas": "Кімнати для спостереження. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування."
+        }
+      },
+      "room_settings": {
+        "title": "Зона · налаштування · {area_name}",
+        "description": "Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+        "data": {
+          "windows": "Вікна",
+          "air_quality": "Датчики якості повітря й середовища",
+          "temperature": "Температура",
+          "humidity": "Вологість",
+          "pressure": "Датчики тиску",
+          "climate_devices": "Пристрої",
+          "shades": "Віконні жалюзі, штори та ролети",
+          "occupancy_sensors": "Присутність · датчик"
+        },
+        "data_description": {
+          "windows": "Вікна. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "air_quality": "Датчики якості повітря й середовища. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "temperature": "Температура. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "humidity": "Вологість. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "pressure": "Датчики тиску. Виберіть входи кімнати: назва пристрою - назва сутності. Порожні групи не використовуються і не вмикають автоматичне виявлення або керування.",
+          "climate_devices": "Пристрої. Виберіть лише фізичні climate.*, humidifier.* і fan.* цієї кімнати. Можливості пристрою визначають опалення, охолодження, осушення, цільові значення й швидкість вентилятора. Вибір нічого не вмикає; автоматичне керування дозволяється окремо для кожного пристрою.",
+          "shades": "Віконні жалюзі, штори та ролети. Виберіть ролети, жалюзі та штори cover.* цієї кімнати. Covers без device_class дозволені за наявності CLOSE, якщо вони справді затінюють вікно. Гаражі, ворота, двері, вікна та маркізи виключені. Вибір нічого не рухає: прив’яжіть датчик вікна й налаштуйте автоматику, оголошення та температуру на контролері. Невідомий стан блокує рух.",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
       }
     },

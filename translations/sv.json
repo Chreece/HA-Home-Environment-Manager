@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "Hem · Away · cooldown (min)",
           "away_open_window_alert": "Varna för öppna fönster när alla har gått",
           "away_windows_target_people": "Personer som ska varnas",
-          "away_windows_delivery_channels": "Kanaler för fönstervarningar"
+          "away_windows_delivery_channels": "Kanaler för fönstervarningar",
+          "general_source_stale_minutes": "källa · max (min)",
+          "general_home_policy": "Hem · Närvaro · styrning"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Hem · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Varna för öppna fönster när alla har gått. Personer som ska varnas (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Klocka, Surfplatta.",
           "away_windows_target_people": "Personer som ska varnas (person.*) - Announcement Hub: Telefon, Klocka, Surfplatta, Annan enhet. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanaler för fönstervarningar: Telefon Avisering / TTS-tal, Klocka Avisering / TTS-tal, Surfplatta Avisering / TTS-tal. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanaler för fönstervarningar: Telefon Avisering / TTS-tal, Klocka Avisering / TTS-tal, Surfplatta Avisering / TTS-tal. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "källa · Sömn / Närvaro · max 240 min. Ogiltig · Stäng av.",
+          "general_home_policy": "Detta alternativ styr ”Hem · Närvaro · styrning”. Fysiska kommandon kräver separat godkännande och skydd."
         }
       },
       "reconfigure": {
         "title": "⚙️ Välj",
         "description": "Välj: Rum / Väder och varningar / Meddelanden (valfritt) / Avancerade gränsvärden",
         "menu_options": {
-          "room_occupancy": "Närvaro · sensor",
-          "outside_data": "Utomhus · källa",
-          "general_settings": "Allmänna · inställningar",
-          "area_settings": "Område · inställningar",
-          "delivery": "Meddelanden (valfritt)",
-          "thresholds": "Avancerade gränsvärden",
-          "climate": "inställningar · Enheter",
-          "pid": "inställningar · PID",
-          "setup_rooms": "Rum att övervaka"
+          "choose_rooms": "Rum att övervaka",
+          "general_settings": "Allmänna · inställningar"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "Rum att övervaka",
+        "description": "Rum att övervaka → källa → Allmänna inställningar",
+        "data": {
+          "areas": "Rum att övervaka"
+        },
+        "data_description": {
+          "areas": "Rum att övervaka. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning."
+        }
+      },
+      "room_settings": {
+        "title": "Område · inställningar · {area_name}",
+        "description": "Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+        "data": {
+          "windows": "Fönster",
+          "air_quality": "Luftkvalitets- och miljösensorer",
+          "temperature": "Temperatur",
+          "humidity": "Luftfuktighet",
+          "pressure": "Trycksensorer",
+          "climate_devices": "Enheter",
+          "shades": "Persienner, rullgardiner och fönsterluckor",
+          "occupancy_sensors": "Närvaro · sensor"
+        },
+        "data_description": {
+          "windows": "Fönster. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "air_quality": "Luftkvalitets- och miljösensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "temperature": "Temperatur. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "pressure": "Trycksensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
+          "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ Välj",
         "description": "Välj: Rum / Väder och varningar / Meddelanden (valfritt) / Avancerade gränsvärden",
         "menu_options": {
-          "room_occupancy": "Närvaro · sensor",
-          "outside_data": "Utomhus · källa",
-          "general_settings": "Allmänna · inställningar",
-          "area_settings": "Område · inställningar",
-          "delivery": "Meddelanden (valfritt)",
-          "thresholds": "Avancerade gränsvärden",
-          "climate": "inställningar · Enheter",
-          "pid": "inställningar · PID",
-          "setup_rooms": "Rum att övervaka"
+          "choose_rooms": "Rum att övervaka",
+          "general_settings": "Allmänna · inställningar"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "Hem · Away · cooldown (min)",
           "away_open_window_alert": "Varna för öppna fönster när alla har gått",
           "away_windows_target_people": "Personer som ska varnas",
-          "away_windows_delivery_channels": "Kanaler för fönstervarningar"
+          "away_windows_delivery_channels": "Kanaler för fönstervarningar",
+          "general_source_stale_minutes": "källa · max (min)",
+          "general_home_policy": "Hem · Närvaro · styrning"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Hem · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Varna för öppna fönster när alla har gått. Personer som ska varnas (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Klocka, Surfplatta.",
           "away_windows_target_people": "Personer som ska varnas (person.*) - Announcement Hub: Telefon, Klocka, Surfplatta, Annan enhet. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "Kanaler för fönstervarningar: Telefon Avisering / TTS-tal, Klocka Avisering / TTS-tal, Surfplatta Avisering / TTS-tal. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "Kanaler för fönstervarningar: Telefon Avisering / TTS-tal, Klocka Avisering / TTS-tal, Surfplatta Avisering / TTS-tal. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "källa · Sömn / Närvaro · max 240 min. Ogiltig · Stäng av.",
+          "general_home_policy": "Detta alternativ styr ”Hem · Närvaro · styrning”. Fysiska kommandon kräver separat godkännande och skydd."
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "Rum att övervaka",
+        "description": "Rum att övervaka → källa → Allmänna inställningar",
+        "data": {
+          "areas": "Rum att övervaka"
+        },
+        "data_description": {
+          "areas": "Rum att övervaka. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning."
+        }
+      },
+      "room_settings": {
+        "title": "Område · inställningar · {area_name}",
+        "description": "Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+        "data": {
+          "windows": "Fönster",
+          "air_quality": "Luftkvalitets- och miljösensorer",
+          "temperature": "Temperatur",
+          "humidity": "Luftfuktighet",
+          "pressure": "Trycksensorer",
+          "climate_devices": "Enheter",
+          "shades": "Persienner, rullgardiner och fönsterluckor",
+          "occupancy_sensors": "Närvaro · sensor"
+        },
+        "data_description": {
+          "windows": "Fönster. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "air_quality": "Luftkvalitets- och miljösensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "temperature": "Temperatur. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "pressure": "Trycksensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
+          "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
       }
     },

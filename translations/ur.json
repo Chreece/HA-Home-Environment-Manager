@@ -200,7 +200,9 @@
           "general_away_cooldown_minutes": "گھر · Away · cooldown (min)",
           "away_open_window_alert": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع",
           "away_windows_target_people": "اطلاع پانے والے افراد",
-          "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع"
+          "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع",
+          "general_source_stale_minutes": "ماخذ · max (min)",
+          "general_home_policy": "گھر · موجودگی · کنٹرول"
         },
         "data_description": {
           "weather_entities": "منتخب کریں: موسم اور انتباہات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -223,22 +225,17 @@
           "general_away_cooldown_minutes": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · گھر · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع. اطلاع پانے والے افراد (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. فون, گھڑی, ٹیبلٹ.",
           "away_windows_target_people": "اطلاع پانے والے افراد (person.*) - Announcement Hub: فون, گھڑی, ٹیبلٹ, دوسرا آلہ. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع: فون اطلاع / TTS آواز, گھڑی اطلاع / TTS آواز, ٹیبلٹ اطلاع / TTS آواز. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع: فون اطلاع / TTS آواز, گھڑی اطلاع / TTS آواز, ٹیبلٹ اطلاع / TTS آواز. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "ماخذ · نیند / موجودگی · max 240 min. غلط · بند.",
+          "general_home_policy": "یہ اختیار «گھر · موجودگی · کنٹرول» کو کنٹرول کرتا ہے۔ جسمانی حکم کے لیے الگ اجازت اور حفاظتی انتظام ضروری ہے۔"
         }
       },
       "reconfigure": {
         "title": "⚙️ منتخب کریں",
         "description": "منتخب کریں: کمرے / موسم اور انتباہات / اعلانات (اختیاری) / اعلیٰ حدود",
         "menu_options": {
-          "room_occupancy": "موجودگی · سینسر",
-          "outside_data": "باہر · ماخذ",
-          "general_settings": "عمومی · ترتیبات",
-          "area_settings": "علاقہ · ترتیبات",
-          "delivery": "اعلانات (اختیاری)",
-          "thresholds": "اعلیٰ حدود",
-          "climate": "ترتیبات · آلات",
-          "pid": "ترتیبات · PID",
-          "setup_rooms": "نگرانی کے کمرے"
+          "choose_rooms": "نگرانی کے کمرے",
+          "general_settings": "عمومی · ترتیبات"
         }
       },
       "init": {
@@ -963,6 +960,40 @@
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
+      },
+      "choose_rooms": {
+        "title": "نگرانی کے کمرے",
+        "description": "نگرانی کے کمرے → ماخذ → عمومی ترتیبات",
+        "data": {
+          "areas": "نگرانی کے کمرے"
+        },
+        "data_description": {
+          "areas": "نگرانی کے کمرے. کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔"
+        }
+      },
+      "room_settings": {
+        "title": "علاقہ · ترتیبات · {area_name}",
+        "description": "کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔",
+        "data": {
+          "windows": "کھڑکیاں",
+          "air_quality": "ہوا کے معیار اور ماحول کے سینسر",
+          "temperature": "درجہ حرارت",
+          "humidity": "نمی",
+          "pressure": "دباؤ کے سینسر",
+          "climate_devices": "آلات",
+          "shades": "کھڑکیوں کے پردے، بلائنڈز اور شٹر",
+          "occupancy_sensors": "موجودگی · سینسر"
+        },
+        "data_description": {
+          "windows": "کھڑکیاں. کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔",
+          "air_quality": "ہوا کے معیار اور ماحول کے سینسر. کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔",
+          "temperature": "درجہ حرارت. کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔",
+          "humidity": "نمی. کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔",
+          "pressure": "دباؤ کے سینسر. کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔",
+          "climate_devices": "آلات. صرف کمرے کے حقیقی climate.*, humidifier.* اور fan.* آلات منتخب کریں۔ آلے کی اپنی صلاحیتیں گرم/ٹھنڈا کرنا، نمی کم کرنا، مطلوبہ قدریں اور پنکھے کی رفتار طے کرتی ہیں۔ انتخاب سے آلہ نہیں چلتا؛ ہر کنٹرولر میں خودکار کنٹرول الگ فعال کریں۔",
+          "shades": "کھڑکیوں کے پردے، بلائنڈز اور شٹر. کمرے کے cover.* رولر شٹر، بلائنڈ اور پردے منتخب کریں۔ device_class کے بغیر covers بھی CLOSE کی مدد سے منظور ہیں بشرطیکہ وہ واقعی کھڑکی کے پردے ہوں۔ گیراج، گیٹ، دروازے، کھڑکیاں اور بیرونی سائبان خارج ہیں۔ انتخاب حرکت نہیں کرتا؛ کھڑکی سینسر، خودکار کنٹرول، اعلان اور درجہ حرارت کنٹرولر پر مقرر کریں۔ نامعلوم حالت میں حرکت نہیں ہوگی۔",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
       }
     },
     "error": {
@@ -1046,15 +1077,8 @@
         "title": "⚙️ منتخب کریں",
         "description": "منتخب کریں: کمرے / موسم اور انتباہات / اعلانات (اختیاری) / اعلیٰ حدود",
         "menu_options": {
-          "room_occupancy": "موجودگی · سینسر",
-          "outside_data": "باہر · ماخذ",
-          "general_settings": "عمومی · ترتیبات",
-          "area_settings": "علاقہ · ترتیبات",
-          "delivery": "اعلانات (اختیاری)",
-          "thresholds": "اعلیٰ حدود",
-          "climate": "ترتیبات · آلات",
-          "pid": "ترتیبات · PID",
-          "setup_rooms": "نگرانی کے کمرے"
+          "choose_rooms": "نگرانی کے کمرے",
+          "general_settings": "عمومی · ترتیبات"
         },
         "data": {},
         "data_description": {}
@@ -1946,7 +1970,9 @@
           "general_away_cooldown_minutes": "گھر · Away · cooldown (min)",
           "away_open_window_alert": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع",
           "away_windows_target_people": "اطلاع پانے والے افراد",
-          "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع"
+          "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع",
+          "general_source_stale_minutes": "ماخذ · max (min)",
+          "general_home_policy": "گھر · موجودگی · کنٹرول"
         },
         "data_description": {
           "weather_entities": "منتخب کریں: موسم اور انتباہات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -1969,7 +1995,9 @@
           "general_away_cooldown_minutes": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · گھر · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "سب کے جانے پر کھلی کھڑکیوں کی اطلاع. اطلاع پانے والے افراد (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. فون, گھڑی, ٹیبلٹ.",
           "away_windows_target_people": "اطلاع پانے والے افراد (person.*) - Announcement Hub: فون, گھڑی, ٹیبلٹ, دوسرا آلہ. Only explicitly assigned personal endpoints.",
-          "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع: فون اطلاع / TTS آواز, گھڑی اطلاع / TTS آواز, ٹیبلٹ اطلاع / TTS آواز. Person-specific, not room speakers."
+          "away_windows_delivery_channels": "کھڑکی اطلاع کے ذرائع: فون اطلاع / TTS آواز, گھڑی اطلاع / TTS آواز, ٹیبلٹ اطلاع / TTS آواز. Person-specific, not room speakers.",
+          "general_source_stale_minutes": "ماخذ · نیند / موجودگی · max 240 min. غلط · بند.",
+          "general_home_policy": "یہ اختیار «گھر · موجودگی · کنٹرول» کو کنٹرول کرتا ہے۔ جسمانی حکم کے لیے الگ اجازت اور حفاظتی انتظام ضروری ہے۔"
         }
       },
       "room_occupancy": {
@@ -1987,6 +2015,40 @@
         },
         "data_description": {
           "room_occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
+        }
+      },
+      "choose_rooms": {
+        "title": "نگرانی کے کمرے",
+        "description": "نگرانی کے کمرے → ماخذ → عمومی ترتیبات",
+        "data": {
+          "areas": "نگرانی کے کمرے"
+        },
+        "data_description": {
+          "areas": "نگرانی کے کمرے. کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔"
+        }
+      },
+      "room_settings": {
+        "title": "علاقہ · ترتیبات · {area_name}",
+        "description": "کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔",
+        "data": {
+          "windows": "کھڑکیاں",
+          "air_quality": "ہوا کے معیار اور ماحول کے سینسر",
+          "temperature": "درجہ حرارت",
+          "humidity": "نمی",
+          "pressure": "دباؤ کے سینسر",
+          "climate_devices": "آلات",
+          "shades": "کھڑکیوں کے پردے، بلائنڈز اور شٹر",
+          "occupancy_sensors": "موجودگی · سینسر"
+        },
+        "data_description": {
+          "windows": "کھڑکیاں. کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔",
+          "air_quality": "ہوا کے معیار اور ماحول کے سینسر. کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔",
+          "temperature": "درجہ حرارت. کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔",
+          "humidity": "نمی. کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔",
+          "pressure": "دباؤ کے سینسر. کمرے کے ان پٹ منتخب کریں: آلے کا نام - اینٹیٹی کا نام۔ خالی گروپ استعمال نہیں ہوتے اور خودکار تلاش یا کنٹرول فعال نہیں کرتے۔",
+          "climate_devices": "آلات. صرف کمرے کے حقیقی climate.*, humidifier.* اور fan.* آلات منتخب کریں۔ آلے کی اپنی صلاحیتیں گرم/ٹھنڈا کرنا، نمی کم کرنا، مطلوبہ قدریں اور پنکھے کی رفتار طے کرتی ہیں۔ انتخاب سے آلہ نہیں چلتا؛ ہر کنٹرولر میں خودکار کنٹرول الگ فعال کریں۔",
+          "shades": "کھڑکیوں کے پردے، بلائنڈز اور شٹر. کمرے کے cover.* رولر شٹر، بلائنڈ اور پردے منتخب کریں۔ device_class کے بغیر covers بھی CLOSE کی مدد سے منظور ہیں بشرطیکہ وہ واقعی کھڑکی کے پردے ہوں۔ گیراج، گیٹ، دروازے، کھڑکیاں اور بیرونی سائبان خارج ہیں۔ انتخاب حرکت نہیں کرتا؛ کھڑکی سینسر، خودکار کنٹرول، اعلان اور درجہ حرارت کنٹرولر پر مقرر کریں۔ نامعلوم حالت میں حرکت نہیں ہوگی۔",
+          "occupancy_sensors": "Room occupancy/presence sensors are preselected by default and can be cleared. The occupied-rooms list, even empty, has priority. Only when it is unknown, unavailable or stale are selected sensors used."
         }
       }
     },
