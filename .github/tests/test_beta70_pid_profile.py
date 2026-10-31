@@ -119,6 +119,7 @@ def make_profile(config, plan):
 
 model = N(
     settings=lambda manager, spec: manager.settings,
+    plan_for=lambda manager, spec: manager._harness.plan,
     sources_available=lambda manager, spec: True,
     capabilities=lambda manager, spec: Cap(),
     profile_name=make_profile,
@@ -158,6 +159,7 @@ class Harness:
                    "sleep":18., "manual":21., "eco":17.},
         )
         self.plan = {"away":"away", "occupancy":"unoccupied"}
+        self.manager._harness = self
         self.state = N(state="off", domain="climate",
                        attributes={"hvac_action":"idle"}, last_changed=N(
                          timestamp=lambda: self.now-off_age))
