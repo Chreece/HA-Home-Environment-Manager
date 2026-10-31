@@ -112,11 +112,15 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
             # Adding/reassigning a selected contact cannot reuse evidence
             # from the old selection, even when both currently report OFF.
             latest = now
-        elif previous.get("status") in ("window_open_pause",
-                                        "window_state_unknown"):
-            # This controller really observed an OPEN or UNKNOWN state.
-            # Require sixty *continuous* seconds of verified closure after
-            # it reappears as closed. No stale last_changed shortcut.
+        elif previous.get("status") == "window_open_pause":
+            # A real OPEN was observed. The physical entity's verified OFF
+            # last_changed timestamp identifies the actual closure even if
+            # this control tick runs 59 seconds after that event; avoid a
+            # second, spurious sixty-second extension at the first read.
+            latest = max(closed_times)
+        elif previous.get("status") == "window_state_unknown":
+            # With missing evidence there is no trustworthy continuity of
+            # the CLOSED reading, so require 60 seconds from first recovery.
             latest = now
         elif previous.get("status") == "window_closed_ready":
             # A previously verified continuous CLOSED observation stays ready
