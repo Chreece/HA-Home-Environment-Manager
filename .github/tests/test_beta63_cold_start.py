@@ -220,9 +220,13 @@ class Simulator:
         self.status = (status, kwargs)
     async def _save(self):
         self._save_log.append(copy.deepcopy(self.records))
-        # The first save initializes the relay's identity; the second
-        # persists intent immediately before the external service dispatch.
-        if self.on_save is not None and len(self._save_log) == 2:
+        # Trigger races at the real durable intent, not at a fixed Store
+        # write count: Beta74 may additionally persist first OFF observation
+        # before an external ON command is commissioned.
+        record = self.records.get(spec.identifier, {})
+        pending = record.get("upstream", {}).get("pending", {})
+        if (self.on_save is not None and isinstance(pending, dict)
+                and pending.get("phase") == "intent"):
             on_save = self.on_save
             self.on_save = None
             on_save()
