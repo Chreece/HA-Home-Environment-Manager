@@ -42,6 +42,7 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
         "status": "window_pause_disabled", "resume_delay_seconds": RESUME_SECONDS,
         "remaining_seconds": 0.0, "contacts": [], "open_contacts": [],
         "unknown_contacts": [], "closed_since": None,
+        "closed_source_timestamps": {},
     }
     if not enabled:
         cache[spec.identifier] = result
@@ -91,6 +92,7 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
                 old_since = previous.get("closed_since") if same else None
                 changed = old_since if isinstance(old_since, (int, float)) and 0 <= old_since <= now else now
             closed_times.append(changed)
+            result["closed_source_timestamps"][entity] = changed
     same = previous.get("identity") == result["identity"]
     if result["open_contacts"]:
         result.update(blocked=True, stop_requested=True, status="window_open_pause")
@@ -123,13 +125,23 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
             # the CLOSED reading, so require 60 seconds from first recovery.
             latest = now
         elif previous.get("status") == "window_closed_ready":
-            # A previously verified continuous CLOSED observation stays ready
-            # without reopening. A refreshed HA last_changed timestamp alone
-            # is NOT a window transition and must not create a new hold.
-            latest = (previous_since
-                      if isinstance(previous_since, (int, float))
-                      and 0 <= previous_since <= now
-                      else now - RESUME_SECONDS)
+            # A previously verified CLOSED observation remains ready if its
+            # *physical last_changed identity* is unchanged. A new OFF stamp
+            # could mean a real OPEN->OFF transition occurred between ticks;
+            # don't miss that transition merely because ON was never sampled.
+            before_stamps = previous.get("closed_source_timestamps", {})
+            before_stamps = before_stamps if isinstance(before_stamps, dict) else {}
+            actual_change = any(
+                before_stamps.get(entity) != stamp
+                for entity, stamp in result["closed_source_timestamps"].items()
+            )
+            if actual_change:
+                latest = max(closed_times)
+            else:
+                latest = (previous_since
+                          if isinstance(previous_since, (int, float))
+                          and 0 <= previous_since <= now
+                          else now - RESUME_SECONDS)
         elif (isinstance(previous_since, (float, int))
               and 0 <= previous_since <= now):
             # Ongoing real post-close warmup cannot be shortened by an
