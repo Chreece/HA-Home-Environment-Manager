@@ -285,7 +285,8 @@
         "description": "请选择: 房间 / 天气与预警 / 播报（可选） / 高级阈值",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "常规 设置"
+          "select_room": "区域 · 设置",
+          "setup_general": "常规 设置"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "窗帘、百叶帘及卷帘. 选择本房间的 cover.* 百叶帘、卷帘、卷闸和窗帘。没有 device_class 的 covers 只要支持 CLOSE 且确实用于窗户遮阳，也可以选择。车库门、门、闸门、窗户及室外遮阳棚均排除。仅选择不会移动：请在控制器中指定窗户传感器、自动控制、提前通知和温度阈值。状态未知时禁止移动。",
           "occupancy_sensors": "为“占用 · 传感器”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。"
         }
+      },
+      "select_room": {
+        "title": "区域 · 设置",
+        "description": "区域 · 设置",
+        "data": {
+          "edit_room_area": "设备"
+        }
+      },
+      "edit_room": {
+        "title": "Settings · {area_name}",
+        "description": "选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+        "data": {
+          "windows": "窗户",
+          "air_quality": "空气质量与环境传感器",
+          "temperature": "温度",
+          "humidity": "湿度",
+          "pressure": "压力传感器",
+          "climate_devices": "设备",
+          "shades": "窗帘、百叶帘及卷帘",
+          "occupancy_sensors": "占用 · 传感器"
+        },
+        "data_description": {
+          "windows": "窗户. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "air_quality": "空气质量与环境传感器. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "temperature": "温度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "humidity": "湿度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "pressure": "压力传感器. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "climate_devices": "设备. 只选择本房间实际的 climate.*、humidifier.* 和 fan.* 实体。设备自身的能力决定供暖、制冷、除湿、温湿度目标和风扇速度。选择不会立即控制设备；须在每台设备控制器中分别启用自动控制。",
+          "shades": "窗帘、百叶帘及卷帘. 选择本房间的 cover.* 百叶帘、卷帘、卷闸和窗帘。没有 device_class 的 covers 只要支持 CLOSE 且确实用于窗户遮阳，也可以选择。车库门、门、闸门、窗户及室外遮阳棚均排除。仅选择不会移动：请在控制器中指定窗户传感器、自动控制、提前通知和温度阈值。状态未知时禁止移动。",
+          "occupancy_sensors": "为“占用 · 传感器”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。"
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "请选择: 房间 / 天气与预警 / 播报（可选） / 高级阈值",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "常规 设置"
+          "select_room": "区域 · 设置",
+          "setup_general": "常规 设置"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+        "data": {
+          "windows": "窗户",
+          "air_quality": "空气质量与环境传感器",
+          "temperature": "温度",
+          "humidity": "湿度",
+          "pressure": "压力传感器",
+          "climate_devices": "设备",
+          "shades": "窗帘、百叶帘及卷帘",
+          "occupancy_sensors": "占用 · 传感器"
+        },
+        "data_description": {
+          "windows": "窗户. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "air_quality": "空气质量与环境传感器. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "temperature": "温度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "humidity": "湿度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "pressure": "压力传感器. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
+          "climate_devices": "设备. 只选择本房间实际的 climate.*、humidifier.* 和 fan.* 实体。设备自身的能力决定供暖、制冷、除湿、温湿度目标和风扇速度。选择不会立即控制设备；须在每台设备控制器中分别启用自动控制。",
+          "shades": "窗帘、百叶帘及卷帘. 选择本房间的 cover.* 百叶帘、卷帘、卷闸和窗帘。没有 device_class 的 covers 只要支持 CLOSE 且确实用于窗户遮阳，也可以选择。车库门、门、闸门、窗户及室外遮阳棚均排除。仅选择不会移动：请在控制器中指定窗户传感器、自动控制、提前通知和温度阈值。状态未知时禁止移动。",
+          "occupancy_sensors": "为“占用 · 传感器”选择真实的 Home Assistant 数据源。数据缺失或过期时暂停相关操作。"
+        }
+      },
+      "select_room": {
+        "title": "区域 · 设置",
+        "description": "区域 · 设置",
+        "data": {
+          "edit_room_area": "设备"
+        }
+      },
+      "edit_room": {
         "title": "Settings · {area_name}",
         "description": "选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
         "data": {

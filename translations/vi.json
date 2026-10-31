@@ -285,7 +285,8 @@
         "description": "Chọn: Phòng / Thời tiết và cảnh báo / Thông báo (tùy chọn) / Ngưỡng nâng cao",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Chung cài đặt"
+          "select_room": "Khu vực · cài đặt",
+          "setup_general": "Chung cài đặt"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
           "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."
         }
+      },
+      "select_room": {
+        "title": "Khu vực · cài đặt",
+        "description": "Khu vực · cài đặt",
+        "data": {
+          "edit_room_area": "Thiết bị"
+        }
+      },
+      "edit_room": {
+        "title": "Settings · {area_name}",
+        "description": "Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+        "data": {
+          "windows": "Cửa sổ",
+          "air_quality": "Cảm biến chất lượng không khí và môi trường",
+          "temperature": "Nhiệt độ",
+          "humidity": "Độ ẩm",
+          "pressure": "Cảm biến áp suất",
+          "climate_devices": "Thiết bị",
+          "shades": "Rèm, mành và cửa chớp",
+          "occupancy_sensors": "Hiện diện · cảm biến"
+        },
+        "data_description": {
+          "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "air_quality": "Cảm biến chất lượng không khí và môi trường. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
+          "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
+          "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Chọn: Phòng / Thời tiết và cảnh báo / Thông báo (tùy chọn) / Ngưỡng nâng cao",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Chung cài đặt"
+          "select_room": "Khu vực · cài đặt",
+          "setup_general": "Chung cài đặt"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+        "data": {
+          "windows": "Cửa sổ",
+          "air_quality": "Cảm biến chất lượng không khí và môi trường",
+          "temperature": "Nhiệt độ",
+          "humidity": "Độ ẩm",
+          "pressure": "Cảm biến áp suất",
+          "climate_devices": "Thiết bị",
+          "shades": "Rèm, mành và cửa chớp",
+          "occupancy_sensors": "Hiện diện · cảm biến"
+        },
+        "data_description": {
+          "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "air_quality": "Cảm biến chất lượng không khí và môi trường. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
+          "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
+          "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."
+        }
+      },
+      "select_room": {
+        "title": "Khu vực · cài đặt",
+        "description": "Khu vực · cài đặt",
+        "data": {
+          "edit_room_area": "Thiết bị"
+        }
+      },
+      "edit_room": {
         "title": "Settings · {area_name}",
         "description": "Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
         "data": {

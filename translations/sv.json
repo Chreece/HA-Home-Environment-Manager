@@ -285,7 +285,8 @@
         "description": "Välj: Rum / Väder och varningar / Meddelanden (valfritt) / Avancerade gränsvärden",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Allmänna inställningar"
+          "select_room": "Område · inställningar",
+          "setup_general": "Allmänna inställningar"
         }
       },
       "init": {
@@ -1044,6 +1045,37 @@
           "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
           "occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden."
         }
+      },
+      "select_room": {
+        "title": "Område · inställningar",
+        "description": "Område · inställningar",
+        "data": {
+          "edit_room_area": "Enheter"
+        }
+      },
+      "edit_room": {
+        "title": "Settings · {area_name}",
+        "description": "Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+        "data": {
+          "windows": "Fönster",
+          "air_quality": "Luftkvalitets- och miljösensorer",
+          "temperature": "Temperatur",
+          "humidity": "Luftfuktighet",
+          "pressure": "Trycksensorer",
+          "climate_devices": "Enheter",
+          "shades": "Persienner, rullgardiner och fönsterluckor",
+          "occupancy_sensors": "Närvaro · sensor"
+        },
+        "data_description": {
+          "windows": "Fönster. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "air_quality": "Luftkvalitets- och miljösensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "temperature": "Temperatur. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "pressure": "Trycksensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
+          "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
+          "occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden."
+        }
       }
     },
     "error": {
@@ -1128,7 +1160,8 @@
         "description": "Välj: Rum / Väder och varningar / Meddelanden (valfritt) / Avancerade gränsvärden",
         "menu_options": {
           "choose_rooms": "Choose rooms",
-          "general_settings": "Allmänna inställningar"
+          "select_room": "Område · inställningar",
+          "setup_general": "Allmänna inställningar"
         },
         "data": {},
         "data_description": {}
@@ -2128,6 +2161,37 @@
         }
       },
       "room_settings": {
+        "title": "Settings · {area_name}",
+        "description": "Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+        "data": {
+          "windows": "Fönster",
+          "air_quality": "Luftkvalitets- och miljösensorer",
+          "temperature": "Temperatur",
+          "humidity": "Luftfuktighet",
+          "pressure": "Trycksensorer",
+          "climate_devices": "Enheter",
+          "shades": "Persienner, rullgardiner och fönsterluckor",
+          "occupancy_sensors": "Närvaro · sensor"
+        },
+        "data_description": {
+          "windows": "Fönster. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "air_quality": "Luftkvalitets- och miljösensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "temperature": "Temperatur. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "pressure": "Trycksensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
+          "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
+          "occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden."
+        }
+      },
+      "select_room": {
+        "title": "Område · inställningar",
+        "description": "Område · inställningar",
+        "data": {
+          "edit_room_area": "Enheter"
+        }
+      },
+      "edit_room": {
         "title": "Settings · {area_name}",
         "description": "Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
         "data": {
