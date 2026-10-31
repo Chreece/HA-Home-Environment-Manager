@@ -195,6 +195,12 @@ async def run():
     assert prior.status[0]=="controlling" and prior.scheduled==1,prior.status
     assert prior._started==NOW-450 and prior.calls==[]
     assert not prior._memory and not prior._profile_wake
+    # An external physical OFF->ON since the old ownership record must
+    # restart the minimum-ON protection, not inherit stale elapsed runtime.
+    rerun=Runtime(prior_owned=True)
+    rerun.states["climate.heater"]=state("heat",changed=NOW-80)
+    await rerun.async_resume(spec)
+    assert rerun.record["power"]["climate.heater"]["since"]==NOW-80
     # The Resume click is explicit authorization to take over an active
     # physical heater that was never automatically adopted by polling.
     unowned=Runtime()
