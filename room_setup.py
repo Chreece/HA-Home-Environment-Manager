@@ -78,6 +78,85 @@ class RoomSetupMixin:
         self._setup_order = []
         self._setup_index = 0
 
+    def _room_edit_menu(self):
+        """Stable per-area menu IDs; room names are translated by the flow."""
+        selected = self._values.get(CONF_AREAS, [])
+        return ["choose_rooms", *(
+            f"edit_room_{area}" for area in selected
+            if isinstance(area, str) and area
+        ), "setup_general"]
+
+    async def async_step_choose_rooms(self, user_input=None):
+        """Edit monitored rooms without entering the entire setup wizard."""
+        options = areas(self.hass)
+        allowed = {item["value"] for item in options}
+        selected = self._values.get(CONF_AREAS, [])
+        errors = {}
+        if user_input is not None:
+            chosen = user_input.get(CONF_AREAS, [])
+            if not isinstance(chosen, list) or any(x not in allowed for x in chosen):
+                errors["base"] = "invalid_setup_rooms"
+            else:
+                self._values[CONF_AREAS] = list(dict.fromkeys(chosen))
+                return await self._finish()
+        return self.async_show_form(
+            step_id="choose_rooms", errors=errors,
+            data_schema=probatio.Schema({
+                probatio.Required(CONF_AREAS, default=[x for x in selected if x in allowed]):
+                    select(options, multiple=True)
+            }),
+        )
+
+    async def async_step_edit_room(self, user_input=None):
+        """All per-room source groups plus occupancy on one page."""
+        from .occupancy_policy import room_sensor_choices
+        from .const import CONF_CLIMATE_ROOMS
+        area = self._edit_room_area
+        registry = ar.async_get(self.hass)
+        room = registry.async_get_area(area)
+        if room is None or area not in self._values.get(CONF_AREAS, []):
+            return self.async_abort(reason="setup_area_removed")
+        saved = sources.defaults(self.hass, self._values, area)
+        options = sources.choices(self.hass, area, saved)
+        climates = self._values.get(CONF_CLIMATE_ROOMS, {})
+        prior = climates.get(area, {}) if isinstance(climates, dict) else {}
+        prior = prior if isinstance(prior, dict) else {}
+        local = prior.get("occupancy_sensors")
+        occupancy_default = local if isinstance(local, list) else room_sensor_choices(self.hass, area)
+        occupancy_ids = sorted(set(room_sensor_choices(self.hass, area)) | set(occupancy_default))
+        errors = {}
+        if user_input is not None:
+            changes = {}
+            for group in sources.GROUPS:
+                values = user_input.get(group, saved[group])
+                allowed = {item["value"] for item in options[group]}
+                if not isinstance(values, list) or any(v not in allowed for v in values):
+                    errors[group] = "invalid_room_source"
+                else:
+                    changes[group] = list(dict.fromkeys(values))
+            occupants = user_input.get("occupancy_sensors", occupancy_default)
+            if not isinstance(occupants, list) or any(v not in occupancy_ids for v in occupants):
+                errors["occupancy_sensors"] = "invalid_room_source"
+            if not errors:
+                sources.store_selection(self.hass, self._values, area, changes)
+                rooms = self._values.setdefault(CONF_CLIMATE_ROOMS, {})
+                updated = dict(rooms.get(area, {}))
+                updated["occupancy_sensors"] = list(dict.fromkeys(occupants))
+                rooms[area] = updated
+                return await self._finish()
+        fields = {
+            field(group, saved[group]): select(options[group], multiple=True)
+            for group in sources.GROUPS
+        }
+        fields[field("occupancy_sensors", occupancy_default)] = select(
+            [{"value": eid, "label": eid} for eid in occupancy_ids], multiple=True
+        )
+        return self.async_show_form(
+            step_id="edit_room", errors=errors,
+            description_placeholders={"area_name": room.name},
+            data_schema=probatio.Schema(fields),
+        )
+
     async def async_step_setup_rooms(self, user_input=None):
         if not hasattr(self, "_setup_base"):
             self._start_room_setup()
