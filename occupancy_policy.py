@@ -276,11 +276,28 @@ def home_presence(hass: Any, global_settings: Mapping,
 def room_presence(hass: Any, area: str, settings: Mapping,
                   global_settings: Mapping, *, known_areas: set[str],
                   ) -> tuple[str, str, list[str]]:
-    """Combine configured room sensor evidence and selected room-list entity.
+    """Resolve the selected occupied-rooms list before per-room sensors.
 
-    Any affirmative evidence wins; negative evidence is valid only when every
-    configured source gives a fresh, explicit negative reading.
+    A fresh, valid explicitly configured list is authoritative per room.
+    Its omission of an area is a verified negative for that area: independent
+    per-room motion/presence sensors cannot silently vote the room back ON.
+    If the selected list is stale, invalid or ambiguous, report UNKNOWN
+    instead of accepting an unrelated positive or assuming absence. Without
+    an explicitly configured list retain the prior area-sensor policy.
     """
+    entity = global_settings.get("occupied_rooms_entity")
+    if isinstance(entity, str) and entity and entity != "none":
+        rooms, reason = configured_rooms(
+            hass, entity, global_settings.get("occupied_rooms_attribute"),
+            known_areas,
+            max_age_minutes=global_settings.get("source_stale_minutes", 240),
+        )
+        if rooms is None:
+            return "unknown", reason, [entity]
+        if area in rooms:
+            return "occupied", "verified_room_occupied", [entity]
+        return "unoccupied", "room_unoccupied", [entity]
+
     local = settings.get("occupancy_sensors")
     chosen = global_settings.get("room_occupancy_sensors", [])
     if isinstance(local, list) and local:
@@ -300,12 +317,6 @@ def room_presence(hass: Any, area: str, settings: Mapping,
                        settings.get("occupancy_stale_minutes", 240))
         for e in area_sensors
     ]
-    entity = global_settings.get("occupied_rooms_entity")
-    if entity:
-        occupied, reason = configured_rooms(
-            hass, entity, global_settings.get("occupied_rooms_attribute"),
-            known_areas, max_age_minutes=global_settings.get("source_stale_minutes", 240))
-        evidence.append(None if occupied is None else area in occupied)
     if any(value is True for value in evidence):
         return "occupied", "verified_room_occupied", area_sensors
     if evidence and all(value is False for value in evidence):
