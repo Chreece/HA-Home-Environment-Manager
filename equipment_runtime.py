@@ -558,6 +558,10 @@ class EquipmentRuntime:
             if new["control_mode"] == "existing" and record.get("power"):
                 raise HomeAssistantError("Reconcile managed power OFF before returning to the room controller")
             method_selected = "control_mode" in changes
+            if method_selected and old["control_mode"] in ("automatic", "pid") and new["control_mode"] == "manual":
+                record["resume_control_mode"] = old["control_mode"]
+            elif method_selected and new["control_mode"] in ("automatic", "pid"):
+                record.pop("resume_control_mode", None)
             if method_selected or old["control_mode"] != new["control_mode"]:
                 # Explicitly selecting a controller method is the user's
                 # acknowledgement/re-arm after a previous software pause. A
@@ -789,57 +793,239 @@ class EquipmentRuntime:
         await self.async_update(spec, {**changes, "profile_fans": table})
 
     async def async_resume(self, spec: model.ManagedDevice) -> None:
-        """Explicitly reconcile actual OFF; changing presets never clears a pause."""
+        """Re-arm a verified live device without forcing an OFF/ON cycle.
+
+        Resume is an explicit user acknowledgement, not implicit adoption by
+        a background poll. It never issues a physical service. It may preserve
+        prior confirmed native ownership, or accept an already-running native
+        output with newly verified authority. Interrupted/uncertain commands,
+        missing identity, unsupported physical modes and conflicting owners
+        still require independent resolution. Hardware dwell is never reset.
+        """
         async with self._lock(spec.identifier):
             if not self._ready or not self._current_spec(spec):
                 raise HomeAssistantError("Controller or its source identity is unavailable")
+            cfg = model.settings(self.manager, spec)
+            cap = model.capabilities(self.manager, spec)
             record = self._record(spec)
-            supply = model.settings(self.manager, spec).get("power_switch_entity")
+            now = self.clock()
+            supply = cfg.get("power_switch_entity")
             upstream = record.get("upstream", {})
+            if not isinstance(upstream, dict):
+                raise HomeAssistantError("Invalid upstream supply history")
+            from .equipment_power_switch import permitted_supply
+            identity = None
+            outlet = None
             if supply:
-                # Reconciliation is explicit and never starts power. It
-                # requires the upstream outlet OFF and the same original
-                # physical switch identity, not merely a writable entity ID.
-                from .equipment_power_switch import permitted_supply, observed_output_off
-                outlet = self.hass.states.get(supply)
-                if (not isinstance(upstream, dict) or
-                        permitted_supply(self.manager, spec, supply,
-                                         upstream.get("identity")) is None
-                        or outlet is None or outlet.state != "off"):
-                    raise HomeAssistantError(
-                        "Turn the commissioned upstream power switch OFF and verify "
-                        "its exact device identity before reconciling"
-                    )
-                if any(
-                    (state := self.hass.states.get(source)) is not None
-                    and state.state not in ("unknown", "unavailable")
-                    and not observed_output_off(state)
-                    for source in spec.source_entities
-                ):
-                    raise HomeAssistantError(
-                        "A physical controller still reports an energized output"
-                    )
-            power = record.get("power", {})
-            pending = record.get("pending")
-            for entity in power:
-                state = self.hass.states.get(entity)
-                if not output_off(state):
-                    raise HomeAssistantError("Turn the owned physical equipment OFF before reconciliation")
-            if pending and pending.get("power") and (self.hass.states.get(pending["entity"]) is None
-                    or not output_off(self.hass.states.get(pending["entity"]))):
-                raise HomeAssistantError("Interrupted power command requires verified physical OFF")
-            record.update(paused=None, pending=None, power={},
-                          baseline={e: snapshot(self.hass.states.get(e)) for e in spec.source_entities},
-                          off_at={e: self.clock() for e in spec.source_entities})
-            if supply:
-                upstream.update(
-                    paused=None, pending=None, owned=False,
-                    idle_since=None, off_at=self.clock(),
+                # A relay ON is not inherently unsafe: preserve its previous
+                # ownership, if any, without ever adopting an unowned ON relay.
+                # All subsequent physical commands still have exact-ID checks.
+                identity = permitted_supply(
+                    self.manager, spec, supply, upstream.get("identity")
                 )
+                outlet = self.hass.states.get(supply)
+                if (identity is None or outlet is None
+                        or outlet.state not in ("on", "off")
+                        or upstream.get("entity") not in (None, supply)):
+                    raise HomeAssistantError(
+                        "The selected supply identity or physical state cannot be verified"
+                    )
+                previous_switch_intent = upstream.get("pending")
+                if previous_switch_intent:
+                    if (not isinstance(previous_switch_intent, dict)
+                            or previous_switch_intent.get("phase") != "commanded"
+                            or previous_switch_intent.get("identity") != identity
+                            or previous_switch_intent.get("desired") != outlet.state):
+                        raise HomeAssistantError(
+                            "A prior upstream power command needs acknowledgement before Resume"
+                        )
+            elif (upstream.get("owned") or upstream.get("pending")):
+                raise HomeAssistantError("An old managed power switch still needs reconciliation")
+
+            physical = {e: self.hass.states.get(e) for e in spec.source_entities}
+            observed = {e: snapshot(value) for e, value in physical.items()}
+            # With an intentionally OFF supply, no native state is expected.
+            # Otherwise an unavailable native endpoint is NOT verified idle.
+            offline = bool(supply and outlet.state == "off")
+            if any(value is None for value in observed.values()) and not offline:
+                raise HomeAssistantError(
+                    "Physical equipment is unavailable; Resume cannot verify its output"
+                )
+            if offline and any(
+                value is not None and not output_off(value)
+                for value in physical.values()
+            ):
+                raise HomeAssistantError(
+                    "The upstream supply is OFF but a downstream output reports active"
+                )
+
+            pending = record.get("pending")
+            if pending:
+                if (not isinstance(pending, dict)
+                        or pending.get("phase") != "commanded"
+                        or pending.get("entity") not in physical
+                        or not matches(physical[pending["entity"]], pending.get("expected", {}))):
+                    raise HomeAssistantError(
+                        "An interrupted native command needs a verified acknowledgement before Resume"
+                    )
+            for e in record.get("power", {}):
+                if e not in physical or observed[e] is None:
+                    raise HomeAssistantError(
+                        "Previously owned native output is missing or unavailable"
+                    )
+            if any(
+                foreign_owner_hold(self.hass, self.manager.entry.entry_id, e)
+                for e, value in physical.items() if value is not None
+            ):
+                raise HomeAssistantError(
+                    "A different controller still owns the physical equipment"
+                )
+
+            live_primary = physical.get(cap.primary) if cap is not None else None
+            active = cap is not None and live_primary is not None and not output_off(live_primary)
+            if active:
+                if (cap.primary not in spec.source_entities or "off" not in cap.modes
+                        or (cap.domain == "climate" and live_primary.state not in cap.modes)
+                        or (cap.domain in ("number", "input_number")
+                            and (finite(live_primary.state, 0, 100) is None
+                                 or live_primary.attributes.get("unit_of_measurement") != "%"
+                                 or live_primary.attributes.get("min") != 0
+                                 or live_primary.attributes.get("max") != 100))):
+                    raise HomeAssistantError("Unsupported or unverified running physical output")
+                # Only a user-selected native controller method, with its
+                # original exact-device power authorization, can explicitly
+                # take over an already-running appliance.
+                if cfg["control_mode"] not in ("pid", "automatic", "manual"):
+                    raise HomeAssistantError(
+                        "Choose an authorized automatic, PID or manual controller method"
+                    )
+                from .device_activation import authorized
+                _, power_granted = model.permission(self.manager, spec, cap)
+                if not power_granted or not authorized(self.manager, spec):
+                    raise HomeAssistantError(
+                        "Physical power control is not authorized for this device"
+                    )
+            elif (cap is None and not offline):
+                raise HomeAssistantError("Native physical capabilities are unavailable")
+
+            prior = deepcopy(record)
+            # An explicit Manual -> Resume returns to the last known Automatic
+            # or PID method ONLY if that mode was actually saved on this
+            # controller. It never guesses an automatic mode.
+            restore_mode = (
+                record.get("resume_control_mode")
+                if cfg["control_mode"] == "manual" else None
+            )
+            if restore_mode not in ("automatic", "pid"):
+                restore_mode = None
+            if restore_mode and (cap is None
+                    or restore_mode not in model.control_modes(self.manager, spec)):
+                raise HomeAssistantError(
+                    "Previous automatic control method is no longer supported"
+                )
+
+            # Preserve the physical start for already-owned outputs. A
+            # previously unowned active appliance is accepted ONLY because
+            # the user pressed Resume; start a conservative new supervision
+            # interval without pretending the controller switched it on.
+            next_power = {}
+            for entity, owned in record.get("power", {}).items():
+                if not output_off(physical[entity]):
+                    next_power[entity] = owned
+            if active and cap.primary not in next_power:
+                on_min, _, max_on = model.timing(self.manager, spec, cap)
+                next_power[cap.primary] = {
+                    "since": now, "min_on": on_min, "max_on": max_on,
+                }
+            next_off_at = dict(record.get("off_at", {}))
+            for entity, value in physical.items():
+                if output_off(value):
+                    observed_off = self._observed_off_since(entity, now)
+                    historical = finite(next_off_at.get(entity), 0, now)
+                    next_off_at[entity] = max(observed_off, historical or 0)
+
+            record.update(
+                paused=None, pending=None, power=next_power,
+                baseline=observed, off_at=next_off_at,
+            )
+            if supply:
+                # Never claim an already-ON, previously unowned smart plug.
+                # Its own history is independent of the native actuator.
+                old_switch_intent = upstream.get("pending")
+                owned_supply = bool(upstream.get("owned"))
+                if old_switch_intent:
+                    owned_supply = old_switch_intent["desired"] == "on"
+                if outlet.state == "off":
+                    owned_supply = False
+                upstream.update(
+                    entity=supply, identity=identity, paused=None, pending=None,
+                    owned=owned_supply, idle_since=None,
+                )
+                if outlet.state == "off":
+                    old_off = finite(upstream.get("off_at"), 0, now)
+                    upstream["off_at"] = max(
+                        old_off or 0, self._observed_off_since(supply, now)
+                    )
             self._memory.pop(spec.identifier, None)
-            self._started = self.clock()
+            self._profile_wake.pop(spec.identifier, None)
+            self._fan_allocations.pop(spec.identifier, None)
+            self._pid_offline_previews.pop(spec.identifier, None)
+
+            # Restoring a previously chosen automatic method is a policy
+            # update, not a device write. Preserve all unrelated options.
+            if restore_mode:
+                lock = getattr(self.manager, "_device_settings_write_lock", None)
+                if lock is None:
+                    lock = self.manager._device_settings_write_lock = asyncio.Lock()
+                async with lock:
+                    options = deepcopy(self.manager.entry.options)
+                    profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+                    profiles = profiles if isinstance(profiles, dict) else {}
+                    saved = profiles.get(spec.identifier, {})
+                    if (not isinstance(saved, dict)
+                            or saved.get("control_mode") != "manual"
+                            or not self._current_spec(spec)):
+                        record.clear()
+                        record.update(prior)
+                        raise HomeAssistantError(
+                            "Controller settings changed during manual reconciliation"
+                        )
+                    profiles[spec.identifier] = {
+                        **saved, "control_mode": restore_mode,
+                    }
+                    options[model.SETTINGS] = profiles
+                    self.hass.config_entries.async_update_entry(
+                        self.manager.entry, options=options,
+                    )
+                record.pop("resume_control_mode", None)
             await self._save()
-            self._status(spec, "reconciled_waiting_minimum_off")
+
+            # A durable save may yield to a native state change. The command
+            # loop cannot start under this controller lock until we return,
+            # so reject the re-arm rather than claim a stale hardware state.
+            if (not self._current_spec(spec)
+                    or any(snapshot(self.hass.states.get(e)) != before
+                           for e, before in observed.items())
+                    or (supply and (
+                        self.hass.states.get(supply) is None
+                        or self.hass.states.get(supply).state != outlet.state
+                        or permitted_supply(self.manager, spec, supply, identity) is None
+                    ))):
+                record["paused"] = "physical_state_changed_during_resume"
+                await self._save()
+                raise HomeAssistantError(
+                    "Physical state or identity changed during Resume; retry after verification"
+                )
+            self._status(
+                spec, "reconciled_running" if active else "reconciled",
+                physical_mode=live_primary.state if active else "off",
+                controller_method=restore_mode or cfg["control_mode"],
+            )
+        # No new hardware command or artificial five-minute startup hold.
+        # Trigger one eligible controller evaluation on the next event loop
+        # turn; the existing service-ACK and dwell gates remain authoritative.
+        if self._active:
+            self.schedule()
 
     def schedule(self) -> None:
         if not self._active or not self._ready:
