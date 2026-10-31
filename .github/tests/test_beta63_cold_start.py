@@ -52,6 +52,14 @@ class Model:
     def plan_for(manager, spec):
         return manager.plan
     @staticmethod
+    def timing(manager, spec, cap, config=None):
+        cfg = config or Model.settings(manager, spec)
+        return (
+            max(600, cfg.get("min_on_seconds", 600)),
+            max(600, cfg.get("min_off_seconds", 600)),
+            7200,
+        )
+    @staticmethod
     def sources_available(manager, spec):
         return manager.native_online
     @staticmethod
@@ -126,11 +134,16 @@ globals_ = {
     "_SWITCH_STATES": ("off", "on"),
     "permitted_supply": permit,
 }
-output_required, off_since, verified_capabilities, approved_demand, cold_start_direction_demand, cold_start_dispatch_safe,     dispatch_safe, send, before_tick = load_functions(
+(output_required, off_since, verified_capabilities,
+ approved_demand, cold_start_direction_demand, cold_start_dispatch_safe,
+ dispatch_safe, send, before_tick, device_supply_dwell, supply_off_since,
+ supply_minimum_on, supply_minimum_off, observe_supply_state) = load_functions(
     "equipment_power_switch.py",
     ("output_required", "_observed_off_since", "verified_capabilities",
      "approved_demand", "cold_start_direction_demand",
-     "cold_start_dispatch_safe", "_dispatch_safe", "_send", "before_tick"),
+     "cold_start_dispatch_safe", "_dispatch_safe", "_send", "before_tick",
+     "device_supply_dwell", "supply_off_since", "supply_minimum_on",
+     "supply_minimum_off", "observe_supply_state"),
     globals_,
 )
 # Resolve normal source-function references in the test module's namespace.
@@ -167,6 +180,7 @@ class Simulator:
                 "control_mode": method,
                 "requested_mode": direction,
                 "power_switch_cooldown_seconds": 600,
+                "min_on_seconds": 600, "min_off_seconds": 600,
             }}},
             native_online=False,
             authorized=authorized,
