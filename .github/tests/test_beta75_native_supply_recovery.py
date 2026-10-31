@@ -36,8 +36,12 @@ tree=ast.parse((ROOT/'equipment_runtime.py').read_text(encoding='utf-8'))
 klass=next(t for t in tree.body if isinstance(t,ast.ClassDef) and t.name=='EquipmentRuntime')
 wake=next(x for x in klass.body if isinstance(x,ast.AsyncFunctionDef)
           and x.name=='_reconcile_native_after_supply_wake')
-exec(compile(ast.Module(body=[wake],type_ignores=[]),'equipment_runtime.py','exec'),helper_ns)
+reconcile=next(x for x in klass.body if isinstance(x,ast.AsyncFunctionDef)
+          and x.name=='_reconcile')
+exec(compile(ast.Module(body=[wake,reconcile],type_ignores=[]),
+             'equipment_runtime.py','exec'),helper_ns)
 C._reconcile_native_after_supply_wake=helper_ns[wake.name]
+C._reconcile=helper_ns[reconcile.name]
 
 def create(mode='off', *, supply_owned=True, off_age=1800, boot_mode='heat'):
     r=C(owned=False,native=mode,supply='on',supply_owned=supply_owned)
@@ -72,6 +76,10 @@ async def evaluate():
     assert off.record['off_at']['climate.heater']==NOW-1800
     assert off.record['baseline']['climate.heater']['state']=='off'
     assert off.record['upstream']['native_wake']['native_state']=='off'
+    # The real manual-override baseline reconciler must also accept the
+    # reconnected appliance; a stale pre-supply baseline cannot pause it.
+    assert await off._reconcile(spec)
+    assert off.record.get('paused') is None
     assert await off._power(spec,off.manager.cap,'heat',automatic=False), (
         off.status,off.record)
     assert off.actual_commands[-1][1]=={'hvac_mode':'heat'}
@@ -101,6 +109,8 @@ async def evaluate():
     assert owner['since']==NOW
     assert owner['min_on']==600. and owner['max_on']==7200.
     assert active.record['baseline']['climate.heater']['state']=='heat'
+    assert await active._reconcile(spec)
+    assert active.record.get('paused') is None
     assert not active.actual_commands
     assert not await active._power(
         spec,active.manager.cap,'off',automatic=False,shutdown=True)
