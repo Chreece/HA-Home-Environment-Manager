@@ -1843,7 +1843,8 @@ class AirQualityConfigFlow(_FlowMixin, config_entries.ConfigFlow, domain=DOMAIN)
             self._indoor_index = 0
             self._start_room_setup()
         return self.async_show_menu(
-            step_id="reconfigure", menu_options=self._room_edit_menu()
+            step_id="reconfigure", menu_options=self._room_edit_menu(),
+            description_placeholders=self._room_menu_placeholders,
         )
 
     async def _finish(self) -> ConfigFlowResult:
@@ -1890,7 +1891,8 @@ class AirQualityOptionsFlow(_FlowMixin, OptionsFlowWithReload):
         self._indoor_index = 0
         self._start_room_setup()
         return self.async_show_menu(
-            step_id="init", menu_options=self._room_edit_menu()
+            step_id="init", menu_options=self._room_edit_menu(),
+            description_placeholders=self._room_menu_placeholders,
         )
 
     async def _finish(self) -> ConfigFlowResult:
