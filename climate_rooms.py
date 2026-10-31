@@ -36,7 +36,7 @@ def _bool_state(hass:Any,entity_id:str,*,max_age_minutes:float=240) -> bool|None
 
 def _presence_ids(hass:Any,area:str,config:dict) -> list[str]:
     selected=config.get("occupancy_sensors")
-    if isinstance(selected,list) and selected:
+    if isinstance(selected,list):
         return [x for x in selected if isinstance(x,str) and x.startswith((
                     "binary_sensor.", "number.", "input_number.", "sensor."))
                 and entity_area(hass,x)==area]
@@ -99,7 +99,10 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
             hass,area,settings,global_presence,
             known_areas=known_areas or {area},
         )
-        if occupied == "unoccupied":
+        if occupied == "unoccupied" and occ_reason != "verified_room_list_unoccupied":
+            # Per-room sensors require a stable vacancy interval. A fresh
+            # authoritative list explicitly omitting this room is already
+            # verified, so do not invent presence during a second timer.
             # A room-list entity can change while the last person leaves.
             # Require a stable empty indication over the same vacancy delay
             # used for individual room presence sensors.
