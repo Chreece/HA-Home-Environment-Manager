@@ -191,7 +191,7 @@ async def run():
     assert prior.record["power"]==before,prior.record
     assert prior.record["paused"] is None
     assert prior.record["baseline"]["climate.heater"]["state"]=="heat"
-    assert prior.status[0]=="reconciled_running" and prior.scheduled==1
+    assert prior.status[0]=="controlling" and prior.scheduled==1,prior.status
     assert prior._started==NOW-450 and prior.calls==[]
     assert not prior._memory and not prior._profile_wake
     # The Resume click is explicit authorization to take over an active
