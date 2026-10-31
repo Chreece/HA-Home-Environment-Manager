@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from .config_data import mutable_copy as deepcopy
 from typing import Any
+import math
 
 import probatio
 from homeassistant.helpers import area_registry as ar, selector
@@ -16,6 +17,7 @@ from .const import (
     CONF_NOTIFY_TARGETS, CONF_MEDIA_PLAYERS, CONF_TTS_ENGINE, CONF_AI_AGENT, CONF_HUB,
     CONF_OCCUPANCY_GLOBAL, CONF_ENVIRONMENT_GLOBAL, CONF_USE_MOLD,
     CONF_AWAY_WINDOWS_ALERT, CONF_AWAY_WINDOWS_PERSONS, CONF_AWAY_WINDOWS_DELIVERY,
+    CONF_THRESHOLDS, DEFAULT_THRESHOLDS,
 )
 from . import room_sources as sources
 
@@ -204,8 +206,12 @@ class RoomSetupMixin:
         if self._setup_index < len(self._setup_order):
             return await self.async_step_setup_room_sources()
         old = self._values.get(CONF_OCCUPANCY_GLOBAL, {})
+        old = old if isinstance(old, dict) else {}
         options = self._general_options()
         env = self._values.get(CONF_ENVIRONMENT_GLOBAL, {})
+        env = env if isinstance(env, dict) else {}
+        limits = self._values.get(CONF_THRESHOLDS, {})
+        limits = limits if isinstance(limits, dict) else {}
         saved_pollen = env.get("pollen_entities") if isinstance(env, dict) else None
         if not isinstance(saved_pollen, list):
             legacy = env.get("pollen_entity") if isinstance(env, dict) else None
@@ -228,6 +234,13 @@ class RoomSetupMixin:
             "general_room_occupancy_sensors": old.get("room_occupancy_sensors", []),
             "general_home_trackers": old.get("home_trackers", []),
             "general_away_cooldown_minutes": old.get("away_cooldown_minutes", 10),
+            "general_source_stale_minutes": old.get("source_stale_minutes", 240),
+            "general_home_policy": old.get("home_policy", "any_home"),
+            "pollen_high_from": env.get("pollen_high_from", 3),
+            "pollen_max_scale": env.get("pollen_max_scale", 5),
+            "pollen_avoid_ventilation": env.get("pollen_avoid_ventilation", False),
+            **{f"global_threshold_{key}": limits.get(key, default)
+               for key, default in DEFAULT_THRESHOLDS.items()},
             **{f"general_{prefix}_rooms_entity": old.get(f"{prefix}_rooms_entity") or "none"
                for prefix in ("occupied", "sleep")},
             **{f"general_{prefix}_rooms_attribute": old.get(f"{prefix}_rooms_attribute") or "__state__"
@@ -268,6 +281,43 @@ class RoomSetupMixin:
             else:
                 if not 0 <= away_cooldown <= 240:
                     errors["general_away_cooldown_minutes"] = "invalid_room_source"
+            if value["general_home_policy"] not in ("any_home", "all_home"):
+                errors["general_home_policy"] = "invalid_room_source"
+            try:
+                source_age = float(value["general_source_stale_minutes"])
+            except (TypeError, ValueError, OverflowError):
+                source_age = float("nan")
+            if not math.isfinite(source_age) or not 10 <= source_age <= 1440:
+                errors["general_source_stale_minutes"] = "invalid_room_source"
+            try:
+                pollen_high = float(value["pollen_high_from"])
+                pollen_max = float(value["pollen_max_scale"])
+            except (TypeError, ValueError, OverflowError):
+                pollen_high = pollen_max = float("nan")
+            if (not all(math.isfinite(v) for v in (pollen_high, pollen_max))
+                    or not 0 <= pollen_high <= pollen_max <= 100):
+                errors["pollen_high_from"] = "invalid_room_source"
+            if type(value["pollen_avoid_ventilation"]) is not bool:
+                errors["pollen_avoid_ventilation"] = "invalid_room_source"
+            # All previously separate global thresholds share this exact
+            # one General settings form. Validate every limit before saving.
+            checked_limits = {}
+            for name, default in DEFAULT_THRESHOLDS.items():
+                key = f"global_threshold_{name}"
+                try:
+                    observed = float(value[key])
+                except (ValueError, TypeError, OverflowError):
+                    observed = float("nan")
+                low = -40 if name in ("min_outdoor_temp", "max_outdoor_temp") else 1
+                high = (100 if name in ("indoor_mold", "indoor_humidity")
+                        else 100000 if name == "max_age_minutes" else 10000)
+                if not math.isfinite(observed) or not low <= observed <= high:
+                    errors[key] = "invalid_room_source"
+                else:
+                    checked_limits[name] = observed
+            if (len(checked_limits) == len(DEFAULT_THRESHOLDS)
+                    and checked_limits["min_outdoor_temp"] >= checked_limits["max_outdoor_temp"]):
+                errors["global_threshold_min_outdoor_temp"] = "temperature_range"
             from .hub_delivery import hub_installed
             if CONF_HUB in user_input and (type(value[CONF_HUB]) is not bool
                     or value[CONF_HUB] and not hub_installed(self.hass)):
@@ -314,10 +364,16 @@ class RoomSetupMixin:
                 global_env["pollen_entities"] = list(dict.fromkeys(value["pollen_entities"]))
                 global_env["pollen_entity"] = (
                     global_env["pollen_entities"][0] if global_env["pollen_entities"] else None)
+                global_env["pollen_high_from"] = pollen_high
+                global_env["pollen_max_scale"] = pollen_max
+                global_env["pollen_avoid_ventilation"] = value["pollen_avoid_ventilation"]
+                self._values[CONF_THRESHOLDS] = checked_limits
                 occupancy = deepcopy(old)
                 for name in ("room_occupancy_sensors", "home_trackers"):
                     occupancy[name] = list(dict.fromkeys(value["general_"+name]))
                 occupancy["away_cooldown_minutes"] = float(value["general_away_cooldown_minutes"])
+                occupancy["source_stale_minutes"] = source_age
+                occupancy["home_policy"] = value["general_home_policy"]
                 for prefix in ("occupied", "sleep"):
                     entity = value[f"general_{prefix}_rooms_entity"]
                     attr = value[f"general_{prefix}_rooms_attribute"]
@@ -355,6 +411,32 @@ class RoomSetupMixin:
             selector.NumberSelector(selector.NumberSelectorConfig(
                 min=0, max=240, step=1, unit_of_measurement="min",
                 mode=selector.NumberSelectorMode.BOX)))
+        fields[field("general_source_stale_minutes", value["general_source_stale_minutes"])] = (
+            selector.NumberSelector(selector.NumberSelectorConfig(
+                min=10, max=1440, step=1, unit_of_measurement="min",
+                mode=selector.NumberSelectorMode.BOX)))
+        fields[field("general_home_policy", value["general_home_policy"])] = select([
+            {"value": "any_home", "label": "Any home"},
+            {"value": "all_home", "label": "All home"},
+        ])
+        for name in DEFAULT_THRESHOLDS:
+            low = -40 if name in ("min_outdoor_temp", "max_outdoor_temp") else 1
+            high = (100 if name in ("indoor_mold", "indoor_humidity")
+                    else 100000 if name == "max_age_minutes" else 10000)
+            key = f"global_threshold_{name}"
+            fields[field(key, value[key])] = selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=low, max=high, step=1,
+                    mode=selector.NumberSelectorMode.BOX))
+        fields[field("pollen_high_from", value["pollen_high_from"])] = selector.NumberSelector(
+            selector.NumberSelectorConfig(
+                min=0, max=100, step=0.1,
+                mode=selector.NumberSelectorMode.BOX))
+        fields[field("pollen_max_scale", value["pollen_max_scale"])] = selector.NumberSelector(
+            selector.NumberSelectorConfig(
+                min=0, max=100, step=0.1,
+                mode=selector.NumberSelectorMode.BOX))
+        fields[field("pollen_avoid_ventilation", value["pollen_avoid_ventilation"])] = selector.BooleanSelector()
         fields[field(CONF_LANGUAGE, value[CONF_LANGUAGE])] = select(language_choices)
         from .hub_delivery import hub_installed
         if hub_installed(self.hass):
