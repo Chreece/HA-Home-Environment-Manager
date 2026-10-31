@@ -136,6 +136,7 @@ runtime_ns = {
     "model": model,
     "asdict": asdict,
     "output_off": lambda s: s is not None and s.state == "off",
+    "snapshot": lambda s: None if s is None else {"state": s.state, "attributes": dict(s.attributes)},
     "finite": lambda v, lo, hi: v if isinstance(v,(float,int)) and lo <= v <= hi else None,
 }
 (tick,) = extract("equipment_runtime.py", ("tick",), runtime_ns)
