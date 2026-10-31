@@ -195,18 +195,19 @@ async def run():
     assert prior.status[0]=="controlling" and prior.scheduled==1,prior.status
     assert prior._started==NOW-450 and prior.calls==[]
     assert not prior._memory and not prior._profile_wake
-    # An external physical OFF->ON since the old ownership record must
-    # restart the minimum-ON protection, not inherit stale elapsed runtime.
+    # HA can synthesize a very recent last_changed at startup while the
+    # physical radiator actually remained ON. Preserve the stored confirmed
+    # timestamp, rather than inventing another minimum-ON period.
     rerun=Runtime(prior_owned=True)
     rerun.states["climate.heater"]=state("heat",changed=NOW-80)
     await rerun.async_resume(spec)
-    assert rerun.record["power"]["climate.heater"]["since"]==NOW-80
+    assert rerun.record["power"]["climate.heater"]["since"]==NOW-750
     # The Resume click is explicit authorization to take over an active
     # physical heater that was never automatically adopted by polling.
     unowned=Runtime()
     await unowned.async_resume(spec)
     assert unowned.record["power"]["climate.heater"]=={
-       "since":NOW,"min_on":600.,"max_on":7200.,
+       "since":NOW-900,"min_on":600.,"max_on":7200.,
     }
     assert not unowned.calls
     # Existing physical OFF duration must NOT restart at the Resume click.
