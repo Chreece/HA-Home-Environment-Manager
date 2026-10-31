@@ -74,6 +74,7 @@ class Model:
     DEFAULTS = {
         "control_mode": "pid", "power_switch_entity": None,
         "power_switch_cooldown_seconds": 600, "cycle_seconds": 3600,
+        "min_on_seconds": 600, "min_off_seconds": 600,
         "pid_calibration_method": "manual",
         "pid_fan_capacity_mode": "legacy", "pid_fan_capacity_for_mode": "choose",
         "pid_fan_capacity_models": {}, "preset": "none",
@@ -326,6 +327,12 @@ async def main():
             AssertionError("A newly paired supply must not be operated")
         ),
     }
+    extract(
+        "equipment_power_switch.py",
+        ("device_supply_dwell", "supply_off_since",
+         "supply_minimum_on", "supply_minimum_off",
+         "observe_supply_state"), supply_env,
+    )
     before_tick, dispatch_safe = extract(
         "equipment_power_switch.py",
         ("before_tick", "_dispatch_safe"), supply_env,
