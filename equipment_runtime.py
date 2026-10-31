@@ -942,7 +942,20 @@ class EquipmentRuntime:
             next_power = {}
             for entity, owned in record.get("power", {}).items():
                 if not output_off(physical[entity]):
-                    next_power[entity] = owned
+                    # A manual OFF -> ON between controller evaluations may
+                    # restart the real physical ON interval. Use the LATER
+                    # of recorded ownership and current observed ON start,
+                    # so Resume cannot prematurely end a newly started cycle.
+                    observed_on = finite(
+                        self._observed_off_since(entity, now), 0, now
+                    )
+                    owned_since = finite(owned.get("since"), 0, now)
+                    if owned_since is None:
+                        raise HomeAssistantError("Stored native power runtime is not verified")
+                    next_power[entity] = {
+                        **owned,
+                        "since": max(owned_since, observed_on or owned_since),
+                    }
             if active and cap.primary not in next_power:
                 on_min, _, max_on = model.timing(self.manager, spec, cap)
                 next_power[cap.primary] = {
