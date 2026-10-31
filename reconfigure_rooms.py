@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from .config_data import mutable_copy as deepcopy
 from typing import Any
+import json
+from pathlib import Path
 
 import probatio
 from homeassistant.helpers import area_registry as ar, entity_registry as er
@@ -18,28 +20,33 @@ from .room_setup import areas, select, field
 from . import room_sources as sources
 
 
-def _room_label(hass: Any, name: str) -> str:
-    """Keep the dynamic label localized without inventing per-area i18n keys."""
-    lang = str(getattr(getattr(hass, "config", None), "language", "en")).split("-")[0]
-    prefix = {
-        "el": "Ρυθμίσεις", "de": "Einstellungen", "fr": "Paramètres",
-        "es": "Ajustes", "it": "Impostazioni", "pt": "Configurações",
-        "nl": "Instellingen",
-    }.get(lang, "Settings")
-    return f"{prefix} · {name}"
+def _locale_menu(hass: Any, context: Any) -> tuple[str, str, str]:
+    """Resolve the dialog's locale for runtime-labelled area menu options.
 
-
-def _menu_labels(hass: Any) -> tuple[str, str]:
-    lang = str(getattr(getattr(hass, "config", None), "language", "en")).split("-")[0]
-    return {
-        "el": ("Επιλογή δωματίων", "Γενικές ρυθμίσεις"),
-        "de": ("Räume auswählen", "Allgemeine Einstellungen"),
-        "fr": ("Choisir les pièces", "Paramètres généraux"),
-        "es": ("Elegir habitaciones", "Configuración general"),
-        "it": ("Seleziona stanze", "Impostazioni generali"),
-        "pt": ("Escolher divisões", "Configurações gerais"),
-        "nl": ("Kamers kiezen", "Algemene instellingen"),
-    }.get(lang, ("Choose rooms", "General settings"))
+    HA accepts menu_options as a mapping from step ID to literal label.
+    Reuse our shipped translation files instead of inventing a new locale
+    catalog or assuming the browser language matches HA's system language.
+    """
+    language = context.get("language") if isinstance(context, dict) else None
+    language = language or getattr(getattr(hass, "config", None), "language", "en")
+    text = str(language or "en").replace("_", "-")
+    translations = Path(__file__).parent / "translations"
+    for candidate in dict.fromkeys((text, text.split("-")[0], "en")):
+        file = translations / (candidate + ".json")
+        if not file.is_file():
+            continue
+        try:
+            steps = json.loads(file.read_text(encoding="utf-8"))["options"]["step"]
+            values = steps["init"]["menu_options"]
+            room = steps["room_settings"]["title"]
+            return (
+                values.get("choose_rooms", "Choose rooms"),
+                values.get("general_settings", "General settings"),
+                room,
+            )
+        except (OSError, TypeError, ValueError, KeyError):
+            continue
+    return "Choose rooms", "General settings", "Settings · {area_name}"
 
 
 class ReconfigureRoomsMixin:
@@ -62,13 +69,19 @@ class ReconfigureRoomsMixin:
         return result
 
     def _room_edit_menu(self) -> dict[str, str]:
-        choose, general = _menu_labels(self.hass)
+        choose, general, room_template = _locale_menu(
+            self.hass, getattr(self, "context", {})
+        )
         result = {"choose_rooms": choose}
         # menu_options is explicitly a mapping of step IDs to literal display
         # names in HA. Dynamically registered Area IDs are validated again
         # when the menu item is invoked (never trust a stale browser menu).
         for area, name in self._selected_edit_rooms():
-            result[f"edit_room_{area}"] = _room_label(self.hass, name)
+            try:
+                label = room_template.format(area_name=name)
+            except (ValueError, KeyError):
+                label = f"Settings · {name}"
+            result[f"edit_room_{area}"] = label
         result["general_settings"] = general
         return result
 
