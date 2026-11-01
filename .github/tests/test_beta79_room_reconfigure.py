@@ -104,7 +104,8 @@ class UI(Mixin):
                if with_sources else {})
         }
         self._room_edit_area=None
-        self.hass=N(config=N(language="el"),states=N(get=lambda e:N(state="on")))
+        self.hass=N(config=N(language="el"),states=N(get=lambda e:N(state="on")),
+                    async_add_executor_job=asyncio.to_thread)
         self.saves=0
         self.saved=[]
     def async_show_form(self,**kw):return {"type":"form",**kw}
@@ -118,7 +119,7 @@ class UI(Mixin):
 
 async def run():
     f=UI()
-    menu=f._room_edit_menu()
+    menu=await f._room_edit_menu()
     assert list(menu)==[
         "choose_rooms","edit_room_badezimmer",
         "edit_room_wohnzimmer","general_settings"
