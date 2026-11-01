@@ -1,0 +1,38 @@
+en|AQI scale|Custom AQI limit|Automatic (provider)|Unknown - no comparison|Custom scale
+de|AQI-Skala|Benutzerdefinierter AQI-Grenzwert|Automatisch (Anbieter)|Unbekannt - kein Vergleich|Benutzerdefinierte Skala
+el|Κλίμακα AQI|Προσαρμοσμένο όριο AQI|Αυτόματα (πάροχος)|Άγνωστη - χωρίς σύγκριση|Προσαρμοσμένη κλίμακα
+fr|Échelle AQI|Seuil AQI personnalisé|Automatique (fournisseur)|Inconnue - sans comparaison|Échelle personnalisée
+es|Escala AQI|Límite AQI personalizado|Automática (proveedor)|Desconocida - sin comparación|Escala personalizada
+it|Scala AQI|Limite AQI personalizzato|Automatica (fornitore)|Sconosciuta - nessun confronto|Scala personalizzata
+ar|مقياس AQI|حد AQI مخصص|تلقائي (المزود)|غير معروف - دون مقارنة|مقياس مخصص
+bg|Скала AQI|Персонализиран праг AQI|Автоматично (доставчик)|Неизвестна - без сравнение|Персонализирана скала
+bn|AQI স্কেল|কাস্টম AQI সীমা|স্বয়ংক্রিয় (প্রদানকারী)|অজানা - তুলনা নয়|কাস্টম স্কেল
+cs|Stupnice AQI|Vlastní limit AQI|Automaticky (poskytovatel)|Neznámá - bez porovnání|Vlastní stupnice
+da|AQI-skala|Tilpasset AQI-grænse|Automatisk (udbyder)|Ukendt - ingen sammenligning|Tilpasset skala
+fa|مقیاس AQI|حد سفارشی AQI|خودکار (ارائه‌دهنده)|نامشخص - بدون مقایسه|مقیاس سفارشی
+fi|AQI-asteikko|Mukautettu AQI-raja|Automaattinen (palveluntarjoaja)|Tuntematon - ei vertailua|Mukautettu asteikko
+he|סולם AQI|סף AQI מותאם|אוטומטי (ספק)|לא ידוע - ללא השוואה|סולם מותאם
+hi|AQI पैमाना|कस्टम AQI सीमा|स्वचालित (प्रदाता)|अज्ञात - तुलना नहीं|कस्टम पैमाना
+hr|AQI ljestvica|Prilagođena AQI granica|Automatski (pružatelj)|Nepoznato - bez usporedbe|Prilagođena ljestvica
+hu|AQI-skála|Egyéni AQI-határérték|Automatikus (szolgáltató)|Ismeretlen - nincs összehasonlítás|Egyéni skála
+id|Skala AQI|Batas AQI khusus|Otomatis (penyedia)|Tidak diketahui - tanpa perbandingan|Skala khusus
+ja|AQI尺度|カスタムAQI上限|自動（提供元）|不明 - 比較しない|カスタム尺度
+ko|AQI 척도|사용자 지정 AQI 한계|자동 (제공자)|알 수 없음 - 비교 안 함|사용자 지정 척도
+nb|AQI-skala|Egendefinert AQI-grense|Automatisk (leverandør)|Ukjent - ingen sammenligning|Egendefinert skala
+nl|AQI-schaal|Aangepaste AQI-grens|Automatisch (aanbieder)|Onbekend - geen vergelijking|Aangepaste schaal
+pl|Skala AQI|Własny limit AQI|Automatycznie (dostawca)|Nieznana - bez porównania|Własna skala
+pt|Escala AQI|Limite AQI personalizado|Automático (fornecedor)|Desconhecida - sem comparação|Escala personalizada
+pt-br|Escala AQI|Limite AQI personalizado|Automático (provedor)|Desconhecida - sem comparação|Escala personalizada
+ro|Scală AQI|Limită AQI personalizată|Automat (furnizor)|Necunoscută - fără comparație|Scală personalizată
+ru|Шкала AQI|Пользовательский порог AQI|Автоматически (поставщик)|Неизвестна - без сравнения|Пользовательская шкала
+sk|Stupnica AQI|Vlastný limit AQI|Automaticky (poskytovateľ)|Neznáma - bez porovnania|Vlastná stupnica
+sr|AQI скала|Прилагођена AQI граница|Аутоматски (провајдер)|Непозната - без поређења|Прилагођена скала
+sv|AQI-skala|Anpassad AQI-gräns|Automatisk (leverantör)|Okänd - ingen jämförelse|Anpassad skala
+ta|AQI அளவுகோல்|தனிப்பயன் AQI வரம்பு|தானியங்கி (வழங்குநர்)|தெரியவில்லை - ஒப்பீடு இல்லை|தனிப்பயன் அளவுகோல்
+th|มาตราส่วน AQI|เกณฑ์ AQI ที่กำหนดเอง|อัตโนมัติ (ผู้ให้บริการ)|ไม่ทราบ - ไม่เปรียบเทียบ|มาตราส่วนที่กำหนดเอง
+tr|AQI ölçeği|Özel AQI sınırı|Otomatik (sağlayıcı)|Bilinmiyor - karşılaştırma yok|Özel ölçek
+uk|Шкала AQI|Власна межа AQI|Автоматично (постачальник)|Невідома - без порівняння|Власна шкала
+ur|AQI پیمانہ|حسب ضرورت AQI حد|خودکار (فراہم کنندہ)|نامعلوم - موازنہ نہیں|حسب ضرورت پیمانہ
+vi|Thang AQI|Ngưỡng AQI tùy chỉnh|Tự động (nhà cung cấp)|Chưa rõ - không so sánh|Thang tùy chỉnh
+zh-hans|AQI尺度|自定义AQI阈值|自动（提供方）|未知 - 不比较|自定义尺度
+zh-hant|AQI尺度|自訂AQI門檻|自動（提供者）|未知 - 不比較|自訂尺度

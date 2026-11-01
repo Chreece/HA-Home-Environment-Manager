@@ -1,0 +1,136 @@
+name: Publish Home Environment Manager beta 65
+on:
+  push:
+    branches: ['release/v0.6.0b65']
+permissions:
+  contents: write
+concurrency:
+  group: home-environment-manager-beta65
+  cancel-in-progress: false
+jobs:
+  validate-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify source, metadata and final display units
+        run: |
+          python -I .github/scripts/finalize_beta65.py
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          manifest=json.loads(Path('manifest.json').read_text())
+          assert manifest['domain']=='environment_manager'
+          assert manifest['version']=='0.6.0b65'
+          for path in Path('.').rglob('*.json'):
+              json.loads(path.read_text(encoding='utf-8'))
+          assert len(list(Path('translations').glob('*.json')))==38
+          print('PASS canonical manifest, JSON, 38 locale catalogs')
+          PY
+      - name: Data, warning and locale behavior
+        run: python -I .github/tests/test_beta65_data.py
+      - name: Retain previously released equipment behavior
+        run: |
+          python -I .github/tests/test_beta61_supply_selection.py
+          python -I .github/tests/test_beta62_pid_races.py
+          python -I .github/tests/test_beta63_cold_start.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+      - name: Install browser-test dependency on runner only
+        run: python -m pip install playwright==1.57.0
+      - name: Render real card, all languages, expansion and service handlers
+        run: |
+          python -I .github/tests/test_beta65_browser.py
+          python -I - <<'PY'
+          import shutil
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          with sync_playwright() as p:
+              browser=p.chromium.launch(executable_path=shutil.which('google-chrome') or shutil.which('chromium'),args=['--no-sandbox'])
+              page=browser.new_page()
+              page.set_content('<html><body></body></html>')
+              page.add_script_tag(path=str(Path('frontend/air-quality-advisor-card.js').resolve()))
+              result=page.evaluate('''()=>{
+                const c=document.createElement('home-environment-manager-card');
+                c._hass={language:'en',states:{}};
+                const a={temperature_unit:'°F',temperature:72,current_temperature:71,measurements:{temperature:21.6}};
+                const entry={entityId:'climate.test',climate:{state:'heat',attributes:a}};
+                const measured=c._deviceSummary65(entry);
+                delete a.measurements;
+                return [measured,c._deviceSummary65(entry)];
+              }''')
+              assert '72 °F' in result[0] and '21.6 °C' in result[0],result[0]
+              assert '71 °F' in result[1] and '71 °C' not in result[1],result[1]
+              browser.close()
+          print('PASS native Fahrenheit targets and Celsius independent measurements')
+          PY
+      - name: Verify no physical controller changes versus Beta64
+        run: |
+          git fetch --no-tags --depth=1 origin 1246ce0f6a5f81807dc8ec25b7499b56ca3bae5c
+          git diff --exit-code 1246ce0f6a5f81807dc8ec25b7499b56ca3bae5c -- equipment_runtime.py equipment_power_switch.py occupancy_policy.py device_activation.py climate_pid.py shade_cooling.py
+          git diff --check
+      - uses: actions/upload-artifact@v4
+        with:
+          name: beta65-release-browser-preview
+          path: dist/beta65-device-card.png
+          retention-days: 7
+      - name: Commit final validated display correction without racing source edits
+        run: |
+          set -euo pipefail
+          current="$(git ls-remote origin refs/heads/release/v0.6.0b65 | cut -f1)"
+          test "$current" = "$GITHUB_SHA" || { echo 'Release branch moved during testing'; exit 1; }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add frontend/air-quality-advisor-card.js .github/patches/card65.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'Beta65: retain correct native temperature units in device summaries'
+            git push origin HEAD:refs/heads/release/v0.6.0b65
+          fi
+          echo "RELEASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Package and inspect canonical integration ZIP
+        run: |
+          python -I - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          from zipfile import ZipFile,ZIP_DEFLATED
+          archive=Path('dist/HA-Home-Environment-Manager-v0.6.0b65.zip')
+          archive.parent.mkdir(exist_ok=True)
+          names=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
+          with ZipFile(archive,'w',ZIP_DEFLATED,compresslevel=8) as z:
+              for name in sorted(filter(None,names)):
+                  if name.startswith(('.github/','tests/','dist/')) or name=='hacs.json' or '__pycache__' in name or name.endswith(('.pyc','.pyo')):
+                      continue
+                  path=Path(name)
+                  if path.is_file():z.write(path,'custom_components/environment_manager/'+name)
+          with ZipFile(archive) as z:
+              assert z.testzip() is None
+              prefix='custom_components/environment_manager/'
+              manifest=json.loads(z.read(prefix+'manifest.json'))
+              assert manifest['domain']=='environment_manager' and manifest['version']=='0.6.0b65'
+              for name in ('__init__.py','logic.py','equipment_runtime.py','equipment_power_switch.py','equipment_status.py','frontend/air-quality-advisor-card.js','translations/el.json','strings.json'):
+                  assert prefix+name in z.namelist(),name
+              assert all(n.startswith(prefix) for n in z.namelist())
+          print('PASS canonical ZIP',archive,archive.stat().st_size)
+          PY
+      - name: Publish verified HACS prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG=v0.6.0b65
+          current="$(git ls-remote origin refs/heads/release/v0.6.0b65 | cut -f1)"
+          test "$current" = "$RELEASE_SHA" || { echo 'Release branch changed; refusing stale tag'; exit 1; }
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Release already exists; leaving unchanged'
+            exit 0
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" >/dev/null 2>&1; then
+            echo 'Tag already exists without release; refusing to repoint'
+            exit 1
+          fi
+          gh release create "$TAG" "dist/HA-Home-Environment-Manager-$TAG.zip#Manual installation ZIP" --repo "$GITHUB_REPOSITORY" --target "$RELEASE_SHA" --title "Home Environment Manager $TAG" --notes-file ".github/releases/$TAG.md" --prerelease
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json tagName,isPrerelease,assets,url

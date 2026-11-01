@@ -1,0 +1,32 @@
+name: Inspect existing Beta65 locale labels
+on:
+  push:
+    branches: ['fix/beta65-card-locales-warnings-lux-20261028']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 -I - <<'PY'
+          import json
+          from pathlib import Path
+          def walk(v, path=''):
+              if isinstance(v, dict):
+                  for k, val in v.items(): yield from walk(val,path+'.'+k)
+              elif isinstance(v,str): yield path,v
+          for lang in ('en','el','fr','ja'):
+              print('LANG',lang)
+              data=json.loads(Path('translations/'+lang+'.json').read_text())
+              for key,value in walk(data):
+                  if key.startswith('.entity.') and (any(s in key for s in ('pid_process','pid_time','pid_dead','pid_lambda','pid_calibration','pid_fan_capacity','pid_capacity','humidity_target','control_mode'))):
+                      print(key, value)
+          for path in ('environment.py','const.py'):
+              print('FILE',path)
+              lines=Path(path).read_text().splitlines()
+              for i,line in enumerate(lines):
+                  if ('optional_data' in line or 'room_science(' in line or 'UNIT_LABEL' in line or 'INDOOR_METRICS' in line):
+                      print('\n'.join(f'{n+1}: {lines[n]}' for n in range(max(0,i-2),min(len(lines),i+13))))
+          PY

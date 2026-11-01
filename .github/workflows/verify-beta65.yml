@@ -1,0 +1,77 @@
+name: Beta65 card localization lux and optional-warning regressions
+on:
+  push:
+    branches: ['fix/beta65-card-locales-warnings-lux-20261028']
+    paths-ignore: ['.github/workflows/audit-beta65.yml', '.github/workflows/inspect-locales65.yml', '.github/workflows/source-beta65.yml']
+permissions:
+  contents: write
+concurrency:
+  group: hem-beta65-verified-source
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Apply guarded source edits and bundle all 38 locale catalogs
+        run: |
+          if ! grep -q 'HEM_CARD65_START' frontend/air-quality-advisor-card.js; then
+            python -I .github/scripts/apply_beta65.py
+          fi
+      - name: Validate source syntax, data and integration identity
+        run: |
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          manifest=json.loads(Path('manifest.json').read_text())
+          assert manifest['domain']=='environment_manager'
+          assert manifest['version']=='0.6.0b65'
+          for p in Path('.').rglob('*.json'):
+              json.loads(p.read_text(encoding='utf-8'))
+          print('PASS: syntax, JSON, canonical domain and version')
+          PY
+      - name: Warning neutrality, lux data pipeline and all-locale friendly names
+        run: python -I .github/tests/test_beta65_data.py
+      - name: Retain supply selection, PID races, startup and sleep-cooldown behavior
+        run: |
+          python -I .github/tests/test_beta61_supply_selection.py
+          python -I .github/tests/test_beta62_pid_races.py
+          python -I .github/tests/test_beta63_cold_start.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+      - name: Install browser-test dependency only on CI runner
+        run: python -m pip install playwright==1.57.0
+      - name: Actual Chromium rendering, 38 locales, events and mobile sizing
+        run: python -I .github/tests/test_beta65_browser.py
+      - name: Keep hardware controllers unchanged
+        run: |
+          git diff --exit-code -- equipment_runtime.py equipment_power_switch.py occupancy_policy.py device_activation.py climate_pid.py shade_cooling.py
+          git diff --check
+      - uses: actions/upload-artifact@v4
+        with:
+          name: beta65-browser-preview
+          path: dist/beta65-device-card.png
+          retention-days: 7
+      - name: Commit tested generated source without overwriting concurrent edits
+        env:
+          SOURCE_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add logic.py discovery.py dashboard.py const.py environment.py environment_extended.py equipment_status.py equipment_name_catalog.py strings.json translations frontend/air-quality-advisor-card.js manifest.json
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "VALIDATED_SOURCE_COMMIT=$GITHUB_SHA"
+            exit 0
+          fi
+          current="$(git ls-remote origin "refs/heads/$SOURCE_BRANCH" | cut -f1)"
+          test "$current" = "$GITHUB_SHA" || { echo 'Source branch moved; refusing stale push'; exit 1; }
+          git commit -m 'Beta65: tested localized device card, collapsed calibration, informational lux and neutral unavailable warnings'
+          git push origin "HEAD:refs/heads/$SOURCE_BRANCH"
+          echo "VALIDATED_SOURCE_COMMIT=$(git rev-parse HEAD)"

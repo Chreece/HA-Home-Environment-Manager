@@ -1,0 +1,32 @@
+name: Beta62 PID race and window-contact regressions
+on:
+  push:
+    branches:
+      - 'fix/beta62-controller-race-and-window-audit-20261027'
+permissions:
+  contents: read
+jobs:
+  pid_races:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Source syntax and canonical integration
+        run: |
+          python -I -m compileall -q .
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          manifest=json.loads(Path("manifest.json").read_text())
+          assert manifest["domain"]=="environment_manager"
+          for path in Path(".").rglob("*.json"):
+              json.loads(path.read_text(encoding="utf-8"))
+          print("PASS: Python syntax, canonical domain, locales")
+          PY
+          node --check frontend/air-quality-advisor-card.js
+      - name: Exercise real legacy PID methods under controlled HA races
+        run: python -I .github/tests/test_beta62_pid_races.py
+      - name: Keep Beta61 power-switch pairing safety
+        run: python -I .github/tests/test_beta61_supply_selection.py

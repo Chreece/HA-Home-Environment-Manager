@@ -1,0 +1,51 @@
+name: Beta76 compact HEM card and interaction regressions
+
+on:
+  push:
+    branches: ['fix/beta76-compact-room-device-card-20261031']
+
+permissions:
+  contents: read
+
+jobs:
+  compact-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Syntax and frontend-only change gate
+        run: |
+          set -euo pipefail
+          node --check frontend/air-quality-advisor-card.js
+          python -I -m compileall -q .
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          assert json.loads(Path('manifest.json').read_text())['domain']=='environment_manager'
+          assert len(list(Path('translations').glob('*.json')))==38
+          source=Path('frontend/air-quality-advisor-card.js').read_text()
+          assert source.count('HEM_COMPACT76_START')==1
+          assert source.count('HEM_COMPACT76_END')==1
+          assert "data-window-policy-switch" in source
+          print('PASS: card-only UI, canonical domain and locale catalogs')
+          PY
+          git fetch --no-tags --depth=1 origin b3628f84d238bcf805445489b8602f92322bf78e
+          python -I - <<'PY'
+          import subprocess
+          changed=set(subprocess.check_output(
+              ['git','diff','--name-only','b3628f84d238bcf805445489b8602f92322bf78e','HEAD','--'],text=True).splitlines())
+          assert {x for x in changed if not x.startswith('.github/')}=={
+            'frontend/air-quality-advisor-card.js'
+          },changed
+          PY
+      - name: Real Home Assistant state/event stream and Chromium interactions
+        run: |
+          set -euo pipefail
+          python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+          python -I .github/tests/test_beta68_events.py
+          python -I .github/tests/test_beta66_browser.py
+          python -I .github/tests/test_beta68_browser.py
+          python -I .github/tests/test_beta76_compact_browser.py

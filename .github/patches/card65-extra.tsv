@@ -1,0 +1,38 @@
+en|Original (uncalibrated)|Measured capacity model|Estimates use sensor readings and model assumptions. Missing inputs or insufficient history cannot support a reliable result.
+de|Bisherig (unkalibriert)|Gemessenes Leistungsmodell|Schätzungen verwenden Sensordaten und Modellannahmen. Fehlende Eingaben oder zu wenig Verlauf erlauben keine verlässliche Aussage.
+el|Αρχική κατανομή (χωρίς βαθμονόμηση)|Μοντέλο μετρημένης απόδοσης|Οι εκτιμήσεις χρησιμοποιούν μετρήσεις αισθητήρων και παραδοχές μοντέλου. Ελλιπή δεδομένα ή ανεπαρκές ιστορικό δεν επιτρέπουν αξιόπιστο αποτέλεσμα.
+fr|Allocation initiale (non étalonnée)|Modèle de capacité mesurée|Les estimations reposent sur les capteurs et les hypothèses du modèle. Des données manquantes ou un historique insuffisant ne permettent pas un résultat fiable.
+es|Original (sin calibrar)|Modelo de capacidad medida|Las estimaciones usan lecturas y supuestos del modelo. La falta de datos o historial impide obtener un resultado fiable.
+it|Originale (non calibrato)|Modello di capacità misurata|Le stime usano misure e ipotesi del modello. Dati mancanti o uno storico insufficiente non consentono risultati affidabili.
+nl|Oorspronkelijk (ongekalibreerd)|Gemeten capaciteitsmodel|Schattingen gebruiken sensormetingen en modelaannames. Ontbrekende gegevens of onvoldoende historie geven geen betrouwbaar resultaat.
+pt|Original (sem calibração)|Modelo de capacidade medida|As estimativas usam medições e pressupostos do modelo. Dados em falta ou histórico insuficiente não permitem resultados fiáveis.
+pt-br|Original (sem calibração)|Modelo de capacidade medida|As estimativas usam medições e suposições do modelo. Dados ausentes ou histórico insuficiente não permitem resultados confiáveis.
+pl|Pierwotny (bez kalibracji)|Model zmierzonej wydajności|Szacunki wykorzystują odczyty czujników i założenia modelu. Brak danych lub zbyt krótka historia nie zapewniają wiarygodnych wyników.
+cs|Původní (nekalibrované)|Model změřeného výkonu|Odhady používají naměřené údaje a předpoklady modelu. Chybějící vstupy nebo nedostatečná historie neumožňují spolehlivý výsledek.
+sk|Pôvodné (nekalibrované)|Model meraného výkonu|Odhady používajú namerané údaje a predpoklady modelu. Chýbajúce vstupy alebo nedostatočná história neumožňujú spoľahlivý výsledok.
+hr|Izvorno (nekalibrirano)|Model izmjerenog kapaciteta|Procjene koriste očitanja senzora i pretpostavke modela. Nedostajući podaci ili nedovoljna povijest ne daju pouzdan rezultat.
+sr|Изворно (некалибрисано)|Модел измереног капацитета|Процене користе очитавања сензора и претпоставке модела. Недостајући подаци или недовољна историја не дају поуздан резултат.
+ro|Inițial (necalibrat)|Model de capacitate măsurată|Estimările folosesc măsurători și ipoteze ale modelului. Datele lipsă sau istoricul insuficient nu permit rezultate fiabile.
+bg|Първоначално (некалибрирано)|Модел на измерена мощност|Оценките използват измервания и допускания на модела. Липсващи данни или недостатъчна история не дават надежден резултат.
+ru|Исходное (без калибровки)|Модель измеренной мощности|Оценки используют показания датчиков и допущения модели. При нехватке данных или истории надёжный результат невозможен.
+uk|Початкове (без калібрування)|Модель виміряної потужності|Оцінки використовують показання датчиків і припущення моделі. За браку даних чи історії надійний результат неможливий.
+sv|Ursprunglig (okalibrerad)|Modell för uppmätt kapacitet|Beräkningarna använder sensorvärden och modellantaganden. Saknade värden eller otillräcklig historik ger inget tillförlitligt resultat.
+da|Oprindelig (ukalibreret)|Model for målt kapacitet|Estimater bruger sensormålinger og modelantagelser. Manglende data eller utilstrækkelig historik giver ikke pålidelige resultater.
+nb|Opprinnelig (ukalibrert)|Modell for målt kapasitet|Estimater bruker sensormålinger og modellforutsetninger. Manglende data eller utilstrekkelig historikk gir ikke pålitelige resultater.
+fi|Alkuperäinen (kalibroimaton)|Mitatun kapasiteetin malli|Arviot käyttävät anturilukemia ja mallin oletuksia. Puuttuvat tiedot tai riittämätön historia eivät mahdollista luotettavaa tulosta.
+hu|Eredeti (kalibrálatlan)|Mért teljesítménymodell|A becslések érzékelőadatokat és modellfeltevéseket használnak. Hiányzó adatok vagy elégtelen előzmények nem adnak megbízható eredményt.
+tr|Orijinal (kalibre edilmemiş)|Ölçülen kapasite modeli|Tahminler sensör verilerini ve model varsayımlarını kullanır. Eksik veriler veya yetersiz geçmiş güvenilir sonuç sağlamaz.
+ar|الأصلي (غير معاير)|نموذج القدرة المقاسة|تعتمد التقديرات على قراءات المستشعرات وافتراضات النموذج. البيانات المفقودة أو السجل غير الكافي لا يدعمان نتيجة موثوقة.
+fa|اصلی (کالیبره نشده)|مدل ظرفیت اندازه‌گیری‌شده|برآوردها از داده‌های حسگر و فرض‌های مدل استفاده می‌کنند. داده‌های ناقص یا سابقه ناکافی نتیجه قابل اعتماد نمی‌دهند.
+he|מקורי (ללא כיול)|מודל תפוקה נמדדת|ההערכות משתמשות בקריאות חיישנים ובהנחות המודל. נתונים חסרים או היסטוריה קצרה מדי אינם מאפשרים תוצאה אמינה.
+ur|اصل (بغیر کیلیبریشن)|ماپی گئی صلاحیت کا ماڈل|تخمینے سینسر کی ریڈنگ اور ماڈل کے مفروضوں پر مبنی ہیں۔ نامکمل ڈیٹا یا ناکافی تاریخ قابل اعتماد نتیجہ نہیں دیتی۔
+hi|मूल (बिना अंशांकन)|मापी गई क्षमता का मॉडल|अनुमान सेंसर रीडिंग और मॉडल की मान्यताओं का उपयोग करते हैं। अधूरे डेटा या कम इतिहास से विश्वसनीय परिणाम नहीं मिलता।
+bn|মূল (ক্রমাঙ্কন ছাড়া)|পরিমাপ করা ক্ষমতার মডেল|অনুমান সেন্সরের পাঠ ও মডেলের ধারণা ব্যবহার করে। অনুপস্থিত তথ্য বা অপর্যাপ্ত ইতিহাস নির্ভরযোগ্য ফল দেয় না।
+ta|அசல் (அளவுத்திருத்தமற்றது)|அளவிடப்பட்ட திறன் மாதிரி|மதிப்பீடுகள் உணரி அளவீடுகளையும் மாதிரி ஊகங்களையும் பயன்படுத்துகின்றன. குறைந்த தரவு அல்லது போதாத வரலாறு நம்பகமான முடிவைத் தராது.
+th|เดิม (ยังไม่ปรับเทียบ)|แบบจำลองกำลังที่วัดได้|ค่าประมาณใช้ข้อมูลเซนเซอร์และสมมติฐานของแบบจำลอง ข้อมูลที่ขาดหรือประวัติไม่เพียงพอไม่ให้ผลที่เชื่อถือได้
+vi|Ban đầu (chưa hiệu chuẩn)|Mô hình công suất đã đo|Ước tính sử dụng số đo cảm biến và giả định mô hình. Thiếu dữ liệu hoặc lịch sử không đủ sẽ không cho kết quả đáng tin cậy.
+id|Asli (belum dikalibrasi)|Model kapasitas terukur|Perkiraan memakai pembacaan sensor dan asumsi model. Data yang hilang atau riwayat yang kurang tidak menghasilkan hasil yang andal.
+ja|初期設定（未校正）|実測能力モデル|推定にはセンサー値とモデルの仮定を使います。入力や履歴が不足している場合、信頼できる結果は得られません。
+ko|기본 (보정되지 않음)|측정 용량 모델|추정에는 센서 측정값과 모델 가정이 사용됩니다. 입력이나 이력이 부족하면 신뢰할 수 있는 결과를 얻을 수 없습니다.
+zh-hans|原始分配（未校准）|实测能力模型|估算使用传感器读数和模型假设。输入缺失或历史记录不足时，无法得到可靠结果。
+zh-hant|原始分配（未校正）|實測能力模型|估算使用感測器讀數和模型假設。輸入缺漏或歷史記錄不足時，無法得到可靠結果。

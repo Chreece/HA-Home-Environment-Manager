@@ -1,0 +1,30 @@
+name: Inspect Beta65 card and warning paths
+on:
+  push:
+    branches: ['fix/beta65-card-locales-warnings-lux-20261028']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Relevant source locations
+        run: |
+          python3 -I - <<'PY'
+          from pathlib import Path
+          import re
+          for filename, pattern in (
+              ('frontend/air-quality-advisor-card.js', r'(^  (?:class|function|const) )|(^    [a-zA-Z_]\w*\(.*\) ?\{)|illuminance|planning|advisory_only|selected_mean|complete_measured_stage|calibration_status|unavailable_warning|warningUnknown|warning\.active|calibration|humidity.*source'),
+              ('environment_extended.py', r'illuminance|lux|lighting|light_|def extend|def room_science'),
+              ('discovery.py', r'illuminance|lux|def warning|def supported_metric|def reading|def _device_class'),
+              ('shade_weather.py', r'.'),
+              ('__init__.py', r'frontend|version|static|resource|card'),
+              ('dashboard.py', r'warning|environment|controller|metric|illuminance'),
+          ):
+              print('\nFILE', filename)
+              for number, line in enumerate(Path(filename).read_text().splitlines(), 1):
+                  if re.search(pattern, line, re.I):
+                      print(f'{number}: {line[:260]}')
+          print('LANGUAGES:', ','.join(sorted(p.stem for p in Path('translations').glob('*.json'))))
+          PY

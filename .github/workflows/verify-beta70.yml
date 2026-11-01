@@ -1,0 +1,44 @@
+name: Beta70 PID comfort profile response regression
+
+on:
+  push:
+    branches:
+      - 'fix/beta70-pid-profile-response-20261031'
+
+permissions:
+  contents: read
+
+jobs:
+  safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Source syntax, manifest and all JSON
+        run: |
+          python -I -m compileall -q .
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          assert json.loads(Path('manifest.json').read_text())['domain']=='environment_manager'
+          for p in Path('.').rglob('*.json'):
+              json.loads(p.read_text(encoding='utf-8'))
+          print('PASS source and locale')
+          PY
+          node --check frontend/air-quality-advisor-card.js
+      - name: Actual PID profile switching, comfort response and hardware dwell
+        run: python -I .github/tests/test_beta70_pid_profile.py
+      - name: Existing physical supply, sleep, window and shade regressions
+        run: |
+          for script in \
+            .github/tests/test_beta61_supply_selection.py \
+            .github/tests/test_beta62_pid_races.py \
+            .github/tests/test_beta63_cold_start.py \
+            .github/tests/test_beta64_sleep_idle.py \
+            .github/tests/test_beta65_data.py \
+            .github/tests/test_beta69_shade_lux.py; do
+            echo "Testing: $script"
+            python -I "$script"
+          done

@@ -1,0 +1,59 @@
+name: Beta71 window startup false-closure regression
+
+on:
+  push:
+    branches: ['fix/beta71-window-restart-baseline-20261031']
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Validate source syntax and canonical metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -I -m compileall -q .
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('manifest.json').read_text())
+          assert m['domain']=='environment_manager'
+          for p in Path('.').rglob('*.json'):
+              json.loads(p.read_text(encoding='utf-8'))
+          print('PASS source and locales')
+          PY
+          node --check frontend/air-quality-advisor-card.js
+      - name: Real selected-window observations, cold startup and genuine closure
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta66_windows.py
+          python -I .github/tests/test_beta70_pid_profile.py
+      - name: Previously proven native power, PID, sleep, AQI and shade regressions
+        run: |
+          set -euo pipefail
+          for script in \
+            .github/tests/test_beta61_supply_selection.py \
+            .github/tests/test_beta62_pid_races.py \
+            .github/tests/test_beta63_cold_start.py \
+            .github/tests/test_beta64_sleep_idle.py \
+            .github/tests/test_beta65_data.py \
+            .github/tests/test_beta67_aqi.py \
+            .github/tests/test_beta68_scheduler.py \
+            .github/tests/test_beta68_metadata.py \
+            .github/tests/test_beta69_shade_lux.py; do
+            echo "Testing $script"
+            python -I "$script"
+          done
+      - name: Actual HA dispatcher and dashboard render load checks
+        run: |
+          python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+          python -I .github/tests/test_beta68_events.py
+          python -I .github/tests/test_beta68_browser.py
