@@ -177,9 +177,14 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "pid_adaptation_mode": cfg.get("pid_adaptation_mode", "observe"),
             # Small read-only evidence summary. Raw measurements remain
             # bounded in memory and never inflate recorder attributes.
-            "pid_passive_learning": (record.get("pid_passive", {})
-                                     if isinstance(record.get("pid_passive"), dict)
-                                     else {}).get("summary"),
+            "pid_passive_learning": (
+                (record.get("pid_passive", {})
+                 if isinstance(record.get("pid_passive"), dict)
+                 else {}).get("summary")
+                or {"status": "disabled" if cfg.get("pid_adaptation_mode") == "disabled"
+                    else "collecting", "confidence": "insufficient",
+                    "valid_cycles": 0, "required_for_auto": 5}
+            ),
             "pid_fan_capacity_strategy": cfg.get("pid_fan_capacity_mode", "legacy"),
             "pid_fan_capacity_selected_direction": cfg.get("pid_fan_capacity_for_mode", "choose"),
             "pid_fan_capacity_calibrated_modes": sorted(cfg.get("pid_fan_capacity_models", {})),
