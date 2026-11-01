@@ -1,4 +1,4 @@
-name: Beta82 passive PID tests
+name: Beta82 passive PID and hardware safety
 on:
   push:
     branches: ['feat/beta82-passive-pid-adaptation-20261101']
@@ -10,14 +10,56 @@ concurrency:
 jobs:
   passive:
     runs-on: ubuntu-latest
+    timeout-minutes: 19
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
-      - name: Pure passive identification, no actuator calls
+      - name: Complete source syntax, all 38 translations and passive model
         run: |
           set -euo pipefail
-          python -I -m compileall -q pid_passive.py pid_calibration.py
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          assert len(list(Path('translations').glob('*.json')))==38
+          for file in [Path('strings.json'),*Path('translations').glob('*.json')]:
+              j=json.loads(file.read_text(encoding='utf-8'))
+              data=j['entity']['select']['equipment_pid_adaptation_mode']
+              assert all(key in data['state'] for key in
+                         ('disabled','observe','bounded')),file
+              assert data['name'],file
+          print('BETA82_ALL_38_LOCALES_ADAPTIVE_SELECT=PASS')
+          PY
           python -I .github/tests/test_beta82_pid_passive.py
+          python -I .github/tests/test_beta82_runtime_guard.py
+          python -I .github/tests/test_beta81_localization.py
+          python -I .github/tests/test_beta79_room_reconfigure.py
+          python -I .github/tests/test_beta80_menu_init.py
+          python -I .github/tests/test_beta79_general_form.py
           git diff --check
+      - name: Physical power, sample, controller and occupancy regressions
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta78_room_occupancy.py
+          python -I .github/tests/test_beta77_dry_only_target.py
+          python -I .github/tests/test_beta77_offline_supply_resume.py
+          python -I .github/tests/test_beta75_native_supply_recovery.py
+          python -I .github/tests/test_beta74_upstream_dwell.py
+          python -I .github/tests/test_beta73_restart_power_history.py
+          python -I .github/tests/test_beta72_resume_running.py
+          python -I .github/tests/test_beta70_pid_profile.py
+          python -I .github/tests/test_beta69_shade_lux.py
+          python -I .github/tests/test_beta62_pid_races.py
+          python -I .github/tests/test_beta63_cold_start.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+      - name: HA event stream and actual Chromium dashboard behavior
+        run: |
+          set -euo pipefail
+          python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+          python -I .github/tests/test_beta68_events.py
+          python -I .github/tests/test_beta66_browser.py
+          python -I .github/tests/test_beta68_browser.py
+          python -I .github/tests/test_beta76_compact_browser.py
