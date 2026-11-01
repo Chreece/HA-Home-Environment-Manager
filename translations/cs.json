@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Sledované místnosti",
+        "title": "Choose rooms",
         "description": "Sledované místnosti → zdroj → Obecná nastavení",
         "data": {
           "areas": "Sledované místnosti"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Vyberte",
-        "description": "Vyberte: Místnosti / Počasí a výstrahy / Oznámení (volitelně) / Pokročilé limity",
+        "description": "**Choose rooms** — Sledované místnosti → zdroj → Obecná nastavení\n\n**Settings · …** — Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.\n\n**Obecná nastavení** — Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Oblast · nastavení",
           "setup_general": "Obecná nastavení"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Sledované místnosti → zdroj → Obecná nastavení",
+          "general_settings": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Vyberte",
-        "description": "Vyberte: Místnosti / Počasí a výstrahy / Oznámení (volitelně) / Pokročilé limity",
+        "description": "**Choose rooms** — Sledované místnosti → zdroj → Obecná nastavení\n\n**Settings · …** — Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.\n\n**Obecná nastavení** — Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Obecná nastavení"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Sledované místnosti → zdroj → Obecná nastavení",
+          "general_settings": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností."
+        }
       },
       "window_sensors": {
         "title": "Vyloučit senzory oken",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Sledované místnosti",
+        "title": "Choose rooms",
         "description": "Sledované místnosti → zdroj → Obecná nastavení",
         "data": {
           "areas": "Sledované místnosti"
