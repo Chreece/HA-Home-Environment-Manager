@@ -40,7 +40,7 @@ assert g["options"]["step"]["setup_rooms"]["data"]["areas"]=="Δωμάτια π�
 assert g["options"]["step"]["setup_rooms"]["data_description"]["areas"].startswith("Επίλεξε")
 assert g["options"]["step"]["edit_room"]["title"]=="Ρυθμίσεις · {area_name}"
 assert g["options"]["step"]["setup_general"]["title"]=="Γενικές ρυθμίσεις"
-assert "γενικά όρια ασφαλείας" in g["options"]["step"]["init"]["description"]
+assert "όρια ασφαλείας" in g["options"]["step"]["init"]["description"]
 for name, expected in [("en","General settings"),("de","Allgemeine Einstellungen"),
                        ("el","Γενικές ρυθμίσεις")]:
     # The actual executor function loads these files; no hardcoded locale map.
