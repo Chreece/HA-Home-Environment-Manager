@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Phòng cần giám sát",
+        "title": "Choose rooms",
         "description": "Phòng cần giám sát → nguồn → Chung cài đặt",
         "data": {
           "areas": "Phòng cần giám sát"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Chọn",
-        "description": "Chọn: Phòng / Thời tiết và cảnh báo / Thông báo (tùy chọn) / Ngưỡng nâng cao",
+        "description": "**Choose rooms** — Phòng cần giám sát → nguồn → Chung cài đặt\n\n**Settings · …** — Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.\n\n**Chung cài đặt** — Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Khu vực · cài đặt",
           "setup_general": "Chung cài đặt"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Phòng cần giám sát → nguồn → Chung cài đặt",
+          "general_settings": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Chọn",
-        "description": "Chọn: Phòng / Thời tiết và cảnh báo / Thông báo (tùy chọn) / Ngưỡng nâng cao",
+        "description": "**Choose rooms** — Phòng cần giám sát → nguồn → Chung cài đặt\n\n**Settings · …** — Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.\n\n**Chung cài đặt** — Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Chung cài đặt"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Phòng cần giám sát → nguồn → Chung cài đặt",
+          "general_settings": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng."
+        }
       },
       "window_sensors": {
         "title": "Loại trừ cảm biến cửa sổ",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Phòng cần giám sát",
+        "title": "Choose rooms",
         "description": "Phòng cần giám sát → nguồn → Chung cài đặt",
         "data": {
           "areas": "Phòng cần giám sát"
