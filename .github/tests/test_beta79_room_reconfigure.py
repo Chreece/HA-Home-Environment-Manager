@@ -90,7 +90,13 @@ exec(compile(ast.Module(body=nodes,type_ignores=[]),
              "reconfigure_rooms.py","exec"),ns)
 Mixin=ns["ReconfigureRoomsMixin"]
 
-class UI(Mixin):
+class LegacyRoomSteps:
+    async def async_step_setup_rooms(self, user_input=None):
+        return {"original": "initial_rooms", "data": user_input}
+    async def async_step_edit_room(self, user_input=None):
+        return {"original": "initial_editor", "data": user_input}
+
+class UI(Mixin, LegacyRoomSteps):
     def __init__(self,with_sources=False):
         self._values={
             "areas":["badezimmer","wohnzimmer"],
@@ -104,6 +110,7 @@ class UI(Mixin):
                if with_sources else {})
         }
         self._room_edit_area=None
+        self._menu_mode=True
         self.hass=N(config=N(language="el"),states=N(get=lambda e:N(state="on")),
                     async_add_executor_job=asyncio.to_thread)
         self.saves=0
@@ -126,12 +133,16 @@ async def run():
     ],menu
     assert menu["edit_room_badezimmer"]=="Ρυθμίσεις · Badezimmer"
     assert menu["choose_rooms"]=="Επιλογή δωματίων"
+    assert menu["general_settings"]=="Γενικές ρυθμίσεις", menu
+    # Exercise actual translation JSON from the release, not mocked locale.
+    german = await f.hass.async_add_executor_job(ns["_locale_menu"], "de")
+    assert german[1] == "Allgemeine Einstellungen", german
     assert not hasattr(f,"async_step_edit_room_schlafzimmer")
     assert not hasattr(f,"async_step_edit_room_nonexistent")
 
     # HA's actual dispatcher does getattr(flow, "async_step_"+choice).
     page=await getattr(f,"async_step_edit_room_badezimmer")()
-    assert page["type"]=="form" and page["step_id"]=="room_settings"
+    assert page["type"]=="form" and page["step_id"]=="edit_room"
     assert set(page["data_schema"])==set(group_names)|{"occupancy_sensors"}
     assert f._room_edit_area=="badezimmer"
     # First visit must not mutate a configuration.
@@ -166,10 +177,22 @@ async def run():
     assert calls[-1][0:2]==("store_selection","badezimmer")
     assert f3._values["climate_rooms"]["wohnzimmer"]=={"enabled":True}
 
+    # The inherited legacy step IDs must dispatch to the current editor
+    # without changing initial setup flows or safety grants.
+    alias=UI()
+    opened=await alias.async_step_setup_rooms()
+    assert opened["step_id"]=="setup_rooms"
+    alias._room_edit_area="badezimmer"
+    rendered=await alias.async_step_edit_room()
+    assert rendered["step_id"]=="edit_room"
+    alias._menu_mode=False
+    assert (await alias.async_step_setup_rooms())["original"]=="initial_rooms"
+    assert (await alias.async_step_edit_room())["original"]=="initial_editor"
+
     # Choose rooms edits only once; initial render is read-only.
     f4=UI()
     choose=await f4.async_step_choose_rooms()
-    assert choose["type"]=="form" and f4.saves==0
+    assert choose["type"]=="form" and choose["step_id"]=="setup_rooms" and f4.saves==0
     outcome=await f4.async_step_choose_rooms({"areas":["badezimmer"]})
     assert outcome["type"]=="save"
     assert calls[-1]==("restrict_rooms",["badezimmer"])
