@@ -3381,6 +3381,14 @@
       },
       "shade_lux_entity": {
         "name": "Solar-shading lux sensor"
+      },
+      "equipment_pid_adaptation_mode": {
+        "name": "PID · {channel}Passive adaptation",
+        "state": {
+          "disabled": "Disabled",
+          "observe": "Observe and suggest",
+          "bounded": "Bounded auto-adapt (10% / day)"
+        }
       }
     },
     "time": {
