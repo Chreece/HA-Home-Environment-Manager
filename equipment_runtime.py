@@ -831,7 +831,12 @@ class EquipmentRuntime:
                 raise HomeAssistantError("Unsupported control method")
             if new["pid_calibration_method"] not in model.PID_CALIBRATION_METHODS:
                 raise HomeAssistantError("Unsupported deterministic PID tuning method")
-            if new["pid_adaptation_mode"] not in model.PID_ADAPTATION_MODES:
+            # A valid existing configuration predating Beta82 has no
+            # adaptation key. It remains observe-only, including in the
+            # legacy controller/physical-power regression harnesses.
+            if new.get("pid_adaptation_mode", "observe") not in getattr(
+                    model, "PID_ADAPTATION_MODES",
+                    ("disabled", "observe", "bounded")):
                 raise HomeAssistantError("Unsupported passive PID learning policy")
             # Model fields are inert commissioning inputs. A zero means "not
             # measured yet"; it is never interpreted as a physical response.
