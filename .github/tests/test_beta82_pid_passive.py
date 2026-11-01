@@ -27,16 +27,16 @@ def wave(metric="temperature", direction=1, cycle_count=5):
     for k in range(cycle_count):
         for n in range(6):
             p.observe(context=context,at=t,value=start,on=False,owned=False,
-                metric=metric,sample_seconds=300,safe=True)
+                metric=metric,direction=direction,sample_seconds=300,safe=True)
             t+=300
         for n in range(42):
             dt=n*5.
             response=gain*(1-math.exp(-max(0,dt-10)/28))
             p.observe(context=context,at=t,value=start+direction*response,
-                on=True,owned=True,metric=metric,sample_seconds=300,safe=True)
+                on=True,owned=True,metric=metric,direction=direction,sample_seconds=300,safe=True)
             t+=300
         accepted=p.observe(context=context,at=t,value=start+direction*gain,
-            on=False,owned=False,metric=metric,sample_seconds=300,safe=True)
+            on=False,owned=False,metric=metric,direction=direction,sample_seconds=300,safe=True)
         assert accepted,(k,p.ledger())
         t+=300
     result=p.summary(metric=metric,sample_seconds=300)
@@ -55,20 +55,20 @@ assert not restored.on and restored.last_on is None
 assert restored.summary(metric="temperature",sample_seconds=300)["valid_cycles"]==5
 # The same sensor and device in opposite direction is a distinct plant.
 restored.observe(context=context+"cool",at=t,value=20.,on=False,owned=False,
-                 metric="temperature",sample_seconds=300,safe=True)
+                 metric="temperature",direction=1,sample_seconds=300,safe=True)
 assert not restored.cycles
 # No learning from unowned or interrupted runs, or from unknown sensors.
 a=passive.PassiveObserver()
 ctx=passive.identity("no-owner","heat")
 for n in range(8):
     a.observe(context=ctx,at=t+n*300,value=20.,on=False,owned=False,
-              metric="temperature",sample_seconds=300,safe=True)
+              metric="temperature",direction=1,sample_seconds=300,safe=True)
 for n in range(35):
     a.observe(context=ctx,at=t+(8+n)*300,value=20.+n*.1,on=True,owned=False,
-              metric="temperature",sample_seconds=300,safe=True)
+              metric="temperature",direction=1,sample_seconds=300,safe=True)
 assert not a.cycles
 a.observe(context=ctx,at=t+44*300,value=None,on=False,owned=False,
-          metric="temperature",sample_seconds=300,safe=False)
+          metric="temperature",direction=1,sample_seconds=300,safe=False)
 assert not a.cycles and not a.on
 # No false inference from a ramp without plateau, regardless of duration.
 assert passive._fit_episode(
