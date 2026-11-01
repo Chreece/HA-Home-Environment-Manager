@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Valvottavat huoneet",
+        "title": "Choose rooms",
         "description": "Valvottavat huoneet → lähde → Yleiset asetukset",
         "data": {
           "areas": "Valvottavat huoneet"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Valitse",
-        "description": "Valitse: Huoneet / Sää ja varoitukset / Ilmoitukset (valinnainen) / Lisäraja-arvot",
+        "description": "**Choose rooms** — Valvottavat huoneet → lähde → Yleiset asetukset\n\n**Settings · …** — Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.\n\n**Yleiset asetukset** — Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Alue · asetukset",
           "setup_general": "Yleiset asetukset"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Valvottavat huoneet → lähde → Yleiset asetukset",
+          "general_settings": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Valitse",
-        "description": "Valitse: Huoneet / Sää ja varoitukset / Ilmoitukset (valinnainen) / Lisäraja-arvot",
+        "description": "**Choose rooms** — Valvottavat huoneet → lähde → Yleiset asetukset\n\n**Settings · …** — Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.\n\n**Yleiset asetukset** — Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Yleiset asetukset"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Valvottavat huoneet → lähde → Yleiset asetukset",
+          "general_settings": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin."
+        }
       },
       "window_sensors": {
         "title": "Ohita ikkuna-anturit",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Valvottavat huoneet",
+        "title": "Choose rooms",
         "description": "Valvottavat huoneet → lähde → Yleiset asetukset",
         "data": {
           "areas": "Valvottavat huoneet"
