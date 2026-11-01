@@ -1138,7 +1138,8 @@ class EquipmentRuntime:
         complete = observer.observe(
             context=context, at=self.clock(), value=measured.get(metric),
             on=is_on, owned=bool(record.get("power", {}).get(cap.primary)),
-            metric=metric, sample_seconds=cfg["sample_seconds"], safe=bool(valid),
+            metric=metric, direction=1 if mode == "heat" else -1,
+            sample_seconds=cfg["sample_seconds"], safe=bool(valid),
         )
         if not complete:
             return
