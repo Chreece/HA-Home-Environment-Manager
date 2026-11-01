@@ -298,9 +298,9 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
             return bool(cap and cap.fan_modes and not cap.fan_percentage)
         if self._key == "pid_adaptation_mode":
             cap = equipment.capabilities(self._manager, self._spec)
-            return bool(self.controller_settings["control_mode"] == "pid"
-                        and (cap is None or "pid" in
-                             equipment.control_modes(self._manager, self._spec)))
+            return bool(cap is not None
+                        and self.controller_settings["control_mode"] == "pid"
+                        and "pid" in equipment.control_modes(self._manager, self._spec))
         if self._key == "pid_calibration_method":
             # Show persisted setup across device startup, but allow edits only
             # after the physical endpoint re-advertises native DRY/PID support.
