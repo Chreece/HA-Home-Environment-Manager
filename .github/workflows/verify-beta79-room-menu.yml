@@ -35,8 +35,11 @@ jobs:
                   assert len(steps['setup_general']['data'])>=45
                   assert all('global_threshold_'+k in steps['setup_general']['data']
                              for k in data[section]['step']['thresholds']['data'])
-                  if section=='options':
-                      assert list(steps['init']['menu_options'])==['choose_rooms','general_settings']
+                  menu=steps['reconfigure' if section=='config' else 'init']['menu_options']
+                  assert next(iter(menu))=='choose_rooms'
+                  assert list(menu)[-1]=='setup_general'
+                  assert all(f'room_{i}' in menu for i in range(64))
+                  assert all(f'room_{i}_name' in menu[f'room_{i}'] for i in range(64))
           print('PASS: 38 locale menu and all room/general labels')
           PY
           git diff --check
