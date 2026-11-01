@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Rum der skal overvåges",
+        "title": "Choose rooms",
         "description": "Rum der skal overvåges → kilde → Generelle indstillinger",
         "data": {
           "areas": "Rum der skal overvåges"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Vælg",
-        "description": "Vælg: Rum / Vejr og advarsler / Meddelelser (valgfrit) / Avancerede grænser",
+        "description": "**Choose rooms** — Rum der skal overvåges → kilde → Generelle indstillinger\n\n**Settings · …** — Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.\n\n**Generelle indstillinger** — Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Område · indstillinger",
           "setup_general": "Generelle indstillinger"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Rum der skal overvåges → kilde → Generelle indstillinger",
+          "general_settings": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Vælg",
-        "description": "Vælg: Rum / Vejr og advarsler / Meddelelser (valgfrit) / Avancerede grænser",
+        "description": "**Choose rooms** — Rum der skal overvåges → kilde → Generelle indstillinger\n\n**Settings · …** — Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.\n\n**Generelle indstillinger** — Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Generelle indstillinger"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Rum der skal overvåges → kilde → Generelle indstillinger",
+          "general_settings": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder."
+        }
       },
       "window_sensors": {
         "title": "Udeluk vinduessensorer",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Rum der skal overvåges",
+        "title": "Choose rooms",
         "description": "Rum der skal overvåges → kilde → Generelle indstillinger",
         "data": {
           "areas": "Rum der skal overvåges"
