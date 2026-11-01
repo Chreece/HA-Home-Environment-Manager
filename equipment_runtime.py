@@ -31,6 +31,10 @@ from .pid_fan_capacity import (
     model_is_valid as fan_capacity_model_is_valid,
 )
 from .pid_calibration import tune as tune_pid
+from .pid_passive import (
+    PassiveObserver, identity as passive_identity,
+    bounded_gains as passive_bounded_gains, AUTO_INTERVAL_S,
+)
 from . import equipment_model as model
 
 _LOGGER = logging.getLogger(__name__)
@@ -125,6 +129,11 @@ class EquipmentRuntime:
         # Diagnostic-only snapshots while an independently powered device is
         # OFF: PID P-term prepared, I held at zero, D reseeded from live sensor.
         self._pid_offline_previews: dict[str, dict] = {}
+        # Partial natural response waveforms stay in memory, never persisted
+        # into HA Recorder or its entity attributes. Only a handful of
+        # completed, verified cycle statistics are saved on completion.
+        self._pid_passive_observers: dict[str, PassiveObserver] = {}
+        self._pid_passive_tasks: dict[str, asyncio.Task] = {}
         self._store = None
         self._ready = False
         self._active = False
@@ -231,6 +240,13 @@ class EquipmentRuntime:
         self._profile_wake.clear()
         self._native_session_observations.clear()
         self._pid_offline_previews.clear()
+        tasks = tuple(self._pid_passive_tasks.values())
+        for task in tasks:
+            task.cancel()
+        if tasks:
+            await asyncio.gather(*tasks, return_exceptions=True)
+        self._pid_passive_tasks.clear()
+        self._pid_passive_observers.clear()
         if self._ready:
             await self._save()
 
@@ -745,6 +761,8 @@ class EquipmentRuntime:
                 raise HomeAssistantError("Unsupported control method")
             if new["pid_calibration_method"] not in model.PID_CALIBRATION_METHODS:
                 raise HomeAssistantError("Unsupported deterministic PID tuning method")
+            if new["pid_adaptation_mode"] not in model.PID_ADAPTATION_MODES:
+                raise HomeAssistantError("Unsupported passive PID learning policy")
             # Model fields are inert commissioning inputs. A zero means "not
             # measured yet"; it is never interpreted as a physical response.
             for key, limits in model.PID_MODEL_FIELDS.items():
@@ -967,6 +985,146 @@ class EquipmentRuntime:
             self._status(spec, "settings_updated", control_mode=new["control_mode"])
         if getattr(self.manager, "_active", False):
             self.manager._recalculate(initial=True)
+
+    async def _pid_passive_observe(
+        self, spec: model.ManagedDevice, cfg: dict, cap: model.Capabilities,
+        plan: dict, target: dict, measured: dict, record: dict,
+        state: Any, mode: str, metric: str, goal: float,
+        soft: bool, power: bool,
+    ) -> None:
+        """Record only naturally occurring, safely verified ON/OFF responses.
+
+        The controller's existing authority, occupancy, sleep, window,
+        compressor and power guards have already passed. This observer never
+        calls a hardware service, changes the controller's output decision or
+        triggers test cycles. A thermostat MODE alone is not evidence of heat
+        delivery: its actual hvac_action must confirm the physical activity.
+        """
+        key = spec.identifier
+        if cfg.get("pid_adaptation_mode", "observe") == "disabled":
+            self._pid_passive_observers.pop(key, None)
+            return
+        if (cfg.get("control_mode") != "pid"
+                or cfg.get("requested_mode") not in ("heat", "cool", "dry")
+                or mode != cfg["requested_mode"]
+                or metric not in ("temperature", "humidity")
+                or cap.domain not in ("climate", "humidifier", "switch", "input_boolean")
+                or not (soft and power)):
+            observer = self._pid_passive_observers.get(key)
+            if observer is not None:
+                observer.interrupt()
+            return
+        # Never mix sensor means whose membership changes when a sensor drops
+        # out; use exactly one verified physical feedback entity.
+        source_ids = measured.get(metric + "_selected_entities")
+        if source_ids is not None:
+            feedback = source_ids[0] if isinstance(source_ids, list) and len(source_ids) == 1 else None
+        else:
+            feedback = measured.get(metric + "_entity")
+        if not isinstance(feedback, str) or not feedback.startswith("sensor."):
+            observer = self._pid_passive_observers.get(key)
+            if observer is not None:
+                observer.interrupt()
+            return
+        valid = (
+            not record.get("pending") and not record.get("paused")
+            and not (record.get("upstream") or {}).get("pending")
+            and cfg.get("requested_mode") == mode
+            and self._active and self._ready
+        )
+        action = state.attributes.get("hvac_action")
+        is_on = not output_off(state)
+        if cap.domain == "climate" and is_on:
+            expected = {"heat": "heating", "cool": "cooling", "dry": "drying"}[mode]
+            valid = valid and action == expected
+        if cap.domain == "humidifier" and mode != "dry":
+            valid = False
+        # Source identity, operating direction, target, preset and fan
+        # settings are tied to a model. All context changes revoke the
+        # old response evidence; no cross-room or cross-mode learning.
+        context = passive_identity(
+            spec.area_id, list(spec.source_entities), cap.primary,
+            mode, metric, feedback, model.profile_name(cfg, plan),
+            round(float(goal), 2),
+            state.attributes.get("fan_mode"), state.attributes.get("percentage"),
+        )
+        saved = record.get("pid_passive")
+        if isinstance(saved, dict) and saved.get("context") != context:
+            record.pop("pid_passive", None)
+            self._pid_passive_observers.pop(key, None)
+            await self._save()
+            saved = None
+        observer = self._pid_passive_observers.get(key)
+        if observer is None:
+            observer = self._pid_passive_observers[key] = PassiveObserver(saved)
+        complete = observer.observe(
+            context=context, at=self.clock(), value=measured.get(metric),
+            on=is_on, owned=bool(record.get("power", {}).get(cap.primary)),
+            metric=metric, sample_seconds=cfg["sample_seconds"], safe=bool(valid),
+        )
+        if not complete:
+            return
+        summary = observer.summary(metric=metric, sample_seconds=cfg["sample_seconds"])
+        # The persisted record has only six short numerical summaries, not the
+        # raw temperature/humidity history. Write at most once per cycle.
+        record["pid_passive"] = {**observer.ledger(), "summary": summary}
+        await self._save()
+        self._presentation_updates.request(key)
+        if (cfg["pid_adaptation_mode"] == "bounded"
+                and summary.get("confidence") == "high"
+                and summary.get("status") == "validated"
+                and output_off(state) and not record.get("power")
+                and not record.get("pending")
+                and key not in self._pid_passive_tasks):
+            # A separate task waits for the controller's existing per-device
+            # lock. No nested lock/deadlock, no service or forced OFF cycle.
+            task = self.hass.async_create_task(
+                self._pid_passive_apply(spec, context, summary["last_cycle_at"])
+            )
+            self._pid_passive_tasks[key] = task
+            task.add_done_callback(
+                lambda finished, identifier=key:
+                    self._pid_passive_tasks.pop(identifier, None)
+            )
+
+    async def _pid_passive_apply(
+        self, spec: model.ManagedDevice, context: str, cycle_at: float,
+    ) -> None:
+        """Optionally apply ≤10% PI gain changes after independent validation.
+
+        async_update rechecks the complete authorization and physical OFF
+        evidence *inside* the existing controller lock before saving.
+        """
+        try:
+            cfg = model.settings(self.manager, spec)
+            record = self.records.get(spec.identifier, {})
+            evidence = record.get("pid_passive", {})
+            summary = evidence.get("summary", {}) if isinstance(evidence, dict) else {}
+            proposal = summary.get("suggested_gains")
+            if not isinstance(proposal, dict):
+                return
+            new = passive_bounded_gains(cfg, proposal)
+            if new is None:
+                return
+            await self.async_update(spec, {
+                **new,
+                "pid_last_calibration": {
+                    "method": "passive_imc_lambda",
+                    "source": "natural_owned_cycles",
+                    "at": self.clock(),
+                    "cycle_at": cycle_at,
+                    "cycles": summary["valid_cycles"],
+                    "model": summary["identified_model"],
+                    "previous_gains": {k: cfg[k] for k in ("kp", "ki", "kd")},
+                    "rate_limit": "10_percent_per_24h",
+                },
+            }, passive_auto=(context, cycle_at, {k: cfg[k] for k in ("kp","ki","kd")}))
+        except asyncio.CancelledError:
+            raise
+        except (HomeAssistantError, ValueError, KeyError, TypeError):
+            # An interrupted/changed/offline physical system is NORMAL:
+            # preserve the observed proposal without applying any gains.
+            _LOGGER.debug("Passive PID gain update safely held for %s", spec.identifier)
 
     async def async_apply_pid_calibration(self, spec: model.ManagedDevice) -> None:
         """Apply a deterministic measured-model tune, never perform a step test.
@@ -2390,6 +2548,10 @@ class EquipmentRuntime:
                 self._status(spec, "select_single_direction_for_pid")
                 return
             if cfg["control_mode"] == "pid":
+                await self._pid_passive_observe(
+                    spec, cfg, cap, plan, target, measured, record, state,
+                    mode, metric, goal, soft, power,
+                )
                 from .pid_phase import phase_decision
                 previous, memory, anchor = self._memory.get(
                     spec.identifier, (None, None, self.clock())
