@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Rom som skal overvåkes",
+        "title": "Choose rooms",
         "description": "Rom som skal overvåkes → kilde → Generelle innstillinger",
         "data": {
           "areas": "Rom som skal overvåkes"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Velg",
-        "description": "Velg: Rom / Vær og varsler / Kunngjøringer (valgfritt) / Avanserte grenseverdier",
+        "description": "**Choose rooms** — Rom som skal overvåkes → kilde → Generelle innstillinger\n\n**Settings · …** — Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.\n\n**Generelle innstillinger** — Velg felles kilder og varslingsutganger. Lagre fullfører oppsettet. Driftsinnstillingene blir på husets og rommenes enheter.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Område · innstillinger",
           "setup_general": "Generelle innstillinger"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Rom som skal overvåkes → kilde → Generelle innstillinger",
+          "general_settings": "Velg felles kilder og varslingsutganger. Lagre fullfører oppsettet. Driftsinnstillingene blir på husets og rommenes enheter."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Velg",
-        "description": "Velg: Rom / Vær og varsler / Kunngjøringer (valgfritt) / Avanserte grenseverdier",
+        "description": "**Choose rooms** — Rom som skal overvåkes → kilde → Generelle innstillinger\n\n**Settings · …** — Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.\n\n**Generelle innstillinger** — Velg felles kilder og varslingsutganger. Lagre fullfører oppsettet. Driftsinnstillingene blir på husets og rommenes enheter.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Generelle innstillinger"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Rom som skal overvåkes → kilde → Generelle innstillinger",
+          "general_settings": "Velg felles kilder og varslingsutganger. Lagre fullfører oppsettet. Driftsinnstillingene blir på husets og rommenes enheter."
+        }
       },
       "window_sensors": {
         "title": "Ekskluder vindussensorer",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Rom som skal overvåkes",
+        "title": "Choose rooms",
         "description": "Rom som skal overvåkes → kilde → Generelle innstillinger",
         "data": {
           "areas": "Rom som skal overvåkes"
