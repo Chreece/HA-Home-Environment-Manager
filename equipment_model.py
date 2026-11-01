@@ -43,6 +43,7 @@ NUMBER_FIELDS = {
 }
 QUIET_FLAGS = ("quiet_sleep", "quiet_occupied")
 from .pid_calibration import METHODS as PID_CALIBRATION_METHODS, MODEL_FIELDS as PID_MODEL_FIELDS
+from .pid_passive import MODES as PID_ADAPTATION_MODES
 from .pid_fan_capacity import (
     CAPACITY_FIELDS as PID_FAN_CAPACITY_FIELDS,
     CAPACITY_METHODS as PID_FAN_CAPACITY_METHODS,
@@ -67,6 +68,8 @@ DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None
             "pause_on_window_open": True,
             "quiet_fan_mode": None, "profile_targets": {}, "profile_fans": {},
             "pid_calibration_method": "manual", "pid_last_calibration": None,
+            # Observe only; never alter gains without per-device opt-in.
+            "pid_adaptation_mode": "observe",
             "pid_fan_capacity_mode": "legacy",
             "pid_fan_capacity_for_mode": "choose",
             "pid_fan_capacity_models": {},
