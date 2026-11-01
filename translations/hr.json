@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Sobe za praćenje",
+        "title": "Choose rooms",
         "description": "Sobe za praćenje → izvor → Opće postavke",
         "data": {
           "areas": "Sobe za praćenje"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Odaberite",
-        "description": "Odaberite: Prostorije / Vrijeme i upozorenja / Obavijesti (neobavezno) / Napredni pragovi",
+        "description": "**Choose rooms** — Sobe za praćenje → izvor → Opće postavke\n\n**Settings · …** — Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.\n\n**Opće postavke** — Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Područje · postavke",
           "setup_general": "Opće postavke"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Sobe za praćenje → izvor → Opće postavke",
+          "general_settings": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Odaberite",
-        "description": "Odaberite: Prostorije / Vrijeme i upozorenja / Obavijesti (neobavezno) / Napredni pragovi",
+        "description": "**Choose rooms** — Sobe za praćenje → izvor → Opće postavke\n\n**Settings · …** — Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.\n\n**Opće postavke** — Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Opće postavke"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Sobe za praćenje → izvor → Opće postavke",
+          "general_settings": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba."
+        }
       },
       "window_sensors": {
         "title": "Isključi senzore prozora",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Sobe za praćenje",
+        "title": "Choose rooms",
         "description": "Sobe za praćenje → izvor → Opće postavke",
         "data": {
           "areas": "Sobe za praćenje"
