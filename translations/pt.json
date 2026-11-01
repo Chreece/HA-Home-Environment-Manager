@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Divisões a monitorizar",
+        "title": "Choose rooms",
         "description": "Divisões a monitorizar → fonte → Gerais definições",
         "data": {
           "areas": "Divisões a monitorizar"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Selecione",
-        "description": "Selecione: Divisões / Tempo e avisos / Anúncios (opcional) / Limites avançados",
+        "description": "**Choose rooms** — Divisões a monitorizar → fonte → Gerais definições\n\n**Settings · …** — Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.\n\n**Gerais definições** — Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Área · definições",
           "setup_general": "Gerais definições"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Divisões a monitorizar → fonte → Gerais definições",
+          "general_settings": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Selecione",
-        "description": "Selecione: Divisões / Tempo e avisos / Anúncios (opcional) / Limites avançados",
+        "description": "**Choose rooms** — Divisões a monitorizar → fonte → Gerais definições\n\n**Settings · …** — Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.\n\n**Gerais definições** — Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Gerais definições"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Divisões a monitorizar → fonte → Gerais definições",
+          "general_settings": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões."
+        }
       },
       "window_sensors": {
         "title": "Excluir sensores de janela",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Divisões a monitorizar",
+        "title": "Choose rooms",
         "description": "Divisões a monitorizar → fonte → Gerais definições",
         "data": {
           "areas": "Divisões a monitorizar"
