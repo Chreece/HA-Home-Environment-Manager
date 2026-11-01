@@ -671,6 +671,9 @@ class EquipmentRuntime:
                     or summary.get("confidence") != "high"
                     or summary.get("status") != "validated"
                     or summary.get("last_cycle_at") != cycle_at
+                    or not isinstance(saved.get("cycles"), list)
+                    or len(saved["cycles"]) < 5
+                    or saved["cycles"][-1].get("at") != cycle_at
                     or not isinstance(previous, dict)
                     or any(cfg.get(k) != previous.get(k) for k in ("kp","ki","kd"))
                     or self.clock() - cycle_at > 3600
