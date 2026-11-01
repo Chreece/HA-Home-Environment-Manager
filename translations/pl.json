@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Pomieszczenia do monitorowania",
+        "title": "Choose rooms",
         "description": "Pomieszczenia do monitorowania → źródło → Ogólne ustawienia",
         "data": {
           "areas": "Pomieszczenia do monitorowania"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Wybierz",
-        "description": "Wybierz: Pomieszczenia / Pogoda i ostrzeżenia / Komunikaty (opcjonalnie) / Zaawansowane progi",
+        "description": "**Choose rooms** — Pomieszczenia do monitorowania → źródło → Ogólne ustawienia\n\n**Settings · …** — Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.\n\n**Ogólne ustawienia** — Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Obszar · ustawienia",
           "setup_general": "Ogólne ustawienia"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Pomieszczenia do monitorowania → źródło → Ogólne ustawienia",
+          "general_settings": "Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Wybierz",
-        "description": "Wybierz: Pomieszczenia / Pogoda i ostrzeżenia / Komunikaty (opcjonalnie) / Zaawansowane progi",
+        "description": "**Choose rooms** — Pomieszczenia do monitorowania → źródło → Ogólne ustawienia\n\n**Settings · …** — Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.\n\n**Ogólne ustawienia** — Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Ogólne ustawienia"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Pomieszczenia do monitorowania → źródło → Ogólne ustawienia",
+          "general_settings": "Wybierz wspólne źródła i wyjścia powiadomień. Zapis kończy konfigurację. Ustawienia pracy pozostają na urządzeniach domu i pomieszczeń."
+        }
       },
       "window_sensors": {
         "title": "Wyklucz czujniki okien",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Pomieszczenia do monitorowania",
+        "title": "Choose rooms",
         "description": "Pomieszczenia do monitorowania → źródło → Ogólne ustawienia",
         "data": {
           "areas": "Pomieszczenia do monitorowania"
