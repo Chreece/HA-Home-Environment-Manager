@@ -1,0 +1,23 @@
+name: Beta82 passive PID tests
+on:
+  push:
+    branches: ['feat/beta82-passive-pid-adaptation-20261101']
+permissions:
+  contents: read
+concurrency:
+  group: beta82-passive
+  cancel-in-progress: true
+jobs:
+  passive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Pure passive identification, no actuator calls
+        run: |
+          set -euo pipefail
+          python -I -m compileall -q pid_passive.py pid_calibration.py
+          python -I .github/tests/test_beta82_pid_passive.py
+          git diff --check
