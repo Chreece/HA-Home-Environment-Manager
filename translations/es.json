@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Estancias que supervisar",
+        "title": "Elegir habitaciones",
         "description": "Estancias que supervisar → fuente → General ajustes",
         "data": {
           "areas": "Estancias que supervisar"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "Elegir ajustes para editar",
-        "description": "Elige una sección. El resto de ajustes permanecerá sin cambios.",
+        "description": "**Elegir habitaciones** — Estancias que supervisar → fuente → General ajustes\n\n**Ajustes · …** — Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.\n\n**General ajustes** — Selecciona fuentes compartidas y salidas de notificación. Guardar termina la configuración. Los ajustes de funcionamiento quedan en los dispositivos de la casa y las estancias.",
         "menu_options": {
           "choose_rooms": "Elegir habitaciones",
           "room_0": "Ajustes · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Ajustes · {room_63_name}",
           "select_room": "Área · ajustes",
           "setup_general": "General ajustes"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Estancias que supervisar → fuente → General ajustes",
+          "general_settings": "Selecciona fuentes compartidas y salidas de notificación. Guardar termina la configuración. Los ajustes de funcionamiento quedan en los dispositivos de la casa y las estancias."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "Elegir ajustes para editar",
-        "description": "Elige una sección. El resto de ajustes permanecerá sin cambios.",
+        "description": "**Elegir habitaciones** — Estancias que supervisar → fuente → General ajustes\n\n**Ajustes · …** — Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.\n\n**General ajustes** — Selecciona fuentes compartidas y salidas de notificación. Guardar termina la configuración. Los ajustes de funcionamiento quedan en los dispositivos de la casa y las estancias.",
         "menu_options": {
           "choose_rooms": "Elegir habitaciones",
           "room_0": "Ajustes · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "General ajustes"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Estancias que supervisar → fuente → General ajustes",
+          "general_settings": "Selecciona fuentes compartidas y salidas de notificación. Guardar termina la configuración. Los ajustes de funcionamiento quedan en los dispositivos de la casa y las estancias."
+        }
       },
       "window_sensors": {
         "title": "Excluir sensores de ventana",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Estancias que supervisar",
+        "title": "Elegir habitaciones",
         "description": "Estancias que supervisar → fuente → General ajustes",
         "data": {
           "areas": "Estancias que supervisar"
