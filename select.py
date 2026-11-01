@@ -52,6 +52,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
     from . import equipment_model as equipment
     entities.extend(EquipmentSelect(manager, spec, "control_mode")
                     for spec in equipment.specs(manager))
+    # A separate, explicit opt-in to calculated gain changes. Observation is
+    # passive and does not change or authorize any physical device output.
+    entities.extend(EquipmentSelect(manager, spec, "pid_adaptation_mode")
+                    for spec in equipment.specs(manager))
     # A dedicated optional physical relay for EVERY managed output, including
     # switch, numeric, fan, humidifier and climate devices. Never auto-enroll.
     entities.extend(EquipmentPowerSwitchSelect(manager, spec)
@@ -292,6 +296,11 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
         if self._key == "quiet_fan_mode":
             cap = equipment.capabilities(self._manager, self._spec)
             return bool(cap and cap.fan_modes and not cap.fan_percentage)
+        if self._key == "pid_adaptation_mode":
+            cap = equipment.capabilities(self._manager, self._spec)
+            return bool(self.controller_settings["control_mode"] == "pid"
+                        and (cap is None or "pid" in
+                             equipment.control_modes(self._manager, self._spec)))
         if self._key == "pid_calibration_method":
             # Show persisted setup across device startup, but allow edits only
             # after the physical endpoint re-advertises native DRY/PID support.
@@ -309,7 +318,8 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
         if self._key in ("control_mode", "quiet_fan_mode",
-                         "pid_calibration_method", "pid_fan_capacity_mode",
+                         "pid_adaptation_mode", "pid_calibration_method",
+                         "pid_fan_capacity_mode",
                          "pid_fan_capacity_for_mode"):
             # Native mode/feature changes can turn DRY-only PID support on
             # after integration setup. Refresh selector options immediately.
@@ -319,6 +329,8 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
     def options(self):
         if self._key == "control_mode":
             return list(equipment.control_modes(self._manager, self._spec))
+        if self._key == "pid_adaptation_mode":
+            return list(equipment.PID_ADAPTATION_MODES)
         if self._key == "pid_calibration_method":
             return list(equipment.PID_CALIBRATION_METHODS)
         if self._key == "pid_fan_capacity_mode":
@@ -338,6 +350,11 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
         if self._key in ("pid_fan_capacity_mode", "pid_fan_capacity_for_mode"):
             return {**attributes, "pid_fan_capacity_role":
                 "strategy" if self._key == "pid_fan_capacity_mode" else "direction"}
+        if self._key == "pid_adaptation_mode":
+            return {**attributes, "pid_learning_role": "passive_mode",
+                    "disabled": "Do not observe",
+                    "observe": "Suggest gains only; never change Kp/Ki/Kd",
+                    "bounded": "After independent validation, change Kp/Ki by no more than 10% per day while OFF"}
         if self._key == "pid_calibration_method":
             return {**attributes, "pid_calibration_role": "method"}
         return attributes
