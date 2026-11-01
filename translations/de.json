@@ -3384,6 +3384,14 @@
       },
       "shade_lux_entity": {
         "name": "Luxsensor für Beschattung"
+      },
+      "equipment_pid_adaptation_mode": {
+        "name": "PID · {channel}Adaptives Lernen",
+        "state": {
+          "disabled": "Deaktiviert",
+          "observe": "Beobachten und empfehlen",
+          "bounded": "Begrenzte automatische Anpassung (10 % / Tag)"
+        }
       }
     },
     "time": {
