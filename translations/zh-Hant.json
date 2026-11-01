@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "要監測的房間",
+        "title": "Choose rooms",
         "description": "要監測的房間 → 來源 → 一般 設定",
         "data": {
           "areas": "要監測的房間"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ 請選擇",
-        "description": "請選擇: 房間 / 天氣與警報 / 播報（選用） / 進階閾值",
+        "description": "**Choose rooms** — 要監測的房間 → 來源 → 一般 設定\n\n**Settings · …** — 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。\n\n**一般 設定** — 選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "區域 · 設定",
           "setup_general": "一般 設定"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "要監測的房間 → 來源 → 一般 設定",
+          "general_settings": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。"
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ 請選擇",
-        "description": "請選擇: 房間 / 天氣與警報 / 播報（選用） / 進階閾值",
+        "description": "**Choose rooms** — 要監測的房間 → 來源 → 一般 設定\n\n**Settings · …** — 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。\n\n**一般 設定** — 選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "一般 設定"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "要監測的房間 → 來源 → 一般 設定",
+          "general_settings": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。"
+        }
       },
       "window_sensors": {
         "title": "排除窗戶感測器",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "要監測的房間",
+        "title": "Choose rooms",
         "description": "要監測的房間 → 來源 → 一般 設定",
         "data": {
           "areas": "要監測的房間"
