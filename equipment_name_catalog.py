@@ -1661,6 +1661,17 @@ _PID_PARAMETER_LABELS = {
 }
 
 
+# Beta82 selector: generated in-memory naming remains grouped by PID and
+# does not read translations from HA's event loop. The same English fallback
+# is used for shipped languages without a dedicated translated label.
+for _locale, _names in EQUIPMENT_TRANSLATED_NAMES.items():
+    _names["pid_adaptation_mode"] = (
+        "PID · {channel}Προσαρμοστική μάθηση" if _locale == "el" else
+        "PID · {channel}Adaptives Lernen" if _locale == "de" else
+        "PID · {channel}Passive adaptation"
+    )
+
+
 def _pid_parameter_label(key: str) -> str | None:
     if key in _PID_PARAMETER_LABELS:
         return _PID_PARAMETER_LABELS[key]
