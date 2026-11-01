@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Rum att övervaka",
+        "title": "Choose rooms",
         "description": "Rum att övervaka → källa → Allmänna inställningar",
         "data": {
           "areas": "Rum att övervaka"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Välj",
-        "description": "Välj: Rum / Väder och varningar / Meddelanden (valfritt) / Avancerade gränsvärden",
+        "description": "**Choose rooms** — Rum att övervaka → källa → Allmänna inställningar\n\n**Settings · …** — Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.\n\n**Allmänna inställningar** — Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Område · inställningar",
           "setup_general": "Allmänna inställningar"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Rum att övervaka → källa → Allmänna inställningar",
+          "general_settings": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Välj",
-        "description": "Välj: Rum / Väder och varningar / Meddelanden (valfritt) / Avancerade gränsvärden",
+        "description": "**Choose rooms** — Rum att övervaka → källa → Allmänna inställningar\n\n**Settings · …** — Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.\n\n**Allmänna inställningar** — Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Allmänna inställningar"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Rum att övervaka → källa → Allmänna inställningar",
+          "general_settings": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter."
+        }
       },
       "window_sensors": {
         "title": "Undanta fönstersensorer",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Rum att övervaka",
+        "title": "Choose rooms",
         "description": "Rum att övervaka → källa → Allmänna inställningar",
         "data": {
           "areas": "Rum att övervaka"
