@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "要监测的房间",
+        "title": "Choose rooms",
         "description": "要监测的房间 → 来源 → 常规 设置",
         "data": {
           "areas": "要监测的房间"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ 请选择",
-        "description": "请选择: 房间 / 天气与预警 / 播报（可选） / 高级阈值",
+        "description": "**Choose rooms** — 要监测的房间 → 来源 → 常规 设置\n\n**Settings · …** — 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。\n\n**常规 设置** — 选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "区域 · 设置",
           "setup_general": "常规 设置"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "要监测的房间 → 来源 → 常规 设置",
+          "general_settings": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。"
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ 请选择",
-        "description": "请选择: 房间 / 天气与预警 / 播报（可选） / 高级阈值",
+        "description": "**Choose rooms** — 要监测的房间 → 来源 → 常规 设置\n\n**Settings · …** — 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。\n\n**常规 设置** — 选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "常规 设置"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "要监测的房间 → 来源 → 常规 设置",
+          "general_settings": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。"
+        }
       },
       "window_sensors": {
         "title": "排除窗户传感器",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "要监测的房间",
+        "title": "Choose rooms",
         "description": "要监测的房间 → 来源 → 常规 设置",
         "data": {
           "areas": "要监测的房间"
