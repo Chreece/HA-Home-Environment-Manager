@@ -33,7 +33,7 @@ cap=N(primary="climate.unit")
 state=N(state="off",attributes={})
 record={"pid_passive":{
   "context":"valid-heat-room-controller",
-  "cycles":[{"at":now-4000+i*700,"gain":4.,"tau":28.,"dead":10.,"r2":.99}
+  "cycles":[{"at":now-2920+i*700,"gain":4.,"tau":28.,"dead":10.,"r2":.99}
             for i in range(5)],
   "summary":{"confidence":"high","status":"validated",
              "last_cycle_at":now-120,
