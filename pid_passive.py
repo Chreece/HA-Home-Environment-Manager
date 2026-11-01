@@ -62,7 +62,9 @@ def _fit_episode(
     if max(y) > maximum * 1.25 or min(y) < -threshold * 0.45:
         return None
     # An actual plateau, not a drifting background response.
-    if max(y[-4:]) - min(y[-4:]) > 0.14 * amp:
+    # A linear drifting room can appear flat over only a few samples.
+    # Require the final eight observations to be close to equilibrium.
+    if max(y[-8:]) - min(y[-8:]) > 0.12 * amp:
         return None
     # Exclude obvious secondary sources/disturbances and lost samples.
     if any(abs(b - a) > max_jump for a, b in zip(y, y[1:])):
