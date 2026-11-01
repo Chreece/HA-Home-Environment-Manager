@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "İzlenecek odalar",
+        "title": "Choose rooms",
         "description": "İzlenecek odalar → kaynak → Genel ayarlar",
         "data": {
           "areas": "İzlenecek odalar"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Seçin",
-        "description": "Seçin: Odalar / Hava durumu ve uyarılar / Duyurular (isteğe bağlı) / Gelişmiş eşikler",
+        "description": "**Choose rooms** — İzlenecek odalar → kaynak → Genel ayarlar\n\n**Settings · …** — Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.\n\n**Genel ayarlar** — Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Alan · ayarlar",
           "setup_general": "Genel ayarlar"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "İzlenecek odalar → kaynak → Genel ayarlar",
+          "general_settings": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Seçin",
-        "description": "Seçin: Odalar / Hava durumu ve uyarılar / Duyurular (isteğe bağlı) / Gelişmiş eşikler",
+        "description": "**Choose rooms** — İzlenecek odalar → kaynak → Genel ayarlar\n\n**Settings · …** — Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.\n\n**Genel ayarlar** — Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Genel ayarlar"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "İzlenecek odalar → kaynak → Genel ayarlar",
+          "general_settings": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır."
+        }
       },
       "window_sensors": {
         "title": "Pencere sensörlerini hariç tut",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "İzlenecek odalar",
+        "title": "Choose rooms",
         "description": "İzlenecek odalar → kaynak → Genel ayarlar",
         "data": {
           "areas": "İzlenecek odalar"
