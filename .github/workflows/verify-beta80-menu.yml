@@ -1,0 +1,52 @@
+name: Beta80 dynamic menu and HA event loop regression
+on:
+  push:
+    branches:
+      - fix/beta80-room-menu-event-loop-20261101
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Actual production menu entrypoints and translation executor
+        run: |
+          set -euo pipefail
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I .github/tests/test_beta79_room_reconfigure.py
+          python -I .github/tests/test_beta80_menu_init.py
+          python -I .github/tests/test_beta79_general_form.py
+          git diff --check
+      - name: Preserve room authority and physical-output safety behavior
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta78_room_occupancy.py
+          python -I .github/tests/test_beta77_offline_supply_resume.py
+          python -I .github/tests/test_beta77_dry_only_target.py
+          python -I .github/tests/test_beta75_native_supply_recovery.py
+          python -I .github/tests/test_beta74_upstream_dwell.py
+          python -I .github/tests/test_beta73_restart_power_history.py
+          python -I .github/tests/test_beta72_resume_running.py
+      - name: Validate shipped locale packs
+        run: |
+          python -I - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('translations')
+          assert len(list(p.glob('*.json')))==38
+          for f in p.glob('*.json'):
+              d=json.loads(f.read_text(encoding='utf-8'))
+              for section in ('config','options'):
+                  steps=d[section]['step']
+                  assert steps['room_settings']['title']
+                  assert steps['room_settings']['data']['occupancy_sensors']
+                  assert steps['init' if section=='options' else 'reconfigure']['menu_options']['choose_rooms']
+          print('BETA80_38_LANGUAGES=PASS')
+          PY
