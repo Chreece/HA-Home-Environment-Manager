@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Camere de monitorizat",
+        "title": "Choose rooms",
         "description": "Camere de monitorizat → sursă → Generale setări",
         "data": {
           "areas": "Camere de monitorizat"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Alegeți",
-        "description": "Alegeți: Camere / Vreme și avertizări / Anunțuri (opțional) / Praguri avansate",
+        "description": "**Choose rooms** — Camere de monitorizat → sursă → Generale setări\n\n**Settings · …** — Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.\n\n**Generale setări** — Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Zonă · setări",
           "setup_general": "Generale setări"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Camere de monitorizat → sursă → Generale setări",
+          "general_settings": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Alegeți",
-        "description": "Alegeți: Camere / Vreme și avertizări / Anunțuri (opțional) / Praguri avansate",
+        "description": "**Choose rooms** — Camere de monitorizat → sursă → Generale setări\n\n**Settings · …** — Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.\n\n**Generale setări** — Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Generale setări"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Camere de monitorizat → sursă → Generale setări",
+          "general_settings": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor."
+        }
       },
       "window_sensors": {
         "title": "Exclude senzori de fereastră",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Camere de monitorizat",
+        "title": "Choose rooms",
         "description": "Camere de monitorizat → sursă → Generale setări",
         "data": {
           "areas": "Camere de monitorizat"
