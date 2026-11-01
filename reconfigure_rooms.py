@@ -20,15 +20,14 @@ from .room_setup import areas, select, field
 from . import room_sources as sources
 
 
-def _locale_menu(hass: Any, context: Any) -> tuple[str, str, str]:
+def _locale_menu(language: str) -> tuple[str, str, str]:
     """Resolve the dialog's locale for runtime-labelled area menu options.
 
     HA accepts menu_options as a mapping from step ID to literal label.
     Reuse our shipped translation files instead of inventing a new locale
     catalog or assuming the browser language matches HA's system language.
     """
-    language = context.get("language") if isinstance(context, dict) else None
-    language = language or getattr(getattr(hass, "config", None), "language", "en")
+    # Runs in Home Assistant's executor, never on the asyncio event loop.
     text = str(language or "en").replace("_", "-")
     translations = Path(__file__).parent / "translations"
     for candidate in dict.fromkeys((text, text.split("-")[0], "en")):
@@ -68,9 +67,17 @@ class ReconfigureRoomsMixin:
                 result.append((area, record.name))
         return result
 
-    def _room_edit_menu(self) -> dict[str, str]:
-        choose, general, room_template = _locale_menu(
-            self.hass, getattr(self, "context", {})
+    async def _room_edit_menu(self) -> dict[str, str]:
+        context = getattr(self, "context", None)
+        language = context.get("language") if isinstance(context, dict) else None
+        language = language or getattr(
+            getattr(self.hass, "config", None), "language", "en"
+        )
+        # Locale JSON is packaged with the integration but reading it from
+        # HA's event loop triggers the blocking-I/O detector. Resolve the
+        # three menu labels off-loop while retaining all shipped languages.
+        choose, general, room_template = await self.hass.async_add_executor_job(
+            _locale_menu, str(language)
         )
         result = {"choose_rooms": choose}
         # menu_options is explicitly a mapping of step IDs to literal display
