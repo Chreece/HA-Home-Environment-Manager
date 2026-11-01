@@ -38,8 +38,8 @@ jobs:
                   menu=steps['reconfigure' if section=='config' else 'init']['menu_options']
                   assert next(iter(menu))=='choose_rooms'
                   assert list(menu)[-1]=='setup_general'
-                  assert all(f'room_{i}' in menu for i in range(64))
-                  assert all(f'room_{i}_name' in menu[f'room_{i}'] for i in range(64))
+                  assert all(f'room_{i}' in menu for i in range(64)), (f,section,'missing room slot')
+                  assert all(f'room_{i}_name' in menu[f'room_{i}'] for i in range(64)), (f,section,'missing room placeholder')
           print('PASS: 38 locale menu and all room/general labels')
           PY
           git diff --check
