@@ -40,7 +40,10 @@ def _locale_menu(language: str) -> tuple[str, str, str]:
             room = steps["room_settings"]["title"]
             return (
                 values.get("choose_rooms", "Choose rooms"),
-                values.get("general_settings", "General settings"),
+                # The shipped menu key is setup_general. Beta79/80 looked
+                # up general_settings instead and always rendered English.
+                values.get("setup_general")
+                or steps["setup_general"]["title"],
                 room,
             )
         except (OSError, TypeError, ValueError, KeyError):
@@ -102,6 +105,22 @@ class ReconfigureRoomsMixin:
                 return open_selected_room
         raise AttributeError(name)
 
+    async def async_step_setup_rooms(self, user_input=None):
+        """Use the established translated form key in edit mode only.
+
+        Existing Home Assistant frontends may retain the older step catalog
+        across a custom integration update. Initial setup is unaffected.
+        """
+        if getattr(self, "_menu_mode", False):
+            return await self.async_step_choose_rooms(user_input)
+        return await super().async_step_setup_rooms(user_input)
+
+    async def async_step_edit_room(self, user_input=None):
+        """Preserve the existing translated room editor step ID."""
+        if getattr(self, "_menu_mode", False):
+            return await self.async_step_room_settings(user_input)
+        return await super().async_step_edit_room(user_input)
+
     async def async_step_choose_rooms(self, user_input=None):
         """Change the list of monitored areas on one page, preserving drafts."""
         options = areas(self.hass)
@@ -122,7 +141,9 @@ class ReconfigureRoomsMixin:
                     sources.restrict_rooms(self._values, selected)
                 return await self._finish()
         return self.async_show_form(
-            step_id="choose_rooms", errors=errors,
+            # HA frontend translations for this established step have been
+            # shipped since initial setup; avoid a new unlocalized Options key.
+            step_id="setup_rooms", errors=errors,
             data_schema=probatio.Schema({
                 probatio.Required(CONF_AREAS, default=default):
                     select(options, multiple=True),
@@ -204,7 +225,7 @@ class ReconfigureRoomsMixin:
                     rooms[area] = cfg
                 return await self._finish()
         return self.async_show_form(
-            step_id="room_settings", errors=errors,
+            step_id="edit_room", errors=errors,
             description_placeholders={"area_name": room.name},
             data_schema=probatio.Schema({
                 field(group, (user_input or {}).get(group, defaults[group])):
