@@ -158,8 +158,8 @@ class PassiveObserver:
 
     def observe(
         self, *, context: str, at: float, value: float | None,
-        on: bool, owned: bool, metric: str, sample_seconds: float,
-        safe: bool,
+        on: bool, owned: bool, metric: str, direction: int,
+        sample_seconds: float, safe: bool,
     ) -> bool:
         """Return True ONLY for one newly accepted completed natural cycle."""
         if context != self.context:
@@ -168,7 +168,8 @@ class PassiveObserver:
             self.proposal = None
             self.status = "collecting"
             self.interrupt()
-        if (not safe or metric not in METRICS or not _finite(at)
+        if (not safe or direction not in (-1, 1)
+                or metric not in METRICS or not _finite(at)
                 or not _finite(value) or not _finite(sample_seconds)
                 or sample_seconds < 120):
             self.interrupt()
@@ -185,7 +186,6 @@ class PassiveObserver:
         if not on:
             completed = False
             if before is True and self.on and self.baseline is not None:
-                direction = 1 if '"heat"' in context else -1
                 episode = _fit_episode(self.on, self.baseline, direction, metric)
                 if episode is not None:
                     episode["at"] = at
