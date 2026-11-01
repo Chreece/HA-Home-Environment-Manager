@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Ambientes para monitorar",
+        "title": "Choose rooms",
         "description": "Ambientes para monitorar → fonte → Gerais configurações",
         "data": {
           "areas": "Ambientes para monitorar"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Selecione",
-        "description": "Selecione: Cômodos / Clima e alertas / Avisos (opcional) / Limites avançados",
+        "description": "**Choose rooms** — Ambientes para monitorar → fonte → Gerais configurações\n\n**Settings · …** — Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.\n\n**Gerais configurações** — Selecione fontes compartilhadas e saídas de notificação. Salvar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e dos ambientes.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Área · configurações",
           "setup_general": "Gerais configurações"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Ambientes para monitorar → fonte → Gerais configurações",
+          "general_settings": "Selecione fontes compartilhadas e saídas de notificação. Salvar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e dos ambientes."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Selecione",
-        "description": "Selecione: Cômodos / Clima e alertas / Avisos (opcional) / Limites avançados",
+        "description": "**Choose rooms** — Ambientes para monitorar → fonte → Gerais configurações\n\n**Settings · …** — Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.\n\n**Gerais configurações** — Selecione fontes compartilhadas e saídas de notificação. Salvar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e dos ambientes.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Gerais configurações"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Ambientes para monitorar → fonte → Gerais configurações",
+          "general_settings": "Selecione fontes compartilhadas e saídas de notificação. Salvar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e dos ambientes."
+        }
       },
       "window_sensors": {
         "title": "Excluir sensores de janela",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Ambientes para monitorar",
+        "title": "Choose rooms",
         "description": "Ambientes para monitorar → fonte → Gerais configurações",
         "data": {
           "areas": "Ambientes para monitorar"
