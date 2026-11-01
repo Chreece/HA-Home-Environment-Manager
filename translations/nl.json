@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Te bewaken kamers",
+        "title": "Choose rooms",
         "description": "Te bewaken kamers → bron → Algemene instellingen",
         "data": {
           "areas": "Te bewaken kamers"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Kies",
-        "description": "Kies: Kamers / Weer en waarschuwingen / Meldingen (optioneel) / Geavanceerde grenswaarden",
+        "description": "**Choose rooms** — Te bewaken kamers → bron → Algemene instellingen\n\n**Settings · …** — Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.\n\n**Algemene instellingen** — Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Ruimte · instellingen",
           "setup_general": "Algemene instellingen"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Te bewaken kamers → bron → Algemene instellingen",
+          "general_settings": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Kies",
-        "description": "Kies: Kamers / Weer en waarschuwingen / Meldingen (optioneel) / Geavanceerde grenswaarden",
+        "description": "**Choose rooms** — Te bewaken kamers → bron → Algemene instellingen\n\n**Settings · …** — Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.\n\n**Algemene instellingen** — Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Algemene instellingen"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Te bewaken kamers → bron → Algemene instellingen",
+          "general_settings": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten."
+        }
       },
       "window_sensors": {
         "title": "Raamsensoren uitsluiten",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Te bewaken kamers",
+        "title": "Choose rooms",
         "description": "Te bewaken kamers → bron → Algemene instellingen",
         "data": {
           "areas": "Te bewaken kamers"
