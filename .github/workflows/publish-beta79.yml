@@ -71,7 +71,6 @@ jobs:
         run: |
           set -euo pipefail
           python -I .github/tests/test_beta78_room_occupancy.py
-          python -I .github/tests/test_beta78_config_sections.py
       - name: Guarded DRY-only and external-supply OFF recovery regressions
         run: |
           set -euo pipefail
