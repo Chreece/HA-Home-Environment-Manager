@@ -2630,10 +2630,16 @@ class EquipmentRuntime:
                 self._status(spec, "select_single_direction_for_pid")
                 return
             if cfg["control_mode"] == "pid":
-                await self._pid_passive_observe(
-                    spec, cfg, cap, plan, target, measured, record, state,
-                    mode, metric, goal, soft, power,
-                )
+                # Older standalone production-tick regression harnesses
+                # compile only tick() without the new observer methods.
+                # The real runtime always has the passive observer; treating
+                # it as an optional diagnostic keeps the actuator path pure.
+                passive = getattr(self, "_pid_passive_observe", None)
+                if passive is not None:
+                    await passive(
+                        spec, cfg, cap, plan, target, measured, record, state,
+                        mode, metric, goal, soft, power,
+                    )
                 from .pid_phase import phase_decision
                 previous, memory, anchor = self._memory.get(
                     spec.identifier, (None, None, self.clock())
