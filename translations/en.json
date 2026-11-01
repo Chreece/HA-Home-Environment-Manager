@@ -145,13 +145,13 @@
         }
       },
       "setup_rooms": {
-        "title": "Rooms to monitor",
-        "description": "Rooms to monitor → source → General settings",
+        "title": "Choose rooms",
+        "description": "Select the Home Assistant rooms this integration should monitor. Each selected room gets its own source and device settings. Removing a room revokes that room's automatic control; other rooms remain unchanged.",
         "data": {
           "areas": "Rooms to monitor"
         },
         "data_description": {
-          "areas": "Rooms to monitor. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control."
+          "areas": "Select one or more Home Assistant areas. Adding a room only adds it to monitoring; it does not start heating, cooling or other equipment. Removing a room safely disables its previous automatic controls."
         }
       },
       "setup_room_sources": {
@@ -178,7 +178,7 @@
       },
       "setup_general": {
         "title": "General settings",
-        "description": "Select shared input sources and notification outputs. Save finishes setup. Operating settings remain on the Home and room devices.",
+        "description": "Shared settings for the whole home: outdoor weather and air measurements, home presence and sleeping rooms, announcements, pollen and global safety thresholds. These settings do not automatically enable equipment control.",
         "data": {
           "weather_entities": "Weather entities",
           "outdoor_sensors": "Outdoor air-quality sensors",
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "Choose settings to edit",
-        "description": "Choose one section. All other settings stay unchanged.",
+        "description": "**Choose rooms** — Add or remove monitored rooms.\n\n**Settings · Room** — Assign this room's windows, sensors, climate devices, shades and occupancy sources.\n\n**General settings** — Configure shared weather, presence/sleep, notifications and limits. Selecting a device does not enable automatic operation.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Room settings",
           "setup_general": "General settings"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Select the Home Assistant rooms this integration should monitor. Each selected room gets its own source and device settings. Removing a room revokes that room's automatic control; other rooms remain unchanged.",
+          "general_settings": "Shared settings for the whole home: outdoor weather and air measurements, home presence and sleeping rooms, announcements, pollen and global safety thresholds. These settings do not automatically enable equipment control."
         }
       },
       "init": {
@@ -1078,17 +1082,17 @@
       },
       "choose_rooms": {
         "title": "Choose rooms",
-        "description": "Rooms to monitor → source → General settings",
+        "description": "Select the Home Assistant rooms this integration should monitor. Each selected room gets its own source and device settings. Removing a room revokes that room's automatic control; other rooms remain unchanged.",
         "data": {
           "areas": "Rooms to monitor"
         },
         "data_description": {
-          "areas": "Rooms to monitor. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control."
+          "areas": "Select one or more Home Assistant areas. Adding a room only adds it to monitoring; it does not start heating, cooling or other equipment. Removing a room safely disables its previous automatic controls."
         }
       },
       "room_settings": {
         "title": "Settings · {area_name}",
-        "description": "Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+        "description": "Select the sensors and equipment that belong to this room. Each group can have multiple sources; an empty selection stays empty. Simply selecting equipment here never authorizes automatic control—use the individual controller's controls for that.",
         "data": {
           "windows": "Windows",
           "air_quality": "Air quality and environmental sensors",
@@ -1100,14 +1104,14 @@
           "occupancy_sensors": "Occupancy/presence sensors in this room"
         },
         "data_description": {
-          "windows": "Windows. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "air_quality": "Air quality and environmental sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "temperature": "Temperature. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "humidity": "Humidity. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "pressure": "Pressure sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "windows": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
+          "air_quality": "Select indoor CO₂, particulate matter, VOC and other air-quality sensors assigned to this room. Multiple valid sources can contribute measurements.",
+          "temperature": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
+          "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
+          "pressure": "Select pressure sensors for this room, if installed. Leave empty when no such sensor is available.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
-          "occupancy_sensors": "Select actual room presence/occupancy binary sensors. A positive value means occupied; an unavailable sensor does not prove an empty room."
+          "occupancy_sensors": "Select the actual room-presence/occupancy binary sensors. A detected presence means occupied; an unknown sensor never proves the room is empty."
         }
       },
       "select_room": {
@@ -1119,7 +1123,7 @@
       },
       "edit_room": {
         "title": "Settings · {area_name}",
-        "description": "Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+        "description": "Select the sensors and equipment that belong to this room. Each group can have multiple sources; an empty selection stays empty. Simply selecting equipment here never authorizes automatic control—use the individual controller's controls for that.",
         "data": {
           "windows": "Windows",
           "air_quality": "Air quality and environmental sensors",
@@ -1131,14 +1135,14 @@
           "occupancy_sensors": "Occupancy/presence sensors in this room"
         },
         "data_description": {
-          "windows": "Windows. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "air_quality": "Air quality and environmental sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "temperature": "Temperature. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "humidity": "Humidity. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "pressure": "Pressure sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "windows": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
+          "air_quality": "Select indoor CO₂, particulate matter, VOC and other air-quality sensors assigned to this room. Multiple valid sources can contribute measurements.",
+          "temperature": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
+          "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
+          "pressure": "Select pressure sensors for this room, if installed. Leave empty when no such sensor is available.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
-          "occupancy_sensors": "Select actual room presence/occupancy binary sensors. A positive value means occupied; an unavailable sensor does not prove an empty room."
+          "occupancy_sensors": "Select the actual room-presence/occupancy binary sensors. A detected presence means occupied; an unknown sensor never proves the room is empty."
         }
       }
     },
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "Choose settings to edit",
-        "description": "Choose one section. All other settings stay unchanged.",
+        "description": "**Choose rooms** — Add or remove monitored rooms.\n\n**Settings · Room** — Assign this room's windows, sensors, climate devices, shades and occupancy sources.\n\n**General settings** — Configure shared weather, presence/sleep, notifications and limits. Selecting a device does not enable automatic operation.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "General settings"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Select the Home Assistant rooms this integration should monitor. Each selected room gets its own source and device settings. Removing a room revokes that room's automatic control; other rooms remain unchanged.",
+          "general_settings": "Shared settings for the whole home: outdoor weather and air measurements, home presence and sleeping rooms, announcements, pollen and global safety thresholds. These settings do not automatically enable equipment control."
+        }
       },
       "window_sensors": {
         "title": "Window sensor exclusions",
@@ -2126,13 +2134,13 @@
         }
       },
       "setup_rooms": {
-        "title": "Rooms to monitor",
-        "description": "Rooms to monitor → source → General settings",
+        "title": "Choose rooms",
+        "description": "Select the Home Assistant rooms this integration should monitor. Each selected room gets its own source and device settings. Removing a room revokes that room's automatic control; other rooms remain unchanged.",
         "data": {
           "areas": "Rooms to monitor"
         },
         "data_description": {
-          "areas": "Rooms to monitor. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control."
+          "areas": "Select one or more Home Assistant areas. Adding a room only adds it to monitoring; it does not start heating, cooling or other equipment. Removing a room safely disables its previous automatic controls."
         }
       },
       "setup_room_sources": {
@@ -2159,7 +2167,7 @@
       },
       "setup_general": {
         "title": "General settings",
-        "description": "Select shared input sources and notification outputs. Save finishes setup. Operating settings remain on the Home and room devices.",
+        "description": "Shared settings for the whole home: outdoor weather and air measurements, home presence and sleeping rooms, announcements, pollen and global safety thresholds. These settings do not automatically enable equipment control.",
         "data": {
           "weather_entities": "Weather entities",
           "outdoor_sensors": "Outdoor air-quality sensors",
@@ -2280,17 +2288,17 @@
       },
       "choose_rooms": {
         "title": "Choose rooms",
-        "description": "Rooms to monitor → source → General settings",
+        "description": "Select the Home Assistant rooms this integration should monitor. Each selected room gets its own source and device settings. Removing a room revokes that room's automatic control; other rooms remain unchanged.",
         "data": {
           "areas": "Rooms to monitor"
         },
         "data_description": {
-          "areas": "Rooms to monitor. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control."
+          "areas": "Select one or more Home Assistant areas. Adding a room only adds it to monitoring; it does not start heating, cooling or other equipment. Removing a room safely disables its previous automatic controls."
         }
       },
       "room_settings": {
         "title": "Settings · {area_name}",
-        "description": "Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+        "description": "Select the sensors and equipment that belong to this room. Each group can have multiple sources; an empty selection stays empty. Simply selecting equipment here never authorizes automatic control—use the individual controller's controls for that.",
         "data": {
           "windows": "Windows",
           "air_quality": "Air quality and environmental sensors",
@@ -2302,14 +2310,14 @@
           "occupancy_sensors": "Occupancy/presence sensors in this room"
         },
         "data_description": {
-          "windows": "Windows. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "air_quality": "Air quality and environmental sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "temperature": "Temperature. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "humidity": "Humidity. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "pressure": "Pressure sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "windows": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
+          "air_quality": "Select indoor CO₂, particulate matter, VOC and other air-quality sensors assigned to this room. Multiple valid sources can contribute measurements.",
+          "temperature": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
+          "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
+          "pressure": "Select pressure sensors for this room, if installed. Leave empty when no such sensor is available.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
-          "occupancy_sensors": "Select actual room presence/occupancy binary sensors. A positive value means occupied; an unavailable sensor does not prove an empty room."
+          "occupancy_sensors": "Select the actual room-presence/occupancy binary sensors. A detected presence means occupied; an unknown sensor never proves the room is empty."
         }
       },
       "select_room": {
@@ -2321,7 +2329,7 @@
       },
       "edit_room": {
         "title": "Settings · {area_name}",
-        "description": "Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+        "description": "Select the sensors and equipment that belong to this room. Each group can have multiple sources; an empty selection stays empty. Simply selecting equipment here never authorizes automatic control—use the individual controller's controls for that.",
         "data": {
           "windows": "Windows",
           "air_quality": "Air quality and environmental sensors",
@@ -2333,14 +2341,14 @@
           "occupancy_sensors": "Occupancy/presence sensors in this room"
         },
         "data_description": {
-          "windows": "Windows. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "air_quality": "Air quality and environmental sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "temperature": "Temperature. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "humidity": "Humidity. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "pressure": "Pressure sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "windows": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
+          "air_quality": "Select indoor CO₂, particulate matter, VOC and other air-quality sensors assigned to this room. Multiple valid sources can contribute measurements.",
+          "temperature": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
+          "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
+          "pressure": "Select pressure sensors for this room, if installed. Leave empty when no such sensor is available.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
-          "occupancy_sensors": "Select actual room presence/occupancy binary sensors. A positive value means occupied; an unavailable sensor does not prove an empty room."
+          "occupancy_sensors": "Select the actual room-presence/occupancy binary sensors. A detected presence means occupied; an unknown sensor never proves the room is empty."
         }
       }
     },
