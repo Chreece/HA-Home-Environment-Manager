@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Stanze da monitorare",
+        "title": "Seleziona stanze",
         "description": "Stanze da monitorare → fonte → Generali impostazioni",
         "data": {
           "areas": "Stanze da monitorare"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Seleziona",
-        "description": "Seleziona: Stanze / Meteo e allerte / Annunci (facoltativi) / Soglie avanzate",
+        "description": "**Seleziona stanze** — Stanze da monitorare → fonte → Generali impostazioni\n\n**Impostazioni · …** — Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.\n\n**Generali impostazioni** — Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze.",
         "menu_options": {
           "choose_rooms": "Seleziona stanze",
           "room_0": "Impostazioni · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Impostazioni · {room_63_name}",
           "select_room": "Area · impostazioni",
           "setup_general": "Generali impostazioni"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Stanze da monitorare → fonte → Generali impostazioni",
+          "general_settings": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Seleziona",
-        "description": "Seleziona: Stanze / Meteo e allerte / Annunci (facoltativi) / Soglie avanzate",
+        "description": "**Seleziona stanze** — Stanze da monitorare → fonte → Generali impostazioni\n\n**Impostazioni · …** — Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.\n\n**Generali impostazioni** — Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze.",
         "menu_options": {
           "choose_rooms": "Seleziona stanze",
           "room_0": "Impostazioni · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Generali impostazioni"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Stanze da monitorare → fonte → Generali impostazioni",
+          "general_settings": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze."
+        }
       },
       "window_sensors": {
         "title": "Escludi sensori finestra",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Stanze da monitorare",
+        "title": "Seleziona stanze",
         "description": "Stanze da monitorare → fonte → Generali impostazioni",
         "data": {
           "areas": "Stanze da monitorare"
