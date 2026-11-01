@@ -646,13 +646,80 @@ class EquipmentRuntime:
                     return "Existing power owner must reconcile this device OFF before transfer"
         return None
 
-    async def async_update(self, spec: model.ManagedDevice, changes: dict) -> None:
+    def _pid_passive_auto_authorized(
+        self, spec: model.ManagedDevice, changes: dict, proof: tuple,
+    ) -> bool:
+        """Fail closed under the per-controller update lock, with no IO."""
+        try:
+            context, cycle_at, previous = proof
+            cfg = model.settings(self.manager, spec)
+            record = self.records.get(spec.identifier, {})
+            saved = record.get("pid_passive", {})
+            summary = saved.get("summary", {})
+            cap = model.capabilities(self.manager, spec)
+            native = self.hass.states.get(cap.primary) if cap is not None else None
+            if (not self._active or not self._ready
+                    or not self._current_spec(spec)
+                    or cfg.get("control_mode") != "pid"
+                    or cfg.get("pid_adaptation_mode") != "bounded"
+                    or cfg.get("requested_mode") not in ("heat", "cool", "dry")
+                    or self.clock() - self._started < STARTUP_SECONDS
+                    or cap is None or native is None or not output_off(native)
+                    or record.get("paused") or record.get("pending")
+                    or record.get("power") or (record.get("upstream") or {}).get("pending")
+                    or saved.get("context") != context
+                    or summary.get("confidence") != "high"
+                    or summary.get("status") != "validated"
+                    or summary.get("last_cycle_at") != cycle_at
+                    or not isinstance(previous, dict)
+                    or any(cfg.get(k) != previous.get(k) for k in ("kp","ki","kd"))
+                    or self.clock() - cycle_at > 3600
+                    or not all(c["at"] <= self.clock()
+                               for c in saved.get("cycles", []))):
+                return False
+            soft, power = model.permission(self.manager, spec, cap)
+            if not (soft and power):
+                return False
+            # Recheck live room, sleep, source, window and foreign-owner gates;
+            # a stale proposal cannot act on a newly changed physical system.
+            plan = model.plan_for(self.manager, spec)
+            if self._gate(spec, cap, cfg, plan, cfg["requested_mode"]) is not None:
+                return False
+            last = cfg.get("pid_last_calibration")
+            if isinstance(last, dict) and last.get("method") == "passive_imc_lambda":
+                stamp = last.get("at")
+                old_cycle = last.get("cycle_at")
+                if (not isinstance(stamp, (int,float))
+                        or self.clock() - stamp < AUTO_INTERVAL_S
+                        or not isinstance(old_cycle, (int,float))
+                        or sum(c["at"] > old_cycle for c in saved["cycles"]) < 2):
+                    return False
+            expected = passive_bounded_gains(cfg, summary["suggested_gains"])
+            if (expected is None
+                    or any(changes.get(k) != expected.get(k)
+                           for k in ("kp", "ki", "kd"))
+                    or set(changes) != {"kp", "ki", "kd", "pid_last_calibration"}):
+                return False
+            evidence = changes["pid_last_calibration"]
+            return (isinstance(evidence, dict)
+                    and evidence.get("method") == "passive_imc_lambda"
+                    and evidence.get("cycle_at") == cycle_at)
+        except (AttributeError, KeyError, ValueError, TypeError):
+            return False
+
+    async def async_update(
+        self, spec: model.ManagedDevice, changes: dict, *,
+        passive_auto: tuple | None = None,
+    ) -> None:
         """Validate all requested edits atomically; no hidden hardware permission."""
         async with self._lock(spec.identifier):
             if not self._ready:
                 raise HomeAssistantError("Controller state storage is unavailable")
             if not self._current_spec(spec):
                 raise HomeAssistantError("Controller sources are no longer assigned to this area")
+            if (passive_auto is not None and
+                    not self._pid_passive_auto_authorized(spec, changes, passive_auto)):
+                raise HomeAssistantError("Passive PID gain change is no longer safe or validated")
             if set(changes) == {"pause_on_window_open"}:
                 value = changes["pause_on_window_open"]
                 if type(value) is not bool:
@@ -978,10 +1045,21 @@ class EquipmentRuntime:
                         raise HomeAssistantError(
                             "Power supply identity or ownership changed during selection"
                         )
+                if (passive_auto is not None and
+                        not self._pid_passive_auto_authorized(spec, changes, passive_auto)):
+                    raise HomeAssistantError("Passive PID context changed before saving new gains")
                 self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
             self._memory.pop(spec.identifier, None)
             self._fan_allocations.pop(spec.identifier, None)
             self._pid_offline_previews.pop(spec.identifier, None)
+            if passive_auto is None and (
+                    old["control_mode"] != new["control_mode"]
+                    or any(k in changes and old.get(k) != new.get(k)
+                           for k in ("kp", "ki", "kd", "pid_calibration_method"))):
+                # Manual tuning or mode changes supersede old passive fits.
+                self._pid_passive_observers.pop(spec.identifier, None)
+                record.pop("pid_passive", None)
+                await self._save()
             self._status(spec, "settings_updated", control_mode=new["control_mode"])
         if getattr(self.manager, "_active", False):
             self.manager._recalculate(initial=True)
