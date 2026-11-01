@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Figyelendő helyiségek",
+        "title": "Choose rooms",
         "description": "Figyelendő helyiségek → forrás → Általános beállítások",
         "data": {
           "areas": "Figyelendő helyiségek"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Válassz",
-        "description": "Válassz: Helyiségek / Időjárás és riasztások / Értesítések (opcionális) / Speciális határértékek",
+        "description": "**Choose rooms** — Figyelendő helyiségek → forrás → Általános beállítások\n\n**Settings · …** — Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.\n\n**Általános beállítások** — Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Terület · beállítások",
           "setup_general": "Általános beállítások"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Figyelendő helyiségek → forrás → Általános beállítások",
+          "general_settings": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Válassz",
-        "description": "Válassz: Helyiségek / Időjárás és riasztások / Értesítések (opcionális) / Speciális határértékek",
+        "description": "**Choose rooms** — Figyelendő helyiségek → forrás → Általános beállítások\n\n**Settings · …** — Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.\n\n**Általános beállítások** — Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Általános beállítások"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Figyelendő helyiségek → forrás → Általános beállítások",
+          "general_settings": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak."
+        }
       },
       "window_sensors": {
         "title": "Ablakérzékelők kizárása",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Figyelendő helyiségek",
+        "title": "Choose rooms",
         "description": "Figyelendő helyiségek → forrás → Általános beállítások",
         "data": {
           "areas": "Figyelendő helyiségek"
