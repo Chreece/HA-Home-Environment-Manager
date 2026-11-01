@@ -145,7 +145,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Ruangan untuk dipantau",
+        "title": "Choose rooms",
         "description": "Ruangan untuk dipantau → sumber → Umum pengaturan",
         "data": {
           "areas": "Ruangan untuk dipantau"
@@ -282,7 +282,7 @@
       },
       "reconfigure": {
         "title": "⚙️ Pilih",
-        "description": "Pilih: Ruangan / Cuaca dan peringatan / Pengumuman (opsional) / Ambang batas lanjutan",
+        "description": "**Choose rooms** — Ruangan untuk dipantau → sumber → Umum pengaturan\n\n**Settings · …** — Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.\n\n**Umum pengaturan** — Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -351,6 +351,10 @@
           "room_63": "Settings · {room_63_name}",
           "select_room": "Area · pengaturan",
           "setup_general": "Umum pengaturan"
+        },
+        "menu_option_descriptions": {
+          "choose_rooms": "Ruangan untuk dipantau → sumber → Umum pengaturan",
+          "general_settings": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan."
         }
       },
       "init": {
@@ -1221,7 +1225,7 @@
     "step": {
       "init": {
         "title": "⚙️ Pilih",
-        "description": "Pilih: Ruangan / Cuaca dan peringatan / Pengumuman (opsional) / Ambang batas lanjutan",
+        "description": "**Choose rooms** — Ruangan untuk dipantau → sumber → Umum pengaturan\n\n**Settings · …** — Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.\n\n**Umum pengaturan** — Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan.",
         "menu_options": {
           "choose_rooms": "Choose rooms",
           "room_0": "Settings · {room_0_name}",
@@ -1292,7 +1296,11 @@
           "setup_general": "Umum pengaturan"
         },
         "data": {},
-        "data_description": {}
+        "data_description": {},
+        "menu_option_descriptions": {
+          "choose_rooms": "Ruangan untuk dipantau → sumber → Umum pengaturan",
+          "general_settings": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan."
+        }
       },
       "window_sensors": {
         "title": "Kecualikan sensor jendela",
@@ -2126,7 +2134,7 @@
         }
       },
       "setup_rooms": {
-        "title": "Ruangan untuk dipantau",
+        "title": "Choose rooms",
         "description": "Ruangan untuk dipantau → sumber → Umum pengaturan",
         "data": {
           "areas": "Ruangan untuk dipantau"
