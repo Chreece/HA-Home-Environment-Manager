@@ -86,6 +86,8 @@ class AirQualityManager:
         self.away_windows = AwayWindowAlert(self)
         self.presence_continuity = PresenceContinuity(self.hass, self.entry.entry_id)
         self.equipment = EquipmentRuntime(self)
+        from .device_faults import NativeDeviceFaultMonitor
+        self.faults = NativeDeviceFaultMonitor(self)
         from .shade_cooling import ShadeCoolingController
         self.shading = ShadeCoolingController(self)
         self.pid = ClimatePidCoordinator(self.hass, self.entry.entry_id, report_changed=self._pid_updated)
@@ -606,6 +608,10 @@ class AirQualityManager:
             async_track_time_interval(self.hass, self._on_interval, timedelta(minutes=5)),
             async_track_time_interval(self.hass, self._on_fast_climate_interval, timedelta(seconds=30)),
         ))
+        # Establish current native error states as a baseline. These are
+        # visible immediately, but are not falsely announced as new faults
+        # after every Home Assistant restart.
+        self.faults.start()
         self._recalculate(initial=True)
 
     @callback
@@ -787,6 +793,9 @@ class AirQualityManager:
                   hierarchy.get("controllers", {}).values()),
             }:
                 return
+        # Native registry membership may change when a manufacturer
+        # integration adds its own diagnostic/error entity after startup.
+        self.faults.refresh()
         self._queue_source_refresh()
 
     @callback
@@ -869,6 +878,9 @@ class AirQualityManager:
     @callback
     def _on_state_changed(self, event: Event) -> None:
         entity_id = event.data.get("entity_id")
+        # Fault monitoring has its own exact device-registry source index,
+        # independent of the environmental measurement selections.
+        self.faults.state_changed(entity_id)
         if entity_id not in self._tracked:
             return
         from .room_sources import native as native_room_source
@@ -1129,6 +1141,7 @@ class AirQualityManager:
             self._source_refresh_handle = None
         self.away_windows.stop()
         controllers = (
+            ("fault_monitor",self.faults),
             ("equipment",self.equipment),
             ("shading",self.shading),
             ("presence_continuity",self.presence_continuity),
