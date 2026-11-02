@@ -102,24 +102,43 @@ from .equipment_entity import EquipmentEntity
 
 
 class EquipmentResumeButton(EquipmentEntity, ButtonEntity):
+    """Explicitly choose Automatic/PID; no physical output is forced."""
     _attr_entity_category = EntityCategory.CONFIG
-    _attr_icon = "mdi:play-pause"
+    _attr_icon = "mdi:play-circle-outline"
 
     def __init__(self, manager, spec):
+        # Preserve the existing entity ID and automation subscriptions.
         self._equipment_init(manager, spec, "resume")
 
     @property
+    def available(self):
+        runtime = self._manager.equipment
+        cfg = self.controller_settings
+        record = runtime.records.get(self._spec.identifier, {})
+        upstream = record.get("upstream", {}) if isinstance(record, dict) else {}
+        blocked = bool(record.get("paused") or record.get("pending")
+                       or isinstance(upstream, dict) and (
+                           upstream.get("paused") or upstream.get("pending")))
+        return bool(getattr(runtime, "_ready", False)
+                    and (cfg["control_mode"] not in ("automatic", "pid") or blocked))
+
+    @property
     def extra_state_attributes(self):
+        cfg = self.controller_settings
         return {
             **super().extra_state_attributes,
-            "controller_resume_role": "check_and_continue",
+            "controller_resume_role": "continue_automatic",
+            "automatic_already_selected": (
+                cfg["control_mode"] in ("automatic", "pid")
+                and not self.available
+            ),
             "native_resume_recovery": self._manager.equipment.resume_information(
                 self._spec
             ),
         }
 
     async def async_press(self):
-        await self._manager.equipment.async_resume(self._spec)
+        await self._manager.equipment.async_continue_automatic(self._spec)
 
 
 class EquipmentCalibrationButton(EquipmentEntity, ButtonEntity):
