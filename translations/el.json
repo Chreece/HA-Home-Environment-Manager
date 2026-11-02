@@ -3257,6 +3257,9 @@
       },
       "shade_lux_enabled": {
         "name": "Χρήση αισθητήρα φωτεινότητας για σκίαση"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Αναγγελία σφαλμάτων · {channel}"
       }
     },
     "select": {

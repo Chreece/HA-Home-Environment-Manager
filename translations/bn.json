@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "সূর্যের ছায়ার জন্য আলোর সেন্সর ব্যবহার করুন"
+      },
+      "equipment_announce_device_errors": {
+        "name": "ডিভাইসের ত্রুটির ঘোষণা · {channel}"
       }
     },
     "select": {

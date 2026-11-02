@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "Brug luxsensor til solafskærmning"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Annoncer enhedsfejl · {channel}"
       }
     },
     "select": {

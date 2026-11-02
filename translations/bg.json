@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "Използване на сензор за осветеност за засенчване"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Известяване за грешки на устройството · {channel}"
       }
     },
     "select": {

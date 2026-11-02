@@ -3257,6 +3257,9 @@
       },
       "shade_lux_enabled": {
         "name": "Use lux sensor for solar shading"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Announce device errors · {channel}"
       }
     },
     "select": {

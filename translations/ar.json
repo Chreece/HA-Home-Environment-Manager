@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "استخدام مستشعر الإضاءة للتظليل الشمسي"
+      },
+      "equipment_announce_device_errors": {
+        "name": "إعلان أخطاء الجهاز · {channel}"
       }
     },
     "select": {
