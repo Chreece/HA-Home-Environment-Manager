@@ -24,6 +24,8 @@ from . import equipment_model as model
 # minimums take precedence, including any stricter physical room/device rule.
 UPSTREAM_MIN_OFF_SECONDS = 600
 UPSTREAM_ACK_SECONDS = 120
+UPSTREAM_COMMAND_MAX_ATTEMPTS = 4  # first request and three safe repeats
+UPSTREAM_COMMAND_RETRY_SECONDS = 30
 # External power is never cycled to diagnose or clear a failed device.
 _SWITCH_STATES = ("off", "on")
 # A physical device must be continuously verified idle, not just outside the
@@ -680,7 +682,7 @@ async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
         return False
     relay["pending"] = {
         "desired": desired, "when": when,
-        "identity": identity, "phase": "intent",
+        "identity": identity, "phase": "intent", "attempts": 1,
         "cold_start": cold_start,
         "min_on_seconds": dwell[0],
         "min_off_seconds": dwell[1],
@@ -714,6 +716,7 @@ async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
                 target={"entity_id": entity}, blocking=True,
             )
         relay["pending"]["phase"] = "commanded"
+        relay["pending"]["last_attempt_at"] = runtime.clock()
         await runtime._save()
         return True
     except Exception:
@@ -810,6 +813,126 @@ def prepare_offline_pid(runtime: Any, spec: Any, cap: Any, cfg: dict,
     }
 
 
+async def retry_pending_supply(
+    runtime: Any, spec: Any, record: dict, identity: dict,
+    observed: Any, now: float,
+) -> None:
+    """Repeat the same switch ON/OFF up to 3 times, never toggle to diagnose.
+
+    Every repeated physical command uses fresh policy, dedicated switch
+    identity, live demand, minimum dwell and native-idle safety gates.
+    An interrupted or failing service call retains its uncertain intent.
+    """
+    relay = record["upstream"]
+    pending = relay.get("pending")
+    if not isinstance(pending, dict):
+        return
+    attempts = pending.get("attempts")
+    last = finite(pending.get("last_attempt_at"), 0, now)
+    first = finite(pending.get("when"), 0, now)
+    if (pending.get("phase") != "commanded"
+            or type(attempts) is not int
+            or not 1 <= attempts <= UPSTREAM_COMMAND_MAX_ATTEMPTS
+            or last is None or first is None or last < first):
+        relay["paused"] = "upstream_retry_intent_uncertain"
+        await runtime._save()
+        runtime._status(spec, "paused", reason=relay["paused"])
+        return
+    if now - last < UPSTREAM_COMMAND_RETRY_SECONDS:
+        runtime._status(
+            spec, "awaiting_physical_acknowledgement",
+            reason="upstream_switch_waiting_for_ack",
+            command_attempts=attempts, command_retries_completed=attempts - 1,
+        )
+        return
+    if attempts == UPSTREAM_COMMAND_MAX_ATTEMPTS:
+        relay["paused"] = "upstream_switch_ack_missing"
+        await runtime._save()
+        runtime._status(
+            spec, "paused", reason=relay["paused"],
+            command_attempts=attempts,
+            command_retries_completed=UPSTREAM_COMMAND_MAX_ATTEMPTS - 1,
+        )
+        return
+
+    cfg = model.settings(runtime.manager, spec)
+    before_cfg = dict(cfg)
+    entity, desired = identity["entity"], pending["desired"]
+    cold_start = pending.get("cold_start") is True
+
+    def safe() -> bool:
+        live = runtime.hass.states.get(entity)
+        current_cfg = model.settings(runtime.manager, spec)
+        if (not runtime._active or not runtime._ready
+                or relay.get("paused") or relay.get("pending") is not pending
+                or pending.get("identity") != identity
+                or current_cfg != before_cfg
+                or current_cfg.get("power_switch_entity") != entity
+                or live is not observed
+                or permitted_supply(runtime.manager, spec, entity, identity) is None
+                or not runtime._current_spec(spec)):
+            return False
+        if cold_start:
+            return cold_start_dispatch_safe(
+                runtime, spec, record, current_cfg, entity
+            )
+        return _dispatch_safe(
+            runtime, spec, record, current_cfg, entity, desired
+        )
+
+    if (not safe()
+            or not runtime.hass.services.has_service("switch", "turn_" + desired)):
+        relay["paused"] = "upstream_retry_policy_or_feedback_changed"
+        await runtime._save()
+        runtime._status(spec, "paused", reason=relay["paused"])
+        return
+
+    previous_last = pending["last_attempt_at"]
+    pending["attempts"] += 1
+    pending["last_attempt_at"] = now
+    pending["phase"] = "retry_intent"
+    await runtime._save()
+    try:
+        async with runtime._commands:
+            if not safe():
+                # No repeat was sent. If HA updated to the requested state,
+                # the ordinary ACK handler can still accept it next tick.
+                pending["attempts"] -= 1
+                pending["last_attempt_at"] = previous_last
+                pending["phase"] = "commanded"
+                await runtime._save()
+                if runtime.hass.states.get(entity) is not observed:
+                    live = runtime.hass.states.get(entity)
+                    if live is not None and live.state == desired:
+                        return
+                relay["paused"] = "upstream_retry_policy_or_feedback_changed"
+                await runtime._save()
+                runtime._status(spec, "paused", reason=relay["paused"])
+                return
+            await runtime.hass.services.async_call(
+                "switch", "turn_" + desired, {},
+                target={"entity_id": entity}, blocking=True,
+            )
+        pending["phase"] = "commanded"
+        await runtime._save()
+        runtime._status(
+            spec, "awaiting_physical_acknowledgement",
+            reason="upstream_switch_waiting_for_ack",
+            command_attempts=pending["attempts"],
+            command_retries_completed=pending["attempts"] - 1,
+        )
+    except BaseException as error:
+        # Cancellation preserves the durable retry intent (restart must
+        # reconcile it); a service exception also pauses uncertain hardware.
+        if isinstance(error, (KeyboardInterrupt, SystemExit, GeneratorExit)):
+            raise
+        if isinstance(error, __import__("asyncio").CancelledError):
+            raise
+        relay["paused"] = "upstream_retry_service_failed_or_uncertain"
+        await runtime._save()
+        runtime._status(spec, "paused", reason=relay["paused"])
+
+
 async def before_tick(runtime: Any, spec: Any) -> bool:
     """Return True when outlet control handled/held the native control tick.
 
@@ -884,6 +1007,9 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
                 )
             relay["idle_since"] = None
             await runtime._save()
+        elif "attempts" in pending:
+            await retry_pending_supply(runtime, spec, record, identity, observed, now)
+            return True
         elif now-pending["when"] > UPSTREAM_ACK_SECONDS:
             relay["paused"] = "upstream_switch_ack_missing"
             await runtime._save()
