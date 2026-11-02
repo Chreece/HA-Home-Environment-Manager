@@ -122,6 +122,34 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = manager
     entry.async_on_unload(async_watch_room_hubs(hass, entry))
 
+    # Mobile Companion actionable buttons return a unique, unguessable
+    # per-proposal action token. The event can only reach the exact pending
+    # owned device; native hardware and current gains are checked again by
+    # the same guarded approval path as the HA button entities.
+    from .pid_review import decode_mobile_action, is_pending
+    from . import equipment_model as equipment_model
+
+    def _pid_mobile_review_action(event):
+        decision = decode_mobile_action(event.data.get("action"))
+        if decision is None:
+            return
+        action, token = decision
+        for spec in equipment_model.specs(manager):
+            review = manager.equipment.records.get(
+                spec.identifier, {}
+            ).get("pid_passive_review")
+            if is_pending(review) and review.get("id") == token:
+                hass.async_create_task(
+                    manager.equipment.async_review_pid(
+                        spec, action, token=token
+                    )
+                )
+                return
+
+    entry.async_on_unload(hass.bus.async_listen(
+        "mobile_app_notification_action", _pid_mobile_review_action
+    ))
+
     if not hass.services.has_service(DOMAIN, "announce"):
         async def async_announce_action(call: ServiceCall) -> ServiceResponse:
             managers = list(hass.data.get(DOMAIN, {}).values())
