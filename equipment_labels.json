@@ -8,7 +8,7 @@
     "quiet_occupied": "Quiet when in room",
     "quiet_percentage": "Quiet fan percentage",
     "quiet_fan_mode": "Quiet fan mode",
-    "resume": "Reconcile and resume"
+    "resume": "Continue Automatic"
   },
   "el": {
     "climate": "Ελεγκτής κλίματος",
@@ -19,7 +19,7 @@
     "quiet_occupied": "Αθόρυβα όταν υπάρχει παρουσία",
     "quiet_percentage": "Ποσοστό ανεμιστήρα αθόρυβης λειτουργίας",
     "quiet_fan_mode": "Λειτουργία ανεμιστήρα αθόρυβης λειτουργίας",
-    "resume": "Επαλήθευση και συνέχιση"
+    "resume": "Συνέχιση αυτόματης λειτουργίας"
   },
   "de": {
     "climate": "Klimaregler",
@@ -30,7 +30,7 @@
     "quiet_occupied": "Leiser Betrieb bei Anwesenheit",
     "quiet_percentage": "Lüftergrenze für leisen Betrieb",
     "quiet_fan_mode": "Native leise Lüfterstufe",
-    "resume": "Abgleichen und fortsetzen"
+    "resume": "Automatik fortsetzen"
   },
   "fr": {
     "climate": "Régulateur climatique",

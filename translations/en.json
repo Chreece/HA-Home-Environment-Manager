@@ -3413,7 +3413,7 @@
         "name": "Recalibrate with current room and outdoor readings"
       },
       "equipment_resume": {
-        "name": "Control · {channel}Reconcile and resume"
+        "name": "Control · {channel}Continue Automatic"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Apply · Calibration"

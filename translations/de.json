@@ -3413,7 +3413,7 @@
         "name": "Mit aktuellen Temperaturwerten neu kalibrieren"
       },
       "equipment_resume": {
-        "name": "Steuerung · {channel}Abgleichen und fortsetzen"
+        "name": "Steuerung · {channel}Automatik fortsetzen"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Anwenden · Kalibrierung"

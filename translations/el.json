@@ -3413,7 +3413,7 @@
         "name": "Επαναβαθμονόμηση με τις τρέχουσες θερμοκρασίες"
       },
       "equipment_resume": {
-        "name": "Έλεγχος · {channel}Επαλήθευση και συνέχιση"
+        "name": "Έλεγχος · {channel}Συνέχιση αυτόματης λειτουργίας"
       },
       "equipment_pid_apply_calibration": {
         "name": "PID · {channel}Εφαρμογή · Βαθμονόμηση"
