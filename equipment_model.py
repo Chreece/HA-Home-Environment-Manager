@@ -67,6 +67,9 @@ DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None
             "power_switch_entity": None,
             "quiet_sleep": False, "quiet_occupied": False,
             "pause_on_window_open": True,
+            # New native fault announcements are independently enabled by
+            # default per selected controller; no synthetic error sensor.
+            "announce_device_errors": True,
             "quiet_fan_mode": None, "profile_targets": {}, "profile_fans": {},
             "pid_calibration_method": "adaptive_suggest", "pid_last_calibration": None,
             # Observe only; never alter gains without per-device opt-in.
