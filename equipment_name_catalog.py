@@ -1661,14 +1661,17 @@ _PID_PARAMETER_LABELS = {
 }
 
 
-# Beta82 selector: generated in-memory naming remains grouped by PID and
-# does not read translations from HA's event loop. The same English fallback
-# is used for shipped languages without a dedicated translated label.
+# One unified PID method, plus native HA Approve/Discard actions.
 for _locale, _names in EQUIPMENT_TRANSLATED_NAMES.items():
-    _names["pid_adaptation_mode"] = (
-        "PID · {channel}Προσαρμοστική μάθηση" if _locale == "el" else
-        "PID · {channel}Adaptives Lernen" if _locale == "de" else
-        "PID · {channel}Passive adaptation"
+    _names["pid_review_approve"] = (
+        "PID · {channel}Έγκριση πρότασης" if _locale == "el" else
+        "PID · {channel}Vorschlag annehmen" if _locale == "de" else
+        "PID · {channel}Approve suggestion"
+    )
+    _names["pid_review_discard"] = (
+        "PID · {channel}Απόρριψη πρότασης" if _locale == "el" else
+        "PID · {channel}Vorschlag verwerfen" if _locale == "de" else
+        "PID · {channel}Discard suggestion"
     )
 
 
