@@ -3479,7 +3479,31 @@
     const open=this._roomsExpanded87?.has(room.area_id)===true;
     const devices=this._managedControllers(room.area_id);
     const activity=_physicalActivities89(devices,this._hass);
-    const airBadges=_roomAirReadings89(room,devices).map(item=>{
+    // Four TOTAL readings at most: temperature, humidity and the two most
+    // useful distinct available environmental metrics. Never scroll a row.
+    // Air/health measurements outrank lux=0 and duplicate source sensors.
+    const priority90={
+      co2:0,pm25:1,aqi:2,pm10:3,mold:4,pm1:5,pm4:6,
+      voc:7,tvoc:7,voc_parts:7,formaldehyde:8,hcho:8,
+      no2:9,o3:10,so2:11,co:12,radon:13,
+      noise:14,sound:14,pressure:15,illuminance:16
+    };
+    const seen90=new Set();
+    const extras90=_roomAirReadings89(room,devices)
+      .filter(item=>item && Number.isFinite(item.value))
+      .sort((a,b)=>{
+        const aKey=String(a.metric||'').toLowerCase();
+        const bKey=String(b.metric||'').toLowerCase();
+        const score=key=>priority90[key]??50;
+        return score(aKey)-score(bKey) ||
+          String(a.name||aKey).localeCompare(String(b.name||bKey));
+      }).filter(item=>{
+        const key=String(item.metric||'').toLowerCase();
+        if(seen90.has(key))return false;
+        seen90.add(key);
+        return true;
+      }).slice(0,2);
+    const airBadges=extras90.map(item=>{
       const metric=String(item.metric).toLowerCase();
       const [short,icon,unit]=_airMetric89[metric] ||
         [String(item.name||metric).slice(0,22),'mdi:gauge',''];
@@ -3557,6 +3581,10 @@
     this._foldInstalled87=true;
     this._roomsExpanded87 ||= new Set();
     this._devicesExpanded87 ||= new Set();
+    const scrolledByUser90=()=>{this._hemScrollEpoch90=(this._hemScrollEpoch90||0)+1};
+    this.addEventListener('wheel',scrolledByUser90,{passive:true});
+    this.addEventListener('touchmove',scrolledByUser90,{passive:true});
+    this.addEventListener('keydown',scrolledByUser90,{passive:true});
     this.shadowRoot.addEventListener('click',event=>{
       // A click on a real source icon or HEM controller name opens its
       // respective HA More Info panel without expanding the device fold.
@@ -3787,13 +3815,60 @@
     if(openHelp)this._openInfo87(openHelp);
     else this._closeInfo87();
   };
+  // HA pushes frequent weather, occupancy and native device updates. The
+  // original _renderContent replaces every card child, which detaches the
+  // browser's current scroll anchor and can jump the Lovelace view upward.
+  // Capture the actual scrolling ancestor(s), including HA shadow roots.
+  // Never scroll to the card top or prevent the user's normal scrolling.
+  proto87._captureScroll90=function(){
+    const positions=[];
+    const seen=new Set();
+    const add=(element)=>{
+      if(!element || seen.has(element) ||
+          typeof element.scrollTop!=='number')return;
+      seen.add(element);
+      if(element.scrollTop>0 && element.scrollHeight>element.clientHeight+1)
+        positions.push([element,element.scrollTop]);
+    };
+    for(let node=this,count=0;node && count<40;
+        node=node.parentNode || node.host,count++){
+      if(node.nodeType===1)add(node);
+    }
+    if(typeof document!=='undefined')add(document.scrollingElement);
+    return positions;
+  };
+  proto87._restoreScroll90=function(positions){
+    for(const [element,offset] of positions||[]) {
+      if(element?.isConnected && element.scrollTop!==offset &&
+          element.scrollHeight>element.clientHeight+1) {
+        element.scrollTop=Math.min(offset,Math.max(
+          0,element.scrollHeight-element.clientHeight
+        ));
+      }
+    }
+  };
   proto87._renderContent=function(force=false) {
     this._installFolds87();
-    const cardBefore=this.shadowRoot.querySelector('ha-card.shell');
+    const before=this.shadowRoot.querySelector('ha-card.shell');
+    const positions=this._captureScroll90();
+    const epoch=this._hemScrollEpoch90||0;
     _renderContent87.call(this,force);
     const card=this.shadowRoot.querySelector('ha-card.shell');
-    if(card && (card!==cardBefore || card.dataset.compact87!=='ready'))
+    if(card && (card!==before || card.dataset.compact87!=='ready'))
       this._compactAfterRender87(card);
+    if(card!==before && positions.length) {
+      // Complete compaction before restoring. HA may move scroll targets
+      // during the browser's following layout; restore once more next frame
+      // only when no fresh user scroll gesture occurred.
+      this._restoreScroll90(positions);
+      const revision=this._hemScrollRevision90=(this._hemScrollRevision90||0)+1;
+      if(typeof requestAnimationFrame==='function')
+        requestAnimationFrame(()=>{
+          if(this.isConnected && revision===this._hemScrollRevision90 &&
+              epoch===(this._hemScrollEpoch90||0))
+            this._restoreScroll90(positions);
+        });
+    }
   };
   const disconnect87=proto87.disconnectedCallback;
   proto87.disconnectedCallback=function(){
@@ -3885,11 +3960,11 @@
       .hem-activity-humidify ha-icon{color:#36cbb8}
       .hem-activity-dry ha-icon{color:#e5ad44}
       .hem-activity-mixed ha-icon{color:#b8a3f8}
-      .hem-room-air89{display:inline-flex;align-items:center;gap:4px;min-width:0;
-        max-width:27%;flex:0 1 auto;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;
-        overscroll-behavior-inline:contain}
+      .hem-room-air89{display:inline-flex;align-items:center;gap:5px;
+        flex:0 1 auto;min-width:0;max-width:37%;overflow:visible}
       .hem-room-air-chip89{display:inline-flex;align-items:center;gap:2px;
-        white-space:nowrap;flex:0 0 auto;font-size:9px;color:var(--aqa-muted)}
+        white-space:nowrap;min-width:0;max-width:83px;flex:0 1 auto;
+        font-size:9px;color:var(--aqa-muted);overflow:hidden;text-overflow:ellipsis}
       .hem-room-air-chip89 ha-icon{--mdc-icon-size:12px;color:var(--aqa-blue)}
       .hem-room-air-chip89 b{font-weight:600;color:var(--aqa-text)}
       .hem-room-air-chip89 small{font-size:8px}
@@ -3979,9 +4054,14 @@
         .hem-room-glance87{gap:4px}
         .hem-room-reading87{font-size:10px}
         .hem-room-reading87 ha-icon{--mdc-icon-size:12px}
-        .hem-room-air89{max-width:19%}
+        .hem-room-air89{max-width:28%}
+        .hem-room-air-chip89{max-width:64px}
         .hem-device-measures87{gap:3px}
         .hem-device-state87{max-width:52px}
+      }
+      @media(max-width:420px){
+        /* Keep the room summary on one row without horizontal scrolling. */
+        .hem-room-air89 .hem-room-air-chip89:nth-child(n+2){display:none}
       }
       @media(max-width:355px){
         .hem-room-active87 .hem-hint87:nth-child(n+2),
