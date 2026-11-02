@@ -230,6 +230,19 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
                 "restart_recovery_blocked") is True,
             "paused_reason": record.get("paused"),
             "command_pending": bool(record.get("pending")),
+            "native_command_attempts": (
+                record["pending"].get("attempts")
+                if isinstance(record.get("pending"), dict) else None
+            ),
+            "native_command_retries_completed": (
+                max(0, record["pending"]["attempts"] - 1)
+                if isinstance(record.get("pending"), dict)
+                and type(record["pending"].get("attempts")) is int else None
+            ),
+            "native_startup_remaining_seconds": observed.get("startup_remaining_seconds"),
+            "pid_demand_reserved_while_reconnecting": (
+                observed.get("pid_demand_reserved") is True
+            ),
             # Read-only, compact recovery guidance. No command payloads or
             # unbounded device histories are exposed in Recorder attributes.
             "native_resume_recovery": (
@@ -243,6 +256,15 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "upstream_pending_command": (
                 upstream.get("pending", {}).get("desired")
                 if isinstance(upstream.get("pending"), dict) else None
+            ),
+            "upstream_command_attempts": (
+                upstream["pending"].get("attempts")
+                if isinstance(upstream.get("pending"), dict) else None
+            ),
+            "upstream_command_retries_completed": (
+                max(0, upstream["pending"]["attempts"] - 1)
+                if isinstance(upstream.get("pending"), dict)
+                and type(upstream["pending"].get("attempts")) is int else None
             ),
             "upstream_pause_reason": upstream.get("paused"),
             "upstream_idle_since": upstream.get("idle_since"),
