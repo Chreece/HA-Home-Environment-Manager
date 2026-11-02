@@ -72,12 +72,24 @@ def _fingerprint(state: Any) -> dict | None:
         return None
     if not isinstance(state.state, str) or len(state.state) > 64:
         return None
-    return {
-        "state": state.state,
-        "attributes": {
-            key: attrs[key] for key in _CONTROL_FIELDS if key in attrs
-        },
-    }
+    # Probe values go into Home Assistant's persistent Store. Reject
+    # non-JSON and unbounded native attributes rather than corrupting the
+    # safety journal or turning Recorder into a raw device-data dump.
+    controls = {}
+    for key in _CONTROL_FIELDS:
+        if key not in attrs:
+            continue
+        value = attrs[key]
+        if isinstance(value, str):
+            if len(value) > 96:
+                return None
+        elif type(value) in (int, float):
+            if not math.isfinite(value):
+                return None
+        elif value is not None and type(value) is not bool:
+            return None
+        controls[key] = value
+    return {"state": state.state, "attributes": controls}
 
 
 def _command_key(pending: Any) -> str | None:
