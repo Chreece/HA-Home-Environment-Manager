@@ -1,0 +1,60 @@
+name: Beta84 unified PID method and actionable approval
+
+on:
+  push:
+    branches: ['feat/beta84-unified-pid-review-20261102']
+  pull_request:
+    branches: ['release/v0.6.0b83']
+
+permissions:
+  contents: read
+
+jobs:
+  pid-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Validate syntax, translation JSON and frontend
+        run: |
+          set -euo pipefail
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I - <<'PY'
+          from pathlib import Path
+          import json
+          for f in Path('.').rglob('*.json'):
+              json.loads(f.read_text(encoding='utf-8'))
+          PY
+      - name: PID selector, review tokens and actual HA notification calls
+        run: python -I .github/tests/test_beta84_unified_review.py
+      - name: Previously validated natural PID calibration and runtime safety
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta82_pid_passive.py
+          python -I .github/tests/test_beta82_runtime_guard.py
+          python -I .github/tests/test_beta81_localization.py
+          python -I .github/tests/test_beta79_room_reconfigure.py
+          python -I .github/tests/test_beta80_menu_init.py
+          python -I .github/tests/test_beta79_general_form.py
+      - name: Supply, compressor, sleep, window and controller regressions
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta83_supply_safety.py
+          python -I .github/tests/test_beta77_offline_supply_resume.py
+          python -I .github/tests/test_beta75_native_supply_recovery.py
+          python -I .github/tests/test_beta74_upstream_dwell.py
+          python -I .github/tests/test_beta73_restart_power_history.py
+          python -I .github/tests/test_beta72_resume_running.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+          python -I .github/tests/test_beta70_pid_profile.py
+          python -I .github/tests/test_beta78_room_occupancy.py
+      - name: Actual Home Assistant event stream
+        run: |
+          python -m pip install 'homeassistant==2026.10.4'
+          python -I .github/tests/test_beta68_events.py
+      - name: Prevent trailing whitespace conflicts
+        run: git diff --check
