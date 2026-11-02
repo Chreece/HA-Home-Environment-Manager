@@ -66,3 +66,59 @@ def phase_decision(
     # Merely changing the profile label without a warmer/cooler target must
     # not produce a surprise pulse. Raising comfort requirements should.
     return signature, True, bool(increased_need or changed_direction)
+
+
+
+def safe_binary_pwm_cycle(
+    demand: float, cycle_s: float, min_on_s: float, min_off_s: float,
+    *, maximum_s: float = 86400.,
+) -> float | None:
+    """Extend a binary PWM period to make small PID demands physically usable.
+
+    With a 600s compressor minimum ON, an 18% duty on a short 1800s
+    period would otherwise request a 324s pulse and *never* turn on.
+    Aggregate an integral number of original periods into a bounded
+    longer cycle, producing one full safe pulse with approximately the
+    same long-term average. Never shorten either native dwell, invent a
+    physical acknowledgement, or start a new pulse by itself. An extremely
+    small demand below one minimum pulse per 24h remains safely idle.
+    """
+    from math import ceil, isfinite
+    args = (demand, cycle_s, min_on_s, min_off_s, maximum_s)
+    if (any(isinstance(v, bool) or not isinstance(v, (int, float))
+            or not isfinite(v) for v in args)
+            or not 0 <= demand <= 100
+            or min_on_s <= 0 or min_off_s <= 0
+            or cycle_s < min_on_s + min_off_s
+            or maximum_s < cycle_s):
+        return None
+    if demand == 0:
+        return None
+    nominal = cycle_s * demand / 100.
+    multiplier = max(1, ceil(min_on_s / nominal - 1e-9))
+    extended = cycle_s * multiplier
+    if extended > maximum_s or extended - min_on_s < min_off_s:
+        return None
+    return extended
+
+
+def binary_pwm_off_phase(
+    demand: float, elapsed: float, cycle: float,
+    min_on: float, min_off: float, *, starting: bool,
+) -> dict:
+    """Expose informational PWM state, never authorize a physical command."""
+    effective = safe_binary_pwm_cycle(demand, cycle, min_on, min_off)
+    if effective is None:
+        return {
+            "state": "demand_below_minimum_safe_pulse" if demand > 0
+                     else "zero_demand",
+            "effective_cycle_seconds": None,
+            "next_window_seconds": None,
+        }
+    phase = elapsed % effective
+    duration = min(effective * demand / 100., effective - min_off)
+    if phase < duration and (not starting or duration-phase >= min_on):
+        return {"state": "on_window", "effective_cycle_seconds": effective,
+                "next_window_seconds": 0.}
+    return {"state": "off_window", "effective_cycle_seconds": effective,
+            "next_window_seconds": max(0., effective - phase)}
