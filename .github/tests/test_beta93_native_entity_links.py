@@ -79,7 +79,10 @@ with sync_playwright() as playwright:
 
     device.locator(':scope > summary').evaluate('(node)=>node.click()')
     assert device.get_attribute('open') is not None
-    section=device.locator('.managed-controller')
+    # The compact wrapper is the managed-controller's child; its parent
+    # retains the HEM metadata while containing the physical-title button.
+    section=device.locator('xpath=..')
+    assert 'managed-controller' in (section.get_attribute('class') or '')
     assert section.get_attribute('data-managed-climate93')==hem
     link=section.locator('button[data-open-physical93]')
     assert link.count()==1
