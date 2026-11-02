@@ -3384,8 +3384,14 @@
   };
   const _airMetric89 = Object.freeze({
     co2:['CO₂','mdi:molecule-co2','ppm'],
+    pm1:['PM1','mdi:blur','µg/m³'],
     pm25:['PM2.5','mdi:blur','µg/m³'],
+    pm4:['PM4','mdi:blur','µg/m³'],
     pm10:['PM10','mdi:blur','µg/m³'],
+    no2:['NO₂','mdi:smog','ppb'],
+    o3:['O₃','mdi:smog','ppb'],
+    so2:['SO₂','mdi:smog','ppb'],
+    co:['CO','mdi:molecule-co','ppm'],
     aqi:['AQI','mdi:air-filter',''],
     tvoc:['TVOC','mdi:chemical-weapon','ppb'],
     voc:['VOC','mdi:chemical-weapon','ppb'],
@@ -3394,7 +3400,10 @@
     radon:['Rn','mdi:radioactive','Bq/m³'],
     pressure:['hPa','mdi:gauge','hPa'],
     illuminance:['Lux','mdi:brightness-5','lx'],
+    sound:['dB','mdi:volume-high','dB'],
     noise:['dB','mdi:volume-high','dB'],
+    pollen:['Pollen','mdi:flower-pollen',''],
+    voc_index:['VOC','mdi:air-filter',''],
     mold:['Mold','mdi:water-alert-outline','%'],
   });
   const _roomAirReadings89 = (room,devices) => {
@@ -3412,7 +3421,8 @@
     }
     return readings.filter(item=>{
       const metric=String(item?.metric||'').toLowerCase();
-      return _airMetric89[metric] && item.available===true &&
+      return metric!=='temperature' && metric!=='temp' &&
+        metric!=='humidity' && item.available===true &&
         typeof item.value==='number' && Number.isFinite(item.value);
     });
   };
@@ -3473,7 +3483,8 @@
     const activity=_physicalActivities89(devices,this._hass);
     const airBadges=_roomAirReadings89(room,devices).map(item=>{
       const metric=String(item.metric).toLowerCase();
-      const [short,icon,unit]=_airMetric89[metric];
+      const [short,icon,unit]=_airMetric89[metric] ||
+        [String(item.name||metric).slice(0,22),'mdi:gauge',''];
       const nativeUnit=typeof item.unit==='string'?item.unit:unit;
       const formatted=this._format(item.value,item.value<10?1:0);
       const label=String(item.name||short)+' · '+formatted+
