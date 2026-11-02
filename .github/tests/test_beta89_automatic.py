@@ -52,6 +52,7 @@ async_set_mode=compile_fn(extract('climate.py','async_set_hvac_mode','ManagedCli
 
 button_ns={}
 available=compile_fn(extract('button.py','available','EquipmentResumeButton'),button_ns)
+available=available.fget if isinstance(available,property) else available
 pause=compile_fn(extract('equipment_runtime.py','_pause','EquipmentRuntime'),{
     'model':Model,'asyncio':asyncio,'deepcopy':deepcopy
 })
