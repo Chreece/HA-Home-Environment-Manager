@@ -2,7 +2,7 @@ name: HEM Beta91 PID restart continuity and stable DOM
 
 on:
   push:
-    branches: ['fix/beta91-restart-pid-stable-dom-20261102']
+    branches: ['fix/beta91-restart-pid-stable-dom-20261102', 'release/v0.6.0b91']
   pull_request:
     branches: ['release/v0.6.0b90']
 
