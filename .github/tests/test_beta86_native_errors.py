@@ -194,13 +194,17 @@ async def run():
     # Original HA error entity is authoritative: state + physical attributes.
     states["sensor.a_error_code"]=state(
         "E07",error_code="E07",error_message="Blocked filter",
-        severity="warning",error_detail="Clean filter",device_class=None,
+        severity="warning",error_detail="Clean filter",
+        error_info={"part":"filter","action":"clean"},
+        device_class=None,
     )
     monitor.state_changed("sensor.a_error_code")
     await drain()
     info=monitor.details(specA)
     assert info["status"]=="warning" and info["code"]=="E07",info
     assert info["description"]=="Blocked filter" and info["active_count"]==1
+    assert "part: filter" in info["info"]["error_info"]
+    assert "action: clean" in info["info"]["error_info"]
     assert info["source_entity_id"]=="sensor.a_error_code"
     assert not monitor.details(specB)["faults"]
     assert len(manager.hass.services.calls)==1
