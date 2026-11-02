@@ -3316,7 +3316,9 @@
         "state": {
           "manual": "Manuell Kp/Ki/Kd",
           "imc_lambda": "IMC / λ",
-          "cohen_coon": "Cohen-Coon"
+          "cohen_coon": "Cohen-Coon",
+          "adaptive_suggest": "Adaptiv · Vorschlag mit Bestätigung",
+          "adaptive_auto": "Adaptiv · Automatisch (max. 10 %/Tag)"
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3414,6 +3416,12 @@
       },
       "equipment_pid_apply_fan_capacity": {
         "name": "PID · {channel}Anwenden · Kalibrierung"
+      },
+      "equipment_pid_review_approve": {
+        "name": "PID · {channel}Vorschlag annehmen"
+      },
+      "equipment_pid_review_discard": {
+        "name": "PID · {channel}Vorschlag verwerfen"
       }
     },
     "climate": {
