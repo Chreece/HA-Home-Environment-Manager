@@ -3291,6 +3291,517 @@
   </style>`; };
   /* HEM_COMPACT76_END */
 
+
+  /* HEM_COMPACT87_START
+   * One-row overview; two-row outdoor conditions; compact, folded rooms and
+   * devices. All native HA controls remain in the expanded content.
+   * The informational popup is in the browser top layer (never clipped).
+   * This patch only changes Lovelace presentation, NEVER hardware commands.
+   */
+  const proto87 = AirQualityAdvisorCard.prototype;
+  const _room87 = proto87._room;
+  const _summary87 = proto87._summary;
+  const _styles87 = proto87._styles;
+  const _renderContent87 = proto87._renderContent;
+  const _deviceIcons87 = {
+    climate:'mdi:thermostat', fan:'mdi:fan', humidifier:'mdi:water-percent',
+    switch:'mdi:power-plug-outline', number:'mdi:valve', input_number:'mdi:valve'
+  };
+  const _deviceState87 = (entry, hass) => {
+    const a=entry.climate?.attributes || {};
+    const sources=Array.isArray(a.source_entity_ids)?a.source_entity_ids:[];
+    for(const id of sources) {
+      const state=hass?.states?.[id];
+      if (!state || ['unavailable','unknown'].includes(state.state)) continue;
+      const action=state.attributes?.hvac_action;
+      if (typeof action==='string') {
+        if (['heating','cooling','drying','fan','fan_only','humidifying'].includes(action))
+          return {active:true,entity:id,action};
+        continue; // HEAT or DRY mode alone is not physical operation.
+      }
+      if (id.startsWith('climate.')) continue;
+      if (state.state==='on' || (['number','input_number'].includes(id.split('.')[0]) &&
+          Number.isFinite(Number(state.state)) && Number(state.state)>0))
+        return {active:true,entity:id,action:'on'};
+    }
+    return {active:false,entity:null,action:'off'};
+  };
+  const _roomLabels87 = language => ({
+    en:{rooms:'Rooms',active:'Active',expand:'Expand room',collapse:'Collapse room',
+      attention:'Needs attention',unavailable:'Missing data',temperature:'Temperature',
+      humidity:'Humidity',devices:'Devices',controls:'Device controls',off:'Off'},
+    de:{rooms:'Räume',active:'Aktiv',expand:'Raum öffnen',collapse:'Raum schließen',
+      attention:'Achtung',unavailable:'Daten fehlen',temperature:'Temperatur',
+      humidity:'Luftfeuchte',devices:'Geräte',controls:'Gerätesteuerung',off:'Aus'},
+    el:{rooms:'Δωμάτια',active:'Ενεργές',expand:'Άνοιγμα δωματίου',collapse:'Κλείσιμο δωματίου',
+      attention:'Χρειάζεται προσοχή',unavailable:'Ελλιπή δεδομένα',temperature:'Θερμοκρασία',
+      humidity:'Υγρασία',devices:'Συσκευές',controls:'Ρυθμίσεις συσκευής',off:'Κλειστό'},
+  }[language] || {
+    rooms:'Rooms',active:'Active',expand:'Expand room',collapse:'Collapse room',
+    attention:'Needs attention',unavailable:'Missing data',temperature:'Temperature',
+    humidity:'Humidity',devices:'Devices',controls:'Device controls',off:'Off'
+  });
+  const _iconHint87 = (icon,label,tone='normal') =>
+    '<span class="hem-hint87 hem-hint-'+tone+'" title="'+escape(label)+
+    '" aria-label="'+escape(label)+'"><ha-icon icon="'+escape(icon)+
+    '" aria-hidden="true"></ha-icon></span>';
+  const _readMetric87 = (room, metric) => {
+    const p=room?.environment?.climate_plan || {};
+    const primary=metric==='temperature'?p.temperature_c:p.equipment_plan?.humidity?.measured_rh;
+    if (typeof primary==='number' && Number.isFinite(primary) &&
+        (metric!=='humidity'||(primary>=0&&primary<=100))) return primary;
+    const values=safeArray(room?.readings).filter(item=>
+      (item.metric===metric || metric==='temperature' && item.metric==='temp') &&
+      item.available!==false && typeof item.value==='number' && Number.isFinite(item.value));
+    return values.length?values[0].value:null;
+  };
+  proto87._summary = function(summary) {
+    const counts=['safe','attention','unknown'].map(k=>
+      Math.max(0,Math.trunc(Number(summary?.[k])||0)));
+    const labels=_roomLabels87(this._language());
+    const icons=['mdi:check-circle-outline','mdi:alert-circle-outline',
+      'mdi:help-circle-outline'];
+    const tones=['good','warn','neutral'];
+    return '<div class="hem-overview87" role="group" aria-label="'+
+      escape(this._t('roomStatus'))+'">'+
+      '<span class="hem-overview-title87">'+this._icon('mdi:home-heart')+
+      '<b>'+escape(labels.rooms)+'</b><strong>'+escape(counts.reduce((a,b)=>a+b,0))+
+      '</strong></span>'+
+      ['safe','attention','unknown'].map((key,i)=>
+        '<span class="hem-overview-stat87 hem-overview-'+tones[i]+'" title="'+
+        escape(this._t(key))+'" aria-label="'+escape(this._t(key))+': '+counts[i]+'">'+
+        this._icon(icons[i])+'<b>'+counts[i]+'</b>'+
+        '<small>'+escape(this._t(key))+'</small></span>').join('')+'</div>';
+  };
+  proto87._room = function(room) {
+    const original=_room87.call(this,room);
+    if(!room || typeof room.area_id!=='string') return original;
+    const labels=_roomLabels87(this._language());
+    const open=this._roomsExpanded87?.has(room.area_id)===true;
+    const devices=this._managedControllers(room.area_id);
+    const active=devices.map(entry=>({entry,state:_deviceState87(entry,this._hass)}))
+      .filter(item=>item.state.active);
+    const temp=_readMetric87(room,'temperature');
+    const humidity=_readMetric87(room,'humidity');
+    const roomStatus=room.status==='attention'?'attention':
+      room.status==='safe'?'safe':'unknown';
+    const alerts=[];
+    if(roomStatus==='attention') alerts.push(_iconHint87(
+      'mdi:alert-circle-outline',labels.attention,'warn'));
+    if(roomStatus==='unknown') alerts.push(_iconHint87(
+      'mdi:help-circle-outline',labels.unavailable,'muted'));
+    if(safeArray(room.windows).some(win=>win.opened===true))
+      alerts.push(_iconHint87('mdi:window-open-variant',
+        this._t('windowOpen'),'warn'));
+    if(room.action==='close')
+      alerts.push(_iconHint87('mdi:window-closed-variant',
+        this._t('closeAdvice'),'warn'));
+    const faultCount=devices.filter(e=>
+      ['warning','error','critical'].includes(e.errorAnnounce?.attributes?.native_error?.status)
+    ).length;
+    if(faultCount) alerts.push(_iconHint87(
+      'mdi:alert-octagon-outline',faultCount+' '+labels.attention,'error'));
+    const blocked=devices.filter(e=>{
+      const code=e.statusInfo?.state?.attributes?.status_code ||
+        e.climate?.attributes?.controller_status?.status || '';
+      return /(paused|blocked|unavailable|failed|error|pid_output_inactive)/i.test(code);
+    }).length;
+    if(blocked) alerts.push(_iconHint87('mdi:alert-outline',
+      blocked+' '+labels.devices+' · '+labels.attention,'warn'));
+    const activeIcons=active.slice(0,3).map(item=>{
+      const domain=item.state.entity.split('.')[0];
+      const name=item.entry.climate?.attributes?.friendly_name || item.state.entity;
+      return _iconHint87(_deviceIcons87[domain]||'mdi:power',
+        name+' · '+labels.active,'good');
+    }).join('');
+    const extra=active.length>3?'<span class="hem-compact-extra87" title="'+
+      escape(active.length+' '+labels.active)+'">+'+(active.length-3)+'</span>':'';
+    const formatted=(value,unit)=>value===null?'—':this._format(value,1)+unit;
+    return '<details class="hem-room-fold87 hem-room-'+roomStatus+'" '+
+      'data-room-fold87="'+escape(room.area_id)+'" '+(open?'open':'')+'>'+
+      '<summary class="hem-room-glance87" aria-label="'+
+      escape((open?labels.collapse:labels.expand)+': '+String(room.name||room.area_id))+'">'+
+      this._icon('mdi:home-outline')+
+      '<strong class="hem-room-name87" title="'+escape(room.name||room.area_id)+'">'+
+      escape(room.name||room.area_id)+'</strong>'+
+      '<span class="hem-room-reading87" title="'+escape(labels.temperature)+'">'+
+      this._icon('mdi:thermometer')+escape(formatted(temp,'°'))+'</span>'+
+      '<span class="hem-room-reading87" title="'+escape(labels.humidity)+'">'+
+      this._icon('mdi:water-percent')+escape(formatted(humidity,'%'))+'</span>'+
+      '<span class="hem-room-active87" aria-label="'+
+      escape(active.length+' '+labels.active)+'">'+activeIcons+extra+'</span>'+
+      '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
+      alerts.slice(0,4).join('')+'</span>'+
+      this._icon(open?'mdi:chevron-up':'mdi:chevron-down')+
+      '</summary><div class="hem-room-body87">'+original+'</div></details>';
+  };
+
+  proto87._installFolds87 = function() {
+    if(this._foldInstalled87) return;
+    this._foldInstalled87=true;
+    this._roomsExpanded87 ||= new Set();
+    this._devicesExpanded87 ||= new Set();
+    this.shadowRoot.addEventListener('click',event=>{
+      const summary=event.target?.closest?.(
+        'summary.hem-room-glance87,summary.hem-device-glance87'
+      );
+      if(!summary) return;
+      const details=summary.parentElement;
+      if(!details || !details.isConnected) return;
+      event.preventDefault();
+      const open=!details.open;
+      details.open=open;
+      if(details.hasAttribute('data-room-fold87')) {
+        const area=details.getAttribute('data-room-fold87');
+        if(open)this._roomsExpanded87.add(area);
+        else this._roomsExpanded87.delete(area);
+      } else {
+        const entity=details.getAttribute('data-device-fold87');
+        if(open)this._devicesExpanded87.add(entity);
+        else this._devicesExpanded87.delete(entity);
+      }
+      const chevron=summary.querySelector('ha-icon:last-child');
+      if(chevron)chevron.setAttribute('icon',open?'mdi:chevron-up':'mdi:chevron-down');
+    },true);
+    this.shadowRoot.addEventListener('toggle',event=>{
+      const el=event.target;
+      if(!el?.isConnected || el.getRootNode()!==this.shadowRoot) return;
+      if(el.matches?.('details.hem-room-fold87')) {
+        const key=el.getAttribute('data-room-fold87');
+        if(el.open)this._roomsExpanded87.add(key);
+        else this._roomsExpanded87.delete(key);
+      }
+      if(el.matches?.('details.hem-device-fold87')) {
+        const key=el.getAttribute('data-device-fold87');
+        if(el.open)this._devicesExpanded87.add(key);
+        else this._devicesExpanded87.delete(key);
+      }
+      if(el.matches?.('details.hem-context76,details.metric-help')) {
+        if(el.open)this._openInfo87(el);
+        else this._closeInfo87();
+      }
+    },true);
+    this._closeInfo87 = ()=> {
+      const pop=this._floatingInfo87;
+      this._floatingInfo87=null;
+      if(pop?.isConnected) {
+        try { if(pop.matches(':popover-open'))pop.hidePopover(); } catch {}
+        pop.remove();
+      }
+    };
+    this._openInfo87 = detail=> {
+      if(!detail?.isConnected || !detail.open) return;
+      const info=detail.querySelector('.hem-context-body76,.metric-help-content');
+      const trigger=detail.querySelector(':scope > summary');
+      if(!info || !trigger) return;
+      this._closeInfo87();
+      const pop=document.createElement('div');
+      pop.className='hem-floating-info87';
+      pop.setAttribute('popover','auto');
+      pop.setAttribute('role','note');
+      pop.setAttribute('aria-label',trigger.getAttribute('aria-label')||'Information');
+      pop.innerHTML=info.innerHTML;
+      this.shadowRoot.appendChild(pop);
+      this._floatingInfo87=pop;
+      const vw=document.documentElement.clientWidth||window.innerWidth||380;
+      const vh=window.innerHeight||document.documentElement.clientHeight||700;
+      const anchor=trigger.getBoundingClientRect();
+      const width=Math.min(340,Math.max(180,vw-24));
+      const left=Math.max(12,Math.min(vw-width-12,anchor.right-width));
+      const maxHeight=Math.min(330,Math.max(110,vh-36));
+      const above=vh-anchor.bottom<180 && anchor.top>vh-anchor.bottom;
+      const top=above
+        ? Math.max(12,anchor.top-Math.min(maxHeight,220)-8)
+        : Math.min(vh-Math.min(maxHeight,220)-12,anchor.bottom+8);
+      pop.style.width=width+'px';
+      pop.style.left=left+'px';
+      pop.style.top=Math.max(12,top)+'px';
+      pop.style.maxHeight=maxHeight+'px';
+      pop.addEventListener('toggle',e=>{
+        if(e.newState==='closed' && this._floatingInfo87===pop) {
+          this._floatingInfo87=null;
+          if(detail.isConnected && detail.open) {
+            detail.open=false;
+            const id=detail.getAttribute('data-detail-id');
+            if(id)this._detailsExpanded66?.delete(id);
+          }
+          pop.remove();
+        }
+      });
+      try {
+        if(typeof pop.showPopover==='function')pop.showPopover();
+      } catch {
+        // Unsupported top-layer API: still fixed outside clipped ha-card.
+      }
+    };
+  };
+
+  proto87._compactAfterRender87 = function(card) {
+    if(!card || card.dataset.compact87==='ready')return;
+    card.dataset.compact87='ready';
+    card.classList.add('hem-portal-ready87');
+    const outside=card.querySelector('section.outside');
+    if(outside) {
+      const second=document.createElement('div');
+      second.className='hem-outside-details87';
+      for(const block of [...outside.children]) {
+        if(block.matches('.out-metrics,.outside-alerts,.out-empty'))second.appendChild(block);
+      }
+      if(second.childElementCount)outside.appendChild(second);
+      for(const reason of outside.querySelectorAll('.reason,.out-chip')) {
+        const full=reason.textContent?.trim();
+        if(full) {reason.setAttribute('title',full);reason.setAttribute('aria-label',full);}
+      }
+      const named=outside.querySelector('.outside-title');
+      if(named)named.setAttribute('title',named.textContent?.trim()||'');
+    }
+    for(const container of card.querySelectorAll('.managed-controller')) {
+      if(container.querySelector(':scope > details.hem-device-fold87')) continue;
+      const control=container.querySelector('[data-open-climate]');
+      const entity=control?.getAttribute('data-open-climate');
+      const area=control?.getAttribute('data-controller-area');
+      if(!entity||!area)continue;
+      const entry=this._managedControllers(area).find(row=>row.entityId===entity);
+      if(!entry)continue;
+      const attrs=entry.climate?.attributes||{};
+      const status=entry.statusInfo?.state?.attributes||{};
+      const fault=entry.errorAnnounce?.attributes?.native_error;
+      const code=String(status.status_code||attrs.controller_status?.status||'');
+      const rawState=String(attrs.physical_source_state||entry.climate?.state||'unknown');
+      const physical=_deviceState87(entry,this._hass);
+      const name=attrs.friendly_name||entity;
+      const labels=_roomLabels87(this._language());
+      const activeFault=['warning','error','critical'].includes(fault?.status);
+      const issue=activeFault || /(paused|blocked|unavailable|failed|error|pid_output_inactive)/i.test(code);
+      const missing=rawState==='unknown'||rawState==='unavailable'||fault?.status==='unavailable';
+      const measurements=attrs.measurements||{};
+      const temperature=typeof measurements.temperature==='number' && Number.isFinite(measurements.temperature)
+        ? measurements.temperature : null;
+      const humidity=typeof measurements.humidity==='number' && Number.isFinite(measurements.humidity)
+        ? measurements.humidity : null;
+      const demand=typeof status.demand_percent==='number' && Number.isFinite(status.demand_percent)
+        ? status.demand_percent : null;
+      const method=entry.method?.state||attrs.control_mode||'existing';
+      const open=this._devicesExpanded87?.has(entity)===true;
+      const details=document.createElement('details');
+      details.className='hem-device-fold87';
+      details.setAttribute('data-device-fold87',entity);
+      details.open=open;
+      const summary=document.createElement('summary');
+      summary.className='hem-device-glance87';
+      const metric=(icon,value,label)=>
+        '<span class="hem-device-reading87" title="'+escape(label)+'">'+
+        this._icon(icon)+escape(value)+'</span>';
+      const fmt=(v,unit)=>this._format(v,1)+unit;
+      const primaryIcon=entity.startsWith('climate.')?'mdi:thermostat':
+        _deviceIcons87[entity.split('.')[0]]||'mdi:thermostat';
+      const stateName=physical.active?this._controllerStatusLabel(physical.action):
+        missing?this._controllerStatusLabel('unavailable'):
+        this._controllerStatusLabel(rawState==='off'?'off':rawState);
+      const issueText=activeFault
+        ? [fault.code,fault.description].filter(Boolean).join(' · ')
+        : this._controllerStatusLabel(status.status_reason_code||code||'unknown');
+      summary.innerHTML='<span class="hem-device-main87">'+
+        this._icon(primaryIcon)+
+        '<strong title="'+escape(name)+'">'+escape(name)+'</strong></span>'+
+        '<span class="hem-device-state87" title="'+escape(stateName)+'">'+
+        this._icon(physical.active?'mdi:power':'mdi:power-standby')+
+        escape(stateName)+'</span>'+
+        '<span class="hem-device-measures87">'+
+        (temperature!==null?metric('mdi:thermometer',fmt(temperature,'°C'),labels.temperature):'')+
+        (humidity!==null?metric('mdi:water-percent',fmt(humidity,'%'),labels.humidity):'')+
+        (demand!==null?metric('mdi:gauge',fmt(demand,'%'),'PID'): '')+
+        '</span><span class="hem-device-attention87">'+
+        (activeFault?_iconHint87('mdi:alert-octagon-outline',issueText,'error'):'')+
+        (issue&&!activeFault?_iconHint87('mdi:alert-circle-outline',issueText,'warn'):'')+
+        (missing?_iconHint87('mdi:help-circle-outline',labels.unavailable,'muted'):'')+
+        '</span>'+this._icon(open?'mdi:chevron-up':'mdi:chevron-down');
+      summary.setAttribute('aria-label',name+' · '+stateName+
+        (issue?' · '+labels.attention:'')+' · '+labels.controls);
+      const body=document.createElement('div');
+      body.className='hem-device-body87';
+      while(container.firstChild)body.appendChild(container.firstChild);
+      details.append(summary,body);
+      container.append(details);
+    }
+    // Older information bubbles are permanently inside the shell. A real
+    // top-layer popover is copied outside the clipped card at open time.
+    const openHelp=card.querySelector('details.hem-context76[open],details.metric-help[open]');
+    if(openHelp)this._openInfo87(openHelp);
+    else this._closeInfo87();
+  };
+  proto87._renderContent=function(force=false) {
+    this._installFolds87();
+    const cardBefore=this.shadowRoot.querySelector('ha-card.shell');
+    _renderContent87.call(this,force);
+    const card=this.shadowRoot.querySelector('ha-card.shell');
+    if(card && (card!==cardBefore || card.dataset.compact87!=='ready'))
+      this._compactAfterRender87(card);
+  };
+  const disconnect87=proto87.disconnectedCallback;
+  proto87.disconnectedCallback=function(){
+    this._closeInfo87?.();
+    return disconnect87.call(this);
+  };
+  proto87._styles=function(){
+    return _styles87.call(this)+String.raw\`<style>
+      /* Header is a single, readable toolbar row. */
+      .shell{overflow:visible}
+      .card-heading{padding:11px 12px;gap:7px;min-height:48px}
+      .card-heading>div:first-child{min-width:0;flex:1}
+      .card-heading .overline,.card-heading>div:first-child>span,.card-logo{display:none}
+      .card-heading h2{margin:0;font-size:18px;line-height:1.2;letter-spacing:-.3px;
+        overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .header-actions{gap:5px}
+      .header-actions .edit-device{width:32px;height:32px;border-radius:9px}
+      .content{padding:0 9px 10px}
+      footer{padding:8px 5px 2px;font-size:9px}
+      /* Outdoor conditions occupy a strict maximum of two horizontal rows.
+       * Long secondary readings and warnings stay scrollable and titled.
+       */
+      .outside{padding:7px 9px;border-radius:11px;min-width:0}
+      .outdoor-head{display:flex;align-items:center;gap:6px;min-height:29px;min-width:0}
+      .outdoor-icon{width:28px;height:28px;flex:0 0 28px;border-radius:8px}
+      .outdoor-icon ha-icon{--mdc-icon-size:19px}
+      .outdoor-text{display:flex;flex:1;align-items:center;min-width:0;gap:7px}
+      .outdoor-text .eyebrow{display:none}
+      .outside-title{font-size:12px;margin:0;max-width:52%;min-width:0;
+        white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto}
+      .weather-line{display:flex;flex:1;flex-wrap:nowrap;gap:4px;white-space:nowrap;
+        font-size:11px;overflow:hidden;min-width:0}
+      .weather-line strong{font-size:12px}
+      .weather-line>span{white-space:nowrap}
+      .weather-line .sep{margin:0 1px}
+      .outdoor-status{align-self:center;flex:0 0 19px}
+      .outdoor-status ha-icon{--mdc-icon-size:17px}
+      .hem-outside-details87{display:flex;align-items:center;gap:5px;margin-top:5px;
+        height:27px;max-width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;
+        overscroll-behavior-inline:contain;scrollbar-width:thin;white-space:nowrap}
+      .hem-outside-details87 .out-metrics,.hem-outside-details87 .outside-alerts{
+        flex:0 0 auto;display:inline-flex;flex-wrap:nowrap;gap:4px;
+        padding:0;margin:0;border:0;white-space:nowrap;align-items:center}
+      .hem-outside-details87 .out-chip{font-size:10px;padding:3px 6px;border-radius:6px}
+      .hem-outside-details87 .out-chip b{font-size:11px;margin-left:3px}
+      .hem-outside-details87 .out-chip small{font-size:9px}
+      .hem-outside-details87 .reason{font-size:10px;padding:3px 5px;
+        white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+      .hem-outside-details87 .reason ha-icon{--mdc-icon-size:13px}
+      .hem-outside-details87 .out-empty{margin:0;font-size:10px}
+      /* Room totals are one horizontal row; no empty donut or tall counts. */
+      .hem-overview87{display:grid;grid-template-columns:minmax(0,1.3fr)
+        repeat(3,minmax(0,1fr));align-items:center;min-width:0;
+        gap:4px;padding:7px 8px;border:1px solid var(--aqa-edge);
+        background:color-mix(in srgb,var(--aqa-muted),transparent 96%);
+        border-radius:10px;margin:7px 0}
+      .hem-overview-title87,.hem-overview-stat87{display:inline-flex;
+        align-items:center;justify-content:center;gap:4px;min-width:0;
+        font-size:11px;white-space:nowrap}
+      .hem-overview-title87{justify-content:flex-start}
+      .hem-overview-title87>ha-icon{--mdc-icon-size:15px;color:var(--aqa-blue)}
+      .hem-overview-title87 strong{font-size:14px}
+      .hem-overview-stat87 ha-icon{--mdc-icon-size:14px}
+      .hem-overview-stat87 b{font-size:14px}
+      .hem-overview-stat87 small{font-size:10px;color:var(--aqa-muted);
+        overflow:hidden;text-overflow:ellipsis}
+      .hem-overview-good ha-icon{color:var(--aqa-green)}
+      .hem-overview-warn ha-icon{color:var(--aqa-amber)}
+      .hem-overview-neutral ha-icon{color:var(--aqa-muted)}
+      .rooms-list{display:grid;grid-template-columns:minmax(0,1fr);gap:5px;margin:7px 0}
+      .hem-room-fold87{display:block;min-width:0;border:1px solid var(--aqa-edge);
+        border-radius:10px;background:var(--aqa-surface)}
+      .hem-room-fold87.hem-room-attention{border-color:color-mix(in srgb,var(--aqa-amber),transparent 55%)}
+      .hem-room-fold87 summary.hem-room-glance87{display:flex;align-items:center;
+        gap:6px;min-height:41px;padding:7px 8px;cursor:pointer;list-style:none;
+        min-width:0;user-select:none}
+      .hem-room-glance87::-webkit-details-marker,.hem-device-glance87::-webkit-details-marker{display:none}
+      .hem-room-glance87>ha-icon:first-child{--mdc-icon-size:16px;color:var(--aqa-blue);
+        width:17px;flex:0 0 17px}
+      .hem-room-glance87>ha-icon:last-child,.hem-device-glance87>ha-icon:last-child{
+        --mdc-icon-size:15px;color:var(--aqa-muted);margin-inline-start:3px;flex:0 0 15px}
+      .hem-room-name87{min-width:45px;flex:1 1 auto;white-space:nowrap;
+        overflow:hidden;text-overflow:ellipsis;font-size:12px}
+      .hem-room-reading87{display:inline-flex;align-items:center;flex:0 0 auto;
+        gap:1px;font-size:11px;white-space:nowrap}
+      .hem-room-reading87 ha-icon{--mdc-icon-size:14px;color:var(--aqa-muted)}
+      .hem-room-active87,.hem-room-alerts87{display:inline-flex;align-items:center;
+        gap:2px;flex:0 0 auto;min-width:0}
+      .hem-room-active87:empty,.hem-room-alerts87:empty{display:none}
+      .hem-hint87{display:inline-flex;align-items:center;justify-content:center;
+        width:19px;height:19px;flex:0 0 19px;border-radius:6px;color:var(--aqa-muted)}
+      .hem-hint87 ha-icon{--mdc-icon-size:16px}
+      .hem-hint-good{color:var(--aqa-green)}
+      .hem-hint-warn{color:var(--aqa-amber)}
+      .hem-hint-error{color:var(--aqa-red)}
+      .hem-compact-extra87{font-size:10px;color:var(--aqa-muted)}
+      .hem-room-glance87:focus-visible,.hem-device-glance87:focus-visible{
+        outline:2px solid var(--aqa-blue);outline-offset:-2px;border-radius:8px}
+      .hem-room-body87{padding:0 7px 8px}
+      .hem-room-body87>.room{border:0;padding:0;background:transparent;border-radius:0}
+      .hem-room-body87>.room>.room-heading{display:none}
+      .hem-room-body87>.room>.metric-grid{margin:5px 0}
+      .hem-room-body87 .section-head{margin-top:8px}
+      .hem-room-body87 .pid-panel{margin:6px 0;padding:7px}
+      /* One compact glance per managed device; everything else folded. */
+      .managed-controllers{gap:4px;margin-top:7px;padding-top:5px}
+      .managed-controllers>strong{font-size:11px}
+      .managed-controller.hem-compact-device76{padding:0;border-radius:8px}
+      .hem-device-fold87{min-width:0}
+      .hem-device-glance87{display:flex;align-items:center;gap:5px;
+        padding:6px 7px;min-height:37px;min-width:0;cursor:pointer;list-style:none}
+      .hem-device-main87{display:inline-flex;align-items:center;
+        gap:4px;min-width:0;flex:1 1 auto}
+      .hem-device-main87>ha-icon{--mdc-icon-size:15px;color:var(--aqa-blue);flex:0 0 15px}
+      .hem-device-main87 strong{font-size:11px;overflow:hidden;
+        text-overflow:ellipsis;white-space:nowrap;min-width:0}
+      .hem-device-state87{display:inline-flex;align-items:center;gap:2px;flex:0 0 auto;
+        max-width:76px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+        font-size:10px;color:var(--aqa-muted)}
+      .hem-device-state87 ha-icon{--mdc-icon-size:13px}
+      .hem-device-measures87{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto}
+      .hem-device-reading87{display:inline-flex;align-items:center;white-space:nowrap;
+        gap:1px;font-size:10px}
+      .hem-device-reading87 ha-icon{--mdc-icon-size:13px;color:var(--aqa-muted)}
+      .hem-device-attention87{display:inline-flex;align-items:center;gap:1px;flex:0 0 auto}
+      .hem-device-body87{padding:6px 6px 8px;border-top:1px solid var(--aqa-edge);
+        min-width:0}
+      .hem-device-body87 .hem-device-data{margin:5px 0}
+      .hem-device-body87 .managed-method-label{margin-top:4px}
+      /* Native popover top layer lives outside the shell and cannot be cut
+       * by the current card, the room, sibling cards, or HA scroll panels.
+       */
+      .hem-portal-ready87 details.hem-context76>.hem-context-body76,
+      .hem-portal-ready87 details.metric-help>.metric-help-content{display:none}
+      .hem-floating-info87{position:fixed;z-index:2147483647;inset:auto;margin:0;
+        box-sizing:border-box;overflow:auto;max-width:calc(100vw - 24px);
+        border:1px solid var(--aqa-edge);border-radius:10px;padding:10px 12px;
+        background:var(--card-background-color,#222);color:var(--primary-text-color,#eee);
+        box-shadow:0 12px 30px #0008;font:12px/1.45 Roboto,Arial,sans-serif;
+        overflow-wrap:anywhere}
+      .hem-floating-info87>div,.hem-floating-info87>small{margin:4px 0}
+      @media(max-width:480px){
+        .card-heading h2{font-size:16px}
+        .hem-overview87{gap:3px;padding:6px}
+        .hem-overview-stat87 small{display:none}
+        .hem-room-name87{font-size:11px}
+        .hem-room-glance87{gap:4px}
+        .hem-room-reading87{font-size:10px}
+        .hem-room-reading87 ha-icon{--mdc-icon-size:12px}
+        .hem-device-measures87{gap:3px}
+        .hem-device-state87{max-width:52px}
+      }
+      @media(max-width:355px){
+        .hem-room-active87 .hem-hint87:nth-child(n+2),
+        .hem-room-alerts87 .hem-hint87:nth-child(n+3){display:none}
+        .hem-device-reading87:nth-child(n+3){display:none}
+        .hem-device-main87 strong{max-width:110px}
+      }
+      @media(prefers-reduced-motion:reduce){
+        .hem-room-fold87,.hem-device-fold87{scroll-behavior:auto}
+      }
+    </style>\`;
+  };
+  /* HEM_COMPACT87_END */
+
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
   // New brand alias; old Lovelace YAML configurations keep working unmodified.
