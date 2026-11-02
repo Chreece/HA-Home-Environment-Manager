@@ -609,6 +609,40 @@
           })).catch((error)=>console.warn('Home Environment Manager shade toggle failed',error));
           return;
         }
+        const errorAnnouncements = event.target.closest?.('[data-device-error-announce]');
+        if (errorAnnouncements && this._hass?.callService) {
+          const area=errorAnnouncements.getAttribute('data-controller-area');
+          const entityId=errorAnnouncements.getAttribute('data-device-error-announce');
+          const linked=this._managedControllers(area).find(item=>
+            item.errorAnnounceId===entityId && item.errorAnnounce &&
+            item.errorAnnounce.attributes?.device_fault_role==='announce');
+          if (!linked || !['on','off'].includes(linked.errorAnnounce.state)) return;
+          const action=linked.errorAnnounce.state==='on'?'turn_off':'turn_on';
+          Promise.resolve(this._hass.callService('switch',action,{
+            entity_id:entityId,
+          })).catch(error=>console.warn('HEM device error alert setting failed',error));
+          return;
+        }
+        const nativeError = event.target.closest?.('[data-open-native-error]');
+        if (nativeError) {
+          const area=nativeError.getAttribute('data-controller-area');
+          const entityId=nativeError.getAttribute('data-open-native-error');
+          const linked=this._managedControllers(area).find(item=>{
+            const reported=item.errorAnnounce?.attributes?.native_error;
+            const available=Array.isArray(reported?.native_error_entities)
+              ? reported.native_error_entities : [];
+            const sources=Array.isArray(item.climate?.attributes?.source_entity_ids)
+              ? item.climate.attributes.source_entity_ids : [];
+            return (reported?.source_entity_id===entityId &&
+              (available.includes(entityId)||sources.includes(entityId)));
+          });
+          if (linked && this._hass?.states?.[entityId]) {
+            this.dispatchEvent(new CustomEvent('hass-more-info',{
+              detail:{entityId},bubbles:true,composed:true,
+            }));
+          }
+          return;
+        }
         const moreInfo = event.target.closest?.('[data-open-climate]');
         if (moreInfo) {
           const entityId = moreInfo.getAttribute('data-open-climate');
@@ -1128,6 +1162,9 @@
         ['automatic','manual','off'].every((mode)=>item.attributes.options.includes(mode)));
       const signature = (item) => JSON.stringify(
         safeArray(item.attributes.source_entity_ids).slice().sort());
+      const errorAnnouncementSwitches=states.filter(([id,item])=>
+        id.startsWith('switch.') && item?.attributes?.area_id===area &&
+        item.attributes.device_fault_role==='announce');
       const nativeResumeButtons=states.filter(([id,item])=>
         id.startsWith('button.') && item?.attributes?.area_id===area &&
         item.attributes.controller_resume_role==='check_and_continue');
@@ -1162,6 +1199,10 @@
         const buttons=calibrationButtons.filter(([,item])=>signature(item)===signature(climate));
         const [calibrationButtonId,calibrationButton]=buttons.length===1 ?
           buttons[0] : [null,null];
+        const faultSettings=errorAnnouncementSwitches.filter(([,item])=>
+          signature(item)===signature(climate));
+        const [errorAnnounceId,errorAnnounce]=faultSettings.length===1
+          ? faultSettings[0] : [null,null];
         const nativeResumes=nativeResumeButtons.filter(([,item])=>
           signature(item)===signature(climate));
         const [resumeButtonId,resumeButton]=nativeResumes.length===1 ?
@@ -1189,6 +1230,7 @@
             id,state,field:state.attributes.pid_fan_capacity_field,
           }));
         return {entityId,climate,methodId,method,resumeButtonId,resumeButton,
+                errorAnnounceId,errorAnnounce,
                 calibrationSelectId,calibrationSelect,calibrationButtonId,calibrationButton,
                 calibrationNumbers,reviewApproveId,reviewApprove,
                 reviewDiscardId,reviewDiscard,capacityModeId,capacityMode,capacityDirectionId,
@@ -1202,6 +1244,7 @@
       const rows = Object.entries(this._hass?.states || {})
         .filter(([id, state]) =>
           (id.startsWith('select.') || id.startsWith('climate.') || (id.startsWith('sensor.') && state?.attributes?.status_code) ||
+           (id.startsWith('switch.') && state?.attributes?.device_fault_role==='announce') ||
            (id.startsWith('button.') && (
              state?.attributes?.pid_calibration_role || state?.attributes?.pid_fan_capacity_role ||
              state?.attributes?.pid_review_role ||
@@ -1219,6 +1262,8 @@
           state.attributes.options,
           state.attributes.source_entity_ids,
           state.attributes.pid_calibration_role,
+          state.attributes.device_fault_role,
+          state.attributes.native_error,
           state.attributes.pid_review_role,
           state.attributes.controller_resume_role,
           state.attributes.native_resume_recovery,
@@ -1603,6 +1648,55 @@
           de:['Adaptiv · Vorschlag bestätigen','Adaptiv · Automatisch','Übernehmen','Verwerfen','Vorgeschlagene PID-Anpassung'],
           el:['Προσαρμοστικό · Πρόταση για έγκριση','Προσαρμοστικό · Αυτόματο','Έγκριση','Απόρριψη','Προτεινόμενη ρύθμιση PID'],
         }[this._language()] || ['Adaptive · Suggest & approve','Adaptive · Automatic','Approve','Discard','Proposed PID adjustment'];
+        const deviceFault=entry.errorAnnounce?.attributes?.native_error;
+        const errorLabels={
+          en:['Announce errors','Physical device error','Severity','Code','Details',
+              'Open original HA error entity','Unavailable error source'],
+          de:['Fehler ansagen','Fehler des physischen Geräts','Schwere','Code','Details',
+              'Originale HA-Fehlerentität öffnen','Fehlerquelle nicht verfügbar'],
+          el:['Αναγγελία σφαλμάτων','Σφάλμα φυσικής συσκευής','Σοβαρότητα','Κωδικός','Λεπτομέρειες',
+              'Άνοιγμα αρχικής οντότητας σφάλματος στο HA','Μη διαθέσιμη πηγή σφάλματος'],
+        }[this._language()] || ['Announce errors','Physical device error','Severity','Code','Details',
+          'Open original HA error entity','Unavailable error source'];
+        const alertSwitch=entry.errorAnnounceId && entry.errorAnnounce &&
+            ['on','off'].includes(entry.errorAnnounce.state)
+          ? '<div class="hem-device-error-toggle"><button type="button" role="switch" '+
+            'data-device-error-announce="'+escape(entry.errorAnnounceId)+'" '+
+            'data-controller-area="'+escape(room.area_id)+'" '+
+            'aria-checked="'+(entry.errorAnnounce.state==='on')+'" '+
+            'aria-label="'+escape(errorLabels[0])+'" title="'+escape(errorLabels[0])+'">'+
+            this._icon(entry.errorAnnounce.state==='on'?'mdi:bell-ring-outline':'mdi:bell-off-outline')+
+            '<span>'+escape(errorLabels[0])+'</span>'+
+            '<b>'+(entry.errorAnnounce.state==='on'?'ON':'OFF')+'</b></button></div>'
+          : '';
+        const faultStatus=deviceFault?.status;
+        const faultActive=['warning','error','critical'].includes(faultStatus);
+        const sourceError=typeof deviceFault?.source_entity_id==='string'
+          ? deviceFault.source_entity_id : '';
+        const trustedNativeSource=sourceError && (
+          (deviceFault?.native_error_entities || []).includes(sourceError) ||
+          (attrs.source_entity_ids || []).includes(sourceError));
+        const faultPanel=faultActive || faultStatus==='unavailable'
+          ? '<section class="hem-device-error" role="status">'+
+            '<strong>'+escape(faultActive?errorLabels[1]:errorLabels[6])+'</strong>'+
+            (faultActive
+              ? '<div>'+escape(errorLabels[2])+': '+escape(deviceFault.severity || '-')+
+                ' · '+escape(errorLabels[3])+': '+escape(deviceFault.code || '-')+'</div>'+
+                (deviceFault.description
+                  ? '<small>'+escape(errorLabels[4])+': '+
+                    escape(deviceFault.description)+'</small>' : '')+
+                Object.entries(deviceFault.info || {}).slice(0,4).map(([key,value])=>
+                  '<small>'+escape(key)+': '+escape(String(value))+'</small>').join('')
+              : (deviceFault?.last_known_fault
+                ? '<small>'+escape(errorLabels[3])+': '+
+                  escape(deviceFault.last_known_fault.code || '-')+'</small>' : ''))+
+            (trustedNativeSource && this._hass?.states?.[sourceError]
+              ? '<button type="button" class="climate-entity-link" '+
+                'data-open-native-error="'+escape(sourceError)+'" '+
+                'data-controller-area="'+escape(room.area_id)+'" '+
+                'title="'+escape(errorLabels[5])+'">'+
+                this._icon('mdi:open-in-new')+' '+escape(sourceError)+'</button>'
+              : '')+'</section>' : '';
         const recovery=entry.statusInfo?.state?.attributes?.native_resume_recovery ||
           entry.resumeButton?.attributes?.native_resume_recovery;
         const recoverLabels={
@@ -1802,7 +1896,8 @@
           '" title="'+escape(l.openEntity)+'">'+
           this._icon('mdi:thermostat')+' <strong>'+escape(name)+
           '</strong> '+this._icon('mdi:open-in-new')+'</button>'+
-          this._deviceSummary65(entry)+recoveryPanel+method+editors.join('')+
+          this._deviceSummary65(entry)+faultPanel+alertSwitch+
+          recoveryPanel+method+editors.join('')+
           this._calibrationDetails65(entry,control==='pid' ?
             calibrationMethod+pidInputs+apply+reviewPanel+capSelectors+capacityInput+applyCapacity+capacitySummary : '')+
           '</section>';
