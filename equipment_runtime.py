@@ -1700,6 +1700,94 @@ class EquipmentRuntime:
         )
         return checked
 
+    async def async_continue_automatic(self, spec: model.ManagedDevice) -> bool:
+        """Select the prior PID/Automatic algorithm, without bypassing hardware.
+
+        An explicit click always restores the *requested controller method*
+        when the exact source identity and settings Store remain writable.
+        Actual native service dispatch remains blocked until the usual
+        physical ACK, ownership, dwell, and window/sleep guards permit it.
+        """
+        if not self._ready or not self._current_spec(spec):
+            raise HomeAssistantError("Controller identity or storage is unavailable")
+        cfg = model.settings(self.manager, spec)
+        record = self._record(spec)
+        upstream = record.get("upstream", {})
+        if (cfg["control_mode"] in ("automatic", "pid")
+                and not record.get("paused") and not record.get("pending")
+                and not (isinstance(upstream, dict) and (
+                    upstream.get("paused") or upstream.get("pending")))):
+            return True  # Already automatic; no mode or physical write.
+        try:
+            await self.async_resume(spec)
+            return True
+        except HomeAssistantError as problem:
+            # An unavailable device or ambiguous in-flight native command is
+            # NOT authority to discard protected state. Nonetheless, the user
+            # explicitly chose the automatic algorithm. Persist that policy
+            # without sending or assuming a physical command.
+            async with self._lock(spec.identifier):
+                if not self._ready or not self._current_spec(spec):
+                    raise
+                latest = model.settings(self.manager, spec)
+                current = self._record(spec)
+                original = current.get("resume_control_mode")
+                desired = (original if original in ("automatic", "pid")
+                           else latest["control_mode"] if latest["control_mode"]
+                           in ("automatic", "pid") else "automatic")
+                cap = model.capabilities(self.manager, spec)
+                if (cap is not None and desired == "pid"
+                        and "pid" not in model.control_modes(self.manager, spec)):
+                    desired = "automatic"
+                if latest["control_mode"] != desired:
+                    lock = getattr(self.manager, "_device_settings_write_lock", None)
+                    if lock is None:
+                        lock = self.manager._device_settings_write_lock = asyncio.Lock()
+                    async with lock:
+                        latest = model.settings(self.manager, spec)
+                        if not self._current_spec(spec):
+                            raise HomeAssistantError("Native device identity changed")
+                        options = deepcopy(self.manager.entry.options)
+                        profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+                        profiles = profiles if isinstance(profiles, dict) else {}
+                        saved = profiles.get(spec.identifier, {})
+                        saved = saved if isinstance(saved, dict) else {}
+                        from .device_activation import authority_context
+                        profile = {**saved, "control_mode": desired}
+                        # This actual button click is a user authorization for
+                        # exactly the still-configured physical sources, not
+                        # a grant to another device or a physical service.
+                        if cap is not None and cap.domain in (
+                            "climate", "fan", "humidifier"
+                        ):
+                            profile["_native_authorization"] = authority_context(
+                                self.manager, spec
+                            )
+                        profiles[spec.identifier] = profile
+                        options[model.SETTINGS] = profiles
+                        self.hass.config_entries.async_update_entry(
+                            self.manager.entry, options=options
+                        )
+                current.pop("resume_control_mode", None)
+                # Keep a genuine uncertain-command/manual source latch until
+                # it can be physically reconciled. Choosing Automatic does
+                # not mean that the compressor is already running.
+                current["paused"] = current.get("paused") or (
+                    "continue_automatic_waiting_for_physical_verification"
+                )
+                current["automatic_continue_requested"] = {
+                    "at": self.clock(), "method": desired,
+                    "awaiting_physical_verification": True,
+                }
+                await self._save()
+                self._status(
+                    spec, "paused", reason=current["paused"],
+                    requested_control_mode=desired,
+                    automatic_selected=True, physical_output_confirmed=False,
+                    previous_recovery_error=str(problem)[:180],
+                )
+            return False
+
     async def async_resume(self, spec: model.ManagedDevice) -> None:
         """Re-arm a verified live device without forcing an OFF/ON cycle.
 
