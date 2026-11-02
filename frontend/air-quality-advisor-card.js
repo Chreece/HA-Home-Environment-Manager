@@ -1285,7 +1285,9 @@
       const native=[...physicalIds].sort().map(id=>{
         const state=this._hass?.states?.[id];
         return [id,state?.state,state?.attributes?.hvac_action,
-          state?.attributes?.device_class,state?.attributes?.percentage];
+          state?.attributes?.device_class,state?.attributes?.percentage,
+          // A native integration rename must immediately update its heading.
+          state?.attributes?.friendly_name];
       });
       return JSON.stringify([rows,native]);
     }
@@ -1644,6 +1646,28 @@
           ? selection.attributes.options : [];
         const control=selection?.state || attrs.control_mode || 'existing';
         const name=attrs.friendly_name || entry.entityId;
+        // The folded row names the HEM controller. The expanded heading
+        // names the ORIGINAL physical endpoint as registered in HA.
+        // Never recycle the HEM facade's friendly_name for that heading.
+        const nativeEndpoint=this._nativeEndpoint93(entry);
+        const nativeName=nativeEndpoint?.name || l.selectedDevice;
+        const nativeIcon=({
+          climate:'mdi:thermostat',humidifier:'mdi:water-percent',
+          fan:'mdi:fan',switch:'mdi:power-plug-outline',
+          number:'mdi:valve',input_number:'mdi:valve'
+        })[nativeEndpoint?.entityId?.split('.')[0]] || 'mdi:devices';
+        const nativeHeader=nativeEndpoint?.state
+          ? '<button type="button" class="climate-entity-link hem-physical-title93" '+
+            'data-open-physical93="'+escape(nativeEndpoint.entityId)+'" '+
+            'data-hem-controller93="'+escape(entry.entityId)+'" '+
+            'data-controller-area="'+escape(room.area_id)+'" '+
+            'title="'+escape(nativeEndpoint.name+' · '+nativeEndpoint.entityId)+'" '+
+            'aria-label="'+escape(l.selectedDevice+': '+nativeEndpoint.name)+'">'+
+            this._icon(nativeIcon)+' <strong>'+escape(nativeName)+'</strong> '+
+            this._icon('mdi:open-in-new')+'</button>'
+          : '<span class="climate-entity-link hem-physical-title93 hem-physical-title93-unavailable" '+
+            'title="'+escape(nativeEndpoint?.entityId || l.selectedDevice)+'">'+
+            this._icon(nativeIcon)+' <strong>'+escape(nativeName)+'</strong></span>';
         const method=entry.methodId && options.length
           ? '<label class="managed-method-label"><span>'+escape(l.method)+'</span>'+
           '<select data-climate-method="'+escape(entry.methodId)+
@@ -1909,13 +1933,10 @@
             'aria-label="'+escape(continueLabel)+'" '+
             (resumeAvailable?'':'disabled title="'+escape(continueLabel)+'"')+'>'+
             this._icon('mdi:play-circle-outline')+escape(continueLabel)+'</button>' : '';
-        return '<section class="managed-controller">'+
-          '<button type="button" class="climate-entity-link" '+
-          'data-open-climate="'+escape(entry.entityId)+
-          '" data-controller-area="'+escape(room.area_id)+
-          '" title="'+escape(l.openEntity)+'">'+
-          this._icon('mdi:thermostat')+' <strong>'+escape(name)+
-          '</strong> '+this._icon('mdi:open-in-new')+'</button>'+
+        return '<section class="managed-controller" '+
+          'data-managed-climate93="'+escape(entry.entityId)+'" '+
+          'data-controller-area="'+escape(room.area_id)+'">'+
+          nativeHeader+
           this._deviceSummary65(entry)+faultPanel+alertSwitch+
           recoveryPanel+resumeControl+method+editors.join('')+
           this._calibrationDetails65(entry,control==='pid' ?
@@ -3348,6 +3369,27 @@
     climate:'mdi:thermostat', fan:'mdi:fan', humidifier:'mdi:water-percent',
     switch:'mdi:power-plug-outline', number:'mdi:valve', input_number:'mdi:valve'
   };
+  /* HEM_NATIVE_TITLE93_START
+   * Provenance-bound native endpoint. Never guess among multiple physical
+   * sources or use the manager-created climate entity as the physical name.
+   */
+  proto87._nativeEndpoint93=function(entry) {
+    const a=entry?.climate?.attributes||{};
+    const sources=safeArray(a.source_entity_ids).filter(id=>
+      typeof id==='string' && id && id!==entry.entityId);
+    const primary=a.physical_primary_entity_id;
+    if(typeof primary==='string' && primary && !sources.includes(primary))
+      return null;
+    const entityId=typeof primary==='string' && sources.includes(primary)
+      ? primary : sources.length===1 ? sources[0] : null;
+    if(!entityId)return null;
+    const state=this._hass?.states?.[entityId]||null;
+    const provided=state?.attributes?.friendly_name;
+    const name=typeof provided==='string' && provided.trim()
+      ? provided.trim() : entityId;
+    return {entityId,state,name};
+  };
+  /* HEM_NATIVE_TITLE93_END */
   const _deviceState87 = (entry, hass) => {
     const a=entry.climate?.attributes || {};
     const sources=Array.isArray(a.source_entity_ids)?a.source_entity_ids:[];
@@ -3607,8 +3649,25 @@
     this.addEventListener('touchmove',scrolledByUser90,{passive:true});
     this.addEventListener('keydown',scrolledByUser90,{passive:true});
     this.shadowRoot.addEventListener('click',event=>{
-      // A click on a real source icon or HEM controller name opens its
-      // respective HA More Info panel without expanding the device fold.
+      // The expanded physical-device heading opens ONLY its real native
+      // entity, not the HEM controller. Verify its association on every click.
+      const physicalTitle=event.target?.closest?.('button[data-open-physical93]');
+      if(physicalTitle) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const area=physicalTitle.getAttribute('data-controller-area');
+        const managedId=physicalTitle.getAttribute('data-hem-controller93');
+        const entry=this._managedControllers(area).find(row=>row.entityId===managedId);
+        const native=this._nativeEndpoint93(entry);
+        if(native?.state &&
+           native.entityId===physicalTitle.getAttribute('data-open-physical93'))
+          this.dispatchEvent(new CustomEvent('hass-more-info',{
+            detail:{entityId:native.entityId},bubbles:true,composed:true,
+          }));
+        return;
+      }
+      // The FOLDED controller title opens the HEM facade, while its source
+      // icon opens the physical entity; neither click expands the fold.
       const link=event.target?.closest?.(
         'button[data-open-native89],button[data-open-controller89]'
       );
@@ -3744,9 +3803,10 @@
     }
     for(const container of card.querySelectorAll('.managed-controller')) {
       if(container.querySelector(':scope > details.hem-device-fold87')) continue;
-      const control=container.querySelector('[data-open-climate]');
-      const entity=control?.getAttribute('data-open-climate');
-      const area=control?.getAttribute('data-controller-area');
+      // The expanded heading now links to the physical entity. Use the
+      // container's independent HEM metadata for fold/controller matching.
+      const entity=container.getAttribute('data-managed-climate93');
+      const area=container.getAttribute('data-controller-area');
       if(!entity||!area)continue;
       const entry=this._managedControllers(area).find(row=>row.entityId===entity);
       if(!entry)continue;
@@ -4163,6 +4223,11 @@
       .hem-device-native-link89 ha-icon{--mdc-icon-size:16px}
       .hem-device-controller-link89{flex:1 1 auto;text-align:start;overflow:hidden}
       .hem-device-controller-link89:hover strong{text-decoration:underline}
+      .hem-physical-title93{display:inline-flex;align-items:center;
+        gap:5px;max-width:100%;min-width:0}
+      .hem-physical-title93 strong{display:inline-block;min-width:0;
+        white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .hem-physical-title93-unavailable{opacity:.65;cursor:default}
       .hem-device-native-link89:hover{background:color-mix(in srgb,var(--aqa-blue),transparent 86%)}
       .hem-device-native-link89:focus-visible,.hem-device-controller-link89:focus-visible{
         outline:2px solid var(--aqa-blue);outline-offset:2px;border-radius:4px}
