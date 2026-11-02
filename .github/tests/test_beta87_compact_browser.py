@@ -178,7 +178,7 @@ with sync_playwright() as p:
     assert first.locator(".hem-room-alerts87 .hem-hint87").count()>=2
     device=first.locator('.hem-device-fold87[data-device-fold87="climate.managed_0_1"]')
     assert "60,2" in device.locator(":scope > summary").inner_text()
-    device.locator(":scope > summary").click()
+    device.locator(":scope > summary > ha-icon:last-child").click()
     assert device.get_attribute("open") is not None
     assert device.locator("[data-climate-method]").is_visible()
     assert device.locator("[data-device-error-announce]").count()==1
