@@ -81,6 +81,7 @@ async def tests():
     # An old failed ON request that never executed is recoverable without
     # turning the appliance OFF/ON, but only after real human verification.
     mismatched=Runtime(native="off")
+    mismatched.states["climate.heater"].attributes["hvac_action"]="idle"
     mismatched.record["paused"]="native_command_failed_or_uncertain"
     mismatched.record["pending"]=pending()
     await expect_hold(mismatched,"reports off")
@@ -95,6 +96,7 @@ async def tests():
     # A changed native output during the verification minute must restart
     # the interval; no stale proof or one-click bypass.
     changed=Runtime(native="off")
+    changed.states["climate.heater"].attributes["hvac_action"]="idle"
     changed.record["paused"]="restart_reconciliation_required"
     changed.record["pending"]=pending(requested="cool")
     await expect_hold(changed,"60 seconds")
@@ -123,6 +125,7 @@ async def tests():
 
     # A contradictory OFF/hvac_action=heating is not safe OFF.
     contradictory=Runtime(native="off")
+    contradictory.states["climate.heater"].attributes["hvac_action"]="idle"
     contradictory.record["paused"]="native_command_failed_or_uncertain"
     contradictory.record["pending"]=pending()
     await expect_hold(contradictory,"60 seconds")
