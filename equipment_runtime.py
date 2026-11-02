@@ -196,7 +196,7 @@ class EquipmentRuntime:
         self._active = True
         self._started = self.clock()
         self._native_session_observations = {}
-        self._restart_baseline_pending.clear()
+        getattr(self, "_restart_baseline_pending", set()).clear()
         try:
             from homeassistant.helpers.storage import Store
             self._store = Store(
@@ -274,7 +274,7 @@ class EquipmentRuntime:
         self._tasks.clear()
         self._profile_wake.clear()
         self._native_session_observations.clear()
-        self._restart_baseline_pending.clear()
+        getattr(self, "_restart_baseline_pending", set()).clear()
         self._pid_offline_previews.clear()
         tasks = tuple(self._pid_passive_tasks.values())
         for task in tasks:
