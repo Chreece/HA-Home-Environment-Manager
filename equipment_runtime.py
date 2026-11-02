@@ -2598,6 +2598,21 @@ class EquipmentRuntime:
         limits = model.device_limits(self.manager, spec, cap)
         profile = model.profile_name(config, model.plan_for(self.manager, spec))
         manual_humidity = not automatic and "humidity" in config.get("profile_targets", {}).get(profile, {})
+        # For genuinely binary climate regulation, the physical HVAC mode is
+        # HEM's actuator. A native thermostat setpoint close to the room goal
+        # would fight the PID's ON period. If no native MANUAL mode exists,
+        # drive the verified full heating/cooling limit while commanded ON.
+        native_modes = (
+            *(state.attributes.get("hvac_modes") or ()),
+            *(state.attributes.get("preset_modes") or ()),
+        )
+        binary_full_output = (
+            automatic and cap.domain == "climate"
+            and config["control_mode"] in ("automatic", "pid")
+            and mode in ("heat", "cool")
+            and cap.temperature and model.permission(self.manager, spec, cap)[1]
+            and not any(str(option).casefold() == "manual" for option in native_modes)
+        )
         if cap.domain == "humidifier" or cap.humidity and (mode == "dry" or manual_humidity):
             if cap.domain == "climate" and not (model.features(state) & model.HUMIDITY):
                 return False
@@ -2631,8 +2646,11 @@ class EquipmentRuntime:
             data = {"target_temp_low": target_to_unit(targets["heat"], unit),
                     "target_temp_high": target_to_unit(targets["cool"], unit)}
         elif cap.temperature and model.features(state) & model.TEMP:
-            target = targets["cool" if mode == "cool" else "heat"]
-            if demand is not None:
+            target = (
+                limits["temperature_max_limit"] if mode == "heat"
+                else limits["temperature_min_limit"]
+            ) if binary_full_output else targets["cool" if mode == "cool" else "heat"]
+            if demand is not None and not binary_full_output:
                 # Setpoint-only PID never gains compressor-cycle permissions.
                 target += (1 if mode == "heat" else -1) * 1.5 * demand / 100
             target = max(limits["temperature_min_limit"],
@@ -2657,7 +2675,7 @@ class EquipmentRuntime:
             desired_c = max(soft_min, min(soft_max, desired_c))
             value = target_to_unit(desired_c, unit)
             outside_soft_limit = not soft_min <= actual_c <= soft_max
-            if automatic and not outside_soft_limit:
+            if automatic and not outside_soft_limit and not binary_full_output:
                 delta = .5 if unit in ("°C", "C") else .9
                 value = max(actual-delta, min(actual+delta, value))
             native_min = target_to_unit(soft_min, unit)
@@ -2678,7 +2696,7 @@ class EquipmentRuntime:
             if final_c is None or not soft_min-1e-6 <= final_c <= soft_max+1e-6:
                 self._status(spec, "target_outside_device_limits")
                 return False
-            if automatic and not outside_soft_limit and abs(final_c-actual_c) > .500001:
+            if automatic and not binary_full_output and not outside_soft_limit and abs(final_c-actual_c) > .500001:
                 self._status(spec, "native_step_exceeds_setpoint_rate_limit")
                 return False
             data[key] = value
