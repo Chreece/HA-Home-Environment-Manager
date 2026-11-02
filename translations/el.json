@@ -2699,6 +2699,7 @@
           "paused": "Η αυτόματη λειτουργία έχει τεθεί σε παύση",
           "paused_away": "Paused away",
           "physical_capabilities_unavailable": "Δεν είναι διαθέσιμες οι δυνατότητες της συσκευής",
+          "physical_device_startup_timeout": "Η συσκευή δεν επανασυνδέθηκε εντός 60 δευτερολέπτων",
           "physical_device_unavailable": "Η φυσική συσκευή δεν είναι διαθέσιμη",
           "pid_already_owns_device": "Η συσκευή ελέγχεται ήδη από άλλο PID",
           "pid_not_ready": "Το PID χρειάζεται περισσότερες έγκυρες μετρήσεις",
