@@ -181,6 +181,22 @@ assert problem["code"]=="problem"
 assert problem["description"]=="Compressor fault"
 assert model.settings(manager,specA)["announce_device_errors"] is True
 
+name_spec=importlib.util.spec_from_file_location(
+    PKG+".equipment_name_catalog",ROOT/"equipment_name_catalog.py"
+)
+name_catalog=importlib.util.module_from_spec(name_spec)
+sys.modules[name_spec.name]=name_catalog
+name_spec.loader.exec_module(name_catalog)
+for catalog in [ROOT/"strings.json",*(ROOT/"translations").glob("*.json")]:
+    label=json.loads(catalog.read_text())["entity"]["switch"][
+        "equipment_announce_device_errors"
+    ]["name"]
+    language="en" if catalog.name=="strings.json" else catalog.stem
+    assert name_catalog.localized_equipment_name(
+        "announce_device_errors",language
+    )==label.replace("{channel}","").strip(),catalog
+assert len(list((ROOT/"translations").glob("*.json")))==38
+
 async def drain():
     tasks=tuple(manager.faults._tasks)
     if tasks:
