@@ -15,8 +15,12 @@ states=base['states'].copy()
 room=base['room'].copy()
 native=states['climate.managed']
 native={**native, 'attributes':{**native['attributes'],
-    'control_mode':'pid','physical_source_state':'off'}}
+    'control_mode':'manual','physical_source_state':'off'}}
 states['climate.managed']=native
+# Continue Automatic is unavailable while PID/Automatic is already selected.
+# Simulate the real native user override, which demoted this controller to
+# Manual and retained its prior algorithm for explicit restoration.
+states['select.method']={**states['select.method'],'state':'manual'}
 status=states['sensor.control_status']
 states['sensor.control_status']={**status,'attributes':{**status['attributes'],
     'status_code':'paused','paused_reason':'native_command_failed_or_uncertain',
