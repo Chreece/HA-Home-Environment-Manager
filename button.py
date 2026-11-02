@@ -27,6 +27,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
         for spec in equipment.specs(manager):
             if pid_calibration_supported(manager, registry, spec, platform="button"):
                 result.append(EquipmentCalibrationButton(manager, spec))
+                result.extend(
+                    EquipmentPIDReviewButton(manager, spec, action)
+                    for action in ("approve", "discard")
+                )
             cap = equipment.capabilities(manager, spec)
             if (cap is not None and cap.domain in ("climate", "humidifier")
                     and cap.fan_modes and "pid" in equipment.control_modes(manager, spec)
@@ -130,7 +134,7 @@ class EquipmentCalibrationButton(EquipmentEntity, ButtonEntity):
         cfg = self.controller_settings
         from . import equipment_model as equipment
         return (cfg["control_mode"] == "pid"
-                and cfg["pid_calibration_method"] != "manual"
+                and cfg["pid_calibration_method"] in ("imc_lambda","cohen_coon")
                 and equipment.capabilities(self._manager, self._spec) is not None
                 and "pid" in equipment.control_modes(self._manager, self._spec))
 
@@ -169,6 +173,51 @@ class EquipmentCalibrationButton(EquipmentEntity, ButtonEntity):
 
     async def async_press(self):
         await self._manager.equipment.async_apply_pid_calibration(self._spec)
+
+
+class EquipmentPIDReviewButton(EquipmentEntity, ButtonEntity):
+    """Approve or discard an exact persisted PID suggestion from Home Assistant.
+
+    These are genuine HA button entities, not unsafe GET links in the
+    persistent-notification Markdown. A second press cannot replay a
+    previously consumed proposal.
+    """
+
+    _attr_entity_category = EntityCategory.CONFIG
+
+    def __init__(self, manager, spec, action):
+        self._action = action
+        self._equipment_init(manager, spec, f"pid_review_{action}")
+        self._attr_icon = "mdi:check-circle-outline" if action == "approve" else "mdi:close-circle-outline"
+
+    @property
+    def available(self):
+        from .pid_review import is_pending
+        record = self._manager.equipment.records.get(self._spec.identifier, {})
+        return (self.controller_settings["control_mode"] == "pid"
+                and self.controller_settings["pid_calibration_method"] == "adaptive_suggest"
+                and is_pending(record.get("pid_passive_review")))
+
+    @property
+    def extra_state_attributes(self):
+        from .pid_review import is_pending
+        record = self._manager.equipment.records.get(self._spec.identifier, {})
+        review = record.get("pid_passive_review")
+        return {**super().extra_state_attributes,
+                "pid_review_role": self._action,
+                "pending": is_pending(review),
+                "current_gains": review.get("current") if is_pending(review) else None,
+                "next_gains": review.get("apply") if is_pending(review) else None,
+                "confidence": review.get("confidence") if is_pending(review) else None}
+
+    async def async_press(self):
+        from homeassistant.exceptions import HomeAssistantError
+        if not await self._manager.equipment.async_review_pid(
+            self._spec, self._action,
+        ):
+            raise HomeAssistantError(
+                "PID recommendation is no longer pending or cannot be safely applied"
+            )
 
 
 class EquipmentFanCapacityButton(EquipmentEntity, ButtonEntity):
