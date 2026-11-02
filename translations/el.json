@@ -2703,7 +2703,7 @@
           "physical_device_unavailable": "Η φυσική συσκευή δεν είναι διαθέσιμη",
           "pid_already_owns_device": "Η συσκευή ελέγχεται ήδη από άλλο PID",
           "pid_not_ready": "Το PID χρειάζεται περισσότερες έγκυρες μετρήσεις",
-          "pid_output_inactive": "Το PID ζητά θέρμανση ή ψύξη, αλλά η έξοδος παραμένει κλειστή",
+          "pid_output_inactive": "Το PID αναμένει τον επόμενο ασφαλή κύκλο ενεργοποίησης",
           "plan_missing": "Plan missing",
           "plan_or_permission_changed": "Plan or permission changed",
           "power_command_sent": "Η εντολή ενεργοποίησης ή απενεργοποίησης στάλθηκε",

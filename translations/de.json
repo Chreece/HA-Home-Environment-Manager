@@ -2703,7 +2703,7 @@
           "physical_device_unavailable": "Physisches Gerät nicht verfügbar",
           "pid_already_owns_device": "Gerät wird bereits von einer anderen PID-Regelung gesteuert",
           "pid_not_ready": "PID benötigt weitere gültige Messwerte",
-          "pid_output_inactive": "PID-Anforderung vorhanden, Ausgang ist derzeit ausgeschaltet",
+          "pid_output_inactive": "PID wartet auf das nächste sichere Einschaltfenster",
           "plan_missing": "Plan missing",
           "plan_or_permission_changed": "Plan or permission changed",
           "power_command_sent": "Ein-/Ausschaltbefehl gesendet",

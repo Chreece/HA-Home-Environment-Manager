@@ -270,7 +270,7 @@
   const CONTROLLER_STATUS_FALLBACK = {
     en: {
       startup_warmup:'Waiting for startup checks to finish',
-      pid_output_inactive:'PID demand is present, but the output is off',
+      pid_output_inactive:'PID waiting for the next safe ON interval',
       within_target_band:'Within the configured target range',
       sleep_room_evidence_unknown:'Cannot verify whether this room is sleeping',
       minimum_off_hold:'Waiting for the minimum safe OFF time',
@@ -281,7 +281,7 @@
     },
     de: {
       startup_warmup:'Warte auf Abschluss der Startprüfung',
-      pid_output_inactive:'PID-Anforderung vorhanden, Ausgang derzeit ausgeschaltet',
+      pid_output_inactive:'PID wartet auf das nächste sichere Einschaltfenster',
       within_target_band:'Innerhalb des eingestellten Zielbereichs',
       sleep_room_evidence_unknown:'Schlafstatus dieses Raums ist unklar',
       minimum_off_hold:'Warte auf sichere Mindest-Ausschaltzeit',
@@ -292,7 +292,7 @@
     },
     el: {
       startup_warmup:'Αναμονή ολοκλήρωσης ελέγχων εκκίνησης',
-      pid_output_inactive:'Το PID ζητά λειτουργία, αλλά η έξοδος είναι κλειστή',
+      pid_output_inactive:'Το PID αναμένει τον επόμενο ασφαλή κύκλο ενεργοποίησης',
       within_target_band:'Εντός του καθορισμένου εύρους στόχου',
       sleep_room_evidence_unknown:'Άγνωστη κατάσταση ύπνου δωματίου',
       minimum_off_hold:'Αναμονή ελάχιστου χρόνου εκτός λειτουργίας',
@@ -3562,7 +3562,7 @@
     const blocked=devices.filter(e=>{
       const code=e.statusInfo?.state?.attributes?.status_code ||
         e.climate?.attributes?.controller_status?.status || '';
-      return /(paused|blocked|unavailable|failed|error|pid_output_inactive)/i.test(code);
+      return /(paused|blocked|unavailable|failed|error)/i.test(code);
     }).length;
     if(blocked) alerts.push(_iconHint87('mdi:alert-outline',
       blocked+' '+labels.devices+' · '+labels.attention,'warn'));
@@ -3762,7 +3762,7 @@
       const name=attrs.friendly_name||entity;
       const labels=_roomLabels87(this._language());
       const activeFault=['warning','error','critical'].includes(fault?.status);
-      const issue=activeFault || /(paused|blocked|unavailable|failed|error|pid_output_inactive)/i.test(code);
+      const issue=activeFault || /(paused|blocked|unavailable|failed|error)/i.test(code);
       const missing=rawState==='unknown'||rawState==='unavailable'||fault?.status==='unavailable';
       const measurements=attrs.measurements||{};
       const temperature=typeof measurements.temperature==='number' && Number.isFinite(measurements.temperature)

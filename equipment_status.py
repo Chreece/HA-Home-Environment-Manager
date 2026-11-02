@@ -167,6 +167,14 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
                 "sleep_room_evidence_unknown" else None),
             "last_evaluated_mode": observed.get("mode"),
             "demand_percent": observed.get("demand_percent"),
+            "pid_control_metric": observed.get("pid_control_metric"),
+            "pid_pwm_state": observed.get("pid_pwm_state"),
+            "pid_pwm_effective_cycle_seconds": observed.get(
+                "pid_pwm_effective_cycle_seconds"
+            ),
+            "pid_pwm_next_window_seconds": observed.get(
+                "pid_pwm_next_window_seconds"
+            ),
             "pid_effective_profile": pid_signature[3] if len(pid_signature) >= 4 else None,
             "pid_pwm_phase_seconds": pid_phase,
             "pid_pwm_cycle_seconds": cycle if cfg.get("control_mode") == "pid" else None,

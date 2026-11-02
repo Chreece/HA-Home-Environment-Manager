@@ -2703,7 +2703,7 @@
           "physical_device_unavailable": "Physical device is unavailable",
           "pid_already_owns_device": "The device is already managed by another PID controller",
           "pid_not_ready": "PID needs more valid readings before it can control",
-          "pid_output_inactive": "PID demand is present, but the output is off",
+          "pid_output_inactive": "PID waiting for the next safe ON interval",
           "plan_missing": "Plan missing",
           "plan_or_permission_changed": "Plan or permission changed",
           "power_command_sent": "Power command sent; waiting for confirmation",
