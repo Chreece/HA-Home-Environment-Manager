@@ -16,6 +16,10 @@ with sync_playwright() as p:
   states['sensor.hem']={state:'safe',attributes:{dashboard:{version:1,rooms:[room],summary:{total:1,safe:1,attention:0,unknown:0},outdoor:{status:'safe',weather:[{condition:'partlycloudy',temperature_c:10,wind_kmh:6}],readings:[{metric:'aqi',value:27,unit:'US AQI',available:true}],warnings:[],blockers:[]}}}};
   window.card=document.createElement('home-environment-manager-card');window.calls=[];document.body.append(card);
   window.renders=0;const original=card._renderContent;card._renderContent=function(...args){renders++;return original.apply(this,args);};
+  // Full-content regression intentionally opens the room and device.
+  // Beta87's default-folded behavior is tested separately.
+  card._roomsExpanded87=new Set([room.area_id]);
+  card._devicesExpanded87=new Set(['climate.managed']);
   card.setConfig({entity:'sensor.hem'});card.hass={language:'el',states,localize:()=>undefined,callService:(...args)=>{calls.push(args);return Promise.resolve();}};
  }''',{'states':states,'room':room})
  page.wait_for_function('card._hasValidRender===true')
