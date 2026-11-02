@@ -459,7 +459,9 @@ class SupplyRetryTests(unittest.IsolatedAsyncioTestCase):
         c = self.case
         c.states.values["switch.supply"].state = "on"
         c.now += 30
-        self.assertTrue(await c.ns["before_tick"](c.runtime, c.spec))
+        # Successful ACK intentionally allows native processing to proceed,
+        # so before_tick returns False rather than holding the native tick.
+        self.assertFalse(await c.ns["before_tick"](c.runtime, c.spec))
         self.assertEqual(c.service_calls, [])
         self.assertIsNone(c.record["upstream"]["pending"])
         self.assertTrue(c.record["upstream"]["owned"])
