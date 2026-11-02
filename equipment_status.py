@@ -170,6 +170,13 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "pid_effective_profile": pid_signature[3] if len(pid_signature) >= 4 else None,
             "pid_pwm_phase_seconds": pid_phase,
             "pid_pwm_cycle_seconds": cycle if cfg.get("control_mode") == "pid" else None,
+            "pid_restart_recovery": record.get("pid_restart_status"),
+            "pid_checkpoint_saved_at": (
+                record["pid_checkpoint"].get("saved_at")
+                if cfg.get("control_mode") == "pid"
+                and isinstance(record.get("pid_checkpoint"), dict)
+                else None
+            ),
             "pid_comfort_wake_pending": bool(pid_wake),
             "pid_comfort_wake_until": pid_wake.get("until") if isinstance(pid_wake, dict) else None,
             "pid_calibration_method": cfg.get("pid_calibration_method", "manual"),
