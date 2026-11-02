@@ -41,7 +41,7 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
         "enabled": enabled, "blocked": False, "stop_requested": False,
         "status": "window_pause_disabled", "resume_delay_seconds": RESUME_SECONDS,
         "remaining_seconds": 0.0, "contacts": [], "open_contacts": [],
-        "unknown_contacts": [], "closed_since": None,
+        "unknown_contacts": [], "contact_states": {}, "closed_since": None,
         "closed_source_timestamps": {},
     }
     if not enabled:
@@ -61,8 +61,13 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
             room = next((item for item in (*getattr(plan, "rooms", ()),
                                           *getattr(plan, "climate_rooms", ()))
                          if item.area_id == spec.area_id), None)
+            # No selected/discovered contact is NOT an invalid sensor ID.
+            # A fabricated empty-string contact used to turn a closed-room
+            # plan into a permanent window_state_unknown hold. When no room
+            # plan exists yet the independent climate _gate still requires
+            # valid, fresh plan evidence before a physical ON command.
             contact_ids = ([item.entity_id for item in room.windows]
-                           if room is not None else [""])
+                           if room is not None else [])
     if not isinstance(contact_ids, (tuple, list)):
         contact_ids = [""]  # malformed selection is not a verified closed room
     contact_ids = tuple(dict.fromkeys(str(entity) for entity in contact_ids))
@@ -77,10 +82,17 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
     closed_times: list[float] = []
     for entity in contact_ids:
         state = runtime.hass.states.get(entity)
-        if (not entity.startswith("binary_sensor.")
-                or entity_area(runtime.hass, entity) != spec.area_id
-                or state is None or not is_window(runtime.hass, state)
-                or state.state not in ("on", "off")):
+        # Explain precisely why the selected contact cannot prove CLOSED.
+        # No other area/device is silently used as its replacement.
+        reason = (
+            "missing" if state is None else
+            "invalid_domain" if not entity.startswith("binary_sensor.") else
+            "other_area" if entity_area(runtime.hass, entity) != spec.area_id else
+            "not_window_contact" if not is_window(runtime.hass, state) else
+            "unknown" if state.state not in ("on", "off") else None
+        )
+        result["contact_states"][entity] = (reason or state.state)
+        if reason:
             result["unknown_contacts"].append(entity)
         elif state.state == "on":
             result["open_contacts"].append(entity)
