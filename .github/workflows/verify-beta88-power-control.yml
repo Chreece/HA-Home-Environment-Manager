@@ -2,7 +2,7 @@ name: HEM Beta88 powered native command safety
 
 on:
   push:
-    branches: ['fix/beta88-power-wake-onoff-ack-retries-20261102']
+    branches: ['fix/beta88-power-wake-onoff-ack-retries-20261102', 'release/v0.6.0b88']
   pull_request:
     branches: ['release/v0.6.0b87']
 
