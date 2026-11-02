@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "Utiliser le capteur de luminosité pour les stores"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Annoncer les erreurs de l’appareil · {channel}"
       }
     },
     "select": {

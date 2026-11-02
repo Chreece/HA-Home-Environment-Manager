@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "Käytä luksianturia aurinkosuojaukseen"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Ilmoita laitteen virheistä · {channel}"
       }
     },
     "select": {

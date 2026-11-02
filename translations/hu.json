@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "Fényérzékelő használata árnyékoláshoz"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Eszközhibák bejelentése · {channel}"
       }
     },
     "select": {

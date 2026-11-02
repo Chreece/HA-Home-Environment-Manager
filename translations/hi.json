@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "धूप से बचाव के लिए प्रकाश सेंसर उपयोग करें"
+      },
+      "equipment_announce_device_errors": {
+        "name": "डिवाइस त्रुटियों की सूचना · {channel}"
       }
     },
     "select": {
