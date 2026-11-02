@@ -56,6 +56,9 @@ with sync_playwright() as p:
       document.body.append(card);
       card._hass={language:'el',states,localize:()=>undefined,
         callService:(...args)=>{calls.push(args);return Promise.resolve();}};
+      // This legacy test exercises the original fully expanded content;
+      // Beta87's new default-collapsed behavior has its own browser test.
+      card._roomsExpanded87=new Set([room.area_id]);
       window.draw=()=>{card.shadowRoot.innerHTML=card._styles()+
        '<ha-card class="shell"><div class="content">'+card._room(room)+'</div></ha-card>';};
       draw();
