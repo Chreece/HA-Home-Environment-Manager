@@ -1933,7 +1933,7 @@
             'aria-label="'+escape(continueLabel)+'" '+
             (resumeAvailable?'':'disabled title="'+escape(continueLabel)+'"')+'>'+
             this._icon('mdi:play-circle-outline')+escape(continueLabel)+'</button>' : '';
-        return '<section class="managed-controller" '+
+        return '<section class="managed-controller hem-compact-device76" '+
           'data-managed-climate93="'+escape(entry.entityId)+'" '+
           'data-controller-area="'+escape(room.area_id)+'">'+
           nativeHeader+
