@@ -3711,7 +3711,7 @@
         border-radius:10px;background:var(--aqa-surface)}
       .hem-room-fold87.hem-room-attention{border-color:color-mix(in srgb,var(--aqa-amber),transparent 55%)}
       .hem-room-fold87 summary.hem-room-glance87{display:flex;align-items:center;
-        gap:6px;min-height:41px;padding:7px 8px;cursor:pointer;list-style:none;
+        gap:6px;min-height:41px;padding:7px 8px;box-sizing:border-box;cursor:pointer;list-style:none;
         min-width:0;user-select:none}
       .hem-room-glance87::-webkit-details-marker,.hem-device-glance87::-webkit-details-marker{display:none}
       .hem-room-glance87>ha-icon:first-child{--mdc-icon-size:16px;color:var(--aqa-blue);
@@ -3747,7 +3747,7 @@
       .managed-controller.hem-compact-device76{padding:0;border-radius:8px}
       .hem-device-fold87{min-width:0}
       .hem-device-glance87{display:flex;align-items:center;gap:5px;
-        padding:6px 7px;min-height:37px;min-width:0;cursor:pointer;list-style:none}
+        padding:6px 7px;min-height:37px;box-sizing:border-box;min-width:0;cursor:pointer;list-style:none}
       .hem-device-main87{display:inline-flex;align-items:center;
         gap:4px;min-width:0;flex:1 1 auto}
       .hem-device-main87>ha-icon{--mdc-icon-size:15px;color:var(--aqa-blue);flex:0 0 15px}
