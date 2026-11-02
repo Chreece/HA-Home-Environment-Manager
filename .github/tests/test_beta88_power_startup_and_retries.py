@@ -383,5 +383,87 @@ class SupplyBootTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(case.sent, [])
 
 
+
+
+class SupplyRetryTests(unittest.IsolatedAsyncioTestCase):
+    def setUp(self):
+        src = runpy.run_path(str(ROOT / ".github/tests/test_beta83_supply_safety.py"))
+        case = src["PowerSafetyTests"]()
+        case.setUp()
+        case.demand = True
+        case.now = 1000.0
+        relay = case.record["upstream"]
+        relay["owned"] = False
+        case.states.values["switch.supply"].state = "off"
+        relay["pending"] = {
+            "desired": "on", "when": 1000.0,
+            "identity": dict(relay["identity"]),
+            "phase": "commanded", "attempts": 1,
+            "last_attempt_at": 1000.0, "cold_start": False,
+        }
+        # Run the REAL upstream safety decision, with the physical fixture's
+        # minimum-OFF already met. The stage-specific mock never grants power
+        # when live demand changes or the native climate reports running.
+        case.ns["supply_minimum_off"] = lambda *args: True
+        case.ns["asyncio"] = asyncio
+        case.ns["UPSTREAM_COMMAND_MAX_ATTEMPTS"] = 4
+        case.ns["UPSTREAM_COMMAND_RETRY_SECONDS"] = 30
+        tree = ast.parse((ROOT / "equipment_power_switch.py").read_text(encoding="utf-8"))
+        retry = next(n for n in tree.body if isinstance(n, ast.AsyncFunctionDef)
+                     and n.name == "retry_pending_supply")
+        exec(compile(ast.Module(body=[retry], type_ignores=[]),
+                     "equipment_power_switch.py", "exec"), case.ns)
+        case.runtime._status = lambda spec, status, **kw: self.statuses.append((status, kw))
+        self.statuses = []
+        self.case = case
+
+    async def test_switch_turn_on_repeats_three_times_before_ack_missing(self):
+        c = self.case
+        relay = c.record["upstream"]
+        c.now = 1029
+        self.assertTrue(await c.ns["before_tick"](c.runtime, c.spec))
+        self.assertEqual(c.service_calls, [])
+        for attempt in (2, 3, 4):
+            c.now += 30
+            self.assertTrue(await c.ns["before_tick"](c.runtime, c.spec))
+            self.assertEqual(relay["pending"]["attempts"], attempt)
+            self.assertEqual(len(c.service_calls), attempt - 1)
+            self.assertEqual(c.service_calls[-1][:2], ("switch", "turn_on"))
+            self.assertNotIn("paused", relay)
+        c.now += 30
+        self.assertTrue(await c.ns["before_tick"](c.runtime, c.spec))
+        self.assertEqual(len(c.service_calls), 3)
+        self.assertEqual(relay["paused"], "upstream_switch_ack_missing")
+        self.assertEqual(self.statuses[-1][1]["command_retries_completed"], 3)
+
+    async def test_switch_retry_revalidates_live_pid_demand(self):
+        c = self.case
+        c.demand = False
+        c.now += 30
+        self.assertTrue(await c.ns["before_tick"](c.runtime, c.spec))
+        self.assertEqual(c.service_calls, [])
+        self.assertEqual(c.record["upstream"]["pending"]["attempts"], 1)
+        self.assertEqual(c.record["upstream"]["paused"],
+                         "upstream_retry_policy_or_feedback_changed")
+
+    async def test_active_native_device_blocks_supply_retry(self):
+        c = self.case
+        c.states.values["climate.native"].state = "heat"
+        c.now += 30
+        await c.ns["before_tick"](c.runtime, c.spec)
+        self.assertEqual(c.service_calls, [])
+        self.assertEqual(c.record["upstream"]["paused"],
+                         "upstream_retry_policy_or_feedback_changed")
+
+    async def test_switch_turn_on_ack_stops_retries(self):
+        c = self.case
+        c.states.values["switch.supply"].state = "on"
+        c.now += 30
+        self.assertTrue(await c.ns["before_tick"](c.runtime, c.spec))
+        self.assertEqual(c.service_calls, [])
+        self.assertIsNone(c.record["upstream"]["pending"])
+        self.assertTrue(c.record["upstream"]["owned"])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
