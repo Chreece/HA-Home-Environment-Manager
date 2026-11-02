@@ -15,7 +15,7 @@ from __future__ import annotations
 from typing import Any
 
 from .climate_coordination import device_inventory
-from .discovery import entity_area
+from .discovery import entity_area, is_window
 from .pid_math import finite
 
 CHANNELS = ("thermal", "humidity", "extraction", "filtration")
@@ -109,8 +109,10 @@ def _contact_interlock(hass: Any, area: str, plan: dict) -> bool:
         if not isinstance(entity,str) or entity_area(hass,entity)!=area:
             return False
         state=hass.states.get(entity)
-        if (state is None or state.domain!="binary_sensor"
-                or state.attributes.get("device_class")!="window"
+        # Use the same registry-aware window classifier as discovery and
+        # the per-device safety policy. A valid HA contact's device class
+        # can live in the entity registry rather than state.attributes.
+        if (state is None or not is_window(hass, state)
                 or state.state!="off"):
             return False
     return True
