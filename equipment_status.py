@@ -232,7 +232,11 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "command_pending": bool(record.get("pending")),
             # Read-only, compact recovery guidance. No command payloads or
             # unbounded device histories are exposed in Recorder attributes.
-            "native_resume_recovery": runtime.resume_information(self._spec),
+            "native_resume_recovery": (
+                runtime.resume_information(self._spec)
+                if callable(getattr(runtime, "resume_information", None))
+                else None
+            ),
             "upstream_power_switch": supply_id,
             "upstream_power_state": supply.state if supply is not None else "unavailable",
             "upstream_owned_by_controller": upstream.get("owned") is True,
