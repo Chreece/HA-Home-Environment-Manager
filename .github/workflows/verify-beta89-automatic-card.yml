@@ -2,7 +2,7 @@ name: HEM Beta89 physical activity and automatic ownership
 
 on:
   push:
-    branches: ['feat/beta89-physical-activity-automatic-20261102']
+    branches: ['feat/beta89-physical-activity-automatic-20261102', 'release/v0.6.0b89']
   pull_request:
     branches: ['release/v0.6.0b88']
 
