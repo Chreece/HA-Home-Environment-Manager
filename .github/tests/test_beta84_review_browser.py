@@ -17,7 +17,7 @@ states={
     "climate.managed":row("dry",friendly_name="Bathroom dehumidifier",
                           control_mode="pid",physical_source_state="off",
                           controller_status={"status":"within_target_band"},
-                          measurements={"humidity":58.},"humidity":60.),
+                          measurements={"humidity":58.},humidity=60.),
     "climate.dehumidifier":{"state":"off","attributes":{"friendly_name":"Dehumidifier"}},
     "select.method":row("pid",options=["existing","automatic","manual","off","pid"]),
     "select.calibration":row(
