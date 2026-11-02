@@ -250,9 +250,9 @@ async def async_publish_review(hass: Any, manager: Any, spec: Any, review: dict)
                 },
             }
             if kind == "entity":
-                data["entity_id"] = target
                 await hass.services.async_call(
-                    "notify", "send_message", data, blocking=True,
+                    "notify", "send_message", data,
+                    target={"entity_id": target}, blocking=True,
                 )
             else:
                 await hass.services.async_call(
@@ -281,9 +281,9 @@ async def async_clear_review(hass: Any, manager: Any, spec: Any) -> None:
                 "data": {"tag": mobile_tag(manager.entry.entry_id, spec.identifier)},
             }
             if kind == "entity":
-                data["entity_id"] = target
                 await hass.services.async_call(
-                    "notify", "send_message", data, blocking=True,
+                    "notify", "send_message", data,
+                    target={"entity_id": target}, blocking=True,
                 )
             else:
                 await hass.services.async_call(
