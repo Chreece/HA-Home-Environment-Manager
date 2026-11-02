@@ -2,7 +2,7 @@ name: HEM Beta90 compact room, stable scroll and window contact evidence
 
 on:
   push:
-    branches: ['fix/beta90-room-summary-scroll-window-evidence-20261102']
+    branches: ['fix/beta90-room-summary-scroll-window-evidence-20261102', 'release/v0.6.0b90']
   pull_request:
     branches: ['release/v0.6.0b89']
 
