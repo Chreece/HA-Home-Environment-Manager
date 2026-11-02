@@ -1712,16 +1712,16 @@
           entry.resumeButton?.attributes?.native_resume_recovery;
         const recoverLabels={
           en:['Previous command not confirmed','Requested','Device reports',
-              'Check the actual appliance and its HA state. If they agree, leave it unchanged and press Check and Continue again after the required time. No device power-cycling is needed.',
+              'Check the actual appliance and its HA state. If they agree, leave it unchanged and press Continue Automatic again after the required time. No device power-cycling is needed.',
               'Continue Automatic','Wait'],
           de:['Vorheriger Gerätebefehl nicht bestätigt','Angefordert','Gerät meldet',
-              'Prüfe den tatsächlichen Gerätezustand gegen Home Assistant. Wenn beide übereinstimmen, unverändert lassen und nach der Wartezeit erneut Prüfen und fortsetzen drücken. Nicht vom Strom trennen.',
+              'Prüfe den tatsächlichen Gerätezustand gegen Home Assistant. Wenn beide übereinstimmen, unverändert lassen und nach der Wartezeit erneut Automatik fortsetzen drücken. Nicht vom Strom trennen.',
               'Automatik fortsetzen','Warten'],
           el:['Η προηγούμενη εντολή δεν επιβεβαιώθηκε','Ζητήθηκε','Η συσκευή αναφέρει',
-              'Έλεγξε ότι η πραγματική συσκευή συμφωνεί με το Home Assistant. Άφησέ την χωρίς αλλαγές και πάτησε ξανά Έλεγχος και συνέχεια μετά την αναμονή. Μη διακόψεις την παροχή ρεύματος.',
+              'Έλεγξε ότι η πραγματική συσκευή συμφωνεί με το Home Assistant. Άφησέ την χωρίς αλλαγές και πάτησε ξανά Συνέχιση αυτόματης λειτουργίας μετά την αναμονή. Μη διακόψεις την παροχή ρεύματος.',
               'Συνέχιση αυτόματης λειτουργίας','Αναμονή'],
         }[this._language()] || ['Previous command not confirmed','Requested','Device reports',
-            'Verify the real device and HA report, then try Check and Continue again after the waiting interval.',
+            'Verify the real device and HA report, then try Continue Automatic again after the waiting interval.',
             'Continue Automatic','Wait'];
         const alreadyAutomatic=['automatic','pid'].includes(control) &&
           !entry.statusInfo?.state?.attributes?.paused_reason &&
@@ -1737,11 +1737,7 @@
               recovery.remaining_seconds !== null && recovery.remaining_seconds > 0
               ? '<small>'+escape(recoverLabels[5])+': '+
                 escape(recovery.remaining_seconds)+' s</small>' : '')+
-            '<small>'+escape(recoverLabels[3])+'</small>'+
-            '<button class="pid-button" type="button" data-native-resume="'+
-            escape(entry.resumeButtonId)+'" data-controller-area="'+
-            escape(room.area_id)+'" '+(resumeAvailable?'':'disabled')+'>'+
-            escape(recoverLabels[4])+'</button></div>' : '';
+            '<small>'+escape(recoverLabels[3])+'</small></div>' : '';
         const calMethods={manual:pidLabels[1],imc_lambda:pidLabels[2],
           cohen_coon:pidLabels[3],adaptive_suggest:localizedReview[0],
           adaptive_auto:localizedReview[1]};
