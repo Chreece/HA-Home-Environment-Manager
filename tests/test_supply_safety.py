@@ -18,7 +18,7 @@ import unittest
 SOURCE = Path(__file__).resolve().parents[1] / "equipment_power_switch.py"
 NAMES = {
     "observed_output_off", "native_outputs_idle", "idle_cooldown_ready",
-    "_dispatch_safe", "before_tick",
+    "_dispatch_safe", "_send", "before_tick",
 }
 
 
@@ -104,13 +104,21 @@ class PowerSafetyTests(unittest.IsolatedAsyncioTestCase):
         }
         self.sent = []
         self.saves = 0
+        self.service_calls = []
+
+        async def service_call(domain, action, data, **kwargs):
+            self.service_calls.append((domain, action, data, kwargs))
         self.runtime = SimpleNamespace(
             manager=SimpleNamespace(settings=self.cfg),
             hass=SimpleNamespace(
                 states=self.states,
-                services=SimpleNamespace(has_service=lambda domain, service: True),
+                services=SimpleNamespace(
+                    has_service=lambda domain, service: True,
+                    async_call=service_call,
+                ),
             ),
             _active=True, _ready=True, _started=500,
+            _commands=asyncio.Lock(),
             _pid_offline_previews={},
             _current_spec=lambda spec: True,
             clock=lambda: self.now,
@@ -137,7 +145,7 @@ class PowerSafetyTests(unittest.IsolatedAsyncioTestCase):
             "observe_supply_state": observe,
             "approved_demand": lambda *args: self.demand,
             "supply_minimum_on": lambda *args: True,
-            "_send": send,
+            "device_supply_dwell": lambda *args: (120, 600),
         })
         self.demand = False
 
@@ -180,6 +188,7 @@ class PowerSafetyTests(unittest.IsolatedAsyncioTestCase):
 
     def test_tick_starts_cooldown_on_verified_native_stop(self):
         tick = self.ns["before_tick"]
+        # No switch command during the first verified idle minute.
         self.assertFalse(await tick(self.runtime, self.spec))
         self.assertEqual(self.record["upstream"]["idle_since"], 1000)
         self.assertEqual(self.sent, [])
@@ -224,6 +233,31 @@ class PowerSafetyTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(await tick(self.runtime, self.spec))
         self.assertIsNone(self.record["upstream"]["idle_since"])
         self.assertEqual(self.sent, [])
+
+    async def test_hardware_off_command_revalidates_after_store_yield(self):
+        send = self.ns["_send"]
+        relay = self.record["upstream"]
+        relay["idle_since"] = 900
+        # Physical state changes while the HEM intent is being persisted.
+        original_save = self.runtime._save
+        saves = 0
+
+        async def state_change_during_save():
+            nonlocal saves
+            saves += 1
+            await original_save()
+            if saves == 1:
+                self.states.values["climate.native"] = State(
+                    "climate", "off", "drying"
+                )
+
+        self.runtime._save = state_change_during_save
+        sent = await send(
+            self.runtime, self.spec, self.record, relay["identity"], "off"
+        )
+        self.assertFalse(sent)
+        self.assertEqual(self.service_calls, [])
+        self.assertIsNone(relay.get("pending"))
 
     def test_final_dispatch_cannot_cut_power_after_state_changes(self):
         check = self.ns["_dispatch_safe"]
