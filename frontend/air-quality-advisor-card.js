@@ -3867,6 +3867,19 @@
       .hem-room-reading87{display:inline-flex;align-items:center;flex:0 0 auto;
         gap:1px;font-size:11px;white-space:nowrap}
       .hem-room-reading87 ha-icon{--mdc-icon-size:14px;color:var(--aqa-muted)}
+      .hem-activity-heat ha-icon{color:#f28a4b}
+      .hem-activity-cool ha-icon{color:#50baff}
+      .hem-activity-humidify ha-icon{color:#36cbb8}
+      .hem-activity-dry ha-icon{color:#e5ad44}
+      .hem-activity-mixed ha-icon{color:#b8a3f8}
+      .hem-room-air89{display:inline-flex;align-items:center;gap:4px;min-width:0;
+        max-width:27%;flex:0 1 auto;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;
+        overscroll-behavior-inline:contain}
+      .hem-room-air-chip89{display:inline-flex;align-items:center;gap:2px;
+        white-space:nowrap;flex:0 0 auto;font-size:9px;color:var(--aqa-muted)}
+      .hem-room-air-chip89 ha-icon{--mdc-icon-size:12px;color:var(--aqa-blue)}
+      .hem-room-air-chip89 b{font-weight:600;color:var(--aqa-text)}
+      .hem-room-air-chip89 small{font-size:8px}
       .hem-room-active87,.hem-room-alerts87{display:inline-flex;align-items:center;
         gap:2px;flex:0 0 auto;min-width:0}
       .hem-room-active87:empty,.hem-room-alerts87:empty{display:none}
@@ -3897,6 +3910,20 @@
       .hem-device-main87>ha-icon{--mdc-icon-size:15px;color:var(--aqa-blue);flex:0 0 15px}
       .hem-device-main87 strong{font-size:11px;overflow:hidden;
         text-overflow:ellipsis;white-space:nowrap;min-width:0}
+      .hem-device-native-link89,.hem-device-controller-link89{
+        border:0;background:transparent;color:inherit;cursor:pointer;padding:0;
+        display:inline-flex;align-items:center;min-width:0;font:inherit}
+      .hem-device-native-link89{flex:0 0 19px;justify-content:center;
+        color:var(--aqa-blue);height:24px;border-radius:5px}
+      .hem-device-native-link89 ha-icon{--mdc-icon-size:16px}
+      .hem-device-controller-link89{flex:1 1 auto;text-align:start;overflow:hidden}
+      .hem-device-controller-link89:hover strong{text-decoration:underline}
+      .hem-device-native-link89:hover{background:color-mix(in srgb,var(--aqa-blue),transparent 86%)}
+      .hem-device-native-link89:focus-visible,.hem-device-controller-link89:focus-visible{
+        outline:2px solid var(--aqa-blue);outline-offset:2px;border-radius:4px}
+      .hem-continue-auto89{display:inline-flex;align-items:center;gap:5px;margin:5px 0}
+      .hem-continue-auto89[disabled]{opacity:.45;cursor:not-allowed}
+      .hem-continue-auto89 ha-icon{--mdc-icon-size:16px}
       .hem-device-state87{display:inline-flex;align-items:center;gap:2px;flex:0 0 auto;
         max-width:76px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
         font-size:10px;color:var(--aqa-muted)}
@@ -3930,6 +3957,7 @@
         .hem-room-glance87{gap:4px}
         .hem-room-reading87{font-size:10px}
         .hem-room-reading87 ha-icon{--mdc-icon-size:12px}
+        .hem-room-air89{max-width:19%}
         .hem-device-measures87{gap:3px}
         .hem-device-state87{max-width:52px}
       }
