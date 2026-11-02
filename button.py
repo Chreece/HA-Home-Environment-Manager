@@ -112,6 +112,7 @@ class EquipmentResumeButton(EquipmentEntity, ButtonEntity):
     def extra_state_attributes(self):
         return {
             **super().extra_state_attributes,
+            "controller_resume_role": "check_and_continue",
             "native_resume_recovery": self._manager.equipment.resume_information(
                 self._spec
             ),
