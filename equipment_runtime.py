@@ -208,6 +208,10 @@ class EquipmentRuntime:
                         raise ValueError("Invalid power recovery history")
             self._ready = True
             for record in self.records.values():
+                # The previous process could not observe a full interval of
+                # continuous native feedback after shutdown/restart. Restart
+                # the user-confirmed two-check interval, never carry it over.
+                record.pop("pending_resume_probe", None)
                 # Previously CONFIRMED native power ON is not an in-flight
                 # command. Retain its durable timestamp and check the native
                 # source/registry before any new action. Only uncertain
@@ -1690,14 +1694,47 @@ class EquipmentRuntime:
                     )
 
             pending = record.get("pending")
+            pending_recovery = None
             if pending:
+                from .equipment_resume import check_pending, instructions
+                # A valid source/identity is mandatory. Never use a stale
+                # stored entity or a disconnected endpoint as native feedback.
                 if (not isinstance(pending, dict)
-                        or pending.get("phase") != "commanded"
-                        or pending.get("entity") not in physical
-                        or not matches(physical[pending["entity"]], pending.get("expected", {}))):
+                        or pending.get("entity") not in physical):
                     raise HomeAssistantError(
-                        "An interrupted native command needs a verified acknowledgement before Resume"
+                        "An interrupted native command refers to a missing physical "
+                        "device. Check the original device in Home Assistant; "
+                        "HEM cannot safely clear or replay the command."
                     )
+                reported = physical[pending["entity"]]
+                confirmation = check_pending(
+                    pending, reported, now,
+                    record.get("pending_resume_probe"),
+                    matches_expected=matches(
+                        reported, pending.get("expected", {}),
+                    ) if isinstance(pending.get("expected"), dict) else False,
+                )
+                decision = confirmation["decision"]
+                if decision == "first_check":
+                    record["pending_resume_probe"] = {
+                        "command": confirmation["command"],
+                        "observed": confirmation["observation"],
+                        "at": now,
+                    }
+                    await self._save()
+                if decision not in ("confirmed", "verified"):
+                    language = str(getattr(
+                        getattr(self.hass, "config", None), "language", "en"
+                    ))
+                    raise HomeAssistantError(
+                        instructions(confirmation, language=language)
+                    )
+                # When HA acknowledged a command but failed to record the
+                # durable completion, a fresh matching native observation
+                # can re-arm it. A differing/old observation requires two
+                # deliberate, unchanged user checks >=60s apart after a
+                # >=120s native-command settling period.
+                pending_recovery = decision
             for e in record.get("power", {}):
                 if e not in physical or observed[e] is None:
                     raise HomeAssistantError(
@@ -1804,6 +1841,18 @@ class EquipmentRuntime:
                     "since": trusted_since if trusted_since is not None else now,
                     "min_on": on_min, "max_on": max_on,
                 }
+            # A physically uncertain ON/OFF request is not evidence of the
+            # actual moment a compressor or heater changed state. If the
+            # user explicitly accepted current native feedback, restart
+            # only this uncertain output's minimum physical dwell, never
+            # infer the old power timestamp or issue an actuator command.
+            if (pending_recovery == "verified" and pending
+                    and pending.get("power") is True
+                    and pending["entity"] in next_power):
+                owned_since = next_power[pending["entity"]]
+                next_power[pending["entity"]] = {
+                    **owned_since, "since": now,
+                }
             next_off_at = dict(record.get("off_at", {}))
             for entity, value in physical.items():
                 if output_off(value):
@@ -1811,10 +1860,23 @@ class EquipmentRuntime:
                     historical = finite(next_off_at.get(entity), 0, now)
                     next_off_at[entity] = max(observed_off, historical or 0)
 
+            if (pending_recovery == "verified" and pending
+                    and pending.get("power") is True
+                    and output_off(physical[pending["entity"]])):
+                next_off_at[pending["entity"]] = now
             record.update(
                 paused=None, pending=None, power=next_power,
                 baseline=observed, off_at=next_off_at,
             )
+            record.pop("pending_resume_probe", None)
+            if pending_recovery is not None and pending:
+                record["last_resume_reconciliation"] = {
+                    "at": now,
+                    "entity": pending["entity"],
+                    "method": "fresh_native_ack" if pending_recovery == "confirmed"
+                              else "two_physical_checks",
+                    "observed": physical[pending["entity"]].state,
+                }
             record.pop("restart_power_verification", None)
             record.pop("restart_recovery_blocked", None)
             native_history = record.setdefault("native_power_observations", {})
@@ -1888,6 +1950,13 @@ class EquipmentRuntime:
                         or self.hass.states.get(supply).state != outlet.state
                         or permitted_supply(self.manager, spec, supply, identity) is None
                     ))):
+                # A changed observation invalidates the completed two-check
+                # proof. Preserve the original unresolved command so another
+                # user check is required; do not erase its safety evidence.
+                if pending_recovery == "verified":
+                    record.clear()
+                    record.update(prior)
+                    record.pop("pending_resume_probe", None)
                 record["paused"] = "physical_state_changed_during_resume"
                 await self._save()
                 raise HomeAssistantError(
