@@ -1661,16 +1661,55 @@ _PID_PARAMETER_LABELS = {
 }
 
 
-# Keep the retired Beta82 adaptation label for translation audits and
-# saved entity-registry migration; no legacy selector entity is created.
-# One unified PID method owns all new gain writes.
+# The only new managed-device entity is a notification preference switch.
+# The original HA diagnostic/error entity remains the authoritative source.
+_DEVICE_ERROR_ANNOUNCE_LABELS = {
+    "ar": "إعلان أخطاء الجهاز",
+    "bg": "Известяване за грешки на устройството",
+    "bn": "ডিভাইসের ত্রুটির ঘোষণা",
+    "cs": "Oznamovat chyby zařízení",
+    "da": "Annoncer enhedsfejl",
+    "de": "Gerätefehler melden",
+    "el": "Αναγγελία σφαλμάτων",
+    "en": "Announce device errors",
+    "es": "Anunciar errores del dispositivo",
+    "fa": "اعلام خطاهای دستگاه",
+    "fi": "Ilmoita laitteen virheistä",
+    "fr": "Annoncer les erreurs de l’appareil",
+    "he": "הודעה על שגיאות מכשיר",
+    "hi": "डिवाइस त्रुटियों की सूचना",
+    "hr": "Najavi pogreške uređaja",
+    "hu": "Eszközhibák bejelentése",
+    "id": "Umumkan kesalahan perangkat",
+    "it": "Annuncia errori dispositivo",
+    "ja": "デバイスのエラーを通知",
+    "ko": "기기 오류 알림",
+    "nb": "Varsle om enhetsfeil",
+    "nl": "Apparaatfouten melden",
+    "pl": "Powiadamiaj o błędach urządzenia",
+    "pt-BR": "Anunciar erros do dispositivo",
+    "pt": "Anunciar erros do dispositivo",
+    "ro": "Anunță erorile dispozitivului",
+    "ru": "Сообщать об ошибках устройства",
+    "sk": "Oznamovať chyby zariadenia",
+    "sr": "Пријављуј грешке уређаја",
+    "sv": "Meddela enhetsfel",
+    "ta": "சாதனப் பிழைகளை அறிவி",
+    "th": "แจ้งเตือนข้อผิดพลาดของอุปกรณ์",
+    "tr": "Cihaz hatalarını duyur",
+    "uk": "Сповіщати про помилки пристрою",
+    "ur": "ڈیوائس کی خرابیوں کا اعلان کریں",
+    "vi": "Thông báo lỗi thiết bị",
+    "zh-Hans": "通报设备错误",
+    "zh-Hant": "通報裝置錯誤",
+}
+
+# Keep retired Beta82 adaptation label for translation audits and saved
+# entity-registry migration; never register that obsolete selector.
 for _locale, _names in EQUIPMENT_TRANSLATED_NAMES.items():
-    # A switch for announcement preference only; the native HA error entity
-    # remains authoritative and is never duplicated by HEM.
     _names["announce_device_errors"] = (
-        "Αναγγελία σφαλμάτων · {channel}" if _locale == "el" else
-        "Gerätefehler melden · {channel}" if _locale == "de" else
-        "Announce device errors · {channel}"
+        _DEVICE_ERROR_ANNOUNCE_LABELS.get(_locale, _DEVICE_ERROR_ANNOUNCE_LABELS["en"])
+        + " · {channel}"
     )
     _names["pid_adaptation_mode"] = (
         "PID · {channel}Προσαρμοστική μάθηση" if _locale == "el" else
