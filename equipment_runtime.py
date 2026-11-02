@@ -662,6 +662,7 @@ class EquipmentRuntime:
                     or not self._current_spec(spec)
                     or cfg.get("control_mode") != "pid"
                     or cfg.get("pid_adaptation_mode") != "bounded"
+                    or cfg.get("pid_calibration_method", "adaptive_auto") != "adaptive_auto"
                     or cfg.get("requested_mode") not in ("heat", "cool", "dry")
                     or self.clock() - self._started < STARTUP_SECONDS
                     or cap is None or native is None or not output_off(native)
@@ -710,9 +711,132 @@ class EquipmentRuntime:
         except (AttributeError, KeyError, ValueError, TypeError):
             return False
 
+    def _pid_review_authorized(
+        self, spec: model.ManagedDevice, changes: dict, token: str,
+    ) -> bool:
+        """Approve only the exact still-current model, gains and native OFF.
+
+        Called TWICE under async_update's per-controller lock, before and
+        after storage yields. No physical service is issued by this path.
+        """
+        from .equipment_power_switch import observed_output_off
+        from .pid_review import is_pending
+        try:
+            cfg = model.settings(self.manager, spec)
+            record = self.records.get(spec.identifier, {})
+            review = record.get("pid_passive_review")
+            saved = record.get("pid_passive", {})
+            summary = saved.get("summary", {})
+            cap = model.capabilities(self.manager, spec)
+            now = self.clock()
+            if (not self._active or not self._ready
+                    or not self._current_spec(spec)
+                    or cfg.get("control_mode") != "pid"
+                    or cfg.get("pid_calibration_method") != "adaptive_suggest"
+                    or cfg.get("requested_mode") not in ("heat","cool","dry")
+                    or now-self._started < STARTUP_SECONDS
+                    or not is_pending(review) or review["id"] != token
+                    or not isinstance(saved, dict)
+                    or saved.get("context") != review["context"]
+                    or summary.get("last_cycle_at") != review["cycle_at"]
+                    or summary.get("status") not in ("suggestion_only","validated")
+                    or summary.get("confidence") not in ("medium","high")
+                    or not isinstance(review.get("created_at"), (int,float))
+                    or not 0 <= now-review["created_at"] <= 48*3600
+                    or cap is None or not observed_output_off(
+                        self.hass.states.get(cap.primary)
+                    )
+                    or record.get("paused") or record.get("pending")
+                    or record.get("power")
+                    or (record.get("upstream") or {}).get("pending")
+                    or any(cfg.get(k) != review["current"].get(k)
+                           for k in ("kp","ki","kd"))
+                    or set(changes) != {"kp","ki","kd","pid_last_calibration"}
+                    or any(changes.get(k) != review["apply"].get(k)
+                           for k in ("kp","ki","kd"))):
+                return False
+            for source in spec.source_entities:
+                state = self.hass.states.get(source)
+                if not observed_output_off(state):
+                    return False
+            soft,power = model.permission(self.manager,spec,cap)
+            if not (soft and power):
+                return False
+            if self._gate(
+                spec,cap,cfg,model.plan_for(self.manager,spec),
+                cfg["requested_mode"],
+            ) is not None:
+                return False
+            evidence = changes.get("pid_last_calibration")
+            return (
+                isinstance(evidence,dict)
+                and evidence.get("method") == "passive_approved_imc_lambda"
+                and evidence.get("proposal_id") == token
+                and evidence.get("cycle_at") == review["cycle_at"]
+                and evidence.get("previous_gains") == review["current"]
+            )
+        except (AttributeError, KeyError, ValueError, TypeError):
+            return False
+
+    async def async_review_pid(
+        self, spec: model.ManagedDevice, decision: str, token: str | None = None,
+    ) -> bool:
+        """Approve or discard one pending suggestion. Stale tokens do nothing."""
+        from .pid_review import is_pending, async_clear_review
+        if decision not in ("approve","discard"):
+            return False
+        record = self._record(spec)
+        review = record.get("pid_passive_review")
+        if not is_pending(review) or (
+            token is not None and review["id"] != token
+        ):
+            return False
+        token = review["id"]
+        if decision == "discard":
+            async with self._lock(spec.identifier):
+                latest = record.get("pid_passive_review")
+                if (not self._active or not self._ready
+                        or not self._current_spec(spec)
+                        or not is_pending(latest) or latest["id"] != token):
+                    return False
+                latest["state"] = "discarded"
+                await self._save()
+            await async_clear_review(self.hass,self.manager,spec)
+            self._presentation_updates.request(spec.identifier)
+            return True
+
+        changes = {
+            **review["apply"],
+            "pid_last_calibration": {
+                "method": "passive_approved_imc_lambda",
+                "proposal_id": token,
+                "cycle_at": review["cycle_at"],
+                "at": self.clock(),
+                "confidence": review["confidence"],
+                "model_target": review["recommended"],
+                "previous_gains": dict(review["current"]),
+                "rate_limit": "approved_10_percent_step",
+            },
+        }
+        try:
+            await self.async_update(spec,changes,passive_review=token)
+        except (HomeAssistantError,ValueError,TypeError):
+            # Keep it pending for a later user retry after safe physical OFF.
+            _LOGGER.debug("HEM PID review approval held for %s",spec.identifier)
+            return False
+        async with self._lock(spec.identifier):
+            latest = record.get("pid_passive_review")
+            if is_pending(latest) and latest["id"] == token:
+                latest["state"] = "applied"
+                await self._save()
+        await async_clear_review(self.hass,self.manager,spec)
+        self._presentation_updates.request(spec.identifier)
+        return True
+
     async def async_update(
         self, spec: model.ManagedDevice, changes: dict, *,
         passive_auto: tuple | None = None,
+        passive_review: str | None = None,
     ) -> None:
         """Validate all requested edits atomically; no hidden hardware permission."""
         async with self._lock(spec.identifier):
@@ -723,6 +847,9 @@ class EquipmentRuntime:
             if (passive_auto is not None and
                     not self._pid_passive_auto_authorized(spec, changes, passive_auto)):
                 raise HomeAssistantError("Passive PID gain change is no longer safe or validated")
+            if (passive_review is not None and
+                    not self._pid_review_authorized(spec, changes, passive_review)):
+                raise HomeAssistantError("PID review has changed or hardware is not safely OFF")
             if set(changes) == {"pause_on_window_open"}:
                 value = changes["pause_on_window_open"]
                 if type(value) is not bool:
@@ -819,7 +946,23 @@ class EquipmentRuntime:
                     self.manager._recalculate(initial=True)
                 return
             old = model.settings(self.manager, spec)
-            new = {**old, **deepcopy(changes)}
+            changes = deepcopy(changes)
+            if "pid_adaptation_mode" in changes:
+                # Backwards compatible API callers of the removed Beta82
+                # selector still enter the SAME canonical method.
+                legacy = changes.pop("pid_adaptation_mode")
+                if "pid_calibration_method" in changes:
+                    raise HomeAssistantError("Select one PID calibration method only")
+                if legacy not in ("disabled","observe","bounded"):
+                    raise HomeAssistantError("Unsupported legacy PID adaptation mode")
+                changes["pid_calibration_method"] = {
+                    "disabled":"manual",
+                    "observe":"adaptive_suggest",
+                    "bounded":"adaptive_auto",
+                }[legacy]
+            new = {**old, **changes}
+            if "pid_calibration_method" in changes:
+                new["pid_adaptation_mode"] = "disabled"
             if ("pause_on_window_open" in new
                     and type(new["pause_on_window_open"]) is not bool):
                 raise HomeAssistantError("Window pause must be a boolean")
@@ -1056,17 +1199,25 @@ class EquipmentRuntime:
                 if (passive_auto is not None and
                         not self._pid_passive_auto_authorized(spec, changes, passive_auto)):
                     raise HomeAssistantError("Passive PID context changed before saving new gains")
+                if (passive_review is not None and
+                        not self._pid_review_authorized(spec, changes, passive_review)):
+                    raise HomeAssistantError("PID review changed before saving gains")
                 self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
             self._memory.pop(spec.identifier, None)
             self._fan_allocations.pop(spec.identifier, None)
             self._pid_offline_previews.pop(spec.identifier, None)
-            if passive_auto is None and (
+            if passive_auto is None and passive_review is None and (
                     old["control_mode"] != new["control_mode"]
                     or any(k in changes and old.get(k) != new.get(k)
                            for k in ("kp", "ki", "kd", "pid_calibration_method"))):
-                # Manual tuning or mode changes supersede old passive fits.
+                # Manual or classical tuning supersedes old passive proposals.
                 self._pid_passive_observers.pop(spec.identifier, None)
                 record.pop("pid_passive", None)
+                if record.pop("pid_passive_review", None) is not None:
+                    from .pid_review import async_clear_review
+                    self.hass.async_create_task(
+                        async_clear_review(self.hass,self.manager,spec)
+                    )
                 await self._save()
             self._status(spec, "settings_updated", control_mode=new["control_mode"])
         if getattr(self.manager, "_active", False):
@@ -1087,7 +1238,9 @@ class EquipmentRuntime:
         delivery: its actual hvac_action must confirm the physical activity.
         """
         key = spec.identifier
-        if cfg.get("pid_adaptation_mode", "observe") == "disabled":
+        if cfg.get("pid_calibration_method", "adaptive_suggest") not in (
+            "adaptive_suggest", "adaptive_auto"
+        ):
             self._pid_passive_observers.pop(key, None)
             return
         if (cfg.get("control_mode") != "pid"
@@ -1157,7 +1310,25 @@ class EquipmentRuntime:
         record["pid_passive"] = {**observer.ledger(), "summary": summary}
         await self._save()
         self._presentation_updates.request(key)
-        if (cfg["pid_adaptation_mode"] == "bounded"
+        if (cfg["pid_calibration_method"] == "adaptive_suggest"
+                and summary.get("status") in ("suggestion_only", "validated")):
+            from .pid_review import proposal_for, async_publish_review
+            latest = record.get("pid_passive_review")
+            if (not isinstance(latest, dict)
+                    or latest.get("cycle_at") != summary.get("last_cycle_at")):
+                review = proposal_for(cfg,summary,context,self.clock())
+                if review is not None:
+                    record["pid_passive_review"] = review
+                    await self._save()
+                    # Notification delivery is an independent task, never a
+                    # prerequisite for native PID control or physical power.
+                    self.hass.async_create_task(
+                        async_publish_review(
+                            self.hass,self.manager,spec,dict(review)
+                        )
+                    )
+                    self._presentation_updates.request(key)
+        if (cfg["pid_calibration_method"] == "adaptive_auto"
                 and summary.get("confidence") == "high"
                 and summary.get("status") == "validated"
                 and output_off(state) and not record.get("power")
@@ -1225,8 +1396,10 @@ class EquipmentRuntime:
         if cfg["control_mode"] != "pid":
             raise HomeAssistantError("Select PID before applying calibration")
         method = cfg["pid_calibration_method"]
-        if method == "manual":
-            raise HomeAssistantError("Manual PID uses the editable Kp/Ki/Kd directly")
+        if method not in ("imc_lambda", "cohen_coon"):
+            raise HomeAssistantError(
+                "Select IMC/Lambda or Cohen-Coon before using Apply calibration"
+            )
         cap = model.capabilities(self.manager, spec)
         if cap is None or not self._current_spec(spec):
             raise HomeAssistantError("Native controller unavailable for calibration")
