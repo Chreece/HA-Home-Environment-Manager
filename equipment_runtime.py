@@ -182,6 +182,52 @@ class EquipmentRuntime:
             # immediate; batch only its outward presentation until next turn.
             self._presentation_updates.request(key)
 
+    def _resume_pid_checkpoint(
+        self, spec: model.ManagedDevice, record: dict, cfg: dict,
+        value: float, goal: float, increasing: bool,
+    ) -> tuple | None:
+        """Restore bounded PID I/PWM phase, not any physical actuator state."""
+        from .pid_restart import restore
+        raw = record.get("pid_checkpoint")
+        if not isinstance(raw, dict):
+            return None
+        restored = restore(
+            raw, sources=tuple(spec.source_entities),
+            source_device_id=spec.source_device_id, now=self.clock(),
+            sample=cfg["sample_seconds"], measured=value, goal=goal,
+            increasing=increasing, kp=cfg["kp"],
+        )
+        if restored is None:
+            # A bad or stale checkpoint must not be reused after another
+            # restart. It is superseded by the next fresh PID sample.
+            record["pid_restart_status"] = "safe_reseed"
+            return None
+        signature, values, anchor = restored
+        record["pid_restart_status"] = "integral_and_phase_restored"
+        # Reset derivative on restart, and never integrate the offline gap.
+        return signature, model.PIDMemory(**values), anchor
+
+    async def _checkpoint_pid(
+        self, spec: model.ManagedDevice, record: dict, cfg: dict,
+        signature: tuple, memory: model.PIDMemory, anchor: float,
+    ) -> None:
+        """Persist no more than once per PID sample or changed logical phase."""
+        from .pid_restart import checkpoint
+        current = checkpoint(
+            signature, memory, anchor, tuple(spec.source_entities),
+            spec.source_device_id, cfg["sample_seconds"], self.clock(),
+        )
+        if current is None:
+            return
+        saved = record.get("pid_checkpoint")
+        if (isinstance(saved, dict)
+                and saved.get("signature") == current["signature"]
+                and saved.get("stamp") == current["stamp"]
+                and saved.get("anchor") == current["anchor"]):
+            return
+        record["pid_checkpoint"] = current
+        await self._save()
+
     async def _save(self) -> None:
         if self._store is None or not self._ready:
             raise HomeAssistantError("Controller storage is unavailable")
@@ -648,6 +694,10 @@ class EquipmentRuntime:
         # climate facade, the PID, a metadata refresh or HA restart) demotes
         # Automatic/PID to Manual. Preserve the algorithm for Continue.
         if reason == "physical_manual_override":
+            # A genuine user intervention ends this PID continuity. Keep
+            # physical ON/OFF ownership timestamps and safety dwell intact.
+            getattr(self, "_memory", {}).pop(spec.identifier, None)
+            record.pop("pid_checkpoint", None)
             cfg = model.settings(self.manager, spec)
             previous = cfg.get("control_mode")
             if previous in ("automatic", "pid") and self._current_spec(spec):
@@ -1302,6 +1352,10 @@ class EquipmentRuntime:
             self._memory.pop(spec.identifier, None)
             self._fan_allocations.pop(spec.identifier, None)
             self._pid_offline_previews.pop(spec.identifier, None)
+            if record.pop("pid_checkpoint", None) is not None:
+                # An explicit settings/algorithm edit invalidates the
+                # previous controller math, never the physical dwell.
+                await self._save()
             if passive_auto is None and passive_review is None and (
                     old["control_mode"] != new["control_mode"]
                     or any(k in changes and old.get(k) != new.get(k)
@@ -3230,6 +3284,8 @@ class EquipmentRuntime:
             # then let a controller-owned upstream relay idle out separately.
             self._memory.pop(spec.identifier, None)
             self._fan_allocations.pop(spec.identifier, None)
+            if record.pop("pid_checkpoint", None) is not None:
+                await self._save()
             if output_off(state):
                 self._status(spec, "sleep_room_control_paused",
                              reason="native_output_off_during_sleep")
@@ -3248,6 +3304,8 @@ class EquipmentRuntime:
             if window["blocked"]:
                 self._memory.pop(spec.identifier, None)
                 self._fan_allocations.pop(spec.identifier, None)
+                if record.pop("pid_checkpoint", None) is not None:
+                    await self._save()
                 if (window["stop_requested"] and not output_off(state)
                         and (power or owned)):
                     await self._power(
@@ -3355,6 +3413,14 @@ class EquipmentRuntime:
                 previous, memory, anchor = self._memory.get(
                     spec.identifier, (None, None, self.clock())
                 )
+                if previous is None:
+                    restore = getattr(self, "_resume_pid_checkpoint", None)
+                    if callable(restore):
+                        recovered = restore(
+                            spec, record, cfg, value, goal, increasing
+                        )
+                        if recovered is not None:
+                            previous, memory, anchor = recovered
                 profile = model.profile_name(cfg, plan)
                 on_min, off_min, _ = model.timing(self.manager, spec, cap)
                 signature, rebased, priority_wake = phase_decision(
@@ -3386,6 +3452,9 @@ class EquipmentRuntime:
                     sample=cfg["sample_seconds"], memory=memory,
                 )
                 self._memory[spec.identifier] = (signature, memory, anchor)
+                persist = getattr(self, "_checkpoint_pid", None)
+                if callable(persist):
+                    await persist(spec, record, cfg, signature, memory, anchor)
                 demand = memory.demand
                 if (cfg.get("pid_fan_capacity_mode") == "measured"
                         and cap.domain in ("climate", "humidifier")
