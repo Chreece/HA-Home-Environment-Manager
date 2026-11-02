@@ -3549,6 +3549,28 @@
     this._roomsExpanded87 ||= new Set();
     this._devicesExpanded87 ||= new Set();
     this.shadowRoot.addEventListener('click',event=>{
+      // A click on a real source icon or HEM controller name opens its
+      // respective HA More Info panel without expanding the device fold.
+      const link=event.target?.closest?.(
+        'button[data-open-native89],button[data-open-controller89]'
+      );
+      if(link) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const area=link.getAttribute('data-controller-area');
+        const entry=this._managedControllers(area).find(row=>
+          row.entityId===link.getAttribute('data-controller-id89'));
+        const source=link.getAttribute('data-open-native89');
+        const controller=link.getAttribute('data-open-controller89');
+        const registered=safeArray(entry?.climate?.attributes?.source_entity_ids);
+        const entity=source
+          ? registered.includes(source) && this._hass?.states?.[source]?source:null
+          : entry?.entityId===controller?controller:null;
+        if(entity)this.dispatchEvent(new CustomEvent('hass-more-info',{
+          detail:{entityId:entity},bubbles:true,composed:true,
+        }));
+        return;
+      }
       const summary=event.target?.closest?.(
         'summary.hem-room-glance87,summary.hem-device-glance87'
       );
@@ -3700,8 +3722,12 @@
         '<span class="hem-device-reading87" title="'+escape(label)+'">'+
         this._icon(icon)+escape(value)+'</span>';
       const fmt=(v,unit)=>this._format(v,1)+unit;
-      const primaryIcon=entity.startsWith('climate.')?'mdi:thermostat':
-        _deviceIcons87[entity.split('.')[0]]||'mdi:thermostat';
+      const sources=safeArray(attrs.source_entity_ids);
+      const declared=attrs.physical_primary_entity_id;
+      const nativeId=typeof declared==='string' && sources.includes(declared)
+        ? declared : sources.length===1?sources[0]:null;
+      const realNative=nativeId && this._hass?.states?.[nativeId]?nativeId:null;
+      const primaryIcon=_deviceIcons87[realNative?.split('.')[0]]||'mdi:thermostat';
       const stateName=physical.active?this._controllerStatusLabel(physical.action):
         missing?this._controllerStatusLabel('unavailable'):
         this._controllerStatusLabel(rawState==='off'?'off':rawState);
@@ -3709,8 +3735,19 @@
         ? [fault.code,fault.description].filter(Boolean).join(' · ')
         : this._controllerStatusLabel(status.status_reason_code||code||'unknown');
       summary.innerHTML='<span class="hem-device-main87">'+
-        this._icon(primaryIcon)+
-        '<strong title="'+escape(name)+'">'+escape(name)+'</strong></span>'+
+        (realNative?
+          '<button type="button" class="hem-device-native-link89" '+
+          'data-open-native89="'+escape(realNative)+'" '+
+          'data-controller-area="'+escape(area)+'" '+
+          'data-controller-id89="'+escape(entity)+'" '+
+          'title="'+escape(realNative)+'" aria-label="Open native device '+escape(realNative)+'">'+
+          this._icon(primaryIcon)+'</button>' : this._icon(primaryIcon))+
+        '<button type="button" class="hem-device-controller-link89" '+
+        'data-open-controller89="'+escape(entity)+'" '+
+        'data-controller-id89="'+escape(entity)+'" '+
+        'data-controller-area="'+escape(area)+'" '+
+        'title="'+escape(name)+'" aria-label="Open HEM controller '+escape(name)+'">'+
+        '<strong>'+escape(name)+'</strong></button></span>'+
         '<span class="hem-device-state87" title="'+escape(stateName)+'">'+
         this._icon(physical.active?'mdi:power':'mdi:power-standby')+
         escape(stateName)+'</span>'+
