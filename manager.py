@@ -795,7 +795,9 @@ class AirQualityManager:
                 return
         # Native registry membership may change when a manufacturer
         # integration adds its own diagnostic/error entity after startup.
-        self.faults.refresh()
+        fault_monitor = getattr(self, "faults", None)
+        if fault_monitor is not None:
+            fault_monitor.refresh()
         self._queue_source_refresh()
 
     @callback
@@ -880,7 +882,9 @@ class AirQualityManager:
         entity_id = event.data.get("entity_id")
         # Fault monitoring has its own exact device-registry source index,
         # independent of the environmental measurement selections.
-        self.faults.state_changed(entity_id)
+        fault_monitor = getattr(self, "faults", None)
+        if fault_monitor is not None:
+            fault_monitor.state_changed(entity_id)
         if entity_id not in self._tracked:
             return
         from .room_sources import native as native_room_source
