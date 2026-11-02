@@ -352,9 +352,14 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
         if mode not in [str(v) for v in self.hvac_modes]:
             raise HomeAssistantError("Unsupported physical HVAC mode")
         algorithm = self.controller_settings["control_mode"]
-        await self._manager.equipment.async_update(self._spec, {
-            "control_mode": "off" if mode == "off" else "pid" if algorithm == "pid" else "manual",
-            "requested_mode": mode})
+        # Commands to HEM's own climate facade are controller *requests*.
+        # They must not silently demote the selected Automatic/PID algorithm.
+        # Only a change on the real native physical entity is treated as an
+        # external manual override (see EquipmentRuntime._reconcile).
+        changes = {"requested_mode": mode}
+        if algorithm not in ("automatic", "pid"):
+            changes["control_mode"] = "off" if mode == "off" else "manual"
+        await self._manager.equipment.async_update(self._spec, changes)
 
     async def async_turn_off(self):
         await self.async_set_hvac_mode(HVACMode.OFF)
