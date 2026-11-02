@@ -32,7 +32,10 @@ def extract(file, names, ns):
 
 
 phase_ns = {"math": math, "TARGET_CHANGE_C": 0.25, "COMFORT_ERROR_C": 0.5}
-(phase_decision,) = extract("pid_phase.py", ("phase_decision",), phase_ns)
+(phase_decision, safe_binary_pwm_cycle, binary_pwm_off_phase) = extract(
+    "pid_phase.py", ("phase_decision", "safe_binary_pwm_cycle",
+                     "binary_pwm_off_phase"), phase_ns
+)
 model_ns = {"math": math, "dataclass": dataclass}
 PIDMemory, pid_step, duty_on, profile_name = extract(
     "equipment_model.py", ("PIDMemory", "pid_step", "duty_on", "profile_name"),
@@ -86,6 +89,8 @@ async def supply_tick(runtime, spec):
 supply.before_tick = supply_tick
 phase_module = ModuleType("test_beta70.pid_phase")
 phase_module.phase_decision = phase_decision
+phase_module.binary_pwm_off_phase = binary_pwm_off_phase
+phase_module.safe_binary_pwm_cycle = safe_binary_pwm_cycle
 sys.modules[pkg.__name__] = pkg
 sys.modules[supply.__name__] = supply
 sys.modules[phase_module.__name__] = phase_module
