@@ -55,6 +55,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
     entities.extend(native_quiet_switches())
     entities.extend(EquipmentWindowPauseSwitch(manager, spec)
                     for spec in equipment.specs(manager))
+    # ONLY a per-device announcement setting is new. Error evidence is
+    # read directly from the manufacturer's existing HA entities/attributes.
+    entities.extend(EquipmentErrorAnnouncementSwitch(manager, spec)
+                    for spec in equipment.specs(manager))
     entities.extend(EquipmentQuietSwitch(manager, spec, "sensor_verified")
                     for spec in equipment.specs(manager)
                     if (cap := equipment.capabilities(manager, spec)) is not None
@@ -187,6 +191,45 @@ class EquipmentQuietSwitch(EquipmentEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs):
         await self._manager.equipment.async_update(self._spec, {self._key: False})
+
+
+class EquipmentErrorAnnouncementSwitch(EquipmentEntity, SwitchEntity):
+    """Default-ON alerts for the physical device's existing HA error sources.
+
+    This switch changes only a stored HEM preference. It remains available
+    even if the native device itself temporarily disappears and never sends
+    any native device or relay power command.
+    """
+
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_icon = "mdi:alert-circle-outline"
+
+    def __init__(self, manager, spec):
+        self._equipment_init(manager, spec, "announce_device_errors")
+
+    @property
+    def available(self):
+        return self._manager.faults.active
+
+    @property
+    def is_on(self):
+        return self.controller_settings.get("announce_device_errors", True) is True
+
+    @property
+    def extra_state_attributes(self):
+        return {
+            **super().extra_state_attributes,
+            "device_fault_role": "announce",
+            # Read-only summary of the *original* physical HA fault entity.
+            # No additional native/HEM error sensor is registered.
+            "native_error": self._manager.faults.details(self._spec),
+        }
+
+    async def async_turn_on(self, **kwargs):
+        await self._manager.faults.async_set_announcements(self._spec, True)
+
+    async def async_turn_off(self, **kwargs):
+        await self._manager.faults.async_set_announcements(self._spec, False)
 
 
 class EquipmentWindowPauseSwitch(EquipmentEntity, SwitchEntity):
