@@ -1661,8 +1661,15 @@ _PID_PARAMETER_LABELS = {
 }
 
 
-# One unified PID method, plus native HA Approve/Discard actions.
+# Keep the retired Beta82 adaptation label for translation audits and
+# saved entity-registry migration; no legacy selector entity is created.
+# One unified PID method owns all new gain writes.
 for _locale, _names in EQUIPMENT_TRANSLATED_NAMES.items():
+    _names["pid_adaptation_mode"] = (
+        "PID · {channel}Προσαρμοστική μάθηση" if _locale == "el" else
+        "PID · {channel}Adaptives Lernen" if _locale == "de" else
+        "PID · {channel}Passive adaptation"
+    )
     _names["pid_review_approve"] = (
         "PID · {channel}Έγκριση πρότασης" if _locale == "el" else
         "PID · {channel}Vorschlag annehmen" if _locale == "de" else
