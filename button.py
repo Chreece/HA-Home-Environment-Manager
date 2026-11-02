@@ -108,6 +108,15 @@ class EquipmentResumeButton(EquipmentEntity, ButtonEntity):
     def __init__(self, manager, spec):
         self._equipment_init(manager, spec, "resume")
 
+    @property
+    def extra_state_attributes(self):
+        return {
+            **super().extra_state_attributes,
+            "native_resume_recovery": self._manager.equipment.resume_information(
+                self._spec
+            ),
+        }
+
     async def async_press(self):
         await self._manager.equipment.async_resume(self._spec)
 
