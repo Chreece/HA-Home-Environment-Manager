@@ -188,8 +188,19 @@ with sync_playwright() as p:
     # on screen even when the trigger is close to the left or right edge.
     info=device.locator("details.hem-context76 > summary").first
     info.click()
+    page.wait_for_timeout(80)
     floating=page.locator(".hem-floating-info87")
-    assert floating.count()==1
+    if floating.count()!=1:
+        diag=info.evaluate("""node=>({
+            open:node.parentElement.open,
+            root:node.getRootNode()===card.shadowRoot,
+            ready:card.shadowRoot.querySelector('ha-card.shell')?.className,
+            portalReady:typeof card._openInfo87,
+            popup:!!card._floatingInfo87,
+            oldExpanded:[...card._detailsExpanded66||[]],
+            present:card.shadowRoot.querySelectorAll('.hem-floating-info87').length
+        })""")
+        raise AssertionError(("Info bubble must show after opening",diag,errors))
     assert floating.evaluate("(e)=>e.matches(':popover-open')")
     rect=floating.bounding_box()
     assert rect and rect["x"]>=0 and rect["x"]+rect["width"]<=590,(rect,errors)
