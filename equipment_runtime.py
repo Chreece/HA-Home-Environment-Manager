@@ -40,6 +40,25 @@ from . import equipment_model as model
 _LOGGER = logging.getLogger(__name__)
 ACK_SECONDS = 120
 STARTUP_SECONDS = 300
+# Initial command + three fresh, independently authorized retries.
+NATIVE_COMMAND_MAX_ATTEMPTS = 4
+NATIVE_COMMAND_RETRY_SECONDS = 30
+
+
+def native_retry_decision(pending: dict, now: float) -> str:
+    """Never mistake a service call for a physical acknowledgement."""
+    if pending.get("phase") != "commanded":
+        return "uncertain"
+    attempts = pending.get("attempts")
+    first = finite(pending.get("when"), 0, now)
+    last = finite(pending.get("last_attempt_at"), 0, now)
+    if (type(attempts) is not int or not 1 <= attempts <= NATIVE_COMMAND_MAX_ATTEMPTS
+            or first is None or last is None or last < first):
+        return "uncertain"
+    if now - last < NATIVE_COMMAND_RETRY_SECONDS:
+        return "waiting"
+    return ("exhausted" if attempts == NATIVE_COMMAND_MAX_ATTEMPTS
+            else "retry")
 # Changes in passive device metadata are not evidence of a manual override.
 # Only physical mode/power and user-adjustable targets, speed and swing qualify.
 SETTABLE_OUTPUT_ATTRIBUTES = frozenset((
@@ -2369,6 +2388,9 @@ class EquipmentRuntime:
                         record["power"].setdefault(entity, {"since": now,
                             "min_on": pending["min_on"], "max_on": pending["max_on"]})
                 await self._save()
+            elif pending.get("retry_context") is not None:
+                await self._retry_pending(spec, pending, now)
+                return False
             elif now < pending["when"] or now-pending["when"] > ACK_SECONDS:
                 await self._pause(spec, "physical_acknowledgement_missing")
                 return False
@@ -2392,6 +2414,195 @@ class EquipmentRuntime:
                 record["baseline"][entity] = observed
                 await self._save()
         return True
+
+    async def _retry_pending(
+        self, spec: model.ManagedDevice, pending: dict, now: float,
+    ) -> None:
+        """Retry only the persisted identical command, never a new inferred intent.
+
+        Physical ACK is checked first by _reconcile. A fresh policy/ownership
+        check is mandatory before each additional native HA service call.
+        Uncertain exceptions, changed consent and HA restarts still require
+        reconciliation; they must never be counted as device nonresponse.
+        """
+        decision = native_retry_decision(pending, now)
+        attempts = pending.get("attempts", 0)
+        if decision == "uncertain":
+            await self._pause(spec, "native_retry_intent_uncertain")
+            return
+        if decision == "waiting":
+            self._status(spec, "awaiting_physical_acknowledgement",
+                         command_attempts=attempts,
+                         command_retries_completed=max(0, attempts - 1),
+                         native_output_confirmed=False)
+            return
+        if decision == "exhausted":
+            await self._pause(spec, "physical_acknowledgement_missing")
+            self._status(spec, "paused", reason="physical_acknowledgement_missing",
+                         command_attempts=attempts,
+                         command_retries_completed=NATIVE_COMMAND_MAX_ATTEMPTS - 1)
+            return
+
+        record = self._record(spec)
+        entity = pending["entity"]
+        state = self.hass.states.get(entity)
+        if state is None or state.state in ("unavailable", "unknown"):
+            # Power-switch boot grace and HA discovery must not consume
+            # retry attempts or falsely claim a physical response.
+            self._status(spec, "waiting_for_physical_device",
+                         command_attempts=attempts,
+                         command_retries_completed=max(0, attempts - 1))
+            return
+
+        context = pending.get("retry_context")
+        cfg = model.settings(self.manager, spec)
+        cap = model.capabilities(self.manager, spec)
+        if cap is None or not model.sources_available(self.manager, spec):
+            self._status(spec, "waiting_for_physical_device")
+            return
+        plan = model.plan_for(self.manager, spec)
+        supply = cfg.get("power_switch_entity")
+        relay = record.get("upstream", {})
+        supply_state = self.hass.states.get(supply) if supply else None
+        before = record.get("baseline", {}).get(entity)
+        observed = snapshot(state)
+        if (
+            not isinstance(context, dict)
+            or record.get("pending") is not pending
+            or not self._current_spec(spec)
+            or not self._identity_ok(spec)
+            or asdict(cap) != record.get("capabilities")
+            or cfg != context.get("settings")
+            or (context.get("profile") != model.profile_name(cfg, plan)
+                if context.get("automatic") else False)
+            or before is None or observed is None
+            or _manual_output_changes(before, observed)
+            or (supply and (
+                supply_state is None or supply_state.state != "on"
+                or relay.get("paused") or relay.get("pending")
+                or relay.get("owned") is not context.get("upstream_owned")
+            ))
+            or entity not in spec.source_entities
+            or entity_area(self.hass, entity) != spec.area_id
+            or foreign_owner_hold(
+                self.hass, self.manager.entry.entry_id, entity
+            )
+        ):
+            await self._pause(spec, "native_retry_authority_or_state_changed")
+            return
+        automatic = context.get("automatic") is True
+        mode = context.get("mode")
+        shutdown = context.get("shutdown") is True
+        policy_stop = context.get("policy_stop")
+        if (not isinstance(mode, str)
+                or (policy_stop is not None
+                    and not self._stop_policy_verified(spec, cap, policy_stop))
+                or (shutdown and not self._shutdown_allowed(
+                    spec, entity, pending["expected"]))
+                or (not shutdown and self._gate(
+                    spec, cap, cfg, plan, mode, automatic=automatic,
+                    window_stop=pending.get("power") and mode == "off"))
+                or (pending.get("power") and not shutdown
+                    and not model.permission(self.manager, spec, cap)[1])):
+            await self._pause(spec, "native_retry_policy_changed")
+            return
+        if automatic and mode != "off":
+            from .equipment_power_switch import approved_demand
+            if approved_demand(self, spec, cfg, cap) is not True:
+                await self._pause(spec, "native_retry_demand_changed")
+                return
+        domain = entity.partition(".")[0]
+        service = pending.get("service")
+        if (not isinstance(service, str)
+                or not self.hass.services.has_service(domain, service)):
+            self._status(spec, "native_service_unavailable",
+                         service=f"{domain}.{service}")
+            return
+
+        # Reserve the next attempt durably BEFORE dispatch. An interrupted
+        # retry stays uncertain; it cannot silently replay across restart.
+        previous_last = pending["last_attempt_at"]
+        pending["attempts"] += 1
+        pending["last_attempt_at"] = now
+        pending["phase"] = "retry_intent"
+        await self._save()
+
+        def still_safe() -> bool:
+            current = self.hass.states.get(entity)
+            if current is None or current.state in ("unknown", "unavailable"):
+                return False
+            if matches(current, pending["expected"]):
+                return False  # Already ACKed while we yielded.
+            latest = model.settings(self.manager, spec)
+            refreshed = model.capabilities(self.manager, spec)
+            if (record.get("pending") is not pending
+                    or not self._active or not self._ready
+                    or record.get("paused") or not self._current_spec(spec)
+                    or latest != context["settings"]
+                    or refreshed is None
+                    or asdict(refreshed) != record.get("capabilities")
+                    or _manual_output_changes(before, snapshot(current))
+                    or foreign_owner_hold(
+                        self.hass, self.manager.entry.entry_id, entity)):
+                return False
+            if supply:
+                relay_now = record.get("upstream", {})
+                physical_supply = self.hass.states.get(supply)
+                if (physical_supply is None or physical_supply.state != "on"
+                        or relay_now.get("pending") or relay_now.get("paused")
+                        or relay_now.get("owned") is not context.get("upstream_owned")):
+                    return False
+            latest_plan = model.plan_for(self.manager, spec)
+            if automatic and model.profile_name(latest, latest_plan) != context["profile"]:
+                return False
+            if policy_stop is not None and not self._stop_policy_verified(
+                spec, refreshed, policy_stop
+            ):
+                return False
+            if shutdown:
+                return self._shutdown_allowed(spec, entity, pending["expected"])
+            if self._gate(spec, refreshed, latest, latest_plan, mode,
+                          automatic=automatic,
+                          window_stop=pending.get("power") and mode == "off"):
+                return False
+            if pending.get("power") and not model.permission(
+                self.manager, spec, refreshed
+            )[1]:
+                return False
+            if automatic and mode != "off":
+                from .equipment_power_switch import approved_demand
+                return approved_demand(self, spec, latest, refreshed) is True
+            return True
+
+        try:
+            async with self._commands:
+                if not still_safe():
+                    # No second call occurred; leave the original command
+                    # pending for a future ACK, but never retry stale intent.
+                    pending["attempts"] -= 1
+                    pending["last_attempt_at"] = previous_last
+                    pending["phase"] = "commanded"
+                    await self._save()
+                    if not matches(self.hass.states.get(entity), pending["expected"]):
+                        await self._pause(spec, "native_retry_authority_or_state_changed")
+                    return
+                await asyncio.wait_for(
+                    self.hass.services.async_call(
+                        domain, service, pending["data"],
+                        target={"entity_id": entity}, blocking=True,
+                    ), timeout=20,
+                )
+            pending["phase"] = "commanded"
+            await self._save()
+            self._status(spec, "awaiting_physical_acknowledgement",
+                         command_attempts=pending["attempts"],
+                         command_retries_completed=pending["attempts"] - 1,
+                         native_output_confirmed=False)
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            if self._ready:
+                await self._pause(spec, "native_command_failed_or_uncertain")
 
     async def _send(self, spec: model.ManagedDevice, cap: model.Capabilities, entity: str,
                     service: str, data: dict, expected: dict, *, power: bool = False,
@@ -2442,7 +2653,14 @@ class EquipmentRuntime:
         pending = {"entity": entity, "service": service, "data": data,
                    "expected": expected, "power": power, "output_on": not (
                        expected.get("state") == "off" or service == "set_value" and data.get("value") == 0),
-                   "phase": "intent", "when": self.clock(), "min_on": min_on, "max_on": max_on}
+                   "phase": "intent", "when": self.clock(), "min_on": min_on, "max_on": max_on,
+                   "attempts": 1, "retry_context": {
+                       "settings": deepcopy(cfg),
+                       "profile": model.profile_name(cfg, plan),
+                       "automatic": automatic, "mode": action_mode,
+                       "shutdown": shutdown, "policy_stop": policy_stop,
+                       "upstream_owned": record.get("upstream", {}).get("owned"),
+                   }}
         record["pending"] = pending
         await self._save()
 
@@ -2481,8 +2699,10 @@ class EquipmentRuntime:
                 await asyncio.wait_for(self.hass.services.async_call(domain, service, data,
                     target={"entity_id": entity}, blocking=True), timeout=20)
             pending["phase"] = "commanded"
+            pending["last_attempt_at"] = self.clock()
             await self._save()
-            self._status(spec, "command_sent", entity_id=entity, service=service)
+            self._status(spec, "command_sent", entity_id=entity, service=service,
+                         command_attempts=1)
             return True
         except asyncio.CancelledError:
             raise  # Persisted intent is deliberately retained.
