@@ -138,6 +138,7 @@ class PowerSafetyTests(unittest.IsolatedAsyncioTestCase):
             return True
 
         self.runtime._save = save
+        self.real_send = ns["_send"]
         ns.update({
             "model": SimpleNamespace(settings=lambda manager, spec: manager.settings),
             "permitted_supply": lambda *args: self.record["upstream"]["identity"],
@@ -146,6 +147,7 @@ class PowerSafetyTests(unittest.IsolatedAsyncioTestCase):
             "approved_demand": lambda *args: self.demand,
             "supply_minimum_on": lambda *args: True,
             "device_supply_dwell": lambda *args: (120, 600),
+            "_send": send,
         })
         self.demand = False
 
@@ -235,7 +237,7 @@ class PowerSafetyTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.sent, [])
 
     async def test_hardware_off_command_revalidates_after_store_yield(self):
-        send = self.ns["_send"]
+        send = self.real_send
         relay = self.record["upstream"]
         relay["idle_since"] = 900
         # Physical state changes while the HEM intent is being persisted.
