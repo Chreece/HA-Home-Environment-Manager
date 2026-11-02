@@ -2326,11 +2326,13 @@
         this._hasValidRender = false;
         return;
       }
+      // Stable alphabetic order: live warning/severity changes must NOT
+      // reorder the whole dashboard while someone scrolls or edits a room.
       const rooms = safeArray(data.rooms).filter((room)=>room &&
         typeof room==='object' && typeof room.area_id==='string').slice().sort((a,b) =>
-        ({attention:0,unknown:1,safe:2}[a.status] ?? 3) - ({attention:0,unknown:1,safe:2}[b.status] ?? 3) ||
-        String(a.name).localeCompare(String(b.name), this._hass.language));
-      this.shadowRoot.innerHTML = `${this._styles()}<ha-card class="shell" dir="${RTL_LANGUAGES.has(lang) ? 'rtl' : 'ltr'}">
+        String(a.name).localeCompare(String(b.name), this._hass.language) ||
+        String(a.area_id).localeCompare(String(b.area_id)));
+      const nextHtml91 = `${this._styles()}<ha-card class="shell" dir="${RTL_LANGUAGES.has(lang) ? 'rtl' : 'ltr'}">
         <header class="card-heading"><div><div class="overline">HOME ASSISTANT</div>
         <h2>${escape(this._config.title || this._t('title'))}</h2><span>${escape(this._t('subtitle'))}</span></div>
         <div class="header-actions"><button class="edit-device" type="button" data-edit-home
@@ -2346,6 +2348,11 @@
           <footer>${this._icon('mdi:shield-check-outline')} ${escape(this._t('sourceData'))}</footer>
         </div>
       </ha-card>`;
+      // On a live HA update do not detach/recreate an otherwise healthy card:
+      // preserve scroll anchors, expanded controls, keyboard focus and dialogs.
+      if(typeof this._commitContent91==='function')
+        this._commitContent91(nextHtml91);
+      else this.shadowRoot.innerHTML=nextHtml91;
       // Commit the cache only after the complete template was constructed
       // and applied. A failed render must be retried on the next HA update.
       this._shownControllerSignature = controllerSignature;
@@ -3861,6 +3868,104 @@
       }
     }
   };
+
+  /* HEM_STABLE_DOM91_START
+   * Frequent weather/PID/occupancy updates must not replace the entire
+   * connected HA card. Reconcile the composed DOM while retaining existing
+   * room/device nodes, focus and Home Assistant's scroll anchoring.
+   * Only actual changed text/attributes/children are updated.
+   */
+  const _key91=node=>{
+    if(node?.nodeType!==1)return null;
+    for(const name of ('data-room-fold87','data-device-fold87',
+                       'data-detail-id','data-calibration-id',
+                       'data-open-controller89','data-open-native89')) {
+      const value=node.getAttribute(name);
+      if(value)return node.localName+':'+name+':'+value;
+    }
+    return null;
+  };
+  const _compatible91=(oldNode,fresh)=>{
+    if(oldNode.nodeType!==fresh.nodeType)return false;
+    if(oldNode.nodeType===1)
+      return oldNode.localName===fresh.localName &&
+        (!(_key91(oldNode)||_key91(fresh)) ||
+         _key91(oldNode)===_key91(fresh));
+    return true;
+  };
+  const _reconcile91=(oldNode,fresh)=>{
+    if(oldNode.isEqualNode(fresh))return;
+    if(oldNode.nodeType!==fresh.nodeType ||
+       (oldNode.nodeType===1 && oldNode.localName!==fresh.localName)) {
+      oldNode.replaceWith(fresh.cloneNode(true));
+      return;
+    }
+    if(oldNode.nodeType!==1) {
+      if(oldNode.nodeValue!==fresh.nodeValue)
+        oldNode.nodeValue=fresh.nodeValue;
+      return;
+    }
+    // Never clobber a manual input edit, even if a browser-local focus
+    // change races an HA update by a few milliseconds.
+    const editor=oldNode.matches?.('input,textarea,select') &&
+      oldNode===oldNode.getRootNode()?.activeElement;
+    for(const attribute of [...oldNode.attributes]){
+      if(!fresh.hasAttribute(attribute.name) && !editor)
+        oldNode.removeAttribute(attribute.name);
+    }
+    for(const attribute of [...fresh.attributes]){
+      if(editor && ['value','selected','checked'].includes(attribute.name))
+        continue;
+      if(oldNode.getAttribute(attribute.name)!==attribute.value)
+        oldNode.setAttribute(attribute.name,attribute.value);
+    }
+    let index=0;
+    while(index<fresh.childNodes.length){
+      const target=fresh.childNodes[index];
+      let current=oldNode.childNodes[index];
+      const neededKey=_key91(target);
+      if(neededKey && (!current || _key91(current)!==neededKey)) {
+        const found=[...oldNode.childNodes].find(candidate=>
+          _key91(candidate)===neededKey);
+        if(found){
+          oldNode.insertBefore(found,current||null);
+          current=found;
+        }
+      }
+      if(!current){
+        oldNode.appendChild(target.cloneNode(true));
+      } else if(!_compatible91(current,target)){
+        oldNode.replaceChild(target.cloneNode(true),current);
+      } else {
+        _reconcile91(current,target);
+      }
+      index++;
+    }
+    while(oldNode.childNodes.length>fresh.childNodes.length)
+      oldNode.lastChild.remove();
+  };
+  proto87._commitContent91=function(html){
+    const oldCard=this.shadowRoot.querySelector('ha-card.shell');
+    if(!oldCard || !this._hasValidRender ||
+       oldCard.dataset.compact87!=='ready'){
+      this.shadowRoot.innerHTML=html;
+      return;
+    }
+    const temp=document.createElement('template');
+    temp.innerHTML=html;
+    const candidate=temp.content.querySelector('ha-card.shell');
+    if(!candidate) {
+      this.shadowRoot.innerHTML=html;
+      return;
+    }
+    // Compact the detached candidate exactly once before comparison so
+    // folded device HTML has identical structure on every update.
+    this._compactAfterRender87(candidate);
+    _reconcile91(oldCard,candidate);
+    this._stableDomUpdates91=(this._stableDomUpdates91||0)+1;
+  };
+  /* HEM_STABLE_DOM91_END */
+
   proto87._renderContent=function(force=false) {
     this._installFolds87();
     const before=this.shadowRoot.querySelector('ha-card.shell');
