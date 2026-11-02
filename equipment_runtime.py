@@ -759,12 +759,42 @@ class EquipmentRuntime:
                 state = self.hass.states.get(source)
                 if not observed_output_off(state):
                     return False
+            # Rebuild the exact physical learning context with CURRENT
+            # room sensor membership, target, profile, direction and native
+            # fan settings; saved evidence cannot approve a different plant.
+            plan = model.plan_for(self.manager, spec)
+            targets = model.targets(self.manager, spec, cap, cfg, plan)
+            measured = self.measurements(spec, cap)
+            direction = cfg["requested_mode"]
+            metric = "humidity" if direction == "dry" else "temperature"
+            goal = targets.get("humidity" if metric == "humidity" else direction)
+            source_ids = measured.get(metric + "_selected_entities")
+            if source_ids is not None:
+                feedback = (source_ids[0] if isinstance(source_ids, list)
+                            and len(source_ids) == 1 else None)
+            else:
+                feedback = measured.get(metric + "_entity")
+            if (not isinstance(feedback, str)
+                    or not feedback.startswith("sensor.")
+                    or finite(goal, -40 if metric == "temperature" else 0,
+                                    80 if metric == "temperature" else 100) is None
+                    or finite(measured.get(metric), -40 if metric == "temperature" else 0,
+                                                80 if metric == "temperature" else 100) is None):
+                return False
+            live_context = passive_identity(
+                spec.area_id, list(spec.source_entities), cap.primary,
+                direction, metric, feedback, model.profile_name(cfg, plan),
+                round(float(goal), 2),
+                self.hass.states.get(cap.primary).attributes.get("fan_mode"),
+                self.hass.states.get(cap.primary).attributes.get("percentage"),
+            )
+            if live_context != review["context"]:
+                return False
             soft,power = model.permission(self.manager,spec,cap)
             if not (soft and power):
                 return False
             if self._gate(
-                spec,cap,cfg,model.plan_for(self.manager,spec),
-                cfg["requested_mode"],
+                spec,cap,cfg,plan,direction,
             ) is not None:
                 return False
             evidence = changes.get("pid_last_calibration")
@@ -1310,10 +1340,18 @@ class EquipmentRuntime:
         record["pid_passive"] = {**observer.ledger(), "summary": summary}
         await self._save()
         self._presentation_updates.request(key)
-        if (cfg["pid_calibration_method"] == "adaptive_suggest"
-                and summary.get("status") in ("suggestion_only", "validated")):
-            from .pid_review import proposal_for, async_publish_review
+        if cfg["pid_calibration_method"] == "adaptive_suggest":
+            from .pid_review import proposal_for, async_publish_review, async_clear_review
             latest = record.get("pid_passive_review")
+            if (isinstance(latest, dict)
+                    and latest.get("cycle_at") != summary.get("last_cycle_at")
+                    and summary.get("status") not in ("suggestion_only", "validated")):
+                record.pop("pid_passive_review", None)
+                await self._save()
+                self.hass.async_create_task(
+                    async_clear_review(self.hass,self.manager,spec)
+                )
+                latest = None
             if (not isinstance(latest, dict)
                     or latest.get("cycle_at") != summary.get("last_cycle_at")):
                 review = proposal_for(cfg,summary,context,self.clock())
