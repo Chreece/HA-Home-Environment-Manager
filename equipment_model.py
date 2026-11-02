@@ -42,7 +42,8 @@ NUMBER_FIELDS = {
     "particle_cadr_m3h": (0.0, 100000.0, 1.0, "m³/h", 0.0),
 }
 QUIET_FLAGS = ("quiet_sleep", "quiet_occupied")
-from .pid_calibration import METHODS as PID_CALIBRATION_METHODS, MODEL_FIELDS as PID_MODEL_FIELDS
+from .pid_calibration import METHODS as _CLASSIC_PID_CALIBRATION_METHODS, MODEL_FIELDS as PID_MODEL_FIELDS
+from .pid_review import ALL_METHODS as PID_CALIBRATION_METHODS, selected_method, legacy_mode
 from .pid_passive import MODES as PID_ADAPTATION_MODES
 from .pid_fan_capacity import (
     CAPACITY_FIELDS as PID_FAN_CAPACITY_FIELDS,
@@ -67,7 +68,7 @@ DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None
             "quiet_sleep": False, "quiet_occupied": False,
             "pause_on_window_open": True,
             "quiet_fan_mode": None, "profile_targets": {}, "profile_fans": {},
-            "pid_calibration_method": "manual", "pid_last_calibration": None,
+            "pid_calibration_method": "adaptive_suggest", "pid_last_calibration": None,
             # Observe only; never alter gains without per-device opt-in.
             "pid_adaptation_mode": "observe",
             "pid_fan_capacity_mode": "legacy",
@@ -119,6 +120,11 @@ def settings(manager: Any, spec: ManagedDevice) -> dict:
     raw = profiles.get(spec.identifier, {}) if isinstance(profiles, dict) else {}
     raw = raw if isinstance(raw, dict) else {}
     result = {**DEFAULTS, **raw}
+    # Beta84 resolves the previous overlapping passive/calculator selectors
+    # into exactly one persisted gain authority. Legacy settings are read
+    # conservatively: an explicit classical tune always wins.
+    result["pid_calibration_method"] = selected_method(raw)
+    result["pid_adaptation_mode"] = legacy_mode(result["pid_calibration_method"])
     # Keep previous commissioning values when these controls first appear.
     primary = next((e for e in spec.source_entities if not e.startswith("fan.")), spec.source_entities[0])
     dev = device_config(manager, spec, primary)
