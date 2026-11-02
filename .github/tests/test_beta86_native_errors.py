@@ -320,7 +320,7 @@ async def run():
     payload=hub.events[0]
     assert payload["use_ai"] is False
     assert payload["area"]==["Bathroom"],payload
-    for required in ("COMFEE", "Motor overload", "205", "critical",
+    for required in ("Bathroom Dehumidifier", "Motor overload", "205", "critical",
                      "Fan rotor blocked", "affected_part: fan motor",
                      "action: clear blockage", "climate.a"):
         assert required.lower() in payload["text"].lower(),(required,payload)
