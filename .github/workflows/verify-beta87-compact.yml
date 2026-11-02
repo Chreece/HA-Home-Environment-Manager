@@ -1,0 +1,65 @@
+name: HEM Beta87 compact foldable card and top-layer help
+
+on:
+  push:
+    branches: ['feat/beta87-compact-foldable-card-20261102']
+  pull_request:
+    branches: ['release/v0.6.0b86']
+
+permissions:
+  contents: read
+
+jobs:
+  compact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: All source and bundled locale syntax
+        run: |
+          set -euo pipefail
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I - <<'PY'
+          from pathlib import Path
+          import json
+          for path in Path('.').rglob('*.json'):
+              json.loads(path.read_text(encoding='utf-8'))
+          assert len(list(Path('translations').glob('*.json')))==38
+          PY
+      - name: Real Chromium compact rooms and devices on mobile and desktop
+        run: |
+          set -euo pipefail
+          python -m pip install 'playwright==1.57.0'
+          python -I .github/tests/test_beta87_compact_browser.py
+      - name: Preserve previous real-browser interaction and tool controls
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta66_browser.py
+          python -I .github/tests/test_beta68_browser.py
+          python -I .github/tests/test_beta76_compact_browser.py
+          python -I .github/tests/test_beta84_review_browser.py
+          python -I .github/tests/test_beta85_resume_browser.py
+          python -I .github/tests/test_beta86_fault_card.py
+      - name: Preserve physical safety and old PID configurations
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta86_native_errors.py
+          python -I .github/tests/test_beta85_native_resume.py
+          python -I .github/tests/test_beta84_unified_review.py
+          python -I .github/tests/test_beta84_pid_review_runtime.py
+          python -I .github/tests/test_beta83_supply_safety.py
+          python -I .github/tests/test_beta82_pid_passive.py
+          python -I .github/tests/test_beta82_runtime_guard.py
+          python -I .github/tests/test_beta74_upstream_dwell.py
+          python -I .github/tests/test_beta72_resume_running.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+      - name: Home Assistant event and output compatibility
+        run: |
+          python -m pip install 'homeassistant==2026.10.4'
+          python -I .github/tests/test_beta68_events.py
+      - name: Whitespace checks
+        run: git diff --check
