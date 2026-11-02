@@ -911,6 +911,42 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         runtime._status(spec, "paused", reason=relay["paused"])
         return True
 
+    # A HEM-acknowledged supply ON may take up to one minute to reconnect
+    # the downstream HA entity. Reserve the authorized demand for the PID,
+    # but do not credit physical output or integrate an unresponsive plant.
+    # Never send a native command to an unavailable/unknown source.
+    if (observed.state == "on" and relay.get("owned") is True
+            and any(
+                (native := runtime.hass.states.get(entity)) is None
+                or native.state in ("unknown", "unavailable")
+                for entity in spec.source_entities
+            )):
+        wake = relay.get("native_wake")
+        boot_at = (finite(wake.get("on_at"), 0, now)
+                   if isinstance(wake, dict)
+                   and wake.get("reconciled") is False
+                   and wake.get("identity") == identity
+                   and wake.get("on_at") == relay.get("on_at")
+                   else None)
+        cap = verified_capabilities(runtime, spec)
+        demand = approved_demand(runtime, spec, cfg, cap) if cap else None
+        if cap is not None and cfg.get("control_mode") == "pid":
+            runtime._pid_offline_previews[spec.identifier] = (
+                prepare_offline_pid(runtime, spec, cap, cfg, demand)
+            )
+        remaining = max(0, 60 - (now - boot_at)) if boot_at is not None else None
+        runtime._status(
+            spec,
+            "physical_device_startup_timeout" if remaining == 0
+            else "waiting_for_physical_device",
+            reason=("upstream_native_boot_timeout" if remaining == 0
+                    else "upstream_native_boot_grace"),
+            startup_remaining_seconds=round(remaining) if remaining is not None else None,
+            pid_demand_reserved=(cfg.get("control_mode") == "pid" and demand is True),
+            native_output_confirmed=False,
+        )
+        return True
+
     if cfg.get("pause_on_window_open", False):
         from .equipment_window import evaluate as window_policy
         window = window_policy(runtime, spec, cfg)
