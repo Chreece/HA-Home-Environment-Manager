@@ -308,13 +308,23 @@ async def run():
     # no extra direct Home Assistant notification.
     hub.is_on=True
     manager.entry.options["use_announcement_hub"]=True
-    states["climate.a"]=state("off",error_code=205,error_message="Motor overload")
+    states["climate.a"]=state(
+        "off",error_code=205,error_message="Motor overload",
+        severity="critical",error_detail="Fan rotor blocked",
+        error_info={"affected_part":"fan motor","action":"clear blockage"},
+    )
     monitor.state_changed("climate.a")
     await drain()
     assert len(hub.events)==1
     assert len(manager.hass.services.calls)==4
-    assert hub.events[0]["use_ai"] is False
-    assert "Motor overload" in hub.events[0]["text"]
+    payload=hub.events[0]
+    assert payload["use_ai"] is False
+    assert payload["area"]==["Bathroom"],payload
+    for required in ("COMFEE", "Motor overload", "205", "critical",
+                     "Fan rotor blocked", "affected_part: fan motor",
+                     "action: clear blockage", "climate.a"):
+        assert required.lower() in payload["text"].lower(),(required,payload)
+    assert payload["level"]=="warning"
 
     # Turning alerts OFF on another managed device is isolated.
     await monitor.async_set_announcements(specB,False)
