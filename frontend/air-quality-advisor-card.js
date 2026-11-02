@@ -672,6 +672,24 @@
             .catch((error)=>console.warn('PID recommendation action was not accepted',error));
           return;
         }
+        const resumeNative = event.target.closest?.('[data-native-resume]');
+        if (resumeNative && this._hass?.callService) {
+          const area=resumeNative.getAttribute('data-controller-area');
+          const entityId=resumeNative.getAttribute('data-native-resume');
+          const linked=this._managedControllers(area).find(item=>
+            item.resumeButtonId===entityId && item.method?.state!=='existing');
+          if (!linked || !entityId?.startsWith('button.')) return;
+          Promise.resolve(this._hass.callService('button','press',{
+            entity_id:entityId,
+          })).then(()=>{
+            this._climateEditError=null;
+          }).catch((error)=>{
+            this._climateEditError=String(error?.message || error);
+            this._render(true);
+            console.warn('HEM safe native Resume still needs confirmation',error);
+          });
+          return;
+        }
         const pidSave = event.target.closest?.('[data-save-pid-model]');
         if (pidSave && this._hass?.callService) {
           const area=pidSave.getAttribute('data-controller-area');
@@ -1110,6 +1128,9 @@
         ['automatic','manual','off'].every((mode)=>item.attributes.options.includes(mode)));
       const signature = (item) => JSON.stringify(
         safeArray(item.attributes.source_entity_ids).slice().sort());
+      const nativeResumeButtons=states.filter(([id,item])=>
+        id.startsWith('button.') && item?.attributes?.area_id===area &&
+        item.attributes.controller_resume_role==='check_and_continue');
       const calibrationSelectors=states.filter(([id,item])=>
         id.startsWith('select.') && item?.attributes?.area_id===area &&
         ['method','single_authoritative_method'].includes(
@@ -1141,6 +1162,10 @@
         const buttons=calibrationButtons.filter(([,item])=>signature(item)===signature(climate));
         const [calibrationButtonId,calibrationButton]=buttons.length===1 ?
           buttons[0] : [null,null];
+        const nativeResumes=nativeResumeButtons.filter(([,item])=>
+          signature(item)===signature(climate));
+        const [resumeButtonId,resumeButton]=nativeResumes.length===1 ?
+          nativeResumes[0] : [null,null];
         const calibrationNumbers=calibrationInputs.filter(([,item])=>
           signature(item)===signature(climate)).map(([id,state])=>({
             id,state,field:state.attributes.pid_calibration_field,
@@ -1163,8 +1188,8 @@
           signature(item)===signature(climate)).map(([id,state])=>({
             id,state,field:state.attributes.pid_fan_capacity_field,
           }));
-        return {entityId,climate,methodId,method,calibrationSelectId,
-                calibrationSelect,calibrationButtonId,calibrationButton,
+        return {entityId,climate,methodId,method,resumeButtonId,resumeButton,
+                calibrationSelectId,calibrationSelect,calibrationButtonId,calibrationButton,
                 calibrationNumbers,reviewApproveId,reviewApprove,
                 reviewDiscardId,reviewDiscard,capacityModeId,capacityMode,capacityDirectionId,
                 capacityDirection,capacityButtonId,capacityButton,capacityNumbers};
@@ -1179,7 +1204,8 @@
           (id.startsWith('select.') || id.startsWith('climate.') || (id.startsWith('sensor.') && state?.attributes?.status_code) ||
            (id.startsWith('button.') && (
              state?.attributes?.pid_calibration_role || state?.attributes?.pid_fan_capacity_role ||
-             state?.attributes?.pid_review_role)) ||
+             state?.attributes?.pid_review_role ||
+             state?.attributes?.controller_resume_role)) ||
            (id.startsWith('number.') && (
              state?.attributes?.pid_calibration_field || state?.attributes?.pid_fan_capacity_field))) &&
           Array.isArray(state?.attributes?.source_entity_ids) &&
@@ -1194,6 +1220,8 @@
           state.attributes.source_entity_ids,
           state.attributes.pid_calibration_role,
           state.attributes.pid_review_role,
+          state.attributes.controller_resume_role,
+          state.attributes.native_resume_recovery,
           state.attributes.pending,
           state.attributes.current_gains,
           state.attributes.next_gains,
@@ -1575,6 +1603,34 @@
           de:['Adaptiv · Vorschlag bestätigen','Adaptiv · Automatisch','Übernehmen','Verwerfen','Vorgeschlagene PID-Anpassung'],
           el:['Προσαρμοστικό · Πρόταση για έγκριση','Προσαρμοστικό · Αυτόματο','Έγκριση','Απόρριψη','Προτεινόμενη ρύθμιση PID'],
         }[this._language()] || ['Adaptive · Suggest & approve','Adaptive · Automatic','Approve','Discard','Proposed PID adjustment'];
+        const recovery=entry.statusInfo?.state?.attributes?.native_resume_recovery ||
+          entry.resumeButton?.attributes?.native_resume_recovery;
+        const recoverLabels={
+          en:['Previous command not confirmed','Requested','Device reports',
+              'Check the actual appliance and its HA state. If they agree, leave it unchanged and press Check and Continue again after the required time. No device power-cycling is needed.',
+              'Check and Continue','Wait'],
+          de:['Vorheriger Gerätebefehl nicht bestätigt','Angefordert','Gerät meldet',
+              'Prüfe den tatsächlichen Gerätezustand gegen Home Assistant. Wenn beide übereinstimmen, unverändert lassen und nach der Wartezeit erneut Prüfen und fortsetzen drücken. Nicht vom Strom trennen.',
+              'Prüfen und fortsetzen','Warten'],
+          el:['Η προηγούμενη εντολή δεν επιβεβαιώθηκε','Ζητήθηκε','Η συσκευή αναφέρει',
+              'Έλεγξε ότι η πραγματική συσκευή συμφωνεί με το Home Assistant. Άφησέ την χωρίς αλλαγές και πάτησε ξανά Έλεγχος και συνέχεια μετά την αναμονή. Μη διακόψεις την παροχή ρεύματος.',
+              'Έλεγχος και συνέχεια','Αναμονή'],
+        }[this._language()] || ['Previous command not confirmed','Requested','Device reports',
+            'Verify the real device and HA report, then try Check and Continue again after the waiting interval.',
+            'Check and Continue','Wait'];
+        const recoveryPanel=recovery && entry.resumeButtonId && control!=='existing'
+          ? '<div class="managed-status hem-resume-recovery" role="status">'+
+            '<strong>'+escape(recoverLabels[0])+'</strong>'+
+            '<small>'+escape(recoverLabels[1])+': '+escape(recovery.requested ?? '-')+
+            ' · '+escape(recoverLabels[2])+': '+escape(recovery.observed ?? 'unavailable')+'</small>'+
+            (Number.isFinite(Number(recovery.remaining_seconds)) &&
+              recovery.remaining_seconds !== null && recovery.remaining_seconds > 0
+              ? '<small>'+escape(recoverLabels[5])+': '+
+                escape(recovery.remaining_seconds)+' s</small>' : '')+
+            '<small>'+escape(recoverLabels[3])+'</small>'+
+            '<button class="pid-button" type="button" data-native-resume="'+
+            escape(entry.resumeButtonId)+'" data-controller-area="'+
+            escape(room.area_id)+'">'+escape(recoverLabels[4])+'</button></div>' : '';
         const calMethods={manual:pidLabels[1],imc_lambda:pidLabels[2],
           cohen_coon:pidLabels[3],adaptive_suggest:localizedReview[0],
           adaptive_auto:localizedReview[1]};
@@ -1746,7 +1802,7 @@
           '" title="'+escape(l.openEntity)+'">'+
           this._icon('mdi:thermostat')+' <strong>'+escape(name)+
           '</strong> '+this._icon('mdi:open-in-new')+'</button>'+
-          this._deviceSummary65(entry)+method+editors.join('')+
+          this._deviceSummary65(entry)+recoveryPanel+method+editors.join('')+
           this._calibrationDetails65(entry,control==='pid' ?
             calibrationMethod+pidInputs+apply+reviewPanel+capSelectors+capacityInput+applyCapacity+capacitySummary : '')+
           '</section>';
