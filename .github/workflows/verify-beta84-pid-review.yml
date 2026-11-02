@@ -40,6 +40,7 @@ jobs:
           python -m pip install 'playwright==1.57.0'
           node --check frontend/air-quality-advisor-card.js
           python -I .github/tests/test_beta76_compact_browser.py
+          python -I .github/tests/test_beta84_review_browser.py
       - name: Previously validated natural PID calibration and runtime safety
         run: |
           set -euo pipefail
