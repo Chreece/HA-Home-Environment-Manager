@@ -656,6 +656,22 @@
           })).catch((error)=>console.warn('Measured capacity not applied',error));
           return;
         }
+        const reviewAction = event.target.closest?.('[data-pid-review-action]');
+        if (reviewAction && this._hass?.callService) {
+          const area=reviewAction.getAttribute('data-controller-area');
+          const action=reviewAction.getAttribute('data-pid-review-action');
+          const entityId=reviewAction.getAttribute('data-pid-review-entity');
+          const linked=this._managedControllers(area).find(item=>
+            item.method?.state==='pid' &&
+            item.calibrationSelect?.state==='adaptive_suggest' &&
+            ((action==='approve' && item.reviewApproveId===entityId) ||
+             (action==='discard' && item.reviewDiscardId===entityId)) &&
+            item.reviewApprove?.attributes?.pending===true);
+          if (!linked || !entityId?.startsWith('button.')) return;
+          Promise.resolve(this._hass.callService('button','press',{entity_id:entityId}))
+            .catch((error)=>console.warn('PID recommendation action was not accepted',error));
+          return;
+        }
         const pidSave = event.target.closest?.('[data-save-pid-model]');
         if (pidSave && this._hass?.callService) {
           const area=pidSave.getAttribute('data-controller-area');
@@ -672,7 +688,7 @@
           const high=Number(record?.state?.attributes?.max);
           if (!linked || !linked.calibrationSelect ||
               linked.method?.state!=='pid' ||
-              linked.calibrationSelect.state==='manual' ||
+              !['imc_lambda','cohen_coon'].includes(linked.calibrationSelect.state) ||
               !Number.isFinite(parsed) || !Number.isFinite(low) ||
               !Number.isFinite(high) || parsed<low || parsed>high) return;
           Promise.resolve(this._hass.callService('number','set_value',{
@@ -688,7 +704,7 @@
             item.calibrationButtonId===entityId);
           if (!linked || linked.method?.state!=='pid' ||
               !linked.calibrationSelect ||
-              linked.calibrationSelect.state==='manual' ||
+              !['imc_lambda','cohen_coon'].includes(linked.calibrationSelect.state) ||
               linked.climate?.state==='unavailable') return;
           // The server independently checks model validity and physical OFF;
           // this is a deliberate apply action, never automatic calibration.
@@ -1097,6 +1113,9 @@
       const calibrationSelectors=states.filter(([id,item])=>
         id.startsWith('select.') && item?.attributes?.area_id===area &&
         item.attributes.pid_calibration_role==='method');
+      const reviewButtons=states.filter(([id,item])=>
+        id.startsWith('button.') && item?.attributes?.area_id===area &&
+        ['approve','discard'].includes(item.attributes.pid_review_role));
       const calibrationButtons=states.filter(([id,item])=>
         id.startsWith('button.') && item?.attributes?.area_id===area &&
         item.attributes.pid_calibration_role==='apply');
@@ -1125,6 +1144,12 @@
           signature(item)===signature(climate)).map(([id,state])=>({
             id,state,field:state.attributes.pid_calibration_field,
           }));
+        const matchingReview=reviewButtons.filter(([,item])=>
+          signature(item)===signature(climate));
+        const [reviewApproveId,reviewApprove]=matchingReview.find(([,item])=>
+          item.attributes.pid_review_role==='approve') || [null,null];
+        const [reviewDiscardId,reviewDiscard]=matchingReview.find(([,item])=>
+          item.attributes.pid_review_role==='discard') || [null,null];
         const capacitySelection=capacitySelectors.filter(([,item])=>
           signature(item)===signature(climate));
         const [capacityModeId, capacityMode]=capacitySelection.find(([,item])=>
@@ -1139,7 +1164,8 @@
           }));
         return {entityId,climate,methodId,method,calibrationSelectId,
                 calibrationSelect,calibrationButtonId,calibrationButton,
-                calibrationNumbers,capacityModeId,capacityMode,capacityDirectionId,
+                calibrationNumbers,reviewApproveId,reviewApprove,
+                reviewDiscardId,reviewDiscard,capacityModeId,capacityMode,capacityDirectionId,
                 capacityDirection,capacityButtonId,capacityButton,capacityNumbers};
       }).sort((a,b)=>a.entityId.localeCompare(b.entityId));
     }
@@ -1151,7 +1177,8 @@
         .filter(([id, state]) =>
           (id.startsWith('select.') || id.startsWith('climate.') || (id.startsWith('sensor.') && state?.attributes?.status_code) ||
            (id.startsWith('button.') && (
-             state?.attributes?.pid_calibration_role || state?.attributes?.pid_fan_capacity_role)) ||
+             state?.attributes?.pid_calibration_role || state?.attributes?.pid_fan_capacity_role ||
+             state?.attributes?.pid_review_role)) ||
            (id.startsWith('number.') && (
              state?.attributes?.pid_calibration_field || state?.attributes?.pid_fan_capacity_field))) &&
           Array.isArray(state?.attributes?.source_entity_ids) &&
@@ -1165,6 +1192,11 @@
           state.attributes.options,
           state.attributes.source_entity_ids,
           state.attributes.pid_calibration_role,
+          state.attributes.pid_review_role,
+          state.attributes.pending,
+          state.attributes.current_gains,
+          state.attributes.next_gains,
+          state.attributes.confidence,
           state.attributes.pid_calibration_field,
           state.attributes.pid_fan_capacity_role,
           state.attributes.pid_fan_capacity_field,
@@ -1537,8 +1569,14 @@
             (option===control ? 'selected' : '')+'>'+
             escape(methods[option] || option)+'</option>').join('')+
           '</select></label>' : '';
+        const localizedReview={
+          en:['Adaptive · Suggest & approve','Adaptive · Automatic','Approve','Discard','Proposed PID adjustment'],
+          de:['Adaptiv · Vorschlag bestätigen','Adaptiv · Automatisch','Übernehmen','Verwerfen','Vorgeschlagene PID-Anpassung'],
+          el:['Προσαρμοστικό · Πρόταση για έγκριση','Προσαρμοστικό · Αυτόματο','Έγκριση','Απόρριψη','Προτεινόμενη ρύθμιση PID'],
+        }[this._language()] || ['Adaptive · Suggest & approve','Adaptive · Automatic','Approve','Discard','Proposed PID adjustment'];
         const calMethods={manual:pidLabels[1],imc_lambda:pidLabels[2],
-          cohen_coon:pidLabels[3]};
+          cohen_coon:pidLabels[3],adaptive_suggest:localizedReview[0],
+          adaptive_auto:localizedReview[1]};
         const selectedCalibration=entry.calibrationSelect?.state || 'manual';
         const calibrationOptions=entry.calibrationSelect?.attributes?.options || [];
         const calibrationMethod=control==='pid' && entry.calibrationSelectId &&
@@ -1559,7 +1597,8 @@
           ['pid_lambda_minutes',pidLabels[7]],
         ].filter(([key])=>selectedCalibration==='imc_lambda' ||
           key!=='pid_lambda_minutes');
-        const pidInputs=(control==='pid' && selectedCalibration!=='manual')
+        const classicalCalibration=['imc_lambda','cohen_coon'].includes(selectedCalibration);
+        const pidInputs=(control==='pid' && classicalCalibration)
           ? pidModelFields.map(([key,label])=>{
               const match=entry.calibrationNumbers?.find(item=>item.field===key);
               if (!match) return '';
@@ -1574,7 +1613,7 @@
                 '" data-pid-model-field="'+escape(key)+'" data-controller-area="'+
                 escape(room.area_id)+'">'+escape(pidLabels[8])+'</button></div>';
             }).join('') : '';
-        const apply=(control==='pid' && selectedCalibration!=='manual' &&
+        const apply=(control==='pid' && classicalCalibration &&
           entry.calibrationButtonId)
           ? '<div class="managed-status">'+escape(pidLabels[10])+' · '+
              escape(this._controllerStatusLabel(entry.calibrationButton?.attributes?.calibration_status || ''))+
@@ -1582,6 +1621,27 @@
             'data-apply-pid-calibration="'+escape(entry.calibrationButtonId)+
             '" data-controller-area="'+escape(room.area_id)+'" '+
             (!available ? 'disabled' : '')+'>'+escape(pidLabels[9])+'</button>' : '';
+        const proposal=entry.reviewApprove?.attributes;
+        const gains=proposal?.next_gains;
+        const prior=proposal?.current_gains;
+        const reviewPending=(control==='pid' && selectedCalibration==='adaptive_suggest' &&
+          proposal?.pending===true && entry.reviewApproveId && entry.reviewDiscardId &&
+          gains && prior);
+        const reviewPanel=reviewPending
+          ? '<section class="managed-status" aria-label="'+escape(localizedReview[4])+'">'+
+            '<strong>'+escape(localizedReview[4])+'</strong>'+
+            '<small>'+escape(String(proposal.confidence || ''))+'</small>'+
+            ['kp','ki','kd'].map(key=>
+              '<div>'+escape(key.toUpperCase())+': '+escape(this._format(Number(prior[key]),5))+
+              ' → '+escape(this._format(Number(gains[key]),5))+'</div>').join('')+
+            '<div class="managed-review-actions">'+
+            '<button type="button" class="pid-button" data-pid-review-action="approve" '+
+            'data-controller-area="'+escape(room.area_id)+'" data-pid-review-entity="'+
+            escape(entry.reviewApproveId)+'">'+escape(localizedReview[2])+'</button>'+
+            '<button type="button" class="pid-button" data-pid-review-action="discard" '+
+            'data-controller-area="'+escape(room.area_id)+'" data-pid-review-entity="'+
+            escape(entry.reviewDiscardId)+'">'+escape(localizedReview[3])+'</button></div>'+
+            '</section>' : '';
         const capMethod=entry.capacityMode;
         const capDirection=entry.capacityDirection;
         const capChoices={
@@ -1687,7 +1747,7 @@
           '</strong> '+this._icon('mdi:open-in-new')+'</button>'+
           this._deviceSummary65(entry)+method+editors.join('')+
           this._calibrationDetails65(entry,control==='pid' ?
-            calibrationMethod+pidInputs+apply+capSelectors+capacityInput+applyCapacity+capacitySummary : '')+
+            calibrationMethod+pidInputs+apply+reviewPanel+capSelectors+capacityInput+applyCapacity+capacitySummary : '')+
           '</section>';
       }).join('');
       return '<div class="managed-controllers">'+
