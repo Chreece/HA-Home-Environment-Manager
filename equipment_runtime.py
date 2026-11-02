@@ -2656,7 +2656,9 @@ class EquipmentRuntime:
                    "phase": "intent", "when": self.clock(), "min_on": min_on, "max_on": max_on,
                    "attempts": 1, "retry_context": {
                        "settings": deepcopy(cfg),
-                       "profile": model.profile_name(cfg, plan),
+                       "profile": (model.profile_name(cfg, plan)
+                                   if automatic and hasattr(model, "profile_name")
+                                   else None),
                        "automatic": automatic, "mode": action_mode,
                        "shutdown": shutdown, "policy_stop": policy_stop,
                        "upstream_owned": record.get("upstream", {}).get("owned"),
