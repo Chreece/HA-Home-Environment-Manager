@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "Folosește senzorul de lumină pentru umbrire"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Anunță erorile dispozitivului · {channel}"
       }
     },
     "select": {

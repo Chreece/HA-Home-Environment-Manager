@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "Použiť snímač osvetlenia pre tienenie"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Oznamovať chyby zariadenia · {channel}"
       }
     },
     "select": {

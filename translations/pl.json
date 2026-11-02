@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "Użyj czujnika natężenia światła do zacieniania"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Powiadamiaj o błędach urządzenia · {channel}"
       }
     },
     "select": {

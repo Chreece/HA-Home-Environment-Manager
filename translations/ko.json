@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "차양에 조도 센서 사용"
+      },
+      "equipment_announce_device_errors": {
+        "name": "기기 오류 알림 · {channel}"
       }
     },
     "select": {

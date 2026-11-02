@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "Использовать датчик освещённости для затенения"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Сообщать об ошибках устройства · {channel}"
       }
     },
     "select": {

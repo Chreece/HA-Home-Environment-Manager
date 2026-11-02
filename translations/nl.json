@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "Luxsensor gebruiken voor zonwering"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Apparaatfouten melden · {channel}"
       }
     },
     "select": {
