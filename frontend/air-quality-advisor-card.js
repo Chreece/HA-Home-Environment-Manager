@@ -3698,6 +3698,9 @@
       const code=String(status.status_code||attrs.controller_status?.status||'');
       const rawState=String(attrs.physical_source_state||entry.climate?.state||'unknown');
       const physical=_deviceState87(entry,this._hass);
+      const physicalTone=_physicalActivities89([entry],this._hass);
+      container.classList.add('hem-native-temp-'+physicalTone.temp+'89',
+                              'hem-native-rh-'+physicalTone.humidity+'89');
       const name=attrs.friendly_name||entity;
       const labels=_roomLabels87(this._language());
       const activeFault=['warning','error','critical'].includes(fault?.status);
@@ -3718,8 +3721,9 @@
       details.open=open;
       const summary=document.createElement('summary');
       summary.className='hem-device-glance87';
-      const metric=(icon,value,label)=>
-        '<span class="hem-device-reading87" title="'+escape(label)+'">'+
+      const metric=(icon,value,label,tone)=>
+        '<span class="hem-device-reading87 hem-activity-'+tone+
+        '" title="'+escape(label)+'">'+
         this._icon(icon)+escape(value)+'</span>';
       const fmt=(v,unit)=>this._format(v,1)+unit;
       const sources=safeArray(attrs.source_entity_ids);
@@ -3752,9 +3756,9 @@
         this._icon(physical.active?'mdi:power':'mdi:power-standby')+
         escape(stateName)+'</span>'+
         '<span class="hem-device-measures87">'+
-        (temperature!==null?metric('mdi:thermometer',fmt(temperature,'°C'),labels.temperature):'')+
-        (humidity!==null?metric('mdi:water-percent',fmt(humidity,'%'),labels.humidity):'')+
-        (demand!==null?metric('mdi:gauge',fmt(demand,'%'),'PID'): '')+
+        (temperature!==null?metric('mdi:thermometer',fmt(temperature,'°C'),labels.temperature,physicalTone.temp):'')+
+        (humidity!==null?metric('mdi:water-percent',fmt(humidity,'%'),labels.humidity,physicalTone.humidity):'')+
+        (demand!==null?metric('mdi:gauge',fmt(demand,'%'),'PID','neutral'): '')+
         '</span><span class="hem-device-attention87">'+
         (activeFault?_iconHint87('mdi:alert-octagon-outline',issueText,'error'):'')+
         (issue&&!activeFault?_iconHint87('mdi:alert-circle-outline',issueText,'warn'):'')+
@@ -3932,6 +3936,15 @@
       .hem-device-reading87{display:inline-flex;align-items:center;white-space:nowrap;
         gap:1px;font-size:10px}
       .hem-device-reading87 ha-icon{--mdc-icon-size:13px;color:var(--aqa-muted)}
+      .hem-device-reading87.hem-activity-heat ha-icon,
+      .hem-native-temp-heat89 .hem-device-data ha-icon[icon="mdi:thermometer"]{color:#f28a4b}
+      .hem-device-reading87.hem-activity-cool ha-icon,
+      .hem-native-temp-cool89 .hem-device-data ha-icon[icon="mdi:thermometer"]{color:#50baff}
+      .hem-device-reading87.hem-activity-humidify ha-icon,
+      .hem-native-rh-humidify89 .hem-device-data ha-icon[icon="mdi:water-percent"]{color:#36cbb8}
+      .hem-device-reading87.hem-activity-dry ha-icon,
+      .hem-native-rh-dry89 .hem-device-data ha-icon[icon="mdi:water-percent"]{color:#e5ad44}
+      .hem-device-reading87.hem-activity-mixed ha-icon{color:#b8a3f8}
       .hem-device-attention87{display:inline-flex;align-items:center;gap:1px;flex:0 0 auto}
       .hem-device-body87{padding:6px 6px 8px;border-top:1px solid var(--aqa-edge);
         min-width:0}
