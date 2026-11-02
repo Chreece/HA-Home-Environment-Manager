@@ -69,6 +69,12 @@ class DryHarness(Harness):
             self._native_events.append((now,'dry'))
             self.state.state='dry'
             self._physical_on_at=now
+            # Simulate the device confirming DRY by an actual HA state ACK.
+            # A test-only "dry" state without the persisted ON ownership
+            # would be treated as externally started and correctly held.
+            self.records['power'][cap.primary]={
+                'since':now,'min_on':600.,'max_on':7200.,
+            }
         elif desired=='off' and self.state.state!='off':
             if now-getattr(self,'_physical_on_at',now)<600:
                 self._status(endpoint,'minimum_on_hold')
@@ -76,6 +82,8 @@ class DryHarness(Harness):
             self._native_events.append((now,'off'))
             self.state.state='off'
             self._last_physical_off=now
+            self.records['power'].pop(cap.primary,None)
+            self.records['off_at'][cap.primary]=now
         return True
     async def _native_target(self,*args):
         self._clock_observations.append(('target',self.now,args[2]))
