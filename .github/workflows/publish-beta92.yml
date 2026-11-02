@@ -25,7 +25,7 @@ jobs:
           from pathlib import Path
           import json
           m=json.loads(Path('manifest.json').read_text())
-          assert m['domain']=='environment_manager' and m['version']=='0.6.0b91'
+          assert m['domain']=='environment_manager' and m['version']=='0.6.0b92'
           for p in Path('.').rglob('*.json'):
               json.loads(p.read_text(encoding='utf-8'))
           assert len(list(Path('translations').glob('*.json')))==38
@@ -245,7 +245,7 @@ jobs:
               assert z.testzip() is None
               root='custom_components/environment_manager/'
               m=json.loads(z.read(root+'manifest.json'))
-              assert m['domain']=='environment_manager' and m['version']=='0.6.0b91'
+              assert m['domain']=='environment_manager' and m['version']=='0.6.0b92'
               for f in ('__init__.py','device_faults.py','equipment_resume.py','pid_review.py','equipment_power_switch.py',
                         'pid_passive.py','pid_calibration.py',
                         'equipment_runtime.py','shade_cooling.py','switch.py',
