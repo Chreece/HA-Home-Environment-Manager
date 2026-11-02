@@ -3305,7 +3305,9 @@
         "state": {
           "manual": "Вручную Kp/Ki/Kd",
           "imc_lambda": "IMC / λ",
-          "cohen_coon": "Cohen-Coon"
+          "cohen_coon": "Cohen-Coon",
+          "adaptive_suggest": "Observe and suggest · Approve",
+          "adaptive_auto": "Bounded auto-adapt (10% / day)"
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3400,6 +3402,12 @@
       },
       "equipment_pid_apply_fan_capacity": {
         "name": "PID · {channel}Применить · Калибровка"
+      },
+      "equipment_pid_review_approve": {
+        "name": "PID · {channel}Approve suggestion"
+      },
+      "equipment_pid_review_discard": {
+        "name": "PID · {channel}Discard suggestion"
       }
     },
     "climate": {
