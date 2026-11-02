@@ -69,6 +69,11 @@ with sync_playwright() as p:
            '<ha-card class="shell"><div class="content">'+card._climatePanel(room)+'</div></ha-card>';};
         window.draw();
     }""",{"states":states,"room":room})
+    assert page.locator("details.hem-calibration>summary").count()==1, (
+        errors,page.evaluate("card._managedControllers('bathroom').length"),
+        page.evaluate("card._climatePanel(window.room||{area_id:'bathroom',environment:{climate_plan:{status:'ready'}}}).slice(-2500)"),
+        page.locator("body").inner_text()[-1000:]
+    )
     page.locator("details.hem-calibration>summary").click()
     assert page.locator("[data-pid-calibration-method]").count()==1
     assert page.locator("[data-pid-review-action='approve']").count()==1
