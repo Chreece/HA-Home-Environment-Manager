@@ -26,12 +26,27 @@ class TestWindowEvidence(unittest.TestCase):
         # until the next planner tick. Previously this generated [""] and
         # permanently blocked a real purifier with window_state_unknown.
         s.manager.settings.pop('room_sources',None)
+        s.manager.plan=Obj(
+            environment={},
+            rooms=(Obj(area_id=spec.area_id,windows=()),),
+            climate_rooms=(),
+        )
         result=s._window_policy(spec)
         self.assertEqual(result['status'],'window_contacts_not_configured')
         self.assertFalse(result['blocked'])
         self.assertEqual(result['contacts'],[])
         self.assertEqual(result['open_contacts'],[])
         self.assertEqual(result['unknown_contacts'],[])
+
+    def test_missing_room_plan_does_not_authorize_no_window(self):
+        s=make(opened=False)
+        s.manager.settings.pop('room_sources',None)
+        # Absence of a whole room plan is not a known zero-window inventory.
+        info=s._window_policy(spec)
+        self.assertEqual(info['status'],'window_state_unknown')
+        self.assertEqual(info['evidence'],'room_window_inventory_unavailable')
+        self.assertTrue(info['blocked'])
+        self.assertEqual(info['contacts'],[])
 
     def test_real_unavailable_selected_contact_remains_blocking_and_named(self):
         s=make(opened=False)

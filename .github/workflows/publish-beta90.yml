@@ -102,7 +102,8 @@ jobs:
           assert '_captureScroll90' in code and '_restoreScroll90' in code
           windows=Path('equipment_window.py').read_text()
           assert '"contact_states"' in windows
-          assert 'if room is not None else []' in windows
+          assert 'room_window_inventory_unavailable' in windows
+          assert 'malformed_window_contact_selection' in windows
           arb=Path('climate_arbitration.py').read_text()
           assert 'not is_window(hass, state)' in arb
           print('BETA90_ROOM_SCROLL_WINDOW_CONTRACT=PASS')

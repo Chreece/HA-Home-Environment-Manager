@@ -61,15 +61,24 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
             room = next((item for item in (*getattr(plan, "rooms", ()),
                                           *getattr(plan, "climate_rooms", ()))
                          if item.area_id == spec.area_id), None)
-            # No selected/discovered contact is NOT an invalid sensor ID.
-            # A fabricated empty-string contact used to turn a closed-room
-            # plan into a permanent window_state_unknown hold. When no room
-            # plan exists yet the independent climate _gate still requires
-            # valid, fresh plan evidence before a physical ON command.
-            contact_ids = ([item.entity_id for item in room.windows]
-                           if room is not None else [])
+            # A known room with zero windows has no contact: do not invent
+            # one. But a missing entire room inventory is NOT proof that
+            # windows are closed, so hold until the planner has evidence.
+            if room is None:
+                result.update(
+                    blocked=True, status="window_state_unknown",
+                    evidence="room_window_inventory_unavailable",
+                )
+                cache[spec.identifier] = result
+                return result
+            contact_ids = [item.entity_id for item in room.windows]
     if not isinstance(contact_ids, (tuple, list)):
-        contact_ids = [""]  # malformed selection is not a verified closed room
+        result.update(
+            blocked=True, status="window_state_unknown",
+            evidence="malformed_window_contact_selection",
+        )
+        cache[spec.identifier] = result
+        return result
     contact_ids = tuple(dict.fromkeys(str(entity) for entity in contact_ids))
     result["contacts"] = list(contact_ids)
     result["identity"] = (spec.area_id, contact_ids)
