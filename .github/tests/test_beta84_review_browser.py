@@ -90,7 +90,7 @@ with sync_playwright() as p:
     ]
     page.locator("[data-pid-review-action='discard']").click()
     page.wait_for_timeout(30)
-    assert page.evaluate("calls").at(-1)==[
+    assert page.evaluate("calls")[-1]==[
       "button","press",{"entity_id":"button.review_discard"}
     ]
     # A stale or unrelated button must not be able to issue an approval.
