@@ -3348,6 +3348,75 @@
     }
     return {active:false,entity:null,action:'off'};
   };
+  // Actual physical feedback only. Never color a summary merely because
+  // HEM's requested HVAC mode says heat/cool/dry.
+  const _physicalActivities89 = (devices, hass) => {
+    const found={heat:false,cool:false,humidify:false,dry:false};
+    for(const entry of devices) {
+      const attrs=entry.climate?.attributes||{};
+      const sources=safeArray(attrs.source_entity_ids);
+      for(const id of sources) {
+        const physical=hass?.states?.[id];
+        if(!physical || ['unknown','unavailable'].includes(physical.state))continue;
+        const domain=id.split('.')[0];
+        const action=String(physical.attributes?.hvac_action||'').toLowerCase();
+        if(action==='heating')found.heat=true;
+        if(action==='cooling')found.cool=true;
+        if(action==='humidifying')found.humidify=true;
+        if(['drying','dehumidifying'].includes(action))found.dry=true;
+        if(physical.state==='on' && domain==='humidifier') {
+          const klass=physical.attributes?.device_class;
+          if(klass==='humidifier')found.humidify=true;
+          if(klass==='dehumidifier')found.dry=true;
+        }
+        if(physical.state==='on' && ['switch','input_boolean'].includes(domain)) {
+          const direction=attrs.requested_hvac_mode;
+          if(direction==='heat')found.heat=true;
+          if(direction==='cool')found.cool=true;
+        }
+      }
+    }
+    return {
+      temp:found.heat&&found.cool?'mixed':found.heat?'heat':found.cool?'cool':'neutral',
+      humidity:found.humidify&&found.dry?'mixed':
+        found.humidify?'humidify':found.dry?'dry':'neutral',
+    };
+  };
+  const _airMetric89 = Object.freeze({
+    co2:['CO₂','mdi:molecule-co2','ppm'],
+    pm25:['PM2.5','mdi:blur','µg/m³'],
+    pm10:['PM10','mdi:blur','µg/m³'],
+    aqi:['AQI','mdi:air-filter',''],
+    tvoc:['TVOC','mdi:chemical-weapon','ppb'],
+    voc:['VOC','mdi:chemical-weapon','ppb'],
+    hcho:['HCHO','mdi:flask-outline','µg/m³'],
+    formaldehyde:['HCHO','mdi:flask-outline','µg/m³'],
+    radon:['Rn','mdi:radioactive','Bq/m³'],
+    pressure:['hPa','mdi:gauge','hPa'],
+    illuminance:['Lux','mdi:brightness-5','lx'],
+    noise:['dB','mdi:volume-high','dB'],
+    mold:['Mold','mdi:water-alert-outline','%'],
+  });
+  const _roomAirReadings89 = (room,devices) => {
+    const readings=safeArray(room.readings).slice();
+    const represented=new Set(readings.map(r=>String(r?.metric||'').toLowerCase()));
+    // Climate-only rooms can expose device-specific live measurements even
+    // when there is no ordinary room.readings collection.
+    for(const entry of devices) {
+      for(const [metric,value] of Object.entries(entry.climate?.attributes?.measurements||{})) {
+        if(_airMetric89[metric] && !represented.has(metric)) {
+          readings.push({metric,value,available:true,name:metric});
+          represented.add(metric);
+        }
+      }
+    }
+    return readings.filter(item=>{
+      const metric=String(item?.metric||'').toLowerCase();
+      return _airMetric89[metric] && item.available===true &&
+        typeof item.value==='number' && Number.isFinite(item.value);
+    });
+  };
+
   const _roomLabels87 = language => ({
     en:{rooms:'Rooms',active:'Active',expand:'Expand room',collapse:'Collapse room',
       attention:'Needs attention',unavailable:'Missing data',temperature:'Temperature',
