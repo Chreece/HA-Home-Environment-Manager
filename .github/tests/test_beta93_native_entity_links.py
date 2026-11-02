@@ -94,13 +94,13 @@ with sync_playwright() as playwright:
 
     # A native integration rename is reflected without reloading Lovelace:
     # the HEM facade state itself stays unchanged.
-    page.evaluate("""()=>{
+    page.evaluate("""({native})=>{
       const before=card._hass.states;
       const changed={...before[native],attributes:{
         ...before[native].attributes,friendly_name:'My Living Room Air Purifier'}};
       card._hass={...card._hass,states:{...before,[native]:changed}};
       card._renderContent(false);
-    }""")
+    }""",{'native':native})
     page.wait_for_timeout(90)
     assert link.inner_text().strip()=='My Living Room Air Purifier'
     collapsed=device.locator(':scope > summary button[data-open-controller89]')
