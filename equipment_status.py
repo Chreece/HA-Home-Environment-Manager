@@ -174,7 +174,14 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "pid_comfort_wake_until": pid_wake.get("until") if isinstance(pid_wake, dict) else None,
             "pid_calibration_method": cfg.get("pid_calibration_method", "manual"),
             "pid_last_calibration": cfg.get("pid_last_calibration"),
-            "pid_adaptation_mode": cfg.get("pid_adaptation_mode", "observe"),
+            # Compatibility field derived from the one selected method.
+            "pid_adaptation_mode": cfg.get("pid_adaptation_mode", "disabled"),
+            "pid_review": {
+                key: record.get("pid_passive_review", {}).get(key)
+                for key in ("state","current","apply","recommended",
+                            "confidence","valid_cycles","cycle_at")
+            } if isinstance(record.get("pid_passive_review"), dict)
+              else {"state":"none"},
             # Small read-only evidence summary. Raw measurements remain
             # bounded in memory and never inflate recorder attributes.
             "pid_passive_learning": (
