@@ -3367,6 +3367,7 @@ class EquipmentRuntime:
                 await self._power(spec, cap, "off", automatic=auto, shutdown=True)
             return
         demand, metric, increasing, goal, wanted = None, None, False, None, None
+        pwm_info = None
         measured_fan_allocation = None
         self._fan_allocations.pop(spec.identifier, None)
         if cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}:
@@ -3409,7 +3410,7 @@ class EquipmentRuntime:
                         spec, cfg, cap, plan, target, measured, record, state,
                         mode, metric, goal, soft, power,
                     )
-                from .pid_phase import phase_decision
+                from .pid_phase import phase_decision, binary_pwm_off_phase
                 previous, memory, anchor = self._memory.get(
                     spec.identifier, (None, None, self.clock())
                 )
@@ -3519,10 +3520,20 @@ class EquipmentRuntime:
                         measured_fan_allocation.compensated_duty_percent
                         if measured_fan_allocation else demand
                     )
-                    wanted = model.duty_on(
-                        duty_demand, self.clock()-anchor, cfg["cycle_seconds"],
+                    elapsed = self.clock() - anchor
+                    pwm_info = binary_pwm_off_phase(
+                        duty_demand, elapsed, cfg["cycle_seconds"],
                         on_min, off_min, starting=output_off(state),
                     )
+                    # A short duty must produce a full physically safe
+                    # native ON interval rather than being skipped FOREVER.
+                    # The longer mathematical cycle never bypasses the
+                    # separately persisted real compressor ON/OFF dwell.
+                    effective_cycle = pwm_info["effective_cycle_seconds"]
+                    wanted = bool(effective_cycle is not None and model.duty_on(
+                        duty_demand, elapsed, effective_cycle,
+                        on_min, off_min, starting=output_off(state),
+                    ))
                     recovery = self._profile_wake.get(spec.identifier)
                     if recovery:
                         still_qualified = (
@@ -3619,6 +3630,18 @@ class EquipmentRuntime:
             status = ("pid_output_inactive" if cfg["control_mode"] == "pid"
                       and demand is not None and demand > 0
                       else "within_target_band")
-        self._status(spec, status, demand_percent=demand,
-                     profile=model.profile_name(cfg, plan), mode=mode, temperature=measured["temperature"],
-                     humidity=measured["humidity"])
+        self._status(
+            spec, status, demand_percent=demand,
+            profile=model.profile_name(cfg, plan),
+            mode=mode, temperature=measured["temperature"],
+            humidity=measured["humidity"],
+            # Neutral PID scheduling diagnostics, NOT an actuator failure.
+            pid_control_metric=metric if cfg["control_mode"] == "pid" else None,
+            pid_pwm_state=pwm_info["state"] if pwm_info else None,
+            pid_pwm_effective_cycle_seconds=(
+                pwm_info["effective_cycle_seconds"] if pwm_info else None
+            ),
+            pid_pwm_next_window_seconds=(
+                pwm_info["next_window_seconds"] if pwm_info else None
+            ),
+        )
