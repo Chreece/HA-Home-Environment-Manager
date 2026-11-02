@@ -71,7 +71,7 @@ def _active(value: Any) -> bool:
     if not text or text in _EMPTY or text in _UNAVAILABLE:
         return False
     try:
-        if re.fullmatch(r"[-+]?\\d+(?:\\.\\d+)?", text):
+        if re.fullmatch(r"[-+]?\d+(?:\.\d+)?", text):
             return float(text) != 0.0
     except (ValueError, OverflowError):
         return False
