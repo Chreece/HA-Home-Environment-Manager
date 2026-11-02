@@ -915,19 +915,23 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
     # the downstream HA entity. Reserve the authorized demand for the PID,
     # but do not credit physical output or integrate an unresponsive plant.
     # Never send a native command to an unavailable/unknown source.
+    wake = relay.get("native_wake")
     if (observed.state == "on" and relay.get("owned") is True
+            and isinstance(wake, dict) and wake.get("reconciled") is False
+            and wake.get("identity") == identity
+            and wake.get("on_at") == relay.get("on_at")
             and any(
                 (native := runtime.hass.states.get(entity)) is None
                 or native.state in ("unknown", "unavailable")
                 for entity in spec.source_entities
             )):
-        wake = relay.get("native_wake")
-        boot_at = (finite(wake.get("on_at"), 0, now)
-                   if isinstance(wake, dict)
-                   and wake.get("reconciled") is False
-                   and wake.get("identity") == identity
-                   and wake.get("on_at") == relay.get("on_at")
-                   else None)
+        # Only HEM's freshly ACKed supply ON qualifies for boot grace.
+        # A later unrelated native outage must still break idle cooldown
+        # and follow the ordinary unavailability safety path.
+        if relay.get("idle_since") is not None:
+            relay["idle_since"] = None
+            await runtime._save()
+        boot_at = finite(wake.get("on_at"), 0, now)
         cap = verified_capabilities(runtime, spec)
         demand = approved_demand(runtime, spec, cfg, cap) if cap else None
         if cap is not None and cfg.get("control_mode") == "pid":
