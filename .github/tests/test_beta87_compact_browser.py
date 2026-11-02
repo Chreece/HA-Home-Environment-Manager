@@ -174,7 +174,8 @@ with sync_playwright() as p:
     assert first.locator(".hem-device-fold87:not([open])").count()==3
     assert not first.locator("[data-climate-method]").first.is_visible()
     warning=first.locator(".hem-device-attention87 .hem-hint87")
-    assert warning.count()>=2
+    assert warning.count()>=1
+    assert first.locator(".hem-room-alerts87 .hem-hint87").count()>=2
     device=first.locator('.hem-device-fold87[data-device-fold87="climate.managed_0_1"]')
     assert "61" in device.locator(":scope > summary").inner_text()
     device.locator(":scope > summary").click()
