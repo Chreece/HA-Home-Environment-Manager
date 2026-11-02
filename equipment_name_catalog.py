@@ -1665,6 +1665,13 @@ _PID_PARAMETER_LABELS = {
 # saved entity-registry migration; no legacy selector entity is created.
 # One unified PID method owns all new gain writes.
 for _locale, _names in EQUIPMENT_TRANSLATED_NAMES.items():
+    # A switch for announcement preference only; the native HA error entity
+    # remains authoritative and is never duplicated by HEM.
+    _names["announce_device_errors"] = (
+        "Αναγγελία σφαλμάτων · {channel}" if _locale == "el" else
+        "Gerätefehler melden · {channel}" if _locale == "de" else
+        "Announce device errors · {channel}"
+    )
     _names["pid_adaptation_mode"] = (
         "PID · {channel}Προσαρμοστική μάθηση" if _locale == "el" else
         "PID · {channel}Adaptives Lernen" if _locale == "de" else
