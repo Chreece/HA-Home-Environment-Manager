@@ -101,25 +101,81 @@ def mobile_tag(entry_id: str, identifier: str) -> str:
     return notification_id(entry_id, identifier)
 
 
-def notification_text(spec: Any, review: dict) -> str:
+def _review_locale(language: str) -> dict:
+    base = language.replace("_", "-").split("-", 1)[0].lower()
+    return {
+        "de": {
+            "title": "HEM · PID-Kalibrierung bestätigen",
+            "device": "PID-Vorschlag für",
+            "model": "Modellziel",
+            "confidence": "Konfidenz",
+            "cycles": "geprüfte normale Betriebszyklen",
+            "instructions": (
+                "Mit den Schaltflächen **Vorschlag annehmen** oder "
+                "**Vorschlag verwerfen** am HEM-Gerät entscheiden. "
+                "Konfigurierte Companion-App-Benachrichtigungen haben "
+                "ebenfalls Aktionsschaltflächen."
+            ),
+            "safety": (
+                "Die Übernahme speichert nur den angezeigten kleinen "
+                "Anpassungsschritt, nicht sofort das volle Modellziel. "
+                "Das Gerät muss sicher AUS sein. Keine Testschaltungen."
+            ),
+            "approve": "Übernehmen", "discard": "Verwerfen",
+        },
+        "el": {
+            "title": "HEM · Έγκριση βαθμονόμησης PID",
+            "device": "Πρόταση PID για",
+            "model": "στόχος μοντέλου",
+            "confidence": "Αξιοπιστία",
+            "cycles": "επαληθευμένοι φυσιολογικοί κύκλοι",
+            "instructions": (
+                "Επίλεξε **Έγκριση πρότασης** ή **Απόρριψη πρότασης** "
+                "από τα δύο κουμπιά της συσκευής HEM. Οι επιλεγμένες "
+                "ειδοποιήσεις Companion διαθέτουν επίσης κουμπιά."
+            ),
+            "safety": (
+                "Η έγκριση αποθηκεύει μόνο το μικρό προτεινόμενο βήμα, "
+                "όχι άμεσα τον τελικό στόχο του μοντέλου. Η συσκευή "
+                "πρέπει να είναι ασφαλώς ΚΛΕΙΣΤΗ. Δεν εκτελείται δοκιμαστική λειτουργία."
+            ),
+            "approve": "Έγκριση", "discard": "Απόρριψη",
+        },
+    }.get(base, {
+        "title": "HEM · PID calibration approval",
+        "device": "PID calibration recommendation for",
+        "model": "model target",
+        "confidence": "Confidence",
+        "cycles": "verified normal operating cycles",
+        "instructions": (
+            "Approve or Discard using the two **PID review** button "
+            "entities on this HEM managed device. Explicitly configured "
+            "Companion-app notifications have action buttons too."
+        ),
+        "safety": (
+            "Approve saves only the shown conservative next-step gains, "
+            "not the more distant mathematical target. It requires the "
+            "device safely OFF and a current proposal. No hardware "
+            "is switched for calibration."
+        ),
+        "approve": "Approve", "discard": "Discard",
+    })
+
+
+def notification_text(spec: Any, review: dict, language: str = "en") -> str:
+    labels = _review_locale(language)
     def values(name: str) -> str:
         old = review["current"][name]
         chosen = review["apply"][name]
         target = review["recommended"][name]
-        return f"**{name.upper()}**: {old:.5g} → {chosen:.5g} (model target {target:.5g})"
+        return (f"**{name.upper()}**: {old:.5g} → {chosen:.5g} "
+                f"({labels['model']} {target:.5g})")
     return (
-        f"PID calibration recommendation for **{str(spec.name)[:96]}**.\n\n"
+        f"{labels['device']} **{str(spec.name)[:96]}**.\n\n"
         f"{values('kp')}\n\n{values('ki')}\n\n{values('kd')}\n\n"
-        f"Confidence: **{review['confidence']}**, "
-        f"{review['valid_cycles']} verified normal operating cycles.\n\n"
-        "Approve or Discard using the two **PID review** button entities "
-        "on this HEM managed device. If an explicitly configured Home "
-        "Assistant Companion mobile target is available, its notification "
-        "also includes **Approve** and **Discard** action buttons.\n\n"
-        "Approve saves only the shown conservative next-step gains, not "
-        "the more distant mathematical target. It requires the physical "
-        "device to be safely OFF and the proposal to remain current. "
-        "No device is switched ON or OFF for calibration."
+        f"{labels['confidence']}: **{review['confidence']}**, "
+        f"{review['valid_cycles']} {labels['cycles']}.\n\n"
+        f"{labels['instructions']}\n\n{labels['safety']}"
     )
 
 
@@ -130,12 +186,25 @@ def _mobile_targets(hass: Any, manager: Any) -> list[tuple[str, str]]:
     if not isinstance(targets, (list, tuple)):
         return []
     found = []
-    for target in dict.fromkeys(targets):
-        if not isinstance(target, str) or not target.startswith("notify."):
+    for target in dict.fromkeys(t for t in targets if isinstance(t, str)):
+        if not target.startswith("notify."):
             continue
         service = target.partition(".")[2]
         if service.startswith("mobile_app_") and hass.services.has_service("notify", service):
             found.append(("service", service))
+            continue
+        # New-style notify entities are acceptable only if the entity
+        # registry verifies mobile_app provenance. Never attach action
+        # tokens to generic home groups or third-party notify services.
+        if not hass.services.has_service("notify", "send_message"):
+            continue
+        try:
+            from homeassistant.helpers import entity_registry as er
+            entry = er.async_get(hass).async_get(target)
+        except (ImportError, AttributeError, TypeError):
+            entry = None
+        if entry is not None and entry.platform == "mobile_app":
+            found.append(("entity", target))
     return found
 
 
@@ -147,8 +216,12 @@ async def async_publish_review(hass: Any, manager: Any, spec: Any, review: dict)
     """
     if not is_pending(review):
         return False
-    title = "HEM · PID calibration approval"
-    body = notification_text(spec, review)
+    locale = (manager.settings.get("language") or "auto")
+    if locale == "auto":
+        locale = getattr(getattr(hass, "config", None), "language", "en")
+    labels = _review_locale(str(locale))
+    title = labels["title"]
+    body = notification_text(spec, review, str(locale))
     sent = False
     if hass.services.has_service("persistent_notification", "create"):
         try:
@@ -163,21 +236,28 @@ async def async_publish_review(hass: Any, manager: Any, spec: Any, review: dict)
             _LOGGER.exception("HEM PID persistent recommendation notification failed")
     actions = [
         {"action": f"{ACTION_PREFIX}APPROVE_{review['id']}",
-         "title": "Approve", "authenticationRequired": True},
+         "title": labels["approve"], "authenticationRequired": True},
         {"action": f"{ACTION_PREFIX}DISCARD_{review['id']}",
-         "title": "Discard", "authenticationRequired": True},
+         "title": labels["discard"], "authenticationRequired": True},
     ]
     for kind, target in _mobile_targets(hass, manager):
         try:
-            await hass.services.async_call(
-                "notify", target, {
-                    "title": title, "message": body,
-                    "data": {
-                        "tag": mobile_tag(manager.entry.entry_id, spec.identifier),
-                        "actions": actions,
-                    },
-                }, blocking=True,
-            )
+            data = {
+                "title": title, "message": body,
+                "data": {
+                    "tag": mobile_tag(manager.entry.entry_id, spec.identifier),
+                    "actions": actions,
+                },
+            }
+            if kind == "entity":
+                data["entity_id"] = target
+                await hass.services.async_call(
+                    "notify", "send_message", data, blocking=True,
+                )
+            else:
+                await hass.services.async_call(
+                    "notify", target, data, blocking=True,
+                )
             sent = True
         except Exception:
             _LOGGER.exception("HEM PID actionable mobile notification failed: %s", target)
@@ -194,13 +274,20 @@ async def async_clear_review(hass: Any, manager: Any, spec: Any) -> None:
             )
         except Exception:
             _LOGGER.debug("Unable to clear PID review from HA notifications", exc_info=True)
-    for _, target in _mobile_targets(hass, manager):
+    for kind, target in _mobile_targets(hass, manager):
         try:
-            await hass.services.async_call(
-                "notify", target, {
-                    "message": "clear_notification",
-                    "data": {"tag": mobile_tag(manager.entry.entry_id, spec.identifier)},
-                }, blocking=True,
-            )
+            data = {
+                "message": "clear_notification",
+                "data": {"tag": mobile_tag(manager.entry.entry_id, spec.identifier)},
+            }
+            if kind == "entity":
+                data["entity_id"] = target
+                await hass.services.async_call(
+                    "notify", "send_message", data, blocking=True,
+                )
+            else:
+                await hass.services.async_call(
+                    "notify", target, data, blocking=True,
+                )
         except Exception:
             _LOGGER.debug("Unable to clear mobile PID review", exc_info=True)
