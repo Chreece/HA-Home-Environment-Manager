@@ -26,15 +26,59 @@ UPSTREAM_MIN_OFF_SECONDS = 600
 UPSTREAM_ACK_SECONDS = 120
 # External power is never cycled to diagnose or clear a failed device.
 _SWITCH_STATES = ("off", "on")
+# A physical device must be continuously verified idle, not just outside the
+# supervisor's demand band, before disconnecting its upstream power.
+MIN_UPSTREAM_IDLE_SECONDS = 60.0
+_IDLE_HVAC_ACTIONS = frozenset(("off", "idle"))
 
 
 def observed_output_off(state: Any) -> bool:
-    """Native switch OFF or a real 0% proportional output, never unavailable."""
+    """Native OFF, with no contradictory running/defrosting HVAC feedback.
+
+    Climate mode "off" alone is insufficient: an appliance can still report
+    cooling, drying, heating, fan, defrost or preheat while stopping. Unknown
+    feedback is never authorization to remove upstream power.
+    """
     if state is None or state.state in ("unknown", "unavailable"):
+        return False
+    attributes = getattr(state, "attributes", {})
+    if not isinstance(attributes, Mapping):
+        return False
+    action = attributes.get("hvac_action")
+    if action is not None and action not in _IDLE_HVAC_ACTIONS:
         return False
     if getattr(state, "domain", "") in ("number", "input_number"):
         return finite(state.state, 0, 100) == 0
     return state.state == "off"
+
+
+def native_outputs_idle(runtime: Any, spec: Any, cap: Any) -> bool:
+    """All native endpoints, including the primary, must report safe idle."""
+    entities = set(spec.source_entities)
+    entities.add(cap.primary)
+    return all(
+        observed_output_off(runtime.hass.states.get(entity))
+        for entity in entities
+    )
+
+
+def idle_cooldown_ready(cfg: dict, relay: dict, now: float,
+                        controller_started: float) -> bool:
+    """Enforce >=60s continuous verified idle, also after a controller restart.
+
+    Invalid/shorter settings fail closed. Persisted idle history is retained
+    across restarts, but never grants immediate OFF on boot without another
+    full minute of native-state observation.
+    """
+    idle_since = finite(relay.get("idle_since"), 0, now)
+    configured = finite(cfg.get("power_switch_cooldown_seconds"), 60, 86400)
+    started = finite(controller_started, 0, now)
+    return bool(
+        idle_since is not None and configured is not None
+        and started is not None
+        and now - idle_since >= max(MIN_UPSTREAM_IDLE_SECONDS, configured)
+        and now - started >= MIN_UPSTREAM_IDLE_SECONDS
+    )
 
 
 def device_supply_dwell(
@@ -599,22 +643,13 @@ def _dispatch_safe(runtime: Any, spec: Any, record: dict, cfg: dict,
     # required for physical ON, not for a confirmed-demand-free OFF.
     if not supply_minimum_on(runtime, spec, cfg, cap, relay, now):
         return False
-    started = finite(relay.get("idle_since"), 0, 1e13)
-    cooldown = finite(cfg.get("power_switch_cooldown_seconds"), 60, 86400)
-    if started is None or cooldown is None or now-started < cooldown:
+    if not idle_cooldown_ready(cfg, relay, now, runtime._started):
         return False
     if approved_demand(runtime, spec, cfg, cap) is not False:
         return False
     if record.get("power") or record.get("pending"):
         return False
-    for source in spec.source_entities:
-        native = runtime.hass.states.get(source)
-        if (native is None or native.state in ("unknown", "unavailable")
-                or native.attributes.get("hvac_action") == "defrosting"):
-            return False
-        if not observed_output_off(native):
-            return False
-    return True
+    return native_outputs_idle(runtime, spec, cap)
 
 
 async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
@@ -802,6 +837,11 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         return True
     observed = runtime.hass.states.get(selected)
     if observed is None or observed.state not in _SWITCH_STATES:
+        # A period without reliable supply feedback cannot count as verified
+        # continuous idle for the next OFF decision.
+        if relay.get("idle_since") is not None:
+            relay["idle_since"] = None
+            await runtime._save()
         runtime._status(spec, "waiting_for_physical_device", reason="upstream_switch_unavailable")
         return True
     now = runtime.clock()
@@ -854,6 +894,9 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
                             reason="upstream_switch_waiting_for_ack")
             return True
     if relay.get("paused"):
+        if relay.get("idle_since") is not None:
+            relay["idle_since"] = None
+            await runtime._save()
         runtime._status(spec, "paused", reason=relay["paused"])
         return True
     # One-time identity-checked physical-state observation. ACK handling
@@ -879,6 +922,9 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
     cap = verified_capabilities(runtime, spec)
     if cap is None:
         if observed.state != "off":
+            if relay.get("idle_since") is not None:
+                relay["idle_since"] = None
+                await runtime._save()
             runtime._status(spec, "waiting_for_physical_device",
                             reason="upstream_on_native_device_not_reporting")
             return True
@@ -976,21 +1022,13 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
     # Switch is ON. Do not assume it belongs to us just because it is ON.
     if not relay.get("owned"):
         return False
-    # An unknown downstream condition is never "no demand".
-    native = runtime.hass.states.get(cap.primary)
-    native_off = observed_output_off(native)
+    # Loss of feedback, any active native output/HVAC action, or a pending
+    # native command breaks the cooldown interval instead of ending it.
     no_native_write = not record.get("power") and not record.get("pending")
-    no_defrost = native is not None and native.attributes.get("hvac_action") != "defrosting"
-    no_active_output = all(
-        (state := runtime.hass.states.get(entity)) is not None
-        and state.state not in ("unknown", "unavailable")
-        and (state.state == "off" or
-             entity.startswith(("number.", "input_number."))
-             and finite(state.state, 0, 100) == 0)
-        for entity in spec.source_entities
+    safe_idle = (
+        demand is False and no_native_write
+        and native_outputs_idle(runtime, spec, cap)
     )
-    safe_idle = (demand is False and native_off and no_native_write
-                 and no_defrost and no_active_output)
     if not safe_idle:
         if relay.get("idle_since") is not None:
             relay["idle_since"] = None
@@ -1000,7 +1038,7 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         relay["idle_since"] = now
         await runtime._save()
         return False
-    if now-relay["idle_since"] < cfg["power_switch_cooldown_seconds"]:
+    if not idle_cooldown_ready(cfg, relay, now, runtime._started):
         return False
     if not supply_minimum_on(runtime, spec, cfg, cap, relay, now):
         runtime._status(spec, "minimum_on_hold",
