@@ -74,11 +74,12 @@ with sync_playwright() as playwright:
     assert 'hem-activity-heat' in glance.locator('.hem-room-reading87').nth(0).get_attribute('class')
     assert 'hem-activity-dry' in glance.locator('.hem-room-reading87').nth(1).get_attribute('class')
     chips=glance.locator('.hem-room-air-chip89')
-    assert chips.count()>=8,chips.count() # Lux plus seven air readings
+    assert chips.count()==2,chips.count() # Temperature + RH + at most two extras
     text=page.evaluate("""()=>[...card.shadowRoot.querySelectorAll(
       '[data-room-fold87="room0"] .hem-room-air-chip89')].map(e=>e.textContent).join(' ')""")
-    for metric in ('CO₂','PM2.5','PM10','TVOC','AQI','HCHO','Rn','Lux'):
+    for metric in ('CO₂','PM2.5'):
         assert metric in text,(metric,text)
+    assert all(name not in text for name in ('Lux','PM10','TVOC','HCHO','Rn')), text
     assert '900' not in text
     assert glance.bounding_box()['height']<=52,glance.bounding_box()
     # Click room, then controller name: opens HEM facade only. Native icon
@@ -122,9 +123,11 @@ with sync_playwright() as playwright:
     glance=page.locator('[data-room-fold87="room0"] > summary')
     assert 'hem-activity-neutral' in glance.locator('.hem-room-reading87').nth(0).get_attribute('class')
     assert 'hem-activity-neutral' in glance.locator('.hem-room-reading87').nth(1).get_attribute('class')
-    # Mobile widths retain the scrollable sensor row and all accessible items.
+    # Mobile never introduces a horizontal sensor scroller.
     page.set_viewport_size({'width':360,'height':1000})
-    assert page.locator('.hem-room-air-chip89').count()>=8
+    assert page.locator('.hem-room-air-chip89').count()<=2
+    assert page.locator('.hem-room-air89').first.evaluate(
+        '(node)=>getComputedStyle(node).overflowX')!='auto'
     assert not errors,errors
     browser.close()
 print('BETA89_CHROMIUM_ACTIVITY_SENSORS_DUAL_ENTITY_LINKS_AUTO_BUTTON=PASS')
