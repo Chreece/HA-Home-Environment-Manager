@@ -206,7 +206,7 @@ class TestAutomatic(unittest.IsolatedAsyncioTestCase):
                 controller_settings=Model.settings(r.manager,SPEC))
         self.assertFalse(available(obj))
         r.record['paused']='physical_manual_override'
-        self.assertTrue(available(obj))
+        self.assertFalse(available(obj))
         r.manager.settings[Model.SETTINGS][SPEC.identifier]['control_mode']='manual'
         obj.controller_settings=Model.settings(r.manager,SPEC)
         self.assertTrue(available(obj))

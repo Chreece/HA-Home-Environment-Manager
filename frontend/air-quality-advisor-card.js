@@ -1723,9 +1723,7 @@
         }[this._language()] || ['Previous command not confirmed','Requested','Device reports',
             'Verify the real device and HA report, then try Continue Automatic again after the waiting interval.',
             'Continue Automatic','Wait'];
-        const alreadyAutomatic=['automatic','pid'].includes(control) &&
-          !entry.statusInfo?.state?.attributes?.paused_reason &&
-          !entry.statusInfo?.state?.attributes?.command_pending;
+        const alreadyAutomatic=['automatic','pid'].includes(control);
         const resumeAvailable=entry.resumeButtonId &&
           entry.resumeButton?.state!=='unavailable' && !alreadyAutomatic;
         const recoveryPanel=recovery && entry.resumeButtonId
