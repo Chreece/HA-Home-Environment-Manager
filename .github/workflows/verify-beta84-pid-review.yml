@@ -30,7 +30,15 @@ jobs:
               json.loads(f.read_text(encoding='utf-8'))
           PY
       - name: PID selector, review tokens and actual HA notification calls
-        run: python -I .github/tests/test_beta84_unified_review.py
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta84_unified_review.py
+          python -I .github/tests/test_beta84_pid_review_runtime.py
+      - name: Chromium card and real Home Assistant dispatcher checks
+        run: |
+          set -euo pipefail
+          node --check frontend/air-quality-advisor-card.js
+          python -I .github/tests/test_beta76_compact_browser.py
       - name: Previously validated natural PID calibration and runtime safety
         run: |
           set -euo pipefail
