@@ -157,10 +157,12 @@ def _read_native_error(entity_id: str, state: Any, *, fault_entity: bool) -> dic
     info = {}
     for key in ("error_info", "fault_info", "error_detail", "fault_detail",
                 "error_data", "fault_data"):
+        if len(info) >= 4:
+            break
         value = attrs.get(key)
         info_text = _detail_text(value)
         if (_active(value) or isinstance(value, (dict, list, tuple))) and info_text:
-            info[key] = info_text[:400]
+            info[key] = info_text[:240]
     return {
         "source_entity_id": entity_id,
         "source_state": state_value,
@@ -202,8 +204,10 @@ def _faults_for(hass: Any, spec: Any, diagnostic_entities: tuple[str, ...]) -> d
             "severity": primary["severity"],
             "info": primary["info"],
             "active_count": len(faults),
-            "faults": faults[:4],
-            "native_error_entities": list(diagnostic_entities[:8]),
+            "faults": faults[:3],
+            "native_error_entities": list(dict.fromkeys(
+                [primary["source_entity_id"], *diagnostic_entities[:8]]
+            ))[:9],
             "unavailable_entities": unavailable[:5],
         }
     return {
