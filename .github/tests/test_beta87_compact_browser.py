@@ -142,7 +142,17 @@ with sync_playwright() as p:
     assert page.locator(".donut").count()==0
     assert page.locator(".hem-room-fold87:not([open])").count()==5
     assert page.locator(".hem-room-glance87").count()==5
-    assert page.locator(".hem-room-glance87").first.bounding_box()["height"] <= 52
+    height=page.locator(".hem-room-glance87").first.bounding_box()["height"]
+    if height>52:
+        diag=page.locator(".hem-room-glance87").first.evaluate("""node=>({
+            client:node.clientWidth,scroll:node.scrollWidth,height:node.clientHeight,
+            children:[...node.children].map(c=>({
+                tag:c.tagName,klass:c.className?.baseVal||c.className,
+                width:c.getBoundingClientRect().width,
+                height:c.getBoundingClientRect().height, display:getComputedStyle(c).display
+            }))
+        })""")
+        raise AssertionError(("room summary must be one line",height,diag))
 
     outdoor=page.locator(".outside")
     assert outdoor.count()==1
