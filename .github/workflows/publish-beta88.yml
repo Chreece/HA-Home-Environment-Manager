@@ -52,18 +52,18 @@ jobs:
               'translations/de.json',
               'translations/el.json',
               'translations/en.json',
+              '.github/tests/test_beta63_cold_start.py',
               '.github/tests/test_beta88_power_startup_and_retries.py',
               '.github/workflows/verify-beta88-power-control.yml',
               '.github/workflows/publish-beta88.yml',
               '.github/releases/v0.6.0b88.md',
           }
           assert changed == required, (
-              'BETA87_UNEXPECTED_SOURCE_CHANGES',
+              'BETA88_UNEXPECTED_SOURCE_CHANGES',
               sorted(changed-required),sorted(required-changed),
           )
           assert 'sensor.py' not in changed
           assert 'frontend/air-quality-advisor-card.js' not in changed
-          assert 'sensor.py' not in changed
           runtime=Path('equipment_runtime.py').read_text()
           supply=Path('equipment_power_switch.py').read_text()
           tests=Path('.github/tests/test_beta88_power_startup_and_retries.py').read_text()

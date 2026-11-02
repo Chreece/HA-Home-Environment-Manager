@@ -255,7 +255,12 @@ async def test_cold_start():
     assert await drive(sim) is True
     assert record["upstream"]["pending"] is None
     assert record["upstream"]["owned"] is True
-    assert sim.status[1]["reason"] == "upstream_on_native_device_not_reporting"
+    # Beta88 deliberately treats an ACKed HEM supply ON as a bounded native
+    # recovery window rather than immediately diagnosing a missing device.
+    assert sim.status[0] == "waiting_for_physical_device"
+    assert sim.status[1]["reason"] == "upstream_native_boot_grace"
+    assert sim.status[1]["startup_remaining_seconds"] == 60
+    assert sim.status[1]["native_output_confirmed"] is False
     assert len(sim.service_calls) == 1
     sim.native_online = True
     sim.states["climate.comfee"] = FakeState("off")
