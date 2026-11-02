@@ -339,6 +339,9 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
                 "profile_sleeping": plan.get("sleeping"),
                 "physical_hvac_mode": self._physical_hvac_mode,
                 "physical_source_state": self._state.state if self._state else "unavailable",
+                # The exact native endpoint is exposed for the Lovelace link;
+                # do not infer the target from a Manager climate entity name.
+                "physical_primary_entity_id": cap.primary if cap else None,
                 "controller_mode_selected": cfg["control_mode"] in ("automatic", "pid", "manual"),
                 "upstream_power_switch": cfg.get("power_switch_entity"),
                 "upstream_power_state": (self._manager.hass.states.get(cfg["power_switch_entity"]).state
