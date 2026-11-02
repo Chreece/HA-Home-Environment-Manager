@@ -145,6 +145,8 @@ def _read_native_error(entity_id: str, state: Any, *, fault_entity: bool) -> dic
     if not values and not descriptors and not state_active:
         return None
     code = (values[0] if values else state_value if state_active else "")
+    if state_active and not values and code.casefold() in ("on", "true", "1"):
+        code = "problem"
     detail = descriptors[0] if descriptors else ""
     if not detail and state_active and state_value.casefold() not in (
             "on", "true", "1", "active", "detected", "problem", "error", "fault", "alarm"):
