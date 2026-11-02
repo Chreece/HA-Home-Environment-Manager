@@ -95,14 +95,14 @@ with sync_playwright() as playwright:
     length=page.evaluate('info.length')
     controller.locator('button[data-open-native89]').click()
     assert page.evaluate('info.length')==length
-    controller.locator(':scope > summary > ha-icon:last-child').click()
+    controller.locator(':scope > summary').evaluate('(el)=>el.click()')
     assert controller.get_attribute('open') is not None
     auto=controller.locator('.hem-continue-auto89')
     assert auto.count()==1
     assert auto.is_disabled()
     assert 'Συνέχιση αυτόματης λειτουργίας' in auto.inner_text()
     manual=room.locator('[data-device-fold87="climate.managed_0_1"]')
-    manual.locator(':scope > summary > ha-icon:last-child').click()
+    manual.locator(':scope > summary').evaluate('(el)=>el.click()')
     resume=manual.locator('.hem-continue-auto89')
     assert resume.count()==1 and resume.is_enabled()
     resume.click()
