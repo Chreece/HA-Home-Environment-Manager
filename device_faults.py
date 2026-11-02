@@ -68,7 +68,8 @@ def _active(value: Any) -> bool:
     if not isinstance(value, str):
         return False
     text = _text(value).casefold()
-    if not text or text in _EMPTY or text in _UNAVAILABLE:
+    if (not text or text.replace("_", " ").replace("-", " ") in _EMPTY
+            or text in _UNAVAILABLE):
         return False
     try:
         if re.fullmatch(r"[-+]?\d+(?:\.\d+)?", text):
@@ -76,6 +77,22 @@ def _active(value: Any) -> bool:
     except (ValueError, OverflowError):
         return False
     return True
+
+
+def _detail_text(value: Any) -> str:
+    """Render short, structured manufacturer fault details if HA supplies them."""
+    if isinstance(value, Mapping):
+        pieces = []
+        for key, item in list(value.items())[:6]:
+            name = _text(key, 36)
+            detail = _text(item, 120)
+            if name and detail:
+                pieces.append(f"{name}: {detail}")
+        return "; ".join(pieces)[:400]
+    if isinstance(value, (list, tuple)):
+        return "; ".join(_text(v, 95) for v in value[:4]
+                         if _text(v, 95))[:400]
+    return _text(value, 400)
 
 
 def _severity(attrs: Mapping, value: str = "") -> str:
@@ -114,7 +131,10 @@ def _read_native_error(entity_id: str, state: Any, *, fault_entity: bool) -> dic
     if not isinstance(attrs, Mapping):
         return None
     values = [_text(attrs.get(k), 110) for k in _ATTR_CODES if _active(attrs.get(k))]
-    descriptors = [_text(attrs.get(k), 240) for k in _ATTR_TEXT if _active(attrs.get(k))]
+    descriptors = [_detail_text(attrs.get(k)) for k in _ATTR_TEXT
+                   if _active(attrs.get(k)) or isinstance(
+                       attrs.get(k), (dict, list, tuple)
+                   ) and bool(_detail_text(attrs.get(k)))]
     state_value = _text(getattr(state, "state", None), 110)
     state_active = fault_entity and _active(getattr(state, "state", None))
     # An explicit native error_code=0 takes precedence over a stale
@@ -136,8 +156,9 @@ def _read_native_error(entity_id: str, state: Any, *, fault_entity: bool) -> dic
     for key in ("error_info", "fault_info", "error_detail", "fault_detail",
                 "error_data", "fault_data"):
         value = attrs.get(key)
-        if _active(value):
-            info[key] = _text(value, 240)
+        detail = _detail_text(value)
+        if (_active(value) or isinstance(value, (dict, list, tuple))) and detail:
+            info[key] = detail[:400]
     return {
         "source_entity_id": entity_id,
         "source_state": state_value,
