@@ -3851,7 +3851,7 @@
       if(element.scrollTop>0 && element.scrollHeight>element.clientHeight+1)
         positions.push([element,element.scrollTop]);
     };
-    for(let node=this,count=0;node && count<40;
+    for(let node=this,count=0;node && count<80;
         node=node.parentNode || node.host,count++){
       if(node.nodeType===1)add(node);
     }
@@ -3966,26 +3966,64 @@
   };
   /* HEM_STABLE_DOM91_END */
 
+  /* HEM_PAGE_SCROLL92_START
+   * Beta91's in-place reconciler keeps ha-card identity stable, so the old
+   * scroll recovery (card !== before) never ran on ordinary HA updates.
+   * This specifically rescues an uncommanded large upward Lovelace jump,
+   * without fighting small native scroll-anchor adjustments or forcing
+   * a user's normal scrolling to the top/bottom.
+   */
+  proto87._recoverUnexpectedScroll92=function(positions){
+    let corrected=0;
+    for(const [element,offset] of positions||[]){
+      if(!element?.isConnected || !Number.isFinite(offset) || offset<160 ||
+          typeof element.scrollTop!=='number' ||
+          element.scrollHeight<=element.clientHeight+1)continue;
+      const observed=element.scrollTop;
+      if(!Number.isFinite(observed) || observed<0 ||
+         offset-observed<Math.max(160,offset*0.4))continue;
+      const bounded=Math.min(offset,Math.max(
+        0,element.scrollHeight-element.clientHeight));
+      if(bounded-observed<=100)continue;
+      element.scrollTop=bounded;
+      corrected++;
+    }
+    if(corrected)this._unexpectedScrollRescues92=
+      (this._unexpectedScrollRescues92||0)+corrected;
+  };
+  /* HEM_PAGE_SCROLL92_END */
+
   proto87._renderContent=function(force=false) {
     this._installFolds87();
     const before=this.shadowRoot.querySelector('ha-card.shell');
     const positions=this._captureScroll90();
     const epoch=this._hemScrollEpoch90||0;
+    const revisionsBefore=this._stableDomUpdates91||0;
     _renderContent87.call(this,force);
     const card=this.shadowRoot.querySelector('ha-card.shell');
     if(card && (card!==before || card.dataset.compact87!=='ready'))
       this._compactAfterRender87(card);
-    if(card!==before && positions.length) {
-      // Complete compaction before restoring. HA may move scroll targets
-      // during the browser's following layout; restore once more next frame
-      // only when no fresh user scroll gesture occurred.
-      this._restoreScroll90(positions);
+    const replaced=card!==before;
+    const reconciled=!!card && (this._stableDomUpdates91||0)!==revisionsBefore;
+    if((replaced||reconciled) && positions.length) {
+      // Preserve Beta90's full-replacement fallback. For normal Beta91
+      // in-place updates, rescue only dramatic upward jumps, not small
+      // changes due to browser anchoring or a legitimately resized room.
+      const recover=()=>replaced
+        ? this._restoreScroll90(positions)
+        : this._recoverUnexpectedScroll92(positions);
+      recover();
       const revision=this._hemScrollRevision90=(this._hemScrollRevision90||0)+1;
       if(typeof requestAnimationFrame==='function')
         requestAnimationFrame(()=>{
-          if(this.isConnected && revision===this._hemScrollRevision90 &&
-              epoch===(this._hemScrollEpoch90||0))
-            this._restoreScroll90(positions);
+          if(!this.isConnected || revision!==this._hemScrollRevision90 ||
+              epoch!==(this._hemScrollEpoch90||0))return;
+          // HA may adjust the scrollable view on the next layout frame.
+          recover();
+          requestAnimationFrame(()=>{
+            if(this.isConnected && revision===this._hemScrollRevision90 &&
+                epoch===(this._hemScrollEpoch90||0))recover();
+          });
         });
     }
   };
