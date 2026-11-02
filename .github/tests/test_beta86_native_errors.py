@@ -172,6 +172,13 @@ assert F._read_native_error(
     "climate.a",state("off",error_code=0,error_description="old fault"),
     fault_entity=False,
 ) is None
+problem=F._read_native_error(
+    "binary_sensor.a_problem",
+    state("on",device_class="problem",error_message="Compressor fault"),
+    fault_entity=True,
+)
+assert problem["code"]=="problem"
+assert problem["description"]=="Compressor fault"
 assert model.settings(manager,specA)["announce_device_errors"] is True
 
 async def drain():
