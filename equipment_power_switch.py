@@ -11,6 +11,7 @@ controller remains logically armed while the external supply is off.
 """
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Mapping
 import time
 from typing import Any
@@ -921,13 +922,10 @@ async def retry_pending_supply(
             command_attempts=pending["attempts"],
             command_retries_completed=pending["attempts"] - 1,
         )
-    except BaseException as error:
-        # Cancellation preserves the durable retry intent (restart must
-        # reconcile it); a service exception also pauses uncertain hardware.
-        if isinstance(error, (KeyboardInterrupt, SystemExit, GeneratorExit)):
-            raise
-        if isinstance(error, __import__("asyncio").CancelledError):
-            raise
+    except asyncio.CancelledError:
+        # A cancelled retry remains durably uncertain for restart handling.
+        raise
+    except Exception:
         relay["paused"] = "upstream_retry_service_failed_or_uncertain"
         await runtime._save()
         runtime._status(spec, "paused", reason=relay["paused"])
