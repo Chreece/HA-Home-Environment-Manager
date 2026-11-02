@@ -125,7 +125,8 @@ with sync_playwright() as playwright:
     assert 'hem-activity-neutral' in glance.locator('.hem-room-reading87').nth(1).get_attribute('class')
     # Mobile never introduces a horizontal sensor scroller.
     page.set_viewport_size({'width':360,'height':1000})
-    assert page.locator('.hem-room-air-chip89').count()<=2
+    for room_header in page.locator('.hem-room-glance87').all():
+        assert room_header.locator('.hem-room-air-chip89').count()<=2
     assert page.locator('.hem-room-air89').first.evaluate(
         '(node)=>getComputedStyle(node).overflowX')!='auto'
     assert not errors,errors
