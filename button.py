@@ -112,15 +112,12 @@ class EquipmentResumeButton(EquipmentEntity, ButtonEntity):
 
     @property
     def available(self):
-        runtime = self._manager.equipment
-        cfg = self.controller_settings
-        record = runtime.records.get(self._spec.identifier, {})
-        upstream = record.get("upstream", {}) if isinstance(record, dict) else {}
-        blocked = bool(record.get("paused") or record.get("pending")
-                       or isinstance(upstream, dict) and (
-                           upstream.get("paused") or upstream.get("pending")))
-        return bool(getattr(runtime, "_ready", False)
-                    and (cfg["control_mode"] not in ("automatic", "pid") or blocked))
+        # The action selects an algorithm; when Automatic/PID is already the
+        # selected method it must be disabled, even if physical actuation is
+        # temporarily held by independent safety/recovery interlocks.
+        return bool(getattr(self._manager.equipment, "_ready", False)
+                    and self.controller_settings["control_mode"]
+                    not in ("automatic", "pid"))
 
     @property
     def extra_state_attributes(self):
