@@ -2472,6 +2472,18 @@
       .climate-entity-link strong{overflow-wrap:anywhere}
       .climate-entity-link ha-icon{--mdc-icon-size:16px;color:var(--aqa-blue);flex:0 0 auto}
       .managed-status{font-size:10px;color:var(--aqa-muted);margin:5px 0 9px;overflow-wrap:anywhere}
+      .hem-device-error{margin:6px 0;padding:8px;border:1px solid var(--error-color,var(--aqa-red));
+        border-radius:8px;font-size:11px;overflow-wrap:anywhere}
+      .hem-device-error>strong{display:block;margin-bottom:5px;color:var(--error-color,var(--aqa-red))}
+      .hem-device-error small{display:block;margin-top:3px;font-size:10px;white-space:normal}
+      .hem-device-error .climate-entity-link{margin-top:5px;text-decoration:underline;max-width:100%;
+        overflow-wrap:anywhere}
+      .hem-device-error-toggle{margin:6px 0}
+      .hem-device-error-toggle button{border:1px solid var(--aqa-edge);border-radius:8px;
+        background:var(--aqa-surface);color:var(--aqa-text);padding:6px 10px;
+        font-size:11px;display:flex;align-items:center;gap:8px;cursor:pointer}
+      .hem-device-error-toggle button b{margin-inline-start:auto;font-variant-numeric:tabular-nums}
+      .hem-device-error-toggle button:focus-visible{outline:2px solid var(--aqa-blue)}
       .managed-method-label,.climate-target-editor label{display:grid;gap:5px;font-size:10px}
       .managed-method-label select,.climate-target-editor input{border:1px solid var(--aqa-edge);
         border-radius:8px;background:var(--aqa-surface);color:var(--aqa-text);padding:7px;
