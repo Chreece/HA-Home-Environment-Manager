@@ -188,7 +188,7 @@ class PowerSafetyTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(check(self.cfg, relay, 1000, 950))
         self.assertTrue(check(self.cfg, relay, 1010, 950))
 
-    def test_tick_starts_cooldown_on_verified_native_stop(self):
+    async def test_tick_starts_cooldown_on_verified_native_stop(self):
         tick = self.ns["before_tick"]
         # No switch command during the first verified idle minute.
         self.assertFalse(await tick(self.runtime, self.spec))
@@ -201,7 +201,7 @@ class PowerSafetyTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(await tick(self.runtime, self.spec))
         self.assertEqual(self.sent, ["off"])
 
-    def test_working_device_resets_cooldown_and_blocks_switch(self):
+    async def test_working_device_resets_cooldown_and_blocks_switch(self):
         tick = self.ns["before_tick"]
         await tick(self.runtime, self.spec)
         self.now = 1020
@@ -219,7 +219,7 @@ class PowerSafetyTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(await tick(self.runtime, self.spec))
         self.assertEqual(self.sent, ["off"])
 
-    def test_unknown_state_and_supply_outage_clear_idle_timer(self):
+    async def test_unknown_state_and_supply_outage_clear_idle_timer(self):
         tick = self.ns["before_tick"]
         await tick(self.runtime, self.spec)
         self.now += 30
