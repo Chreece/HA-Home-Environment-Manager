@@ -33,6 +33,7 @@ jobs:
         run: |
           set -euo pipefail
           python -I .github/tests/test_beta91_pid_restart.py
+          python -I .github/tests/test_beta91_dry_only_pwm.py
           python -I .github/tests/test_beta73_restart_power_history.py
           python -I .github/tests/test_beta74_upstream_dwell.py
           python -I .github/tests/test_beta75_native_supply_recovery.py
