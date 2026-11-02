@@ -1608,6 +1608,37 @@ class EquipmentRuntime:
         table[profile] = str(value)
         await self.async_update(spec, {**changes, "profile_fans": table})
 
+    def resume_information(self, spec: model.ManagedDevice) -> dict | None:
+        """Read-only explanation of an unresolved native command and next step.
+
+        This is safe for the controller status sensor and Check/Continue
+        entity. Never scans the registry, polls hardware or issues a service.
+        """
+        record = self.records.get(spec.identifier, {})
+        pending = record.get("pending") if isinstance(record, dict) else None
+        if not pending:
+            return None
+        from .equipment_resume import check_pending, instructions
+        entity = pending.get("entity") if isinstance(pending, dict) else None
+        state = self.hass.states.get(entity) if isinstance(entity, str) else None
+        expected = pending.get("expected") if isinstance(pending, dict) else None
+        checked = check_pending(
+            pending, state, self.clock(),
+            record.get("pending_resume_probe"),
+            matches_expected=matches(state, expected) if isinstance(expected, dict) else False,
+        )
+        checked = {
+            key: checked.get(key)
+            for key in ("decision", "entity", "requested", "observed",
+                        "remaining_seconds", "phase", "needs_physical_check")
+        }
+        checked["instructions"] = instructions(
+            checked, language=str(getattr(
+                getattr(self.hass, "config", None), "language", "en"
+            ))
+        )
+        return checked
+
     async def async_resume(self, spec: model.ManagedDevice) -> None:
         """Re-arm a verified live device without forcing an OFF/ON cycle.
 
@@ -1846,8 +1877,10 @@ class EquipmentRuntime:
             # user explicitly accepted current native feedback, restart
             # only this uncertain output's minimum physical dwell, never
             # infer the old power timestamp or issue an actuator command.
-            if (pending_recovery == "verified" and pending
+            if (pending_recovery is not None and pending
                     and pending.get("power") is True
+                    and (pending_recovery == "verified"
+                         or pending.get("phase") == "intent")
                     and pending["entity"] in next_power):
                 owned_since = next_power[pending["entity"]]
                 next_power[pending["entity"]] = {
@@ -1860,8 +1893,10 @@ class EquipmentRuntime:
                     historical = finite(next_off_at.get(entity), 0, now)
                     next_off_at[entity] = max(observed_off, historical or 0)
 
-            if (pending_recovery == "verified" and pending
+            if (pending_recovery is not None and pending
                     and pending.get("power") is True
+                    and (pending_recovery == "verified"
+                         or pending.get("phase") == "intent")
                     and output_off(physical[pending["entity"]])):
                 next_off_at[pending["entity"]] = now
             record.update(
