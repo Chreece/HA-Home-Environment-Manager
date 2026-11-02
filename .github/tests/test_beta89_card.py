@@ -45,6 +45,8 @@ for j in range(3):
     states[f'button.resume_0_{j}']['attributes']['controller_resume_role']='continue_automatic'
 states['button.resume_0_0']['state']='unavailable' # HA-disables when healthy
 states['button.resume_0_1']['state']='unknown' # physical manual override requires Continue
+states['select.control_0_1']['state']='manual'
+states[ctrl_dry]['attributes']['control_mode']='manual'
 states['button.resume_0_2']['state']='unavailable'
 
 chrome=shutil.which('chromium') or shutil.which('google-chrome')
