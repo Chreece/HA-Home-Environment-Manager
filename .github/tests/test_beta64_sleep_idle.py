@@ -247,14 +247,20 @@ power_env = {
     "model": Model, "finite": finite, "permitted_supply": permitted,
     "UPSTREAM_MIN_OFF_SECONDS": 600, "UPSTREAM_ACK_SECONDS": 120,
     "_SWITCH_STATES": ("off", "on"),
+    "_IDLE_HVAC_ACTIONS": frozenset(("off", "idle")),
+    "MIN_UPSTREAM_IDLE_SECONDS": 60.0,
     "output_required": lambda cap, targets, measured, **args: (
         True if measured["humidity"] > targets["humidity"]+2 else
         False if measured["humidity"] < targets["humidity"]-2 else None
     ),
-    "observed_output_off": output_off,
     "_observed_off_since": lambda state, now: state.last_changed.timestamp(),
     "verified_capabilities": lambda runtime, spec: runtime.manager.cap,
 }
+(observed_output_off, native_outputs_idle, idle_cooldown_ready) = extract(
+    "equipment_power_switch.py",
+    ("observed_output_off", "native_outputs_idle", "idle_cooldown_ready"),
+    power_env,
+)
 (device_supply_dwell, supply_off_since, supply_minimum_on,
  supply_minimum_off, observe_supply_state) = extract(
     "equipment_power_switch.py",
