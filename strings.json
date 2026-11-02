@@ -2699,6 +2699,7 @@
           "paused": "Automatic control is paused",
           "paused_away": "Paused away",
           "physical_capabilities_unavailable": "Physical device capabilities cannot be read",
+          "physical_device_startup_timeout": "Powered device did not reconnect within 60 seconds",
           "physical_device_unavailable": "Physical device is unavailable",
           "pid_already_owns_device": "The device is already managed by another PID controller",
           "pid_not_ready": "PID needs more valid readings before it can control",
