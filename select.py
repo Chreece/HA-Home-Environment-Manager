@@ -52,10 +52,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
     from . import equipment_model as equipment
     entities.extend(EquipmentSelect(manager, spec, "control_mode")
                     for spec in equipment.specs(manager))
-    # A separate, explicit opt-in to calculated gain changes. Observation is
-    # passive and does not change or authorize any physical device output.
-    entities.extend(EquipmentSelect(manager, spec, "pid_adaptation_mode")
-                    for spec in equipment.specs(manager))
+    # PID calibration and passive learning are selected ONLY through the
+    # native PID Calibration dropdown, never competing independent selectors.
     # A dedicated optional physical relay for EVERY managed output, including
     # switch, numeric, fan, humidifier and climate devices. Never auto-enroll.
     entities.extend(EquipmentPowerSwitchSelect(manager, spec)
@@ -66,6 +64,15 @@ async def async_setup_entry(hass, entry, async_add_entities):
         pid_calibration_supported,
     )
     registry = er.async_get(hass)
+    # The Beta82 passive selector is superseded by the unified calibration
+    # dropdown. Migrate its saved preference in model.settings() first; then
+    # retire only our exact registered legacy entity, avoiding ghost controls.
+    for spec in equipment.specs(manager):
+        old_entity = registry.async_get_entity_id(
+            "select", DOMAIN, f"{spec.identifier}_pid_adaptation_mode"
+        )
+        if old_entity:
+            registry.async_remove(old_entity)
 
     def native_feature_selects():
         selection = []
@@ -296,11 +303,6 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
         if self._key == "quiet_fan_mode":
             cap = equipment.capabilities(self._manager, self._spec)
             return bool(cap and cap.fan_modes and not cap.fan_percentage)
-        if self._key == "pid_adaptation_mode":
-            cap = equipment.capabilities(self._manager, self._spec)
-            return bool(cap is not None
-                        and self.controller_settings["control_mode"] == "pid"
-                        and "pid" in equipment.control_modes(self._manager, self._spec))
         if self._key == "pid_calibration_method":
             # Show persisted setup across device startup, but allow edits only
             # after the physical endpoint re-advertises native DRY/PID support.
@@ -318,7 +320,7 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
         if self._key in ("control_mode", "quiet_fan_mode",
-                         "pid_adaptation_mode", "pid_calibration_method",
+                         "pid_calibration_method",
                          "pid_fan_capacity_mode",
                          "pid_fan_capacity_for_mode"):
             # Native mode/feature changes can turn DRY-only PID support on
@@ -329,8 +331,6 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
     def options(self):
         if self._key == "control_mode":
             return list(equipment.control_modes(self._manager, self._spec))
-        if self._key == "pid_adaptation_mode":
-            return list(equipment.PID_ADAPTATION_MODES)
         if self._key == "pid_calibration_method":
             return list(equipment.PID_CALIBRATION_METHODS)
         if self._key == "pid_fan_capacity_mode":
@@ -350,13 +350,13 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
         if self._key in ("pid_fan_capacity_mode", "pid_fan_capacity_for_mode"):
             return {**attributes, "pid_fan_capacity_role":
                 "strategy" if self._key == "pid_fan_capacity_mode" else "direction"}
-        if self._key == "pid_adaptation_mode":
-            return {**attributes, "pid_learning_role": "passive_mode",
-                    "disabled": "Do not observe",
-                    "observe": "Suggest gains only; never change Kp/Ki/Kd",
-                    "bounded": "After independent validation, change Kp/Ki by no more than 10% per day while OFF"}
         if self._key == "pid_calibration_method":
-            return {**attributes, "pid_calibration_role": "method"}
+            return {**attributes, "pid_calibration_role": "single_authoritative_method",
+                    "manual": "Manually edit Kp/Ki/Kd; no passive learning",
+                    "imc_lambda": "Compute IMC/Lambda gains from a supplied physical model; Apply explicitly",
+                    "cohen_coon": "Compute Cohen-Coon gains from a supplied physical model; Apply explicitly",
+                    "adaptive_suggest": "Observe normal cycles, notify and require Approve/Discard",
+                    "adaptive_auto": "After 5 high-quality cycles, apply bounded Kp/Ki changes with safety checks"}
         return attributes
 
     @property
