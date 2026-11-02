@@ -2699,6 +2699,7 @@
           "paused": "Automatische Regelung ist pausiert",
           "paused_away": "Paused away",
           "physical_capabilities_unavailable": "Geräteeigenschaften konnten nicht gelesen werden",
+          "physical_device_startup_timeout": "Mit Strom versorgtes Gerät nach 60 Sekunden nicht erreichbar",
           "physical_device_unavailable": "Physisches Gerät nicht verfügbar",
           "pid_already_owns_device": "Gerät wird bereits von einer anderen PID-Regelung gesteuert",
           "pid_not_ready": "PID benötigt weitere gültige Messwerte",
