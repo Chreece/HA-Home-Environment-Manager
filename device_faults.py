@@ -68,7 +68,14 @@ def _active(value: Any) -> bool:
     if not isinstance(value, str):
         return False
     text = _text(value).casefold()
-    return bool(text and text not in _EMPTY and text not in _UNAVAILABLE)
+    if not text or text in _EMPTY or text in _UNAVAILABLE:
+        return False
+    try:
+        if re.fullmatch(r"[-+]?\\d+(?:\\.\\d+)?", text):
+            return float(text) != 0.0
+    except (ValueError, OverflowError):
+        return False
+    return True
 
 
 def _severity(attrs: Mapping, value: str = "") -> str:
@@ -110,6 +117,11 @@ def _read_native_error(entity_id: str, state: Any, *, fault_entity: bool) -> dic
     descriptors = [_text(attrs.get(k), 240) for k in _ATTR_TEXT if _active(attrs.get(k))]
     state_value = _text(getattr(state, "state", None), 110)
     state_active = fault_entity and _active(getattr(state, "state", None))
+    # An explicit native error_code=0 takes precedence over a stale
+    # descriptive last-error attribute left by the manufacturer's device.
+    if (any(key in attrs for key in _ATTR_CODES)
+            and not values and not state_active):
+        return None
     if not values and not descriptors and not state_active:
         return None
     code = (values[0] if values else state_value if state_active else "")
@@ -261,6 +273,8 @@ class NativeDeviceFaultMonitor:
             device_id = getattr(entry, "device_id", None)
             if not device_id or not isinstance(entity_id, str):
                 continue
+            if getattr(entry, "disabled_by", None) is not None:
+                continue
             if not entity_id.startswith(("sensor.", "binary_sensor.")):
                 continue
             native_state = self.hass.states.get(entity_id)
@@ -326,6 +340,17 @@ class NativeDeviceFaultMonitor:
         # Unavailable reads must not clear a previous active fault signature.
         if report["status"] != "unavailable":
             self._fingerprints[identifier] = fingerprint
+            if not fingerprint:
+                # Rearm an identical future occurrence only after ALL
+                # independent channels of this same physical product have
+                # recovered. Do not duplicate current errors from siblings.
+                device_key = spec.source_device_id or identifier
+                if not any(
+                    self._fingerprints.get(other.identifier)
+                    for other in self._specs.values()
+                    if (other.source_device_id or other.identifier) == device_key
+                ):
+                    self._seen_device_alerts.pop(device_key, None)
         self._latest[identifier] = report
         if prior != report:
             updates = getattr(getattr(self.manager, "equipment", None),
