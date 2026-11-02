@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "Dùng cảm biến ánh sáng cho che nắng"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Thông báo lỗi thiết bị · {channel}"
       }
     },
     "select": {

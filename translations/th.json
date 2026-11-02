@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "ใช้เซ็นเซอร์แสงสำหรับม่านกันแดด"
+      },
+      "equipment_announce_device_errors": {
+        "name": "แจ้งเตือนข้อผิดพลาดของอุปกรณ์ · {channel}"
       }
     },
     "select": {

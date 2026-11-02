@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "使用照度感測器進行遮陽"
+      },
+      "equipment_announce_device_errors": {
+        "name": "通報裝置錯誤 · {channel}"
       }
     },
     "select": {

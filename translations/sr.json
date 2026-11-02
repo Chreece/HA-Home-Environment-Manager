@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "Користи сензор осветљења за сенчење"
+      },
+      "equipment_announce_device_errors": {
+        "name": "Пријављуј грешке уређаја · {channel}"
       }
     },
     "select": {

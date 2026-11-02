@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "சூரிய நிழலுக்கான ஒளி உணரியைப் பயன்படுத்து"
+      },
+      "equipment_announce_device_errors": {
+        "name": "சாதனப் பிழைகளை அறிவி · {channel}"
       }
     },
     "select": {

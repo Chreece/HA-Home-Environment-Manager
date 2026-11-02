@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "使用照度传感器进行遮阳"
+      },
+      "equipment_announce_device_errors": {
+        "name": "通报设备错误 · {channel}"
       }
     },
     "select": {

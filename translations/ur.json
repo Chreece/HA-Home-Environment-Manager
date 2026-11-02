@@ -3254,6 +3254,9 @@
       },
       "shade_lux_enabled": {
         "name": "سولر شیڈنگ کے لیے روشنی کا سینسر استعمال کریں"
+      },
+      "equipment_announce_device_errors": {
+        "name": "ڈیوائس کی خرابیوں کا اعلان کریں · {channel}"
       }
     },
     "select": {
