@@ -711,8 +711,9 @@
           const area=resumeNative.getAttribute('data-controller-area');
           const entityId=resumeNative.getAttribute('data-native-resume');
           const linked=this._managedControllers(area).find(item=>
-            item.resumeButtonId===entityId && item.method?.state!=='existing');
-          if (!linked || !entityId?.startsWith('button.')) return;
+            item.resumeButtonId===entityId && item.resumeButton?.state!=='unavailable');
+          if (!linked || !entityId?.startsWith('button.') ||
+              resumeNative.disabled) return;
           Promise.resolve(this._hass.callService('button','press',{
             entity_id:entityId,
           })).then(()=>{
@@ -1167,7 +1168,8 @@
         item.attributes.device_fault_role==='announce');
       const nativeResumeButtons=states.filter(([id,item])=>
         id.startsWith('button.') && item?.attributes?.area_id===area &&
-        item.attributes.controller_resume_role==='check_and_continue');
+        ['check_and_continue','continue_automatic'].includes(
+          item.attributes.controller_resume_role));
       const calibrationSelectors=states.filter(([id,item])=>
         id.startsWith('select.') && item?.attributes?.area_id===area &&
         ['method','single_authoritative_method'].includes(
@@ -1276,7 +1278,16 @@
           state.attributes.pid_fan_capacity_field,
           state.attributes.calibration_status,
         ]);
-      return JSON.stringify(rows);
+      // Activity color must update when a native device changes without a
+      // corresponding HEM facade state change.
+      const physicalIds=new Set(rows.flatMap(row=>
+        Array.isArray(row[14])?row[14]:[]));
+      const native=[...physicalIds].sort().map(id=>{
+        const state=this._hass?.states?.[id];
+        return [id,state?.state,state?.attributes?.hvac_action,
+          state?.attributes?.device_class,state?.attributes?.percentage];
+      });
+      return JSON.stringify([rows,native]);
     }
 
     _icon(icon, extraClass = '') {
@@ -1702,17 +1713,22 @@
         const recoverLabels={
           en:['Previous command not confirmed','Requested','Device reports',
               'Check the actual appliance and its HA state. If they agree, leave it unchanged and press Check and Continue again after the required time. No device power-cycling is needed.',
-              'Check and Continue','Wait'],
+              'Continue Automatic','Wait'],
           de:['Vorheriger Gerätebefehl nicht bestätigt','Angefordert','Gerät meldet',
               'Prüfe den tatsächlichen Gerätezustand gegen Home Assistant. Wenn beide übereinstimmen, unverändert lassen und nach der Wartezeit erneut Prüfen und fortsetzen drücken. Nicht vom Strom trennen.',
-              'Prüfen und fortsetzen','Warten'],
+              'Automatik fortsetzen','Warten'],
           el:['Η προηγούμενη εντολή δεν επιβεβαιώθηκε','Ζητήθηκε','Η συσκευή αναφέρει',
               'Έλεγξε ότι η πραγματική συσκευή συμφωνεί με το Home Assistant. Άφησέ την χωρίς αλλαγές και πάτησε ξανά Έλεγχος και συνέχεια μετά την αναμονή. Μη διακόψεις την παροχή ρεύματος.',
-              'Έλεγχος και συνέχεια','Αναμονή'],
+              'Συνέχιση αυτόματης λειτουργίας','Αναμονή'],
         }[this._language()] || ['Previous command not confirmed','Requested','Device reports',
             'Verify the real device and HA report, then try Check and Continue again after the waiting interval.',
-            'Check and Continue','Wait'];
-        const recoveryPanel=recovery && entry.resumeButtonId && control!=='existing'
+            'Continue Automatic','Wait'];
+        const alreadyAutomatic=['automatic','pid'].includes(control) &&
+          !entry.statusInfo?.state?.attributes?.paused_reason &&
+          !entry.statusInfo?.state?.attributes?.command_pending;
+        const resumeAvailable=entry.resumeButtonId &&
+          entry.resumeButton?.state!=='unavailable' && !alreadyAutomatic;
+        const recoveryPanel=recovery && entry.resumeButtonId
           ? '<div class="managed-status hem-resume-recovery" role="status">'+
             '<strong>'+escape(recoverLabels[0])+'</strong>'+
             '<small>'+escape(recoverLabels[1])+': '+escape(recovery.requested ?? '-')+
@@ -1724,7 +1740,8 @@
             '<small>'+escape(recoverLabels[3])+'</small>'+
             '<button class="pid-button" type="button" data-native-resume="'+
             escape(entry.resumeButtonId)+'" data-controller-area="'+
-            escape(room.area_id)+'">'+escape(recoverLabels[4])+'</button></div>' : '';
+            escape(room.area_id)+'" '+(resumeAvailable?'':'disabled')+'>'+
+            escape(recoverLabels[4])+'</button></div>' : '';
         const calMethods={manual:pidLabels[1],imc_lambda:pidLabels[2],
           cohen_coon:pidLabels[3],adaptive_suggest:localizedReview[0],
           adaptive_auto:localizedReview[1]};
@@ -1889,6 +1906,15 @@
             escape(room.area_id)+'">'+escape(l.save)+'</button></div>');
         }
         const status=attrs.controller_status?.status || '';
+        const continueLabel=({'en':'Continue Automatic','de':'Automatik fortsetzen',
+          'el':'Συνέχιση αυτόματης λειτουργίας'})[this._language()]||'Continue Automatic';
+        const resumeControl=entry.resumeButtonId
+          ? '<button type="button" class="pid-button hem-continue-auto89" '+
+            'data-native-resume="'+escape(entry.resumeButtonId)+'" '+
+            'data-controller-area="'+escape(room.area_id)+'" '+
+            'aria-label="'+escape(continueLabel)+'" '+
+            (resumeAvailable?'':'disabled title="'+escape(continueLabel)+'"')+'>'+
+            this._icon('mdi:play-circle-outline')+escape(continueLabel)+'</button>' : '';
         return '<section class="managed-controller">'+
           '<button type="button" class="climate-entity-link" '+
           'data-open-climate="'+escape(entry.entityId)+
@@ -1897,7 +1923,7 @@
           this._icon('mdi:thermostat')+' <strong>'+escape(name)+
           '</strong> '+this._icon('mdi:open-in-new')+'</button>'+
           this._deviceSummary65(entry)+faultPanel+alertSwitch+
-          recoveryPanel+method+editors.join('')+
+          recoveryPanel+resumeControl+method+editors.join('')+
           this._calibrationDetails65(entry,control==='pid' ?
             calibrationMethod+pidInputs+apply+reviewPanel+capSelectors+capacityInput+applyCapacity+capacitySummary : '')+
           '</section>';
