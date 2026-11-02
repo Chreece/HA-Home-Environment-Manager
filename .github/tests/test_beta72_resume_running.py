@@ -225,18 +225,19 @@ async def run():
     assert idle.record["off_at"]["climate.heater"]==NOW-900
     assert idle._started==NOW-450
 
-    # Manual changes can return to the formerly chosen automatic method,
-    # never guess one when none was previously recorded.
+    # Continue Automatic returns to remembered PID when available,
+    # or explicit default Automatic when no previous algorithm was recorded.
     manual=Runtime(mode="manual",prior_owned=True)
     manual.record["resume_control_mode"]="pid"
     await manual.async_resume(spec)
     assert Model.settings(manual.manager,spec)["control_mode"]=="pid"
     assert "resume_control_mode" not in manual.record
     assert not manual.calls
-    # With no remembered prior controller, Manual remains Manual.
+    # An explicit Continue Automatic must not leave an otherwise-verified
+    # physical device stranded in Manual because a legacy record lacked history.
     no_prior=Runtime(mode="manual")
     await no_prior.async_resume(spec)
-    assert Model.settings(no_prior.manager,spec)["control_mode"]=="manual"
+    assert Model.settings(no_prior.manager,spec)["control_mode"]=="automatic"
 
     for switch_owned in (True,False):
         switched=Runtime(supply="on",prior_owned=True,supply_owned=switch_owned)
