@@ -3470,6 +3470,19 @@
     const labels=_roomLabels87(this._language());
     const open=this._roomsExpanded87?.has(room.area_id)===true;
     const devices=this._managedControllers(room.area_id);
+    const activity=_physicalActivities89(devices,this._hass);
+    const airBadges=_roomAirReadings89(room,devices).map(item=>{
+      const metric=String(item.metric).toLowerCase();
+      const [short,icon,unit]=_airMetric89[metric];
+      const nativeUnit=typeof item.unit==='string'?item.unit:unit;
+      const formatted=this._format(item.value,item.value<10?1:0);
+      const label=String(item.name||short)+' · '+formatted+
+        (nativeUnit?' '+nativeUnit:'');
+      return '<span class="hem-room-air-chip89" title="'+escape(label)+
+        '" aria-label="'+escape(label)+'">'+this._icon(icon)+
+        '<b>'+escape(short)+'</b> '+escape(formatted)+
+        (nativeUnit?'<small>'+escape(nativeUnit)+'</small>':'')+'</span>';
+    }).join('');
     const active=devices.map(entry=>({entry,state:_deviceState87(entry,this._hass)}))
       .filter(item=>item.state.active);
     const temp=_readMetric87(room,'temperature');
@@ -3515,10 +3528,13 @@
       this._icon('mdi:home-outline')+
       '<strong class="hem-room-name87" title="'+escape(room.name||room.area_id)+'">'+
       escape(room.name||room.area_id)+'</strong>'+
-      '<span class="hem-room-reading87" title="'+escape(labels.temperature)+'">'+
+      '<span class="hem-room-reading87 hem-activity-'+activity.temp+
+      '" title="'+escape(labels.temperature)+'">'+
       this._icon('mdi:thermometer')+escape(formatted(temp,'°'))+'</span>'+
-      '<span class="hem-room-reading87" title="'+escape(labels.humidity)+'">'+
+      '<span class="hem-room-reading87 hem-activity-'+activity.humidity+
+      '" title="'+escape(labels.humidity)+'">'+
       this._icon('mdi:water-percent')+escape(formatted(humidity,'%'))+'</span>'+
+      (airBadges?'<span class="hem-room-air89" role="group" aria-label="Air quality and environmental sensors">'+airBadges+'</span>':'')+
       '<span class="hem-room-active87" aria-label="'+
       escape(active.length+' '+labels.active)+'">'+activeIcons+extra+'</span>'+
       '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
