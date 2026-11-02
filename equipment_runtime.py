@@ -1988,7 +1988,9 @@ class EquipmentRuntime:
                 # A changed observation invalidates the completed two-check
                 # proof. Preserve the original unresolved command so another
                 # user check is required; do not erase its safety evidence.
-                if pending_recovery == "verified":
+                if (pending_recovery == "verified"
+                        or pending_recovery == "confirmed" and pending
+                        and pending.get("phase") == "intent"):
                     record.clear()
                     record.update(prior)
                     record.pop("pending_resume_probe", None)
