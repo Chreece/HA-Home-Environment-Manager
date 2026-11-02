@@ -1112,7 +1112,8 @@
         safeArray(item.attributes.source_entity_ids).slice().sort());
       const calibrationSelectors=states.filter(([id,item])=>
         id.startsWith('select.') && item?.attributes?.area_id===area &&
-        item.attributes.pid_calibration_role==='method');
+        ['method','single_authoritative_method'].includes(
+          item.attributes.pid_calibration_role));
       const reviewButtons=states.filter(([id,item])=>
         id.startsWith('button.') && item?.attributes?.area_id===area &&
         ['approve','discard'].includes(item.attributes.pid_review_role));
