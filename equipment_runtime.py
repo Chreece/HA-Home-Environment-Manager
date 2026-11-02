@@ -666,6 +666,7 @@ class EquipmentRuntime:
                     or cfg.get("requested_mode") not in ("heat", "cool", "dry")
                     or self.clock() - self._started < STARTUP_SECONDS
                     or cap is None or native is None or not output_off(native)
+                    or native.attributes.get("hvac_action") not in (None,"off","idle")
                     or record.get("paused") or record.get("pending")
                     or record.get("power") or (record.get("upstream") or {}).get("pending")
                     or saved.get("context") != context
