@@ -3644,7 +3644,7 @@
     return disconnect87.call(this);
   };
   proto87._styles=function(){
-    return _styles87.call(this)+String.raw\`<style>
+    return _styles87.call(this)+String.raw`<style>
       /* Header is a single, readable toolbar row. */
       .shell{overflow:visible}
       .card-heading{padding:11px 12px;gap:7px;min-height:48px}
@@ -3798,7 +3798,7 @@
       @media(prefers-reduced-motion:reduce){
         .hem-room-fold87,.hem-device-fold87{scroll-behavior:auto}
       }
-    </style>\`;
+    </style>`;
   };
   /* HEM_COMPACT87_END */
 
