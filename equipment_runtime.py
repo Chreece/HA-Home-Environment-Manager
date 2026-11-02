@@ -144,6 +144,9 @@ class EquipmentRuntime:
         # Session-local observations distinguish a real ON transition
         # recorded by HEM from an HA-restored native State at startup.
         self._native_session_observations: dict[tuple[str, str], str] = {}
+        # The first verified source snapshot after HA restart is a recovery
+        # baseline, not evidence that the user touched the physical device.
+        self._restart_baseline_pending: set[str] = set()
         self._fan_allocations: dict[str, dict] = {}
         # Diagnostic-only snapshots while an independently powered device is
         # OFF: PID P-term prepared, I held at zero, D reseeded from live sensor.
@@ -193,6 +196,7 @@ class EquipmentRuntime:
         self._active = True
         self._started = self.clock()
         self._native_session_observations = {}
+        self._restart_baseline_pending.clear()
         try:
             from homeassistant.helpers.storage import Store
             self._store = Store(
@@ -226,6 +230,14 @@ class EquipmentRuntime:
                         or owned["max_on"] <= owned["min_on"]):
                         raise ValueError("Invalid power recovery history")
             self._ready = True
+            # Discard stale pre-restart physical attribute baselines only
+            # after fresh native source verification and absent pending
+            # commands. Never erase an explicit physical manual override.
+            self._restart_baseline_pending = {
+                key for key, record in self.records.items()
+                if not record.get("pending")
+                and record.get("paused") != "physical_manual_override"
+            }
             for record in self.records.values():
                 # The previous process could not observe a full interval of
                 # continuous native feedback after shutdown/restart. Restart
@@ -262,6 +274,7 @@ class EquipmentRuntime:
         self._tasks.clear()
         self._profile_wake.clear()
         self._native_session_observations.clear()
+        self._restart_baseline_pending.clear()
         self._pid_offline_previews.clear()
         tasks = tuple(self._pid_passive_tasks.values())
         for task in tasks:
@@ -629,7 +642,36 @@ class EquipmentRuntime:
         return self._locks.setdefault(group, asyncio.Lock())
 
     async def _pause(self, spec: Any, reason: str) -> None:
-        self._record(spec)["paused"] = reason
+        record = self._record(spec)
+        record["paused"] = reason
+        # Only an observed change to the REAL native device (not the HEM
+        # climate facade, the PID, a metadata refresh or HA restart) demotes
+        # Automatic/PID to Manual. Preserve the algorithm for Continue.
+        if reason == "physical_manual_override":
+            cfg = model.settings(self.manager, spec)
+            previous = cfg.get("control_mode")
+            if previous in ("automatic", "pid") and self._current_spec(spec):
+                record["resume_control_mode"] = previous
+                await self._save()
+                lock = getattr(self.manager, "_device_settings_write_lock", None)
+                if lock is None:
+                    lock = self.manager._device_settings_write_lock = asyncio.Lock()
+                async with lock:
+                    fresh = model.settings(self.manager, spec)
+                    if (fresh.get("control_mode") == previous
+                            and self._current_spec(spec)):
+                        options = deepcopy(self.manager.entry.options)
+                        profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+                        profiles = profiles if isinstance(profiles, dict) else {}
+                        saved = profiles.get(spec.identifier, {})
+                        profiles[spec.identifier] = {
+                            **(saved if isinstance(saved, dict) else {}),
+                            "control_mode": "manual",
+                        }
+                        options[model.SETTINGS] = profiles
+                        self.hass.config_entries.async_update_entry(
+                            self.manager.entry, options=options
+                        )
         self._status(spec, "paused", reason=reason)
         await self._save()
 
@@ -1815,7 +1857,8 @@ class EquipmentRuntime:
                 # take over an already-running appliance.
                 if cfg["control_mode"] not in ("pid", "automatic", "manual"):
                     raise HomeAssistantError(
-                        "Choose an authorized automatic, PID or manual controller method"
+                        "Running physical equipment needs an authorized controller "
+                        "method before Continue Automatic"
                     )
                 from .device_activation import authorized
                 _, power_granted = model.permission(self.manager, spec, cap)
@@ -1827,19 +1870,22 @@ class EquipmentRuntime:
                 raise HomeAssistantError("Native physical capabilities are unavailable")
 
             prior = deepcopy(record)
-            # An explicit Manual -> Resume returns to the last known Automatic
-            # or PID method ONLY if that mode was actually saved on this
-            # controller. It never guesses an automatic mode.
-            restore_mode = (
-                record.get("resume_control_mode")
-                if cfg["control_mode"] == "manual" else None
-            )
-            if restore_mode not in ("automatic", "pid"):
-                restore_mode = None
-            if restore_mode and (cap is None
-                    or restore_mode not in model.control_modes(self.manager, spec)):
+            # Continue Automatic is an explicit user choice. Restore the
+            # previously configured PID when available; otherwise choose the
+            # regular Automatic algorithm, never leave a successful Resume
+            # stranded in Manual/Off. A selected already-running Automatic
+            # or PID method needs reconciliation only, not a mode change.
+            chosen = record.get("resume_control_mode")
+            if chosen not in ("automatic", "pid"):
+                chosen = cfg["control_mode"] if cfg["control_mode"] in (
+                    "automatic", "pid"
+                ) else "automatic"
+            restore_mode = chosen if chosen != cfg["control_mode"] else None
+            if restore_mode and cap is not None and (
+                restore_mode not in model.control_modes(self.manager, spec)
+            ):
                 raise HomeAssistantError(
-                    "Previous automatic control method is no longer supported"
+                    "Selected automatic control method is no longer supported"
                 )
 
             # Preserve the physical start for already-owned outputs. A
@@ -1976,7 +2022,7 @@ class EquipmentRuntime:
                     profiles = profiles if isinstance(profiles, dict) else {}
                     saved = profiles.get(spec.identifier, {})
                     if (not isinstance(saved, dict)
-                            or saved.get("control_mode") != "manual"
+                            or saved.get("control_mode") != cfg["control_mode"]
                             or not self._current_spec(spec)):
                         record.clear()
                         record.update(prior)
@@ -2397,6 +2443,20 @@ class EquipmentRuntime:
             else:
                 self._status(spec, "awaiting_physical_acknowledgement")
                 return False
+        restarted = getattr(self, "_restart_baseline_pending", set())
+        if (spec.identifier in restarted and record.get("pending") is None
+                and record.get("paused") != "physical_manual_override"):
+            fresh_sources = {
+                entity: snapshot(self.hass.states.get(entity))
+                for entity in spec.source_entities
+            }
+            if all(value is not None for value in fresh_sources.values()):
+                # Initial HA state restoration is NOT an external manual
+                # change. The usual foreign-owner, permission and physical
+                # dwell checks still govern all subsequent writes.
+                record["baseline"] = fresh_sources
+                restarted.discard(spec.identifier)
+                await self._save()
         for entity, baseline in record.get("baseline", {}).items():
             if baseline is None:
                 continue
