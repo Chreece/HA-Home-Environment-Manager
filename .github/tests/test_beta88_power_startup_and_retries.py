@@ -312,7 +312,7 @@ class CommandRetryTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotEqual(r.record["paused"], "physical_acknowledgement_missing")
 
     async def test_binary_heat_cool_full_setpoints_with_native_limits(self):
-        for mode, expected in (("heat", 30.0), ("cool", 10.0)):
+        for mode, expected in (("heat", 35.0), ("cool", 5.0)):
             with self.subTest(mode=mode):
                 r = SimRuntime(mode)
                 r.now = 5000
@@ -337,7 +337,7 @@ class CommandRetryTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(await r._native_target(
             SPEC, r.manager.cap, "heat",
             {"heat": 18.0, "cool": 26.0}, None, True))
-        self.assertEqual(r.calls[-1][2], {"temperature": 30.0})
+        self.assertEqual(r.calls[-1][2], {"temperature": 35.0})
 
     async def test_without_native_power_permission_keeps_soft_trim(self):
         r = SimRuntime("heat")
