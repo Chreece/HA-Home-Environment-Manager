@@ -1987,7 +1987,7 @@ class EquipmentRuntime:
                 )
             # The caller is finished; HEM (not the user) now owns the
             # recovery/re-evaluation lifecycle on every normal scheduler tick.
-            if self._active:
+            if getattr(self, "_active", False):
                 self.schedule()
             return False
 
