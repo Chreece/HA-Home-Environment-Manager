@@ -49,8 +49,11 @@ sys.modules.update({name:module for name,module in (
 tree=ast.parse((ROOT/'room_ventilation.py').read_text())
 tree.body=[node for node in tree.body
            if not isinstance(node,ast.ImportFrom) or node.level==0]
-scope={'__name__':'beta95_room.room_ventilation','__package__':'beta95_room',
-       'Reason':Reason,'Recommendation':Recommendation,'Window':Window}
+loaded=ModuleType('beta95_room.room_ventilation')
+loaded.__package__='beta95_room'
+sys.modules[loaded.__name__]=loaded
+scope=loaded.__dict__
+scope.update({'Reason':Reason,'Recommendation':Recommendation,'Window':Window})
 exec(compile(ast.fix_missing_locations(tree),'room_ventilation.py','exec'),scope)
 Monitor=scope['RoomVentilationMonitor']
 assert scope['VACANCY_SECONDS']==7200
