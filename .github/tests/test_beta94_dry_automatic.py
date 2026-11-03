@@ -73,10 +73,11 @@ async def scenarios():
     assert person.record['paused']=='physical_manual_override'
     assert Model.settings(person.manager,SPEC)['control_mode']=='manual'
 
-    # Actual physical humidity target changes should remain manual even
-    # without a web-authenticated HA user_id, when native remains available.
+    # An authenticated direct HA target change remains a real manual
+    # intervention. Anonymous firmware target changes are not evidence of a user.
     physical=owned_dry()
     physical.state=FakeState('dry',humidity=54)
+    physical.state.context=N(user_id='explicit-ha-user',parent_id=None)
     physical.states_by_id['climate.native']=physical.state
     assert not await physical._reconcile(SPEC)
     assert physical.record['paused']=='physical_manual_override'
@@ -97,12 +98,28 @@ async def scenarios():
     assert SPEC.identifier not in recovered._native_offline_under_owned_supply
     assert Model.settings(recovered.manager,SPEC)['control_mode']=='pid'
 
+    anonymous=owned_dry()
+    anonymous.state=FakeState('dry',humidity=51)
+    anonymous.states_by_id['climate.native']=anonymous.state
+    assert await anonymous._reconcile(SPEC)
+    assert Model.settings(anonymous.manager,SPEC)['control_mode']=='pid'
+    assert not anonymous.record.get('paused')
+    assert anonymous.record['baseline']['climate.native']['attributes']['humidity']==51
+
+    # Explicitly reported local physical-button evidence also counts.
+    button=owned_dry()
+    button.state=FakeState('off',humidity=60,operation_source='physical_button')
+    button.states_by_id['climate.native']=button.state
+    assert not await button._reconcile(SPEC)
+    assert button.record.get('paused')=='physical_manual_override'
+
     # Existing non-DRY devices retain their real native manual override
     # detection; this is not a blanket permission to ignore user changes.
     heat=owned_dry()
     heat.manager.cap=N(primary='climate.native',domain='climate',
                        modes=('off','heat','cool'))
     heat.state=FakeState('cool',humidity=60)
+    heat.state.context=N(user_id='explicit-ha-user',parent_id=None)
     heat.states_by_id['climate.native']=heat.state
     assert not await heat._reconcile(SPEC)
     assert heat.record['paused']=='physical_manual_override'
@@ -113,6 +130,7 @@ async def scenarios():
     unowned=owned_dry()
     unowned.record['upstream']['owned']=False
     unowned.state=FakeState('off',humidity=60)
+    unowned.state.context=N(user_id='explicit-ha-user',parent_id=None)
     unowned.states_by_id['climate.native']=unowned.state
     assert not await unowned._reconcile(SPEC)
     assert unowned.record['paused']=='physical_manual_override'
