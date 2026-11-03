@@ -6,7 +6,7 @@ permissions:
   contents: write
 concurrency:
   group: hem-beta100-release
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   validate-and-publish:
     runs-on: ubuntu-latest
