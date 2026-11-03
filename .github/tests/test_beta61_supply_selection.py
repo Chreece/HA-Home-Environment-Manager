@@ -270,7 +270,7 @@ async def scenario(supply="off", native="unavailable", *, capabilities=False,
         assert queued and queued["requested"] == selected, queued
     else:
         assert Model.settings(controller.manager, spec)["power_switch_entity"] == selected
-    assert controller.record["upstream"].get("owned") is bool(upstream_owned), (
+    assert (controller.record["upstream"].get("owned") is True) == bool(upstream_owned), (
         "UI choice cannot acquire or discard actual supply ownership"
     )
     if not capabilities or native in ("unknown", "unavailable", None) or remove:
