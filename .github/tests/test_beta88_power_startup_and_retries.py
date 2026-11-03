@@ -125,6 +125,7 @@ def extract():
         "foreign_owner_hold": lambda hass, entry, entity: None,
         "NATIVE_COMMAND_MAX_ATTEMPTS": 4,
         "NATIVE_COMMAND_RETRY_SECONDS": 30,
+        "NATIVE_OFF_FEEDBACK_GRACE_SECONDS": 60,
         "NATIVE_RECONNECT_SETTLE_SECONDS": 30,
         "NATIVE_RECONNECT_EXTRA_ATTEMPTS": 2,
         "target_to_unit": lambda value, unit: float(value),
