@@ -175,6 +175,22 @@ assert rec and rec.reasons[0].code=='window_cooling_loss'
 assert status['window_energy_direction']=='window_cooling_loss'
 assert cool_test(23.0,closed)[1] is None
 
+# One verified OPEN contact remains actionable even if a second contact
+# in the same room is unavailable; it cannot mask the known open window.
+mixed=Monitor(clock=lambda:clock['at'])
+mixed_windows=(opened[0],Window('binary_sensor.second','Second window',None))
+mixed.observe(area='mixed',name='Mixed',windows=mixed_windows,
+    occupancy='occupied',sleeping=False,has_air_sensor=True,
+    outside_safe=True,temperature_c=21.4,heat_target_c=20.,
+    cool_target_c=None)
+clock['at']+=200
+mixed_status,mixed_rec=mixed.observe(area='mixed',name='Mixed',windows=mixed_windows,
+    occupancy='occupied',sleeping=False,has_air_sensor=True,
+    outside_safe=True,temperature_c=20.6,heat_target_c=20.,
+    cool_target_c=None)
+assert mixed_rec and mixed_rec.reasons[0].code=='window_heat_loss'
+assert mixed_status['window_contacts_incomplete'] is True
+
 # No temperature or no real heat/cool capability -> no fake thermal warning.
 dry=Monitor(clock=lambda:clock['at'])
 for temp in (21.,19.,17.):
