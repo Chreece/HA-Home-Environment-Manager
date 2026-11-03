@@ -2888,6 +2888,13 @@ class EquipmentRuntime:
                     cap = model.capabilities(self.manager, spec)
                     native_self_stop = (
                         supply_owned_on and not user_context
+                        and str(
+                            native_state.attributes.get("change_origin")
+                            or native_state.attributes.get("operation_source")
+                            or ""
+                        ).lower() not in (
+                            "physical_button", "manual_button", "local_user"
+                        )
                         and changed == ("state",)
                         and cap is not None and cap.primary == entity
                         and cap.domain == "climate"
