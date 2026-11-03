@@ -4389,6 +4389,166 @@
   };
   /* HEM_COMPACT87_END */
 
+
+  /* HEM_WEATHER_WARNING101_START
+   * Display native warning attributes without altering backend hazard policy.
+   * Reuse the existing Beta87 top-layer, scrollable information popover.
+   */
+  const proto101=AirQualityAdvisorCard.prototype;
+  const prevOutside101=proto101._outside;
+  const prevSignature101=proto101._controllerSignature;
+  const prevInstall101=proto101._installFolds87;
+  const prevStyles101=proto101._styles;
+  const wxLabels101={
+    en:{subject:'Weather warning',attributes:'All reported attributes',open:'Open HA entity',state:'State'},
+    de:{subject:'Wetterwarnung',attributes:'Alle gemeldeten Attribute',open:'HA-Entität öffnen',state:'Zustand'},
+    el:{subject:'Προειδοποίηση καιρού',attributes:'Όλα τα γνωρίσματα της οντότητας',open:'Άνοιγμα οντότητας HA',state:'Κατάσταση'}
+  };
+  const wxLabel101=(card,key)=>(wxLabels101[card._language()]||wxLabels101.en)[key];
+  proto101._weatherEntity101=function(warning){
+    const id=warning?.entity_id;
+    if(typeof id!=='string'||!/^(sensor|binary_sensor)\.[a-z0-9_]+$/i.test(id))return null;
+    const configured=this._state()[1]?.attributes?.warning_sources;
+    if(Array.isArray(configured)&&!configured.includes(id))return null;
+    const state=this._hass?.states?.[id];
+    return state?{id,state}:null;
+  };
+  proto101._weatherContent101=function(warning){
+    const source=this._weatherEntity101(warning),attrs=source?.state?.attributes||{};
+    const first=Array.isArray(attrs.warnings)?attrs.warnings.find(v=>
+      v&&typeof v==='object'&&!Array.isArray(v)):null;
+    const options=[attrs,first,attrs.warning_1,attrs.warning,attrs.alert,
+      Array.isArray(attrs.alerts)?attrs.alerts[0]:null].filter(x=>
+      x&&typeof x==='object'&&!Array.isArray(x));
+    const pick=keys=>{
+      for(const o of options)for(const k of keys){
+        const value=o[k];if(typeof value==='string'&&value.trim())return value.trim();
+      }
+      return '';
+    };
+    const event=pick(['event','warning_1_event','warning_1_name','warning_event',
+      'warning_type','warning_name','headline','warning_1_headline','title','name','category','type']);
+    const description=pick(['description','warning_1_description','warning_description',
+      'message','text','instruction','instructions','details','summary']);
+    const native=String(source?.state?.state||'');
+    const name=event||(!['on','off','unknown','unavailable'].includes(native.toLowerCase())
+      ?native:'')||warning?.name||wxLabel101(this,'subject');
+    const brief=(description&&!name.includes(description)
+      ?name+' · '+description:name).replace(/\s+/g,' ').trim();
+    return {source,name,description,brief};
+  };
+  proto101._weatherChip101=function(warning){
+    const data=this._weatherContent101(warning);
+    const text=wxLabel101(this,'subject')+' · '+data.brief;
+    if(!data.source)return '<span class="reason">'+this._icon('mdi:weather-alert')+
+      escape(text)+'</span>';
+    const {id,state}=data.source,attrs=state.attributes||{};
+    const cells=Object.entries(attrs).map(([key,v])=>{
+      let value;
+      try{value=typeof v==='string'?v:JSON.stringify(v,null,2);}
+      catch{value=String(v);}
+      return '<div class="hem-wx-row101"><dt>'+escape(key)+'</dt><dd><pre dir="auto">'+
+        escape(value??'null')+'</pre></dd></div>';
+    }).join('');
+    const detail='<div class="hem-wx-header101"><strong>'+escape(data.name)+
+      '</strong>'+(data.description?'<p>'+escape(data.description)+'</p>':'')+
+      '<small>'+escape(id)+'</small></div><strong>'+
+      escape(wxLabel101(this,'attributes'))+'</strong><dl class="hem-wx-attrs101">'+
+      '<div class="hem-wx-row101"><dt>'+escape(wxLabel101(this,'state'))+
+      '</dt><dd><pre>'+escape(String(state.state))+'</pre></dd></div>'+
+      cells+'</dl><button type="button" class="hem-wx-open101" '+
+      'data-open-weather-entity101="'+escape(id)+'">'+
+      this._icon('mdi:open-in-new')+escape(wxLabel101(this,'open'))+'</button>';
+    return '<details class="hem-context76 hem-warning101" data-detail-id="wx:'+escape(id)+'">'+
+      '<summary class="reason hem-wx-summary101" title="'+escape(text)+'" '+
+      'aria-label="'+escape(text)+'">'+this._icon('mdi:weather-alert')+
+      '<span class="hem-wx-text101">'+escape(text)+'</span>'+
+      this._icon('mdi:information-outline')+'</summary>'+
+      '<div class="hem-context-body76">'+detail+'</div></details>';
+  };
+  proto101._outside=function(outdoor){
+    const warnings=safeArray(outdoor?.warnings).filter(w=>
+      w?.active===true&&typeof w.entity_id==='string');
+    if(!warnings.length)return prevOutside101.call(this,outdoor);
+    // Suppress only the duplicate friendly-name display, not the warning
+    // blocker and NOT the ventilation/safety evaluation.
+    const display={...outdoor,blockers:safeArray(outdoor.blockers).filter(
+      b=>b?.code!=='active_warning'),warnings:[]};
+    const html=prevOutside101.call(this,display);
+    return html.replace(/<\/section>\s*$/,
+      '<div class="outside-alerts">'+warnings.map(w=>this._weatherChip101(w)).join('')+
+      '</div></section>');
+  };
+  proto101._controllerSignature=function(){
+    const base=prevSignature101.call(this);
+    const sourceIds=this._state()[1]?.attributes?.warning_sources;
+    if(!Array.isArray(sourceIds))return base;
+    return base+JSON.stringify(sourceIds.filter(id=>typeof id==='string'&&
+      /^(sensor|binary_sensor)\.[a-z0-9_]+$/i.test(id)).map(id=>{
+      const state=this._hass?.states?.[id];return [id,state?.state,state?.attributes];
+    }));
+  };
+  proto101._installFolds87=function(){
+    prevInstall101.call(this);
+    if(this._wxInit101)return;
+    this._wxInit101=true;
+    const originalOpen=this._openInfo87;
+    this._openInfo87=detail=>{
+      originalOpen(detail);
+      if(detail?.matches?.('details.hem-warning101')&&this._floatingInfo87){
+        const pop=this._floatingInfo87;
+        pop.classList.add('hem-wx-pop101');
+        pop.style.width=Math.min(490,Math.max(180,
+          (document.documentElement.clientWidth||window.innerWidth||380)-24))+'px';
+        pop.style.maxHeight=Math.min(540,Math.max(120,
+          (window.innerHeight||700)-24))+'px';
+      }
+    };
+    this.shadowRoot.addEventListener('click',event=>{
+      const button=event.target?.closest?.('[data-open-weather-entity101]');
+      if(!button)return;
+      event.preventDefault();event.stopImmediatePropagation();
+      const id=button.getAttribute('data-open-weather-entity101');
+      const [entity,state]=this._state();
+      const snapshot=state?.attributes?.dashboard?.version===1
+        ?state.attributes.dashboard:
+        this._dashboardEntity===entity?this._dashboardData:null;
+      const warning=safeArray(snapshot?.outdoor?.warnings).find(
+        w=>w?.active===true&&w.entity_id===id);
+      if(warning&&this._weatherEntity101(warning)){
+        this.dispatchEvent(new CustomEvent('hass-more-info',{
+          detail:{entityId:id},bubbles:true,composed:true
+        }));
+      }
+    },true);
+  };
+  const wxStyle101=[
+    '<style>',
+    '.hem-outside-details87 .hem-warning101{flex:0 0 auto;max-width:min(390px,88vw);min-width:0}',
+    '.hem-outside-details87 .hem-warning101>.reason{max-width:100%;display:flex;',
+    'align-items:center;gap:4px;cursor:pointer;white-space:nowrap}',
+    '.hem-wx-text101{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}',
+    '.hem-warning101>summary:focus-visible,.hem-wx-open101:focus-visible{',
+    'outline:2px solid var(--primary-color,#03a9f4);outline-offset:2px}',
+    '.hem-wx-pop101{overflow:auto;max-width:calc(100vw - 24px)}',
+    '.hem-wx-header101{margin-bottom:8px}',
+    '.hem-wx-header101 p{white-space:pre-wrap;margin:5px 0}',
+    '.hem-wx-header101 small{display:block;font-size:10px;opacity:.75}',
+    '.hem-wx-attrs101{display:grid;gap:5px;margin:7px 0}',
+    '.hem-wx-row101{display:grid;grid-template-columns:minmax(90px,34%) minmax(0,1fr);',
+    'gap:7px;padding:6px;border:1px solid var(--divider-color,#555);border-radius:7px}',
+    '.hem-wx-row101 dt{font-weight:600;overflow-wrap:anywhere}',
+    '.hem-wx-row101 dd{margin:0;min-width:0}',
+    '.hem-wx-row101 pre{font:inherit;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}',
+    '.hem-wx-open101{border:1px solid var(--divider-color,#555);',
+    'background:transparent;color:inherit;border-radius:7px;',
+    'padding:7px 10px;display:inline-flex;gap:5px;cursor:pointer}',
+    '@media(max-width:380px){.hem-wx-row101{grid-template-columns:minmax(0,1fr)}}',
+    '</style>'
+  ].join('');
+  proto101._styles=function(){return prevStyles101.call(this)+wxStyle101;};
+  /* HEM_WEATHER_WARNING101_END */
+
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
   // New brand alias; old Lovelace YAML configurations keep working unmodified.
