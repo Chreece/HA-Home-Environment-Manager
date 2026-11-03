@@ -3223,8 +3223,10 @@
     const c=a.controller_status || {};
     const t=CARD65[this._language()]?.text || CARD65.en.text;
     const id=entry.entityId, state=d.status_code || c.status || entry.climate.state;
-    const until=Number(d.native_minimum_on_until);
-    const held=state==='minimum_on_hold' && Number.isFinite(until) &&
+    const untilKey=state==='minimum_on_hold'?'native_minimum_on_until':
+      state==='minimum_off_hold'?'native_minimum_off_until':null;
+    const until=Number(untilKey?d[untilKey]:NaN);
+    const held=!!untilKey && Number.isFinite(until) &&
       until>0 && until>Date.now()/1000;
     const untilLabel=held?' · '+Math.ceil((until-Date.now()/1000)/60)+' min':'';
     const label=this._controllerStatusLabel(state)+untilLabel;
