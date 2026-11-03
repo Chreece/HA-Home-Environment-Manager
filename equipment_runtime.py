@@ -1853,11 +1853,23 @@ class EquipmentRuntime:
             for key in ("decision", "entity", "requested", "observed",
                         "remaining_seconds", "phase", "needs_physical_check")
         }
-        checked["instructions"] = instructions(
-            checked, language=str(getattr(
-                getattr(self.hass, "config", None), "language", "en"
-            ))
-        )
+        language = str(getattr(
+            getattr(self.hass, "config", None), "language", "en"
+        ))
+        if isinstance(record.get("automatic_continue_requested"), dict):
+            # A saved user choice is handled by HEM itself. The user does
+            # not need to keep pressing a button, and being online is not
+            # proof the previously requested physical command succeeded.
+            from .equipment_resume import automatic_recovery_message
+            checked["instructions"] = automatic_recovery_message(
+                checked, language=language,
+            )
+            checked["settings_saved"] = True
+            checked["requires_user_repeated_check"] = False
+        else:
+            checked["instructions"] = instructions(
+                checked, language=language,
+            )
         return checked
 
     async def async_continue_automatic(self, spec: model.ManagedDevice) -> bool:
