@@ -59,6 +59,7 @@ jobs:
             '.github/releases/v0.6.0b98.md',
             '.github/tests/test_beta61_supply_selection.py',
             '.github/tests/test_beta88_power_startup_and_retries.py',
+            '.github/tests/test_beta85_resume_browser.py',
             '.github/tests/test_beta89_automatic.py',
             '.github/tests/test_beta98_nonblocking_ack.py',
             '.github/tests/test_beta98_native_reconnect.py',
