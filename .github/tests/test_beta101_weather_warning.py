@@ -73,6 +73,10 @@ with sync_playwright() as p:
             headline:'Sturmböen',description:'Windwarnung'}};
         card.hass={...card._hass,states};
     }""")
+    # HA's stable-DOM scheduler defers a live weather refresh briefly.
+    page.wait_for_function(
+      "() => !!card.shadowRoot.querySelector('button.hem-wx-chip103')?.textContent.includes('Sturmböen')",
+      timeout=5000)
     chip=page.locator('button.hem-wx-chip103')
     assert 'Sturmböen' in chip.inner_text()
     chip.click()
