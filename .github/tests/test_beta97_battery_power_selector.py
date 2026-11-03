@@ -83,6 +83,10 @@ states['fan.battery_fan']=State('on',battery_percentage=None)
 assert detect(hass,[attr],registry)==frozenset()
 states['fan.battery_fan']=State('on',battery_percentage=0)
 assert detect(hass,[attr],registry)==frozenset({'controller_attr'})
+# HA native attributes can be immutable Mapping objects rather than dicts.
+from types import MappingProxyType
+states['fan.battery_fan'].attributes=MappingProxyType({'battery_level':37})
+assert detect(hass,[attr],registry)==frozenset({'controller_attr'})
 
 # Registry-backed BATTERY class survives an unavailable battery sensor.
 states['sensor.device_a_battery']=State('unavailable')
