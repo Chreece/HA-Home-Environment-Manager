@@ -105,8 +105,9 @@ async def run():
     assert raced.record['paused']=='physical_state_changed_during_resume'
     assert raced.scheduled==0 and raced.calls==[]
 
-    # Same-tick OFF-supply race must not falsely assert manual intervention;
-    # if supply is actually ON, a changed physical mode still latches override.
+    # Same-tick OFF-supply race must not falsely assert Manual. An
+    # unattributed state change after supply return is NOT evidence a user
+    # touched the device; HEM also must not adopt unowned ON equipment.
     short=create_offline()
     short.record['paused']=None
     assert await short._reconcile(spec) is False
@@ -115,8 +116,19 @@ async def run():
     live=create_offline()
     live.record['paused']=None
     live.states['switch.plug']=state('on','switch')
-    assert await live._reconcile(spec) is False
-    assert live.record['paused']=='physical_manual_override'
+    assert await live._reconcile(spec) is True
+    assert live.record.get('paused') is None
+    assert live.record['power']=={}
+    assert live.record['baseline']['climate.heater']['state']=='dry'
+    assert live.calls==[]
+    # A direct authenticated HA edit still selects Manual, even with the
+    # relay available and native mode physically ON.
+    direct=create_offline()
+    direct.record['paused']=None
+    direct.states['switch.plug']=state('on','switch')
+    direct.states['climate.heater'].context=N(user_id='actual-user',parent_id=None)
+    assert not await direct._reconcile(spec)
+    assert direct.record['paused']=='physical_manual_override'
 
     supply=(ROOT/'equipment_power_switch.py').read_text(encoding='utf-8')
     assert ('runtime._status(spec, "waiting_for_physical_device",\n'
