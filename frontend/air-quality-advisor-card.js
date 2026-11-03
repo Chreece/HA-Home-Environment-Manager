@@ -3626,7 +3626,7 @@
     if(refresh95)ventNotes95.push(ventLang95.refresh);
     if(waiting95)ventNotes95.push(ventLang95.awaiting);
     if(energy95)ventNotes95.push(
-      vent95.measured_room_temperature_c<=vent95.heat_target_c+0.8
+      vent95.window_energy_direction==='window_heat_loss'
         ?ventLang95.energyHeat:ventLang95.energyCool);
     const ventHeader95=ventNotes95.length?
       '<div class="hem-room-ventilation95" role="status">'+
