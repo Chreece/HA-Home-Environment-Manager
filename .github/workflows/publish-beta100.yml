@@ -45,6 +45,8 @@ jobs:
           required={
               '.github/releases/v0.6.0b100.md',
               '.github/tests/test_beta100_native_pid.py',
+              '.github/tests/test_beta76_compact_browser.py',
+              '.github/tests/test_beta88_power_startup_and_retries.py',
               '.github/workflows/publish-beta100.yml',
               'equipment_runtime.py','frontend/air-quality-advisor-card.js',
               'manifest.json',
