@@ -48,30 +48,32 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
         cache[spec.identifier] = result
         return result
     contact_ids = selected(runtime.manager.settings, spec.area_id, "windows")
-    if contact_ids is None:
-        # Use the already captured room inventory. Live states/registry area
-        # below are still revalidated at every physical command boundary.
-        # Never invoke plan_for's whole-home legacy discovery from this gate.
+    # For a managed controller, one room's real physical contacts are the
+    # ONLY permitted window evidence. A whole-house/stale climate plan can
+    # contain foreign contacts and must not block unrelated device owners.
+    # An explicit local source remains authoritative even if unavailable.
+    from_selection = contact_ids is not None
+    if not from_selection:
         plan = getattr(runtime.manager, "plan", None)
-        environment = getattr(plan, "environment", {}) or {}
-        area = environment.get(spec.area_id, {})
-        climate = area.get("climate_plan", {}) if isinstance(area, dict) else {}
-        contact_ids = climate.get("window_contacts") if isinstance(climate, dict) else None
-        if contact_ids is None:
-            room = next((item for item in (*getattr(plan, "rooms", ()),
-                                          *getattr(plan, "climate_rooms", ()))
-                         if item.area_id == spec.area_id), None)
-            # A known room with zero windows has no contact: do not invent
-            # one. But a missing entire room inventory is NOT proof that
-            # windows are closed, so hold until the planner has evidence.
-            if room is None:
+        room = next((item for item in (*getattr(plan, "rooms", ()),
+                                      *getattr(plan, "climate_rooms", ()))
+                     if getattr(item, "area_id", None) == spec.area_id), None)
+        if room is not None:
+            contact_ids = [item.entity_id for item in room.windows]
+        else:
+            environment = getattr(plan, "environment", {}) or {}
+            area = environment.get(spec.area_id, {})
+            climate = area.get("climate_plan", {}) if isinstance(area, dict) else {}
+            contact_ids = climate.get("window_contacts") if isinstance(climate, dict) else None
+            if contact_ids is None:
+                # Missing the whole room inventory is unknown, never proof
+                # that the room's own windows are safely closed.
                 result.update(
                     blocked=True, status="window_state_unknown",
                     evidence="room_window_inventory_unavailable",
                 )
                 cache[spec.identifier] = result
                 return result
-            contact_ids = [item.entity_id for item in room.windows]
     if not isinstance(contact_ids, (tuple, list)):
         result.update(
             blocked=True, status="window_state_unknown",
@@ -79,7 +81,16 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
         )
         cache[spec.identifier] = result
         return result
-    contact_ids = tuple(dict.fromkeys(str(entity) for entity in contact_ids))
+    # Wrong-room contacts are never usable as this room's policy sources.
+    # Record misconfiguration, but do not mistake a foreign OPEN for the
+    # actual room's OPEN or turn a windowless room into a permanent hold.
+    all_ids = tuple(dict.fromkeys(
+        entity for entity in contact_ids if isinstance(entity, str) and entity))
+    foreign = tuple(entity for entity in all_ids
+                    if entity_area(runtime.hass, entity) not in (spec.area_id, None))
+    contact_ids = tuple(entity for entity in all_ids if entity not in foreign)
+    if foreign:
+        result["ignored_other_room_contacts"] = list(foreign)
     result["contacts"] = list(contact_ids)
     result["identity"] = (spec.area_id, contact_ids)
     if not contact_ids:
