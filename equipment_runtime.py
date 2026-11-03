@@ -1293,35 +1293,49 @@ class EquipmentRuntime:
                 # states: never promote those into proof for automatic power ON.
                 record["capabilities"] = asdict(cap)
                 await self._save()
-            if record.get("pending") and not record.get("paused"):
-                await self._reconcile(spec)
-            if record.get("pending"):
-                raise HomeAssistantError("Wait for the current physical-device acknowledgement before editing")
-            if new["control_mode"] == "existing" and record.get("power"):
-                raise HomeAssistantError("Reconcile managed power OFF before returning to the room controller")
+            # Preferences are NOT physical service commands. The previous
+            # service may still be awaiting an HA state ACK; never force the
+            # user to wait before editing, and never retry it from this editor.
+            # Preserve its immutable pending intent, previous physical
+            # baselines and dwell history until independently reconciled.
+            upstream = record.get("upstream", {})
+            hardware_unresolved = bool(
+                record.get("pending") or
+                isinstance(upstream, dict) and (
+                    upstream.get("pending") or upstream.get("paused")
+                ) or record.get("paused")
+            )
             method_selected = "control_mode" in changes
-            if method_selected and old["control_mode"] in ("automatic", "pid") and new["control_mode"] == "manual":
+            if (method_selected and old["control_mode"] in ("automatic", "pid")
+                    and new["control_mode"] == "manual"):
                 record["resume_control_mode"] = old["control_mode"]
             elif method_selected and new["control_mode"] in ("automatic", "pid"):
                 record.pop("resume_control_mode", None)
             if method_selected or old["control_mode"] != new["control_mode"]:
-                # Explicitly selecting a controller method is the user's
-                # acknowledgement/re-arm after a previous software pause. A
-                # still-running unowned appliance is handled separately below
-                # and is never silently adopted.
-                if method_selected and new["control_mode"] in (
-                    "automatic", "pid", "manual", "off"
-                ):
+                if (method_selected and not hardware_unresolved
+                        and new["control_mode"] in ("automatic", "pid", "manual", "off")):
                     record.pop("paused", None)
-                record["baseline"] = {
-                    e: snapshot(self.hass.states.get(e)) for e in spec.source_entities
+                # Unresolved hardware history is NOT erased by a UI action.
+                if not hardware_unresolved:
+                    record["baseline"] = {
+                        e: snapshot(self.hass.states.get(e))
+                        for e in spec.source_entities
+                    }
+                    now = self.clock()
+                    record.setdefault("off_at", {}).update({
+                        e: self._observed_off_since(e, now)
+                        for e in spec.source_entities
+                        if output_off(self.hass.states.get(e))
+                    })
+                    await self._save()
+            if new["control_mode"] in ("automatic", "pid") and hardware_unresolved:
+                record["automatic_continue_requested"] = {
+                    "at": self.clock(), "method": new["control_mode"],
+                    "awaiting_physical_verification": True,
                 }
-                now = self.clock()
-                record.setdefault("off_at", {}).update({
-                    e: self._observed_off_since(e, now)
-                    for e in spec.source_entities
-                    if output_off(self.hass.states.get(e))
-                })
+                await self._save()
+            elif method_selected and new["control_mode"] not in ("automatic", "pid"):
+                record.pop("automatic_continue_requested", None)
                 await self._save()
             # Use the shared options lock to preserve simultaneous room/mold edits.
             lock = getattr(self.manager, "_device_settings_write_lock", None)
@@ -1374,7 +1388,19 @@ class EquipmentRuntime:
                         async_clear_review(self.hass,self.manager,spec)
                     )
                 await self._save()
-            self._status(spec, "settings_updated", control_mode=new["control_mode"])
+            self._status(
+                spec,
+                "awaiting_physical_acknowledgement" if hardware_unresolved
+                else "settings_updated",
+                control_mode=new["control_mode"],
+                settings_saved=True,
+                automatic_selected=new["control_mode"] in ("automatic", "pid"),
+                recovery_detail=(
+                    "Your settings are saved. HEM will verify the previous "
+                    "physical command before applying any new output."
+                    if hardware_unresolved else None
+                ),
+            )
         if getattr(self.manager, "_active", False):
             self.manager._recalculate(initial=True)
 
