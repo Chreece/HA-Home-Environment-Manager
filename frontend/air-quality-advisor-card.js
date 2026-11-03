@@ -4679,16 +4679,13 @@
       escape(wxWord103(this,'close'))+'">'+this._icon('mdi:close')+
       '</button></div><div class="hem-wx-content103"></div>';
     this.shadowRoot.appendChild(pop);
-    const vw=document.documentElement.clientWidth||window.innerWidth||380;
-    const vh=window.innerHeight||document.documentElement.clientHeight||700;
-    const width=Math.min(540,Math.max(210,vw-24));
-    const height=Math.min(640,Math.max(170,vh-24));
-    const rect=anchor.getBoundingClientRect();
-    pop.style.width=width+'px';
-    pop.style.maxHeight=height+'px';
-    pop.style.left=Math.max(12,Math.min(vw-width-12,rect.left))+'px';
-    const top=Math.max(12,Math.min(vh-height-12,rect.bottom+8));
-    pop.style.top=top+'px';
+    // Viewport-relative placement stays on screen when a mobile device
+    // rotates or the Home Assistant pane is resized WHILE details are open.
+    pop.style.width='min(540px, calc(100vw - 24px))';
+    pop.style.maxHeight='min(640px, calc(100vh - 24px))';
+    pop.style.left='50%';
+    pop.style.transform='translateX(-50%)';
+    pop.style.top='12px';
     this._weatherDialog103={node:pop,id,owner:verified.owner,signature:null};
     this._refreshWeather103();
     try{pop.showPopover?.();}catch{}
