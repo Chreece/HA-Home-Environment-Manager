@@ -1032,6 +1032,23 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
         runtime._status(spec, "paused", reason=relay["paused"])
         return True
 
+    # An already HEM-owned, acknowledged ON supply can briefly lose its
+    # native HA entity during a physical ESPHome/firmware reconnect. Remember
+    # the *observed unavailability* in memory so a later restored DRY/OFF
+    # baseline is not falsely interpreted as the user's manual command.
+    # This marker is NEVER permission to turn a physical output ON.
+    if observed.state == "on" and relay.get("owned") is True:
+        missing_native = any(
+            (native := runtime.hass.states.get(source)) is None
+            or native.state in ("unknown", "unavailable")
+            for source in spec.source_entities
+        )
+        offline = getattr(runtime, "_native_offline_under_owned_supply", None)
+        if offline is None:
+            offline = runtime._native_offline_under_owned_supply = set()
+        if missing_native:
+            offline.add(spec.identifier)
+
     # A HEM-acknowledged supply ON may take up to one minute to reconnect
     # the downstream HA entity. Reserve the authorized demand for the PID,
     # but do not credit physical output or integrate an unresponsive plant.
