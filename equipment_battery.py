@@ -9,7 +9,7 @@ exactly once for every setup, not once per controller.
 """
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from typing import Any
 
 
@@ -25,7 +25,7 @@ BATTERY_SUFFIXES = (
 
 def _has_battery_attributes(state: Any) -> bool:
     attrs = getattr(state, "attributes", None)
-    return bool(isinstance(attrs, dict) and any(
+    return bool(isinstance(attrs, Mapping) and any(
         key in attrs and attrs[key] is not None for key in BATTERY_FIELDS
     ))
 
@@ -41,7 +41,7 @@ def _registered_battery_entity(entry: Any, state: Any) -> bool:
         getattr(entry, "device_class", None),
         getattr(entry, "original_device_class", None),
         getattr(state, "attributes", {}).get("device_class")
-        if isinstance(getattr(state, "attributes", None), dict) else None,
+        if isinstance(getattr(state, "attributes", None), Mapping) else None,
     )
     if any(str(cls).casefold().split(".")[-1] == "battery"
            for cls in classes if cls is not None):
