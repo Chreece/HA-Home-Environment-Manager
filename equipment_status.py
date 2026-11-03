@@ -244,6 +244,28 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "restart_recovery_blocked": record.get(
                 "restart_recovery_blocked") is True,
             "paused_reason": record.get("paused"),
+            # User-facing control preferences are ALWAYS writable. An
+            # unresolved physical command only delays applying OUTPUT,
+            # never the user's saved Automatic/PID or device settings.
+            "settings_saved": observed.get("settings_saved") is True
+                or isinstance(record.get("automatic_continue_requested"), dict)
+                or isinstance(record.get("queued_power_switch"), dict),
+            "automatic_recovery_requested": isinstance(
+                record.get("automatic_continue_requested"), dict
+            ),
+            "automatic_recovery_mode": (
+                record.get("automatic_continue_requested", {}).get("method")
+                if isinstance(record.get("automatic_continue_requested"), dict)
+                else None
+            ),
+            "queued_power_switch": (
+                record.get("queued_power_switch", {}).get("requested")
+                if isinstance(record.get("queued_power_switch"), dict) else None
+            ),
+            "queued_power_switch_pending": isinstance(
+                record.get("queued_power_switch"), dict
+            ),
+            "recovery_detail": observed.get("recovery_detail"),
             "command_pending": bool(record.get("pending")),
             "native_command_attempts": (
                 record["pending"].get("attempts")
