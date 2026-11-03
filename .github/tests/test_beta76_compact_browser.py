@@ -68,7 +68,7 @@ with sync_playwright() as p:
     assert page.locator('.hem-compact-device76').count()==1
     assert page.locator('.hem-room-readings66 b').count()==2
     assert page.locator('.hem-room-readings66').is_visible()
-    assert page.locator('.hem-device-data>div').count()>=5
+    assert page.locator('.hem-device-data>div').count()==1  # native off state only; no fabricated readings
     assert page.locator('.hem-device-state76 .hem-status-pill76').count()>=3
     assert page.locator('.hem-context-row76 .hem-status-pill76').count()>=3
     assert page.locator('.hem-room-readings66').evaluate(
@@ -121,7 +121,7 @@ with sync_playwright() as p:
                   device:card.shadowRoot.querySelectorAll('.hem-device-data>div').length,
                   info:card.shadowRoot.querySelector('[data-detail-id="room-info:bedroom"] summary').getAttribute('aria-label')};
         }''',lang)
-        assert result['room']==2 and result['device']>=5 and result['info'],(lang,result)
+        assert result['room']==2 and result['device']==1 and result['info'],(lang,result)
 
     for width in (320,375,430,590):
         page.set_viewport_size({'width':width,'height':1000})
