@@ -149,6 +149,8 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "status_reason_code": observed.get("reason"),
             "native_minimum_on_remaining_seconds": observed.get("minimum_on_remaining_seconds"),
             "native_minimum_on_until": observed.get("minimum_on_until"),
+            "native_minimum_off_remaining_seconds": observed.get("minimum_off_remaining_seconds"),
+            "native_minimum_off_until": observed.get("minimum_off_until"),
             "control_method": cfg.get("control_mode", "existing"),
             "selected_preset": (effective if cfg.get("control_mode")
                                 in ("automatic", "pid") else cfg.get("preset", "none")),
