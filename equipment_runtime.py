@@ -48,6 +48,10 @@ NATIVE_STARTUP_STABLE_SECONDS = 60
 # Initial command + three fresh, independently authorized retries.
 NATIVE_COMMAND_MAX_ATTEMPTS = 4
 NATIVE_COMMAND_RETRY_SECONDS = 30
+# Home Assistant may report a successful native OFF late. Give a still-
+# unreported power-OFF transition one bounded feedback grace before replaying
+# the identical durable command. Other commands keep the 30-second retry.
+NATIVE_OFF_FEEDBACK_GRACE_SECONDS = 60
 # A restored native entity may load cached/default HVAC values, reconnect
 # accessory channels, or run firmware automations before its state settles.
 NATIVE_RECONNECT_SETTLE_SECONDS = 30
@@ -56,7 +60,7 @@ NATIVE_RECONNECT_SETTLE_SECONDS = 30
 NATIVE_RECONNECT_EXTRA_ATTEMPTS = 2
 
 
-def native_retry_decision(pending: dict, now: float) -> str:
+def native_retry_decision(pending: dict, now: float, state=None) -> str:
     """Never mistake a service call for a physical acknowledgement."""
     if pending.get("phase") != "commanded":
         return "uncertain"
@@ -72,6 +76,26 @@ def native_retry_decision(pending: dict, now: float) -> str:
         return "uncertain"
     if now - last < NATIVE_COMMAND_RETRY_SECONDS:
         return "waiting"
+    # The native integration can accept OFF while its HA state still reads
+    # HEAT/COOL for a short while. Avoid unnecessary duplicate OFF calls when
+    # there has been NO fresh native report since this attempt. An actual
+    # post-command report still showing ON permits the normal bounded retry.
+    if (pending.get("power") is True
+            and isinstance(pending.get("expected"), dict)
+            and pending["expected"].get("state") == "off"
+            and now - last < NATIVE_OFF_FEEDBACK_GRACE_SECONDS):
+        reported = False
+        for key in ("last_reported", "last_updated", "last_changed"):
+            value = getattr(state, key, None)
+            try:
+                stamp = value.timestamp() if value is not None else None
+            except (AttributeError, TypeError, ValueError, OverflowError):
+                stamp = None
+            if stamp is not None and last < stamp <= now:
+                reported = True
+                break
+        if not reported:
+            return "waiting"
     return ("exhausted" if attempts >= NATIVE_COMMAND_MAX_ATTEMPTS
             and not extension else "retry")
 # Changes in passive device metadata are not evidence of a manual override.
@@ -2980,7 +3004,7 @@ class EquipmentRuntime:
         Uncertain exceptions, changed consent and HA restarts still require
         reconciliation; they must never be counted as device nonresponse.
         """
-        decision = native_retry_decision(pending, now)
+        decision = native_retry_decision(pending, now, self.hass.states.get(pending.get('entity')))
         attempts = pending.get("attempts", 0)
         entity = pending.get("entity")
         state = self.hass.states.get(entity)
@@ -3346,7 +3370,18 @@ class EquipmentRuntime:
                 changed = getattr(state, "last_changed", None)
                 stamp = changed.timestamp() if changed is not None else record.setdefault("on_seen", {}).setdefault(cap.primary, now)
             if not 0 <= now-stamp or now-stamp < on_min:
-                self._status(spec, "minimum_on_hold")
+                self._status(
+                    spec, "minimum_on_hold",
+                    minimum_on_remaining_seconds=(
+                        round(max(0, on_min - (now - stamp)))
+                        if 0 <= now-stamp else None
+                    ),
+                    minimum_on_until=(
+                        stamp + on_min if 0 <= now-stamp else None
+                    ),
+                    native_state=state.state,
+                    reason="minimum_native_on_dwell_before_off",
+                )
                 return False
         else:
             relay = record.get("upstream", {})
