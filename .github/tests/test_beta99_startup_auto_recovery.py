@@ -53,6 +53,9 @@ async def test_startup():
         'attempts':1,
     }
     r=Controller(native='off',native_report_age=900,pending=pending,owned=True)
+    r.states['climate.heater'].attributes.update(
+        {'hvac_action':'idle','temperature':20}
+    )
     r._startup_source_observed={}
     r._startup_source_since={}
     r._startup_source_done=set()
