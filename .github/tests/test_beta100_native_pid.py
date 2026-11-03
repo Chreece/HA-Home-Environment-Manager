@@ -15,7 +15,7 @@ fixture=runpy.run_path(str(ROOT/".github/tests/test_beta88_power_startup_and_ret
 SimRuntime,SPEC=fixture["SimRuntime"],fixture["SPEC"]
 
 async def run():
-    for mode,expected in (("heat",30.0),("cool",10.0)):
+    for mode,expected in (("heat",35.0),("cool",5.0)):
         controlled=SimRuntime("off")
         controlled.now=5000.
         # Native set_temperature may auto-start hardware; it is forbidden
@@ -30,6 +30,46 @@ async def run():
             {"heat":19.,"cool":26.},None,True)
         assert controlled.calls[-1][2]=={"temperature":expected}
 asyncio.run(run())
+
+# The room's comfortable 10–30°C software limits are deliberately irrelevant
+# to the binary actuator's physical 5–35°C operating extrema.
+# Additional native limits and temperature units work without per-device rules.
+async def reported_limits():
+    controller=SimRuntime("heat")
+    controller.now=5000.
+    controller.state.attributes.update(
+        min_temp=13.0,max_temp=27.5,target_temp_step=.5,temperature=19.0)
+    assert await controller._native_target(
+        SPEC,controller.manager.cap,"heat",
+        {"heat":20.,"cool":24.},None,True)
+    assert controller.calls[-1][2]=={"temperature":27.5}
+    controller=SimRuntime("cool")
+    controller.now=5000.
+    controller.state.attributes.update(
+        min_temp=13.0,max_temp=27.5,target_temp_step=.5,temperature=19.0)
+    assert await controller._native_target(
+        SPEC,controller.manager.cap,"cool",
+        {"heat":20.,"cool":24.},None,True)
+    assert controller.calls[-1][2]=={"temperature":13.0}
+    controller=SimRuntime("heat")
+    controller.now=5000.
+    controller.state.attributes.update(
+        temperature_unit="°F",min_temp=45.0,max_temp=95.0,
+        target_temp_step=1.0,temperature=70.0)
+    assert await controller._native_target(
+        SPEC,controller.manager.cap,"heat",
+        {"heat":20.,"cool":24.},None,True)
+    assert controller.calls[-1][2]=={"temperature":95.0}
+    # Do not guess a missing native bound or target resolution.
+    for key in ("min_temp","max_temp","target_temp_step"):
+        controller=SimRuntime("heat")
+        controller.now=5000.
+        controller.state.attributes.pop(key,None)
+        assert not await controller._native_target(
+            SPEC,controller.manager.cap,"heat",
+            {"heat":19.,"cool":26.},None,True)
+        assert controller.calls==[]
+asyncio.run(reported_limits())
 
 assert 'and (config["control_mode"] == "pid" or' in runtime
 assert 'def _pid_extreme_native_target(' not in runtime
