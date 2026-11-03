@@ -701,6 +701,7 @@ class EquipmentRuntime:
                 return False
         previous = record.get("baseline", {})
         revised = {}
+        verified_off = []
         now = self.clock()
         if not record.get("power"):
             record.pop("restart_power_verification", None)
@@ -716,27 +717,45 @@ class EquipmentRuntime:
             if current is None:
                 self._status(spec, "waiting_for_physical_device")
                 return False
-            if (output_off(actual_state)
-                    or foreign_owner_hold(
-                        self.hass, self.manager.entry.entry_id, entity
-                    ) is not None
-                    or finite(owned.get("since"), 0, now) is None
-                    or not isinstance(previous.get(entity), dict)
+            if (foreign_owner_hold(
+                    self.hass, self.manager.entry.entry_id, entity
+                ) is not None or finite(owned.get("since"), 0, now) is None):
+                record.pop("restart_power_verification", None)
+                record["restart_recovery_blocked"] = True
+                await self._pause(spec, "restart_reconciliation_required")
+                return False
+            if output_off(actual_state):
+                # A previously owned appliance genuinely reported OFF after
+                # HA's stable-source cooldown. That ends the historical ON
+                # interval; it is not a manual intervention. The OFF time is
+                # deliberately conservative: a fresh minimum-OFF starts NOW,
+                # not the potentially misleading HA restoration timestamp.
+                verified_off.append(entity)
+                revised[entity] = current
+                continue
+            if (not isinstance(previous.get(entity), dict)
                     or previous[entity].get("state") != current["state"]
                     or _manual_output_changes(previous[entity], current)):
-                # The known ON state/authorization is no longer established.
-                # Do not infer actual ON duration from a reset HA timestamp.
+                # Different restored ON modes do not establish the previous
+                # native command's ownership. Never adopt them here.
                 record.pop("restart_power_verification", None)
                 record["restart_recovery_blocked"] = True
                 await self._pause(spec, "restart_reconciliation_required")
                 return False
             revised[entity] = current
+        for entity in verified_off:
+            record["power"].pop(entity, None)
+            record.setdefault("off_at", {})[entity] = now
         record["baseline"].update(revised)
         record.pop("restart_power_verification", None)
         record.pop("restart_recovery_blocked", None)
         await self._save()
-        self._status(spec, "awaiting_evaluation",
-                     reason="verified_owned_native_power_after_restart")
+        self._status(
+            spec, "awaiting_evaluation",
+            reason="native_off_confirmed_after_restart"
+                   if verified_off else "verified_owned_native_power_after_restart",
+            verified_native_off=list(verified_off),
+        )
         return True
 
     def _lock(self, key: str) -> asyncio.Lock:
