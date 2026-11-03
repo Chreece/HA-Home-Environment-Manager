@@ -628,7 +628,7 @@ class AirQualityManager:
                 area=area_id,name=monitored_room.name,
                 windows=monitored_room.windows,
                 occupancy=occupied,sleeping=sleeping,
-                has_air_sensor=has_indoor_air_sensor(monitored_room,config),
+                has_air_sensor=has_indoor_air_sensor(monitored_room,config,self.hass),
                 outside_safe=air_plan.outdoor_safe,
                 temperature_c=room_temp,
                 heat_target_c=heat,cool_target_c=cool,
