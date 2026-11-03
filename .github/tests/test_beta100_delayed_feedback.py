@@ -38,6 +38,11 @@ fresh = SimpleNamespace(
     last_reported=datetime.fromtimestamp(1020., timezone.utc),
     last_changed=None)
 assert decision(pending, 1030., stale) == 'waiting'
+# Safety-critical OFF remains on the original 30-second retry cadence.
+urgent = {**pending, 'retry_context':{'policy_stop':'window','shutdown':False}}
+assert decision(urgent, 1030., stale) == 'retry'
+shutdown = {**pending, 'retry_context':{'policy_stop':None,'shutdown':True}}
+assert decision(shutdown, 1030., stale) == 'retry'
 assert decision(pending, 1059., stale) == 'waiting'
 assert decision(pending, 1060., stale) == 'retry'
 # Once HA has actually reported the same still-ON state, allow the original
