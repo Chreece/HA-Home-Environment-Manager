@@ -45,6 +45,7 @@ jobs:
           required={
               '.github/releases/v0.6.0b99.md',
               '.github/tests/test_beta73_restart_power_history.py',
+              '.github/tests/test_beta77_offline_supply_resume.py',
               '.github/tests/test_beta89_automatic.py',
               '.github/tests/test_beta94_dry_automatic.py',
               '.github/tests/test_beta98_nonblocking_ack.py',
