@@ -268,9 +268,9 @@ class EquipmentRuntime:
         self._active = True
         self._started = self.clock()
         self._ha_running_since = None
-        self._startup_source_observed.clear()
-        self._startup_source_since.clear()
-        self._startup_source_done.clear()
+        getattr(self, "_startup_source_observed", {}).clear()
+        getattr(self, "_startup_source_since", {}).clear()
+        getattr(self, "_startup_source_done", set()).clear()
         self._native_session_observations = {}
         getattr(self, "_restart_baseline_pending", set()).clear()
         getattr(self, "_native_offline_under_owned_supply", set()).clear()
@@ -374,9 +374,9 @@ class EquipmentRuntime:
         self._profile_wake.clear()
         self._native_session_observations.clear()
         self._ha_running_since = None
-        self._startup_source_observed.clear()
-        self._startup_source_since.clear()
-        self._startup_source_done.clear()
+        getattr(self, "_startup_source_observed", {}).clear()
+        getattr(self, "_startup_source_since", {}).clear()
+        getattr(self, "_startup_source_done", set()).clear()
         getattr(self, "_restart_baseline_pending", set()).clear()
         getattr(self, "_native_offline_under_owned_supply", set()).clear()
         getattr(self, "_native_ready_since", {}).clear()
