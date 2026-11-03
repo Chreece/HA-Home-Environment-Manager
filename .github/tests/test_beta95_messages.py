@@ -44,8 +44,8 @@ for lang in ('en','de','el','fr'):
             assert value in explain(rec.reasons[0],lang)
         else:
             assert 'Bathroom Window' not in body
-            assert ('sensor' in body.casefold() or 'αισθητήρα' in body.casefold()
-                    or 'sensor' in scope['ROOM_VENTILATION_TEXT']['en']['wake'])
+            assert any(term in body.casefold() for term in (
+                'sensor','αισθητήρα','measured','measurement','μέτρηση')), (lang,code,body)
         if lang=='el':
             assert any('\u0370'<=c<='\u03ff' for c in title)
         if lang=='de':
