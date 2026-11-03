@@ -3685,10 +3685,21 @@ class EquipmentRuntime:
         pending = record.get("pending")
         if pending:
             evidence = self.resume_information(spec) or {}
-            if evidence.get("decision") != "confirmed":
+            decision = evidence.get("decision")
+            # On restart, an interrupted intent may never have been sent.
+            # It cannot spontaneously become a native ACK. But the EXISTING
+            # read-only Resume verifier can take two stable independent
+            # observations (>=60s, after >=120s from original command) and
+            # reconcile the *reported current state* without inventing a
+            # completed actuator command. Start that verifier automatically:
+            # the previously selected PID/Automatic is already user consent.
+            if decision not in (
+                "confirmed", "verified", "first_check",
+                "second_check_wait", "settling",
+            ):
                 return {
                     "ready": False,
-                    "reason": "previous_command_not_yet_confirmed",
+                    "reason": "previous_command_evidence_invalid",
                     "requested_native_state": evidence.get("requested"),
                     "observed_native_state": evidence.get("observed"),
                 }
@@ -3806,12 +3817,18 @@ class EquipmentRuntime:
             # verifier. No new physical service is sent by this helper.
             await self.async_resume(spec)
         except HomeAssistantError as error:
+            # An observation interval or missing ACK is not a user-facing
+            # Manual pause. HEM continues checking during its next normal
+            # scheduler tick; no new physical command is sent by this path.
             self._status(
-                spec, "paused",
-                reason=self._record(spec).get("paused")
-                or "continue_automatic_waiting_for_physical_verification",
+                spec, "awaiting_physical_acknowledgement",
+                reason="automatic_reconciliation_observing_native_state",
                 automatic_selected=True, settings_saved=True,
-                recovery_detail=str(error)[:240],
+                recovery_detail=(
+                    "Automatic/PID stays selected. HEM is checking the "
+                    "original device state automatically; no action needed."
+                ),
+                last_verification_issue=str(error)[:180],
             )
             return
         async with self._lock(spec.identifier):
