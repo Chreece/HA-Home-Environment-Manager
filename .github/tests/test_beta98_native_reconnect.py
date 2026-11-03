@@ -69,9 +69,11 @@ async def tests():
     assert await r._reconcile(spec)
     assert r.record['baseline']['climate.native']==b['sn'](r.state)
     assert r._native_settled_for[(spec.identifier,'climate.native')]==1000.0
-    # A genuinely later physical change is no longer hidden.
+    # A genuinely identified HA user change after settling remains Manual.
+    # An anonymous firmware state change is no longer treated as a person.
     r.now=1031
     r.state=FakeState('cool',temperature=20)
+    r.state.context=type('Context',(),{'user_id':'ha-user','parent_id':None})()
     assert not await r._reconcile(spec)
     assert r.record['paused']=='physical_manual_override'
     assert Model.settings(r.manager,spec)['control_mode']=='manual'
