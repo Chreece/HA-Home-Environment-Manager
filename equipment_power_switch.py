@@ -569,7 +569,6 @@ def approved_demand(runtime: Any, spec: Any, cfg: dict,
     """Live policies and feedback must authorize EACH upstream decision."""
     from .device_activation import authorized, effective_device
     from .occupancy_policy import live_device_permission
-    from .climate_arbitration import _contact_interlock
     if not authorized(runtime.manager, spec):
         return None
     method = cfg.get("control_mode")
@@ -597,11 +596,9 @@ def approved_demand(runtime: Any, spec: Any, cfg: dict,
             # Unknown sleep/presence still blocks ON but is NEVER proof that
             # cutting the supply to a running device is safe.
             return None
-    if method in ("automatic", "pid", "manual") and cfg.get("pause_on_window_open", True):
-        if (plan.get("window_safe") is not True
-                or (cap.domain != "fan" and
-                    not _contact_interlock(runtime.hass, spec.area_id, plan))):
-            return None
+    # The exact-room live contact policy checked above is the sole window
+    # source. A stale whole-room plan (or a different room's OPEN contact)
+    # must not starve an already-authorized external supply after closure.
     targets = model.targets(runtime.manager, spec, cap, cfg, plan)
     observed = runtime.measurements(spec, cap)
     return output_required(
