@@ -19,7 +19,13 @@ def extract(name):
     n=next(x for x in runtime_class.body
            if isinstance(x,(ast.FunctionDef,ast.AsyncFunctionDef))
            and x.name==name)
-    scope={}
+    scope={
+        'NATIVE_RECONNECT_SETTLE_SECONDS':30,
+        'NATIVE_COMMAND_MAX_ATTEMPTS':4,
+        'NATIVE_COMMAND_RECONNECT_EXTRA_ATTEMPTS':2,
+        'NATIVE_RECONNECT_EXTRA_ATTEMPTS':2,
+        'NATIVE_COMMAND_RETRY_SECONDS':30,
+    }
     exec(compile(ast.Module(body=[n],type_ignores=[]),
                  'equipment_runtime.py','exec'),scope)
     return scope[name]
@@ -95,6 +101,7 @@ async def tests():
     # consume zero attempts. Only a VERIFIED offline→online edge after the
     # old attempt may grant at most TWO extra attempts (one per reconnect).
     b88=runpy.run_path(str(ROOT/'.github/tests/test_beta88_power_startup_and_retries.py'))
+    retry_after.__globals__['model']=b88['Model']
     Sim=b88['SimRuntime']
     s=b88['SPEC']
     sim=Sim()
