@@ -4585,7 +4585,7 @@
     const title=escape(full);
     if(!info.source)return '<span class="reason hem-wx-static103" title="'+title+'">'+
       this._icon('mdi:weather-alert')+escape(subject)+'</span>';
-    return '<button type="button" class="reason hem-wx-chip103" '+
+    return '<button type="button" class="hem-wx-chip103" '+
       'data-wx-open103="'+escape(info.source.id)+'" title="'+title+
       '" aria-label="'+title+'">'+this._icon('mdi:weather-alert')+
       '<span class="hem-wx-chip-text103">'+escape(subject)+'</span>'+
@@ -4671,6 +4671,7 @@
     pop.className='hem-wx-dialog103';
     pop.setAttribute('popover','manual');
     pop.setAttribute('role','dialog');
+    pop.setAttribute('tabindex','-1');
     pop.setAttribute('aria-label',wxWord103(this,'details'));
     pop.innerHTML='<div class="hem-wx-head103"><strong>'+
       this._icon('mdi:weather-alert')+escape(wxWord103(this,'details'))+
@@ -4691,6 +4692,7 @@
     this._weatherDialog103={node:pop,id,owner:verified.owner,signature:null};
     this._refreshWeather103();
     try{pop.showPopover?.();}catch{}
+    pop.focus({preventScroll:true});
   };
   proto103._installFolds87=function(){
     installBefore103.call(this);
@@ -4747,6 +4749,7 @@
     'border:1px solid color-mix(in srgb,var(--aqa-red),transparent 65%);',
     'color:var(--primary-text-color,#eee);border-radius:7px;padding:3px 6px}',
     '.hem-wx-chip103 ha-icon{flex:0 0 auto;--mdc-icon-size:13px}',
+    '.hem-wx-chip103 ha-icon:first-child{color:var(--aqa-red,#f37368)}',
     '.hem-wx-chip-text103{display:block;flex:1;min-width:0;',
     'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}',
     '.hem-outside-details87 .hem-wx-static103{max-width:320px;min-width:120px}',
