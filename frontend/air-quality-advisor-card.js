@@ -2769,33 +2769,32 @@
     const add=(label,display)=>{if(display!==null && display!==undefined && display!=='')
       rows.push('<div title="'+escape(label+': '+display)+'"><span>'+escape(label)+'</span><b>'+
         escape(display)+'</b></div>');};
-    const physical=a.physical_source_state;
-    add(t.physical,this._controllerStatusLabel(physical ?? 'unavailable'));
-    add(t.choose,this._controllerStatusLabel(a.requested_hvac_mode || entry.climate.state));
-    const observedRh=a.measurements?.humidity ?? a.current_humidity;
-    if (numeric(observedRh)) add(this._t('humidity'),value(observedRh,'%'));
-    if (numeric(a.humidity)) add(this._t('humidity')+' · '+t.target,value(a.humidity,'%'));
-    const nativeUnit=a.temperature_unit || '°C';
-    const thermalTarget=Array.isArray(a.hvac_modes) &&
-      a.hvac_modes.some(mode=>['heat','cool','heat_cool','auto'].includes(mode)) &&
-      !!((Number(a.supported_features) || 0) & 3);
-    const hasMeasuredTemp=numeric(a.measurements?.temperature);
-    const observedTemp=hasMeasuredTemp?a.measurements.temperature:a.current_temperature;
-    if (numeric(observedTemp)) add(MOLD_DETAIL_LABELS[this._language()]?.[5] || t.physical,value(observedTemp,' '+(hasMeasuredTemp?'°C':nativeUnit)));
-    if (thermalTarget && numeric(a.temperature)) add(t.target,value(a.temperature,' '+nativeUnit));
-    if (thermalTarget && numeric(a.target_temp_low) && numeric(a.target_temp_high))
-      add(t.target,this._format(a.target_temp_low)+' - '+this._format(a.target_temp_high)+' '+nativeUnit);
-    add(t.demand,value(d.demand_percent ?? c.demand_percent,'%'));
+    // Beta100 physical telemetry: only attributes from the exact native
+    // Home Assistant source. Never present PID demand, room averages or HEM
+    // logical targets as values read from a physical appliance.
+    const sources=safeArray(a.source_entity_ids);
+    const declared=a.physical_primary_entity_id;
+    const nativeId=typeof declared==='string' && sources.includes(declared)
+      ?declared:sources.length===1?sources[0]:null;
+    const native=nativeId?this._hass?.states?.[nativeId]:null;
+    const attrs=native?.attributes||{};
+    const unit=typeof attrs.temperature_unit==='string'?attrs.temperature_unit:'°C';
+    if(native && !['unknown','unavailable'].includes(native.state)) {
+      add(t.physical,this._controllerStatusLabel(native.state));
+      if(typeof attrs.hvac_action==='string' && attrs.hvac_action!=='unknown')
+        add(t.physical+' · '+t.information,this._controllerStatusLabel(attrs.hvac_action));
+      if(numeric(attrs.current_temperature))
+        add(this._t('temperature'),value(attrs.current_temperature,' '+unit));
+      if(numeric(attrs.current_humidity))
+        add(this._t('humidity'),value(attrs.current_humidity,'%'));
+      if(numeric(attrs.temperature))
+        add(t.target+' · '+this._t('temperature'),value(attrs.temperature,' '+unit));
+      if(numeric(attrs.humidity))
+        add(t.target+' · '+this._t('humidity'),value(attrs.humidity,'%'));
+      if(numeric(attrs.percentage))add(t.speed,value(attrs.percentage,'%'));
+      else if(typeof attrs.fan_mode==='string')add(t.speed,attrs.fan_mode);
+    }
     const supplyId=d.upstream_power_switch || a.upstream_power_switch;
-    if (supplyId) {
-      const supply=this._hass?.states?.[supplyId];
-      add(t.supply,this._controllerStatusLabel(supply?.state ?? d.upstream_power_state ?? a.upstream_power_state ?? 'unavailable'));
-    }
-    if (numeric(d.upstream_idle_since) && numeric(d.upstream_idle_cooldown_seconds)) {
-      const elapsed=Math.max(0,Date.now()/1000-d.upstream_idle_since);
-      add(t.cooldown,this._format(Math.max(0,d.upstream_idle_cooldown_seconds-elapsed),0)+' s');
-    }
-    if (d.sleep_pause_requested===true) add(t.sleep,this._controllerStatusLabel('sleep_room_control_paused'));
     const status=d.status_code || c.status;
     const reason=d.status_reason_code || c.reason;
     const reasonLabel=reason?this._controllerStatusLabel(reason):'';
@@ -2846,10 +2845,10 @@
   };
   const originalStyles65=proto65._styles;
   proto65._styles = function() { return originalStyles65.call(this)+`<style>
-    .hem-device-data{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
-    .hem-device-data>div{padding:8px;border-radius:9px;background:var(--secondary-background-color,rgba(127,127,127,.09));min-width:0}
-    .hem-device-data span{display:block;font-size:11px;color:var(--secondary-text-color);overflow-wrap:anywhere}
-    .hem-device-data b{display:block;margin-top:4px;font-size:14px;overflow-wrap:anywhere}
+    .hem-device-data{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:6px 0}
+    .hem-device-data>div{padding:5px 6px;border-radius:7px;background:var(--secondary-background-color,rgba(127,127,127,.09));min-width:0}
+    .hem-device-data span{display:block;font-size:10px;color:var(--secondary-text-color);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .hem-device-data b{display:block;margin-top:2px;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .hem-calibration,.hem-diagnostics{margin-top:12px;border-top:1px solid var(--divider-color,rgba(127,127,127,.25));padding-top:8px}
     .hem-calibration>summary,.hem-diagnostics>summary{cursor:pointer;padding:8px 0;font-weight:600}
     .hem-calibration:not([open])>*:not(summary),.hem-diagnostics:not([open])>*:not(summary){display:none}
@@ -3908,7 +3907,13 @@
         ? declared : sources.length===1?sources[0]:null;
       const realNative=nativeId && this._hass?.states?.[nativeId]?nativeId:null;
       const primaryIcon=_deviceIcons87[realNative?.split('.')[0]]||'mdi:thermostat';
+      const observedNative=realNative?this._hass?.states?.[realNative]:null;
+      const actualMode=observedNative && !['unknown','unavailable'].includes(observedNative.state)
+        ?observedNative.state:null;
+      // Native DRY is a reported mode; without hvac_action it is not proof of
+      // compressor activity. Keep the physical mode visible, not "Unknown".
       const stateName=physical.active?this._controllerStatusLabel(physical.action):
+        actualMode?this._controllerStatusLabel(actualMode):
         missing?this._controllerStatusLabel('unavailable'):
         this._controllerStatusLabel(rawState==='off'?'off':rawState);
       const issueText=activeFault
