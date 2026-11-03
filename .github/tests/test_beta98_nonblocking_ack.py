@@ -15,6 +15,9 @@ from types import SimpleNamespace as N, MethodType
 
 ROOT=Path(__file__).resolve().parents[2]
 base=runpy.run_path(str(ROOT/'.github/tests/test_beta61_supply_selection.py'))
+# The Beta72 suite runs its asyncio fixture at module load; execute it
+# before entering this test's own event loop.
+resume_fixture=runpy.run_path(str(ROOT/'.github/tests/test_beta72_resume_running.py'))
 Controller=base['Controller']
 Model=base['Model']
 NativeCap=base['NativeCap']
@@ -147,7 +150,6 @@ async def tests():
 
     # Actual no-service Resume uses the current physical state and proves
     # successful ACK before clearing the pending journal and queued method.
-    resume_fixture=runpy.run_path(str(ROOT/'.github/tests/test_beta72_resume_running.py'))
     Runtime=resume_fixture['Runtime']
     physical_spec=resume_fixture['spec']
     h=Runtime(prior_owned=True)
