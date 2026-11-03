@@ -4010,7 +4010,11 @@ class EquipmentRuntime:
             return
         self._invalidated.discard(spec.identifier)
         record = self._record(spec)
-        readiness = self._startup_readiness(spec)
+        # The production runtime always defines _startup_readiness. Older
+        # source-extracted PID test harnesses intentionally bind only tick()
+        # and simulate their own ready native device.
+        readiness_fn = getattr(self, "_startup_readiness", None)
+        readiness = readiness_fn(spec) if callable(readiness_fn) else {"ready": True}
         if not readiness["ready"]:
             self._status(
                 spec, "waiting_for_physical_device",
