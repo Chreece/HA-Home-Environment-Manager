@@ -47,6 +47,7 @@ jobs:
               '.github/tests/test_beta100_native_pid.py',
               '.github/tests/test_beta100_delayed_feedback.py',
               '.github/tests/test_beta76_compact_browser.py',
+              '.github/tests/test_beta77_dry_only_target.py',
               '.github/tests/test_beta88_power_startup_and_retries.py',
               '.github/workflows/publish-beta100.yml',
               'equipment_runtime.py','equipment_status.py',
@@ -61,6 +62,8 @@ jobs:
           assert 'def _pid_extreme_native_target(' not in code
           assert 'if state is None or state.state == "off":' in code
           assert 'and (config["control_mode"] == "pid" or' in code
+          assert 'native_high if mode == "heat" else native_low' in code
+          assert 'native_step = finite(attrs.get("target_temp_step"), .1, 10)' in code
           assert 'NATIVE_STARTUP_STABLE_SECONDS = 60' in code
           assert 'native_off_confirmed_after_restart' in code
           assert 'const native=nativeId?this._hass?.states?.[nativeId]:null;' in card
