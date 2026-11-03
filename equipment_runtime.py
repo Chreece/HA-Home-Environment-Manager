@@ -3387,6 +3387,77 @@ class EquipmentRuntime:
             return False
         return await self._send(spec, cap, cap.fan_entity, service, data, expected, automatic=automatic)
 
+    async def _apply_queued_power_switch(self, spec: model.ManagedDevice) -> bool:
+        """Commit a user's saved supply preference only after safe release.
+
+        Returns True when a preference was committed. Existing native output
+        and upstream relay ownership are never cleared here and no physical
+        service is called. The old supply remains authoritative until HEM
+        has independently completed its safe OFF/ACK/dwell process.
+        """
+        record = self._record(spec)
+        queued = record.get("queued_power_switch")
+        if not isinstance(queued, dict):
+            return False
+        if not self._current_spec(spec) or not self._ready:
+            return False
+        upstream = record.get("upstream", {})
+        if (record.get("pending") or record.get("power")
+                or isinstance(upstream, dict) and (
+                    upstream.get("pending") or upstream.get("owned")
+                )):
+            return False
+        if (queued.get("area") != spec.area_id
+                or queued.get("source_device_id") != spec.source_device_id):
+            self._status(spec, "awaiting_evaluation",
+                         reason="queued_supply_source_identity_changed")
+            return False
+        old = model.settings(self.manager, spec).get("power_switch_entity")
+        selected = queued.get("requested")
+        if old != queued.get("original"):
+            self._status(spec, "awaiting_evaluation",
+                         reason="queued_supply_configuration_changed")
+            return False
+        from .equipment_power_switch import permitted_supply
+        if selected is not None and permitted_supply(
+            self.manager, spec, selected
+        ) is None:
+            self._status(spec, "awaiting_evaluation",
+                         reason="queued_supply_no_longer_available")
+            return False
+        lock = getattr(self.manager, "_device_settings_write_lock", None)
+        if lock is None:
+            lock = self.manager._device_settings_write_lock = asyncio.Lock()
+        async with lock:
+            current = model.settings(self.manager, spec)
+            if (not self._current_spec(spec)
+                    or current.get("power_switch_entity") != old
+                    or record.get("pending") or record.get("power")
+                    or (record.get("upstream") or {}).get("pending")
+                    or (record.get("upstream") or {}).get("owned")
+                    or (selected is not None and permitted_supply(
+                        self.manager, spec, selected
+                    ) is None)):
+                return False
+            options = deepcopy(self.manager.entry.options)
+            profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+            profiles = profiles if isinstance(profiles, dict) else {}
+            saved = profiles.get(spec.identifier, {})
+            saved = saved if isinstance(saved, dict) else {}
+            profiles[spec.identifier] = {
+                **saved, "power_switch_entity": selected,
+            }
+            options[model.SETTINGS] = profiles
+            self.hass.config_entries.async_update_entry(
+                self.manager.entry, options=options,
+            )
+        record.pop("queued_power_switch", None)
+        await self._save()
+        self._status(spec, "settings_updated",
+                     reason="queued_supply_applied_after_safe_release",
+                     settings_saved=True)
+        return True
+
     def _schedule_automatic_reconciliation(self, spec: model.ManagedDevice) -> None:
         """Run the existing no-command Resume verifier outside the tick lock.
 
@@ -3457,6 +3528,9 @@ class EquipmentRuntime:
             return
         self._invalidated.discard(spec.identifier)
         record = self._record(spec)
+        if record.get("queued_power_switch"):
+            if await self._apply_queued_power_switch(spec):
+                return
         if record.get("restart_power_verification"):
             if not await self._verify_restart_power(spec):
                 return
