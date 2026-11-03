@@ -2490,10 +2490,10 @@ class EquipmentRuntime:
             window = self._window_policy(spec, cfg)
             if window["blocked"] and not window_stop:
                 return window["status"]
-        if (mode != "off" and cap.domain != "fan"
-                and cfg.get("pause_on_window_open", True)
-                and not _contact_interlock(self.hass, spec.area_id, plan)):
-            return "open_or_unknown_window"
+        # The per-controller live window policy above is authoritative.
+        # Do not additionally reject an otherwise safe local controller due
+        # to old climate-plan contacts from another room, or an outdated
+        # window_safe field that has not yet been recalculated.
         if mode in ("heat", "cool", "heat_cool"):
             if conflict := _physical_climate_conflict(self.hass, spec.area_id, room, cap.primary, mode):
                 return conflict
@@ -2520,8 +2520,8 @@ class EquipmentRuntime:
                 if purpose == "extraction":
                     if plan.get("air_actions", {}).get("outdoor_air_verified") is not True:
                         return "outside_air_not_verified"
-                    if cfg.get("pause_on_window_open", True) and not _contact_interlock(self.hass, spec.area_id, plan):
-                        return "window_already_open_or_unknown"
+                    # An extraction fan uses the same exact-room source
+                    # policy, already evaluated at the top of this gate.
                 elif not (dev.get("sensor_verified") is True or room.get("pm25_sensor_verified") is True):
                     return "particle_sensor_not_verified"
             if cap.domain == "humidifier" or mode == "dry":
