@@ -1005,6 +1005,59 @@ class EquipmentRuntime:
             if (passive_review is not None and
                     not self._pid_review_authorized(spec, changes, passive_review)):
                 raise HomeAssistantError("PID review has changed or hardware is not safely OFF")
+            changes = deepcopy(changes)
+            # A supply reassignment is configuration, never authority to
+            # interrupt a running compressor or discard the previous supply's
+            # acknowledged ownership. Accept the user's choice now and stage
+            # only that field until the old native output/supply is idle.
+            deferred_supply = None
+            old_supply = model.settings(self.manager, spec).get("power_switch_entity")
+            if "power_switch_entity" in changes:
+                requested_supply = changes["power_switch_entity"]
+                if requested_supply == "none":
+                    requested_supply = None
+                record = self._record(spec)
+                upstream = record.get("upstream", {})
+                busy = bool(
+                    record.get("pending") or record.get("power")
+                    or isinstance(upstream, dict) and (
+                        upstream.get("owned") or upstream.get("pending")
+                    )
+                )
+                if requested_supply != old_supply and busy:
+                    if requested_supply is not None:
+                        from .equipment_power_switch import permitted_supply
+                        if permitted_supply(self.manager, spec, requested_supply) is None:
+                            raise HomeAssistantError(
+                                "Select a dedicated physical power switch in the same room"
+                            )
+                    deferred_supply = {
+                        "requested": requested_supply,
+                        "original": old_supply,
+                        "source_device_id": spec.source_device_id,
+                        "area": spec.area_id,
+                        "at": self.clock(),
+                    }
+                    changes.pop("power_switch_entity")
+                    if not changes:
+                        record["queued_power_switch"] = deferred_supply
+                        await self._save()
+                        self._status(
+                            spec, "awaiting_evaluation",
+                            reason="power_switch_change_saved_for_safe_release",
+                            settings_saved=True, queued_power_switch=requested_supply,
+                            recovery_detail=(
+                                "Power-switch preference saved. HEM will apply "
+                                "it after the old physical output and supply "
+                                "are safely released."
+                            ),
+                        )
+                        return
+                elif requested_supply == old_supply and record.get(
+                    "queued_power_switch"
+                ):
+                    record.pop("queued_power_switch", None)
+                    await self._save()
             if set(changes) == {"pause_on_window_open"}:
                 value = changes["pause_on_window_open"]
                 if type(value) is not bool:
@@ -1392,12 +1445,19 @@ class EquipmentRuntime:
                         async_clear_review(self.hass,self.manager,spec)
                     )
                 await self._save()
+            if deferred_supply is not None:
+                record["queued_power_switch"] = deferred_supply
+                await self._save()
             self._status(
                 spec,
                 "awaiting_physical_acknowledgement" if hardware_unresolved
                 else "settings_updated",
                 control_mode=new["control_mode"],
                 settings_saved=True,
+                queued_power_switch=(
+                    deferred_supply.get("requested")
+                    if isinstance(deferred_supply, dict) else None
+                ),
                 automatic_selected=new["control_mode"] in ("automatic", "pid"),
                 recovery_detail=(
                     "Your settings are saved. HEM will verify the previous "
