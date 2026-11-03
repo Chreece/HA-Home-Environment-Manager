@@ -3697,6 +3697,62 @@ class EquipmentRuntime:
             )
         )
 
+    async def _retry_after_verified_reconnect(
+        self, spec: model.ManagedDevice,
+    ) -> bool:
+        """Resume a bounded native retry, only for a genuine new HA reconnect.
+
+        Never replay an obsolete command after the user changed settings, nor
+        clear uncertain intents, force an OFF/ON cycle, or adopt an unowned
+        output. The original _retry_pending still validates all safety gates.
+        """
+        record = self._record(spec)
+        pending = record.get("pending")
+        if (not isinstance(pending, dict)
+                or pending.get("phase") != "commanded"
+                or record.get("paused") not in (
+                    None, "physical_acknowledgement_missing",
+                    "restart_reconciliation_required",
+                )
+                or not isinstance(pending.get("retry_context"), dict)):
+            return False
+        entity = pending.get("entity")
+        if entity not in spec.source_entities:
+            return False
+        now = self.clock()
+        stamp = self._native_reconnect_epoch.get(entity)
+        last = pending.get("last_attempt_at")
+        attempts = pending.get("attempts", 0)
+        used = pending.get("reconnect_retry_uses", 0)
+        if (not isinstance(stamp, (int, float))
+                or not isinstance(last, (int, float))
+                or not isinstance(attempts, int) or not 1 <= attempts <= (
+                    NATIVE_COMMAND_MAX_ATTEMPTS + NATIVE_RECONNECT_EXTRA_ATTEMPTS
+                )
+                or not isinstance(used, int)
+                or used > NATIVE_RECONNECT_EXTRA_ATTEMPTS
+                or stamp <= last
+                or stamp == pending.get("reconnect_retry_epoch_used")
+                or now - stamp < NATIVE_RECONNECT_SETTLE_SECONDS
+                or now - last < NATIVE_COMMAND_RETRY_SECONDS
+                or (attempts >= NATIVE_COMMAND_MAX_ATTEMPTS
+                    and used >= NATIVE_RECONNECT_EXTRA_ATTEMPTS)
+                or pending["retry_context"].get("settings")
+                    != model.settings(self.manager, spec)
+                or self._native_settle_remaining(spec) != 0
+                or not self._current_spec(spec)
+                or not self._identity_ok(spec)
+                or not model.sources_available(self.manager, spec)):
+            return False
+        # Clearing only an ACK-exhausted *software pause* allows the exact
+        # existing retry path to enforce every fresh native/demand/supply
+        # safety check. Any other manual/physical safety hold stays latched.
+        if record.get("paused") == "physical_acknowledgement_missing":
+            record["paused"] = None
+            await self._save()
+        await self._retry_pending(spec, pending, now)
+        return True
+
     async def _apply_automatic_reconciliation(
         self, spec: model.ManagedDevice,
     ) -> None:
@@ -3750,11 +3806,30 @@ class EquipmentRuntime:
             if not await self._verify_restart_power(spec):
                 return
         requested = record.get("automatic_continue_requested")
+        if (not isinstance(requested, dict)
+                and record.get("paused") == "physical_acknowledgement_missing"
+                and model.settings(self.manager, spec).get("control_mode")
+                    in ("automatic", "pid")):
+            # Recover a Beta97-era stale ACK pause even before a user opens
+            # the card. Selecting Auto remains an independent preference;
+            # output is still gated on the exact original native evidence.
+            method = model.settings(self.manager, spec)["control_mode"]
+            record["automatic_continue_requested"] = {
+                "at": self.clock(), "method": method,
+                "awaiting_physical_verification": True,
+            }
+            await self._save()
+            requested = record["automatic_continue_requested"]
         if isinstance(requested, dict):
-            # The editor or Continue Automatic button already accepted the
-            # choice; only a confirmed previous command can trigger the
-            # existing no-command physical rearm verifier.
+            # A newly restored HA entity is observed but never spammed.
+            # A real offline→online transition earns at most one bounded
+            # reconnect retry per episode, with the unchanged safety gate.
             gate = self._automatic_recovery_gate(spec)
+            if (not gate["ready"]
+                    and gate.get("reason")
+                        == "previous_command_not_yet_confirmed"):
+                if await self._retry_after_verified_reconnect(spec):
+                    return
             if not gate["ready"]:
                 self._status(
                     spec, "awaiting_physical_acknowledgement",
