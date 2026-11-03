@@ -3829,11 +3829,100 @@ class EquipmentRuntime:
                     automatic_selected=True, physical_output_confirmed=True,
                 )
 
+    def _startup_readiness(self, spec: model.ManagedDevice) -> dict:
+        """Wait for HA ready and a stable, source-bound native startup.
+
+        A device which deliberately has a verified external supply OFF may
+        remain unavailable indefinitely. Its original supply controller
+        can continue after the HA-ready cooldown; native commands still
+        require subsequent source stabilization.
+        """
+        now = self.clock()
+        if getattr(self.hass, "is_running", True) is False:
+            self._ha_running_since = None
+            return {"ready": False, "reason": "home_assistant_still_starting"}
+        if self._ha_running_since is None or not 0 <= now - self._ha_running_since:
+            self._ha_running_since = now
+        remaining = HA_READY_COOLDOWN_SECONDS - (now - self._ha_running_since)
+        if remaining > 0:
+            return {
+                "ready": False, "reason": "home_assistant_ready_cooldown",
+                "remaining_seconds": round(remaining),
+            }
+        record = self._record(spec)
+        cfg = model.settings(self.manager, spec)
+        disconnected = []
+        for entity in spec.source_entities:
+            current = snapshot(self.hass.states.get(entity))
+            if current is None:
+                disconnected.append(entity)
+                self._startup_source_observed.pop((spec.identifier, entity), None)
+                self._startup_source_since.pop((spec.identifier, entity), None)
+                self._startup_source_done.discard((spec.identifier, entity))
+                continue
+            key = (spec.identifier, entity)
+            if key in self._startup_source_done:
+                continue
+            previous = self._startup_source_observed.get(key)
+            started = self._startup_source_since.get(key)
+            # Only native mode and user-settable attributes reset startup
+            # readiness. Passive current humidity, temperature and battery
+            # reports must not keep an occupied room blocked indefinitely.
+            if (previous is None or started is None or now < started
+                    or _manual_output_changes(previous, current)):
+                self._startup_source_observed[key] = current
+                self._startup_source_since[key] = now
+                started = now
+            wait = NATIVE_STARTUP_STABLE_SECONDS - (now - started)
+            if wait > 0:
+                remaining = max(remaining, wait)
+            else:
+                self._startup_source_done.add(key)
+        if disconnected:
+            # An OFF supply intentionally disconnects its downstream
+            # device. Allow the existing guarded upstream controller to
+            # evaluate it, but never bypass a persisted native command,
+            # power ownership, or restart output verification.
+            supply = cfg.get("power_switch_entity")
+            state = self.hass.states.get(supply) if supply else None
+            upstream = record.get("upstream", {})
+            if (state is not None and state.state == "off"
+                    and not record.get("pending")
+                    and not record.get("power")
+                    and not record.get("restart_power_verification")
+                    and not (isinstance(upstream, dict)
+                             and (upstream.get("pending") or upstream.get("owned")))):
+                return {"ready": True, "native_offline_supply_only": True}
+            return {
+                "ready": False, "reason": "native_source_unavailable",
+                "remaining_seconds": None,
+            }
+        if remaining > 0:
+            return {
+                "ready": False, "reason": "native_startup_stabilizing",
+                "remaining_seconds": round(remaining),
+            }
+        return {"ready": True}
+
     async def tick(self, spec: model.ManagedDevice) -> None:
         if not self._active or not self._ready:
             return
         self._invalidated.discard(spec.identifier)
         record = self._record(spec)
+        readiness = self._startup_readiness(spec)
+        if not readiness["ready"]:
+            self._status(
+                spec, "waiting_for_physical_device",
+                reason=readiness["reason"],
+                startup_settle_remaining_seconds=readiness.get("remaining_seconds"),
+                configured_control_method=model.settings(
+                    self.manager, spec
+                ).get("control_mode"),
+                automatic_selected=model.settings(
+                    self.manager, spec
+                ).get("control_mode") in ("automatic", "pid"),
+            )
+            return
         if record.get("queued_power_switch"):
             if await self._apply_queued_power_switch(spec):
                 return
