@@ -85,6 +85,9 @@ assert "attrs.current_temperature" in summary
 assert "native.state" in summary
 assert "grid-template-columns:repeat(3,minmax(0,1fr))" in card
 assert "const actualMode=observedNative" in card
+assert "dehumidifying:t.dry" in card
+assert "el:{heating:'Θερμαίνει',cooling:'Ψύχει',drying:'Αφυγραίνει'" in card
+assert "['heating','cooling','drying','dehumidifying','fan','fan_only','humidifying']" in card
 assert "HEM_COMPACT87_START" in card
 assert "_recoverUnexpectedScroll92" in card
 print("BETA100_NATIVE_PID_EXTREMES_AND_NATIVE_ONLY_COMPACT_TELEMETRY=PASS")
