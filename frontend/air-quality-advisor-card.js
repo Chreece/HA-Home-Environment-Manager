@@ -2671,6 +2671,19 @@
     const key=String(code ?? '').trim();
     if (!key) return '';
     const lang=this._language(), data=CARD65[lang] || CARD65.en, t=data.text;
+    // HVAC activity is distinct from physical HVAC mode. Native `drying`
+    // reports an active compressor, while merely `dry` reports a selected mode.
+    const activities={heating:t.heat,cooling:t.cool,drying:t.dry,
+      dehumidifying:t.dry,humidifying:this._t('humidity'),fan:t.fan};
+    const activeWords={
+      en:{heating:'Heating',cooling:'Cooling',drying:'Dehumidifying',
+        dehumidifying:'Dehumidifying',humidifying:'Humidifying'},
+      el:{heating:'Θερμαίνει',cooling:'Ψύχει',drying:'Αφυγραίνει',
+        dehumidifying:'Αφυγραίνει',humidifying:'Υγραίνει'},
+      de:{heating:'Heizt',cooling:'Kühlt',drying:'Entfeuchtet',
+        dehumidifying:'Entfeuchtet',humidifying:'Befeuchtet'},
+    };
+    if(activities[key])return activeWords[lang]?.[key]||activities[key];
     const modes={...data.profiles,heat:t.heat,cool:t.cool,dry:t.dry,fan_only:t.fan,
       on:t.on,off:t.off,unknown:t.unknown,unavailable:this._t('missing'),
       idle:t.idle,selected_mean:t.mean,selected_sensor:t.mean,
@@ -3409,7 +3422,7 @@
       if (!state || ['unavailable','unknown'].includes(state.state)) continue;
       const action=state.attributes?.hvac_action;
       if (typeof action==='string') {
-        if (['heating','cooling','drying','fan','fan_only','humidifying'].includes(action))
+        if (['heating','cooling','drying','dehumidifying','fan','fan_only','humidifying'].includes(action))
           return {active:true,entity:id,action};
         continue; // HEAT or DRY mode alone is not physical operation.
       }
