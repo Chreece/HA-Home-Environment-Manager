@@ -43,6 +43,12 @@ STARTUP_SECONDS = 300
 # Initial command + three fresh, independently authorized retries.
 NATIVE_COMMAND_MAX_ATTEMPTS = 4
 NATIVE_COMMAND_RETRY_SECONDS = 30
+# A restored native entity may load cached/default HVAC values, reconnect
+# accessory channels, or run firmware automations before its state settles.
+NATIVE_RECONNECT_SETTLE_SECONDS = 30
+# Up to two extra attempts, ONLY across independently observed reconnects.
+# A service that keeps failing while continuously online must not spam output.
+NATIVE_RECONNECT_EXTRA_ATTEMPTS = 2
 
 
 def native_retry_decision(pending: dict, now: float) -> str:
@@ -151,6 +157,9 @@ class EquipmentRuntime:
         # Source entities can disappear and return while HEM's dedicated
         # upstream supply remains ON. This is recovery, not user interaction.
         self._native_offline_under_owned_supply: set[str] = set()
+        self._native_ready_since: dict[str, float] = {}
+        self._native_reconnect_epoch: dict[str, float] = {}
+        self._native_settled_for: dict[tuple[str, str], float] = {}
         self._fan_allocations: dict[str, dict] = {}
         # Diagnostic-only snapshots while an independently powered device is
         # OFF: PID P-term prepared, I held at zero, D reseeded from live sensor.
@@ -248,6 +257,9 @@ class EquipmentRuntime:
         self._native_session_observations = {}
         getattr(self, "_restart_baseline_pending", set()).clear()
         getattr(self, "_native_offline_under_owned_supply", set()).clear()
+        getattr(self, "_native_ready_since", {}).clear()
+        getattr(self, "_native_reconnect_epoch", {}).clear()
+        getattr(self, "_native_settled_for", {}).clear()
         try:
             from homeassistant.helpers.storage import Store
             self._store = Store(
@@ -330,6 +342,9 @@ class EquipmentRuntime:
         self._native_session_observations.clear()
         getattr(self, "_restart_baseline_pending", set()).clear()
         getattr(self, "_native_offline_under_owned_supply", set()).clear()
+        getattr(self, "_native_ready_since", {}).clear()
+        getattr(self, "_native_reconnect_epoch", {}).clear()
+        getattr(self, "_native_settled_for", {}).clear()
         self._pid_offline_previews.clear()
         tasks = tuple(self._pid_passive_tasks.values())
         for task in tasks:
@@ -3482,6 +3497,57 @@ class EquipmentRuntime:
                      settings_saved=True)
         return True
 
+    def observe_native_availability(
+        self, entity_id: str, old: Any, new: Any,
+    ) -> None:
+        """Observe exact native HA offline→online; never infer physical ACK.
+
+        No service calls, database queries or controller reconfiguration.
+        The HA event timestamp begins the settle window, avoiding an extra
+        full polling interval after a genuine reconnection.
+        """
+        if not isinstance(entity_id, str):
+            return
+        live = lambda item: (
+            item is not None
+            and getattr(item, "state", None) not in (
+                None, "unavailable", "unknown"
+            )
+        )
+        if not live(new):
+            self._native_ready_since.pop(entity_id, None)
+            return
+        if not live(old):
+            stamp = self.clock()
+            self._native_ready_since[entity_id] = stamp
+            self._native_reconnect_epoch[entity_id] = stamp
+
+    def _native_settle_remaining(
+        self, spec: model.ManagedDevice,
+    ) -> float | None:
+        """None = absent/unknown; positive = startup settling; zero = ready.
+
+        Native output is still checked against live identity, capability,
+        physical safety and the old command ACK before any new write.
+        """
+        now = self.clock()
+        remaining = 0.0
+        for entity in spec.source_entities:
+            state = self.hass.states.get(entity)
+            if state is None or state.state in ("unavailable", "unknown"):
+                self._native_ready_since.pop(entity, None)
+                return None
+            since = self._native_ready_since.get(entity)
+            if since is None or not 0 <= now - since:
+                since = now
+                self._native_ready_since[entity] = now
+                self._native_reconnect_epoch.setdefault(entity, now)
+            remaining = max(
+                remaining,
+                NATIVE_RECONNECT_SETTLE_SECONDS - (now - since)
+            )
+        return max(0.0, remaining)
+
     def _automatic_recovery_gate(self, spec: model.ManagedDevice) -> dict:
         """Read-only: only positively confirmed old commands can auto-rearm.
 
@@ -3492,6 +3558,15 @@ class EquipmentRuntime:
         """
         if not self._current_spec(spec):
             return {"ready": False, "reason": "source_deselected_or_moved"}
+        settle = self._native_settle_remaining(spec)
+        if settle is None:
+            return {"ready": False, "reason": "native_source_unavailable"}
+        if settle > 0:
+            return {
+                "ready": False,
+                "reason": "native_reconnected_settling",
+                "remaining_seconds": round(settle),
+            }
         record = self._record(spec)
         pending = record.get("pending")
         if pending:
