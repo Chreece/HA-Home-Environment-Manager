@@ -206,7 +206,13 @@ class TestAutomatic(unittest.IsolatedAsyncioTestCase):
                 controller_settings=Model.settings(r.manager,SPEC))
         self.assertFalse(available(obj))
         r.record['paused']='physical_manual_override'
-        self.assertFalse(available(obj))
+        # Beta98: selected PID is not proof the physical controller is
+        # running. A paused controller's button MUST remain actionable.
+        self.assertTrue(available(obj))
+        r.record['paused']=None
+        r.record['pending']={'entity':'climate.native'}
+        self.assertTrue(available(obj))
+        r.record['pending']=None
         r.manager.settings[Model.SETTINGS][SPEC.identifier]['control_mode']='manual'
         obj.controller_settings=Model.settings(r.manager,SPEC)
         self.assertTrue(available(obj))
