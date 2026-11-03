@@ -116,6 +116,16 @@ async def scenarios():
     unowned.states_by_id['climate.native']=unowned.state
     assert not await unowned._reconcile(SPEC)
     assert unowned.record['paused']=='physical_manual_override'
+
+    # The real relay observer—not a test-supplied flag—must record an
+    # actual native HA disconnect with the dedicated supply still owned ON.
+    supply_test=runpy.run_path(str(ROOT/'.github/tests/test_beta83_supply_safety.py'))
+    case=supply_test['PowerSafetyTests'](methodName='test_tick_starts_cooldown_on_verified_native_stop')
+    case.setUp()
+    case.states.values['climate.native']=supply_test['State']('climate','unavailable')
+    await case.ns['before_tick'](case.runtime,case.spec)
+    assert case.spec.identifier in case.runtime._native_offline_under_owned_supply
+    assert not case.sent, 'unknown downstream source must never cause relay ON'
     print('BETA94_DRY_SUPPLY_AUTO_CONTINUITY_TRUE_USER_ONLY_MANUAL=PASS')
 
 asyncio.run(scenarios())
