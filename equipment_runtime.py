@@ -3883,6 +3883,21 @@ class EquipmentRuntime:
         if record.get("capabilities") != actual_capabilities:
             record["capabilities"] = actual_capabilities
             await self._save()
+        # The device may have just returned to HA and still be applying its
+        # own startup presets. Do not classify manual operation, adopt native
+        # output ownership or issue HVAC services until 30 seconds after the
+        # verified native source is back. The upstream supply safety stage
+        # above continues to run independently.
+        settle_fn = getattr(self, "_native_settle_remaining", None)
+        settle = settle_fn(spec) if callable(settle_fn) else 0.0
+        if settle is None or settle > 0:
+            self._status(spec, "waiting_for_physical_device",
+                         reason="native_restore_settling"
+                         if settle is not None else "native_source_unavailable",
+                         reconnect_settle_remaining_seconds=(
+                             round(settle) if settle is not None else None
+                         ))
+            return
         # Native discovery after a HEM-owned supply ON must not fabricate
         # another OFF period or indefinitely reject the same just-powered
         # device as an unrelated unowned manual source.
