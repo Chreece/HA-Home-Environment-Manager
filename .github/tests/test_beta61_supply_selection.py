@@ -273,7 +273,10 @@ async def scenario(supply="off", native="unavailable", *, capabilities=False,
     assert (controller.record["upstream"].get("owned") is True) == bool(upstream_owned), (
         "UI choice cannot acquire or discard actual supply ownership"
     )
-    if not capabilities or native in ("unknown", "unavailable", None) or remove:
+    if (not capabilities or native in ("unknown", "unavailable", None)
+            or remove or busy):
+        # A queued-only binding cannot grant or cache physical actuation
+        # capabilities before the previous supply has been released.
         assert "capabilities" not in controller.record, (
             "A disconnected native appliance must not gain unverified capabilities"
         )
