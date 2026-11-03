@@ -89,12 +89,14 @@ async def tests():
     zero.observe_native_availability('climate.native',None,FakeState('off'))
     assert 'climate.native' not in zero._native_reconnect_epoch
     assert zero._native_settle_remaining(spec)==30
+    zero.state=FakeState('unavailable')
     zero.observe_native_availability(
-        'climate.native',FakeState('heat'),FakeState('unavailable'))
+        'climate.native',FakeState('heat'),zero.state)
     assert zero._native_settle_remaining(spec) is None
     zero.now=3010.
+    zero.state=FakeState('off')
     zero.observe_native_availability(
-        'climate.native',FakeState('unavailable'),FakeState('off'))
+        'climate.native',FakeState('unavailable'),zero.state)
     assert zero._native_settle_remaining(spec)==30
 
     # Four normal attempts total, with 30s retry spacing; offline periods
