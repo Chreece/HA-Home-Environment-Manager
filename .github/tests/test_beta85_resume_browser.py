@@ -17,9 +17,9 @@ native=states['climate.managed']
 native={**native, 'attributes':{**native['attributes'],
     'control_mode':'manual','physical_source_state':'off'}}
 states['climate.managed']=native
-# Continue Automatic is unavailable while PID/Automatic is already selected.
-# Simulate the real native user override, which demoted this controller to
-# Manual and retained its prior algorithm for explicit restoration.
+# Manual was selected by a genuine native intervention. Both this case and
+# an already-selected but physically PAUSED PID must expose Continue Automatic.
+# The status panel explains the old command without requiring repeat clicks.
 states['select.method']={**states['select.method'],'state':'manual'}
 status=states['sensor.control_status']
 states['sensor.control_status']={**status,'attributes':{**status['attributes'],
@@ -61,7 +61,7 @@ with sync_playwright() as p:
     }""",{'states':states,'room':room})
     recovery=page.locator('.hem-resume-recovery')
     assert recovery.count()==1
-    assert 'Previous command not confirmed' in recovery.inner_text()
+    assert 'HEM is verifying an earlier device command' in recovery.inner_text()
     assert 'dry' in recovery.inner_text() and 'off' in recovery.inner_text()
     assert '60 s' in recovery.inner_text()
     assert page.evaluate('calls.length')==0
@@ -77,7 +77,7 @@ with sync_playwright() as p:
     }""")
     page.wait_for_timeout(20)
     assert page.evaluate('calls.length')==1
-    for locale,label in [('el','Η προηγούμενη εντολή'),('de','Vorheriger Gerätebefehl')]:
+    for locale,label in [('el','Το HEM ελέγχει προηγούμενη εντολή'),('de','HEM prüft einen früheren Gerätebefehl')]:
         page.evaluate("(locale)=>{card._hass={...card._hass,language:locale};draw()}",locale)
         assert label in page.locator('.hem-resume-recovery').inner_text()
     page.evaluate("""()=>{
