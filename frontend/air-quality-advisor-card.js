@@ -3586,6 +3586,52 @@
     const roomStatus=room.status==='attention'?'attention':
       room.status==='safe'?'safe':'unknown';
     const alerts=[];
+    // Display-only: room ventilation opportunity uses NO virtual CO2/AQI
+    // readings. Native window-temperature guidance uses measured °C and
+    // the corresponding physical thermostat's actual configured setpoint.
+    const vent95=room?.environment?.room_ventilation||{};
+    const ventLang95={
+      en:{noSensor:'No indoor pollutant sensor · timing-based airing reminder',
+          refresh:'Fresh air suggested after wake/return',
+          awaiting:'Outdoor or window conditions not verified for airing',
+          energyHeat:'Close window: cooling toward heating setpoint',
+          energyCool:'Close window: warming toward cooling setpoint'},
+      de:{noSensor:'Kein Raumluft-Schadstoffsensor · zeitbasierte Lüfterinnerung',
+          refresh:'Lüften nach Aufwachen/Rückkehr empfohlen',
+          awaiting:'Lüften: Außenbedingungen oder Fenster unklar',
+          energyHeat:'Fenster schließen: Raum nähert sich dem Heizsollwert',
+          energyCool:'Fenster schließen: Raum nähert sich dem Kühlsollwert'},
+      el:{noSensor:'Χωρίς αισθητήρα ρύπων · υπενθύμιση αερισμού βάσει χρόνου',
+          refresh:'Προτείνεται αερισμός μετά το ξύπνημα/επιστροφή',
+          awaiting:'Αερισμός: ανεπιβεβαίωτες εξωτερικές συνθήκες ή παράθυρο',
+          energyHeat:'Κλείσε παράθυρο: πτώση προς τον στόχο θέρμανσης',
+          energyCool:'Κλείσε παράθυρο: άνοδος προς τον στόχο ψύξης'},
+    }[this._language()]||{
+      noSensor:'No indoor pollutant sensor · timing-based airing reminder',
+      refresh:'Fresh air suggested after wake/return',
+      awaiting:'Outdoor or window conditions not verified for airing',
+      energyHeat:'Close window: cooling toward heating setpoint',
+      energyCool:'Close window: warming toward cooling setpoint'};
+    const energy95=vent95.window_energy_status==='close_window_to_save_energy';
+    const refresh95=vent95.air_refresh_status==='refresh_recommended';
+    const waiting95=vent95.air_refresh_status==='outdoor_or_window_not_verified';
+    if(energy95) alerts.push(_iconHint87('mdi:thermometer-alert',
+      (vent95.measured_room_temperature_c<=vent95.heat_target_c+0.8
+        ?ventLang95.energyHeat:ventLang95.energyCool),'warn'));
+    if(refresh95) alerts.push(_iconHint87('mdi:weather-windy',
+      ventLang95.refresh,'good'));
+    const ventNotes95=[];
+    if(vent95.has_indoor_pollutant_sensor===false)
+      ventNotes95.push(ventLang95.noSensor);
+    if(refresh95)ventNotes95.push(ventLang95.refresh);
+    if(waiting95)ventNotes95.push(ventLang95.awaiting);
+    if(energy95)ventNotes95.push(
+      vent95.measured_room_temperature_c<=vent95.heat_target_c+0.8
+        ?ventLang95.energyHeat:ventLang95.energyCool);
+    const ventHeader95=ventNotes95.length?
+      '<div class="hem-room-ventilation95" role="status">'+
+      this._icon('mdi:air-filter')+
+      '<span>'+ventNotes95.map(value=>escape(value)).join(' · ')+'</span></div>':'';
     if(roomStatus==='attention') alerts.push(_iconHint87(
       'mdi:alert-circle-outline',labels.attention,'warn'));
     if(roomStatus==='unknown') alerts.push(_iconHint87(
@@ -3636,7 +3682,7 @@
       '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
       alerts.slice(0,4).join('')+'</span>'+
       this._icon(open?'mdi:chevron-up':'mdi:chevron-down')+
-      '</summary><div class="hem-room-body87">'+original+'</div></details>';
+      '</summary><div class="hem-room-body87">'+ventHeader95+original+'</div></details>';
   };
 
   proto87._installFolds87 = function() {
@@ -4198,6 +4244,12 @@
       .hem-room-glance87:focus-visible,.hem-device-glance87:focus-visible{
         outline:2px solid var(--aqa-blue);outline-offset:-2px;border-radius:8px}
       .hem-room-body87{padding:0 7px 8px}
+      .hem-room-ventilation95{display:flex;align-items:center;gap:6px;
+        margin:6px 1px 4px;padding:6px 7px;border:1px solid var(--aqa-edge);
+        border-radius:8px;font-size:10px;color:var(--aqa-muted)}
+      .hem-room-ventilation95>ha-icon{--mdc-icon-size:15px;flex:0 0 15px;
+        color:var(--aqa-blue)}
+      .hem-room-ventilation95>span{overflow-wrap:anywhere}
       .hem-room-body87>.room{border:0;padding:0;background:transparent;border-radius:0}
       .hem-room-body87>.room>.room-heading{display:none}
       .hem-room-body87>.room>.metric-grid{margin:5px 0}
