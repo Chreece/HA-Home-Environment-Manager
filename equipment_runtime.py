@@ -3431,7 +3431,17 @@ class EquipmentRuntime:
                     stamp = observed
             record["off_at"][cap.primary] = stamp
             if not 0 <= now-stamp or now-stamp < off_min:
-                self._status(spec, "minimum_off_hold")
+                self._status(
+                    spec, "minimum_off_hold",
+                    minimum_off_remaining_seconds=(
+                        round(max(0, off_min - (now - stamp)))
+                        if 0 <= now-stamp else None
+                    ),
+                    minimum_off_until=(
+                        stamp + off_min if 0 <= now-stamp else None
+                    ),
+                    native_state=state.state,
+                )
                 return False
         if proportional:
             attrs = state.attributes
