@@ -175,8 +175,25 @@ class TestAutomatic(unittest.IsolatedAsyncioTestCase):
         # A later real native mode change, unlike the first HA restore,
         # must still stop the supervisor and switch only that device to Manual.
         r.state=FakeState('cool',temperature=21)
+        r.state.context=Obj(user_id='direct-ha-user', parent_id=None)
         self.assertFalse(await r._reconcile(SPEC))
         self.assertEqual(Model.settings(r.manager,SPEC)['control_mode'],'manual')
+        self.assertEqual(r.record['paused'],'physical_manual_override')
+
+    async def test_anonymous_native_automation_never_demotes_pid(self):
+        r=FakeController('pid')
+        r.state=FakeState('off',percentage=-16)
+        r.record['baseline']={'climate.native':{
+            'state':'off','attributes':{'percentage':0}}}
+        self.assertTrue(await r._reconcile(SPEC))
+        self.assertEqual(Model.settings(r.manager,SPEC)['control_mode'],'pid')
+        self.assertNotIn('paused',r.record)
+        self.assertEqual(r.record['baseline']['climate.native']['attributes']['percentage'],-16)
+        self.assertEqual(r.status[-1][1]['verified_user_intervention'],False)
+        # HA user edits are still recognized as real manual intervention.
+        r.state=FakeState('off',percentage=25)
+        r.state.context=Obj(user_id='direct-ha-user',parent_id=None)
+        self.assertFalse(await r._reconcile(SPEC))
         self.assertEqual(r.record['paused'],'physical_manual_override')
 
     async def test_explicit_continue_selects_prior_pid_without_dispatch(self):
