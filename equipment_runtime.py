@@ -2739,7 +2739,8 @@ class EquipmentRuntime:
         # The HA source has reappeared. Its initial mode/target reports can
         # still change as the physical device initializes or runs firmware
         # automations. Do not classify those changes as human intervention.
-        settle = self._native_settle_remaining(spec)
+        settle_fn = getattr(self, "_native_settle_remaining", None)
+        settle = settle_fn(spec) if callable(settle_fn) else 0
         if settle is None:
             self._status(spec, "waiting_for_physical_device",
                          reason="native_source_unavailable")
@@ -2752,7 +2753,7 @@ class EquipmentRuntime:
         fresh = {}
         settled = getattr(self, "_native_settled_for", {})
         for entity in spec.source_entities:
-            epoch = self._native_ready_since.get(entity)
+            epoch = getattr(self, "_native_ready_since", {}).get(entity)
             if epoch is not None and settled.get((spec.identifier, entity)) != epoch:
                 native = snapshot(self.hass.states.get(entity))
                 if native is not None:
@@ -2884,7 +2885,8 @@ class EquipmentRuntime:
                          command_attempts=attempts,
                          command_retries_completed=max(0, attempts - 1))
             return
-        settle = self._native_settle_remaining(spec)
+        settle_fn = getattr(self, "_native_settle_remaining", None)
+        settle = settle_fn(spec) if callable(settle_fn) else 0
         if settle is None or settle > 0:
             self._status(spec, "waiting_for_physical_device",
                          reason="native_restore_settling",
@@ -2893,7 +2895,7 @@ class EquipmentRuntime:
                          ), command_attempts=attempts)
             return
         if decision == "exhausted":
-            epoch = self._native_reconnect_epoch.get(entity)
+            epoch = getattr(self, "_native_reconnect_epoch", {}).get(entity)
             previous = pending.get("reconnect_retry_epoch_used")
             used = pending.get("reconnect_retry_uses", 0)
             last = pending.get("last_attempt_at")
@@ -3009,7 +3011,7 @@ class EquipmentRuntime:
                 pending.get("reconnect_retry_uses", 0) + 1
             )
             pending["reconnect_retry_epoch_used"] = (
-                self._native_reconnect_epoch.get(entity)
+                getattr(self, "_native_reconnect_epoch", {}).get(entity)
             )
         await self._save()
 
