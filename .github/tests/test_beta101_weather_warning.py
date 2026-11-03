@@ -92,8 +92,23 @@ with sync_playwright() as playwright:
         };
         card.hass = {...card._hass, states};
     }""")
+    page.wait_for_timeout(100)
     chip = page.locator("details.hem-warning101")
-    assert "Starkregen" in chip.locator(":scope > summary").inner_text()
+    observed=page.evaluate("""() => {
+        const e=card._hass.states['sensor.wesseling_weather_warning'];
+        const warning=card._state()[1].attributes.dashboard.outdoor.warnings[0];
+        const info=card._weatherContent101(warning);
+        return {
+          nativeName:e.attributes.warning_1_name,
+          computedName:info.name,
+          rendered:card.shadowRoot.querySelector('details.hem-warning101')?.textContent,
+          signatureFresh:card._controllerSignature()===card._shownControllerSignature,
+          pendingRender:card._pendingRender,
+          focusedEditor:!!card._focusedEditor,
+          renderError:card._lastRenderError
+        };
+    }""")
+    assert "Starkregen" in chip.locator(":scope > summary").inner_text(),observed
     chip.locator(":scope > summary").click()
     page.locator(".hem-floating-info87.hem-wx-pop101").wait_for(state="visible", timeout=4000)
     assert "Regenwarnung" in page.locator(".hem-floating-info87").inner_text()
