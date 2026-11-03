@@ -3929,7 +3929,17 @@ class EquipmentRuntime:
         require subsequent source stabilization.
         """
         now = self.clock()
-        if getattr(self.hass, "is_running", True) is False:
+        # Home Assistant's hass.is_running ALSO includes CoreState.starting.
+        # That is too early for actuator reconciliation. Require the actual
+        # CoreState.running after ALL HA startup integrations have finished;
+        # the fallback supports minimal HA-like test harnesses only.
+        core_state = getattr(self.hass, "state", None)
+        core_ready = (
+            getattr(core_state, "value", str(core_state)).lower() == "running"
+            if core_state is not None
+            else getattr(self.hass, "is_running", True) is True
+        )
+        if not core_ready:
             self._ha_running_since = None
             return {"ready": False, "reason": "home_assistant_still_starting"}
         if self._ha_running_since is None or not 0 <= now - self._ha_running_since:
