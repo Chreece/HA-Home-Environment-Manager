@@ -3482,6 +3482,43 @@ class EquipmentRuntime:
                      settings_saved=True)
         return True
 
+    def _automatic_recovery_gate(self, spec: model.ManagedDevice) -> dict:
+        """Read-only: only positively confirmed old commands can auto-rearm.
+
+        An online entity, timeout or two stable observations are NOT a
+        command acknowledgement. The previous pending journal is retained
+        until its expected physical state is confirmed, or explicit separate
+        hardware recovery establishes new permission.
+        """
+        if not self._current_spec(spec):
+            return {"ready": False, "reason": "source_deselected_or_moved"}
+        record = self._record(spec)
+        pending = record.get("pending")
+        if pending:
+            evidence = self.resume_information(spec) or {}
+            if evidence.get("decision") != "confirmed":
+                return {
+                    "ready": False,
+                    "reason": "previous_command_not_yet_confirmed",
+                    "requested_native_state": evidence.get("requested"),
+                    "observed_native_state": evidence.get("observed"),
+                }
+        relay = record.get("upstream", {})
+        supply_pending = (
+            relay.get("pending") if isinstance(relay, dict) else None
+        )
+        if supply_pending:
+            supply = self.hass.states.get(relay.get("entity"))
+            if (not isinstance(supply_pending, dict)
+                    or supply_pending.get("phase") != "commanded"
+                    or supply is None
+                    or supply.state != supply_pending.get("desired")):
+                return {
+                    "ready": False,
+                    "reason": "upstream_switch_command_not_yet_confirmed",
+                }
+        return {"ready": True}
+
     def _schedule_automatic_reconciliation(self, spec: model.ManagedDevice) -> None:
         """Run the existing no-command Resume verifier outside the tick lock.
 
@@ -3560,49 +3597,23 @@ class EquipmentRuntime:
                 return
         requested = record.get("automatic_continue_requested")
         if isinstance(requested, dict):
-            # The editor or Continue Automatic button has already accepted
-            # a user choice. It is not necessary to press again. Yet a
-            # physically unconfirmed command is NEVER silently abandoned:
-            # only a positively matching ACK allows Resume to proceed.
-            if not self._current_spec(spec):
-                self._status(spec, "source_deselected_or_moved")
+            # The editor or Continue Automatic button already accepted the
+            # choice; only a confirmed previous command can trigger the
+            # existing no-command physical rearm verifier.
+            gate = self._automatic_recovery_gate(spec)
+            if not gate["ready"]:
+                self._status(
+                    spec, "awaiting_physical_acknowledgement",
+                    reason=gate["reason"],
+                    automatic_selected=True, settings_saved=True,
+                    requested_native_state=gate.get("requested_native_state"),
+                    observed_native_state=gate.get("observed_native_state"),
+                    recovery_detail=(
+                        "Settings saved. HEM will apply them after verifying "
+                        "the earlier physical command. No repeated clicks."
+                    ),
+                )
                 return
-            pending = record.get("pending")
-            if pending:
-                evidence = self.resume_information(spec) or {}
-                if evidence.get("decision") != "confirmed":
-                    self._status(
-                        spec, "awaiting_physical_acknowledgement",
-                        reason="previous_command_not_yet_confirmed",
-                        automatic_selected=True, settings_saved=True,
-                        requested_native_state=evidence.get("requested"),
-                        observed_native_state=evidence.get("observed"),
-                        recovery_detail=(
-                            "Settings saved. HEM will apply them when the "
-                            "previous physical command is verified."
-                        ),
-                    )
-                    return
-            relay = record.get("upstream", {})
-            supply_pending = (
-                relay.get("pending") if isinstance(relay, dict) else None
-            )
-            if supply_pending:
-                supply = self.hass.states.get(relay.get("entity"))
-                if (not isinstance(supply_pending, dict)
-                        or supply_pending.get("phase") != "commanded"
-                        or supply is None
-                        or supply.state != supply_pending.get("desired")):
-                    self._status(
-                        spec, "awaiting_physical_acknowledgement",
-                        reason="upstream_switch_command_not_yet_confirmed",
-                        automatic_selected=True, settings_saved=True,
-                        recovery_detail=(
-                            "Settings saved. HEM is verifying the existing "
-                            "power-switch command automatically."
-                        ),
-                    )
-                    return
             self._schedule_automatic_reconciliation(spec)
             self._status(
                 spec, "awaiting_evaluation",
