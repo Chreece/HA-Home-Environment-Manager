@@ -4789,6 +4789,78 @@
   proto103._styles=function(){return stylesBefore103.call(this)+wxStyles103;};
   /* HEM_WEATHER_DIALOG103_END */
 
+
+  /* HEM_WEATHER_NO_SCROLL104_START
+   * Keep all outdoor chips within the second weather row. Only display an
+   * informative short subject; every full native word/attribute stays in the
+   * title and in the existing pinned, accessible details dialog.
+   */
+  const proto104=AirQualityAdvisorCard.prototype;
+  const oldStyles104=proto104._styles;
+  const shortTitle104=value=>{
+    const headline=wxPlain103(value);
+    if(headline.length<=32)return headline;
+    // DWD-style events append a large administrative area after " - ".
+    // The event itself ("Entwarnung: Kampfmittelfund") remains visible.
+    const event=headline.split(/\s+-\s+/)[0].trim();
+    return event.length>=7?event:headline;
+  };
+  proto104._weatherChip101=function(warning){
+    const info=this._weatherContent101(warning);
+    const full=wxPlain103(info.name)||String(warning?.name||wxWord103(this,'details'));
+    const description=wxPlain103(info.description);
+    const visible=shortTitle104(full);
+    const tooltip=escape(full+(description?' · '+description:''));
+    if(!info.source)
+      return '<span class="reason hem-wx-static103" title="'+tooltip+'">'+
+        this._icon('mdi:weather-alert')+
+        '<span class="hem-wx-chip-text103">'+escape(visible)+'</span></span>';
+    return '<button type="button" class="hem-wx-chip103" '+
+      'data-wx-open103="'+escape(info.source.id)+'" '+
+      'title="'+tooltip+'" aria-label="'+tooltip+'">'+
+      this._icon('mdi:weather-alert')+
+      '<span class="hem-wx-chip-text103">'+escape(visible)+'</span>'+
+      this._icon('mdi:information-outline')+'</button>';
+  };
+  const noScrollCSS104=[
+    '<style>',
+    '.outside{min-width:0;max-width:100%;box-sizing:border-box}',
+    '.hem-outside-details87{display:flex;align-items:center;',
+    'height:27px;width:100%;max-width:100%;min-width:0;',
+    'gap:4px;flex-wrap:nowrap;white-space:nowrap;',
+    'overflow-x:clip!important;overflow-y:clip!important;',
+    'scrollbar-width:none!important;overscroll-behavior:none!important}',
+    '.hem-outside-details87::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}',
+    '.hem-outside-details87 .out-metrics{flex:0 1 auto;min-width:0;',
+    'max-width:42%;width:auto;display:flex;gap:4px;',
+    'overflow:hidden!important;flex-wrap:nowrap!important}',
+    '.hem-outside-details87 .out-metrics .out-chip{display:inline-flex;',
+    'align-items:center;flex:0 1 auto;min-width:0;max-width:100%;',
+    'overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.hem-outside-details87 .outside-alerts{display:flex;',
+    'flex:1 1 0;min-width:0;width:0;max-width:100%;',
+    'overflow:hidden!important;align-items:center;gap:4px;flex-wrap:nowrap!important}',
+    '.hem-outside-details87 .outside-alerts .reason{flex:0 1 auto;',
+    'min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis}',
+    '.hem-outside-details87 .outside-alerts>.hem-wx-chip103{',
+    'display:inline-flex;align-items:center;flex:1 1 0!important;',
+    'min-width:0!important;width:auto!important;max-width:100%!important;',
+    'height:24px;overflow:hidden;white-space:nowrap;box-sizing:border-box}',
+    '.hem-outside-details87 .hem-wx-chip-text103{display:block;flex:1 1 auto;',
+    'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.hem-wx-dialog103{scrollbar-width:none!important;-ms-overflow-style:none}',
+    '.hem-wx-dialog103::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}',
+    '@media(max-width:380px){',
+    '.hem-outside-details87{gap:3px}',
+    '.hem-outside-details87 .out-metrics{max-width:39%}',
+    '.hem-outside-details87 .hem-wx-chip103 ha-icon{--mdc-icon-size:12px}',
+    '.hem-outside-details87 .hem-wx-chip103{padding:2px 3px;gap:2px}',
+    '}',
+    '</style>'
+  ].join('');
+  proto104._styles=function(){return oldStyles104.call(this)+noScrollCSS104;};
+  /* HEM_WEATHER_NO_SCROLL104_END */
+
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
   // New brand alias; old Lovelace YAML configurations keep working unmodified.
