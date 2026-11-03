@@ -52,18 +52,31 @@ async def async_setup_entry(hass, entry, async_add_entities):
     from . import equipment_model as equipment
     entities.extend(EquipmentSelect(manager, spec, "control_mode")
                     for spec in equipment.specs(manager))
-    # PID calibration and passive learning are selected ONLY through the
-    # native PID Calibration dropdown, never competing independent selectors.
-    # A dedicated optional physical relay for EVERY managed output, including
-    # switch, numeric, fan, humidifier and climate devices. Never auto-enroll.
-    entities.extend(EquipmentPowerSwitchSelect(manager, spec)
-                    for spec in equipment.specs(manager))
+    # Optional upstream power is meaningful for mains-powered equipment.
+    # A physical device reporting its own battery (native attributes or a
+    # same-device battery diagnostic sensor) must not expose the relay picker.
+    # Retire exact legacy HEM selector IDs, including user-renamed entities,
+    # without altering any saved relay association or physical control state.
     from homeassistant.helpers import entity_registry as er
+    from .equipment_battery import battery_reporting_controllers
+    registry = er.async_get(hass)
+    physical_specs = equipment.specs(manager)
+    battery_controllers = battery_reporting_controllers(
+        hass, physical_specs, registry,
+    )
+    for spec in physical_specs:
+        if spec.identifier in battery_controllers:
+            old_selector = registry.async_get_entity_id(
+                "select", DOMAIN, f"{spec.identifier}_power_switch_entity"
+            )
+            if old_selector:
+                registry.async_remove(old_selector)
+        else:
+            entities.append(EquipmentPowerSwitchSelect(manager, spec))
     from .equipment_feature_registration import (
         quiet_keys, register_late_capabilities, registered_control,
         pid_calibration_supported,
     )
-    registry = er.async_get(hass)
     # The Beta82 passive selector is superseded by the unified calibration
     # dropdown. Migrate its saved preference in model.settings() first; then
     # retire only our exact registered legacy entity, avoiding ghost controls.
