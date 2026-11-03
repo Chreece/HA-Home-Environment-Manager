@@ -984,6 +984,12 @@ class AirQualityManager:
         if not native_room_source(self.hass, entity_id):
             return  # Never use our own climate/overview as measurement input.
         old, new = event.data.get("old_state"), event.data.get("new_state")
+        # Native availability changes must reach the physical controller
+        # before the room-plan refresh, so its 30s restart-settle clock starts
+        # at the actual HA reconnect event rather than on a later poll.
+        equipment = getattr(self, "equipment", None)
+        if equipment is not None:
+            equipment.observe_native_availability(entity_id, old, new)
         if (old is not None and new is not None and
                 old.state == new.state and old.attributes == new.attributes):
             return  # A repeated report has not changed the source evidence.
