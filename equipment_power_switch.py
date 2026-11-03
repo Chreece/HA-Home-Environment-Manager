@@ -597,8 +597,14 @@ def approved_demand(runtime: Any, spec: Any, cfg: dict,
             # cutting the supply to a running device is safe.
             return None
     # The exact-room live contact policy checked above is the sole window
-    # source. A stale whole-room plan (or a different room's OPEN contact)
-    # must not starve an already-authorized external supply after closure.
+    # source for CONFIGURED managed controllers. A stale whole-room plan
+    # must not starve their supply after the local window actually closes.
+    # But a legacy/incomplete settings record with NO per-device window
+    # policy is not evidence that window protection was turned off. Preserve
+    # its older fail-closed cold-start guard rather than powering an offline
+    # device from a plan that explicitly says window-safe is unverified.
+    if "pause_on_window_open" not in cfg and plan.get("window_safe") is not True:
+        return None
     targets = model.targets(runtime.manager, spec, cap, cfg, plan)
     observed = runtime.measurements(spec, cap)
     return output_required(
