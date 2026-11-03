@@ -1079,8 +1079,15 @@ class EquipmentRuntime:
                     options[model.SETTINGS] = profiles
                     self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
                 # Do not clear manual override or uncertain hardware latches.
+                if deferred_supply is not None:
+                    self._record(spec)["queued_power_switch"] = deferred_supply
+                    await self._save()
                 getattr(self, "_window_policy_cache", {}).pop(spec.identifier, None)
-                self._status(spec, "settings_updated")
+                self._status(spec, "settings_updated", settings_saved=True,
+                             queued_power_switch=(
+                                 deferred_supply.get("requested")
+                                 if isinstance(deferred_supply, dict) else None
+                             ))
                 if getattr(self.manager, "_active", False):
                     self.manager._recalculate(initial=True)
                 return
@@ -1146,8 +1153,12 @@ class EquipmentRuntime:
                     self.hass.config_entries.async_update_entry(
                         self.manager.entry, options=options,
                     )
+                if deferred_supply is not None:
+                    self._record(spec)["queued_power_switch"] = deferred_supply
+                    await self._save()
                 self._status(spec, "settings_updated",
-                             control_mode=adjusted["control_mode"])
+                             control_mode=adjusted["control_mode"],
+                             settings_saved=True)
                 # Persisting a safe, offline-only edit must refresh UI/room
                 # settings. This is not permission to send physical commands.
                 if getattr(self.manager, "_active", False):
