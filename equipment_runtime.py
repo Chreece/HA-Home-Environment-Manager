@@ -147,6 +147,9 @@ class EquipmentRuntime:
         # The first verified source snapshot after HA restart is a recovery
         # baseline, not evidence that the user touched the physical device.
         self._restart_baseline_pending: set[str] = set()
+        # Source entities can disappear and return while HEM's dedicated
+        # upstream supply remains ON. This is recovery, not user interaction.
+        self._native_offline_under_owned_supply: set[str] = set()
         self._fan_allocations: dict[str, dict] = {}
         # Diagnostic-only snapshots while an independently powered device is
         # OFF: PID P-term prepared, I held at zero, D reseeded from live sensor.
@@ -243,6 +246,7 @@ class EquipmentRuntime:
         self._started = self.clock()
         self._native_session_observations = {}
         getattr(self, "_restart_baseline_pending", set()).clear()
+        getattr(self, "_native_offline_under_owned_supply", set()).clear()
         try:
             from homeassistant.helpers.storage import Store
             self._store = Store(
@@ -321,6 +325,7 @@ class EquipmentRuntime:
         self._profile_wake.clear()
         self._native_session_observations.clear()
         getattr(self, "_restart_baseline_pending", set()).clear()
+        getattr(self, "_native_offline_under_owned_supply", set()).clear()
         self._pid_offline_previews.clear()
         tasks = tuple(self._pid_passive_tasks.values())
         for task in tasks:
@@ -2599,13 +2604,76 @@ class EquipmentRuntime:
                 record["baseline"] = fresh_sources
                 restarted.discard(spec.identifier)
                 await self._save()
+        # Some native integrations recreate their climate entity after a
+        # short loss of connectivity while an already HEM-owned external
+        # power switch remains ON. The restored DRY/OFF state and defaults
+        # are NOT evidence of a person touching the device. Rebase the
+        # comparison only after observing that actual temporary loss.
+        offline = getattr(self, "_native_offline_under_owned_supply", set())
+        recovered = spec.identifier in offline
+        cfg = model.settings(self.manager, spec)
+        supply_entity = cfg.get("power_switch_entity")
+        upstream = record.get("upstream", {})
+        power_supply = self.hass.states.get(supply_entity) if supply_entity else None
+        supply_owned_on = bool(
+            supply_entity and isinstance(upstream, dict)
+            and upstream.get("owned") is True and not upstream.get("pending")
+            and not upstream.get("paused") and power_supply is not None
+            and power_supply.state == "on"
+        )
+        if recovered and supply_owned_on and not record.get("pending"):
+            fresh = {source: snapshot(self.hass.states.get(source))
+                     for source in spec.source_entities}
+            if fresh and all(current is not None for current in fresh.values()):
+                # Reconnection cannot grant a new ON permission, a minimum
+                # OFF exemption or a fictitious physical acknowledgement.
+                # Previously owned ON outputs restart their minimum-ON clock
+                # conservatively from now; known OFF resets minimum-OFF.
+                for source, current in fresh.items():
+                    if current["state"] == "off" and source in record["power"]:
+                        record["power"].pop(source, None)
+                        record.setdefault("off_at", {})[source] = now
+                    elif current["state"] != "off" and source in record["power"]:
+                        record["power"][source]["since"] = now
+                record["baseline"].update(fresh)
+                offline.discard(spec.identifier)
+                await self._save()
+                self._status(spec, "awaiting_evaluation",
+                             reason="native_entity_reconnected_under_owned_supply")
         for entity, baseline in record.get("baseline", {}).items():
             if baseline is None:
                 continue
-            observed = snapshot(self.hass.states.get(entity))
+            native_state = self.hass.states.get(entity)
+            observed = snapshot(native_state)
             if observed is not None and observed != baseline:
                 changed = _manual_output_changes(baseline, observed)
                 if changed:
+                    user_context = getattr(getattr(native_state, "context", None),
+                                           "user_id", None)
+                    # DRY-only compressors can report their own internal OFF
+                    # while the dedicated, HEM-owned supply remains ON.
+                    # It does not prove that a user changed the HVAC mode.
+                    # A real HA user_id or a changed physical setpoint remains
+                    # a manual intervention and is never swallowed here.
+                    cap = model.capabilities(self.manager, spec)
+                    native_self_stop = (
+                        supply_owned_on and not user_context
+                        and changed == ("state",)
+                        and cap is not None and cap.primary == entity
+                        and cap.domain == "climate"
+                        and set(cap.modes) == {"off", "dry"}
+                        and baseline.get("state") == "dry"
+                        and observed.get("state") == "off"
+                    )
+                    if native_self_stop:
+                        record["baseline"][entity] = observed
+                        if entity in record["power"]:
+                            record["power"].pop(entity, None)
+                            record.setdefault("off_at", {})[entity] = now
+                        await self._save()
+                        self._status(spec, "minimum_off_hold",
+                                     reason="native_dry_automatic_stop_not_user_override")
+                        continue
                     await self._pause(spec, "physical_manual_override")
                     self._status(spec, "paused", reason="physical_manual_override",
                                  changed_controls=list(changed))
