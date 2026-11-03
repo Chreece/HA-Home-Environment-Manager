@@ -204,6 +204,19 @@ async def run():
     assert recent.actual_commands==[]
     assert recent.status[0]=='minimum_on_hold'
 
+    # After a restart, a previously OWNED heater which now verifiably
+    # reports OFF is not proof of a human Manual override. Retire its old
+    # ON ownership and conservatively restart the minimum-OFF interval.
+    off_restored=Controller(native='off')
+    await off_restored.async_start()
+    assert off_restored.record.get('restart_power_verification') is True
+    assert await off_restored._verify_restart_power(spec)
+    assert off_restored.record['power']=={}
+    assert off_restored.record['off_at']['climate.heater']==NOW
+    assert off_restored.record['baseline']['climate.heater']['state']=='off'
+    assert off_restored.record.get('paused') is None
+    assert off_restored.actual_commands==[]
+
     # A previous native ON with a user-selected Manual mode is kept
     # supervised; Resume itself must not send physical services.
     manual=Controller(previous_pause='physical_manual_override')
