@@ -48,6 +48,7 @@ jobs:
               '.github/tests/test_beta89_automatic.py',
               '.github/tests/test_beta94_dry_automatic.py',
               '.github/tests/test_beta98_nonblocking_ack.py',
+              '.github/tests/test_beta98_native_reconnect.py',
               '.github/tests/test_beta99_startup_auto_recovery.py',
               '.github/workflows/publish-beta99.yml',
               '.github/workflows/verify-beta99-startup.yml',
