@@ -40,6 +40,11 @@ from . import equipment_model as model
 _LOGGER = logging.getLogger(__name__)
 ACK_SECONDS = 120
 STARTUP_SECONDS = 300
+# Readiness is distinct from the existing five-minute physical ON gate:
+# do not inspect restored outputs for manual overrides until HA is fully
+# running and this controller's native sources have stabilized.
+HA_READY_COOLDOWN_SECONDS = 60
+NATIVE_STARTUP_STABLE_SECONDS = 60
 # Initial command + three fresh, independently authorized retries.
 NATIVE_COMMAND_MAX_ATTEMPTS = 4
 NATIVE_COMMAND_RETRY_SECONDS = 30
@@ -157,6 +162,10 @@ class EquipmentRuntime:
         # The first verified source snapshot after HA restart is a recovery
         # baseline, not evidence that the user touched the physical device.
         self._restart_baseline_pending: set[str] = set()
+        self._ha_running_since: float | None = None
+        self._startup_source_observed: dict[tuple[str, str], dict] = {}
+        self._startup_source_since: dict[tuple[str, str], float] = {}
+        self._startup_source_done: set[tuple[str, str]] = set()
         self._automatic_recovery_tasks: dict[str, asyncio.Task] = {}
         # Source entities can disappear and return while HEM's dedicated
         # upstream supply remains ON. This is recovery, not user interaction.
@@ -258,6 +267,10 @@ class EquipmentRuntime:
     async def async_start(self) -> None:
         self._active = True
         self._started = self.clock()
+        self._ha_running_since = None
+        self._startup_source_observed.clear()
+        self._startup_source_since.clear()
+        self._startup_source_done.clear()
         self._native_session_observations = {}
         getattr(self, "_restart_baseline_pending", set()).clear()
         getattr(self, "_native_offline_under_owned_supply", set()).clear()
@@ -305,20 +318,36 @@ class EquipmentRuntime:
                 if not record.get("pending")
                 and record.get("paused") != "physical_manual_override"
             }
-            for record in self.records.values():
-                # The previous process could not observe a full interval of
-                # continuous native feedback after shutdown/restart. Restart
-                # the user-confirmed two-check interval, never carry it over.
+            for key, record in self.records.items():
+                # HA setup may interrupt an intent before the device command
+                # executes. Preserve the original journal, but do NOT create
+                # an endless user-facing pause. A previously authorized PID/
+                # Automatic choice is itself consent for SAFE, read-only
+                # reconciliation once HA/native startup has fully settled.
+                # Never auto-rearm genuinely user-initiated Manual or Off.
                 record.pop("pending_resume_probe", None)
-                # Previously CONFIRMED native power ON is not an in-flight
-                # command. Retain its durable timestamp and check the native
-                # source/registry before any new action. Only uncertain
-                # commands or already-manual pauses require a user action.
                 upstream = record.get("upstream", {})
-                if (record.get("pending") or
-                        isinstance(upstream, dict) and upstream.get("pending")):
-                    record["paused"] = "restart_reconciliation_required"
-                    record.pop("restart_power_verification", None)
+                pending = bool(
+                    record.get("pending") or
+                    isinstance(upstream, dict) and upstream.get("pending")
+                )
+                profiles = self.manager.settings.get(model.SETTINGS, {})
+                user_cfg = profiles.get(key, {}) if isinstance(profiles, dict) else {}
+                configured_auto = (
+                    isinstance(user_cfg, dict)
+                    and user_cfg.get("control_mode") in ("automatic", "pid")
+                )
+                if pending:
+                    if record.get("paused") != "physical_manual_override":
+                        record["paused"] = "restart_reconciliation_required"
+                        record.pop("restart_power_verification", None)
+                        if configured_auto:
+                            record["automatic_continue_requested"] = {
+                                "at": self.clock(),
+                                "method": user_cfg["control_mode"],
+                                "awaiting_physical_verification": True,
+                                "origin": "automatic_restart_reconciliation",
+                            }
                 elif (record.get("power")
                         and not record.get("restart_recovery_blocked")
                         and record.get("paused") in (
@@ -344,6 +373,10 @@ class EquipmentRuntime:
         getattr(self, "_automatic_recovery_tasks", {}).clear()
         self._profile_wake.clear()
         self._native_session_observations.clear()
+        self._ha_running_since = None
+        self._startup_source_observed.clear()
+        self._startup_source_since.clear()
+        self._startup_source_done.clear()
         getattr(self, "_restart_baseline_pending", set()).clear()
         getattr(self, "_native_offline_under_owned_supply", set()).clear()
         getattr(self, "_native_ready_since", {}).clear()
