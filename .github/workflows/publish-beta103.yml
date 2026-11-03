@@ -35,11 +35,11 @@ jobs:
           assert 'if new in source:' in Path('.github/scripts/apply_beta69.py').read_text()
           print('PASS: canonical version, localized release, single optional lux implementation')
           PY
-          git fetch --no-tags --depth=1 origin 44e05cf3e5bf6ff89162312c76091f3d379e96be
+          git fetch --no-tags --depth=1 origin 9c381db421ae5cc65cef6189e45b5f242521c466
           python -I - <<'PY'
           import subprocess,json
           from pathlib import Path
-          baseline='44e05cf3e5bf6ff89162312c76091f3d379e96be'
+          baseline='9c381db421ae5cc65cef6189e45b5f242521c466'
           changed=set(subprocess.check_output(
               ['git','diff','--name-only',baseline,'HEAD','--'],text=True).splitlines())
           required={
