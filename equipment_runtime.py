@@ -3406,6 +3406,44 @@ class EquipmentRuntime:
                                 power=True, mode=desired, automatic=automatic,
                                 shutdown=shutdown, policy_stop=policy_stop)
 
+    def _pid_extreme_native_target(self, spec: model.ManagedDevice,
+                                   cap: model.Capabilities, state: Any,
+                                   mode: str) -> float | None:
+        """Native binary PID setpoint, bounded by hardware and room limits.
+
+        Read-only calculation; PID retains exclusive authority over switching,
+        hardware dwell, startup stabilization and physical command ACK.
+        """
+        if (cap.domain != "climate" or not cap.temperature
+                or mode not in ("heat", "cool")
+                or model.settings(self.manager, spec)["control_mode"] != "pid"
+                or not model.permission(self.manager, spec, cap)[1]
+                or not model.features(state) & model.TEMP):
+            return None
+        unit = state.attributes.get("temperature_unit")
+        limits = model.device_limits(self.manager, spec, cap)
+        soft_low = target_to_unit(limits["temperature_min_limit"], unit)
+        soft_high = target_to_unit(limits["temperature_max_limit"], unit)
+        if soft_low is None or soft_high is None:
+            self._status(spec, "unsupported_temperature_unit")
+            return None
+        physical_low = finite(state.attributes.get("min_temp"), -50, 150)
+        physical_high = finite(state.attributes.get("max_temp"), -50, 150)
+        if physical_low is None or physical_high is None:
+            self._status(spec, "physical_capabilities_unavailable")
+            return None
+        low, high = max(soft_low, physical_low), min(soft_high, physical_high)
+        if low > high:
+            self._status(spec, "target_outside_native_limits")
+            return None
+        result = quantize_target(
+            high if mode == "heat" else low,
+            state.attributes.get("target_temp_step", .5), low, high,
+        )
+        if result is None:
+            self._status(spec, "target_outside_native_limits")
+        return result
+
     async def _native_target(self, spec: model.ManagedDevice, cap: model.Capabilities,
                              mode: str, targets: dict, demand: float | None, automatic: bool) -> bool:
         state = self.hass.states.get(cap.primary)
@@ -3428,7 +3466,8 @@ class EquipmentRuntime:
             and config["control_mode"] in ("automatic", "pid")
             and mode in ("heat", "cool")
             and cap.temperature and model.permission(self.manager, spec, cap)[1]
-            and not any(str(option).casefold() == "manual" for option in native_modes)
+            and (config["control_mode"] == "pid" or
+                 not any(str(option).casefold() == "manual" for option in native_modes))
         )
         if cap.domain == "humidifier" or cap.humidity and (mode == "dry" or manual_humidity):
             if cap.domain == "climate" and not (model.features(state) & model.HUMIDITY):
@@ -4429,6 +4468,28 @@ class EquipmentRuntime:
                 wanted = error > band or not output_off(state) and error > -band
             if power and (cap.domain != "number" and cap.domain != "input_number"):
                 desired = mode if wanted else "off"
+                if (auto and power and wanted and output_off(state)
+                        and cfg["control_mode"] == "pid"
+                        and cap.domain == "climate"
+                        and cap.temperature and mode in ("heat", "cool")):
+                    # Set the native thermostat to the verified extreme BEFORE
+                    # switching the binary output ON. Existing ACK/commissioning,
+                    # room safety, native reconnect and dwell gates still apply.
+                    extreme = self._pid_extreme_native_target(spec, cap, state, mode)
+                    if extreme is None:
+                        return
+                    current_native = finite(state.attributes.get("temperature"), -50, 150)
+                    if current_native is None:
+                        self._status(spec, "native_setpoint_unavailable")
+                        return
+                    if abs(current_native - extreme) > .051:
+                        await self._send(
+                            spec, cap, cap.primary, "set_temperature",
+                            {"temperature": extreme},
+                            {"attributes": {"temperature": extreme}},
+                            mode=mode, automatic=True,
+                        )
+                        return
                 if wanted and output_off(state) and cap.fan_modes and (
                     cfg.get("quiet_sleep") or cfg.get("quiet_occupied")
                 ) and self._quiet_context(spec, cfg, plan) is None:
