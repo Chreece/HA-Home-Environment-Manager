@@ -83,6 +83,12 @@ def native_retry_decision(pending: dict, now: float, state=None) -> str:
     if (pending.get("power") is True
             and isinstance(pending.get("expected"), dict)
             and pending["expected"].get("state") == "off"
+            # Safety-critical shutdowns/window/sleep/idle stops must retain
+            # their original fast retry. Grace applies only to ordinary
+            # duty-cycle OFF where waiting for HA's native report is safe.
+            and not (isinstance(pending.get("retry_context"), dict)
+                     and (pending["retry_context"].get("policy_stop") is not None
+                          or pending["retry_context"].get("shutdown") is True))
             and now - last < NATIVE_OFF_FEEDBACK_GRACE_SECONDS):
         reported = False
         for key in ("last_reported", "last_updated", "last_changed"):
@@ -3004,10 +3010,10 @@ class EquipmentRuntime:
         Uncertain exceptions, changed consent and HA restarts still require
         reconciliation; they must never be counted as device nonresponse.
         """
-        decision = native_retry_decision(pending, now, self.hass.states.get(pending.get('entity')))
         attempts = pending.get("attempts", 0)
         entity = pending.get("entity")
-        state = self.hass.states.get(entity)
+        state = self.hass.states.get(entity) if isinstance(entity, str) else None
+        decision = native_retry_decision(pending, now, state)
         if state is None or state.state in ("unavailable", "unknown"):
             # Offline waiting never consumes attempts or permanently pauses
             # a valid previous command simply because the device vanished.
@@ -3380,7 +3386,6 @@ class EquipmentRuntime:
                         stamp + on_min if 0 <= now-stamp else None
                     ),
                     native_state=state.state,
-                    reason="minimum_native_on_dwell_before_off",
                 )
                 return False
         else:
