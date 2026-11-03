@@ -59,12 +59,15 @@ assert 'if matches(state, pending["expected"]):' in source
 assert source.index('if matches(state, pending["expected"]):') < source.index('await self._retry_pending(spec, pending, now)')
 assert 'minimum_on_remaining_seconds=' in source
 assert 'minimum_on_until=' in source
+assert 'minimum_off_until=' in source
 assert 'now-stamp < on_min' in source
 assert 'NATIVE_STARTUP_STABLE_SECONDS = 60' in source
 assert 'NATIVE_RECONNECT_SETTLE_SECONDS = 30' in source
 status = (ROOT / 'equipment_status.py').read_text()
 assert '"native_minimum_on_until": observed.get("minimum_on_until")' in status
+assert '"native_minimum_off_until": observed.get("minimum_off_until")' in status
 card = (ROOT / 'frontend/air-quality-advisor-card.js').read_text()
 assert "state==='minimum_on_hold'" in card
+assert "state==='minimum_off_hold'" in card
 assert "const label=this._controllerStatusLabel(state)+untilLabel;" in card
 print('BETA100_DELAYED_NATIVE_OFF_AND_MINIMUM_ON_COUNTDOWN=PASS')
