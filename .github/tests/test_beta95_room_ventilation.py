@@ -193,7 +193,7 @@ room.readings.pop()
 assert scope['has_indoor_air_sensor'](room,{'room_sources':{
     'bedroom':{'air_quality':['sensor.offline_co2']}}})
 assert not scope['has_indoor_air_sensor'](room,{'room_sources':{
-    'bedroom':{'air_quality':[]}})
+    'bedroom':{'air_quality':[]}}})
 
 # Production thermal target helper excludes DRY-only climate even if it
 # advertises a generic current_temperature attribute.
