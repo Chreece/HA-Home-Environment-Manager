@@ -78,9 +78,12 @@ async def test_startup():
 
     # Core reports HA not fully running: do not perform restart ownership
     # checks, baseline adoption or manual-override checks.
-    r.hass.is_running=False
-    assert r._startup_readiness(spec)['reason']=='home_assistant_still_starting'
     r.hass.is_running=True
+    # HA's is_running is already True during STARTING. Only CoreState.running
+    # after startup may begin HEM's controller cooldown.
+    r.hass.state=type('CoreState',(),{'value':'STARTING'})()
+    assert r._startup_readiness(spec)['reason']=='home_assistant_still_starting'
+    r.hass.state=type('CoreState',(),{'value':'RUNNING'})()
     assert r._startup_readiness(spec)['reason']=='home_assistant_ready_cooldown'
     r.now+=59
     assert r._startup_readiness(spec)['reason']=='home_assistant_ready_cooldown'
