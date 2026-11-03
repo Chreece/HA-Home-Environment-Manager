@@ -25,7 +25,7 @@ jobs:
           from pathlib import Path
           import json
           m=json.loads(Path('manifest.json').read_text())
-          assert m['domain']=='environment_manager' and m['version']=='0.6.0b99'
+          assert m['domain']=='environment_manager' and m['version']=='0.6.0b100'
           for p in Path('.').rglob('*.json'):
               json.loads(p.read_text(encoding='utf-8'))
           assert len(list(Path('translations').glob('*.json')))==38
@@ -58,8 +58,9 @@ jobs:
           )
           code=Path('equipment_runtime.py').read_text()
           card=Path('frontend/air-quality-advisor-card.js').read_text()
-          assert 'def _pid_extreme_native_target(' in code
-          assert '# Set the native thermostat to the verified extreme BEFORE' in code
+          assert 'def _pid_extreme_native_target(' not in code
+          assert 'if state is None or state.state == "off":' in code
+          assert 'and (config["control_mode"] == "pid" or' in code
           assert 'NATIVE_STARTUP_STABLE_SECONDS = 60' in code
           assert 'native_off_confirmed_after_restart' in code
           assert 'const native=nativeId?this._hass?.states?.[nativeId]:null;' in card
@@ -211,7 +212,7 @@ jobs:
               assert z.testzip() is None
               root='custom_components/environment_manager/'
               m=json.loads(z.read(root+'manifest.json'))
-              assert m['domain']=='environment_manager' and m['version']=='0.6.0b99'
+              assert m['domain']=='environment_manager' and m['version']=='0.6.0b100'
               for f in ('__init__.py','device_faults.py','equipment_resume.py','pid_review.py','equipment_power_switch.py',
                         'pid_passive.py','pid_calibration.py',
                         'equipment_runtime.py','shade_cooling.py','switch.py',
