@@ -45,11 +45,12 @@ jobs:
           required={
               '.github/releases/v0.6.0b100.md',
               '.github/tests/test_beta100_native_pid.py',
+              '.github/tests/test_beta100_delayed_feedback.py',
               '.github/tests/test_beta76_compact_browser.py',
               '.github/tests/test_beta88_power_startup_and_retries.py',
               '.github/workflows/publish-beta100.yml',
-              'equipment_runtime.py','frontend/air-quality-advisor-card.js',
-              'manifest.json',
+              'equipment_runtime.py','equipment_status.py',
+              'frontend/air-quality-advisor-card.js','manifest.json',
           }
           assert changed == required, (
               'BETA100_UNEXPECTED_SOURCE_CHANGES',
@@ -70,6 +71,7 @@ jobs:
       - name: Beta100 native binary setpoint bounds and physical-only telemetry
         run: |
           python -I .github/tests/test_beta100_native_pid.py
+          python -I .github/tests/test_beta100_delayed_feedback.py
           node --check frontend/air-quality-advisor-card.js
       - name: Beta91 native DRY-only PID, low-demand compressor PWM and restart continuity
         run: |
