@@ -93,6 +93,10 @@ with sync_playwright() as browser_api:
               warnings:[]}}}};
       card.hass={...card._hass,states};
     }""")
+    # Live card reconciliation may defer its DOM commit for a frame.
+    page.wait_for_function(
+      "()=>card.shadowRoot.querySelectorAll('button.hem-wx-chip103').length===0",
+      timeout=5000)
     assert page.locator('button.hem-wx-chip103').count()==0
     assert not errors,errors
     browser.close()
