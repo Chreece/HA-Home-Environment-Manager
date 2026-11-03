@@ -131,6 +131,10 @@ with sync_playwright() as playwright:
         }};
         card.hass = {...card._hass, states};
     }""")
+    page.wait_for_function(
+        "() => card.shadowRoot.querySelectorAll('details.hem-warning101').length === 2",
+        timeout=4000,
+    )
     warnings = page.locator("details.hem-warning101")
     assert warnings.count() == 2
     assert "Starkregen" in warnings.nth(0).inner_text()
