@@ -4521,6 +4521,36 @@ class EquipmentRuntime:
                 # Hysteresis preserves current output until the opposite boundary.
                 band = .3 if metric == "temperature" else 2 if metric == "humidity" else 50 if metric == "co2" else 2
                 wanted = error > band or not output_off(state) and error > -band
+            # HEM_B102_NATIVE_PID_FOLLOWTHROUGH
+            # A climate can ACK HEAT/COOL with its previous antifrost setpoint
+            # (e.g. 4/5°C). For a commissioned, already HEM-owned physical ON,
+            # correct the native setpoint BEFORE an unrelated PWM OFF-phase
+            # minimum-ON hold returns early. The real PID demand must remain
+            # positive; never energize an OFF device or delay a permitted OFF.
+            # All startup, sleep, window, quiet, manual, availability, identity
+            # and foreign-owner gates above have already passed. _native_target
+            # dispatches only through the existing durable _send/ACK path.
+            if (
+                cfg["control_mode"] == "pid"
+                and power and cap.domain == "climate" and cap.temperature
+                and mode in ("heat", "cool") and state.state == mode
+                and isinstance(owned, dict)
+                and demand is not None and demand > 0 and error > 0
+                and (
+                    wanted is True or (
+                        wanted is False
+                        and isinstance(owned.get("since"), (int, float))
+                        and isinstance(owned.get("min_on"), (int, float))
+                        and 0 <= self.clock() - owned["since"] < owned["min_on"]
+                    )
+                )
+            ):
+                if await self._native_target(
+                    spec, cap, mode, target, None, True
+                ):
+                    return
+                if spec.identifier in self._invalidated:
+                    return
             if power and (cap.domain != "number" and cap.domain != "input_number"):
                 desired = mode if wanted else "off"
                 if wanted and output_off(state) and cap.fan_modes and (
