@@ -2885,10 +2885,58 @@ class EquipmentRuntime:
                         self._status(spec, "minimum_off_hold",
                                      reason="native_dry_automatic_stop_not_user_override")
                         continue
-                    await self._pause(spec, "physical_manual_override")
-                    self._status(spec, "paused", reason="physical_manual_override",
-                                 changed_controls=list(changed))
-                    return False
+                    # HA integrations also change mode, fan percentages and
+                    # targets under their own firmware/native automations.
+                    # A state diff by itself is NOT evidence of a person,
+                    # especially when a fan is OFF (some report invalid or
+                    # sentinel percentages). Only direct user context or
+                    # explicit native human-origin evidence may demote PID.
+                    context = getattr(native_state, "context", None)
+                    direct_ha_user = bool(
+                        user_context and not getattr(context, "parent_id", None)
+                    )
+                    native_origin = str(
+                        native_state.attributes.get("change_origin")
+                        or native_state.attributes.get("operation_source")
+                        or ""
+                    ).lower()
+                    physical_button = native_origin in (
+                        "physical_button", "manual_button", "local_user",
+                    )
+                    if direct_ha_user or physical_button:
+                        record["manual_override_evidence"] = {
+                            "kind": "ha_user" if direct_ha_user
+                                    else "native_explicit_button",
+                            "changed_controls": list(changed),
+                            "at": now,
+                        }
+                        await self._pause(spec, "physical_manual_override")
+                        self._status(
+                            spec, "paused", reason="physical_manual_override",
+                            changed_controls=list(changed),
+                            verified_user_intervention=True,
+                        )
+                        return False
+                    # Unattributed native transitions are *observations*.
+                    # Preserve safety: an observed OFF ends old ownership and
+                    # conservatively begins a NEW minimum-OFF interval; an
+                    # ON under prior ownership restarts minimum-ON dwell.
+                    # Never adopt a previously unowned ON output here.
+                    if observed["state"] == "off":
+                        if entity in record["power"]:
+                            record["power"].pop(entity, None)
+                            record.setdefault("off_at", {})[entity] = now
+                    elif entity in record["power"]:
+                        record["power"][entity]["since"] = now
+                    record["baseline"][entity] = observed
+                    await self._save()
+                    self._status(
+                        spec, "awaiting_evaluation",
+                        reason="unattributed_native_change_not_manual",
+                        changed_controls=list(changed),
+                        verified_user_intervention=False,
+                    )
+                    continue
                 # ESPHome and HA can refresh capability metadata without the
                 # user touching a physical control. Keep that metadata current
                 # instead of permanently latching a false manual override.
