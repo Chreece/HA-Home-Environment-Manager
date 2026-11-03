@@ -85,7 +85,8 @@ with sync_playwright() as playwright:
     assert recovery.count()==1
     text=recovery.inner_text()
     assert 'Settings and Automatic/PID are saved' in text,text
-    assert 'press again' not in text.lower()
+    assert 'you do not need to press again' in text.lower()
+    assert 'then press' not in text.lower()
     assert 'dry' in text and 'off' in text and 'Previous command' not in text
     assert 'Settings saved' in device.inner_text()
     button.click()
