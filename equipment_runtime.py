@@ -1941,11 +1941,23 @@ class EquipmentRuntime:
                 }
                 await self._save()
                 self._status(
-                    spec, "paused", reason=current["paused"],
-                    requested_control_mode=desired,
+                    spec, "awaiting_physical_acknowledgement"
+                    if current.get("pending")
+                    or (current.get("upstream") or {}).get("pending")
+                    else "awaiting_evaluation",
+                    reason="automatic_recovery_requested",
+                    requested_control_mode=desired, settings_saved=True,
                     automatic_selected=True, physical_output_confirmed=False,
-                    previous_recovery_error=str(problem)[:180],
+                    recovery_detail=(
+                        "Automatic/PID is saved. HEM will verify the earlier "
+                        "physical command and resume control when safe."
+                    ),
+                    last_verification_issue=str(problem)[:180],
                 )
+            # The caller is finished; HEM (not the user) now owns the
+            # recovery/re-evaluation lifecycle on every normal scheduler tick.
+            if self._active:
+                self.schedule()
             return False
 
     async def async_resume(self, spec: model.ManagedDevice) -> None:
