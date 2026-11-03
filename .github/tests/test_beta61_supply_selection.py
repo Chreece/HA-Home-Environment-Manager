@@ -261,9 +261,17 @@ async def scenario(supply="off", native="unavailable", *, capabilities=False,
             "Unsafe edit changed settings"
         )
         return False, controller
-    assert Model.settings(controller.manager, spec)["power_switch_entity"] == selected
-    assert controller.record["upstream"].get("owned") is not True, (
-        "No selection may establish external supply ownership"
+    busy = bool(upstream_owned or native_owned or pending)
+    if busy:
+        # New UX: accept the edit immediately, but preserve the exact
+        # previous supply binding until known native/relay ownership is safe.
+        assert Model.settings(controller.manager, spec)["power_switch_entity"] == old
+        queued = controller.record.get("queued_power_switch")
+        assert queued and queued["requested"] == selected, queued
+    else:
+        assert Model.settings(controller.manager, spec)["power_switch_entity"] == selected
+    assert controller.record["upstream"].get("owned") is bool(upstream_owned), (
+        "UI choice cannot acquire or discard actual supply ownership"
     )
     if not capabilities or native in ("unknown", "unavailable", None) or remove:
         assert "capabilities" not in controller.record, (
@@ -295,12 +303,12 @@ async def main():
                                    race="identity"))[0], "Identity races must reject"
         assert not (await scenario("on", "heat", capabilities=with_cap,
                                    permit=False))[0], "Cross-room/claimed/own supply rejects"
-        assert not (await scenario("on", "heat", capabilities=with_cap,
-                                   upstream_owned=True))[0], "Old owned relay cannot be reassigned"
-        assert not (await scenario("on", "heat", capabilities=with_cap,
-                                   pending=True))[0], "Pending native command requires reconciliation"
         assert (await scenario("on", "heat", capabilities=with_cap,
-                               native_owned=True))[0], "Native running output must not block pure pairing"
+                                   upstream_owned=True))[0], "Owned relay change is queued without a power command"
+        assert (await scenario("on", "heat", capabilities=with_cap,
+                                   pending=True))[0], "Pending native command must not block preference edits"
+        assert (await scenario("on", "heat", capabilities=with_cap,
+                               native_owned=True))[0], "Native-owned output queues safe supply rebinding"
         for supply in ("off", "on", "unavailable"):
             assert (await scenario(supply, "heat", capabilities=with_cap,
                                    remove=True))[0], "Unowned supply can be unselected"
@@ -309,6 +317,17 @@ async def main():
     success, controller = await scenario("on", "heat", capabilities=True,
                                          native_owned=True)
     assert success
+    # The deferred preference is applied automatically after independent
+    # physical ownership is released, not by changing the live output.
+    apply_supply, = extract(
+        "equipment_runtime.py", ("_apply_queued_power_switch",), runtime_env,
+    )
+    old_ownership = dict(controller.record["power"])
+    controller.record["power"].clear()
+    assert await apply_supply(controller, spec)
+    assert Model.settings(controller.manager, spec)["power_switch_entity"] == "switch.plug"
+    assert not controller.record.get("queued_power_switch")
+    controller.record["power"].update(old_ownership)
     supply_env = {
         "model": Model, "Any": Any, "finite": finite,
         "permitted_supply": switch_mod.permitted_supply,
