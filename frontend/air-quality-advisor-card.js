@@ -2800,7 +2800,10 @@
         add(this._t('temperature'),value(attrs.current_temperature,' '+unit));
       if(numeric(attrs.current_humidity))
         add(this._t('humidity'),value(attrs.current_humidity,'%'));
-      if(numeric(attrs.temperature))
+      const physicalThermal=Array.isArray(attrs.hvac_modes) &&
+        attrs.hvac_modes.some(mode=>['heat','cool','heat_cool','auto'].includes(mode)) &&
+        !!((Number(attrs.supported_features)||0)&3);
+      if(physicalThermal && numeric(attrs.temperature))
         add(t.target+' · '+this._t('temperature'),value(attrs.temperature,' '+unit));
       if(numeric(attrs.humidity))
         add(t.target+' · '+this._t('humidity'),value(attrs.humidity,'%'));
