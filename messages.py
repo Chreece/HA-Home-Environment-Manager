@@ -149,6 +149,47 @@ def _extra_messages(entry: dict) -> dict[str, str]:
 TEXT.update({tag: _extra_messages(locale) for tag, locale in EXTRA_LOCALES.items()})
 
 
+ROOM_VENTILATION_TEXT = {
+    "en": {
+        "refresh_title": "Fresh-air reminder",
+        "wake": "After waking in {area}, consider airing the room briefly. Indoor air quality is not measured here, so this is a timing reminder, not a pollution alert. Outdoor conditions currently allow ventilation.",
+        "return": "After returning to {area} following a long vacancy, consider airing the room briefly. There is no indoor air-quality measurement; this reminder is based on occupancy timing. Outdoor conditions currently allow ventilation.",
+        "heat_title": "Close window · heating",
+        "cool_title": "Close window · cooling",
+        "heat": "Please close {windows} in {area} to avoid unnecessary heating. With the window open, the room is cooling toward its heating setpoint ({value}).",
+        "cool": "Please close {windows} in {area} to avoid unnecessary cooling. With the window open, the room is warming toward its cooling setpoint ({value}).",
+        "reason_heat": "Room cooling toward the heating setpoint ({value})",
+        "reason_cool": "Room warming toward the cooling setpoint ({value})",
+    },
+    "de": {
+        "refresh_title": "Frischluft-Erinnerung",
+        "wake": "Nach dem Aufwachen in {area}: Lüfte den Raum bei Gelegenheit kurz. Da dort kein Luftqualitätssensor vorhanden ist, ist dies eine zeitbasierte Erinnerung und keine Schadstoffwarnung. Die Außenbedingungen lassen Lüften derzeit zu.",
+        "return": "Nach längerer Abwesenheit aus {area}: Lüfte den Raum bei Gelegenheit kurz. Ohne Luftqualitätssensor ist dies nur eine zeitbasierte Erinnerung. Die Außenbedingungen lassen Lüften derzeit zu.",
+        "heat_title": "Fenster schließen · Heizen",
+        "cool_title": "Fenster schließen · Kühlen",
+        "heat": "Bitte schließe {windows} in {area}, um Heizenergie zu sparen. Bei offenem Fenster sinkt die Raumtemperatur in Richtung Heizsollwert ({value}).",
+        "cool": "Bitte schließe {windows} in {area}, um Kühlenergie zu sparen. Bei offenem Fenster steigt die Raumtemperatur in Richtung Kühlsollwert ({value}).",
+        "reason_heat": "Raumtemperatur sinkt zum Heizsollwert ({value})",
+        "reason_cool": "Raumtemperatur steigt zum Kühlsollwert ({value})",
+    },
+    "el": {
+        "refresh_title": "Υπενθύμιση αερισμού",
+        "wake": "Μετά το ξύπνημα στο {area}, σκέψου να αερίσεις για λίγο το δωμάτιο. Δεν υπάρχει αισθητήρας ποιότητας αέρα στον χώρο, επομένως πρόκειται για υπενθύμιση βάσει χρόνου και όχι για ένδειξη ρύπανσης. Οι εξωτερικές συνθήκες επιτρέπουν τον αερισμό.",
+        "return": "Μετά από μεγάλη απουσία από το {area}, σκέψου να αερίσεις για λίγο το δωμάτιο. Χωρίς αισθητήρα ποιότητας αέρα, η υπενθύμιση βασίζεται στην παρουσία και όχι σε μετρημένους ρύπους. Οι εξωτερικές συνθήκες επιτρέπουν τον αερισμό.",
+        "heat_title": "Κλείσιμο παραθύρου · Θέρμανση",
+        "cool_title": "Κλείσιμο παραθύρου · Ψύξη",
+        "heat": "Κλείσε {windows} στο {area} για εξοικονόμηση ενέργειας. Με ανοιχτό παράθυρο η θερμοκρασία πέφτει κοντά στον στόχο θέρμανσης ({value}).",
+        "cool": "Κλείσε {windows} στο {area} για εξοικονόμηση ενέργειας. Με ανοιχτό παράθυρο η θερμοκρασία ανεβαίνει κοντά στον στόχο ψύξης ({value}).",
+        "reason_heat": "Πτώση θερμοκρασίας προς τον στόχο θέρμανσης ({value})",
+        "reason_cool": "Άνοδος θερμοκρασίας προς τον στόχο ψύξης ({value})",
+    },
+}
+ROOM_VENTILATION_CODES = frozenset((
+    "air_refresh_wake", "air_refresh_return",
+    "window_heat_loss", "window_cooling_loss",
+))
+
+
 def language_code(language: str | None) -> str:
     return resolve_language(language)
 
@@ -164,6 +205,14 @@ RH_FALLBACK_SOURCE_LABEL = "Average room relative humidity (fallback)"
 
 
 def explain(reason: Reason, language: str) -> str:
+    if reason.code in ("window_heat_loss", "window_cooling_loss"):
+        t = ROOM_VENTILATION_TEXT.get(language_code(language),
+                                      ROOM_VENTILATION_TEXT["en"])
+        return t["reason_heat" if reason.code=="window_heat_loss"
+                 else "reason_cool"].format(value=reason.value)
+    if reason.code in ("air_refresh_wake", "air_refresh_return"):
+        return ROOM_VENTILATION_TEXT.get(language_code(language),
+                                          ROOM_VENTILATION_TEXT["en"])["refresh_title"]
     if reason.code == "inside_mold":
         return f"{MOLD_NAMES.get(language_code(language), MOLD_NAMES['en'])}: {reason.value}"
     dictionary = TEXT[language_code(language)]
@@ -187,6 +236,23 @@ def explain(reason: Reason, language: str) -> str:
 
 
 def announcement(rec: Recommendation, language: str) -> tuple[str, str]:
+    if rec.reasons and rec.reasons[0].code in ROOM_VENTILATION_CODES:
+        code = rec.reasons[0].code
+        translated = ROOM_VENTILATION_TEXT.get(language_code(language),
+                                                ROOM_VENTILATION_TEXT["en"])
+        if code.startswith("air_refresh_"):
+            title = translated["refresh_title"]
+            content = translated["wake" if code=="air_refresh_wake" else "return"]
+            return title,content.format(area=rec.area_name)
+        kind = "heat" if code=="window_heat_loss" else "cool"
+        windows = ", ".join(w.name for w in rec.windows)
+        return (
+            translated[kind+"_title"],
+            translated[kind].format(
+                windows=windows, area=rec.area_name,
+                value=rec.reasons[0].value,
+            ),
+        )
     t = TEXT[language_code(language)]
     windows = ", ".join(window.name for window in rec.windows)
     # A few causes are sufficient for TTS; all causes remain in sensor attributes.
