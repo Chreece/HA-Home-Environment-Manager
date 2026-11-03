@@ -4498,8 +4498,11 @@
       if(detail?.matches?.('details.hem-warning101')&&this._floatingInfo87){
         const pop=this._floatingInfo87;
         pop.classList.add('hem-wx-pop101');
-        pop.style.width=Math.min(490,Math.max(180,
-          (document.documentElement.clientWidth||window.innerWidth||380)-24))+'px';
+        const viewport=document.documentElement.clientWidth||window.innerWidth||380;
+        const width=Math.min(490,Math.max(180,viewport-24));
+        pop.style.width=width+'px';
+        pop.style.left=Math.max(12,Math.min(viewport-width-12,
+          Number.parseFloat(pop.style.left)||12))+'px';
         pop.style.maxHeight=Math.min(540,Math.max(120,
           (window.innerHeight||700)-24))+'px';
       }
