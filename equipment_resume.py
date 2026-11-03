@@ -192,6 +192,43 @@ def check_pending(pending: Any, state: Any, now: float,
     return {**outcome, "decision": "verified"}
 
 
+def automatic_recovery_message(result: dict, *, language: str = "en") -> str:
+    """Plain-language status for user-requested queued Automatic/PID.
+
+    This changes only the diagnostic text: it never treats HA availability
+    as a physical ACK or invents output verification.
+    """
+    entity = str(result.get("entity") or "the physical device")[:160]
+    desired = str(result.get("requested") or "unknown")[:64]
+    actual = str(result.get("observed") or "unavailable")[:64]
+    locale = language.replace("_", "-").split("-")[0].lower()
+    if locale == "el":
+        return (
+            f"Οι ρυθμίσεις και η Αυτόματη λειτουργία αποθηκεύτηκαν. "
+            f"Το HEM ζήτησε {desired} στη συσκευή {entity}, αλλά το "
+            f"Home Assistant αναφέρει {actual}. Η συσκευή είναι διαθέσιμη, "
+            f"όμως αυτό δεν επιβεβαιώνει ότι εκτέλεσε την προηγούμενη εντολή. "
+            f"Το HEM θα επανελέγχει αυτόματα και θα συνεχίσει μόλις "
+            f"επαληθευτεί με ασφάλεια. Δεν χρειάζεται να ξαναπατήσεις κουμπί."
+        )
+    if locale == "de":
+        return (
+            f"Einstellungen und Automatik sind gespeichert. HEM hat "
+            f"{desired} für {entity} angefordert; Home Assistant meldet "
+            f"{actual}. Erreichbarkeit allein bestätigt die Ausführung "
+            f"nicht. HEM prüft selbstständig weiter und setzt die "
+            f"Steuerung erst nach sicherer Bestätigung fort. "
+            f"Erneutes Drücken ist nicht erforderlich."
+        )
+    return (
+        f"Settings and Automatic/PID are saved. HEM requested {desired} "
+        f"from {entity}, while Home Assistant reports {actual}. An online "
+        f"entity does not confirm the earlier physical command was applied. "
+        f"HEM will check automatically and resume control when verified; "
+        f"you do not need to press the button again."
+    )
+
+
 def instructions(result: dict, *, language: str = "en") -> str:
     """Clear HA button error in the server language; no cryptic ACK jargon."""
     code = result.get("decision")
