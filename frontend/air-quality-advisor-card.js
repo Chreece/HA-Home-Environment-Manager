@@ -1269,6 +1269,9 @@
           state.attributes.pid_review_role,
           state.attributes.controller_resume_role,
           state.attributes.native_resume_recovery,
+          state.attributes.automatic_recovery_requested,
+          state.attributes.recovery_detail,
+          state.attributes.queued_power_switch_pending,
           state.attributes.pending,
           state.attributes.current_gains,
           state.attributes.next_gains,
@@ -1735,31 +1738,32 @@
         const recovery=entry.statusInfo?.state?.attributes?.native_resume_recovery ||
           entry.resumeButton?.attributes?.native_resume_recovery;
         const recoverLabels={
-          en:['Previous command not confirmed','Requested','Device reports',
-              'Check the actual appliance and its HA state. If they agree, leave it unchanged and press Continue Automatic again after the required time. No device power-cycling is needed.',
-              'Continue Automatic','Wait'],
-          de:['Vorheriger Gerätebefehl nicht bestätigt','Angefordert','Gerät meldet',
-              'Prüfe den tatsächlichen Gerätezustand gegen Home Assistant. Wenn beide übereinstimmen, unverändert lassen und nach der Wartezeit erneut Automatik fortsetzen drücken. Nicht vom Strom trennen.',
-              'Automatik fortsetzen','Warten'],
-          el:['Η προηγούμενη εντολή δεν επιβεβαιώθηκε','Ζητήθηκε','Η συσκευή αναφέρει',
-              'Έλεγξε ότι η πραγματική συσκευή συμφωνεί με το Home Assistant. Άφησέ την χωρίς αλλαγές και πάτησε ξανά Συνέχιση αυτόματης λειτουργίας μετά την αναμονή. Μη διακόψεις την παροχή ρεύματος.',
-              'Συνέχιση αυτόματης λειτουργίας','Αναμονή'],
-        }[this._language()] || ['Previous command not confirmed','Requested','Device reports',
-            'Verify the real device and HA report, then try Continue Automatic again after the waiting interval.',
-            'Continue Automatic','Wait'];
-        const alreadyAutomatic=['automatic','pid'].includes(control);
-        const resumeAvailable=entry.resumeButtonId &&
-          entry.resumeButton?.state!=='unavailable' && !alreadyAutomatic;
+          en:['HEM is verifying an earlier device command','Requested','Device reports',
+              'Your settings are saved. HEM checks the physical feedback automatically and applies the new preference when safe. No repeated button presses are needed.','Confirming'],
+          de:['HEM prüft einen früheren Gerätebefehl','Angefordert','Gerät meldet',
+              'Deine Einstellungen sind gespeichert. HEM überprüft die Geräterückmeldung selbst und übernimmt die neue Einstellung, sobald es sicher ist. Erneutes Drücken ist nicht erforderlich.','Prüfung'],
+          el:['Το HEM ελέγχει προηγούμενη εντολή συσκευής','Ζητήθηκε','Η συσκευή αναφέρει',
+              'Οι ρυθμίσεις αποθηκεύτηκαν. Το HEM ελέγχει μόνο του την κατάσταση της συσκευής και εφαρμόζει τις επιλογές όταν αυτό είναι ασφαλές. Δεν χρειάζονται επαναλαμβανόμενα πατήματα.','Έλεγχος'],
+        }[this._language()] || [
+          'HEM is verifying an earlier device command','Requested','Device reports',
+          'Settings saved; HEM monitors the previous device command automatically.','Confirming'
+        ];
+        // HA itself owns the button's availability. A controller can already
+        // have Automatic/PID selected while physically paused; that must NOT
+        // disable the recovery button on this card.
+        const resumeAvailable=Boolean(entry.resumeButtonId) &&
+          entry.resumeButton?.state!=='unavailable';
         const recoveryPanel=recovery && entry.resumeButtonId
           ? '<div class="managed-status hem-resume-recovery" role="status">'+
             '<strong>'+escape(recoverLabels[0])+'</strong>'+
             '<small>'+escape(recoverLabels[1])+': '+escape(recovery.requested ?? '-')+
             ' · '+escape(recoverLabels[2])+': '+escape(recovery.observed ?? 'unavailable')+'</small>'+
-            (Number.isFinite(Number(recovery.remaining_seconds)) &&
-              recovery.remaining_seconds !== null && recovery.remaining_seconds > 0
-              ? '<small>'+escape(recoverLabels[5])+': '+
+            (recovery.settings_saved!==true &&
+             Number.isFinite(Number(recovery.remaining_seconds)) &&
+             recovery.remaining_seconds !== null && recovery.remaining_seconds > 0
+              ? '<small>'+escape(recoverLabels[4])+': '+
                 escape(recovery.remaining_seconds)+' s</small>' : '')+
-            '<small>'+escape(recoverLabels[3])+'</small></div>' : '';
+            '<small>'+escape(recovery.instructions || recoverLabels[3])+'</small></div>' : '';
         const calMethods={manual:pidLabels[1],imc_lambda:pidLabels[2],
           cohen_coon:pidLabels[3],adaptive_suggest:localizedReview[0],
           adaptive_auto:localizedReview[1]};
@@ -2801,6 +2805,14 @@
       '<div class="hem-device-data">'+rows.join('')+'</div>'+
       (friendlySupply?'<small>'+escape(t.supply)+': '+escape(friendlySupply)+'</small>':'')+
       (reasonLabel && reasonLabel!==t.unknown ? '<small>'+escape(t.reason)+': '+escape(reasonLabel)+'</small>':'')+
+      (d.automatic_recovery_requested===true || d.queued_power_switch_pending===true
+        ? '<small role="status">'+escape(d.recovery_detail || (
+            this._language()==='el'
+              ? 'Οι ρυθμίσεις αποθηκεύτηκαν· το HEM ελέγχει τη συσκευή.'
+              : this._language()==='de'
+              ? 'Einstellungen gespeichert; HEM prüft das Gerät.'
+              : 'Settings saved; HEM verifies the physical device.'
+          ))+'</small>' : '')+
       '<details class="hem-diagnostics"><summary>'+escape(t.details)+'</summary><code>'+
       diagnostics.map(escape).join('<br>')+'</code></details>';
   };
