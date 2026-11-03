@@ -112,12 +112,21 @@ class EquipmentResumeButton(EquipmentEntity, ButtonEntity):
 
     @property
     def available(self):
-        # The action selects an algorithm; when Automatic/PID is already the
-        # selected method it must be disabled, even if physical actuation is
-        # temporarily held by independent safety/recovery interlocks.
-        return bool(getattr(self._manager.equipment, "_ready", False)
-                    and self.controller_settings["control_mode"]
-                    not in ("automatic", "pid"))
+        # A selected Automatic/PID algorithm is NOT proof that its physical
+        # supervisor is active. Never hide the user's recovery request while
+        # a native command, smart supply, or saved safety pause is unresolved.
+        runtime = self._manager.equipment
+        record = runtime.records.get(self._spec.identifier, {})
+        upstream = record.get("upstream", {})
+        upstream = upstream if isinstance(upstream, dict) else {}
+        needs_recovery = bool(record.get("paused") or record.get("pending")
+                              or upstream.get("paused") or upstream.get("pending")
+                              or record.get("automatic_continue_requested"))
+        return bool(getattr(runtime, "_ready", False)
+                    and runtime._current_spec(self._spec)
+                    and (needs_recovery
+                         or self.controller_settings["control_mode"]
+                            not in ("automatic", "pid")))
 
     @property
     def extra_state_attributes(self):
@@ -128,6 +137,11 @@ class EquipmentResumeButton(EquipmentEntity, ButtonEntity):
             "automatic_already_selected": (
                 cfg["control_mode"] in ("automatic", "pid")
                 and not self.available
+            ),
+            "automatic_recovery_requested": bool(
+                self._manager.equipment.records.get(
+                    self._spec.identifier, {}
+                ).get("automatic_continue_requested")
             ),
             "native_resume_recovery": self._manager.equipment.resume_information(
                 self._spec
