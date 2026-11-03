@@ -3223,7 +3223,11 @@
     const c=a.controller_status || {};
     const t=CARD65[this._language()]?.text || CARD65.en.text;
     const id=entry.entityId, state=d.status_code || c.status || entry.climate.state;
-    const label=this._controllerStatusLabel(state);
+    const until=Number(d.native_minimum_on_until);
+    const held=state==='minimum_on_hold' && Number.isFinite(until) &&
+      until>0 && until>Date.now()/1000;
+    const untilLabel=held?' · '+Math.ceil((until-Date.now()/1000)/60)+' min':'';
+    const label=this._controllerStatusLabel(state)+untilLabel;
     const tone=/(paused|hold|unavailable|unknown|failed|error|blocked|inactive|missing)/.test(
       String(state))?'warn':/^(controlling|ready|within_target_band|manual)$/.test(
       String(state))?'good':'neutral';
