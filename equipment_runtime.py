@@ -58,13 +58,17 @@ def native_retry_decision(pending: dict, now: float) -> str:
     attempts = pending.get("attempts")
     first = finite(pending.get("when"), 0, now)
     last = finite(pending.get("last_attempt_at"), 0, now)
-    if (type(attempts) is not int or not 1 <= attempts <= NATIVE_COMMAND_MAX_ATTEMPTS
+    extension = pending.get("reconnect_retry_grant") is True
+    used = pending.get("reconnect_retry_uses", 0)
+    if (type(attempts) is not int
+            or not 1 <= attempts <= NATIVE_COMMAND_MAX_ATTEMPTS + NATIVE_RECONNECT_EXTRA_ATTEMPTS
+            or type(used) is not int or not 0 <= used <= NATIVE_RECONNECT_EXTRA_ATTEMPTS
             or first is None or last is None or last < first):
         return "uncertain"
     if now - last < NATIVE_COMMAND_RETRY_SECONDS:
         return "waiting"
-    return ("exhausted" if attempts == NATIVE_COMMAND_MAX_ATTEMPTS
-            else "retry")
+    return ("exhausted" if attempts >= NATIVE_COMMAND_MAX_ATTEMPTS
+            and not extension else "retry")
 # Changes in passive device metadata are not evidence of a manual override.
 # Only physical mode/power and user-adjustable targets, speed and swing qualify.
 SETTABLE_OUTPUT_ATTRIBUTES = frozenset((
@@ -2870,6 +2874,45 @@ class EquipmentRuntime:
         """
         decision = native_retry_decision(pending, now)
         attempts = pending.get("attempts", 0)
+        entity = pending.get("entity")
+        state = self.hass.states.get(entity)
+        if state is None or state.state in ("unavailable", "unknown"):
+            # Offline waiting never consumes attempts or permanently pauses
+            # a valid previous command simply because the device vanished.
+            self._status(spec, "waiting_for_physical_device",
+                         reason="native_source_unavailable",
+                         command_attempts=attempts,
+                         command_retries_completed=max(0, attempts - 1))
+            return
+        settle = self._native_settle_remaining(spec)
+        if settle is None or settle > 0:
+            self._status(spec, "waiting_for_physical_device",
+                         reason="native_restore_settling",
+                         reconnect_settle_remaining_seconds=(
+                             round(settle) if settle is not None else None
+                         ), command_attempts=attempts)
+            return
+        if decision == "exhausted":
+            epoch = self._native_reconnect_epoch.get(entity)
+            previous = pending.get("reconnect_retry_epoch_used")
+            used = pending.get("reconnect_retry_uses", 0)
+            last = pending.get("last_attempt_at")
+            if (type(used) is int and used < NATIVE_RECONNECT_EXTRA_ATTEMPTS
+                    and isinstance(epoch, (int,float))
+                    and isinstance(last, (int,float))
+                    and epoch > last
+                    and epoch != previous
+                    and now - epoch >= NATIVE_RECONNECT_SETTLE_SECONDS
+                    and now - last >= NATIVE_COMMAND_RETRY_SECONDS
+                    and pending.get("phase") == "commanded"
+                    and isinstance(pending.get("retry_context"), dict)
+                    and pending["retry_context"].get("settings")
+                        == model.settings(self.manager, spec)):
+                pending["reconnect_retry_grant"] = True
+                decision = "retry"
+                # The actual grant will be consumed durably in retry_intent
+                # before any physical service. Never manufacture a reconnect
+                # grant from the mere fact that HA is currently online.
         if decision == "uncertain":
             await self._pause(spec, "native_retry_intent_uncertain")
             return
@@ -2888,15 +2931,6 @@ class EquipmentRuntime:
 
         record = self._record(spec)
         entity = pending["entity"]
-        state = self.hass.states.get(entity)
-        if state is None or state.state in ("unavailable", "unknown"):
-            # Power-switch boot grace and HA discovery must not consume
-            # retry attempts or falsely claim a physical response.
-            self._status(spec, "waiting_for_physical_device",
-                         command_attempts=attempts,
-                         command_retries_completed=max(0, attempts - 1))
-            return
-
         context = pending.get("retry_context")
         cfg = model.settings(self.manager, spec)
         cap = model.capabilities(self.manager, spec)
@@ -2965,9 +2999,18 @@ class EquipmentRuntime:
         # Reserve the next attempt durably BEFORE dispatch. An interrupted
         # retry stays uncertain; it cannot silently replay across restart.
         previous_last = pending["last_attempt_at"]
+        reconnect_grant = pending.get("reconnect_retry_grant") is True
         pending["attempts"] += 1
         pending["last_attempt_at"] = now
         pending["phase"] = "retry_intent"
+        if reconnect_grant:
+            pending["reconnect_retry_grant"] = False
+            pending["reconnect_retry_uses"] = (
+                pending.get("reconnect_retry_uses", 0) + 1
+            )
+            pending["reconnect_retry_epoch_used"] = (
+                self._native_reconnect_epoch.get(entity)
+            )
         await self._save()
 
         def still_safe() -> bool:
