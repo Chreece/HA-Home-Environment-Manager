@@ -3616,7 +3616,7 @@
     const refresh95=vent95.air_refresh_status==='refresh_recommended';
     const waiting95=vent95.air_refresh_status==='outdoor_or_window_not_verified';
     if(energy95) alerts.push(_iconHint87('mdi:thermometer-alert',
-      (vent95.measured_room_temperature_c<=vent95.heat_target_c+0.8
+      (vent95.window_energy_direction==='window_heat_loss'
         ?ventLang95.energyHeat:ventLang95.energyCool),'warn'));
     if(refresh95) alerts.push(_iconHint87('mdi:weather-windy',
       ventLang95.refresh,'good'));
