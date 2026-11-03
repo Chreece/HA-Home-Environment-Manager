@@ -215,6 +215,7 @@ class RoomVentilationMonitor:
         return ({
             "air_refresh_status": air_status,
             "window_energy_status": energy_status,
+            "window_energy_direction": s.energy_kind if energy_status=="close_window_to_save_energy" else None,
             "method": "occupancy_sleep_timing_without_indoor_air_measurement",
             "has_indoor_pollutant_sensor": bool(has_air_sensor),
             "heat_target_c": round(heat, 2) if heat is not None else None,
