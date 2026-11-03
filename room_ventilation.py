@@ -137,15 +137,8 @@ class RoomVentilationMonitor:
             s.base_temperature = None
             s.last_temperature = None
             s.energy_kind = None
-        elif unknown_window:
-            # A local unknown contact cannot certify the total open/closed
-            # configuration. Still observe verified opened windows, but don't
-            # infer a stable closed air refresh.
-            energy_status = "window_contacts_incomplete"
-            s.observed_open_at = None
-            s.base_temperature = None
-            s.last_temperature = None
-            s.energy_kind = None
+        # A confirmed open contact is sufficient to monitor actual heat
+        # loss. Another unknown contact must not hide that verified opening.
         elif temp is None or heat is None and cool is None:
             energy_status = "temperature_or_thermal_target_unavailable"
             s.observed_open_at = None
@@ -222,6 +215,7 @@ class RoomVentilationMonitor:
             "cool_target_c": round(cool, 2) if cool is not None else None,
             "measured_room_temperature_c": round(temp, 2) if opened and temp is not None else None,
             "open_window_entities": [w.entity_id for w in opened],
+            "window_contacts_incomplete": bool(unknown_window),
             "pending_reason": s.pending,
             "automatic_device_actuation": False,
         }, notice)
