@@ -147,6 +147,7 @@ class EquipmentRuntime:
         # The first verified source snapshot after HA restart is a recovery
         # baseline, not evidence that the user touched the physical device.
         self._restart_baseline_pending: set[str] = set()
+        self._automatic_recovery_tasks: dict[str, asyncio.Task] = {}
         # Source entities can disappear and return while HEM's dedicated
         # upstream supply remains ON. This is recovery, not user interaction.
         self._native_offline_under_owned_supply: set[str] = set()
@@ -316,12 +317,15 @@ class EquipmentRuntime:
     async def async_stop(self) -> None:
         self._active = False
         self._presentation_updates.close()
-        tasks = tuple(self._tasks.values())
+        tasks = tuple((*self._tasks.values(), *getattr(
+            self, "_automatic_recovery_tasks", {}
+        ).values()))
         for task in tasks:
             task.cancel()
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
         self._tasks.clear()
+        getattr(self, "_automatic_recovery_tasks", {}).clear()
         self._profile_wake.clear()
         self._native_session_observations.clear()
         getattr(self, "_restart_baseline_pending", set()).clear()
@@ -3312,6 +3316,71 @@ class EquipmentRuntime:
             return False
         return await self._send(spec, cap, cap.fan_entity, service, data, expected, automatic=automatic)
 
+    def _schedule_automatic_reconciliation(self, spec: model.ManagedDevice) -> None:
+        """Run the existing no-command Resume verifier outside the tick lock.
+
+        User settings stay persisted even if physical feedback arrives late.
+        This task NEVER clears a pending command on a timer or assumes that
+        an online entity proves a native command completed.
+        """
+        tasks = getattr(self, "_automatic_recovery_tasks", None)
+        if tasks is None:
+            tasks = self._automatic_recovery_tasks = {}
+        current = tasks.get(spec.identifier)
+        if current is not None and not current.done():
+            return
+        task = self.hass.async_create_task(
+            self._apply_automatic_reconciliation(spec)
+        )
+        tasks[spec.identifier] = task
+        task.add_done_callback(
+            lambda finished, key=spec.identifier, active=tasks: (
+                active.pop(key, None)
+                if active.get(key) is finished else None
+            )
+        )
+
+    async def _apply_automatic_reconciliation(
+        self, spec: model.ManagedDevice,
+    ) -> None:
+        """Apply a saved Automatic/PID preference once real ACK is verified."""
+        if not (self._ready and self._current_spec(spec)):
+            return
+        request = self._record(spec).get("automatic_continue_requested")
+        if not isinstance(request, dict):
+            return
+        if model.settings(self.manager, spec).get("control_mode") not in (
+            "automatic", "pid"
+        ):
+            return
+        try:
+            # async_resume is the original comprehensive native/source/relay
+            # verifier. No new physical service is sent by this helper.
+            await self.async_resume(spec)
+        except HomeAssistantError as error:
+            self._status(
+                spec, "paused",
+                reason=self._record(spec).get("paused")
+                or "continue_automatic_waiting_for_physical_verification",
+                automatic_selected=True, settings_saved=True,
+                recovery_detail=str(error)[:240],
+            )
+            return
+        async with self._lock(spec.identifier):
+            record = self._record(spec)
+            requested = record.get("automatic_continue_requested")
+            if isinstance(requested, dict) and (
+                model.settings(self.manager, spec).get("control_mode")
+                in ("automatic", "pid")
+            ):
+                record.pop("automatic_continue_requested", None)
+                await self._save()
+                self._status(
+                    spec, "awaiting_evaluation",
+                    reason="automatic_recovery_verified",
+                    automatic_selected=True, physical_output_confirmed=True,
+                )
+
     async def tick(self, spec: model.ManagedDevice) -> None:
         if not self._active or not self._ready:
             return
@@ -3320,6 +3389,58 @@ class EquipmentRuntime:
         if record.get("restart_power_verification"):
             if not await self._verify_restart_power(spec):
                 return
+        requested = record.get("automatic_continue_requested")
+        if isinstance(requested, dict):
+            # The editor or Continue Automatic button has already accepted
+            # a user choice. It is not necessary to press again. Yet a
+            # physically unconfirmed command is NEVER silently abandoned:
+            # only a positively matching ACK allows Resume to proceed.
+            if not self._current_spec(spec):
+                self._status(spec, "source_deselected_or_moved")
+                return
+            pending = record.get("pending")
+            if pending:
+                evidence = self.resume_information(spec) or {}
+                if evidence.get("decision") != "confirmed":
+                    self._status(
+                        spec, "awaiting_physical_acknowledgement",
+                        reason="previous_command_not_yet_confirmed",
+                        automatic_selected=True, settings_saved=True,
+                        requested_native_state=evidence.get("requested"),
+                        observed_native_state=evidence.get("observed"),
+                        recovery_detail=(
+                            "Settings saved. HEM will apply them when the "
+                            "previous physical command is verified."
+                        ),
+                    )
+                    return
+            relay = record.get("upstream", {})
+            supply_pending = (
+                relay.get("pending") if isinstance(relay, dict) else None
+            )
+            if supply_pending:
+                supply = self.hass.states.get(relay.get("entity"))
+                if (not isinstance(supply_pending, dict)
+                        or supply_pending.get("phase") != "commanded"
+                        or supply is None
+                        or supply.state != supply_pending.get("desired")):
+                    self._status(
+                        spec, "awaiting_physical_acknowledgement",
+                        reason="upstream_switch_command_not_yet_confirmed",
+                        automatic_selected=True, settings_saved=True,
+                        recovery_detail=(
+                            "Settings saved. HEM is verifying the existing "
+                            "power-switch command automatically."
+                        ),
+                    )
+                    return
+            self._schedule_automatic_reconciliation(spec)
+            self._status(
+                spec, "awaiting_evaluation",
+                reason="automatic_reconciliation_scheduled",
+                automatic_selected=True, settings_saved=True,
+            )
+            return
         if record.get("paused"):
             self._status(spec, "paused", reason=record["paused"])
             return
