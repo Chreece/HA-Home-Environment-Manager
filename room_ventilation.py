@@ -224,3 +224,74 @@ class RoomVentilationMonitor:
             "pending_reason": s.pending,
             "automatic_device_actuation": False,
         }, notice)
+
+
+def has_indoor_air_sensor(room: Any, settings: dict) -> bool:
+    """Conservatively distinguish an AQ sensor from RH, mold or temperature.
+
+    A selected physical AQ entity that is temporarily offline is still an
+    installed sensor; don't silently switch it to a synthetic reading.
+    """
+    from .const import SUPPORTED_AIR_METRICS
+    from .room_sources import selected
+    chosen = selected(settings, room.area_id, "air_quality")
+    if chosen is not None and len(chosen) > 0:
+        return True
+    return any(
+        item.metric in SUPPORTED_AIR_METRICS
+        and isinstance(item.entity_id, str) and item.entity_id
+        for item in room.readings
+    )
+
+
+def thermal_targets(manager: Any, area: str, plan: dict) -> tuple[float | None, float | None]:
+    """Actual selected same-room HVAC heat/cool setpoints; exclude DRY-only.
+
+    Targets follow HEM's configured comfort/away/sleep profile, rather than
+    a generic 20/26 degree assumption or a device's unsupported temp sensor.
+    """
+    from . import equipment_model as equipment
+    heat: list[float] = []
+    cool: list[float] = []
+
+    for spec in equipment.specs(manager):
+        if spec.area_id != area:
+            continue
+        cfg = equipment.settings(manager, spec)
+        if cfg.get("control_mode") not in ("automatic", "pid"):
+            continue
+        cap = equipment.capabilities(manager, spec)
+        if cap is None or cap.domain != "climate" or not (
+                cap.temperature or cap.temperature_range):
+            continue
+        # Only genuine native thermally capable modes count. A climate
+        # exposing ('off','dry') may also report current_temperature, but
+        # must NEVER appear as a heater/AC in the energy-loss monitor.
+        supported = set(cap.modes)
+        try:
+            targets = equipment.targets(manager, spec, cap, cfg, plan)
+        except (KeyError, TypeError, ValueError, OverflowError):
+            continue
+        for direction, out in (("heat", heat), ("cool", cool)):
+            usable = (direction in supported
+                      or "heat_cool" in supported and cap.temperature_range
+                      or "auto" in supported and cap.temperature_range)
+            setting = _number(targets.get(direction))
+            if usable and setting is not None:
+                out.append(setting)
+
+    # Also monitor a configured legacy room climate controller, but only
+    # when a real thermal device and its user-provided target were verified.
+    if plan.get("automatic_actuation_enabled") is True:
+        cap = plan.get("climate_capabilities", {})
+        if isinstance(cap, dict):
+            for supported, target_key, out in (
+                ("heat", "low_target_c", heat),
+                ("cool", "high_target_c", cool),
+            ):
+                target = _number(plan.get(target_key))
+                if cap.get(supported) is True and target is not None:
+                    out.append(target)
+
+    return (max(heat) if heat else None,
+            min(cool) if cool else None)
