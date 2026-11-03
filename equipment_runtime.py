@@ -2709,6 +2709,8 @@ class EquipmentRuntime:
                 await self._pause(spec, "physical_source_identity_changed")
                 return False
             state = self.hass.states.get(pending["entity"])
+            # ACK matching remains allowed immediately. Sending another
+            # command, however, must respect full reconnect settling.
             if matches(state, pending["expected"]):
                 record["baseline"][pending["entity"]] = snapshot(state)
                 record["pending"] = None
@@ -2730,6 +2732,37 @@ class EquipmentRuntime:
             else:
                 self._status(spec, "awaiting_physical_acknowledgement")
                 return False
+        # The HA source has reappeared. Its initial mode/target reports can
+        # still change as the physical device initializes or runs firmware
+        # automations. Do not classify those changes as human intervention.
+        settle = self._native_settle_remaining(spec)
+        if settle is None:
+            self._status(spec, "waiting_for_physical_device",
+                         reason="native_source_unavailable")
+            return False
+        if settle > 0:
+            self._status(spec, "waiting_for_physical_device",
+                         reason="native_restore_settling",
+                         reconnect_settle_remaining_seconds=round(settle))
+            return False
+        fresh = {}
+        settled = getattr(self, "_native_settled_for", {})
+        for entity in spec.source_entities:
+            epoch = self._native_ready_since.get(entity)
+            if epoch is not None and settled.get((spec.identifier, entity)) != epoch:
+                native = snapshot(self.hass.states.get(entity))
+                if native is not None:
+                    fresh[entity] = native
+                    settled[(spec.identifier, entity)] = epoch
+        if fresh and not record.get("pending"):
+            # Rebase only after the stable 30s. This is a source baseline
+            # update, NOT permission to adopt an unowned running appliance or
+            # bypass compressor ON/OFF dwell. The ordinary physical guards
+            # below still handle all output authority.
+            record.setdefault("baseline", {}).update(fresh)
+            await self._save()
+            self._status(spec, "awaiting_evaluation",
+                         reason="native_restore_baseline_rechecked")
         restarted = getattr(self, "_restart_baseline_pending", set())
         if (spec.identifier in restarted and record.get("pending") is None
                 and record.get("paused") != "physical_manual_override"):
@@ -3520,7 +3553,11 @@ class EquipmentRuntime:
         if not live(old):
             stamp = self.clock()
             self._native_ready_since[entity_id] = stamp
-            self._native_reconnect_epoch[entity_id] = stamp
+            # Only a genuine known OFFLINE→ONLINE edge (not the first HA
+            # registration or the integration starting) grants one bounded
+            # recovery opportunity to a previously exhausted command.
+            if old is not None:
+                self._native_reconnect_epoch[entity_id] = stamp
 
     def _native_settle_remaining(
         self, spec: model.ManagedDevice,
@@ -3541,7 +3578,6 @@ class EquipmentRuntime:
             if since is None or not 0 <= now - since:
                 since = now
                 self._native_ready_since[entity] = now
-                self._native_reconnect_epoch.setdefault(entity, now)
             remaining = max(
                 remaining,
                 NATIVE_RECONNECT_SETTLE_SECONDS - (now - since)
