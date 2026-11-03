@@ -3481,6 +3481,49 @@ class EquipmentRuntime:
             and (config["control_mode"] == "pid" or
                  not any(str(option).casefold() == "manual" for option in native_modes))
         )
+        if binary_full_output:
+            # The binary PID controls output timing. While the native mode is
+            # positively observed ON, force the device's *reported* extremum,
+            # not a room comfort/setpoint limit. Treat the physical entity's
+            # native target range and step as authoritative for this actuator.
+            # A set_temperature while OFF can implicitly activate hardware.
+            if state.state != mode or not model.features(state) & model.TEMP:
+                return False
+            attrs = state.attributes
+            unit = attrs.get("temperature_unit")
+            if unit not in ("°C", "C", "°F", "F"):
+                self._status(spec, "unsupported_temperature_unit")
+                return False
+            native_low = finite(attrs.get("min_temp"), -30, 140)
+            native_high = finite(attrs.get("max_temp"), -29, 150)
+            native_step = finite(attrs.get("target_temp_step"), .1, 10)
+            if (native_low is None or native_high is None
+                    or native_low >= native_high or native_step is None):
+                self._status(spec, "physical_capabilities_unavailable")
+                return False
+            value = quantize_target(
+                native_high if mode == "heat" else native_low,
+                native_step, native_low, native_high,
+            )
+            if value is None:
+                self._status(spec, "target_outside_native_limits")
+                return False
+            actual = finite(attrs.get("temperature"), -30, 150)
+            if actual is None:
+                self._status(spec, "native_setpoint_unavailable")
+                return False
+            if abs(value - actual) < .05:
+                return False
+            # Durable single-command, native ACK, consent and room safety
+            # gates are enforced by the existing _send implementation.
+            sent = await self._send(
+                spec, cap, cap.primary, "set_temperature",
+                {"temperature": value}, {"attributes": {"temperature": value}},
+                automatic=automatic,
+            )
+            if sent:
+                self._record(spec)["target_at"] = self.clock()
+            return sent
         if cap.domain == "humidifier" or cap.humidity and (mode == "dry" or manual_humidity):
             if cap.domain == "climate" and not (model.features(state) & model.HUMIDITY):
                 return False
