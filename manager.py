@@ -59,6 +59,7 @@ from .logic import Plan, evaluate
 from .messages import announcement, language_code
 from .away_windows import AwayWindowAlert, watched_entities
 from .presence_continuity import PresenceContinuity
+from .room_ventilation import RoomVentilationMonitor, has_indoor_air_sensor, thermal_targets
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -85,6 +86,7 @@ class AirQualityManager:
         self._environment_store: Any | None = None
         self.away_windows = AwayWindowAlert(self)
         self.presence_continuity = PresenceContinuity(self.hass, self.entry.entry_id)
+        self.ventilation = RoomVentilationMonitor()
         self.equipment = EquipmentRuntime(self)
         from .device_faults import NativeDeviceFaultMonitor
         self.faults = NativeDeviceFaultMonitor(self)
@@ -563,9 +565,100 @@ class AirQualityManager:
                 extra_notices.append(Recommendation(
                     "open",room.area_id,room.name,closed,(window_reason(option),),
                 ))
+        # Per-room time-based ventilation is NOT an air-quality measurement.
+        # Use the same verified room-presence, sleep and physical temperature
+        # evidence as the native climate controller, without acquiring any
+        # device control. In particular, never infer vacant from no motion.
+        from .occupancy_policy import (
+            room_presence, home_presence, controlled_sleep_presence,
+        )
+        from .climate_schedule import scheduled_sleep
+        known_areas = {item.area_id for item in (*selected_rooms,*extra)}
+        known_areas.update(room_climate_configs)
+        shared = shared_presence
+        monitored = {room.area_id for room in selected_rooms}
+        preferred = list(air_plan.recommendations)
+        secondary = list(extra_notices)
+        for monitored_room in (*selected_rooms,*extra):
+            area_id = monitored_room.area_id
+            climate = environment.get(area_id,{}).get("climate_plan",{})
+            local_settings = room_climate_configs.get(area_id,{})
+            local_settings = local_settings if isinstance(local_settings,dict) else {}
+            if isinstance(climate,dict) and climate.get("status") != "disabled":
+                occupied = climate.get("occupancy","unknown")
+                evidence = climate.get("occupancy_evidence")
+                if evidence not in (
+                    "verified_room_occupied", "selected_room_sensor_on",
+                    "verified_room_list_unoccupied",
+                    "all_selected_room_sensors_off",
+                ):
+                    # Climate may assume occupancy for comfort. That is not
+                    # permission to infer somebody has actually entered.
+                    occupied = "unknown"
+                sleeping = climate.get("sleeping")
+            else:
+                occupied, _why, _sources = room_presence(
+                    self.hass,area_id,local_settings,shared,
+                    known_areas=known_areas,
+                )
+                home, _evidence, _trackers = home_presence(self.hass,shared)
+                local_sleep, local_reason = scheduled_sleep(
+                    local_settings,time(),
+                    getattr(self.hass.config,"time_zone",None) or "UTC",
+                )
+                sleeping, _why = controlled_sleep_presence(
+                    self.hass,area_id,shared,known_areas,
+                    home_status=home,local_sleeping=local_sleep,
+                    local_reason=local_reason,
+                )
+            from .room_sources import room_temperature_evidence
+            room_temp, _temperature_sources = room_temperature_evidence(
+                self.hass,config,area_id,
+                pinned=local_settings.get("temperature_entity"),
+                age_minutes=10,
+            )
+            if room_temp is None and isinstance(climate,dict):
+                value = climate.get("temperature_c")
+                if isinstance(value,(float,int)) and not isinstance(value,bool):
+                    if -60 <= value <= 85:
+                        room_temp = float(value)
+            temperature_plan = climate if isinstance(climate,dict) else {}
+            heat, cool = thermal_targets(self,area_id,temperature_plan)
+            status, suggestion = self.ventilation.observe(
+                area=area_id,name=monitored_room.name,
+                windows=monitored_room.windows,
+                occupancy=occupied,sleeping=sleeping,
+                has_air_sensor=has_indoor_air_sensor(monitored_room,config),
+                outside_safe=air_plan.outdoor_safe,
+                temperature_c=room_temp,
+                heat_target_c=heat,cool_target_c=cool,
+            )
+            environment.setdefault(area_id,{})["room_ventilation"]=status
+            if suggestion is None:
+                continue
+            current = preferred if area_id in monitored else secondary
+            prior = next((rec for rec in current if rec.area_id==area_id),None)
+            # An existing OUTDOOR HAZARD close is never suppressed. A
+            # verified heat-loss CLOSE overrides an unrelated open suggestion;
+            # a time-based OPEN never overrides measured air-quality advice.
+            if prior is not None and (prior.action=="close"
+                                      or suggestion.action=="open"):
+                continue
+            if prior is not None:
+                current.remove(prior)
+            current.append(suggestion)
+        self.ventilation.prune(known_areas)
+        # Preserve the calculated overall urgency when a new verified window
+        # energy-loss close is added in a room with otherwise benign AQ data.
+        all_notices=(*preferred,*secondary)
+        overall=("close" if any(rec.action=="close" for rec in all_notices)
+                 else "open" if any(rec.action=="open" for rec in all_notices)
+                 else air_plan.status)
         return replace(
-            air_plan,climate_rooms=extra,
-            climate_recommendations=tuple(extra_notices),
+            air_plan,status=overall,
+            recommendations=tuple(preferred),
+            climate_rooms=extra,
+            climate_recommendations=tuple(secondary),
         )
 
     async def async_start(self) -> None:
@@ -1095,6 +1188,22 @@ class AirQualityManager:
             result = await self.async_announce(channels="auto", areas=[area_id])
             if result.get("submitted", 0):
                 self._last_sent[action_key] = monotonic()
+                # A room-entry / wake ventilation nudge is once per event,
+                # never repeated every ten minutes after acceptance by Hub.
+                rec = next((
+                    notice for notice in
+                    (*self.plan.recommendations,*self.plan.climate_recommendations)
+                    if notice.area_id == area_id
+                    and notice.action_signature == action_key
+                    and notice.reason_signature == reason_key
+                ),None)
+                if (rec is not None and rec.reasons
+                        and rec.reasons[0].code in (
+                            "air_refresh_wake","air_refresh_return"
+                        )):
+                    self.ventilation.acknowledge(
+                        area_id,rec.reasons[0].code)
+                    self._recalculate()
         except asyncio.CancelledError:
             raise
         except Exception:
@@ -1144,6 +1253,7 @@ class AirQualityManager:
             self._source_refresh_handle.cancel()
             self._source_refresh_handle = None
         self.away_windows.stop()
+        self.ventilation.clear()
         controllers = (
             ("fault_monitor",self.faults),
             ("equipment",self.equipment),
