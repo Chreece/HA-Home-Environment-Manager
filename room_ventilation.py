@@ -221,22 +221,48 @@ class RoomVentilationMonitor:
         }, notice)
 
 
-def has_indoor_air_sensor(room: Any, settings: dict) -> bool:
-    """Conservatively distinguish an AQ sensor from RH, mold or temperature.
+def has_indoor_air_sensor(room: Any, settings: dict,
+                          hass: Any | None = None) -> bool:
+    """Only actual pollutant sensors disable time-based fresh-air guidance.
 
-    A selected physical AQ entity that is temporarily offline is still an
-    installed sensor; don't silently switch it to a synthetic reading.
+    HEM's generic air_quality selection includes LUX, noise and air-speed
+    sensors. Those aren't CO2/PM/AQI measurements. An *unavailable genuine*
+    pollutant sensor remains installed and must not become fake pollution data.
     """
     from .const import SUPPORTED_AIR_METRICS
     from .room_sources import selected
-    chosen = selected(settings, room.area_id, "air_quality")
-    if chosen is not None and len(chosen) > 0:
+    pollutants = frozenset((*SUPPORTED_AIR_METRICS, "hcho", "formaldehyde",
+                            "radon", "tvoc"))
+    if any(item.metric in pollutants
+           and isinstance(item.entity_id, str) and item.entity_id
+           for item in room.readings):
         return True
-    return any(
-        item.metric in SUPPORTED_AIR_METRICS
-        and isinstance(item.entity_id, str) and item.entity_id
-        for item in room.readings
-    )
+    chosen = selected(settings, room.area_id, "air_quality")
+    if not chosen:
+        return False
+    if hass is None:
+        # A source-only unit test with no HA registry cannot type a selected
+        # offline sensor. In production, the current HA state is mandatory.
+        return True
+    from .discovery import supported_metric, _device_class
+    for entity_id in chosen:
+        state = hass.states.get(entity_id)
+        if state is None:
+            return True  # Missing selected device: not proven non-pollutant.
+        metric = supported_metric(hass, state, outdoor=False)
+        if metric in pollutants:
+            return True
+        klass = str(_device_class(hass, state) or "").casefold()
+        if (klass in ("carbon_dioxide", "nitrogen_dioxide", "formaldehyde",
+                      "radon", "pm25", "pm10", "volatile_organic_compounds")
+                or entity_id.casefold().endswith(
+                    ("_hcho", "_formaldehyde", "_radon", "_co2"))):
+            return True
+        if state.state in ("unknown", "unavailable") and klass not in (
+                "illuminance", "noise", "sound_pressure", "humidity",
+                "temperature", "pressure", "atmospheric_pressure"):
+            return True
+    return False
 
 
 def thermal_targets(manager: Any, area: str, plan: dict) -> tuple[float | None, float | None]:
