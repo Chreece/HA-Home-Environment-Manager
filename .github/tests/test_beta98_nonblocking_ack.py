@@ -94,9 +94,14 @@ async def tests():
                  'equipment_runtime.py','exec'),scope)
     gate=scope['_automatic_recovery_gate']
     c._native_settle_remaining=lambda sp:0.0
+    # "verified" means two independent stable physical observations,
+    # not that the old service succeeded. It may now enter the existing
+    # read-only Resume verifier, never directly dispatch a native service.
     c.resume_information=lambda sp:{'decision':'verified','requested':'heat','observed':'off'}
+    assert gate(c,spec)['ready'] is True
+    c.resume_information=lambda sp:{'decision':'unavailable','requested':'heat','observed':'unknown'}
     assert gate(c,spec)['ready'] is False
-    assert gate(c,spec)['reason']=='previous_command_not_yet_confirmed'
+    assert gate(c,spec)['reason']=='previous_command_evidence_invalid'
     c.resume_information=lambda sp:{'decision':'confirmed','requested':'heat','observed':'heat'}
     assert gate(c,spec)['ready'] is True
     c.record['upstream']['pending']={'phase':'commanded','desired':'on'}
