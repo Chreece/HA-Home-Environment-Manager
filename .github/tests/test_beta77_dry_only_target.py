@@ -67,6 +67,9 @@ for modes, bits in [
 
 frontend = (ROOT / "frontend/air-quality-advisor-card.js").read_text(encoding="utf-8")
 assert "kind==='temperature' && !thermalModes" in frontend
-assert "thermalTarget && numeric(a.temperature)" in frontend
-assert "thermalTarget && numeric(a.target_temp_low)" in frontend
+# DRY/FAN_ONLY native devices may report temperature measurements, but
+# must not offer a physical temperature TARGET they do not support.
+assert "const physicalThermal=" in frontend
+assert "physicalThermal && numeric(attrs.temperature)" in frontend
+assert "Array.isArray(attrs.hvac_modes)" in frontend
 print("BETA77_DRY_ONLY_CAPABILITIES_AND_FRONTEND_GATES=PASS")
