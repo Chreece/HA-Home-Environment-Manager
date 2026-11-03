@@ -68,6 +68,7 @@ with sync_playwright() as playwright:
     assert page.locator(".outside .outside-alerts .reason").count() >= 2
     summary.click()
     pop = page.locator(".hem-floating-info87.hem-wx-pop101")
+    pop.wait_for(state="visible", timeout=4000)
     assert pop.is_visible()
     assert pop.locator(".hem-wx-row101").count() == len(attributes) + 1
     assert "warning_1_description" in pop.inner_text()
@@ -94,6 +95,7 @@ with sync_playwright() as playwright:
     chip = page.locator("details.hem-warning101")
     assert "Starkregen" in chip.locator(":scope > summary").inner_text()
     chip.locator(":scope > summary").click()
+    page.locator(".hem-floating-info87.hem-wx-pop101").wait_for(state="visible", timeout=4000)
     assert "Regenwarnung" in page.locator(".hem-floating-info87").inner_text()
     # Two warnings may share friendly names; their exact native IDs remain distinct.
     page.evaluate("""() => {
@@ -121,6 +123,7 @@ with sync_playwright() as playwright:
     page.set_viewport_size({"width": 360, "height": 740})
     warnings.nth(1).locator(":scope > summary").click()
     pop = page.locator(".hem-floating-info87.hem-wx-pop101")
+    pop.wait_for(state="visible", timeout=4000)
     assert pop.is_visible()
     assert pop.bounding_box()["width"] <= 360
     assert not errors, errors
