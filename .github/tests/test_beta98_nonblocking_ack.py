@@ -90,6 +90,7 @@ async def tests():
     exec(compile(ast.Module(body=[gate],type_ignores=[]),
                  'equipment_runtime.py','exec'),scope)
     gate=scope['_automatic_recovery_gate']
+    c._native_settle_remaining=lambda sp:0.0
     c.resume_information=lambda sp:{'decision':'verified','requested':'heat','observed':'off'}
     assert gate(c,spec)['ready'] is False
     assert gate(c,spec)['reason']=='previous_command_not_yet_confirmed'
