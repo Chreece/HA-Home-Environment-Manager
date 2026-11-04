@@ -24,7 +24,7 @@ MAX_POINTS_PER_AREA = 2600
 # Bounded, native-contributor-specific time-series for actual 2+ sensor means.
 AVG_ALLOWED = frozenset((
     "temperature","humidity","co2","pm25","pm10","pm1","pm4",
-    "illuminance","voc","voc_parts","aqi","no2","o3","so2",
+    "illuminance","voc","voc_parts","no2","o3","so2",
     "hcho","formaldehyde","radon","noise",
 ))
 AVG_MAX_AGE = 7 * DAY_S
@@ -112,7 +112,10 @@ class EnvironmentHistory:
                             or len(set(sources)) != len(sources)):
                         continue
                     points = []
-                    for point in (series.get("points") or [])[-AVG_MAX_POINTS:]:
+                    raw_points = series.get("points")
+                    if not isinstance(raw_points, list):
+                        continue
+                    for point in raw_points[-AVG_MAX_POINTS:]:
                         if not isinstance(point, dict):
                             continue
                         t, value = point.get("t"), point.get("v")
