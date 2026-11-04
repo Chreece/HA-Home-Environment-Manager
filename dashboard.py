@@ -78,7 +78,7 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
         if (data.get("details") or {}).get("fallback_for_mold"):
             aggregate = evidence.get("humidity", {})
             if aggregate.get("source_count", 0) >= 2:
-                data["average_evidence"] = aggregate
+                data["average_evidence"] = {**aggregate, "area_id": room.area_id}
         readings.append(data)
     high = [item for item in readings if item["exceeded"]]
     air_readings = [item for item in readings if item["metric"] != "illuminance"]
