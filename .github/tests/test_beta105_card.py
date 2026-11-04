@@ -211,12 +211,14 @@ with sync_playwright() as playwright:
             dashboardVersion:data?.version};
         }""")
         raise AssertionError(("ONE_NATIVE_SOURCE_MUST_REMAIN_CLICKABLE",debug))
-    test.evaluate("(el)=>el.setAttribute('data-hem-source105','sensor.unrelated')")
     original=page.evaluate('info.length')
-    # This verifies rejection of a tampered entity ID, not viewport
-    # actionability: a user may have folded the room during HA re-renders.
-    # Dispatch the native button click even when its room body is hidden.
-    test.evaluate('(el)=>el.click()')
+    # The selector matches sensor.temp_a; mutating that attribute makes a
+    # fresh Playwright locator lookup invalid. Mutate and click the SAME
+    # already-resolved node in one DOM callback, even if the room is folded.
+    test.evaluate("""el=>{
+      el.setAttribute('data-hem-source105','sensor.unrelated');
+      el.click();
+    }""")
     assert page.evaluate('info.length')==original
     for width in (320,360,430,590):
       page.set_viewport_size({'width':width,'height':990})
