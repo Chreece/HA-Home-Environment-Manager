@@ -3457,7 +3457,8 @@ class EquipmentRuntime:
                                 shutdown=shutdown, policy_stop=policy_stop)
 
     async def _native_target(self, spec: model.ManagedDevice, cap: model.Capabilities,
-                             mode: str, targets: dict, demand: float | None, automatic: bool) -> bool:
+                             mode: str, targets: dict, demand: float | None, automatic: bool) -> bool | None:
+        """Return True if sent, False if skipped, None for a blocked binary target."""
         state = self.hass.states.get(cap.primary)
         if state is None or state.state == "off":
             return False
@@ -3467,51 +3468,42 @@ class EquipmentRuntime:
         manual_humidity = not automatic and "humidity" in config.get("profile_targets", {}).get(profile, {})
         # For genuinely binary climate regulation, the physical HVAC mode is
         # HEM's actuator. A native thermostat setpoint close to the room goal
-        # would fight the PID's ON period. If no native MANUAL mode exists,
-        # drive the verified full heating/cooling limit while commanded ON.
-        native_modes = (
-            *(state.attributes.get("hvac_modes") or ()),
-            *(state.attributes.get("preset_modes") or ()),
-        )
+        # would fight the ON period. Drive the verified full heating/cooling
+        # limit while commanded ON, including devices with a manual preset.
+        # Offering such a preset does not mean it is selected or that the
+        # appliance's own thermostat has stopped limiting its output.
         binary_full_output = (
             automatic and cap.domain == "climate"
             and config["control_mode"] in ("automatic", "pid")
             and mode in ("heat", "cool")
             and cap.temperature and model.permission(self.manager, spec, cap)[1]
-            and (config["control_mode"] == "pid" or
-                 not any(str(option).casefold() == "manual" for option in native_modes))
         )
         if binary_full_output:
-            # The binary PID controls output timing. While the native mode is
+            # The binary controller owns output timing. While the native mode is
             # positively observed ON, force the device's *reported* extremum,
             # not a room comfort/setpoint limit. Treat the physical entity's
-            # native target range and step as authoritative for this actuator.
+            # native target range as authoritative for this actuator.
             # A set_temperature while OFF can implicitly activate hardware.
             if state.state != mode or not model.features(state) & model.TEMP:
                 return False
             attrs = state.attributes
-            unit = attrs.get("temperature_unit")
-            if unit not in ("°C", "C", "°F", "F"):
-                self._status(spec, "unsupported_temperature_unit")
-                return False
             native_low = finite(attrs.get("min_temp"), -30, 140)
             native_high = finite(attrs.get("max_temp"), -29, 150)
-            native_step = finite(attrs.get("target_temp_step"), .1, 10)
             if (native_low is None or native_high is None
-                    or native_low >= native_high or native_step is None):
+                    or native_low >= native_high):
                 self._status(spec, "physical_capabilities_unavailable")
-                return False
-            value = quantize_target(
-                native_high if mode == "heat" else native_low,
-                native_step, native_low, native_high,
-            )
-            if value is None:
-                self._status(spec, "target_outside_native_limits")
-                return False
+                return None
+            # HA exposes these bounds in the same unit accepted by its
+            # set_temperature service. Copy the exact reported endpoint:
+            # older HA states omit temperature_unit, and target_temp_step is
+            # optional. Neither metadata field is needed for this operation.
+            # Rounding a bound to a step can also move it away from the
+            # device's actual maximum/minimum (or outside its valid range).
+            value = native_high if mode == "heat" else native_low
             actual = finite(attrs.get("temperature"), -30, 150)
             if actual is None:
                 self._status(spec, "native_setpoint_unavailable")
-                return False
+                return None
             if abs(value - actual) < .05:
                 return False
             # Durable single-command, native ACK, consent and room safety
@@ -3523,7 +3515,9 @@ class EquipmentRuntime:
             )
             if sent:
                 self._record(spec)["target_at"] = self.clock()
-            return sent
+            # Preserve a dispatch blocker instead of falling through to a
+            # misleading "controlling" status when the target was not sent.
+            return True if sent else None
         if cap.domain == "humidifier" or cap.humidity and (mode == "dry" or manual_humidity):
             if cap.domain == "climate" and not (model.features(state) & model.HUMIDITY):
                 return False
@@ -4545,9 +4539,9 @@ class EquipmentRuntime:
                     )
                 )
             ):
-                if await self._native_target(
+                if (await self._native_target(
                     spec, cap, mode, target, None, True
-                ):
+                )) is not False:
                     return
                 if spec.identifier in self._invalidated:
                     return
@@ -4599,7 +4593,7 @@ class EquipmentRuntime:
             self._status(spec, "native_off_no_power_permission")
             return
         if auto or cfg.get("profile_targets", {}).get(model.profile_name(cfg, plan)) or cfg["preset"] != "none":
-            if await self._native_target(spec, cap, mode, target, demand if not power else None, auto):
+            if (await self._native_target(spec, cap, mode, target, demand if not power else None, auto)) is not False:
                 return
             if spec.identifier in self._invalidated:
                 return

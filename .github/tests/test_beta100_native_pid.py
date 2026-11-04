@@ -60,8 +60,9 @@ async def reported_limits():
         SPEC,controller.manager.cap,"heat",
         {"heat":20.,"cool":24.},None,True)
     assert controller.calls[-1][2]=={"temperature":95.0}
-    # Do not guess a missing native bound or target resolution.
-    for key in ("min_temp","max_temp","target_temp_step"):
+    # Do not guess a missing native bound. Unit/step metadata is optional
+    # for copying the exact reported endpoint through HA's service API.
+    for key in ("min_temp","max_temp"):
         controller=SimRuntime("heat")
         controller.now=5000.
         controller.state.attributes.pop(key,None)
@@ -71,11 +72,10 @@ async def reported_limits():
         assert controller.calls==[]
 asyncio.run(reported_limits())
 
-assert 'and (config["control_mode"] == "pid" or' in runtime
 assert 'def _pid_extreme_native_target(' not in runtime
 assert 'if state is None or state.state == "off":' in runtime
 assert runtime.index('await self._power(spec, cap, desired, automatic=True)') < (
-    runtime.index('if await self._native_target(spec, cap, mode, target,'))
+    runtime.index('if (await self._native_target(spec, cap, mode, target,'))
 assert 'NATIVE_STARTUP_STABLE_SECONDS = 60' in runtime
 assert 'NATIVE_RECONNECT_SETTLE_SECONDS = 30' in runtime
 start=card.index("proto65._deviceSummary65 = function(entry)")

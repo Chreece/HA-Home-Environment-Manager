@@ -322,14 +322,14 @@ class CommandRetryTests(unittest.IsolatedAsyncioTestCase):
                     {"heat": 19.0, "cool": 26.0}, None, True))
                 self.assertEqual(r.calls[-1][2], {"temperature": expected})
 
-    async def test_automatic_native_manual_preset_keeps_soft_trim(self):
+    async def test_automatic_native_manual_preset_still_uses_full_binary_output(self):
         r = SimRuntime("heat", manual=True)
         r.manager.settings["cfg"]["control_mode"] = "automatic"
         r.now = 5000
         self.assertTrue(await r._native_target(
             SPEC, r.manager.cap, "heat",
             {"heat": 18.0, "cool": 26.0}, None, True))
-        self.assertEqual(r.calls[-1][2], {"temperature": 19.5})
+        self.assertEqual(r.calls[-1][2], {"temperature": 35.0})
 
     async def test_pid_native_manual_preset_still_uses_full_binary_output(self):
         r = SimRuntime("heat", manual=True)
