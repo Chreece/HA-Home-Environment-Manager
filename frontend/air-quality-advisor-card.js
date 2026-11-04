@@ -599,6 +599,7 @@
         }
         const shadeSwitch = event.target.closest?.('[data-shade-switch]');
         if (shadeSwitch && this._hass?.callService) {
+          event.preventDefault(); // A summary action must not also fold the section.
           const area=shadeSwitch.getAttribute('data-shade-area');
           const entityId=shadeSwitch.getAttribute('data-shade-switch');
           const found=this._shadingSwitch(area);
@@ -1411,10 +1412,19 @@
         : '';
       const moldInfo = average || surface
         ? `<div class="mold-summary">${average}${surface}</div>` : '';
+      const aggregate=item.average_evidence;
+      const averaged=aggregate?.source_count >= 2;
+      const fromNative=!averaged && !item.details?.fallback_for_mold &&
+        item.metric !== 'mold' && typeof item.entity_id==='string' &&
+        /^sensor\.[a-z0-9_]+$/.test(item.entity_id);
+      const click=averaged && aggregate?.area_id
+        ? 'data-hem-average105="'+escape(item.metric)+'" data-average-area105="'+escape(aggregate.area_id)+'"'
+        : fromNative ? 'data-hem-source105="'+escape(item.entity_id)+'"' : '';
       return `<div class="metric ${miniature ? 'tiny' : ''} metric-${level}">
         <div class="metric-line">
           <span class="metric-name">${this._icon(METRIC_ICON[item.metric] || 'mdi:gauge')}<span class="metric-title" title="${escape(fullSource || metric)}">${escape(metric)}</span><details class="metric-help"><summary aria-label="${escape(this._l65('information'))}: ${escape(metric)}" title="${escape(this._metricHelp(item))}">${this._icon('mdi:information-outline')}</summary><div class="metric-help-content" role="note">${escape(this._metricHelp(item))}</div></details></span>
-          <span class="metric-number">${escape(display)} <small>${escape(unit)}</small></span>
+          <span class="metric-number ${click ? 'hem-source-click105' : ''}" ${click}
+             ${click ? 'role="button" tabindex="0" title="'+escape(averaged ? 'Average trend' : fullSource)+'"' : ''}>${escape(display)} <small>${escape(unit)}</small></span>
         </div>
         ${hasLimit ? `<div class="meter" role="progressbar" aria-label="${escape(metric)}"
           aria-valuemin="0" aria-valuemax="${escape(limit)}" aria-valuenow="${available ? escape(item.value) : '0'}">
@@ -1430,7 +1440,10 @@
       const klass = opened === true ? 'opened' : opened === false ? 'closed' : 'unknown';
       const icon = opened === true ? 'mdi:window-open-variant' : opened === false ? 'mdi:window-closed-variant' : 'mdi:window-closed';
       const text = opened === true ? this._t('windowOpen') : opened === false ? this._t('windowClosed') : this._t('windowUnknown');
-      return `<span class="window ${klass}" title="${escape(win.entity_id)}">${this._icon(icon)}<span>${escape(win.name)}</span>
+      const native = typeof win.entity_id==='string' && /^binary_sensor\.[a-z0-9_]+$/.test(win.entity_id);
+      return `<span class="window ${klass} ${native?'hem-source-click105':''}"
+         title="${escape(win.entity_id)}"
+         ${native?'data-hem-source105="'+escape(win.entity_id)+'" role="button" tabindex="0"':''}>${this._icon(icon)}<span>${escape(win.name)}</span>
         <small>· ${escape(text)}</small></span>`;
     }
 
@@ -1479,7 +1492,8 @@
           <div class="outdoor-status">${this._icon(status === 'safe' ? 'mdi:check' : status === 'unsafe' ? 'mdi:alert' : 'mdi:information-outline')}</div>
         </div>
         ${readings.length ? `<div class="out-metrics" aria-label="${escape(this._t('outdoorSensors'))}">
-          ${readings.map((item) => `<span class="out-chip ${!item.available ? 'dim' : item.exceeded ? 'elevated' : ''}">
+          ${readings.map((item) => `<span class="out-chip ${!item.available ? 'dim' : item.exceeded ? 'elevated' : ''} ${item.entity_id && /^sensor\.[a-z0-9_]+$/.test(item.entity_id) ? 'hem-source-click105' : ''}"
+              ${item.entity_id && /^sensor\.[a-z0-9_]+$/.test(item.entity_id) ? 'data-hem-source105="'+escape(item.entity_id)+'" role="button" tabindex="0"' : ''}>
             ${escape(this._metricName(item.metric))} <b>${item.available ? escape(this._format(item.value)) : '-'}</b>
             <small>${escape(item.unit)}</small></span>`).join('')}
         </div>` : `<div class="out-empty">${escape(this._t('noOutdoor'))}</div>`}
