@@ -107,9 +107,9 @@ class EnvironmentHistory:
                         continue
                     sources = series.get("sources")
                     if (not isinstance(sources, list) or not 2 <= len(sources) <= 32
-                            or len(set(sources)) != len(sources)
                             or any(not isinstance(source, str) or not source.startswith("sensor.")
-                                   or len(source) > 255 for source in sources)):
+                                   or len(source) > 255 for source in sources)
+                            or len(set(sources)) != len(sources)):
                         continue
                     points = []
                     for point in (series.get("points") or [])[-AVG_MAX_POINTS:]:
