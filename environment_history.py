@@ -163,11 +163,15 @@ class EnvironmentHistory:
             series = {"sources": unique, "points": []}
             room[metric] = series
         points = series["points"]
-        if points and now < points[-1]["t"]:
+        # Compare times at the SAME millisecond precision persisted in Store.
+        # Comparing unrounded clock time against rounded prior timestamps
+        # intermittently discards a legitimate sample exactly 15 minutes later.
+        stamp = round(float(now), 3)
+        if points and stamp < points[-1]["t"]:
             return changed
-        if points and now - points[-1]["t"] < AVG_MIN_SAMPLE_SECONDS:
+        if points and stamp - points[-1]["t"] < AVG_MIN_SAMPLE_SECONDS:
             return changed
-        points.append({"t": round(now, 3), "v": round(float(value), 3)})
+        points.append({"t": stamp, "v": round(float(value), 3)})
         points[:] = [p for p in points if p["t"] >= now - AVG_MAX_AGE][-AVG_MAX_POINTS:]
         return True
 
