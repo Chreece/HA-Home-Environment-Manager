@@ -207,6 +207,10 @@ def run_browser_checks(previous, base, helper):
     chrome = os.environ.get("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH") or (
         shutil.which("chromium") or shutil.which("google-chrome"))
     assert chrome and Path(chrome).is_file(), "Chromium required (or use --status-only)"
+    shots = os.environ.get("HEM_TEST_SCREENSHOT_DIR")
+    shots = Path(shots) if shots else None
+    if shots:
+        shots.mkdir(parents=True, exist_ok=True)
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(executable_path=chrome, headless=True,
             args=["--no-sandbox", "--disable-dev-shm-usage"])
@@ -242,6 +246,10 @@ def run_browser_checks(previous, base, helper):
                 assert glance.locator('ha-icon[icon="mdi:alert-octagon-outline"]').count() == 0
                 assert page.evaluate("calls") == []
                 assert not errors, errors
+                if shots and index < 2:
+                    phase_name = "startup" if index == 0 else "shutdown"
+                    device.screenshot(path=str(
+                        shots / f"beta109-setpoint-grace-{language}-{phase_name}.png"))
         # A real native device error still has its own attention indicator;
         # the wait status is not a general exemption from fault presentation.
         page.evaluate("""({controller,status}) => {
