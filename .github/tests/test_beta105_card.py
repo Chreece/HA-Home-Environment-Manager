@@ -120,7 +120,9 @@ with sync_playwright() as playwright:
     assert page.evaluate('info')[-1]=='sensor.outdoor_aqi'
     # Source click in full metric card and window contact must use exactly
     # the native source and not interfere with built-in info/help buttons.
-    row.locator(':scope > summary').click()
+    # Click the room NAME, not the center of a summary containing
+    # interactive sensor buttons (Playwright's center can hit those instead).
+    row.locator('.hem-room-name87').click()
     assert row.get_attribute('open') is not None
     rhTile=row.locator('.metric-number[data-hem-source105="sensor.humidity_1"]')
     assert rhTile.count()==1
