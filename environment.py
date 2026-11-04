@@ -17,7 +17,7 @@ from .building_physics import (
     surface_condensation, threshold_exposure_hours, weighted_window,
 )
 from .discovery import entity_area, indoor_temperature_choices, is_stale, temperature_sensor_c
-from .environment_history import EnvironmentHistory
+from .environment_history import EnvironmentHistory, AVG_ALLOWED
 from .environment_extended import extend_room_inputs, room_science
 
 
@@ -30,6 +30,56 @@ def _single_value(readings: Any, metric: str) -> float | None:
         and (0 < item.value <= 100 if metric == "humidity" else item.value >= 0)
     ]
     return round(sum(values) / len(values), 3) if values else None
+
+
+def _display_measurement_evidence(
+    hass: Any, room: Any, *, indoor_t: float | None,
+    temperature_inputs: Any, temperature_entity: str | None,
+    max_age: float,
+) -> dict[str, dict]:
+    """Display-only provenance: exactly the valid normalized native contributors.
+
+    Derived mold readings never masquerade as physical sensors; no actuator
+    settings or Home Assistant services are modified here.
+    """
+    from .room_sources import numeric
+    grouped: dict[str, dict[str, float]] = {}
+    for item in room.readings:
+        if (item.metric not in AVG_ALLOWED
+                or not isinstance(item.entity_id, str)
+                or not item.entity_id.startswith("sensor.")
+                or type(item.value) not in (int, float)
+                or not math.isfinite(item.value)
+                or (item.details or {}).get("fallback_for_mold")):
+            continue
+        grouped.setdefault(item.metric, {})[item.entity_id] = float(item.value)
+    if indoor_t is not None and math.isfinite(indoor_t):
+        if temperature_inputs is not None:
+            candidates = tuple(temperature_inputs)
+        elif temperature_entity:
+            candidates = (temperature_entity,)
+        else:
+            candidates = tuple(row["value"] for row in
+                               indoor_temperature_choices(hass, room.area_id))
+        accepted = {}
+        for entity in dict.fromkeys(candidates):
+            value = numeric(hass, entity, room.area_id, "temperature", max_age)
+            if value is not None and math.isfinite(value):
+                accepted[entity] = float(value)
+        # A different climate-only temperature input cannot be mislabeled
+        # as the room's actual displayed multi-sensor mean.
+        if accepted and abs(sum(accepted.values()) / len(accepted) - indoor_t) < .03:
+            grouped["temperature"] = accepted
+    result = {}
+    for metric, contributors in grouped.items():
+        if not contributors:
+            continue
+        result[metric] = {
+            "value": round(sum(contributors.values()) / len(contributors), 3),
+            "source_ids": sorted(contributors),
+            "source_count": len(contributors),
+        }
+    return result
 
 
 def _numeric_mean(values: Any, *, minimum: float, maximum: float) -> float | None:
@@ -149,6 +199,21 @@ def build_environment(
                 "valid_count": sum(r.value is not None for r in light_sources),
                 "status": "selected_mean" if light_value is not None else "unavailable",
             }
+        # Display-only aggregation, with exact valid source IDs for each
+        # independently measured metric (temperature, RH, PM, CO₂, lux, ...).
+        display = _display_measurement_evidence(
+            hass, room, indoor_t=indoor_t, temperature_inputs=temperature_inputs,
+            temperature_entity=temp_source, max_age=max_age_minutes,
+        )
+        for metric, aggregate in display.items():
+            if aggregate["source_count"] >= 2:
+                contributors = aggregate["source_ids"]
+                changed = history.add_average(
+                    room.area_id, metric, contributors, aggregate["value"], now=stamp
+                ) or changed
+                aggregate["trend"] = history.average_trend(
+                    room.area_id, metric, contributors
+                )
         indoor_rh = _single_value(room.readings, "humidity")
         pm25 = _single_value(room.readings, "pm25")
         pm10 = _single_value(room.readings, "pm10")
@@ -183,6 +248,7 @@ def build_environment(
         co2_data = co2_trend(samples, stamp)
         ach = co2_decay_ach(samples, stamp, outdoor_co2)
         base_report = {
+            "measurement_evidence": display,
             "moisture": moisture,
             "thermal_comfort": comfort,
             "passive_cooling": cooling,
