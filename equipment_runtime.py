@@ -1938,26 +1938,41 @@ class EquipmentRuntime:
         """
         record = self.records.get(spec.identifier, {})
         pending = record.get("pending") if isinstance(record, dict) else None
+        unconfirmed_target = (record.get("unconfirmed_native_target")
+                              if isinstance(record, dict) else None)
+        retained_target = not pending and isinstance(unconfirmed_target, dict)
+        if retained_target:
+            pending = unconfirmed_target
         if not pending:
             return None
         from .equipment_resume import check_pending, instructions
         entity = pending.get("entity") if isinstance(pending, dict) else None
         state = self.hass.states.get(entity) if isinstance(entity, str) else None
         expected = pending.get("expected") if isinstance(pending, dict) else None
+        ha_config = getattr(self.hass, "config", None)
+        language = str(getattr(ha_config, "language", "en"))
         checked = check_pending(
             pending, state, self.clock(),
             record.get("pending_resume_probe"),
             matches_expected=matches(state, expected) if isinstance(expected, dict) else False,
+            language=language,
+            temperature_unit=getattr(getattr(ha_config, "units", None),
+                                     "temperature_unit", None),
         )
         checked = {
             key: checked.get(key)
             for key in ("decision", "entity", "requested", "observed",
                         "remaining_seconds", "phase", "needs_physical_check")
         }
-        language = str(getattr(
-            getattr(self.hass, "config", None), "language", "en"
-        ))
-        if isinstance(record.get("automatic_continue_requested"), dict):
+        if retained_target:
+            from .equipment_resume import exhausted_target_message
+            checked["command_attempts"] = pending.get("attempts")
+            checked["retry_limit_reached"] = True
+            checked["requires_user_repeated_check"] = False
+            checked["instructions"] = exhausted_target_message(
+                checked, language=language,
+            )
+        elif isinstance(record.get("automatic_continue_requested"), dict):
             # A saved user choice is handled by HEM itself. The user does
             # not need to keep pressing a button, and being online is not
             # proof the previously requested physical command succeeded.
@@ -1966,6 +1981,16 @@ class EquipmentRuntime:
                 checked, language=language,
             )
             checked["settings_saved"] = True
+            checked["requires_user_repeated_check"] = False
+        elif not record.get("paused"):
+            # This read is not a manual Resume attempt. An ordinary pending
+            # command is already checked/retried by _reconcile; presenting
+            # the manual verifier's two-click instructions here falsely
+            # implies a pause and that no command was sent.
+            from .equipment_resume import pending_feedback_message
+            checked["instructions"] = pending_feedback_message(
+                checked, language=language,
+            )
             checked["requires_user_repeated_check"] = False
         else:
             checked["instructions"] = instructions(
@@ -1988,6 +2013,7 @@ class EquipmentRuntime:
         upstream = record.get("upstream", {})
         if (cfg["control_mode"] in ("automatic", "pid")
                 and not record.get("paused") and not record.get("pending")
+                and not record.get("unconfirmed_native_target")
                 and not (isinstance(upstream, dict) and (
                     upstream.get("paused") or upstream.get("pending")))):
             return True  # Already automatic; no mode or physical write.
@@ -2073,15 +2099,16 @@ class EquipmentRuntime:
                 self.schedule()
             return False
 
-    async def async_resume(self, spec: model.ManagedDevice) -> None:
+    async def async_resume(
+        self, spec: model.ManagedDevice, *, automatic: bool = False,
+    ) -> None:
         """Re-arm a verified live device without forcing an OFF/ON cycle.
 
-        Resume is an explicit user acknowledgement, not implicit adoption by
-        a background poll. It never issues a physical service. It may preserve
-        prior confirmed native ownership, or accept an already-running native
-        output with newly verified authority. Interrupted/uncertain commands,
-        missing identity, unsupported physical modes and conflicting owners
-        still require independent resolution. Hardware dwell is never reset.
+        Explicit Resume grants another attempt after current-state verification.
+        Background reconciliation preserves exhausted target budgets: stable
+        observations establish current native state, not a successful command.
+        Neither path issues a physical service or bypasses identity, authority,
+        ownership or physical dwell verification.
         """
         async with self._lock(spec.identifier):
             if not self._ready or not self._current_spec(spec):
@@ -2172,12 +2199,17 @@ class EquipmentRuntime:
                         "HEM cannot safely clear or replay the command."
                     )
                 reported = physical[pending["entity"]]
+                ha_config = getattr(self.hass, "config", None)
+                language = str(getattr(ha_config, "language", "en"))
                 confirmation = check_pending(
                     pending, reported, now,
                     record.get("pending_resume_probe"),
                     matches_expected=matches(
                         reported, pending.get("expected", {}),
                     ) if isinstance(pending.get("expected"), dict) else False,
+                    language=language,
+                    temperature_unit=getattr(getattr(ha_config, "units", None),
+                                             "temperature_unit", None),
                 )
                 decision = confirmation["decision"]
                 if decision == "first_check":
@@ -2188,9 +2220,6 @@ class EquipmentRuntime:
                     }
                     await self._save()
                 if decision not in ("confirmed", "verified"):
-                    language = str(getattr(
-                        getattr(self.hass, "config", None), "language", "en"
-                    ))
                     raise HomeAssistantError(
                         instructions(confirmation, language=language)
                     )
@@ -2341,12 +2370,49 @@ class EquipmentRuntime:
                 paused=None, pending=None, power=next_power,
                 baseline=observed, off_at=next_off_at,
             )
+            target_budget = record.get("unconfirmed_native_target")
+            if not automatic:
+                # A successful explicit Check/Continue is fresh user consent
+                # to try again. Background polls cannot provide this consent.
+                record.pop("unconfirmed_native_target", None)
+            elif (
+                pending_recovery == "verified"
+                and isinstance(pending, dict)
+                and pending.get("service") == "set_temperature"
+                and pending.get("power") is not True
+                and type(pending.get("attempts")) is int
+                and pending["attempts"] >= NATIVE_COMMAND_MAX_ATTEMPTS
+                and (
+                    pending.get("phase") == "commanded"
+                    or isinstance(target_budget, dict)
+                    and pending.get("phase") == "intent"
+                    and all(pending.get(key) == target_budget.get(key)
+                            for key in ("entity", "service", "data", "expected"))
+                )
+                and not output_off(physical[pending["entity"]])
+            ):
+                # Retire the blocking command journal so normal OFF policies
+                # remain reachable, but retain its full failed target budget.
+                # Two stable observations must never make this a new attempt 1.
+                record["unconfirmed_native_target"] = deepcopy(pending)
+            target_budget = record.get("unconfirmed_native_target")
+            if isinstance(target_budget, dict):
+                native = physical.get(target_budget.get("entity"))
+                expected_target = target_budget.get("expected")
+                if (native is not None and observed.get(target_budget.get("entity")) is not None
+                        and (output_off(native)
+                             or isinstance(expected_target, dict) and expected_target
+                             and matches(native, expected_target))):
+                    # The target is now reported, or a real OFF ended its ON
+                    # episode. Neither a timeout nor availability earns this.
+                    record.pop("unconfirmed_native_target", None)
             record.pop("pending_resume_probe", None)
             if pending_recovery is not None and pending:
                 record["last_resume_reconciliation"] = {
                     "at": now,
                     "entity": pending["entity"],
                     "method": "fresh_native_ack" if pending_recovery == "confirmed"
+                              else "stable_native_state" if automatic
                               else "two_physical_checks",
                     "observed": physical[pending["entity"]].state,
                 }
@@ -2428,7 +2494,9 @@ class EquipmentRuntime:
                 # user check is required; do not erase its safety evidence.
                 if (pending_recovery == "verified"
                         or pending_recovery == "confirmed" and pending
-                        and pending.get("phase") == "intent"):
+                        and pending.get("phase") == "intent"
+                        or prior.get("unconfirmed_native_target")
+                            != record.get("unconfirmed_native_target")):
                     record.clear()
                     record.update(prior)
                     record.pop("pending_resume_probe", None)
@@ -2441,9 +2509,13 @@ class EquipmentRuntime:
             # Prefer existing localized statuses rather than creating an
             # untranslated diagnostic enum and another recorder schema.
             self._status(
-                spec, "manual" if active and effective_method == "manual"
+                spec, "awaiting_physical_acknowledgement"
+                if record.get("unconfirmed_native_target")
+                else "manual" if active and effective_method == "manual"
                 else "controlling" if active else "awaiting_evaluation",
-                reason="explicit_resume_verified_running" if active
+                reason="previous_command_not_yet_confirmed"
+                if record.get("unconfirmed_native_target")
+                else "explicit_resume_verified_running" if active
                 else "explicit_resume_awaiting_evaluation",
                 physical_mode=live_primary.state if active else "off",
                 controller_method=effective_method,
@@ -2789,6 +2861,38 @@ class EquipmentRuntime:
             self._status(spec, "waiting_for_physical_device",
                          reason="upstream_switch_off_native_state_unverified")
             return False
+        target_budget = record.get("unconfirmed_native_target")
+        if (isinstance(target_budget, dict)
+                and target_budget.get("entity") in spec.source_entities
+                and self._identity_ok(spec)):
+            entity = target_budget["entity"]
+            native = self.hass.states.get(entity)
+            expected_target = target_budget.get("expected")
+            live = native is not None and native.state not in ("unknown", "unavailable")
+            target_reported = bool(
+                live and isinstance(expected_target, dict) and expected_target
+                and matches(native, expected_target)
+            )
+            episode_ended = live and output_off(native)
+            if target_reported or episode_ended:
+                record.pop("unconfirmed_native_target", None)
+                if target_reported and not episode_ended and not record.get("pending"):
+                    # A late matching target is our expected feedback, not a
+                    # human override or a new native ON/dwell transition.
+                    # Rebase only the acknowledged attributes: a simultaneous
+                    # user mode/fan change must still reach the override gate.
+                    baseline = record.get("baseline", {}).get(entity)
+                    fields = expected_target.get("attributes")
+                    if (isinstance(baseline, dict)
+                            and isinstance(baseline.get("attributes"), dict)
+                            and isinstance(fields, dict)):
+                        baseline["attributes"].update({
+                            key: deepcopy(native.attributes[key])
+                            for key in fields if key in native.attributes
+                        })
+                # Preserve the ordinary OFF observation/ownership handling
+                # below; accepting an OFF must not skip its minimum dwell.
+                await self._save()
         pending = record.get("pending")
         if pending:
             if not self._identity_ok(spec):
@@ -3263,6 +3367,62 @@ class EquipmentRuntime:
         if not self.hass.services.has_service(domain, service):
             self._status(spec, "native_service_unavailable", service=f"{domain}.{service}")
             return False
+        target_budget = record.get("unconfirmed_native_target")
+        budget_retry = False
+        previous_budget = None
+        reserved_budget = None
+        reconnect_epoch = None
+        same_target = (
+            service == "set_temperature" and not power
+            and isinstance(target_budget, dict)
+            and all(target_budget.get(key) == value for key, value in (
+                ("entity", entity), ("service", service),
+                ("data", data), ("expected", expected),
+            ))
+        )
+        invalid_budget = (service == "set_temperature" and not power
+                          and target_budget is not None
+                          and not isinstance(target_budget, dict))
+        if same_target or invalid_budget:
+            # This is still the SAME exhausted target after read-only
+            # reconciliation. OFF and genuinely different requests bypass
+            # this budget; a timer or stable native mismatch cannot reset it.
+            now = self.clock()
+            attempts = target_budget.get("attempts") if same_target else None
+            used = target_budget.get("reconnect_retry_uses", 0) if same_target else None
+            first = finite(target_budget.get("when"), 0, now) if same_target else None
+            last = finite(target_budget.get("last_attempt_at"), 0, now) if same_target else None
+            reconnect_epoch = finite(
+                getattr(self, "_native_reconnect_epoch", {}).get(entity), 0, now
+            )
+            context = target_budget.get("retry_context") if same_target else None
+            settle_fn = getattr(self, "_native_settle_remaining", None)
+            budget_retry = bool(
+                same_target and type(attempts) is int
+                and NATIVE_COMMAND_MAX_ATTEMPTS <= attempts < (
+                    NATIVE_COMMAND_MAX_ATTEMPTS + NATIVE_RECONNECT_EXTRA_ATTEMPTS
+                )
+                and type(used) is int and 0 <= used < NATIVE_RECONNECT_EXTRA_ATTEMPTS
+                and first is not None and last is not None and first <= last
+                and reconnect_epoch is not None and reconnect_epoch > last
+                and reconnect_epoch != target_budget.get("reconnect_retry_epoch_used")
+                and now - reconnect_epoch >= NATIVE_RECONNECT_SETTLE_SECONDS
+                and now - last >= NATIVE_COMMAND_RETRY_SECONDS
+                and isinstance(context, dict) and context.get("settings") == cfg
+                and callable(settle_fn) and settle_fn(spec) == 0
+                and self._identity_ok(spec)
+            )
+            if not budget_retry:
+                self._status(
+                    spec, "awaiting_physical_acknowledgement",
+                    reason="previous_command_not_yet_confirmed",
+                    command_attempts=attempts,
+                    command_retries_completed=(max(0, attempts - 1)
+                                               if type(attempts) is int else None),
+                    native_output_confirmed=False,
+                )
+                return False
+            previous_budget = deepcopy(target_budget)
         before_settings = deepcopy(self.manager.settings)
         before_plan = deepcopy(plan)
         before_sources = {e: snapshot(self.hass.states.get(e)) for e in spec.source_entities}
@@ -3288,11 +3448,32 @@ class EquipmentRuntime:
                        "shutdown": shutdown, "policy_stop": policy_stop,
                        "upstream_owned": record.get("upstream", {}).get("owned"),
                    }}
+        if budget_retry:
+            pending.update(
+                when=previous_budget["when"],
+                attempts=previous_budget["attempts"] + 1,
+                last_attempt_at=self.clock(),
+                reconnect_retry_uses=previous_budget.get("reconnect_retry_uses", 0) + 1,
+                reconnect_retry_epoch_used=reconnect_epoch,
+            )
+            # Reserve the old budget durably before dispatch, including an
+            # uncertain interrupted intent. A restart cannot turn attempt 5
+            # into a new four-attempt command. A proven pre-send abort below
+            # restores the old budget because no actuator command occurred.
+            reserved_budget = deepcopy(pending)
+            record["unconfirmed_native_target"] = reserved_budget
         record["pending"] = pending
         await self._save()
 
         def current() -> bool:
-            if not self._active or not self._ready or record.get("paused"):
+            if (not self._active or not self._ready or record.get("paused")
+                    or record.get("pending") is not pending):
+                return False
+            if budget_retry and (
+                record.get("unconfirmed_native_target") is not reserved_budget
+                or self._native_settle_remaining(spec) != 0
+                or getattr(self, "_native_reconnect_epoch", {}).get(entity) != reconnect_epoch
+            ):
                 return False
             if any(snapshot(self.hass.states.get(e)) != previous for e, previous in before_sources.items()):
                 return False
@@ -3312,7 +3493,10 @@ class EquipmentRuntime:
 
         async def abort() -> bool:
             self._invalidated.add(spec.identifier)
-            record["pending"] = None  # Dispatch has NOT happened; no uncertainty.
+            if record.get("pending") is pending:
+                record["pending"] = None  # Dispatch has NOT happened; no uncertainty.
+            if budget_retry and record.get("unconfirmed_native_target") is reserved_budget:
+                record["unconfirmed_native_target"] = previous_budget
             await self._save()
             self._status(spec, "authority_or_evidence_changed_before_dispatch")
             return False
@@ -3327,9 +3511,11 @@ class EquipmentRuntime:
                     target={"entity_id": entity}, blocking=True), timeout=20)
             pending["phase"] = "commanded"
             pending["last_attempt_at"] = self.clock()
+            if budget_retry and record.get("unconfirmed_native_target") is reserved_budget:
+                reserved_budget.update(deepcopy(pending))
             await self._save()
             self._status(spec, "command_sent", entity_id=entity, service=service,
-                         command_attempts=1)
+                         command_attempts=pending["attempts"])
             return True
         except asyncio.CancelledError:
             raise  # Persisted intent is deliberately retained.
@@ -3825,12 +4011,11 @@ class EquipmentRuntime:
         return max(0.0, remaining)
 
     def _automatic_recovery_gate(self, spec: model.ManagedDevice) -> dict:
-        """Read-only: only positively confirmed old commands can auto-rearm.
+        """Read-only: verify current state before resuming ordinary control.
 
-        An online entity, timeout or two stable observations are NOT a
-        command acknowledgement. The previous pending journal is retained
-        until its expected physical state is confirmed, or explicit separate
-        hardware recovery establishes new permission.
+        An online entity or two stable observations are not a command ACK.
+        Automatic Resume preserves an unconfirmed exhausted target budget
+        separately, so normal shutdown policies remain reachable afterwards.
         """
         if not self._current_spec(spec):
             return {"ready": False, "reason": "source_deselected_or_moved"}
@@ -3977,7 +4162,7 @@ class EquipmentRuntime:
         try:
             # async_resume is the original comprehensive native/source/relay
             # verifier. No new physical service is sent by this helper.
-            await self.async_resume(spec)
+            await self.async_resume(spec, automatic=True)
         except HomeAssistantError as error:
             # An observation interval or missing ACK is not a user-facing
             # Manual pause. HEM continues checking during its next normal
@@ -4002,10 +4187,16 @@ class EquipmentRuntime:
             ):
                 record.pop("automatic_continue_requested", None)
                 await self._save()
+                target_budget = record.get("unconfirmed_native_target")
                 self._status(
-                    spec, "awaiting_evaluation",
-                    reason="automatic_recovery_verified",
-                    automatic_selected=True, physical_output_confirmed=True,
+                    spec, "awaiting_physical_acknowledgement"
+                    if target_budget else "awaiting_evaluation",
+                    reason="previous_command_not_yet_confirmed"
+                    if target_budget else "automatic_recovery_verified",
+                    automatic_selected=True,
+                    physical_output_confirmed=not bool(target_budget),
+                    command_attempts=(target_budget.get("attempts")
+                                      if isinstance(target_budget, dict) else None),
                 )
 
     def _startup_readiness(self, spec: model.ManagedDevice) -> dict:

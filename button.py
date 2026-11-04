@@ -120,6 +120,7 @@ class EquipmentResumeButton(EquipmentEntity, ButtonEntity):
         upstream = record.get("upstream", {})
         upstream = upstream if isinstance(upstream, dict) else {}
         needs_recovery = bool(record.get("paused") or record.get("pending")
+                              or record.get("unconfirmed_native_target")
                               or upstream.get("paused") or upstream.get("pending")
                               or record.get("automatic_continue_requested"))
         return bool(getattr(runtime, "_ready", False)
