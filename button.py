@@ -122,7 +122,11 @@ class EquipmentResumeButton(EquipmentEntity, ButtonEntity):
         needs_recovery = bool(record.get("paused") or record.get("pending")
                               or record.get("unconfirmed_native_target")
                               or upstream.get("paused") or upstream.get("pending")
-                              or record.get("automatic_continue_requested"))
+                              or record.get("automatic_continue_requested")
+                              or (record.get("native_setpoint_stop")
+                                  and getattr(runtime, "statuses", {}).get(
+                                      self._spec.identifier, {}
+                                  ).get("status") == "native_setpoint_shutdown_blocked"))
         return bool(getattr(runtime, "_ready", False)
                     and runtime._current_spec(self._spec)
                     and (needs_recovery

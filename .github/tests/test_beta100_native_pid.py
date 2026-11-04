@@ -24,7 +24,20 @@ async def run():
             SPEC,controlled.manager.cap,mode,
             {"heat":19.,"cool":26.},None,True)
         assert controlled.calls==[]
-        controlled.state.state=mode
+        controlled.state=fixture["State"](mode,changed=controlled.now)
+        # The observed native ON starts the required grace. Neither the
+        # ACK itself nor a poll just before 30 seconds may write a target.
+        assert not await controlled._native_target(
+            SPEC,controlled.manager.cap,mode,
+            {"heat":19.,"cool":26.},None,True)
+        assert controlled.calls==[]
+        assert controlled.statuses[-1][0]=='native_setpoint_startup_grace'
+        controlled.now+=29.999
+        assert not await controlled._native_target(
+            SPEC,controlled.manager.cap,mode,
+            {"heat":19.,"cool":26.},None,True)
+        assert controlled.calls==[]
+        controlled.now=5030.
         assert await controlled._native_target(
             SPEC,controlled.manager.cap,mode,
             {"heat":19.,"cool":26.},None,True)
@@ -95,4 +108,4 @@ assert "el:{heating:'Θερμαίνει',cooling:'Ψύχει',drying:'Αφυγρ
 assert "['heating','cooling','drying','dehumidifying','fan','fan_only','humidifying']" in card
 assert "HEM_COMPACT87_START" in card
 assert "_recoverUnexpectedScroll92" in card
-print("BETA100_NATIVE_ON_FIRST_EXTREMES_AND_NATIVE_ONLY_TELEMETRY=PASS")
+print("BETA100_NATIVE_ON_THEN_30S_EXTREMES_AND_NATIVE_ONLY_TELEMETRY=PASS")

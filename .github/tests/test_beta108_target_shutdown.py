@@ -106,7 +106,7 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
             await asyncio.gather(*tasks)
 
     def assert_off_command(self, runtime, original):
-        self.assertEqual(len(runtime.calls), 5, runtime.calls)
+        self.assertEqual(len(runtime.calls), 6, runtime.calls)
         self.assertEqual(runtime.calls[-1], {
             "domain": "climate", "service": "set_hvac_mode",
             "data": {"hvac_mode": "off"}, "target": {"entity_id": PRIMARY},
@@ -115,6 +115,16 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(runtime.record["pending"]["phase"], "commanded")
         self.assert_ledger(runtime, original)
         self.assertIn(PRIMARY, runtime.record["power"], "Service completion does not prove OFF")
+
+    async def finish_prepared_stop(self, runtime, original):
+        # Beta109 adds a distinct reducing-target leg. It is allowed even
+        # while the failed ON target keeps its original exhausted budget.
+        self.assertEqual(len(runtime.calls), 5)
+        self.assertEqual(runtime.calls[-1]["data"], {"temperature": runtime.original_target})
+        self.assert_ledger(runtime, original)
+        self.assertIn("native_setpoint_stop", runtime.record)
+        await runtime.evaluate(30)
+        self.assert_off_command(runtime, original)
 
     async def test_each_required_stop_dispatches_off_and_waits_for_its_ack(self):
         for method in ("automatic", "pid"):
@@ -129,13 +139,13 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
                         self.assertTrue(runtime._shutdown_allowed(SPEC, PRIMARY, {"state": "off"}))
                         await self.reconcile_target(runtime, original)
                         await runtime.evaluate()
-                        self.assert_off_command(runtime, original)
+                        await self.finish_prepared_stop(runtime, original)
                         runtime.report(mode="off")
                         await runtime.evaluate(1)
                         self.assertIsNone(runtime.record["pending"])
                         self.assertNotIn(PRIMARY, runtime.record["power"])
                         self.assertNotIn(LEDGER, runtime.record)
-                        self.assertEqual(len(runtime.calls), 5)
+                        self.assertEqual(len(runtime.calls), 6)
 
     async def test_withdrawn_stop_cannot_reset_the_failed_target_budget(self):
         for method in ("automatic", "pid"):
@@ -167,25 +177,25 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
                             self.assertIsNone(runtime.record["pending"])
                             self.assert_ledger(runtime, original)
 
-    async def test_stop_withdrawn_during_off_persistence_preserves_failed_target(self):
+    async def test_stop_withdrawn_during_preparation_persistence_preserves_failed_target(self):
         runtime, original = await self.exhausted()
         self.open_window(runtime)
         await self.reconcile_target(runtime, original)
 
         def withdraw_after_intent(controller):
             pending = controller.record.get("pending") or {}
-            if pending.get("service") == "set_hvac_mode" and pending.get("phase") == "intent":
+            if pending.get("stop_target") and pending.get("phase") == "intent":
                 self.close_window(controller)
                 controller.after_persist = None
 
         runtime.after_persist = withdraw_after_intent
         await runtime.evaluate()
-        self.assertIsNone(runtime.after_persist, "The test must reach durable OFF intent")
-        self.assertEqual(len(runtime.calls), 4, "The fresh stop recheck must prevent stale OFF")
+        self.assertIsNone(runtime.after_persist, "The test must reach durable preparation intent")
+        self.assertEqual(len(runtime.calls), 4, "The fresh stop recheck must prevent stale preparation")
         self.assertIsNone(runtime.record["pending"])
         self.assert_ledger(runtime, original)
         await runtime.evaluate(1)
-        self.assertEqual(len(runtime.calls), 4, "Aborting OFF must not replenish the target budget")
+        self.assertEqual(len(runtime.calls), 4, "Aborting preparation must not replenish the target budget")
         self.assert_ledger(runtime, original)
 
     async def test_reconciliation_preserves_minimum_on_before_off(self):
@@ -202,7 +212,7 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(runtime.calls), 4)
         self.assert_ledger(runtime, original)
         await runtime.evaluate(1)
-        self.assert_off_command(runtime, original)
+        await self.finish_prepared_stop(runtime, original)
 
     async def test_late_target_ack_does_not_hide_an_explicit_user_mode_change(self):
         runtime, original = await self.exhausted()
@@ -264,8 +274,10 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
 
                 runtime.after_persist = change_after_intent
                 await runtime.evaluate()
+                self.assertEqual(runtime.calls[-1]["data"], {"temperature": runtime.original_target})
+                await runtime.evaluate(30)
                 self.assertIsNone(runtime.after_persist, "The test must reach durable OFF intent")
-                self.assertEqual(len(runtime.calls), 4)
+                self.assertEqual(len(runtime.calls), 5, "Only the preparation was dispatched")
                 self.assertIsNone(runtime.record["pending"])
                 self.assert_ledger(runtime, original)
 

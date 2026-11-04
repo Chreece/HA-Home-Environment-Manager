@@ -147,7 +147,35 @@ runtime_ns = {
     "output_off": lambda s: s is not None and s.state == "off",
     "snapshot": lambda s: None if s is None else {"state": s.state, "attributes": dict(s.attributes)},
     "finite": lambda v, lo, hi: v if isinstance(v,(float,int)) and lo <= v <= hi else None,
+    "entity_area": lambda hass, entity: spec.area_id,
+    "foreign_owner_hold": lambda *args: None,
 }
+# Load the production sequencing module even when this PID-only fixture
+# delegates physical dispatch. Its real progress check must run in tick.
+sys.modules["test_beta70.equipment_model"] = model
+pkg.equipment_model = model
+for helper in ("pid_math", "equipment_setpoint_sequence"):
+    helper_spec = importlib.util.spec_from_file_location(
+        f"test_beta70.{helper}", ROOT / f"{helper}.py")
+    helper_module = importlib.util.module_from_spec(helper_spec)
+    sys.modules[helper_spec.name] = helper_module
+    helper_spec.loader.exec_module(helper_module)
+runtime_tree = ast.parse((ROOT / "equipment_runtime.py").read_text())
+runtime_constants = [
+    node for node in runtime_tree.body if isinstance(node, ast.Assign)
+    and any(isinstance(target, ast.Name) and (
+        target.id.startswith("NATIVE_")
+        or target.id in ("MONITORED", "SETTABLE_OUTPUT_ATTRIBUTES"))
+        for target in node.targets)
+]
+exec(compile(ast.Module(body=runtime_constants, type_ignores=[]),
+             "equipment_runtime.py", "exec"), runtime_ns)
+extract("equipment_runtime.py",
+        ("native_retry_decision", "snapshot", "matches", "_manual_output_changes"),
+        runtime_ns)
+runtime_module = ModuleType("test_beta70.equipment_runtime")
+runtime_module.__dict__.update(runtime_ns)
+sys.modules[runtime_module.__name__] = runtime_module
 (tick,) = extract("equipment_runtime.py", ("tick",), runtime_ns)
 
 

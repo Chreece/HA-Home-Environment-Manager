@@ -69,5 +69,6 @@ assert '"native_minimum_off_until": observed.get("minimum_off_until")' in status
 card = (ROOT / 'frontend/air-quality-advisor-card.js').read_text()
 assert "state==='minimum_on_hold'" in card
 assert "state==='minimum_off_hold'" in card
-assert "const label=this._controllerStatusLabel(state)+untilLabel;" in card
+assert "const label=transition109?.label || this._controllerStatusLabel(state)+untilLabel;" in card
+assert "Math.ceil((until-Date.now()/1000)/60)+' min'" in card
 print('BETA100_DELAYED_NATIVE_OFF_AND_MINIMUM_ON_COUNTDOWN=PASS')

@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import ast
 import asyncio
+import importlib.util
 from dataclasses import asdict, dataclass
 import math
 from pathlib import Path
@@ -109,8 +110,14 @@ sys.modules[supply.__name__] = supply
 
 
 def extract():
-    retry_fn = next(n for n in TREE.body if isinstance(n, ast.FunctionDef)
-                    and n.name == "native_retry_decision")
+    helpers = [n for n in TREE.body if isinstance(n, ast.FunctionDef)
+               and n.name in ("native_retry_decision", "snapshot", "matches",
+                              "_manual_output_changes")]
+    constants = [n for n in TREE.body if isinstance(n, ast.Assign)
+                 and any(isinstance(target, ast.Name) and (
+                     target.id.startswith("NATIVE_")
+                     or target.id in ("MONITORED", "SETTABLE_OUTPUT_ATTRIBUTES"))
+                     for target in n.targets)]
     requested = ("_retry_pending", "_native_target")
     methods = [n for n in METHODS.body if isinstance(n, ast.AsyncFunctionDef)
                and n.name in requested]
@@ -133,20 +140,34 @@ def extract():
         "quantize_target": lambda value, step, low, high:
             min(high, max(low, round(float(value) / step) * step)),
     }
-    exec(compile(ast.Module(body=[retry_fn, *methods], type_ignores=[]),
+    exec(compile(ast.Module(body=[*constants, *helpers, *methods], type_ignores=[]),
                  str(SOURCE), "exec"), scope)
     return scope
 
 
 NS = extract()
+sys.modules["hem_beta88_fixture.equipment_model"] = Model
+pkg.equipment_model = Model
+runtime_module = ModuleType("hem_beta88_fixture.equipment_runtime")
+runtime_module.__dict__.update(NS)
+sys.modules[runtime_module.__name__] = runtime_module
+for helper in ("pid_math", "equipment_setpoint_sequence"):
+    helper_spec = importlib.util.spec_from_file_location(
+        f"hem_beta88_fixture.{helper}", ROOT / f"{helper}.py")
+    helper_module = importlib.util.module_from_spec(helper_spec)
+    sys.modules[helper_spec.name] = helper_module
+    helper_spec.loader.exec_module(helper_module)
 SPEC = SimpleNamespace(identifier="controller", area_id="kitchen",
                        source_entities=("climate.heater",))
 
 
 class State:
-    def __init__(self, mode="off", *, temperature=20, presets=()):
+    def __init__(self, mode="off", *, temperature=20, presets=(), changed=0.0):
         self.domain = "climate"
         self.state = mode
+        # Existing-state fixtures have already completed native startup.
+        # Tests of a newly acknowledged ON supply the actual newer timestamp.
+        self.last_changed = SimpleNamespace(timestamp=lambda: changed)
         self.attributes = {
             "temperature": temperature, "temperature_unit": "°C",
             "min_temp": 5, "max_temp": 35, "target_temp_step": 0.5,

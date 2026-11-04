@@ -774,6 +774,9 @@ def claimed_sources(manager: Any) -> set[str]:
         active.update(record.get("power", {}))
         if isinstance(record.get("pending"), dict):
             active.add(record["pending"]["entity"])
+        sequence = record.get("native_setpoint_stop")
+        if isinstance(sequence, dict) and isinstance(sequence.get("entity"), str):
+            active.add(sequence["entity"])
     return active
 
 

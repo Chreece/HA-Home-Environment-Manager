@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import ast
 import asyncio
+import importlib.util
 from copy import deepcopy
+from dataclasses import asdict, dataclass
 import runpy
 import sys
 from pathlib import Path
@@ -28,6 +30,16 @@ Model=base['Model']
 
 
 class ExtendedModel(Model):
+    TEMP = 1
+
+    @staticmethod
+    def features(state):
+        return state.attributes.get("supported_features", 0)
+
+    @staticmethod
+    def plan_for(manager, spec):
+        return manager.plan
+
     @staticmethod
     def sources_available(manager, spec):
         return all(
@@ -61,20 +73,53 @@ sys.modules.update({
 root=ast.parse((ROOT/'equipment_runtime.py').read_text(encoding='utf-8'))
 cls=next(n for n in root.body if isinstance(n,ast.ClassDef) and n.name=='EquipmentRuntime')
 methods=('async_start','_verify_restart_power','_observe_native_running','_power')
+methods=(*methods, '_send')
 nodes=[n for n in cls.body if isinstance(n,ast.AsyncFunctionDef) and n.name in methods]
 assert {n.name for n in nodes}==set(methods)
+helpers=[n for n in root.body if isinstance(n,ast.FunctionDef)
+         and n.name in ('native_retry_decision','snapshot','matches',
+                        '_manual_output_changes')]
+constants=[n for n in root.body if isinstance(n,ast.Assign)
+           and any(isinstance(target,ast.Name) and (
+               target.id.startswith('NATIVE_')
+               or target.id in ('MONITORED','SETTABLE_OUTPUT_ATTRIBUTES'))
+               for target in n.targets)]
 namespace={
  '__name__':'beta73_fixture.equipment_runtime',
  '__package__':'beta73_fixture',
  'asyncio':asyncio, 'deepcopy':deepcopy,
+ 'asdict':asdict,
  'HomeAssistantError':HomeAssistantError,
  'model':ExtendedModel, 'snapshot':snap, 'output_off':off,
  'finite':finite, 'matches':base['matches'],
  '_manual_output_changes':physical_changes,
  'foreign_owner_hold':lambda hass,owner,e: hass.manager.foreign_owner,
+ 'entity_area':lambda hass,entity:spec.area_id,
  'DOMAIN':'environment_manager',
 }
-exec(compile(ast.Module(body=nodes,type_ignores=[]),'equipment_runtime.py','exec'),namespace)
+exec(compile(ast.Module(body=[*constants,*helpers,*nodes],type_ignores=[]),
+             'equipment_runtime.py','exec'),namespace)
+sys.modules['beta73_fixture.equipment_model']=ExtendedModel
+package.equipment_model=ExtendedModel
+runtime_module=ModuleType('beta73_fixture.equipment_runtime')
+runtime_module.__dict__.update(namespace)
+sys.modules[runtime_module.__name__]=runtime_module
+for helper in ('pid_math','equipment_setpoint_sequence'):
+    helper_spec=importlib.util.spec_from_file_location(
+        f'beta73_fixture.{helper}',ROOT/f'{helper}.py')
+    helper_module=importlib.util.module_from_spec(helper_spec)
+    sys.modules[helper_spec.name]=helper_module
+    helper_spec.loader.exec_module(helper_module)
+sequence=sys.modules['beta73_fixture.equipment_setpoint_sequence']
+
+
+@dataclass(frozen=True)
+class Capabilities:
+    primary: str='climate.heater'
+    domain: str='climate'
+    modes: tuple=('off','heat','cool')
+    temperature: bool=True
+    humidity: bool=False
 
 storage = ModuleType('homeassistant.helpers.storage')
 class Store:
@@ -124,6 +169,12 @@ class Controller(Parent):
         self.manager.original_store={'version':1,'records':deepcopy(self.records)}
         self.manager.native_permission=True
         self.manager.source_valid=True
+        self.manager.cap=Capabilities()
+        self.manager.plan={}
+        if self.states.get('climate.heater') is not None:
+            self.states['climate.heater'].attributes.update(
+                temperature=21., min_temp=5., max_temp=35.,
+                supported_features=1)
         self.status=None
         self.actual_commands=[]
         self._store=None
@@ -133,6 +184,22 @@ class Controller(Parent):
         self._pid_offline_previews={}
         self._fan_allocations={}
         self._saved=[]
+        self._commands=asyncio.Semaphore(1)
+        self._invalidated=set()
+        async def service_call(*args,**kwargs):
+            # Transport accepts the payload; feedback stays unchanged until
+            # a test supplies a real native state. A call is never an ACK.
+            return None
+        self.hass.services=N(has_service=lambda domain,service:True,
+                             async_call=service_call)
+    def measurements(self,*args):
+        return {'temperature':20.}
+    def _quiet_context(self,*args):
+        return False
+    def _gate(self,*args,**kwargs):
+        return None if (self._ready and self._active
+                        and self.manager.source_valid
+                        and self.manager.native_permission) else 'not_authorized'
     def _identity_ok(self, spec):
         return self.manager.source_valid
     def _current_spec(self,spec):
@@ -152,8 +219,11 @@ class Controller(Parent):
             and self.manager.foreign_owner is None
         )
     async def _send(self,spec,cap,entity,service,data,expected,**kwargs):
-        self.actual_commands.append((service,dict(data),dict(expected),kwargs))
-        return True
+        sent=await namespace['_send'](
+            self,spec,cap,entity,service,data,expected,**kwargs)
+        if sent:
+            self.actual_commands.append((service,dict(data),dict(expected),kwargs))
+        return sent
 
 
 async def run():
@@ -175,8 +245,21 @@ async def run():
     assert await r._power(
         spec,r.manager.cap,'off',automatic=False,shutdown=True
     )
+    assert r.actual_commands[-1][0]=='set_temperature'
+    assert r.actual_commands[-1][1]=={'temperature':5.}
+    assert r.record['power']['climate.heater']['since']==NOW-750
+    assert r.record['pending']['expected']=={'attributes':{'temperature':5.}}
+    r.now=NOW+29.999
+    assert await sequence.progress_stop(r,spec)
+    assert len(r.actual_commands)==1
+    r.now=NOW+30.
+    assert await sequence.progress_stop(r,spec)
     assert r.actual_commands[-1][0]=='set_hvac_mode'
     assert r.actual_commands[-1][1]=={'hvac_mode':'off'}
+    assert len(r.actual_commands)==2
+    assert r.record['power']['climate.heater']['since']==NOW-750
+    assert r.record['native_setpoint_stop']['target_confirmed'] is False
+    assert r.record['pending']['expected']=={'state':'off'}
 
     # A persisted OFF observation can be stale after an acknowledged
     # physical ON operation immediately before the HA process stopped.
@@ -309,7 +392,7 @@ async def run():
     assert 'if not await self._verify_restart_power(spec)' in src
     assert 'await self._observe_native_running(spec, cap, state)' in src
     assert 'native_power_observations' in src
-    print('PASS Beta73: persisted heat runtime survives fake HA restart timestamp; immediate eligible OFF; real short minimum-ON remains held; verified automatic ownership; no power commands during verification; uncertainty fail-closed; durable real OFF->ON transition; no repeated Store writes')
+    print('PASS Beta73: persisted heat runtime survives fake HA restart timestamp; reverse target then 30s eligible OFF without false ACK; real short minimum-ON remains held; verified automatic ownership; no power commands during verification; uncertainty fail-closed; durable real OFF->ON transition; no repeated Store writes')
 
 
 asyncio.run(run())

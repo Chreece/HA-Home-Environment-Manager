@@ -321,7 +321,11 @@ class ExhaustedTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
                     else:
                         runtime.measurement = 23.0
                         await runtime.evaluate()
+                        self.assertEqual(runtime.calls[-1]["data"], {"temperature": runtime.original_target})
+                        self.assertEqual(len(runtime.calls), 1)
+                        await runtime.evaluate(30)
                         self.assertEqual(runtime.calls[-1]["data"], {"hvac_mode": "off"})
+                        self.assertEqual(len(runtime.calls), 2)
                         self.assertIn("unconfirmed_native_target", runtime.record,
                                       "A successful OFF service is not physical OFF feedback")
                         runtime.report(mode="off")

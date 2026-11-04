@@ -64,6 +64,8 @@ def create(mode='off', *, supply_owned=True, off_age=1800, boot_mode='heat'):
         },
     })
     r.states['climate.heater']=state(mode,changed=NOW-2)
+    r.states['climate.heater'].attributes.update(
+        temperature=21., min_temp=5., max_temp=35., supported_features=1)
     r.actual_commands=[]
     return r
 
@@ -148,6 +150,16 @@ async def evaluate():
     active.now=NOW+600
     assert await active._power(
         spec,active.manager.cap,'off',automatic=False,shutdown=True)
+    assert active.actual_commands[-1][0:2]==('set_temperature',{'temperature':5.})
+    assert active.record['power']['climate.heater']['since']==NOW
+    active.now=NOW+629.999
+    assert await b['sequence'].progress_stop(active,spec)
+    assert len(active.actual_commands)==1
+    active.now=NOW+630.
+    assert await b['sequence'].progress_stop(active,spec)
+    assert active.actual_commands[-1][0:2]==('set_hvac_mode',{'hvac_mode':'off'})
+    assert active.record['pending']['expected']=={'state':'off'}
+    assert active.record['power']['climate.heater']['since']==NOW
 
     # Non-climate physical endpoints report HA "on" or an actual %
     # rather than their assigned "heat"/"dry"/"fan_only" capability role.
@@ -176,8 +188,9 @@ async def evaluate():
         variant.states[entity]=native
         variant.record['sources']=[entity]
         variant.record['baseline']={entity:b['snap'](native)}
-        variant.manager.cap=N(
+        variant.manager.cap=b['Capabilities'](
             primary=entity,domain=domain,modes=('off',role),
+            temperature=False,
         )
         variant.manager.settings[M.SETTINGS][spec.identifier]['requested_mode']=role
         assert await variant._reconcile_native_after_supply_wake(
@@ -198,8 +211,9 @@ async def evaluate():
     valve_off.attributes.update(unit_of_measurement='%',min=0,max=100)
     valve.states['number.valve']=valve_off
     valve.record['sources']=['number.valve']
-    valve.manager.cap=N(primary='number.valve',domain='number',
-                          modes=('off','heat'))
+    valve.manager.cap=b['Capabilities'](
+        primary='number.valve',domain='number',modes=('off','heat'),
+        temperature=False)
     assert await valve._reconcile_native_after_supply_wake(
         valve_source,valve.manager.cap)
     assert valve.record['off_at']['number.valve']==NOW-1800

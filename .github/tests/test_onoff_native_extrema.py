@@ -161,6 +161,7 @@ extract(RUNTIME, (*METHODS, "output_off", "snapshot", "matches", "_manual_output
     "NATIVE_RECONNECT_SETTLE_SECONDS", "NATIVE_RECONNECT_EXTRA_ATTEMPTS",
     "SETTABLE_OUTPUT_ATTRIBUTES", "MONITORED",
 ))
+load_pure("equipment_setpoint_sequence", "equipment_setpoint_sequence.py")
 
 
 class NativeRuntime:
@@ -311,6 +312,9 @@ class OnOffNativeExtremaTests(unittest.IsolatedAsyncioTestCase):
                             self.assertEqual(len(runtime.calls), 1, "No target before native mode ACK")
                             runtime.report(mode=mode)
                             await runtime.tick(SPEC)
+                            self.assertEqual(len(runtime.calls), 1, "Native ON begins the 30-second setpoint grace")
+                            runtime.now += 30
+                            await runtime.tick(SPEC)
                             self.assertEqual(runtime.calls[-1], {
                                 "domain": "climate", "service": "set_temperature",
                                 "data": {"temperature": expected}, "target": {"entity_id": PRIMARY},
@@ -383,7 +387,7 @@ class OnOffNativeExtremaTests(unittest.IsolatedAsyncioTestCase):
             "native_service_unavailable", {"service": "climate.set_temperature"},
         ))
 
-    async def test_off_no_demand_and_safety_holds_never_write_temperature(self):
+    async def test_off_no_demand_and_safety_holds_never_write_on_extreme(self):
         for method in ("pid", "automatic"):
             for mode in ("heat", "cool"):
                 with self.subTest(method=method, mode=mode, case="minimum_off"):
@@ -401,8 +405,13 @@ class OnOffNativeExtremaTests(unittest.IsolatedAsyncioTestCase):
                     runtime.own_running(age=900.0)
                     runtime.measurement = 23.0
                     await runtime.tick(SPEC)
+                    self.assertEqual(runtime.calls[-1]["data"], {
+                        "temperature": 5.0 if mode == "heat" else 35.0,
+                    })
+                    runtime.now += 30
+                    await runtime.tick(SPEC)
                     self.assertEqual(runtime.calls[-1]["data"], {"hvac_mode": "off"})
-                    self.assertFalse(any(call["service"] == "set_temperature" for call in runtime.calls))
+                    self.assertEqual(len(runtime.calls), 2)
             for hold in ("startup", "unavailable", "window", "sleep", "defrost", "foreign", "settling"):
                 with self.subTest(method=method, hold=hold):
                     runtime = NativeRuntime(method)
@@ -423,15 +432,17 @@ class OnOffNativeExtremaTests(unittest.IsolatedAsyncioTestCase):
                     else:
                         runtime.settle_seconds = 30.0
                     await runtime.tick(SPEC)
-                    self.assertFalse(any(call["service"] == "set_temperature" for call in runtime.calls),
-                                     (runtime.calls, runtime.statuses))
                     if hold in ("window", "sleep"):
+                        self.assertEqual(runtime.calls[-1]["data"], {"temperature": 5.0})
+                        runtime.now += 30
+                        await runtime.tick(SPEC)
                         self.assertEqual(runtime.calls[-1]["data"], {"hvac_mode": "off"})
+                        self.assertEqual(len(runtime.calls), 2)
                     else:
                         self.assertEqual(runtime.calls, [])
 
     async def test_pwm_off_phase_corrects_target_only_during_mandatory_on_hold(self):
-        for age, expected_service in ((100.0, "set_temperature"), (900.0, "set_hvac_mode")):
+        for age, expected in ((100.0, 35.0), (900.0, 5.0)):
             with self.subTest(age=age):
                 runtime = NativeRuntime(absent=("temperature_unit", "target_temp_step"))
                 runtime.own_running(age=age)
@@ -445,9 +456,13 @@ class OnOffNativeExtremaTests(unittest.IsolatedAsyncioTestCase):
                 runtime._memory[SPEC.identifier] = signature, memory, runtime.now - 1500.0
                 await runtime.tick(SPEC)
                 self.assertEqual(len(runtime.calls), 1, runtime.statuses)
-                self.assertEqual(runtime.calls[-1]["service"], expected_service, runtime.statuses)
-                self.assertEqual(runtime.calls[-1]["data"], {"temperature": 35.0}
-                                 if age == 100 else {"hvac_mode": "off"})
+                self.assertEqual(runtime.calls[-1]["service"], "set_temperature", runtime.statuses)
+                self.assertEqual(runtime.calls[-1]["data"], {"temperature": expected})
+                if age == 900:
+                    runtime.now += 30
+                    await runtime.tick(SPEC)
+                    self.assertEqual(runtime.calls[-1]["data"], {"hvac_mode": "off"})
+                    self.assertEqual(len(runtime.calls), 2)
 
 
 if __name__ == "__main__":

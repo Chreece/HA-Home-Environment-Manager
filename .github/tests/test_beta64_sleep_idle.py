@@ -7,6 +7,7 @@ from __future__ import annotations
 import ast
 import asyncio
 import copy
+import importlib.util
 import sys
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
@@ -39,6 +40,7 @@ class Capabilities:
     domain: str = "climate"
     modes: tuple[str, ...] = ("off", "dry")
     humidity: bool = True
+    temperature: bool = False
     humidifying: bool = False
 
 
@@ -295,7 +297,35 @@ runtime_env = {
     "matches": lambda s, expected: s is not None and s.state == expected.get("state"),
     "entity_area": lambda hass, entity: spec.area_id,
     "STARTUP_SECONDS": 300,
+    "foreign_owner_hold": lambda *args: None,
 }
+# The real tick/send/power paths now import the native setpoint sequencer.
+# This fixture is a DRY-only appliance (no temperature control), so it must
+# still take its original guarded OFF without a thermostat shutdown leg.
+sys.modules["beta64_probe.equipment_model"] = Model
+setattr(pkg, "equipment_model", Model)
+for helper in ("pid_math", "equipment_setpoint_sequence"):
+    helper_spec = importlib.util.spec_from_file_location(
+        f"beta64_probe.{helper}", ROOT / f"{helper}.py")
+    helper_module = importlib.util.module_from_spec(helper_spec)
+    sys.modules[helper_spec.name] = helper_module
+    helper_spec.loader.exec_module(helper_module)
+runtime_tree = ast.parse((ROOT / "equipment_runtime.py").read_text())
+runtime_constants = [
+    node for node in runtime_tree.body if isinstance(node, ast.Assign)
+    and any(isinstance(target, ast.Name) and (
+        target.id.startswith("NATIVE_")
+        or target.id in ("MONITORED", "SETTABLE_OUTPUT_ATTRIBUTES"))
+        for target in node.targets)
+]
+exec(compile(ast.Module(body=runtime_constants, type_ignores=[]),
+             "equipment_runtime.py", "exec"), runtime_env)
+extract("equipment_runtime.py",
+        ("native_retry_decision", "snapshot", "matches", "_manual_output_changes"),
+        runtime_env)
+runtime_module = ModuleType("beta64_probe.equipment_runtime")
+runtime_module.__dict__.update(runtime_env)
+sys.modules[runtime_module.__name__] = runtime_module
 (stop_policy, native_send, native_power, tick) = extract(
     "equipment_runtime.py",
     ("_stop_policy_verified", "_send", "_power", "tick"),
