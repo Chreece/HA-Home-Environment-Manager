@@ -198,7 +198,19 @@ with sync_playwright() as playwright:
     assert row.locator('[data-hem-average105="temperature"]').count()==0
     # Other room source spoofing must never open unrelated entities.
     test=row.locator('[data-hem-source105="sensor.temp_a"]')
-    assert test.count()==1
+    if test.count()!=1:
+        debug=page.evaluate("""()=>{
+          const data=card._dashboard105();
+          const ev=data?.rooms?.find(r=>r.area_id==='room0')?.environment?.measurement_evidence?.temperature;
+          const badges=[...card.shadowRoot.querySelectorAll('[data-room-fold87="room0"] .hem-room-reading87')]
+            .map(el=>({tag:el.tagName,outer:el.outerHTML.slice(0,450)}));
+          return {evidence:ev,sourceVisible:!!card._hass.states['sensor.temp_a'],
+            allowed:card._nativeAllowed105('sensor.temp_a'),
+            evidenceLookup:card._evidence105('room0','temperature'),
+            badges,renderError:card._lastRenderError,
+            dashboardVersion:data?.version};
+        }""")
+        raise AssertionError(("ONE_NATIVE_SOURCE_MUST_REMAIN_CLICKABLE",debug))
     test.evaluate("(el)=>el.setAttribute('data-hem-source105','sensor.unrelated')")
     original=page.evaluate('info.length')
     test.click()
