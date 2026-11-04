@@ -275,6 +275,19 @@
       sleep_room_evidence_unknown:'Cannot verify whether this room is sleeping',
       minimum_off_hold:'Waiting for the minimum safe OFF time',
       minimum_on_hold:'Waiting for the minimum safe ON time',
+      native_setpoint_startup_grace:'Waiting before setting the operating temperature',
+      native_setpoint_shutdown_grace:'Waiting before switching off',
+      native_setpoint_shutdown_preparing:'Preparing the device to switch off',
+      native_setpoint_shutdown_blocked:'Waiting until the device can switch off safely',
+      invalid_shutdown_sequence:'Shutdown is on hold because its saved state cannot be verified',
+      invalid_shutdown_deadline:'Shutdown is on hold because its saved state cannot be verified',
+      invalid_shutdown_retry_history:'Shutdown is on hold because its saved state cannot be verified',
+      shutdown_target_authority_changed:'Device control changed; the shutdown temperature cannot yet be requested',
+      shutdown_finish_authority_changed:'Device control changed; permission to switch off must be verified',
+      upstream_switch_not_verified_on:'Waiting to verify that the device power supply is on',
+      shutdown_command_evidence_missing:'The previous shutdown temperature request cannot be verified',
+      native_mode_changed_during_shutdown:'The device changed mode during shutdown; waiting to verify safe control',
+      shutdown_sequence_in_progress:'Finishing the current shutdown before accepting another command',
       paused:'Automatic control is paused',
       controlling:'Automatic control is active',
       unrecognized_status:'Unknown controller state; see status_code',
@@ -286,6 +299,19 @@
       sleep_room_evidence_unknown:'Schlafstatus dieses Raums ist unklar',
       minimum_off_hold:'Warte auf sichere Mindest-Ausschaltzeit',
       minimum_on_hold:'Warte auf sichere Mindestlaufzeit',
+      native_setpoint_startup_grace:'Warten vor dem Einstellen der Betriebstemperatur',
+      native_setpoint_shutdown_grace:'Warten vor dem Ausschalten',
+      native_setpoint_shutdown_preparing:'Ausschalten des Geräts wird vorbereitet',
+      native_setpoint_shutdown_blocked:'Warten, bis das Gerät sicher ausgeschaltet werden kann',
+      invalid_shutdown_sequence:'Das Ausschalten wartet, weil der gespeicherte Ablauf nicht überprüft werden kann',
+      invalid_shutdown_deadline:'Das Ausschalten wartet, weil der gespeicherte Ablauf nicht überprüft werden kann',
+      invalid_shutdown_retry_history:'Das Ausschalten wartet, weil der gespeicherte Ablauf nicht überprüft werden kann',
+      shutdown_target_authority_changed:'Die Gerätesteuerung wurde geändert; die Temperatur vor dem Ausschalten kann noch nicht angefordert werden',
+      shutdown_finish_authority_changed:'Die Gerätesteuerung wurde geändert; die Berechtigung zum Ausschalten muss überprüft werden',
+      upstream_switch_not_verified_on:'Warten auf Bestätigung der eingeschalteten Stromversorgung des Geräts',
+      shutdown_command_evidence_missing:'Die vorherige Temperaturanforderung zum Ausschalten kann nicht überprüft werden',
+      native_mode_changed_during_shutdown:'Der Gerätemodus wurde beim Ausschalten geändert; die sichere Steuerung wird überprüft',
+      shutdown_sequence_in_progress:'Das laufende Ausschalten wird vor einem weiteren Befehl abgeschlossen',
       paused:'Automatische Regelung ist pausiert',
       controlling:'Automatische Regelung ist aktiv',
       unrecognized_status:'Unbekannter Reglerzustand; status_code prüfen',
@@ -297,10 +323,41 @@
       sleep_room_evidence_unknown:'Άγνωστη κατάσταση ύπνου δωματίου',
       minimum_off_hold:'Αναμονή ελάχιστου χρόνου εκτός λειτουργίας',
       minimum_on_hold:'Αναμονή ελάχιστου χρόνου λειτουργίας',
+      native_setpoint_startup_grace:'Αναμονή πριν τη ρύθμιση της θερμοκρασίας λειτουργίας',
+      native_setpoint_shutdown_grace:'Αναμονή πριν την απενεργοποίηση',
+      native_setpoint_shutdown_preparing:'Προετοιμασία απενεργοποίησης της συσκευής',
+      native_setpoint_shutdown_blocked:'Αναμονή για ασφαλή απενεργοποίηση της συσκευής',
+      invalid_shutdown_sequence:'Η απενεργοποίηση αναμένει επειδή δεν μπορεί να επαληθευτεί η αποθηκευμένη κατάσταση',
+      invalid_shutdown_deadline:'Η απενεργοποίηση αναμένει επειδή δεν μπορεί να επαληθευτεί η αποθηκευμένη κατάσταση',
+      invalid_shutdown_retry_history:'Η απενεργοποίηση αναμένει επειδή δεν μπορεί να επαληθευτεί η αποθηκευμένη κατάσταση',
+      shutdown_target_authority_changed:'Ο έλεγχος της συσκευής άλλαξε· δεν μπορεί ακόμη να ζητηθεί η θερμοκρασία απενεργοποίησης',
+      shutdown_finish_authority_changed:'Ο έλεγχος της συσκευής άλλαξε· πρέπει να επαληθευτεί η άδεια απενεργοποίησης',
+      upstream_switch_not_verified_on:'Αναμονή επιβεβαίωσης ότι η τροφοδοσία της συσκευής είναι ενεργή',
+      shutdown_command_evidence_missing:'Δεν μπορεί να επαληθευτεί το προηγούμενο αίτημα θερμοκρασίας απενεργοποίησης',
+      native_mode_changed_during_shutdown:'Η συσκευή άλλαξε λειτουργία κατά την απενεργοποίηση· αναμονή επαλήθευσης ασφαλούς ελέγχου',
+      shutdown_sequence_in_progress:'Ολοκλήρωση της τρέχουσας απενεργοποίησης πριν από νέα εντολή',
       paused:'Η αυτόματη λειτουργία έχει τεθεί σε παύση',
       controlling:'Η αυτόματη ρύθμιση λειτουργεί',
       unrecognized_status:'Άγνωστη κατάσταση ελεγκτή· έλεγξε το status_code',
     },
+  };
+  const SETPOINT_PHASES109 = new Set([
+    'native_setpoint_startup_grace', 'native_setpoint_shutdown_grace',
+    'native_setpoint_shutdown_preparing', 'native_setpoint_shutdown_blocked',
+  ]);
+  const SETPOINT_GRACE109 = new Set([
+    'native_setpoint_startup_grace', 'native_setpoint_shutdown_grace',
+  ]);
+  const SETPOINT_REASONS109 = new Set([
+    'invalid_shutdown_sequence', 'invalid_shutdown_deadline', 'invalid_shutdown_retry_history',
+    'shutdown_target_authority_changed', 'shutdown_finish_authority_changed',
+    'upstream_switch_not_verified_on', 'shutdown_command_evidence_missing',
+    'native_mode_changed_during_shutdown', 'shutdown_sequence_in_progress',
+  ]);
+  const SETPOINT_REQUEST_LABEL109 = {
+    en:'Temperature requested before switch-off',
+    de:'Angeforderte Temperatur vor dem Ausschalten',
+    el:'Ζητούμενη θερμοκρασία πριν την απενεργοποίηση',
   };
   const RTL_LANGUAGES = new Set(['ar', 'he', 'fa', 'ur']);
   function cardLanguage(code) {
@@ -1281,6 +1338,10 @@
           state.attributes.pid_fan_capacity_role,
           state.attributes.pid_fan_capacity_field,
           state.attributes.calibration_status,
+          state.attributes.setpoint_wait_remaining_seconds,
+          state.attributes.setpoint_wait_until,
+          state.attributes.requested_temperature,
+          state.attributes.native_mode,
         ]);
       // Activity color must update when a native device changes without a
       // corresponding HEM facade state change.
@@ -1767,7 +1828,8 @@
         // disable the recovery button on this card.
         const resumeAvailable=Boolean(entry.resumeButtonId) &&
           entry.resumeButton?.state!=='unavailable';
-        const recoveryPanel=recovery && entry.resumeButtonId
+        const transition109=this._setpointPhase109(entry);
+        const recoveryPanel=recovery && entry.resumeButtonId && !transition109?.grace
           ? '<div class="managed-status hem-resume-recovery" role="status">'+
             '<strong>'+escape(recoverLabels[0])+'</strong>'+
             '<small>'+escape(recoverLabels[1])+': '+escape(recovery.requested ?? '-')+
@@ -2714,10 +2776,12 @@
     const native=this._hass?.localize?.(
       'component.environment_manager.entity.sensor.equipment_control_status.state.'+key);
     const value=data.states[key];
-    const english=CARD65.en.states[key];
+    const setpoint109=SETPOINT_PHASES109.has(key) || SETPOINT_REASONS109.has(key);
+    const english=setpoint109?CONTROLLER_STATUS_FALLBACK.en[key]:CARD65.en.states[key];
     // Exact machine codes remain available in the explicit diagnostics section.
     if (typeof native==='string' && native.trim() && !native.startsWith('component.') &&
         native!==key && (lang==='en' || native!==english)) return native;
+    if (setpoint109) return (CONTROLLER_STATUS_FALLBACK[lang] || CONTROLLER_STATUS_FALLBACK.en)[key];
     if (value && (lang==='en' || value!==english)) return value;
     if (key==='sleep_room_control_paused') return t.sleep;
     if (key==='waiting_for_physical_device') return t.waiting+': '+t.physical;
@@ -2725,6 +2789,37 @@
     if (/calibration|capacity|stage/.test(key) && /required|invalid|incomplete|missing|unmeasured/.test(key)) return t.inputs;
     if (/waiting|hold|pending|warmup/.test(key)) return t.waiting;
     return t.unknown;
+  };
+  proto65._setpointPhase109 = function(entry) {
+    const a=entry.climate?.attributes || {}, d=entry.statusInfo?.state?.attributes || {};
+    const c=a.controller_status || {};
+    const code=d.status_code || c.status || entry.climate?.state;
+    if(!SETPOINT_PHASES109.has(code)) return null;
+    const numeric=value=>typeof value==='number' && Number.isFinite(value);
+    const grace=SETPOINT_GRACE109.has(code);
+    const until=[d.setpoint_wait_until,c.setpoint_wait_until].find(value=>numeric(value)&&value>0);
+    const remaining=[d.setpoint_wait_remaining_seconds,c.setpoint_wait_remaining_seconds]
+      .find(value=>numeric(value)&&value>=0);
+    // A 30-second hardware wait must never be presented as a rounded minute.
+    // The deadline keeps it current when other HA updates redraw the card.
+    const seconds=!grace?null:until!==undefined?Math.max(0,Math.ceil(until-Date.now()/1000)):
+      remaining!==undefined?Math.ceil(remaining):null;
+    const label=this._controllerStatusLabel(code)+(seconds===null?'':' · '+this._format(seconds,0)+' s');
+    const requested=[d.requested_temperature,c.requested_temperature].find(numeric);
+    const mode=d.native_mode || c.native_mode;
+    let target=null;
+    if(code!=='native_setpoint_startup_grace' && requested!==undefined) {
+      const sources=safeArray(a.source_entity_ids), declared=a.physical_primary_entity_id;
+      const entity=typeof declared==='string' && sources.includes(declared)?declared:
+        sources.length===1?sources[0]:null;
+      const native=this._hass?.states?.[entity];
+      const unit=[native?.attributes?.temperature_unit,this._hass?.config?.unit_system?.temperature]
+        .find(value=>['°C','°F','K'].includes(value));
+      target=(SETPOINT_REQUEST_LABEL109[this._language()] || SETPOINT_REQUEST_LABEL109.en)+': '+
+        this._format(requested)+(unit?' '+unit:'')+
+        (['heat','cool'].includes(mode)?' · '+this._controllerStatusLabel(mode):'');
+    }
+    return {code,grace,seconds,label,target};
   };
   proto65._climateLabels65 = function() {
     const lang=this._language(), t=CARD65[lang]?.text || CARD65.en.text;
@@ -3241,20 +3336,22 @@
     const c=a.controller_status || {};
     const t=CARD65[this._language()]?.text || CARD65.en.text;
     const id=entry.entityId, state=d.status_code || c.status || entry.climate.state;
+    const transition109=this._setpointPhase109(entry);
     const untilKey=state==='minimum_on_hold'?'native_minimum_on_until':
       state==='minimum_off_hold'?'native_minimum_off_until':null;
     const until=Number(untilKey?d[untilKey]:NaN);
     const held=!!untilKey && Number.isFinite(until) &&
       until>0 && until>Date.now()/1000;
     const untilLabel=held?' · '+Math.ceil((until-Date.now()/1000)/60)+' min':'';
-    const label=this._controllerStatusLabel(state)+untilLabel;
-    const tone=/(paused|hold|unavailable|unknown|failed|error|blocked|inactive|missing)/.test(
+    const label=transition109?.label || this._controllerStatusLabel(state)+untilLabel;
+    const tone=transition109?'neutral':/(paused|hold|unavailable|unknown|failed|error|blocked|inactive|missing)/.test(
       String(state))?'warn':/^(controlling|ready|within_target_band|manual)$/.test(
       String(state))?'good':'neutral';
     const info=[];
     const reason=d.status_reason_code || c.reason;
     if (reason && reason!==state)
       info.push('<div>'+escape(t.reason)+': '+escape(this._controllerStatusLabel(reason))+'</div>');
+    if (transition109?.target) info.push('<div>'+escape(transition109.target)+'</div>');
     // All truncated mini-tile values remain fully readable on touch as well
     // as hover, without repeating them permanently below the measurements.
     const tileDetails=[...html.matchAll(
@@ -3271,7 +3368,7 @@
       info.push('<div>'+escape(this._l66('windowSwitch'))+': '+
         escape(this._controllerStatusLabel(windowState.status))+'</div>');
     const badge=badge76(
-      tone==='warn'?'mdi:alert-circle-outline':'mdi:check-circle-outline',
+      transition109?'mdi:timer-sand':tone==='warn'?'mdi:alert-circle-outline':'mdi:check-circle-outline',
       label,tone
     );
     let chips='<div class="hem-device-state76" role="status">'+badge;
@@ -3707,7 +3804,7 @@
     const blocked=devices.filter(e=>{
       const code=e.statusInfo?.state?.attributes?.status_code ||
         e.climate?.attributes?.controller_status?.status || '';
-      return /(paused|blocked|unavailable|failed|error)/i.test(code);
+      return !SETPOINT_PHASES109.has(code) && /(paused|blocked|unavailable|failed|error)/i.test(code);
     }).length;
     if(blocked) alerts.push(_iconHint87('mdi:alert-outline',
       blocked+' '+labels.devices+' · '+labels.attention,'warn'));
@@ -3924,6 +4021,7 @@
       const status=entry.statusInfo?.state?.attributes||{};
       const fault=entry.errorAnnounce?.attributes?.native_error;
       const code=String(status.status_code||attrs.controller_status?.status||'');
+      const transition109=this._setpointPhase109(entry);
       const rawState=String(attrs.physical_source_state||entry.climate?.state||'unknown');
       const physical=_deviceState87(entry,this._hass);
       const physicalTone=_physicalActivities89([entry],this._hass);
@@ -3932,7 +4030,7 @@
       const name=attrs.friendly_name||entity;
       const labels=_roomLabels87(this._language());
       const activeFault=['warning','error','critical'].includes(fault?.status);
-      const issue=activeFault || /(paused|blocked|unavailable|failed|error)/i.test(code);
+      const issue=activeFault || (!transition109 && /(paused|blocked|unavailable|failed|error)/i.test(code));
       const missing=rawState==='unknown'||rawState==='unavailable'||fault?.status==='unavailable';
       const measurements=attrs.measurements||{};
       const temperature=typeof measurements.temperature==='number' && Number.isFinite(measurements.temperature)
@@ -3996,10 +4094,11 @@
         '</span><span class="hem-device-attention87">'+
         (activeFault?_iconHint87('mdi:alert-octagon-outline',issueText,'error'):'')+
         (issue&&!activeFault?_iconHint87('mdi:alert-circle-outline',issueText,'warn'):'')+
+        (transition109?_iconHint87('mdi:timer-sand',transition109.label,'neutral'):'')+
         (missing?_iconHint87('mdi:help-circle-outline',labels.unavailable,'muted'):'')+
         '</span>'+this._icon(open?'mdi:chevron-up':'mdi:chevron-down');
       summary.setAttribute('aria-label',name+' · '+stateName+
-        (issue?' · '+labels.attention:'')+' · '+labels.controls);
+        (issue?' · '+labels.attention:'')+(transition109?' · '+transition109.label:'')+' · '+labels.controls);
       const body=document.createElement('div');
       body.className='hem-device-body87';
       while(container.firstChild)body.appendChild(container.firstChild);

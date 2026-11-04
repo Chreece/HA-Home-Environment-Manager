@@ -151,6 +151,11 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "native_minimum_on_until": observed.get("minimum_on_until"),
             "native_minimum_off_remaining_seconds": observed.get("minimum_off_remaining_seconds"),
             "native_minimum_off_until": observed.get("minimum_off_until"),
+            "setpoint_wait_remaining_seconds": observed.get("setpoint_wait_remaining_seconds"),
+            "setpoint_wait_until": observed.get("setpoint_wait_until"),
+            "requested_temperature": observed.get("requested_temperature"),
+            "native_mode": observed.get("native_mode"),
+            "native_target_confirmed": observed.get("native_target_confirmed"),
             "control_method": cfg.get("control_mode", "existing"),
             "selected_preset": (effective if cfg.get("control_mode")
                                 in ("automatic", "pid") else cfg.get("preset", "none")),
