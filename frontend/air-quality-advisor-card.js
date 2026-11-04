@@ -3618,18 +3618,25 @@
       const [short,icon,unit]=_airMetric89[metric] ||
         [String(item.name||metric).slice(0,22),'mdi:gauge',''];
       const nativeUnit=typeof item.unit==='string'?item.unit:unit;
-      const formatted=this._format(item.value,item.value<10?1:0);
+      const evidence=room?.environment?.measurement_evidence?.[metric];
+      const measured=typeof evidence?.value==='number' &&
+        Number.isFinite(evidence.value)?evidence.value:item.value;
+      const formatted=this._format(measured,measured<10?1:0);
       const label=String(item.name||short)+' · '+formatted+
         (nativeUnit?' '+nativeUnit:'');
-      return '<span class="hem-room-air-chip89" title="'+escape(label)+
-        '" aria-label="'+escape(label)+'">'+this._icon(icon)+
-        '<b>'+escape(short)+'</b> '+escape(formatted)+
-        (nativeUnit?'<small>'+escape(nativeUnit)+'</small>':'')+'</span>';
+      const body=this._icon(icon)+'<b>'+escape(short)+'</b> '+escape(formatted)+
+        (nativeUnit?'<small>'+escape(nativeUnit)+'</small>':'');
+      return this._measurementBadge105(room,metric,'hem-room-air-chip89',
+        body,label,item.entity_id);
     }).join('');
     const active=devices.map(entry=>({entry,state:_deviceState87(entry,this._hass)}))
       .filter(item=>item.state.active);
-    const temp=_readMetric87(room,'temperature');
-    const humidity=_readMetric87(room,'humidity');
+    const tempEvidence=room?.environment?.measurement_evidence?.temperature;
+    const humidityEvidence=room?.environment?.measurement_evidence?.humidity;
+    const temp=typeof tempEvidence?.value==='number'?tempEvidence.value:
+      _readMetric87(room,'temperature');
+    const humidity=typeof humidityEvidence?.value==='number'?humidityEvidence.value:
+      _readMetric87(room,'humidity');
     const roomStatus=room.status==='attention'?'attention':
       room.status==='safe'?'safe':'unknown';
     const alerts=[];
@@ -3717,12 +3724,14 @@
       this._icon('mdi:home-outline')+
       '<strong class="hem-room-name87" title="'+escape(room.name||room.area_id)+'">'+
       escape(room.name||room.area_id)+'</strong>'+
-      '<span class="hem-room-reading87 hem-activity-'+activity.temp+
-      '" title="'+escape(labels.temperature)+'">'+
-      this._icon('mdi:thermometer')+escape(formatted(temp,'°'))+'</span>'+
-      '<span class="hem-room-reading87 hem-activity-'+activity.humidity+
-      '" title="'+escape(labels.humidity)+'">'+
-      this._icon('mdi:water-percent')+escape(formatted(humidity,'%'))+'</span>'+
+      this._measurementBadge105(room,'temperature',
+        'hem-room-reading87 hem-activity-'+activity.temp,
+        this._icon('mdi:thermometer')+escape(formatted(temp,'°')),
+        labels.temperature)+
+      this._measurementBadge105(room,'humidity',
+        'hem-room-reading87 hem-activity-'+activity.humidity,
+        this._icon('mdi:water-percent')+escape(formatted(humidity,'%')),
+        labels.humidity)+
       (airBadges?'<span class="hem-room-air89" role="group" aria-label="Air quality and environmental sensors">'+airBadges+'</span>':'')+
       '<span class="hem-room-active87" aria-label="'+
       escape(active.length+' '+labels.active)+'">'+activeIcons+extra+'</span>'+
@@ -3781,6 +3790,8 @@
         }));
         return;
       }
+      // Metric clicks must not also fold or unfold their enclosing room.
+      if(event.target?.closest?.('[data-hem-source105],[data-hem-average105]'))return;
       const summary=event.target?.closest?.(
         'summary.hem-room-glance87,summary.hem-device-glance87'
       );
