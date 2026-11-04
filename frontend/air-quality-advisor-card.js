@@ -3624,9 +3624,11 @@
       const formatted=this._format(measured,measured<10?1:0);
       const label=String(item.name||short)+' · '+formatted+
         (nativeUnit?' '+nativeUnit:'');
-      const body=this._icon(icon)+'<b>'+escape(short)+'</b> '+escape(formatted)+
-        (nativeUnit?'<small>'+escape(nativeUnit)+'</small>':'');
-      return this._measurementBadge105(room,metric,'hem-room-air-chip89',
+      const body=this._icon(icon)+
+        '<span class="hem-room-metric-label107">'+escape(short)+'</span>'+
+        '<span class="hem-room-metric-value107">'+escape(formatted)+'</span>'+
+        (nativeUnit?'<span class="hem-room-metric-unit107">'+escape(nativeUnit)+'</span>':'');
+      return this._measurementBadge105(room,metric,'hem-room-air-chip89 hem-room-metric107',
         body,label,item.entity_id);
     }).join('');
     const active=devices.map(entry=>({entry,state:_deviceState87(entry,this._hass)}))
@@ -3716,7 +3718,10 @@
     }).join('');
     const extra=active.length>3?'<span class="hem-compact-extra87" title="'+
       escape(active.length+' '+labels.active)+'">+'+(active.length-3)+'</span>':'';
-    const formatted=(value,unit)=>value===null?'—':this._format(value,1)+unit;
+    const formatted=(value,unit)=>
+      '<span class="hem-room-metric-value107">'+
+      escape(value===null?'—':this._format(value,1))+'</span>'+
+      (value===null?'':'<span class="hem-room-metric-unit107">'+escape(unit)+'</span>');
     return '<details class="hem-room-fold87 hem-room-'+roomStatus+'" '+
       'data-room-fold87="'+escape(room.area_id)+'" '+(open?'open':'')+'>'+
       '<summary class="hem-room-glance87" aria-label="'+
@@ -3725,12 +3730,12 @@
       '<strong class="hem-room-name87" title="'+escape(room.name||room.area_id)+'">'+
       escape(room.name||room.area_id)+'</strong>'+
       this._measurementBadge105(room,'temperature',
-        'hem-room-reading87 hem-activity-'+activity.temp,
-        this._icon('mdi:thermometer')+escape(formatted(temp,'°')),
+        'hem-room-reading87 hem-room-metric107 hem-activity-'+activity.temp,
+        this._icon('mdi:thermometer')+formatted(temp,'°'),
         labels.temperature)+
       this._measurementBadge105(room,'humidity',
-        'hem-room-reading87 hem-activity-'+activity.humidity,
-        this._icon('mdi:water-percent')+escape(formatted(humidity,'%')),
+        'hem-room-reading87 hem-room-metric107 hem-activity-'+activity.humidity,
+        this._icon('mdi:water-percent')+formatted(humidity,'%'),
         labels.humidity)+
       (airBadges?'<span class="hem-room-air89" role="group" aria-label="Air quality and environmental sensors">'+airBadges+'</span>':'')+
       '<span class="hem-room-active87" aria-label="'+
@@ -5265,6 +5270,78 @@
   ].join('');
   proto105._styles=function(){return oldStyles105.call(this)+css105;};
   /* HEM_NATIVE_AVERAGES_FOLDS105_END */
+
+  /* HEM_ROOM_METRIC_SEPARATION107_START
+   * Source buttons and plain readings share the same metric typography.
+   * Keep values, labels, units and average markers inside distinct cells.
+   * Container queries also handle narrow Lovelace columns on wide screens.
+   */
+  const proto107=AirQualityAdvisorCard.prototype;
+  const oldStyles107=proto107._styles;
+  const css107=`<style>
+    .rooms-list{container-type:inline-size;container-name:hem-rooms107}
+    .hem-room-fold87>summary.hem-room-glance87{gap:5px}
+    .hem-room-glance87 .hem-room-name87{min-width:44px}
+    .hem-room-glance87 .hem-room-metric107{
+      display:inline-flex;align-items:center;flex:0 0 auto;gap:2px;
+      box-sizing:border-box;min-height:25px;min-width:0;max-width:none;
+      padding:3px;border:1px solid var(--aqa-edge);border-radius:6px;
+      background:color-mix(in srgb,var(--aqa-text),transparent 97%);
+      color:var(--aqa-text);font-family:inherit;font-size:12px;
+      font-weight:500;line-height:1.2;white-space:nowrap;
+      overflow:visible;text-overflow:clip;vertical-align:middle;
+    }
+    .hem-room-glance87 .hem-room-metric-value107{
+      flex:0 0 auto;font-size:12px;font-weight:600;line-height:1.2;
+      font-variant-numeric:tabular-nums;
+    }
+    .hem-room-glance87 .hem-room-metric-label107,
+    .hem-room-glance87 .hem-room-metric-unit107{
+      flex:0 0 auto;font-size:9px;font-weight:500;line-height:1.2;
+      color:var(--aqa-muted);
+    }
+    .hem-room-glance87 .hem-room-metric107>ha-icon{
+      --mdc-icon-size:12px;width:12px;height:12px;flex:0 0 12px;
+    }
+    .hem-room-glance87 .hem-room-metric107 .hem-avg-marker105{
+      margin-inline-start:1px;color:var(--aqa-blue);
+    }
+    .hem-room-glance87 .hem-room-metric107 .hem-avg-marker105 ha-icon{
+      --mdc-icon-size:10px!important;width:10px;height:10px;
+    }
+    .hem-room-glance87 .hem-room-air89{
+      gap:5px;max-width:none;flex:0 0 auto;overflow:visible;
+    }
+    @container hem-rooms107 (max-width:470px){
+      .hem-room-glance87 .hem-room-metric107{gap:2px;padding:3px 2px;min-height:24px}
+      .hem-room-glance87 .hem-room-metric107,
+      .hem-room-glance87 .hem-room-metric-value107{font-size:11px}
+      .hem-room-glance87 .hem-room-metric-label107,
+      .hem-room-glance87 .hem-room-metric-unit107{font-size:8px}
+      .hem-room-glance87 .hem-room-air-chip89 .hem-room-metric-unit107{display:none}
+      .hem-room-glance87 .hem-room-name87{font-size:11px;min-width:40px}
+    }
+    @container hem-rooms107 (max-width:400px){
+      .hem-room-air89 .hem-room-air-chip89:nth-child(n+2){display:none}
+      .hem-room-glance87 .hem-room-active87 .hem-hint87:nth-child(n+2){display:none}
+      .hem-room-glance87 .hem-room-alerts87 .hem-hint87:nth-child(n+3){display:none}
+    }
+    @container hem-rooms107 (max-width:340px){
+      .hem-room-fold87>summary.hem-room-glance87{gap:3px;padding-inline:6px}
+      .hem-room-glance87 .hem-room-air89{gap:3px}
+      .hem-room-glance87 .hem-room-metric107{gap:1px;padding:3px 2px}
+      .hem-room-glance87 .hem-room-metric107>ha-icon{
+        --mdc-icon-size:11px;width:11px;height:11px;flex-basis:11px;
+      }
+      .hem-room-glance87 .hem-room-metric-label107{display:none}
+      .hem-room-glance87 .hem-room-metric107 .hem-avg-marker105 ha-icon{
+        --mdc-icon-size:9px!important;width:9px;height:9px;
+      }
+      .hem-room-glance87 .hem-room-alerts87 .hem-hint87{width:15px;flex-basis:15px}
+    }
+  </style>`;
+  proto107._styles=function(){return oldStyles107.call(this)+css107;};
+  /* HEM_ROOM_METRIC_SEPARATION107_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
