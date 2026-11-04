@@ -4985,7 +4985,7 @@
     const key='physics:'+room.area_id;
     const open=this._foldSections105?.has(key)===true;
     return '<details class="hem-physics-fold105" data-hem-section105="'+escape(key)+
-      '" data-detail-id="'+escape(key)+'" '+(open?'open':'')+'>'+
+      '" '+(open?'open':'')+'>'+
       '<summary class="hem-physics-glance105">'+
       this._icon('mdi:flask-outline')+'<strong>'+
       escape((SCIENCE_LABELS[this._language()]||SCIENCE_LABELS.en).title)+
@@ -5023,7 +5023,7 @@
       '" aria-label="'+escape(word105(this,'shades')+' · '+(enabled?word105(this,'on'):word105(this,'off')))+
       '">'+escape(enabled?word105(this,'on'):word105(this,'off'))+'</button>':'';
     return '<details class="hem-covers-fold105" data-hem-section105="'+escape(key)+
-      '" data-detail-id="'+escape(key)+'" '+(open?'open':'')+'>'+
+      '" '+(open?'open':'')+'>'+
       '<summary class="hem-cover-glance105">'+this._icon('mdi:blinds')+
       '<strong>'+escape(word105(this,'shades'))+'</strong>'+
       '<span class="hem-cover-states105">'+statusSummary+'</span>'+
