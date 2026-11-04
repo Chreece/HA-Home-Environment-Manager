@@ -4886,6 +4886,386 @@
   proto104._styles=function(){return oldStyles104.call(this)+noScrollCSS104;};
   /* HEM_WEATHER_NO_SCROLL104_END */
 
+
+  /* HEM_NATIVE_AVERAGES_FOLDS105_START
+   * Read-only exact-source links and contributor-bound history.
+   * The physics and covers remain UI-only folds; all native cover commands
+   * are still handled by the existing verified Beta104 click path.
+   */
+  const proto105=AirQualityAdvisorCard.prototype;
+  const oldPhysics105=proto105._environmentReport;
+  const oldShades105=proto105._shadePanel;
+  const oldInstall105=proto105._installFolds87;
+  const oldRender105=proto105._renderContent;
+  const oldStyles105=proto105._styles;
+  const oldDisconnect105=proto105.disconnectedCallback;
+  const copy105={
+    en:{average:'Average of',sensors:'sensors',trend:'Average trend',
+      recent:'Recorded averages · up to 7 days',none:'Collecting history · fewer than two samples',
+      sources:'Contributing sensors',physics:'Building physics',shades:'Covers',
+      close:'Close trend',on:'On',off:'Off',open:'Open',closed:'Closed',
+      unavailable:'Unavailable'},
+    de:{average:'Mittelwert aus',sensors:'Sensoren',trend:'Mittelwertverlauf',
+      recent:'Aufgezeichnete Mittelwerte · bis zu 7 Tage',
+      none:'Verlauf wird erfasst · noch keine zwei Messpunkte',
+      sources:'Beitragende Sensoren',physics:'Bauphysik',shades:'Rollläden',
+      close:'Verlauf schließen',on:'Ein',off:'Aus',open:'Offen',closed:'Geschlossen',
+      unavailable:'Nicht verfügbar'},
+    el:{average:'Μέσος όρος από',sensors:'αισθητήρες',trend:'Τάση μέσου όρου',
+      recent:'Καταγεγραμμένοι μέσοι όροι · έως 7 ημέρες',
+      none:'Συλλογή ιστορικού · λιγότερα από δύο σημεία',
+      sources:'Συμμετέχοντες αισθητήρες',physics:'Φυσική κτιρίου',
+      shades:'Σκίαστρα',close:'Κλείσιμο τάσης',on:'Ενεργό',off:'Ανενεργό',
+      open:'Ανοιχτό',closed:'Κλειστό',unavailable:'Μη διαθέσιμο'},
+  };
+  const word105=(card,key)=>(copy105[card._language()]||copy105.en)[key];
+  proto105._dashboard105=function(){
+    const [id,state]=this._state();
+    if(state?.attributes?.dashboard?.version===1)return state.attributes.dashboard;
+    return this._dashboardEntity===id?this._dashboardData:null;
+  };
+  proto105._nativeAllowed105=function(id){
+    if(typeof id!=='string'||!/^(sensor|binary_sensor|weather)\.[a-z0-9_]+$/.test(id))
+      return false;
+    const data=this._dashboard105();
+    if(!data||!this._hass?.states?.[id])return false;
+    if(safeArray(data.outdoor?.readings).some(v=>v?.entity_id===id) ||
+       safeArray(data.outdoor?.weather).some(v=>v?.entity_id===id))return true;
+    return safeArray(data.rooms).some(room=>
+      safeArray(room.readings).some(v=>v?.entity_id===id &&
+        !v?.details?.fallback_for_mold && v?.metric!=='mold') ||
+      safeArray(room.windows).some(v=>v?.entity_id===id) ||
+      Object.values(room.environment?.measurement_evidence||{}).some(v=>
+        safeArray(v?.source_ids).includes(id)));
+  };
+  proto105._evidence105=function(area,metric){
+    const room=safeArray(this._dashboard105()?.rooms).find(v=>v?.area_id===area);
+    const value=room?.environment?.measurement_evidence?.[metric];
+    if(!room || !value || !Number.isFinite(value.value) ||
+       !Number.isInteger(value.source_count) ||
+       safeArray(value.source_ids).length!==value.source_count)return null;
+    return {room,value};
+  };
+  proto105._measurementBadge105=function(room,metric,style,content,label,fallbackId){
+    const evidence=this._evidence105(room.area_id,metric)?.value ||
+      room.environment?.measurement_evidence?.[metric];
+    const ids=safeArray(evidence?.source_ids);
+    const count=evidence?.source_count;
+    const avg=count>=2&&ids.length===count;
+    const native=(!avg && count===1 && ids.length===1 &&
+      typeof ids[0]==='string'&&this._nativeAllowed105(ids[0]))
+      ?ids[0]:null;
+    // Some standalone device metrics are not part of a room-level mean.
+    const original=!avg&&!native && typeof fallbackId==='string' &&
+      this._nativeAllowed105(fallbackId)?fallbackId:null;
+    const action=avg
+      ?'data-hem-average105="'+escape(metric)+'" data-average-area105="'+escape(room.area_id)+'"'
+      :native||original?'data-hem-source105="'+escape(native||original)+'"':'';
+    const badgeTitle=avg?word105(this,'average')+' '+count+' '+
+      word105(this,'sensors')+' · '+label:label;
+    const tag=action?'button':'span';
+    return '<'+tag+' class="'+escape(style)+(action?' hem-measure-click105':'')+
+      '" title="'+escape(badgeTitle)+'" aria-label="'+escape(badgeTitle)+'" '+
+      (action?'type="button" '+action:'')+'>'+
+      content+(avg?'<span class="hem-avg-marker105" title="'+escape(badgeTitle)+'">'+
+      this._icon('mdi:approximately-equal')+'</span>':'')+
+      '</'+tag+'>';
+  };
+  proto105._environmentReport=function(room){
+    const original=oldPhysics105.call(this,room);
+    if(!original)return '';
+    const e=room.environment||{},m=e.moisture||{},s=e.condensation||{};
+    const details=[];
+    if(typeof m.drying_potential_g_kg==='number'&&Number.isFinite(m.drying_potential_g_kg))
+      details.push((m.status==='humidifying'?'↗ ':'↘ ')+
+        this._format(m.drying_potential_g_kg,1)+' g/kg');
+    if(typeof s.condensation_margin_c==='number'&&Number.isFinite(s.condensation_margin_c))
+      details.push(this._icon('mdi:water-outline')+' '+
+        escape(this._format(s.condensation_margin_c,1))+' °C');
+    const key='physics:'+room.area_id;
+    const open=this._foldSections105?.has(key)===true;
+    return '<details class="hem-physics-fold105" data-hem-section105="'+escape(key)+
+      '" data-detail-id="'+escape(key)+'" '+(open?'open':'')+'>'+
+      '<summary class="hem-physics-glance105">'+
+      this._icon('mdi:flask-outline')+'<strong>'+
+      escape((SCIENCE_LABELS[this._language()]||SCIENCE_LABELS.en).title)+
+      '</strong><span class="hem-physics-peek105">'+details.slice(0,2).join(' · ')+
+      '</span>'+this._icon(open?'mdi:chevron-up':'mdi:chevron-down')+
+      '</summary><div class="hem-physics-expanded105">'+original+'</div></details>';
+  };
+  proto105._shadePanel=function(room){
+    const original=oldShades105.call(this,room);
+    if(!original)return '';
+    const report=room.environment?.shade_cooling||{};
+    const ids=safeArray(report.selected_covers).filter(id=>
+      typeof id==='string'&&id.startsWith('cover.'));
+    if(!ids.length)return original;
+    const managed=this._shadingSwitch(room.area_id),enabled=managed?.state?.state==='on';
+    const key='covers:'+room.area_id;
+    const open=this._foldSections105?.has(key)===true;
+    const states=ids.map(id=>{
+      const state=this._hass?.states?.[id];
+      return {id,name:state?.attributes?.friendly_name||id,
+        status:state?.state||'unavailable'};
+    });
+    const statusSummary=states.slice(0,4).map(item=>{
+      const icon=({
+        open:'mdi:blinds-open',closed:'mdi:blinds',
+        opening:'mdi:blinds-open',closing:'mdi:blinds',
+      })[item.status]||'mdi:help-circle-outline';
+      return '<span class="hem-cover-state105" title="'+escape(item.name+
+        ' · '+item.status)+'" aria-label="'+escape(item.name+
+        ' · '+item.status)+'">'+this._icon(icon)+'</span>';
+    }).join('')+(states.length>4?'<span class="hem-cover-extra105">+'+
+      (states.length-4)+'</span>':'');
+    const toggle=managed?'<button type="button" class="hem-cover-toggle105 shade-toggle" '+
+      'data-shade-switch="'+escape(managed.id)+'" data-shade-area="'+escape(room.area_id)+
+      '" aria-label="'+escape(word105(this,'shades')+' · '+(enabled?word105(this,'on'):word105(this,'off')))+
+      '">'+escape(enabled?word105(this,'on'):word105(this,'off'))+'</button>':'';
+    return '<details class="hem-covers-fold105" data-hem-section105="'+escape(key)+
+      '" data-detail-id="'+escape(key)+'" '+(open?'open':'')+'>'+
+      '<summary class="hem-cover-glance105">'+this._icon('mdi:blinds')+
+      '<strong>'+escape(word105(this,'shades'))+'</strong>'+
+      '<span class="hem-cover-states105">'+statusSummary+'</span>'+
+      toggle+this._icon(open?'mdi:chevron-up':'mdi:chevron-down')+
+      '</summary><div class="hem-covers-expanded105">'+original+'</div></details>';
+  };
+  proto105._closeAverage105=function(){
+    const pop=this._averageDialog105?.node;
+    this._averageDialog105=null;
+    if(pop?.isConnected){
+      try{if(pop.matches(':popover-open'))pop.hidePopover();}catch{}
+      pop.remove();
+    }
+  };
+  proto105._averageBody105=function(area,metric,evidence){
+    const {value}=evidence,points=safeArray(value.trend).filter(p=>
+      p && Number.isFinite(p.t)&&Number.isFinite(p.v)&&p.t>0);
+    const title=metric==='temperature'?this._t('temperature'):
+      metric==='humidity'?this._t('humidity'):this._metricName(metric);
+    let unit=metric==='temperature'?'°C':metric==='humidity'?'%':
+      (safeArray(evidence.room.readings).find(r=>r.metric===metric)?.unit||'');
+    let svg='';
+    if(points.length>=2){
+      const values=points.map(p=>p.v),lo=Math.min(...values),hi=Math.max(...values);
+      const pad=Math.max(.05,(hi-lo)*.08),min=lo-pad,max=hi+pad;
+      const tMin=points[0].t,tMax=Math.max(tMin+1,points[points.length-1].t);
+      const line=points.map(p=>{
+        const x=32+386*(p.t-tMin)/(tMax-tMin);
+        const y=139-117*(p.v-min)/(max-min);
+        return x.toFixed(1)+','+y.toFixed(1);
+      }).join(' ');
+      const labelled=escape(word105(this,'recent')+' · '+title);
+      svg='<svg class="hem-avg-chart105" viewBox="0 0 430 168" '+
+        'role="img" aria-label="'+labelled+'">'+
+        '<line x1="32" y1="139" x2="418" y2="139" class="hem-avg-axis105"/>'+
+        '<line x1="32" y1="22" x2="32" y2="139" class="hem-avg-axis105"/>'+
+        '<polyline points="'+line+'" class="hem-avg-line105"/>'+
+        '<text x="0" y="25">'+escape(this._format(hi,1))+'</text>'+
+        '<text x="0" y="141">'+escape(this._format(lo,1))+'</text>'+
+        '</svg>';
+      const fmt=(p)=>new Date(p.t*1000).toLocaleString(this._hass?.language||'en');
+      svg+='<div class="hem-avg-period105">'+escape(fmt(points[0]))+
+        ' — '+escape(fmt(points[points.length-1]))+'</div>';
+    }else svg='<div class="hem-avg-collect105">'+
+      this._icon('mdi:chart-line')+escape(word105(this,'none'))+'</div>';
+    const sources=value.source_ids.map(id=>{
+      const label=this._hass?.states?.[id]?.attributes?.friendly_name||id;
+      return '<button type="button" class="hem-average-source105" '+
+        'data-hem-source105="'+escape(id)+'" title="'+escape(id)+'">'+
+        this._icon('mdi:open-in-new')+escape(label)+'</button>';
+    }).join('');
+    return '<div class="hem-average-summary105"><strong>'+
+      escape(title)+' · '+escape(this._format(value.value,1))+' '+escape(unit)+
+      '</strong><small>'+escape(word105(this,'average')+' '+value.source_count+
+      ' '+word105(this,'sensors'))+'</small></div>'+
+      '<div class="hem-average-caption105">'+escape(word105(this,'recent'))+'</div>'+
+      svg+'<div class="hem-average-caption105">'+escape(word105(this,'sources'))+
+      '</div><div class="hem-average-sources105">'+sources+'</div>';
+  };
+  proto105._refreshAverage105=function(){
+    const saved=this._averageDialog105;
+    if(!saved)return;
+    const evidence=this._evidence105(saved.area,saved.metric);
+    if(!evidence || evidence.value.source_count<2 ||
+       evidence.value.source_ids.join('|')!==saved.sources){
+      this._closeAverage105();return;
+    }
+    let key;
+    try{key=JSON.stringify(evidence.value);}catch{key=null;}
+    if(key===saved.last)return;
+    const body=saved.node.querySelector('.hem-avg-body105');
+    const position=saved.node.scrollTop;
+    if(body)body.innerHTML=this._averageBody105(saved.area,saved.metric,evidence);
+    saved.node.scrollTop=position;saved.last=key;
+  };
+  proto105._openAverage105=function(area,metric){
+    const evidence=this._evidence105(area,metric);
+    if(!evidence||evidence.value.source_count<2)return;
+    if(this._averageDialog105?.area===area &&
+       this._averageDialog105?.metric===metric){
+      this._closeAverage105();return;
+    }
+    this._closeAverage105();
+    this._closeWeather103?.();
+    const pop=document.createElement('div');
+    pop.className='hem-avg-dialog105';
+    pop.setAttribute('popover','manual');
+    pop.setAttribute('role','dialog');
+    pop.setAttribute('tabindex','-1');
+    pop.setAttribute('aria-label',word105(this,'trend'));
+    pop.innerHTML='<header class="hem-avg-head105"><strong>'+
+      this._icon('mdi:chart-line')+escape(word105(this,'trend'))+
+      '</strong><button type="button" data-close-avg105 title="'+
+      escape(word105(this,'close'))+'" aria-label="'+escape(word105(this,'close'))+
+      '">'+this._icon('mdi:close')+'</button></header>'+
+      '<div class="hem-avg-body105"></div>';
+    this.shadowRoot.appendChild(pop);
+    this._averageDialog105={node:pop,area,metric,
+      sources:evidence.value.source_ids.join('|'),last:null};
+    this._refreshAverage105();
+    try{pop.showPopover?.();}catch{}
+    pop.focus({preventScroll:true});
+  };
+  proto105._installFolds87=function(){
+    oldInstall105.call(this);
+    if(this._interactionInstalled105)return;
+    this._interactionInstalled105=true;
+    this._foldSections105 ||= new Set();
+    this.shadowRoot.addEventListener('toggle',event=>{
+      const node=event.target;
+      if(!node?.isConnected||!node.matches?.('[data-hem-section105]'))return;
+      const key=node.getAttribute('data-hem-section105');
+      if(node.open)this._foldSections105.add(key);
+      else this._foldSections105.delete(key);
+    },true);
+    this.shadowRoot.addEventListener('click',event=>{
+      const close=event.target?.closest?.('[data-close-avg105]');
+      if(close){event.preventDefault();this._closeAverage105();return;}
+      const source=event.target?.closest?.('[data-hem-source105]');
+      if(source){
+        event.preventDefault();event.stopImmediatePropagation();
+        const id=source.getAttribute('data-hem-source105');
+        if(this._nativeAllowed105(id))
+          this.dispatchEvent(new CustomEvent('hass-more-info',{
+            detail:{entityId:id},bubbles:true,composed:true,
+          }));
+        return;
+      }
+      const average=event.target?.closest?.('[data-hem-average105]');
+      if(average){
+        event.preventDefault();event.stopImmediatePropagation();
+        this._openAverage105(average.getAttribute('data-average-area105'),
+          average.getAttribute('data-hem-average105'));
+      }
+    },true);
+    this.shadowRoot.addEventListener('keydown',event=>{
+      if(event.key==='Escape' && this._averageDialog105){
+        this._closeAverage105();event.preventDefault();return;
+      }
+      if((event.key==='Enter'||event.key===' ') &&
+         event.target?.matches?.('[data-hem-source105][role="button"]')){
+        event.preventDefault();event.target.click();
+      }
+    },true);
+  };
+  proto105._renderContent=function(force=false){
+    oldRender105.call(this,force);
+    this._refreshAverage105();
+  };
+  proto105.disconnectedCallback=function(){
+    this._closeAverage105?.();
+    return oldDisconnect105.call(this);
+  };
+  const css105=[
+    '<style>',
+    '/* AQI value, unit and label must never touch */',
+    '.hem-outside-details87 .out-chip{display:inline-flex;align-items:center;gap:5px}',
+    '.hem-outside-details87 .out-chip b{margin-inline-start:3px}',
+    '.hem-outside-details87 .out-chip small{margin-inline-start:3px;white-space:nowrap;flex:0 0 auto}',
+    '.hem-measure-click105,.hem-source-click105{cursor:pointer}',
+    'button.hem-measure-click105{font:inherit;border:0;background:none;',
+    'padding:0;color:inherit;text-align:start}',
+    '.hem-measure-click105:focus-visible,.hem-source-click105:focus-visible{',
+    'outline:2px solid var(--primary-color,#03a9f4);outline-offset:2px;border-radius:4px}',
+    '.hem-avg-marker105{display:inline-flex;align-items:center;flex:0 0 auto;',
+    'color:var(--aqa-blue);margin-inline-start:2px}',
+    '.hem-avg-marker105 ha-icon{--mdc-icon-size:12px!important}',
+    '.hem-room-air-chip89.hem-measure-click105{min-width:0;max-width:100%}',
+    '.hem-room-reading87.hem-measure-click105{flex:0 0 auto;display:inline-flex;align-items:center}',
+    '.metric-number.hem-source-click105{border-bottom:1px dotted var(--aqa-blue);',
+    'display:inline-flex;align-items:center;gap:3px}',
+    '.out-chip.hem-source-click105{cursor:pointer}',
+    '.window.hem-source-click105{cursor:pointer}',
+    '.hem-physics-fold105,.hem-covers-fold105{margin:7px 0;',
+    'border:1px solid var(--aqa-edge);border-radius:9px;min-width:0;',
+    'background:var(--aqa-surface)}',
+    '.hem-physics-glance105,.hem-cover-glance105{display:flex;align-items:center;',
+    'gap:6px;padding:7px 8px;min-height:34px;box-sizing:border-box;',
+    'cursor:pointer;list-style:none;min-width:0;font-size:11px}',
+    '.hem-physics-glance105::-webkit-details-marker,.hem-cover-glance105::-webkit-details-marker{display:none}',
+    '.hem-physics-glance105>ha-icon:first-child,.hem-cover-glance105>ha-icon:first-child{',
+    '--mdc-icon-size:16px;color:var(--aqa-blue);flex:0 0 16px}',
+    '.hem-physics-glance105>strong,.hem-cover-glance105>strong{',
+    'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:50px;flex:0 1 auto}',
+    '.hem-physics-glance105>ha-icon:last-child,.hem-cover-glance105>ha-icon:last-child{',
+    '--mdc-icon-size:14px;flex:0 0 14px;margin-inline-start:auto}',
+    '.hem-physics-peek105{margin-inline-start:auto;min-width:0;flex:1 1 auto;',
+    'text-align:end;font-size:10px;color:var(--aqa-muted);',
+    'overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.hem-physics-expanded105{padding:0 7px 7px}',
+    '.hem-physics-expanded105 .science-section{margin:0;border:0;background:transparent;',
+    'padding:6px 0}',
+    '.hem-physics-expanded105 .science-section>.field-label{display:none}',
+    '.hem-covers-expanded105{padding:0 7px 7px}',
+    '.hem-covers-expanded105 .shade-panel{margin:0;border:0;background:transparent;padding:7px 0}',
+    '.hem-covers-expanded105 .shade-heading .shade-toggle{display:none!important}',
+    '.hem-cover-states105{display:inline-flex;align-items:center;gap:2px;',
+    'min-width:0;flex:1 1 auto;justify-content:flex-end}',
+    '.hem-cover-state105{display:inline-flex;color:var(--aqa-blue)}',
+    '.hem-cover-state105 ha-icon{--mdc-icon-size:15px}',
+    '.hem-cover-extra105{font-size:10px}',
+    '.hem-cover-toggle105{margin-inline-start:3px;padding:2px 6px;',
+    'border:1px solid var(--aqa-edge);border-radius:6px;',
+    'color:inherit;background:transparent;cursor:pointer;font-size:10px}',
+    '.hem-covers-fold105[open]>.hem-cover-glance105>.hem-cover-toggle105{display:none!important}',
+    '.hem-avg-dialog105{position:fixed;inset:auto;left:50%;top:12px;',
+    'transform:translateX(-50%);width:min(520px,calc(100vw - 24px));',
+    'max-height:calc(100vh - 24px);box-sizing:border-box;',
+    'padding:0 12px 12px;overflow:auto;scrollbar-width:none;',
+    'border:1px solid var(--divider-color,#555);border-radius:12px;',
+    'color:var(--primary-text-color,#eee);background:var(--card-background-color,#222);',
+    'box-shadow:0 14px 38px #0009;font:12px/1.5 Roboto,Arial,sans-serif;',
+    'overflow-wrap:anywhere}',
+    '.hem-avg-dialog105::-webkit-scrollbar{display:none}',
+    '.hem-avg-head105{position:sticky;top:0;display:flex;align-items:center;',
+    'min-height:44px;background:var(--card-background-color,#222);z-index:2;',
+    'border-bottom:1px solid var(--divider-color,#555)}',
+    '.hem-avg-head105>strong{display:flex;align-items:center;gap:7px;flex:1}',
+    '.hem-avg-head105 button{border:0;background:transparent;color:inherit;',
+    'cursor:pointer;min-width:30px;min-height:30px}',
+    '.hem-average-summary105{margin:9px 0 3px;display:flex;justify-content:space-between;gap:8px}',
+    '.hem-average-summary105 small{color:var(--secondary-text-color,#aaa)}',
+    '.hem-average-caption105{margin:9px 0 5px;font-size:11px;color:var(--secondary-text-color,#aaa)}',
+    '.hem-avg-chart105{width:100%;height:auto;max-height:185px}',
+    '.hem-avg-chart105 text{font-size:11px;fill:var(--secondary-text-color,#aaa)}',
+    '.hem-avg-axis105{stroke:var(--divider-color,#666);stroke-width:1}',
+    '.hem-avg-line105{fill:none;stroke:var(--primary-color,#03a9f4);',
+    'stroke-width:2.7;stroke-linejoin:round;stroke-linecap:round}',
+    '.hem-avg-period105{font-size:10px;color:var(--secondary-text-color,#aaa)}',
+    '.hem-avg-collect105{display:flex;gap:6px;align-items:center;padding:16px 6px}',
+    '.hem-average-sources105{display:flex;flex-wrap:wrap;gap:5px}',
+    '.hem-average-source105{cursor:pointer;border:1px solid var(--divider-color,#666);',
+    'border-radius:7px;padding:5px 7px;background:transparent;color:inherit;',
+    'font:inherit;display:inline-flex;align-items:center;gap:5px}',
+    '@media(max-width:380px){.hem-physics-peek105{max-width:40%}',
+    '.hem-cover-states105 .hem-cover-state105:nth-child(n+4){display:none}',
+    '.hem-avg-dialog105{font-size:11px}}',
+    '</style>'
+  ].join('');
+  proto105._styles=function(){return oldStyles105.call(this)+css105;};
+  /* HEM_NATIVE_AVERAGES_FOLDS105_END */
+
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
   // New brand alias; old Lovelace YAML configurations keep working unmodified.
