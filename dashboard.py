@@ -69,10 +69,17 @@ def _warning(item: Warning) -> dict[str, Any]:
 
 def _room(room: Room, plan: Plan, limits: dict[str, float], *,
           climate_only: bool = False) -> dict[str, Any]:
-    readings = [
-        _reading(item, limits.get(f"indoor_{item.metric}"), indoor=True)
-        for item in room.readings
-    ]
+    evidence = plan.environment.get(room.area_id, {}).get("measurement_evidence", {})
+    readings = []
+    for item in room.readings:
+        data = _reading(item, limits.get(f"indoor_{item.metric}"), indoor=True)
+        # Mold's substitute humidity is a derived room mean, not an HA sensor:
+        # show the verified trend when 2+ physical RH sensors contribute.
+        if (data.get("details") or {}).get("fallback_for_mold"):
+            aggregate = evidence.get("humidity", {})
+            if aggregate.get("source_count", 0) >= 2:
+                data["average_evidence"] = aggregate
+        readings.append(data)
     high = [item for item in readings if item["exceeded"]]
     air_readings = [item for item in readings if item["metric"] != "illuminance"]
     known = any(item["available"] for item in air_readings)
