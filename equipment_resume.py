@@ -108,24 +108,98 @@ def _command_key(pending: Any) -> str | None:
     return hashlib.sha256(packed.encode("utf-8")).hexdigest()[:32]
 
 
-def _requested(expected: Any) -> str:
+def _command_feedback(expected: Any, state: Any, *, language: str = "en",
+                      temperature_unit: str | None = None) -> tuple[str, str]:
+    """Describe the exact fields the ACK matcher checks, on both sides.
+
+    A climate entity's state (``heat``/``cool``) is its selected mode, not
+    its temperature setpoint or measured room temperature. Attribute
+    commands must be compared with the same native attributes, including
+    missing feedback. These strings are presentation only: no ACK, probe,
+    ownership or retry decision depends on them.
+    """
+    locale = language.replace("_", "-").split("-")[0].lower()
+    labels = {
+        "en": ("Temperature setpoint", "Lower temperature setpoint",
+               "Upper temperature setpoint", "Humidity setpoint", "Fan mode",
+               "Percentage", "Preset", "Swing mode", "Horizontal swing mode",
+               "Operating mode", "unavailable"),
+        "de": ("Temperatur-Sollwert", "Unterer Temperatur-Sollwert",
+               "Oberer Temperatur-Sollwert", "Feuchte-Sollwert", "Lüftermodus",
+               "Prozentwert", "Voreinstellung", "Schwenkmodus",
+               "Horizontaler Schwenkmodus", "Betriebsmodus", "nicht verfügbar"),
+        "el": ("Επιθυμητή θερμοκρασία", "Κατώτερη επιθυμητή θερμοκρασία",
+               "Ανώτερη επιθυμητή θερμοκρασία", "Επιθυμητή υγρασία",
+               "Λειτουργία ανεμιστήρα", "Ποσοστό", "Προεπιλογή",
+               "Λειτουργία ταλάντωσης", "Οριζόντια ταλάντωση",
+               "Τρόπος λειτουργίας", "μη διαθέσιμη"),
+    }
+    words = labels.get(locale, labels["en"])
+    fields = _CONTROL_FIELDS[:-1]  # hvac_action is feedback, never a target.
+    names = dict(zip(fields, words[:9]))
+    unavailable = words[-1]
     if not isinstance(expected, dict):
-        return "unverified command"
-    state = expected.get("state")
-    if isinstance(state, str) and len(state) < 65:
-        return state
+        return "unverified command", unavailable
+    current = getattr(state, "state", None)
+    live = isinstance(current, str) and current not in ("unknown", "unavailable")
+    native = getattr(state, "attributes", {})
+    native = native if live and isinstance(native, Mapping) else {}
+    # HA's set_temperature accepts the HA temperature unit. Many native
+    # entities do not duplicate that unit in their own state attributes.
+    unit = native.get("temperature_unit")
+    if unit not in ("°C", "°F", "K"):
+        unit = temperature_unit if temperature_unit in ("°C", "°F", "K") else None
+
+    def bounded(value: Any, *, numeric: bool = False) -> str | None:
+        if numeric:
+            if type(value) not in (int, float, str):
+                return None
+            try:
+                value = float(value)
+            except (ValueError, TypeError, OverflowError):
+                return None
+            if not math.isfinite(value) or not -1e8 <= value <= 1e8:
+                return None
+        if isinstance(value, str) and 0 < len(value) <= 96:
+            return value if value not in ("unknown", "unavailable") else None
+        if (type(value) in (int, float) and -1e8 <= value <= 1e8
+                and math.isfinite(value)):
+            text = f"{value:g}"
+            return text.replace(".", ",") if locale in ("de", "el") else text
+        return None
+
+    desired, observed = [], []
+    target_mode = bounded(expected.get("state"))
     attributes = expected.get("attributes")
-    if isinstance(attributes, dict):
-        for key in ("temperature", "target_temp_low", "target_temp_high",
-                    "humidity", "fan_mode", "percentage", "preset_mode"):
-            value = attributes.get(key)
-            if isinstance(value, (str, int, float)) and len(str(value)) <= 32:
-                return f"{key}={value}"
-    return "the requested output"
+    attributes = attributes if isinstance(attributes, dict) else {}
+    commanded = [field for field in fields if field in attributes]
+    if target_mode is not None:
+        # Retain the existing concise mode-only diagnostics. When a single
+        # command includes both mode and attributes, name every field.
+        prefix = words[-2] + " " if commanded else ""
+        desired.append(prefix + target_mode)
+        observed.append(prefix + ((bounded(current) if live else None) or unavailable))
+    for field in commanded:
+        numeric = field in ("temperature", "target_temp_low", "target_temp_high",
+                            "humidity", "percentage")
+        requested = bounded(attributes[field], numeric=numeric)
+        actual = bounded(native.get(field), numeric=numeric)
+        suffix = (" " + unit if unit else "") if field in (
+            "temperature", "target_temp_low", "target_temp_high"
+        ) else " %" if field in ("humidity", "percentage") else ""
+        desired.append(names[field] + " " + (
+            requested + suffix if requested is not None else unavailable
+        ))
+        observed.append(names[field] + " " + (
+            actual + suffix if actual is not None else unavailable
+        ))
+    return ("; ".join(desired) or "the requested output",
+            "; ".join(observed) or unavailable)
 
 
 def check_pending(pending: Any, state: Any, now: float,
-                  probe: Any, *, matches_expected: bool) -> dict:
+                  probe: Any, *, matches_expected: bool,
+                  language: str = "en", temperature_unit: str | None = None) -> dict:
     """Return immutable decision, bounded diagnostic fields and next action.
 
     'confirmed': an actual ACK is verified; phase 'commanded' was already
@@ -136,16 +210,15 @@ def check_pending(pending: Any, state: Any, now: float,
     Other decisions never clear a command nor permit Resume.
     """
     entity = pending.get("entity") if isinstance(pending, dict) else None
-    requested = _requested(
-        pending.get("expected") if isinstance(pending, dict) else None
+    requested, observed = _command_feedback(
+        pending.get("expected") if isinstance(pending, dict) else None,
+        state, language=language, temperature_unit=temperature_unit,
     )
-    current = getattr(state, "state", None)
     outcome = {
         "decision": "invalid",
         "entity": entity if isinstance(entity, str) and len(entity) <= 160 else None,
         "requested": requested,
-        "observed": current if isinstance(current, str) and len(current) <= 64
-                    else "unavailable",
+        "observed": observed,
         "remaining_seconds": None,
         "phase": pending.get("phase") if isinstance(pending, dict) else None,
         "needs_physical_check": True,
@@ -192,6 +265,73 @@ def check_pending(pending: Any, state: Any, now: float,
     return {**outcome, "decision": "verified"}
 
 
+def pending_feedback_message(result: dict, *, language: str = "en") -> str:
+    """Describe normal in-flight feedback without invoking manual recovery.
+
+    Reading a pending command is not a Resume attempt. The regular runtime
+    still owns ACK checks and bounded retries; this text changes no policy.
+    """
+    entity = str(result.get("entity") or "the physical device")[:160]
+    desired = str(result.get("requested") or "unknown")[:512]
+    actual = str(result.get("observed") or "unavailable")[:512]
+    locale = language.replace("_", "-").split("-")[0].lower()
+    if locale == "el":
+        return (
+            f"Το HEM περιμένει επιβεβαίωση για το αίτημα {desired} στη "
+            f"συσκευή {entity}. Το Home Assistant αναφέρει {actual}. "
+            "Το HEM ελέγχει αυτόματα την αναφορά της συσκευής. "
+            "Δεν χρειάζεται να ξαναπατήσεις κουμπί."
+        )
+    if locale == "de":
+        return (
+            f"HEM wartet auf die Bestätigung der Anforderung {desired} "
+            f"für {entity}. Home Assistant meldet {actual}. "
+            "HEM prüft die Geräterückmeldung automatisch. "
+            "Erneutes Drücken ist nicht erforderlich."
+        )
+    return (
+        f"HEM is waiting for confirmation of the request {desired} "
+        f"for {entity}. Home Assistant reports {actual}. "
+        "HEM checks the device feedback automatically; "
+        "you do not need to press the button again."
+    )
+
+
+def exhausted_target_message(result: dict, *, language: str = "en") -> str:
+    """Keep a failed setpoint visible after safe current-state reconciliation."""
+    entity = str(result.get("entity") or "the physical device")[:160]
+    desired = str(result.get("requested") or "unknown")[:512]
+    actual = str(result.get("observed") or "unavailable")[:512]
+    attempts = result.get("command_attempts")
+    count = str(attempts) if type(attempts) is int and 1 <= attempts <= 6 else "—"
+    locale = language.replace("_", "-").split("-")[0].lower()
+    if locale == "el":
+        return (
+            f"Ζητήθηκε {desired} στη συσκευή {entity}, αλλά το Home Assistant αναφέρει {actual}. "
+            f"Η ρύθμιση δεν επιβεβαιώθηκε μετά από {count} προσπάθειες. "
+            "Το HEM παρακολουθεί την αναφορά της συσκευής χωρίς να ξεκινά "
+            "ξανά τις ίδιες προσπάθειες. Οι προστατευτικές εντολές "
+            "απενεργοποίησης παραμένουν διαθέσιμες. Έλεγξε την αρχική "
+            "συσκευή στο Home Assistant πριν ζητήσεις νέα προσπάθεια."
+        )
+    if locale == "de":
+        return (
+            f"Für {entity} angefordert: {desired}; Home Assistant meldet {actual}. "
+            f"Der Sollwert wurde nach {count} Versuchen nicht bestätigt. "
+            "HEM überwacht die Rückmeldung, ohne dieselben Versuche neu "
+            "zu starten. Schutzbedingtes Ausschalten bleibt möglich. "
+            "Prüfe das Originalgerät in Home Assistant, bevor du einen "
+            "neuen Versuch anforderst."
+        )
+    return (
+        f"Requested {desired} for {entity}; Home Assistant reports {actual}. "
+        f"The target was not confirmed after {count} attempts. "
+        "HEM monitors feedback without restarting the same retry sequence. "
+        "Protective OFF commands remain available. Check the original "
+        "device in Home Assistant before requesting another attempt."
+    )
+
+
 def automatic_recovery_message(result: dict, *, language: str = "en") -> str:
     """Plain-language status for user-requested queued Automatic/PID.
 
@@ -199,8 +339,8 @@ def automatic_recovery_message(result: dict, *, language: str = "en") -> str:
     as a physical ACK or invents output verification.
     """
     entity = str(result.get("entity") or "the physical device")[:160]
-    desired = str(result.get("requested") or "unknown")[:64]
-    actual = str(result.get("observed") or "unavailable")[:64]
+    desired = str(result.get("requested") or "unknown")[:512]
+    actual = str(result.get("observed") or "unavailable")[:512]
     locale = language.replace("_", "-").split("-")[0].lower()
     if locale == "el":
         return (
@@ -251,7 +391,8 @@ def instructions(result: dict, *, language: str = "en") -> str:
                     f"{current} statt angefordertem {target}. Prüfe am echten Gerät, "
                     "dass sein Zustand zur Home-Assistant-Anzeige passt. "
                     "Warte 60 Sekunden ohne Änderung und drücke "
-                    "'Prüfen und fortsetzen' erneut. Kein Befehl gesendet.")
+                    "'Prüfen und fortsetzen' erneut. Diese Prüfung hat "
+                    "keinen neuen Gerätebefehl gesendet.")
         return (f"HEM kann den vorherigen Befehl noch nicht sicher prüfen. "
                 f"{entity}: gemeldet {current}, angefordert {target}. "
                 "Prüfe die Erreichbarkeit und den echten Betriebszustand. "
@@ -276,12 +417,13 @@ def instructions(result: dict, *, language: str = "en") -> str:
     if code in ("settling", "second_check_wait"):
         return (f"HEM is waiting another {seconds} seconds to verify the previous "
                 f"command safely. {suffix}Check the actual device, leave its "
-                "power alone, then press Check and Continue again. No command sent.")
+                "power alone, then press Check and Continue again. "
+                "This check sent no new device command.")
     if code == "first_check":
         return ("A previous device command was not confirmed. " + suffix +
                 "Check that the real appliance agrees with Home Assistant. "
                 "Leave it unchanged for 60 seconds, then press Check and "
-                "Continue again. No device command has been sent.")
+                "Continue again. This check sent no new device command.")
     if code == "unavailable":
         return ("The physical device is unavailable or reports contradictory "
                 "activity. " + suffix + "Check its native Home Assistant "

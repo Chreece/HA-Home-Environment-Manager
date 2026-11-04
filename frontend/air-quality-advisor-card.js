@@ -1772,7 +1772,7 @@
             '<strong>'+escape(recoverLabels[0])+'</strong>'+
             '<small>'+escape(recoverLabels[1])+': '+escape(recovery.requested ?? '-')+
             ' · '+escape(recoverLabels[2])+': '+escape(recovery.observed ?? 'unavailable')+'</small>'+
-            (recovery.settings_saved!==true &&
+            (recovery.settings_saved!==true && recovery.requires_user_repeated_check!==false &&
              Number.isFinite(Number(recovery.remaining_seconds)) &&
              recovery.remaining_seconds !== null && recovery.remaining_seconds > 0
               ? '<small>'+escape(recoverLabels[4])+': '+
@@ -2790,6 +2790,7 @@
     const a=entry.climate.attributes || {}, d=entry.statusInfo?.state?.attributes || {};
     const c=a.controller_status || {};
     const t=CARD65[this._language()]?.text || CARD65.en.text;
+    const temperatureLabel=CARD65[this._language()]?.words?.temperature || CARD65.en.words.temperature;
     const numeric=(v)=>typeof v==='number' && Number.isFinite(v);
     const value=(v,unit='')=>numeric(v)?this._format(v)+unit:null;
     const rows=[];
@@ -2811,14 +2812,14 @@
       if(typeof attrs.hvac_action==='string' && attrs.hvac_action!=='unknown')
         add(t.physical+' · '+t.information,this._controllerStatusLabel(attrs.hvac_action));
       if(numeric(attrs.current_temperature))
-        add(this._t('temperature'),value(attrs.current_temperature,' '+unit));
+        add(temperatureLabel,value(attrs.current_temperature,' '+unit));
       if(numeric(attrs.current_humidity))
         add(this._t('humidity'),value(attrs.current_humidity,'%'));
       const physicalThermal=Array.isArray(attrs.hvac_modes) &&
         attrs.hvac_modes.some(mode=>['heat','cool','heat_cool','auto'].includes(mode)) &&
         !!((Number(attrs.supported_features)||0)&3);
       if(physicalThermal && numeric(attrs.temperature))
-        add(t.target+' · '+this._t('temperature'),value(attrs.temperature,' '+unit));
+        add(t.target+' · '+temperatureLabel,value(attrs.temperature,' '+unit));
       if(numeric(attrs.humidity))
         add(t.target+' · '+this._t('humidity'),value(attrs.humidity,'%'));
       if(numeric(attrs.percentage))add(t.speed,value(attrs.percentage,'%'));
