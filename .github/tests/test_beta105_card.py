@@ -37,6 +37,10 @@ room['environment']['shade_cooling']={
         'cover.blind_a':'owned','cover.blind_b':'idle'},
     'sun_elevation':24.1,
 }
+# The baseline synthetic RH reading is displayed in the FIRST three tiles.
+# Make that displayed reading a real native HA entity; otherwise the extra
+# appended source is not the value the expanded tile actually displays.
+room['readings'][1].update(entity_id='sensor.humidity_1',value=54.4)
 room['readings'] += [
   {'entity_id':'sensor.co2_one','name':'CO₂ sensor','metric':'co2',
    'value':700,'available':True,'unit':'ppm'},
