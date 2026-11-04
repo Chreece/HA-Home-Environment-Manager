@@ -2006,7 +2006,7 @@
         const status=attrs.controller_status?.status || '';
         const continueLabel=({'en':'Continue Automatic','de':'Automatik fortsetzen',
           'el':'Συνέχιση αυτόματης λειτουργίας'})[this._language()]||'Continue Automatic';
-        const resumeControl=entry.resumeButtonId
+        const resumeControl=entry.resumeButtonId && !transition109?.grace
           ? '<button type="button" class="pid-button hem-continue-auto89" '+
             'data-native-resume="'+escape(entry.resumeButtonId)+'" '+
             'data-controller-area="'+escape(room.area_id)+'" '+
@@ -2804,7 +2804,8 @@
     // The deadline keeps it current when other HA updates redraw the card.
     const seconds=!grace?null:until!==undefined?Math.max(0,Math.ceil(until-Date.now()/1000)):
       remaining!==undefined?Math.ceil(remaining):null;
-    const label=this._controllerStatusLabel(code)+(seconds===null?'':' · '+this._format(seconds,0)+' s');
+    // Keep the countdown visible when a long translated label is truncated.
+    const label=(seconds===null?'':this._format(seconds,0)+' s · ')+this._controllerStatusLabel(code);
     const requested=[d.requested_temperature,c.requested_temperature].find(numeric);
     const mode=d.native_mode || c.native_mode;
     let target=null;

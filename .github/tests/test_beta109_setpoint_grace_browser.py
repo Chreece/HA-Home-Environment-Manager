@@ -116,13 +116,14 @@ for(const [language,labels] of Object.entries(input.labels)) {
     const entry=card._managedControllers('room0')[0];
     const phase=card._setpointPhase109(entry);
     assert.equal(card._controllerStatusLabel(code),labels[index]);
-    assert.equal(phase.label,labels[index]+(index<2?' · 30 s':''));
+    assert.equal(phase.label,(index<2?'30 s · ':'')+labels[index]);
     assert.equal(phase.grace,index<2);
     assert.equal(phase.seconds,index<2?30:null);
     const html=panel(card);
     assert.ok(html.includes(phase.label));
     assert.ok(html.includes('mdi:timer-sand'));
     assert.equal(html.includes('hem-resume-recovery'),index>=2);
+    assert.equal(html.includes('data-native-resume='),index>=2);
     assert.ok(!html.includes('30 min') && !html.includes('1 min'));
     if(index===0) assert.equal(phase.target,null);
     else assert.ok(phase.target.includes('5 °C'));
@@ -156,6 +157,7 @@ status.status_code='minimum_on_hold';status.native_minimum_on_until=input.now+30
 assert.equal(card._setpointPhase109(entry),null);
 assert.ok(panel(card).includes('1 min'),'ordinary minimum-ON presentation changed');
 assert.ok(panel(card).includes('hem-resume-recovery'),'real recovery explanation was hidden');
+assert.ok(panel(card).includes('data-native-resume='),'real recovery action was hidden');
 const french=make('fr',input.fixtures[input.codes[0]]);
 assert.equal(french._controllerStatusLabel(input.codes[0]),input.labels.en[0]);
 for(const language of Object.keys(input.labels)) {
@@ -177,6 +179,7 @@ for(const language of Object.keys(input.labels)) {
   const html=panel(withFault);
   assert.ok(html.includes('hem-device-error') && html.includes('Native error example'));
   assert.ok(!html.includes('hem-resume-recovery'));
+  assert.ok(!html.includes('data-native-resume='));
 }
 assert.equal(services,0);
 console.log('BETA109_SETPOINT_STATUS_SECONDS_LOCALIZATION_READ_ONLY=PASS');
@@ -233,11 +236,12 @@ def run_browser_checks(previous, base, helper):
                     "states": states, "language": language, "controller": previous.CONTROLLER})
                 device = page.locator(f'[data-device-fold87="{previous.CONTROLLER}"]')
                 phase = device.locator('.hem-device-state76 > .hem-status-pill76').first
-                assert previous.normalize(phase.inner_text()) == labels[index] + (
-                    " · 30 s" if index < 2 else "")
+                assert previous.normalize(phase.inner_text()) == (
+                    "30 s · " if index < 2 else "") + labels[index]
                 assert "hem-tone-neutral" in phase.get_attribute("class")
                 assert phase.locator('ha-icon').get_attribute("icon") == "mdi:timer-sand"
                 assert device.locator('.hem-resume-recovery').count() == (0 if index < 2 else 1)
+                assert device.locator('[data-native-resume]').count() == (0 if index < 2 else 1)
                 previous.assert_native_tiles(device, language, target_present=True)
                 glance = device.locator(':scope > summary')
                 assert labels[index] in glance.get_attribute("aria-label")
