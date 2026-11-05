@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from typing import Any
 import math
 from .climate_equipment import classify_hvac
+from .comfort_targets import has_minimum_deadband
 
 
 # Shared by the room editors, the physical controller target resolver and
@@ -82,7 +83,8 @@ def profiles(settings: dict) -> tuple[dict[str,Profile],str|None]:
         if not isinstance(v,dict): return {},f"invalid_profile_{name}"
         heat=_num(v.get("heat_c"),5,35)
         cool=_num(v.get("cool_c"),6,40)
-        if heat is None or cool is None or cool-heat<max(1.0,2*tolerance):
+        if (heat is None or cool is None
+                or not has_minimum_deadband(heat, cool, max(1.0, 2*tolerance))):
             return {},f"overlapping_or_invalid_{name}"
         parsed[name]=Profile(name,heat,cool)
     return parsed,None
@@ -160,7 +162,10 @@ def auto_mode(temp_c:float|None, heat_c:float, cool_c:float,
     """Mutual exclusion and Schmitt hysteresis; never oscillate across center."""
     t=_num(temp_c,-10,50)
     h=_num(hysteresis_c,0.2,3)
-    if t is None or h is None or cool_c-heat_c < max(1.0,2*h):
+    heat_c=_num(heat_c,5,35)
+    cool_c=_num(cool_c,6,40)
+    if (t is None or h is None or heat_c is None or cool_c is None
+            or not has_minimum_deadband(heat_c, cool_c, max(1.0,2*h))):
         return None,"invalid_temperature_or_deadband"
     if previous=="heat" and t <= heat_c+h: return "heat","heating_hysteresis"
     if previous=="cool" and t >= cool_c-h: return "cool","cooling_hysteresis"
@@ -187,24 +192,25 @@ def policy(settings:dict, *, temp_c:float|None,
     # 7730 estimate. Advanced ISO remains separate, explicitly enabled.
     if name in ("comfort","sleep"):
         basis=settings.get("target_source")
+        minimum_gap=max(1.0,2*float(settings.get("hysteresis_c",0.7)))
         if basis=="auto_comfort":
             from .comfort_targets import automatic_comfort_band
             adjusted=automatic_comfort_band(
                 heat_target,cool_target,comfort_humidity_rh,
                 maximum_adjustment_c=settings.get("comfort_adjustment_max_c",1.5),
+                minimum_deadband_c=minimum_gap,
             )
             if adjusted.get("status")=="humidity_aware_estimate":
                 heat_target,cool_target=adjusted["heat_c"],adjusted["cool_c"]
         elif basis=="pmv":
-            comfort=_num(comfort_target_c,16,30)
-            influence=_num(settings.get("comfort_adjustment_max_c",1.5),0,2.5)
-            if comfort is not None and influence is not None:
-                adjusted_heat=min(band.heat_c+influence,max(
-                    band.heat_c,min(comfort-0.5,band.cool_c-1.0)))
-                adjusted_cool=max(band.cool_c-influence,min(
-                    band.cool_c,max(comfort+0.5,band.heat_c+1.0)))
-                if adjusted_cool-adjusted_heat>=1:
-                    heat_target,cool_target=round(adjusted_heat,2),round(adjusted_cool,2)
+            from .comfort_targets import pmv_comfort_band
+            adjusted=pmv_comfort_band(
+                heat_target,cool_target,comfort_target_c,
+                maximum_adjustment_c=settings.get("comfort_adjustment_max_c",1.5),
+                minimum_deadband_c=minimum_gap,
+            )
+            if adjusted.get("status")=="pmv_estimate":
+                heat_target,cool_target=adjusted["heat_c"],adjusted["cool_c"]
     if not window_safe:
         return Output("hold",name,None,None,"open_or_unknown_window","none")
     strategy=settings.get("controller","device")

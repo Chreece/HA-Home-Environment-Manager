@@ -78,22 +78,36 @@ def solve_pmv_air_temperature(
             "caveat":"Radiant temperature/airflow may change as equipment runs; verify actual comfort."}
 
 
+def has_minimum_deadband(heat_c: float, cool_c: float, minimum_deadband_c: float) -> bool:
+    """Compare validated targets without rejecting a decimal boundary as noise."""
+    gap = cool_c - heat_c
+    return gap >= minimum_deadband_c or math.isclose(
+        gap, minimum_deadband_c, rel_tol=0., abs_tol=1e-9)
+
+
+def _round_within(value: float, low: float, high: float) -> float:
+    """Keep display rounding inside the saved band and adjustment allowance."""
+    return max(low, min(high, round(value, 2)))
+
+
 def automatic_comfort_band(
     heat_c: Any, cool_c: Any, relative_humidity: Any,
-    *, maximum_adjustment_c: Any = 1.5,
+    *, maximum_adjustment_c: Any = 1.5, minimum_deadband_c: Any = 1.0,
 ) -> dict:
     """Bounded everyday comfort without imaginary air-speed/MET/CLO readings.
 
     This is an explicitly named *humidity-aware setpoint heuristic*, NOT an
     ISO 7730 PMV/PPD prediction or seasonal clothing estimate. Keep the user's
-    chosen Home/Away/Eco/Sleep settings authoritative and preserve minimum
-    1°C heating/cooling deadband. Higher humidity can modestly advance cooling;
+    chosen Home/Away/Eco/Sleep settings authoritative and preserve the caller's
+    heating/cooling deadband (at least 1°C). Higher humidity can advance cooling;
     unusually dry air can modestly advance heating. No RH => fixed targets.
     """
     heat = finite(heat_c, 5, 35)
     cool = finite(cool_c, 6, 40)
     limit = finite(maximum_adjustment_c, 0, 2.5)
-    if heat is None or cool is None or limit is None or cool-heat < 1:
+    gap = finite(minimum_deadband_c, 1, 35)
+    if (heat is None or cool is None or limit is None or gap is None
+            or not has_minimum_deadband(heat, cool, gap)):
         return {"status": "invalid_config"}
     rh = finite(relative_humidity, 0, 100)
     if rh is None:
@@ -102,13 +116,44 @@ def automatic_comfort_band(
     # Small measured-RH correction, not inferred skin evaporation or PMV.
     warm_shift = min(limit, 0.6, max(0., (40.-rh)*0.03))
     cooling_shift = min(limit, 0.9, max(0., (rh-60.)*0.045))
-    corrected_heat = min(heat + warm_shift, cool - 1.)
-    corrected_cool = max(cool - cooling_shift, corrected_heat + 1.)
+    heat_ceiling = max(heat, min(heat + warm_shift, cool - gap))
+    corrected_heat = _round_within(heat_ceiling, heat, heat_ceiling)
+    cool_floor = min(cool, max(cool - cooling_shift, corrected_heat + gap))
+    corrected_cool = _round_within(cool_floor, cool_floor, cool)
     return {
         "status": "humidity_aware_estimate",
-        "heat_c": round(corrected_heat, 2),
-        "cool_c": round(corrected_cool, 2),
+        "heat_c": corrected_heat,
+        "cool_c": corrected_cool,
         "rh_used": round(rh, 1),
         "model": "bounded_room_humidity_heuristic_not_iso7730",
         "note": "Personal comfort varies; activity/clothing/radiant temperature not measured.",
     }
+
+
+def pmv_comfort_band(
+    heat_c: Any, cool_c: Any, comfort_target_c: Any,
+    *, maximum_adjustment_c: Any = 1.5, minimum_deadband_c: Any = 1.0,
+) -> dict:
+    """Apply the existing bounded PMV adjustment only when its band is valid.
+
+    The caller qualifies the current measured-input estimate and opt-ins. This
+    function retains the established +/-0.5°C PMV formula; if that adjustment
+    cannot preserve the controller's gap, keep the fixed profile targets.
+    """
+    heat = finite(heat_c, 5, 35)
+    cool = finite(cool_c, 6, 40)
+    influence = finite(maximum_adjustment_c, 0, 2.5)
+    gap = finite(minimum_deadband_c, 1, 35)
+    if (heat is None or cool is None or influence is None or gap is None
+            or not has_minimum_deadband(heat, cool, gap)):
+        return {"status": "invalid_config"}
+    target = finite(comfort_target_c, 16, 30)
+    if target is None:
+        return {"status": "fixed_targets_missing_pmv", "heat_c": heat, "cool_c": cool}
+    adjusted_heat = min(heat + influence, max(heat, min(target - .5, cool - 1.)))
+    adjusted_cool = max(cool - influence, min(cool, max(target + .5, heat + 1.)))
+    adjusted_heat = _round_within(adjusted_heat, heat, min(cool, heat + influence))
+    adjusted_cool = _round_within(adjusted_cool, max(heat, cool - influence), cool)
+    if not has_minimum_deadband(adjusted_heat, adjusted_cool, gap):
+        return {"status": "fixed_targets_minimum_deadband", "heat_c": heat, "cool_c": cool}
+    return {"status": "pmv_estimate", "heat_c": adjusted_heat, "cool_c": adjusted_cool}

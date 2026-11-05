@@ -211,9 +211,27 @@ def tuning_source(config: dict) -> str:
 
 
 def climate_settings(settings: dict, area: str) -> dict | None:
+    """Stored room preferences, independent of native control authorization.
+
+    The compact source editor enrolls native equipment without enabling the
+    legacy room actuator. Its sleep/comfort preferences must still be editable,
+    including while the physical appliance is offline. This read never enables
+    a controller or creates an actuation grant.
+    """
     rooms = settings.get(CONF_CLIMATE_ROOMS, {})
     room = rooms.get(area) if isinstance(rooms, dict) else None
-    return room if isinstance(room, dict) and room.get("enabled") is True else None
+    if not isinstance(room, dict):
+        return None
+    if room.get("enabled") is True:
+        return room
+    from .device_hierarchy import NATIVE_DOMAINS
+    selected = room.get("selected_devices")
+    if isinstance(selected, list) and any(
+        isinstance(entity, str) and entity.partition(".")[0] in NATIVE_DOMAINS
+        for entity in selected
+    ):
+        return room
+    return None
 
 
 def science_source_options(manager: Any, area: str, key: str) -> tuple[str, ...]:
@@ -502,10 +520,8 @@ async def update_device_setting(manager: Any, kind: str, key: str,
             else:
                 if kind == "area_environment" and area not in current.get(CONF_AREAS, []):
                     raise HomeAssistantError("Select the room for environmental monitoring first")
-                if kind == "climate_operating" and not (
-                    isinstance(data.get(area), dict) and data[area].get("enabled") is True
-                ):
-                    raise HomeAssistantError("This room's climate manager is not enabled")
+                if kind == "climate_operating" and climate_settings(current, area) is None:
+                    raise HomeAssistantError("Select native room equipment or configure its climate manager first")
                 room = deepcopy(data.get(area, {}))
             if key in flags:
                 if type(value) is not bool:
@@ -525,6 +541,13 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                 hysteresis = float(room.get("humidity_hysteresis_rh", 3))
                 if high-low < 2*hysteresis:
                     raise HomeAssistantError("Humidity deadband must exceed twice hysteresis")
+                if key == "sleep_schedule_enabled" and value is True:
+                    from .climate_schedule import local_interval_active
+                    if local_interval_active(
+                        1704067200, "UTC", room.get("sleep_start", "22:00"),
+                        room.get("sleep_end", "07:00")
+                    )[0] is None:
+                        raise HomeAssistantError("Invalid sleep interval")
             if area is not None:
                 data[area] = room
             options[section] = data
@@ -625,7 +648,7 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                 raise HomeAssistantError("Invalid clock time")
             room_configs = deepcopy(current.get(CONF_CLIMATE_ROOMS, {}))
             old_cfg = room_configs.get(area) if isinstance(room_configs, dict) else None
-            if not isinstance(old_cfg, dict) or old_cfg.get("enabled") is not True:
+            if climate_settings(current, area) is None:
                 raise HomeAssistantError("Room climate management is not configured")
             draft = dict(old_cfg)
             draft[key] = v
@@ -650,14 +673,20 @@ async def update_device_setting(manager: Any, kind: str, key: str,
             else:
                 rooms = deepcopy(current.get(CONF_CLIMATE_ROOMS, {}))
                 original = rooms.get(area) if isinstance(rooms, dict) else None
-                if not isinstance(original, dict) or original.get("enabled") is not True:
-                    raise HomeAssistantError("Room climate manager is not enabled")
                 if kind == "climate_policy":
                     if key not in CLIMATE_POLICY_OPTIONS or value not in CLIMATE_POLICY_OPTIONS[key]:
                         raise HomeAssistantError("Unsupported room policy")
+                    if climate_settings(current, area) is None:
+                        raise HomeAssistantError("Select native room equipment or configure its climate manager first")
+                    # Native controllers consume the shared target source.
+                    # The other selectors belong to the legacy room policy.
+                    if key != "target_source" and original.get("enabled") is not True:
+                        raise HomeAssistantError("Room climate manager is not enabled")
                     new_room = dict(original)
                     new_room[key] = value
                 else:
+                    if not isinstance(original, dict) or original.get("enabled") is not True:
+                        raise HomeAssistantError("Room climate manager is not enabled")
                     if key not in DEVICE_POLICY_OPTIONS or value not in DEVICE_POLICY_OPTIONS[key]:
                         raise HomeAssistantError("Invalid device policy")
                     if not isinstance(entity_id, str) or entity_id not in original.get("selected_devices", []):
