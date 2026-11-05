@@ -187,6 +187,20 @@ jobs:
           python -I .github/tests/test_beta68_metadata.py
       - name: Install runner-only Home Assistant and browser test packages
         run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+      - name: Interactive trends, direct room settings and problem navigation
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-beta114-ui
+        run: |
+          python -I .github/tests/test_beta114_room_navigation.py
+          python -I .github/tests/test_beta114_room_settings.py
+          python -I .github/tests/test_beta114_interactive_trends.py
+      - name: Preserve room interface verification images
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hem-beta114-ui-${{ github.sha }}
+          path: /tmp/hem-beta114-ui/
+          if-no-files-found: ignore
       - name: Home Assistant dispatcher and compact card browser interactions
         run: |
           python -I .github/tests/test_beta68_events.py

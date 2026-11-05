@@ -8,12 +8,13 @@ provides a compact room dashboard.
 ## Current version and branches
 
 The current tested release is
-[**v0.6.0b113**](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b113).
-It gives configured whole-home presence priority over room occupancy and
-removes irrelevant room-occupancy errors while everyone is away. It also
-includes per-device fan limits, simpler ordinary-room comfort settings,
-reported-device activity colours, directional PID target cutoffs, and optional
-30-second timed setpoints.
+[**v0.6.0b114**](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b114).
+It adds interactive average trends, direct room settings, occupancy colours
+on room names, and navigation from room alerts to their underlying details.
+The no-occupancy indicator also explains verified whole-home absence.
+The whole-home presence priority, per-device fan limits, reported-device
+activity colours, directional PID target cutoffs, and optional 30-second
+timed setpoints remain included.
 
 | Branch | Purpose |
 | --- | --- |
@@ -31,7 +32,7 @@ Requires Home Assistant **2026.10.0 or newer**.
 1. Add `https://github.com/Chreece/HA-Home-Environment-Manager` as a HACS custom
    repository with category **Integration**, if it is not already present.
 2. Open **Home Environment Manager** in HACS. Enable **Show beta versions** in
-   version selection and choose **v0.6.0b113**.
+   version selection and choose **v0.6.0b114**.
 3. Download the update and restart Home Assistant.
 4. For a new installation, open **Settings → Devices & services → Add integration**
    and choose **Home Environment Manager**. For an existing installation, use its
@@ -74,7 +75,7 @@ are configured, room evidence and its existing Away cooldown still apply.
 A fresh empty occupied-rooms string or list is a valid empty list.
 
 For the full behavior changes in the current version, see the
-[release notes](.github/releases/v0.6.0b113.md).
+[release notes](.github/releases/v0.6.0b114.md).
 
 ## Development
 
@@ -84,7 +85,8 @@ validation and release process. The
 runs the existing runtime and browser regressions on both branches. A new beta
 version with matching release notes is published only after its `main` commit
 passes validation. The published ZIP is verified before older beta releases
-are removed; historical tags remain available.
+are removed. Tags older than beta113 were retired; beta113 and newer tags
+remain available.
 
 ## License
 

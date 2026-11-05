@@ -1037,6 +1037,12 @@
     }
 
     _loadDeviceIds() {
+      const currentSource114=this._state()[0];
+      if(this._configEntryOwner114&&this._configEntryOwner114!==currentSource114){
+        this._deviceRegistryLoaded=false;
+        this._homeDeviceId=null;this._areaDeviceIds=new Map();
+        this._configEntryId114=null;this._configEntryOwner114=null;
+      }
       // Loading/reconnect failures are transient. A permanent "unavailable"
       // latch previously required a browser hard refresh to recover links.
       if (this._deviceRegistryLoading || this._deviceRegistryLoaded ||
@@ -1075,6 +1081,8 @@
           }
         }
         this._homeDeviceId = parent.id;
+        this._configEntryId114 = entryId;
+        this._configEntryOwner114 = stateId;
         this._areaDeviceIds = roomDevices;
         this._deviceRegistryLoaded = true;
         this._deviceRegistryUnavailable = false;
@@ -1520,7 +1528,7 @@
       const click=averaged && aggregate?.area_id
         ? 'data-hem-average105="'+escape(item.metric)+'" data-average-area105="'+escape(aggregate.area_id)+'"'
         : fromNative ? 'data-hem-source105="'+escape(item.entity_id)+'"' : '';
-      return `<div class="metric ${miniature ? 'tiny' : ''} metric-${level}">
+      return `<div class="metric ${miniature ? 'tiny' : ''} metric-${level}" data-room-metric114="${escape(item.metric)}" data-metric-source114="${escape(item.entity_id || '')}">
         <div class="metric-line">
           <span class="metric-name">${this._icon(METRIC_ICON[item.metric] || 'mdi:gauge')}<span class="metric-title" title="${escape(fullSource || metric)}">${escape(metric)}</span><details class="metric-help"><summary aria-label="${escape(this._l65('information'))}: ${escape(metric)}" title="${escape(this._metricHelp(item))}">${this._icon('mdi:information-outline')}</summary><div class="metric-help-content" role="note">${escape(this._metricHelp(item))}</div></details></span>
           <span class="metric-number ${click ? 'hem-source-click105' : ''}" ${click}
@@ -3323,24 +3331,22 @@
       .map(entry=>entry.statusInfo?.state?.attributes)
       .find(a=>a && typeof a==='object') || {};
     const profile=p.profile || deviceAttrs.effective_preset || 'home';
-    const occupancy=p.occupancy ?? deviceAttrs.room_occupancy;
-    const home=p.away ?? deviceAttrs.home_presence_status;
+    const presence=this._roomPresence114(room);
+    const occupancy=presence.state;
     const sleeping=p.sleeping ?? deviceAttrs.sleeping;
     const chips=[];
     const profileName=this._controllerStatusLabel(profile);
     if (profile && profile!=='none')
       chips.push(badge76('mdi:home-outline',profileName,'neutral'));
-    if (home==='away'||home==='unoccupied')
-      chips.push(badge76('mdi:home-export-outline',
-        this._controllerStatusLabel('away'),'neutral'));
     if (occupancy==='occupied')
-      chips.push(badge76('mdi:account-check-outline',w.presence || t.information,'good'));
+      chips.push(badge76('mdi:account-check-outline',presence.label,'good'));
     else if (occupancy==='unoccupied')
-      chips.push(badge76('mdi:account-off-outline',w.presence || t.information,'neutral',
-        this._controllerStatusLabel('room_unoccupied')));
+      chips.push(badge76('mdi:account-off-outline',presence.label,'neutral'));
     else if (occupancy==='unknown')
-      chips.push(badge76('mdi:account-question-outline',w.presence || t.information,'warn',
-        this._controllerStatusLabel('room_occupancy_unknown')));
+      chips.push('<button type="button" class="hem-presence-issue114" '+
+        'data-room-issue114="occupancy" data-issue-area114="'+escape(room.area_id)+'" '+
+        'aria-label="'+escape(presence.label)+'">'+
+        badge76('mdi:account-question-outline',presence.label,'warn')+'</button>');
     if (sleeping===true)
       chips.push(badge76('mdi:power-sleep',t.sleep,'warn',
         this._controllerStatusLabel('sleep_room_control_paused')));
@@ -3791,6 +3797,7 @@
     const labels=_roomLabels87(this._language());
     const open=this._roomsExpanded87?.has(room.area_id)===true;
     const devices=this._managedControllers(room.area_id);
+    const presence=this._roomPresence114(room);
     const activity=_physicalActivities89(devices,this._hass);
     const activityText=_activityText112(this,activity.items) ||
       (_activityCopy112[this._language()]||_activityCopy112.en).neutral;
@@ -3879,10 +3886,10 @@
     const energy95=vent95.window_energy_status==='close_window_to_save_energy';
     const refresh95=vent95.air_refresh_status==='refresh_recommended';
     const waiting95=vent95.air_refresh_status==='outdoor_or_window_not_verified';
-    if(energy95) alerts.push(_iconHint87('mdi:thermometer-alert',
+    if(energy95) alerts.push(this._roomAlert114(room,'ventilation','mdi:thermometer-alert',
       (vent95.window_energy_direction==='window_heat_loss'
         ?ventLang95.energyHeat:ventLang95.energyCool),'warn'));
-    if(refresh95) alerts.push(_iconHint87('mdi:weather-windy',
+    if(refresh95) alerts.push(this._roomAlert114(room,'ventilation','mdi:weather-windy',
       ventLang95.refresh,'good'));
     const ventNotes95=[];
     if(vent95.has_indoor_pollutant_sensor===false)
@@ -3896,27 +3903,27 @@
       '<div class="hem-room-ventilation95" role="status">'+
       this._icon('mdi:air-filter')+
       '<span>'+ventNotes95.map(value=>escape(value)).join(' · ')+'</span></div>':'';
-    if(roomStatus==='attention') alerts.push(_iconHint87(
+    if(roomStatus==='attention') alerts.push(this._roomAlert114(room,'attention',
       'mdi:alert-circle-outline',labels.attention,'warn'));
-    if(roomStatus==='unknown') alerts.push(_iconHint87(
+    if(roomStatus==='unknown') alerts.push(this._roomAlert114(room,'missing',
       'mdi:help-circle-outline',labels.unavailable,'muted'));
     if(safeArray(room.windows).some(win=>win.opened===true))
-      alerts.push(_iconHint87('mdi:window-open-variant',
+      alerts.push(this._roomAlert114(room,'windows','mdi:window-open-variant',
         this._t('windowOpen'),'warn'));
     if(room.action==='close')
-      alerts.push(_iconHint87('mdi:window-closed-variant',
+      alerts.push(this._roomAlert114(room,'advice','mdi:window-closed-variant',
         this._t('closeAdvice'),'warn'));
     const faultCount=devices.filter(e=>
       ['warning','error','critical'].includes(e.errorAnnounce?.attributes?.native_error?.status)
     ).length;
-    if(faultCount) alerts.push(_iconHint87(
+    if(faultCount) alerts.unshift(this._roomAlert114(room,'faults',
       'mdi:alert-octagon-outline',faultCount+' '+labels.attention,'error'));
     const blocked=devices.filter(e=>{
       const code=e.statusInfo?.state?.attributes?.status_code ||
         e.climate?.attributes?.controller_status?.status || '';
       return !SETPOINT_PHASES109.has(code) && /(paused|blocked|unavailable|failed|error)/i.test(code);
     }).length;
-    if(blocked) alerts.push(_iconHint87('mdi:alert-outline',
+    if(blocked) alerts.splice(faultCount?1:0,0,this._roomAlert114(room,'controllers','mdi:alert-outline',
       blocked+' '+labels.devices+' · '+labels.attention,'warn'));
     const activeIcons=active.slice(0,3).map(item=>{
       const domain=item.state.entity.split('.')[0];
@@ -3939,10 +3946,13 @@
       'data-room-fold87="'+escape(room.area_id)+'" '+(open?'open':'')+'>'+
       '<summary class="hem-room-glance87" aria-label="'+
       escape((open?labels.collapse:labels.expand)+': '+String(room.name||room.area_id)+
-        ' · '+activityText)+'">'+
+        ' · '+presence.label+' · '+activityText)+'">'+
       '<ha-icon class="hem-room-icon112 hem-activity-'+activity.overall+
         '" icon="mdi:home-outline" aria-hidden="true" title="'+escape(activityText)+'"></ha-icon>'+
-      '<strong class="hem-room-name87" title="'+escape(room.name||room.area_id)+'">'+
+      this._roomSettingsButton114(room)+
+      '<strong class="hem-room-name87 hem-room-presence-'+presence.state+'" '+
+      'data-room-presence114="'+presence.state+'" title="'+
+      escape((room.name||room.area_id)+' · '+presence.label)+'">'+
       escape(room.name||room.area_id)+'</strong>'+
       this._measurementBadge105(room,'temperature',
         'hem-room-reading87 hem-room-metric107 hem-activity-'+activity.temp,
@@ -3958,7 +3968,8 @@
       '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
       alerts.slice(0,4).join('')+'</span>'+
       this._icon(open?'mdi:chevron-up':'mdi:chevron-down')+
-      '</summary><div class="hem-room-body87">'+ventHeader95+original+'</div></details>';
+      '</summary><div class="hem-room-body87">'+ventHeader95+
+      this._roomIssueDetail114(room)+original+'</div></details>';
   };
 
   proto87._installFolds87 = function() {
@@ -3971,6 +3982,19 @@
     this.addEventListener('touchmove',scrolledByUser90,{passive:true});
     this.addEventListener('keydown',scrolledByUser90,{passive:true});
     this.shadowRoot.addEventListener('click',event=>{
+      const settings114=event.target?.closest?.('[data-room-settings114]');
+      if(settings114){
+        event.preventDefault();event.stopImmediatePropagation();
+        this._openRoomSettings114(settings114.getAttribute('data-room-settings114'));
+        return;
+      }
+      const issue114=event.target?.closest?.('[data-room-issue114]');
+      if(issue114){
+        event.preventDefault();event.stopImmediatePropagation();
+        this._navigateRoomIssue114(issue114.getAttribute('data-issue-area114'),
+          issue114.getAttribute('data-room-issue114'));
+        return;
+      }
       // The expanded physical-device heading opens ONLY its real native
       // entity, not the HEM controller. Verify its association on every click.
       const physicalTitle=event.target?.closest?.('button[data-open-physical93]');
@@ -5488,6 +5512,434 @@
   proto105._styles=function(){return oldStyles105.call(this)+css105;};
   /* HEM_NATIVE_AVERAGES_FOLDS105_END */
 
+  /* HEM_INTERACTIVE_TRENDS114_START
+   * Keep the contributor-bound stored averages. Navigation and inspection are
+   * local, read-only views of those samples; missing intervals are not filled.
+   */
+  const trend114=AirQualityAdvisorCard.prototype;
+  const openTrend114=trend114._openAverage105;
+  const closeTrend114=trend114._closeAverage105;
+  const stylesTrend114=trend114._styles;
+  let trendSequence114=0;
+  const trendWords114={
+    en:{all:'All',hours:'h',days:'d',range:'Time range',older:'Previous period',
+      newer:'Next period',latest:'Latest',current:'Current average',sample:'Recorded value',
+      empty:'No samples in this period',gap:'No recorded sample',one:'One recorded sample',
+      low:'Low',high:'High',samples:'samples',chart:'Recorded average over time',
+      help:'Drag or move across the chart to inspect. Arrow keys: samples · Page Up/Down: periods.',
+      gapHelp:'Shaded gaps have no recorded values.',
+      collecting:'History appears as measurements are recorded.'},
+    de:{all:'Alle',hours:'Std.',days:'T.',range:'Zeitraum',older:'Vorheriger Zeitraum',
+      newer:'Nächster Zeitraum',latest:'Neueste',current:'Aktueller Mittelwert',sample:'Messwert',
+      empty:'Keine Messwerte in diesem Zeitraum',gap:'Kein aufgezeichneter Messwert',
+      one:'Ein aufgezeichneter Messwert',low:'Min.',high:'Max.',samples:'Messpunkte',
+      chart:'Aufgezeichneter Mittelwert im Zeitverlauf',
+      help:'Über das Diagramm ziehen oder bewegen. Pfeiltasten: Messpunkte · Bild auf/ab: Zeiträume.',
+      gapHelp:'Schattierte Lücken enthalten keine Messwerte.',
+      collecting:'Der Verlauf erscheint mit den aufgezeichneten Messungen.'},
+    el:{all:'Όλα',hours:'ώ.',days:'ημ.',range:'Χρονικό διάστημα',older:'Προηγούμενο διάστημα',
+      newer:'Επόμενο διάστημα',latest:'Πρόσφατα',current:'Τρέχων μέσος όρος',
+      sample:'Καταγεγραμμένη τιμή',empty:'Δεν υπάρχουν μετρήσεις σε αυτό το διάστημα',
+      gap:'Δεν έχει καταγραφεί μέτρηση',one:'Μία καταγεγραμμένη μέτρηση',
+      low:'Ελάχ.',high:'Μέγ.',samples:'μετρήσεις',chart:'Μέσος όρος στον χρόνο',
+      help:'Σύρε ή κινήσου στο διάγραμμα. Βέλη: μετρήσεις · Page Up/Down: διαστήματα.',
+      gapHelp:'Στα σκιασμένα κενά δεν υπάρχουν καταγεγραμμένες τιμές.',
+      collecting:'Το ιστορικό εμφανίζεται καθώς καταγράφονται μετρήσεις.'},
+  };
+  const tw114=(card,key)=>(trendWords114[card._language()]||trendWords114.en)[key];
+  const trendPoints114=value=>{
+    const points=new Map(),missing=[];
+    for(const row of safeArray(value.trend).slice(-1000)){
+      if(!row||!Number.isFinite(row.t)||row.t<=0||row.t>8640000000000)continue;
+      if(Number.isFinite(row.v))points.set(row.t,{t:row.t,v:row.v});
+      else missing.push(row.t);
+    }
+    const ordered=[...points.values()].sort((a,b)=>a.t-b.t);
+    const intervals=ordered.slice(1).map((p,i)=>p.t-ordered[i].t).sort((a,b)=>a-b);
+    // The server bounds and downsamples history. Estimate its displayed
+    // cadence, rather than treating every >15 min pair as a missing interval.
+    const cadence=Math.max(900,intervals.length>2?
+      intervals[Math.floor((intervals.length-1)/2)]:900);
+    const gaps=[];
+    for(let i=1;i<ordered.length;i++){
+      const a=ordered[i-1].t,b=ordered[i].t;
+      if(b-a>cadence*2.5||missing.some(t=>t>a&&t<b))gaps.push([a,b]);
+    }
+    return {points:ordered,gaps,cadence};
+  };
+  trend114._trendDate114=function(stamp,mode='full'){
+    const zone=this._hass?.config?.time_zone;
+    const options=mode==='time'?{hour:'2-digit',minute:'2-digit'}:
+      mode==='day'?{month:'short',day:'numeric'}:
+      mode==='period'?{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}:
+      {year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'};
+    try{return new Intl.DateTimeFormat(this._hass?.language||'en',{
+      ...options,...(zone?{timeZone:zone}:{}),
+    }).format(new Date(stamp*1000));}catch{return new Date(stamp*1000).toLocaleString();}
+  };
+  trend114._trendView114=function(evidence){
+    const saved=this._averageDialog105;
+    const data=trendPoints114(evidence.value),points=data.points;
+    const first=points[0]?.t??0,last=points.at(-1)?.t??0;
+    const state=saved.view114 ||= {
+      range:last-first>21600?86400:0,end:null,cursor:null,
+    };
+    const duration=state.range||Math.max(1800,last-first);
+    const earliestEnd=Math.min(last,first+duration);
+    const end=state.range?Math.max(earliestEnd,Math.min(last,state.end??last)):
+      Math.max(first,Math.min(last,state.end??last));
+    const start=state.range?end-duration:first;
+    const viewStart=points.length===1&&!state.range?first-900:start;
+    const viewEnd=points.length===1&&!state.range?first+900:
+      end>viewStart?end:viewStart+1800;
+    const visible=points.filter(p=>p.t>=viewStart&&p.t<=viewEnd);
+    const width=Math.max(240,Math.min(800,saved.width114||
+      Math.min(560,window.innerWidth-24)-32));
+    const values=visible.map(p=>p.v),low=values.length?Math.min(...values):0;
+    const high=values.length?Math.max(...values):1;
+    const padding=Math.max((high-low)*.15,Math.abs(low)*.005,.1);
+    return { ...data,visible,first,last,start:viewStart,end:viewEnd,
+      width,left:48,right:width-14,top:18,bottom:164,min:low-padding,max:high+padding,
+      older:!!state.range&&start>first,newer:!!state.range&&end<last,
+      unit:saved.metric==='temperature'?'°C':saved.metric==='humidity'?'%':
+        (safeArray(evidence.room.readings).find(r=>r.metric===saved.metric)?.unit||''),
+    };
+  };
+  const trendX114=(model,t)=>model.left+(model.right-model.left)*(t-model.start)/(model.end-model.start);
+  const trendY114=(model,v)=>model.bottom-(model.bottom-model.top)*(v-model.min)/(model.max-model.min);
+  trend114._trendSelection114=function(model){
+    const cursor=this._averageDialog105.view114.cursor;
+    if(!model.visible.length)return {point:null,time:cursor??model.end,index:0};
+    const time=cursor??model.visible.at(-1).t;
+    const gap=model.gaps.some(([a,b])=>time>a+model.cadence*.5&&time<b-model.cadence*.5);
+    const nearest=model.visible.reduce((best,p)=>Math.abs(p.t-time)<Math.abs(best.t-time)?p:best);
+    const outside=time<model.visible[0].t-model.cadence*.5||
+      time>model.visible.at(-1).t+model.cadence*.5;
+    return {point:gap||outside?null:nearest,time:gap||outside?time:nearest.t,
+      index:model.points.indexOf(nearest)};
+  };
+  trend114._inspectTrend114=function(time){
+    const saved=this._averageDialog105,model=saved?.model114;
+    if(!saved||!model)return;
+    if(time!==undefined){
+      saved.view114.cursor=Math.max(model.start,Math.min(model.end,time));
+      // Inspection pins the visible period. New samples update the current
+      // mean but cannot move the chart underneath a finger or keyboard user.
+      if(saved.view114.end===null)saved.view114.end=model.end;
+    }
+    const selected=this._trendSelection114(model),point=selected.point;
+    const root=saved.node;
+    const text=(selector,value)=>{const node=root.querySelector(selector);if(node)node.textContent=value;};
+    const display=point?this._format(point.v,3):'—';
+    const date=model.points.length?this._trendDate114(selected.time):'';
+    text('[data-trend-value114]',display);
+    text('[data-trend-time114]',date);
+    text('[data-trend-label114]',point?tw114(this,'sample'):tw114(this,'gap'));
+    root.querySelector('[data-trend-value114]')?.setAttribute('data-sample-time114',point?String(point.t):'');
+    const stamp=root.querySelector('[data-trend-time114]');
+    if(stamp){
+      if(model.points.length)stamp.setAttribute('datetime',new Date(selected.time*1000).toISOString());
+      else stamp.removeAttribute('datetime');
+    }
+    const marker=root.querySelector('.hem-trend-cursor114');
+    if(marker){
+      marker.setAttribute('transform','translate('+trendX114(model,selected.time).toFixed(2)+' 0)');
+      marker.style.display=model.visible.length?'':'none';
+      const dot=marker.querySelector('circle');
+      dot?.setAttribute('cy',point?trendY114(model,point.v).toFixed(2):'0');
+      if(dot)dot.style.display=point?'':'none';
+    }
+    const chart=root.querySelector('[data-trend-chart114]');
+    chart?.setAttribute('aria-valuenow',String(Math.max(0,selected.index)));
+    chart?.setAttribute('aria-valuetext',(point?display+' '+model.unit:tw114(this,'gap'))+' · '+date);
+  };
+  trend114._averageBody105=function(area,metric,evidence){
+    const saved=this._averageDialog105,model=this._trendView114(evidence);
+    saved.model114=model;
+    const state=saved.view114,value=evidence.value;
+    const title=metric==='temperature'?this._t('temperature'):
+      metric==='humidity'?this._t('humidity'):this._metricName(metric);
+    const uid=saved.uid114 ||= ++trendSequence114;
+    const accent=({temperature:'#f28a4b',humidity:'#36bcb1',pm25:'#8da4ef',
+      pm10:'#8da4ef',co2:'#72b85e',illuminance:'#d9ac44'})[metric]||'var(--primary-color,#03a9f4)';
+    const ranges=[[21600,'6 '+tw114(this,'hours')],[86400,'24 '+tw114(this,'hours')],
+      [604800,'7 '+tw114(this,'days')],[0,tw114(this,'all')]];
+    const rangeButtons=ranges.map(([seconds,label])=>
+      '<button type="button" data-trend-range114="'+seconds+'" aria-pressed="'+
+      (state.range===seconds)+'">'+escape(label)+'</button>').join('');
+    const nav=(dir,icon,label,disabled)=>'<button type="button" data-trend-move114="'+dir+
+      '" aria-label="'+escape(label)+'" title="'+escape(label)+'" '+(disabled?'disabled':'')+'>'+
+      this._icon(icon)+'</button>';
+    const axisDigits=Math.min(3,Math.max(0,Math.ceil(-Math.log10((model.max-model.min)/3))));
+    const ticks=[0,1,2,3].map(i=>{
+      const val=model.max-(model.max-model.min)*i/3;
+      const y=trendY114(model,val).toFixed(2);
+      return '<line x1="'+model.left+'" y1="'+y+'" x2="'+model.right+'" y2="'+y+
+        '" class="hem-trend-grid114"/><text x="'+(model.left-8)+'" y="'+(Number(y)+4)+
+        '" text-anchor="end">'+escape(this._format(val,axisDigits))+'</text>';
+    }).join('');
+    const timeTicks=[0,.5,1].map(fraction=>{
+      const time=model.start+(model.end-model.start)*fraction;
+      return '<text x="'+trendX114(model,time).toFixed(2)+'" y="190" text-anchor="'+
+        (fraction===0?'start':fraction===1?'end':'middle')+'">'+
+        escape(this._trendDate114(time,model.end-model.start>86400?'day':'time'))+'</text>';
+    }).join('');
+    const visibleGaps=model.gaps.filter(([a,b])=>a<model.end&&b>model.start);
+    const gaps=visibleGaps.map(([a,b])=>{
+      const x1=trendX114(model,Math.max(a,model.start)),x2=trendX114(model,Math.min(b,model.end));
+      return '<rect class="hem-trend-gap114" x="'+x1.toFixed(2)+'" y="'+model.top+
+        '" width="'+(x2-x1).toFixed(2)+'" height="'+(model.bottom-model.top)+
+        '" fill="url(#hem-trend-gap114-'+uid+')"/>';
+    }).join('');
+    const segments=[];
+    for(const point of model.visible){
+      const segment=segments.at(-1),prev=segment?.at(-1);
+      if(!prev||model.gaps.some(([a,b])=>prev.t<=a&&point.t>=b))segments.push([point]);
+      else segment.push(point);
+    }
+    const paths=segments.map(segment=>segment.map((point,i)=>
+      (i?'L':'M')+trendX114(model,point.t).toFixed(2)+' '+trendY114(model,point.v).toFixed(2)).join(' '));
+    const fill=segments.map((segment,i)=>segment.length>1?paths[i]+' L'+
+      trendX114(model,segment.at(-1).t).toFixed(2)+' '+model.bottom+' L'+
+      trendX114(model,segment[0].t).toFixed(2)+' '+model.bottom+' Z':'').join(' ');
+    const dots=model.visible.length<45?model.visible.map(point=>
+      '<circle class="hem-trend-sample114" cx="'+trendX114(model,point.t).toFixed(2)+
+      '" cy="'+trendY114(model,point.v).toFixed(2)+'" r="2.5"/>').join(''):'';
+    const chart=model.points.length?'<svg class="hem-avg-chart105 hem-trend-chart114" '+
+      'data-trend-chart114 viewBox="0 0 '+model.width+' 204" role="slider" tabindex="0" '+
+      'aria-label="'+escape(title+' · '+tw114(this,'chart'))+'" aria-orientation="horizontal" '+
+      'aria-valuemin="0" aria-valuemax="'+Math.max(0,model.points.length-1)+'" aria-valuenow="0" '+
+      'aria-describedby="hem-trend-help114-'+uid+'">'+
+      '<defs><linearGradient id="hem-trend-fill114-'+uid+'" x1="0" y1="0" x2="0" y2="1">'+
+      '<stop offset="0" stop-color="currentColor" stop-opacity=".26"/>'+
+      '<stop offset="1" stop-color="currentColor" stop-opacity=".015"/></linearGradient>'+
+      '<pattern id="hem-trend-gap114-'+uid+'" width="7" height="7" patternUnits="userSpaceOnUse">'+
+      '<path d="M0 7L7 0" stroke="currentColor" stroke-opacity=".10"/></pattern></defs>'+
+      ticks+timeTicks+gaps+'<path d="'+fill+'" fill="url(#hem-trend-fill114-'+uid+')"/>'+
+      '<path class="hem-avg-line105" d="'+paths.join(' ')+'"/>'+dots+
+      '<g class="hem-trend-cursor114" pointer-events="none"><line y1="'+model.top+'" y2="'+
+      model.bottom+'"/><circle cx="0" cy="0" r="5"/></g></svg>':'';
+    const values=model.visible.map(p=>p.v);
+    const stats=values.length?'<div class="hem-trend-stats114"><span>'+escape(tw114(this,'low'))+
+      ' <b>'+escape(this._format(Math.min(...values),3))+'</b></span><span>'+escape(tw114(this,'high'))+
+      ' <b>'+escape(this._format(Math.max(...values),3))+'</b></span><span>'+values.length+' '+
+      escape(tw114(this,'samples'))+'</span></div>':'';
+    const sources=value.source_ids.map(id=>{
+      const label=this._hass?.states?.[id]?.attributes?.friendly_name||id;
+      return '<button type="button" class="hem-average-source105" data-hem-source105="'+escape(id)+
+        '" title="'+escape(id)+'">'+this._icon('mdi:open-in-new')+escape(label)+'</button>';
+    }).join('');
+    return '<div class="hem-trend114" style="--hem-trend-accent114:'+accent+'">'+
+      '<div class="hem-average-summary105"><div><strong>'+escape(title)+'</strong><small>'+escape(evidence.room.name||area)+
+      '</small></div><span class="hem-trend-current114">'+escape(tw114(this,'current'))+'<b>'+
+      escape(this._format(value.value,3))+' '+escape(model.unit)+'</b></span></div>'+
+      '<div class="hem-trend-toolbar114"><div class="hem-trend-ranges114" role="group" aria-label="'+
+      escape(tw114(this,'range'))+'">'+rangeButtons+'</div><div class="hem-trend-nav114">'+
+      nav('older','mdi:chevron-left',tw114(this,'older'),!model.older)+
+      '<button type="button" data-trend-move114="latest">'+escape(tw114(this,'latest'))+'</button>'+
+      nav('newer','mdi:chevron-right',tw114(this,'newer'),!model.newer)+'</div></div>'+
+      '<div class="hem-trend-readout114" aria-live="polite" aria-atomic="true">'+
+      '<div><span data-trend-label114>'+escape(tw114(this,'sample'))+'</span><strong><b data-trend-value114>—</b>'+
+      '<small>'+escape(model.unit)+'</small></strong></div><time data-trend-time114></time></div>'+
+      '<div class="hem-trend-plot114">'+chart+
+      (!model.visible.length?'<div class="hem-avg-collect105">'+this._icon('mdi:chart-line')+
+      '<span>'+escape(tw114(this,model.points.length?'empty':'collecting'))+'</span></div>':'')+'</div>'+stats+
+      (model.points.length?'<div class="hem-avg-period105">'+escape(this._trendDate114(model.start,'period'))+
+        ' — '+escape(this._trendDate114(model.end,'period'))+'</div>':'')+
+      '<p class="hem-trend-help114" id="hem-trend-help114-'+uid+'">'+
+      escape(model.points.length===1?tw114(this,'one')+' · ':'')+escape(tw114(this,'help'))+
+      (visibleGaps.length?' '+escape(tw114(this,'gapHelp')):'')+'</p>'+
+      '<div class="hem-average-caption105">'+escape(word105(this,'average')+' '+value.source_count+' '+
+      word105(this,'sensors'))+'</div><div class="hem-average-sources105">'+sources+'</div></div>';
+  };
+  trend114._refreshAverage105=function(force=false){
+    const saved=this._averageDialog105;
+    if(!saved)return;
+    const evidence=this._evidence105(saved.area,saved.metric);
+    if(!evidence||evidence.value.source_count<2||evidence.value.source_ids.join('|')!==saved.sources){
+      this._closeAverage105();return;
+    }
+    if(saved.pointer114!==undefined){saved.pending114=true;return;}
+    const key=JSON.stringify([evidence.value,this._hass?.language,this._hass?.config?.time_zone,saved.width114]);
+    if(!force&&key===saved.last)return;
+    const body=saved.node.querySelector('.hem-avg-body105');
+    const position=saved.node.scrollTop;
+    const temp=document.createElement('template');
+    temp.innerHTML='<div class="hem-avg-body105">'+this._averageBody105(saved.area,saved.metric,evidence)+'</div>';
+    if(body)_reconcile91(body,temp.content.firstElementChild);
+    saved.node.scrollTop=position;saved.last=key;saved.pending114=false;
+    this._inspectTrend114();
+  };
+  trend114._moveTrend114=function(action){
+    const saved=this._averageDialog105,model=saved?.model114;
+    if(!saved||!model)return;
+    const state=saved.view114;
+    if(action==='latest'){state.end=null;state.cursor=null;}
+    else if(action==='older'&&model.older){
+      state.end=Math.max(Math.min(model.last,model.first+state.range),model.end-state.range);
+      state.cursor=null;
+    }else if(action==='newer'&&model.newer){
+      state.end=Math.min(model.last,model.end+state.range);state.cursor=null;
+      if(state.end===model.last)state.end=null;
+    }else return;
+    this._refreshAverage105(true);
+  };
+  trend114._openAverage105=function(area,metric){
+    const returnTo=this.shadowRoot.activeElement;
+    openTrend114.call(this,area,metric);
+    const saved=this._averageDialog105;
+    if(!saved||saved.interactive114)return;
+    saved.interactive114=true;saved.returnTo114=returnTo;
+    const pop=saved.node;
+    pop.addEventListener('click',event=>{
+      const control=event.target?.closest?.('[data-trend-range114],[data-trend-move114]');
+      if(!control||control.disabled)return;
+      event.preventDefault();event.stopPropagation();
+      if(control.hasAttribute('data-trend-range114')){
+        const range=Number(control.getAttribute('data-trend-range114'));
+        if(![0,21600,86400,604800].includes(range))return;
+        saved.view114.range=range;saved.view114.cursor=null;
+        if(range===0)saved.view114.end=null;
+        this._refreshAverage105(true);
+      }else this._moveTrend114(control.getAttribute('data-trend-move114'));
+    });
+    const inspect=(event,chart)=>{
+      const rect=chart.getBoundingClientRect(),model=saved.model114;
+      if(!rect.width||!model)return;
+      const x=(event.clientX-rect.left)*model.width/rect.width;
+      this._inspectTrend114(model.start+(x-model.left)/(model.right-model.left)*(model.end-model.start));
+    };
+    pop.addEventListener('pointerdown',event=>{
+      const chart=event.target?.closest?.('[data-trend-chart114]');
+      if(!chart||event.button!==0||event.isPrimary===false)return;
+      saved.pointer114=event.pointerId;
+      chart.focus({preventScroll:true});
+      try{chart.setPointerCapture(event.pointerId);}catch{}
+      inspect(event,chart);
+    });
+    pop.addEventListener('pointermove',event=>{
+      const chart=event.target?.closest?.('[data-trend-chart114]');
+      if(!chart||event.isPrimary===false||
+        (event.pointerType!=='mouse'&&saved.pointer114!==event.pointerId))return;
+      inspect(event,chart);
+    });
+    const endPointer=event=>{
+      if(saved.pointer114!==event.pointerId)return;
+      delete saved.pointer114;
+      if(saved.pending114)this._refreshAverage105(true);
+    };
+    pop.addEventListener('pointerup',endPointer);
+    pop.addEventListener('pointercancel',endPointer);
+    pop.addEventListener('lostpointercapture',endPointer);
+    pop.addEventListener('keydown',event=>{
+      const chart=event.target?.closest?.('[data-trend-chart114]');
+      if(!chart)return;
+      if(event.key==='PageUp'||event.key==='PageDown'){
+        event.preventDefault();this._moveTrend114(event.key==='PageUp'?'older':'newer');return;
+      }
+      if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+      event.preventDefault();
+      const model=saved.model114,visible=model?.visible||[];
+      if(!visible.length)return;
+      const selected=this._trendSelection114(model);
+      const index=visible.findIndex(p=>p.t>=selected.time);
+      const next=event.key==='Home'?0:event.key==='End'?visible.length-1:
+        event.key==='ArrowLeft'?(index<0?visible.length:index)-1:
+        (index<0?visible.length-1:index)+(selected.point?1:0);
+      this._inspectTrend114(visible[Math.max(0,Math.min(visible.length-1,next))].t);
+    });
+    if(typeof ResizeObserver==='function'){
+      saved.resize114=new ResizeObserver(entries=>{
+        const width=Math.round(entries[0]?.contentRect.width||0);
+        if(width<100||width===saved.width114||this._averageDialog105!==saved)return;
+        saved.width114=width;
+        if(saved.frame114)cancelAnimationFrame(saved.frame114);
+        saved.frame114=requestAnimationFrame(()=>{
+          saved.frame114=null;
+          if(this._averageDialog105===saved)this._refreshAverage105(true);
+        });
+      });
+      saved.resize114.observe(pop.querySelector('.hem-avg-body105'));
+    }
+  };
+  trend114._closeAverage105=function(){
+    const saved=this._averageDialog105;
+    const restore=!!saved?.node?.contains(this.shadowRoot.activeElement);
+    saved?.resize114?.disconnect();
+    if(saved?.frame114)cancelAnimationFrame(saved.frame114);
+    closeTrend114.call(this);
+    if(restore&&saved?.returnTo114?.isConnected)saved.returnTo114.focus({preventScroll:true});
+  };
+  trend114._styles=function(){return stylesTrend114.call(this)+`<style>
+    .hem-avg-dialog105{width:min(560px,calc(100vw - 24px));padding:0 16px 16px;
+      max-height:calc(100dvh - 24px);border-radius:18px;
+      border-color:var(--divider-color,#3b4654);box-shadow:0 16px 60px #0006;
+      font-size:12px;color:var(--primary-text-color,#e8edf4);
+      background:var(--card-background-color,#202830)}
+    .hem-avg-head105{min-height:48px;gap:8px;background:var(--card-background-color,#202830)}
+    .hem-avg-head105>strong{font-size:13px;font-weight:600}
+    .hem-avg-head105 button{width:36px;height:36px;border-radius:50%}
+    .hem-avg-head105 button:hover{background:color-mix(in srgb,currentColor,transparent 93%)}
+    .hem-trend114{--hem-trend-muted114:var(--secondary-text-color,#a5b2c4);min-width:0}
+    .hem-trend114 .hem-average-summary105{margin:14px 0 12px;align-items:center;gap:12px}
+    .hem-trend114 .hem-average-summary105>div{min-width:0}
+    .hem-trend114 .hem-average-summary105 strong{font-size:16px;line-height:1.25}
+    .hem-trend114 .hem-average-summary105 small{display:block;margin-top:2px;overflow-wrap:anywhere}
+    .hem-trend-current114{text-align:end;font-size:10px;color:var(--hem-trend-muted114);flex:0 0 auto}
+    .hem-trend-current114 b{display:block;color:var(--primary-text-color,#e8edf4);font-size:13px;font-weight:500}
+    .hem-trend-toolbar114{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+    .hem-trend-ranges114{display:flex;gap:2px;padding:3px;border-radius:10px;
+      background:color-mix(in srgb,var(--primary-text-color,#e8edf4),transparent 95%)}
+    .hem-trend114 button{font:inherit;cursor:pointer}
+    .hem-trend-ranges114 button,.hem-trend-nav114 button{border:0;border-radius:7px;min-height:32px;
+      padding:4px 10px;background:transparent;color:var(--hem-trend-muted114);font-size:11px}
+    .hem-trend-ranges114 button[aria-pressed="true"]{color:var(--primary-text-color,#e8edf4);
+      background:var(--card-background-color,#202830);box-shadow:0 1px 4px #0002;font-weight:600}
+    .hem-trend-nav114{display:flex;align-items:center;gap:2px;margin-inline-start:auto}
+    .hem-trend-nav114 button{padding:3px 6px;min-width:30px}
+    .hem-trend-nav114 ha-icon{--mdc-icon-size:18px}
+    .hem-trend114 button:disabled{opacity:.3;cursor:default}
+    .hem-trend114 button:focus-visible,.hem-trend-chart114:focus-visible{outline:2px solid var(--primary-color,#03a9f4);outline-offset:2px}
+    .hem-trend114 button:hover:not(:disabled){color:var(--primary-text-color,#e8edf4)}
+    .hem-trend-readout114{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
+      min-height:62px;margin:14px 0 1px;font-variant-numeric:tabular-nums}
+    .hem-trend-readout114>div>span{display:block;font-size:10px;color:var(--hem-trend-muted114)}
+    .hem-trend-readout114 strong{display:flex;align-items:baseline;gap:5px;line-height:1.3}
+    .hem-trend-readout114 b{font-size:27px;font-weight:600;letter-spacing:-.5px}
+    .hem-trend-readout114 small{font-size:13px;font-weight:400;color:var(--hem-trend-muted114)}
+    .hem-trend-readout114 time{max-width:55%;color:var(--hem-trend-muted114);font-size:11px;text-align:end;line-height:1.5;padding-bottom:5px}
+    .hem-trend-plot114{position:relative;margin:4px -2px 0}
+    .hem-trend-chart114{display:block;width:100%;height:auto;max-height:none;overflow:visible;
+      color:var(--hem-trend-accent114);touch-action:pan-y;cursor:crosshair;user-select:none;border-radius:7px}
+    .hem-trend-chart114 text{font-size:10px;fill:var(--hem-trend-muted114)}
+    .hem-trend-grid114{stroke:var(--divider-color,#556070);stroke-opacity:.45;stroke-dasharray:3 5;stroke-width:1}
+    .hem-trend-chart114 .hem-avg-line105{stroke:currentColor;stroke-width:2.4;vector-effect:non-scaling-stroke}
+    .hem-trend-sample114{fill:var(--card-background-color,#202830);stroke:currentColor;stroke-width:1.4}
+    .hem-trend-cursor114 line{stroke:var(--primary-text-color,#e8edf4);stroke-width:1;stroke-opacity:.5;stroke-dasharray:3 4}
+    .hem-trend-cursor114 circle{fill:currentColor;stroke:var(--card-background-color,#202830);stroke-width:2}
+    .hem-trend-stats114{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:11px;
+      color:var(--hem-trend-muted114);font-variant-numeric:tabular-nums;margin:0 0 5px}
+    .hem-trend-stats114 b{color:var(--primary-text-color,#e8edf4);font-weight:500;margin-inline-start:3px}
+    .hem-trend-stats114>span:last-child{margin-inline-start:auto}
+    .hem-trend114 .hem-avg-period105{font-size:10px;color:var(--hem-trend-muted114)}
+    .hem-trend-help114{font-size:10px;color:var(--hem-trend-muted114);margin:7px 0 12px;line-height:1.6}
+    .hem-trend114 .hem-average-caption105{padding-top:10px;border-top:1px solid var(--divider-color,#3b4654);margin-top:0}
+    .hem-trend114 .hem-average-source105{font-size:10px;border-radius:8px;padding:5px 8px;
+      color:var(--hem-trend-muted114);border-color:var(--divider-color,#3b4654);min-height:30px}
+    .hem-trend114 .hem-average-source105 ha-icon{--mdc-icon-size:13px}
+    .hem-trend114 .hem-avg-collect105{min-height:90px;justify-content:center;color:var(--hem-trend-muted114);font-size:12px}
+    .hem-trend-plot114>.hem-trend-chart114+.hem-avg-collect105{position:absolute;inset:25px 14px 30px 48px;min-height:0;text-align:center;pointer-events:none}
+    @media(max-width:380px){
+      .hem-avg-dialog105{padding:0 12px 12px}
+      .hem-trend-ranges114{flex:1 1 auto;justify-content:space-between}
+      .hem-trend-ranges114 button{padding:4px 9px}
+      .hem-trend-nav114{width:100%;justify-content:space-between}
+      .hem-trend-readout114{margin-top:7px;gap:6px}
+      .hem-trend-readout114 time{font-size:10px}
+    }
+  </style>`;};
+  /* HEM_INTERACTIVE_TRENDS114_END */
+
   /* HEM_ROOM_METRIC_SEPARATION107_START
    * Source buttons and plain readings share the same metric typography.
    * Keep values, labels, units and average markers inside distinct cells.
@@ -5592,6 +6044,821 @@
   </style>`;
   proto112._styles=function(){return oldStyles112.call(this)+css112;};
   /* HEM_ROOM_ACTIVITY_COLOURS112_END */
+
+  /* HEM_ROOM_NAVIGATION114_START: presentation and navigation only. */
+  const protoRoom114=AirQualityAdvisorCard.prototype;
+  const roomWords114=card=>({
+    en:{occupied:'Room occupied',empty:'Room empty',away:'Nobody home · room empty',
+      settings:'Room settings',climateOnly:'Air quality is not monitored in this room.',
+      noWindows:'No window sensors are selected for this room.',
+      missingWindows:'A window sensor has no valid state.',
+      noSensors:'No valid indoor measurements are available.',
+      unknown:'Room occupancy cannot be confirmed.',details:'Room details'},
+    de:{occupied:'Raum belegt',empty:'Raum leer',away:'Niemand zu Hause · Raum leer',
+      settings:'Raumeinstellungen',climateOnly:'Die Luftqualität wird in diesem Raum nicht überwacht.',
+      noWindows:'Für diesen Raum sind keine Fenstersensoren ausgewählt.',
+      missingWindows:'Ein Fenstersensor meldet keinen gültigen Zustand.',
+      noSensors:'Keine gültigen Innenraummesswerte verfügbar.',
+      unknown:'Die Raumbelegung kann nicht bestätigt werden.',details:'Raumdetails'},
+    el:{occupied:'Κατειλημμένο δωμάτιο',empty:'Άδειο δωμάτιο',away:'Κανείς στο σπίτι · άδειο δωμάτιο',
+      settings:'Ρυθμίσεις δωματίου',climateOnly:'Η ποιότητα αέρα δεν παρακολουθείται σε αυτό το δωμάτιο.',
+      noWindows:'Δεν έχουν επιλεγεί αισθητήρες παραθύρων για αυτό το δωμάτιο.',
+      missingWindows:'Ένας αισθητήρας παραθύρου δεν έχει έγκυρη κατάσταση.',
+      noSensors:'Δεν υπάρχουν έγκυρες μετρήσεις εσωτερικού χώρου.',
+      unknown:'Δεν μπορεί να επιβεβαιωθεί η παρουσία στο δωμάτιο.',details:'Λεπτομέρειες δωματίου'}
+  }[card._language()]||{
+    occupied:'Room occupied',empty:'Room empty',away:'Nobody home · room empty',
+    settings:'Room settings',climateOnly:'Air quality is not monitored in this room.',
+    noWindows:'No window sensors are selected for this room.',
+    missingWindows:'A window sensor has no valid state.',
+    noSensors:'No valid indoor measurements are available.',
+    unknown:'Room occupancy cannot be confirmed.',details:'Room details'
+  });
+  protoRoom114._roomPresence114=function(room){
+    const p=room?.environment?.climate_plan||{};
+    const verified=room?.environment?.room_presence||{};
+    const attrs=this._managedControllers(room.area_id).flatMap(e=>[
+      e.statusInfo?.state?.attributes||{},e.climate?.attributes||{}]);
+    const own=(key)=>attrs.find(a=>a[key]!==undefined)?.[key];
+    const home=verified.home??p.away??own('home_presence_status');
+    const away=['away','unoccupied'].includes(home);
+    const reported=verified.occupancy??p.occupancy??own('room_occupancy');
+    const state=away?'unoccupied':
+      ['occupied','unoccupied'].includes(reported)?reported:'unknown';
+    const words=roomWords114(this);
+    return {state,away,label:away?words.away:
+      state==='occupied'?words.occupied:state==='unoccupied'?words.empty:words.unknown};
+  };
+  protoRoom114._roomSettingsButton114=function(room){
+    const label=roomWords114(this).settings+' · '+(room.name||room.area_id);
+    const enabled=this._hass?.user?.is_admin===true&&this._areaDeviceIds?.has(room.area_id)&&
+      this._configEntryId114&&this._configEntryOwner114===this._state()[0];
+    return '<button type="button" class="hem-room-settings114" '+
+      'data-room-settings114="'+escape(room.area_id)+'" aria-label="'+escape(label)+
+      '" title="'+escape(label)+'" '+(enabled?'':'disabled')+'>'+
+      this._icon('mdi:cog-outline')+'</button>';
+  };
+  protoRoom114._roomAlert114=function(room,kind,icon,label,tone='normal'){
+    return '<button type="button" class="hem-hint87 hem-hint-'+escape(tone)+
+      ' hem-room-issue114" data-room-issue114="'+escape(kind)+
+      '" data-issue-area114="'+escape(room.area_id)+'" title="'+escape(label)+
+      '" aria-label="'+escape(label)+'">'+this._icon(icon)+'</button>';
+  };
+  protoRoom114._roomIssueDetail114=function(room){
+    const kind=this._roomIssues114?.get(room.area_id);
+    if(!kind)return '';
+    const words=roomWords114(this),labels=_roomLabels87(this._language());
+    const rows=[];
+    const add=(text,id)=>{
+      const native=typeof id==='string'&&this._nativeAllowed105(id);
+      rows.push('<li>'+(native?'<button type="button" class="hem-issue-source114" '+
+        'data-hem-source105="'+escape(id)+'">'+escape(text)+'</button>':escape(text))+'</li>');
+    };
+    if(kind==='occupancy')add(this._roomPresence114(room).label);
+    else if(kind==='missing'){
+      if(room.climate_only===true)add(words.climateOnly);
+      else {
+        for(const item of safeArray(room.readings).filter(r=>r.available!==true)){
+          add((item.name||this._metricName(item.metric))+' · '+
+            (item.metric==='mold'&&room.status_detail==='mold_not_calibrated'
+              ?this._t('moldNotCalibrated'):this._t('missing')),item.entity_id);
+        }
+        for(const warning of safeArray(room.mold_warnings))add(this._moldInputWarning(warning));
+        if(!safeArray(room.readings).some(r=>r.available===true))add(words.noSensors);
+        if(!safeArray(room.windows).length)add(words.noWindows);
+        else for(const win of room.windows.filter(w=>typeof w.opened!=='boolean'))
+          add((win.name||this._t('windows'))+' · '+words.missingWindows,win.entity_id);
+      }
+    } else if(kind==='attention'){
+      for(const item of safeArray(room.readings).filter(r=>r.exceeded===true))
+        add((item.name||this._metricName(item.metric))+' · '+
+          this._format(item.value)+' '+(item.unit||''),item.entity_id);
+      for(const reason of safeArray(room.reasons))
+        add([reason.label,reason.value].filter(Boolean).join(' · '));
+    } else if(kind==='windows'||kind==='advice'){
+      if(kind==='advice'&&room.action==='close')add(this._t('closeAdvice'));
+      for(const win of safeArray(room.windows)){
+        const state=win.opened===true?'windowOpen':win.opened===false?'windowClosed':'windowUnknown';
+        add((win.name||this._t('windows'))+' · '+this._t(state),win.entity_id);
+      }
+      if(!safeArray(room.windows).length)add(words.noWindows);
+    }
+    if(!rows.length && kind==='missing' && room.status!=='unknown'){
+      this._roomIssues114.delete(room.area_id);
+      return '';
+    }
+    if(!rows.length)add(kind==='missing'?labels.unavailable:
+      this._controllerStatusLabel(room.environment?.climate_plan?.status||'unknown'));
+    return '<section class="hem-room-issue-detail114" data-room-issue-detail114="'+
+      escape(kind)+'" tabindex="-1" role="region" aria-label="'+
+      escape(kind==='missing'?labels.unavailable:words.details)+'">'+
+      '<strong>'+escape(kind==='missing'?labels.unavailable:words.details)+'</strong>'+
+      '<ul>'+rows.join('')+'</ul>'+this._roomSettingsButton114(room)+'</section>';
+  };
+  protoRoom114._navigateRoomIssue114=function(area,kind){
+    const room=safeArray(this._dashboard105()?.rooms).find(r=>r?.area_id===area);
+    if(!room || !['missing','attention','windows','advice','ventilation',
+      'faults','controllers','occupancy'].includes(kind))return;
+    this._roomsExpanded87 ||= new Set();this._roomsExpanded87.add(area);
+    this._expanded.add(area);
+    this._roomIssues114 ||= new Map();
+    if(['missing','occupancy'].includes(kind))this._roomIssues114.set(area,kind);
+    else this._roomIssues114.delete(area);
+    const devices=this._managedControllers(area);
+    const affected=devices.filter(e=>kind==='faults'
+      ?['warning','error','critical'].includes(e.errorAnnounce?.attributes?.native_error?.status)
+      :kind==='controllers' && !SETPOINT_PHASES109.has(
+          e.statusInfo?.state?.attributes?.status_code||e.climate?.attributes?.controller_status?.status||'') &&
+        /(paused|blocked|unavailable|failed|error)/i.test(
+          e.statusInfo?.state?.attributes?.status_code||e.climate?.attributes?.controller_status?.status||''));
+    this._devicesExpanded87 ||= new Set();
+    for(const device of affected)this._devicesExpanded87.add(device.entityId);
+    if(kind==='controllers' && affected.length){
+      this._detailsExpanded66 ||= new Set();
+      this._detailsExpanded66.add('device-info:'+affected[0].entityId);
+    }
+    this._renderContent(true);
+    const fold=[...this.shadowRoot.querySelectorAll('[data-room-fold87]')]
+      .find(el=>el.getAttribute('data-room-fold87')===area);
+    if(!fold)return;
+    let target;
+    if(['missing','occupancy'].includes(kind))target=fold.querySelector('.hem-room-issue-detail114');
+    else if(kind==='ventilation')target=fold.querySelector('.hem-room-ventilation95');
+    else if(kind==='windows')target=fold.querySelector('.window-section');
+    else if(kind==='advice')target=fold.querySelector('.advice')||fold.querySelector('.window-section');
+    else if(affected.length){
+      const device=[...fold.querySelectorAll('[data-device-fold87]')]
+        .find(el=>el.getAttribute('data-device-fold87')===affected[0].entityId);
+      target=device?.querySelector(kind==='faults'?'.hem-device-error':'.hem-device-state76,.managed-status')||device;
+    } else if(kind==='attention'){
+      const item=safeArray(room.readings).find(r=>r.exceeded===true);
+      if(item)target=[...fold.querySelectorAll('[data-room-metric114]')].find(el=>
+        el.getAttribute('data-room-metric114')===item.metric &&
+        el.getAttribute('data-metric-source114')===String(item.entity_id||''));
+      target ||= fold.querySelector('.advice,.mold-warnings,.hem-physics-fold105,.empty-measurements');
+    }
+    if(!target){
+      this._roomIssues114.set(area,kind);
+      this._renderContent(true);
+      target=[...this.shadowRoot.querySelectorAll('[data-room-fold87]')]
+        .find(el=>el.getAttribute('data-room-fold87')===area)?.querySelector('.hem-room-issue-detail114');
+    }
+    if(!target)return;
+    for(let parent=target;parent&&parent!==this.shadowRoot;parent=parent.parentElement){
+      if(parent.localName!=='details')continue;
+      parent.open=true;
+      const section=parent.getAttribute('data-hem-section105');
+      if(section){this._foldSections105 ||= new Set();this._foldSections105.add(section);}
+    }
+    // This is a user-requested navigation. Do not restore the earlier page
+    // position when the scheduled stable-DOM scroll recovery runs.
+    this._hemScrollEpoch90=(this._hemScrollEpoch90||0)+1;
+    target.setAttribute('tabindex','-1');
+    target.focus({preventScroll:true});
+    target.scrollIntoView({block:'nearest',behavior:'auto'});
+    if(kind==='controllers'){
+      const info=target.querySelector('details.hem-context76');
+      if(info){
+        info.open=true;
+        this._openInfo87(info);
+        requestAnimationFrame(()=>{
+          const pop=this._floatingInfo87;
+          if(!info.isConnected||!info.open||!pop?.isConnected)return;
+          pop.setAttribute('tabindex','-1');
+          pop.focus({preventScroll:true});
+        });
+      }
+    }
+  };
+  const oldRoomStyles114=protoRoom114._styles;
+  protoRoom114._styles=function(){return oldRoomStyles114.call(this)+`<style>
+    .hem-room-glance87 .hem-room-presence-occupied{color:var(--aqa-green)}
+    .hem-room-glance87 .hem-room-presence-unoccupied{color:var(--aqa-muted)}
+    .hem-room-glance87 .hem-room-presence-unknown{color:var(--aqa-amber)}
+    .hem-room-settings114{display:inline-flex;align-items:center;justify-content:center;
+      flex:0 0 24px;width:24px;height:28px;padding:2px;border:0;border-radius:7px;
+      background:transparent;color:var(--aqa-muted);cursor:pointer}
+    .hem-room-settings114 ha-icon{--mdc-icon-size:16px;width:16px;height:16px}
+    .hem-room-settings114:hover{background:color-mix(in srgb,var(--aqa-blue),transparent 90%);color:var(--aqa-blue)}
+    .hem-room-settings114:disabled{cursor:default;opacity:.45}
+    button.hem-room-issue114{border:0;padding:0;background:transparent;cursor:pointer;
+      min-width:19px;height:26px;font:inherit}
+    .hem-room-issue114:hover{background:color-mix(in srgb,currentColor,transparent 90%)}
+    .hem-presence-issue114{border:0;background:transparent;padding:0;font:inherit;cursor:pointer}
+    .hem-room-settings114:focus-visible,.hem-room-issue114:focus-visible,
+    .hem-presence-issue114:focus-visible,.hem-issue-source114:focus-visible{
+      outline:2px solid var(--aqa-blue);outline-offset:1px;border-radius:5px}
+    .hem-room-body87 [tabindex="-1"]:focus{outline:2px solid var(--aqa-blue);
+      outline-offset:3px;border-radius:7px}
+    .hem-room-issue-detail114{margin:7px 0 9px;padding:10px;border:1px solid var(--aqa-edge);
+      border-radius:9px;color:var(--aqa-text);background:var(--aqa-surface);
+      font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+    .hem-room-issue-detail114 ul{padding-inline-start:18px;margin:5px 0}
+    .hem-room-issue-detail114 li+li{margin-top:4px}
+    .hem-issue-source114{border:0;background:transparent;padding:0;font:inherit;
+      text-align:start;color:var(--aqa-blue);cursor:pointer;text-decoration:underline}
+    @container hem-rooms107 (max-width:400px){
+      .hem-room-glance87>ha-icon.hem-room-icon112{display:none}
+      .hem-room-glance87 .hem-room-settings114{width:20px;flex-basis:20px}
+    }
+  </style>`;};
+  /* HEM_ROOM_NAVIGATION114_END */
+
+  /* HEM_DIRECT_ROOM_OPTIONS114_START
+   * Use the ordinary HA Options flow and its exact room schema. Opening a
+   * room creates only an isolated flow draft; only the Save button submits
+   * settings. A native HTML dialog also works on a fresh dashboard where
+   * Home Assistant has not loaded its internal options-dialog bundle.
+   */
+  const _roomOptionsProto114=AirQualityAdvisorCard.prototype;
+  const _roomOptionsKeys114=['windows','air_quality','temperature','humidity',
+    'pressure','climate_devices','shades','occupancy_sensors'];
+  const _roomOptionsIcons114={windows:'mdi:window-closed-variant',
+    air_quality:'mdi:air-filter',temperature:'mdi:thermometer',
+    humidity:'mdi:water-percent',pressure:'mdi:gauge',
+    climate_devices:'mdi:thermostat',shades:'mdi:blinds',
+    occupancy_sensors:'mdi:account-outline'};
+  const _roomOptionsWords114={
+    en:{title:'Room settings',loading:'Loading room settings…',
+      save:'Save',saving:'Saving…',saved:'Room settings saved.',close:'Close',
+      done:'Done',retry:'Reload settings',controls:'Room controls',
+      search:'Search entities',clear:'Clear selection',selected:'selected',
+      none:'No available entities',noMatches:'No matching entities',
+      unavailable:'Unavailable selection',
+      loadError:'Room settings could not be loaded. Reload to try again.',
+      saveError:'The save could not be confirmed. Reload to check the current settings.',
+      changed:'These settings changed while the dialog was open. Reload to continue.',
+      invalid:'Review the highlighted selections before saving.',
+      invalidSelection:'Choose only entities currently listed for this room.',
+      windows:'Windows',air_quality:'Air quality',temperature:'Temperature',
+      humidity:'Humidity',pressure:'Pressure',climate_devices:'Climate devices',
+      shades:'Window shades',occupancy_sensors:'Occupancy sensors'},
+    de:{title:'Raumeinstellungen',loading:'Raumeinstellungen werden geladen…',
+      save:'Speichern',saving:'Wird gespeichert…',saved:'Raumeinstellungen gespeichert.',
+      close:'Schließen',done:'Fertig',retry:'Einstellungen neu laden',
+      controls:'Raumsteuerung',search:'Entitäten suchen',clear:'Auswahl leeren',
+      selected:'ausgewählt',none:'Keine verfügbaren Entitäten',
+      noMatches:'Keine passenden Entitäten',unavailable:'Nicht verfügbare Auswahl',
+      loadError:'Die Raumeinstellungen konnten nicht geladen werden. Erneut laden.',
+      saveError:'Das Speichern konnte nicht bestätigt werden. Aktuelle Einstellungen neu laden.',
+      changed:'Die Einstellungen wurden inzwischen geändert. Zum Fortfahren neu laden.',
+      invalid:'Die markierte Auswahl vor dem Speichern prüfen.',
+      invalidSelection:'Nur aktuell für diesen Raum aufgeführte Entitäten auswählen.',
+      windows:'Fenster',air_quality:'Luftqualität',temperature:'Temperatur',
+      humidity:'Luftfeuchtigkeit',pressure:'Luftdruck',climate_devices:'Klimageräte',
+      shades:'Beschattung',occupancy_sensors:'Anwesenheitssensoren'},
+    el:{title:'Ρυθμίσεις χώρου',loading:'Φόρτωση ρυθμίσεων χώρου…',
+      save:'Αποθήκευση',saving:'Αποθήκευση…',saved:'Οι ρυθμίσεις χώρου αποθηκεύτηκαν.',
+      close:'Κλείσιμο',done:'Τέλος',retry:'Επαναφόρτωση ρυθμίσεων',
+      controls:'Έλεγχοι χώρου',search:'Αναζήτηση οντοτήτων',clear:'Εκκαθάριση επιλογής',
+      selected:'επιλεγμένα',none:'Δεν υπάρχουν διαθέσιμες οντότητες',
+      noMatches:'Δεν βρέθηκαν οντότητες',unavailable:'Μη διαθέσιμη επιλογή',
+      loadError:'Δεν ήταν δυνατή η φόρτωση των ρυθμίσεων. Δοκίμασε ξανά.',
+      saveError:'Δεν επιβεβαιώθηκε η αποθήκευση. Επαναφόρτωσε τις τρέχουσες ρυθμίσεις.',
+      changed:'Οι ρυθμίσεις άλλαξαν όσο το παράθυρο ήταν ανοιχτό. Επαναφόρτωσε για συνέχεια.',
+      invalid:'Έλεγξε τις επισημασμένες επιλογές πριν την αποθήκευση.',
+      invalidSelection:'Επίλεξε μόνο οντότητες που αναφέρονται για αυτόν τον χώρο.',
+      windows:'Παράθυρα',air_quality:'Ποιότητα αέρα',temperature:'Θερμοκρασία',
+      humidity:'Υγρασία',pressure:'Πίεση',climate_devices:'Συσκευές κλιματισμού',
+      shades:'Σκίαστρα',occupancy_sensors:'Αισθητήρες παρουσίας'},
+  };
+  const _roomOptionsWord114=(card,key)=>
+    (_roomOptionsWords114[card._language()]||_roomOptionsWords114.en)[key]||key;
+  const _roomOptionsLocalized114=(card,key,placeholders)=>{
+    try{
+      const text=card._hass?.localize?.(key,placeholders);
+      return typeof text==='string'&&text&&text!==key?text:null;
+    }catch{return null;}
+  };
+  const _roomOptionsLabel114=(card,name,form)=>
+    _roomOptionsLocalized114(card,
+      'component.environment_manager.options.step.edit_room.data.'+name,
+      form?.description_placeholders)||_roomOptionsWord114(card,name);
+  const _roomOptionsError114=(card,code,form)=>
+    _roomOptionsLocalized114(card,
+      'component.environment_manager.options.error.'+String(code||''),
+      form?.description_placeholders)||_roomOptionsWord114(card,
+        code==='setup_changed'?'changed':'invalidSelection');
+  const _roomOptionsContext114=(card,area,entryId,owner)=>{
+    if(!card.isConnected||card._hass?.user?.is_admin!==true||
+       typeof card._hass?.callApi!=='function'||typeof area!=='string'||!area)
+      return null;
+    const currentOwner=card._state()[0],currentEntry=card._configEntryId114;
+    if(typeof currentEntry!=='string'||!currentEntry||!currentOwner||
+       card._configEntryOwner114!==currentOwner||
+       (entryId!==undefined&&currentEntry!==entryId)||
+       (owner!==undefined&&currentOwner!==owner))return null;
+    const sourceEntry=card._hass?.entities?.[currentOwner]?.config_entry_id;
+    if(sourceEntry&&sourceEntry!==currentEntry)return null;
+    const device=card._areaDeviceIds?.get(area);
+    const room=safeArray(card._dashboard105()?.rooms).find(item=>item?.area_id===area);
+    return room&&typeof device==='string'&&device
+      ?{room,owner:currentOwner,entryId:currentEntry,device}:null;
+  };
+  const _roomOptionsActive114=(card,saved)=>
+    card._roomSettingsDialog114===saved&&!saved.disposed&&
+    (!saved.connection||saved.connection===card._hass?.connection)&&
+    !!_roomOptionsContext114(card,saved.area,saved.entryId,saved.owner);
+  const _roomOptionsEndpoint114=saved=>
+    'config/config_entries/options/flow/'+encodeURIComponent(saved.flowId);
+  const _roomOptionsCleanup114=saved=>{
+    saved.cleanupRequested=true;
+    if(!saved.flowId||saved.finished||saved.cleanupStarted)return saved.cleanupPromise;
+    saved.cleanupStarted=true;
+    // The transport belongs to the entry that created this flow, including
+    // when the card has switched sources or been removed in the meantime.
+    saved.cleanupPromise=Promise.resolve().then(()=>
+      saved.api('DELETE',_roomOptionsEndpoint114(saved))
+    ).catch(()=>{saved.cleanupFailed=true;});
+    return saved.cleanupPromise;
+  };
+  const _roomOptionsDiscard114=(card,saved)=>{
+    if(card._roomSettingsDialog114===saved)card._closeRoomSettings114(false);
+    else _roomOptionsCleanup114(saved);
+  };
+  const _roomOptionsFields114=form=>{
+    if(form?.type!=='form'||form.step_id!=='edit_room'||
+       !Array.isArray(form.data_schema)||
+       form.data_schema.length!==_roomOptionsKeys114.length)
+      throw new Error('Unexpected room settings form');
+    const names=new Set();
+    return form.data_schema.map(field=>{
+      const name=field?.name,select=field?.selector?.select;
+      if(!_roomOptionsKeys114.includes(name)||names.has(name)||
+         select?.multiple!==true||select.custom_value===true||
+         !Array.isArray(select.options))throw new Error('Unexpected room selector');
+      names.add(name);
+      const values=new Set(),options=select.options.map(option=>{
+        const value=typeof option==='string'?option:option?.value;
+        if(typeof value!=='string'||!value||values.has(value))
+          throw new Error('Invalid room selector option');
+        values.add(value);
+        return {value,label:typeof option?.label==='string'?option.label:value};
+      });
+      const defaults=field.default??field.description?.suggested_value??[];
+      if(!Array.isArray(defaults)||defaults.some(value=>typeof value!=='string'))
+        throw new Error('Invalid room selector defaults');
+      return {name,schema:field,options,values,defaults:[...new Set(defaults)]};
+    });
+  };
+  const _roomOptionsDeepFocus114=()=>{
+    let node=document.activeElement;
+    while(node?.shadowRoot?.activeElement)node=node.shadowRoot.activeElement;
+    return node;
+  };
+  const _roomOptionsFocusables114=node=>{
+    const found=[];
+    const visit=root=>{
+      for(const child of root.children||[]){
+        if(!child.disabled&&child.tabIndex>=0&&child.getClientRects().length)
+          found.push(child);
+        if(child.shadowRoot)visit(child.shadowRoot);
+        visit(child);
+      }
+    };
+    visit(node);return found;
+  };
+  _roomOptionsProto114._closeRoomSettings114=function(restoreFocus=true){
+    const saved=this._roomSettingsDialog114;
+    if(!saved)return;
+    this._roomSettingsDialog114=null;
+    saved.disposed=true;
+    _roomOptionsCleanup114(saved);
+    try{if(saved.node.open)saved.node.close();}catch{}
+    saved.node.remove();
+    if(restoreFocus&&saved.returnFocus?.isConnected)
+      saved.returnFocus.focus?.({preventScroll:true});
+  };
+  _roomOptionsProto114._roomSettingsBusy114=function(saved,busy){
+    saved.busy=busy;
+    saved.node.setAttribute('aria-busy',String(busy));
+    const blocked=busy||saved.failed||saved.finished;
+    for(const input of saved.node.querySelectorAll(
+        '[data-room-option114],[data-room-options-search114],[data-room-clear114]'))
+      input.disabled=blocked;
+    for(const native of saved.nativeForms||[])native.disabled=blocked;
+    const save=saved.node.querySelector('[data-room-options-save114]');
+    save.disabled=blocked||!saved.fields||saved.clientErrors.size>0;
+    save.textContent=_roomOptionsWord114(this,busy&&saved.fields?'saving':'save');
+    saved.node.querySelector('[data-room-options-retry114]').hidden=!saved.failed;
+  };
+  _roomOptionsProto114._roomSettingsStatus114=function(saved,message,error=false){
+    const status=saved.node.querySelector('[data-room-options-status114]');
+    status.textContent=message;
+    status.hidden=!message;
+    status.classList.toggle('hem-room-options-error114',error);
+    status.setAttribute('role',error?'alert':'status');
+  };
+  _roomOptionsProto114._failRoomSettings114=function(saved,message){
+    if(this._roomSettingsDialog114!==saved||saved.disposed)return;
+    saved.failed=true;
+    _roomOptionsCleanup114(saved);
+    this._roomSettingsBusy114(saved,false);
+    this._roomSettingsStatus114(saved,message,true);
+  };
+  _roomOptionsProto114._roomSettingsSelection114=function(saved,name,values){
+    if(!_roomOptionsActive114(this,saved)||saved.busy||saved.failed||saved.finished)return;
+    const field=saved.fields?.find(item=>item.name===name);
+    if(!field||!Array.isArray(values)||values.some(value=>typeof value!=='string'))return;
+    const next=[...new Set(values)];
+    // Retain an already-selected unavailable source until the user removes
+    // it. Never silently clear it, or allow a forged new option to be added.
+    if(next.some(value=>!field.values.has(value)&&!saved.draft[name].includes(value))){
+      saved.clientErrors.add(name);
+      this._roomSettingsFieldError114(saved,name,_roomOptionsWord114(this,'invalidSelection'));
+      this._roomSettingsBusy114(saved,false);return;
+    }
+    saved.draft[name]=next;
+    if(next.some(value=>!field.values.has(value))){
+      saved.clientErrors.add(name);
+      this._roomSettingsFieldError114(saved,name,_roomOptionsWord114(this,'invalidSelection'));
+    }else{
+      saved.clientErrors.delete(name);
+      this._roomSettingsFieldError114(saved,name,'');
+    }
+    const group=saved.node.querySelector('[data-room-options-group114="'+name+'"]');
+    group.querySelector('[data-room-options-count114]').textContent=String(next.length);
+    const labels=next.map(value=>field.options.find(item=>item.value===value)?.label||value);
+    const peek=group.querySelector('[data-room-options-peek114]');
+    peek.textContent=labels.slice(0,2).join(', ')+(labels.length>2?' +'+(labels.length-2):'');
+    peek.title=labels.join(', ');
+    for(const input of group.querySelectorAll('[data-room-option114]'))
+      input.checked=next.includes(input.value);
+    const native=group.querySelector('ha-form');
+    if(native)native.data={[name]:[...next]};
+    if(!saved.clientErrors.size)this._roomSettingsStatus114(saved,'');
+    this._roomSettingsBusy114(saved,false);
+  };
+  _roomOptionsProto114._roomSettingsFieldError114=function(saved,name,message){
+    const group=saved.node.querySelector('[data-room-options-group114="'+name+'"]');
+    const text=group?.querySelector('[data-room-options-field-error114]');
+    if(text){text.textContent=message;text.hidden=!message;}
+    if(message&&group)group.open=true;
+  };
+  _roomOptionsProto114._renderRoomSettingsForm114=function(saved,form,keepDraft=false){
+    const fields=_roomOptionsFields114(form);
+    if(form.flow_id!==saved.flowId||
+       (form.handler!==undefined&&form.handler!==saved.entryId))
+      throw new Error('Room settings flow identity changed');
+    const open=new Set([...saved.node.querySelectorAll('details[open]')].map(
+      node=>node.getAttribute('data-room-options-group114')));
+    saved.fields=fields;saved.form=form;saved.nativeForms=[];saved.clientErrors.clear();
+    if(!keepDraft)saved.draft=Object.fromEntries(fields.map(
+      field=>[field.name,[...field.defaults]]));
+    const groups=saved.node.querySelector('[data-room-options-groups114]');
+    groups.replaceChildren();
+    for(const field of fields){
+      const name=field.name,label=_roomOptionsLabel114(this,name,form);
+      const selected=saved.draft[name];
+      const orphan=selected.filter(value=>!field.values.has(value));
+      if(orphan.length)saved.clientErrors.add(name);
+      const labels=selected.map(value=>field.options.find(item=>item.value===value)?.label||value);
+      const group=document.createElement('details');
+      group.className='hem-room-options-group114';
+      group.setAttribute('data-room-options-group114',name);
+      group.setAttribute('name','hem-room-options-groups114');
+      group.open=open.has(name);
+      group.innerHTML='<summary>'+this._icon(_roomOptionsIcons114[name])+
+        '<span class="hem-room-options-label114"><strong>'+escape(label)+
+        '</strong><small data-room-options-peek114 title="'+escape(labels.join(', '))+'">'+
+        escape(labels.slice(0,2).join(', ')+(labels.length>2?' +'+(labels.length-2):''))+
+        '</small></span><span class="hem-room-options-count114" data-room-options-count114 '+
+        'aria-label="'+escape(_roomOptionsWord114(this,'selected'))+'">'+selected.length+
+        '</span>'+this._icon('mdi:chevron-down')+'</summary>'+
+        '<div class="hem-room-options-group-body114"><div data-room-options-mount114></div>'+
+        '<p class="hem-room-options-field-error114" data-room-options-field-error114 '+
+        'role="alert" hidden></p><button class="hem-room-options-clear114" type="button" '+
+        'data-room-clear114="'+name+'" aria-label="'+escape(_roomOptionsWord114(this,'clear')+
+          ' · '+label)+'">'+escape(_roomOptionsWord114(this,'clear'))+'</button></div>';
+      groups.appendChild(group);
+      const mount=group.querySelector('[data-room-options-mount114]');
+      if(customElements.get('ha-form')&&!orphan.length){
+        const native=document.createElement('ha-form');
+        native.hass=this._hass;
+        native.schema=[field.schema];
+        native.data={[name]:[...selected]};
+        native.computeLabel=()=>label;
+        native.computeHelper=()=>_roomOptionsLocalized114(this,
+          'component.environment_manager.options.step.edit_room.data_description.'+name,
+          form.description_placeholders)||'';
+        native.computeError=error=>_roomOptionsError114(this,error,form);
+        native.addEventListener('value-changed',event=>{
+          event.stopPropagation();
+          const data=event.detail?.value;
+          if(!data||typeof data!=='object'||Array.isArray(data))return;
+          this._roomSettingsSelection114(saved,name,
+            Object.prototype.hasOwnProperty.call(data,name)?data[name]:[]);
+        });
+        mount.appendChild(native);saved.nativeForms.push(native);
+      }else{
+        const choices=[...field.options,...orphan.map(value=>({value,
+          label:value+' · '+_roomOptionsWord114(this,'unavailable')}))];
+        mount.innerHTML='<input type="search" class="hem-room-options-search114" '+
+          'data-room-options-search114="'+name+'" autocomplete="off" '+
+          'placeholder="'+escape(_roomOptionsWord114(this,'search'))+'" aria-label="'+
+          escape(_roomOptionsWord114(this,'search')+' · '+label)+'">'+
+          '<div class="hem-room-options-choices114" role="group" aria-label="'+escape(label)+'">'+
+          choices.map(option=>'<label class="hem-room-options-choice114" '+
+            'data-room-options-choice114="'+escape((option.label+' '+option.value).toLocaleLowerCase())+'">'+
+            '<input type="checkbox" data-room-option114="'+name+'" value="'+
+            escape(option.value)+'" '+(selected.includes(option.value)?'checked':'')+'>'+
+            '<span><strong>'+escape(option.label)+'</strong>'+
+            (option.label!==option.value?'<small>'+escape(option.value)+'</small>':'')+
+            '</span></label>').join('')+'</div>'+
+          '<p class="hem-room-options-empty114" data-room-options-empty114 '+
+          (choices.length?'hidden':'')+'>'+escape(_roomOptionsWord114(this,
+            choices.length?'noMatches':'none'))+'</p>';
+      }
+      if(orphan.length)this._roomSettingsFieldError114(saved,name,
+        _roomOptionsWord114(this,'invalidSelection'));
+      if(form.errors?.[name])this._roomSettingsFieldError114(saved,name,
+        _roomOptionsError114(this,form.errors[name],form));
+    }
+    // A previously expanded later group must not hide the first validation
+    // problem when the browser enforces the single-open accordion name.
+    const problem=fields.find(field=>saved.clientErrors.has(field.name)||form.errors?.[field.name]);
+    if(problem)saved.node.querySelector(
+      '[data-room-options-group114="'+problem.name+'"]').open=true;
+    const hasErrors=form.errors&&Object.keys(form.errors).length;
+    this._roomSettingsStatus114(saved,hasErrors
+      ?(form.errors.base?_roomOptionsError114(this,form.errors.base,form):
+        _roomOptionsWord114(this,'invalid')):'',!!hasErrors);
+    this._roomSettingsBusy114(saved,false);
+  };
+  _roomOptionsProto114._submitRoomSettings114=async function(saved){
+    if(!_roomOptionsActive114(this,saved)||saved.busy||saved.failed||
+       saved.finished||!saved.fields||!saved.flowId)return;
+    const data={};
+    for(const field of saved.fields){
+      const values=saved.draft[field.name];
+      if(!Array.isArray(values)||values.some(value=>!field.values.has(value))||
+         saved.clientErrors.has(field.name)){
+        this._roomSettingsFieldError114(saved,field.name,
+          _roomOptionsWord114(this,'invalidSelection'));
+        this._roomSettingsStatus114(saved,_roomOptionsWord114(this,'invalid'),true);
+        return;
+      }
+      data[field.name]=[...new Set(values)];
+    }
+    this._roomSettingsBusy114(saved,true);
+    this._roomSettingsStatus114(saved,_roomOptionsWord114(this,'saving'));
+    try{
+      const result=await saved.api('POST',_roomOptionsEndpoint114(saved),data);
+      if(!_roomOptionsActive114(this,saved)){_roomOptionsDiscard114(this,saved);return;}
+      if(result?.flow_id!==saved.flowId)throw new Error('Room settings flow changed');
+      if(result.type==='create_entry'){
+        // HA has finished and removed this flow; there is nothing to cancel.
+        saved.finished=true;
+        saved.node.querySelector('[data-room-options-groups114]').replaceChildren();
+        saved.node.querySelector('[data-room-options-save114]').hidden=true;
+        saved.node.querySelector('[data-room-options-close114]').textContent=
+          _roomOptionsWord114(this,'done');
+        this._roomSettingsStatus114(saved,_roomOptionsWord114(this,'saved'));
+        this._roomSettingsBusy114(saved,false);
+        saved.node.querySelector('[data-room-options-close114]').focus({preventScroll:true});
+      }else if(result.type==='form'){
+        this._renderRoomSettingsForm114(saved,result,true);
+      }else{
+        if(result.type==='abort')saved.finished=true;
+        this._failRoomSettings114(saved,_roomOptionsWord114(this,'changed'));
+      }
+    }catch{
+      if(_roomOptionsActive114(this,saved))
+        this._failRoomSettings114(saved,_roomOptionsWord114(this,'saveError'));
+      else _roomOptionsDiscard114(this,saved);
+    }
+  };
+  _roomOptionsProto114._openRoomSettings114=async function(area){
+    const context=_roomOptionsContext114(this,area);
+    if(!context)return false;
+    this._closeRoomSettings114(false);
+    this._closeAverage105?.();this._closeWeather103?.();this._closeInfo87?.();
+    const node=document.createElement('dialog');
+    node.className='hem-room-options114';
+    node.setAttribute('aria-labelledby','hem-room-options-title114');
+    node.setAttribute('aria-modal','true');node.setAttribute('tabindex','-1');
+    node.dir=RTL_LANGUAGES.has(this._language())?'rtl':'ltr';
+    const saved={...context,area,node,api:this._hass.callApi.bind(this._hass),
+      connection:this._hass.connection,returnFocus:_roomOptionsDeepFocus114(),
+      flowId:null,fields:null,nativeForms:[],draft:{},clientErrors:new Set(),
+      busy:true,disposed:false,failed:false,finished:false};
+    this._roomSettingsDialog114=saved;
+    node.innerHTML='<header class="hem-room-options-head114"><div><small>'+
+      escape(_roomOptionsWord114(this,'title'))+'</small><h2 id="hem-room-options-title114">'+
+      escape(context.room.name||area)+'</h2></div><button type="button" '+
+      'class="hem-room-options-x114" data-room-options-x114 aria-label="'+
+      escape(_roomOptionsWord114(this,'close'))+'">'+this._icon('mdi:close')+'</button></header>'+
+      '<div class="hem-room-options-body114"><p class="hem-room-options-status114" '+
+      'data-room-options-status114 role="status" aria-live="polite">'+
+      escape(_roomOptionsWord114(this,'loading'))+'</p><div data-room-options-groups114></div></div>'+
+      '<footer class="hem-room-options-footer114"><button type="button" '+
+      'class="hem-room-options-controls114" data-room-controls114>'+this._icon('mdi:tune-variant')+
+      escape(_roomOptionsWord114(this,'controls'))+'</button><button type="button" '+
+      'data-room-options-retry114 hidden>'+escape(_roomOptionsWord114(this,'retry'))+'</button>'+
+      '<button type="button" data-room-options-close114>'+escape(_roomOptionsWord114(this,'close'))+
+      '</button><button type="button" class="hem-room-options-save114" data-room-options-save114 disabled>'+
+      escape(_roomOptionsWord114(this,'save'))+'</button></footer>';
+    node.addEventListener('cancel',event=>{
+      event.preventDefault();if(this._roomSettingsDialog114===saved)this._closeRoomSettings114();
+    });
+    node.addEventListener('close',()=>{
+      if(this._roomSettingsDialog114===saved)this._closeRoomSettings114();
+    });
+    node.addEventListener('keydown',event=>{
+      if(event.key==='Escape'){
+        event.preventDefault();event.stopPropagation();
+        if(this._roomSettingsDialog114===saved)this._closeRoomSettings114();
+      }else if(event.key==='Tab'){
+        const targets=_roomOptionsFocusables114(node);
+        const active=_roomOptionsDeepFocus114();
+        if(event.shiftKey&&active===targets[0]){
+          event.preventDefault();targets.at(-1)?.focus();
+        }else if(!event.shiftKey&&active===targets.at(-1)){
+          event.preventDefault();targets[0]?.focus();
+        }
+      }
+    });
+    node.addEventListener('click',event=>{
+      const button=event.target?.closest?.('button');
+      if(!button||!node.contains(button))return;
+      event.stopPropagation();
+      if(button.hasAttribute('data-room-options-close114')||button.hasAttribute('data-room-options-x114')){
+        this._closeRoomSettings114();return;
+      }
+      if(button.hasAttribute('data-room-options-retry114')){
+        if(!saved.busy)this._openRoomSettings114(saved.area);return;
+      }
+      if(button.hasAttribute('data-room-options-save114')){
+        this._submitRoomSettings114(saved);return;
+      }
+      if(button.hasAttribute('data-room-clear114')){
+        this._roomSettingsSelection114(saved,button.getAttribute('data-room-clear114'),[]);return;
+      }
+      if(button.hasAttribute('data-room-controls114')){
+        const verified=_roomOptionsContext114(this,saved.area,saved.entryId,saved.owner);
+        if(!verified)return;
+        const path='/config/devices/device/'+encodeURIComponent(verified.device);
+        this._closeRoomSettings114(false);
+        if(window.history?.pushState&&window.dispatchEvent){
+          window.history.pushState(null,'',path);
+          window.dispatchEvent(new Event('location-changed'));
+        }else window.location.assign(path);
+      }
+    });
+    node.addEventListener('change',event=>{
+      const input=event.target?.closest?.('[data-room-option114]');
+      if(!input)return;
+      event.stopPropagation();
+      const name=input.getAttribute('data-room-option114');
+      const prior=saved.draft[name];
+      if(!Array.isArray(prior))return;
+      this._roomSettingsSelection114(saved,name,input.checked
+        ?[...prior,input.value]:prior.filter(value=>value!==input.value));
+    });
+    node.addEventListener('input',event=>{
+      const input=event.target?.closest?.('[data-room-options-search114]');
+      if(!input)return;
+      const group=input.closest('[data-room-options-group114]');
+      const query=input.value.trim().toLocaleLowerCase();let visible=0;
+      for(const choice of group.querySelectorAll('[data-room-options-choice114]')){
+        choice.hidden=!choice.getAttribute('data-room-options-choice114').includes(query);
+        if(!choice.hidden)visible++;
+      }
+      group.querySelector('[data-room-options-empty114]').hidden=visible>0;
+    });
+    this.shadowRoot.appendChild(node);
+    try{node.showModal();}catch{node.setAttribute('open','');}
+    node.querySelector('[data-room-options-x114]').focus({preventScroll:true});
+    this._roomSettingsBusy114(saved,true);
+    // These optional translations improve native ha-form labels without
+    // making access depend on a translation download or a lazy UI import.
+    for(const category of ['options','selector']){
+      try{Promise.resolve(this._hass.loadBackendTranslation?.(
+        category,'environment_manager')).catch(()=>{});}catch{}
+    }
+    try{
+      const menu=await saved.api('POST','config/config_entries/options/flow',{
+        handler:saved.entryId});
+      if(typeof menu?.flow_id==='string'&&/^[A-Za-z0-9_-]{1,128}$/.test(menu.flow_id))
+        saved.flowId=menu.flow_id;
+      if(!_roomOptionsActive114(this,saved)){_roomOptionsDiscard114(this,saved);return false;}
+      const next='edit_room_'+saved.area;
+      const options=Array.isArray(menu?.menu_options)?menu.menu_options:
+        Object.keys(menu?.menu_options||{});
+      if(menu?.type!=='menu'||!saved.flowId||!options.includes(next)||
+         (menu.handler!==undefined&&menu.handler!==saved.entryId))
+        throw new Error('The exact room is not in the current options menu');
+      const form=await saved.api('POST',_roomOptionsEndpoint114(saved),{next_step_id:next});
+      if(!_roomOptionsActive114(this,saved)){_roomOptionsDiscard114(this,saved);return false;}
+      this._renderRoomSettingsForm114(saved,form);
+      return true;
+    }catch{
+      if(_roomOptionsActive114(this,saved))
+        this._failRoomSettings114(saved,_roomOptionsWord114(this,'loadError'));
+      else _roomOptionsDiscard114(this,saved);
+      return false;
+    }
+  };
+  _roomOptionsProto114._refreshRoomSettings114=function(){
+    const saved=this._roomSettingsDialog114;
+    if(!saved)return;
+    if(!_roomOptionsActive114(this,saved)){this._closeRoomSettings114(false);return;}
+    // Ordinary HA updates retain the separate modal and its unfinished draft.
+    if(!saved.node.isConnected){
+      saved.node.removeAttribute('open');this.shadowRoot.appendChild(saved.node);
+      try{saved.node.showModal();}catch{saved.node.setAttribute('open','');}
+    }
+    for(const native of saved.nativeForms)native.hass=this._hass;
+  };
+  const _roomOptionsOldRender114=_roomOptionsProto114._renderContent;
+  _roomOptionsProto114._renderContent=function(force=false){
+    _roomOptionsOldRender114.call(this,force);this._refreshRoomSettings114();
+  };
+  const _roomOptionsOldDisconnect114=_roomOptionsProto114.disconnectedCallback;
+  _roomOptionsProto114.disconnectedCallback=function(){
+    this._closeRoomSettings114(false);return _roomOptionsOldDisconnect114.call(this);
+  };
+  const _roomOptionsOldStyles114=_roomOptionsProto114._styles;
+  _roomOptionsProto114._styles=function(){return _roomOptionsOldStyles114.call(this)+String.raw`<style>
+    .hem-room-options114{box-sizing:border-box;width:min(570px,calc(100vw - 24px));
+      max-width:calc(100vw - 24px);max-height:min(800px,calc(100dvh - 24px));
+      margin:auto;padding:0;border:1px solid var(--divider-color,#455463);border-radius:18px;
+      color:var(--primary-text-color,#e8edf3);background:var(--card-background-color,#18212b);
+      box-shadow:0 20px 80px #0007;font:inherit;overflow:hidden;outline:none}
+    .hem-room-options114[open]{display:flex;flex-direction:column}
+    .hem-room-options114:not([open]),.hem-room-options114 [hidden]{display:none!important}
+    .hem-room-options114::backdrop{background:#07101a88;backdrop-filter:blur(5px)}
+    .hem-room-options114 *{box-sizing:border-box}
+    .hem-room-options-head114{display:flex;align-items:center;justify-content:space-between;
+      gap:12px;padding:17px 18px 14px;flex:0 0 auto;border-bottom:1px solid var(--divider-color,#455463)}
+    .hem-room-options-head114>div{min-width:0;flex:1}
+    .hem-room-options-head114 small{font-size:11px;color:var(--secondary-text-color,#aebbc8)}
+    .hem-room-options-head114 h2{font-size:19px;line-height:1.3;margin:3px 0 0;
+      overflow-wrap:anywhere;color:inherit}
+    .hem-room-options114 button{min-height:34px;border:1px solid var(--divider-color,#455463);
+      border-radius:9px;background:var(--secondary-background-color,#22303d);color:inherit;
+      padding:7px 10px;font:inherit;font-size:12px;cursor:pointer;display:inline-flex;
+      align-items:center;justify-content:center;gap:5px;max-width:100%;white-space:normal}
+    .hem-room-options114 button:disabled{opacity:.45;cursor:default}
+    .hem-room-options114 button:focus-visible,.hem-room-options114 summary:focus-visible,
+    .hem-room-options114 input:focus-visible{outline:2px solid var(--primary-color,#03a9f4);outline-offset:2px}
+    .hem-room-options114 ha-icon{--mdc-icon-size:18px;flex:0 0 18px;width:18px;height:18px}
+    .hem-room-options-head114 .hem-room-options-x114{flex:0 0 34px;width:34px;padding:7px;
+      background:transparent;border-color:transparent}
+    .hem-room-options-body114{min-height:0;overflow:auto;overflow-x:hidden;padding:12px 14px;
+      scrollbar-width:none;-ms-overflow-style:none;overscroll-behavior:contain}
+    .hem-room-options-body114::-webkit-scrollbar{display:none}
+    .hem-room-options-status114{font-size:13px;line-height:1.45;margin:7px 3px 12px;
+      color:var(--secondary-text-color,#aebbc8);overflow-wrap:anywhere}
+    .hem-room-options-status114.hem-room-options-error114,.hem-room-options-field-error114{
+      color:var(--error-color,#ef8378)}
+    .hem-room-options-group114{min-width:0;margin:0 0 6px;border:1px solid var(--divider-color,#455463);
+      border-radius:11px;overflow:hidden;background:var(--secondary-background-color,#22303d)}
+    .hem-room-options-group114>summary{min-height:46px;padding:9px 11px;display:flex;
+      gap:9px;align-items:center;cursor:pointer;list-style:none;user-select:none}
+    .hem-room-options-group114>summary::-webkit-details-marker{display:none}
+    .hem-room-options-group114>summary>ha-icon:first-child{color:var(--primary-color,#53b8ee)}
+    .hem-room-options-group114>summary>ha-icon:last-child{color:var(--secondary-text-color,#aebbc8)}
+    .hem-room-options-group114[open]>summary>ha-icon:last-child{transform:rotate(180deg)}
+    .hem-room-options-label114{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+    .hem-room-options-label114 strong{font-size:13px;font-weight:600;overflow-wrap:anywhere}
+    .hem-room-options-label114 small{font-size:10px;line-height:1.2;white-space:nowrap;
+      overflow:hidden;text-overflow:ellipsis;color:var(--secondary-text-color,#aebbc8)}
+    .hem-room-options-label114 small:empty{display:none}
+    .hem-room-options-count114{display:grid;place-items:center;min-width:23px;height:23px;
+      border-radius:7px;background:color-mix(in srgb,var(--primary-color,#53b8ee),transparent 87%);
+      color:var(--primary-text-color,#e8edf3);font-size:11px;font-variant-numeric:tabular-nums}
+    .hem-room-options-group-body114{padding:3px 10px 10px;min-width:0}
+    .hem-room-options-group-body114 ha-form{display:block;min-width:0;width:100%;max-width:100%}
+    .hem-room-options-search114{width:100%;min-width:0;height:35px;border-radius:8px;
+      border:1px solid var(--divider-color,#455463);padding:6px 9px;font:inherit;font-size:12px;
+      background:var(--card-background-color,#18212b);color:var(--primary-text-color,#e8edf3);
+      margin:1px 0 6px}
+    .hem-room-options-choice114{display:flex;align-items:flex-start;gap:9px;padding:8px 6px;
+      min-width:0;border-radius:7px;cursor:pointer}
+    .hem-room-options-choice114:hover{background:color-mix(in srgb,var(--primary-color,#53b8ee),transparent 92%)}
+    .hem-room-options-choice114 input{margin:2px 0 0;flex:0 0 17px;width:17px;height:17px;
+      accent-color:var(--primary-color,#53b8ee)}
+    .hem-room-options-choice114>span{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+    .hem-room-options-choice114 strong{font-size:12px;font-weight:500;line-height:1.35;overflow-wrap:anywhere}
+    .hem-room-options-choice114 small{font-size:10px;color:var(--secondary-text-color,#aebbc8);
+      overflow-wrap:anywhere;line-height:1.3}
+    .hem-room-options-field-error114,.hem-room-options-empty114{font-size:12px;line-height:1.4;margin:8px 3px}
+    .hem-room-options114 .hem-room-options-clear114{font-size:11px;min-height:28px;
+      padding:4px 7px;background:transparent;border-color:transparent;color:var(--primary-color,#53b8ee)}
+    .hem-room-options-footer114{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;
+      flex:0 0 auto;gap:7px;border-top:1px solid var(--divider-color,#455463);padding:12px 14px}
+    .hem-room-options-footer114 .hem-room-options-controls114{margin-inline-end:auto;
+      background:transparent;border-color:transparent;font-size:11px;padding:5px 2px}
+    .hem-room-options-footer114 .hem-room-options-save114{background:var(--primary-color,#0288c7);
+      border-color:var(--primary-color,#0288c7);color:var(--text-primary-color,#fff);font-weight:600}
+    @media(max-width:380px){.hem-room-options114{width:calc(100vw - 16px);max-width:calc(100vw - 16px);
+      max-height:calc(100dvh - 16px);border-radius:13px}
+      .hem-room-options-head114{padding:12px}.hem-room-options-body114{padding:9px}
+      .hem-room-options-footer114{padding:9px;gap:5px}
+      .hem-room-options-group114>summary{padding:8px;gap:6px}}
+  </style>`;};
+  /* HEM_DIRECT_ROOM_OPTIONS114_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);

@@ -612,6 +612,8 @@ class AirQualityManager:
                     # permission to infer somebody has actually entered.
                     occupied = "unknown"
                 sleeping = climate.get("sleeping")
+                display_home = climate.get("away", "unknown")
+                display_presence_evidence = evidence
             else:
                 home, _evidence, _trackers = home_presence(
                     self.hass,shared,local_settings.get("away_entities",[]))
@@ -619,6 +621,8 @@ class AirQualityManager:
                     self.hass,area_id,local_settings,shared,
                     known_areas=known_areas,home_status=home,
                 )
+                display_home = home
+                display_presence_evidence = _why
                 local_sleep, local_reason = scheduled_sleep(
                     local_settings,time(),
                     getattr(self.hass.config,"time_zone",None) or "UTC",
@@ -628,6 +632,15 @@ class AirQualityManager:
                     home_status=home,local_sleeping=local_sleep,
                     local_reason=local_reason,
                 )
+            # Expose the same verified evidence to every room header,
+            # including air-quality-only rooms with no climate controller.
+            # Comfort-policy assumptions must not appear as known presence.
+            environment.setdefault(area_id, {})["room_presence"] = {
+                "occupancy": occupied,
+                "occupancy_evidence": display_presence_evidence,
+                "home": display_home,
+                "sleeping": sleeping,
+            }
             from .room_sources import room_temperature_evidence
             room_temp, _temperature_sources = room_temperature_evidence(
                 self.hass,config,area_id,
