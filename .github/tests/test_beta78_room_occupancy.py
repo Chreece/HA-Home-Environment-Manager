@@ -21,7 +21,8 @@ ROOT=Path(__file__).resolve().parents[2]
 source=(ROOT/'occupancy_policy.py').read_text(encoding='utf-8')
 tree=ast.parse(source)
 names={'_fresh','_room_key','_tokens','configured_rooms','_bool_presence',
-       'room_sensor_choices','selected_room_sensors','room_presence'}
+       '_after_away_cooldown','home_presence','room_sensor_choices',
+       'selected_room_sensors','room_presence'}
 methods=[node for node in tree.body if isinstance(node,ast.FunctionDef)
          and node.name in names]
 assert len(methods)==len(names), set(names)-{m.name for m in methods}
@@ -61,7 +62,7 @@ ns={'ast':ast,'json':json,'math':math,'re':re,
     '_device_class':lambda hass,s:s.attributes.get('device_class') or s.registry_class or '',
     '_area_aliases':lambda hass,known:{
         unicodedata.normalize('NFKC',n).strip().casefold():aid
-        for n,aid in areas.items() if aid in known
+        for n,aid in areas.items() if not known or aid in known
     }}
 exec(compile(ast.Module(body=methods,type_ignores=[]),
              'occupancy_policy.py','exec'),ns)
@@ -129,10 +130,11 @@ h.put('input_text.occupied_rooms','Wohnzimmer')
 actual=expect('badezimmer',setting,'unoccupied')
 assert 'binary_sensor.bath_occupancy' in actual[2]
 assert 'input_text.occupied_rooms' in actual[2]
-# Device permissions must call the same room_presence function for live
-# command-time checks; the room plan must skip fake vacancy dwell on a list.
-device=(ROOT/'occupancy_policy.py').read_text(encoding='utf-8')
-climate=(ROOT/'climate_rooms.py').read_text(encoding='utf-8')
-assert 'room,_,_=room_presence(hass,area,room_config,global_settings' in device
-assert 'occ_reason != "verified_room_list_unoccupied"' in climate
+# Device permissions must call the same production room resolver. Actual
+# command-time and room-plan dwell behavior is exercised separately in
+# test_home_presence_authority.py, without depending on source formatting.
+live=next(node for node in tree.body if isinstance(node,ast.FunctionDef)
+          and node.name=='live_device_permission')
+assert any(isinstance(node,ast.Call) and isinstance(node.func,ast.Name)
+           and node.func.id=='room_presence' for node in ast.walk(live))
 print('BETA78_ROOM_LIST_PRECEDENCE_AND_SELECTED_FALLBACK=PASS')

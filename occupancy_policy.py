@@ -1,8 +1,9 @@
 """Global, room and device occupancy policy.
 
 Only actual Home Assistant states and configured Area Registry IDs are accepted.
-A missing/old/ambiguous source is UNKNOWN, never 'nobody home'. An explicit
-empty JSON array from a fresh source does mean no rooms are occupied.
+A missing/old/ambiguous source is UNKNOWN, never 'nobody home'. A fresh empty
+room list (including an empty string) means no rooms are occupied. Configured
+whole-home sources take priority; verified Away does not consult room sources.
 """
 from __future__ import annotations
 
@@ -181,25 +182,15 @@ def _after_away_cooldown(states: list[Any], minutes: Any, reason: str,
 
 def home_presence(hass: Any, global_settings: Mapping,
                   fallback_trackers: list[str] | None = None) -> tuple[str, str, list[str]]:
-    """Any fresh positive tracker or presence sensor is sufficient for HOME.
+    """Resolve configured whole-home sources before consulting any room.
 
-    Evaluate *all* explicitly configured presence signals before any negative
-    priority/cooldown logic. A fresh device_tracker/person 'home' or binary
-    sensor 'on' can never be vetoed by another 'not_home'/'off', a missing
-    sensor, or an empty/stale occupied-rooms list. Only a real fresh positive
-    qualifies; unavailable or stale values are not affirmative evidence.
-
-    Once no positive evidence exists, retain conservative existing behavior
-    for room lists, all-negative room sensors and away cooldowns.
+    A fresh positive direct source means Home. Otherwise all direct sources
+    must be freshly negative to establish Away; a missing/unknown one leaves
+    home presence unknown. Room activity cannot override either decision.
+    Only installations without direct home sources use room evidence and
+    its existing absence cooldown. Return the sources that decided presence,
+    so room sensors cannot become home trackers at a later control check.
     """
-    cooldown = global_settings.get("away_cooldown_minutes", 10)
-    room_entity = global_settings.get("occupied_rooms_entity")
-    room_sources = global_settings.get("room_occupancy_sensors", [])
-    allowed_rooms = list(dict.fromkeys(
-        entity for entity in (room_sources if isinstance(room_sources, list) else [])
-        if isinstance(entity, str) and entity.startswith((
-            "binary_sensor.", "number.", "input_number.", "sensor."))
-    ))
     global_trackers = global_settings.get("home_trackers", [])
     # Legacy area trackers are explicit sources too: a positive should not
     # disappear merely because the General settings list is also configured.
@@ -213,26 +204,35 @@ def home_presence(hass: Any, global_settings: Mapping,
         and entity.startswith(("person.", "device_tracker.", "binary_sensor.",
                                "number.", "input_number.", "sensor."))
     ))
+    if allowed:
+        tracker_values = [_bool_presence(hass.states.get(e)) for e in allowed]
+        if any(value is True for value in tracker_values):
+            return "home", "any_home_policy", allowed
+        if any(value is None for value in tracker_values):
+            return "unknown", "unverified_home_trackers", allowed
+        # Direct absence has always bypassed the room-motion cooldown. Do
+        # not read a stale/empty list or a stuck room sensor to contradict it.
+        return "away", "all_selected_home_trackers_away", allowed
+
+    cooldown = global_settings.get("away_cooldown_minutes", 10)
+    room_entity = global_settings.get("occupied_rooms_entity")
+    room_sources = global_settings.get("room_occupancy_sensors", [])
+    allowed_rooms = list(dict.fromkeys(
+        entity for entity in (room_sources if isinstance(room_sources, list) else [])
+        if isinstance(entity, str) and entity.startswith((
+            "binary_sensor.", "number.", "input_number.", "sensor."))
+    ))
     all_sources = list(dict.fromkeys([
         *([room_entity] if isinstance(room_entity, str) and room_entity else []),
-        *allowed_rooms, *allowed,
+        *allowed_rooms,
     ]))
     room_values = [_bool_presence(hass.states.get(e)) for e in allowed_rooms]
-    tracker_values = [_bool_presence(hass.states.get(e)) for e in allowed]
     resumed_since = global_settings.get("_verified_absence_since")
 
-    # Positive evidence has unconditional priority over contradictory/unknown
-    # negative sources and old all_home configuration (which no longer vetoes
-    # a known person at home). This affects only house presence; independent
-    # physical compressor and per-room safety gates still apply.
-    if any(value is True for value in tracker_values):
-        return "home", "any_home_policy", all_sources
+    # With no direct home source, retain the existing room-only inference.
     if any(value is True for value in room_values):
         return "home", "room_sensor_occupied", all_sources
 
-    # Positive evidence was handled above. No negative source may establish
-    # "everyone away" while another *selected* source is unavailable/unknown.
-    # A fresh occupied-room list also has priority over apparently away trackers.
     has_room_list = isinstance(room_entity, str) and bool(room_entity)
     if has_room_list:
         rooms, why = configured_rooms(
@@ -242,16 +242,8 @@ def home_presence(hass: Any, global_settings: Mapping,
             return "unknown", why, all_sources
         if rooms:
             return "home", "occupied_rooms_present", all_sources
-    if any(value is None for value in tracker_values):
-        return "unknown", "unverified_home_trackers", all_sources
     if any(value is None for value in room_values):
         return "unknown", "room_presence_evidence_unknown", all_sources
-
-    # Explicit HA persons, device trackers and household number counters are
-    # direct home/away evidence. An older empty-room cooldown must not falsely
-    # change an independently verified AWAY household into HOME after reboot.
-    if allowed and all(value is False for value in tracker_values):
-        return "away", "all_selected_home_trackers_away", all_sources
 
     if has_room_list:
         state = hass.states.get(room_entity)
@@ -301,20 +293,32 @@ def selected_room_sensors(hass: Any, area: str, settings: Mapping,
             global_selected if isinstance(global_selected, list) and global_selected
             else room_sensor_choices(hass, area)
         )
-    return list(dict.fromkeys(
-        eid for eid in candidates
-        if isinstance(eid, str) and eid.startswith("binary_sensor.")
-        and entity_area(hass, eid) == area
-        and (state := hass.states.get(eid)) is not None
-        and _device_class(hass, state).casefold() in ("occupancy", "presence")
-    ))
+    result = []
+    for eid in candidates:
+        if not isinstance(eid, str) or not eid.startswith("binary_sensor."):
+            continue
+        assigned = entity_area(hass, eid)
+        state = hass.states.get(eid)
+        if state is None:
+            # An explicitly selected source that has disappeared is unknown,
+            # not permission to infer vacancy from the remaining OFF sources.
+            # A known assignment to another room is still excluded.
+            if assigned in (None, area):
+                result.append(eid)
+        elif (assigned == area and
+              _device_class(hass, state).casefold() in ("occupancy", "presence")):
+            result.append(eid)
+    return list(dict.fromkeys(result))
 
 
 def room_presence(hass: Any, area: str, settings: Mapping,
                   global_settings: Mapping, *, known_areas: set[str],
+                  home_status: str | None = None,
                   ) -> tuple[str, str, list[str]]:
-    """Authoritative room list, then selected local sensor fallback only.
+    """Verified home absence, then room list and selected local fallback.
 
+    When the household is verified Away, skip all room-source reads. Callers
+    may pass a just-evaluated home status to share one consistent decision.
     Valid list: a room omitted from it is immediately UNoccupied, regardless
     of another sensor's ON reading. Valid empty string/list: all rooms are
     unoccupied. Missing/unavailable/stale list: use the sensors explicitly
@@ -323,6 +327,12 @@ def room_presence(hass: Any, area: str, settings: Mapping,
     grant inferred presence or absence. An explicit [] sensor selection is
     honoured even during fallback.
     """
+    if home_status is None:
+        home_status, _, _ = home_presence(
+            hass, global_settings, settings.get("away_entities"),
+        )
+    if home_status == "away":
+        return "unoccupied", "verified_home_away", []
     sensors = selected_room_sensors(hass, area, settings, global_settings)
     entity = global_settings.get("occupied_rooms_entity")
     has_list = isinstance(entity, str) and bool(entity) and entity != "none"
@@ -424,6 +434,10 @@ def device_permission(device: Mapping, room_status: str, home_status: str,
         pass
     elif sleep != "normal":
         return "held", "invalid_sleep_policy"
+    # A cached/manual plan can still contain old room activity. Verified
+    # whole-home absence takes priority at the final device-policy boundary.
+    if home_status == "away":
+        room_status = "unoccupied"
     source = device.get("presence_requirement", "always")
     # Legacy room/home semantics are retained for the old room drivers only.
     # The new per-controller UI never offers these values.
@@ -465,10 +479,10 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
     if isinstance(global_settings, Mapping) and global_settings:
         known = (set(area_ids) if isinstance(area_ids, (tuple,list,set))
                  else {area})
-        room,_,_=room_presence(hass,area,room_config,global_settings,
-                               known_areas=known or {area})
         home,_,_=home_presence(hass,global_settings,
-                               plan.get("tracker_entities",[]))
+                               room_config.get("away_entities"))
+        room,_,_=room_presence(hass,area,room_config,global_settings,
+                               known_areas=known or {area},home_status=home)
         from time import time as _time
         from .climate_schedule import scheduled_sleep
         zone = getattr(getattr(hass, "config", None), "time_zone", None) or "UTC"
@@ -479,20 +493,15 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
             local_reason=local_reason,
         )
         return device_permission(device,room,home,sleeping)
-    room = plan.get("occupancy","unknown")
-    sensors=plan.get("presence_entities")
-    if isinstance(sensors,list) and sensors:
-        readings=[_bool_presence(hass.states.get(entity)) for entity in sensors]
-        if any(value is True for value in readings):
-            room="occupied"
-        elif any(value is None for value in readings):
-            room="unknown"
-        else:
-            room="unoccupied"
     home=plan.get("away","unknown")
-    trackers=plan.get("tracker_entities")
+    trackers=room_config.get("away_entities",plan.get("tracker_entities"))
     if isinstance(trackers,list) and trackers:
         home,_,_=home_presence(hass,{"home_trackers":trackers})
+    # Away plans deliberately contain no room evidence. On a return before
+    # the next plan, read the actual room configuration rather than trusting
+    # that cached unoccupied result or its empty presence_entities list.
+    room,_,_=room_presence(hass,area,room_config,{},
+                           known_areas={area},home_status=home)
     # Even a climate-only room without General sleeping-room configuration
     # has valid non-sleep evidence from its own disabled/local schedule.
     from time import time as _time

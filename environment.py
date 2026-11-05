@@ -141,6 +141,7 @@ def build_environment(
     source_selections: dict[str, Any] | None = None,
     purifier_ratings_by_room: dict[str, list[dict]] | None = None,
     outside_safe: bool = False, now: float | None = None,
+    home_status: str = "unknown",
 ) -> tuple[dict[str, dict], bool]:
     """Return scientific diagnostics for dashboard and whether history changed."""
     stamp = time.time() if now is None else now
@@ -229,7 +230,15 @@ def build_environment(
         # readings are unknown or a missing contact could be open.
         window_open = (True if True in win_values else
                        False if win_values and all(v is False for v in win_values) else None)
-        occupied = _occupancy_state(hass, room.area_id, max_age_minutes)
+        # Whole-home absence is sufficient vacancy evidence. Do not consult
+        # room sensors after the configured home sources prove everyone away.
+        occupied = (False if home_status == "away" else
+                    _occupancy_state(hass, room.area_id, max_age_minutes))
+        occupancy_evidence = (
+            "verified_home_away" if home_status == "away" else
+            "room_occupancy_sensors" if occupied is not None else
+            "room_occupancy_source_unknown"
+        )
         changed = history.add(room.area_id, {
             "temperature_c": indoor_t, "humidity": indoor_rh,
             "pm25": pm25, "pm10": pm10, "co2": co2,
@@ -272,6 +281,7 @@ def build_environment(
                 ),
                 "humidity_sensors": sum(r.metric == "humidity" and r.value is not None for r in room.readings),
                 "occupancy_known": occupied is not None,
+                "occupancy_evidence": occupancy_evidence,
                 "outdoor_co2_measured": outdoor_co2 is not None,
                 "co2_sensor_technology_verified": False,
                 "co2_sensor_note": "Verify NDIR technology manually; eCO2 is not true CO2",
