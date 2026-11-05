@@ -1,0 +1,169 @@
+"""Register real native capability-dependent configuration controls.
+
+Only a registered source belonging to a managed physical controller can
+authorize adding controls. A delayed native fan capability must not leave
+orphaned HA entity-registry entries or require another restart. Nothing here
+calls a physical HA service or infers a capability from a device's name.
+"""
+from __future__ import annotations
+
+from collections.abc import Callable, Iterable
+from typing import Any
+
+from homeassistant.helpers.event import async_track_state_change_event
+from homeassistant.core import callback
+from homeassistant.helpers import entity_registry as er
+
+from .const import DOMAIN
+from . import equipment_model as equipment
+from .room_hubs import async_add_grouped_entities
+
+
+def registered_control(registry: Any, platform: str, spec: Any, key: str) -> bool:
+    """Preserve unique IDs of previously supported native controller controls."""
+    getter = getattr(registry, "async_get_entity_id", None)
+    return bool(getter and getter(platform, DOMAIN, f"{spec.identifier}_{key}"))
+
+
+
+def pid_calibration_supported(manager: Any, registry: Any, spec: Any,
+                              *, platform: str) -> bool:
+    """Expose PID tuning only for a verified or previously configured endpoint.
+
+    A DRY-only climate exposes a genuine humidity PID capability; however,
+    its physical HVAC modes may arrive after the select/button platforms
+    finish setup. Keep a known PID controller's tuning controls registered
+    across that startup gap. Unproven devices obtain them only once their
+    advertised native features confirm PID support.
+    """
+    key = {"select": "pid_calibration_method",
+           "button": "pid_apply_calibration"}.get(platform)
+    if key is None:
+        raise ValueError("Only PID calibration select/button are supported")
+    if "pid" in equipment.control_modes(manager, spec):
+        return True
+    if registered_control(registry, platform, spec, key):
+        return True
+    return (equipment.settings(manager, spec).get("control_mode") == "pid"
+            and any(entity.startswith(("climate.", "humidifier.", "fan."))
+                    for entity in spec.source_entities))
+
+
+def timed_setpoint_supported(manager: Any, registry: Any, spec: Any) -> bool:
+    """Expose timing only on a controller with an actual native setpoint."""
+    cap = equipment.capabilities(manager, spec)
+    state = manager.hass.states.get(cap.primary) if cap else None
+    available = state is not None and state.state not in ("unknown", "unavailable")
+    flags = equipment.features(state)
+    if not available:
+        if registered_control(registry, "switch", spec, "timed_setpoint_sequence"):
+            return True
+        # On the first upgrade the native appliance may be disconnected.
+        # Reuse capabilities previously verified for precisely these sources.
+        record = getattr(manager.equipment, "records", {}).get(spec.identifier, {})
+        if (record.get("area") == spec.area_id
+                and record.get("source_device_id") == spec.source_device_id
+                and tuple(record.get("sources", ())) == spec.source_entities):
+            try:
+                saved = equipment.Capabilities(**record["capabilities"])
+                if saved.primary in spec.source_entities:
+                    attrs = record.get("baseline", {}).get(saved.primary) or {}
+                    flags = int(attrs.get("attributes", {}).get("supported_features", 0))
+                    cap = saved
+            except (KeyError, TypeError, ValueError, OverflowError):
+                pass
+    if cap is None:
+        return False
+    return bool(
+        cap.domain == "humidifier" and cap.humidity
+        or cap.domain == "climate" and (
+            (cap.temperature and flags & equipment.TEMP)
+            or (cap.temperature_range and "heat_cool" in cap.modes and flags & equipment.RANGE)
+            or (cap.humidity and flags & equipment.HUMIDITY)
+        )
+    )
+
+
+def quiet_keys(manager: Any, registry: Any, spec: Any,
+               *, platform: str) -> tuple[str, ...]:
+    """Capability-gated controls; never interpret a physical OFF as no fan.
+
+    When HA has not loaded native modes yet, recreate only the existing
+    registry controls so they recover under their previous unique IDs.
+    An unregistered/unsupported feature is never invented or enabled.
+    """
+    cap = equipment.capabilities(manager, spec)
+    if platform == "switch":
+        choices = equipment.QUIET_FLAGS
+        offered = bool(cap and cap.fan_modes)
+    elif platform == "select":
+        choices = ("quiet_fan_mode",)
+        offered = bool(cap and cap.fan_modes and not cap.fan_percentage)
+    else:
+        raise ValueError("Only native quiet configuration platforms are supported")
+
+    if offered:
+        return choices
+    return tuple(
+        key for key in choices
+        if registered_control(registry, platform, spec, key)
+    )
+
+
+def register_late_capabilities(
+    hass: Any,
+    entry: Any,
+    async_add_entities: Callable[..., Any],
+    original: Iterable[Any],
+    candidates: Callable[[], Iterable[Any]],
+) -> None:
+    """Register newly discovered features only for exact physical source events.
+
+    Track added unique IDs before forwarding platform additions to prevent
+    duplicate registration. Room hub identity and user-customized entity IDs
+    remain untouched. A manager-generated logical entity never triggers this.
+    """
+    manager = entry.runtime_data
+    registered_ids = {
+        entity._attr_unique_id for entity in original
+    }
+    watched = frozenset(
+        source for spec in equipment.specs(manager)
+        for source in spec.source_entities
+    )
+    if not watched:
+        return
+
+    capability_fields = (
+        "device_class", "supported_features", "hvac_modes", "fan_modes", "swing_modes",
+        "swing_horizontal_modes", "preset_modes", "min_temp", "max_temp",
+        "target_temp_step", "temperature_unit", "min_humidity", "max_humidity",
+        "percentage_step", "min", "max", "step", "unit_of_measurement",
+    )
+
+    def fingerprint(state):
+        if state is None:
+            return None
+        return {key: state.attributes.get(key) for key in capability_fields}
+
+    @callback
+    def native_changed(event: Any) -> None:
+        if event.data.get("entity_id") not in watched:
+            return
+        if fingerprint(event.data.get("old_state")) == fingerprint(event.data.get("new_state")):
+            return  # A numeric observation is not new hardware capability.
+        missing = {}
+        for candidate in candidates():
+            unique_id = candidate._attr_unique_id
+            if unique_id not in registered_ids:
+                missing[unique_id] = candidate
+        if not missing:
+            return
+        registered_ids.update(missing)
+        async_add_grouped_entities(
+            entry.runtime_data, async_add_entities, missing.values()
+        )
+
+    entry.async_on_unload(
+        async_track_state_change_event(hass, watched, native_changed)
+    )

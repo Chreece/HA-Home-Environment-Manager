@@ -1,169 +1,246 @@
-name: Validate and release (after push)
+name: Validate Home Environment Manager
 
-# A completed push to main starts validation. Only the final validated HEAD
-# gets a release; manual dispatch can run validation without publishing.
 on:
   push:
-    branches:
-      - main
-      - 'feat/research-based-indoor-environment-*'
-      - 'feat/home-environment-advisor-*'
-      - 'feat/home-environment-manager-pid-*'
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
   workflow_dispatch:
-    inputs:
-      publish_release:
-        description: 'Publish the versioned GitHub/HACS release after all checks pass'
-        required: false
-        default: false
-        type: boolean
 
 permissions:
   contents: read
 
 concurrency:
-  group: air-quality-advisor-release-${{ github.ref }}
+  group: hem-validation-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  test:
+  validate:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-      - name: Pure decision-engine tests
-        run: |
-          python -m pip install pytest
-          python -m pytest -q tests
-      - name: Verify translations match generator
-        run: |
-          python generate_translations.py
-          git diff --exit-code -- custom_components/air_quality_advisor/strings.json custom_components/air_quality_advisor/translations
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Card syntax and rendering smoke test
-        run: |
-          node --check custom_components/air_quality_advisor/frontend/air-quality-advisor-card.js
-          node tests/card_test.cjs
-      - name: Syntax and JSON check
-        run: |
-          python -m compileall -q custom_components
-          python -m json.tool hacs.json > /dev/null
-          python -m json.tool custom_components/air_quality_advisor/manifest.json > /dev/null
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          for path in Path('custom_components/air_quality_advisor').rglob('*.json'):
-              json.loads(path.read_text(encoding='utf-8'))
-          print('Translations validated')
-          PY
-  hassfest:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: home-assistant/actions/hassfest@master
-  hacs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: hacs/action@main
-        with:
-          category: integration
-          # Strict integration checks; ignore only missing GitHub About metadata.
-          # For listing in the default HACS catalog, remove this exception.
-          ignore: description topics
-
-  publish:
-    name: Publish versioned HACS release
-    if: >-
-      github.ref == 'refs/heads/main' &&
-      (github.event_name == 'push' ||
-      (github.event_name == 'workflow_dispatch' && inputs.publish_release == true))
-    needs: [test, hassfest, hacs]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Check requested version and release notes
-        id: metadata
-        shell: bash
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Validate canonical integration source
         run: |
-          python - <<'PY'
+          set -euo pipefail
+          python -I -m compileall -q .
+          node --check frontend/air-quality-advisor-card.js
+          python -I - <<'PYCODE'
+          import json
+          import re
           from pathlib import Path
-          import json, os, re
-          request = json.loads(Path('.github/release-request.json').read_text(encoding='utf-8'))
-          version = request.get('version', '')
-          assert re.fullmatch(r'\d+\.\d+\.\d+', version), f'Invalid release version: {version}'
-          manifest = json.loads(Path('custom_components/air_quality_advisor/manifest.json').read_text(encoding='utf-8'))
-          assert manifest['version'] == version, f"Manifest {manifest['version']} differs from request {version}"
-          tag = f'v{version}'
-          notes = Path(f'.github/releases/{tag}.md')
-          assert notes.is_file() and notes.stat().st_size > 200, f'Missing release notes: {notes}'
-          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
-              print(f'tag={tag}', file=out)
-              print(f'notes={notes}', file=out)
+
+          manifest = json.loads(Path('manifest.json').read_text(encoding='utf-8'))
+          assert manifest['domain'] == 'environment_manager'
+          assert re.fullmatch(r'[0-9][0-9A-Za-z.+-]*', manifest['version'])
+          for path in Path('.').rglob('*.json'):
+              json.loads(path.read_text(encoding='utf-8'))
+          assert len(list(Path('translations').glob('*.json'))) == 38
+          print('PASS: canonical manifest, JSON and translations', manifest['version'])
+          PYCODE
+          git diff --check
+      - name: Device fan limits and advanced comfort controls
+        run: |
+          python -I .github/tests/test_beta112_device_fan_limits.py
+          python -I .github/tests/test_beta112_advanced_comfort.py
+          python -I .github/tests/test_beta112_room_activity.py --logic-only
+      - name: PID target cutoff, original retry budgets and live native shutdown
+        run: |
+          python -I .github/tests/test_beta111_pid_cutoff_math.py
+          python -I .github/tests/test_beta111_pid_supply_cutoff.py
+          python -I .github/tests/test_beta111_pid_target_cutoff.py
+      - name: Per-device option defaults, persistence and command behavior
+        run: |
+          python -I .github/tests/test_beta110_device_setting.py
+          python -I .github/tests/test_beta110_timed_sequence_opt_in.py
+      - name: Beta109 timed startup and committed shutdown through real actuator paths
+        run: |
+          python -I .github/tests/test_beta109_setpoint_sequence.py
+          python -I .github/tests/test_beta109_setpoint_grace_browser.py --status-only
+      - name: Beta108 like-for-like setpoint feedback and read-only pending status
+        run: |
+          python -I .github/tests/test_beta108_setpoint_feedback.py
+          python -I .github/tests/test_beta108_pending_status.py
+          python -I .github/tests/test_beta108_retry_recovery.py
+          python -I .github/tests/test_beta108_target_shutdown.py
+      - name: Binary heat max and cool min through real dispatch and delayed native ACK
+        run: python -I .github/tests/test_onoff_native_extrema.py
+      - name: Beta105 physical contributor provenance and persisted average trends
+        run: |
+          python -I .github/tests/test_beta105_averages.py
+          node --check frontend/air-quality-advisor-card.js
+      - name: Beta102 reproduce 5°C heating and 4°C cooling native PID hold
+        run: python -I .github/tests/test_beta102_pid_target_followthrough.py
+      - name: Beta100 native binary setpoint bounds and physical-only telemetry
+        run: |
+          python -I .github/tests/test_beta100_native_pid.py
+          python -I .github/tests/test_beta100_delayed_feedback.py
+          node --check frontend/air-quality-advisor-card.js
+      - name: Beta91 native DRY-only PID, low-demand compressor PWM and restart continuity
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta91_dry_only_pwm.py
+          python -I .github/tests/test_beta91_pid_restart.py
+          python -I .github/tests/test_beta70_pid_profile.py
+          python -I .github/tests/test_beta73_restart_power_history.py
+          python -I .github/tests/test_beta99_startup_auto_recovery.py
+          python -I .github/tests/test_beta74_upstream_dwell.py
+          python -I .github/tests/test_beta88_power_startup_and_retries.py
+      - name: Beta90 source-verified window evidence and no phantom open sensor
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta90_window_evidence.py
+          python -I .github/tests/test_beta94_room_windows.py
+          python -I .github/tests/test_beta95_room_ventilation.py
+          python -I .github/tests/test_beta95_messages.py
+          python -I .github/tests/test_beta96_air_sensor_classification.py
+          python -I .github/tests/test_beta97_battery_power_selector.py
+          python -I .github/tests/test_beta98_nonblocking_ack.py
+          python -I .github/tests/test_beta98_native_reconnect.py
+          python -I .github/tests/test_beta66_windows.py
+          python -I .github/tests/test_beta75_native_supply_recovery.py
+          python -I .github/tests/test_beta83_supply_safety.py
+      - name: Beta89 native activity, real override and Automatic persistence
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta89_automatic.py
+          python -I .github/tests/test_beta94_dry_automatic.py
+          python -I .github/tests/test_beta72_resume_running.py
+          python -I .github/tests/test_beta85_native_resume.py
+      - name: Beta88 actual powered-device startup, binary setpoints and ACK retries
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta88_power_startup_and_retries.py
+          python -I .github/tests/test_beta83_supply_safety.py
+          python -I .github/tests/test_beta85_native_resume.py
+      - name: Beta86 real native HA device errors and complete Hub details
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta86_native_errors.py
+          python -I .github/tests/test_beta85_native_resume.py
+      - name: Preserve Beta85 guided interrupted-command Resume
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta85_native_resume.py
+          python -I .github/tests/test_beta72_resume_running.py
+          python -I .github/tests/test_beta73_restart_power_history.py
+          python -I .github/tests/test_beta99_startup_auto_recovery.py
+      - name: Preserve Beta84 unified PID review and upstream power protections
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta84_unified_review.py
+          python -I .github/tests/test_beta84_pid_review_runtime.py
+          python -I .github/tests/test_beta83_supply_safety.py
+          python -I .github/tests/test_beta74_upstream_dwell.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+      - name: Actual Beta82 menu entrypoints, per-room and consolidated General settings
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta82_pid_passive.py
+          python -I .github/tests/test_beta82_runtime_guard.py
+          python -I .github/tests/test_beta81_localization.py
+          python -I .github/tests/test_beta79_room_reconfigure.py
+          python -I .github/tests/test_beta80_menu_init.py
+          python -I .github/tests/test_beta79_general_form.py
+      - name: Explicit room-list priority and section-based reconfigure tests
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta78_room_occupancy.py
+      - name: Guarded DRY-only and external-supply OFF recovery regressions
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta77_dry_only_target.py
+          python -I .github/tests/test_beta77_offline_supply_resume.py
+      - name: Real native reconnection after owned supply ON
+        run: python -I .github/tests/test_beta75_native_supply_recovery.py
+      - name: Per-device external supply min-ON, min-OFF and cooldown evidence
+        run: python -I .github/tests/test_beta74_upstream_dwell.py
+      - name: Actual persisted physical ON history and safe restart recovery
+        run: python -I .github/tests/test_beta73_restart_power_history.py
+      - name: Resume authorized running physical outputs without forcing OFF
+        run: python -I .github/tests/test_beta72_resume_running.py
+      - name: Restore genuinely closed windows without spurious restart delay
+        run: python -I .github/tests/test_beta66_windows.py
+      - name: Real PID profile response and physical minimum-OFF regression
+        run: python -I .github/tests/test_beta70_pid_profile.py
+      - name: Actual per-cover lux controller and existing protective behavior
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta69_shade_lux.py
+          python -I .github/tests/test_beta61_supply_selection.py
+          python -I .github/tests/test_beta62_pid_races.py
+          python -I .github/tests/test_beta63_cold_start.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+          python -I .github/tests/test_beta65_data.py
+          python -I .github/tests/test_beta66_windows.py
+          python -I .github/tests/test_beta67_aqi.py
+          python -I .github/tests/test_beta68_scheduler.py
+          python -I .github/tests/test_beta68_metadata.py
+      - name: Install runner-only Home Assistant and browser test packages
+        run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+      - name: Home Assistant dispatcher and compact card browser interactions
+        run: |
+          python -I .github/tests/test_beta68_events.py
+          python -I .github/tests/test_beta66_browser.py
+          python -I .github/tests/test_beta68_browser.py
+          python -I .github/tests/test_beta76_compact_browser.py
+          python -I .github/tests/test_beta84_review_browser.py
+          python -I .github/tests/test_beta85_resume_browser.py
+          python -I .github/tests/test_beta86_fault_card.py
+          python -I .github/tests/test_beta87_compact_browser.py
+          python -I .github/tests/test_beta89_card.py
+          python -I .github/tests/test_beta90_scroll_card.py
+          python -I .github/tests/test_beta91_stable_dom.py
+          python -I .github/tests/test_beta92_lovelace_scroll.py
+          python -I .github/tests/test_beta93_native_entity_links.py
+          python -I .github/tests/test_beta95_card.py
+          python -I .github/tests/test_beta98_resume_card.py
+          python -I .github/tests/test_beta101_weather_warning.py
+          python -I .github/tests/test_beta103_weather_persistent.py
+          python -I .github/tests/test_beta104_weather_no_scroll.py
+          python -I .github/tests/test_beta105_card.py
+          python -I .github/tests/test_beta107_room_metrics.py
+          python -I .github/tests/test_beta112_room_activity.py
+          python -I .github/tests/test_beta108_setpoint_feedback_browser.py
+          python -I .github/tests/test_beta109_setpoint_grace_browser.py
+          python -I .github/tests/test_beta110_device_option_browser.py
+      - name: Package and inspect canonical HACS integration
+        run: |
+          python -I - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          from zipfile import ZipFile,ZIP_DEFLATED
+          version=json.loads(Path('manifest.json').read_text(encoding='utf-8'))['version']
+          p=Path('dist')/f'HA-Home-Environment-Manager-v{version}.zip'
+          p.parent.mkdir(exist_ok=True)
+          names=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
+          with ZipFile(p,'w',ZIP_DEFLATED,compresslevel=8) as z:
+              for name in sorted(filter(None,names)):
+                  if name.startswith(('.github/','tests/','dist/')) or name=='hacs.json' or '__pycache__' in name or name.endswith(('.pyc','.pyo')):
+                      continue
+                  q=Path(name)
+                  if q.is_file():z.write(q,'custom_components/environment_manager/'+name)
+          with ZipFile(p) as z:
+              assert z.testzip() is None
+              root='custom_components/environment_manager/'
+              m=json.loads(z.read(root+'manifest.json'))
+              assert m['domain']=='environment_manager' and m['version']==version
+              for f in ('__init__.py','device_faults.py','equipment_resume.py','pid_review.py','equipment_power_switch.py',
+                        'pid_passive.py','pid_calibration.py',
+                        'equipment_runtime.py','equipment_setpoint_sequence.py','equipment_pid_safety.py','advanced_comfort.py','shade_cooling.py','switch.py',
+                        'button.py','climate.py','equipment_name_catalog.py',
+                        'equipment_labels.json','equipment_window.py',
+                        'climate_arbitration.py','pid_phase.py','pid_restart.py',
+                        'equipment_status.py','equipment_battery.py',
+                        'room_ventilation.py','messages.py',
+                        'select.py','number.py','device_controls.py',
+                        'translations/el.json','frontend/air-quality-advisor-card.js'):
+                  assert root+f in z.namelist(),f
+              assert all(f.startswith(root) for f in z.namelist())
+          print('PASS: canonical integration ZIP',version,p.stat().st_size)
           PY
-      - name: Verify this commit is current and the version is unreleased
-        id: eligibility
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ steps.metadata.outputs.tag }}
-        run: |
-          set -euo pipefail
-          current_sha="$(gh api "repos/$GITHUB_REPOSITORY/branches/main" --jq '.commit.sha')"
-          if [[ "$current_sha" != "$GITHUB_SHA" ]]; then
-            echo "::notice::Superseded by $current_sha; skipping obsolete release"
-            echo "should_publish=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            echo "::notice::Release $RELEASE_TAG already exists; no duplicate"
-            echo "should_publish=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" >/dev/null 2>&1; then
-            echo "::error::Tag $RELEASE_TAG already exists without a release; refusing to repoint it"
-            exit 1
-          fi
-          echo "should_publish=true" >> "$GITHUB_OUTPUT"
-      - name: Build manual integration ZIP
-        if: steps.eligibility.outputs.should_publish == 'true'
-        env:
-          RELEASE_TAG: ${{ steps.metadata.outputs.tag }}
-        run: |
-          mkdir -p dist
-          zip -q -r "dist/HA-Air-Quality-Advisor-${RELEASE_TAG}.zip" custom_components/air_quality_advisor \
-            -x '*__pycache__*' '*.pyc'
-      - name: Create release at the validated commit
-        if: steps.eligibility.outputs.should_publish == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ steps.metadata.outputs.tag }}
-          RELEASE_NOTES: ${{ steps.metadata.outputs.notes }}
-        run: |
-          set -euo pipefail
-          current_sha="$(gh api "repos/$GITHUB_REPOSITORY/branches/main" --jq '.commit.sha')"
-          if [[ "$current_sha" != "$GITHUB_SHA" ]]; then
-            echo "::notice::New push arrived during packaging; skip obsolete release"
-            exit 0
-          fi
-          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            echo "::notice::Release $RELEASE_TAG already published; no duplicate"
-            exit 0
-          fi
-          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" >/dev/null 2>&1; then
-            echo "::error::Tag $RELEASE_TAG exists without a published release"
-            exit 1
-          fi
-          gh release create "$RELEASE_TAG" "dist/HA-Air-Quality-Advisor-${RELEASE_TAG}.zip#Manual installation ZIP" \
-            --repo "$GITHUB_REPOSITORY" \
-            --target "$GITHUB_SHA" \
-            --title "Home Environment Manager ${RELEASE_TAG}" \
-            --notes-file "$RELEASE_NOTES" \
-            --latest
