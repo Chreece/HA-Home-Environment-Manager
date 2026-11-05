@@ -98,10 +98,10 @@ async def scenarios():
     # be considered closed just because every foreign window is shut.
     unknown=make(opened=False,native='off')
     unknown.manager.settings['room_sources'][spec.area_id]['windows']=[
-        'binary_sensor.window','binary_sensor.unavailable_window']
+        'binary_sensor.window','binary_sensor.window_unavailable']
     p=unknown._window_policy(spec)
     assert p['blocked'] and p['status']=='window_state_unknown',p
-    assert p['unknown_contacts']==['binary_sensor.unavailable_window'],p
+    assert p['unknown_contacts']==['binary_sensor.window_unavailable'],p
     print('BETA94_ROOM_SCOPED_WINDOW_OPEN_CLOSE_60S_NO_CROSS_ROOM_PAUSE=PASS')
 
 asyncio.run(scenarios())

@@ -594,6 +594,7 @@
       this._areaDeviceIds = new Map();
       this._homeDeviceId = null;
       this._deviceRegistryLoading = null;
+      this._deviceRegistryContext = null;
       this._deviceRegistryUnavailable = false;
       this._deviceRegistryLoaded = false;
       this._deviceRegistryFailureCount = 0;
@@ -975,6 +976,7 @@
       this._config = {show_outside:true, show_metrics:true, show_science:true, ...config};
       this._lastConfigKey = null;
       this._loadDashboard();
+      this._loadDeviceIds();
       this._render(true);
     }
 
@@ -1062,21 +1064,37 @@
     }
 
     _loadDeviceIds() {
-      const currentSource114=this._state()[0];
-      if(this._configEntryOwner114&&this._configEntryOwner114!==currentSource114){
-        this._deviceRegistryLoaded=false;
-        this._homeDeviceId=null;this._areaDeviceIds=new Map();
-        this._configEntryId114=null;this._configEntryOwner114=null;
+      const hass = this._hass;
+      const stateId = this._state()[0];
+      const connection = hass?.connection;
+      const previous = this._deviceRegistryContext;
+      if (!previous || previous.stateId !== stateId ||
+          previous.connection !== connection) {
+        // Settings links and options-flow ownership belong to the selected
+        // source and HA connection, even while its registry request is pending.
+        this._deviceRegistryContext = {stateId, connection};
+        this._deviceRegistryLoading = null;
+        this._deviceRegistryLoaded = false;
+        this._deviceRegistryFailureCount = 0;
+        this._deviceRegistryNextAttemptAt = 0;
+        this._homeDeviceId = null;
+        this._areaDeviceIds = new Map();
+        this._configEntryId114 = null;
+        this._configEntryOwner114 = null;
       }
+      const context = this._deviceRegistryContext;
+      const current = () => this._deviceRegistryContext === context &&
+        this._state()[0] === stateId && this._hass?.connection === connection;
       // Loading/reconnect failures are transient. A permanent "unavailable"
       // latch previously required a browser hard refresh to recover links.
       if (this._deviceRegistryLoading || this._deviceRegistryLoaded ||
-          !this._hass?.callWS || Date.now()<this._deviceRegistryNextAttemptAt) return;
+          !stateId || !hass?.callWS || Date.now()<this._deviceRegistryNextAttemptAt) return;
       // Defer the call to catch both synchronous WebSocket failures and
       // rejected promises without escaping from Home Assistant's hass setter.
-      this._deviceRegistryLoading = Promise.resolve().then(() =>
-        this._hass.callWS({type:'config/device_registry/list'})
+      const request = Promise.resolve().then(() =>
+        hass.callWS({type:'config/device_registry/list'})
       ).then((entries) => {
+        if (!current()) return;
         if (!Array.isArray(entries)) throw new Error('Invalid device registry');
         const belong = (d) => safeArray(d?.identifiers)
           .filter((pair) => Array.isArray(pair) && pair[0]==='environment_manager')
@@ -1084,7 +1102,6 @@
         const home = entries.filter((device) => belong(device).some(
           (identifier) => typeof identifier === 'string' && !identifier.includes('_area_')
         ));
-        const stateId = this._state()[0];
         const currentDevice = this._hass?.entities?.[stateId]?.device_id;
         const parent = home.find((device)=>device.id===currentDevice) ||
                        (home.length===1 ? home[0] : null);
@@ -1115,6 +1132,7 @@
         this._deviceRegistryNextAttemptAt = 0;
         this._render(true);
       }).catch((error) => {
+        if (!current()) return;
         this._deviceRegistryLoaded = false;
         this._deviceRegistryFailureCount = Math.min(6, this._deviceRegistryFailureCount+1);
         this._deviceRegistryNextAttemptAt = Date.now()+
@@ -1124,7 +1142,10 @@
         if (this._deviceRegistryFailureCount<=2) {
           console.warn('Home Environment Manager device links will retry', error);
         }
-      }).finally(() => { this._deviceRegistryLoading = null; });
+      }).finally(() => {
+        if (this._deviceRegistryLoading === request) this._deviceRegistryLoading = null;
+      });
+      this._deviceRegistryLoading = request;
     }
 
     _deviceEditLabel(home = false) {

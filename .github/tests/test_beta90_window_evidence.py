@@ -51,13 +51,13 @@ class TestWindowEvidence(unittest.TestCase):
     def test_real_unavailable_selected_contact_remains_blocking_and_named(self):
         s=make(opened=False)
         s.manager.settings['room_sources'][spec.area_id]['windows']=[
-            'binary_sensor.unavailable_window'
+            'binary_sensor.window_unavailable'
         ]
         info=s._window_policy(spec)
         self.assertEqual(info['status'],'window_state_unknown')
         self.assertTrue(info['blocked'])
-        self.assertEqual(info['unknown_contacts'],['binary_sensor.unavailable_window'])
-        self.assertEqual(info['contact_states']['binary_sensor.unavailable_window'],'missing')
+        self.assertEqual(info['unknown_contacts'],['binary_sensor.window_unavailable'])
+        self.assertEqual(info['contact_states']['binary_sensor.window_unavailable'],'missing')
         self.assertFalse(info['open_contacts'])
 
     def test_actual_open_contact_reported_only_when_physically_on(self):
