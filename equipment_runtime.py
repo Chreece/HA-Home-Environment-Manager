@@ -2799,19 +2799,25 @@ class EquipmentRuntime:
         """Do not raise fan speed on missing sleep/presence evidence."""
         room = model.room_config(self.manager, spec)
         shared = plan.get("global_presence", {})
+        shared = shared if isinstance(shared, dict) else {}
         known = set(plan.get("known_presence_areas", [spec.area_id]))
         occupied = plan.get("occupancy", "unknown")
         sleeping = plan.get("sleeping")
+        from .occupancy_policy import controlled_sleep_presence, home_presence
+        # Home trackers come from configuration, never the plan's combined
+        # evidence list, which can also contain room-presence sources.
+        home, _, _ = home_presence(
+            self.hass, shared, room.get("away_entities", []))
+        # A previous Away plan has no room readings. Re-resolve from the
+        # configured room on return, even without shared presence settings.
+        occupied, _, _ = room_presence(self.hass, spec.area_id, room, shared,
+                                        known_areas=known or {spec.area_id},
+                                        home_status=home)
         if shared:
-            occupied, _, _ = room_presence(self.hass, spec.area_id, room, shared,
-                                            known_areas=known or {spec.area_id})
             # Fan quiet behavior and the heating gate must evaluate the same
             # refreshed sleep facts. A failed optional sleep source while
             # everyone is verified away is not proof of a sleeping occupant.
-            from .occupancy_policy import controlled_sleep_presence, home_presence
             from .climate_schedule import scheduled_sleep
-            home, _, _ = home_presence(
-                self.hass, shared, plan.get("tracker_entities", []))
             zone = getattr(getattr(self.hass, "config", None), "time_zone", None) or "UTC"
             local_sleep, local_reason = scheduled_sleep(room, self.clock(), zone)
             sleeping, _ = controlled_sleep_presence(
@@ -2819,17 +2825,6 @@ class EquipmentRuntime:
                 home_status=home, local_sleeping=local_sleep,
                 local_reason=local_reason,
             )
-        else:
-            sensors = plan.get("presence_entities", [])
-            if sensors:
-                from .occupancy_policy import _bool_presence
-                evidence = [_bool_presence(self.hass.states.get(e)) for e in sensors]
-                if any(value is True for value in evidence):
-                    occupied = "occupied"
-                elif any(value is None for value in evidence):
-                    occupied = "unknown"
-                else:
-                    occupied = "unoccupied"
         # Unavailable optional presence/sleep sensors must never prevent a
         # humidity or thermal output from operating. When they cannot prove
         # whether quieting is needed, conservatively use the quiet fan limit.

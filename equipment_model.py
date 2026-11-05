@@ -691,8 +691,12 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
         shared = continuity.context(shared)
     room = room_config(manager, spec)
     known = {item.area_id for item in specs(manager)}
-    occupancy, evidence, sensors = room_presence(manager.hass, spec.area_id, room, shared, known_areas=known)
-    home, home_evidence, trackers = home_presence(manager.hass, shared)
+    home, home_evidence, trackers = home_presence(
+        manager.hass, shared, room.get("away_entities", []))
+    occupancy, evidence, sensors = room_presence(
+        manager.hass, spec.area_id, room, shared,
+        known_areas=known, home_status=home,
+    )
     # Climate-only controller hubs do not always have a room-wide plan.
     # Reconstruct local sleep schedule and source evidence, not an accidental
     # None returned simply because no optional sleeping-room list exists.

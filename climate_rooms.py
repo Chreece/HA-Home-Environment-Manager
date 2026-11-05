@@ -62,50 +62,34 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
     if not isinstance(settings,dict) or not settings.get("enabled"):
         return {"status":"disabled"},set()
     area=room.area_id
-    sensors=_presence_ids(hass,area,settings)
-    age_limit=settings.get("occupancy_stale_minutes",240)
-    try: age_limit=float(age_limit)
-    except (ValueError,TypeError,OverflowError): age_limit=240
-    if not 10<=age_limit<=1440: age_limit=240
-    occupants=[_bool_state(hass,s,max_age_minutes=age_limit) for s in sensors]
-    occupied,occ_reason=occupied_evidence(
-        occupants,unknown_policy=settings.get("unknown_occupancy","occupied")
-    )
-    # An instantaneous 'no motion' does not prove a vacant room. Wait until
-    # EVERY selected presence sensor has remained OFF for the chosen interval.
-    if occupied=="unoccupied":
-        try: delay=float(settings.get("unoccupied_delay_minutes",10))
-        except (ValueError,TypeError,OverflowError): delay=10
-        if not 0<=delay<=240: delay=10
-        if delay > 0:
-            clock=time.time() if now is None else now
-            for entity in sensors:
-                state=hass.states.get(entity)
-                changed=(getattr(state,"last_changed",None) or
-                         getattr(state,"last_updated",None))
-                if not isinstance(changed,datetime) or changed.tzinfo is None:
-                    occupied,occ_reason="occupied","off_duration_unverified"
-                    break
-                seconds=clock-changed.timestamp()
-                if seconds<0 or seconds<delay*60:
-                    occupied,occ_reason="occupied","awaiting_stable_unoccupied_period"
-                    break
-    # The shared configuration may supply an authoritative occupied-rooms
-    # list in an entity state/attribute, global area sensors and trackers.
-    # Missing evidence never becomes a negative/off signal.
-    if isinstance(global_presence,dict) and global_presence:
+    tracker_ids=settings.get("away_entities",[])
+    if not isinstance(tracker_ids,list): tracker_ids=[]
+    trackers=[e for e in tracker_ids if isinstance(e,str) and e.startswith(("person.","device_tracker.","binary_sensor."))]
+    shared = isinstance(global_presence,dict) and bool(global_presence)
+    if shared:
         from .occupancy_policy import room_presence, home_presence
+        at_home,home_reason,trackers=home_presence(hass,global_presence,trackers)
+    else:
+        at_home,home_reason=home_away_evidence(
+            [_bool_state(hass,x) for x in trackers],
+            mode=settings.get("away_policy","any_home"),
+        )
+
+    # Whole-home absence is already sufficient. Do not discover/read room
+    # sources or run a room-vacancy timer while the household is verified Away.
+    if at_home == "away":
+        occupied,occ_reason,sensors="unoccupied","verified_home_away",[]
+    elif shared:
         occupied,occ_reason,sensors=room_presence(
             hass,area,settings,global_presence,
-            known_areas=known_areas or {area},
+            known_areas=known_areas or {area},home_status=at_home,
         )
-        if occupied == "unoccupied" and occ_reason != "verified_room_list_unoccupied":
+        if occupied == "unoccupied" and occ_reason not in (
+            "verified_room_list_unoccupied", "verified_home_away",
+        ):
             # Per-room sensors require a stable vacancy interval. A fresh
             # authoritative list explicitly omitting this room is already
             # verified, so do not invent presence during a second timer.
-            # A room-list entity can change while the last person leaves.
-            # Require a stable empty indication over the same vacancy delay
-            # used for individual room presence sensors.
             delay = settings.get("unoccupied_delay_minutes", 10)
             try:
                 delay = float(delay)
@@ -133,13 +117,35 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
                         or now_clock-changed.timestamp()<delay*60):
                     occupied,occ_reason="unknown","awaiting_stable_unoccupied_period"
                     break
-    tracker_ids=settings.get("away_entities",[])
-    if not isinstance(tracker_ids,list): tracker_ids=[]
-    trackers=[e for e in tracker_ids if isinstance(e,str) and e.startswith(("person.","device_tracker.","binary_sensor."))]
-    at_home,home_reason=home_away_evidence([_bool_state(hass,x) for x in trackers],
-                                           mode=settings.get("away_policy","any_home"))
-    if isinstance(global_presence,dict) and global_presence:
-        at_home,home_reason,trackers=home_presence(hass,global_presence,trackers)
+    else:
+        sensors=_presence_ids(hass,area,settings)
+        age_limit=settings.get("occupancy_stale_minutes",240)
+        try: age_limit=float(age_limit)
+        except (ValueError,TypeError,OverflowError): age_limit=240
+        if not 10<=age_limit<=1440: age_limit=240
+        occupants=[_bool_state(hass,s,max_age_minutes=age_limit) for s in sensors]
+        occupied,occ_reason=occupied_evidence(
+            occupants,unknown_policy=settings.get("unknown_occupancy","occupied")
+        )
+        # No motion alone does not prove vacancy. Preserve the legacy room
+        # dwell when there is no shared presence configuration.
+        if occupied=="unoccupied":
+            try: delay=float(settings.get("unoccupied_delay_minutes",10))
+            except (ValueError,TypeError,OverflowError): delay=10
+            if not 0<=delay<=240: delay=10
+            if delay > 0:
+                clock=time.time() if now is None else now
+                for entity in sensors:
+                    state=hass.states.get(entity)
+                    changed=(getattr(state,"last_changed",None) or
+                             getattr(state,"last_updated",None))
+                    if not isinstance(changed,datetime) or changed.tzinfo is None:
+                        occupied,occ_reason="occupied","off_duration_unverified"
+                        break
+                    seconds=clock-changed.timestamp()
+                    if seconds<0 or seconds<delay*60:
+                        occupied,occ_reason="occupied","awaiting_stable_unoccupied_period"
+                        break
     temperature_id=settings.get("temperature_entity")
     pinned=isinstance(temperature_id,str) and bool(temperature_id)
     # A Manager-supplied temperature is already source/area/freshness

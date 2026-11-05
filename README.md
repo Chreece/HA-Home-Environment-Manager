@@ -8,8 +8,10 @@ provides a compact room dashboard.
 ## Current version and branches
 
 The current tested release is
-[**v0.6.0b112**](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b112).
-It includes per-device fan limits, simpler ordinary-room comfort settings,
+[**v0.6.0b113**](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b113).
+It gives configured whole-home presence priority over room occupancy and
+removes irrelevant room-occupancy errors while everyone is away. It also
+includes per-device fan limits, simpler ordinary-room comfort settings,
 reported-device activity colours, directional PID target cutoffs, and optional
 30-second timed setpoints.
 
@@ -29,7 +31,7 @@ Requires Home Assistant **2026.10.0 or newer**.
 1. Add `https://github.com/Chreece/HA-Home-Environment-Manager` as a HACS custom
    repository with category **Integration**, if it is not already present.
 2. Open **Home Environment Manager** in HACS. Enable **Show beta versions** in
-   version selection and choose **v0.6.0b112**.
+   version selection and choose **v0.6.0b113**.
 3. Download the update and restart Home Assistant.
 4. For a new installation, open **Settings → Devices & services → Add integration**
    and choose **Home Environment Manager**. For an existing installation, use its
@@ -58,16 +60,31 @@ settings, including supported fan minimum/maximum speed limits. Advanced ISO
 The **Timed setpoints (30 s)** option is also off by default and can be enabled
 per device.
 
+### Home and room presence
+
+Configured home sources are authoritative: any fresh home/on/positive source
+means someone is home; all sources freshly away/off/zero mean the household
+is away. HEM then uses the Away profile and skips room occupancy checks,
+including the checks immediately before a device command. A stuck room
+sensor, an empty occupied-rooms state, or a stale room list cannot override
+verified whole-home absence. Room checks resume when someone returns.
+
+Unknown or unavailable home evidence remains unknown. When no home sources
+are configured, room evidence and its existing Away cooldown still apply.
+A fresh empty occupied-rooms string or list is a valid empty list.
+
 For the full behavior changes in the current version, see the
-[release notes](.github/releases/v0.6.0b112.md).
+[release notes](.github/releases/v0.6.0b113.md).
 
 ## Development
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the `dev` → `main` workflow,
 validation and release process. The
 [validation workflow](https://github.com/Chreece/HA-Home-Environment-Manager/actions/workflows/validate.yml)
-runs the existing runtime and browser regressions on both branches. Publication
-is a separate, deliberate release action.
+runs the existing runtime and browser regressions on both branches. A new beta
+version with matching release notes is published only after its `main` commit
+passes validation. The published ZIP is verified before older beta releases
+are removed; historical tags remain available.
 
 ## License
 

@@ -44,6 +44,8 @@ jobs:
           print('PASS: canonical manifest, JSON and translations', manifest['version'])
           PYCODE
           git diff --check
+      - name: Validate beta publication guards and canonical ZIP
+        run: python -I .github/tests/test_publish_release.py
       - name: Device fan limits and advanced comfort controls
         run: |
           python -I .github/tests/test_beta112_device_fan_limits.py
@@ -147,9 +149,11 @@ jobs:
           python -I .github/tests/test_beta79_room_reconfigure.py
           python -I .github/tests/test_beta80_menu_init.py
           python -I .github/tests/test_beta79_general_form.py
-      - name: Explicit room-list priority and section-based reconfigure tests
+      - name: Whole-home absence and room-list priority
         run: |
           set -euo pipefail
+          python -I .github/tests/test_home_presence_authority.py
+          python -I .github/tests/test_home_presence_consumers.py
           python -I .github/tests/test_beta78_room_occupancy.py
       - name: Guarded DRY-only and external-supply OFF recovery regressions
         run: |

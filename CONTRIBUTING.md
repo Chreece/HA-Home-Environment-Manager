@@ -25,11 +25,17 @@ physical appliance must be supported by evidence from that appliance.
 
 ## Releases
 
-Set the intended version in `manifest.json` and add matching release notes in
-`.github/releases/v<VERSION>.md`. Validate the exact commit, promote it to
-`main`, and publish its tag and installation ZIP from that tested commit.
-Mark beta versions as prereleases. Verify that the published tag, manifest
-version and ZIP match before removing a superseded GitHub Release.
+Set the intended beta version in `manifest.json` and add matching release
+notes in `.github/releases/v<VERSION>.md`. This is the deliberate release
+request. Validate on `dev`, then promote it to `main` after review.
+
+The separate **Publish validated beta** workflow runs after a successful
+validation push on `main`. It verifies the exact commit, creates a prerelease
+and installation ZIP for a new version, and checks the tag, manifest and
+uploaded ZIP before retiring older published betas. Already published versions
+are never overwritten. A changed `main` head or failed validation prevents
+publication.
 
 Repository cleanup keeps the newest published release and the `main` and `dev`
-branches. The validation workflow never performs this cleanup automatically.
+branches. The validation workflow remains read-only; only the publishing
+workflow can publish and retire releases. Historical tags remain available.

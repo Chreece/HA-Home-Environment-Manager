@@ -283,6 +283,25 @@ class AirQualityManager:
                 self,monitored.area_id,environment_rooms.get(monitored.area_id,{})
             ) for monitored in raw_rooms
         }
+        from .device_activation import planning_rooms
+        room_climate_configs=planning_rooms(self)
+        # Legacy room trackers also describe household presence. Include
+        # every configured room so a known or possible occupant cannot be
+        # mislabeled as absent in the shared environmental history.
+        environment_trackers=[]
+        if isinstance(room_climate_configs,dict):
+            for room_settings in room_climate_configs.values():
+                trackers = (room_settings.get("away_entities")
+                            if isinstance(room_settings,dict) else None)
+                if isinstance(trackers,list):
+                    environment_trackers.extend(
+                        entity for entity in trackers if isinstance(entity,str))
+        shared_presence=self.presence_continuity.context(
+            config.get(CONF_OCCUPANCY_GLOBAL, {})
+        )
+        from .occupancy_policy import home_presence
+        home_status, _home_evidence, _home_sources = home_presence(
+            self.hass,shared_presence,environment_trackers)
         environment, changed = build_environment(
             self.hass, raw_rooms, selected_rooms, current_weather, outdoor_readings,
             history=self._environment_history, max_age_minutes=max_age,
@@ -291,13 +310,9 @@ class AirQualityManager:
             source_selections=config.get("room_sources"),
             purifier_ratings_by_room=purifier_ratings,
             outside_safe=base_plan.outdoor_safe,
+            home_status=home_status,
         )
         environment["__outside__"] = {"pollen": pollen}
-        from .device_activation import planning_rooms
-        room_climate_configs=planning_rooms(self)
-        shared_presence=self.presence_continuity.context(
-            config.get(CONF_OCCUPANCY_GLOBAL, {})
-        )
         for key in ("occupied_rooms_entity","sleep_rooms_entity"):
             entity=shared_presence.get(key)
             if isinstance(entity,str):
@@ -584,24 +599,26 @@ class AirQualityManager:
             climate = environment.get(area_id,{}).get("climate_plan",{})
             local_settings = room_climate_configs.get(area_id,{})
             local_settings = local_settings if isinstance(local_settings,dict) else {}
-            if isinstance(climate,dict) and climate.get("status") != "disabled":
+            if isinstance(climate,dict) and climate and climate.get("status") != "disabled":
                 occupied = climate.get("occupancy","unknown")
                 evidence = climate.get("occupancy_evidence")
                 if evidence not in (
                     "verified_room_occupied", "selected_room_sensor_on",
                     "verified_room_list_unoccupied",
                     "all_selected_room_sensors_off",
+                    "verified_home_away",
                 ):
                     # Climate may assume occupancy for comfort. That is not
                     # permission to infer somebody has actually entered.
                     occupied = "unknown"
                 sleeping = climate.get("sleeping")
             else:
+                home, _evidence, _trackers = home_presence(
+                    self.hass,shared,local_settings.get("away_entities",[]))
                 occupied, _why, _sources = room_presence(
                     self.hass,area_id,local_settings,shared,
-                    known_areas=known_areas,
+                    known_areas=known_areas,home_status=home,
                 )
-                home, _evidence, _trackers = home_presence(self.hass,shared)
                 local_sleep, local_reason = scheduled_sleep(
                     local_settings,time(),
                     getattr(self.hass.config,"time_zone",None) or "UTC",
