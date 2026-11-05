@@ -156,7 +156,7 @@ target_source = ast.parse((ROOT / "equipment_model.py").read_text(encoding="utf-
 target_function = next(n for n in target_source.body
                        if isinstance(n, ast.FunctionDef) and n.name == "targets")
 # Target defaults now come from the same pure module as the room editors.
-for helper in ("climate_equipment", "climate_strategy"):
+for helper in ("climate_equipment", "pid_math", "comfort_targets", "climate_strategy"):
     helper_spec = importlib.util.spec_from_file_location(
         f"hem_beta88_fixture.{helper}", ROOT / f"{helper}.py")
     helper_module = importlib.util.module_from_spec(helper_spec)

@@ -585,6 +585,7 @@
       this._dashboardEntity = null;
       this._dashboardLoadedRevision = null;
       this._dashboardFetching = null;
+      this._dashboardContext = null;
       this._dashboardFailureCount = 0;
       this._dashboardNextAttemptAt = 0;
       this._climateEditError = null;
@@ -988,8 +989,28 @@
       // Recorder attributes deliberately contain only an API marker/revision.
       // Fetch the complete scientific and device data over authenticated WS.
       // Old in-memory dashboards remain displayable during a rolling upgrade.
-      if (!this._hass?.callWS) return;
+      const hass = this._hass;
+      if (!hass?.callWS) return;
       const [entityId, state] = this._state();
+      const connection = hass.connection;
+      const previous = this._dashboardContext;
+      if (!previous || previous.entityId !== entityId ||
+          previous.connection !== connection) {
+        // A pending request or retry delay belongs only to its source and
+        // connection. Changing either must allow the new source to load now.
+        this._dashboardContext = {entityId, connection};
+        this._dashboardFetching = null;
+        this._dashboardFailureCount = 0;
+        this._dashboardNextAttemptAt = 0;
+        if (previous && previous.connection !== connection) {
+          this._dashboardData = null;
+          this._dashboardEntity = null;
+          this._dashboardLoadedRevision = null;
+        }
+      }
+      const context = this._dashboardContext;
+      const current = () => this._dashboardContext === context &&
+        this._state()[0] === entityId && this._hass?.connection === connection;
       const attrs = state?.attributes || {};
       if (!entityId || attrs.dashboard_api !== 'environment_manager/dashboard' ||
           attrs.dashboard?.version === 1) return;
@@ -1000,16 +1021,16 @@
           Date.now()<this._dashboardNextAttemptAt) return;
       const capturedEntity = entityId;
       const capturedRevision = revision;
-      this._dashboardFetching = Promise.resolve().then(() =>
-        this._hass.callWS({
+      const request = Promise.resolve().then(() =>
+        hass.callWS({
           type:'environment_manager/dashboard', entity_id:capturedEntity
         })
       ).then((snapshot) => {
+        // Retired responses, including malformed ones, cannot update the
+        // new source's data, request ownership or retry delay.
+        if (!current()) return;
         if (!snapshot || snapshot.version !== 1 ||
             !Array.isArray(snapshot.rooms)) throw new Error('Invalid dashboard snapshot');
-        // A response from a previously selected recommendation must never
-        // appear on another entry's card after the user changes the source.
-        if (this._state()[0] !== capturedEntity) return;
         this._dashboardData = snapshot;
         this._dashboardEntity = capturedEntity;
         this._dashboardLoadedRevision = capturedRevision;
@@ -1017,6 +1038,7 @@
         this._dashboardNextAttemptAt = 0;
         this._render(true);
       }).catch((error) => {
+        if (!current()) return;
         this._dashboardFailureCount = Math.min(6, this._dashboardFailureCount+1);
         this._dashboardNextAttemptAt = Date.now() +
           Math.min(60000, 1000 * (2 ** this._dashboardFailureCount));
@@ -1024,16 +1046,19 @@
           console.warn('Home Environment Manager dashboard will retry',error);
         }
       }).finally(() => {
+        if (this._dashboardFetching !== request) return;
         this._dashboardFetching = null;
         const [currentEntity, current] = this._state();
         const currentRevision = Number(current?.attributes?.dashboard_revision) || 0;
         if (current?.attributes?.dashboard_api === 'environment_manager/dashboard' &&
             (currentEntity !== capturedEntity ||
-             currentRevision !== capturedRevision) &&
+             currentRevision !== capturedRevision ||
+             this._hass?.connection !== connection) &&
             Date.now()>=this._dashboardNextAttemptAt) {
           this._loadDashboard();
         }
       });
+      this._dashboardFetching = request;
     }
 
     _loadDeviceIds() {
@@ -2272,7 +2297,7 @@
     }
 
     _shadingEvidence(area) {
-      const snapshot=this._dashboardData || this._state()[1]?.attributes?.dashboard;
+      const snapshot=this._dashboard105();
       const rooms=safeArray(snapshot?.rooms);
       return rooms.find((room)=>room?.area_id===area)?.environment?.shade_cooling || null;
     }

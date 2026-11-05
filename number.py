@@ -239,7 +239,8 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
                 for key, bounds in CLIMATE_OPERATING_NUMBERS.items()
             )
             cfg = manager.settings.get("climate_rooms", {}).get(area_id, {})
-            if isinstance(cfg, dict) and cfg.get("controller") in ("pwm", "proportional"):
+            if (isinstance(cfg, dict) and cfg.get("enabled") is True
+                    and cfg.get("controller") in ("pwm", "proportional")):
                 for key, bounds in DIRECT_CONTROLLER_NUMBERS.items():
                     if (cfg["controller"] == "pwm" and
                             key in ("max_demand_change", "min_demand_change")):
@@ -248,6 +249,8 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
                         manager, entry.entry_id, area_id, "direct_tuning",
                         key, bounds[:4],
                     ))
+            if cfg.get("enabled") is not True:
+                continue  # Legacy device editors retain their commissioning gate.
             active = cfg.get("device_settings", {}) if isinstance(cfg, dict) else {}
             active = active if isinstance(active, dict) else {}
             selected = cfg.get("selected_devices", []) if isinstance(cfg, dict) else []

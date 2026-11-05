@@ -61,7 +61,7 @@ control_names = {
     "GLOBAL_ENV_NUMBERS", "GLOBAL_OCCUPANCY_NUMBERS", "AREA_ENV_NUMBERS",
     "CLIMATE_OPERATING_NUMBERS", "AREA_ENV_FLAGS", "GLOBAL_ENV_FLAGS",
     "CLIMATE_OPERATING_FLAGS", "CLIMATE_POLICY_OPTIONS", "DEVICE_POLICY_OPTIONS",
-    "_finite", "update_device_setting",
+    "_finite", "climate_settings", "update_device_setting",
 }
 control_ns = {
     **vars(const), "__package__": PKG, "__name__": PKG + ".device_controls",

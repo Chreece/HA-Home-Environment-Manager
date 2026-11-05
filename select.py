@@ -27,7 +27,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
     manager = entry.runtime_data
     entities = [TTSLanguageSelect(manager, entry.entry_id)]
     for area in configured_area_ids(manager.settings):
-        if climate_settings(manager.settings, area) is not None:
+        room = climate_settings(manager.settings, area)
+        if room is not None and room.get("enabled") is True:
             entities.append(ConfigSelect(manager, entry.entry_id, area, "manual_profile",
                                          PROFILE_OPTIONS))
         if pid_settings(manager.settings, area) is not None:
@@ -44,9 +45,12 @@ async def async_setup_entry(hass, entry, async_add_entities):
         for _ in (0,)
     )
     for area in configured_area_ids(manager.settings):
-        if climate_settings(manager.settings, area) is None:
+        room = climate_settings(manager.settings, area)
+        if room is None:
             continue
         for key, values in CLIMATE_POLICY_OPTIONS.items():
+            if key != "target_source" and room.get("enabled") is not True:
+                continue  # Legacy occupancy selectors do not drive native policy.
             entities.append(ConfigSelect(
                 manager, entry.entry_id, area, "climate_policy", values, setting_key=key
             ))

@@ -758,20 +758,42 @@ def targets(manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict,
     humidity = profile_humidity_target(room, "comfort" if profile == "manual" else profile)
     result={"heat":float(heat),"cool":float(cool),"humidity":float(humidity)}
 
-    # A room's simple automatic comfort policy also applies to the unified
-    # per-device controllers (PID, native DRY, heating and cooling), not only
-    # legacy room climate entities. Use an independent live selected RH
-    # reading; never synthesize ISO 7730 clothing or airflow measurements.
-    if profile in ("comfort", "sleep") and room.get("target_source")=="auto_comfort":
-        from .comfort_targets import automatic_comfort_band
-        runtime=getattr(manager,"equipment",None)
-        sample=(runtime.measurements(spec,cap) if runtime is not None else {})
-        comfort=automatic_comfort_band(
-            result["heat"],result["cool"],sample.get("humidity"),
-            maximum_adjustment_c=room.get("comfort_adjustment_max_c",1.5),
-        )
-        if comfort.get("status")=="humidity_aware_estimate":
-            result["heat"],result["cool"]=comfort["heat_c"],comfort["cool_c"]
+    # Optional comfort narrows the effective fixed band, so apply native/room
+    # limits first. Clipping an already-adjusted band could erase its deadband.
+    # A too-narrow bounded base stays fixed; never invent wider saved targets.
+    basis=room.get("target_source")
+    if profile in ("comfort", "sleep") and basis in ("auto_comfort", "pmv"):
+        from .comfort_targets import automatic_comfort_band, pmv_comfort_band
+        hysteresis=finite(room.get("hysteresis_c",0.7),0.2,3)
+        base_heat=finite(result["heat"],5,35)
+        base_cool=finite(result["cool"],6,40)
+        if hysteresis is not None and base_heat is not None and base_cool is not None:
+            base_heat=max(limits["temperature_min_limit"],min(limits["temperature_max_limit"],base_heat))
+            base_cool=max(limits["temperature_min_limit"],min(limits["temperature_max_limit"],base_cool))
+            kwargs={"maximum_adjustment_c": room.get("comfort_adjustment_max_c",1.5),
+                    "minimum_deadband_c": max(1.0,2*hysteresis)}
+            comfort={}
+            if basis=="auto_comfort":
+                runtime=getattr(manager,"equipment",None)
+                sample=(runtime.measurements(spec,cap) if runtime is not None else {})
+                sample=sample if isinstance(sample,dict) else {}
+                comfort=automatic_comfort_band(base_heat,base_cool,sample.get("humidity"),**kwargs)
+            elif config.get("control_mode") in ("automatic","pid"):
+                # Selecting PMV never enables its assessment or physical
+                # control. Consume only the current qualified plan, without
+                # retaining a previous estimate after evidence disappears.
+                rooms=manager.settings.get("environment_rooms",{})
+                science=rooms.get(spec.area_id,{}) if isinstance(rooms,dict) else {}
+                environment=getattr(getattr(manager,"plan",None),"environment",{})
+                current=environment.get(spec.area_id,{}) if isinstance(environment,dict) else {}
+                international=current.get("international",{}) if isinstance(current,dict) else {}
+                estimate=international.get("pmv_air_target",{}) if isinstance(international,dict) else {}
+                if (isinstance(science,dict) and science.get("enable_pmv") is True
+                        and isinstance(estimate,dict) and estimate.get("status")=="estimate"):
+                    comfort=pmv_comfort_band(
+                        base_heat,base_cool,estimate.get("air_temperature_target_c"),**kwargs)
+            if comfort.get("status") in ("humidity_aware_estimate","pmv_estimate"):
+                result["heat"],result["cool"]=comfort["heat_c"],comfort["cool_c"]
 
     if profile == "manual":
         override=config.get("profile_targets",{}).get("manual",{})
