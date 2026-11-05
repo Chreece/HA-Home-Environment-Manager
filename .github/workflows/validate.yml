@@ -154,6 +154,7 @@ jobs:
           python -I .github/tests/test_beta115_cover_discovery.py
           python -I .github/tests/test_beta115_mold_readiness.py
           python -I .github/tests/test_beta115_sensor_scope.py
+          python -I .github/tests/test_beta115_popup_ownership.py
       - name: Whole-home absence and room-list priority
         run: |
           set -euo pipefail

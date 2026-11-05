@@ -177,6 +177,8 @@ assert.ok(moldHelp.includes('Stable conditions are not verified'));
 assert.ok(moldHelp.includes('17.2 °C'));
 for(const language of ['en','de','el']){
   card._hass.language=language;
+  assert.equal(card._metricName('temperature'),
+    ({en:'Temperature',de:'Temperatur',el:'Θερμοκρασία'})[language]);
   for(const state of ['temperatures_unavailable','outdoors_not_colder','difference_too_small','difference_suitable']){
     const reading=structuredClone(moldRoom.readings.at(-1));
     reading.details.calibration_readiness=state;

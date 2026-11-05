@@ -1151,6 +1151,7 @@
     }
 
     _metricName(metric) {
+      if(metric==='temperature')return _roomLabels87(this._language()).temperature;
       if (metric === 'mold') {
         const translated = this._t('metric_mold');
         return translated === 'metric_mold' ? 'Mold indication' : translated;
@@ -4089,7 +4090,9 @@
         else {
           if(this._roomIssueInfo114===el.getAttribute('data-detail-id'))
             this._roomIssueInfo114=null;
-          this._closeInfo87();
+          // Toggle events are queued. A previous disclosure closing must
+          // not dismiss a newer explanation opened in the meantime.
+          if(this._floatingInfo87?._hemInfoSource87===el)this._closeInfo87();
         }
         const area=el.closest('[data-room-fold87]')?.getAttribute('data-room-fold87');
         if(area)this._syncRoomIssueButtons115?.(area);
@@ -4111,6 +4114,7 @@
       this._closeInfo87();
       const pop=document.createElement('div');
       pop.className='hem-floating-info87';
+      pop._hemInfoSource87=detail;
       pop.setAttribute('popover','auto');
       pop.setAttribute('role','note');
       pop.setAttribute('aria-label',trigger.getAttribute('aria-label')||'Information');
@@ -6302,7 +6306,12 @@
     if(view.kind==='controllers'&&view.infoKey){
       const detail=[...fold.querySelectorAll('[data-detail-id]')]
         .find(el=>el.getAttribute('data-detail-id')===view.infoKey);
-      return detail?.open===true&&visible(detail);
+      const pop=this._floatingInfo87;
+      let shown=Boolean(pop?.isConnected&&pop._hemInfoSource87===detail);
+      if(shown&&typeof pop.showPopover==='function'){
+        try{shown=pop.matches(':popover-open');}catch{}
+      }
+      return detail?.open===true&&visible(detail)&&shown;
     }
     if(view.kind==='faults')return [...fold.querySelectorAll('.hem-device-error')].some(visible)||visible(panel);
     if(view.kind==='attention'){

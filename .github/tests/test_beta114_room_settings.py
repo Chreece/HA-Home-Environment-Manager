@@ -286,7 +286,9 @@ def browser_checks(card_source):
                         shades=cover_selection)
         assert saved == expected, saved
         assert page.evaluate("committed") == expected
-        assert popup.locator('[data-room-detect-shades115]').is_disabled()
+        # Success replaces the editing groups with a saved confirmation.
+        assert popup.locator('[data-room-detect-shades115]').count() == 0
+        assert popup.locator('[data-room-options-save114]').is_hidden()
         popup.locator('[data-room-options-close114]').click()
         assert popup.count() == 0
 
@@ -365,7 +367,9 @@ def browser_checks(card_source):
         expected['shades'] = COVERS
         assert native.evaluate("calls.at(-1).data") == expected
         assert native.evaluate("committed") == expected
-        assert popup.locator('[data-room-detect-shades115]').is_disabled()
+        # Success replaces the editing groups with a saved confirmation.
+        assert popup.locator('[data-room-detect-shades115]').count() == 0
+        assert popup.locator('[data-room-options-save114]').is_hidden()
         popup.locator('[data-room-options-close114]').click()
         native.evaluate("card._openRoomSettings114('room1')")
         native.evaluate("card.remove()")
