@@ -62,11 +62,15 @@ NATIVE_RECONNECT_EXTRA_ATTEMPTS = 2
 
 def native_retry_decision(pending: dict, now: float, state=None) -> str:
     """Never mistake a service call for a physical acknowledgement."""
-    if pending.get("phase") != "commanded":
-        return "uncertain"
     attempts = pending.get("attempts")
     first = finite(pending.get("when"), 0, now)
     last = finite(pending.get("last_attempt_at"), 0, now)
+    if pending.get("phase") != "commanded":
+        verified = pending.get("retry_state_verified_at")
+        if (pending.get("phase") != "retry_intent"
+                or type(verified) not in (int, float) or last is None
+                or finite(verified, last, now) is None):
+            return "uncertain"
     extension = pending.get("reconnect_retry_grant") is True
     used = pending.get("reconnect_retry_uses", 0)
     if (type(attempts) is not int
@@ -2080,11 +2084,18 @@ class EquipmentRuntime:
                         "remaining_seconds", "phase", "needs_physical_check")
         }
         if retained_target:
-            from .equipment_resume import exhausted_target_message
+            from .equipment_resume import exhausted_target_message, pending_feedback_message
             checked["command_attempts"] = pending.get("attempts")
-            checked["retry_limit_reached"] = True
+            checked["retry_limit_reached"] = (
+                type(pending.get("attempts")) is int
+                and pending["attempts"] >= NATIVE_COMMAND_MAX_ATTEMPTS
+            )
             checked["requires_user_repeated_check"] = False
-            checked["instructions"] = exhausted_target_message(
+            message = (pending_feedback_message
+                       if not checked["retry_limit_reached"]
+                       and pending.get("retry_state_verified_at") is not None
+                       else exhausted_target_message)
+            checked["instructions"] = message(
                 checked, language=language,
             )
         elif isinstance(record.get("automatic_continue_requested"), dict):
@@ -2468,7 +2479,7 @@ class EquipmentRuntime:
             if (pending_recovery is not None and pending
                     and pending.get("power") is True
                     and (pending_recovery == "verified"
-                         or pending.get("phase") == "intent")
+                         or pending.get("phase") in ("intent", "retry_intent"))
                     and pending["entity"] in next_power):
                 owned_since = next_power[pending["entity"]]
                 next_power[pending["entity"]] = {
@@ -2484,7 +2495,7 @@ class EquipmentRuntime:
             if (pending_recovery is not None and pending
                     and pending.get("power") is True
                     and (pending_recovery == "verified"
-                         or pending.get("phase") == "intent")
+                         or pending.get("phase") in ("intent", "retry_intent"))
                     and output_off(physical[pending["entity"]])):
                 next_off_at[pending["entity"]] = now
             record.update(
@@ -2532,13 +2543,17 @@ class EquipmentRuntime:
                 and pending.get("service") == "set_temperature"
                 and pending.get("power") is not True
                 and type(pending.get("attempts")) is int
-                and pending["attempts"] >= NATIVE_COMMAND_MAX_ATTEMPTS
+                and pending["attempts"] >= 2
                 and (
-                    pending.get("phase") == "commanded"
-                    or isinstance(target_budget, dict)
-                    and pending.get("phase") == "intent"
-                    and all(pending.get(key) == target_budget.get(key)
-                            for key in ("entity", "service", "data", "expected"))
+                    pending.get("phase") == "retry_intent"
+                    or pending["attempts"] >= NATIVE_COMMAND_MAX_ATTEMPTS
+                    and (
+                        pending.get("phase") == "commanded"
+                        or isinstance(target_budget, dict)
+                        and pending.get("phase") == "intent"
+                        and all(pending.get(key) == target_budget.get(key)
+                                for key in ("entity", "service", "data", "expected"))
+                    )
                 )
                 and not output_off(physical[pending["entity"]])
             ):
@@ -2546,6 +2561,11 @@ class EquipmentRuntime:
                 # remain reachable, but retain its full failed target budget.
                 # Two stable observations must never make this a new attempt 1.
                 record["unconfirmed_native_target"] = deepcopy(pending)
+                if pending.get("phase") == "retry_intent":
+                    # Verified current state is not an ACK. Retain the exact
+                    # retry budget and allow only its remaining attempts,
+                    # through the ordinary fresh policy/dispatch gates.
+                    record["unconfirmed_native_target"]["retry_state_verified_at"] = now
             target_budget = record.get("unconfirmed_native_target")
             if isinstance(target_budget, dict):
                 native = physical.get(target_budget.get("entity"))
@@ -2645,7 +2665,7 @@ class EquipmentRuntime:
                 # user check is required; do not erase its safety evidence.
                 if (pending_recovery == "verified"
                         or pending_recovery == "confirmed" and pending
-                        and pending.get("phase") == "intent"
+                        and pending.get("phase") in ("intent", "retry_intent")
                         or prior.get("unconfirmed_native_target")
                             != record.get("unconfirmed_native_target")):
                     record.clear()
@@ -3455,6 +3475,7 @@ class EquipmentRuntime:
         pending["attempts"] += 1
         pending["last_attempt_at"] = now
         pending["phase"] = "retry_intent"
+        pending.pop("retry_state_verified_at", None)
         if reconnect_grant:
             pending["reconnect_retry_grant"] = False
             pending["reconnect_retry_uses"] = (
@@ -3669,15 +3690,22 @@ class EquipmentRuntime:
         invalid_budget = (service == "set_temperature" and not power and not stop_target
                           and target_budget is not None
                           and not isinstance(target_budget, dict))
-        if (same_target and target_budget.get("pid_target_satisfied") is True
-                and target_budget.get("phase") == "commanded"
+        verified_retry = bool(
+            same_target and target_budget.get("phase") == "retry_intent"
+            and type(target_budget.get("retry_state_verified_at")) in (int, float)
+            and (last := finite(target_budget.get("last_attempt_at"), 0, self.clock())) is not None
+            and finite(target_budget["retry_state_verified_at"], last, self.clock()) is not None
+        )
+        if (same_target and (
+                target_budget.get("pid_target_satisfied") is True
+                and target_budget.get("phase") == "commanded" or verified_retry)
                 and type(target_budget.get("attempts")) is int
                 and 1 <= target_budget["attempts"] < NATIVE_COMMAND_MAX_ATTEMPTS
                 and isinstance(target_budget.get("retry_context"), dict)
                 and retry_settings_match(target_budget["retry_context"].get("settings"), cfg)):
-            # Demand returned before physical OFF (for example during a
-            # minimum-ON hold). Continue the SAME command's remaining retry
-            # budget; a target crossing must neither exhaust nor reset it.
+            # Demand returned before physical OFF, or an interrupted retry
+            # was reconciled against stable current state. Continue the SAME
+            # command's remaining budget; neither event grants attempt one.
             resumed = deepcopy(target_budget)
             resumed.pop("pid_target_satisfied", None)
             record["pending"] = resumed

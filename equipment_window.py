@@ -84,11 +84,12 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
     # Wrong-room contacts are never usable as this room's policy sources.
     # Record misconfiguration, but do not mistake a foreign OPEN for the
     # actual room's OPEN or turn a windowless room into a permanent hold.
+    # Registry ownership survives missing live states (startup/unloaded
+    # integrations); a foreign contact must remain foreign during that gap.
     all_ids = tuple(dict.fromkeys(
         entity for entity in contact_ids if isinstance(entity, str) and entity))
     foreign = tuple(entity for entity in all_ids
-                    if runtime.hass.states.get(entity) is not None
-                    and entity_area(runtime.hass, entity) not in (spec.area_id, None))
+                    if entity_area(runtime.hass, entity) not in (spec.area_id, None))
     contact_ids = tuple(entity for entity in all_ids if entity not in foreign)
     if foreign:
         result["ignored_other_room_contacts"] = list(foreign)

@@ -136,6 +136,16 @@ class ExhaustedTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
         owned_since = runtime.record["power"][PRIMARY]["since"]
         await runtime.evaluate()
         self.assertIs(runtime.record["pending"], pending)
+        information = runtime.resume_information(SPEC) or {}
+        if information.get("decision") == "settling":
+            remaining = information["remaining_seconds"]
+            # The fourth/reconnect attempt needs its own full 120-second
+            # settle period; time since the original attempt is insufficient.
+            await runtime.evaluate(remaining - 1)
+            self.assertIs(runtime.record["pending"], pending)
+            self.assertNotIn("pending_resume_probe", runtime.record)
+            await runtime.evaluate(1)
+        self.assertIn("pending_resume_probe", runtime.record)
         await runtime.evaluate(60)
         self.assertIsNone(runtime.record["pending"])
         self.assertIsNone(runtime.record["paused"])
@@ -291,6 +301,12 @@ class ExhaustedTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_explicit_two_checks_keep_existing_user_reconciliation(self):
         runtime, pending = await self.exhausted()
+        with self.assertRaises(HomeAssistantError):
+            await runtime.async_resume(SPEC)
+        self.assertNotIn("pending_resume_probe", runtime.record)
+        remaining = runtime.resume_information(SPEC)["remaining_seconds"]
+        self.assertEqual(remaining, 90)
+        runtime.now += remaining
         with self.assertRaises(HomeAssistantError):
             await runtime.async_resume(SPEC)
         self.assertIn("pending_resume_probe", runtime.record)

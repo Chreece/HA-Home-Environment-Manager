@@ -89,8 +89,7 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
 
     async def reconcile_target(self, runtime, original):
         owned_since = runtime.record["power"][PRIMARY]["since"]
-        await runtime.evaluate()
-        self.assertIn("pending_resume_probe", runtime.record)
+        await self.begin_verification(runtime)
         self.assertIsNotNone(runtime.record["pending"])
         await runtime.evaluate(60)
         self.assertIsNone(runtime.record["pending"])
@@ -99,6 +98,17 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(runtime.record["power"][PRIMARY]["since"], owned_since)
         self.assertEqual(len(runtime.calls), 4, "State reconciliation is not a device command")
         self.assertNotEqual(runtime.record["last_resume_reconciliation"]["method"], "fresh_native_ack")
+
+    async def begin_verification(self, runtime):
+        await runtime.evaluate()
+        information = runtime.resume_information(SPEC) or {}
+        if information.get("decision") == "settling":
+            # Each retry starts its own physical settling window; a stop
+            # policy does not turn older first-attempt age into fresh proof.
+            await runtime.evaluate(information["remaining_seconds"] - 1)
+            self.assertNotIn("pending_resume_probe", runtime.record)
+            await runtime.evaluate(1)
+        self.assertIn("pending_resume_probe", runtime.record)
 
     async def drain_recovery_tasks(self, runtime):
         while runtime.queued_tasks:
@@ -154,8 +164,7 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
                     with self.subTest(method=method, mode=mode, change_at=change_at):
                         runtime, original = await self.exhausted(method=method, mode=mode)
                         self.open_window(runtime)
-                        await runtime.evaluate()
-                        self.assertIn("pending_resume_probe", runtime.record)
+                        await self.begin_verification(runtime)
                         runtime.now += 60
                         if change_at == "before_resume_task":
                             await runtime.tick(SPEC)
@@ -287,7 +296,7 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(runtime._shutdown_allowed(SPEC, PRIMARY, {"state": "off"}))
         # Existing explicit Resume requires a power grant even for an owned
         # active output. This patch must not invent one or drop its journal.
-        for delta in (0, 60, 60):
+        for delta in (0, 90, 60):
             await runtime.evaluate(delta)
             self.assertEqual(len(runtime.calls), 4)
             self.assertEqual(runtime.record["pending"], original)

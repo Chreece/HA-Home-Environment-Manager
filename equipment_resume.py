@@ -97,7 +97,8 @@ def _command_key(pending: Any) -> str | None:
         return None
     values = {
         key: pending.get(key) for key in (
-            "entity", "phase", "when", "service", "expected", "power", "output_on"
+            "entity", "phase", "when", "last_attempt_at", "attempts",
+            "service", "expected", "power", "output_on"
         )
     }
     try:
@@ -227,7 +228,7 @@ def check_pending(pending: Any, state: Any, now: float,
         return outcome
     expected = pending.get("expected")
     phase = pending.get("phase")
-    if (phase not in ("intent", "commanded") or not isinstance(expected, dict)
+    if (phase not in ("intent", "retry_intent", "commanded") or not isinstance(expected, dict)
             or not expected or _command_key(pending) is None):
         return outcome
     live = _fingerprint(state)
@@ -239,11 +240,17 @@ def check_pending(pending: Any, state: Any, now: float,
     when = _number(pending.get("when"), 0, now)
     if when is None:
         return {**outcome, "decision": "unknown_dispatch_time"}
+    if phase == "retry_intent" or "last_attempt_at" in pending:
+        # A retry's original command may be hours old. Only the most recent
+        # reserved dispatch can start its settle window or authenticate ACK.
+        when = _number(pending.get("last_attempt_at"), when, now)
+        if when is None:
+            return {**outcome, "decision": "unknown_dispatch_time"}
     age = now - when
     if age < COMMAND_SETTLE_SECONDS:
         return {**outcome, "decision": "settling",
                 "remaining_seconds": math.ceil(COMMAND_SETTLE_SECONDS-age)}
-    if phase == "intent" and matches_expected and _recent_feedback(
+    if phase in ("intent", "retry_intent") and matches_expected and _recent_feedback(
         state, when, now
     ):
         return {**outcome, "decision": "confirmed",

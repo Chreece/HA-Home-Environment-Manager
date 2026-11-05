@@ -61,6 +61,12 @@ jobs:
           python -I .github/tests/test_bugfix_comfort_band.py
           python -I .github/tests/test_bugfix_native_settings.py
           python -I .github/tests/test_bugfix_card_async.py
+      - name: Interrupted retries, missing foreign windows and registry request ownership
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_bugfix119_recovery.py
+          python -I .github/tests/test_bugfix119_occupancy.py
+          python -I .github/tests/test_bugfix119_dashboard.py
       - name: PID target cutoff, original retry budgets and live native shutdown
         run: |
           python -I .github/tests/test_beta111_pid_cutoff_math.py
@@ -205,7 +211,7 @@ jobs:
         run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
       - name: Compact VOC labels and purpose-specific configuration help
         env:
-          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-beta118-ui
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-beta119-ui
         run: |
           hem_ui_status=0
           python -I .github/tests/test_beta116_compact_metric_labels.py || hem_ui_status=1
@@ -213,7 +219,7 @@ jobs:
           exit "$hem_ui_status"
       - name: Interactive trends, direct room settings and problem toggles
         env:
-          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-beta118-ui
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-beta119-ui
         run: |
           hem_ui_status=0
           python -I .github/tests/test_beta114_room_navigation.py || hem_ui_status=1
@@ -224,8 +230,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hem-beta118-ui-${{ github.sha }}
-          path: /tmp/hem-beta118-ui/
+          name: hem-beta119-ui-${{ github.sha }}
+          path: /tmp/hem-beta119-ui/
           if-no-files-found: ignore
       - name: Home Assistant dispatcher and compact card browser interactions
         run: |

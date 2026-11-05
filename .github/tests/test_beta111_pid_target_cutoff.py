@@ -634,7 +634,16 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
                 await r.evaluate(30.)
             await r.evaluate(30.)
             self.assertEqual(r.record.get("paused"), "physical_acknowledgement_missing")
+            interrupted = deepcopy(r.record["pending"])
             await r.evaluate()
+            # Each retry must settle for 120 seconds from its own dispatch.
+            # The old first-attempt age cannot start the two-check proof.
+            await r.evaluate(interrupted["last_attempt_at"] + 120. - r.now - 1.)
+            self.assertEqual(r.record["pending"], interrupted)
+            self.assertNotIn("pending_resume_probe", r.record)
+            self.assertEqual(len(r.calls), 4)
+            await r.evaluate(1.)
+            self.assertIn("pending_resume_probe", r.record)
             await r.evaluate(60.)
             self.assertIsNone(r.record.get("pending"))
             previous = deepcopy(r.record["unconfirmed_native_target"])
