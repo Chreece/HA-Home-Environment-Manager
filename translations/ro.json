@@ -162,16 +162,14 @@
           "air_quality": "Senzori de calitate a aerului și de mediu",
           "temperature": "Temperatură",
           "humidity": "Umiditate",
-          "pressure": "Senzori de presiune",
           "climate_devices": "Dispozitive",
           "shades": "Jaluzele, rulouri și obloane"
         },
         "data_description": {
           "windows": "Ferestre. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
-          "air_quality": "Senzori de calitate a aerului și de mediu. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "air_quality": "Selectați senzorii de calitate a aerului și senzorii opționali de lumină (lux) ai camerei. Lux alimentează istoricul luminii. Pentru umbrire solară, activați lux în controlerul fiecărui stor și alegeți un senzor din aceeași cameră sau media senzorilor selectați: fiecare nouă închidere automată necesită apoi luminozitatea minimă configurată. Selectarea senzorilor aici nu autorizează mișcarea.",
           "temperature": "Temperatură. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
-          "pressure": "Senzori de presiune. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
           "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · senzor · Obligatoriu · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · sursă · senzor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · senzor · Obligatoriu",
-          "illuminance_entity": "LUX · sursă (lux)",
+          "illuminance_entity": "Iluminare (lux)",
           "melanopic_edi_entity": "EDI · EDI · sursă (lx)",
           "melanopic_spectral_verified": "EDI · Obligatoriu"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Utilizați măsurători reale potrivite pentru „HCHO · senzor · Obligatoriu · SENSOR ✓ · VERIFIED”. Estimarea nu înlocuiește HCHO · senzor · Obligatoriu · SENSOR ✓ · VERIFIEDul calibrat.",
           "noise_entity": "Alegeți o dB(A) · sursă · senzor (dB(A)) Home Assistant reală pentru „dB(A) · sursă · senzor (dB(A))”. Datele lipsă sau vechi suspendă acțiunea.",
           "noise_sensor_calibrated": "Utilizați măsurători reale potrivite pentru „dB(A) · senzor · Obligatoriu”. Estimarea nu înlocuiește dB(A) · senzor · Obligatoriuul calibrat.",
-          "illuminance_entity": "Alegeți o LUX · sursă (lux) Home Assistant reală pentru „LUX · sursă (lux)”. Datele lipsă sau vechi suspendă acțiunea.",
+          "illuminance_entity": "Alegeți un senzor real de iluminare (lux) pentru raportul descriptiv al istoricului luminii din cameră. Umbrirea solară se configurează separat: alegeți sursa lux, luminozitatea minimă și comutatorul lux în controlerul fiecărui stor. Raportul nu deduce EDI melanopic din lux.",
           "melanopic_edi_entity": "Alegeți o EDI · EDI · sursă (lx) Home Assistant reală pentru „EDI · EDI · sursă (lx)”. Datele lipsă sau vechi suspendă acțiunea.",
           "melanopic_spectral_verified": "Utilizați măsurători reale potrivite pentru „EDI · Obligatoriu”. Estimarea nu înlocuiește senzorul calibrat."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Senzori de calitate a aerului și de mediu",
           "temperature": "Temperatură",
           "humidity": "Umiditate",
-          "pressure": "Senzori de presiune",
           "climate_devices": "Dispozitive",
           "shades": "Jaluzele, rulouri și obloane",
           "occupancy_sensors": "Ocupare · senzor"
         },
         "data_description": {
           "windows": "Ferestre. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
-          "air_quality": "Senzori de calitate a aerului și de mediu. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "air_quality": "Selectați senzorii de calitate a aerului și senzorii opționali de lumină (lux) ai camerei. Lux alimentează istoricul luminii. Pentru umbrire solară, activați lux în controlerul fiecărui stor și alegeți un senzor din aceeași cameră sau media senzorilor selectați: fiecare nouă închidere automată necesită apoi luminozitatea minimă configurată. Selectarea senzorilor aici nu autorizează mișcarea.",
           "temperature": "Temperatură. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
-          "pressure": "Senzori de presiune. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
           "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea.",
           "occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea."
@@ -1129,17 +1125,15 @@
           "air_quality": "Senzori de calitate a aerului și de mediu",
           "temperature": "Temperatură",
           "humidity": "Umiditate",
-          "pressure": "Senzori de presiune",
           "climate_devices": "Dispozitive",
           "shades": "Jaluzele, rulouri și obloane",
           "occupancy_sensors": "Ocupare · senzor"
         },
         "data_description": {
           "windows": "Ferestre. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
-          "air_quality": "Senzori de calitate a aerului și de mediu. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "air_quality": "Selectați senzorii de calitate a aerului și senzorii opționali de lumină (lux) ai camerei. Lux alimentează istoricul luminii. Pentru umbrire solară, activați lux în controlerul fiecărui stor și alegeți un senzor din aceeași cameră sau media senzorilor selectați: fiecare nouă închidere automată necesită apoi luminozitatea minimă configurată. Selectarea senzorilor aici nu autorizează mișcarea.",
           "temperature": "Temperatură. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
-          "pressure": "Senzori de presiune. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
           "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea.",
           "occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · senzor · Obligatoriu · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · sursă · senzor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · senzor · Obligatoriu",
-          "illuminance_entity": "LUX · sursă (lux)",
+          "illuminance_entity": "Iluminare (lux)",
           "melanopic_edi_entity": "EDI · EDI · sursă (lx)",
           "melanopic_spectral_verified": "EDI · Obligatoriu"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Utilizați măsurători reale potrivite pentru „HCHO · senzor · Obligatoriu · SENSOR ✓ · VERIFIED”. Estimarea nu înlocuiește HCHO · senzor · Obligatoriu · SENSOR ✓ · VERIFIEDul calibrat.",
           "noise_entity": "Alegeți o dB(A) · sursă · senzor (dB(A)) Home Assistant reală pentru „dB(A) · sursă · senzor (dB(A))”. Datele lipsă sau vechi suspendă acțiunea.",
           "noise_sensor_calibrated": "Utilizați măsurători reale potrivite pentru „dB(A) · senzor · Obligatoriu”. Estimarea nu înlocuiește dB(A) · senzor · Obligatoriuul calibrat.",
-          "illuminance_entity": "Alegeți o LUX · sursă (lux) Home Assistant reală pentru „LUX · sursă (lux)”. Datele lipsă sau vechi suspendă acțiunea.",
+          "illuminance_entity": "Alegeți un senzor real de iluminare (lux) pentru raportul descriptiv al istoricului luminii din cameră. Umbrirea solară se configurează separat: alegeți sursa lux, luminozitatea minimă și comutatorul lux în controlerul fiecărui stor. Raportul nu deduce EDI melanopic din lux.",
           "melanopic_edi_entity": "Alegeți o EDI · EDI · sursă (lx) Home Assistant reală pentru „EDI · EDI · sursă (lx)”. Datele lipsă sau vechi suspendă acțiunea.",
           "melanopic_spectral_verified": "Utilizați măsurători reale potrivite pentru „EDI · Obligatoriu”. Estimarea nu înlocuiește senzorul calibrat."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Senzori de calitate a aerului și de mediu",
           "temperature": "Temperatură",
           "humidity": "Umiditate",
-          "pressure": "Senzori de presiune",
           "climate_devices": "Dispozitive",
           "shades": "Jaluzele, rulouri și obloane"
         },
         "data_description": {
           "windows": "Ferestre. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
-          "air_quality": "Senzori de calitate a aerului și de mediu. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "air_quality": "Selectați senzorii de calitate a aerului și senzorii opționali de lumină (lux) ai camerei. Lux alimentează istoricul luminii. Pentru umbrire solară, activați lux în controlerul fiecărui stor și alegeți un senzor din aceeași cameră sau media senzorilor selectați: fiecare nouă închidere automată necesită apoi luminozitatea minimă configurată. Selectarea senzorilor aici nu autorizează mișcarea.",
           "temperature": "Temperatură. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
-          "pressure": "Senzori de presiune. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
           "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Senzori de calitate a aerului și de mediu",
           "temperature": "Temperatură",
           "humidity": "Umiditate",
-          "pressure": "Senzori de presiune",
           "climate_devices": "Dispozitive",
           "shades": "Jaluzele, rulouri și obloane",
           "occupancy_sensors": "Ocupare · senzor"
         },
         "data_description": {
           "windows": "Ferestre. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
-          "air_quality": "Senzori de calitate a aerului și de mediu. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "air_quality": "Selectați senzorii de calitate a aerului și senzorii opționali de lumină (lux) ai camerei. Lux alimentează istoricul luminii. Pentru umbrire solară, activați lux în controlerul fiecărui stor și alegeți un senzor din aceeași cameră sau media senzorilor selectați: fiecare nouă închidere automată necesită apoi luminozitatea minimă configurată. Selectarea senzorilor aici nu autorizează mișcarea.",
           "temperature": "Temperatură. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
-          "pressure": "Senzori de presiune. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
           "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea.",
           "occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea."
@@ -2335,17 +2325,15 @@
           "air_quality": "Senzori de calitate a aerului și de mediu",
           "temperature": "Temperatură",
           "humidity": "Umiditate",
-          "pressure": "Senzori de presiune",
           "climate_devices": "Dispozitive",
           "shades": "Jaluzele, rulouri și obloane",
           "occupancy_sensors": "Ocupare · senzor"
         },
         "data_description": {
           "windows": "Ferestre. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
-          "air_quality": "Senzori de calitate a aerului și de mediu. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
+          "air_quality": "Selectați senzorii de calitate a aerului și senzorii opționali de lumină (lux) ai camerei. Lux alimentează istoricul luminii. Pentru umbrire solară, activați lux în controlerul fiecărui stor și alegeți un senzor din aceeași cameră sau media senzorilor selectați: fiecare nouă închidere automată necesită apoi luminozitatea minimă configurată. Selectarea senzorilor aici nu autorizează mișcarea.",
           "temperature": "Temperatură. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
-          "pressure": "Senzori de presiune. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
           "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea.",
           "occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea."

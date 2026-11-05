@@ -162,16 +162,14 @@
           "air_quality": "Sensor kualitas udara dan lingkungan",
           "temperature": "Suhu",
           "humidity": "Kelembapan",
-          "pressure": "Sensor tekanan",
           "climate_devices": "Perangkat",
           "shades": "Tirai, gorden, dan penutup jendela"
         },
         "data_description": {
           "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
-          "air_quality": "Sensor kualitas udara dan lingkungan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "air_quality": "Pilih sensor kualitas udara dan sensor cahaya opsional (lux) di ruangan ini. Lux menyediakan riwayat cahaya. Untuk peneduh matahari, aktifkan lux pada pengontrol masing-masing penutup dan pilih sensor di ruangan yang sama atau rata-rata sensor ruangan yang dipilih: setiap penutupan otomatis baru lalu memerlukan kecerahan minimum yang ditetapkan. Memilih sensor di sini tidak mengizinkan gerakan.",
           "temperature": "Suhu. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
-          "pressure": "Sensor tekanan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensor · Wajib · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · sumber · sensor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensor · Wajib",
-          "illuminance_entity": "LUX · sumber (lux)",
+          "illuminance_entity": "Iluminansi (lux)",
           "melanopic_edi_entity": "EDI · EDI · sumber (lx)",
           "melanopic_spectral_verified": "EDI · Wajib"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Gunakan pengukuran nyata yang sesuai untuk “HCHO · sensor · Wajib · SENSOR ✓ · VERIFIED”. Perkiraan tidak menggantikan HCHO · sensor · Wajib · SENSOR ✓ · VERIFIED terkalibrasi.",
           "noise_entity": "Pilih dB(A) · sumber · sensor (dB(A)) Home Assistant nyata untuk “dB(A) · sumber · sensor (dB(A))”. Data hilang atau usang menghentikan tindakan terkait.",
           "noise_sensor_calibrated": "Gunakan pengukuran nyata yang sesuai untuk “dB(A) · sensor · Wajib”. Perkiraan tidak menggantikan dB(A) · sensor · Wajib terkalibrasi.",
-          "illuminance_entity": "Pilih LUX · sumber (lux) Home Assistant nyata untuk “LUX · sumber (lux)”. Data hilang atau usang menghentikan tindakan terkait.",
+          "illuminance_entity": "Pilih sensor iluminansi nyata (lux) untuk laporan deskriptif riwayat cahaya ruangan. Peneduh matahari dikonfigurasi terpisah: pilih sumber lux, kecerahan minimum, dan sakelar lux pada pengontrol setiap penutup. Laporan tidak menyimpulkan EDI melanopik dari lux.",
           "melanopic_edi_entity": "Pilih EDI · EDI · sumber (lx) Home Assistant nyata untuk “EDI · EDI · sumber (lx)”. Data hilang atau usang menghentikan tindakan terkait.",
           "melanopic_spectral_verified": "Gunakan pengukuran nyata yang sesuai untuk “EDI · Wajib”. Perkiraan tidak menggantikan sensor terkalibrasi."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Sensor kualitas udara dan lingkungan",
           "temperature": "Suhu",
           "humidity": "Kelembapan",
-          "pressure": "Sensor tekanan",
           "climate_devices": "Perangkat",
           "shades": "Tirai, gorden, dan penutup jendela",
           "occupancy_sensors": "Kehadiran · sensor"
         },
         "data_description": {
           "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
-          "air_quality": "Sensor kualitas udara dan lingkungan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "air_quality": "Pilih sensor kualitas udara dan sensor cahaya opsional (lux) di ruangan ini. Lux menyediakan riwayat cahaya. Untuk peneduh matahari, aktifkan lux pada pengontrol masing-masing penutup dan pilih sensor di ruangan yang sama atau rata-rata sensor ruangan yang dipilih: setiap penutupan otomatis baru lalu memerlukan kecerahan minimum yang ditetapkan. Memilih sensor di sini tidak mengizinkan gerakan.",
           "temperature": "Suhu. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
-          "pressure": "Sensor tekanan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
           "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."
@@ -1129,17 +1125,15 @@
           "air_quality": "Sensor kualitas udara dan lingkungan",
           "temperature": "Suhu",
           "humidity": "Kelembapan",
-          "pressure": "Sensor tekanan",
           "climate_devices": "Perangkat",
           "shades": "Tirai, gorden, dan penutup jendela",
           "occupancy_sensors": "Kehadiran · sensor"
         },
         "data_description": {
           "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
-          "air_quality": "Sensor kualitas udara dan lingkungan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "air_quality": "Pilih sensor kualitas udara dan sensor cahaya opsional (lux) di ruangan ini. Lux menyediakan riwayat cahaya. Untuk peneduh matahari, aktifkan lux pada pengontrol masing-masing penutup dan pilih sensor di ruangan yang sama atau rata-rata sensor ruangan yang dipilih: setiap penutupan otomatis baru lalu memerlukan kecerahan minimum yang ditetapkan. Memilih sensor di sini tidak mengizinkan gerakan.",
           "temperature": "Suhu. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
-          "pressure": "Sensor tekanan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
           "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensor · Wajib · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · sumber · sensor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensor · Wajib",
-          "illuminance_entity": "LUX · sumber (lux)",
+          "illuminance_entity": "Iluminansi (lux)",
           "melanopic_edi_entity": "EDI · EDI · sumber (lx)",
           "melanopic_spectral_verified": "EDI · Wajib"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Gunakan pengukuran nyata yang sesuai untuk “HCHO · sensor · Wajib · SENSOR ✓ · VERIFIED”. Perkiraan tidak menggantikan HCHO · sensor · Wajib · SENSOR ✓ · VERIFIED terkalibrasi.",
           "noise_entity": "Pilih dB(A) · sumber · sensor (dB(A)) Home Assistant nyata untuk “dB(A) · sumber · sensor (dB(A))”. Data hilang atau usang menghentikan tindakan terkait.",
           "noise_sensor_calibrated": "Gunakan pengukuran nyata yang sesuai untuk “dB(A) · sensor · Wajib”. Perkiraan tidak menggantikan dB(A) · sensor · Wajib terkalibrasi.",
-          "illuminance_entity": "Pilih LUX · sumber (lux) Home Assistant nyata untuk “LUX · sumber (lux)”. Data hilang atau usang menghentikan tindakan terkait.",
+          "illuminance_entity": "Pilih sensor iluminansi nyata (lux) untuk laporan deskriptif riwayat cahaya ruangan. Peneduh matahari dikonfigurasi terpisah: pilih sumber lux, kecerahan minimum, dan sakelar lux pada pengontrol setiap penutup. Laporan tidak menyimpulkan EDI melanopik dari lux.",
           "melanopic_edi_entity": "Pilih EDI · EDI · sumber (lx) Home Assistant nyata untuk “EDI · EDI · sumber (lx)”. Data hilang atau usang menghentikan tindakan terkait.",
           "melanopic_spectral_verified": "Gunakan pengukuran nyata yang sesuai untuk “EDI · Wajib”. Perkiraan tidak menggantikan sensor terkalibrasi."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Sensor kualitas udara dan lingkungan",
           "temperature": "Suhu",
           "humidity": "Kelembapan",
-          "pressure": "Sensor tekanan",
           "climate_devices": "Perangkat",
           "shades": "Tirai, gorden, dan penutup jendela"
         },
         "data_description": {
           "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
-          "air_quality": "Sensor kualitas udara dan lingkungan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "air_quality": "Pilih sensor kualitas udara dan sensor cahaya opsional (lux) di ruangan ini. Lux menyediakan riwayat cahaya. Untuk peneduh matahari, aktifkan lux pada pengontrol masing-masing penutup dan pilih sensor di ruangan yang sama atau rata-rata sensor ruangan yang dipilih: setiap penutupan otomatis baru lalu memerlukan kecerahan minimum yang ditetapkan. Memilih sensor di sini tidak mengizinkan gerakan.",
           "temperature": "Suhu. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
-          "pressure": "Sensor tekanan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Sensor kualitas udara dan lingkungan",
           "temperature": "Suhu",
           "humidity": "Kelembapan",
-          "pressure": "Sensor tekanan",
           "climate_devices": "Perangkat",
           "shades": "Tirai, gorden, dan penutup jendela",
           "occupancy_sensors": "Kehadiran · sensor"
         },
         "data_description": {
           "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
-          "air_quality": "Sensor kualitas udara dan lingkungan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "air_quality": "Pilih sensor kualitas udara dan sensor cahaya opsional (lux) di ruangan ini. Lux menyediakan riwayat cahaya. Untuk peneduh matahari, aktifkan lux pada pengontrol masing-masing penutup dan pilih sensor di ruangan yang sama atau rata-rata sensor ruangan yang dipilih: setiap penutupan otomatis baru lalu memerlukan kecerahan minimum yang ditetapkan. Memilih sensor di sini tidak mengizinkan gerakan.",
           "temperature": "Suhu. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
-          "pressure": "Sensor tekanan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
           "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."
@@ -2335,17 +2325,15 @@
           "air_quality": "Sensor kualitas udara dan lingkungan",
           "temperature": "Suhu",
           "humidity": "Kelembapan",
-          "pressure": "Sensor tekanan",
           "climate_devices": "Perangkat",
           "shades": "Tirai, gorden, dan penutup jendela",
           "occupancy_sensors": "Kehadiran · sensor"
         },
         "data_description": {
           "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
-          "air_quality": "Sensor kualitas udara dan lingkungan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
+          "air_quality": "Pilih sensor kualitas udara dan sensor cahaya opsional (lux) di ruangan ini. Lux menyediakan riwayat cahaya. Untuk peneduh matahari, aktifkan lux pada pengontrol masing-masing penutup dan pilih sensor di ruangan yang sama atau rata-rata sensor ruangan yang dipilih: setiap penutupan otomatis baru lalu memerlukan kecerahan minimum yang ditetapkan. Memilih sensor di sini tidak mengizinkan gerakan.",
           "temperature": "Suhu. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
-          "pressure": "Sensor tekanan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
           "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."

@@ -57,10 +57,17 @@ tts.language_options=lambda hass,x:[{'value':'auto','label':'Auto'}]
 tts.preferred_language=lambda hass,engine,choice:'auto'
 hub=types.ModuleType('beta79_general.hub_delivery')
 hub.hub_installed=lambda hass:False
+discovery=types.ModuleType('beta79_general.discovery')
+discovery.er=N(async_get=lambda hass:hass.entity_registry)
+discovery.HomeAssistant=object
+pressure=next(n for n in ast.parse((ROOT/'discovery.py').read_text()).body
+              if isinstance(n,ast.FunctionDef) and n.name=='is_pressure_sensor')
+exec(compile(ast.Module([pressure],type_ignores=[]),'discovery.py','exec'),discovery.__dict__)
 sys.modules.update({
  'beta79_general':pkg,'beta79_general.languages':languages,
  'beta79_general.ai_rewrite':ai,'beta79_general.tts_languages':tts,
  'beta79_general.hub_delivery':hub,
+ 'beta79_general.discovery':discovery,
 })
 ns={'__name__':'beta79_general.room_setup','__package__':'beta79_general',
     'Any':object,'selector':sel,'probatio':P,'field':field,'select':select,
@@ -96,7 +103,8 @@ class UI:
           'thresholds':copy.deepcopy(limits),
         }
         self.config_entry=N(data={},options=copy.deepcopy(self._values))
-        self.hass=N()
+        self.hass=N(states=N(get=lambda entity:None),
+                    entity_registry=N(async_get=lambda entity:None))
         self._setup_order=[];self._setup_index=0;self._editing=True
         self._setup_base=copy.deepcopy(self._values)
         self.saved=0

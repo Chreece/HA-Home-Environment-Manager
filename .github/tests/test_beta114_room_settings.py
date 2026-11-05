@@ -19,12 +19,13 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 CARD = ROOT / "frontend/air-quality-advisor-card.js"
 MARKER = "  if (!customElements.get('air-quality-advisor-card'))"
-KEYS = ["windows", "air_quality", "temperature", "humidity", "pressure",
+KEYS = ["windows", "air_quality", "temperature", "humidity",
         "climate_devices", "shades", "occupancy_sensors"]
+COVERS = ["cover.wohnzimmer_rollo_links_rolo_3", "cover.wohnzimmer_rollo_rechts"]
 DEFAULTS = {
     "windows": ["binary_sensor.window"], "air_quality": [],
     "temperature": ["sensor.temp_a", "sensor.temp_b"],
-    "humidity": ["sensor.humidity"], "pressure": [],
+    "humidity": ["sensor.humidity"],
     "climate_devices": ["climate.radiator"], "shades": [],
     "occupancy_sensors": ["binary_sensor.presence"],
 }
@@ -35,7 +36,9 @@ FORM = {
         {"name": name, "required": False, "default": values,
          "selector": {"select": {"multiple": True, "custom_value": False,
              "options": [{"value": value, "label": value.replace("_", " ")}
-                         for value in values + (["sensor.temp_c"] if name == "temperature" else [])]}}}
+                         for value in values + {
+                             "temperature": ["sensor.temp_c"], "shades": COVERS,
+                         }.get(name, [])]}}}
         for name, values in DEFAULTS.items()
     ],
 }
@@ -119,6 +122,8 @@ assert.equal(helper.context(card,'room0'),null);
 
 SETUP = r"""({states,form,native})=>{
   window.calls=[];window.pending={};window.mode={};window.seq=0;
+  window.committed=Object.fromEntries(form.data_schema.map(field=>
+    [field.name,structuredClone(field.default)]));
   if(native)customElements.define('ha-form',class extends HTMLElement{
     constructor(){super();this.attachShadow({mode:'open'}).innerHTML='<input aria-label="Native selector">';}
   });
@@ -142,6 +147,7 @@ SETUP = r"""({states,form,native})=>{
     }
     if(mode.failSave)throw Error('offline');
     if(mode.validation)return {...step,errors:{temperature:'invalid_room_source'}};
+    committed=structuredClone(data);
     return {type:'create_entry',flow_id};
   };
   card._hass={language:'en',user:{is_admin:true},states,localize:()=>undefined,
@@ -191,8 +197,52 @@ def browser_checks(card_source):
         assert page.evaluate("card._openRoomSettings114('room0')") is True
         popup = page.locator(".hem-room-options114")
         assert popup.evaluate("node=>node.matches(':modal')")
-        assert popup.locator("details").count() == 8
+        assert popup.locator("details").count() == len(KEYS)
         assert len(page.evaluate("calls")) == 2, "Opening must not submit a settings form"
+        assert popup.locator('[data-room-detect-shades115]').count() == 1
+        shades = popup.locator('[data-room-options-group114="shades"]')
+        assert shades.locator('[data-room-options-count114]').inner_text() == "0"
+        assert page.evaluate("card._roomSettingsDialog114.draft") == DEFAULTS
+        shades.locator("summary").click()
+        detect = shades.locator('[data-room-detect-shades115]')
+        assert detect.inner_text() == "Select detected covers"
+        assert shades.locator('[data-room-option114]:checked').count() == 0
+        detect.click()
+        assert shades.locator('[data-room-options-count114]').inner_text() == "2"
+        for cover in COVERS:
+            assert shades.locator(f'input[value="{cover}"]').is_checked()
+        selected = deepcopy(DEFAULTS)
+        selected['shades'] = COVERS
+        assert page.evaluate("card._roomSettingsDialog114.draft") == selected
+        assert len(page.evaluate("calls")) == 2, "Detect must edit only the draft"
+        assert page.evaluate("committed") == DEFAULTS
+        for width in (320, 390):
+            page.set_viewport_size({"width": width, "height": 850})
+            assert shades.evaluate("node=>node.scrollWidth<=node.clientWidth+1")
+        shades.locator('[data-room-clear114]').click()
+        assert shades.locator('[data-room-options-count114]').inner_text() == "0"
+        assert shades.locator('[data-room-option114]:checked').count() == 0
+        assert page.evaluate("card._roomSettingsDialog114.draft") == DEFAULTS
+        assert len(page.evaluate("calls")) == 2 and page.evaluate("committed") == DEFAULTS
+        detect.click()
+        popup.locator('[data-room-options-x114]').click()
+        page.wait_for_function("calls.some(call=>call.method==='DELETE')")
+        assert popup.count() == 0
+        assert page.evaluate("calls.map(call=>call.method)") == ["POST", "POST", "DELETE"]
+        assert page.evaluate("committed") == DEFAULTS, "Cancel must discard detected covers"
+
+        # Saved empty selections stay empty on reopen; detection is an
+        # explicit union, preserving an already selected cover without duplicates.
+        page.evaluate("calls=[]")
+        assert page.evaluate("card._openRoomSettings114('room0')") is True
+        assert page.evaluate("card._roomSettingsDialog114.draft") == DEFAULTS
+        shades.locator("summary").click()
+        shades.locator(f'input[value="{COVERS[1]}"]').check()
+        detect.click()
+        cover_selection = [COVERS[1], COVERS[0]]
+        assert page.evaluate("card._roomSettingsDialog114.draft.shades") == cover_selection
+        assert shades.locator('[data-room-options-count114]').inner_text() == "2"
+        assert len(page.evaluate("calls")) == 2
         temp = popup.locator('[data-room-options-group114="temperature"]')
         temp.locator("summary").click()
         temp.locator('input[value="sensor.temp_a"]').uncheck()
@@ -222,14 +272,21 @@ def browser_checks(card_source):
         assert temp.locator('input[value="sensor.temp_c"]').is_checked()
         assert not temp.locator('input[value="sensor.temp_a"]').is_checked()
         assert temp.locator('[data-room-options-field-error114]').is_visible()
+        assert page.evaluate("card._roomSettingsDialog114.draft.shades") == cover_selection
+        for cover in COVERS:
+            assert shades.locator(f'input[value="{cover}"]').is_checked()
+        assert page.evaluate("committed") == DEFAULTS
         assert page.evaluate("calls.filter(c=>c.method==='DELETE').length") == 0
         page.evaluate("mode.validation=false")
         popup.locator('[data-room-options-save114]').click()
         page.wait_for_function("card._roomSettingsDialog114.finished===true")
         saved = page.evaluate("calls.filter(c=>c.data?.temperature).at(-1).data")
         expected = deepcopy(DEFAULTS)
-        expected.update(temperature=["sensor.temp_b", "sensor.temp_c"], humidity=[])
+        expected.update(temperature=["sensor.temp_b", "sensor.temp_c"], humidity=[],
+                        shades=cover_selection)
         assert saved == expected, saved
+        assert page.evaluate("committed") == expected
+        assert popup.locator('[data-room-detect-shades115]').is_disabled()
         popup.locator('[data-room-options-close114]').click()
         assert popup.count() == 0
 
@@ -256,6 +313,7 @@ def browser_checks(card_source):
         page.wait_for_function("card._roomSettingsDialog114.failed===true")
         assert popup.locator('[data-room-options-status114]').get_attribute("role") == "alert"
         assert popup.locator('[data-room-options-save114]').is_disabled()
+        assert popup.locator('[data-room-detect-shades115]').is_disabled()
         page.wait_for_function("calls.some(c=>c.method==='DELETE')")
         page.evaluate("mode={}")
         popup.locator('[data-room-options-retry114]').click()
@@ -271,7 +329,30 @@ def browser_checks(card_source):
         native = new_page(native=True)
         native.evaluate("card._openRoomSettings114('room0')")
         popup = native.locator('.hem-room-options114')
-        assert popup.locator('ha-form').count() == 8
+        assert popup.locator('ha-form').count() == len(KEYS)
+        assert popup.locator('[data-room-detect-shades115]').count() == 1
+        assert native.evaluate("calls.length") == 2
+        shades = popup.locator('[data-room-options-group114="shades"]')
+        assert shades.locator('ha-form').evaluate("node=>node.data.shades") == []
+        shades.locator("summary").click()
+        native.evaluate("""cover=>{
+          const form=card._roomSettingsDialog114.node.querySelector(
+            '[data-room-options-group114="shades"] ha-form');
+          form.dispatchEvent(new CustomEvent('value-changed',{
+            detail:{value:{shades:[cover]}},bubbles:true}));
+        }""", COVERS[1])
+        shades.locator('[data-room-detect-shades115]').click()
+        assert shades.locator('ha-form').evaluate("node=>node.data.shades") == cover_selection
+        assert shades.locator('[data-room-options-count114]').inner_text() == "2"
+        assert native.evaluate("card._roomSettingsDialog114.draft.shades") == cover_selection
+        assert native.evaluate("calls.length") == 2 and native.evaluate("committed") == DEFAULTS
+        shades.locator('[data-room-clear114]').click()
+        assert shades.locator('ha-form').evaluate("node=>node.data.shades") == []
+        assert shades.locator('[data-room-options-count114]').inner_text() == "0"
+        assert native.evaluate("card._roomSettingsDialog114.draft") == DEFAULTS
+        assert native.evaluate("calls.length") == 2 and native.evaluate("committed") == DEFAULTS
+        shades.locator('[data-room-detect-shades115]').click()
+        assert shades.locator('ha-form').evaluate("node=>node.data.shades") == COVERS
         native.evaluate("""()=>{
           const form=card._roomSettingsDialog114.node.querySelector(
             '[data-room-options-group114="humidity"] ha-form');
@@ -281,7 +362,10 @@ def browser_checks(card_source):
         native.wait_for_function("card._roomSettingsDialog114.finished===true")
         expected = deepcopy(DEFAULTS)
         expected['humidity'] = []
+        expected['shades'] = COVERS
         assert native.evaluate("calls.at(-1).data") == expected
+        assert native.evaluate("committed") == expected
+        assert popup.locator('[data-room-detect-shades115]').is_disabled()
         popup.locator('[data-room-options-close114]').click()
         native.evaluate("card._openRoomSettings114('room1')")
         native.evaluate("card.remove()")
@@ -290,6 +374,7 @@ def browser_checks(card_source):
         assert not errors, errors
         browser.close()
     print("BETA114_ROOM_SETTINGS_BROWSER_DRAFTS_CANCEL_RACES_AND_NATIVE_FORM=PASS")
+    print("BETA115_DETECTED_COVERS_DRAFT_ONLY_FALLBACK_NATIVE_AND_EXPLICIT_SAVE=PASS")
 
 
 if __name__ == "__main__":

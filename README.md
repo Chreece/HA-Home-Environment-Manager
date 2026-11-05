@@ -8,10 +8,12 @@ provides a compact room dashboard.
 ## Current version and branches
 
 The current tested release is
-[**v0.6.0b114**](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b114).
-It adds interactive average trends, direct room settings, occupancy colours
-on room names, and navigation from room alerts to their underlying details.
-The no-occupancy indicator also explains verified whole-home absence.
+[**v0.6.0b115**](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b115).
+It simplifies room headers, makes room warning buttons toggle their details,
+adds live guidance for mold surface-temperature measurement, and corrects
+automatic room cover selection. Setup now explains how illuminance supports
+solar shading; unused pressure selections and readings have been removed.
+Interactive trends, direct room settings and occupancy colours remain included.
 The whole-home presence priority, per-device fan limits, reported-device
 activity colours, directional PID target cutoffs, and optional 30-second
 timed setpoints remain included.
@@ -32,7 +34,7 @@ Requires Home Assistant **2026.10.0 or newer**.
 1. Add `https://github.com/Chreece/HA-Home-Environment-Manager` as a HACS custom
    repository with category **Integration**, if it is not already present.
 2. Open **Home Environment Manager** in HACS. Enable **Show beta versions** in
-   version selection and choose **v0.6.0b114**.
+   version selection and choose **v0.6.0b115**.
 3. Download the update and restart Home Assistant.
 4. For a new installation, open **Settings → Devices & services → Add integration**
    and choose **Home Environment Manager**. For an existing installation, use its
@@ -75,7 +77,7 @@ are configured, room evidence and its existing Away cooldown still apply.
 A fresh empty occupied-rooms string or list is a valid empty list.
 
 For the full behavior changes in the current version, see the
-[release notes](.github/releases/v0.6.0b114.md).
+[release notes](.github/releases/v0.6.0b115.md).
 
 ## Development
 

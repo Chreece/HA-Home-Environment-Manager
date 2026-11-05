@@ -162,16 +162,14 @@
           "air_quality": "Hava kalitesi ve çevre sensörleri",
           "temperature": "Sıcaklık",
           "humidity": "Nem",
-          "pressure": "Basınç sensörleri",
           "climate_devices": "Cihazlar",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler"
         },
         "data_description": {
           "windows": "Pencereler. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "air_quality": "Hava kalitesi ve çevre sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "air_quality": "Bu odanın hava kalitesi sensörlerini ve isteğe bağlı ışık sensörlerini (lux) seçin. Lux, ışık geçmişini kaydeder. Güneşten gölgeleme için her perdenin kontrolcüsünde lux özelliğini açın ve aynı odadan bir sensör veya seçili oda sensörlerinin ortalamasını seçin: her yeni otomatik kapanma, ayarlanan minimum aydınlığı gerektirir. Burada sensör seçmek harekete izin vermez.",
           "temperature": "Sıcaklık. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "humidity": "Nem. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "pressure": "Basınç sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "climate_devices": "Cihazlar. Yalnızca odadaki fiziksel climate.*, humidifier.* ve fan.* varlıklarını seçin. Cihazın yerel özellikleri ısıtma, soğutma, nem alma, hedefler ve fan hızını belirler. Seçim cihazı çalıştırmaz; otomatik kontrolü her cihazda ayrıca etkinleştirin.",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler. Odadaki cover.* panjur, stor ve perdeleri seçin. device_class olmayan covers, CLOSE destekliyorsa ve gerçekten pencere gölgeliyorsa kabul edilir. Garajlar, kapılar, geçitler, pencereler ve tenteler hariçtir. Seçim hareket ettirmez: pencere sensörünü bağlayın, otomatik kontrolü, duyuruyu ve sıcaklığı ayarlayın. Bilinmeyen durum hareketi engeller."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensör · Gerekli · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · kaynak · sensör (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensör · Gerekli",
-          "illuminance_entity": "LUX · kaynak (lux)",
+          "illuminance_entity": "Aydınlık düzeyi (lux)",
           "melanopic_edi_entity": "EDI · EDI · kaynak (lx)",
           "melanopic_spectral_verified": "EDI · Gerekli"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "«HCHO · sensör · Gerekli · SENSOR ✓ · VERIFIED» için uygun gerçek ölçüm kullanın. Tahminler kalibre HCHO · sensör · Gerekli · SENSOR ✓ · VERIFIEDün yerini tutmaz.",
           "noise_entity": "«dB(A) · kaynak · sensör (dB(A))» için gerçek bir Home Assistant kaynağı seçin. Eski veya eksik veriler ilgili işlemi durdurur.",
           "noise_sensor_calibrated": "«dB(A) · sensör · Gerekli» için uygun gerçek ölçüm kullanın. Tahminler kalibre dB(A) · sensör · Gerekliün yerini tutmaz.",
-          "illuminance_entity": "«LUX · kaynak (lux)» için gerçek bir Home Assistant kaynağı seçin. Eski veya eksik veriler ilgili işlemi durdurur.",
+          "illuminance_entity": "Odanın açıklayıcı ışık geçmişi raporu için gerçek bir aydınlık sensörü (lux) seçin. Güneşten gölgeleme ayrı yapılandırılır: her perdenin kontrolcüsünde lux kaynağını, minimum aydınlığı ve lux anahtarını seçin. Rapor, lux değerlerinden melanopik EDI hesaplamaz.",
           "melanopic_edi_entity": "«EDI · EDI · kaynak (lx)» için gerçek bir Home Assistant kaynağı seçin. Eski veya eksik veriler ilgili işlemi durdurur.",
           "melanopic_spectral_verified": "«EDI · Gerekli» için uygun gerçek ölçüm kullanın. Tahminler kalibre sensörün yerini tutmaz."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Hava kalitesi ve çevre sensörleri",
           "temperature": "Sıcaklık",
           "humidity": "Nem",
-          "pressure": "Basınç sensörleri",
           "climate_devices": "Cihazlar",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler",
           "occupancy_sensors": "Doluluk · sensör"
         },
         "data_description": {
           "windows": "Pencereler. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "air_quality": "Hava kalitesi ve çevre sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "air_quality": "Bu odanın hava kalitesi sensörlerini ve isteğe bağlı ışık sensörlerini (lux) seçin. Lux, ışık geçmişini kaydeder. Güneşten gölgeleme için her perdenin kontrolcüsünde lux özelliğini açın ve aynı odadan bir sensör veya seçili oda sensörlerinin ortalamasını seçin: her yeni otomatik kapanma, ayarlanan minimum aydınlığı gerektirir. Burada sensör seçmek harekete izin vermez.",
           "temperature": "Sıcaklık. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "humidity": "Nem. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "pressure": "Basınç sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "climate_devices": "Cihazlar. Yalnızca odadaki fiziksel climate.*, humidifier.* ve fan.* varlıklarını seçin. Cihazın yerel özellikleri ısıtma, soğutma, nem alma, hedefler ve fan hızını belirler. Seçim cihazı çalıştırmaz; otomatik kontrolü her cihazda ayrıca etkinleştirin.",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler. Odadaki cover.* panjur, stor ve perdeleri seçin. device_class olmayan covers, CLOSE destekliyorsa ve gerçekten pencere gölgeliyorsa kabul edilir. Garajlar, kapılar, geçitler, pencereler ve tenteler hariçtir. Seçim hareket ettirmez: pencere sensörünü bağlayın, otomatik kontrolü, duyuruyu ve sıcaklığı ayarlayın. Bilinmeyen durum hareketi engeller.",
           "occupancy_sensors": "«Doluluk · sensör» için gerçek bir Home Assistant kaynağı seçin. Eski veya eksik veriler ilgili işlemi durdurur."
@@ -1129,17 +1125,15 @@
           "air_quality": "Hava kalitesi ve çevre sensörleri",
           "temperature": "Sıcaklık",
           "humidity": "Nem",
-          "pressure": "Basınç sensörleri",
           "climate_devices": "Cihazlar",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler",
           "occupancy_sensors": "Doluluk · sensör"
         },
         "data_description": {
           "windows": "Pencereler. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "air_quality": "Hava kalitesi ve çevre sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "air_quality": "Bu odanın hava kalitesi sensörlerini ve isteğe bağlı ışık sensörlerini (lux) seçin. Lux, ışık geçmişini kaydeder. Güneşten gölgeleme için her perdenin kontrolcüsünde lux özelliğini açın ve aynı odadan bir sensör veya seçili oda sensörlerinin ortalamasını seçin: her yeni otomatik kapanma, ayarlanan minimum aydınlığı gerektirir. Burada sensör seçmek harekete izin vermez.",
           "temperature": "Sıcaklık. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "humidity": "Nem. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "pressure": "Basınç sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "climate_devices": "Cihazlar. Yalnızca odadaki fiziksel climate.*, humidifier.* ve fan.* varlıklarını seçin. Cihazın yerel özellikleri ısıtma, soğutma, nem alma, hedefler ve fan hızını belirler. Seçim cihazı çalıştırmaz; otomatik kontrolü her cihazda ayrıca etkinleştirin.",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler. Odadaki cover.* panjur, stor ve perdeleri seçin. device_class olmayan covers, CLOSE destekliyorsa ve gerçekten pencere gölgeliyorsa kabul edilir. Garajlar, kapılar, geçitler, pencereler ve tenteler hariçtir. Seçim hareket ettirmez: pencere sensörünü bağlayın, otomatik kontrolü, duyuruyu ve sıcaklığı ayarlayın. Bilinmeyen durum hareketi engeller.",
           "occupancy_sensors": "«Doluluk · sensör» için gerçek bir Home Assistant kaynağı seçin. Eski veya eksik veriler ilgili işlemi durdurur."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensör · Gerekli · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · kaynak · sensör (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensör · Gerekli",
-          "illuminance_entity": "LUX · kaynak (lux)",
+          "illuminance_entity": "Aydınlık düzeyi (lux)",
           "melanopic_edi_entity": "EDI · EDI · kaynak (lx)",
           "melanopic_spectral_verified": "EDI · Gerekli"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "«HCHO · sensör · Gerekli · SENSOR ✓ · VERIFIED» için uygun gerçek ölçüm kullanın. Tahminler kalibre HCHO · sensör · Gerekli · SENSOR ✓ · VERIFIEDün yerini tutmaz.",
           "noise_entity": "«dB(A) · kaynak · sensör (dB(A))» için gerçek bir Home Assistant kaynağı seçin. Eski veya eksik veriler ilgili işlemi durdurur.",
           "noise_sensor_calibrated": "«dB(A) · sensör · Gerekli» için uygun gerçek ölçüm kullanın. Tahminler kalibre dB(A) · sensör · Gerekliün yerini tutmaz.",
-          "illuminance_entity": "«LUX · kaynak (lux)» için gerçek bir Home Assistant kaynağı seçin. Eski veya eksik veriler ilgili işlemi durdurur.",
+          "illuminance_entity": "Odanın açıklayıcı ışık geçmişi raporu için gerçek bir aydınlık sensörü (lux) seçin. Güneşten gölgeleme ayrı yapılandırılır: her perdenin kontrolcüsünde lux kaynağını, minimum aydınlığı ve lux anahtarını seçin. Rapor, lux değerlerinden melanopik EDI hesaplamaz.",
           "melanopic_edi_entity": "«EDI · EDI · kaynak (lx)» için gerçek bir Home Assistant kaynağı seçin. Eski veya eksik veriler ilgili işlemi durdurur.",
           "melanopic_spectral_verified": "«EDI · Gerekli» için uygun gerçek ölçüm kullanın. Tahminler kalibre sensörün yerini tutmaz."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Hava kalitesi ve çevre sensörleri",
           "temperature": "Sıcaklık",
           "humidity": "Nem",
-          "pressure": "Basınç sensörleri",
           "climate_devices": "Cihazlar",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler"
         },
         "data_description": {
           "windows": "Pencereler. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "air_quality": "Hava kalitesi ve çevre sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "air_quality": "Bu odanın hava kalitesi sensörlerini ve isteğe bağlı ışık sensörlerini (lux) seçin. Lux, ışık geçmişini kaydeder. Güneşten gölgeleme için her perdenin kontrolcüsünde lux özelliğini açın ve aynı odadan bir sensör veya seçili oda sensörlerinin ortalamasını seçin: her yeni otomatik kapanma, ayarlanan minimum aydınlığı gerektirir. Burada sensör seçmek harekete izin vermez.",
           "temperature": "Sıcaklık. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "humidity": "Nem. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "pressure": "Basınç sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "climate_devices": "Cihazlar. Yalnızca odadaki fiziksel climate.*, humidifier.* ve fan.* varlıklarını seçin. Cihazın yerel özellikleri ısıtma, soğutma, nem alma, hedefler ve fan hızını belirler. Seçim cihazı çalıştırmaz; otomatik kontrolü her cihazda ayrıca etkinleştirin.",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler. Odadaki cover.* panjur, stor ve perdeleri seçin. device_class olmayan covers, CLOSE destekliyorsa ve gerçekten pencere gölgeliyorsa kabul edilir. Garajlar, kapılar, geçitler, pencereler ve tenteler hariçtir. Seçim hareket ettirmez: pencere sensörünü bağlayın, otomatik kontrolü, duyuruyu ve sıcaklığı ayarlayın. Bilinmeyen durum hareketi engeller."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Hava kalitesi ve çevre sensörleri",
           "temperature": "Sıcaklık",
           "humidity": "Nem",
-          "pressure": "Basınç sensörleri",
           "climate_devices": "Cihazlar",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler",
           "occupancy_sensors": "Doluluk · sensör"
         },
         "data_description": {
           "windows": "Pencereler. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "air_quality": "Hava kalitesi ve çevre sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "air_quality": "Bu odanın hava kalitesi sensörlerini ve isteğe bağlı ışık sensörlerini (lux) seçin. Lux, ışık geçmişini kaydeder. Güneşten gölgeleme için her perdenin kontrolcüsünde lux özelliğini açın ve aynı odadan bir sensör veya seçili oda sensörlerinin ortalamasını seçin: her yeni otomatik kapanma, ayarlanan minimum aydınlığı gerektirir. Burada sensör seçmek harekete izin vermez.",
           "temperature": "Sıcaklık. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "humidity": "Nem. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "pressure": "Basınç sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "climate_devices": "Cihazlar. Yalnızca odadaki fiziksel climate.*, humidifier.* ve fan.* varlıklarını seçin. Cihazın yerel özellikleri ısıtma, soğutma, nem alma, hedefler ve fan hızını belirler. Seçim cihazı çalıştırmaz; otomatik kontrolü her cihazda ayrıca etkinleştirin.",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler. Odadaki cover.* panjur, stor ve perdeleri seçin. device_class olmayan covers, CLOSE destekliyorsa ve gerçekten pencere gölgeliyorsa kabul edilir. Garajlar, kapılar, geçitler, pencereler ve tenteler hariçtir. Seçim hareket ettirmez: pencere sensörünü bağlayın, otomatik kontrolü, duyuruyu ve sıcaklığı ayarlayın. Bilinmeyen durum hareketi engeller.",
           "occupancy_sensors": "«Doluluk · sensör» için gerçek bir Home Assistant kaynağı seçin. Eski veya eksik veriler ilgili işlemi durdurur."
@@ -2335,17 +2325,15 @@
           "air_quality": "Hava kalitesi ve çevre sensörleri",
           "temperature": "Sıcaklık",
           "humidity": "Nem",
-          "pressure": "Basınç sensörleri",
           "climate_devices": "Cihazlar",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler",
           "occupancy_sensors": "Doluluk · sensör"
         },
         "data_description": {
           "windows": "Pencereler. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "air_quality": "Hava kalitesi ve çevre sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
+          "air_quality": "Bu odanın hava kalitesi sensörlerini ve isteğe bağlı ışık sensörlerini (lux) seçin. Lux, ışık geçmişini kaydeder. Güneşten gölgeleme için her perdenin kontrolcüsünde lux özelliğini açın ve aynı odadan bir sensör veya seçili oda sensörlerinin ortalamasını seçin: her yeni otomatik kapanma, ayarlanan minimum aydınlığı gerektirir. Burada sensör seçmek harekete izin vermez.",
           "temperature": "Sıcaklık. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "humidity": "Nem. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
-          "pressure": "Basınç sensörleri. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "climate_devices": "Cihazlar. Yalnızca odadaki fiziksel climate.*, humidifier.* ve fan.* varlıklarını seçin. Cihazın yerel özellikleri ısıtma, soğutma, nem alma, hedefler ve fan hızını belirler. Seçim cihazı çalıştırmaz; otomatik kontrolü her cihazda ayrıca etkinleştirin.",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler. Odadaki cover.* panjur, stor ve perdeleri seçin. device_class olmayan covers, CLOSE destekliyorsa ve gerçekten pencere gölgeliyorsa kabul edilir. Garajlar, kapılar, geçitler, pencereler ve tenteler hariçtir. Seçim hareket ettirmez: pencere sensörünü bağlayın, otomatik kontrolü, duyuruyu ve sıcaklığı ayarlayın. Bilinmeyen durum hareketi engeller.",
           "occupancy_sensors": "«Doluluk · sensör» için gerçek bir Home Assistant kaynağı seçin. Eski veya eksik veriler ilgili işlemi durdurur."

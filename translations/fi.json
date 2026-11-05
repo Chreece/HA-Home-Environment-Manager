@@ -162,16 +162,14 @@
           "air_quality": "Ilmanlaatu- ja ympäristöanturit",
           "temperature": "Lämpötila",
           "humidity": "Kosteus",
-          "pressure": "Paineanturit",
           "climate_devices": "Laitteet",
           "shades": "Ikkunaverhot, kaihtimet ja luukut"
         },
         "data_description": {
           "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "air_quality": "Ilmanlaatu- ja ympäristöanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "air_quality": "Valitse huoneen ilmanlaatuanturit ja valinnaiset valoanturit (lux). Lux tuottaa valaistushistorian. Ota lux käyttöön kunkin aurinkosuojan ohjaimessa ja valitse saman huoneen anturi tai valittujen huoneanturien keskiarvo: jokainen uusi automaattinen sulkeminen vaatii sitten asetetun vähimmäisvalaistuksen. Anturien valinta tässä ei salli liikuttamista.",
           "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · anturi · Vaaditaan · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · lähde · anturi (dB(A))",
           "noise_sensor_calibrated": "dB(A) · anturi · Vaaditaan",
-          "illuminance_entity": "LUX · lähde (lux)",
+          "illuminance_entity": "Valaistusvoimakkuus (lux)",
           "melanopic_edi_entity": "EDI · EDI · lähde (lx)",
           "melanopic_spectral_verified": "EDI · Vaaditaan"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Käytä todellista sopivaa mittausta kohtaan ”HCHO · anturi · Vaaditaan · SENSOR ✓ · VERIFIED”. Arvio ei korvaa kalibroitua HCHO · anturi · Vaaditaan · SENSOR ✓ · VERIFIEDa.",
           "noise_entity": "Valitse todellinen Home Assistant -dB(A) · lähde · anturi (dB(A)) kohdalle ”dB(A) · lähde · anturi (dB(A))”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "noise_sensor_calibrated": "Käytä todellista sopivaa mittausta kohtaan ”dB(A) · anturi · Vaaditaan”. Arvio ei korvaa kalibroitua dB(A) · anturi · Vaaditaana.",
-          "illuminance_entity": "Valitse todellinen Home Assistant -LUX · lähde (lux) kohdalle ”LUX · lähde (lux)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "illuminance_entity": "Valitse todellinen valaistusvoimakkuusanturi (lux) huoneen kuvailevaa valaistushistoriaraporttia varten. Aurinkosuojaus asetetaan erikseen: valitse luxlähde, vähimmäisvalaistus ja luxkytkin kunkin aurinkosuojan ohjaimessa. Raportti ei päättele melanoppista EDI:tä luxarvoista.",
           "melanopic_edi_entity": "Valitse todellinen Home Assistant -EDI · EDI · lähde (lx) kohdalle ”EDI · EDI · lähde (lx)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "melanopic_spectral_verified": "Käytä todellista sopivaa mittausta kohtaan ”EDI · Vaaditaan”. Arvio ei korvaa kalibroitua anturia."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Ilmanlaatu- ja ympäristöanturit",
           "temperature": "Lämpötila",
           "humidity": "Kosteus",
-          "pressure": "Paineanturit",
           "climate_devices": "Laitteet",
           "shades": "Ikkunaverhot, kaihtimet ja luukut",
           "occupancy_sensors": "Läsnäolo · anturi"
         },
         "data_description": {
           "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "air_quality": "Ilmanlaatu- ja ympäristöanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "air_quality": "Valitse huoneen ilmanlaatuanturit ja valinnaiset valoanturit (lux). Lux tuottaa valaistushistorian. Ota lux käyttöön kunkin aurinkosuojan ohjaimessa ja valitse saman huoneen anturi tai valittujen huoneanturien keskiarvo: jokainen uusi automaattinen sulkeminen vaatii sitten asetetun vähimmäisvalaistuksen. Anturien valinta tässä ei salli liikuttamista.",
           "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
           "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."
@@ -1129,17 +1125,15 @@
           "air_quality": "Ilmanlaatu- ja ympäristöanturit",
           "temperature": "Lämpötila",
           "humidity": "Kosteus",
-          "pressure": "Paineanturit",
           "climate_devices": "Laitteet",
           "shades": "Ikkunaverhot, kaihtimet ja luukut",
           "occupancy_sensors": "Läsnäolo · anturi"
         },
         "data_description": {
           "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "air_quality": "Ilmanlaatu- ja ympäristöanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "air_quality": "Valitse huoneen ilmanlaatuanturit ja valinnaiset valoanturit (lux). Lux tuottaa valaistushistorian. Ota lux käyttöön kunkin aurinkosuojan ohjaimessa ja valitse saman huoneen anturi tai valittujen huoneanturien keskiarvo: jokainen uusi automaattinen sulkeminen vaatii sitten asetetun vähimmäisvalaistuksen. Anturien valinta tässä ei salli liikuttamista.",
           "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
           "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · anturi · Vaaditaan · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · lähde · anturi (dB(A))",
           "noise_sensor_calibrated": "dB(A) · anturi · Vaaditaan",
-          "illuminance_entity": "LUX · lähde (lux)",
+          "illuminance_entity": "Valaistusvoimakkuus (lux)",
           "melanopic_edi_entity": "EDI · EDI · lähde (lx)",
           "melanopic_spectral_verified": "EDI · Vaaditaan"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Käytä todellista sopivaa mittausta kohtaan ”HCHO · anturi · Vaaditaan · SENSOR ✓ · VERIFIED”. Arvio ei korvaa kalibroitua HCHO · anturi · Vaaditaan · SENSOR ✓ · VERIFIEDa.",
           "noise_entity": "Valitse todellinen Home Assistant -dB(A) · lähde · anturi (dB(A)) kohdalle ”dB(A) · lähde · anturi (dB(A))”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "noise_sensor_calibrated": "Käytä todellista sopivaa mittausta kohtaan ”dB(A) · anturi · Vaaditaan”. Arvio ei korvaa kalibroitua dB(A) · anturi · Vaaditaana.",
-          "illuminance_entity": "Valitse todellinen Home Assistant -LUX · lähde (lux) kohdalle ”LUX · lähde (lux)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "illuminance_entity": "Valitse todellinen valaistusvoimakkuusanturi (lux) huoneen kuvailevaa valaistushistoriaraporttia varten. Aurinkosuojaus asetetaan erikseen: valitse luxlähde, vähimmäisvalaistus ja luxkytkin kunkin aurinkosuojan ohjaimessa. Raportti ei päättele melanoppista EDI:tä luxarvoista.",
           "melanopic_edi_entity": "Valitse todellinen Home Assistant -EDI · EDI · lähde (lx) kohdalle ”EDI · EDI · lähde (lx)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "melanopic_spectral_verified": "Käytä todellista sopivaa mittausta kohtaan ”EDI · Vaaditaan”. Arvio ei korvaa kalibroitua anturia."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Ilmanlaatu- ja ympäristöanturit",
           "temperature": "Lämpötila",
           "humidity": "Kosteus",
-          "pressure": "Paineanturit",
           "climate_devices": "Laitteet",
           "shades": "Ikkunaverhot, kaihtimet ja luukut"
         },
         "data_description": {
           "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "air_quality": "Ilmanlaatu- ja ympäristöanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "air_quality": "Valitse huoneen ilmanlaatuanturit ja valinnaiset valoanturit (lux). Lux tuottaa valaistushistorian. Ota lux käyttöön kunkin aurinkosuojan ohjaimessa ja valitse saman huoneen anturi tai valittujen huoneanturien keskiarvo: jokainen uusi automaattinen sulkeminen vaatii sitten asetetun vähimmäisvalaistuksen. Anturien valinta tässä ei salli liikuttamista.",
           "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Ilmanlaatu- ja ympäristöanturit",
           "temperature": "Lämpötila",
           "humidity": "Kosteus",
-          "pressure": "Paineanturit",
           "climate_devices": "Laitteet",
           "shades": "Ikkunaverhot, kaihtimet ja luukut",
           "occupancy_sensors": "Läsnäolo · anturi"
         },
         "data_description": {
           "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "air_quality": "Ilmanlaatu- ja ympäristöanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "air_quality": "Valitse huoneen ilmanlaatuanturit ja valinnaiset valoanturit (lux). Lux tuottaa valaistushistorian. Ota lux käyttöön kunkin aurinkosuojan ohjaimessa ja valitse saman huoneen anturi tai valittujen huoneanturien keskiarvo: jokainen uusi automaattinen sulkeminen vaatii sitten asetetun vähimmäisvalaistuksen. Anturien valinta tässä ei salli liikuttamista.",
           "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
           "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."
@@ -2335,17 +2325,15 @@
           "air_quality": "Ilmanlaatu- ja ympäristöanturit",
           "temperature": "Lämpötila",
           "humidity": "Kosteus",
-          "pressure": "Paineanturit",
           "climate_devices": "Laitteet",
           "shades": "Ikkunaverhot, kaihtimet ja luukut",
           "occupancy_sensors": "Läsnäolo · anturi"
         },
         "data_description": {
           "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "air_quality": "Ilmanlaatu- ja ympäristöanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
+          "air_quality": "Valitse huoneen ilmanlaatuanturit ja valinnaiset valoanturit (lux). Lux tuottaa valaistushistorian. Ota lux käyttöön kunkin aurinkosuojan ohjaimessa ja valitse saman huoneen anturi tai valittujen huoneanturien keskiarvo: jokainen uusi automaattinen sulkeminen vaatii sitten asetetun vähimmäisvalaistuksen. Anturien valinta tässä ei salli liikuttamista.",
           "temperature": "Lämpötila. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
-          "pressure": "Paineanturit. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
           "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."

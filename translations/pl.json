@@ -162,16 +162,14 @@
           "air_quality": "Czujniki jakości powietrza i otoczenia",
           "temperature": "Temperatura",
           "humidity": "Wilgotność",
-          "pressure": "Czujniki ciśnienia",
           "climate_devices": "Urządzenia",
           "shades": "Rolety, żaluzje i zasłony okienne"
         },
         "data_description": {
           "windows": "Okna. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "air_quality": "Czujniki jakości powietrza i otoczenia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "air_quality": "Wybierz czujniki jakości powietrza i opcjonalne czujniki światła (lux) tego pomieszczenia. Lux służy do historii oświetlenia. Dla ochrony przed słońcem włącz lux w sterowniku każdej osłony i wybierz czujnik z tego pomieszczenia lub średnią z wybranych czujników: każde nowe automatyczne zamknięcie wymaga wtedy ustawionej minimalnej jasności. Sam wybór czujników nie zezwala na ruch.",
           "temperature": "Temperatura. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "pressure": "Czujniki ciśnienia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
           "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · czujnik · Wymagane · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · źródło · czujnik (dB(A))",
           "noise_sensor_calibrated": "dB(A) · czujnik · Wymagane",
-          "illuminance_entity": "LUX · źródło (lux)",
+          "illuminance_entity": "Natężenie oświetlenia (lux)",
           "melanopic_edi_entity": "EDI · EDI · źródło (lx)",
           "melanopic_spectral_verified": "EDI · Wymagane"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Użyj rzeczywistego odpowiedniego pomiaru dla „HCHO · czujnik · Wymagane · SENSOR ✓ · VERIFIED”. Oszacowanie nie zastępuje kalibracji.",
           "noise_entity": "Wybierz rzeczywiste dB(A) · źródło · czujnik (dB(A)) Home Assistant dla „dB(A) · źródło · czujnik (dB(A))”. Brak lub stare dane wstrzymują działanie.",
           "noise_sensor_calibrated": "Użyj rzeczywistego odpowiedniego pomiaru dla „dB(A) · czujnik · Wymagane”. Oszacowanie nie zastępuje kalibracji.",
-          "illuminance_entity": "Wybierz rzeczywiste LUX · źródło (lux) Home Assistant dla „LUX · źródło (lux)”. Brak lub stare dane wstrzymują działanie.",
+          "illuminance_entity": "Wybierz rzeczywisty czujnik natężenia oświetlenia (lux) do opisowego raportu historii światła w pomieszczeniu. Osłony przeciwsłoneczne konfiguruje się oddzielnie: wybierz źródło lux, minimalną jasność i przełącznik lux w sterowniku każdej osłony. Raport nie wyznacza melanopowego EDI z lux.",
           "melanopic_edi_entity": "Wybierz rzeczywiste EDI · EDI · źródło (lx) Home Assistant dla „EDI · EDI · źródło (lx)”. Brak lub stare dane wstrzymują działanie.",
           "melanopic_spectral_verified": "Użyj rzeczywistego odpowiedniego pomiaru dla „EDI · Wymagane”. Oszacowanie nie zastępuje kalibracji."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Czujniki jakości powietrza i otoczenia",
           "temperature": "Temperatura",
           "humidity": "Wilgotność",
-          "pressure": "Czujniki ciśnienia",
           "climate_devices": "Urządzenia",
           "shades": "Rolety, żaluzje i zasłony okienne",
           "occupancy_sensors": "Obecność · czujnik"
         },
         "data_description": {
           "windows": "Okna. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "air_quality": "Czujniki jakości powietrza i otoczenia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "air_quality": "Wybierz czujniki jakości powietrza i opcjonalne czujniki światła (lux) tego pomieszczenia. Lux służy do historii oświetlenia. Dla ochrony przed słońcem włącz lux w sterowniku każdej osłony i wybierz czujnik z tego pomieszczenia lub średnią z wybranych czujników: każde nowe automatyczne zamknięcie wymaga wtedy ustawionej minimalnej jasności. Sam wybór czujników nie zezwala na ruch.",
           "temperature": "Temperatura. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "pressure": "Czujniki ciśnienia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
           "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch.",
           "occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · czujnik”. Brak lub stare dane wstrzymują działanie."
@@ -1129,17 +1125,15 @@
           "air_quality": "Czujniki jakości powietrza i otoczenia",
           "temperature": "Temperatura",
           "humidity": "Wilgotność",
-          "pressure": "Czujniki ciśnienia",
           "climate_devices": "Urządzenia",
           "shades": "Rolety, żaluzje i zasłony okienne",
           "occupancy_sensors": "Obecność · czujnik"
         },
         "data_description": {
           "windows": "Okna. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "air_quality": "Czujniki jakości powietrza i otoczenia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "air_quality": "Wybierz czujniki jakości powietrza i opcjonalne czujniki światła (lux) tego pomieszczenia. Lux służy do historii oświetlenia. Dla ochrony przed słońcem włącz lux w sterowniku każdej osłony i wybierz czujnik z tego pomieszczenia lub średnią z wybranych czujników: każde nowe automatyczne zamknięcie wymaga wtedy ustawionej minimalnej jasności. Sam wybór czujników nie zezwala na ruch.",
           "temperature": "Temperatura. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "pressure": "Czujniki ciśnienia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
           "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch.",
           "occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · czujnik”. Brak lub stare dane wstrzymują działanie."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · czujnik · Wymagane · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · źródło · czujnik (dB(A))",
           "noise_sensor_calibrated": "dB(A) · czujnik · Wymagane",
-          "illuminance_entity": "LUX · źródło (lux)",
+          "illuminance_entity": "Natężenie oświetlenia (lux)",
           "melanopic_edi_entity": "EDI · EDI · źródło (lx)",
           "melanopic_spectral_verified": "EDI · Wymagane"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Użyj rzeczywistego odpowiedniego pomiaru dla „HCHO · czujnik · Wymagane · SENSOR ✓ · VERIFIED”. Oszacowanie nie zastępuje kalibracji.",
           "noise_entity": "Wybierz rzeczywiste dB(A) · źródło · czujnik (dB(A)) Home Assistant dla „dB(A) · źródło · czujnik (dB(A))”. Brak lub stare dane wstrzymują działanie.",
           "noise_sensor_calibrated": "Użyj rzeczywistego odpowiedniego pomiaru dla „dB(A) · czujnik · Wymagane”. Oszacowanie nie zastępuje kalibracji.",
-          "illuminance_entity": "Wybierz rzeczywiste LUX · źródło (lux) Home Assistant dla „LUX · źródło (lux)”. Brak lub stare dane wstrzymują działanie.",
+          "illuminance_entity": "Wybierz rzeczywisty czujnik natężenia oświetlenia (lux) do opisowego raportu historii światła w pomieszczeniu. Osłony przeciwsłoneczne konfiguruje się oddzielnie: wybierz źródło lux, minimalną jasność i przełącznik lux w sterowniku każdej osłony. Raport nie wyznacza melanopowego EDI z lux.",
           "melanopic_edi_entity": "Wybierz rzeczywiste EDI · EDI · źródło (lx) Home Assistant dla „EDI · EDI · źródło (lx)”. Brak lub stare dane wstrzymują działanie.",
           "melanopic_spectral_verified": "Użyj rzeczywistego odpowiedniego pomiaru dla „EDI · Wymagane”. Oszacowanie nie zastępuje kalibracji."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Czujniki jakości powietrza i otoczenia",
           "temperature": "Temperatura",
           "humidity": "Wilgotność",
-          "pressure": "Czujniki ciśnienia",
           "climate_devices": "Urządzenia",
           "shades": "Rolety, żaluzje i zasłony okienne"
         },
         "data_description": {
           "windows": "Okna. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "air_quality": "Czujniki jakości powietrza i otoczenia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "air_quality": "Wybierz czujniki jakości powietrza i opcjonalne czujniki światła (lux) tego pomieszczenia. Lux służy do historii oświetlenia. Dla ochrony przed słońcem włącz lux w sterowniku każdej osłony i wybierz czujnik z tego pomieszczenia lub średnią z wybranych czujników: każde nowe automatyczne zamknięcie wymaga wtedy ustawionej minimalnej jasności. Sam wybór czujników nie zezwala na ruch.",
           "temperature": "Temperatura. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "pressure": "Czujniki ciśnienia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
           "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Czujniki jakości powietrza i otoczenia",
           "temperature": "Temperatura",
           "humidity": "Wilgotność",
-          "pressure": "Czujniki ciśnienia",
           "climate_devices": "Urządzenia",
           "shades": "Rolety, żaluzje i zasłony okienne",
           "occupancy_sensors": "Obecność · czujnik"
         },
         "data_description": {
           "windows": "Okna. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "air_quality": "Czujniki jakości powietrza i otoczenia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "air_quality": "Wybierz czujniki jakości powietrza i opcjonalne czujniki światła (lux) tego pomieszczenia. Lux służy do historii oświetlenia. Dla ochrony przed słońcem włącz lux w sterowniku każdej osłony i wybierz czujnik z tego pomieszczenia lub średnią z wybranych czujników: każde nowe automatyczne zamknięcie wymaga wtedy ustawionej minimalnej jasności. Sam wybór czujników nie zezwala na ruch.",
           "temperature": "Temperatura. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "pressure": "Czujniki ciśnienia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
           "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch.",
           "occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · czujnik”. Brak lub stare dane wstrzymują działanie."
@@ -2335,17 +2325,15 @@
           "air_quality": "Czujniki jakości powietrza i otoczenia",
           "temperature": "Temperatura",
           "humidity": "Wilgotność",
-          "pressure": "Czujniki ciśnienia",
           "climate_devices": "Urządzenia",
           "shades": "Rolety, żaluzje i zasłony okienne",
           "occupancy_sensors": "Obecność · czujnik"
         },
         "data_description": {
           "windows": "Okna. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "air_quality": "Czujniki jakości powietrza i otoczenia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
+          "air_quality": "Wybierz czujniki jakości powietrza i opcjonalne czujniki światła (lux) tego pomieszczenia. Lux służy do historii oświetlenia. Dla ochrony przed słońcem włącz lux w sterowniku każdej osłony i wybierz czujnik z tego pomieszczenia lub średnią z wybranych czujników: każde nowe automatyczne zamknięcie wymaga wtedy ustawionej minimalnej jasności. Sam wybór czujników nie zezwala na ruch.",
           "temperature": "Temperatura. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
-          "pressure": "Czujniki ciśnienia. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
           "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch.",
           "occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · czujnik”. Brak lub stare dane wstrzymują działanie."

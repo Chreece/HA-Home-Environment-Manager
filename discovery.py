@@ -72,6 +72,29 @@ def _device_class(hass: HomeAssistant, state: State) -> str:
     ) or "").casefold()
 
 
+def is_pressure_sensor(hass: HomeAssistant, entity_id: str) -> bool:
+    """Identify retired pressure inputs without guessing from entity names.
+
+    Keep unrelated unavailable sensors as missing evidence. Registered
+    metadata still identifies a pressure source when its live state is absent;
+    an explicitly reclassified live pollutant source takes precedence.
+    """
+    if not isinstance(entity_id, str) or not entity_id.startswith("sensor."):
+        return False
+    state = hass.states.get(entity_id)
+    entry = er.async_get(hass).async_get(entity_id)
+    attrs = state.attributes if state is not None else {}
+    kind = str(attrs.get("device_class") or getattr(entry, "device_class", None)
+               or getattr(entry, "original_device_class", None) or "").casefold()
+    if kind:
+        return kind in ("pressure", "atmospheric_pressure")
+    unit = str(attrs.get("unit_of_measurement")
+               or getattr(entry, "unit_of_measurement", None)
+               or getattr(entry, "original_unit_of_measurement", None)
+               or "").strip().casefold()
+    return unit in ("pa", "hpa", "kpa", "mbar", "bar", "inhg", "mmhg", "psi")
+
+
 def _metric(hass: HomeAssistant, state: State) -> str | None:
     if not state.entity_id.startswith("sensor."):
         return None
@@ -118,6 +141,8 @@ def _normalize(metric: str, value: float, unit: str | None) -> float | None:
 
 def supported_metric(hass: HomeAssistant, state: State, *, outdoor: bool) -> str | None:
     """Expose only supported numeric units, and never list indoor humidity outside."""
+    if is_pressure_sensor(hass, state.entity_id):
+        return None
     unit = str(state.attributes.get("unit_of_measurement", "")).strip().casefold()
     if (not outdoor and state.entity_id.startswith("sensor.")
             and unit in ("lx", "lux")):
@@ -410,6 +435,8 @@ def rooms(
         seen = {item.entity_id for item in by_area_readings[area]}
         for group in ("air_quality", "humidity"):
             for entity in selected(scoped, area, group) or ():
+                if is_pressure_sensor(hass, entity):
+                    continue
                 if entity not in seen:
                     registered = er.async_get(hass).async_get(entity)
                     sensor_class = (getattr(registered, "device_class", None)

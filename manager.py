@@ -139,7 +139,14 @@ class AirQualityManager:
     def _capture(self) -> Plan:
         config = self.settings
         max_age = self.thresholds["max_age_minutes"]
-        selected_outdoor = set(config.get(CONF_OUTDOOR, []))
+        from .discovery import is_pressure_sensor
+        # Retired pressure selections stay in saved configuration but do not
+        # create an unsupported/missing-air-data warning. Real pollutant
+        # sources, including unavailable or removed sensors, remain evidence.
+        selected_outdoor = {
+            entity for entity in config.get(CONF_OUTDOOR, [])
+            if not is_pressure_sensor(self.hass, entity)
+        }
         monitored_areas = config.get(CONF_AREAS, [])
         by_area = config.get(CONF_EXCLUDED_INDOOR, {})
         if not isinstance(by_area, dict):

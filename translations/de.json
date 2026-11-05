@@ -162,16 +162,14 @@
           "air_quality": "Luftqualitäts- und Umgebungssensoren",
           "temperature": "Temperatur",
           "humidity": "Luftfeuchtigkeit",
-          "pressure": "Drucksensoren",
           "climate_devices": "Geräte",
           "shades": "Fensterrollos, Jalousien und Rollläden"
         },
         "data_description": {
           "windows": "Fenster. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
-          "air_quality": "Luftqualitäts- und Umgebungssensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "air_quality": "Wähle die Luftqualitätssensoren und optionalen Lichtsensoren (Lux) dieses Raums. Lux liefert den Beleuchtungsverlauf. Für die Sonnenbeschattung Lux am jeweiligen Beschattungscontroller aktivieren und einen Sensor desselben Raums oder den Mittelwert der ausgewählten Raumsensoren wählen: Jedes neue automatische Schließen erfordert dann die eingestellte Mindesthelligkeit. Die Sensorauswahl hier gibt keine Bewegung frei.",
           "temperature": "Temperatur. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
           "humidity": "Luftfeuchtigkeit. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
-          "pressure": "Drucksensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
           "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung."
         }
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Für „HCHO-Messung unabhängig geprüft“ echte passende Messdaten verwenden. Schätzungen ersetzen keine kalibrierten Sensoren.",
           "noise_entity": "Nur kalibrierte dB(A)-Zeitreihen; gemessene Spitzenpegel sind kein LAeq.",
           "noise_sensor_calibrated": "Für „Geeignete kalibrierte Schallmessung“ echte passende Messdaten verwenden. Schätzungen ersetzen keine kalibrierten Sensoren.",
-          "illuminance_entity": "Eine passende Home-Assistant-Quelle für „Beleuchtungsstärke (Lux)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
+          "illuminance_entity": "Wähle einen echten Beleuchtungsstärkesensor (Lux) für den beschreibenden Beleuchtungsverlauf des Raums. Die Sonnenbeschattung wird separat eingerichtet: Lux-Quelle, Mindesthelligkeit und Lux-Schalter am jeweiligen Beschattungscontroller wählen. Der Bericht leitet keine melanopische EDI aus Lux ab.",
           "melanopic_edi_entity": "Eine passende Home-Assistant-Quelle für „Spektral gemessene melanopische EDI (lx)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "melanopic_spectral_verified": "Für „Spektralmessung für EDI bestätigt“ echte passende Messdaten verwenden. Schätzungen ersetzen keine kalibrierten Sensoren."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Luftqualitäts- und Umgebungssensoren",
           "temperature": "Temperatur",
           "humidity": "Luftfeuchtigkeit",
-          "pressure": "Drucksensoren",
           "climate_devices": "Geräte",
           "shades": "Fensterrollos, Jalousien und Rollläden",
           "occupancy_sensors": "Präsenzsensoren in diesem Raum"
         },
         "data_description": {
           "windows": "Wähle die echten Fenster- und Türkontakte des Raums. Sie melden geöffnete oder geschlossene Öffnungen, steuern aber keine Fenster.",
-          "air_quality": "Wähle CO₂-, Feinstaub-, VOC- und weitere Luftqualitätssensoren des Raums. Mehrere gültige Quellen können zusammen genutzt werden.",
+          "air_quality": "Wähle die Luftqualitätssensoren und optionalen Lichtsensoren (Lux) dieses Raums. Lux liefert den Beleuchtungsverlauf. Für die Sonnenbeschattung Lux am jeweiligen Beschattungscontroller aktivieren und einen Sensor desselben Raums oder den Mittelwert der ausgewählten Raumsensoren wählen: Jedes neue automatische Schließen erfordert dann die eingestellte Mindesthelligkeit. Die Sensorauswahl hier gibt keine Bewegung frei.",
           "temperature": "Wähle Innentemperatursensoren des Raums. Mehrere gültige Messungen können gemittelt werden; nicht verfügbare Werte werden ignoriert.",
           "humidity": "Wähle Luftfeuchtigkeitssensoren des Raums. Gültige Werte unterstützen Komfort-, Entfeuchtungs- und Schimmelrisikohinweise; fehlende Werte gelten nicht als null.",
-          "pressure": "Wähle Drucksensoren des Raums, falls vorhanden. Ansonsten leer lassen.",
           "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
           "occupancy_sensors": "Wähle echte binäre Präsenzsensoren des Raums. Erkannte Präsenz bedeutet belegt; ein unbekannter Zustand beweist nicht, dass der Raum leer ist."
@@ -1129,17 +1125,15 @@
           "air_quality": "Luftqualitäts- und Umgebungssensoren",
           "temperature": "Temperatur",
           "humidity": "Luftfeuchtigkeit",
-          "pressure": "Drucksensoren",
           "climate_devices": "Geräte",
           "shades": "Fensterrollos, Jalousien und Rollläden",
           "occupancy_sensors": "Präsenzsensoren in diesem Raum"
         },
         "data_description": {
           "windows": "Wähle die echten Fenster- und Türkontakte des Raums. Sie melden geöffnete oder geschlossene Öffnungen, steuern aber keine Fenster.",
-          "air_quality": "Wähle CO₂-, Feinstaub-, VOC- und weitere Luftqualitätssensoren des Raums. Mehrere gültige Quellen können zusammen genutzt werden.",
+          "air_quality": "Wähle die Luftqualitätssensoren und optionalen Lichtsensoren (Lux) dieses Raums. Lux liefert den Beleuchtungsverlauf. Für die Sonnenbeschattung Lux am jeweiligen Beschattungscontroller aktivieren und einen Sensor desselben Raums oder den Mittelwert der ausgewählten Raumsensoren wählen: Jedes neue automatische Schließen erfordert dann die eingestellte Mindesthelligkeit. Die Sensorauswahl hier gibt keine Bewegung frei.",
           "temperature": "Wähle Innentemperatursensoren des Raums. Mehrere gültige Messungen können gemittelt werden; nicht verfügbare Werte werden ignoriert.",
           "humidity": "Wähle Luftfeuchtigkeitssensoren des Raums. Gültige Werte unterstützen Komfort-, Entfeuchtungs- und Schimmelrisikohinweise; fehlende Werte gelten nicht als null.",
-          "pressure": "Wähle Drucksensoren des Raums, falls vorhanden. Ansonsten leer lassen.",
           "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
           "occupancy_sensors": "Wähle echte binäre Präsenzsensoren des Raums. Erkannte Präsenz bedeutet belegt; ein unbekannter Zustand beweist nicht, dass der Raum leer ist."
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Für „HCHO-Messung unabhängig geprüft“ echte passende Messdaten verwenden. Schätzungen ersetzen keine kalibrierten Sensoren.",
           "noise_entity": "Nur kalibrierte dB(A)-Zeitreihen; gemessene Spitzenpegel sind kein LAeq.",
           "noise_sensor_calibrated": "Für „Geeignete kalibrierte Schallmessung“ echte passende Messdaten verwenden. Schätzungen ersetzen keine kalibrierten Sensoren.",
-          "illuminance_entity": "Eine passende Home-Assistant-Quelle für „Beleuchtungsstärke (Lux)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
+          "illuminance_entity": "Wähle einen echten Beleuchtungsstärkesensor (Lux) für den beschreibenden Beleuchtungsverlauf des Raums. Die Sonnenbeschattung wird separat eingerichtet: Lux-Quelle, Mindesthelligkeit und Lux-Schalter am jeweiligen Beschattungscontroller wählen. Der Bericht leitet keine melanopische EDI aus Lux ab.",
           "melanopic_edi_entity": "Eine passende Home-Assistant-Quelle für „Spektral gemessene melanopische EDI (lx)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "melanopic_spectral_verified": "Für „Spektralmessung für EDI bestätigt“ echte passende Messdaten verwenden. Schätzungen ersetzen keine kalibrierten Sensoren."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Luftqualitäts- und Umgebungssensoren",
           "temperature": "Temperatur",
           "humidity": "Luftfeuchtigkeit",
-          "pressure": "Drucksensoren",
           "climate_devices": "Geräte",
           "shades": "Fensterrollos, Jalousien und Rollläden"
         },
         "data_description": {
           "windows": "Fenster. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
-          "air_quality": "Luftqualitäts- und Umgebungssensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
+          "air_quality": "Wähle die Luftqualitätssensoren und optionalen Lichtsensoren (Lux) dieses Raums. Lux liefert den Beleuchtungsverlauf. Für die Sonnenbeschattung Lux am jeweiligen Beschattungscontroller aktivieren und einen Sensor desselben Raums oder den Mittelwert der ausgewählten Raumsensoren wählen: Jedes neue automatische Schließen erfordert dann die eingestellte Mindesthelligkeit. Die Sensorauswahl hier gibt keine Bewegung frei.",
           "temperature": "Temperatur. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
           "humidity": "Luftfeuchtigkeit. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
-          "pressure": "Drucksensoren. Eingänge für diesen Raum auswählen. Jede Auswahl zeigt Gerätename - Entitätsname (Zustand), ohne leere Bestandteile. Leere Gruppen bleiben ungenutzt; sie aktivieren weder automatische Erkennung noch Gerätesteuerung.",
           "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Luftqualitäts- und Umgebungssensoren",
           "temperature": "Temperatur",
           "humidity": "Luftfeuchtigkeit",
-          "pressure": "Drucksensoren",
           "climate_devices": "Geräte",
           "shades": "Fensterrollos, Jalousien und Rollläden",
           "occupancy_sensors": "Präsenzsensoren in diesem Raum"
         },
         "data_description": {
           "windows": "Wähle die echten Fenster- und Türkontakte des Raums. Sie melden geöffnete oder geschlossene Öffnungen, steuern aber keine Fenster.",
-          "air_quality": "Wähle CO₂-, Feinstaub-, VOC- und weitere Luftqualitätssensoren des Raums. Mehrere gültige Quellen können zusammen genutzt werden.",
+          "air_quality": "Wähle die Luftqualitätssensoren und optionalen Lichtsensoren (Lux) dieses Raums. Lux liefert den Beleuchtungsverlauf. Für die Sonnenbeschattung Lux am jeweiligen Beschattungscontroller aktivieren und einen Sensor desselben Raums oder den Mittelwert der ausgewählten Raumsensoren wählen: Jedes neue automatische Schließen erfordert dann die eingestellte Mindesthelligkeit. Die Sensorauswahl hier gibt keine Bewegung frei.",
           "temperature": "Wähle Innentemperatursensoren des Raums. Mehrere gültige Messungen können gemittelt werden; nicht verfügbare Werte werden ignoriert.",
           "humidity": "Wähle Luftfeuchtigkeitssensoren des Raums. Gültige Werte unterstützen Komfort-, Entfeuchtungs- und Schimmelrisikohinweise; fehlende Werte gelten nicht als null.",
-          "pressure": "Wähle Drucksensoren des Raums, falls vorhanden. Ansonsten leer lassen.",
           "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
           "occupancy_sensors": "Wähle echte binäre Präsenzsensoren des Raums. Erkannte Präsenz bedeutet belegt; ein unbekannter Zustand beweist nicht, dass der Raum leer ist."
@@ -2335,17 +2325,15 @@
           "air_quality": "Luftqualitäts- und Umgebungssensoren",
           "temperature": "Temperatur",
           "humidity": "Luftfeuchtigkeit",
-          "pressure": "Drucksensoren",
           "climate_devices": "Geräte",
           "shades": "Fensterrollos, Jalousien und Rollläden",
           "occupancy_sensors": "Präsenzsensoren in diesem Raum"
         },
         "data_description": {
           "windows": "Wähle die echten Fenster- und Türkontakte des Raums. Sie melden geöffnete oder geschlossene Öffnungen, steuern aber keine Fenster.",
-          "air_quality": "Wähle CO₂-, Feinstaub-, VOC- und weitere Luftqualitätssensoren des Raums. Mehrere gültige Quellen können zusammen genutzt werden.",
+          "air_quality": "Wähle die Luftqualitätssensoren und optionalen Lichtsensoren (Lux) dieses Raums. Lux liefert den Beleuchtungsverlauf. Für die Sonnenbeschattung Lux am jeweiligen Beschattungscontroller aktivieren und einen Sensor desselben Raums oder den Mittelwert der ausgewählten Raumsensoren wählen: Jedes neue automatische Schließen erfordert dann die eingestellte Mindesthelligkeit. Die Sensorauswahl hier gibt keine Bewegung frei.",
           "temperature": "Wähle Innentemperatursensoren des Raums. Mehrere gültige Messungen können gemittelt werden; nicht verfügbare Werte werden ignoriert.",
           "humidity": "Wähle Luftfeuchtigkeitssensoren des Raums. Gültige Werte unterstützen Komfort-, Entfeuchtungs- und Schimmelrisikohinweise; fehlende Werte gelten nicht als null.",
-          "pressure": "Wähle Drucksensoren des Raums, falls vorhanden. Ansonsten leer lassen.",
           "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
           "occupancy_sensors": "Wähle echte binäre Präsenzsensoren des Raums. Erkannte Präsenz bedeutet belegt; ein unbekannter Zustand beweist nicht, dass der Raum leer ist."

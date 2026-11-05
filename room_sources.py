@@ -12,7 +12,7 @@ from typing import Any
 from .const import DOMAIN
 
 CONF_ROOM_SOURCES = "room_sources"
-GROUPS = ("windows", "air_quality", "temperature", "humidity", "pressure", "climate_devices", "shades")
+GROUPS = ("windows", "air_quality", "temperature", "humidity", "climate_devices", "shades")
 # Cover device classes that represent an indoor window shade, never an opening
 # such as a window, garage, gate, door, damper or exterior wind-driven awning.
 SHADING_COVER_CLASSES = frozenset(("blind", "shade", "shutter", "curtain"))
@@ -47,10 +47,6 @@ def is_shading_cover(hass: Any, state: Any) -> bool:
     if cover_class in EXCLUDED_SHADING_COVER_CLASSES:
         return False
     return cover_class in SHADING_COVER_CLASSES or not cover_class
-
-
-PRESSURE_UNITS = {"pa": .01, "hpa": 1., "kpa": 10., "mbar": 1., "bar": 1000.,
-                  "inhg": 33.8638866667, "mmhg": 1.33322387415, "psi": 68.9475729317}
 
 
 def selected(settings: dict, area: str, group: str) -> tuple[str, ...] | None:
@@ -91,7 +87,7 @@ def label(hass: Any, entity: str) -> str:
 
 
 def category(hass: Any, state: Any) -> str | None:
-    from .discovery import _device_class, is_window, supported_metric
+    from .discovery import _device_class, is_pressure_sensor, is_window, supported_metric
     if not native(hass, state.entity_id):
         return None
     # Window shading actuators are *not* window contact sensors. They are an
@@ -104,14 +100,12 @@ def category(hass: Any, state: Any) -> str | None:
         if state.domain != "climate" or isinstance(state.attributes.get("hvac_modes"), (list, tuple)):
             return "climate_devices"
         return None
-    if state.domain != "sensor":
+    if state.domain != "sensor" or is_pressure_sensor(hass, state.entity_id):
         return None
     klass = _device_class(hass, state)
     unit = str(state.attributes.get("unit_of_measurement", "")).strip()
     if klass == "temperature" or state.entity_id.endswith(("_temperature", "_temp")):
         return "temperature" if unit in ("°C", "C", "°F", "F", "K") else None
-    if klass in ("atmospheric_pressure", "pressure"):
-        return "pressure" if unit.casefold() in PRESSURE_UNITS else None
     units = unit.replace("μ", "µ").replace("³", "3").replace(" ", "").casefold()
     if klass in ("sound_pressure", "noise") and units in ("db(a)", "dba"):
         return "air_quality"
@@ -133,7 +127,7 @@ def category(hass: Any, state: Any) -> str | None:
 
 def choices(hass: Any, area: str, previous: dict | None = None) -> dict[str, list[dict]]:
     from homeassistant.helpers import entity_registry as er
-    from .discovery import entity_area
+    from .discovery import entity_area, is_pressure_sensor
     previous = previous if isinstance(previous, dict) else {}
     result = {group: {} for group in GROUPS}
     registry = er.async_get(hass)
@@ -152,7 +146,8 @@ def choices(hass: Any, area: str, previous: dict | None = None) -> dict[str, lis
     for group in GROUPS:
         values = previous.get(group, [])
         for entity in values if isinstance(values, list) else ():
-            if not isinstance(entity, str) or entity_area(hass, entity) != area or not native(hass, entity):
+            if (not isinstance(entity, str) or entity_area(hass, entity) != area
+                    or not native(hass, entity) or is_pressure_sensor(hass, entity)):
                 continue
             state = hass.states.get(entity)
             # Keep registered unavailable inputs, never a retyped or moved input.
@@ -173,18 +168,24 @@ def choices(hass: Any, area: str, previous: dict | None = None) -> dict[str, lis
 
 def defaults(hass: Any, settings: dict, area: str) -> dict[str, list[str]]:
     """Import existing inclusions/exclusions; do not restore removed grants."""
+    from .discovery import is_pressure_sensor
     existing = settings.get(CONF_ROOM_SOURCES, {}).get(area)
-    if isinstance(existing, dict):
-        return {k: list(selected(settings, area, k) or ()) for k in GROUPS}
+    if isinstance(existing, dict) and "shades" in existing:
+        return {k: [e for e in selected(settings, area, k) or ()
+                    if not is_pressure_sensor(hass, e)] for k in GROUPS}
     from .device_hierarchy import configured_sources
     available = choices(hass, area)
     excluded = set(settings.get("excluded_window_entities", [])) | set(
         settings.get("excluded_indoor_entities", {}).get(area, []))
     result = {k: [v["value"] for v in values if v["value"] not in excluded]
               for k, values in available.items()}
-    # Existing rooms must never begin physically moving covers simply because
-    # this new group was discovered in a later release. Explicit opt-in only.
-    result["shades"] = []
+    # Discovery supplies draft inventory defaults, not automation grants.
+    # Legacy rooms with no shade field may discover covers, but an explicit
+    # saved list (including []) was already returned unchanged above.
+    if isinstance(existing, dict):
+        return {k: result["shades"] if k == "shades"
+                else [e for e in selected(settings, area, k) or ()
+                      if not is_pressure_sensor(hass, e)] for k in GROUPS}
     room = settings.get("climate_rooms", {}).get(area, {})
     if "selected_devices" in room or configured_sources(settings, area):
         result["climate_devices"] = list(configured_sources(settings, area))
@@ -322,7 +323,11 @@ def store_selection(hass: Any, settings: dict, area: str, inputs: dict) -> None:
         mold["indoor_temperature_entities"] = sensors
         # A single legacy pin cannot silently suppress a selected room mean.
         mold["indoor_temperature_entity"] = sensors[0] if len(sensors) == 1 else None
-    settings.setdefault(CONF_ROOM_SOURCES, {})[area] = deepcopy(inputs)
+    # Retired source keys remain inert for compatibility. Saving active groups
+    # must not discard an old pressure selection or unrelated saved metadata.
+    saved_inputs = deepcopy(previous_inputs) if isinstance(previous_inputs, dict) else {}
+    saved_inputs.update({key: deepcopy(inputs[key]) for key in GROUPS})
+    settings.setdefault(CONF_ROOM_SOURCES, {})[area] = saved_inputs
     included = {e for key in GROUPS for e in inputs[key]}
     settings["excluded_window_entities"] = [e for e in settings.get("excluded_window_entities", []) if e not in included]
     exclusions = settings.setdefault("excluded_indoor_entities", {})
@@ -410,14 +415,6 @@ def numeric(hass: Any, entity: str, area: str, group: str, age: float) -> float 
     if group == "temperature":
         value = temperature_sensor_c(hass, entity, age)
         return value if value is not None and -60 <= value <= 85 else None
-    if group == "pressure":
-        if category(hass, state) != "pressure":
-            return None
-        try:
-            value = float(state.state) * PRESSURE_UNITS[str(state.attributes["unit_of_measurement"]).strip().casefold()]
-        except (ValueError, TypeError, KeyError, OverflowError):
-            return None
-        return value if math.isfinite(value) and 300 <= value <= 1100 else None
     observed = reading(hass, entity, age, outdoor=False)
     # A sensor reclassified after setup must never contaminate an RH average
     # with a CO2, PM2.5 or other unrelated numeric measurement.
@@ -502,7 +499,7 @@ def room_temperature_evidence(
 def source_overview(manager: Any, area: str) -> dict:
     if selected(manager.settings, area, "windows") is None:
         return {}
-    from .discovery import entity_area
+    from .discovery import entity_area, is_pressure_sensor
     result = {}
     for group in GROUPS:
         values = selected(manager.settings, area, group)
@@ -510,6 +507,8 @@ def source_overview(manager: Any, area: str) -> dict:
             continue
         rows = []
         for entity in values:
+            if is_pressure_sensor(manager.hass, entity):
+                continue
             state = manager.hass.states.get(entity)
             valid = entity_area(manager.hass, entity) == area and native(manager.hass, entity)
             rows.append({"entity_id": entity, "label": label(manager.hass, entity),
@@ -517,8 +516,4 @@ def source_overview(manager: Any, area: str) -> dict:
                          "unit": state.attributes.get("unit_of_measurement") if state and valid else None,
                          "assigned_to_room": valid})
         result[group] = rows
-    pressures = selected(manager.settings, area, "pressure")
-    if pressures is not None:
-        value, status = aggregate(manager.hass, pressures, area, "pressure", getattr(manager, "thresholds", {}).get("max_age_minutes", 90))
-        result["pressure_summary"] = {"value_hpa": value, "status": status}
     return result

@@ -162,16 +162,14 @@
           "air_quality": "Сензори квалитета ваздуха и околине",
           "temperature": "Temperatura",
           "humidity": "Vlažnost",
-          "pressure": "Сензори притиска",
           "climate_devices": "Uređaji",
           "shades": "Прозорске ролетне, завесе и жалузине"
         },
         "data_description": {
           "windows": "Прозори. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
-          "air_quality": "Сензори квалитета ваздуха и околине. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "air_quality": "Izaberite senzore kvaliteta vazduha i opcione senzore svetla (lux) ove sobe. Lux beleži istoriju osvetljenja. Za zaštitu od sunca uključite lux na kontroleru svakog zastora i izaberite senzor iz iste sobe ili prosek izabranih senzora: svako novo automatsko zatvaranje tada zahteva podešenu minimalnu osvetljenost. Sam izbor senzora ne dozvoljava pomeranje.",
           "temperature": "Temperatura. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
           "humidity": "Vlažnost. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
-          "pressure": "Сензори притиска. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
           "climate_devices": "Uređaji. Изабери само физичке ентитете climate.*, humidifier.* и fan.* ове собе. Изворне могућности одређују грејање, хлађење, одвлаживање, циљеве и брзину вентилатора. Сам избор ништа не покреће; аутоматику укључи за сваки уређај посебно.",
           "shades": "Прозорске ролетне, завесе и жалузине. Изабери ролетне, жалузине и завесе cover.* ове собе. Covers без device_class су дозвољени уз CLOSE ако заиста заклањају прозор. Гараже, капије, врата, прозори и тенде су искључени. Избор ништа не покреће: повежи сензор прозора и подеси аутоматику, најаву и температуру на контролеру. Непознато стање блокира кретање."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · senzor · Obavezno · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · izvor · senzor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · senzor · Obavezno",
-          "illuminance_entity": "LUX · izvor (lux)",
+          "illuminance_entity": "Osvetljenost (lux)",
           "melanopic_edi_entity": "EDI · EDI · izvor (lx)",
           "melanopic_spectral_verified": "EDI · Obavezno"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Koristite stvarno odgovarajuće merenje za „HCHO · senzor · Obavezno · SENSOR ✓ · VERIFIED”. Procena ne zamenjuje kalibrisan HCHO · senzor · Obavezno · SENSOR ✓ · VERIFIED.",
           "noise_entity": "Izaberite stvarni Home Assistant dB(A) · izvor · senzor (dB(A)) za „dB(A) · izvor · senzor (dB(A))”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "noise_sensor_calibrated": "Koristite stvarno odgovarajuće merenje za „dB(A) · senzor · Obavezno”. Procena ne zamenjuje kalibrisan dB(A) · senzor · Obavezno.",
-          "illuminance_entity": "Izaberite stvarni Home Assistant LUX · izvor (lux) za „LUX · izvor (lux)”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
+          "illuminance_entity": "Izaberite pravi senzor osvetljenosti (lux) za opisni izveštaj o istoriji svetla u sobi. Zaštita od sunca podešava se zasebno: izaberite izvor lux, minimalnu osvetljenost i prekidač lux na kontroleru svakog zastora. Izveštaj ne izračunava melanopski EDI iz lux.",
           "melanopic_edi_entity": "Izaberite stvarni Home Assistant EDI · EDI · izvor (lx) za „EDI · EDI · izvor (lx)”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "melanopic_spectral_verified": "Koristite stvarno odgovarajuće merenje za „EDI · Obavezno”. Procena ne zamenjuje kalibrisan senzor."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Сензори квалитета ваздуха и околине",
           "temperature": "Temperatura",
           "humidity": "Vlažnost",
-          "pressure": "Сензори притиска",
           "climate_devices": "Uređaji",
           "shades": "Прозорске ролетне, завесе и жалузине",
           "occupancy_sensors": "Prisustvo · senzor"
         },
         "data_description": {
           "windows": "Прозори. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
-          "air_quality": "Сензори квалитета ваздуха и околине. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "air_quality": "Izaberite senzore kvaliteta vazduha i opcione senzore svetla (lux) ove sobe. Lux beleži istoriju osvetljenja. Za zaštitu od sunca uključite lux na kontroleru svakog zastora i izaberite senzor iz iste sobe ili prosek izabranih senzora: svako novo automatsko zatvaranje tada zahteva podešenu minimalnu osvetljenost. Sam izbor senzora ne dozvoljava pomeranje.",
           "temperature": "Temperatura. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
           "humidity": "Vlažnost. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
-          "pressure": "Сензори притиска. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
           "climate_devices": "Uređaji. Изабери само физичке ентитете climate.*, humidifier.* и fan.* ове собе. Изворне могућности одређују грејање, хлађење, одвлаживање, циљеве и брзину вентилатора. Сам избор ништа не покреће; аутоматику укључи за сваки уређај посебно.",
           "shades": "Прозорске ролетне, завесе и жалузине. Изабери ролетне, жалузине и завесе cover.* ове собе. Covers без device_class су дозвољени уз CLOSE ако заиста заклањају прозор. Гараже, капије, врата, прозори и тенде су искључени. Избор ништа не покреће: повежи сензор прозора и подеси аутоматику, најаву и температуру на контролеру. Непознато стање блокира кретање.",
           "occupancy_sensors": "Izaberite stvarni Home Assistant izvor za „Prisustvo · senzor”. Nepostojeći ili zastareli podaci zaustavljaju radnju."
@@ -1129,17 +1125,15 @@
           "air_quality": "Сензори квалитета ваздуха и околине",
           "temperature": "Temperatura",
           "humidity": "Vlažnost",
-          "pressure": "Сензори притиска",
           "climate_devices": "Uređaji",
           "shades": "Прозорске ролетне, завесе и жалузине",
           "occupancy_sensors": "Prisustvo · senzor"
         },
         "data_description": {
           "windows": "Прозори. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
-          "air_quality": "Сензори квалитета ваздуха и околине. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "air_quality": "Izaberite senzore kvaliteta vazduha i opcione senzore svetla (lux) ove sobe. Lux beleži istoriju osvetljenja. Za zaštitu od sunca uključite lux na kontroleru svakog zastora i izaberite senzor iz iste sobe ili prosek izabranih senzora: svako novo automatsko zatvaranje tada zahteva podešenu minimalnu osvetljenost. Sam izbor senzora ne dozvoljava pomeranje.",
           "temperature": "Temperatura. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
           "humidity": "Vlažnost. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
-          "pressure": "Сензори притиска. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
           "climate_devices": "Uređaji. Изабери само физичке ентитете climate.*, humidifier.* и fan.* ове собе. Изворне могућности одређују грејање, хлађење, одвлаживање, циљеве и брзину вентилатора. Сам избор ништа не покреће; аутоматику укључи за сваки уређај посебно.",
           "shades": "Прозорске ролетне, завесе и жалузине. Изабери ролетне, жалузине и завесе cover.* ове собе. Covers без device_class су дозвољени уз CLOSE ако заиста заклањају прозор. Гараже, капије, врата, прозори и тенде су искључени. Избор ништа не покреће: повежи сензор прозора и подеси аутоматику, најаву и температуру на контролеру. Непознато стање блокира кретање.",
           "occupancy_sensors": "Izaberite stvarni Home Assistant izvor za „Prisustvo · senzor”. Nepostojeći ili zastareli podaci zaustavljaju radnju."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · senzor · Obavezno · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · izvor · senzor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · senzor · Obavezno",
-          "illuminance_entity": "LUX · izvor (lux)",
+          "illuminance_entity": "Osvetljenost (lux)",
           "melanopic_edi_entity": "EDI · EDI · izvor (lx)",
           "melanopic_spectral_verified": "EDI · Obavezno"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Koristite stvarno odgovarajuće merenje za „HCHO · senzor · Obavezno · SENSOR ✓ · VERIFIED”. Procena ne zamenjuje kalibrisan HCHO · senzor · Obavezno · SENSOR ✓ · VERIFIED.",
           "noise_entity": "Izaberite stvarni Home Assistant dB(A) · izvor · senzor (dB(A)) za „dB(A) · izvor · senzor (dB(A))”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "noise_sensor_calibrated": "Koristite stvarno odgovarajuće merenje za „dB(A) · senzor · Obavezno”. Procena ne zamenjuje kalibrisan dB(A) · senzor · Obavezno.",
-          "illuminance_entity": "Izaberite stvarni Home Assistant LUX · izvor (lux) za „LUX · izvor (lux)”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
+          "illuminance_entity": "Izaberite pravi senzor osvetljenosti (lux) za opisni izveštaj o istoriji svetla u sobi. Zaštita od sunca podešava se zasebno: izaberite izvor lux, minimalnu osvetljenost i prekidač lux na kontroleru svakog zastora. Izveštaj ne izračunava melanopski EDI iz lux.",
           "melanopic_edi_entity": "Izaberite stvarni Home Assistant EDI · EDI · izvor (lx) za „EDI · EDI · izvor (lx)”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "melanopic_spectral_verified": "Koristite stvarno odgovarajuće merenje za „EDI · Obavezno”. Procena ne zamenjuje kalibrisan senzor."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Сензори квалитета ваздуха и околине",
           "temperature": "Temperatura",
           "humidity": "Vlažnost",
-          "pressure": "Сензори притиска",
           "climate_devices": "Uređaji",
           "shades": "Прозорске ролетне, завесе и жалузине"
         },
         "data_description": {
           "windows": "Прозори. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
-          "air_quality": "Сензори квалитета ваздуха и околине. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "air_quality": "Izaberite senzore kvaliteta vazduha i opcione senzore svetla (lux) ove sobe. Lux beleži istoriju osvetljenja. Za zaštitu od sunca uključite lux na kontroleru svakog zastora i izaberite senzor iz iste sobe ili prosek izabranih senzora: svako novo automatsko zatvaranje tada zahteva podešenu minimalnu osvetljenost. Sam izbor senzora ne dozvoljava pomeranje.",
           "temperature": "Temperatura. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
           "humidity": "Vlažnost. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
-          "pressure": "Сензори притиска. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
           "climate_devices": "Uređaji. Изабери само физичке ентитете climate.*, humidifier.* и fan.* ове собе. Изворне могућности одређују грејање, хлађење, одвлаживање, циљеве и брзину вентилатора. Сам избор ништа не покреће; аутоматику укључи за сваки уређај посебно.",
           "shades": "Прозорске ролетне, завесе и жалузине. Изабери ролетне, жалузине и завесе cover.* ове собе. Covers без device_class су дозвољени уз CLOSE ако заиста заклањају прозор. Гараже, капије, врата, прозори и тенде су искључени. Избор ништа не покреће: повежи сензор прозора и подеси аутоматику, најаву и температуру на контролеру. Непознато стање блокира кретање."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Сензори квалитета ваздуха и околине",
           "temperature": "Temperatura",
           "humidity": "Vlažnost",
-          "pressure": "Сензори притиска",
           "climate_devices": "Uređaji",
           "shades": "Прозорске ролетне, завесе и жалузине",
           "occupancy_sensors": "Prisustvo · senzor"
         },
         "data_description": {
           "windows": "Прозори. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
-          "air_quality": "Сензори квалитета ваздуха и околине. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "air_quality": "Izaberite senzore kvaliteta vazduha i opcione senzore svetla (lux) ove sobe. Lux beleži istoriju osvetljenja. Za zaštitu od sunca uključite lux na kontroleru svakog zastora i izaberite senzor iz iste sobe ili prosek izabranih senzora: svako novo automatsko zatvaranje tada zahteva podešenu minimalnu osvetljenost. Sam izbor senzora ne dozvoljava pomeranje.",
           "temperature": "Temperatura. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
           "humidity": "Vlažnost. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
-          "pressure": "Сензори притиска. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
           "climate_devices": "Uređaji. Изабери само физичке ентитете climate.*, humidifier.* и fan.* ове собе. Изворне могућности одређују грејање, хлађење, одвлаживање, циљеве и брзину вентилатора. Сам избор ништа не покреће; аутоматику укључи за сваки уређај посебно.",
           "shades": "Прозорске ролетне, завесе и жалузине. Изабери ролетне, жалузине и завесе cover.* ове собе. Covers без device_class су дозвољени уз CLOSE ако заиста заклањају прозор. Гараже, капије, врата, прозори и тенде су искључени. Избор ништа не покреће: повежи сензор прозора и подеси аутоматику, најаву и температуру на контролеру. Непознато стање блокира кретање.",
           "occupancy_sensors": "Izaberite stvarni Home Assistant izvor za „Prisustvo · senzor”. Nepostojeći ili zastareli podaci zaustavljaju radnju."
@@ -2335,17 +2325,15 @@
           "air_quality": "Сензори квалитета ваздуха и околине",
           "temperature": "Temperatura",
           "humidity": "Vlažnost",
-          "pressure": "Сензори притиска",
           "climate_devices": "Uređaji",
           "shades": "Прозорске ролетне, завесе и жалузине",
           "occupancy_sensors": "Prisustvo · senzor"
         },
         "data_description": {
           "windows": "Прозори. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
-          "air_quality": "Сензори квалитета ваздуха и околине. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
+          "air_quality": "Izaberite senzore kvaliteta vazduha i opcione senzore svetla (lux) ove sobe. Lux beleži istoriju osvetljenja. Za zaštitu od sunca uključite lux na kontroleru svakog zastora i izaberite senzor iz iste sobe ili prosek izabranih senzora: svako novo automatsko zatvaranje tada zahteva podešenu minimalnu osvetljenost. Sam izbor senzora ne dozvoljava pomeranje.",
           "temperature": "Temperatura. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
           "humidity": "Vlažnost. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
-          "pressure": "Сензори притиска. Изаберите улазе собе: назив уређаја - назив ентитета. Празне групе се не користе и не укључују аутоматско откривање ни управљање.",
           "climate_devices": "Uređaji. Изабери само физичке ентитете climate.*, humidifier.* и fan.* ове собе. Изворне могућности одређују грејање, хлађење, одвлаживање, циљеве и брзину вентилатора. Сам избор ништа не покреће; аутоматику укључи за сваки уређај посебно.",
           "shades": "Прозорске ролетне, завесе и жалузине. Изабери ролетне, жалузине и завесе cover.* ове собе. Covers без device_class су дозвољени уз CLOSE ако заиста заклањају прозор. Гараже, капије, врата, прозори и тенде су искључени. Избор ништа не покреће: повежи сензор прозора и подеси аутоматику, најаву и температуру на контролеру. Непознато стање блокира кретање.",
           "occupancy_sensors": "Izaberite stvarni Home Assistant izvor za „Prisustvo · senzor”. Nepostojeći ili zastareli podaci zaustavljaju radnju."

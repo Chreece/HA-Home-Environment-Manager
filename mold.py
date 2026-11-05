@@ -15,8 +15,20 @@ from .logic import Reading, Room, Weather
 MAGNUS_A = 17.62
 MAGNUS_B = 243.12
 
+# A practical cold-surface-finding target, not a mold-risk threshold or an
+# additional calibration-factor validity rule. Home Assistant requires a
+# significant simultaneous indoor/outdoor difference; FLIR and RICS recommend
+# at least 10°C for building thermography. A snapshot cannot establish the
+# stable heating/weather conditions those inspections also require.
+# https://www.home-assistant.io/integrations/mold_indicator/#calibration
+# https://www.flir.com/globalassets/imported-assets/document/flir-ex-series-user-manual.pdf
+# https://ww3.rics.org/uk/en/journals/built-environment-journal/conducting-a-successful-thermographic-survey.html
+CALIBRATION_RECOMMENDED_DIFFERENCE_C = 10.0
+
 
 def _temperature(value: Any) -> float | None:
+    if isinstance(value, bool):
+        return None
     try:
         number = float(value)
         return number if math.isfinite(number) and -60 <= number <= 85 else None
@@ -27,8 +39,9 @@ def _temperature(value: Any) -> float | None:
 def calibration_factor(indoor_c: float, outdoor_c: float, surface_c: float) -> float | None:
     """Calculate HA-compatible factor from three simultaneous temperatures.
 
-    A difference of at least 3°C makes the estimate less unstable. A very
-    small surface/outdoor denominator, or extreme factor, is not usable.
+    The 3°C minimum is a numerical validity guard, not an assurance that
+    conditions are suitable for finding the coldest surface. A very small
+    surface/outdoor denominator, or extreme factor, is not usable.
     Negative factors are valid for unusual thermal conditions (as in HA).
     """
     inside, outside, surface = (_temperature(v) for v in (indoor_c, outdoor_c, surface_c))
@@ -38,6 +51,50 @@ def calibration_factor(indoor_c: float, outdoor_c: float, surface_c: float) -> f
         return None
     factor = (inside - outside) / (surface - outside)
     return factor if math.isfinite(factor) and 0.5 <= abs(factor) <= 20 else None
+
+
+def calibration_measurement_readiness(
+    indoor_c: float | None, outdoor_c: float | None,
+) -> dict[str, float | str | list[str]]:
+    """Describe the temperature contrast for a winter cold-surface measurement.
+
+    Inputs must already be freshness-checked, selected room/weather evidence
+    (as in manager._capture and config_flow._mold_room_notice). Missing, stale,
+    wrong-room, or unselected evidence is passed as None, never guessed here.
+    A suitable positive difference only helps reveal cold surfaces. It does
+    not prove steady state, that the weather station represents this building,
+    or that any surface has been measured, and is never a health/risk score.
+    """
+    inside, outside = _temperature(indoor_c), _temperature(outdoor_c)
+    details: dict[str, float | str | list[str]] = {
+        "calibration_recommended_difference_c": CALIBRATION_RECOMMENDED_DIFFERENCE_C,
+        "calibration_stability": "not_verified",
+    }
+    missing: list[str] = []
+    if inside is None:
+        missing.append("indoor_temperature")
+    else:
+        details["indoor_temperature_c"] = inside
+    if outside is None:
+        missing.append("outdoor_temperature")
+    else:
+        details["outdoor_temperature_c"] = outside
+    if missing:
+        details["calibration_readiness"] = "temperatures_unavailable"
+        details["calibration_missing_temperature_inputs"] = missing
+        return details
+
+    # Keep the sign: a hot summer day must never be presented as a good
+    # opportunity to identify the coldest winter surface. Compare at full
+    # precision, keeping display rounding out of the readiness decision.
+    difference = inside - outside
+    details["calibration_temperature_difference_c"] = difference
+    details["calibration_readiness"] = (
+        "outdoors_not_colder" if difference <= 0 else
+        "difference_too_small" if difference < CALIBRATION_RECOMMENDED_DIFFERENCE_C else
+        "difference_suitable"
+    )
+    return details
 
 
 def mean_valid_humidity(readings: tuple[Reading, ...]) -> tuple[float | None, int]:
@@ -165,6 +222,11 @@ def estimate_mold_for_room(
         "status": data_status,
         "missing_inputs": missing_inputs,
     }
+    if not calibrated:
+        # Live guidance is separate from the unavailable mold estimate: even
+        # suitable temperature contrast never manufactures a mold reading or
+        # asserts that stable measurement conditions have been verified.
+        details.update(calibration_measurement_readiness(indoor_c, outdoor_c))
     if calibrated:
         # Preserve the exact saved floating-point factor; rounding is a
         # presentation concern only and must not alter mold calculations.

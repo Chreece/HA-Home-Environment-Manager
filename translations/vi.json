@@ -162,16 +162,14 @@
           "air_quality": "Cảm biến chất lượng không khí và môi trường",
           "temperature": "Nhiệt độ",
           "humidity": "Độ ẩm",
-          "pressure": "Cảm biến áp suất",
           "climate_devices": "Thiết bị",
           "shades": "Rèm, mành và cửa chớp"
         },
         "data_description": {
           "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "air_quality": "Cảm biến chất lượng không khí và môi trường. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "air_quality": "Chọn cảm biến chất lượng không khí và cảm biến ánh sáng tùy chọn (lux) của phòng này. Lux cung cấp lịch sử ánh sáng. Để che nắng, bật lux trên bộ điều khiển từng rèm và chọn cảm biến cùng phòng hoặc trung bình các cảm biến phòng đã chọn: mỗi lần tự động đóng mới sẽ cần độ sáng tối thiểu đã đặt. Việc chọn cảm biến ở đây không cho phép rèm chuyển động.",
           "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · cảm biến · Bắt buộc · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · nguồn · cảm biến (dB(A))",
           "noise_sensor_calibrated": "dB(A) · cảm biến · Bắt buộc",
-          "illuminance_entity": "LUX · nguồn (lux)",
+          "illuminance_entity": "Độ rọi (lux)",
           "melanopic_edi_entity": "EDI · EDI · nguồn (lx)",
           "melanopic_spectral_verified": "EDI · Bắt buộc"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Dùng phép đo thực phù hợp cho “HCHO · cảm biến · Bắt buộc · SENSOR ✓ · VERIFIED”. Ước tính không thay thế HCHO · cảm biến · Bắt buộc · SENSOR ✓ · VERIFIED hiệu chuẩn.",
           "noise_entity": "Chọn dB(A) · nguồn · cảm biến (dB(A)) Home Assistant thực cho “dB(A) · nguồn · cảm biến (dB(A))”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "noise_sensor_calibrated": "Dùng phép đo thực phù hợp cho “dB(A) · cảm biến · Bắt buộc”. Ước tính không thay thế dB(A) · cảm biến · Bắt buộc hiệu chuẩn.",
-          "illuminance_entity": "Chọn LUX · nguồn (lux) Home Assistant thực cho “LUX · nguồn (lux)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "illuminance_entity": "Chọn cảm biến độ rọi thực (lux) cho báo cáo mô tả lịch sử ánh sáng của phòng. Chức năng che nắng được cấu hình riêng: chọn nguồn lux, độ sáng tối thiểu và công tắc lux trên bộ điều khiển từng rèm. Báo cáo không suy ra EDI melanopic từ lux.",
           "melanopic_edi_entity": "Chọn EDI · EDI · nguồn (lx) Home Assistant thực cho “EDI · EDI · nguồn (lx)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "melanopic_spectral_verified": "Dùng phép đo thực phù hợp cho “EDI · Bắt buộc”. Ước tính không thay thế cảm biến hiệu chuẩn."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Cảm biến chất lượng không khí và môi trường",
           "temperature": "Nhiệt độ",
           "humidity": "Độ ẩm",
-          "pressure": "Cảm biến áp suất",
           "climate_devices": "Thiết bị",
           "shades": "Rèm, mành và cửa chớp",
           "occupancy_sensors": "Hiện diện · cảm biến"
         },
         "data_description": {
           "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "air_quality": "Cảm biến chất lượng không khí và môi trường. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "air_quality": "Chọn cảm biến chất lượng không khí và cảm biến ánh sáng tùy chọn (lux) của phòng này. Lux cung cấp lịch sử ánh sáng. Để che nắng, bật lux trên bộ điều khiển từng rèm và chọn cảm biến cùng phòng hoặc trung bình các cảm biến phòng đã chọn: mỗi lần tự động đóng mới sẽ cần độ sáng tối thiểu đã đặt. Việc chọn cảm biến ở đây không cho phép rèm chuyển động.",
           "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
           "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."
@@ -1129,17 +1125,15 @@
           "air_quality": "Cảm biến chất lượng không khí và môi trường",
           "temperature": "Nhiệt độ",
           "humidity": "Độ ẩm",
-          "pressure": "Cảm biến áp suất",
           "climate_devices": "Thiết bị",
           "shades": "Rèm, mành và cửa chớp",
           "occupancy_sensors": "Hiện diện · cảm biến"
         },
         "data_description": {
           "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "air_quality": "Cảm biến chất lượng không khí và môi trường. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "air_quality": "Chọn cảm biến chất lượng không khí và cảm biến ánh sáng tùy chọn (lux) của phòng này. Lux cung cấp lịch sử ánh sáng. Để che nắng, bật lux trên bộ điều khiển từng rèm và chọn cảm biến cùng phòng hoặc trung bình các cảm biến phòng đã chọn: mỗi lần tự động đóng mới sẽ cần độ sáng tối thiểu đã đặt. Việc chọn cảm biến ở đây không cho phép rèm chuyển động.",
           "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
           "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · cảm biến · Bắt buộc · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · nguồn · cảm biến (dB(A))",
           "noise_sensor_calibrated": "dB(A) · cảm biến · Bắt buộc",
-          "illuminance_entity": "LUX · nguồn (lux)",
+          "illuminance_entity": "Độ rọi (lux)",
           "melanopic_edi_entity": "EDI · EDI · nguồn (lx)",
           "melanopic_spectral_verified": "EDI · Bắt buộc"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Dùng phép đo thực phù hợp cho “HCHO · cảm biến · Bắt buộc · SENSOR ✓ · VERIFIED”. Ước tính không thay thế HCHO · cảm biến · Bắt buộc · SENSOR ✓ · VERIFIED hiệu chuẩn.",
           "noise_entity": "Chọn dB(A) · nguồn · cảm biến (dB(A)) Home Assistant thực cho “dB(A) · nguồn · cảm biến (dB(A))”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "noise_sensor_calibrated": "Dùng phép đo thực phù hợp cho “dB(A) · cảm biến · Bắt buộc”. Ước tính không thay thế dB(A) · cảm biến · Bắt buộc hiệu chuẩn.",
-          "illuminance_entity": "Chọn LUX · nguồn (lux) Home Assistant thực cho “LUX · nguồn (lux)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "illuminance_entity": "Chọn cảm biến độ rọi thực (lux) cho báo cáo mô tả lịch sử ánh sáng của phòng. Chức năng che nắng được cấu hình riêng: chọn nguồn lux, độ sáng tối thiểu và công tắc lux trên bộ điều khiển từng rèm. Báo cáo không suy ra EDI melanopic từ lux.",
           "melanopic_edi_entity": "Chọn EDI · EDI · nguồn (lx) Home Assistant thực cho “EDI · EDI · nguồn (lx)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "melanopic_spectral_verified": "Dùng phép đo thực phù hợp cho “EDI · Bắt buộc”. Ước tính không thay thế cảm biến hiệu chuẩn."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Cảm biến chất lượng không khí và môi trường",
           "temperature": "Nhiệt độ",
           "humidity": "Độ ẩm",
-          "pressure": "Cảm biến áp suất",
           "climate_devices": "Thiết bị",
           "shades": "Rèm, mành và cửa chớp"
         },
         "data_description": {
           "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "air_quality": "Cảm biến chất lượng không khí và môi trường. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "air_quality": "Chọn cảm biến chất lượng không khí và cảm biến ánh sáng tùy chọn (lux) của phòng này. Lux cung cấp lịch sử ánh sáng. Để che nắng, bật lux trên bộ điều khiển từng rèm và chọn cảm biến cùng phòng hoặc trung bình các cảm biến phòng đã chọn: mỗi lần tự động đóng mới sẽ cần độ sáng tối thiểu đã đặt. Việc chọn cảm biến ở đây không cho phép rèm chuyển động.",
           "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Cảm biến chất lượng không khí và môi trường",
           "temperature": "Nhiệt độ",
           "humidity": "Độ ẩm",
-          "pressure": "Cảm biến áp suất",
           "climate_devices": "Thiết bị",
           "shades": "Rèm, mành và cửa chớp",
           "occupancy_sensors": "Hiện diện · cảm biến"
         },
         "data_description": {
           "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "air_quality": "Cảm biến chất lượng không khí và môi trường. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "air_quality": "Chọn cảm biến chất lượng không khí và cảm biến ánh sáng tùy chọn (lux) của phòng này. Lux cung cấp lịch sử ánh sáng. Để che nắng, bật lux trên bộ điều khiển từng rèm và chọn cảm biến cùng phòng hoặc trung bình các cảm biến phòng đã chọn: mỗi lần tự động đóng mới sẽ cần độ sáng tối thiểu đã đặt. Việc chọn cảm biến ở đây không cho phép rèm chuyển động.",
           "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
           "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."
@@ -2335,17 +2325,15 @@
           "air_quality": "Cảm biến chất lượng không khí và môi trường",
           "temperature": "Nhiệt độ",
           "humidity": "Độ ẩm",
-          "pressure": "Cảm biến áp suất",
           "climate_devices": "Thiết bị",
           "shades": "Rèm, mành và cửa chớp",
           "occupancy_sensors": "Hiện diện · cảm biến"
         },
         "data_description": {
           "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "air_quality": "Cảm biến chất lượng không khí và môi trường. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
+          "air_quality": "Chọn cảm biến chất lượng không khí và cảm biến ánh sáng tùy chọn (lux) của phòng này. Lux cung cấp lịch sử ánh sáng. Để che nắng, bật lux trên bộ điều khiển từng rèm và chọn cảm biến cùng phòng hoặc trung bình các cảm biến phòng đã chọn: mỗi lần tự động đóng mới sẽ cần độ sáng tối thiểu đã đặt. Việc chọn cảm biến ở đây không cho phép rèm chuyển động.",
           "temperature": "Nhiệt độ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
-          "pressure": "Cảm biến áp suất. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
           "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."

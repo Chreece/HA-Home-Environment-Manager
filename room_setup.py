@@ -189,7 +189,9 @@ class RoomSetupMixin:
         if user_input is not None:
             changes = {}
             for group in sources.GROUPS:
-                values = user_input.get(group, saved[group])
+                # HA omits a cleared optional multi-select. Cover discovery
+                # is a form suggestion, never a reason to restore that list.
+                values = user_input.get(group, [] if group == "shades" else saved[group])
                 allowed = {item["value"] for item in options[group]}
                 if not isinstance(values, list) or any(v not in allowed for v in values):
                     errors[group] = "invalid_room_source"
@@ -255,7 +257,8 @@ class RoomSetupMixin:
         if user_input is not None:
             data = {}
             for group in sources.GROUPS:
-                value = user_input.get(group, defaults[group])
+                # An omitted cover field is an explicit empty selection.
+                value = user_input.get(group, [] if group == "shades" else defaults[group])
                 allowed = {v["value"] for v in options[group]}
                 if (not isinstance(value, list)
                         or any(not isinstance(e, str) or e not in allowed for e in value)):
@@ -391,6 +394,12 @@ class RoomSetupMixin:
                   CONF_AWAY_WINDOWS_PERSONS, CONF_AWAY_WINDOWS_DELIVERY}
         errors = {}
         value = {**defaults, **(user_input or {})}
+        from .discovery import is_pressure_sensor
+        if isinstance(value[CONF_OUTDOOR], list):
+            # Retire only positively identified pressure inputs from this
+            # draft; keep every other selection for the normal validation.
+            value[CONF_OUTDOOR] = [entity for entity in value[CONF_OUTDOOR]
+                                   if not is_pressure_sensor(self.hass, entity)]
         from .tts_languages import language_options, preferred_language
         language_choices = language_options(self.hass, None if value[CONF_TTS_ENGINE] == "none" else value[CONF_TTS_ENGINE])
         language_values = {item["value"] for item in language_choices}

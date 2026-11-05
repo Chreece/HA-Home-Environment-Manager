@@ -162,16 +162,14 @@
           "air_quality": "Capteurs de qualité de l’air et d’environnement",
           "temperature": "Température",
           "humidity": "Humidité",
-          "pressure": "Capteurs de pression",
           "climate_devices": "Appareils",
           "shades": "Stores, rideaux et volets de fenêtre"
         },
         "data_description": {
           "windows": "Fenêtres. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
-          "air_quality": "Capteurs de qualité de l’air et d’environnement. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "air_quality": "Choisissez les capteurs de qualité de l'air et, en option, de lumière (lux) de cette pièce. Les lux alimentent l'historique lumineux. Pour la protection solaire, activez les lux sur le contrôleur de chaque store et choisissez un capteur de la pièce ou la moyenne des capteurs sélectionnés : toute nouvelle fermeture automatique exige alors la luminosité minimale définie. Cette sélection de capteurs n'autorise aucun mouvement.",
           "temperature": "Température. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
-          "pressure": "Capteurs de pression. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · capteur · Obligatoire · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · source · capteur (dB(A))",
           "noise_sensor_calibrated": "dB(A) · capteur · Obligatoire",
-          "illuminance_entity": "LUX · source (lux)",
+          "illuminance_entity": "Éclairement (lux)",
           "melanopic_edi_entity": "EDI · EDI · source (lx)",
           "melanopic_spectral_verified": "EDI · Obligatoire"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Utilisez une mesure réelle et adaptée pour « HCHO · capteur · Obligatoire · SENSOR ✓ · VERIFIED ». Une estimation ne remplace pas un HCHO · capteur · Obligatoire · SENSOR ✓ · VERIFIED étalonné.",
           "noise_entity": "Choisissez une dB(A) · source · capteur (dB(A)) Home Assistant réelle pour « dB(A) · source · capteur (dB(A)) ». Une valeur absente ou périmée suspend l'action concernée.",
           "noise_sensor_calibrated": "Utilisez une mesure réelle et adaptée pour « dB(A) · capteur · Obligatoire ». Une estimation ne remplace pas un dB(A) · capteur · Obligatoire étalonné.",
-          "illuminance_entity": "Choisissez une LUX · source (lux) Home Assistant réelle pour « LUX · source (lux) ». Une valeur absente ou périmée suspend l'action concernée.",
+          "illuminance_entity": "Choisissez un véritable capteur d'éclairement (lux) pour le rapport descriptif de l'historique lumineux de la pièce. La protection solaire se règle séparément : choisissez la source lux, la luminosité minimale et l'interrupteur lux sur le contrôleur de chaque store. Le rapport ne déduit pas l'EDI mélanopique des lux.",
           "melanopic_edi_entity": "Choisissez une EDI · EDI · source (lx) Home Assistant réelle pour « EDI · EDI · source (lx) ». Une valeur absente ou périmée suspend l'action concernée.",
           "melanopic_spectral_verified": "Utilisez une mesure réelle et adaptée pour « EDI · Obligatoire ». Une estimation ne remplace pas un capteur étalonné."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Capteurs de qualité de l’air et d’environnement",
           "temperature": "Température",
           "humidity": "Humidité",
-          "pressure": "Capteurs de pression",
           "climate_devices": "Appareils",
           "shades": "Stores, rideaux et volets de fenêtre",
           "occupancy_sensors": "Présence · capteur"
         },
         "data_description": {
           "windows": "Fenêtres. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
-          "air_quality": "Capteurs de qualité de l’air et d’environnement. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "air_quality": "Choisissez les capteurs de qualité de l'air et, en option, de lumière (lux) de cette pièce. Les lux alimentent l'historique lumineux. Pour la protection solaire, activez les lux sur le contrôleur de chaque store et choisissez un capteur de la pièce ou la moyenne des capteurs sélectionnés : toute nouvelle fermeture automatique exige alors la luminosité minimale définie. Cette sélection de capteurs n'autorise aucun mouvement.",
           "temperature": "Température. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
-          "pressure": "Capteurs de pression. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
           "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
@@ -1129,17 +1125,15 @@
           "air_quality": "Capteurs de qualité de l’air et d’environnement",
           "temperature": "Température",
           "humidity": "Humidité",
-          "pressure": "Capteurs de pression",
           "climate_devices": "Appareils",
           "shades": "Stores, rideaux et volets de fenêtre",
           "occupancy_sensors": "Présence · capteur"
         },
         "data_description": {
           "windows": "Fenêtres. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
-          "air_quality": "Capteurs de qualité de l’air et d’environnement. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "air_quality": "Choisissez les capteurs de qualité de l'air et, en option, de lumière (lux) de cette pièce. Les lux alimentent l'historique lumineux. Pour la protection solaire, activez les lux sur le contrôleur de chaque store et choisissez un capteur de la pièce ou la moyenne des capteurs sélectionnés : toute nouvelle fermeture automatique exige alors la luminosité minimale définie. Cette sélection de capteurs n'autorise aucun mouvement.",
           "temperature": "Température. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
-          "pressure": "Capteurs de pression. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
           "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · capteur · Obligatoire · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · source · capteur (dB(A))",
           "noise_sensor_calibrated": "dB(A) · capteur · Obligatoire",
-          "illuminance_entity": "LUX · source (lux)",
+          "illuminance_entity": "Éclairement (lux)",
           "melanopic_edi_entity": "EDI · EDI · source (lx)",
           "melanopic_spectral_verified": "EDI · Obligatoire"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Utilisez une mesure réelle et adaptée pour « HCHO · capteur · Obligatoire · SENSOR ✓ · VERIFIED ». Une estimation ne remplace pas un HCHO · capteur · Obligatoire · SENSOR ✓ · VERIFIED étalonné.",
           "noise_entity": "Choisissez une dB(A) · source · capteur (dB(A)) Home Assistant réelle pour « dB(A) · source · capteur (dB(A)) ». Une valeur absente ou périmée suspend l'action concernée.",
           "noise_sensor_calibrated": "Utilisez une mesure réelle et adaptée pour « dB(A) · capteur · Obligatoire ». Une estimation ne remplace pas un dB(A) · capteur · Obligatoire étalonné.",
-          "illuminance_entity": "Choisissez une LUX · source (lux) Home Assistant réelle pour « LUX · source (lux) ». Une valeur absente ou périmée suspend l'action concernée.",
+          "illuminance_entity": "Choisissez un véritable capteur d'éclairement (lux) pour le rapport descriptif de l'historique lumineux de la pièce. La protection solaire se règle séparément : choisissez la source lux, la luminosité minimale et l'interrupteur lux sur le contrôleur de chaque store. Le rapport ne déduit pas l'EDI mélanopique des lux.",
           "melanopic_edi_entity": "Choisissez une EDI · EDI · source (lx) Home Assistant réelle pour « EDI · EDI · source (lx) ». Une valeur absente ou périmée suspend l'action concernée.",
           "melanopic_spectral_verified": "Utilisez une mesure réelle et adaptée pour « EDI · Obligatoire ». Une estimation ne remplace pas un capteur étalonné."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Capteurs de qualité de l’air et d’environnement",
           "temperature": "Température",
           "humidity": "Humidité",
-          "pressure": "Capteurs de pression",
           "climate_devices": "Appareils",
           "shades": "Stores, rideaux et volets de fenêtre"
         },
         "data_description": {
           "windows": "Fenêtres. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
-          "air_quality": "Capteurs de qualité de l’air et d’environnement. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "air_quality": "Choisissez les capteurs de qualité de l'air et, en option, de lumière (lux) de cette pièce. Les lux alimentent l'historique lumineux. Pour la protection solaire, activez les lux sur le contrôleur de chaque store et choisissez un capteur de la pièce ou la moyenne des capteurs sélectionnés : toute nouvelle fermeture automatique exige alors la luminosité minimale définie. Cette sélection de capteurs n'autorise aucun mouvement.",
           "temperature": "Température. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
-          "pressure": "Capteurs de pression. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Capteurs de qualité de l’air et d’environnement",
           "temperature": "Température",
           "humidity": "Humidité",
-          "pressure": "Capteurs de pression",
           "climate_devices": "Appareils",
           "shades": "Stores, rideaux et volets de fenêtre",
           "occupancy_sensors": "Présence · capteur"
         },
         "data_description": {
           "windows": "Fenêtres. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
-          "air_quality": "Capteurs de qualité de l’air et d’environnement. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "air_quality": "Choisissez les capteurs de qualité de l'air et, en option, de lumière (lux) de cette pièce. Les lux alimentent l'historique lumineux. Pour la protection solaire, activez les lux sur le contrôleur de chaque store et choisissez un capteur de la pièce ou la moyenne des capteurs sélectionnés : toute nouvelle fermeture automatique exige alors la luminosité minimale définie. Cette sélection de capteurs n'autorise aucun mouvement.",
           "temperature": "Température. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
-          "pressure": "Capteurs de pression. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
           "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
@@ -2335,17 +2325,15 @@
           "air_quality": "Capteurs de qualité de l’air et d’environnement",
           "temperature": "Température",
           "humidity": "Humidité",
-          "pressure": "Capteurs de pression",
           "climate_devices": "Appareils",
           "shades": "Stores, rideaux et volets de fenêtre",
           "occupancy_sensors": "Présence · capteur"
         },
         "data_description": {
           "windows": "Fenêtres. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
-          "air_quality": "Capteurs de qualité de l’air et d’environnement. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
+          "air_quality": "Choisissez les capteurs de qualité de l'air et, en option, de lumière (lux) de cette pièce. Les lux alimentent l'historique lumineux. Pour la protection solaire, activez les lux sur le contrôleur de chaque store et choisissez un capteur de la pièce ou la moyenne des capteurs sélectionnés : toute nouvelle fermeture automatique exige alors la luminosité minimale définie. Cette sélection de capteurs n'autorise aucun mouvement.",
           "temperature": "Température. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
-          "pressure": "Capteurs de pression. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
           "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
