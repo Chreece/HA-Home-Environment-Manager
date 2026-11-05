@@ -72,7 +72,7 @@
           "automatic_tts": "Automatisk",
           "automatic_notifications": "Automatisk · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Meddelanden (valfritt) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Meddelanden · Announcement Hub",
           "notify_entities": "inställningar · källa",
           "tts_engine": "inställningar · källa · TTS_ENGINE",
           "media_players": "inställningar · källa · MEDIA_PLAYERS",
@@ -84,7 +84,7 @@
           "automatic_tts": "Standard: ⛔ · Automatisk · 🪟 90 s. Detta alternativ styr ”Automatisk”. Fysiska kommandon kräver separat godkännande och skydd.",
           "automatic_notifications": "Standard: ⛔ · Automatisk · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Standard: 10 min · 0 = aldrig · Så länge samma orsak kvarstår · Rum.",
-          "use_announcement_hub": "Announcement Hub · Inte tillgänglig → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Välj: notify.* · inställningar · källa.",
           "tts_engine": "Välj: tts.* · inställningar · källa · TTS_ENGINE.",
           "media_players": "Välj: media_player.* · inställningar · källa · MEDIA_PLAYERS.",
@@ -115,8 +115,8 @@
           "min_outdoor_temp": "Utomhus · °C (≥)",
           "max_outdoor_temp": "Utomhus · °C (≤)",
           "max_outdoor_humidity": "Utomhus · RH (%) (≤)",
-          "max_wind_kmh": "Väder och varningar · km/h (≤)",
-          "max_age_minutes": "⏱ · Öppna (min, ≤)",
+          "max_wind_kmh": "Ventilation · Väder och varningar · km/h (≤)",
+          "max_age_minutes": "Ventilation · ⏱ · Öppna (min, ≤)",
           "indoor_mold": "Mögelindikator · ≥ 70%"
         },
         "data_description": {
@@ -139,8 +139,8 @@
           "min_outdoor_temp": "Beslutströskel för ”Utomhus · °C (≥)”. Den styr råd, men är ingen medicinsk gräns.",
           "max_outdoor_temp": "Beslutströskel för ”Utomhus · °C (≤)”. Den styr råd, men är ingen medicinsk gräns.",
           "max_outdoor_humidity": "Beslutströskel för ”Utomhus · RH (%) (≤)”. Den styr råd, men är ingen medicinsk gräns.",
-          "max_wind_kmh": "Beslutströskel för ”Väder och varningar · km/h (≤)”. Den styr råd, men är ingen medicinsk gräns.",
-          "max_age_minutes": "Beslutströskel för ”⏱ · Öppna (min, ≤)”. Den styr råd, men är ingen medicinsk gräns.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Beslutströskel för ”Mögelindikator · ≥ 70%”. Den styr råd, men är ingen medicinsk gräns."
         }
       },
@@ -194,7 +194,7 @@
           "language": "TTS · Välj · källa",
           "use_mold_indicator": "Mögelindikator · RH (%) → 70%",
           "pollen_entities": "Pollen · källa · Välj",
-          "use_announcement_hub": "Automatisk · Announcement Hub",
+          "use_announcement_hub": "Meddelanden · Announcement Hub",
           "general_away_cooldown_minutes": "Hem · Away · cooldown (min)",
           "away_open_window_alert": "Varna för öppna fönster när alla har gått",
           "away_windows_target_people": "Personer som ska varnas",
@@ -225,7 +225,7 @@
           "pollen_max_scale": "POLLEN · Pollen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
           "general_source_stale_minutes": "källa · max (min)",
-          "general_home_policy": "Hem · Närvaro · styrning"
+          "general_home_policy": "Närvaro hemma"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -244,7 +244,7 @@
           "language": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · TTS · Välj · källa · provider capabilities.",
           "use_mold_indicator": "🧱 Mögelindikator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Pollen · källa · Välj.",
-          "use_announcement_hub": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Automatisk · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Hem · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Varna för öppna fönster när alla har gått. Personer som ska varnas (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Klocka, Surfplatta.",
           "away_windows_target_people": "Personer som ska varnas (person.*) - Announcement Hub: Telefon, Klocka, Surfplatta, Annan enhet. Only explicitly assigned personal endpoints.",
@@ -275,7 +275,7 @@
           "pollen_max_scale": "Ställ in ”POLLEN · Pollen · SCALE” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "pollen_avoid_ventilation": "Ställ in ”POLLEN · Pollen · NO VENT” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "general_source_stale_minutes": "källa · Sömn / Närvaro · max 240 min. Ogiltig · Stäng av.",
-          "general_home_policy": "Detta alternativ styr ”Hem · Närvaro · styrning”. Fysiska kommandon kräver separat godkännande och skydd."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "reconfigure": {
@@ -537,7 +537,7 @@
           "extractor_entity": "Frånluftsfläkt · källa",
           "co2_ndir_verified": "CO₂ · Krävs",
           "co2_target_ppm": "CO₂ · CO₂ · mål (ppm)",
-          "sleep_room": "Sömn"
+          "sleep_room": "Buller · Sömn"
         },
         "data_description": {
           "temperature_entity": "Välj en riktig Home Assistant-källa för ”Temperatur · källa”. Saknade eller gamla värden stoppar åtgärden.",
@@ -546,8 +546,8 @@
           "purifier_entity": "Välj en riktig Home Assistant-Luftrenare · källa för ”Luftrenare · källa”. Saknade eller gamla värden stoppar åtgärden.",
           "extractor_entity": "Välj en riktig Home Assistant-Frånluftsfläkt · källa för ”Frånluftsfläkt · källa”. Saknade eller gamla värden stoppar åtgärden.",
           "co2_ndir_verified": "Använd en riktig lämplig mätning för ”CO₂ · Krävs”. En uppskattning ersätter inte kalibrerad sensor.",
-          "co2_target_ppm": "Beslutströskel för ”CO₂ · CO₂ · mål (ppm)”. Den styr råd, men är ingen medicinsk gräns.",
-          "sleep_room": "Ställ in ”Sömn” endast för valt rum. Ogiltiga värden stoppar åtgärden."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -699,7 +699,7 @@
           "climate_unknown_occupancy": "Närvaro · Enheter",
           "climate_unoccupied_delay_minutes": "Enheter · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Närvaro · Enheter · sensor · Krävs",
-          "climate_away_policy": "Hem · Enheter · POLICY",
+          "climate_away_policy": "Närvaro hemma · Hem · Enheter · POLICY",
           "climate_manual_profile": "Enheter · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sömn · Enheter",
           "climate_sleep_schedule_enabled": "Sömn · Automatisk",
@@ -711,15 +711,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden.",
           "climate_away_entities": "Välj en riktig Home Assistant-källa för ”Hem · Enheter”. Saknade eller gamla värden stoppar åtgärden.",
-          "climate_unknown_occupancy": "Detta alternativ styr ”Närvaro · Enheter”. Fysiska kommandon kräver separat godkännande och skydd.",
-          "climate_unoccupied_delay_minutes": "Denna tid styr ”Enheter · CLIMATE_UNOCCUPIED_DELAY_MINUTES”. Den minskar täta växlingar men ersätter inte hårdvaruskydd.",
-          "climate_occupancy_stale_minutes": "Denna tid styr ”Närvaro · Enheter · sensor · Krävs”. Den minskar täta växlingar men ersätter inte hårdvaruskydd.",
-          "climate_away_policy": "Detta alternativ styr ”Hem · Enheter · POLICY”. Fysiska kommandon kräver separat godkännande och skydd.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Detta alternativ styr ”Enheter · CLIMATE_MANUAL_PROFILE”. Fysiska kommandon kräver separat godkännande och skydd.",
-          "climate_sleep_active": "Detta alternativ styr ”Sömn · Enheter”. Fysiska kommandon kräver separat godkännande och skydd.",
-          "climate_sleep_schedule_enabled": "Detta alternativ styr ”Sömn · Automatisk”. Fysiska kommandon kräver separat godkännande och skydd.",
-          "climate_sleep_start": "Denna tid styr ”Sömn · Enheter · START”. Den minskar täta växlingar men ersätter inte hårdvaruskydd.",
-          "climate_sleep_end": "Denna tid styr ”Sömn · Enheter · END”. Den minskar täta växlingar men ersätter inte hårdvaruskydd.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Beslutströskel för ”Enheter · källa · mål”. Den styr råd, men är ingen medicinsk gräns.",
           "climate_comfort_adjustment_max_c": "Beslutströskel för ”Enheter (°C)”. Den styr råd, men är ingen medicinsk gräns."
         }
@@ -768,7 +768,7 @@
           "climate_humidity_low_rh": "Beslutströskel för ”RH · Luftfuktighet · Enheter (%) · RH MIN”. Den styr råd, men är ingen medicinsk gräns.",
           "climate_humidity_high_rh": "Beslutströskel för ”RH · Luftfuktighet · Enheter (%) · RH MAX”. Den styr råd, men är ingen medicinsk gräns.",
           "climate_humidity_hysteresis_rh": "Beslutströskel för ”RH · Luftfuktighet · Enheter · ± RH”. Den styr råd, men är ingen medicinsk gräns.",
-          "climate_cooling_dry_deferral_rh_points": "Detta alternativ styr ”Enheter · Temperatur −”. Fysiska kommandon kräver separat godkännande och skydd.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Detta alternativ styr ”Luftfuktighet · Automatisk”. Fysiska kommandon kräver separat godkännande och skydd.",
           "climate_window_efficiency_notify": "Detta alternativ styr ”Enheter · Utomhus”. Fysiska kommandon kräver separat godkännande och skydd.",
           "climate_dry_fan_mode_auto": "Detta alternativ styr ”Hastighet · Automatisk”. Fysiska kommandon kräver separat godkännande och skydd.",
@@ -921,7 +921,7 @@
           "general_occupied_rooms_entity": "Närvaro · Rum · källa (state)",
           "general_occupied_rooms_attribute": "Närvaro · Rum · källa (attribute)",
           "general_home_trackers": "Hem · Närvaro · Enheter",
-          "general_home_policy": "Hem · Närvaro · styrning",
+          "general_home_policy": "Närvaro hemma",
           "general_sleep_rooms_entity": "Sömn · Rum · källa (state)",
           "general_sleep_rooms_attribute": "Sömn · Rum · källa (attribute)",
           "general_source_stale_minutes": "källa · max (min)"
@@ -931,7 +931,7 @@
           "general_occupied_rooms_entity": "Välj en riktig Home Assistant-källa för ”Närvaro · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
           "general_occupied_rooms_attribute": "Ställ in ”Närvaro · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "general_home_trackers": "Välj en riktig Home Assistant-källa för ”Hem · Närvaro · Enheter”. Saknade eller gamla värden stoppar åtgärden.",
-          "general_home_policy": "Detta alternativ styr ”Hem · Närvaro · styrning”. Fysiska kommandon kräver separat godkännande och skydd.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Välj en riktig Home Assistant-källa för ”Sömn · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
           "general_sleep_rooms_attribute": "Ställ in ”Sömn · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "general_source_stale_minutes": "källa · Sömn / Närvaro · max 240 min. Ogiltig · Stäng av."
@@ -1366,7 +1366,7 @@
           "automatic_tts": "Automatisk",
           "automatic_notifications": "Automatisk · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Meddelanden (valfritt) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Meddelanden · Announcement Hub",
           "notify_entities": "inställningar · källa",
           "tts_engine": "inställningar · källa · TTS_ENGINE",
           "media_players": "inställningar · källa · MEDIA_PLAYERS",
@@ -1378,7 +1378,7 @@
           "automatic_tts": "Standard: ⛔ · Automatisk · 🪟 90 s. Detta alternativ styr ”Automatisk”. Fysiska kommandon kräver separat godkännande och skydd.",
           "automatic_notifications": "Standard: ⛔ · Automatisk · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Standard: 10 min · 0 = aldrig · Så länge samma orsak kvarstår · Rum.",
-          "use_announcement_hub": "Announcement Hub · Inte tillgänglig → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Välj: notify.* · inställningar · källa.",
           "tts_engine": "Välj: tts.* · inställningar · källa · TTS_ENGINE.",
           "media_players": "Välj: media_player.* · inställningar · källa · MEDIA_PLAYERS.",
@@ -1409,8 +1409,8 @@
           "min_outdoor_temp": "Utomhus · °C (≥)",
           "max_outdoor_temp": "Utomhus · °C (≤)",
           "max_outdoor_humidity": "Utomhus · RH (%) (≤)",
-          "max_wind_kmh": "Väder och varningar · km/h (≤)",
-          "max_age_minutes": "⏱ · Öppna (min, ≤)",
+          "max_wind_kmh": "Ventilation · Väder och varningar · km/h (≤)",
+          "max_age_minutes": "Ventilation · ⏱ · Öppna (min, ≤)",
           "indoor_mold": "Mögelindikator · ≥ 70%"
         },
         "data_description": {
@@ -1433,8 +1433,8 @@
           "min_outdoor_temp": "Beslutströskel för ”Utomhus · °C (≥)”. Den styr råd, men är ingen medicinsk gräns.",
           "max_outdoor_temp": "Beslutströskel för ”Utomhus · °C (≤)”. Den styr råd, men är ingen medicinsk gräns.",
           "max_outdoor_humidity": "Beslutströskel för ”Utomhus · RH (%) (≤)”. Den styr råd, men är ingen medicinsk gräns.",
-          "max_wind_kmh": "Beslutströskel för ”Väder och varningar · km/h (≤)”. Den styr råd, men är ingen medicinsk gräns.",
-          "max_age_minutes": "Beslutströskel för ”⏱ · Öppna (min, ≤)”. Den styr råd, men är ingen medicinsk gräns.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Beslutströskel för ”Mögelindikator · ≥ 70%”. Den styr råd, men är ingen medicinsk gräns."
         }
       },
@@ -1603,7 +1603,7 @@
           "extractor_entity": "Frånluftsfläkt · källa",
           "co2_ndir_verified": "CO₂ · Krävs",
           "co2_target_ppm": "CO₂ · CO₂ · mål (ppm)",
-          "sleep_room": "Sömn"
+          "sleep_room": "Buller · Sömn"
         },
         "data_description": {
           "temperature_entity": "Välj en riktig Home Assistant-källa för ”Temperatur · källa”. Saknade eller gamla värden stoppar åtgärden.",
@@ -1612,8 +1612,8 @@
           "purifier_entity": "Välj en riktig Home Assistant-Luftrenare · källa för ”Luftrenare · källa”. Saknade eller gamla värden stoppar åtgärden.",
           "extractor_entity": "Välj en riktig Home Assistant-Frånluftsfläkt · källa för ”Frånluftsfläkt · källa”. Saknade eller gamla värden stoppar åtgärden.",
           "co2_ndir_verified": "Använd en riktig lämplig mätning för ”CO₂ · Krävs”. En uppskattning ersätter inte kalibrerad sensor.",
-          "co2_target_ppm": "Beslutströskel för ”CO₂ · CO₂ · mål (ppm)”. Den styr råd, men är ingen medicinsk gräns.",
-          "sleep_room": "Ställ in ”Sömn” endast för valt rum. Ogiltiga värden stoppar åtgärden."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -1765,7 +1765,7 @@
           "climate_unknown_occupancy": "Närvaro · Enheter",
           "climate_unoccupied_delay_minutes": "Enheter · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Närvaro · Enheter · sensor · Krävs",
-          "climate_away_policy": "Hem · Enheter · POLICY",
+          "climate_away_policy": "Närvaro hemma · Hem · Enheter · POLICY",
           "climate_manual_profile": "Enheter · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sömn · Enheter",
           "climate_sleep_schedule_enabled": "Sömn · Automatisk",
@@ -1777,15 +1777,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden.",
           "climate_away_entities": "Välj en riktig Home Assistant-källa för ”Hem · Enheter”. Saknade eller gamla värden stoppar åtgärden.",
-          "climate_unknown_occupancy": "Detta alternativ styr ”Närvaro · Enheter”. Fysiska kommandon kräver separat godkännande och skydd.",
-          "climate_unoccupied_delay_minutes": "Denna tid styr ”Enheter · CLIMATE_UNOCCUPIED_DELAY_MINUTES”. Den minskar täta växlingar men ersätter inte hårdvaruskydd.",
-          "climate_occupancy_stale_minutes": "Denna tid styr ”Närvaro · Enheter · sensor · Krävs”. Den minskar täta växlingar men ersätter inte hårdvaruskydd.",
-          "climate_away_policy": "Detta alternativ styr ”Hem · Enheter · POLICY”. Fysiska kommandon kräver separat godkännande och skydd.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Detta alternativ styr ”Enheter · CLIMATE_MANUAL_PROFILE”. Fysiska kommandon kräver separat godkännande och skydd.",
-          "climate_sleep_active": "Detta alternativ styr ”Sömn · Enheter”. Fysiska kommandon kräver separat godkännande och skydd.",
-          "climate_sleep_schedule_enabled": "Detta alternativ styr ”Sömn · Automatisk”. Fysiska kommandon kräver separat godkännande och skydd.",
-          "climate_sleep_start": "Denna tid styr ”Sömn · Enheter · START”. Den minskar täta växlingar men ersätter inte hårdvaruskydd.",
-          "climate_sleep_end": "Denna tid styr ”Sömn · Enheter · END”. Den minskar täta växlingar men ersätter inte hårdvaruskydd.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Beslutströskel för ”Enheter · källa · mål”. Den styr råd, men är ingen medicinsk gräns.",
           "climate_comfort_adjustment_max_c": "Beslutströskel för ”Enheter (°C)”. Den styr råd, men är ingen medicinsk gräns."
         }
@@ -1834,7 +1834,7 @@
           "climate_humidity_low_rh": "Beslutströskel för ”RH · Luftfuktighet · Enheter (%) · RH MIN”. Den styr råd, men är ingen medicinsk gräns.",
           "climate_humidity_high_rh": "Beslutströskel för ”RH · Luftfuktighet · Enheter (%) · RH MAX”. Den styr råd, men är ingen medicinsk gräns.",
           "climate_humidity_hysteresis_rh": "Beslutströskel för ”RH · Luftfuktighet · Enheter · ± RH”. Den styr råd, men är ingen medicinsk gräns.",
-          "climate_cooling_dry_deferral_rh_points": "Detta alternativ styr ”Enheter · Temperatur −”. Fysiska kommandon kräver separat godkännande och skydd.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Detta alternativ styr ”Luftfuktighet · Automatisk”. Fysiska kommandon kräver separat godkännande och skydd.",
           "climate_window_efficiency_notify": "Detta alternativ styr ”Enheter · Utomhus”. Fysiska kommandon kräver separat godkännande och skydd.",
           "climate_dry_fan_mode_auto": "Detta alternativ styr ”Hastighet · Automatisk”. Fysiska kommandon kräver separat godkännande och skydd.",
@@ -1987,7 +1987,7 @@
           "general_occupied_rooms_entity": "Närvaro · Rum · källa (state)",
           "general_occupied_rooms_attribute": "Närvaro · Rum · källa (attribute)",
           "general_home_trackers": "Hem · Närvaro · Enheter",
-          "general_home_policy": "Hem · Närvaro · styrning",
+          "general_home_policy": "Närvaro hemma",
           "general_sleep_rooms_entity": "Sömn · Rum · källa (state)",
           "general_sleep_rooms_attribute": "Sömn · Rum · källa (attribute)",
           "general_source_stale_minutes": "källa · max (min)"
@@ -1997,7 +1997,7 @@
           "general_occupied_rooms_entity": "Välj en riktig Home Assistant-källa för ”Närvaro · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
           "general_occupied_rooms_attribute": "Ställ in ”Närvaro · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "general_home_trackers": "Välj en riktig Home Assistant-källa för ”Hem · Närvaro · Enheter”. Saknade eller gamla värden stoppar åtgärden.",
-          "general_home_policy": "Detta alternativ styr ”Hem · Närvaro · styrning”. Fysiska kommandon kräver separat godkännande och skydd.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Välj en riktig Home Assistant-källa för ”Sömn · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
           "general_sleep_rooms_attribute": "Ställ in ”Sömn · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "general_source_stale_minutes": "källa · Sömn / Närvaro · max 240 min. Ogiltig · Stäng av."
@@ -2177,7 +2177,7 @@
           "language": "TTS · Välj · källa",
           "use_mold_indicator": "Mögelindikator · RH (%) → 70%",
           "pollen_entities": "Pollen · källa · Välj",
-          "use_announcement_hub": "Automatisk · Announcement Hub",
+          "use_announcement_hub": "Meddelanden · Announcement Hub",
           "general_away_cooldown_minutes": "Hem · Away · cooldown (min)",
           "away_open_window_alert": "Varna för öppna fönster när alla har gått",
           "away_windows_target_people": "Personer som ska varnas",
@@ -2208,7 +2208,7 @@
           "pollen_max_scale": "POLLEN · Pollen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
           "general_source_stale_minutes": "källa · max (min)",
-          "general_home_policy": "Hem · Närvaro · styrning"
+          "general_home_policy": "Närvaro hemma"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2227,7 +2227,7 @@
           "language": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · TTS · Välj · källa · provider capabilities.",
           "use_mold_indicator": "🧱 Mögelindikator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Pollen · källa · Välj.",
-          "use_announcement_hub": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Automatisk · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Hem · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Varna för öppna fönster när alla har gått. Personer som ska varnas (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefon, Klocka, Surfplatta.",
           "away_windows_target_people": "Personer som ska varnas (person.*) - Announcement Hub: Telefon, Klocka, Surfplatta, Annan enhet. Only explicitly assigned personal endpoints.",
@@ -2258,7 +2258,7 @@
           "pollen_max_scale": "Ställ in ”POLLEN · Pollen · SCALE” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "pollen_avoid_ventilation": "Ställ in ”POLLEN · Pollen · NO VENT” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "general_source_stale_minutes": "källa · Sömn / Närvaro · max 240 min. Ogiltig · Stäng av.",
-          "general_home_policy": "Detta alternativ styr ”Hem · Närvaro · styrning”. Fysiska kommandon kräver separat godkännande och skydd."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "room_occupancy": {
@@ -2852,436 +2852,1175 @@
     },
     "number": {
       "global_threshold_outdoor_aqi": {
-        "name": "Utomhus · AQI (≤)"
+        "name": "Ventilation · Utomhus · AQI (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_outdoor_co2": {
-        "name": "Utomhus · CO₂ (ppm) (≤)"
+        "name": "Ventilation · Utomhus · CO₂ (ppm) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_outdoor_pm25": {
-        "name": "Utomhus · PM2.5 (µg/m³) (≤)"
+        "name": "Ventilation · Utomhus · PM2.5 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_outdoor_pm10": {
-        "name": "Utomhus · PM10 (µg/m³) (≤)"
+        "name": "Ventilation · Utomhus · PM10 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_outdoor_voc": {
-        "name": "Utomhus · VOC (µg/m³) (≤)"
+        "name": "Ventilation · Utomhus · VOC (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_outdoor_voc_parts": {
-        "name": "Utomhus · VOC (ppb) (≤)"
+        "name": "Ventilation · Utomhus · VOC (ppb) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_outdoor_no2": {
-        "name": "NO₂ · Utomhus (µg/m³)"
+        "name": "Ventilation · NO₂ · Utomhus (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_outdoor_o3": {
-        "name": "O₃ · Utomhus (µg/m³)"
+        "name": "Ventilation · O₃ · Utomhus (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_outdoor_so2": {
-        "name": "SO₂ · Utomhus (µg/m³)"
+        "name": "Ventilation · SO₂ · Utomhus (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_indoor_aqi": {
-        "name": "Luftkvalitet · AQI (≥)"
+        "name": "Ventilation · Luftkvalitet · AQI (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_indoor_co2": {
-        "name": "Luftkvalitet · CO₂ (ppm) (≥)"
+        "name": "Ventilation · Luftkvalitet · CO₂ (ppm) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_indoor_pm25": {
-        "name": "Luftkvalitet · PM2.5 (µg/m³) (≥)"
+        "name": "Ventilation · Luftkvalitet · PM2.5 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_indoor_pm10": {
-        "name": "Luftkvalitet · PM10 (µg/m³) (≥)"
+        "name": "Ventilation · Luftkvalitet · PM10 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_indoor_voc": {
-        "name": "Luftkvalitet · VOC (µg/m³) (≥)"
+        "name": "Ventilation · Luftkvalitet · VOC (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_indoor_voc_parts": {
-        "name": "Luftkvalitet · VOC (ppb) (≥)"
+        "name": "Ventilation · Luftkvalitet · VOC (ppb) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_indoor_humidity": {
-        "name": "Luftkvalitet · RH (%) (≥)"
+        "name": "Ventilation · Luftkvalitet · RH (%) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_indoor_mold": {
-        "name": "Mögelindikator · ≥ 70%"
+        "name": "Ventilation · Mögelindikator · ≥ 70%",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_min_outdoor_temp": {
-        "name": "Utomhus · °C (≥)"
+        "name": "Ventilation · Utomhus · °C (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_max_outdoor_temp": {
-        "name": "Utomhus · °C (≤)"
+        "name": "Ventilation · Utomhus · °C (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_max_outdoor_humidity": {
-        "name": "Utomhus · RH (%) (≤)"
+        "name": "Ventilation · Utomhus · RH (%) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_max_wind_kmh": {
-        "name": "Väder och varningar · km/h (≤)"
+        "name": "Ventilation · Väder och varningar · km/h (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_threshold_max_age_minutes": {
-        "name": "⏱ · Öppna (min, ≤)"
+        "name": "Ventilation · ⏱ · Öppna (min, ≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Meddelanden (valfritt) · 0-1440 min"
+        "name": "Meddelanden · Meddelanden (valfritt) · 0-1440 min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_pid_target_c": {
-        "name": "PID · mål (°C)"
+        "name": "PID · mål (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_pid_kp": {
-        "name": "PID · Kp · styrning (% per °C)"
+        "name": "PID · Kp · styrning (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_pid_ki": {
-        "name": "PID · Ki · styrning (% per °C-minute)"
+        "name": "PID · Ki · styrning (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_pid_kd": {
-        "name": "PID · Kd · styrning (%·minute per °C)"
+        "name": "PID · Kd · styrning (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_pid_offset_c": {
-        "name": "PID · (°C) · PID_OFFSET_C"
+        "name": "PID · (°C) · PID_OFFSET_C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_pid_min_setpoint_c": {
-        "name": "PID · (°C) · MIN TARGET"
+        "name": "PID · (°C) · MIN TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_pid_max_setpoint_c": {
-        "name": "PID · (°C) · MAX TARGET"
+        "name": "PID · (°C) · MAX TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_pid_sample_seconds": {
-        "name": "PID · (s)"
+        "name": "PID · (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_pid_max_change_c": {
-        "name": "PID · (°C) · MAX Δ"
+        "name": "PID · (°C) · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_pid_min_change_c": {
-        "name": "PID · (°C) · MIN Δ"
+        "name": "PID · (°C) · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_comfort_heat": {
-        "name": "Uppvärmning · Rum · Närvaro"
+        "name": "Profil · Uppvärmning · Rum · Närvaro",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_comfort_cool": {
-        "name": "Kylning · Rum · Närvaro"
+        "name": "Profil · Kylning · Rum · Närvaro",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_comfort_humidity": {
-        "name": "Luftfuktighet · Rum · Närvaro · mål (%)"
+        "name": "Profil · Luftfuktighet · Rum · Närvaro · mål (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_home_heat": {
-        "name": "Uppvärmning · Hem"
+        "name": "Profil · Uppvärmning · Hem",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_home_cool": {
-        "name": "Kylning · Hem"
+        "name": "Profil · Kylning · Hem",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_home_humidity": {
-        "name": "Luftfuktighet · Hem · mål (%)"
+        "name": "Profil · Luftfuktighet · Hem · mål (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_away_heat": {
-        "name": "Uppvärmning · Borta"
+        "name": "Profil · Uppvärmning · Borta",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_away_cool": {
-        "name": "Kylning · Borta"
+        "name": "Profil · Kylning · Borta",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_away_humidity": {
-        "name": "Luftfuktighet · Borta · mål (%)"
+        "name": "Profil · Luftfuktighet · Borta · mål (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_sleep_heat": {
-        "name": "Uppvärmning · Sömn"
+        "name": "Profil · Uppvärmning · Sömn",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_sleep_cool": {
-        "name": "Kylning · Sömn"
+        "name": "Profil · Kylning · Sömn",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_sleep_humidity": {
-        "name": "Luftfuktighet · Sömn · mål (%)"
+        "name": "Profil · Luftfuktighet · Sömn · mål (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_eco_heat": {
-        "name": "Uppvärmning · ECO"
+        "name": "Profil · Uppvärmning · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_eco_cool": {
-        "name": "Kylning · ECO"
+        "name": "Profil · Kylning · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_profile_eco_humidity": {
-        "name": "Luftfuktighet · ECO · mål (%)"
+        "name": "Profil · Luftfuktighet · ECO · mål (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_environment_pollen_high_from": {
-        "name": "POLLEN · Pollen · HIGH"
+        "name": "Pollen · POLLEN · Pollen · HIGH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_environment_pollen_max_scale": {
-        "name": "POLLEN · Pollen · SCALE"
+        "name": "Pollen · POLLEN · Pollen · SCALE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "källa · max (min)"
+        "name": "Närvaro hemma · källa · max (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_area_environment_room_volume_m3": {
-        "name": "inställningar · källa (m³)"
+        "name": "Luftrening · inställningar · källa (m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_area_environment_particle_cadr_m3h": {
-        "name": "CADR (m³/h)"
+        "name": "Luftrening · CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_area_environment_co2_target_ppm": {
-        "name": "CO₂ · CO₂ · mål (ppm)"
+        "name": "Luftrening · CO₂ · CO₂ · mål (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_area_environment_radon_reference_bq_m3": {
-        "name": "Rn (Bq/m³)"
+        "name": "Luftrening · Rn (Bq/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "Hastighet · Utomhus (m/s)"
+        "name": "Avancerad komfort · Hastighet · Utomhus (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_area_environment_met": {
-        "name": "inställningar · källa (met)"
+        "name": "Avancerad komfort · inställningar · källa (met)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_area_environment_clo": {
-        "name": "inställningar · källa (clo)"
+        "name": "Avancerad komfort · inställningar · källa (clo)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_unoccupied_delay_minutes": {
-        "name": "Enheter · CLIMATE_UNOCCUPIED_DELAY_MINUTES"
+        "name": "Närvaro i rummet · Enheter · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Närvaro · Enheter · sensor · Krävs"
+        "name": "Närvaro i rummet · Närvaro · Enheter · sensor · Krävs",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_comfort_adjustment_max_c": {
-        "name": "Enheter (°C)"
+        "name": "Avancerad komfort · Enheter (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_humidity_low_rh": {
-        "name": "RH · Luftfuktighet · Enheter (%) · RH MIN"
+        "name": "Luftfuktighet · RH · Luftfuktighet · Enheter (%) · RH MIN",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_humidity_high_rh": {
-        "name": "RH · Luftfuktighet · Enheter (%) · RH MAX"
+        "name": "Luftfuktighet · RH · Luftfuktighet · Enheter (%) · RH MAX",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_humidity_hysteresis_rh": {
-        "name": "RH · Luftfuktighet · Enheter · ± RH"
+        "name": "Luftfuktighet · RH · Luftfuktighet · Enheter · ± RH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_cooling_dry_deferral_rh_points": {
-        "name": "Enheter · Temperatur −"
+        "name": "Luftfuktighet · Enheter · Temperatur −",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_pm25_action_ug_m3": {
-        "name": "PM2.5 · Enheter (µg/m³)"
+        "name": "Luftrening · PM2.5 · Enheter (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_extraction_speed_percent": {
-        "name": "EXTRACT · Enheter · Hastighet (%) · SPEED %"
+        "name": "Luftrening · EXTRACT · Enheter · Hastighet (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_purifier_speed_percent": {
-        "name": "PURIFIER · Enheter · Hastighet (%) · SPEED %"
+        "name": "Luftrening · PURIFIER · Enheter · Hastighet (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_direct_tuning_kp": {
-        "name": "PID · Kp · styrning (percentage points/°C)"
+        "name": "PID · Kp · styrning (percentage points/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_direct_tuning_ki": {
-        "name": "PID · Ki · styrning (percentage points/(°C·minute))"
+        "name": "PID · Ki · styrning (percentage points/(°C·minute))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_direct_tuning_kd": {
-        "name": "PID · Kd · styrning (percentage points·minute/°C)"
+        "name": "PID · Kd · styrning (percentage points·minute/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "PID · inställningar · källa (s) · SAMPLE"
+        "name": "PID · inställningar · källa (s) · SAMPLE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "PID · inställningar · källa · MAX Δ"
+        "name": "PID · inställningar · källa · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "PID · inställningar · källa · MIN Δ"
+        "name": "PID · inställningar · källa · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_mold_surface_critical_temperature_c": {
-        "name": "Mögelindikator · 🧊 °C"
+        "name": "Mögel · Mögelindikator · 🧊 °C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_kp": {
-        "name": "PID · {channel}Kp · styrning (% per °C)"
+        "name": "PID · {channel}Kp · styrning (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_ki": {
-        "name": "PID · {channel}Ki · styrning (% per °C-minute)"
+        "name": "PID · {channel}Ki · styrning (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_kd": {
-        "name": "PID · {channel}Kd · styrning (%·minute per °C)"
+        "name": "PID · {channel}Kd · styrning (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_sample_seconds": {
-        "name": "PID · {channel}(s)"
+        "name": "PID · {channel}(s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Processförstärkning"
+        "name": "PID · {channel}Processförstärkning",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Tidskonstant"
+        "name": "PID · {channel}Tidskonstant",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Dödtid"
+        "name": "PID · {channel}Dödtid",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC λ"
+        "name": "PID · {channel}IMC λ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Relativ kapacitet 1 (%)"
+        "name": "PID · {channel}Relativ kapacitet 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Relativ kapacitet 2 (%)"
+        "name": "PID · {channel}Relativ kapacitet 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Relativ kapacitet 3 (%)"
+        "name": "PID · {channel}Relativ kapacitet 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Relativ kapacitet 4 (%)"
+        "name": "PID · {channel}Relativ kapacitet 4 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Fläkthastighet 1 (%)"
+        "name": "PID · {channel}Fläkthastighet 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Relativ kapacitet 1 (%)"
+        "name": "PID · {channel}Relativ kapacitet 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Fläkthastighet 2 (%)"
+        "name": "PID · {channel}Fläkthastighet 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Relativ kapacitet 2 (%)"
+        "name": "PID · {channel}Relativ kapacitet 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Fläkthastighet 3 (%)"
+        "name": "PID · {channel}Fläkthastighet 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Relativ kapacitet 3 (%)"
+        "name": "PID · {channel}Relativ kapacitet 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_cycle_seconds": {
-        "name": "PID · {channel}inställningar · källa (s) · PWM PERIOD"
+        "name": "PID · {channel}inställningar · källa (s) · PWM PERIOD",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_quiet_percentage": {
-        "name": "Tyst · {channel}Fläktgräns för tyst drift (%)"
+        "name": "Tyst · {channel}Fläktgräns för tyst drift (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_min_on_seconds": {
-        "name": "Effekt · {channel}min ON (s)"
+        "name": "Effekt · {channel}min ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_min_off_seconds": {
-        "name": "Effekt · {channel}min OFF (s)"
+        "name": "Effekt · {channel}min OFF (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_max_on_seconds": {
-        "name": "Effekt · {channel}max ON (s)"
+        "name": "Effekt · {channel}max ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_min_limit": {
-        "name": "Rum · Temperatur · min"
+        "name": "Rumsgränser · Rum · Temperatur · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_max_limit": {
-        "name": "Rum · Temperatur · max"
+        "name": "Rumsgränser · Rum · Temperatur · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_min_limit": {
-        "name": "Rum · Luftfuktighet · min"
+        "name": "Rumsgränser · Rum · Luftfuktighet · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_max_limit": {
-        "name": "Rum · Luftfuktighet · max"
+        "name": "Rumsgränser · Rum · Luftfuktighet · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_room_equipment_limit_fan_min_percentage": {
-        "name": "Rum · Hastighet · min (%)"
+        "name": "Rumsgränser · Rum · Hastighet · min (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_room_equipment_limit_fan_max_percentage": {
-        "name": "Rum · Hastighet · max (%)"
+        "name": "Rumsgränser · Rum · Hastighet · max (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "home_global_occupancy_away_cooldown_minutes": {
-        "name": "Hem · Away · cooldown (min)"
+        "name": "Närvaro hemma · Hem · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_shading_close_above_c": {
-        "name": "Stäng solskydd över rumstemperaturen (°C)"
+        "name": "Solskydd · Stäng solskydd över rumstemperaturen (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_shading_min_sun_elevation": {
-        "name": "Minsta solhöjd (°)"
+        "name": "Solskydd · Minsta solhöjd (°)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "shade_close_above_c": {
-        "name": "Stäng solskydd över rumstemperaturen (°C)"
+        "name": "Solskydd · Stäng solskydd över rumstemperaturen (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_particle_cadr_m3h": {
-        "name": "Filter · Rated particle CADR (m³/h)"
+        "name": "Filter · Rated particle CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "shade_min_lux": {
-        "name": "Minsta belysningsstyrka för stängning (lx)"
+        "name": "Solskydd · Minsta belysningsstyrka för stängning (lx)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_fan_min_percentage": {
-        "name": "Fläkt · {channel}Lägsta hastighet (%)"
+        "name": "Fläkt · {channel}Lägsta hastighet (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_fan_max_percentage": {
-        "name": "Fläkt · {channel}Högsta hastighet (%)"
+        "name": "Fläkt · {channel}Högsta hastighet (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
+      },
+      "global_occupancy_away_cooldown_minutes": {
+        "name": "Närvaro hemma · Hem · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
+      },
+      "home_aqi_custom_limit": {
+        "name": "Ventilation · Custom AQI limit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
+      },
+      "area_device_target_fan_speed_percent": {
+        "name": "Fläkt · Target speed (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       }
     },
     "switch": {
       "home_automatic_notifications": {
-        "name": "Automatisk · AUTOMATIC_NOTIFICATIONS"
+        "name": "Meddelanden · Automatisk · AUTOMATIC_NOTIFICATIONS",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "home_automatic_tts": {
-        "name": "Automatisk"
+        "name": "Meddelanden · Automatisk",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "home_use_announcement_hub": {
-        "name": "Announcement Hub"
+        "name": "Meddelanden · Announcement Hub",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "home_ai_rewrite_announcements": {
-        "name": "AI · Meddelanden (valfritt)"
+        "name": "Meddelanden · AI · Meddelanden (valfritt)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "home_global_environment_pollen_avoid_ventilation": {
-        "name": "POLLEN · Pollen · NO VENT"
+        "name": "Pollen · POLLEN · Pollen · NO VENT",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_area_environment_sleep_room": {
-        "name": "Sömn"
+        "name": "Buller · Sömn",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_area_environment_enable_pmv": {
-        "name": "PMV / PPD · Automatisk"
+        "name": "Avancerad komfort · PMV / PPD · Automatisk",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_sleep_active": {
-        "name": "Sömn · Enheter"
+        "name": "Sömn · Enheter",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_sleep_schedule_enabled": {
-        "name": "Sömn · Automatisk"
+        "name": "Sömn · Automatisk",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_operating_window_efficiency_notify": {
-        "name": "Enheter · Utomhus"
+        "name": "Meddelanden · Enheter · Utomhus",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_quiet_sleep": {
-        "name": "Tyst · {channel}Lägre ljud under sömn"
+        "name": "Tyst · {channel}Lägre ljud under sömn",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_quiet_occupied": {
-        "name": "Tyst · {channel}Lägre ljud vid närvaro"
+        "name": "Tyst · {channel}Lägre ljud vid närvaro",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_sensor_verified": {
-        "name": "Sensor · {channel}Krävs"
+        "name": "Sensor · {channel}Krävs",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_shading_enabled": {
-        "name": "Automatisk stängning av solskydd vid värme"
+        "name": "Solskydd · Automatisk stängning av solskydd vid värme",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "home_shade_announce_before_movement": {
-        "name": "Meddela innan solskydd öppnas eller stängs"
+        "name": "Meddelanden · Meddela innan solskydd öppnas eller stängs",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "shade_auto_control": {
-        "name": "Automatisk stängning av solskydd vid värme"
+        "name": "Solskydd · Automatisk stängning av solskydd vid värme",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "shade_announce": {
-        "name": "Meddela innan solskydd öppnas eller stängs"
+        "name": "Meddelanden · Meddela innan solskydd öppnas eller stängs",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "home_away_open_window_alert": {
-        "name": "Varna för öppna fönster när alla har gått"
+        "name": "Meddelanden · Varna för öppna fönster när alla har gått",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pause_on_window_open": {
-        "name": "Stäng av när ett fönster öppnas · {channel}"
+        "name": "Styrning · Stäng av när ett fönster öppnas · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "shade_lux_enabled": {
-        "name": "Använd luxsensor för solskydd"
+        "name": "Solskydd · Använd luxsensor för solskydd",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_announce_device_errors": {
-        "name": "Meddela enhetsfel · {channel}"
+        "name": "Meddelanden · Meddela enhetsfel · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       }
     },
     "select": {
       "home_language": {
-        "name": "Språk"
+        "name": "Meddelanden · Språk",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_manual_profile": {
-        "name": "Enheter · CLIMATE_MANUAL_PROFILE"
+        "name": "Profil · Enheter · CLIMATE_MANUAL_PROFILE",
+        "state": {
+          "auto": "Automatic"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Gain source",
         "state": {
           "defaults": "Defaults",
           "manual": "Manual"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
         }
       },
       "home_global_policy_home_policy": {
-        "name": "Hem · Närvaro · styrning"
+        "name": "Närvaro hemma",
+        "state": {
+          "any_home": "Minst en person hemma",
+          "all_home": "Alla hemma (äldre alternativ)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_policy_unknown_occupancy": {
-        "name": "Närvaro · Enheter"
+        "name": "Närvaro i rummet · Närvaro · Enheter",
+        "state": {
+          "occupied": "Assume occupied",
+          "hold": "Hold automatic changes"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_policy_away_policy": {
-        "name": "Hem · Enheter · POLICY"
+        "name": "Närvaro hemma · Hem · Enheter · POLICY",
+        "state": {
+          "any_home": "Minst en person hemma",
+          "all_home": "Alla hemma (äldre alternativ)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_policy_target_source": {
-        "name": "Enheter · källa · mål",
+        "name": "Avancerad komfort · Enheter · källa · mål",
         "state": {
           "temperature": "Fasta temperaturmål",
           "auto_comfort": "Automatisk komfort (temperatur och luftfuktighet)",
           "pmv": "Avancerad ISO 7730 (mätningar krävs)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
         }
       },
       "equipment_control_mode": {
@@ -3292,10 +4031,20 @@
           "manual": "Manuell",
           "off": "Stäng av",
           "pid": "PID"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "Tyst · {channel}Inbyggt tyst fläktläge"
+        "name": "Tyst · {channel}Inbyggt tyst fläktläge",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}Kalibrering",
@@ -3305,6 +4054,11 @@
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Observe and suggest · Approve",
           "adaptive_auto": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3312,6 +4066,11 @@
         "state": {
           "legacy": "Ursprunglig (okalibrerad)",
           "measured": "Modell för uppmätt kapacitet"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
@@ -3322,6 +4081,11 @@
           "cool": "Kylning",
           "dry": "Avfuktning",
           "fan_only": "Fläkt"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
         }
       },
       "equipment_presence_requirement": {
@@ -3330,6 +4094,11 @@
           "always": "Automatisk",
           "occupied": "Rum · Närvaro",
           "absent": "Rum · Närvaro · Stäng av"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
         }
       },
       "equipment_sleep_behavior": {
@@ -3338,6 +4107,11 @@
           "normal": "Automatisk",
           "pause": "Pausa",
           "sleep_targets": "Sömn · mål"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
         }
       },
       "equipment_fan_purpose": {
@@ -3346,29 +4120,59 @@
           "extraction": "Utomhus · styrning",
           "filtration": "PM2.5 · styrning",
           "auto": "Automatisk"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "Temperatur · källa"
+        "name": "Avancerad komfort · Temperatur · källa",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_area_science_air_speed_entity": {
-        "name": "källa · Hastighet · Utomhus (m/s)"
+        "name": "Avancerad komfort · källa · Hastighet · Utomhus (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "shade_window_entity": {
-        "name": "Kopplad fönsterkontakt"
+        "name": "Solskydd · Kopplad fönsterkontakt",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "home_aqi_scale": {
-        "name": "AQI-skala",
+        "name": "Ventilation · AQI-skala",
         "state": {
           "auto": "Automatisk (leverantör)",
           "not_configured": "Okänd - ingen jämförelse",
           "us_epa": "US EPA AQI (0-500)",
           "eea_category": "EEA AQI (1-6)",
           "custom": "Anpassad skala"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
         }
       },
       "shade_lux_entity": {
-        "name": "Luxsensor för solskydd"
+        "name": "Solskydd · Luxsensor för solskydd",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_adaptation_mode": {
         "name": "PID · {channel}Passive adaptation",
@@ -3376,35 +4180,80 @@
           "disabled": "Disabled",
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
         }
       }
     },
     "time": {
       "area_climate_sleep_start": {
-        "name": "Sömn · Enheter · START"
+        "name": "Sömn · Enheter · START",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "area_climate_sleep_end": {
-        "name": "Sömn · Enheter · END"
+        "name": "Sömn · Enheter · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       }
     },
     "button": {
       "area_recalculate_mold": {
-        "name": "Mögelindikator · ↻ 🌡️"
+        "name": "Mögel · Mögelindikator · ↻ 🌡️",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_resume": {
-        "name": "Styrning · {channel}Kontrollera och återuppta"
+        "name": "Styrning · {channel}Kontrollera och återuppta",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Tillämpa · Kalibrering"
+        "name": "PID · {channel}Tillämpa · Kalibrering",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Tillämpa · Kalibrering"
+        "name": "PID · {channel}Tillämpa · Kalibrering",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_review_approve": {
-        "name": "PID · {channel}Approve suggestion"
+        "name": "PID · {channel}Approve suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       },
       "equipment_pid_review_discard": {
-        "name": "PID · {channel}Discard suggestion"
+        "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       }
     },
     "climate": {
@@ -3505,8 +4354,8 @@
     },
     "general_home_policy": {
       "options": {
-        "any_home": "Hem · Närvaro",
-        "all_home": "Hem · Enheter · Närvaro"
+        "any_home": "Minst en person hemma",
+        "all_home": "Alla hemma (äldre alternativ)"
       }
     },
     "device_method": {

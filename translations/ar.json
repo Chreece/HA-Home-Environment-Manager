@@ -72,7 +72,7 @@
           "automatic_tts": "تلقائي",
           "automatic_notifications": "تلقائي · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "الإعلانات (اختياري) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "الإعلانات · Announcement Hub",
           "notify_entities": "الإعدادات · المصدر",
           "tts_engine": "الإعدادات · المصدر · TTS_ENGINE",
           "media_players": "الإعدادات · المصدر · MEDIA_PLAYERS",
@@ -84,7 +84,7 @@
           "automatic_tts": "افتراضي: ⛔ · تلقائي · 🪟 90 s. يتحكم هذا الخيار في «تلقائي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "automatic_notifications": "يتحكم هذا الخيار في «تلقائي · AUTOMATIC_NOTIFICATIONS». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "announcement_repeat_minutes": "افتراضي: 10 min · 0 = أبدًا · ما دام السبب نفسه مستمرًا · الغرف.",
-          "use_announcement_hub": "Announcement Hub · غير متاح → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "اختر مصدر Home Assistant حقيقيًا لـ «الإعدادات · المصدر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "tts_engine": "اختر: tts.* · الإعدادات · المصدر · TTS_ENGINE.",
           "media_players": "اختر: media_player.* · الإعدادات · المصدر · MEDIA_PLAYERS.",
@@ -115,8 +115,8 @@
           "min_outdoor_temp": "الخارج · °C (≥)",
           "max_outdoor_temp": "الخارج · °C (≤)",
           "max_outdoor_humidity": "الخارج · RH (%) (≤)",
-          "max_wind_kmh": "الطقس والتحذيرات · km/h (≤)",
-          "max_age_minutes": "⏱ · افتح (min, ≤)",
+          "max_wind_kmh": "التهوية · الطقس والتحذيرات · km/h (≤)",
+          "max_age_minutes": "التهوية · ⏱ · افتح (min, ≤)",
           "indoor_mold": "مؤشر العفن · ≥ 70%"
         },
         "data_description": {
@@ -139,8 +139,8 @@
           "min_outdoor_temp": "هذه عتبة القرار لـ «الخارج · °C (≥)». تؤثر في التوصيات وليست حدًا طبيًا.",
           "max_outdoor_temp": "هذه عتبة القرار لـ «الخارج · °C (≤)». تؤثر في التوصيات وليست حدًا طبيًا.",
           "max_outdoor_humidity": "هذه عتبة القرار لـ «الخارج · RH (%) (≤)». تؤثر في التوصيات وليست حدًا طبيًا.",
-          "max_wind_kmh": "هذه عتبة القرار لـ «الطقس والتحذيرات · km/h (≤)». تؤثر في التوصيات وليست حدًا طبيًا.",
-          "max_age_minutes": "هذه عتبة القرار لـ «⏱ · افتح (min, ≤)». تؤثر في التوصيات وليست حدًا طبيًا.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "هذه عتبة القرار لـ «مؤشر العفن · ≥ 70%». تؤثر في التوصيات وليست حدًا طبيًا."
         }
       },
@@ -194,7 +194,7 @@
           "language": "TTS · اختيار · المصدر",
           "use_mold_indicator": "مؤشر العفن · RH (%) → 70%",
           "pollen_entities": "حبوب اللقاح · المصدر · اختيار",
-          "use_announcement_hub": "تلقائي · Announcement Hub",
+          "use_announcement_hub": "الإعلانات · Announcement Hub",
           "general_away_cooldown_minutes": "المنزل · Away · cooldown (min)",
           "away_open_window_alert": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع",
           "away_windows_target_people": "الأشخاص المطلوب تنبيههم",
@@ -225,7 +225,7 @@
           "pollen_max_scale": "POLLEN · حبوب اللقاح · SCALE",
           "pollen_avoid_ventilation": "POLLEN · حبوب اللقاح · NO VENT",
           "general_source_stale_minutes": "المصدر · max (min)",
-          "general_home_policy": "المنزل · الإشغال · التحكم"
+          "general_home_policy": "التواجد في المنزل"
         },
         "data_description": {
           "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -244,7 +244,7 @@
           "language": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · TTS · اختيار · المصدر · provider capabilities.",
           "use_mold_indicator": "🧱 مؤشر العفن · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · حبوب اللقاح · المصدر · اختيار.",
-          "use_announcement_hub": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · تلقائي · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · المنزل · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع. الأشخاص المطلوب تنبيههم (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. الهاتف, الساعة, الجهاز اللوحي.",
           "away_windows_target_people": "الأشخاص المطلوب تنبيههم (person.*) - Announcement Hub: الهاتف, الساعة, الجهاز اللوحي, جهاز آخر. Only explicitly assigned personal endpoints.",
@@ -275,7 +275,7 @@
           "pollen_max_scale": "اضبط «POLLEN · حبوب اللقاح · SCALE» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "pollen_avoid_ventilation": "اضبط «POLLEN · حبوب اللقاح · NO VENT» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "general_source_stale_minutes": "المصدر · النوم / الإشغال · max 240 min. غير صالح · إيقاف.",
-          "general_home_policy": "يتحكم هذا الخيار في «المنزل · الإشغال · التحكم». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "reconfigure": {
@@ -537,7 +537,7 @@
           "extractor_entity": "مروحة شفط · المصدر",
           "co2_ndir_verified": "CO₂ · مطلوب",
           "co2_target_ppm": "CO₂ · CO₂ · الهدف (ppm)",
-          "sleep_room": "النوم"
+          "sleep_room": "الضوضاء · النوم"
         },
         "data_description": {
           "temperature_entity": "اختر مصدر Home Assistant حقيقيًا لـ «الحرارة · المصدر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
@@ -546,8 +546,8 @@
           "purifier_entity": "اختر مصدر Home Assistant حقيقيًا لـ «منقّي الهواء · المصدر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "extractor_entity": "اختر مصدر Home Assistant حقيقيًا لـ «مروحة شفط · المصدر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "co2_ndir_verified": "استخدم قياسًا حقيقيًا مناسبًا لـ «CO₂ · مطلوب». التقدير لا يحل محل حساس معاير.",
-          "co2_target_ppm": "هذه عتبة القرار لـ «CO₂ · CO₂ · الهدف (ppm)». تؤثر في التوصيات وليست حدًا طبيًا.",
-          "sleep_room": "اضبط «النوم» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -699,7 +699,7 @@
           "climate_unknown_occupancy": "الإشغال · الأجهزة",
           "climate_unoccupied_delay_minutes": "الأجهزة · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "الإشغال · الأجهزة · مستشعر · مطلوب",
-          "climate_away_policy": "المنزل · الأجهزة · POLICY",
+          "climate_away_policy": "التواجد في المنزل · المنزل · الأجهزة · POLICY",
           "climate_manual_profile": "الأجهزة · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "النوم · الأجهزة",
           "climate_sleep_schedule_enabled": "النوم · تلقائي",
@@ -711,15 +711,15 @@
         "data_description": {
           "climate_occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "climate_away_entities": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
-          "climate_unknown_occupancy": "يتحكم هذا الخيار في «الإشغال · الأجهزة». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
-          "climate_unoccupied_delay_minutes": "تضبط هذه المدة «الأجهزة · CLIMATE_UNOCCUPIED_DELAY_MINUTES». تحد من التبديل السريع ولا تحل محل وسائل الحماية المادية.",
-          "climate_occupancy_stale_minutes": "تضبط هذه المدة «الإشغال · الأجهزة · مستشعر · مطلوب». تحد من التبديل السريع ولا تحل محل وسائل الحماية المادية.",
-          "climate_away_policy": "يتحكم هذا الخيار في «المنزل · الأجهزة · POLICY». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "يتحكم هذا الخيار في «الأجهزة · CLIMATE_MANUAL_PROFILE». أوامر الأجهزة · CLIMATE_MANUAL_PROFILE تتطلب موافقة مستقلة ووسائل حماية.",
-          "climate_sleep_active": "يتحكم هذا الخيار في «النوم · الأجهزة». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
-          "climate_sleep_schedule_enabled": "يتحكم هذا الخيار في «النوم · تلقائي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
-          "climate_sleep_start": "تضبط هذه المدة «النوم · الأجهزة · START». تحد من التبديل السريع ولا تحل محل وسائل الحماية المادية.",
-          "climate_sleep_end": "تضبط هذه المدة «النوم · الأجهزة · END». تحد من التبديل السريع ولا تحل محل وسائل الحماية المادية.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "هذه عتبة القرار لـ «الأجهزة · المصدر · الهدف». تؤثر في التوصيات وليست حدًا طبيًا.",
           "climate_comfort_adjustment_max_c": "هذه عتبة القرار لـ «الأجهزة (°C)». تؤثر في التوصيات وليست حدًا طبيًا."
         }
@@ -768,7 +768,7 @@
           "climate_humidity_low_rh": "هذه عتبة القرار لـ «RH · الرطوبة · الأجهزة (%) · RH MIN». تؤثر في التوصيات وليست حدًا طبيًا.",
           "climate_humidity_high_rh": "هذه عتبة القرار لـ «RH · الرطوبة · الأجهزة (%) · RH MAX». تؤثر في التوصيات وليست حدًا طبيًا.",
           "climate_humidity_hysteresis_rh": "هذه عتبة القرار لـ «RH · الرطوبة · الأجهزة · ± RH». تؤثر في التوصيات وليست حدًا طبيًا.",
-          "climate_cooling_dry_deferral_rh_points": "يتحكم هذا الخيار في «الأجهزة · الحرارة −». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "يتحكم هذا الخيار في «الرطوبة · تلقائي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "climate_window_efficiency_notify": "يتحكم هذا الخيار في «الأجهزة · خارجي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "climate_dry_fan_mode_auto": "يتحكم هذا الخيار في «السرعة · تلقائي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
@@ -921,7 +921,7 @@
           "general_occupied_rooms_entity": "الإشغال · غرفة · المصدر (state)",
           "general_occupied_rooms_attribute": "الإشغال · غرفة · المصدر (attribute)",
           "general_home_trackers": "المنزل · الإشغال · الأجهزة",
-          "general_home_policy": "المنزل · الإشغال · التحكم",
+          "general_home_policy": "التواجد في المنزل",
           "general_sleep_rooms_entity": "النوم · غرفة · المصدر (state)",
           "general_sleep_rooms_attribute": "النوم · غرفة · المصدر (attribute)",
           "general_source_stale_minutes": "المصدر · max (min)"
@@ -931,7 +931,7 @@
           "general_occupied_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "general_occupied_rooms_attribute": "اضبط «الإشغال · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "general_home_trackers": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الإشغال · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
-          "general_home_policy": "يتحكم هذا الخيار في «المنزل · الإشغال · التحكم». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «النوم · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "general_sleep_rooms_attribute": "اضبط «النوم · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "general_source_stale_minutes": "المصدر · النوم / الإشغال · max 240 min. غير صالح · إيقاف."
@@ -1366,7 +1366,7 @@
           "automatic_tts": "تلقائي",
           "automatic_notifications": "تلقائي · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "الإعلانات (اختياري) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "الإعلانات · Announcement Hub",
           "notify_entities": "الإعدادات · المصدر",
           "tts_engine": "الإعدادات · المصدر · TTS_ENGINE",
           "media_players": "الإعدادات · المصدر · MEDIA_PLAYERS",
@@ -1378,7 +1378,7 @@
           "automatic_tts": "افتراضي: ⛔ · تلقائي · 🪟 90 s. يتحكم هذا الخيار في «تلقائي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "automatic_notifications": "يتحكم هذا الخيار في «تلقائي · AUTOMATIC_NOTIFICATIONS». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "announcement_repeat_minutes": "افتراضي: 10 min · 0 = أبدًا · ما دام السبب نفسه مستمرًا · الغرف.",
-          "use_announcement_hub": "Announcement Hub · غير متاح → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "اختر مصدر Home Assistant حقيقيًا لـ «الإعدادات · المصدر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "tts_engine": "اختر: tts.* · الإعدادات · المصدر · TTS_ENGINE.",
           "media_players": "اختر: media_player.* · الإعدادات · المصدر · MEDIA_PLAYERS.",
@@ -1409,8 +1409,8 @@
           "min_outdoor_temp": "الخارج · °C (≥)",
           "max_outdoor_temp": "الخارج · °C (≤)",
           "max_outdoor_humidity": "الخارج · RH (%) (≤)",
-          "max_wind_kmh": "الطقس والتحذيرات · km/h (≤)",
-          "max_age_minutes": "⏱ · افتح (min, ≤)",
+          "max_wind_kmh": "التهوية · الطقس والتحذيرات · km/h (≤)",
+          "max_age_minutes": "التهوية · ⏱ · افتح (min, ≤)",
           "indoor_mold": "مؤشر العفن · ≥ 70%"
         },
         "data_description": {
@@ -1433,8 +1433,8 @@
           "min_outdoor_temp": "هذه عتبة القرار لـ «الخارج · °C (≥)». تؤثر في التوصيات وليست حدًا طبيًا.",
           "max_outdoor_temp": "هذه عتبة القرار لـ «الخارج · °C (≤)». تؤثر في التوصيات وليست حدًا طبيًا.",
           "max_outdoor_humidity": "هذه عتبة القرار لـ «الخارج · RH (%) (≤)». تؤثر في التوصيات وليست حدًا طبيًا.",
-          "max_wind_kmh": "هذه عتبة القرار لـ «الطقس والتحذيرات · km/h (≤)». تؤثر في التوصيات وليست حدًا طبيًا.",
-          "max_age_minutes": "هذه عتبة القرار لـ «⏱ · افتح (min, ≤)». تؤثر في التوصيات وليست حدًا طبيًا.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "هذه عتبة القرار لـ «مؤشر العفن · ≥ 70%». تؤثر في التوصيات وليست حدًا طبيًا."
         }
       },
@@ -1603,7 +1603,7 @@
           "extractor_entity": "مروحة شفط · المصدر",
           "co2_ndir_verified": "CO₂ · مطلوب",
           "co2_target_ppm": "CO₂ · CO₂ · الهدف (ppm)",
-          "sleep_room": "النوم"
+          "sleep_room": "الضوضاء · النوم"
         },
         "data_description": {
           "temperature_entity": "اختر مصدر Home Assistant حقيقيًا لـ «الحرارة · المصدر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
@@ -1612,8 +1612,8 @@
           "purifier_entity": "اختر مصدر Home Assistant حقيقيًا لـ «منقّي الهواء · المصدر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "extractor_entity": "اختر مصدر Home Assistant حقيقيًا لـ «مروحة شفط · المصدر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "co2_ndir_verified": "استخدم قياسًا حقيقيًا مناسبًا لـ «CO₂ · مطلوب». التقدير لا يحل محل حساس معاير.",
-          "co2_target_ppm": "هذه عتبة القرار لـ «CO₂ · CO₂ · الهدف (ppm)». تؤثر في التوصيات وليست حدًا طبيًا.",
-          "sleep_room": "اضبط «النوم» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -1765,7 +1765,7 @@
           "climate_unknown_occupancy": "الإشغال · الأجهزة",
           "climate_unoccupied_delay_minutes": "الأجهزة · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "الإشغال · الأجهزة · مستشعر · مطلوب",
-          "climate_away_policy": "المنزل · الأجهزة · POLICY",
+          "climate_away_policy": "التواجد في المنزل · المنزل · الأجهزة · POLICY",
           "climate_manual_profile": "الأجهزة · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "النوم · الأجهزة",
           "climate_sleep_schedule_enabled": "النوم · تلقائي",
@@ -1777,15 +1777,15 @@
         "data_description": {
           "climate_occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "climate_away_entities": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
-          "climate_unknown_occupancy": "يتحكم هذا الخيار في «الإشغال · الأجهزة». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
-          "climate_unoccupied_delay_minutes": "تضبط هذه المدة «الأجهزة · CLIMATE_UNOCCUPIED_DELAY_MINUTES». تحد من التبديل السريع ولا تحل محل وسائل الحماية المادية.",
-          "climate_occupancy_stale_minutes": "تضبط هذه المدة «الإشغال · الأجهزة · مستشعر · مطلوب». تحد من التبديل السريع ولا تحل محل وسائل الحماية المادية.",
-          "climate_away_policy": "يتحكم هذا الخيار في «المنزل · الأجهزة · POLICY». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "يتحكم هذا الخيار في «الأجهزة · CLIMATE_MANUAL_PROFILE». أوامر الأجهزة · CLIMATE_MANUAL_PROFILE تتطلب موافقة مستقلة ووسائل حماية.",
-          "climate_sleep_active": "يتحكم هذا الخيار في «النوم · الأجهزة». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
-          "climate_sleep_schedule_enabled": "يتحكم هذا الخيار في «النوم · تلقائي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
-          "climate_sleep_start": "تضبط هذه المدة «النوم · الأجهزة · START». تحد من التبديل السريع ولا تحل محل وسائل الحماية المادية.",
-          "climate_sleep_end": "تضبط هذه المدة «النوم · الأجهزة · END». تحد من التبديل السريع ولا تحل محل وسائل الحماية المادية.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "هذه عتبة القرار لـ «الأجهزة · المصدر · الهدف». تؤثر في التوصيات وليست حدًا طبيًا.",
           "climate_comfort_adjustment_max_c": "هذه عتبة القرار لـ «الأجهزة (°C)». تؤثر في التوصيات وليست حدًا طبيًا."
         }
@@ -1834,7 +1834,7 @@
           "climate_humidity_low_rh": "هذه عتبة القرار لـ «RH · الرطوبة · الأجهزة (%) · RH MIN». تؤثر في التوصيات وليست حدًا طبيًا.",
           "climate_humidity_high_rh": "هذه عتبة القرار لـ «RH · الرطوبة · الأجهزة (%) · RH MAX». تؤثر في التوصيات وليست حدًا طبيًا.",
           "climate_humidity_hysteresis_rh": "هذه عتبة القرار لـ «RH · الرطوبة · الأجهزة · ± RH». تؤثر في التوصيات وليست حدًا طبيًا.",
-          "climate_cooling_dry_deferral_rh_points": "يتحكم هذا الخيار في «الأجهزة · الحرارة −». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "يتحكم هذا الخيار في «الرطوبة · تلقائي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "climate_window_efficiency_notify": "يتحكم هذا الخيار في «الأجهزة · خارجي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "climate_dry_fan_mode_auto": "يتحكم هذا الخيار في «السرعة · تلقائي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
@@ -1987,7 +1987,7 @@
           "general_occupied_rooms_entity": "الإشغال · غرفة · المصدر (state)",
           "general_occupied_rooms_attribute": "الإشغال · غرفة · المصدر (attribute)",
           "general_home_trackers": "المنزل · الإشغال · الأجهزة",
-          "general_home_policy": "المنزل · الإشغال · التحكم",
+          "general_home_policy": "التواجد في المنزل",
           "general_sleep_rooms_entity": "النوم · غرفة · المصدر (state)",
           "general_sleep_rooms_attribute": "النوم · غرفة · المصدر (attribute)",
           "general_source_stale_minutes": "المصدر · max (min)"
@@ -1997,7 +1997,7 @@
           "general_occupied_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "general_occupied_rooms_attribute": "اضبط «الإشغال · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "general_home_trackers": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الإشغال · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
-          "general_home_policy": "يتحكم هذا الخيار في «المنزل · الإشغال · التحكم». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «النوم · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "general_sleep_rooms_attribute": "اضبط «النوم · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "general_source_stale_minutes": "المصدر · النوم / الإشغال · max 240 min. غير صالح · إيقاف."
@@ -2177,7 +2177,7 @@
           "language": "TTS · اختيار · المصدر",
           "use_mold_indicator": "مؤشر العفن · RH (%) → 70%",
           "pollen_entities": "حبوب اللقاح · المصدر · اختيار",
-          "use_announcement_hub": "تلقائي · Announcement Hub",
+          "use_announcement_hub": "الإعلانات · Announcement Hub",
           "general_away_cooldown_minutes": "المنزل · Away · cooldown (min)",
           "away_open_window_alert": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع",
           "away_windows_target_people": "الأشخاص المطلوب تنبيههم",
@@ -2208,7 +2208,7 @@
           "pollen_max_scale": "POLLEN · حبوب اللقاح · SCALE",
           "pollen_avoid_ventilation": "POLLEN · حبوب اللقاح · NO VENT",
           "general_source_stale_minutes": "المصدر · max (min)",
-          "general_home_policy": "المنزل · الإشغال · التحكم"
+          "general_home_policy": "التواجد في المنزل"
         },
         "data_description": {
           "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2227,7 +2227,7 @@
           "language": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · TTS · اختيار · المصدر · provider capabilities.",
           "use_mold_indicator": "🧱 مؤشر العفن · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · حبوب اللقاح · المصدر · اختيار.",
-          "use_announcement_hub": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · تلقائي · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · المنزل · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع. الأشخاص المطلوب تنبيههم (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. الهاتف, الساعة, الجهاز اللوحي.",
           "away_windows_target_people": "الأشخاص المطلوب تنبيههم (person.*) - Announcement Hub: الهاتف, الساعة, الجهاز اللوحي, جهاز آخر. Only explicitly assigned personal endpoints.",
@@ -2258,7 +2258,7 @@
           "pollen_max_scale": "اضبط «POLLEN · حبوب اللقاح · SCALE» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "pollen_avoid_ventilation": "اضبط «POLLEN · حبوب اللقاح · NO VENT» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "general_source_stale_minutes": "المصدر · النوم / الإشغال · max 240 min. غير صالح · إيقاف.",
-          "general_home_policy": "يتحكم هذا الخيار في «المنزل · الإشغال · التحكم». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "room_occupancy": {
@@ -2852,436 +2852,1175 @@
     },
     "number": {
       "global_threshold_outdoor_aqi": {
-        "name": "الخارج · AQI (≤)"
+        "name": "التهوية · الخارج · AQI (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_outdoor_co2": {
-        "name": "الخارج · CO₂ (ppm) (≤)"
+        "name": "التهوية · الخارج · CO₂ (ppm) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_outdoor_pm25": {
-        "name": "الخارج · PM2.5 (µg/m³) (≤)"
+        "name": "التهوية · الخارج · PM2.5 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_outdoor_pm10": {
-        "name": "الخارج · PM10 (µg/m³) (≤)"
+        "name": "التهوية · الخارج · PM10 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_outdoor_voc": {
-        "name": "الخارج · VOC (µg/m³) (≤)"
+        "name": "التهوية · الخارج · VOC (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_outdoor_voc_parts": {
-        "name": "الخارج · VOC (ppb) (≤)"
+        "name": "التهوية · الخارج · VOC (ppb) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_outdoor_no2": {
-        "name": "NO₂ · خارجي (µg/m³)"
+        "name": "التهوية · NO₂ · خارجي (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_outdoor_o3": {
-        "name": "O₃ · خارجي (µg/m³)"
+        "name": "التهوية · O₃ · خارجي (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_outdoor_so2": {
-        "name": "SO₂ · خارجي (µg/m³)"
+        "name": "التهوية · SO₂ · خارجي (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_indoor_aqi": {
-        "name": "جودة الهواء · AQI (≥)"
+        "name": "التهوية · جودة الهواء · AQI (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_indoor_co2": {
-        "name": "جودة الهواء · CO₂ (ppm) (≥)"
+        "name": "التهوية · جودة الهواء · CO₂ (ppm) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_indoor_pm25": {
-        "name": "جودة الهواء · PM2.5 (µg/m³) (≥)"
+        "name": "التهوية · جودة الهواء · PM2.5 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_indoor_pm10": {
-        "name": "جودة الهواء · PM10 (µg/m³) (≥)"
+        "name": "التهوية · جودة الهواء · PM10 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_indoor_voc": {
-        "name": "جودة الهواء · VOC (µg/m³) (≥)"
+        "name": "التهوية · جودة الهواء · VOC (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_indoor_voc_parts": {
-        "name": "جودة الهواء · VOC (ppb) (≥)"
+        "name": "التهوية · جودة الهواء · VOC (ppb) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_indoor_humidity": {
-        "name": "جودة الهواء · RH (%) (≥)"
+        "name": "التهوية · جودة الهواء · RH (%) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_indoor_mold": {
-        "name": "مؤشر العفن · ≥ 70%"
+        "name": "التهوية · مؤشر العفن · ≥ 70%",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_min_outdoor_temp": {
-        "name": "الخارج · °C (≥)"
+        "name": "التهوية · الخارج · °C (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_max_outdoor_temp": {
-        "name": "الخارج · °C (≤)"
+        "name": "التهوية · الخارج · °C (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_max_outdoor_humidity": {
-        "name": "الخارج · RH (%) (≤)"
+        "name": "التهوية · الخارج · RH (%) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_max_wind_kmh": {
-        "name": "الطقس والتحذيرات · km/h (≤)"
+        "name": "التهوية · الطقس والتحذيرات · km/h (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_threshold_max_age_minutes": {
-        "name": "⏱ · افتح (min, ≤)"
+        "name": "التهوية · ⏱ · افتح (min, ≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "الإعلانات (اختياري) · 0-1440 min"
+        "name": "الإعلانات · الإعلانات (اختياري) · 0-1440 min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_pid_target_c": {
-        "name": "PID · الهدف (°C)"
+        "name": "PID · الهدف (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_pid_kp": {
-        "name": "PID · Kp · التحكم (% per °C)"
+        "name": "PID · Kp · التحكم (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_pid_ki": {
-        "name": "PID · Ki · التحكم (% per °C-minute)"
+        "name": "PID · Ki · التحكم (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_pid_kd": {
-        "name": "PID · Kd · التحكم (%·minute per °C)"
+        "name": "PID · Kd · التحكم (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_pid_offset_c": {
-        "name": "PID · (°C) · PID_OFFSET_C"
+        "name": "PID · (°C) · PID_OFFSET_C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_pid_min_setpoint_c": {
-        "name": "PID · (°C) · MIN TARGET"
+        "name": "PID · (°C) · MIN TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_pid_max_setpoint_c": {
-        "name": "PID · (°C) · MAX TARGET"
+        "name": "PID · (°C) · MAX TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_pid_sample_seconds": {
-        "name": "PID · (s)"
+        "name": "PID · (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_pid_max_change_c": {
-        "name": "PID · (°C) · MAX Δ"
+        "name": "PID · (°C) · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_pid_min_change_c": {
-        "name": "PID · (°C) · MIN Δ"
+        "name": "PID · (°C) · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_comfort_heat": {
-        "name": "تدفئة · غرفة · الإشغال"
+        "name": "الملف · تدفئة · غرفة · الإشغال",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_comfort_cool": {
-        "name": "تبريد · غرفة · الإشغال"
+        "name": "الملف · تبريد · غرفة · الإشغال",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_comfort_humidity": {
-        "name": "الرطوبة · غرفة · الإشغال · الهدف (%)"
+        "name": "الملف · الرطوبة · غرفة · الإشغال · الهدف (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_home_heat": {
-        "name": "تدفئة · المنزل"
+        "name": "الملف · تدفئة · المنزل",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_home_cool": {
-        "name": "تبريد · المنزل"
+        "name": "الملف · تبريد · المنزل",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_home_humidity": {
-        "name": "الرطوبة · المنزل · الهدف (%)"
+        "name": "الملف · الرطوبة · المنزل · الهدف (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_away_heat": {
-        "name": "تدفئة · خارج المنزل"
+        "name": "الملف · تدفئة · خارج المنزل",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_away_cool": {
-        "name": "تبريد · خارج المنزل"
+        "name": "الملف · تبريد · خارج المنزل",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_away_humidity": {
-        "name": "الرطوبة · خارج المنزل · الهدف (%)"
+        "name": "الملف · الرطوبة · خارج المنزل · الهدف (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_sleep_heat": {
-        "name": "تدفئة · النوم"
+        "name": "الملف · تدفئة · النوم",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_sleep_cool": {
-        "name": "تبريد · النوم"
+        "name": "الملف · تبريد · النوم",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_sleep_humidity": {
-        "name": "الرطوبة · النوم · الهدف (%)"
+        "name": "الملف · الرطوبة · النوم · الهدف (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_eco_heat": {
-        "name": "تدفئة · ECO"
+        "name": "الملف · تدفئة · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_eco_cool": {
-        "name": "تبريد · ECO"
+        "name": "الملف · تبريد · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_profile_eco_humidity": {
-        "name": "الرطوبة · ECO · الهدف (%)"
+        "name": "الملف · الرطوبة · ECO · الهدف (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_environment_pollen_high_from": {
-        "name": "POLLEN · حبوب اللقاح · HIGH"
+        "name": "حبوب اللقاح · POLLEN · حبوب اللقاح · HIGH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_environment_pollen_max_scale": {
-        "name": "POLLEN · حبوب اللقاح · SCALE"
+        "name": "حبوب اللقاح · POLLEN · حبوب اللقاح · SCALE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "المصدر · max (min)"
+        "name": "التواجد في المنزل · المصدر · max (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_area_environment_room_volume_m3": {
-        "name": "الإعدادات · المصدر (m³)"
+        "name": "تنقية الهواء · الإعدادات · المصدر (m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_area_environment_particle_cadr_m3h": {
-        "name": "CADR (m³/h)"
+        "name": "تنقية الهواء · CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_area_environment_co2_target_ppm": {
-        "name": "CO₂ · CO₂ · الهدف (ppm)"
+        "name": "تنقية الهواء · CO₂ · CO₂ · الهدف (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_area_environment_radon_reference_bq_m3": {
-        "name": "Rn (Bq/m³)"
+        "name": "تنقية الهواء · Rn (Bq/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "السرعة · خارجي (m/s)"
+        "name": "الراحة المتقدمة · السرعة · خارجي (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_area_environment_met": {
-        "name": "الإعدادات · المصدر (met)"
+        "name": "الراحة المتقدمة · الإعدادات · المصدر (met)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_area_environment_clo": {
-        "name": "الإعدادات · المصدر (clo)"
+        "name": "الراحة المتقدمة · الإعدادات · المصدر (clo)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_unoccupied_delay_minutes": {
-        "name": "الأجهزة · CLIMATE_UNOCCUPIED_DELAY_MINUTES"
+        "name": "التواجد في الغرفة · الأجهزة · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "الإشغال · الأجهزة · مستشعر · مطلوب"
+        "name": "التواجد في الغرفة · الإشغال · الأجهزة · مستشعر · مطلوب",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_comfort_adjustment_max_c": {
-        "name": "الأجهزة (°C)"
+        "name": "الراحة المتقدمة · الأجهزة (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_humidity_low_rh": {
-        "name": "RH · الرطوبة · الأجهزة (%) · RH MIN"
+        "name": "الرطوبة · RH · الرطوبة · الأجهزة (%) · RH MIN",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_humidity_high_rh": {
-        "name": "RH · الرطوبة · الأجهزة (%) · RH MAX"
+        "name": "الرطوبة · RH · الرطوبة · الأجهزة (%) · RH MAX",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_humidity_hysteresis_rh": {
-        "name": "RH · الرطوبة · الأجهزة · ± RH"
+        "name": "الرطوبة · RH · الرطوبة · الأجهزة · ± RH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_cooling_dry_deferral_rh_points": {
-        "name": "الأجهزة · الحرارة −"
+        "name": "الرطوبة · الأجهزة · الحرارة −",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_pm25_action_ug_m3": {
-        "name": "PM2.5 · الأجهزة (µg/m³)"
+        "name": "تنقية الهواء · PM2.5 · الأجهزة (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_extraction_speed_percent": {
-        "name": "EXTRACT · الأجهزة · السرعة (%) · SPEED %"
+        "name": "تنقية الهواء · EXTRACT · الأجهزة · السرعة (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_purifier_speed_percent": {
-        "name": "PURIFIER · الأجهزة · السرعة (%) · SPEED %"
+        "name": "تنقية الهواء · PURIFIER · الأجهزة · السرعة (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_direct_tuning_kp": {
-        "name": "PID · Kp · التحكم (percentage points/°C)"
+        "name": "PID · Kp · التحكم (percentage points/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_direct_tuning_ki": {
-        "name": "PID · Ki · التحكم (percentage points/(°C·minute))"
+        "name": "PID · Ki · التحكم (percentage points/(°C·minute))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_direct_tuning_kd": {
-        "name": "PID · Kd · التحكم (percentage points·minute/°C)"
+        "name": "PID · Kd · التحكم (percentage points·minute/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "PID · الإعدادات · المصدر (s) · SAMPLE"
+        "name": "PID · الإعدادات · المصدر (s) · SAMPLE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "PID · الإعدادات · المصدر · MAX Δ"
+        "name": "PID · الإعدادات · المصدر · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "PID · الإعدادات · المصدر · MIN Δ"
+        "name": "PID · الإعدادات · المصدر · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_mold_surface_critical_temperature_c": {
-        "name": "مؤشر العفن · 🧊 °C"
+        "name": "العفن · مؤشر العفن · 🧊 °C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_kp": {
-        "name": "PID · {channel}Kp · التحكم (% per °C)"
+        "name": "PID · {channel}Kp · التحكم (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_ki": {
-        "name": "PID · {channel}Ki · التحكم (% per °C-minute)"
+        "name": "PID · {channel}Ki · التحكم (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_kd": {
-        "name": "PID · {channel}Kd · التحكم (%·minute per °C)"
+        "name": "PID · {channel}Kd · التحكم (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_sample_seconds": {
-        "name": "PID · {channel}(s)"
+        "name": "PID · {channel}(s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}كسب العملية"
+        "name": "PID · {channel}كسب العملية",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}الثابت الزمني"
+        "name": "PID · {channel}الثابت الزمني",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}زمن التأخير"
+        "name": "PID · {channel}زمن التأخير",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC λ"
+        "name": "PID · {channel}IMC λ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}القدرة النسبية 1 (%)"
+        "name": "PID · {channel}القدرة النسبية 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}القدرة النسبية 2 (%)"
+        "name": "PID · {channel}القدرة النسبية 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}القدرة النسبية 3 (%)"
+        "name": "PID · {channel}القدرة النسبية 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}القدرة النسبية 4 (%)"
+        "name": "PID · {channel}القدرة النسبية 4 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}سرعة المروحة 1 (%)"
+        "name": "PID · {channel}سرعة المروحة 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}القدرة النسبية 1 (%)"
+        "name": "PID · {channel}القدرة النسبية 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}سرعة المروحة 2 (%)"
+        "name": "PID · {channel}سرعة المروحة 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}القدرة النسبية 2 (%)"
+        "name": "PID · {channel}القدرة النسبية 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}سرعة المروحة 3 (%)"
+        "name": "PID · {channel}سرعة المروحة 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}القدرة النسبية 3 (%)"
+        "name": "PID · {channel}القدرة النسبية 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_cycle_seconds": {
-        "name": "PID · {channel}الإعدادات · المصدر (s) · PWM PERIOD"
+        "name": "PID · {channel}الإعدادات · المصدر (s) · PWM PERIOD",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_quiet_percentage": {
-        "name": "الهدوء · {channel}حد سرعة المروحة الهادئة (%)"
+        "name": "الهدوء · {channel}حد سرعة المروحة الهادئة (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_min_on_seconds": {
-        "name": "الطاقة · {channel}min ON (s)"
+        "name": "الطاقة · {channel}min ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_min_off_seconds": {
-        "name": "الطاقة · {channel}min OFF (s)"
+        "name": "الطاقة · {channel}min OFF (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_max_on_seconds": {
-        "name": "الطاقة · {channel}max ON (s)"
+        "name": "الطاقة · {channel}max ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_min_limit": {
-        "name": "غرفة · الحرارة · min"
+        "name": "حدود الغرفة · غرفة · الحرارة · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_max_limit": {
-        "name": "غرفة · الحرارة · max"
+        "name": "حدود الغرفة · غرفة · الحرارة · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_min_limit": {
-        "name": "غرفة · الرطوبة · min"
+        "name": "حدود الغرفة · غرفة · الرطوبة · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_max_limit": {
-        "name": "غرفة · الرطوبة · max"
+        "name": "حدود الغرفة · غرفة · الرطوبة · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_room_equipment_limit_fan_min_percentage": {
-        "name": "غرفة · السرعة · min (%)"
+        "name": "حدود الغرفة · غرفة · السرعة · min (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_room_equipment_limit_fan_max_percentage": {
-        "name": "غرفة · السرعة · max (%)"
+        "name": "حدود الغرفة · غرفة · السرعة · max (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "home_global_occupancy_away_cooldown_minutes": {
-        "name": "المنزل · Away · cooldown (min)"
+        "name": "التواجد في المنزل · المنزل · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_shading_close_above_c": {
-        "name": "إغلاق الستائر فوق درجة حرارة الغرفة (°C)"
+        "name": "التظليل · إغلاق الستائر فوق درجة حرارة الغرفة (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_shading_min_sun_elevation": {
-        "name": "الارتفاع الأدنى للشمس (°)"
+        "name": "التظليل · الارتفاع الأدنى للشمس (°)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "shade_close_above_c": {
-        "name": "إغلاق الستائر فوق درجة حرارة الغرفة (°C)"
+        "name": "التظليل · إغلاق الستائر فوق درجة حرارة الغرفة (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_particle_cadr_m3h": {
-        "name": "Filter · Rated particle CADR (m³/h)"
+        "name": "Filter · Rated particle CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "shade_min_lux": {
-        "name": "الحد الأدنى للإضاءة للإغلاق (lx)"
+        "name": "التظليل · الحد الأدنى للإضاءة للإغلاق (lx)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_fan_min_percentage": {
-        "name": "المروحة · {channel}أدنى سرعة (%)"
+        "name": "المروحة · {channel}أدنى سرعة (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_fan_max_percentage": {
-        "name": "المروحة · {channel}أعلى سرعة (%)"
+        "name": "المروحة · {channel}أعلى سرعة (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
+      },
+      "global_occupancy_away_cooldown_minutes": {
+        "name": "التواجد في المنزل · المنزل · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
+      },
+      "home_aqi_custom_limit": {
+        "name": "التهوية · Custom AQI limit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
+      },
+      "area_device_target_fan_speed_percent": {
+        "name": "المروحة · Target speed (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       }
     },
     "switch": {
       "home_automatic_notifications": {
-        "name": "تلقائي · AUTOMATIC_NOTIFICATIONS"
+        "name": "الإعلانات · تلقائي · AUTOMATIC_NOTIFICATIONS",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "home_automatic_tts": {
-        "name": "تلقائي"
+        "name": "الإعلانات · تلقائي",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "home_use_announcement_hub": {
-        "name": "Announcement Hub"
+        "name": "الإعلانات · Announcement Hub",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "home_ai_rewrite_announcements": {
-        "name": "AI · الإعلانات (اختياري)"
+        "name": "الإعلانات · AI · الإعلانات (اختياري)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "home_global_environment_pollen_avoid_ventilation": {
-        "name": "POLLEN · حبوب اللقاح · NO VENT"
+        "name": "حبوب اللقاح · POLLEN · حبوب اللقاح · NO VENT",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_area_environment_sleep_room": {
-        "name": "النوم"
+        "name": "الضوضاء · النوم",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_area_environment_enable_pmv": {
-        "name": "PMV / PPD · تلقائي"
+        "name": "الراحة المتقدمة · PMV / PPD · تلقائي",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_sleep_active": {
-        "name": "النوم · الأجهزة"
+        "name": "النوم · الأجهزة",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_sleep_schedule_enabled": {
-        "name": "النوم · تلقائي"
+        "name": "النوم · تلقائي",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_operating_window_efficiency_notify": {
-        "name": "الأجهزة · خارجي"
+        "name": "الإعلانات · الأجهزة · خارجي",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_quiet_sleep": {
-        "name": "الهدوء · {channel}ضوضاء أقل أثناء النوم"
+        "name": "الهدوء · {channel}ضوضاء أقل أثناء النوم",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_quiet_occupied": {
-        "name": "الهدوء · {channel}ضوضاء أقل عند وجود أشخاص"
+        "name": "الهدوء · {channel}ضوضاء أقل عند وجود أشخاص",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_sensor_verified": {
-        "name": "المستشعر · {channel}مطلوب"
+        "name": "المستشعر · {channel}مطلوب",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_shading_enabled": {
-        "name": "الإغلاق التلقائي للستائر لتبريد الغرفة"
+        "name": "التظليل · الإغلاق التلقائي للستائر لتبريد الغرفة",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "home_shade_announce_before_movement": {
-        "name": "الإعلان قبل فتح أو إغلاق ستائر النوافذ"
+        "name": "الإعلانات · الإعلان قبل فتح أو إغلاق ستائر النوافذ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "shade_auto_control": {
-        "name": "الإغلاق التلقائي للستائر لتبريد الغرفة"
+        "name": "التظليل · الإغلاق التلقائي للستائر لتبريد الغرفة",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "shade_announce": {
-        "name": "الإعلان قبل فتح أو إغلاق ستائر النوافذ"
+        "name": "الإعلانات · الإعلان قبل فتح أو إغلاق ستائر النوافذ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "home_away_open_window_alert": {
-        "name": "تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع"
+        "name": "الإعلانات · تنبيه عند بقاء النوافذ مفتوحة بعد مغادرة الجميع",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pause_on_window_open": {
-        "name": "إيقاف عند فتح نافذة · {channel}"
+        "name": "التحكم · إيقاف عند فتح نافذة · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "shade_lux_enabled": {
-        "name": "استخدام مستشعر الإضاءة للتظليل الشمسي"
+        "name": "التظليل · استخدام مستشعر الإضاءة للتظليل الشمسي",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_announce_device_errors": {
-        "name": "إعلان أخطاء الجهاز · {channel}"
+        "name": "الإعلانات · إعلان أخطاء الجهاز · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       }
     },
     "select": {
       "home_language": {
-        "name": "اللغة"
+        "name": "الإعلانات · اللغة",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_manual_profile": {
-        "name": "الأجهزة · CLIMATE_MANUAL_PROFILE"
+        "name": "الملف · الأجهزة · CLIMATE_MANUAL_PROFILE",
+        "state": {
+          "auto": "Automatic"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Gain source",
         "state": {
           "defaults": "Defaults",
           "manual": "Manual"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
         }
       },
       "home_global_policy_home_policy": {
-        "name": "المنزل · الإشغال · التحكم"
+        "name": "التواجد في المنزل",
+        "state": {
+          "any_home": "شخص واحد على الأقل في المنزل",
+          "all_home": "الجميع في المنزل (خيار قديم)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_policy_unknown_occupancy": {
-        "name": "الإشغال · الأجهزة"
+        "name": "التواجد في الغرفة · الإشغال · الأجهزة",
+        "state": {
+          "occupied": "Assume occupied",
+          "hold": "Hold automatic changes"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_policy_away_policy": {
-        "name": "المنزل · الأجهزة · POLICY"
+        "name": "التواجد في المنزل · المنزل · الأجهزة · POLICY",
+        "state": {
+          "any_home": "شخص واحد على الأقل في المنزل",
+          "all_home": "الجميع في المنزل (خيار قديم)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_policy_target_source": {
-        "name": "الأجهزة · المصدر · الهدف",
+        "name": "الراحة المتقدمة · الأجهزة · المصدر · الهدف",
         "state": {
           "temperature": "درجات حرارة ثابتة",
           "auto_comfort": "راحة تلقائية (الحرارة والرطوبة)",
           "pmv": "ISO 7730 المتقدم (يتطلب قياسات)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
         }
       },
       "equipment_control_mode": {
@@ -3292,10 +4031,20 @@
           "manual": "يدوي",
           "off": "إيقاف",
           "pid": "PID"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "الهدوء · {channel}وضع المروحة الهادئ الأصلي"
+        "name": "الهدوء · {channel}وضع المروحة الهادئ الأصلي",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}المعايرة",
@@ -3305,6 +4054,11 @@
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Observe and suggest · Approve",
           "adaptive_auto": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3312,6 +4066,11 @@
         "state": {
           "legacy": "الأصلي (غير معاير)",
           "measured": "نموذج القدرة المقاسة"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
@@ -3322,6 +4081,11 @@
           "cool": "تبريد",
           "dry": "إزالة الرطوبة",
           "fan_only": "مروحة"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
         }
       },
       "equipment_presence_requirement": {
@@ -3330,6 +4094,11 @@
           "always": "تلقائي",
           "occupied": "غرفة · الإشغال",
           "absent": "غرفة · الإشغال · إيقاف"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
         }
       },
       "equipment_sleep_behavior": {
@@ -3338,6 +4107,11 @@
           "normal": "تلقائي",
           "pause": "تعليق",
           "sleep_targets": "النوم · الهدف"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
         }
       },
       "equipment_fan_purpose": {
@@ -3346,29 +4120,59 @@
           "extraction": "خارجي · التحكم",
           "filtration": "PM2.5 · التحكم",
           "auto": "تلقائي"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "الحرارة · المصدر"
+        "name": "الراحة المتقدمة · الحرارة · المصدر",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_area_science_air_speed_entity": {
-        "name": "المصدر · السرعة · خارجي (m/s)"
+        "name": "الراحة المتقدمة · المصدر · السرعة · خارجي (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "shade_window_entity": {
-        "name": "مستشعر النافذة المرتبط"
+        "name": "التظليل · مستشعر النافذة المرتبط",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "home_aqi_scale": {
-        "name": "مقياس AQI",
+        "name": "التهوية · مقياس AQI",
         "state": {
           "auto": "تلقائي (المزود)",
           "not_configured": "غير معروف - دون مقارنة",
           "us_epa": "US EPA AQI (0-500)",
           "eea_category": "EEA AQI (1-6)",
           "custom": "مقياس مخصص"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
         }
       },
       "shade_lux_entity": {
-        "name": "مستشعر الإضاءة للتظليل"
+        "name": "التظليل · مستشعر الإضاءة للتظليل",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_adaptation_mode": {
         "name": "PID · {channel}Passive adaptation",
@@ -3376,35 +4180,80 @@
           "disabled": "Disabled",
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
         }
       }
     },
     "time": {
       "area_climate_sleep_start": {
-        "name": "النوم · الأجهزة · START"
+        "name": "النوم · الأجهزة · START",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "area_climate_sleep_end": {
-        "name": "النوم · الأجهزة · END"
+        "name": "النوم · الأجهزة · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       }
     },
     "button": {
       "area_recalculate_mold": {
-        "name": "مؤشر العفن · ↻ 🌡️"
+        "name": "العفن · مؤشر العفن · ↻ 🌡️",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_resume": {
-        "name": "التحكم · {channel}تحقق واستأنف"
+        "name": "التحكم · {channel}تحقق واستأنف",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}تطبيق · المعايرة"
+        "name": "PID · {channel}تطبيق · المعايرة",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}تطبيق · المعايرة"
+        "name": "PID · {channel}تطبيق · المعايرة",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_review_approve": {
-        "name": "PID · {channel}Approve suggestion"
+        "name": "PID · {channel}Approve suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       },
       "equipment_pid_review_discard": {
-        "name": "PID · {channel}Discard suggestion"
+        "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       }
     },
     "climate": {
@@ -3505,8 +4354,8 @@
     },
     "general_home_policy": {
       "options": {
-        "any_home": "المنزل · الإشغال",
-        "all_home": "المنزل · الأجهزة · الإشغال"
+        "any_home": "شخص واحد على الأقل في المنزل",
+        "all_home": "الجميع في المنزل (خيار قديم)"
       }
     },
     "device_method": {

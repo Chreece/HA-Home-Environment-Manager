@@ -79,6 +79,7 @@ class Entity:
 
 
 entity_ns = {
+    "SettingsMetadata": importlib.import_module(PKG + ".settings_help").SettingsMetadata,
     **vars(const), **{name: control_ns[name] for name in control_names},
     "__package__": PKG, "__name__": PKG + ".entity_fixture",
     "callback": lambda fn: fn, "EntityCategory": N(CONFIG="config"),

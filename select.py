@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .room_hubs import async_add_grouped_entities
+from .settings_help import SettingsMetadata
 from .room_pid_name_catalog import localized_room_pid_name
 
 from homeassistant.components.select import SelectEntity
@@ -130,10 +131,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
     )
 
 
-class TTSLanguageSelect(SelectEntity):
+class TTSLanguageSelect(SettingsMetadata, SelectEntity):
     """Show human language names while persisting provider-compatible BCP47 tags."""
 
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_should_poll = False
     _attr_entity_category = EntityCategory.CONFIG
     _attr_translation_key = "home_language"
@@ -169,10 +170,10 @@ class TTSLanguageSelect(SelectEntity):
         self.async_write_ha_state()
 
 
-class ConfigSelect(SelectEntity):
+class ConfigSelect(SettingsMetadata, SelectEntity):
     """Only supervisor profile/gain-source and language, never native HVAC mode."""
 
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_should_poll = False
     _attr_entity_category = EntityCategory.CONFIG
 
@@ -232,7 +233,8 @@ class ConfigSelect(SelectEntity):
         if self._kind == "aqi_scale":
             from .aqi_sources import resolve_scale
             profile = self._manager.settings.get("environment_global", {})
-            return {"aqi_source_entity_id": self._entity_id,
+            return {**super().extra_state_attributes,
+                    "aqi_source_entity_id": self._entity_id,
                     **resolve_scale(self._manager.hass, profile, self._entity_id)}
         return super().extra_state_attributes
 
@@ -510,9 +512,9 @@ class AreaScienceSource(ConfigSelect):
         self.async_write_ha_state()
 
 
-class ShadeIlluminanceSelect(SelectEntity):
+class ShadeIlluminanceSelect(SettingsMetadata, SelectEntity):
     """Select one exact room sensor or the selected-room lux mean per cover."""
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_should_poll = False
     _attr_entity_category = EntityCategory.CONFIG
     _attr_translation_key = "shade_lux_entity"
@@ -577,7 +579,8 @@ class ShadeIlluminanceSelect(SelectEntity):
     def extra_state_attributes(self):
         from .shade_cooling import cover_config
         cfg = cover_config(self._manager.settings, self._area, self._cover)
-        return {"source_cover": self._cover, "lux_entity": cfg["lux_entity"],
+        return {**super().extra_state_attributes,
+                "source_cover": self._cover, "lux_entity": cfg["lux_entity"],
                 "minimum_lux": cfg["min_lux"], "use_lux_for_shading": cfg["lux_enabled"]}
 
     async def async_select_option(self, option):
@@ -600,10 +603,10 @@ class ShadeIlluminanceSelect(SelectEntity):
         self.async_write_ha_state()
 
 
-class ShadeWindowSelect(SelectEntity):
+class ShadeWindowSelect(SettingsMetadata, SelectEntity):
     """Select the exact physical window contact assigned to one motorized cover."""
 
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_should_poll = False
     _attr_entity_category = EntityCategory.CONFIG
     _attr_translation_key = "shade_window_entity"
@@ -650,7 +653,8 @@ class ShadeWindowSelect(SelectEntity):
         window_status = (
             "open" if raw == "on" else "closed" if raw == "off"
             else "unknown")
-        return {"window_entity_id": contact_id, "window_state": window_status,
+        return {**super().extra_state_attributes,
+                "window_entity_id": contact_id, "window_state": window_status,
                 "source_cover": self._cover}
 
     async def async_select_option(self, option: str):

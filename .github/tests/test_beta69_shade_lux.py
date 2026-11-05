@@ -7,6 +7,7 @@ import ast
 import asyncio
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
+import importlib
 import json
 from pathlib import Path
 import sys
@@ -104,7 +105,7 @@ def reading(hass,entity,max_age_minutes,*,outdoor):
     except (TypeError,ValueError):v=None
     return NS(metric='illuminance',value=v if v is not None and 0<=v<=300000 else None)
 
-PKG=ModuleType('lux_69');PKG.__path__=[]
+PKG=ModuleType('lux_69');PKG.__path__=[str(ROOT)]
 DIS=ModuleType('lux_69.discovery');DIS.entity_area=entity_area;DIS.is_window=is_window;DIS.reading=reading
 ROOMMOD=ModuleType('lux_69.room_sources');ROOMMOD.selected=selected;ROOMMOD.native=native
 ROOMMOD.category=lambda hass,s:'shades' if s.domain=='cover' else None
@@ -279,6 +280,7 @@ async def test_select_device_and_scan_budget():
         LUX_ROOM_MEAN=lux_globals['LUX_ROOM_MEAN'],
         cover_config=lux_globals['cover_config'])
     scope={'__name__':SELECT.__name__,'__package__':'lux_69',
+           'SettingsMetadata':importlib.import_module('lux_69.settings_help').SettingsMetadata,
            'SelectEntity':object,'EntityCategory':NS(CONFIG='config'),
            'controller_device_info':hierarchy.controller_device_info,
            'update_device_setting':lambda *args,**kw:None,

@@ -72,7 +72,7 @@
           "automatic_tts": "Tự động",
           "automatic_notifications": "Tự động · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Thông báo (tùy chọn) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Thông báo · Announcement Hub",
           "notify_entities": "cài đặt · nguồn",
           "tts_engine": "cài đặt · nguồn · TTS_ENGINE",
           "media_players": "cài đặt · nguồn · MEDIA_PLAYERS",
@@ -84,7 +84,7 @@
           "automatic_tts": "Mặc định: ⛔ · Tự động · 🪟 90 s. Tùy chọn này điều khiển “Tự động”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "automatic_notifications": "Tùy chọn này điều khiển “Tự động · AUTOMATIC_NOTIFICATIONS”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "announcement_repeat_minutes": "Mặc định: 10 min · 0 = không bao giờ · Khi nguyên nhân vẫn còn · Phòng.",
-          "use_announcement_hub": "Announcement Hub · Không khả dụng → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Chọn: notify.* · cài đặt · nguồn. Chọn nguồn Home Assistant thực cho “cài đặt · nguồn”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "tts_engine": "Chọn: tts.* · cài đặt · nguồn · TTS_ENGINE.",
           "media_players": "Chọn: media_player.* · cài đặt · nguồn · MEDIA_PLAYERS.",
@@ -115,8 +115,8 @@
           "min_outdoor_temp": "Ngoài trời · °C (≥)",
           "max_outdoor_temp": "Ngoài trời · °C (≤)",
           "max_outdoor_humidity": "Ngoài trời · RH (%) (≤)",
-          "max_wind_kmh": "Thời tiết và cảnh báo · km/h (≤)",
-          "max_age_minutes": "⏱ · Mở (min, ≤)",
+          "max_wind_kmh": "Thông gió · Thời tiết và cảnh báo · km/h (≤)",
+          "max_age_minutes": "Thông gió · ⏱ · Mở (min, ≤)",
           "indoor_mold": "Chỉ số nấm mốc · ≥ 70%"
         },
         "data_description": {
@@ -139,8 +139,8 @@
           "min_outdoor_temp": "Ngưỡng quyết định cho “Ngoài trời · °C (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "max_outdoor_temp": "Ngưỡng quyết định cho “Ngoài trời · °C (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "max_outdoor_humidity": "Ngưỡng quyết định cho “Ngoài trời · RH (%) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
-          "max_wind_kmh": "Ngưỡng quyết định cho “Thời tiết và cảnh báo · km/h (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
-          "max_age_minutes": "Ngưỡng quyết định cho “⏱ · Mở (min, ≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Ngưỡng quyết định cho “Chỉ số nấm mốc · ≥ 70%”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế."
         }
       },
@@ -194,7 +194,7 @@
           "language": "TTS · Chọn · nguồn",
           "use_mold_indicator": "Chỉ số nấm mốc · RH (%) → 70%",
           "pollen_entities": "Phấn hoa · nguồn · Chọn",
-          "use_announcement_hub": "Tự động · Announcement Hub",
+          "use_announcement_hub": "Thông báo · Announcement Hub",
           "general_away_cooldown_minutes": "Nhà · Away · cooldown (min)",
           "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà",
           "away_windows_target_people": "Người nhận thông báo",
@@ -225,7 +225,7 @@
           "pollen_max_scale": "POLLEN · Phấn hoa · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Phấn hoa · NO VENT",
           "general_source_stale_minutes": "nguồn · max (min)",
-          "general_home_policy": "Nhà · Hiện diện · điều khiển"
+          "general_home_policy": "Có mặt ở nhà"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -244,7 +244,7 @@
           "language": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · TTS · Chọn · nguồn · provider capabilities.",
           "use_mold_indicator": "🧱 Chỉ số nấm mốc · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Phấn hoa · nguồn · Chọn.",
-          "use_announcement_hub": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Tự động · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Nhà · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà. Người nhận thông báo (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Điện thoại, Đồng hồ, Máy tính bảng.",
           "away_windows_target_people": "Người nhận thông báo (person.*) - Announcement Hub: Điện thoại, Đồng hồ, Máy tính bảng, Thiết bị khác. Only explicitly assigned personal endpoints.",
@@ -275,7 +275,7 @@
           "pollen_max_scale": "Chỉ thiết lập “POLLEN · Phấn hoa · SCALE” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "pollen_avoid_ventilation": "Chỉ thiết lập “POLLEN · Phấn hoa · NO VENT” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "general_source_stale_minutes": "nguồn · Ngủ / Hiện diện · max 240 min. Không hợp lệ · Tắt.",
-          "general_home_policy": "Tùy chọn này điều khiển “Nhà · Hiện diện · điều khiển”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "reconfigure": {
@@ -537,7 +537,7 @@
           "extractor_entity": "Quạt hút · nguồn",
           "co2_ndir_verified": "CO₂ · Bắt buộc",
           "co2_target_ppm": "CO₂ · CO₂ · mục tiêu (ppm)",
-          "sleep_room": "Ngủ"
+          "sleep_room": "Tiếng ồn · Ngủ"
         },
         "data_description": {
           "temperature_entity": "Chọn nguồn Home Assistant thực cho “Nhiệt độ · nguồn”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
@@ -546,8 +546,8 @@
           "purifier_entity": "Chọn Máy lọc không khí · nguồn Home Assistant thực cho “Máy lọc không khí · nguồn”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "extractor_entity": "Chọn Quạt hút · nguồn Home Assistant thực cho “Quạt hút · nguồn”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "co2_ndir_verified": "Dùng phép đo thực phù hợp cho “CO₂ · Bắt buộc”. Ước tính không thay thế cảm biến hiệu chuẩn.",
-          "co2_target_ppm": "Ngưỡng quyết định cho “CO₂ · CO₂ · mục tiêu (ppm)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
-          "sleep_room": "Chỉ thiết lập “Ngủ” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -699,7 +699,7 @@
           "climate_unknown_occupancy": "Hiện diện · Thiết bị",
           "climate_unoccupied_delay_minutes": "Thiết bị · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Hiện diện · Thiết bị · cảm biến · Bắt buộc",
-          "climate_away_policy": "Nhà · Thiết bị · POLICY",
+          "climate_away_policy": "Có mặt ở nhà · Nhà · Thiết bị · POLICY",
           "climate_manual_profile": "Thiết bị · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Ngủ · Thiết bị",
           "climate_sleep_schedule_enabled": "Ngủ · Tự động",
@@ -711,15 +711,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "climate_away_entities": "Chọn nguồn Home Assistant thực cho “Nhà · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
-          "climate_unknown_occupancy": "Tùy chọn này điều khiển “Hiện diện · Thiết bị”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
-          "climate_unoccupied_delay_minutes": "Khoảng thời gian này áp dụng cho “Thiết bị · CLIMATE_UNOCCUPIED_DELAY_MINUTES”. Giảm bật tắt liên tục, không thay thế bảo vệ phần cứng.",
-          "climate_occupancy_stale_minutes": "Khoảng thời gian này áp dụng cho “Hiện diện · Thiết bị · cảm biến · Bắt buộc”. Giảm bật tắt liên tục, không thay thế bảo vệ phần cứng.",
-          "climate_away_policy": "Tùy chọn này điều khiển “Nhà · Thiết bị · POLICY”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Tùy chọn này điều khiển “Thiết bị · CLIMATE_MANUAL_PROFILE”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
-          "climate_sleep_active": "Tùy chọn này điều khiển “Ngủ · Thiết bị”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
-          "climate_sleep_schedule_enabled": "Tùy chọn này điều khiển “Ngủ · Tự động”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
-          "climate_sleep_start": "Khoảng thời gian này áp dụng cho “Ngủ · Thiết bị · START”. Giảm bật tắt liên tục, không thay thế bảo vệ phần cứng.",
-          "climate_sleep_end": "Khoảng thời gian này áp dụng cho “Ngủ · Thiết bị · END”. Giảm bật tắt liên tục, không thay thế bảo vệ phần cứng.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Ngưỡng quyết định cho “Thiết bị · nguồn · mục tiêu”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "climate_comfort_adjustment_max_c": "Ngưỡng quyết định cho “Thiết bị (°C)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế."
         }
@@ -768,7 +768,7 @@
           "climate_humidity_low_rh": "Ngưỡng quyết định cho “RH · Độ ẩm · Thiết bị (%) · RH MIN”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "climate_humidity_high_rh": "Ngưỡng quyết định cho “RH · Độ ẩm · Thiết bị (%) · RH MAX”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "climate_humidity_hysteresis_rh": "Ngưỡng quyết định cho “RH · Độ ẩm · Thiết bị · ± RH”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
-          "climate_cooling_dry_deferral_rh_points": "Tùy chọn này điều khiển “Thiết bị · Nhiệt độ −”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Tùy chọn này điều khiển “Độ ẩm · Tự động”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "climate_window_efficiency_notify": "Tùy chọn này điều khiển “Thiết bị · Bên ngoài”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "climate_dry_fan_mode_auto": "Tùy chọn này điều khiển “Tốc độ · Tự động”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
@@ -921,7 +921,7 @@
           "general_occupied_rooms_entity": "Hiện diện · Phòng · nguồn (state)",
           "general_occupied_rooms_attribute": "Hiện diện · Phòng · nguồn (attribute)",
           "general_home_trackers": "Nhà · Hiện diện · Thiết bị",
-          "general_home_policy": "Nhà · Hiện diện · điều khiển",
+          "general_home_policy": "Có mặt ở nhà",
           "general_sleep_rooms_entity": "Ngủ · Phòng · nguồn (state)",
           "general_sleep_rooms_attribute": "Ngủ · Phòng · nguồn (attribute)",
           "general_source_stale_minutes": "nguồn · max (min)"
@@ -931,7 +931,7 @@
           "general_occupied_rooms_entity": "Chọn nguồn Home Assistant thực cho “Hiện diện · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "general_occupied_rooms_attribute": "Chỉ thiết lập “Hiện diện · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "general_home_trackers": "Chọn nguồn Home Assistant thực cho “Nhà · Hiện diện · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
-          "general_home_policy": "Tùy chọn này điều khiển “Nhà · Hiện diện · điều khiển”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Chọn nguồn Home Assistant thực cho “Ngủ · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "general_sleep_rooms_attribute": "Chỉ thiết lập “Ngủ · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "general_source_stale_minutes": "nguồn · Ngủ / Hiện diện · max 240 min. Không hợp lệ · Tắt."
@@ -1366,7 +1366,7 @@
           "automatic_tts": "Tự động",
           "automatic_notifications": "Tự động · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Thông báo (tùy chọn) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Thông báo · Announcement Hub",
           "notify_entities": "cài đặt · nguồn",
           "tts_engine": "cài đặt · nguồn · TTS_ENGINE",
           "media_players": "cài đặt · nguồn · MEDIA_PLAYERS",
@@ -1378,7 +1378,7 @@
           "automatic_tts": "Mặc định: ⛔ · Tự động · 🪟 90 s. Tùy chọn này điều khiển “Tự động”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "automatic_notifications": "Tùy chọn này điều khiển “Tự động · AUTOMATIC_NOTIFICATIONS”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "announcement_repeat_minutes": "Mặc định: 10 min · 0 = không bao giờ · Khi nguyên nhân vẫn còn · Phòng.",
-          "use_announcement_hub": "Announcement Hub · Không khả dụng → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Chọn: notify.* · cài đặt · nguồn. Chọn nguồn Home Assistant thực cho “cài đặt · nguồn”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "tts_engine": "Chọn: tts.* · cài đặt · nguồn · TTS_ENGINE.",
           "media_players": "Chọn: media_player.* · cài đặt · nguồn · MEDIA_PLAYERS.",
@@ -1409,8 +1409,8 @@
           "min_outdoor_temp": "Ngoài trời · °C (≥)",
           "max_outdoor_temp": "Ngoài trời · °C (≤)",
           "max_outdoor_humidity": "Ngoài trời · RH (%) (≤)",
-          "max_wind_kmh": "Thời tiết và cảnh báo · km/h (≤)",
-          "max_age_minutes": "⏱ · Mở (min, ≤)",
+          "max_wind_kmh": "Thông gió · Thời tiết và cảnh báo · km/h (≤)",
+          "max_age_minutes": "Thông gió · ⏱ · Mở (min, ≤)",
           "indoor_mold": "Chỉ số nấm mốc · ≥ 70%"
         },
         "data_description": {
@@ -1433,8 +1433,8 @@
           "min_outdoor_temp": "Ngưỡng quyết định cho “Ngoài trời · °C (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "max_outdoor_temp": "Ngưỡng quyết định cho “Ngoài trời · °C (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "max_outdoor_humidity": "Ngưỡng quyết định cho “Ngoài trời · RH (%) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
-          "max_wind_kmh": "Ngưỡng quyết định cho “Thời tiết và cảnh báo · km/h (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
-          "max_age_minutes": "Ngưỡng quyết định cho “⏱ · Mở (min, ≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Ngưỡng quyết định cho “Chỉ số nấm mốc · ≥ 70%”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế."
         }
       },
@@ -1603,7 +1603,7 @@
           "extractor_entity": "Quạt hút · nguồn",
           "co2_ndir_verified": "CO₂ · Bắt buộc",
           "co2_target_ppm": "CO₂ · CO₂ · mục tiêu (ppm)",
-          "sleep_room": "Ngủ"
+          "sleep_room": "Tiếng ồn · Ngủ"
         },
         "data_description": {
           "temperature_entity": "Chọn nguồn Home Assistant thực cho “Nhiệt độ · nguồn”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
@@ -1612,8 +1612,8 @@
           "purifier_entity": "Chọn Máy lọc không khí · nguồn Home Assistant thực cho “Máy lọc không khí · nguồn”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "extractor_entity": "Chọn Quạt hút · nguồn Home Assistant thực cho “Quạt hút · nguồn”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "co2_ndir_verified": "Dùng phép đo thực phù hợp cho “CO₂ · Bắt buộc”. Ước tính không thay thế cảm biến hiệu chuẩn.",
-          "co2_target_ppm": "Ngưỡng quyết định cho “CO₂ · CO₂ · mục tiêu (ppm)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
-          "sleep_room": "Chỉ thiết lập “Ngủ” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -1765,7 +1765,7 @@
           "climate_unknown_occupancy": "Hiện diện · Thiết bị",
           "climate_unoccupied_delay_minutes": "Thiết bị · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Hiện diện · Thiết bị · cảm biến · Bắt buộc",
-          "climate_away_policy": "Nhà · Thiết bị · POLICY",
+          "climate_away_policy": "Có mặt ở nhà · Nhà · Thiết bị · POLICY",
           "climate_manual_profile": "Thiết bị · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Ngủ · Thiết bị",
           "climate_sleep_schedule_enabled": "Ngủ · Tự động",
@@ -1777,15 +1777,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "climate_away_entities": "Chọn nguồn Home Assistant thực cho “Nhà · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
-          "climate_unknown_occupancy": "Tùy chọn này điều khiển “Hiện diện · Thiết bị”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
-          "climate_unoccupied_delay_minutes": "Khoảng thời gian này áp dụng cho “Thiết bị · CLIMATE_UNOCCUPIED_DELAY_MINUTES”. Giảm bật tắt liên tục, không thay thế bảo vệ phần cứng.",
-          "climate_occupancy_stale_minutes": "Khoảng thời gian này áp dụng cho “Hiện diện · Thiết bị · cảm biến · Bắt buộc”. Giảm bật tắt liên tục, không thay thế bảo vệ phần cứng.",
-          "climate_away_policy": "Tùy chọn này điều khiển “Nhà · Thiết bị · POLICY”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Tùy chọn này điều khiển “Thiết bị · CLIMATE_MANUAL_PROFILE”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
-          "climate_sleep_active": "Tùy chọn này điều khiển “Ngủ · Thiết bị”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
-          "climate_sleep_schedule_enabled": "Tùy chọn này điều khiển “Ngủ · Tự động”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
-          "climate_sleep_start": "Khoảng thời gian này áp dụng cho “Ngủ · Thiết bị · START”. Giảm bật tắt liên tục, không thay thế bảo vệ phần cứng.",
-          "climate_sleep_end": "Khoảng thời gian này áp dụng cho “Ngủ · Thiết bị · END”. Giảm bật tắt liên tục, không thay thế bảo vệ phần cứng.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Ngưỡng quyết định cho “Thiết bị · nguồn · mục tiêu”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "climate_comfort_adjustment_max_c": "Ngưỡng quyết định cho “Thiết bị (°C)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế."
         }
@@ -1834,7 +1834,7 @@
           "climate_humidity_low_rh": "Ngưỡng quyết định cho “RH · Độ ẩm · Thiết bị (%) · RH MIN”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "climate_humidity_high_rh": "Ngưỡng quyết định cho “RH · Độ ẩm · Thiết bị (%) · RH MAX”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "climate_humidity_hysteresis_rh": "Ngưỡng quyết định cho “RH · Độ ẩm · Thiết bị · ± RH”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
-          "climate_cooling_dry_deferral_rh_points": "Tùy chọn này điều khiển “Thiết bị · Nhiệt độ −”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Tùy chọn này điều khiển “Độ ẩm · Tự động”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "climate_window_efficiency_notify": "Tùy chọn này điều khiển “Thiết bị · Bên ngoài”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "climate_dry_fan_mode_auto": "Tùy chọn này điều khiển “Tốc độ · Tự động”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
@@ -1987,7 +1987,7 @@
           "general_occupied_rooms_entity": "Hiện diện · Phòng · nguồn (state)",
           "general_occupied_rooms_attribute": "Hiện diện · Phòng · nguồn (attribute)",
           "general_home_trackers": "Nhà · Hiện diện · Thiết bị",
-          "general_home_policy": "Nhà · Hiện diện · điều khiển",
+          "general_home_policy": "Có mặt ở nhà",
           "general_sleep_rooms_entity": "Ngủ · Phòng · nguồn (state)",
           "general_sleep_rooms_attribute": "Ngủ · Phòng · nguồn (attribute)",
           "general_source_stale_minutes": "nguồn · max (min)"
@@ -1997,7 +1997,7 @@
           "general_occupied_rooms_entity": "Chọn nguồn Home Assistant thực cho “Hiện diện · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "general_occupied_rooms_attribute": "Chỉ thiết lập “Hiện diện · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "general_home_trackers": "Chọn nguồn Home Assistant thực cho “Nhà · Hiện diện · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
-          "general_home_policy": "Tùy chọn này điều khiển “Nhà · Hiện diện · điều khiển”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Chọn nguồn Home Assistant thực cho “Ngủ · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "general_sleep_rooms_attribute": "Chỉ thiết lập “Ngủ · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "general_source_stale_minutes": "nguồn · Ngủ / Hiện diện · max 240 min. Không hợp lệ · Tắt."
@@ -2177,7 +2177,7 @@
           "language": "TTS · Chọn · nguồn",
           "use_mold_indicator": "Chỉ số nấm mốc · RH (%) → 70%",
           "pollen_entities": "Phấn hoa · nguồn · Chọn",
-          "use_announcement_hub": "Tự động · Announcement Hub",
+          "use_announcement_hub": "Thông báo · Announcement Hub",
           "general_away_cooldown_minutes": "Nhà · Away · cooldown (min)",
           "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà",
           "away_windows_target_people": "Người nhận thông báo",
@@ -2208,7 +2208,7 @@
           "pollen_max_scale": "POLLEN · Phấn hoa · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Phấn hoa · NO VENT",
           "general_source_stale_minutes": "nguồn · max (min)",
-          "general_home_policy": "Nhà · Hiện diện · điều khiển"
+          "general_home_policy": "Có mặt ở nhà"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2227,7 +2227,7 @@
           "language": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · TTS · Chọn · nguồn · provider capabilities.",
           "use_mold_indicator": "🧱 Chỉ số nấm mốc · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Phấn hoa · nguồn · Chọn.",
-          "use_announcement_hub": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Tự động · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Nhà · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà. Người nhận thông báo (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Điện thoại, Đồng hồ, Máy tính bảng.",
           "away_windows_target_people": "Người nhận thông báo (person.*) - Announcement Hub: Điện thoại, Đồng hồ, Máy tính bảng, Thiết bị khác. Only explicitly assigned personal endpoints.",
@@ -2258,7 +2258,7 @@
           "pollen_max_scale": "Chỉ thiết lập “POLLEN · Phấn hoa · SCALE” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "pollen_avoid_ventilation": "Chỉ thiết lập “POLLEN · Phấn hoa · NO VENT” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "general_source_stale_minutes": "nguồn · Ngủ / Hiện diện · max 240 min. Không hợp lệ · Tắt.",
-          "general_home_policy": "Tùy chọn này điều khiển “Nhà · Hiện diện · điều khiển”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "room_occupancy": {
@@ -2852,436 +2852,1175 @@
     },
     "number": {
       "global_threshold_outdoor_aqi": {
-        "name": "Ngoài trời · AQI (≤)"
+        "name": "Thông gió · Ngoài trời · AQI (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_outdoor_co2": {
-        "name": "Ngoài trời · CO₂ (ppm) (≤)"
+        "name": "Thông gió · Ngoài trời · CO₂ (ppm) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_outdoor_pm25": {
-        "name": "Ngoài trời · PM2.5 (µg/m³) (≤)"
+        "name": "Thông gió · Ngoài trời · PM2.5 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_outdoor_pm10": {
-        "name": "Ngoài trời · PM10 (µg/m³) (≤)"
+        "name": "Thông gió · Ngoài trời · PM10 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_outdoor_voc": {
-        "name": "Ngoài trời · VOC (µg/m³) (≤)"
+        "name": "Thông gió · Ngoài trời · VOC (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_outdoor_voc_parts": {
-        "name": "Ngoài trời · VOC (ppb) (≤)"
+        "name": "Thông gió · Ngoài trời · VOC (ppb) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_outdoor_no2": {
-        "name": "NO₂ · Bên ngoài (µg/m³)"
+        "name": "Thông gió · NO₂ · Bên ngoài (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_outdoor_o3": {
-        "name": "O₃ · Bên ngoài (µg/m³)"
+        "name": "Thông gió · O₃ · Bên ngoài (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_outdoor_so2": {
-        "name": "SO₂ · Bên ngoài (µg/m³)"
+        "name": "Thông gió · SO₂ · Bên ngoài (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_indoor_aqi": {
-        "name": "Chất lượng không khí · AQI (≥)"
+        "name": "Thông gió · Chất lượng không khí · AQI (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_indoor_co2": {
-        "name": "Chất lượng không khí · CO₂ (ppm) (≥)"
+        "name": "Thông gió · Chất lượng không khí · CO₂ (ppm) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_indoor_pm25": {
-        "name": "Chất lượng không khí · PM2.5 (µg/m³) (≥)"
+        "name": "Thông gió · Chất lượng không khí · PM2.5 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_indoor_pm10": {
-        "name": "Chất lượng không khí · PM10 (µg/m³) (≥)"
+        "name": "Thông gió · Chất lượng không khí · PM10 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_indoor_voc": {
-        "name": "Chất lượng không khí · VOC (µg/m³) (≥)"
+        "name": "Thông gió · Chất lượng không khí · VOC (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_indoor_voc_parts": {
-        "name": "Chất lượng không khí · VOC (ppb) (≥)"
+        "name": "Thông gió · Chất lượng không khí · VOC (ppb) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_indoor_humidity": {
-        "name": "Chất lượng không khí · RH (%) (≥)"
+        "name": "Thông gió · Chất lượng không khí · RH (%) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_indoor_mold": {
-        "name": "Chỉ số nấm mốc · ≥ 70%"
+        "name": "Thông gió · Chỉ số nấm mốc · ≥ 70%",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_min_outdoor_temp": {
-        "name": "Ngoài trời · °C (≥)"
+        "name": "Thông gió · Ngoài trời · °C (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_max_outdoor_temp": {
-        "name": "Ngoài trời · °C (≤)"
+        "name": "Thông gió · Ngoài trời · °C (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_max_outdoor_humidity": {
-        "name": "Ngoài trời · RH (%) (≤)"
+        "name": "Thông gió · Ngoài trời · RH (%) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_max_wind_kmh": {
-        "name": "Thời tiết và cảnh báo · km/h (≤)"
+        "name": "Thông gió · Thời tiết và cảnh báo · km/h (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_threshold_max_age_minutes": {
-        "name": "⏱ · Mở (min, ≤)"
+        "name": "Thông gió · ⏱ · Mở (min, ≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Thông báo (tùy chọn) · 0-1440 min"
+        "name": "Thông báo · Thông báo (tùy chọn) · 0-1440 min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_pid_target_c": {
-        "name": "PID · mục tiêu (°C)"
+        "name": "PID · mục tiêu (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_pid_kp": {
-        "name": "PID · Kp · điều khiển (% per °C)"
+        "name": "PID · Kp · điều khiển (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_pid_ki": {
-        "name": "PID · Ki · điều khiển (% per °C-minute)"
+        "name": "PID · Ki · điều khiển (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_pid_kd": {
-        "name": "PID · Kd · điều khiển (%·minute per °C)"
+        "name": "PID · Kd · điều khiển (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_pid_offset_c": {
-        "name": "PID · (°C) · PID_OFFSET_C"
+        "name": "PID · (°C) · PID_OFFSET_C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_pid_min_setpoint_c": {
-        "name": "PID · (°C) · MIN TARGET"
+        "name": "PID · (°C) · MIN TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_pid_max_setpoint_c": {
-        "name": "PID · (°C) · MAX TARGET"
+        "name": "PID · (°C) · MAX TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_pid_sample_seconds": {
-        "name": "PID · (s)"
+        "name": "PID · (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_pid_max_change_c": {
-        "name": "PID · (°C) · MAX Δ"
+        "name": "PID · (°C) · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_pid_min_change_c": {
-        "name": "PID · (°C) · MIN Δ"
+        "name": "PID · (°C) · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_comfort_heat": {
-        "name": "Sưởi · Phòng · Hiện diện"
+        "name": "Hồ sơ · Sưởi · Phòng · Hiện diện",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_comfort_cool": {
-        "name": "Làm mát · Phòng · Hiện diện"
+        "name": "Hồ sơ · Làm mát · Phòng · Hiện diện",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_comfort_humidity": {
-        "name": "Độ ẩm · Phòng · Hiện diện · mục tiêu (%)"
+        "name": "Hồ sơ · Độ ẩm · Phòng · Hiện diện · mục tiêu (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_home_heat": {
-        "name": "Sưởi · Nhà"
+        "name": "Hồ sơ · Sưởi · Nhà",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_home_cool": {
-        "name": "Làm mát · Nhà"
+        "name": "Hồ sơ · Làm mát · Nhà",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_home_humidity": {
-        "name": "Độ ẩm · Nhà · mục tiêu (%)"
+        "name": "Hồ sơ · Độ ẩm · Nhà · mục tiêu (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_away_heat": {
-        "name": "Sưởi · Vắng nhà"
+        "name": "Hồ sơ · Sưởi · Vắng nhà",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_away_cool": {
-        "name": "Làm mát · Vắng nhà"
+        "name": "Hồ sơ · Làm mát · Vắng nhà",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_away_humidity": {
-        "name": "Độ ẩm · Vắng nhà · mục tiêu (%)"
+        "name": "Hồ sơ · Độ ẩm · Vắng nhà · mục tiêu (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_sleep_heat": {
-        "name": "Sưởi · Ngủ"
+        "name": "Hồ sơ · Sưởi · Ngủ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_sleep_cool": {
-        "name": "Làm mát · Ngủ"
+        "name": "Hồ sơ · Làm mát · Ngủ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_sleep_humidity": {
-        "name": "Độ ẩm · Ngủ · mục tiêu (%)"
+        "name": "Hồ sơ · Độ ẩm · Ngủ · mục tiêu (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_eco_heat": {
-        "name": "Sưởi · ECO"
+        "name": "Hồ sơ · Sưởi · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_eco_cool": {
-        "name": "Làm mát · ECO"
+        "name": "Hồ sơ · Làm mát · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_profile_eco_humidity": {
-        "name": "Độ ẩm · ECO · mục tiêu (%)"
+        "name": "Hồ sơ · Độ ẩm · ECO · mục tiêu (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_environment_pollen_high_from": {
-        "name": "POLLEN · Phấn hoa · HIGH"
+        "name": "Phấn hoa · POLLEN · Phấn hoa · HIGH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_environment_pollen_max_scale": {
-        "name": "POLLEN · Phấn hoa · SCALE"
+        "name": "Phấn hoa · POLLEN · Phấn hoa · SCALE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "nguồn · max (min)"
+        "name": "Có mặt ở nhà · nguồn · max (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_area_environment_room_volume_m3": {
-        "name": "cài đặt · nguồn (m³)"
+        "name": "Lọc không khí · cài đặt · nguồn (m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_area_environment_particle_cadr_m3h": {
-        "name": "CADR (m³/h)"
+        "name": "Lọc không khí · CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_area_environment_co2_target_ppm": {
-        "name": "CO₂ · CO₂ · mục tiêu (ppm)"
+        "name": "Lọc không khí · CO₂ · CO₂ · mục tiêu (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_area_environment_radon_reference_bq_m3": {
-        "name": "Rn (Bq/m³)"
+        "name": "Lọc không khí · Rn (Bq/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "Tốc độ · Bên ngoài (m/s)"
+        "name": "Tiện nghi nâng cao · Tốc độ · Bên ngoài (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_area_environment_met": {
-        "name": "cài đặt · nguồn (met)"
+        "name": "Tiện nghi nâng cao · cài đặt · nguồn (met)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_area_environment_clo": {
-        "name": "cài đặt · nguồn (clo)"
+        "name": "Tiện nghi nâng cao · cài đặt · nguồn (clo)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_unoccupied_delay_minutes": {
-        "name": "Thiết bị · CLIMATE_UNOCCUPIED_DELAY_MINUTES"
+        "name": "Có mặt trong phòng · Thiết bị · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Hiện diện · Thiết bị · cảm biến · Bắt buộc"
+        "name": "Có mặt trong phòng · Hiện diện · Thiết bị · cảm biến · Bắt buộc",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_comfort_adjustment_max_c": {
-        "name": "Thiết bị (°C)"
+        "name": "Tiện nghi nâng cao · Thiết bị (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_humidity_low_rh": {
-        "name": "RH · Độ ẩm · Thiết bị (%) · RH MIN"
+        "name": "Độ ẩm · RH · Độ ẩm · Thiết bị (%) · RH MIN",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_humidity_high_rh": {
-        "name": "RH · Độ ẩm · Thiết bị (%) · RH MAX"
+        "name": "Độ ẩm · RH · Độ ẩm · Thiết bị (%) · RH MAX",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_humidity_hysteresis_rh": {
-        "name": "RH · Độ ẩm · Thiết bị · ± RH"
+        "name": "Độ ẩm · RH · Độ ẩm · Thiết bị · ± RH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_cooling_dry_deferral_rh_points": {
-        "name": "Thiết bị · Nhiệt độ −"
+        "name": "Độ ẩm · Thiết bị · Nhiệt độ −",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_pm25_action_ug_m3": {
-        "name": "PM2.5 · Thiết bị (µg/m³)"
+        "name": "Lọc không khí · PM2.5 · Thiết bị (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_extraction_speed_percent": {
-        "name": "EXTRACT · Thiết bị · Tốc độ (%) · SPEED %"
+        "name": "Lọc không khí · EXTRACT · Thiết bị · Tốc độ (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_purifier_speed_percent": {
-        "name": "PURIFIER · Thiết bị · Tốc độ (%) · SPEED %"
+        "name": "Lọc không khí · PURIFIER · Thiết bị · Tốc độ (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_direct_tuning_kp": {
-        "name": "PID · Kp · điều khiển (percentage points/°C)"
+        "name": "PID · Kp · điều khiển (percentage points/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_direct_tuning_ki": {
-        "name": "PID · Ki · điều khiển (percentage points/(°C·minute))"
+        "name": "PID · Ki · điều khiển (percentage points/(°C·minute))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_direct_tuning_kd": {
-        "name": "PID · Kd · điều khiển (percentage points·minute/°C)"
+        "name": "PID · Kd · điều khiển (percentage points·minute/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "PID · cài đặt · nguồn (s) · SAMPLE"
+        "name": "PID · cài đặt · nguồn (s) · SAMPLE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "PID · cài đặt · nguồn · MAX Δ"
+        "name": "PID · cài đặt · nguồn · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "PID · cài đặt · nguồn · MIN Δ"
+        "name": "PID · cài đặt · nguồn · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_mold_surface_critical_temperature_c": {
-        "name": "Chỉ số nấm mốc · 🧊 °C"
+        "name": "Nấm mốc · Chỉ số nấm mốc · 🧊 °C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_kp": {
-        "name": "PID · {channel}Kp · điều khiển (% per °C)"
+        "name": "PID · {channel}Kp · điều khiển (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_ki": {
-        "name": "PID · {channel}Ki · điều khiển (% per °C-minute)"
+        "name": "PID · {channel}Ki · điều khiển (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_kd": {
-        "name": "PID · {channel}Kd · điều khiển (%·minute per °C)"
+        "name": "PID · {channel}Kd · điều khiển (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_sample_seconds": {
-        "name": "PID · {channel}(s)"
+        "name": "PID · {channel}(s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Hệ số khuếch đại quá trình"
+        "name": "PID · {channel}Hệ số khuếch đại quá trình",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Hằng số thời gian"
+        "name": "PID · {channel}Hằng số thời gian",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Thời gian trễ"
+        "name": "PID · {channel}Thời gian trễ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC λ"
+        "name": "PID · {channel}IMC λ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Công suất tương đối 1 (%)"
+        "name": "PID · {channel}Công suất tương đối 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Công suất tương đối 2 (%)"
+        "name": "PID · {channel}Công suất tương đối 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Công suất tương đối 3 (%)"
+        "name": "PID · {channel}Công suất tương đối 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Công suất tương đối 4 (%)"
+        "name": "PID · {channel}Công suất tương đối 4 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Tốc độ quạt 1 (%)"
+        "name": "PID · {channel}Tốc độ quạt 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Công suất tương đối 1 (%)"
+        "name": "PID · {channel}Công suất tương đối 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Tốc độ quạt 2 (%)"
+        "name": "PID · {channel}Tốc độ quạt 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Công suất tương đối 2 (%)"
+        "name": "PID · {channel}Công suất tương đối 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Tốc độ quạt 3 (%)"
+        "name": "PID · {channel}Tốc độ quạt 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Công suất tương đối 3 (%)"
+        "name": "PID · {channel}Công suất tương đối 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_cycle_seconds": {
-        "name": "PID · {channel}cài đặt · nguồn (s) · PWM PERIOD"
+        "name": "PID · {channel}cài đặt · nguồn (s) · PWM PERIOD",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_quiet_percentage": {
-        "name": "Yên tĩnh · {channel}Giới hạn quạt chạy êm (%)"
+        "name": "Yên tĩnh · {channel}Giới hạn quạt chạy êm (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_min_on_seconds": {
-        "name": "Công suất · {channel}min ON (s)"
+        "name": "Công suất · {channel}min ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_min_off_seconds": {
-        "name": "Công suất · {channel}min OFF (s)"
+        "name": "Công suất · {channel}min OFF (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_max_on_seconds": {
-        "name": "Công suất · {channel}max ON (s)"
+        "name": "Công suất · {channel}max ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_min_limit": {
-        "name": "Phòng · Nhiệt độ · min"
+        "name": "Giới hạn phòng · Phòng · Nhiệt độ · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_max_limit": {
-        "name": "Phòng · Nhiệt độ · max"
+        "name": "Giới hạn phòng · Phòng · Nhiệt độ · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_min_limit": {
-        "name": "Phòng · Độ ẩm · min"
+        "name": "Giới hạn phòng · Phòng · Độ ẩm · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_max_limit": {
-        "name": "Phòng · Độ ẩm · max"
+        "name": "Giới hạn phòng · Phòng · Độ ẩm · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_room_equipment_limit_fan_min_percentage": {
-        "name": "Phòng · Tốc độ · min (%)"
+        "name": "Giới hạn phòng · Phòng · Tốc độ · min (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_room_equipment_limit_fan_max_percentage": {
-        "name": "Phòng · Tốc độ · max (%)"
+        "name": "Giới hạn phòng · Phòng · Tốc độ · max (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "home_global_occupancy_away_cooldown_minutes": {
-        "name": "Nhà · Away · cooldown (min)"
+        "name": "Có mặt ở nhà · Nhà · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_shading_close_above_c": {
-        "name": "Đóng rèm khi nhiệt độ phòng vượt ngưỡng (°C)"
+        "name": "Che nắng · Đóng rèm khi nhiệt độ phòng vượt ngưỡng (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_shading_min_sun_elevation": {
-        "name": "Độ cao tối thiểu của mặt trời (°)"
+        "name": "Che nắng · Độ cao tối thiểu của mặt trời (°)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "shade_close_above_c": {
-        "name": "Đóng rèm khi nhiệt độ phòng vượt ngưỡng (°C)"
+        "name": "Che nắng · Đóng rèm khi nhiệt độ phòng vượt ngưỡng (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_particle_cadr_m3h": {
-        "name": "Filter · Rated purifier particle CADR (m³/h)"
+        "name": "Filter · Rated purifier particle CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "shade_min_lux": {
-        "name": "Độ rọi tối thiểu để đóng (lx)"
+        "name": "Che nắng · Độ rọi tối thiểu để đóng (lx)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_fan_min_percentage": {
-        "name": "Quạt · {channel}Tốc độ tối thiểu (%)"
+        "name": "Quạt · {channel}Tốc độ tối thiểu (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_fan_max_percentage": {
-        "name": "Quạt · {channel}Tốc độ tối đa (%)"
+        "name": "Quạt · {channel}Tốc độ tối đa (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
+      },
+      "global_occupancy_away_cooldown_minutes": {
+        "name": "Có mặt ở nhà · Nhà · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
+      },
+      "home_aqi_custom_limit": {
+        "name": "Thông gió · Custom AQI limit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
+      },
+      "area_device_target_fan_speed_percent": {
+        "name": "Quạt · Target speed (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       }
     },
     "switch": {
       "home_automatic_notifications": {
-        "name": "Tự động · AUTOMATIC_NOTIFICATIONS"
+        "name": "Thông báo · Tự động · AUTOMATIC_NOTIFICATIONS",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "home_automatic_tts": {
-        "name": "Tự động"
+        "name": "Thông báo · Tự động",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "home_use_announcement_hub": {
-        "name": "Announcement Hub"
+        "name": "Thông báo · Announcement Hub",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "home_ai_rewrite_announcements": {
-        "name": "AI · Thông báo (tùy chọn)"
+        "name": "Thông báo · AI · Thông báo (tùy chọn)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "home_global_environment_pollen_avoid_ventilation": {
-        "name": "POLLEN · Phấn hoa · NO VENT"
+        "name": "Phấn hoa · POLLEN · Phấn hoa · NO VENT",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_area_environment_sleep_room": {
-        "name": "Ngủ"
+        "name": "Tiếng ồn · Ngủ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_area_environment_enable_pmv": {
-        "name": "PMV / PPD · Tự động"
+        "name": "Tiện nghi nâng cao · PMV / PPD · Tự động",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_sleep_active": {
-        "name": "Ngủ · Thiết bị"
+        "name": "Ngủ · Thiết bị",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_sleep_schedule_enabled": {
-        "name": "Ngủ · Tự động"
+        "name": "Ngủ · Tự động",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_operating_window_efficiency_notify": {
-        "name": "Thiết bị · Bên ngoài"
+        "name": "Thông báo · Thiết bị · Bên ngoài",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_quiet_sleep": {
-        "name": "Yên tĩnh · {channel}Giảm tiếng ồn khi ngủ"
+        "name": "Yên tĩnh · {channel}Giảm tiếng ồn khi ngủ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_quiet_occupied": {
-        "name": "Yên tĩnh · {channel}Giảm tiếng ồn khi có người"
+        "name": "Yên tĩnh · {channel}Giảm tiếng ồn khi có người",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_sensor_verified": {
-        "name": "Cảm biến · {channel}Bắt buộc"
+        "name": "Cảm biến · {channel}Bắt buộc",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_shading_enabled": {
-        "name": "Tự động đóng rèm để làm mát"
+        "name": "Che nắng · Tự động đóng rèm để làm mát",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "home_shade_announce_before_movement": {
-        "name": "Thông báo trước khi mở hoặc đóng rèm cửa"
+        "name": "Thông báo · Thông báo trước khi mở hoặc đóng rèm cửa",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "shade_auto_control": {
-        "name": "Tự động đóng rèm để làm mát"
+        "name": "Che nắng · Tự động đóng rèm để làm mát",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "shade_announce": {
-        "name": "Thông báo trước khi mở hoặc đóng rèm cửa"
+        "name": "Thông báo · Thông báo trước khi mở hoặc đóng rèm cửa",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "home_away_open_window_alert": {
-        "name": "Cảnh báo cửa sổ mở khi mọi người đã rời nhà"
+        "name": "Thông báo · Cảnh báo cửa sổ mở khi mọi người đã rời nhà",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pause_on_window_open": {
-        "name": "Tắt khi cửa sổ mở · {channel}"
+        "name": "Điều khiển · Tắt khi cửa sổ mở · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "shade_lux_enabled": {
-        "name": "Dùng cảm biến ánh sáng cho che nắng"
+        "name": "Che nắng · Dùng cảm biến ánh sáng cho che nắng",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_announce_device_errors": {
-        "name": "Thông báo lỗi thiết bị · {channel}"
+        "name": "Thông báo · Thông báo lỗi thiết bị · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       }
     },
     "select": {
       "home_language": {
-        "name": "Ngôn ngữ"
+        "name": "Thông báo · Ngôn ngữ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_manual_profile": {
-        "name": "Thiết bị · CLIMATE_MANUAL_PROFILE"
+        "name": "Hồ sơ · Thiết bị · CLIMATE_MANUAL_PROFILE",
+        "state": {
+          "auto": "Automatic"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Gain source",
         "state": {
           "defaults": "Defaults",
           "manual": "Manual"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
         }
       },
       "home_global_policy_home_policy": {
-        "name": "Nhà · Hiện diện · điều khiển"
+        "name": "Có mặt ở nhà",
+        "state": {
+          "any_home": "Ít nhất một người ở nhà",
+          "all_home": "Tất cả ở nhà (tùy chọn cũ)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_policy_unknown_occupancy": {
-        "name": "Hiện diện · Thiết bị"
+        "name": "Có mặt trong phòng · Hiện diện · Thiết bị",
+        "state": {
+          "occupied": "Assume occupied",
+          "hold": "Hold automatic changes"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_policy_away_policy": {
-        "name": "Nhà · Thiết bị · POLICY"
+        "name": "Có mặt ở nhà · Nhà · Thiết bị · POLICY",
+        "state": {
+          "any_home": "Ít nhất một người ở nhà",
+          "all_home": "Tất cả ở nhà (tùy chọn cũ)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_policy_target_source": {
-        "name": "Thiết bị · nguồn · mục tiêu",
+        "name": "Tiện nghi nâng cao · Thiết bị · nguồn · mục tiêu",
         "state": {
           "temperature": "Mục tiêu nhiệt độ cố định",
           "auto_comfort": "Tiện nghi tự động (nhiệt độ và độ ẩm)",
           "pmv": "ISO 7730 nâng cao (cần đo đạc)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
         }
       },
       "equipment_control_mode": {
@@ -3292,10 +4031,20 @@
           "manual": "Thủ công",
           "off": "Tắt",
           "pid": "PID"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "Yên tĩnh · {channel}Chế độ quạt êm của thiết bị"
+        "name": "Yên tĩnh · {channel}Chế độ quạt êm của thiết bị",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}Hiệu chuẩn",
@@ -3305,6 +4054,11 @@
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Observe and suggest · Approve",
           "adaptive_auto": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3312,6 +4066,11 @@
         "state": {
           "legacy": "Ban đầu (chưa hiệu chuẩn)",
           "measured": "Mô hình công suất đã đo"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
@@ -3322,6 +4081,11 @@
           "cool": "Làm mát",
           "dry": "Hút ẩm",
           "fan_only": "Quạt"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
         }
       },
       "equipment_presence_requirement": {
@@ -3330,6 +4094,11 @@
           "always": "Tự động",
           "occupied": "Phòng · Hiện diện",
           "absent": "Phòng · Hiện diện · Tắt"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
         }
       },
       "equipment_sleep_behavior": {
@@ -3338,6 +4107,11 @@
           "normal": "Tự động",
           "pause": "Tạm dừng",
           "sleep_targets": "Ngủ · mục tiêu"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
         }
       },
       "equipment_fan_purpose": {
@@ -3346,29 +4120,59 @@
           "extraction": "Bên ngoài · điều khiển",
           "filtration": "PM2.5 · điều khiển",
           "auto": "Tự động"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "Nhiệt độ · nguồn"
+        "name": "Tiện nghi nâng cao · Nhiệt độ · nguồn",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_area_science_air_speed_entity": {
-        "name": "nguồn · Tốc độ · Bên ngoài (m/s)"
+        "name": "Tiện nghi nâng cao · nguồn · Tốc độ · Bên ngoài (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "shade_window_entity": {
-        "name": "Cảm biến cửa sổ được liên kết"
+        "name": "Che nắng · Cảm biến cửa sổ được liên kết",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "home_aqi_scale": {
-        "name": "Thang AQI",
+        "name": "Thông gió · Thang AQI",
         "state": {
           "auto": "Tự động (nhà cung cấp)",
           "not_configured": "Chưa rõ - không so sánh",
           "us_epa": "US EPA AQI (0-500)",
           "eea_category": "EEA AQI (1-6)",
           "custom": "Thang tùy chỉnh"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
         }
       },
       "shade_lux_entity": {
-        "name": "Cảm biến ánh sáng cho che nắng"
+        "name": "Che nắng · Cảm biến ánh sáng cho che nắng",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_adaptation_mode": {
         "name": "PID · {channel}Passive adaptation",
@@ -3376,35 +4180,80 @@
           "disabled": "Disabled",
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
         }
       }
     },
     "time": {
       "area_climate_sleep_start": {
-        "name": "Ngủ · Thiết bị · START"
+        "name": "Ngủ · Thiết bị · START",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "area_climate_sleep_end": {
-        "name": "Ngủ · Thiết bị · END"
+        "name": "Ngủ · Thiết bị · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       }
     },
     "button": {
       "area_recalculate_mold": {
-        "name": "Chỉ số nấm mốc · ↻ 🌡️"
+        "name": "Nấm mốc · Chỉ số nấm mốc · ↻ 🌡️",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_resume": {
-        "name": "Điều khiển · {channel}Kiểm tra và tiếp tục"
+        "name": "Điều khiển · {channel}Kiểm tra và tiếp tục",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Áp dụng · Hiệu chuẩn"
+        "name": "PID · {channel}Áp dụng · Hiệu chuẩn",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Áp dụng · Hiệu chuẩn"
+        "name": "PID · {channel}Áp dụng · Hiệu chuẩn",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_review_approve": {
-        "name": "PID · {channel}Approve suggestion"
+        "name": "PID · {channel}Approve suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       },
       "equipment_pid_review_discard": {
-        "name": "PID · {channel}Discard suggestion"
+        "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       }
     },
     "climate": {
@@ -3505,8 +4354,8 @@
     },
     "general_home_policy": {
       "options": {
-        "any_home": "Nhà · Hiện diện",
-        "all_home": "Nhà · Thiết bị · Hiện diện"
+        "any_home": "Ít nhất một người ở nhà",
+        "all_home": "Tất cả ở nhà (tùy chọn cũ)"
       }
     },
     "device_method": {

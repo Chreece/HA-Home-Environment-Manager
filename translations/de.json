@@ -71,7 +71,7 @@
           "language": "Sprache",
           "automatic_tts": "Neue Empfehlungen automatisch sprechen",
           "automatic_notifications": "Neue Empfehlungen automatisch melden",
-          "use_announcement_hub": "Announcement Hub verwenden, falls vorhanden",
+          "use_announcement_hub": "Ansagen · Announcement Hub verwenden",
           "notify_entities": "Direkte Benachrichtigungsentitäten",
           "tts_engine": "Direkte TTS-Engine",
           "media_players": "Direkte TTS-Mediaplayer",
@@ -83,7 +83,7 @@
           "language": "Die automatische Auswahl verwendet die Sprache von Home Assistant. Die manuelle Aktion kann sie überschreiben.",
           "automatic_tts": "Standardmäßig deaktiviert. Neue Öffnungsempfehlungen erfordern 90 Sekunden stabile Bedingungen.",
           "automatic_notifications": "Standardmäßig deaktiviert. Nicht bei jedem neuen Sensorwert erneut benachrichtigen.",
-          "use_announcement_hub": "Nur bei eingerichteten Announcement Hub sichtbar. Falls der Hub nicht läuft oder Nachrichten ablehnt, werden direkte Home-Assistant-Ausgaben bzw. eine dauerhafte Benachrichtigung verwendet.",
+          "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
           "notify_entities": "Direkte Benachrichtigungsziele, wenn Announcement Hub nicht verwendet wird.",
           "tts_engine": "Sprachausgabe für direkte Ansagen ohne Announcement Hub.",
           "media_players": "Mediaplayer für direkte Sprachausgabe. Die Raumzuordnung bestimmt die Ziele.",
@@ -115,8 +115,8 @@
           "min_outdoor_temp": "Minimale Außentemperatur (°C)",
           "max_outdoor_temp": "Maximale Außentemperatur (°C)",
           "max_outdoor_humidity": "Maximale Außenluftfeuchte (%)",
-          "max_wind_kmh": "Maximale Windgeschwindigkeit (km/h)",
-          "max_age_minutes": "Höchstalter einer Außenmessung (Minuten)",
+          "max_wind_kmh": "Lüftung · Maximale Windgeschwindigkeit (km/h)",
+          "max_age_minutes": "Lüftung · Höchstalter der Messwerte (min)",
           "indoor_mold": "Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)"
         },
         "data_description": {
@@ -139,8 +139,8 @@
           "min_outdoor_temp": "Dies ist ein Entscheidungswert für „Minimale Außentemperatur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "max_outdoor_temp": "Dies ist ein Entscheidungswert für „Maximale Außentemperatur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "max_outdoor_humidity": "Dies ist ein Entscheidungswert für „Maximale Außenluftfeuchte (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "max_wind_kmh": "Dies ist ein Entscheidungswert für „Maximale Windgeschwindigkeit (km/h)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "max_age_minutes": "Dies ist ein Entscheidungswert für „Höchstalter einer Außenmessung (Minuten)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "max_wind_kmh": "Höchste Außenwindgeschwindigkeit für Lüftungsempfehlungen in km/h. Meldet die ausgewählte Wetterquelle stärkeren Wind, verhindert HEM Öffnungsempfehlungen und kann das Schließen offener Fenster empfehlen. Dies ist keine Ventilatordrehzahl.",
+          "max_age_minutes": "Höchstalter der verwendeten Umweltmesswerte in Minuten, einschließlich Außen-/Wetterdaten und Raummessungen. Ältere Werte gelten als veraltet und belegen weder sichere Lüftung noch gültige Temperaturen für die Schimmelkalibrierung.",
           "indoor_mold": "Dies ist ein Entscheidungswert für „Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert."
         }
       },
@@ -194,7 +194,7 @@
           "language": "TTS · Auswählen · Quelle",
           "use_mold_indicator": "Schimmelindikator statt relativer Raumluftfeuchte verwenden",
           "pollen_entities": "Pollen · Quelle · Auswählen",
-          "use_announcement_hub": "Automatische · Announcement Hub",
+          "use_announcement_hub": "Ansagen · Announcement Hub verwenden",
           "general_away_cooldown_minutes": "Zuhause · Away · cooldown (min)",
           "away_open_window_alert": "Bei offenen Fenstern nach Verlassen des Hauses warnen",
           "away_windows_target_people": "Zu benachrichtigende Personen",
@@ -225,7 +225,7 @@
           "pollen_max_scale": "Maximalwert der Pollen-Skala",
           "pollen_avoid_ventilation": "Bei hoher Pollenbelastung Lüften vermeiden",
           "general_source_stale_minutes": "Maximales Datenalter für Raumbelegung/Schlaf (Minuten)",
-          "general_home_policy": "Zuhause · Belegung · Steuerung"
+          "general_home_policy": "Anwesenheit zu Hause"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -244,7 +244,7 @@
           "language": "Sprachen stammen vom gewählten TTS-Anbieter. Regionscodes erscheinen nur bei mehreren Varianten derselben Sprache.",
           "use_mold_indicator": "Die Lüftungsempfehlung berücksichtigt die geschätzte relative Feuchte an der kältesten Oberfläche statt der normalen Raumluftfeuchte. Pro Raum kalibrieren; ohne Kalibrierung wird der Wert als unbekannt angezeigt.",
           "pollen_entities": "Beim ersten Einrichten werden alle gefundenen Pollenquellen vorausgewählt. Eine später bewusst leere Auswahl bleibt leer.",
-          "use_announcement_hub": "Wird nur angezeigt, wenn Announcement Hub installiert ist. Aktiviert wird darüber geroutet, sobald der Hub verfügbar ist.",
+          "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
           "general_away_cooldown_minutes": "Nach einer frisch bestätigten leeren Raumbelegung so viele Minuten warten, bevor Away gilt. Unbekannte oder veraltete Daten lösen Away nicht aus.",
           "away_open_window_alert": "Standardmäßig aus. Sofortige Meldung, sobald alle ausgewählten Anwesenheitsquellen Abwesenheit bestätigen. Number-/input_number-Zähler: 0 = niemand da, positiv = anwesend. Unbekannte Werte beweisen keine Abwesenheit. Es werden nur echte offene Fenster gemeldet. Kein erneutes Senden beim Neustart während Abwesenheit; neue Fenster können erneut gemeldet werden.",
           "away_windows_target_people": "Wähle konkrete person.*-Einträge in Home Assistant. Für jede Person muss das passende Handy/Uhr-Ziel in Announcement Hub zugeordnet sein. Eine fehlende Zuordnung führt niemals zu einem Raum-Rundruf.",
@@ -275,7 +275,7 @@
           "pollen_max_scale": "Oberster Zahlenwert der Anbieterskala, z. B. 5.",
           "pollen_avoid_ventilation": "Hohe Pollenwerte können die Empfehlung zum Fensteröffnen optional sperren.",
           "general_source_stale_minutes": "Maximales Alter der letzten Quellenaktualisierung, bevor die Raum-/Schlafliste als unbekannt gilt. Keine Mindestschlafdauer. Standard: 240 Minuten. Veraltete Daten dürfen kein automatisches Ausschalten auslösen.",
-          "general_home_policy": "Diese Option steuert „Zuhause · Belegung · Steuerung“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen."
+          "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind."
         }
       },
       "reconfigure": {
@@ -537,7 +537,7 @@
           "extractor_entity": "Abluftventilator / Schalter",
           "co2_ndir_verified": "Echter NDIR-CO₂-Sensor bestätigt",
           "co2_target_ppm": "CO₂-Zielwert beim Lüften (ppm)",
-          "sleep_room": "Schlafzimmer"
+          "sleep_room": "Lärm · Als Schlafraum genutzt"
         },
         "data_description": {
           "temperature_entity": "Eine passende Home-Assistant-Quelle für „Temperatursensor im Raum (optional)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
@@ -546,8 +546,8 @@
           "purifier_entity": "Eine passende Home-Assistant-Quelle für „Luftreiniger: Betriebsstatus“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "extractor_entity": "Eine passende Home-Assistant-Quelle für „Abluftventilator / Schalter“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "co2_ndir_verified": "Nur bei nachweislich echtem CO₂-Sensor markieren. eCO₂ aus VOC-Messungen reicht nicht aus.",
-          "co2_target_ppm": "Dies ist ein Entscheidungswert für „CO₂-Zielwert beim Lüften (ppm)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "sleep_room": "„Schlafzimmer“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion."
+          "co2_target_ppm": "CO₂-Raumziel in ppm zum Erlernen der Fensterlüftungswirkung aus geeigneten NDIR-Verläufen und für Abluftempfehlungen. Gemessenes CO₂ ab diesem Ziel + 200 ppm gilt dabei als erhöht; Außenluft- und Quellenprüfungen bleiben erforderlich. Die separate allgemeine CO₂-Schwelle für Fensteröffnungsempfehlungen wird dadurch nicht geändert.",
+          "sleep_room": "Kennzeichnet den Raum als Schlafraum NUR für die kalibrierte Lärmauswertung des letzten abgeschlossenen lokalen Zeitfensters 22:00–07:00. Ohne konfigurierte kalibrierte Lärmquelle ohne Wirkung. Aktiviert kein Schlaf-Klimaprofil und meldet keinen aktuellen Schlaf."
         }
       },
       "environment_room_exposure": {
@@ -699,27 +699,27 @@
           "climate_unknown_occupancy": "Belegung · Geräte",
           "climate_unoccupied_delay_minutes": "Verzögerung bis Raum als unbelegt gilt (Minuten)",
           "climate_occupancy_stale_minutes": "Maximales Alter der Präsenzmessung (Minuten)",
-          "climate_away_policy": "Zuhause · Geräte · POLICY",
+          "climate_away_policy": "Anwesenheit zu Hause · Abwesenheitsregel",
           "climate_manual_profile": "Geräte",
-          "climate_sleep_active": "Schlaf · Geräte",
-          "climate_sleep_schedule_enabled": "Schlafprofil nach Uhrzeit",
-          "climate_sleep_start": "Schlafbeginn (lokale Zeit)",
-          "climate_sleep_end": "Schlafende (lokale Zeit)",
+          "climate_sleep_active": "Schlaf · Jetzt schlafen",
+          "climate_sleep_schedule_enabled": "Schlaf · Zeitplan verwenden",
+          "climate_sleep_start": "Schlaf · Beginn (Ortszeit)",
+          "climate_sleep_end": "Schlaf · Ende (Ortszeit)",
           "climate_target_source": "Komfortregelung",
           "climate_comfort_adjustment_max_c": "Maximale Komfortkorrektur (°C)"
         },
         "data_description": {
           "climate_occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Präsenzsensoren in diesem Raum“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "climate_away_entities": "Eine passende Home-Assistant-Quelle für „Personen und Tracker für Zuhause/Abwesend“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
-          "climate_unknown_occupancy": "Diese Option steuert „Belegung · Geräte“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
-          "climate_unoccupied_delay_minutes": "Dieser Zeitwert regelt „Verzögerung bis Raum als unbelegt gilt (Minuten)“. Er begrenzt häufiges Schalten und ersetzt keine Schutzschaltung.",
-          "climate_occupancy_stale_minutes": "Dieser Zeitwert regelt „Maximales Alter der Präsenzmessung (Minuten)“. Er begrenzt häufiges Schalten und ersetzt keine Schutzschaltung.",
-          "climate_away_policy": "Diese Option steuert „Zuhause · Geräte · POLICY“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
+          "climate_unknown_occupancy": "Ältere Raumprofil-Ersatzregel ohne konfigurierte gemeinsame Anwesenheit: Belegt-Annahme setzt Belegung voraus; Aussetzen lässt das Profil unbekannt. Mit gemeinsamer Anwesenheit bleiben unbekannte Nachweise unbekannt. Einheitliche Regler nutzen dann Home, sofern Away, Sleep oder ein explizites Profil nicht vorrangig ist; gerätespezifische Belegt-/Leer-Anforderungen benötigen weiterhin bestätigte Nachweise.",
+          "climate_unoccupied_delay_minutes": "Verzögerung für durchgehend gemeldete Abwesenheit lokaler Raumanwesenheitssensoren vor einem automatischen Raumprofilwechsel. Eine gültige gemeinsame Liste belegter Räume, die diesen Raum auslässt, oder bestätigte Abwesenheit im gesamten Zuhause gilt sofort und umgeht diese Verzögerung.",
+          "climate_occupancy_stale_minutes": "Maximales Alter der Meldungen ausgewählter lokaler Raumanwesenheitssensoren in Minuten. Ältere oder fehlende Meldungen gelten als unbekannt und belegen weder Anwesenheit noch Abwesenheit. Gemeinsame Raumlisten haben eine eigene Altersgrenze; diese Einstellung wählt kein Ersatz-Klimaprofil.",
+          "climate_away_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
           "climate_manual_profile": "Diese Option steuert „Geräte“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
-          "climate_sleep_active": "Diese Option steuert „Schlaf · Geräte“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
-          "climate_sleep_schedule_enabled": "Diese Option steuert „Schlafprofil nach Uhrzeit“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
-          "climate_sleep_start": "Dieser Zeitwert regelt „Schlafbeginn (lokale Zeit)“. Er begrenzt häufiges Schalten und ersetzt keine Schutzschaltung.",
-          "climate_sleep_end": "Dieser Zeitwert regelt „Schlafende (lokale Zeit)“. Er begrenzt häufiges Schalten und ersetzt keine Schutzschaltung.",
+          "climate_sleep_active": "Kennzeichnet manuell aktuellen Schlaf für automatische Schlafprofile und konfigurierte Ruhe-/Pausenregeln. Aus erzwingt kein Wachsein: Zeitplan oder gewählte Schlafraumquelle können weiterhin Schlaf melden. Explizite Profile und bestätigte Abwesenheit behalten Vorrang.",
+          "climate_sleep_schedule_enabled": "Verwendet Beginn und Ende des Raumschlafzeitplans in der lokalen Home-Assistant-Zeitzone als Schlafnachweis. Vorgabe 22:00–07:00. Manuelle Angabe und Schlafraumquelle wirken zusätzlich; die statische Lärmraum-Einstufung bleibt unverändert.",
+          "climate_sleep_start": "Lokale Beginnzeit des Schlafintervalls. Sie trägt nur bei aktiviertem Zeitplan zum Schlafnachweis bei. Das Intervall kann über Mitternacht reichen, etwa 22:00–07:00.",
+          "climate_sleep_end": "Lokale Endzeit des Schlafintervalls, wirksam nur bei aktiviertem Zeitplan. Das Ende hebt Schlafmeldungen des manuellen Schalters oder einer anderen gewählten Quelle nicht auf.",
           "climate_target_source": "Feste Temperaturen, begrenzte Korrektur nach gemessener Luftfeuchte oder ISO 7730 mit echten Messwerten.",
           "climate_comfort_adjustment_max_c": "Dies ist ein Entscheidungswert für „Maximale Komfortkorrektur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert."
         }
@@ -768,7 +768,7 @@
           "climate_humidity_low_rh": "Dies ist ein Entscheidungswert für „Untergrenze der relativen Luftfeuchte (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "climate_humidity_high_rh": "Dies ist ein Entscheidungswert für „Obergrenze der relativen Luftfeuchte (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "climate_humidity_hysteresis_rh": "Dies ist ein Entscheidungswert für „Hysterese für Luftfeuchte (Prozentpunkte)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "climate_cooling_dry_deferral_rh_points": "Diese Option steuert „Entfeuchter beim aktiven Kühlen zurückstellen, bis relative Feuchte die Obergrenze um diesen Wert übersteigt (0 deaktiviert)“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
+          "climate_cooling_dry_deferral_rh_points": "Zusätzliche Prozentpunkte relativer Feuchte, die bei bereits kühlender Klimaanlage für separate Entfeuchtung erforderlich sind. Die einheitlichen Gerätekontroller vergleichen mit dem Feuchteziel des aktiven Profils plus dieser Marge; die ältere Raumkoordination nutzt die obere Raumfeuchteschwelle plus Marge. Null entfernt die zusätzliche Marge; weitere Bedarfsprüfungen gelten weiterhin.",
           "climate_humidity_setpoint_auto": "Diese Option steuert „Sollfeuchte eines bereits eingeschalteten Be-/Entfeuchters regeln (separate Freigabe)“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
           "climate_window_efficiency_notify": "Diese Option steuert „Hinweis senden, wenn sich laufende Heizung, Kühlung oder Entfeuchtung durch sicheres Fensterlüften entlasten lässt“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
           "climate_dry_fan_mode_auto": "Diese Option steuert „DRY/FAN_ONLY am Klimagerät automatisch umschalten (separate Freigabe nach Geräteprüfung)“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
@@ -921,7 +921,7 @@
           "general_occupied_rooms_entity": "Belegung · Raum · Quelle (state)",
           "general_occupied_rooms_attribute": "Belegung · Raum · Quelle (attribute)",
           "general_home_trackers": "Zuhause · Belegung · Geräte",
-          "general_home_policy": "Zuhause · Belegung · Steuerung",
+          "general_home_policy": "Anwesenheit zu Hause",
           "general_sleep_rooms_entity": "Schlaf · Raum · Quelle (state)",
           "general_sleep_rooms_attribute": "Schlaf · Raum · Quelle (attribute)",
           "general_source_stale_minutes": "Maximales Datenalter für Raumbelegung/Schlaf (Minuten)"
@@ -931,7 +931,7 @@
           "general_occupied_rooms_entity": "Eine passende Home-Assistant-Quelle für „Belegung · Raum · Quelle (state)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "general_occupied_rooms_attribute": "„Belegung · Raum · Quelle (attribute)“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
           "general_home_trackers": "Eine passende Home-Assistant-Quelle für „Zuhause · Belegung · Geräte“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
-          "general_home_policy": "Diese Option steuert „Zuhause · Belegung · Steuerung“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
+          "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
           "general_sleep_rooms_entity": "Eine passende Home-Assistant-Quelle für „Schlaf · Raum · Quelle (state)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "general_sleep_rooms_attribute": "Zustand oder ein tatsächlich mit einer Raumliste gefülltes Attribut wählen.",
           "general_source_stale_minutes": "Maximales Alter der letzten Quellenaktualisierung, bevor die Raum-/Schlafliste als unbekannt gilt. Keine Mindestschlafdauer. Standard: 240 Minuten. Veraltete Daten dürfen kein automatisches Ausschalten auslösen."
@@ -1365,7 +1365,7 @@
           "language": "Sprache",
           "automatic_tts": "Neue Empfehlungen automatisch sprechen",
           "automatic_notifications": "Neue Empfehlungen automatisch melden",
-          "use_announcement_hub": "Announcement Hub verwenden, falls vorhanden",
+          "use_announcement_hub": "Ansagen · Announcement Hub verwenden",
           "notify_entities": "Direkte Benachrichtigungsentitäten",
           "tts_engine": "Direkte TTS-Engine",
           "media_players": "Direkte TTS-Mediaplayer",
@@ -1377,7 +1377,7 @@
           "language": "Die automatische Auswahl verwendet die Sprache von Home Assistant. Die manuelle Aktion kann sie überschreiben.",
           "automatic_tts": "Standardmäßig deaktiviert. Neue Öffnungsempfehlungen erfordern 90 Sekunden stabile Bedingungen.",
           "automatic_notifications": "Standardmäßig deaktiviert. Nicht bei jedem neuen Sensorwert erneut benachrichtigen.",
-          "use_announcement_hub": "Nur bei eingerichteten Announcement Hub sichtbar. Falls der Hub nicht läuft oder Nachrichten ablehnt, werden direkte Home-Assistant-Ausgaben bzw. eine dauerhafte Benachrichtigung verwendet.",
+          "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
           "notify_entities": "Direkte Benachrichtigungsziele, wenn Announcement Hub nicht verwendet wird.",
           "tts_engine": "Sprachausgabe für direkte Ansagen ohne Announcement Hub.",
           "media_players": "Mediaplayer für direkte Sprachausgabe. Die Raumzuordnung bestimmt die Ziele.",
@@ -1409,8 +1409,8 @@
           "min_outdoor_temp": "Minimale Außentemperatur (°C)",
           "max_outdoor_temp": "Maximale Außentemperatur (°C)",
           "max_outdoor_humidity": "Maximale Außenluftfeuchte (%)",
-          "max_wind_kmh": "Maximale Windgeschwindigkeit (km/h)",
-          "max_age_minutes": "Höchstalter einer Außenmessung (Minuten)",
+          "max_wind_kmh": "Lüftung · Maximale Windgeschwindigkeit (km/h)",
+          "max_age_minutes": "Lüftung · Höchstalter der Messwerte (min)",
           "indoor_mold": "Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)"
         },
         "data_description": {
@@ -1433,8 +1433,8 @@
           "min_outdoor_temp": "Dies ist ein Entscheidungswert für „Minimale Außentemperatur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "max_outdoor_temp": "Dies ist ein Entscheidungswert für „Maximale Außentemperatur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "max_outdoor_humidity": "Dies ist ein Entscheidungswert für „Maximale Außenluftfeuchte (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "max_wind_kmh": "Dies ist ein Entscheidungswert für „Maximale Windgeschwindigkeit (km/h)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "max_age_minutes": "Dies ist ein Entscheidungswert für „Höchstalter einer Außenmessung (Minuten)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "max_wind_kmh": "Höchste Außenwindgeschwindigkeit für Lüftungsempfehlungen in km/h. Meldet die ausgewählte Wetterquelle stärkeren Wind, verhindert HEM Öffnungsempfehlungen und kann das Schließen offener Fenster empfehlen. Dies ist keine Ventilatordrehzahl.",
+          "max_age_minutes": "Höchstalter der verwendeten Umweltmesswerte in Minuten, einschließlich Außen-/Wetterdaten und Raummessungen. Ältere Werte gelten als veraltet und belegen weder sichere Lüftung noch gültige Temperaturen für die Schimmelkalibrierung.",
           "indoor_mold": "Dies ist ein Entscheidungswert für „Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert."
         }
       },
@@ -1603,7 +1603,7 @@
           "extractor_entity": "Abluftventilator / Schalter",
           "co2_ndir_verified": "Echter NDIR-CO₂-Sensor bestätigt",
           "co2_target_ppm": "CO₂-Zielwert beim Lüften (ppm)",
-          "sleep_room": "Schlafzimmer"
+          "sleep_room": "Lärm · Als Schlafraum genutzt"
         },
         "data_description": {
           "temperature_entity": "Eine passende Home-Assistant-Quelle für „Temperatursensor im Raum (optional)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
@@ -1612,8 +1612,8 @@
           "purifier_entity": "Eine passende Home-Assistant-Quelle für „Luftreiniger: Betriebsstatus“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "extractor_entity": "Eine passende Home-Assistant-Quelle für „Abluftventilator / Schalter“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "co2_ndir_verified": "Nur bei nachweislich echtem CO₂-Sensor markieren. eCO₂ aus VOC-Messungen reicht nicht aus.",
-          "co2_target_ppm": "Dies ist ein Entscheidungswert für „CO₂-Zielwert beim Lüften (ppm)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "sleep_room": "„Schlafzimmer“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion."
+          "co2_target_ppm": "CO₂-Raumziel in ppm zum Erlernen der Fensterlüftungswirkung aus geeigneten NDIR-Verläufen und für Abluftempfehlungen. Gemessenes CO₂ ab diesem Ziel + 200 ppm gilt dabei als erhöht; Außenluft- und Quellenprüfungen bleiben erforderlich. Die separate allgemeine CO₂-Schwelle für Fensteröffnungsempfehlungen wird dadurch nicht geändert.",
+          "sleep_room": "Kennzeichnet den Raum als Schlafraum NUR für die kalibrierte Lärmauswertung des letzten abgeschlossenen lokalen Zeitfensters 22:00–07:00. Ohne konfigurierte kalibrierte Lärmquelle ohne Wirkung. Aktiviert kein Schlaf-Klimaprofil und meldet keinen aktuellen Schlaf."
         }
       },
       "environment_room_exposure": {
@@ -1765,27 +1765,27 @@
           "climate_unknown_occupancy": "Belegung · Geräte",
           "climate_unoccupied_delay_minutes": "Verzögerung bis Raum als unbelegt gilt (Minuten)",
           "climate_occupancy_stale_minutes": "Maximales Alter der Präsenzmessung (Minuten)",
-          "climate_away_policy": "Zuhause · Geräte · POLICY",
+          "climate_away_policy": "Anwesenheit zu Hause · Abwesenheitsregel",
           "climate_manual_profile": "Geräte",
-          "climate_sleep_active": "Schlaf · Geräte",
-          "climate_sleep_schedule_enabled": "Schlafprofil nach Uhrzeit",
-          "climate_sleep_start": "Schlafbeginn (lokale Zeit)",
-          "climate_sleep_end": "Schlafende (lokale Zeit)",
+          "climate_sleep_active": "Schlaf · Jetzt schlafen",
+          "climate_sleep_schedule_enabled": "Schlaf · Zeitplan verwenden",
+          "climate_sleep_start": "Schlaf · Beginn (Ortszeit)",
+          "climate_sleep_end": "Schlaf · Ende (Ortszeit)",
           "climate_target_source": "Komfortregelung",
           "climate_comfort_adjustment_max_c": "Maximale Komfortkorrektur (°C)"
         },
         "data_description": {
           "climate_occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Präsenzsensoren in diesem Raum“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "climate_away_entities": "Eine passende Home-Assistant-Quelle für „Personen und Tracker für Zuhause/Abwesend“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
-          "climate_unknown_occupancy": "Diese Option steuert „Belegung · Geräte“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
-          "climate_unoccupied_delay_minutes": "Dieser Zeitwert regelt „Verzögerung bis Raum als unbelegt gilt (Minuten)“. Er begrenzt häufiges Schalten und ersetzt keine Schutzschaltung.",
-          "climate_occupancy_stale_minutes": "Dieser Zeitwert regelt „Maximales Alter der Präsenzmessung (Minuten)“. Er begrenzt häufiges Schalten und ersetzt keine Schutzschaltung.",
-          "climate_away_policy": "Diese Option steuert „Zuhause · Geräte · POLICY“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
+          "climate_unknown_occupancy": "Ältere Raumprofil-Ersatzregel ohne konfigurierte gemeinsame Anwesenheit: Belegt-Annahme setzt Belegung voraus; Aussetzen lässt das Profil unbekannt. Mit gemeinsamer Anwesenheit bleiben unbekannte Nachweise unbekannt. Einheitliche Regler nutzen dann Home, sofern Away, Sleep oder ein explizites Profil nicht vorrangig ist; gerätespezifische Belegt-/Leer-Anforderungen benötigen weiterhin bestätigte Nachweise.",
+          "climate_unoccupied_delay_minutes": "Verzögerung für durchgehend gemeldete Abwesenheit lokaler Raumanwesenheitssensoren vor einem automatischen Raumprofilwechsel. Eine gültige gemeinsame Liste belegter Räume, die diesen Raum auslässt, oder bestätigte Abwesenheit im gesamten Zuhause gilt sofort und umgeht diese Verzögerung.",
+          "climate_occupancy_stale_minutes": "Maximales Alter der Meldungen ausgewählter lokaler Raumanwesenheitssensoren in Minuten. Ältere oder fehlende Meldungen gelten als unbekannt und belegen weder Anwesenheit noch Abwesenheit. Gemeinsame Raumlisten haben eine eigene Altersgrenze; diese Einstellung wählt kein Ersatz-Klimaprofil.",
+          "climate_away_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
           "climate_manual_profile": "Diese Option steuert „Geräte“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
-          "climate_sleep_active": "Diese Option steuert „Schlaf · Geräte“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
-          "climate_sleep_schedule_enabled": "Diese Option steuert „Schlafprofil nach Uhrzeit“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
-          "climate_sleep_start": "Dieser Zeitwert regelt „Schlafbeginn (lokale Zeit)“. Er begrenzt häufiges Schalten und ersetzt keine Schutzschaltung.",
-          "climate_sleep_end": "Dieser Zeitwert regelt „Schlafende (lokale Zeit)“. Er begrenzt häufiges Schalten und ersetzt keine Schutzschaltung.",
+          "climate_sleep_active": "Kennzeichnet manuell aktuellen Schlaf für automatische Schlafprofile und konfigurierte Ruhe-/Pausenregeln. Aus erzwingt kein Wachsein: Zeitplan oder gewählte Schlafraumquelle können weiterhin Schlaf melden. Explizite Profile und bestätigte Abwesenheit behalten Vorrang.",
+          "climate_sleep_schedule_enabled": "Verwendet Beginn und Ende des Raumschlafzeitplans in der lokalen Home-Assistant-Zeitzone als Schlafnachweis. Vorgabe 22:00–07:00. Manuelle Angabe und Schlafraumquelle wirken zusätzlich; die statische Lärmraum-Einstufung bleibt unverändert.",
+          "climate_sleep_start": "Lokale Beginnzeit des Schlafintervalls. Sie trägt nur bei aktiviertem Zeitplan zum Schlafnachweis bei. Das Intervall kann über Mitternacht reichen, etwa 22:00–07:00.",
+          "climate_sleep_end": "Lokale Endzeit des Schlafintervalls, wirksam nur bei aktiviertem Zeitplan. Das Ende hebt Schlafmeldungen des manuellen Schalters oder einer anderen gewählten Quelle nicht auf.",
           "climate_target_source": "Feste Temperaturen, begrenzte Korrektur nach gemessener Luftfeuchte oder ISO 7730 mit echten Messwerten.",
           "climate_comfort_adjustment_max_c": "Dies ist ein Entscheidungswert für „Maximale Komfortkorrektur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert."
         }
@@ -1834,7 +1834,7 @@
           "climate_humidity_low_rh": "Dies ist ein Entscheidungswert für „Untergrenze der relativen Luftfeuchte (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "climate_humidity_high_rh": "Dies ist ein Entscheidungswert für „Obergrenze der relativen Luftfeuchte (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "climate_humidity_hysteresis_rh": "Dies ist ein Entscheidungswert für „Hysterese für Luftfeuchte (Prozentpunkte)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "climate_cooling_dry_deferral_rh_points": "Diese Option steuert „Entfeuchter beim aktiven Kühlen zurückstellen, bis relative Feuchte die Obergrenze um diesen Wert übersteigt (0 deaktiviert)“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
+          "climate_cooling_dry_deferral_rh_points": "Zusätzliche Prozentpunkte relativer Feuchte, die bei bereits kühlender Klimaanlage für separate Entfeuchtung erforderlich sind. Die einheitlichen Gerätekontroller vergleichen mit dem Feuchteziel des aktiven Profils plus dieser Marge; die ältere Raumkoordination nutzt die obere Raumfeuchteschwelle plus Marge. Null entfernt die zusätzliche Marge; weitere Bedarfsprüfungen gelten weiterhin.",
           "climate_humidity_setpoint_auto": "Diese Option steuert „Sollfeuchte eines bereits eingeschalteten Be-/Entfeuchters regeln (separate Freigabe)“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
           "climate_window_efficiency_notify": "Diese Option steuert „Hinweis senden, wenn sich laufende Heizung, Kühlung oder Entfeuchtung durch sicheres Fensterlüften entlasten lässt“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
           "climate_dry_fan_mode_auto": "Diese Option steuert „DRY/FAN_ONLY am Klimagerät automatisch umschalten (separate Freigabe nach Geräteprüfung)“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
@@ -1987,7 +1987,7 @@
           "general_occupied_rooms_entity": "Belegung · Raum · Quelle (state)",
           "general_occupied_rooms_attribute": "Belegung · Raum · Quelle (attribute)",
           "general_home_trackers": "Zuhause · Belegung · Geräte",
-          "general_home_policy": "Zuhause · Belegung · Steuerung",
+          "general_home_policy": "Anwesenheit zu Hause",
           "general_sleep_rooms_entity": "Schlaf · Raum · Quelle (state)",
           "general_sleep_rooms_attribute": "Schlaf · Raum · Quelle (attribute)",
           "general_source_stale_minutes": "Maximales Datenalter für Raumbelegung/Schlaf (Minuten)"
@@ -1997,7 +1997,7 @@
           "general_occupied_rooms_entity": "Eine passende Home-Assistant-Quelle für „Belegung · Raum · Quelle (state)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "general_occupied_rooms_attribute": "„Belegung · Raum · Quelle (attribute)“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
           "general_home_trackers": "Eine passende Home-Assistant-Quelle für „Zuhause · Belegung · Geräte“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
-          "general_home_policy": "Diese Option steuert „Zuhause · Belegung · Steuerung“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
+          "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
           "general_sleep_rooms_entity": "Eine passende Home-Assistant-Quelle für „Schlaf · Raum · Quelle (state)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "general_sleep_rooms_attribute": "Zustand oder ein tatsächlich mit einer Raumliste gefülltes Attribut wählen.",
           "general_source_stale_minutes": "Maximales Alter der letzten Quellenaktualisierung, bevor die Raum-/Schlafliste als unbekannt gilt. Keine Mindestschlafdauer. Standard: 240 Minuten. Veraltete Daten dürfen kein automatisches Ausschalten auslösen."
@@ -2177,7 +2177,7 @@
           "language": "TTS · Auswählen · Quelle",
           "use_mold_indicator": "Schimmelindikator statt relativer Raumluftfeuchte verwenden",
           "pollen_entities": "Pollen · Quelle · Auswählen",
-          "use_announcement_hub": "Automatische · Announcement Hub",
+          "use_announcement_hub": "Ansagen · Announcement Hub verwenden",
           "general_away_cooldown_minutes": "Zuhause · Away · cooldown (min)",
           "away_open_window_alert": "Bei offenen Fenstern nach Verlassen des Hauses warnen",
           "away_windows_target_people": "Zu benachrichtigende Personen",
@@ -2208,7 +2208,7 @@
           "pollen_max_scale": "Maximalwert der Pollen-Skala",
           "pollen_avoid_ventilation": "Bei hoher Pollenbelastung Lüften vermeiden",
           "general_source_stale_minutes": "Maximales Datenalter für Raumbelegung/Schlaf (Minuten)",
-          "general_home_policy": "Zuhause · Belegung · Steuerung"
+          "general_home_policy": "Anwesenheit zu Hause"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -2227,7 +2227,7 @@
           "language": "Sprachen stammen vom gewählten TTS-Anbieter. Regionscodes erscheinen nur bei mehreren Varianten derselben Sprache.",
           "use_mold_indicator": "Die Lüftungsempfehlung berücksichtigt die geschätzte relative Feuchte an der kältesten Oberfläche statt der normalen Raumluftfeuchte. Pro Raum kalibrieren; ohne Kalibrierung wird der Wert als unbekannt angezeigt.",
           "pollen_entities": "Beim ersten Einrichten werden alle gefundenen Pollenquellen vorausgewählt. Eine später bewusst leere Auswahl bleibt leer.",
-          "use_announcement_hub": "Wird nur angezeigt, wenn Announcement Hub installiert ist. Aktiviert wird darüber geroutet, sobald der Hub verfügbar ist.",
+          "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
           "general_away_cooldown_minutes": "Nach einer frisch bestätigten leeren Raumbelegung so viele Minuten warten, bevor Away gilt. Unbekannte oder veraltete Daten lösen Away nicht aus.",
           "away_open_window_alert": "Standardmäßig aus. Sofortige Meldung, sobald alle ausgewählten Anwesenheitsquellen Abwesenheit bestätigen. Number-/input_number-Zähler: 0 = niemand da, positiv = anwesend. Unbekannte Werte beweisen keine Abwesenheit. Es werden nur echte offene Fenster gemeldet. Kein erneutes Senden beim Neustart während Abwesenheit; neue Fenster können erneut gemeldet werden.",
           "away_windows_target_people": "Wähle konkrete person.*-Einträge in Home Assistant. Für jede Person muss das passende Handy/Uhr-Ziel in Announcement Hub zugeordnet sein. Eine fehlende Zuordnung führt niemals zu einem Raum-Rundruf.",
@@ -2258,7 +2258,7 @@
           "pollen_max_scale": "Oberster Zahlenwert der Anbieterskala, z. B. 5.",
           "pollen_avoid_ventilation": "Hohe Pollenwerte können die Empfehlung zum Fensteröffnen optional sperren.",
           "general_source_stale_minutes": "Maximales Alter der letzten Quellenaktualisierung, bevor die Raum-/Schlafliste als unbekannt gilt. Keine Mindestschlafdauer. Standard: 240 Minuten. Veraltete Daten dürfen kein automatisches Ausschalten auslösen.",
-          "general_home_policy": "Diese Option steuert „Zuhause · Belegung · Steuerung“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen."
+          "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind."
         }
       },
       "room_occupancy": {
@@ -2853,423 +2853,1127 @@
     },
     "number": {
       "global_threshold_outdoor_aqi": {
-        "name": "Maximaler Außen-AQI"
+        "name": "Lüftung · Maximaler Außen-AQI",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_outdoor_co2": {
-        "name": "Maximaler CO₂-Wert außen (ppm)"
+        "name": "Lüftung · Maximaler CO₂-Wert außen (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_outdoor_pm25": {
-        "name": "Maximaler PM2,5-Wert außen (µg/m³)"
+        "name": "Lüftung · Maximaler PM2,5-Wert außen (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_outdoor_pm10": {
-        "name": "Maximaler PM10-Wert außen (µg/m³)"
+        "name": "Lüftung · Maximaler PM10-Wert außen (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_outdoor_voc": {
-        "name": "Maximaler VOC-Wert außen (µg/m³)"
+        "name": "Lüftung · Maximaler VOC-Wert außen (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_outdoor_voc_parts": {
-        "name": "Maximaler VOC-Wert außen (ppb)"
+        "name": "Lüftung · Maximaler VOC-Wert außen (ppb)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_outdoor_no2": {
-        "name": "Außenluft NO₂ - Richtwert (µg/m³)"
+        "name": "Lüftung · Außenluft NO₂ - Richtwert (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_outdoor_o3": {
-        "name": "Außenluft O₃ - Richtwert (µg/m³)"
+        "name": "Lüftung · Außenluft O₃ - Richtwert (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_outdoor_so2": {
-        "name": "Außenluft SO₂ - Richtwert (µg/m³)"
+        "name": "Lüftung · Außenluft SO₂ - Richtwert (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_indoor_aqi": {
-        "name": "Innen-AQI als Lüftungsschwelle"
+        "name": "Lüftung · Innen-AQI als Lüftungsschwelle",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_indoor_co2": {
-        "name": "CO₂-Grenzwert innen für Lüftung (ppm)"
+        "name": "Lüftung · CO₂-Grenzwert innen für Lüftung (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_indoor_pm25": {
-        "name": "PM2,5-Grenzwert innen für Lüftung (µg/m³)"
+        "name": "Lüftung · PM2,5-Grenzwert innen für Lüftung (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_indoor_pm10": {
-        "name": "PM10-Grenzwert innen für Lüftung (µg/m³)"
+        "name": "Lüftung · PM10-Grenzwert innen für Lüftung (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_indoor_voc": {
-        "name": "VOC-Grenzwert innen für Lüftung (µg/m³)"
+        "name": "Lüftung · VOC-Grenzwert innen für Lüftung (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_indoor_voc_parts": {
-        "name": "VOC-Grenzwert innen für Lüftung (ppb)"
+        "name": "Lüftung · VOC-Grenzwert innen für Lüftung (ppb)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_indoor_humidity": {
-        "name": "Luftfeuchte innen als Lüftungsschwelle (%)"
+        "name": "Lüftung · Luftfeuchte innen als Lüftungsschwelle (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_indoor_mold": {
-        "name": "Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)"
+        "name": "Lüftung · Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_min_outdoor_temp": {
-        "name": "Minimale Außentemperatur (°C)"
+        "name": "Lüftung · Minimale Außentemperatur (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_max_outdoor_temp": {
-        "name": "Maximale Außentemperatur (°C)"
+        "name": "Lüftung · Maximale Außentemperatur (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_max_outdoor_humidity": {
-        "name": "Maximale Außenluftfeuchte (%)"
+        "name": "Lüftung · Maximale Außenluftfeuchte (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_max_wind_kmh": {
-        "name": "Maximale Windgeschwindigkeit (km/h)"
+        "name": "Lüftung · Maximale Windgeschwindigkeit (km/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_threshold_max_age_minutes": {
-        "name": "Höchstalter einer Außenmessung (Minuten)"
+        "name": "Lüftung · Höchstalter der Messwerte (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Ansagen wiederholen (Minuten)"
+        "name": "Ansagen · Wiederholungsintervall (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_pid_target_c": {
-        "name": "PID · Raum-Solltemperatur (°C)"
+        "name": "PID · Raum-Solltemperatur (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_pid_kp": {
-        "name": "PID · Proportionalverstärkung Kp (%/°C)"
+        "name": "PID · Proportionalverstärkung Kp (%/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_pid_ki": {
-        "name": "PID · Integralverstärkung Ki (%/(°C·min))"
+        "name": "PID · Integralverstärkung Ki (%/(°C·min))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_pid_kd": {
-        "name": "PID · Differentialverstärkung Kd (%·min/°C)"
+        "name": "PID · Differentialverstärkung Kd (%·min/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_pid_offset_c": {
-        "name": "PID · Maximale Sollwertabweichung (°C)"
+        "name": "PID · Maximale Sollwertabweichung (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_pid_min_setpoint_c": {
-        "name": "PID · Niedrigster zulässiger Sollwert (°C)"
+        "name": "PID · Niedrigster zulässiger Sollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_pid_max_setpoint_c": {
-        "name": "PID · Höchster zulässiger Sollwert (°C)"
+        "name": "PID · Höchster zulässiger Sollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_pid_sample_seconds": {
-        "name": "PID · Abtastintervall (Sekunden)"
+        "name": "PID · Abtastintervall (Sekunden)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_pid_max_change_c": {
-        "name": "PID · Maximale Sollwertänderung je Intervall (°C)"
+        "name": "PID · Maximale Sollwertänderung je Intervall (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_pid_min_change_c": {
-        "name": "PID · Minimale sinnvolle Sollwertänderung (°C)"
+        "name": "PID · Minimale sinnvolle Sollwertänderung (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_comfort_heat": {
-        "name": "Heizen · Raum · Belegung"
+        "name": "Profil · Komfort · Heizsollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_comfort_cool": {
-        "name": "Kühlen · Raum · Belegung"
+        "name": "Profil · Komfort · Kühlsollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_comfort_humidity": {
-        "name": "Luftfeuchtigkeit · Raum · Belegung · Sollwert (%)"
+        "name": "Profil · Komfort · Feuchtesollwert (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_home_heat": {
-        "name": "Heizen · Zuhause"
+        "name": "Profil · Zu Hause · Heizsollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_home_cool": {
-        "name": "Kühlen · Zuhause"
+        "name": "Profil · Zu Hause · Kühlsollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_home_humidity": {
-        "name": "Luftfeuchtigkeit · Zuhause · Sollwert (%)"
+        "name": "Profil · Zu Hause · Feuchtesollwert (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_away_heat": {
-        "name": "Heizen · Abwesend"
+        "name": "Profil · Abwesend · Heizsollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_away_cool": {
-        "name": "Kühlen · Abwesend"
+        "name": "Profil · Abwesend · Kühlsollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_away_humidity": {
-        "name": "Luftfeuchtigkeit · Abwesend · Sollwert (%)"
+        "name": "Profil · Abwesend · Feuchtesollwert (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_sleep_heat": {
-        "name": "Heizen · Schlaf"
+        "name": "Profil · Schlaf · Heizsollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_sleep_cool": {
-        "name": "Kühlen · Schlaf"
+        "name": "Profil · Schlaf · Kühlsollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_sleep_humidity": {
-        "name": "Luftfeuchtigkeit · Schlaf · Sollwert (%)"
+        "name": "Profil · Schlaf · Feuchtesollwert (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_eco_heat": {
-        "name": "Heizen · ECO"
+        "name": "Profil · Eco · Heizsollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_eco_cool": {
-        "name": "Kühlen · ECO"
+        "name": "Profil · Eco · Kühlsollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_profile_eco_humidity": {
-        "name": "Luftfeuchtigkeit · ECO · Sollwert (%)"
+        "name": "Profil · Eco · Feuchtesollwert (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_environment_pollen_high_from": {
-        "name": "Pollenindex ab diesem Wert hoch"
+        "name": "Pollen · Pollenindex ab diesem Wert hoch",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_environment_pollen_max_scale": {
-        "name": "Maximalwert der Pollen-Skala"
+        "name": "Pollen · Maximalwert der Pollen-Skala",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Maximales Datenalter für Raumbelegung/Schlaf (Minuten)"
+        "name": "Anwesenheit zu Hause · Höchstalter der Raum-/Schlafliste (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_area_environment_room_volume_m3": {
-        "name": "Raumluftvolumen (m³)"
+        "name": "Luftreinigung · Raumvolumen (m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_area_environment_particle_cadr_m3h": {
-        "name": "Reinigungsleistung für Partikel, CADR (m³/h)"
+        "name": "Luftreinigung · Reinigungsleistung für Partikel, CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_area_environment_co2_target_ppm": {
-        "name": "CO₂-Zielwert beim Lüften (ppm)"
+        "name": "Luftreinigung · CO₂-Zielwert (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_area_environment_radon_reference_bq_m3": {
-        "name": "Radon-Jahresreferenzwert (Bq/m³)"
+        "name": "Luftreinigung · Radon-Jahresreferenzwert (Bq/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "Erweiterter Komfort · Luftgeschwindigkeit (m/s)"
+        "name": "Erweiterter Komfort · Luftgeschwindigkeit (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_area_environment_met": {
-        "name": "Erweiterter Komfort · Aktivität (met)"
+        "name": "Erweiterter Komfort · Aktivität (met)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_area_environment_clo": {
-        "name": "Erweiterter Komfort · Kleidung (clo)"
+        "name": "Erweiterter Komfort · Bekleidung (clo)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_unoccupied_delay_minutes": {
-        "name": "Verzögerung bis Raum als unbelegt gilt (Minuten)"
+        "name": "Raumanwesenheit · Verzögerung bei leerem Raum (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Maximales Alter der Präsenzmessung (Minuten)"
+        "name": "Raumanwesenheit · Höchstalter der Sensormeldung (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_comfort_adjustment_max_c": {
-        "name": "Maximale Komfortkorrektur (°C)"
+        "name": "Erweiterter Komfort · Maximale Sollwertanpassung (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_humidity_low_rh": {
-        "name": "Untergrenze der relativen Luftfeuchte (%)"
+        "name": "Luftfeuchte · Befeuchtungsschwelle (% rF)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_humidity_high_rh": {
-        "name": "Obergrenze der relativen Luftfeuchte (%)"
+        "name": "Luftfeuchte · Entfeuchtungsschwelle (% rF)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_humidity_hysteresis_rh": {
-        "name": "Hysterese für Luftfeuchte (Prozentpunkte)"
+        "name": "Luftfeuchte · Entscheidungshysterese (Prozentpunkte)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_cooling_dry_deferral_rh_points": {
-        "name": "Entfeuchter beim aktiven Kühlen zurückstellen, bis relative Feuchte die Obergrenze um diesen Wert übersteigt (0 deaktiviert)"
+        "name": "Luftfeuchte · Zusätzliche Entfeuchtungsmarge beim Kühlen (Prozentpunkte)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_pm25_action_ug_m3": {
-        "name": "PM2.5-Kurzzeit-Auslöseschwelle (µg/m³)"
+        "name": "Luftreinigung · PM2.5-Lüfterschwelle (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_extraction_speed_percent": {
-        "name": "Zieldrehzahl laufender Abluftanlage (%)"
+        "name": "Luftreinigung · Maximale Abluftdrehzahl (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_purifier_speed_percent": {
-        "name": "Zieldrehzahl laufender Luftreinigung (%)"
+        "name": "Luftreinigung · Maximale Luftreinigerdrehzahl (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_direct_tuning_kp": {
-        "name": "PID · Kp · Steuerung (percentage points/°C)"
+        "name": "PID · Kp · Steuerung (percentage points/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_direct_tuning_ki": {
-        "name": "PID · Ki · Steuerung (percentage points/(°C·minute))"
+        "name": "PID · Ki · Steuerung (percentage points/(°C·minute))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_direct_tuning_kd": {
-        "name": "PID · Kd · Steuerung (percentage points·minute/°C)"
+        "name": "PID · Kd · Steuerung (percentage points·minute/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "PID · Einstellungen · Quelle (s) · SAMPLE"
+        "name": "PID · Einstellungen · Quelle (s) · SAMPLE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "PID · Einstellungen · Quelle · MAX Δ"
+        "name": "PID · Einstellungen · Quelle · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "PID · Einstellungen · Quelle · MIN Δ"
+        "name": "PID · Einstellungen · Quelle · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_mold_surface_critical_temperature_c": {
-        "name": "Gemessene Temperatur der kältesten Oberfläche (°C)"
+        "name": "Schimmel · Gemessene kälteste Oberflächentemperatur (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_kp": {
-        "name": "PID · {channel}Proportionalverstärkung Kp (%/°C)"
+        "name": "PID · {channel}Proportionalverstärkung Kp (%/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_ki": {
-        "name": "PID · {channel}Integralverstärkung Ki (%/(°C·min))"
+        "name": "PID · {channel}Integralverstärkung Ki (%/(°C·min))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_kd": {
-        "name": "PID · {channel}Differentialverstärkung Kd (%·min/°C)"
+        "name": "PID · {channel}Differentialverstärkung Kd (%·min/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_sample_seconds": {
-        "name": "PID · {channel}Abtastintervall (Sekunden)"
+        "name": "PID · {channel}Abtastintervall (Sekunden)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Prozessverstärkung"
+        "name": "PID · {channel}Prozessverstärkung",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Zeitkonstante"
+        "name": "PID · {channel}Zeitkonstante",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Totzeit"
+        "name": "PID · {channel}Totzeit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC λ"
+        "name": "PID · {channel}IMC λ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Relative Leistung 1 (%)"
+        "name": "PID · {channel}Relative Leistung 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Relative Leistung 2 (%)"
+        "name": "PID · {channel}Relative Leistung 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Relative Leistung 3 (%)"
+        "name": "PID · {channel}Relative Leistung 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Relative Leistung 4 (%)"
+        "name": "PID · {channel}Relative Leistung 4 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Lüfterdrehzahl 1 (%)"
+        "name": "PID · {channel}Lüfterdrehzahl 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Relative Leistung 1 (%)"
+        "name": "PID · {channel}Relative Leistung 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Lüfterdrehzahl 2 (%)"
+        "name": "PID · {channel}Lüfterdrehzahl 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Relative Leistung 2 (%)"
+        "name": "PID · {channel}Relative Leistung 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Lüfterdrehzahl 3 (%)"
+        "name": "PID · {channel}Lüfterdrehzahl 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Relative Leistung 3 (%)"
+        "name": "PID · {channel}Relative Leistung 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_cycle_seconds": {
-        "name": "PID · {channel}Einstellungen · Quelle (s) · PWM PERIOD"
+        "name": "PID · {channel}Einstellungen · Quelle (s) · PWM PERIOD",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_quiet_percentage": {
-        "name": "Leise · {channel}Lüfterleistung (%)"
+        "name": "Leise · {channel}Lüfterleistung (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_min_on_seconds": {
-        "name": "Leistung · {channel}Mindest-EIN-Zeit (s)"
+        "name": "Leistung · {channel}Mindest-EIN-Zeit (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_min_off_seconds": {
-        "name": "Leistung · {channel}Mindest-AUS-Zeit (s)"
+        "name": "Leistung · {channel}Mindest-AUS-Zeit (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_max_on_seconds": {
-        "name": "Leistung · {channel}Maximale Einschaltdauer (s)"
+        "name": "Leistung · {channel}Maximale Einschaltdauer (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_min_limit": {
-        "name": "Raum · Temperatur · min"
+        "name": "Raumgrenzen · Minimaler Temperatursollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_max_limit": {
-        "name": "Raum · Temperatur · max"
+        "name": "Raumgrenzen · Maximaler Temperatursollwert (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_min_limit": {
-        "name": "Raum · Luftfeuchtigkeit · min"
+        "name": "Raumgrenzen · Minimaler Feuchtesollwert (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_max_limit": {
-        "name": "Raum · Luftfeuchtigkeit · max"
+        "name": "Raumgrenzen · Maximaler Feuchtesollwert (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_room_equipment_limit_fan_min_percentage": {
-        "name": "Raum · Geschwindigkeit · min (%)"
+        "name": "Raumgrenzen · Alte minimale Lüfterdrehzahl (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_room_equipment_limit_fan_max_percentage": {
-        "name": "Raum · Geschwindigkeit · max (%)"
+        "name": "Raumgrenzen · Alte maximale Lüfterdrehzahl (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "home_global_occupancy_away_cooldown_minutes": {
-        "name": "Zuhause · Away · cooldown (min)"
+        "name": "Anwesenheit zu Hause · Abwesenheitsverzögerung (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_shading_close_above_c": {
-        "name": "Rollos schließen ab Raumtemperatur (°C)"
+        "name": "Beschattung · Rollos schließen ab Raumtemperatur (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_shading_min_sun_elevation": {
-        "name": "Minimale Sonnenhöhe für Beschattung (°)"
+        "name": "Beschattung · Minimale Sonnenhöhe für Beschattung (°)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "shade_close_above_c": {
-        "name": "Rollos schließen ab Raumtemperatur (°C)"
+        "name": "Beschattung · Rollos schließen ab Raumtemperatur (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_power_switch_cooldown_seconds": {
-        "name": "Strom · Leerlauf-Nachlaufzeit (Sekunden)"
+        "name": "Strom · Leerlauf-Nachlaufzeit (Sekunden)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_particle_cadr_m3h": {
-        "name": "Partikel-CADR des Luftreinigers (m³/h)"
+        "name": "Partikel-CADR des Luftreinigers (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "shade_min_lux": {
-        "name": "Mindestbeleuchtungsstärke zum Schließen (lx)"
+        "name": "Beschattung · Mindestbeleuchtungsstärke zum Schließen (lx)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_fan_min_percentage": {
-        "name": "Lüfter · {channel}Mindestgeschwindigkeit (%)"
+        "name": "Lüfter · {channel}Mindestgeschwindigkeit (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_fan_max_percentage": {
-        "name": "Lüfter · {channel}Höchstgeschwindigkeit (%)"
+        "name": "Lüfter · {channel}Höchstgeschwindigkeit (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "global_occupancy_away_cooldown_minutes": {
+        "name": "Anwesenheit zu Hause · Abwesenheitsverzögerung (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "home_aqi_custom_limit": {
+        "name": "Lüftung · Benutzerdefinierter AQI-Grenzwert",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "area_device_target_fan_speed_percent": {
+        "name": "Ventilator · Sollgeschwindigkeit (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       }
     },
     "switch": {
       "home_automatic_notifications": {
-        "name": "Neue Empfehlungen automatisch melden"
+        "name": "Ansagen · Automatische Benachrichtigungen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "home_automatic_tts": {
-        "name": "Neue Empfehlungen automatisch sprechen"
+        "name": "Ansagen · Automatische Sprachausgabe",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "home_use_announcement_hub": {
-        "name": "Announcement Hub verwenden, falls vorhanden"
+        "name": "Ansagen · Announcement Hub verwenden",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "home_ai_rewrite_announcements": {
-        "name": "KI für Ansagen verwenden"
+        "name": "Ansagen · Formulierung mit KI",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "home_global_environment_pollen_avoid_ventilation": {
-        "name": "Bei hoher Pollenbelastung Lüften vermeiden"
+        "name": "Pollen · Bei hoher Pollenbelastung Lüften vermeiden",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_area_environment_sleep_room": {
-        "name": "Schlafzimmer"
+        "name": "Lärm · Als Schlafraum genutzt",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_area_environment_enable_pmv": {
-        "name": "Erweiterter Komfort (ISO 7730)"
+        "name": "Erweiterter Komfort · PMV/PPD aktivieren",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_sleep_active": {
-        "name": "Schlaf · Geräte"
+        "name": "Schlaf · Jetzt schlafen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_sleep_schedule_enabled": {
-        "name": "Schlafprofil nach Uhrzeit"
+        "name": "Schlaf · Zeitplan verwenden",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_operating_window_efficiency_notify": {
-        "name": "Hinweis senden, wenn sich laufende Heizung, Kühlung oder Entfeuchtung durch sicheres Fensterlüften entlasten lässt"
+        "name": "Ansagen · Hinweise zum effizienten Lüften",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_quiet_sleep": {
-        "name": "Leise · {channel}Im Schlafmodus"
+        "name": "Leise · {channel}Im Schlafmodus",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_quiet_occupied": {
-        "name": "Leise · {channel}Bei Anwesenheit"
+        "name": "Leise · {channel}Bei Anwesenheit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_sensor_verified": {
-        "name": "Sensor · {channel}Erforderlich"
+        "name": "Sensor · {channel}Erforderlich",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_shading_enabled": {
-        "name": "Automatische Fensterbeschattung zur Kühlung"
+        "name": "Beschattung · Automatische Fensterbeschattung zur Kühlung",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "home_shade_announce_before_movement": {
-        "name": "Vor dem Öffnen oder Schließen der Rollos ankündigen"
+        "name": "Ansagen · Beschattungsbewegung ankündigen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "shade_auto_control": {
-        "name": "Automatische Fensterbeschattung zur Kühlung"
+        "name": "Beschattung · Automatische Fensterbeschattung zur Kühlung",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "shade_announce": {
-        "name": "Vor dem Öffnen oder Schließen der Rollos ankündigen"
+        "name": "Ansagen · Beschattungsbewegung ankündigen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "home_away_open_window_alert": {
-        "name": "Bei offenen Fenstern nach Verlassen des Hauses warnen"
+        "name": "Ansagen · Offene Fenster bei Abwesenheit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pause_on_window_open": {
-        "name": "Bei offenem Fenster ausschalten · {channel}"
+        "name": "Steuerung · {channel}Bei offenem Fenster pausieren",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "shade_lux_enabled": {
-        "name": "Luxsensor für Sonnenschutz verwenden"
+        "name": "Beschattung · Luxsensor für Sonnenschutz verwenden",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_announce_device_errors": {
-        "name": "Gerätefehler melden · {channel}"
+        "name": "Ansagen · {channel}Gerätefehler",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       }
     },
     "select": {
       "home_language": {
-        "name": "Sprache"
+        "name": "Ansagen · Sprache",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_manual_profile": {
-        "name": "Geräte",
+        "name": "Profil · Überschreiben (Automatik empfohlen)",
         "state": {
-          "none": "Automatisch",
           "comfort": "Komfort",
           "home": "Zuhause",
           "away": "Abwesend",
           "sleep": "Schlaf",
-          "eco": "Sparbetrieb"
+          "eco": "Sparbetrieb",
+          "auto": "Automatisch"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
         }
       },
       "area_pid_gain_source": {
@@ -3277,23 +3981,60 @@
         "state": {
           "defaults": "Standardwerte",
           "manual": "Manuell"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
         }
       },
       "home_global_policy_home_policy": {
-        "name": "Zuhause · Belegung · Steuerung"
+        "name": "Anwesenheit zu Hause",
+        "state": {
+          "any_home": "Mindestens eine Person zu Hause",
+          "all_home": "Alle zu Hause (Altoption)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_policy_unknown_occupancy": {
-        "name": "Belegung · Geräte"
+        "name": "Raumanwesenheit · Bei unbekannter Anwesenheit",
+        "state": {
+          "occupied": "Als belegt behandeln",
+          "hold": "Automatische Änderungen aussetzen"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_policy_away_policy": {
-        "name": "Zuhause · Geräte · POLICY"
+        "name": "Anwesenheit zu Hause · Abwesenheitsregel",
+        "state": {
+          "any_home": "Mindestens eine Person zu Hause",
+          "all_home": "Alle zu Hause (Altoption)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_policy_target_source": {
-        "name": "Komfortregelung",
+        "name": "Erweiterter Komfort · Methode der Temperatursollwerte",
         "state": {
           "temperature": "Feste Temperaturziele",
           "auto_comfort": "Automatischer Komfort (Temperatur/Luftfeuchte)",
           "pmv": "Erweitert: ISO 7730 (Messungen erforderlich)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
         }
       },
       "equipment_control_mode": {
@@ -3304,10 +4045,20 @@
           "manual": "Manuell",
           "off": "Ausschalten",
           "pid": "PID"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "Leise · {channel}Lüftermodus"
+        "name": "Leise · {channel}Lüftermodus",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}Kalibrierung",
@@ -3317,6 +4068,11 @@
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Adaptiv · Vorschlag mit Bestätigung",
           "adaptive_auto": "Adaptiv · Automatisch (max. 10 %/Tag)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3324,6 +4080,11 @@
         "state": {
           "legacy": "Bisherig (unkalibriert)",
           "measured": "Gemessenes Leistungsmodell"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
@@ -3334,6 +4095,11 @@
           "cool": "Kühlen",
           "dry": "Entfeuchten",
           "fan_only": "Lüfter"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
         }
       },
       "equipment_presence_requirement": {
@@ -3342,6 +4108,11 @@
           "always": "Automatische",
           "occupied": "Raum · Belegung",
           "absent": "Raum · Belegung · Ausschalten"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
         }
       },
       "equipment_sleep_behavior": {
@@ -3350,6 +4121,11 @@
           "normal": "Automatische",
           "pause": "Pausieren",
           "sleep_targets": "Schlaf · Sollwert"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
         }
       },
       "equipment_fan_purpose": {
@@ -3358,32 +4134,67 @@
           "extraction": "Außen · Steuerung",
           "filtration": "PM2.5 · Steuerung",
           "auto": "Automatische"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "Erweiterter Komfort · Strahlungstemperaturquelle"
+        "name": "Erweiterter Komfort · Quelle der Strahlungstemperatur",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_area_science_air_speed_entity": {
-        "name": "Erweiterter Komfort · Luftgeschwindigkeitssensor"
+        "name": "Erweiterter Komfort · Quelle der Luftgeschwindigkeit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "shade_window_entity": {
-        "name": "Zugeordneter Fensterkontakt"
+        "name": "Beschattung · Zugeordneter Fensterkontakt",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_power_switch_entity": {
-        "name": "Strom · Vorgeschalteter Netzschalter"
+        "name": "Strom · Vorgeschalteter Netzschalter",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "home_aqi_scale": {
-        "name": "AQI-Skala",
+        "name": "Lüftung · AQI-Skala",
         "state": {
           "auto": "Automatisch (Anbieter)",
           "not_configured": "Unbekannt - kein Vergleich",
           "us_epa": "US EPA AQI (0-500)",
           "eea_category": "EEA AQI (1-6)",
           "custom": "Benutzerdefinierte Skala"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
         }
       },
       "shade_lux_entity": {
-        "name": "Luxsensor für Beschattung"
+        "name": "Beschattung · Luxsensor für Beschattung",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_adaptation_mode": {
         "name": "PID · {channel}Adaptives Lernen",
@@ -3391,35 +4202,80 @@
           "disabled": "Deaktiviert",
           "observe": "Beobachten und empfehlen",
           "bounded": "Begrenzte automatische Anpassung (10 % / Tag)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
         }
       }
     },
     "time": {
       "area_climate_sleep_start": {
-        "name": "Schlafbeginn (lokale Zeit)"
+        "name": "Schlaf · Beginn (Ortszeit)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "area_climate_sleep_end": {
-        "name": "Schlafende (lokale Zeit)"
+        "name": "Schlaf · Ende (Ortszeit)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       }
     },
     "button": {
       "area_recalculate_mold": {
-        "name": "Mit aktuellen Temperaturwerten neu kalibrieren"
+        "name": "Schimmel · Kalibrierungsfaktor neu berechnen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_resume": {
-        "name": "Steuerung · {channel}Automatik fortsetzen"
+        "name": "Steuerung · {channel}Automatik fortsetzen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Anwenden · Kalibrierung"
+        "name": "PID · {channel}Anwenden · Kalibrierung",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Anwenden · Kalibrierung"
+        "name": "PID · {channel}Anwenden · Kalibrierung",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_review_approve": {
-        "name": "PID · {channel}Vorschlag annehmen"
+        "name": "PID · {channel}Vorschlag annehmen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       },
       "equipment_pid_review_discard": {
-        "name": "PID · {channel}Vorschlag verwerfen"
+        "name": "PID · {channel}Vorschlag verwerfen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       }
     },
     "climate": {
@@ -3520,8 +4376,8 @@
     },
     "general_home_policy": {
       "options": {
-        "any_home": "Zuhause · Belegung",
-        "all_home": "Zuhause · Geräte · Belegung"
+        "any_home": "Mindestens eine Person zu Hause",
+        "all_home": "Alle zu Hause (Altoption)"
       }
     },
     "device_method": {

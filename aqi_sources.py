@@ -88,7 +88,10 @@ def control_name(manager: Any, entity_id: str, field: str) -> str:
     from .aqi_names import AQI_NAMES
     tag = str(getattr(getattr(manager.hass, "config", None), "language", "en")).replace("_", "-").lower()
     labels = AQI_NAMES.get(tag, AQI_NAMES.get(tag.split("-")[0], AQI_NAMES["en"]))
-    return f"{source_name(manager.hass, entity_id)} - {labels[field]}"
+    from .settings_name_catalog import localized_setting_name
+    key = "home_aqi_scale" if field == "scale" else "home_aqi_custom_limit"
+    label = localized_setting_name(key, tag) or labels[field]
+    return f"{label} · {source_name(manager.hass, entity_id)}"
 
 
 def register_late_sources(manager: Any, entry: Any, add_entities: Any,

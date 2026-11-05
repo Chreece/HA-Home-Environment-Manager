@@ -72,7 +72,7 @@
           "automatic_tts": "தானியங்கி",
           "automatic_notifications": "தானியங்கி · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "அறிவிப்புகள் (விருப்பம்) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "அறிவிப்புகள் · Announcement Hub",
           "notify_entities": "அமைப்புகள் · மூலம்",
           "tts_engine": "அமைப்புகள் · மூலம் · TTS_ENGINE",
           "media_players": "அமைப்புகள் · மூலம் · MEDIA_PLAYERS",
@@ -84,7 +84,7 @@
           "automatic_tts": "இயல்புநிலை: ⛔ · தானியங்கி · 🪟 90 s.",
           "automatic_notifications": "இயல்புநிலை: ⛔ · தானியங்கி · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "இயல்புநிலை: 10 min · 0 = ஒருபோதும் இல்லை · அதே காரணம் தொடரும் வரை · அறைகள்.",
-          "use_announcement_hub": "Announcement Hub · கிடைக்கவில்லை → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "தேர்ந்தெடுக்கவும்: notify.* · அமைப்புகள் · மூலம்.",
           "tts_engine": "தேர்ந்தெடுக்கவும்: tts.* · அமைப்புகள் · மூலம் · TTS_ENGINE.",
           "media_players": "தேர்ந்தெடுக்கவும்: media_player.* · அமைப்புகள் · மூலம் · MEDIA_PLAYERS.",
@@ -115,8 +115,8 @@
           "min_outdoor_temp": "வெளியே · °C (≥)",
           "max_outdoor_temp": "வெளியே · °C (≤)",
           "max_outdoor_humidity": "வெளியே · RH (%) (≤)",
-          "max_wind_kmh": "வானிலை மற்றும் எச்சரிக்கைகள் · km/h (≤)",
-          "max_age_minutes": "⏱ · திறக்கவும் (min, ≤)",
+          "max_wind_kmh": "காற்றோட்டம் · வானிலை மற்றும் எச்சரிக்கைகள் · km/h (≤)",
+          "max_age_minutes": "காற்றோட்டம் · ⏱ · திறக்கவும் (min, ≤)",
           "indoor_mold": "பூஞ்சை குறியீடு · ≥ 70%"
         },
         "data_description": {
@@ -139,8 +139,8 @@
           "min_outdoor_temp": "“வெளியே · °C (≥)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
           "max_outdoor_temp": "“வெளியே · °C (≤)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
           "max_outdoor_humidity": "“வெளியே · RH (%) (≤)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
-          "max_wind_kmh": "“வானிலை மற்றும் எச்சரிக்கைகள் · km/h (≤)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
-          "max_age_minutes": "“⏱ · திறக்கவும் (min, ≤)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "“பூஞ்சை குறியீடு · ≥ 70%” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல."
         }
       },
@@ -194,7 +194,7 @@
           "language": "TTS · தேர்வு · மூலம்",
           "use_mold_indicator": "பூஞ்சை குறியீடு · RH (%) → 70%",
           "pollen_entities": "மகரந்தம் · மூலம் · தேர்வு",
-          "use_announcement_hub": "தானியங்கி · Announcement Hub",
+          "use_announcement_hub": "அறிவிப்புகள் · Announcement Hub",
           "general_away_cooldown_minutes": "வீடு · Away · cooldown (min)",
           "away_open_window_alert": "அனைவரும் வெளியேறியபின் திறந்த சாளர எச்சரிக்கை",
           "away_windows_target_people": "அறிவிப்பு பெறும் நபர்கள்",
@@ -225,7 +225,7 @@
           "pollen_max_scale": "POLLEN · மகரந்தம் · SCALE",
           "pollen_avoid_ventilation": "POLLEN · மகரந்தம் · NO VENT",
           "general_source_stale_minutes": "மூலம் · max (min)",
-          "general_home_policy": "வீடு · இருப்பு · கட்டுப்பாடு"
+          "general_home_policy": "வீட்டில் இருப்பு"
         },
         "data_description": {
           "weather_entities": "தேர்ந்தெடுக்கவும்: வானிலை மற்றும் எச்சரிக்கைகள் · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -244,7 +244,7 @@
           "language": "பொதுவான மூலங்களையும் அறிவிப்பு வெளியீடுகளையும் தேர்ந்தெடுக்கவும். சேமித்தல் அமைப்பை முடிக்கிறது. இயக்க அமைப்புகள் வீடு மற்றும் அறைச் சாதனங்களில் இருக்கும். · TTS · தேர்வு · மூலம் · provider capabilities.",
           "use_mold_indicator": "🧱 பூஞ்சை குறியீடு · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "பொதுவான மூலங்களையும் அறிவிப்பு வெளியீடுகளையும் தேர்ந்தெடுக்கவும். சேமித்தல் அமைப்பை முடிக்கிறது. இயக்க அமைப்புகள் வீடு மற்றும் அறைச் சாதனங்களில் இருக்கும். · மகரந்தம் · மூலம் · தேர்வு.",
-          "use_announcement_hub": "பொதுவான மூலங்களையும் அறிவிப்பு வெளியீடுகளையும் தேர்ந்தெடுக்கவும். சேமித்தல் அமைப்பை முடிக்கிறது. இயக்க அமைப்புகள் வீடு மற்றும் அறைச் சாதனங்களில் இருக்கும். · தானியங்கி · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "பொதுவான மூலங்களையும் அறிவிப்பு வெளியீடுகளையும் தேர்ந்தெடுக்கவும். சேமித்தல் அமைப்பை முடிக்கிறது. இயக்க அமைப்புகள் வீடு மற்றும் அறைச் சாதனங்களில் இருக்கும். · வீடு · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "அனைவரும் வெளியேறியபின் திறந்த சாளர எச்சரிக்கை. அறிவிப்பு பெறும் நபர்கள் (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. தொலைபேசி, கடிகாரம், டேப்லெட்.",
           "away_windows_target_people": "அறிவிப்பு பெறும் நபர்கள் (person.*) - Announcement Hub: தொலைபேசி, கடிகாரம், டேப்லெட், மற்ற சாதனம். Only explicitly assigned personal endpoints.",
@@ -275,7 +275,7 @@
           "pollen_max_scale": "“POLLEN · மகரந்தம் · SCALE” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்.",
           "pollen_avoid_ventilation": "“POLLEN · மகரந்தம் · NO VENT” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்.",
           "general_source_stale_minutes": "மூலம் · தூக்கம் / இருப்பு · max 240 min. செல்லாதது · அணை.",
-          "general_home_policy": "இந்த விருப்பம் “வீடு · இருப்பு · கட்டுப்பாடு” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "reconfigure": {
@@ -537,7 +537,7 @@
           "extractor_entity": "வெளியேற்ற விசிறி · மூலம்",
           "co2_ndir_verified": "CO₂ · தேவை",
           "co2_target_ppm": "CO₂ · CO₂ · இலக்கு (ppm)",
-          "sleep_room": "தூக்கம்"
+          "sleep_room": "இரைச்சல் · தூக்கம்"
         },
         "data_description": {
           "temperature_entity": "“வெப்பநிலை · மூலம்” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
@@ -546,8 +546,8 @@
           "purifier_entity": "“காற்று சுத்திகரிப்பான் · மூலம்” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
           "extractor_entity": "“வெளியேற்ற விசிறி · மூலம்” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
           "co2_ndir_verified": "“CO₂ · தேவை” க்கு பொருத்தமான உண்மையான அளவீட்டை பயன்படுத்தவும். மதிப்பீடு அளவுத்திருத்த உணரியை மாற்றாது.",
-          "co2_target_ppm": "“CO₂ · CO₂ · இலக்கு (ppm)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
-          "sleep_room": "“தூக்கம்” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -699,27 +699,27 @@
           "climate_unknown_occupancy": "இருப்பு · சாதனங்கள்",
           "climate_unoccupied_delay_minutes": "சாதனங்கள் · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "இருப்பு · சாதனங்கள் · உணரி · தேவை",
-          "climate_away_policy": "வீடு · சாதனங்கள் · POLICY",
+          "climate_away_policy": "வீட்டில் இருப்பு · வீடு · சாதனங்கள் · POLICY",
           "climate_manual_profile": "சாதனங்கள் · CLIMATE_MANUAL_PROFILE",
-          "climate_sleep_active": "தூக்கம் · சாதனங்கள்",
-          "climate_sleep_schedule_enabled": "தூக்கம் · தானியங்கி",
-          "climate_sleep_start": "தூக்கம் · சாதனங்கள் · START",
-          "climate_sleep_end": "தூக்கம் · சாதனங்கள் · END",
+          "climate_sleep_active": "உறக்கம் · தூக்கம் · சாதனங்கள்",
+          "climate_sleep_schedule_enabled": "உறக்கம் · தூக்கம் · தானியங்கி",
+          "climate_sleep_start": "உறக்கம் · தூக்கம் · சாதனங்கள் · START",
+          "climate_sleep_end": "உறக்கம் · தூக்கம் · சாதனங்கள் · END",
           "climate_target_source": "சாதனங்கள் · மூலம் · இலக்கு",
           "climate_comfort_adjustment_max_c": "சாதனங்கள் (°C)"
         },
         "data_description": {
           "climate_occupancy_sensors": "“இருப்பு · உணரி” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
           "climate_away_entities": "“வீடு · சாதனங்கள்” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
-          "climate_unknown_occupancy": "இந்த விருப்பம் “இருப்பு · சாதனங்கள்” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
-          "climate_unoccupied_delay_minutes": "இந்த நேரம் “சாதனங்கள் · CLIMATE_UNOCCUPIED_DELAY_MINUTES” ஐ நிர்ணயிக்கிறது. அடிக்கடி மாறுவதைத் தடுக்கிறது; சாதனப் பாதுகாப்பை மாற்றாது.",
-          "climate_occupancy_stale_minutes": "இந்த நேரம் “இருப்பு · சாதனங்கள் · உணரி · தேவை” ஐ நிர்ணயிக்கிறது. அடிக்கடி மாறுவதைத் தடுக்கிறது; சாதனப் பாதுகாப்பை மாற்றாது.",
-          "climate_away_policy": "இந்த விருப்பம் “வீடு · சாதனங்கள் · POLICY” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "இந்த விருப்பம் “சாதனங்கள் · CLIMATE_MANUAL_PROFILE” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
-          "climate_sleep_active": "இந்த விருப்பம் “தூக்கம் · சாதனங்கள்” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
-          "climate_sleep_schedule_enabled": "இந்த விருப்பம் “தூக்கம் · தானியங்கி” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
-          "climate_sleep_start": "இந்த நேரம் “தூக்கம் · சாதனங்கள் · START” ஐ நிர்ணயிக்கிறது. அடிக்கடி மாறுவதைத் தடுக்கிறது; சாதனப் பாதுகாப்பை மாற்றாது.",
-          "climate_sleep_end": "இந்த நேரம் “தூக்கம் · சாதனங்கள் · END” ஐ நிர்ணயிக்கிறது. அடிக்கடி மாறுவதைத் தடுக்கிறது; சாதனப் பாதுகாப்பை மாற்றாது.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "“சாதனங்கள் · மூலம் · இலக்கு” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
           "climate_comfort_adjustment_max_c": "“சாதனங்கள் (°C)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல."
         }
@@ -768,7 +768,7 @@
           "climate_humidity_low_rh": "“RH · ஈரப்பதம் · சாதனங்கள் (%) · RH MIN” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
           "climate_humidity_high_rh": "“RH · ஈரப்பதம் · சாதனங்கள் (%) · RH MAX” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
           "climate_humidity_hysteresis_rh": "“RH · ஈரப்பதம் · சாதனங்கள் · ± RH” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
-          "climate_cooling_dry_deferral_rh_points": "இந்த விருப்பம் “சாதனங்கள் · வெப்பநிலை −” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "இந்த விருப்பம் “ஈரப்பதம் · தானியங்கி” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
           "climate_window_efficiency_notify": "இந்த விருப்பம் “சாதனங்கள் · வெளிப்புற” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
           "climate_dry_fan_mode_auto": "இந்த விருப்பம் “வேகம் · தானியங்கி” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
@@ -921,7 +921,7 @@
           "general_occupied_rooms_entity": "இருப்பு · அறை · மூலம் (state)",
           "general_occupied_rooms_attribute": "இருப்பு · அறை · மூலம் (attribute)",
           "general_home_trackers": "வீடு · இருப்பு · சாதனங்கள்",
-          "general_home_policy": "வீடு · இருப்பு · கட்டுப்பாடு",
+          "general_home_policy": "வீட்டில் இருப்பு",
           "general_sleep_rooms_entity": "தூக்கம் · அறை · மூலம் (state)",
           "general_sleep_rooms_attribute": "தூக்கம் · அறை · மூலம் (attribute)",
           "general_source_stale_minutes": "மூலம் · max (min)"
@@ -931,7 +931,7 @@
           "general_occupied_rooms_entity": "“இருப்பு · அறை · மூலம் (state)” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
           "general_occupied_rooms_attribute": "“இருப்பு · அறை · மூலம் (attribute)” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்.",
           "general_home_trackers": "“வீடு · இருப்பு · சாதனங்கள்” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
-          "general_home_policy": "இந்த விருப்பம் “வீடு · இருப்பு · கட்டுப்பாடு” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "“தூக்கம் · அறை · மூலம் (state)” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
           "general_sleep_rooms_attribute": "“தூக்கம் · அறை · மூலம் (attribute)” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்.",
           "general_source_stale_minutes": "மூலம் · தூக்கம் / இருப்பு · max 240 min. செல்லாதது · அணை."
@@ -1366,7 +1366,7 @@
           "automatic_tts": "தானியங்கி",
           "automatic_notifications": "தானியங்கி · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "அறிவிப்புகள் (விருப்பம்) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "அறிவிப்புகள் · Announcement Hub",
           "notify_entities": "அமைப்புகள் · மூலம்",
           "tts_engine": "அமைப்புகள் · மூலம் · TTS_ENGINE",
           "media_players": "அமைப்புகள் · மூலம் · MEDIA_PLAYERS",
@@ -1378,7 +1378,7 @@
           "automatic_tts": "இயல்புநிலை: ⛔ · தானியங்கி · 🪟 90 s.",
           "automatic_notifications": "இயல்புநிலை: ⛔ · தானியங்கி · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "இயல்புநிலை: 10 min · 0 = ஒருபோதும் இல்லை · அதே காரணம் தொடரும் வரை · அறைகள்.",
-          "use_announcement_hub": "Announcement Hub · கிடைக்கவில்லை → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "தேர்ந்தெடுக்கவும்: notify.* · அமைப்புகள் · மூலம்.",
           "tts_engine": "தேர்ந்தெடுக்கவும்: tts.* · அமைப்புகள் · மூலம் · TTS_ENGINE.",
           "media_players": "தேர்ந்தெடுக்கவும்: media_player.* · அமைப்புகள் · மூலம் · MEDIA_PLAYERS.",
@@ -1409,8 +1409,8 @@
           "min_outdoor_temp": "வெளியே · °C (≥)",
           "max_outdoor_temp": "வெளியே · °C (≤)",
           "max_outdoor_humidity": "வெளியே · RH (%) (≤)",
-          "max_wind_kmh": "வானிலை மற்றும் எச்சரிக்கைகள் · km/h (≤)",
-          "max_age_minutes": "⏱ · திறக்கவும் (min, ≤)",
+          "max_wind_kmh": "காற்றோட்டம் · வானிலை மற்றும் எச்சரிக்கைகள் · km/h (≤)",
+          "max_age_minutes": "காற்றோட்டம் · ⏱ · திறக்கவும் (min, ≤)",
           "indoor_mold": "பூஞ்சை குறியீடு · ≥ 70%"
         },
         "data_description": {
@@ -1433,8 +1433,8 @@
           "min_outdoor_temp": "“வெளியே · °C (≥)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
           "max_outdoor_temp": "“வெளியே · °C (≤)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
           "max_outdoor_humidity": "“வெளியே · RH (%) (≤)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
-          "max_wind_kmh": "“வானிலை மற்றும் எச்சரிக்கைகள் · km/h (≤)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
-          "max_age_minutes": "“⏱ · திறக்கவும் (min, ≤)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "“பூஞ்சை குறியீடு · ≥ 70%” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல."
         }
       },
@@ -1603,7 +1603,7 @@
           "extractor_entity": "வெளியேற்ற விசிறி · மூலம்",
           "co2_ndir_verified": "CO₂ · தேவை",
           "co2_target_ppm": "CO₂ · CO₂ · இலக்கு (ppm)",
-          "sleep_room": "தூக்கம்"
+          "sleep_room": "இரைச்சல் · தூக்கம்"
         },
         "data_description": {
           "temperature_entity": "“வெப்பநிலை · மூலம்” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
@@ -1612,8 +1612,8 @@
           "purifier_entity": "“காற்று சுத்திகரிப்பான் · மூலம்” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
           "extractor_entity": "“வெளியேற்ற விசிறி · மூலம்” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
           "co2_ndir_verified": "“CO₂ · தேவை” க்கு பொருத்தமான உண்மையான அளவீட்டை பயன்படுத்தவும். மதிப்பீடு அளவுத்திருத்த உணரியை மாற்றாது.",
-          "co2_target_ppm": "“CO₂ · CO₂ · இலக்கு (ppm)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
-          "sleep_room": "“தூக்கம்” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -1765,27 +1765,27 @@
           "climate_unknown_occupancy": "இருப்பு · சாதனங்கள்",
           "climate_unoccupied_delay_minutes": "சாதனங்கள் · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "இருப்பு · சாதனங்கள் · உணரி · தேவை",
-          "climate_away_policy": "வீடு · சாதனங்கள் · POLICY",
+          "climate_away_policy": "வீட்டில் இருப்பு · வீடு · சாதனங்கள் · POLICY",
           "climate_manual_profile": "சாதனங்கள் · CLIMATE_MANUAL_PROFILE",
-          "climate_sleep_active": "தூக்கம் · சாதனங்கள்",
-          "climate_sleep_schedule_enabled": "தூக்கம் · தானியங்கி",
-          "climate_sleep_start": "தூக்கம் · சாதனங்கள் · START",
-          "climate_sleep_end": "தூக்கம் · சாதனங்கள் · END",
+          "climate_sleep_active": "உறக்கம் · தூக்கம் · சாதனங்கள்",
+          "climate_sleep_schedule_enabled": "உறக்கம் · தூக்கம் · தானியங்கி",
+          "climate_sleep_start": "உறக்கம் · தூக்கம் · சாதனங்கள் · START",
+          "climate_sleep_end": "உறக்கம் · தூக்கம் · சாதனங்கள் · END",
           "climate_target_source": "சாதனங்கள் · மூலம் · இலக்கு",
           "climate_comfort_adjustment_max_c": "சாதனங்கள் (°C)"
         },
         "data_description": {
           "climate_occupancy_sensors": "“இருப்பு · உணரி” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
           "climate_away_entities": "“வீடு · சாதனங்கள்” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
-          "climate_unknown_occupancy": "இந்த விருப்பம் “இருப்பு · சாதனங்கள்” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
-          "climate_unoccupied_delay_minutes": "இந்த நேரம் “சாதனங்கள் · CLIMATE_UNOCCUPIED_DELAY_MINUTES” ஐ நிர்ணயிக்கிறது. அடிக்கடி மாறுவதைத் தடுக்கிறது; சாதனப் பாதுகாப்பை மாற்றாது.",
-          "climate_occupancy_stale_minutes": "இந்த நேரம் “இருப்பு · சாதனங்கள் · உணரி · தேவை” ஐ நிர்ணயிக்கிறது. அடிக்கடி மாறுவதைத் தடுக்கிறது; சாதனப் பாதுகாப்பை மாற்றாது.",
-          "climate_away_policy": "இந்த விருப்பம் “வீடு · சாதனங்கள் · POLICY” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "இந்த விருப்பம் “சாதனங்கள் · CLIMATE_MANUAL_PROFILE” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
-          "climate_sleep_active": "இந்த விருப்பம் “தூக்கம் · சாதனங்கள்” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
-          "climate_sleep_schedule_enabled": "இந்த விருப்பம் “தூக்கம் · தானியங்கி” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
-          "climate_sleep_start": "இந்த நேரம் “தூக்கம் · சாதனங்கள் · START” ஐ நிர்ணயிக்கிறது. அடிக்கடி மாறுவதைத் தடுக்கிறது; சாதனப் பாதுகாப்பை மாற்றாது.",
-          "climate_sleep_end": "இந்த நேரம் “தூக்கம் · சாதனங்கள் · END” ஐ நிர்ணயிக்கிறது. அடிக்கடி மாறுவதைத் தடுக்கிறது; சாதனப் பாதுகாப்பை மாற்றாது.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "“சாதனங்கள் · மூலம் · இலக்கு” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
           "climate_comfort_adjustment_max_c": "“சாதனங்கள் (°C)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல."
         }
@@ -1834,7 +1834,7 @@
           "climate_humidity_low_rh": "“RH · ஈரப்பதம் · சாதனங்கள் (%) · RH MIN” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
           "climate_humidity_high_rh": "“RH · ஈரப்பதம் · சாதனங்கள் (%) · RH MAX” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
           "climate_humidity_hysteresis_rh": "“RH · ஈரப்பதம் · சாதனங்கள் · ± RH” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
-          "climate_cooling_dry_deferral_rh_points": "இந்த விருப்பம் “சாதனங்கள் · வெப்பநிலை −” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "இந்த விருப்பம் “ஈரப்பதம் · தானியங்கி” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
           "climate_window_efficiency_notify": "இந்த விருப்பம் “சாதனங்கள் · வெளிப்புற” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
           "climate_dry_fan_mode_auto": "இந்த விருப்பம் “வேகம் · தானியங்கி” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
@@ -1987,7 +1987,7 @@
           "general_occupied_rooms_entity": "இருப்பு · அறை · மூலம் (state)",
           "general_occupied_rooms_attribute": "இருப்பு · அறை · மூலம் (attribute)",
           "general_home_trackers": "வீடு · இருப்பு · சாதனங்கள்",
-          "general_home_policy": "வீடு · இருப்பு · கட்டுப்பாடு",
+          "general_home_policy": "வீட்டில் இருப்பு",
           "general_sleep_rooms_entity": "தூக்கம் · அறை · மூலம் (state)",
           "general_sleep_rooms_attribute": "தூக்கம் · அறை · மூலம் (attribute)",
           "general_source_stale_minutes": "மூலம் · max (min)"
@@ -1997,7 +1997,7 @@
           "general_occupied_rooms_entity": "“இருப்பு · அறை · மூலம் (state)” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
           "general_occupied_rooms_attribute": "“இருப்பு · அறை · மூலம் (attribute)” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்.",
           "general_home_trackers": "“வீடு · இருப்பு · சாதனங்கள்” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
-          "general_home_policy": "இந்த விருப்பம் “வீடு · இருப்பு · கட்டுப்பாடு” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "“தூக்கம் · அறை · மூலம் (state)” க்கு உண்மையான Home Assistant தரவு மூலத்தைத் தேர்வு செய்யவும். பழைய அல்லது இல்லாத தரவு செயல்பாட்டை நிறுத்தும்.",
           "general_sleep_rooms_attribute": "“தூக்கம் · அறை · மூலம் (attribute)” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்.",
           "general_source_stale_minutes": "மூலம் · தூக்கம் / இருப்பு · max 240 min. செல்லாதது · அணை."
@@ -2177,7 +2177,7 @@
           "language": "TTS · தேர்வு · மூலம்",
           "use_mold_indicator": "பூஞ்சை குறியீடு · RH (%) → 70%",
           "pollen_entities": "மகரந்தம் · மூலம் · தேர்வு",
-          "use_announcement_hub": "தானியங்கி · Announcement Hub",
+          "use_announcement_hub": "அறிவிப்புகள் · Announcement Hub",
           "general_away_cooldown_minutes": "வீடு · Away · cooldown (min)",
           "away_open_window_alert": "அனைவரும் வெளியேறியபின் திறந்த சாளர எச்சரிக்கை",
           "away_windows_target_people": "அறிவிப்பு பெறும் நபர்கள்",
@@ -2208,7 +2208,7 @@
           "pollen_max_scale": "POLLEN · மகரந்தம் · SCALE",
           "pollen_avoid_ventilation": "POLLEN · மகரந்தம் · NO VENT",
           "general_source_stale_minutes": "மூலம் · max (min)",
-          "general_home_policy": "வீடு · இருப்பு · கட்டுப்பாடு"
+          "general_home_policy": "வீட்டில் இருப்பு"
         },
         "data_description": {
           "weather_entities": "தேர்ந்தெடுக்கவும்: வானிலை மற்றும் எச்சரிக்கைகள் · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2227,7 +2227,7 @@
           "language": "பொதுவான மூலங்களையும் அறிவிப்பு வெளியீடுகளையும் தேர்ந்தெடுக்கவும். சேமித்தல் அமைப்பை முடிக்கிறது. இயக்க அமைப்புகள் வீடு மற்றும் அறைச் சாதனங்களில் இருக்கும். · TTS · தேர்வு · மூலம் · provider capabilities.",
           "use_mold_indicator": "🧱 பூஞ்சை குறியீடு · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "பொதுவான மூலங்களையும் அறிவிப்பு வெளியீடுகளையும் தேர்ந்தெடுக்கவும். சேமித்தல் அமைப்பை முடிக்கிறது. இயக்க அமைப்புகள் வீடு மற்றும் அறைச் சாதனங்களில் இருக்கும். · மகரந்தம் · மூலம் · தேர்வு.",
-          "use_announcement_hub": "பொதுவான மூலங்களையும் அறிவிப்பு வெளியீடுகளையும் தேர்ந்தெடுக்கவும். சேமித்தல் அமைப்பை முடிக்கிறது. இயக்க அமைப்புகள் வீடு மற்றும் அறைச் சாதனங்களில் இருக்கும். · தானியங்கி · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "பொதுவான மூலங்களையும் அறிவிப்பு வெளியீடுகளையும் தேர்ந்தெடுக்கவும். சேமித்தல் அமைப்பை முடிக்கிறது. இயக்க அமைப்புகள் வீடு மற்றும் அறைச் சாதனங்களில் இருக்கும். · வீடு · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "அனைவரும் வெளியேறியபின் திறந்த சாளர எச்சரிக்கை. அறிவிப்பு பெறும் நபர்கள் (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. தொலைபேசி, கடிகாரம், டேப்லெட்.",
           "away_windows_target_people": "அறிவிப்பு பெறும் நபர்கள் (person.*) - Announcement Hub: தொலைபேசி, கடிகாரம், டேப்லெட், மற்ற சாதனம். Only explicitly assigned personal endpoints.",
@@ -2258,7 +2258,7 @@
           "pollen_max_scale": "“POLLEN · மகரந்தம் · SCALE” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்.",
           "pollen_avoid_ventilation": "“POLLEN · மகரந்தம் · NO VENT” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்.",
           "general_source_stale_minutes": "மூலம் · தூக்கம் / இருப்பு · max 240 min. செல்லாதது · அணை.",
-          "general_home_policy": "இந்த விருப்பம் “வீடு · இருப்பு · கட்டுப்பாடு” ஐக் கட்டுப்படுத்துகிறது. சாதன ஆணைகளுக்குத் தனி அனுமதியும் பாதுகாப்பும் தேவை."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "room_occupancy": {
@@ -2852,436 +2852,1175 @@
     },
     "number": {
       "global_threshold_outdoor_aqi": {
-        "name": "வெளியே · AQI (≤)"
+        "name": "காற்றோட்டம் · வெளியே · AQI (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_outdoor_co2": {
-        "name": "வெளியே · CO₂ (ppm) (≤)"
+        "name": "காற்றோட்டம் · வெளியே · CO₂ (ppm) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_outdoor_pm25": {
-        "name": "வெளியே · PM2.5 (µg/m³) (≤)"
+        "name": "காற்றோட்டம் · வெளியே · PM2.5 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_outdoor_pm10": {
-        "name": "வெளியே · PM10 (µg/m³) (≤)"
+        "name": "காற்றோட்டம் · வெளியே · PM10 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_outdoor_voc": {
-        "name": "வெளியே · VOC (µg/m³) (≤)"
+        "name": "காற்றோட்டம் · வெளியே · VOC (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_outdoor_voc_parts": {
-        "name": "வெளியே · VOC (ppb) (≤)"
+        "name": "காற்றோட்டம் · வெளியே · VOC (ppb) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_outdoor_no2": {
-        "name": "NO₂ · வெளிப்புற (µg/m³)"
+        "name": "காற்றோட்டம் · NO₂ · வெளிப்புற (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_outdoor_o3": {
-        "name": "O₃ · வெளிப்புற (µg/m³)"
+        "name": "காற்றோட்டம் · O₃ · வெளிப்புற (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_outdoor_so2": {
-        "name": "SO₂ · வெளிப்புற (µg/m³)"
+        "name": "காற்றோட்டம் · SO₂ · வெளிப்புற (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_indoor_aqi": {
-        "name": "காற்றுத் தரம் · AQI (≥)"
+        "name": "காற்றோட்டம் · காற்றுத் தரம் · AQI (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_indoor_co2": {
-        "name": "காற்றுத் தரம் · CO₂ (ppm) (≥)"
+        "name": "காற்றோட்டம் · காற்றுத் தரம் · CO₂ (ppm) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_indoor_pm25": {
-        "name": "காற்றுத் தரம் · PM2.5 (µg/m³) (≥)"
+        "name": "காற்றோட்டம் · காற்றுத் தரம் · PM2.5 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_indoor_pm10": {
-        "name": "காற்றுத் தரம் · PM10 (µg/m³) (≥)"
+        "name": "காற்றோட்டம் · காற்றுத் தரம் · PM10 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_indoor_voc": {
-        "name": "காற்றுத் தரம் · VOC (µg/m³) (≥)"
+        "name": "காற்றோட்டம் · காற்றுத் தரம் · VOC (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_indoor_voc_parts": {
-        "name": "காற்றுத் தரம் · VOC (ppb) (≥)"
+        "name": "காற்றோட்டம் · காற்றுத் தரம் · VOC (ppb) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_indoor_humidity": {
-        "name": "காற்றுத் தரம் · RH (%) (≥)"
+        "name": "காற்றோட்டம் · காற்றுத் தரம் · RH (%) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_indoor_mold": {
-        "name": "பூஞ்சை குறியீடு · ≥ 70%"
+        "name": "காற்றோட்டம் · பூஞ்சை குறியீடு · ≥ 70%",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_min_outdoor_temp": {
-        "name": "வெளியே · °C (≥)"
+        "name": "காற்றோட்டம் · வெளியே · °C (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_max_outdoor_temp": {
-        "name": "வெளியே · °C (≤)"
+        "name": "காற்றோட்டம் · வெளியே · °C (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_max_outdoor_humidity": {
-        "name": "வெளியே · RH (%) (≤)"
+        "name": "காற்றோட்டம் · வெளியே · RH (%) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_max_wind_kmh": {
-        "name": "வானிலை மற்றும் எச்சரிக்கைகள் · km/h (≤)"
+        "name": "காற்றோட்டம் · வானிலை மற்றும் எச்சரிக்கைகள் · km/h (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_threshold_max_age_minutes": {
-        "name": "⏱ · திறக்கவும் (min, ≤)"
+        "name": "காற்றோட்டம் · ⏱ · திறக்கவும் (min, ≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "அறிவிப்புகள் (விருப்பம்) · 0-1440 min"
+        "name": "அறிவிப்புகள் · அறிவிப்புகள் (விருப்பம்) · 0-1440 min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_pid_target_c": {
-        "name": "PID · இலக்கு (°C)"
+        "name": "PID · இலக்கு (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_pid_kp": {
-        "name": "PID · Kp · கட்டுப்பாடு (% per °C)"
+        "name": "PID · Kp · கட்டுப்பாடு (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_pid_ki": {
-        "name": "PID · Ki · கட்டுப்பாடு (% per °C-minute)"
+        "name": "PID · Ki · கட்டுப்பாடு (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_pid_kd": {
-        "name": "PID · Kd · கட்டுப்பாடு (%·minute per °C)"
+        "name": "PID · Kd · கட்டுப்பாடு (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_pid_offset_c": {
-        "name": "PID · (°C) · PID_OFFSET_C"
+        "name": "PID · (°C) · PID_OFFSET_C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_pid_min_setpoint_c": {
-        "name": "PID · (°C) · MIN TARGET"
+        "name": "PID · (°C) · MIN TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_pid_max_setpoint_c": {
-        "name": "PID · (°C) · MAX TARGET"
+        "name": "PID · (°C) · MAX TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_pid_sample_seconds": {
-        "name": "PID · (s)"
+        "name": "PID · (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_pid_max_change_c": {
-        "name": "PID · (°C) · MAX Δ"
+        "name": "PID · (°C) · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_pid_min_change_c": {
-        "name": "PID · (°C) · MIN Δ"
+        "name": "PID · (°C) · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_comfort_heat": {
-        "name": "வெப்பமூட்டல் · அறை · இருப்பு"
+        "name": "சுயவிவரம் · வெப்பமூட்டல் · அறை · இருப்பு",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_comfort_cool": {
-        "name": "குளிரூட்டல் · அறை · இருப்பு"
+        "name": "சுயவிவரம் · குளிரூட்டல் · அறை · இருப்பு",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_comfort_humidity": {
-        "name": "ஈரப்பதம் · அறை · இருப்பு · இலக்கு (%)"
+        "name": "சுயவிவரம் · ஈரப்பதம் · அறை · இருப்பு · இலக்கு (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_home_heat": {
-        "name": "வெப்பமூட்டல் · வீடு"
+        "name": "சுயவிவரம் · வெப்பமூட்டல் · வீடு",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_home_cool": {
-        "name": "குளிரூட்டல் · வீடு"
+        "name": "சுயவிவரம் · குளிரூட்டல் · வீடு",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_home_humidity": {
-        "name": "ஈரப்பதம் · வீடு · இலக்கு (%)"
+        "name": "சுயவிவரம் · ஈரப்பதம் · வீடு · இலக்கு (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_away_heat": {
-        "name": "வெப்பமூட்டல் · வீட்டில் இல்லை"
+        "name": "சுயவிவரம் · வெப்பமூட்டல் · வீட்டில் இல்லை",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_away_cool": {
-        "name": "குளிரூட்டல் · வீட்டில் இல்லை"
+        "name": "சுயவிவரம் · குளிரூட்டல் · வீட்டில் இல்லை",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_away_humidity": {
-        "name": "ஈரப்பதம் · வீட்டில் இல்லை · இலக்கு (%)"
+        "name": "சுயவிவரம் · ஈரப்பதம் · வீட்டில் இல்லை · இலக்கு (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_sleep_heat": {
-        "name": "வெப்பமூட்டல் · தூக்கம்"
+        "name": "சுயவிவரம் · வெப்பமூட்டல் · தூக்கம்",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_sleep_cool": {
-        "name": "குளிரூட்டல் · தூக்கம்"
+        "name": "சுயவிவரம் · குளிரூட்டல் · தூக்கம்",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_sleep_humidity": {
-        "name": "ஈரப்பதம் · தூக்கம் · இலக்கு (%)"
+        "name": "சுயவிவரம் · ஈரப்பதம் · தூக்கம் · இலக்கு (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_eco_heat": {
-        "name": "வெப்பமூட்டல் · ECO"
+        "name": "சுயவிவரம் · வெப்பமூட்டல் · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_eco_cool": {
-        "name": "குளிரூட்டல் · ECO"
+        "name": "சுயவிவரம் · குளிரூட்டல் · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_profile_eco_humidity": {
-        "name": "ஈரப்பதம் · ECO · இலக்கு (%)"
+        "name": "சுயவிவரம் · ஈரப்பதம் · ECO · இலக்கு (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_environment_pollen_high_from": {
-        "name": "POLLEN · மகரந்தம் · HIGH"
+        "name": "மகரந்தம் · POLLEN · மகரந்தம் · HIGH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_environment_pollen_max_scale": {
-        "name": "POLLEN · மகரந்தம் · SCALE"
+        "name": "மகரந்தம் · POLLEN · மகரந்தம் · SCALE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "மூலம் · max (min)"
+        "name": "வீட்டில் இருப்பு · மூலம் · max (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_area_environment_room_volume_m3": {
-        "name": "அமைப்புகள் · மூலம் (m³)"
+        "name": "காற்று சுத்திகரிப்பு · அமைப்புகள் · மூலம் (m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_area_environment_particle_cadr_m3h": {
-        "name": "CADR (m³/h)"
+        "name": "காற்று சுத்திகரிப்பு · CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_area_environment_co2_target_ppm": {
-        "name": "CO₂ · CO₂ · இலக்கு (ppm)"
+        "name": "காற்று சுத்திகரிப்பு · CO₂ · CO₂ · இலக்கு (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_area_environment_radon_reference_bq_m3": {
-        "name": "Rn (Bq/m³)"
+        "name": "காற்று சுத்திகரிப்பு · Rn (Bq/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "வேகம் · வெளிப்புற (m/s)"
+        "name": "மேம்பட்ட வசதி · வேகம் · வெளிப்புற (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_area_environment_met": {
-        "name": "அமைப்புகள் · மூலம் (met)"
+        "name": "மேம்பட்ட வசதி · அமைப்புகள் · மூலம் (met)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_area_environment_clo": {
-        "name": "அமைப்புகள் · மூலம் (clo)"
+        "name": "மேம்பட்ட வசதி · அமைப்புகள் · மூலம் (clo)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_unoccupied_delay_minutes": {
-        "name": "சாதனங்கள் · CLIMATE_UNOCCUPIED_DELAY_MINUTES"
+        "name": "அறையில் இருப்பு · சாதனங்கள் · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "இருப்பு · சாதனங்கள் · உணரி · தேவை"
+        "name": "அறையில் இருப்பு · இருப்பு · சாதனங்கள் · உணரி · தேவை",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_comfort_adjustment_max_c": {
-        "name": "சாதனங்கள் (°C)"
+        "name": "மேம்பட்ட வசதி · சாதனங்கள் (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_humidity_low_rh": {
-        "name": "RH · ஈரப்பதம் · சாதனங்கள் (%) · RH MIN"
+        "name": "ஈரப்பதம் · RH · ஈரப்பதம் · சாதனங்கள் (%) · RH MIN",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_humidity_high_rh": {
-        "name": "RH · ஈரப்பதம் · சாதனங்கள் (%) · RH MAX"
+        "name": "ஈரப்பதம் · RH · ஈரப்பதம் · சாதனங்கள் (%) · RH MAX",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_humidity_hysteresis_rh": {
-        "name": "RH · ஈரப்பதம் · சாதனங்கள் · ± RH"
+        "name": "ஈரப்பதம் · RH · ஈரப்பதம் · சாதனங்கள் · ± RH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_cooling_dry_deferral_rh_points": {
-        "name": "சாதனங்கள் · வெப்பநிலை −"
+        "name": "ஈரப்பதம் · சாதனங்கள் · வெப்பநிலை −",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_pm25_action_ug_m3": {
-        "name": "PM2.5 · சாதனங்கள் (µg/m³)"
+        "name": "காற்று சுத்திகரிப்பு · PM2.5 · சாதனங்கள் (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_extraction_speed_percent": {
-        "name": "EXTRACT · சாதனங்கள் · வேகம் (%) · SPEED %"
+        "name": "காற்று சுத்திகரிப்பு · EXTRACT · சாதனங்கள் · வேகம் (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_purifier_speed_percent": {
-        "name": "PURIFIER · சாதனங்கள் · வேகம் (%) · SPEED %"
+        "name": "காற்று சுத்திகரிப்பு · PURIFIER · சாதனங்கள் · வேகம் (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_direct_tuning_kp": {
-        "name": "PID · Kp · கட்டுப்பாடு (percentage points/°C)"
+        "name": "PID · Kp · கட்டுப்பாடு (percentage points/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_direct_tuning_ki": {
-        "name": "PID · Ki · கட்டுப்பாடு (percentage points/(°C·minute))"
+        "name": "PID · Ki · கட்டுப்பாடு (percentage points/(°C·minute))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_direct_tuning_kd": {
-        "name": "PID · Kd · கட்டுப்பாடு (percentage points·minute/°C)"
+        "name": "PID · Kd · கட்டுப்பாடு (percentage points·minute/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "PID · அமைப்புகள் · மூலம் (s) · SAMPLE"
+        "name": "PID · அமைப்புகள் · மூலம் (s) · SAMPLE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "PID · அமைப்புகள் · மூலம் · MAX Δ"
+        "name": "PID · அமைப்புகள் · மூலம் · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "PID · அமைப்புகள் · மூலம் · MIN Δ"
+        "name": "PID · அமைப்புகள் · மூலம் · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_mold_surface_critical_temperature_c": {
-        "name": "பூஞ்சை குறியீடு · 🧊 °C"
+        "name": "பூஞ்சை · பூஞ்சை குறியீடு · 🧊 °C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_kp": {
-        "name": "PID · {channel}Kp · கட்டுப்பாடு (% per °C)"
+        "name": "PID · {channel}Kp · கட்டுப்பாடு (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_ki": {
-        "name": "PID · {channel}Ki · கட்டுப்பாடு (% per °C-minute)"
+        "name": "PID · {channel}Ki · கட்டுப்பாடு (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_kd": {
-        "name": "PID · {channel}Kd · கட்டுப்பாடு (%·minute per °C)"
+        "name": "PID · {channel}Kd · கட்டுப்பாடு (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_sample_seconds": {
-        "name": "PID · {channel}(s)"
+        "name": "PID · {channel}(s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}செயல்முறை பெருக்கம்"
+        "name": "PID · {channel}செயல்முறை பெருக்கம்",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}கால மாறிலி"
+        "name": "PID · {channel}கால மாறிலி",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}தாமத நேரம்"
+        "name": "PID · {channel}தாமத நேரம்",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC λ"
+        "name": "PID · {channel}IMC λ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 1 (%)"
+        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 2 (%)"
+        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 3 (%)"
+        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 4 (%)"
+        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 4 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}விசிறி வேகம் 1 (%)"
+        "name": "PID · {channel}விசிறி வேகம் 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 1 (%)"
+        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}விசிறி வேகம் 2 (%)"
+        "name": "PID · {channel}விசிறி வேகம் 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 2 (%)"
+        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}விசிறி வேகம் 3 (%)"
+        "name": "PID · {channel}விசிறி வேகம் 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 3 (%)"
+        "name": "PID · {channel}ஒப்பீட்டுத் திறன் 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_cycle_seconds": {
-        "name": "PID · {channel}அமைப்புகள் · மூலம் (s) · PWM PERIOD"
+        "name": "PID · {channel}அமைப்புகள் · மூலம் (s) · PWM PERIOD",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_quiet_percentage": {
-        "name": "அமைதி · {channel}குறைந்த ஒலி விசிறி வரம்பு (%)"
+        "name": "அமைதி · {channel}குறைந்த ஒலி விசிறி வரம்பு (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_min_on_seconds": {
-        "name": "சக்தி · {channel}min ON (s)"
+        "name": "சக்தி · {channel}min ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_min_off_seconds": {
-        "name": "சக்தி · {channel}min OFF (s)"
+        "name": "சக்தி · {channel}min OFF (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_max_on_seconds": {
-        "name": "சக்தி · {channel}max ON (s)"
+        "name": "சக்தி · {channel}max ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_min_limit": {
-        "name": "அறை · வெப்பநிலை · min"
+        "name": "அறை வரம்புகள் · அறை · வெப்பநிலை · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_max_limit": {
-        "name": "அறை · வெப்பநிலை · max"
+        "name": "அறை வரம்புகள் · அறை · வெப்பநிலை · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_min_limit": {
-        "name": "அறை · ஈரப்பதம் · min"
+        "name": "அறை வரம்புகள் · அறை · ஈரப்பதம் · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_max_limit": {
-        "name": "அறை · ஈரப்பதம் · max"
+        "name": "அறை வரம்புகள் · அறை · ஈரப்பதம் · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_room_equipment_limit_fan_min_percentage": {
-        "name": "அறை · வேகம் · min (%)"
+        "name": "அறை வரம்புகள் · அறை · வேகம் · min (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_room_equipment_limit_fan_max_percentage": {
-        "name": "அறை · வேகம் · max (%)"
+        "name": "அறை வரம்புகள் · அறை · வேகம் · max (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "home_global_occupancy_away_cooldown_minutes": {
-        "name": "வீடு · Away · cooldown (min)"
+        "name": "வீட்டில் இருப்பு · வீடு · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_shading_close_above_c": {
-        "name": "அறை வெப்பநிலைக்கு மேல் திரைகளை மூடு (°C)"
+        "name": "நிழல் · அறை வெப்பநிலைக்கு மேல் திரைகளை மூடு (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_shading_min_sun_elevation": {
-        "name": "சூரியனின் குறைந்தபட்ச உயரம் (°)"
+        "name": "நிழல் · சூரியனின் குறைந்தபட்ச உயரம் (°)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "shade_close_above_c": {
-        "name": "அறை வெப்பநிலைக்கு மேல் திரைகளை மூடு (°C)"
+        "name": "நிழல் · அறை வெப்பநிலைக்கு மேல் திரைகளை மூடு (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_particle_cadr_m3h": {
-        "name": "Filter · Rated particle CADR (m³/h)"
+        "name": "Filter · Rated particle CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "shade_min_lux": {
-        "name": "மூடுவதற்கான குறைந்தபட்ச ஒளி அளவு (lx)"
+        "name": "நிழல் · மூடுவதற்கான குறைந்தபட்ச ஒளி அளவு (lx)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_fan_min_percentage": {
-        "name": "விசிறி · {channel}குறைந்தபட்ச வேகம் (%)"
+        "name": "விசிறி · {channel}குறைந்தபட்ச வேகம் (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_fan_max_percentage": {
-        "name": "விசிறி · {channel}அதிகபட்ச வேகம் (%)"
+        "name": "விசிறி · {channel}அதிகபட்ச வேகம் (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
+      },
+      "global_occupancy_away_cooldown_minutes": {
+        "name": "வீட்டில் இருப்பு · வீடு · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
+      },
+      "home_aqi_custom_limit": {
+        "name": "காற்றோட்டம் · Custom AQI limit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
+      },
+      "area_device_target_fan_speed_percent": {
+        "name": "விசிறி · Target speed (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       }
     },
     "switch": {
       "home_automatic_notifications": {
-        "name": "தானியங்கி · AUTOMATIC_NOTIFICATIONS"
+        "name": "அறிவிப்புகள் · தானியங்கி · AUTOMATIC_NOTIFICATIONS",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "home_automatic_tts": {
-        "name": "தானியங்கி"
+        "name": "அறிவிப்புகள் · தானியங்கி",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "home_use_announcement_hub": {
-        "name": "Announcement Hub"
+        "name": "அறிவிப்புகள் · Announcement Hub",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "home_ai_rewrite_announcements": {
-        "name": "AI · அறிவிப்புகள் (விருப்பம்)"
+        "name": "அறிவிப்புகள் · AI · அறிவிப்புகள் (விருப்பம்)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "home_global_environment_pollen_avoid_ventilation": {
-        "name": "POLLEN · மகரந்தம் · NO VENT"
+        "name": "மகரந்தம் · POLLEN · மகரந்தம் · NO VENT",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_area_environment_sleep_room": {
-        "name": "தூக்கம்"
+        "name": "இரைச்சல் · தூக்கம்",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_area_environment_enable_pmv": {
-        "name": "PMV / PPD · தானியங்கி"
+        "name": "மேம்பட்ட வசதி · PMV / PPD · தானியங்கி",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_sleep_active": {
-        "name": "தூக்கம் · சாதனங்கள்"
+        "name": "உறக்கம் · தூக்கம் · சாதனங்கள்",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_sleep_schedule_enabled": {
-        "name": "தூக்கம் · தானியங்கி"
+        "name": "உறக்கம் · தூக்கம் · தானியங்கி",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_operating_window_efficiency_notify": {
-        "name": "சாதனங்கள் · வெளிப்புற"
+        "name": "அறிவிப்புகள் · சாதனங்கள் · வெளிப்புற",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_quiet_sleep": {
-        "name": "அமைதி · {channel}தூங்கும்போது குறைந்த ஒலி"
+        "name": "அமைதி · {channel}தூங்கும்போது குறைந்த ஒலி",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_quiet_occupied": {
-        "name": "அமைதி · {channel}அறையில் இருக்கும்போது குறைந்த ஒலி"
+        "name": "அமைதி · {channel}அறையில் இருக்கும்போது குறைந்த ஒலி",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_sensor_verified": {
-        "name": "உணரி · {channel}தேவை"
+        "name": "உணரி · {channel}தேவை",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_shading_enabled": {
-        "name": "அறையைக் குளிர்விக்க திரைகளைத் தானாக மூடு"
+        "name": "நிழல் · அறையைக் குளிர்விக்க திரைகளைத் தானாக மூடு",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "home_shade_announce_before_movement": {
-        "name": "திரைகளைத் திறப்பதற்கு அல்லது மூடுவதற்கு முன் அறிவி"
+        "name": "அறிவிப்புகள் · திரைகளைத் திறப்பதற்கு அல்லது மூடுவதற்கு முன் அறிவி",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "shade_auto_control": {
-        "name": "அறையைக் குளிர்விக்க திரைகளைத் தானாக மூடு"
+        "name": "நிழல் · அறையைக் குளிர்விக்க திரைகளைத் தானாக மூடு",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "shade_announce": {
-        "name": "திரைகளைத் திறப்பதற்கு அல்லது மூடுவதற்கு முன் அறிவி"
+        "name": "அறிவிப்புகள் · திரைகளைத் திறப்பதற்கு அல்லது மூடுவதற்கு முன் அறிவி",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "home_away_open_window_alert": {
-        "name": "அனைவரும் வெளியேறியபின் திறந்த சாளர எச்சரிக்கை"
+        "name": "அறிவிப்புகள் · அனைவரும் வெளியேறியபின் திறந்த சாளர எச்சரிக்கை",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pause_on_window_open": {
-        "name": "சாளரம் திறந்தால் அணைக்கவும் · {channel}"
+        "name": "கட்டுப்பாடு · சாளரம் திறந்தால் அணைக்கவும் · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "shade_lux_enabled": {
-        "name": "சூரிய நிழலுக்கான ஒளி உணரியைப் பயன்படுத்து"
+        "name": "நிழல் · சூரிய நிழலுக்கான ஒளி உணரியைப் பயன்படுத்து",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_announce_device_errors": {
-        "name": "சாதனப் பிழைகளை அறிவி · {channel}"
+        "name": "அறிவிப்புகள் · சாதனப் பிழைகளை அறிவி · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       }
     },
     "select": {
       "home_language": {
-        "name": "மொழி"
+        "name": "அறிவிப்புகள் · மொழி",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_manual_profile": {
-        "name": "சாதனங்கள் · CLIMATE_MANUAL_PROFILE"
+        "name": "சுயவிவரம் · சாதனங்கள் · CLIMATE_MANUAL_PROFILE",
+        "state": {
+          "auto": "Automatic"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Gain source",
         "state": {
           "defaults": "Defaults",
           "manual": "Manual"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
         }
       },
       "home_global_policy_home_policy": {
-        "name": "வீடு · இருப்பு · கட்டுப்பாடு"
+        "name": "வீட்டில் இருப்பு",
+        "state": {
+          "any_home": "குறைந்தது ஒருவர் வீட்டில்",
+          "all_home": "அனைவரும் வீட்டில் (பழைய விருப்பம்)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_policy_unknown_occupancy": {
-        "name": "இருப்பு · சாதனங்கள்"
+        "name": "அறையில் இருப்பு · இருப்பு · சாதனங்கள்",
+        "state": {
+          "occupied": "Assume occupied",
+          "hold": "Hold automatic changes"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_policy_away_policy": {
-        "name": "வீடு · சாதனங்கள் · POLICY"
+        "name": "வீட்டில் இருப்பு · வீடு · சாதனங்கள் · POLICY",
+        "state": {
+          "any_home": "குறைந்தது ஒருவர் வீட்டில்",
+          "all_home": "அனைவரும் வீட்டில் (பழைய விருப்பம்)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_policy_target_source": {
-        "name": "சாதனங்கள் · மூலம் · இலக்கு",
+        "name": "மேம்பட்ட வசதி · சாதனங்கள் · மூலம் · இலக்கு",
         "state": {
           "temperature": "நிலையான வெப்பநிலை இலக்குகள்",
           "auto_comfort": "தானியங்கி வசதி (வெப்பநிலை மற்றும் ஈரப்பதம்)",
           "pmv": "மேம்பட்ட ISO 7730 (அளவீடுகள் தேவை)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
         }
       },
       "equipment_control_mode": {
@@ -3292,10 +4031,20 @@
           "manual": "கைமுறை",
           "off": "அணை",
           "pid": "PID"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "அமைதி · {channel}சாதனத்தின் குறைந்த ஒலி விசிறி முறை"
+        "name": "அமைதி · {channel}சாதனத்தின் குறைந்த ஒலி விசிறி முறை",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}அளவுத்திருத்தம்",
@@ -3305,6 +4054,11 @@
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Observe and suggest · Approve",
           "adaptive_auto": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3312,6 +4066,11 @@
         "state": {
           "legacy": "அசல் (அளவுத்திருத்தமற்றது)",
           "measured": "அளவிடப்பட்ட திறன் மாதிரி"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
@@ -3322,6 +4081,11 @@
           "cool": "குளிர்வித்தல்",
           "dry": "ஈரப்பத நீக்கம்",
           "fan_only": "விசிறி"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
         }
       },
       "equipment_presence_requirement": {
@@ -3330,6 +4094,11 @@
           "always": "தானியங்கி",
           "occupied": "அறை · இருப்பு",
           "absent": "அறை · இருப்பு · அணை"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
         }
       },
       "equipment_sleep_behavior": {
@@ -3338,6 +4107,11 @@
           "normal": "தானியங்கி",
           "pause": "இடைநிறுத்து",
           "sleep_targets": "தூக்கம் · இலக்கு"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
         }
       },
       "equipment_fan_purpose": {
@@ -3346,29 +4120,59 @@
           "extraction": "வெளிப்புற · கட்டுப்பாடு",
           "filtration": "PM2.5 · கட்டுப்பாடு",
           "auto": "தானியங்கி"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "வெப்பநிலை · மூலம்"
+        "name": "மேம்பட்ட வசதி · வெப்பநிலை · மூலம்",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_area_science_air_speed_entity": {
-        "name": "மூலம் · வேகம் · வெளிப்புற (m/s)"
+        "name": "மேம்பட்ட வசதி · மூலம் · வேகம் · வெளிப்புற (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "shade_window_entity": {
-        "name": "தொடர்புடைய சன்னல் உணரி"
+        "name": "நிழல் · தொடர்புடைய சன்னல் உணரி",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "home_aqi_scale": {
-        "name": "AQI அளவுகோல்",
+        "name": "காற்றோட்டம் · AQI அளவுகோல்",
         "state": {
           "auto": "தானியங்கி (வழங்குநர்)",
           "not_configured": "தெரியவில்லை - ஒப்பீடு இல்லை",
           "us_epa": "US EPA AQI (0-500)",
           "eea_category": "EEA AQI (1-6)",
           "custom": "தனிப்பயன் அளவுகோல்"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
         }
       },
       "shade_lux_entity": {
-        "name": "நிழலுக்கான ஒளி உணரி"
+        "name": "நிழல் · நிழலுக்கான ஒளி உணரி",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_adaptation_mode": {
         "name": "PID · {channel}Passive adaptation",
@@ -3376,35 +4180,80 @@
           "disabled": "Disabled",
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
         }
       }
     },
     "time": {
       "area_climate_sleep_start": {
-        "name": "தூக்கம் · சாதனங்கள் · START"
+        "name": "உறக்கம் · தூக்கம் · சாதனங்கள் · START",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "area_climate_sleep_end": {
-        "name": "தூக்கம் · சாதனங்கள் · END"
+        "name": "உறக்கம் · தூக்கம் · சாதனங்கள் · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       }
     },
     "button": {
       "area_recalculate_mold": {
-        "name": "பூஞ்சை குறியீடு · ↻ 🌡️"
+        "name": "பூஞ்சை · பூஞ்சை குறியீடு · ↻ 🌡️",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_resume": {
-        "name": "கட்டுப்பாடு · {channel}சரிபார்த்து மீண்டும் தொடங்கு"
+        "name": "கட்டுப்பாடு · {channel}சரிபார்த்து மீண்டும் தொடங்கு",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}பயன்படுத்து · அளவுத்திருத்தம்"
+        "name": "PID · {channel}பயன்படுத்து · அளவுத்திருத்தம்",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}பயன்படுத்து · அளவுத்திருத்தம்"
+        "name": "PID · {channel}பயன்படுத்து · அளவுத்திருத்தம்",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_review_approve": {
-        "name": "PID · {channel}Approve suggestion"
+        "name": "PID · {channel}Approve suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       },
       "equipment_pid_review_discard": {
-        "name": "PID · {channel}Discard suggestion"
+        "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       }
     },
     "climate": {
@@ -3505,8 +4354,8 @@
     },
     "general_home_policy": {
       "options": {
-        "any_home": "வீடு · இருப்பு",
-        "all_home": "வீடு · சாதனங்கள் · இருப்பு"
+        "any_home": "குறைந்தது ஒருவர் வீட்டில்",
+        "all_home": "அனைவரும் வீட்டில் (பழைய விருப்பம்)"
       }
     },
     "device_method": {

@@ -12,6 +12,35 @@ import math
 from .climate_equipment import classify_hvac
 
 
+# Shared by the room editors, the physical controller target resolver and
+# target writes. A missing value uses these defaults; a saved user value,
+# including the previous 50% default, remains authoritative.
+DEFAULT_PROFILE_TARGETS = {
+    "comfort": {"heat_c": 20.0, "cool_c": 26.0, "humidity": 65.0},
+    "home": {"heat_c": 18.0, "cool_c": 28.0, "humidity": 65.0},
+    "away": {"heat_c": 16.0, "cool_c": 30.0, "humidity": 65.0},
+    "sleep": {"heat_c": 18.0, "cool_c": 26.0, "humidity": 65.0},
+    "eco": {"heat_c": 17.0, "cool_c": 29.0, "humidity": 70.0},
+}
+
+
+def profile_humidity_target(settings: dict, profile: str) -> Any:
+    """Resolve an RH preference without discarding saved legacy room targets.
+
+    This selects the value only. Callers retain their existing numeric and
+    native-device limit validation at the display, save or actuation boundary.
+    """
+    raw = settings.get("profiles", {}) if isinstance(settings, dict) else {}
+    raw = raw if isinstance(raw, dict) else {}
+    band = raw.get(profile, {})
+    band = band if isinstance(band, dict) else {}
+    legacy = settings.get(
+        "sleep_humidity_target" if profile == "sleep" else "humidity_target"
+    ) if isinstance(settings, dict) else None
+    fallback = DEFAULT_PROFILE_TARGETS.get(profile, DEFAULT_PROFILE_TARGETS["home"])
+    return band.get("humidity", legacy if legacy is not None else fallback["humidity"])
+
+
 @dataclass(frozen=True)
 class Profile:
     name: str
@@ -47,15 +76,8 @@ def profiles(settings: dict) -> tuple[dict[str,Profile],str|None]:
     if tolerance is None:
         return {},"invalid_hysteresis"
     source=raw
-    defaults={
-        "comfort":{"heat_c":20.0,"cool_c":26.0},
-        "home":{"heat_c":18.0,"cool_c":28.0},
-        "away":{"heat_c":16.0,"cool_c":30.0},
-        "sleep":{"heat_c":18.0,"cool_c":26.0},
-        "eco":{"heat_c":17.0,"cool_c":29.0},
-    }
     parsed={}
-    for name,fallback in defaults.items():
+    for name,fallback in DEFAULT_PROFILE_TARGETS.items():
         v=source.get(name,fallback)
         if not isinstance(v,dict): return {},f"invalid_profile_{name}"
         heat=_num(v.get("heat_c"),5,35)

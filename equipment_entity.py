@@ -6,7 +6,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 
 from .const import DOMAIN, SIGNAL_UPDATED
 from . import equipment_model as model
-from .equipment_text import DEVICE_HELP
+from .equipment_help import equipment_configuration_help
 from .equipment_name_catalog import localized_equipment_name
 
 
@@ -61,13 +61,13 @@ class EquipmentEntity:
         locale = self._manager.settings.get("language", "auto")
         if locale == "auto":
             locale = getattr(getattr(self._manager.hass, "config", None), "language", "en")
-        locale = str(locale).replace("_", "-").casefold()
-        language = next((key for key in DEVICE_HELP if key.casefold() == locale), locale.split("-")[0])
         return {"area_id": self._spec.area_id,
                 "source_device_id": self._spec.source_device_id,
                 "source_entity_ids": list(self._spec.source_entities),
                 "controller_status": self._manager.equipment.statuses.get(self._spec.identifier, {}),
-                "configuration_help": DEVICE_HELP.get(language, DEVICE_HELP["en"])}
+                "configuration_help": equipment_configuration_help(
+                    getattr(self, "_key", "control_status"), locale
+                )}
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()

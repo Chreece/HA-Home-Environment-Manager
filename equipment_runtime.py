@@ -1993,18 +1993,13 @@ class EquipmentRuntime:
             if profile not in ("comfort","home","away","sleep","eco"):
                 raise HomeAssistantError("Select a Room Environment profile before editing its target")
 
-            defaults={
-                "comfort":{"heat_c":20.0,"cool_c":26.0,"humidity":50.0},
-                "home":{"heat_c":18.0,"cool_c":28.0,"humidity":50.0},
-                "away":{"heat_c":16.0,"cool_c":30.0,"humidity":50.0},
-                "sleep":{"heat_c":18.0,"cool_c":26.0,"humidity":50.0},
-                "eco":{"heat_c":17.0,"cool_c":29.0,"humidity":50.0},
-            }
+            from .climate_strategy import DEFAULT_PROFILE_TARGETS, profile_humidity_target
             raw_profiles=deepcopy(room.get("profiles",{}))
             raw_profiles=raw_profiles if isinstance(raw_profiles,dict) else {}
-            fallback=defaults[profile]
+            fallback=DEFAULT_PROFILE_TARGETS[profile]
             existing=raw_profiles.get(profile,{})
-            band={**fallback,**(existing if isinstance(existing,dict) else {})}
+            band={**fallback, "humidity": profile_humidity_target(room, profile),
+                  **(existing if isinstance(existing,dict) else {})}
 
             if "humidity" in values:
                 humidity=finite(

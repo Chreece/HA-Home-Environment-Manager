@@ -21,7 +21,7 @@ from .const import (
     DEFAULT_THRESHOLDS, MAX_REPEAT_MINUTES,
 )
 from .pid_math import DEFAULT_PID, validate_settings
-from .climate_strategy import profiles
+from .climate_strategy import DEFAULT_PROFILE_TARGETS, profile_humidity_target, profiles
 
 # PID gain units are percent-per-degree, per degree-minute and
 # percent-minute-per-degree. No physical HVAC self-tuning is implied.
@@ -43,11 +43,9 @@ PID_NUMBERS = {
 # by at least one selected physical controller in that room.
 ROOM_PROFILES = ("comfort", "home", "away", "sleep", "eco")
 PROFILE_DEFAULTS = {
-    "comfort": {"heat": 20.0, "cool": 26.0, "humidity": 50.0},
-    "home": {"heat": 18.0, "cool": 28.0, "humidity": 50.0},
-    "away": {"heat": 16.0, "cool": 30.0, "humidity": 50.0},
-    "sleep": {"heat": 18.0, "cool": 26.0, "humidity": 50.0},
-    "eco": {"heat": 17.0, "cool": 29.0, "humidity": 50.0},
+    name: {"heat": values["heat_c"], "cool": values["cool_c"],
+           "humidity": values["humidity"]}
+    for name, values in DEFAULT_PROFILE_TARGETS.items()
 }
 PROFILE_NUMBERS = {
     **{
@@ -155,8 +153,8 @@ DIRECT_CONTROLLER_NUMBERS = {
 DEVICE_TARGET_NUMBERS = {
     # Device-specific environmental/fan settings only. Temperature preset
     # targets are owned by the Room Environment device.
-    "humidity_target": (20.0, 80.0, 1.0, "%", 50.0),
-    "sleep_humidity_target": (20.0, 80.0, 1.0, "%", 50.0),
+    "humidity_target": (20.0, 80.0, 1.0, "%", DEFAULT_PROFILE_TARGETS["home"]["humidity"]),
+    "sleep_humidity_target": (20.0, 80.0, 1.0, "%", DEFAULT_PROFILE_TARGETS["sleep"]["humidity"]),
     "fan_speed_percent": (10.0, 100.0, 1.0, "%", 60.0),
 }
 
@@ -457,7 +455,7 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                 band = {
                     "heat_c": parsed.heat_c,
                     "cool_c": parsed.cool_c,
-                    "humidity": PROFILE_DEFAULTS[group]["humidity"],
+                    "humidity": profile_humidity_target(draft, group),
                     **(saved if isinstance(saved, dict) else {}),
                 }
                 target_key = "humidity" if mode == "humidity" else f"{mode}_c"

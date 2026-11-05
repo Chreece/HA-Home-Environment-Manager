@@ -72,7 +72,7 @@
           "automatic_tts": "Automaattinen",
           "automatic_notifications": "Automaattinen · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Ilmoitukset (valinnainen) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Ilmoitukset · Announcement Hub",
           "notify_entities": "asetukset · lähde",
           "tts_engine": "asetukset · lähde · TTS_ENGINE",
           "media_players": "asetukset · lähde · MEDIA_PLAYERS",
@@ -84,7 +84,7 @@
           "automatic_tts": "Oletus: ⛔ · Automaattinen · 🪟 90 s.",
           "automatic_notifications": "Oletus: ⛔ · Automaattinen · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Oletus: 10 min · 0 = ei koskaan · Kun sama syy jatkuu · Huoneet.",
-          "use_announcement_hub": "Announcement Hub · Ei saatavilla → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Valitse: notify.* · asetukset · lähde.",
           "tts_engine": "Valitse: tts.* · asetukset · lähde · TTS_ENGINE.",
           "media_players": "Valitse: media_player.* · asetukset · lähde · MEDIA_PLAYERS.",
@@ -115,8 +115,8 @@
           "min_outdoor_temp": "Ulkona · °C (≥)",
           "max_outdoor_temp": "Ulkona · °C (≤)",
           "max_outdoor_humidity": "Ulkona · RH (%) (≤)",
-          "max_wind_kmh": "Sää ja varoitukset · km/h (≤)",
-          "max_age_minutes": "⏱ · Avaa (min, ≤)",
+          "max_wind_kmh": "Ilmanvaihto · Sää ja varoitukset · km/h (≤)",
+          "max_age_minutes": "Ilmanvaihto · ⏱ · Avaa (min, ≤)",
           "indoor_mold": "Homeindikaattori · ≥ 70%"
         },
         "data_description": {
@@ -139,8 +139,8 @@
           "min_outdoor_temp": "Päätösraja kohdalle ”Ulkona · °C (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "max_outdoor_temp": "Päätösraja kohdalle ”Ulkona · °C (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "max_outdoor_humidity": "Päätösraja kohdalle ”Ulkona · RH (%) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
-          "max_wind_kmh": "Päätösraja kohdalle ”Sää ja varoitukset · km/h (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
-          "max_age_minutes": "Päätösraja kohdalle ”⏱ · Avaa (min, ≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Päätösraja kohdalle ”Homeindikaattori · ≥ 70%”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja."
         }
       },
@@ -194,7 +194,7 @@
           "language": "TTS · Valitse · lähde",
           "use_mold_indicator": "Homeindikaattori · RH (%) → 70%",
           "pollen_entities": "Siitepöly · lähde · Valitse",
-          "use_announcement_hub": "Automaattinen · Announcement Hub",
+          "use_announcement_hub": "Ilmoitukset · Announcement Hub",
           "general_away_cooldown_minutes": "Koti · Away · cooldown (min)",
           "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt",
@@ -225,7 +225,7 @@
           "pollen_max_scale": "POLLEN · Siitepöly · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Siitepöly · NO VENT",
           "general_source_stale_minutes": "lähde · max (min)",
-          "general_home_policy": "Koti · Läsnäolo · ohjaus"
+          "general_home_policy": "Kotonaolo"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -244,7 +244,7 @@
           "language": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · TTS · Valitse · lähde · provider capabilities.",
           "use_mold_indicator": "🧱 Homeindikaattori · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Siitepöly · lähde · Valitse.",
-          "use_announcement_hub": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Automaattinen · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Koti · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä. Ilmoituksen saavat henkilöt (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Puhelin, Kello, Tabletti.",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt (person.*) - Announcement Hub: Puhelin, Kello, Tabletti, Muu laite. Only explicitly assigned personal endpoints.",
@@ -275,7 +275,7 @@
           "pollen_max_scale": "Määritä ”POLLEN · Siitepöly · SCALE” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "pollen_avoid_ventilation": "Määritä ”POLLEN · Siitepöly · NO VENT” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "general_source_stale_minutes": "lähde · Uni / Läsnäolo · max 240 min. Virheellinen · Sammuta.",
-          "general_home_policy": "Tämä asetus ohjaa kohtaa ”Koti · Läsnäolo · ohjaus”. Fyysiset komennot vaativat erillisen luvan ja suojaukset."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "reconfigure": {
@@ -537,7 +537,7 @@
           "extractor_entity": "Poistopuhallin · lähde",
           "co2_ndir_verified": "CO₂ · Vaaditaan",
           "co2_target_ppm": "CO₂ · CO₂ · tavoite (ppm)",
-          "sleep_room": "Uni"
+          "sleep_room": "Melu · Uni"
         },
         "data_description": {
           "temperature_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Lämpötila · lähde”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
@@ -546,8 +546,8 @@
           "purifier_entity": "Valitse todellinen Home Assistant -Ilmanpuhdistin · lähde kohdalle ”Ilmanpuhdistin · lähde”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "extractor_entity": "Valitse todellinen Home Assistant -Poistopuhallin · lähde kohdalle ”Poistopuhallin · lähde”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "co2_ndir_verified": "Käytä todellista sopivaa mittausta kohtaan ”CO₂ · Vaaditaan”. Arvio ei korvaa kalibroitua anturia.",
-          "co2_target_ppm": "Päätösraja kohdalle ”CO₂ · CO₂ · tavoite (ppm)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
-          "sleep_room": "Määritä ”Uni” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -699,7 +699,7 @@
           "climate_unknown_occupancy": "Läsnäolo · Laitteet",
           "climate_unoccupied_delay_minutes": "Laitteet · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Läsnäolo · Laitteet · anturi · Vaaditaan",
-          "climate_away_policy": "Koti · Laitteet · POLICY",
+          "climate_away_policy": "Kotonaolo · Koti · Laitteet · POLICY",
           "climate_manual_profile": "Laitteet · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Uni · Laitteet",
           "climate_sleep_schedule_enabled": "Uni · Automaattinen",
@@ -711,15 +711,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "climate_away_entities": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
-          "climate_unknown_occupancy": "Tämä asetus ohjaa kohtaa ”Läsnäolo · Laitteet”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
-          "climate_unoccupied_delay_minutes": "Tämä aikaraja koskee kohtaa ”Laitteet · CLIMATE_UNOCCUPIED_DELAY_MINUTES”. Se estää liian tiheät kytkennät muttei korvaa laitesuojausta.",
-          "climate_occupancy_stale_minutes": "Tämä aikaraja koskee kohtaa ”Läsnäolo · Laitteet · anturi · Vaaditaan”. Se estää liian tiheät kytkennät muttei korvaa laitesuojausta.",
-          "climate_away_policy": "Tämä asetus ohjaa kohtaa ”Koti · Laitteet · POLICY”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Tämä asetus ohjaa kohtaa ”Laitteet · CLIMATE_MANUAL_PROFILE”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
-          "climate_sleep_active": "Tämä asetus ohjaa kohtaa ”Uni · Laitteet”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
-          "climate_sleep_schedule_enabled": "Tämä asetus ohjaa kohtaa ”Uni · Automaattinen”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
-          "climate_sleep_start": "Tämä aikaraja koskee kohtaa ”Uni · Laitteet · START”. Se estää liian tiheät kytkennät muttei korvaa laitesuojausta.",
-          "climate_sleep_end": "Tämä aikaraja koskee kohtaa ”Uni · Laitteet · END”. Se estää liian tiheät kytkennät muttei korvaa laitesuojausta.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Päätösraja kohdalle ”Laitteet · lähde · tavoite”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "climate_comfort_adjustment_max_c": "Päätösraja kohdalle ”Laitteet (°C)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja."
         }
@@ -768,7 +768,7 @@
           "climate_humidity_low_rh": "Päätösraja kohdalle ”RH · Kosteus · Laitteet (%) · RH MIN”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "climate_humidity_high_rh": "Päätösraja kohdalle ”RH · Kosteus · Laitteet (%) · RH MAX”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "climate_humidity_hysteresis_rh": "Päätösraja kohdalle ”RH · Kosteus · Laitteet · ± RH”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
-          "climate_cooling_dry_deferral_rh_points": "Tämä asetus ohjaa kohtaa ”Laitteet · Lämpötila −”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Tämä asetus ohjaa kohtaa ”Kosteus · Automaattinen”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
           "climate_window_efficiency_notify": "Tämä asetus ohjaa kohtaa ”Laitteet · Ulko”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
           "climate_dry_fan_mode_auto": "Tämä asetus ohjaa kohtaa ”Nopeus · Automaattinen”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
@@ -921,7 +921,7 @@
           "general_occupied_rooms_entity": "Läsnäolo · Huone · lähde (state)",
           "general_occupied_rooms_attribute": "Läsnäolo · Huone · lähde (attribute)",
           "general_home_trackers": "Koti · Läsnäolo · Laitteet",
-          "general_home_policy": "Koti · Läsnäolo · ohjaus",
+          "general_home_policy": "Kotonaolo",
           "general_sleep_rooms_entity": "Uni · Huone · lähde (state)",
           "general_sleep_rooms_attribute": "Uni · Huone · lähde (attribute)",
           "general_source_stale_minutes": "lähde · max (min)"
@@ -931,7 +931,7 @@
           "general_occupied_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "general_occupied_rooms_attribute": "Määritä ”Läsnäolo · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "general_home_trackers": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Läsnäolo · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
-          "general_home_policy": "Tämä asetus ohjaa kohtaa ”Koti · Läsnäolo · ohjaus”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Uni · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "general_sleep_rooms_attribute": "Määritä ”Uni · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "general_source_stale_minutes": "lähde · Uni / Läsnäolo · max 240 min. Virheellinen · Sammuta."
@@ -1366,7 +1366,7 @@
           "automatic_tts": "Automaattinen",
           "automatic_notifications": "Automaattinen · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Ilmoitukset (valinnainen) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Ilmoitukset · Announcement Hub",
           "notify_entities": "asetukset · lähde",
           "tts_engine": "asetukset · lähde · TTS_ENGINE",
           "media_players": "asetukset · lähde · MEDIA_PLAYERS",
@@ -1378,7 +1378,7 @@
           "automatic_tts": "Oletus: ⛔ · Automaattinen · 🪟 90 s.",
           "automatic_notifications": "Oletus: ⛔ · Automaattinen · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Oletus: 10 min · 0 = ei koskaan · Kun sama syy jatkuu · Huoneet.",
-          "use_announcement_hub": "Announcement Hub · Ei saatavilla → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Valitse: notify.* · asetukset · lähde.",
           "tts_engine": "Valitse: tts.* · asetukset · lähde · TTS_ENGINE.",
           "media_players": "Valitse: media_player.* · asetukset · lähde · MEDIA_PLAYERS.",
@@ -1409,8 +1409,8 @@
           "min_outdoor_temp": "Ulkona · °C (≥)",
           "max_outdoor_temp": "Ulkona · °C (≤)",
           "max_outdoor_humidity": "Ulkona · RH (%) (≤)",
-          "max_wind_kmh": "Sää ja varoitukset · km/h (≤)",
-          "max_age_minutes": "⏱ · Avaa (min, ≤)",
+          "max_wind_kmh": "Ilmanvaihto · Sää ja varoitukset · km/h (≤)",
+          "max_age_minutes": "Ilmanvaihto · ⏱ · Avaa (min, ≤)",
           "indoor_mold": "Homeindikaattori · ≥ 70%"
         },
         "data_description": {
@@ -1433,8 +1433,8 @@
           "min_outdoor_temp": "Päätösraja kohdalle ”Ulkona · °C (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "max_outdoor_temp": "Päätösraja kohdalle ”Ulkona · °C (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "max_outdoor_humidity": "Päätösraja kohdalle ”Ulkona · RH (%) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
-          "max_wind_kmh": "Päätösraja kohdalle ”Sää ja varoitukset · km/h (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
-          "max_age_minutes": "Päätösraja kohdalle ”⏱ · Avaa (min, ≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Päätösraja kohdalle ”Homeindikaattori · ≥ 70%”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja."
         }
       },
@@ -1603,7 +1603,7 @@
           "extractor_entity": "Poistopuhallin · lähde",
           "co2_ndir_verified": "CO₂ · Vaaditaan",
           "co2_target_ppm": "CO₂ · CO₂ · tavoite (ppm)",
-          "sleep_room": "Uni"
+          "sleep_room": "Melu · Uni"
         },
         "data_description": {
           "temperature_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Lämpötila · lähde”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
@@ -1612,8 +1612,8 @@
           "purifier_entity": "Valitse todellinen Home Assistant -Ilmanpuhdistin · lähde kohdalle ”Ilmanpuhdistin · lähde”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "extractor_entity": "Valitse todellinen Home Assistant -Poistopuhallin · lähde kohdalle ”Poistopuhallin · lähde”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "co2_ndir_verified": "Käytä todellista sopivaa mittausta kohtaan ”CO₂ · Vaaditaan”. Arvio ei korvaa kalibroitua anturia.",
-          "co2_target_ppm": "Päätösraja kohdalle ”CO₂ · CO₂ · tavoite (ppm)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
-          "sleep_room": "Määritä ”Uni” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -1765,7 +1765,7 @@
           "climate_unknown_occupancy": "Läsnäolo · Laitteet",
           "climate_unoccupied_delay_minutes": "Laitteet · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Läsnäolo · Laitteet · anturi · Vaaditaan",
-          "climate_away_policy": "Koti · Laitteet · POLICY",
+          "climate_away_policy": "Kotonaolo · Koti · Laitteet · POLICY",
           "climate_manual_profile": "Laitteet · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Uni · Laitteet",
           "climate_sleep_schedule_enabled": "Uni · Automaattinen",
@@ -1777,15 +1777,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "climate_away_entities": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
-          "climate_unknown_occupancy": "Tämä asetus ohjaa kohtaa ”Läsnäolo · Laitteet”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
-          "climate_unoccupied_delay_minutes": "Tämä aikaraja koskee kohtaa ”Laitteet · CLIMATE_UNOCCUPIED_DELAY_MINUTES”. Se estää liian tiheät kytkennät muttei korvaa laitesuojausta.",
-          "climate_occupancy_stale_minutes": "Tämä aikaraja koskee kohtaa ”Läsnäolo · Laitteet · anturi · Vaaditaan”. Se estää liian tiheät kytkennät muttei korvaa laitesuojausta.",
-          "climate_away_policy": "Tämä asetus ohjaa kohtaa ”Koti · Laitteet · POLICY”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Tämä asetus ohjaa kohtaa ”Laitteet · CLIMATE_MANUAL_PROFILE”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
-          "climate_sleep_active": "Tämä asetus ohjaa kohtaa ”Uni · Laitteet”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
-          "climate_sleep_schedule_enabled": "Tämä asetus ohjaa kohtaa ”Uni · Automaattinen”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
-          "climate_sleep_start": "Tämä aikaraja koskee kohtaa ”Uni · Laitteet · START”. Se estää liian tiheät kytkennät muttei korvaa laitesuojausta.",
-          "climate_sleep_end": "Tämä aikaraja koskee kohtaa ”Uni · Laitteet · END”. Se estää liian tiheät kytkennät muttei korvaa laitesuojausta.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Päätösraja kohdalle ”Laitteet · lähde · tavoite”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "climate_comfort_adjustment_max_c": "Päätösraja kohdalle ”Laitteet (°C)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja."
         }
@@ -1834,7 +1834,7 @@
           "climate_humidity_low_rh": "Päätösraja kohdalle ”RH · Kosteus · Laitteet (%) · RH MIN”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "climate_humidity_high_rh": "Päätösraja kohdalle ”RH · Kosteus · Laitteet (%) · RH MAX”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "climate_humidity_hysteresis_rh": "Päätösraja kohdalle ”RH · Kosteus · Laitteet · ± RH”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
-          "climate_cooling_dry_deferral_rh_points": "Tämä asetus ohjaa kohtaa ”Laitteet · Lämpötila −”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Tämä asetus ohjaa kohtaa ”Kosteus · Automaattinen”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
           "climate_window_efficiency_notify": "Tämä asetus ohjaa kohtaa ”Laitteet · Ulko”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
           "climate_dry_fan_mode_auto": "Tämä asetus ohjaa kohtaa ”Nopeus · Automaattinen”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
@@ -1987,7 +1987,7 @@
           "general_occupied_rooms_entity": "Läsnäolo · Huone · lähde (state)",
           "general_occupied_rooms_attribute": "Läsnäolo · Huone · lähde (attribute)",
           "general_home_trackers": "Koti · Läsnäolo · Laitteet",
-          "general_home_policy": "Koti · Läsnäolo · ohjaus",
+          "general_home_policy": "Kotonaolo",
           "general_sleep_rooms_entity": "Uni · Huone · lähde (state)",
           "general_sleep_rooms_attribute": "Uni · Huone · lähde (attribute)",
           "general_source_stale_minutes": "lähde · max (min)"
@@ -1997,7 +1997,7 @@
           "general_occupied_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "general_occupied_rooms_attribute": "Määritä ”Läsnäolo · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "general_home_trackers": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Läsnäolo · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
-          "general_home_policy": "Tämä asetus ohjaa kohtaa ”Koti · Läsnäolo · ohjaus”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Uni · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "general_sleep_rooms_attribute": "Määritä ”Uni · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "general_source_stale_minutes": "lähde · Uni / Läsnäolo · max 240 min. Virheellinen · Sammuta."
@@ -2177,7 +2177,7 @@
           "language": "TTS · Valitse · lähde",
           "use_mold_indicator": "Homeindikaattori · RH (%) → 70%",
           "pollen_entities": "Siitepöly · lähde · Valitse",
-          "use_announcement_hub": "Automaattinen · Announcement Hub",
+          "use_announcement_hub": "Ilmoitukset · Announcement Hub",
           "general_away_cooldown_minutes": "Koti · Away · cooldown (min)",
           "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt",
@@ -2208,7 +2208,7 @@
           "pollen_max_scale": "POLLEN · Siitepöly · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Siitepöly · NO VENT",
           "general_source_stale_minutes": "lähde · max (min)",
-          "general_home_policy": "Koti · Läsnäolo · ohjaus"
+          "general_home_policy": "Kotonaolo"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2227,7 +2227,7 @@
           "language": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · TTS · Valitse · lähde · provider capabilities.",
           "use_mold_indicator": "🧱 Homeindikaattori · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Siitepöly · lähde · Valitse.",
-          "use_announcement_hub": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Automaattinen · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Valitse yhteiset lähteet ja ilmoitusten lähdöt. Tallennus päättää määrityksen. Käyttöasetukset jäävät kodin ja huoneiden laitteisiin. · Koti · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Varoita avoimista ikkunoista kaikkien lähdettyä. Ilmoituksen saavat henkilöt (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Puhelin, Kello, Tabletti.",
           "away_windows_target_people": "Ilmoituksen saavat henkilöt (person.*) - Announcement Hub: Puhelin, Kello, Tabletti, Muu laite. Only explicitly assigned personal endpoints.",
@@ -2258,7 +2258,7 @@
           "pollen_max_scale": "Määritä ”POLLEN · Siitepöly · SCALE” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "pollen_avoid_ventilation": "Määritä ”POLLEN · Siitepöly · NO VENT” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "general_source_stale_minutes": "lähde · Uni / Läsnäolo · max 240 min. Virheellinen · Sammuta.",
-          "general_home_policy": "Tämä asetus ohjaa kohtaa ”Koti · Läsnäolo · ohjaus”. Fyysiset komennot vaativat erillisen luvan ja suojaukset."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "room_occupancy": {
@@ -2852,436 +2852,1175 @@
     },
     "number": {
       "global_threshold_outdoor_aqi": {
-        "name": "Ulkona · AQI (≤)"
+        "name": "Ilmanvaihto · Ulkona · AQI (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_outdoor_co2": {
-        "name": "Ulkona · CO₂ (ppm) (≤)"
+        "name": "Ilmanvaihto · Ulkona · CO₂ (ppm) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_outdoor_pm25": {
-        "name": "Ulkona · PM2.5 (µg/m³) (≤)"
+        "name": "Ilmanvaihto · Ulkona · PM2.5 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_outdoor_pm10": {
-        "name": "Ulkona · PM10 (µg/m³) (≤)"
+        "name": "Ilmanvaihto · Ulkona · PM10 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_outdoor_voc": {
-        "name": "Ulkona · VOC (µg/m³) (≤)"
+        "name": "Ilmanvaihto · Ulkona · VOC (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_outdoor_voc_parts": {
-        "name": "Ulkona · VOC (ppb) (≤)"
+        "name": "Ilmanvaihto · Ulkona · VOC (ppb) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_outdoor_no2": {
-        "name": "NO₂ · Ulko (µg/m³)"
+        "name": "Ilmanvaihto · NO₂ · Ulko (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_outdoor_o3": {
-        "name": "O₃ · Ulko (µg/m³)"
+        "name": "Ilmanvaihto · O₃ · Ulko (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_outdoor_so2": {
-        "name": "SO₂ · Ulko (µg/m³)"
+        "name": "Ilmanvaihto · SO₂ · Ulko (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_indoor_aqi": {
-        "name": "Ilmanlaatu · AQI (≥)"
+        "name": "Ilmanvaihto · Ilmanlaatu · AQI (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_indoor_co2": {
-        "name": "Ilmanlaatu · CO₂ (ppm) (≥)"
+        "name": "Ilmanvaihto · Ilmanlaatu · CO₂ (ppm) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_indoor_pm25": {
-        "name": "Ilmanlaatu · PM2.5 (µg/m³) (≥)"
+        "name": "Ilmanvaihto · Ilmanlaatu · PM2.5 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_indoor_pm10": {
-        "name": "Ilmanlaatu · PM10 (µg/m³) (≥)"
+        "name": "Ilmanvaihto · Ilmanlaatu · PM10 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_indoor_voc": {
-        "name": "Ilmanlaatu · VOC (µg/m³) (≥)"
+        "name": "Ilmanvaihto · Ilmanlaatu · VOC (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_indoor_voc_parts": {
-        "name": "Ilmanlaatu · VOC (ppb) (≥)"
+        "name": "Ilmanvaihto · Ilmanlaatu · VOC (ppb) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_indoor_humidity": {
-        "name": "Ilmanlaatu · RH (%) (≥)"
+        "name": "Ilmanvaihto · Ilmanlaatu · RH (%) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_indoor_mold": {
-        "name": "Homeindikaattori · ≥ 70%"
+        "name": "Ilmanvaihto · Homeindikaattori · ≥ 70%",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_min_outdoor_temp": {
-        "name": "Ulkona · °C (≥)"
+        "name": "Ilmanvaihto · Ulkona · °C (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_max_outdoor_temp": {
-        "name": "Ulkona · °C (≤)"
+        "name": "Ilmanvaihto · Ulkona · °C (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_max_outdoor_humidity": {
-        "name": "Ulkona · RH (%) (≤)"
+        "name": "Ilmanvaihto · Ulkona · RH (%) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_max_wind_kmh": {
-        "name": "Sää ja varoitukset · km/h (≤)"
+        "name": "Ilmanvaihto · Sää ja varoitukset · km/h (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_threshold_max_age_minutes": {
-        "name": "⏱ · Avaa (min, ≤)"
+        "name": "Ilmanvaihto · ⏱ · Avaa (min, ≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Ilmoitukset (valinnainen) · 0-1440 min"
+        "name": "Ilmoitukset · Ilmoitukset (valinnainen) · 0-1440 min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_pid_target_c": {
-        "name": "PID · tavoite (°C)"
+        "name": "PID · tavoite (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_pid_kp": {
-        "name": "PID · Kp · ohjaus (% per °C)"
+        "name": "PID · Kp · ohjaus (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_pid_ki": {
-        "name": "PID · Ki · ohjaus (% per °C-minute)"
+        "name": "PID · Ki · ohjaus (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_pid_kd": {
-        "name": "PID · Kd · ohjaus (%·minute per °C)"
+        "name": "PID · Kd · ohjaus (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_pid_offset_c": {
-        "name": "PID · (°C) · PID_OFFSET_C"
+        "name": "PID · (°C) · PID_OFFSET_C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_pid_min_setpoint_c": {
-        "name": "PID · (°C) · MIN TARGET"
+        "name": "PID · (°C) · MIN TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_pid_max_setpoint_c": {
-        "name": "PID · (°C) · MAX TARGET"
+        "name": "PID · (°C) · MAX TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_pid_sample_seconds": {
-        "name": "PID · (s)"
+        "name": "PID · (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_pid_max_change_c": {
-        "name": "PID · (°C) · MAX Δ"
+        "name": "PID · (°C) · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_pid_min_change_c": {
-        "name": "PID · (°C) · MIN Δ"
+        "name": "PID · (°C) · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_comfort_heat": {
-        "name": "Lämmitys · Huone · Läsnäolo"
+        "name": "Profiili · Lämmitys · Huone · Läsnäolo",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_comfort_cool": {
-        "name": "Jäähdytys · Huone · Läsnäolo"
+        "name": "Profiili · Jäähdytys · Huone · Läsnäolo",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_comfort_humidity": {
-        "name": "Kosteus · Huone · Läsnäolo · tavoite (%)"
+        "name": "Profiili · Kosteus · Huone · Läsnäolo · tavoite (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_home_heat": {
-        "name": "Lämmitys · Koti"
+        "name": "Profiili · Lämmitys · Koti",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_home_cool": {
-        "name": "Jäähdytys · Koti"
+        "name": "Profiili · Jäähdytys · Koti",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_home_humidity": {
-        "name": "Kosteus · Koti · tavoite (%)"
+        "name": "Profiili · Kosteus · Koti · tavoite (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_away_heat": {
-        "name": "Lämmitys · Poissa"
+        "name": "Profiili · Lämmitys · Poissa",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_away_cool": {
-        "name": "Jäähdytys · Poissa"
+        "name": "Profiili · Jäähdytys · Poissa",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_away_humidity": {
-        "name": "Kosteus · Poissa · tavoite (%)"
+        "name": "Profiili · Kosteus · Poissa · tavoite (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_sleep_heat": {
-        "name": "Lämmitys · Uni"
+        "name": "Profiili · Lämmitys · Uni",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_sleep_cool": {
-        "name": "Jäähdytys · Uni"
+        "name": "Profiili · Jäähdytys · Uni",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_sleep_humidity": {
-        "name": "Kosteus · Uni · tavoite (%)"
+        "name": "Profiili · Kosteus · Uni · tavoite (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_eco_heat": {
-        "name": "Lämmitys · ECO"
+        "name": "Profiili · Lämmitys · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_eco_cool": {
-        "name": "Jäähdytys · ECO"
+        "name": "Profiili · Jäähdytys · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_profile_eco_humidity": {
-        "name": "Kosteus · ECO · tavoite (%)"
+        "name": "Profiili · Kosteus · ECO · tavoite (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_environment_pollen_high_from": {
-        "name": "POLLEN · Siitepöly · HIGH"
+        "name": "Siitepöly · POLLEN · Siitepöly · HIGH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_environment_pollen_max_scale": {
-        "name": "POLLEN · Siitepöly · SCALE"
+        "name": "Siitepöly · POLLEN · Siitepöly · SCALE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "lähde · max (min)"
+        "name": "Kotonaolo · lähde · max (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_area_environment_room_volume_m3": {
-        "name": "asetukset · lähde (m³)"
+        "name": "Ilmanpuhdistus · asetukset · lähde (m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_area_environment_particle_cadr_m3h": {
-        "name": "CADR (m³/h)"
+        "name": "Ilmanpuhdistus · CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_area_environment_co2_target_ppm": {
-        "name": "CO₂ · CO₂ · tavoite (ppm)"
+        "name": "Ilmanpuhdistus · CO₂ · CO₂ · tavoite (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_area_environment_radon_reference_bq_m3": {
-        "name": "Rn (Bq/m³)"
+        "name": "Ilmanpuhdistus · Rn (Bq/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "Nopeus · Ulko (m/s)"
+        "name": "Edistynyt mukavuus · Nopeus · Ulko (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_area_environment_met": {
-        "name": "asetukset · lähde (met)"
+        "name": "Edistynyt mukavuus · asetukset · lähde (met)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_area_environment_clo": {
-        "name": "asetukset · lähde (clo)"
+        "name": "Edistynyt mukavuus · asetukset · lähde (clo)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_unoccupied_delay_minutes": {
-        "name": "Laitteet · CLIMATE_UNOCCUPIED_DELAY_MINUTES"
+        "name": "Huoneen läsnäolo · Laitteet · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Läsnäolo · Laitteet · anturi · Vaaditaan"
+        "name": "Huoneen läsnäolo · Läsnäolo · Laitteet · anturi · Vaaditaan",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_comfort_adjustment_max_c": {
-        "name": "Laitteet (°C)"
+        "name": "Edistynyt mukavuus · Laitteet (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_humidity_low_rh": {
-        "name": "RH · Kosteus · Laitteet (%) · RH MIN"
+        "name": "Kosteus · RH · Kosteus · Laitteet (%) · RH MIN",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_humidity_high_rh": {
-        "name": "RH · Kosteus · Laitteet (%) · RH MAX"
+        "name": "Kosteus · RH · Kosteus · Laitteet (%) · RH MAX",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_humidity_hysteresis_rh": {
-        "name": "RH · Kosteus · Laitteet · ± RH"
+        "name": "Kosteus · RH · Kosteus · Laitteet · ± RH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_cooling_dry_deferral_rh_points": {
-        "name": "Laitteet · Lämpötila −"
+        "name": "Kosteus · Laitteet · Lämpötila −",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_pm25_action_ug_m3": {
-        "name": "PM2.5 · Laitteet (µg/m³)"
+        "name": "Ilmanpuhdistus · PM2.5 · Laitteet (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_extraction_speed_percent": {
-        "name": "EXTRACT · Laitteet · Nopeus (%) · SPEED %"
+        "name": "Ilmanpuhdistus · EXTRACT · Laitteet · Nopeus (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_purifier_speed_percent": {
-        "name": "PURIFIER · Laitteet · Nopeus (%) · SPEED %"
+        "name": "Ilmanpuhdistus · PURIFIER · Laitteet · Nopeus (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_direct_tuning_kp": {
-        "name": "PID · Kp · ohjaus (percentage points/°C)"
+        "name": "PID · Kp · ohjaus (percentage points/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_direct_tuning_ki": {
-        "name": "PID · Ki · ohjaus (percentage points/(°C·minute))"
+        "name": "PID · Ki · ohjaus (percentage points/(°C·minute))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_direct_tuning_kd": {
-        "name": "PID · Kd · ohjaus (percentage points·minute/°C)"
+        "name": "PID · Kd · ohjaus (percentage points·minute/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "PID · asetukset · lähde (s) · SAMPLE"
+        "name": "PID · asetukset · lähde (s) · SAMPLE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "PID · asetukset · lähde · MAX Δ"
+        "name": "PID · asetukset · lähde · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "PID · asetukset · lähde · MIN Δ"
+        "name": "PID · asetukset · lähde · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_mold_surface_critical_temperature_c": {
-        "name": "Homeindikaattori · 🧊 °C"
+        "name": "Home · Homeindikaattori · 🧊 °C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_kp": {
-        "name": "PID · {channel}Kp · ohjaus (% per °C)"
+        "name": "PID · {channel}Kp · ohjaus (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_ki": {
-        "name": "PID · {channel}Ki · ohjaus (% per °C-minute)"
+        "name": "PID · {channel}Ki · ohjaus (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_kd": {
-        "name": "PID · {channel}Kd · ohjaus (%·minute per °C)"
+        "name": "PID · {channel}Kd · ohjaus (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_sample_seconds": {
-        "name": "PID · {channel}(s)"
+        "name": "PID · {channel}(s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Prosessin vahvistus"
+        "name": "PID · {channel}Prosessin vahvistus",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Aikavakio"
+        "name": "PID · {channel}Aikavakio",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Kuollut aika"
+        "name": "PID · {channel}Kuollut aika",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC λ"
+        "name": "PID · {channel}IMC λ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Suhteellinen kapasiteetti 1 (%)"
+        "name": "PID · {channel}Suhteellinen kapasiteetti 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Suhteellinen kapasiteetti 2 (%)"
+        "name": "PID · {channel}Suhteellinen kapasiteetti 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Suhteellinen kapasiteetti 3 (%)"
+        "name": "PID · {channel}Suhteellinen kapasiteetti 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Suhteellinen kapasiteetti 4 (%)"
+        "name": "PID · {channel}Suhteellinen kapasiteetti 4 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Puhaltimen nopeus 1 (%)"
+        "name": "PID · {channel}Puhaltimen nopeus 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Suhteellinen kapasiteetti 1 (%)"
+        "name": "PID · {channel}Suhteellinen kapasiteetti 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Puhaltimen nopeus 2 (%)"
+        "name": "PID · {channel}Puhaltimen nopeus 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Suhteellinen kapasiteetti 2 (%)"
+        "name": "PID · {channel}Suhteellinen kapasiteetti 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Puhaltimen nopeus 3 (%)"
+        "name": "PID · {channel}Puhaltimen nopeus 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Suhteellinen kapasiteetti 3 (%)"
+        "name": "PID · {channel}Suhteellinen kapasiteetti 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_cycle_seconds": {
-        "name": "PID · {channel}asetukset · lähde (s) · PWM PERIOD"
+        "name": "PID · {channel}asetukset · lähde (s) · PWM PERIOD",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_quiet_percentage": {
-        "name": "Hiljainen · {channel}Hiljaisen puhalluksen raja (%)"
+        "name": "Hiljainen · {channel}Hiljaisen puhalluksen raja (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_min_on_seconds": {
-        "name": "Teho · {channel}min ON (s)"
+        "name": "Teho · {channel}min ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_min_off_seconds": {
-        "name": "Teho · {channel}min OFF (s)"
+        "name": "Teho · {channel}min OFF (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_max_on_seconds": {
-        "name": "Teho · {channel}max ON (s)"
+        "name": "Teho · {channel}max ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_min_limit": {
-        "name": "Huone · Lämpötila · min"
+        "name": "Huonerajat · Huone · Lämpötila · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_max_limit": {
-        "name": "Huone · Lämpötila · max"
+        "name": "Huonerajat · Huone · Lämpötila · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_min_limit": {
-        "name": "Huone · Kosteus · min"
+        "name": "Huonerajat · Huone · Kosteus · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_max_limit": {
-        "name": "Huone · Kosteus · max"
+        "name": "Huonerajat · Huone · Kosteus · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_room_equipment_limit_fan_min_percentage": {
-        "name": "Huone · Nopeus · min (%)"
+        "name": "Huonerajat · Huone · Nopeus · min (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_room_equipment_limit_fan_max_percentage": {
-        "name": "Huone · Nopeus · max (%)"
+        "name": "Huonerajat · Huone · Nopeus · max (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "home_global_occupancy_away_cooldown_minutes": {
-        "name": "Koti · Away · cooldown (min)"
+        "name": "Kotonaolo · Koti · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_shading_close_above_c": {
-        "name": "Sulje kaihtimet yli huonelämpötilan (°C)"
+        "name": "Aurinkosuojaus · Sulje kaihtimet yli huonelämpötilan (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_shading_min_sun_elevation": {
-        "name": "Auringon vähimmäiskorkeus (°)"
+        "name": "Aurinkosuojaus · Auringon vähimmäiskorkeus (°)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "shade_close_above_c": {
-        "name": "Sulje kaihtimet yli huonelämpötilan (°C)"
+        "name": "Aurinkosuojaus · Sulje kaihtimet yli huonelämpötilan (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_particle_cadr_m3h": {
-        "name": "Filter · Rated particle CADR (m³/h)"
+        "name": "Filter · Rated particle CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "shade_min_lux": {
-        "name": "Sulkemisen vähimmäisvalaistus (lx)"
+        "name": "Aurinkosuojaus · Sulkemisen vähimmäisvalaistus (lx)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_fan_min_percentage": {
-        "name": "Puhallin · {channel}Vähimmäisnopeus (%)"
+        "name": "Puhallin · {channel}Vähimmäisnopeus (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_fan_max_percentage": {
-        "name": "Puhallin · {channel}Enimmäisnopeus (%)"
+        "name": "Puhallin · {channel}Enimmäisnopeus (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "global_occupancy_away_cooldown_minutes": {
+        "name": "Kotonaolo · Koti · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "home_aqi_custom_limit": {
+        "name": "Ilmanvaihto · Custom AQI limit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "area_device_target_fan_speed_percent": {
+        "name": "Puhallin · Target speed (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       }
     },
     "switch": {
       "home_automatic_notifications": {
-        "name": "Automaattinen · AUTOMATIC_NOTIFICATIONS"
+        "name": "Ilmoitukset · Automaattinen · AUTOMATIC_NOTIFICATIONS",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "home_automatic_tts": {
-        "name": "Automaattinen"
+        "name": "Ilmoitukset · Automaattinen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "home_use_announcement_hub": {
-        "name": "Announcement Hub"
+        "name": "Ilmoitukset · Announcement Hub",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "home_ai_rewrite_announcements": {
-        "name": "AI · Ilmoitukset (valinnainen)"
+        "name": "Ilmoitukset · AI · Ilmoitukset (valinnainen)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "home_global_environment_pollen_avoid_ventilation": {
-        "name": "POLLEN · Siitepöly · NO VENT"
+        "name": "Siitepöly · POLLEN · Siitepöly · NO VENT",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_area_environment_sleep_room": {
-        "name": "Uni"
+        "name": "Melu · Uni",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_area_environment_enable_pmv": {
-        "name": "PMV / PPD · Automaattinen"
+        "name": "Edistynyt mukavuus · PMV / PPD · Automaattinen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_sleep_active": {
-        "name": "Uni · Laitteet"
+        "name": "Uni · Laitteet",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_sleep_schedule_enabled": {
-        "name": "Uni · Automaattinen"
+        "name": "Uni · Automaattinen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_operating_window_efficiency_notify": {
-        "name": "Laitteet · Ulko"
+        "name": "Ilmoitukset · Laitteet · Ulko",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_quiet_sleep": {
-        "name": "Hiljainen · {channel}Hiljaisempi toiminta nukuttaessa"
+        "name": "Hiljainen · {channel}Hiljaisempi toiminta nukuttaessa",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_quiet_occupied": {
-        "name": "Hiljainen · {channel}Hiljaisempi toiminta läsnä ollessa"
+        "name": "Hiljainen · {channel}Hiljaisempi toiminta läsnä ollessa",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_sensor_verified": {
-        "name": "Anturi · {channel}Vaaditaan"
+        "name": "Anturi · {channel}Vaaditaan",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_shading_enabled": {
-        "name": "Automaattinen aurinkosuojaus viilennykseen"
+        "name": "Aurinkosuojaus · Automaattinen aurinkosuojaus viilennykseen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "home_shade_announce_before_movement": {
-        "name": "Ilmoita ennen kaihtimien avaamista tai sulkemista"
+        "name": "Ilmoitukset · Ilmoita ennen kaihtimien avaamista tai sulkemista",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "shade_auto_control": {
-        "name": "Automaattinen aurinkosuojaus viilennykseen"
+        "name": "Aurinkosuojaus · Automaattinen aurinkosuojaus viilennykseen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "shade_announce": {
-        "name": "Ilmoita ennen kaihtimien avaamista tai sulkemista"
+        "name": "Ilmoitukset · Ilmoita ennen kaihtimien avaamista tai sulkemista",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "home_away_open_window_alert": {
-        "name": "Varoita avoimista ikkunoista kaikkien lähdettyä"
+        "name": "Ilmoitukset · Varoita avoimista ikkunoista kaikkien lähdettyä",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pause_on_window_open": {
-        "name": "Sammuta ikkunan avautuessa · {channel}"
+        "name": "Ohjaus · Sammuta ikkunan avautuessa · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "shade_lux_enabled": {
-        "name": "Käytä luksianturia aurinkosuojaukseen"
+        "name": "Aurinkosuojaus · Käytä luksianturia aurinkosuojaukseen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_announce_device_errors": {
-        "name": "Ilmoita laitteen virheistä · {channel}"
+        "name": "Ilmoitukset · Ilmoita laitteen virheistä · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       }
     },
     "select": {
       "home_language": {
-        "name": "Kieli"
+        "name": "Ilmoitukset · Kieli",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_manual_profile": {
-        "name": "Laitteet · CLIMATE_MANUAL_PROFILE"
+        "name": "Profiili · Laitteet · CLIMATE_MANUAL_PROFILE",
+        "state": {
+          "auto": "Automatic"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Gain source",
         "state": {
           "defaults": "Defaults",
           "manual": "Manual"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
         }
       },
       "home_global_policy_home_policy": {
-        "name": "Koti · Läsnäolo · ohjaus"
+        "name": "Kotonaolo",
+        "state": {
+          "any_home": "Vähintään yksi henkilö kotona",
+          "all_home": "Kaikki kotona (vanha asetus)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_policy_unknown_occupancy": {
-        "name": "Läsnäolo · Laitteet"
+        "name": "Huoneen läsnäolo · Läsnäolo · Laitteet",
+        "state": {
+          "occupied": "Assume occupied",
+          "hold": "Hold automatic changes"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_policy_away_policy": {
-        "name": "Koti · Laitteet · POLICY"
+        "name": "Kotonaolo · Koti · Laitteet · POLICY",
+        "state": {
+          "any_home": "Vähintään yksi henkilö kotona",
+          "all_home": "Kaikki kotona (vanha asetus)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_policy_target_source": {
-        "name": "Laitteet · lähde · tavoite",
+        "name": "Edistynyt mukavuus · Laitteet · lähde · tavoite",
         "state": {
           "temperature": "Kiinteät lämpötilat",
           "auto_comfort": "Automaattinen mukavuus (lämpötila ja kosteus)",
           "pmv": "Edistynyt ISO 7730 (mittaukset vaaditaan)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
         }
       },
       "equipment_control_mode": {
@@ -3292,10 +4031,20 @@
           "manual": "Manuaalinen",
           "off": "Sammuta",
           "pid": "PID"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "Hiljainen · {channel}Laitteen hiljainen puhallustila"
+        "name": "Hiljainen · {channel}Laitteen hiljainen puhallustila",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}Kalibrointi",
@@ -3305,6 +4054,11 @@
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Observe and suggest · Approve",
           "adaptive_auto": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3312,6 +4066,11 @@
         "state": {
           "legacy": "Alkuperäinen (kalibroimaton)",
           "measured": "Mitatun kapasiteetin malli"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
@@ -3322,6 +4081,11 @@
           "cool": "Jäähdytys",
           "dry": "Kuivaus",
           "fan_only": "Puhallin"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
         }
       },
       "equipment_presence_requirement": {
@@ -3330,6 +4094,11 @@
           "always": "Automaattinen",
           "occupied": "Huone · Läsnäolo",
           "absent": "Huone · Läsnäolo · Sammuta"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
         }
       },
       "equipment_sleep_behavior": {
@@ -3338,6 +4107,11 @@
           "normal": "Automaattinen",
           "pause": "Keskeytä",
           "sleep_targets": "Uni · tavoite"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
         }
       },
       "equipment_fan_purpose": {
@@ -3346,29 +4120,59 @@
           "extraction": "Ulko · ohjaus",
           "filtration": "PM2.5 · ohjaus",
           "auto": "Automaattinen"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "Lämpötila · lähde"
+        "name": "Edistynyt mukavuus · Lämpötila · lähde",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_area_science_air_speed_entity": {
-        "name": "lähde · Nopeus · Ulko (m/s)"
+        "name": "Edistynyt mukavuus · lähde · Nopeus · Ulko (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "shade_window_entity": {
-        "name": "Liitetty ikkunakosketin"
+        "name": "Aurinkosuojaus · Liitetty ikkunakosketin",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "home_aqi_scale": {
-        "name": "AQI-asteikko",
+        "name": "Ilmanvaihto · AQI-asteikko",
         "state": {
           "auto": "Automaattinen (palveluntarjoaja)",
           "not_configured": "Tuntematon - ei vertailua",
           "us_epa": "US EPA AQI (0-500)",
           "eea_category": "EEA AQI (1-6)",
           "custom": "Mukautettu asteikko"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
         }
       },
       "shade_lux_entity": {
-        "name": "Luksianturi aurinkosuojaukseen"
+        "name": "Aurinkosuojaus · Luksianturi aurinkosuojaukseen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_adaptation_mode": {
         "name": "PID · {channel}Passive adaptation",
@@ -3376,35 +4180,80 @@
           "disabled": "Disabled",
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
         }
       }
     },
     "time": {
       "area_climate_sleep_start": {
-        "name": "Uni · Laitteet · START"
+        "name": "Uni · Laitteet · START",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "area_climate_sleep_end": {
-        "name": "Uni · Laitteet · END"
+        "name": "Uni · Laitteet · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       }
     },
     "button": {
       "area_recalculate_mold": {
-        "name": "Homeindikaattori · ↻ 🌡️"
+        "name": "Home · Homeindikaattori · ↻ 🌡️",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_resume": {
-        "name": "Ohjaus · {channel}Tarkista ja jatka"
+        "name": "Ohjaus · {channel}Tarkista ja jatka",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Käytä · Kalibrointi"
+        "name": "PID · {channel}Käytä · Kalibrointi",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Käytä · Kalibrointi"
+        "name": "PID · {channel}Käytä · Kalibrointi",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_review_approve": {
-        "name": "PID · {channel}Approve suggestion"
+        "name": "PID · {channel}Approve suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       },
       "equipment_pid_review_discard": {
-        "name": "PID · {channel}Discard suggestion"
+        "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       }
     },
     "climate": {
@@ -3505,8 +4354,8 @@
     },
     "general_home_policy": {
       "options": {
-        "any_home": "Koti · Läsnäolo",
-        "all_home": "Koti · Laitteet · Läsnäolo"
+        "any_home": "Vähintään yksi henkilö kotona",
+        "all_home": "Kaikki kotona (vanha asetus)"
       }
     },
     "device_method": {

@@ -72,7 +72,7 @@
           "automatic_tts": "Otomatis",
           "automatic_notifications": "Otomatis · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Pengumuman (opsional) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Pengumuman · Announcement Hub",
           "notify_entities": "pengaturan · sumber",
           "tts_engine": "pengaturan · sumber · TTS_ENGINE",
           "media_players": "pengaturan · sumber · MEDIA_PLAYERS",
@@ -84,7 +84,7 @@
           "automatic_tts": "Bawaan: ⛔ · Otomatis · 🪟 90 s. Opsi ini mengatur “Otomatis”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "automatic_notifications": "Opsi ini mengatur “Otomatis · AUTOMATIC_NOTIFICATIONS”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "announcement_repeat_minutes": "Bawaan: 10 min · 0 = tidak pernah · Selama penyebab yang sama berlanjut · Ruangan.",
-          "use_announcement_hub": "Announcement Hub · Tidak tersedia → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Pilih: notify.* · pengaturan · sumber.",
           "tts_engine": "Pilih: tts.* · pengaturan · sumber · TTS_ENGINE.",
           "media_players": "Pilih: media_player.* · pengaturan · sumber · MEDIA_PLAYERS.",
@@ -115,8 +115,8 @@
           "min_outdoor_temp": "Di luar · °C (≥)",
           "max_outdoor_temp": "Di luar · °C (≤)",
           "max_outdoor_humidity": "Di luar · RH (%) (≤)",
-          "max_wind_kmh": "Cuaca dan peringatan · km/h (≤)",
-          "max_age_minutes": "⏱ · Buka (min, ≤)",
+          "max_wind_kmh": "Ventilasi · Cuaca dan peringatan · km/h (≤)",
+          "max_age_minutes": "Ventilasi · ⏱ · Buka (min, ≤)",
           "indoor_mold": "Indikator jamur · ≥ 70%"
         },
         "data_description": {
@@ -139,8 +139,8 @@
           "min_outdoor_temp": "Ambang keputusan untuk “Di luar · °C (≥)”. Memengaruhi saran, bukan batas medis.",
           "max_outdoor_temp": "Ambang keputusan untuk “Di luar · °C (≤)”. Memengaruhi saran, bukan batas medis.",
           "max_outdoor_humidity": "Ambang keputusan untuk “Di luar · RH (%) (≤)”. Memengaruhi saran, bukan batas medis.",
-          "max_wind_kmh": "Ambang keputusan untuk “Cuaca dan peringatan · km/h (≤)”. Memengaruhi saran, bukan batas medis.",
-          "max_age_minutes": "Ambang keputusan untuk “⏱ · Buka (min, ≤)”. Memengaruhi saran, bukan batas medis.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Ambang keputusan untuk “Indikator jamur · ≥ 70%”. Memengaruhi saran, bukan batas medis."
         }
       },
@@ -194,7 +194,7 @@
           "language": "TTS · Pilih · sumber",
           "use_mold_indicator": "Indikator jamur · RH (%) → 70%",
           "pollen_entities": "Serbuk sari · sumber · Pilih",
-          "use_announcement_hub": "Otomatis · Announcement Hub",
+          "use_announcement_hub": "Pengumuman · Announcement Hub",
           "general_away_cooldown_minutes": "Rumah · Away · cooldown (min)",
           "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi",
           "away_windows_target_people": "Orang yang diberi tahu",
@@ -225,7 +225,7 @@
           "pollen_max_scale": "POLLEN · Serbuk sari · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Serbuk sari · NO VENT",
           "general_source_stale_minutes": "sumber · max (min)",
-          "general_home_policy": "Rumah · Kehadiran · kendali"
+          "general_home_policy": "Kehadiran di rumah"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -244,7 +244,7 @@
           "language": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · TTS · Pilih · sumber · provider capabilities.",
           "use_mold_indicator": "🧱 Indikator jamur · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Serbuk sari · sumber · Pilih.",
-          "use_announcement_hub": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Otomatis · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Rumah · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi. Orang yang diberi tahu (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Ponsel, Jam tangan, Tablet.",
           "away_windows_target_people": "Orang yang diberi tahu (person.*) - Announcement Hub: Ponsel, Jam tangan, Tablet, Perangkat lain. Only explicitly assigned personal endpoints.",
@@ -275,7 +275,7 @@
           "pollen_max_scale": "Atur “POLLEN · Serbuk sari · SCALE” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "pollen_avoid_ventilation": "Atur “POLLEN · Serbuk sari · NO VENT” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "general_source_stale_minutes": "sumber · Tidur / Kehadiran · max 240 min. Tidak valid · Matikan.",
-          "general_home_policy": "Opsi ini mengatur “Rumah · Kehadiran · kendali”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "reconfigure": {
@@ -537,7 +537,7 @@
           "extractor_entity": "Kipas ekstraksi · sumber",
           "co2_ndir_verified": "CO₂ · Wajib",
           "co2_target_ppm": "CO₂ · CO₂ · target (ppm)",
-          "sleep_room": "Tidur"
+          "sleep_room": "Kebisingan · Tidur"
         },
         "data_description": {
           "temperature_entity": "Pilih sumber Home Assistant nyata untuk “Suhu · sumber”. Data hilang atau usang menghentikan tindakan terkait.",
@@ -546,8 +546,8 @@
           "purifier_entity": "Pilih Pembersih udara · sumber Home Assistant nyata untuk “Pembersih udara · sumber”. Data hilang atau usang menghentikan tindakan terkait.",
           "extractor_entity": "Pilih Kipas ekstraksi · sumber Home Assistant nyata untuk “Kipas ekstraksi · sumber”. Data hilang atau usang menghentikan tindakan terkait.",
           "co2_ndir_verified": "Gunakan pengukuran nyata yang sesuai untuk “CO₂ · Wajib”. Perkiraan tidak menggantikan sensor terkalibrasi.",
-          "co2_target_ppm": "Ambang keputusan untuk “CO₂ · CO₂ · target (ppm)”. Memengaruhi saran, bukan batas medis.",
-          "sleep_room": "Atur “Tidur” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -699,7 +699,7 @@
           "climate_unknown_occupancy": "Kehadiran · Perangkat",
           "climate_unoccupied_delay_minutes": "Perangkat · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Kehadiran · Perangkat · sensor · Wajib",
-          "climate_away_policy": "Rumah · Perangkat · POLICY",
+          "climate_away_policy": "Kehadiran di rumah · Rumah · Perangkat · POLICY",
           "climate_manual_profile": "Perangkat · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Tidur · Perangkat",
           "climate_sleep_schedule_enabled": "Tidur · Otomatis",
@@ -711,15 +711,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait.",
           "climate_away_entities": "Pilih sumber Home Assistant nyata untuk “Rumah · Perangkat”. Data hilang atau usang menghentikan tindakan terkait.",
-          "climate_unknown_occupancy": "Opsi ini mengatur “Kehadiran · Perangkat”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
-          "climate_unoccupied_delay_minutes": "Waktu ini mengatur “Perangkat · CLIMATE_UNOCCUPIED_DELAY_MINUTES”. Membatasi siklus cepat dan bukan pengganti perlindungan perangkat.",
-          "climate_occupancy_stale_minutes": "Waktu ini mengatur “Kehadiran · Perangkat · sensor · Wajib”. Membatasi siklus cepat dan bukan pengganti perlindungan perangkat.",
-          "climate_away_policy": "Opsi ini mengatur “Rumah · Perangkat · POLICY”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Opsi ini mengatur “Perangkat · CLIMATE_MANUAL_PROFILE”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
-          "climate_sleep_active": "Opsi ini mengatur “Tidur · Perangkat”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
-          "climate_sleep_schedule_enabled": "Opsi ini mengatur “Tidur · Otomatis”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
-          "climate_sleep_start": "Waktu ini mengatur “Tidur · Perangkat · START”. Membatasi siklus cepat dan bukan pengganti perlindungan perangkat.",
-          "climate_sleep_end": "Waktu ini mengatur “Tidur · Perangkat · END”. Membatasi siklus cepat dan bukan pengganti perlindungan perangkat.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Ambang keputusan untuk “Perangkat · sumber · target”. Memengaruhi saran, bukan batas medis.",
           "climate_comfort_adjustment_max_c": "Ambang keputusan untuk “Perangkat (°C)”. Memengaruhi saran, bukan batas medis."
         }
@@ -768,7 +768,7 @@
           "climate_humidity_low_rh": "Ambang keputusan untuk “RH · Kelembapan · Perangkat (%) · RH MIN”. Memengaruhi saran, bukan batas medis.",
           "climate_humidity_high_rh": "Ambang keputusan untuk “RH · Kelembapan · Perangkat (%) · RH MAX”. Memengaruhi saran, bukan batas medis.",
           "climate_humidity_hysteresis_rh": "Ambang keputusan untuk “RH · Kelembapan · Perangkat · ± RH”. Memengaruhi saran, bukan batas medis.",
-          "climate_cooling_dry_deferral_rh_points": "Opsi ini mengatur “Perangkat · Suhu −”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Opsi ini mengatur “Kelembapan · Otomatis”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "climate_window_efficiency_notify": "Opsi ini mengatur “Perangkat · Luar”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "climate_dry_fan_mode_auto": "Opsi ini mengatur “Kecepatan · Otomatis”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
@@ -921,7 +921,7 @@
           "general_occupied_rooms_entity": "Kehadiran · Ruangan · sumber (state)",
           "general_occupied_rooms_attribute": "Kehadiran · Ruangan · sumber (attribute)",
           "general_home_trackers": "Rumah · Kehadiran · Perangkat",
-          "general_home_policy": "Rumah · Kehadiran · kendali",
+          "general_home_policy": "Kehadiran di rumah",
           "general_sleep_rooms_entity": "Tidur · Ruangan · sumber (state)",
           "general_sleep_rooms_attribute": "Tidur · Ruangan · sumber (attribute)",
           "general_source_stale_minutes": "sumber · max (min)"
@@ -931,7 +931,7 @@
           "general_occupied_rooms_entity": "Pilih sumber Home Assistant nyata untuk “Kehadiran · Ruangan · sumber (state)”. Data hilang atau usang menghentikan tindakan terkait.",
           "general_occupied_rooms_attribute": "Atur “Kehadiran · Ruangan · sumber (attribute)” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "general_home_trackers": "Pilih sumber Home Assistant nyata untuk “Rumah · Kehadiran · Perangkat”. Data hilang atau usang menghentikan tindakan terkait.",
-          "general_home_policy": "Opsi ini mengatur “Rumah · Kehadiran · kendali”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Pilih sumber Home Assistant nyata untuk “Tidur · Ruangan · sumber (state)”. Data hilang atau usang menghentikan tindakan terkait.",
           "general_sleep_rooms_attribute": "Atur “Tidur · Ruangan · sumber (attribute)” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "general_source_stale_minutes": "sumber · Tidur / Kehadiran · max 240 min. Tidak valid · Matikan."
@@ -1366,7 +1366,7 @@
           "automatic_tts": "Otomatis",
           "automatic_notifications": "Otomatis · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Pengumuman (opsional) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Pengumuman · Announcement Hub",
           "notify_entities": "pengaturan · sumber",
           "tts_engine": "pengaturan · sumber · TTS_ENGINE",
           "media_players": "pengaturan · sumber · MEDIA_PLAYERS",
@@ -1378,7 +1378,7 @@
           "automatic_tts": "Bawaan: ⛔ · Otomatis · 🪟 90 s. Opsi ini mengatur “Otomatis”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "automatic_notifications": "Opsi ini mengatur “Otomatis · AUTOMATIC_NOTIFICATIONS”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "announcement_repeat_minutes": "Bawaan: 10 min · 0 = tidak pernah · Selama penyebab yang sama berlanjut · Ruangan.",
-          "use_announcement_hub": "Announcement Hub · Tidak tersedia → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Pilih: notify.* · pengaturan · sumber.",
           "tts_engine": "Pilih: tts.* · pengaturan · sumber · TTS_ENGINE.",
           "media_players": "Pilih: media_player.* · pengaturan · sumber · MEDIA_PLAYERS.",
@@ -1409,8 +1409,8 @@
           "min_outdoor_temp": "Di luar · °C (≥)",
           "max_outdoor_temp": "Di luar · °C (≤)",
           "max_outdoor_humidity": "Di luar · RH (%) (≤)",
-          "max_wind_kmh": "Cuaca dan peringatan · km/h (≤)",
-          "max_age_minutes": "⏱ · Buka (min, ≤)",
+          "max_wind_kmh": "Ventilasi · Cuaca dan peringatan · km/h (≤)",
+          "max_age_minutes": "Ventilasi · ⏱ · Buka (min, ≤)",
           "indoor_mold": "Indikator jamur · ≥ 70%"
         },
         "data_description": {
@@ -1433,8 +1433,8 @@
           "min_outdoor_temp": "Ambang keputusan untuk “Di luar · °C (≥)”. Memengaruhi saran, bukan batas medis.",
           "max_outdoor_temp": "Ambang keputusan untuk “Di luar · °C (≤)”. Memengaruhi saran, bukan batas medis.",
           "max_outdoor_humidity": "Ambang keputusan untuk “Di luar · RH (%) (≤)”. Memengaruhi saran, bukan batas medis.",
-          "max_wind_kmh": "Ambang keputusan untuk “Cuaca dan peringatan · km/h (≤)”. Memengaruhi saran, bukan batas medis.",
-          "max_age_minutes": "Ambang keputusan untuk “⏱ · Buka (min, ≤)”. Memengaruhi saran, bukan batas medis.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Ambang keputusan untuk “Indikator jamur · ≥ 70%”. Memengaruhi saran, bukan batas medis."
         }
       },
@@ -1603,7 +1603,7 @@
           "extractor_entity": "Kipas ekstraksi · sumber",
           "co2_ndir_verified": "CO₂ · Wajib",
           "co2_target_ppm": "CO₂ · CO₂ · target (ppm)",
-          "sleep_room": "Tidur"
+          "sleep_room": "Kebisingan · Tidur"
         },
         "data_description": {
           "temperature_entity": "Pilih sumber Home Assistant nyata untuk “Suhu · sumber”. Data hilang atau usang menghentikan tindakan terkait.",
@@ -1612,8 +1612,8 @@
           "purifier_entity": "Pilih Pembersih udara · sumber Home Assistant nyata untuk “Pembersih udara · sumber”. Data hilang atau usang menghentikan tindakan terkait.",
           "extractor_entity": "Pilih Kipas ekstraksi · sumber Home Assistant nyata untuk “Kipas ekstraksi · sumber”. Data hilang atau usang menghentikan tindakan terkait.",
           "co2_ndir_verified": "Gunakan pengukuran nyata yang sesuai untuk “CO₂ · Wajib”. Perkiraan tidak menggantikan sensor terkalibrasi.",
-          "co2_target_ppm": "Ambang keputusan untuk “CO₂ · CO₂ · target (ppm)”. Memengaruhi saran, bukan batas medis.",
-          "sleep_room": "Atur “Tidur” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -1765,7 +1765,7 @@
           "climate_unknown_occupancy": "Kehadiran · Perangkat",
           "climate_unoccupied_delay_minutes": "Perangkat · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Kehadiran · Perangkat · sensor · Wajib",
-          "climate_away_policy": "Rumah · Perangkat · POLICY",
+          "climate_away_policy": "Kehadiran di rumah · Rumah · Perangkat · POLICY",
           "climate_manual_profile": "Perangkat · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Tidur · Perangkat",
           "climate_sleep_schedule_enabled": "Tidur · Otomatis",
@@ -1777,15 +1777,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait.",
           "climate_away_entities": "Pilih sumber Home Assistant nyata untuk “Rumah · Perangkat”. Data hilang atau usang menghentikan tindakan terkait.",
-          "climate_unknown_occupancy": "Opsi ini mengatur “Kehadiran · Perangkat”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
-          "climate_unoccupied_delay_minutes": "Waktu ini mengatur “Perangkat · CLIMATE_UNOCCUPIED_DELAY_MINUTES”. Membatasi siklus cepat dan bukan pengganti perlindungan perangkat.",
-          "climate_occupancy_stale_minutes": "Waktu ini mengatur “Kehadiran · Perangkat · sensor · Wajib”. Membatasi siklus cepat dan bukan pengganti perlindungan perangkat.",
-          "climate_away_policy": "Opsi ini mengatur “Rumah · Perangkat · POLICY”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Opsi ini mengatur “Perangkat · CLIMATE_MANUAL_PROFILE”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
-          "climate_sleep_active": "Opsi ini mengatur “Tidur · Perangkat”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
-          "climate_sleep_schedule_enabled": "Opsi ini mengatur “Tidur · Otomatis”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
-          "climate_sleep_start": "Waktu ini mengatur “Tidur · Perangkat · START”. Membatasi siklus cepat dan bukan pengganti perlindungan perangkat.",
-          "climate_sleep_end": "Waktu ini mengatur “Tidur · Perangkat · END”. Membatasi siklus cepat dan bukan pengganti perlindungan perangkat.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Ambang keputusan untuk “Perangkat · sumber · target”. Memengaruhi saran, bukan batas medis.",
           "climate_comfort_adjustment_max_c": "Ambang keputusan untuk “Perangkat (°C)”. Memengaruhi saran, bukan batas medis."
         }
@@ -1834,7 +1834,7 @@
           "climate_humidity_low_rh": "Ambang keputusan untuk “RH · Kelembapan · Perangkat (%) · RH MIN”. Memengaruhi saran, bukan batas medis.",
           "climate_humidity_high_rh": "Ambang keputusan untuk “RH · Kelembapan · Perangkat (%) · RH MAX”. Memengaruhi saran, bukan batas medis.",
           "climate_humidity_hysteresis_rh": "Ambang keputusan untuk “RH · Kelembapan · Perangkat · ± RH”. Memengaruhi saran, bukan batas medis.",
-          "climate_cooling_dry_deferral_rh_points": "Opsi ini mengatur “Perangkat · Suhu −”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Opsi ini mengatur “Kelembapan · Otomatis”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "climate_window_efficiency_notify": "Opsi ini mengatur “Perangkat · Luar”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "climate_dry_fan_mode_auto": "Opsi ini mengatur “Kecepatan · Otomatis”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
@@ -1987,7 +1987,7 @@
           "general_occupied_rooms_entity": "Kehadiran · Ruangan · sumber (state)",
           "general_occupied_rooms_attribute": "Kehadiran · Ruangan · sumber (attribute)",
           "general_home_trackers": "Rumah · Kehadiran · Perangkat",
-          "general_home_policy": "Rumah · Kehadiran · kendali",
+          "general_home_policy": "Kehadiran di rumah",
           "general_sleep_rooms_entity": "Tidur · Ruangan · sumber (state)",
           "general_sleep_rooms_attribute": "Tidur · Ruangan · sumber (attribute)",
           "general_source_stale_minutes": "sumber · max (min)"
@@ -1997,7 +1997,7 @@
           "general_occupied_rooms_entity": "Pilih sumber Home Assistant nyata untuk “Kehadiran · Ruangan · sumber (state)”. Data hilang atau usang menghentikan tindakan terkait.",
           "general_occupied_rooms_attribute": "Atur “Kehadiran · Ruangan · sumber (attribute)” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "general_home_trackers": "Pilih sumber Home Assistant nyata untuk “Rumah · Kehadiran · Perangkat”. Data hilang atau usang menghentikan tindakan terkait.",
-          "general_home_policy": "Opsi ini mengatur “Rumah · Kehadiran · kendali”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Pilih sumber Home Assistant nyata untuk “Tidur · Ruangan · sumber (state)”. Data hilang atau usang menghentikan tindakan terkait.",
           "general_sleep_rooms_attribute": "Atur “Tidur · Ruangan · sumber (attribute)” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "general_source_stale_minutes": "sumber · Tidur / Kehadiran · max 240 min. Tidak valid · Matikan."
@@ -2177,7 +2177,7 @@
           "language": "TTS · Pilih · sumber",
           "use_mold_indicator": "Indikator jamur · RH (%) → 70%",
           "pollen_entities": "Serbuk sari · sumber · Pilih",
-          "use_announcement_hub": "Otomatis · Announcement Hub",
+          "use_announcement_hub": "Pengumuman · Announcement Hub",
           "general_away_cooldown_minutes": "Rumah · Away · cooldown (min)",
           "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi",
           "away_windows_target_people": "Orang yang diberi tahu",
@@ -2208,7 +2208,7 @@
           "pollen_max_scale": "POLLEN · Serbuk sari · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Serbuk sari · NO VENT",
           "general_source_stale_minutes": "sumber · max (min)",
-          "general_home_policy": "Rumah · Kehadiran · kendali"
+          "general_home_policy": "Kehadiran di rumah"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2227,7 +2227,7 @@
           "language": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · TTS · Pilih · sumber · provider capabilities.",
           "use_mold_indicator": "🧱 Indikator jamur · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Serbuk sari · sumber · Pilih.",
-          "use_announcement_hub": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Otomatis · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Rumah · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Beri tahu jendela terbuka setelah semua pergi. Orang yang diberi tahu (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Ponsel, Jam tangan, Tablet.",
           "away_windows_target_people": "Orang yang diberi tahu (person.*) - Announcement Hub: Ponsel, Jam tangan, Tablet, Perangkat lain. Only explicitly assigned personal endpoints.",
@@ -2258,7 +2258,7 @@
           "pollen_max_scale": "Atur “POLLEN · Serbuk sari · SCALE” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "pollen_avoid_ventilation": "Atur “POLLEN · Serbuk sari · NO VENT” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "general_source_stale_minutes": "sumber · Tidur / Kehadiran · max 240 min. Tidak valid · Matikan.",
-          "general_home_policy": "Opsi ini mengatur “Rumah · Kehadiran · kendali”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "room_occupancy": {
@@ -2852,436 +2852,1175 @@
     },
     "number": {
       "global_threshold_outdoor_aqi": {
-        "name": "Di luar · AQI (≤)"
+        "name": "Ventilasi · Di luar · AQI (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_outdoor_co2": {
-        "name": "Di luar · CO₂ (ppm) (≤)"
+        "name": "Ventilasi · Di luar · CO₂ (ppm) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_outdoor_pm25": {
-        "name": "Di luar · PM2.5 (µg/m³) (≤)"
+        "name": "Ventilasi · Di luar · PM2.5 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_outdoor_pm10": {
-        "name": "Di luar · PM10 (µg/m³) (≤)"
+        "name": "Ventilasi · Di luar · PM10 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_outdoor_voc": {
-        "name": "Di luar · VOC (µg/m³) (≤)"
+        "name": "Ventilasi · Di luar · VOC (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_outdoor_voc_parts": {
-        "name": "Di luar · VOC (ppb) (≤)"
+        "name": "Ventilasi · Di luar · VOC (ppb) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_outdoor_no2": {
-        "name": "NO₂ · Luar (µg/m³)"
+        "name": "Ventilasi · NO₂ · Luar (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_outdoor_o3": {
-        "name": "O₃ · Luar (µg/m³)"
+        "name": "Ventilasi · O₃ · Luar (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_outdoor_so2": {
-        "name": "SO₂ · Luar (µg/m³)"
+        "name": "Ventilasi · SO₂ · Luar (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_indoor_aqi": {
-        "name": "Kualitas udara · AQI (≥)"
+        "name": "Ventilasi · Kualitas udara · AQI (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_indoor_co2": {
-        "name": "Kualitas udara · CO₂ (ppm) (≥)"
+        "name": "Ventilasi · Kualitas udara · CO₂ (ppm) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_indoor_pm25": {
-        "name": "Kualitas udara · PM2.5 (µg/m³) (≥)"
+        "name": "Ventilasi · Kualitas udara · PM2.5 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_indoor_pm10": {
-        "name": "Kualitas udara · PM10 (µg/m³) (≥)"
+        "name": "Ventilasi · Kualitas udara · PM10 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_indoor_voc": {
-        "name": "Kualitas udara · VOC (µg/m³) (≥)"
+        "name": "Ventilasi · Kualitas udara · VOC (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_indoor_voc_parts": {
-        "name": "Kualitas udara · VOC (ppb) (≥)"
+        "name": "Ventilasi · Kualitas udara · VOC (ppb) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_indoor_humidity": {
-        "name": "Kualitas udara · RH (%) (≥)"
+        "name": "Ventilasi · Kualitas udara · RH (%) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_indoor_mold": {
-        "name": "Indikator jamur · ≥ 70%"
+        "name": "Ventilasi · Indikator jamur · ≥ 70%",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_min_outdoor_temp": {
-        "name": "Di luar · °C (≥)"
+        "name": "Ventilasi · Di luar · °C (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_max_outdoor_temp": {
-        "name": "Di luar · °C (≤)"
+        "name": "Ventilasi · Di luar · °C (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_max_outdoor_humidity": {
-        "name": "Di luar · RH (%) (≤)"
+        "name": "Ventilasi · Di luar · RH (%) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_max_wind_kmh": {
-        "name": "Cuaca dan peringatan · km/h (≤)"
+        "name": "Ventilasi · Cuaca dan peringatan · km/h (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_threshold_max_age_minutes": {
-        "name": "⏱ · Buka (min, ≤)"
+        "name": "Ventilasi · ⏱ · Buka (min, ≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Pengumuman (opsional) · 0-1440 min"
+        "name": "Pengumuman · Pengumuman (opsional) · 0-1440 min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_pid_target_c": {
-        "name": "PID · target (°C)"
+        "name": "PID · target (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_pid_kp": {
-        "name": "PID · Kp · kendali (% per °C)"
+        "name": "PID · Kp · kendali (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_pid_ki": {
-        "name": "PID · Ki · kendali (% per °C-minute)"
+        "name": "PID · Ki · kendali (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_pid_kd": {
-        "name": "PID · Kd · kendali (%·minute per °C)"
+        "name": "PID · Kd · kendali (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_pid_offset_c": {
-        "name": "PID · (°C) · PID_OFFSET_C"
+        "name": "PID · (°C) · PID_OFFSET_C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_pid_min_setpoint_c": {
-        "name": "PID · (°C) · MIN TARGET"
+        "name": "PID · (°C) · MIN TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_pid_max_setpoint_c": {
-        "name": "PID · (°C) · MAX TARGET"
+        "name": "PID · (°C) · MAX TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_pid_sample_seconds": {
-        "name": "PID · (s)"
+        "name": "PID · (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_pid_max_change_c": {
-        "name": "PID · (°C) · MAX Δ"
+        "name": "PID · (°C) · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_pid_min_change_c": {
-        "name": "PID · (°C) · MIN Δ"
+        "name": "PID · (°C) · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_comfort_heat": {
-        "name": "Pemanasan · Ruangan · Kehadiran"
+        "name": "Profil · Pemanasan · Ruangan · Kehadiran",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_comfort_cool": {
-        "name": "Pendinginan · Ruangan · Kehadiran"
+        "name": "Profil · Pendinginan · Ruangan · Kehadiran",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_comfort_humidity": {
-        "name": "Kelembapan · Ruangan · Kehadiran · target (%)"
+        "name": "Profil · Kelembapan · Ruangan · Kehadiran · target (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_home_heat": {
-        "name": "Pemanasan · Rumah"
+        "name": "Profil · Pemanasan · Rumah",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_home_cool": {
-        "name": "Pendinginan · Rumah"
+        "name": "Profil · Pendinginan · Rumah",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_home_humidity": {
-        "name": "Kelembapan · Rumah · target (%)"
+        "name": "Profil · Kelembapan · Rumah · target (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_away_heat": {
-        "name": "Pemanasan · Tidak di rumah"
+        "name": "Profil · Pemanasan · Tidak di rumah",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_away_cool": {
-        "name": "Pendinginan · Tidak di rumah"
+        "name": "Profil · Pendinginan · Tidak di rumah",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_away_humidity": {
-        "name": "Kelembapan · Tidak di rumah · target (%)"
+        "name": "Profil · Kelembapan · Tidak di rumah · target (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_sleep_heat": {
-        "name": "Pemanasan · Tidur"
+        "name": "Profil · Pemanasan · Tidur",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_sleep_cool": {
-        "name": "Pendinginan · Tidur"
+        "name": "Profil · Pendinginan · Tidur",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_sleep_humidity": {
-        "name": "Kelembapan · Tidur · target (%)"
+        "name": "Profil · Kelembapan · Tidur · target (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_eco_heat": {
-        "name": "Pemanasan · ECO"
+        "name": "Profil · Pemanasan · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_eco_cool": {
-        "name": "Pendinginan · ECO"
+        "name": "Profil · Pendinginan · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_profile_eco_humidity": {
-        "name": "Kelembapan · ECO · target (%)"
+        "name": "Profil · Kelembapan · ECO · target (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_environment_pollen_high_from": {
-        "name": "POLLEN · Serbuk sari · HIGH"
+        "name": "Serbuk sari · POLLEN · Serbuk sari · HIGH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_environment_pollen_max_scale": {
-        "name": "POLLEN · Serbuk sari · SCALE"
+        "name": "Serbuk sari · POLLEN · Serbuk sari · SCALE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "sumber · max (min)"
+        "name": "Kehadiran di rumah · sumber · max (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_area_environment_room_volume_m3": {
-        "name": "pengaturan · sumber (m³)"
+        "name": "Pemurnian udara · pengaturan · sumber (m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_area_environment_particle_cadr_m3h": {
-        "name": "CADR (m³/h)"
+        "name": "Pemurnian udara · CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_area_environment_co2_target_ppm": {
-        "name": "CO₂ · CO₂ · target (ppm)"
+        "name": "Pemurnian udara · CO₂ · CO₂ · target (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_area_environment_radon_reference_bq_m3": {
-        "name": "Rn (Bq/m³)"
+        "name": "Pemurnian udara · Rn (Bq/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "Kecepatan · Luar (m/s)"
+        "name": "Kenyamanan lanjutan · Kecepatan · Luar (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_area_environment_met": {
-        "name": "pengaturan · sumber (met)"
+        "name": "Kenyamanan lanjutan · pengaturan · sumber (met)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_area_environment_clo": {
-        "name": "pengaturan · sumber (clo)"
+        "name": "Kenyamanan lanjutan · pengaturan · sumber (clo)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_unoccupied_delay_minutes": {
-        "name": "Perangkat · CLIMATE_UNOCCUPIED_DELAY_MINUTES"
+        "name": "Kehadiran di ruangan · Perangkat · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Kehadiran · Perangkat · sensor · Wajib"
+        "name": "Kehadiran di ruangan · Kehadiran · Perangkat · sensor · Wajib",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_comfort_adjustment_max_c": {
-        "name": "Perangkat (°C)"
+        "name": "Kenyamanan lanjutan · Perangkat (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_humidity_low_rh": {
-        "name": "RH · Kelembapan · Perangkat (%) · RH MIN"
+        "name": "Kelembapan · RH · Kelembapan · Perangkat (%) · RH MIN",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_humidity_high_rh": {
-        "name": "RH · Kelembapan · Perangkat (%) · RH MAX"
+        "name": "Kelembapan · RH · Kelembapan · Perangkat (%) · RH MAX",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_humidity_hysteresis_rh": {
-        "name": "RH · Kelembapan · Perangkat · ± RH"
+        "name": "Kelembapan · RH · Kelembapan · Perangkat · ± RH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_cooling_dry_deferral_rh_points": {
-        "name": "Perangkat · Suhu −"
+        "name": "Kelembapan · Perangkat · Suhu −",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_pm25_action_ug_m3": {
-        "name": "PM2.5 · Perangkat (µg/m³)"
+        "name": "Pemurnian udara · PM2.5 · Perangkat (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_extraction_speed_percent": {
-        "name": "EXTRACT · Perangkat · Kecepatan (%) · SPEED %"
+        "name": "Pemurnian udara · EXTRACT · Perangkat · Kecepatan (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_purifier_speed_percent": {
-        "name": "PURIFIER · Perangkat · Kecepatan (%) · SPEED %"
+        "name": "Pemurnian udara · PURIFIER · Perangkat · Kecepatan (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_direct_tuning_kp": {
-        "name": "PID · Kp · kendali (percentage points/°C)"
+        "name": "PID · Kp · kendali (percentage points/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_direct_tuning_ki": {
-        "name": "PID · Ki · kendali (percentage points/(°C·minute))"
+        "name": "PID · Ki · kendali (percentage points/(°C·minute))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_direct_tuning_kd": {
-        "name": "PID · Kd · kendali (percentage points·minute/°C)"
+        "name": "PID · Kd · kendali (percentage points·minute/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "PID · pengaturan · sumber (s) · SAMPLE"
+        "name": "PID · pengaturan · sumber (s) · SAMPLE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "PID · pengaturan · sumber · MAX Δ"
+        "name": "PID · pengaturan · sumber · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "PID · pengaturan · sumber · MIN Δ"
+        "name": "PID · pengaturan · sumber · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_mold_surface_critical_temperature_c": {
-        "name": "Indikator jamur · 🧊 °C"
+        "name": "Jamur · Indikator jamur · 🧊 °C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_kp": {
-        "name": "PID · {channel}Kp · kendali (% per °C)"
+        "name": "PID · {channel}Kp · kendali (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_ki": {
-        "name": "PID · {channel}Ki · kendali (% per °C-minute)"
+        "name": "PID · {channel}Ki · kendali (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_kd": {
-        "name": "PID · {channel}Kd · kendali (%·minute per °C)"
+        "name": "PID · {channel}Kd · kendali (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_sample_seconds": {
-        "name": "PID · {channel}(s)"
+        "name": "PID · {channel}(s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Penguatan proses"
+        "name": "PID · {channel}Penguatan proses",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Konstanta waktu"
+        "name": "PID · {channel}Konstanta waktu",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Waktu tunda"
+        "name": "PID · {channel}Waktu tunda",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC λ"
+        "name": "PID · {channel}IMC λ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Kapasitas relatif 1 (%)"
+        "name": "PID · {channel}Kapasitas relatif 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Kapasitas relatif 2 (%)"
+        "name": "PID · {channel}Kapasitas relatif 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Kapasitas relatif 3 (%)"
+        "name": "PID · {channel}Kapasitas relatif 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Kapasitas relatif 4 (%)"
+        "name": "PID · {channel}Kapasitas relatif 4 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Kecepatan kipas 1 (%)"
+        "name": "PID · {channel}Kecepatan kipas 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Kapasitas relatif 1 (%)"
+        "name": "PID · {channel}Kapasitas relatif 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Kecepatan kipas 2 (%)"
+        "name": "PID · {channel}Kecepatan kipas 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Kapasitas relatif 2 (%)"
+        "name": "PID · {channel}Kapasitas relatif 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Kecepatan kipas 3 (%)"
+        "name": "PID · {channel}Kecepatan kipas 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Kapasitas relatif 3 (%)"
+        "name": "PID · {channel}Kapasitas relatif 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_cycle_seconds": {
-        "name": "PID · {channel}pengaturan · sumber (s) · PWM PERIOD"
+        "name": "PID · {channel}pengaturan · sumber (s) · PWM PERIOD",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_quiet_percentage": {
-        "name": "Senyap · {channel}Batas kipas senyap (%)"
+        "name": "Senyap · {channel}Batas kipas senyap (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_min_on_seconds": {
-        "name": "Daya · {channel}min ON (s)"
+        "name": "Daya · {channel}min ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_min_off_seconds": {
-        "name": "Daya · {channel}min OFF (s)"
+        "name": "Daya · {channel}min OFF (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_max_on_seconds": {
-        "name": "Daya · {channel}max ON (s)"
+        "name": "Daya · {channel}max ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_min_limit": {
-        "name": "Ruangan · Suhu · min"
+        "name": "Batas ruangan · Ruangan · Suhu · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_max_limit": {
-        "name": "Ruangan · Suhu · max"
+        "name": "Batas ruangan · Ruangan · Suhu · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_min_limit": {
-        "name": "Ruangan · Kelembapan · min"
+        "name": "Batas ruangan · Ruangan · Kelembapan · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_max_limit": {
-        "name": "Ruangan · Kelembapan · max"
+        "name": "Batas ruangan · Ruangan · Kelembapan · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_room_equipment_limit_fan_min_percentage": {
-        "name": "Ruangan · Kecepatan · min (%)"
+        "name": "Batas ruangan · Ruangan · Kecepatan · min (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_room_equipment_limit_fan_max_percentage": {
-        "name": "Ruangan · Kecepatan · max (%)"
+        "name": "Batas ruangan · Ruangan · Kecepatan · max (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "home_global_occupancy_away_cooldown_minutes": {
-        "name": "Rumah · Away · cooldown (min)"
+        "name": "Kehadiran di rumah · Rumah · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_shading_close_above_c": {
-        "name": "Tutup tirai di atas suhu ruangan (°C)"
+        "name": "Peneduhan · Tutup tirai di atas suhu ruangan (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_shading_min_sun_elevation": {
-        "name": "Elevasi matahari minimum (°)"
+        "name": "Peneduhan · Elevasi matahari minimum (°)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "shade_close_above_c": {
-        "name": "Tutup tirai di atas suhu ruangan (°C)"
+        "name": "Peneduhan · Tutup tirai di atas suhu ruangan (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_particle_cadr_m3h": {
-        "name": "Filter · Rated purifier particle CADR (m³/h)"
+        "name": "Filter · Rated purifier particle CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "shade_min_lux": {
-        "name": "Pencahayaan minimum untuk menutup (lx)"
+        "name": "Peneduhan · Pencahayaan minimum untuk menutup (lx)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_fan_min_percentage": {
-        "name": "Kipas · {channel}Kecepatan minimum (%)"
+        "name": "Kipas · {channel}Kecepatan minimum (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_fan_max_percentage": {
-        "name": "Kipas · {channel}Kecepatan maksimum (%)"
+        "name": "Kipas · {channel}Kecepatan maksimum (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
+      },
+      "global_occupancy_away_cooldown_minutes": {
+        "name": "Kehadiran di rumah · Rumah · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
+      },
+      "home_aqi_custom_limit": {
+        "name": "Ventilasi · Custom AQI limit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
+      },
+      "area_device_target_fan_speed_percent": {
+        "name": "Kipas · Target speed (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       }
     },
     "switch": {
       "home_automatic_notifications": {
-        "name": "Otomatis · AUTOMATIC_NOTIFICATIONS"
+        "name": "Pengumuman · Otomatis · AUTOMATIC_NOTIFICATIONS",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "home_automatic_tts": {
-        "name": "Otomatis"
+        "name": "Pengumuman · Otomatis",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "home_use_announcement_hub": {
-        "name": "Announcement Hub"
+        "name": "Pengumuman · Announcement Hub",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "home_ai_rewrite_announcements": {
-        "name": "AI · Pengumuman (opsional)"
+        "name": "Pengumuman · AI · Pengumuman (opsional)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "home_global_environment_pollen_avoid_ventilation": {
-        "name": "POLLEN · Serbuk sari · NO VENT"
+        "name": "Serbuk sari · POLLEN · Serbuk sari · NO VENT",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_area_environment_sleep_room": {
-        "name": "Tidur"
+        "name": "Kebisingan · Tidur",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_area_environment_enable_pmv": {
-        "name": "PMV / PPD · Otomatis"
+        "name": "Kenyamanan lanjutan · PMV / PPD · Otomatis",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_sleep_active": {
-        "name": "Tidur · Perangkat"
+        "name": "Tidur · Perangkat",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_sleep_schedule_enabled": {
-        "name": "Tidur · Otomatis"
+        "name": "Tidur · Otomatis",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_operating_window_efficiency_notify": {
-        "name": "Perangkat · Luar"
+        "name": "Pengumuman · Perangkat · Luar",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_quiet_sleep": {
-        "name": "Senyap · {channel}Lebih senyap saat tidur"
+        "name": "Senyap · {channel}Lebih senyap saat tidur",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_quiet_occupied": {
-        "name": "Senyap · {channel}Lebih senyap saat ruangan terisi"
+        "name": "Senyap · {channel}Lebih senyap saat ruangan terisi",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_sensor_verified": {
-        "name": "Sensor · {channel}Wajib"
+        "name": "Sensor · {channel}Wajib",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_shading_enabled": {
-        "name": "Tutup tirai otomatis untuk mendinginkan"
+        "name": "Peneduhan · Tutup tirai otomatis untuk mendinginkan",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "home_shade_announce_before_movement": {
-        "name": "Umumkan sebelum tirai dibuka atau ditutup"
+        "name": "Pengumuman · Umumkan sebelum tirai dibuka atau ditutup",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "shade_auto_control": {
-        "name": "Tutup tirai otomatis untuk mendinginkan"
+        "name": "Peneduhan · Tutup tirai otomatis untuk mendinginkan",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "shade_announce": {
-        "name": "Umumkan sebelum tirai dibuka atau ditutup"
+        "name": "Pengumuman · Umumkan sebelum tirai dibuka atau ditutup",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "home_away_open_window_alert": {
-        "name": "Beri tahu jendela terbuka setelah semua pergi"
+        "name": "Pengumuman · Beri tahu jendela terbuka setelah semua pergi",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pause_on_window_open": {
-        "name": "Matikan saat jendela dibuka · {channel}"
+        "name": "Kontrol · Matikan saat jendela dibuka · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "shade_lux_enabled": {
-        "name": "Gunakan sensor cahaya untuk peneduh surya"
+        "name": "Peneduhan · Gunakan sensor cahaya untuk peneduh surya",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_announce_device_errors": {
-        "name": "Umumkan kesalahan perangkat · {channel}"
+        "name": "Pengumuman · Umumkan kesalahan perangkat · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       }
     },
     "select": {
       "home_language": {
-        "name": "Bahasa"
+        "name": "Pengumuman · Bahasa",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_manual_profile": {
-        "name": "Perangkat · CLIMATE_MANUAL_PROFILE"
+        "name": "Profil · Perangkat · CLIMATE_MANUAL_PROFILE",
+        "state": {
+          "auto": "Automatic"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Gain source",
         "state": {
           "defaults": "Defaults",
           "manual": "Manual"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
         }
       },
       "home_global_policy_home_policy": {
-        "name": "Rumah · Kehadiran · kendali"
+        "name": "Kehadiran di rumah",
+        "state": {
+          "any_home": "Setidaknya satu orang di rumah",
+          "all_home": "Semua di rumah (opsi lama)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_policy_unknown_occupancy": {
-        "name": "Kehadiran · Perangkat"
+        "name": "Kehadiran di ruangan · Kehadiran · Perangkat",
+        "state": {
+          "occupied": "Assume occupied",
+          "hold": "Hold automatic changes"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_policy_away_policy": {
-        "name": "Rumah · Perangkat · POLICY"
+        "name": "Kehadiran di rumah · Rumah · Perangkat · POLICY",
+        "state": {
+          "any_home": "Setidaknya satu orang di rumah",
+          "all_home": "Semua di rumah (opsi lama)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_policy_target_source": {
-        "name": "Perangkat · sumber · target",
+        "name": "Kenyamanan lanjutan · Perangkat · sumber · target",
         "state": {
           "temperature": "Target suhu tetap",
           "auto_comfort": "Kenyamanan otomatis (suhu dan kelembapan)",
           "pmv": "ISO 7730 lanjutan (perlu pengukuran)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
         }
       },
       "equipment_control_mode": {
@@ -3292,10 +4031,20 @@
           "manual": "Manual",
           "off": "Matikan",
           "pid": "PID"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "Senyap · {channel}Mode kipas senyap bawaan"
+        "name": "Senyap · {channel}Mode kipas senyap bawaan",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}Kalibrasi",
@@ -3305,6 +4054,11 @@
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Observe and suggest · Approve",
           "adaptive_auto": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3312,6 +4066,11 @@
         "state": {
           "legacy": "Asli (belum dikalibrasi)",
           "measured": "Model kapasitas terukur"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
@@ -3322,6 +4081,11 @@
           "cool": "Pendinginan",
           "dry": "Pengeringan",
           "fan_only": "Kipas"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
         }
       },
       "equipment_presence_requirement": {
@@ -3330,6 +4094,11 @@
           "always": "Otomatis",
           "occupied": "Ruangan · Kehadiran",
           "absent": "Ruangan · Kehadiran · Matikan"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
         }
       },
       "equipment_sleep_behavior": {
@@ -3338,6 +4107,11 @@
           "normal": "Otomatis",
           "pause": "Jeda",
           "sleep_targets": "Tidur · target"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
         }
       },
       "equipment_fan_purpose": {
@@ -3346,29 +4120,59 @@
           "extraction": "Luar · kendali",
           "filtration": "PM2.5 · kendali",
           "auto": "Otomatis"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "Suhu · sumber"
+        "name": "Kenyamanan lanjutan · Suhu · sumber",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_area_science_air_speed_entity": {
-        "name": "sumber · Kecepatan · Luar (m/s)"
+        "name": "Kenyamanan lanjutan · sumber · Kecepatan · Luar (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "shade_window_entity": {
-        "name": "Sensor jendela terkait"
+        "name": "Peneduhan · Sensor jendela terkait",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "home_aqi_scale": {
-        "name": "Skala AQI",
+        "name": "Ventilasi · Skala AQI",
         "state": {
           "auto": "Otomatis (penyedia)",
           "not_configured": "Tidak diketahui - tanpa perbandingan",
           "us_epa": "US EPA AQI (0-500)",
           "eea_category": "EEA AQI (1-6)",
           "custom": "Skala khusus"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
         }
       },
       "shade_lux_entity": {
-        "name": "Sensor cahaya peneduh surya"
+        "name": "Peneduhan · Sensor cahaya peneduh surya",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_adaptation_mode": {
         "name": "PID · {channel}Passive adaptation",
@@ -3376,35 +4180,80 @@
           "disabled": "Disabled",
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
         }
       }
     },
     "time": {
       "area_climate_sleep_start": {
-        "name": "Tidur · Perangkat · START"
+        "name": "Tidur · Perangkat · START",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "area_climate_sleep_end": {
-        "name": "Tidur · Perangkat · END"
+        "name": "Tidur · Perangkat · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       }
     },
     "button": {
       "area_recalculate_mold": {
-        "name": "Indikator jamur · ↻ 🌡️"
+        "name": "Jamur · Indikator jamur · ↻ 🌡️",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_resume": {
-        "name": "Kontrol · {channel}Periksa dan lanjutkan"
+        "name": "Kontrol · {channel}Periksa dan lanjutkan",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Terapkan · Kalibrasi"
+        "name": "PID · {channel}Terapkan · Kalibrasi",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Terapkan · Kalibrasi"
+        "name": "PID · {channel}Terapkan · Kalibrasi",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_review_approve": {
-        "name": "PID · {channel}Approve suggestion"
+        "name": "PID · {channel}Approve suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       },
       "equipment_pid_review_discard": {
-        "name": "PID · {channel}Discard suggestion"
+        "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       }
     },
     "climate": {
@@ -3505,8 +4354,8 @@
     },
     "general_home_policy": {
       "options": {
-        "any_home": "Rumah · Kehadiran",
-        "all_home": "Rumah · Perangkat · Kehadiran"
+        "any_home": "Setidaknya satu orang di rumah",
+        "all_home": "Semua di rumah (opsi lama)"
       }
     },
     "device_method": {
