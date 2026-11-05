@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .room_hubs import async_add_grouped_entities
+from .settings_help import SettingsMetadata
 
 from datetime import time
 
@@ -26,8 +27,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
     async_add_grouped_entities(entry.runtime_data, async_add_entities, result)
 
 
-class AreaScheduleTime(TimeEntity):
-    _attr_has_entity_name = True
+class AreaScheduleTime(SettingsMetadata, TimeEntity):
+    _attr_has_entity_name = False
     _attr_entity_category = EntityCategory.CONFIG
     _attr_should_poll = False
 

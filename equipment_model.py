@@ -17,6 +17,7 @@ from typing import Any
 from .const import DOMAIN
 from .device_hierarchy import ManagedDevice, configured_sources
 from .pid_math import finite, target_from_unit
+from .climate_strategy import DEFAULT_PROFILE_TARGETS, profile_humidity_target
 
 SETTINGS = "equipment_controllers"
 PRESETS = ("none", "home", "comfort", "away", "sleep", "eco")
@@ -743,13 +744,7 @@ def targets(manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict,
 
     raw_profiles = room.get("profiles", {}) if isinstance(room, dict) else {}
     bands = raw_profiles if isinstance(raw_profiles, dict) else {}
-    defaults={
-        "comfort":{"heat_c":20.0,"cool_c":26.0,"humidity":50.0},
-        "home":{"heat_c":18.0,"cool_c":28.0,"humidity":50.0},
-        "away":{"heat_c":16.0,"cool_c":30.0,"humidity":50.0},
-        "sleep":{"heat_c":18.0,"cool_c":26.0,"humidity":50.0},
-        "eco":{"heat_c":17.0,"cool_c":29.0,"humidity":50.0},
-    }
+    defaults = DEFAULT_PROFILE_TARGETS
 
     if profile == "manual":
         band=bands.get("comfort",defaults["comfort"])
@@ -760,13 +755,7 @@ def targets(manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict,
     band = band if isinstance(band,dict) else fallback
     heat=float(band.get("heat_c",fallback["heat_c"]))
     cool=float(band.get("cool_c",fallback["cool_c"]))
-    legacy_humidity = room.get(
-        "sleep_humidity_target" if profile == "sleep" else "humidity_target"
-    )
-    humidity = band.get(
-        "humidity",
-        legacy_humidity if legacy_humidity is not None else fallback["humidity"],
-    )
+    humidity = profile_humidity_target(room, "comfort" if profile == "manual" else profile)
     result={"heat":float(heat),"cool":float(cool),"humidity":float(humidity)}
 
     # A room's simple automatic comfort policy also applies to the unified

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .room_hubs import async_add_grouped_entities
+from .settings_help import SettingsMetadata
 from .room_pid_name_catalog import localized_room_pid_name
 
 from homeassistant.components.number import NumberEntity, NumberMode
@@ -395,10 +396,10 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
         )
 
 
-class ConfigNumber(NumberEntity):
+class ConfigNumber(SettingsMetadata, NumberEntity):
     """Configuration-only setting, not a second physical thermostat entity."""
 
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_should_poll = False
     _attr_entity_category = EntityCategory.CONFIG
     _attr_mode = NumberMode.BOX
@@ -424,7 +425,10 @@ class ConfigNumber(NumberEntity):
             )
         if entity_id:
             self._attr_name = f"{entity_id} · {key.replace('_', ' ')}"
+            if kind == "device_target":
+                self._attr_translation_key = f"area_device_target_{key}"
             if kind == "aqi_limit":
+                self._attr_translation_key = "home_aqi_custom_limit"
                 self._attr_has_entity_name = False
         else:
             self._attr_translation_key = (
@@ -683,10 +687,10 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
         super()._equipment_update()
 
 
-class ShadeCoolingNumber(NumberEntity):
+class ShadeCoolingNumber(SettingsMetadata, NumberEntity):
     """Bounded room solar-cooling thresholds, not physical cover targets."""
 
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_should_poll = False
     _attr_entity_category = EntityCategory.CONFIG
     _attr_mode = NumberMode.BOX
@@ -725,9 +729,9 @@ class ShadeCoolingNumber(NumberEntity):
         self.async_write_ha_state()
 
 
-class ShadeIlluminanceNumber(NumberEntity):
+class ShadeIlluminanceNumber(SettingsMetadata, NumberEntity):
     """Minimum measured indoor illuminance before this cover can auto-close."""
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_should_poll = False
     _attr_entity_category = EntityCategory.CONFIG
     _attr_translation_key = "shade_min_lux"
@@ -766,10 +770,10 @@ class ShadeIlluminanceNumber(NumberEntity):
         self.async_write_ha_state()
 
 
-class ShadeDeviceNumber(NumberEntity):
+class ShadeDeviceNumber(SettingsMetadata, NumberEntity):
     """Independent threshold to close this particular cover."""
 
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_should_poll = False
     _attr_entity_category = EntityCategory.CONFIG
     _attr_translation_key = "shade_close_above_c"

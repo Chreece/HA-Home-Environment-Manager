@@ -126,7 +126,8 @@ class Base:
     def async_on_remove(self,f): pass
     async def async_added_to_hass(self): pass
 
-common={'SelectEntity':Base,'NumberEntity':Base,'NumberMode':N(BOX='box'),
+common={'SettingsMetadata':importlib.import_module('hem67.settings_help').SettingsMetadata,
+        'SelectEntity':Base,'NumberEntity':Base,'NumberMode':N(BOX='box'),
         'EntityCategory':N(CONFIG='config'),'callback':lambda f:f,
         'DOMAIN':'environment_manager','SIGNAL_UPDATED':'hem_update'}
 (Select,)=extract('select.py',('ConfigSelect',),dict(common))

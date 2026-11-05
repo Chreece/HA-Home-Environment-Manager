@@ -72,7 +72,7 @@
           "automatic_tts": "Автоматичне",
           "automatic_notifications": "Автоматичне · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Оголошення (необов’язково) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Оголошення · Announcement Hub",
           "notify_entities": "налаштування · джерело",
           "tts_engine": "налаштування · джерело · TTS_ENGINE",
           "media_players": "налаштування · джерело · MEDIA_PLAYERS",
@@ -84,7 +84,7 @@
           "automatic_tts": "Типово: ⛔ · Автоматичне · 🪟 90 s. Це налаштування керує «Автоматичне». Фізичні команди потребують окремого дозволу й захисту.",
           "automatic_notifications": "Типово: ⛔ · Автоматичне · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Типово: 10 min · 0 = ніколи · Доки зберігається та сама причина · Кімнати.",
-          "use_announcement_hub": "Announcement Hub · Недоступно → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Оберіть: notify.* · налаштування · джерело.",
           "tts_engine": "Оберіть: tts.* · налаштування · джерело · TTS_ENGINE.",
           "media_players": "Оберіть: media_player.* · налаштування · джерело · MEDIA_PLAYERS.",
@@ -115,8 +115,8 @@
           "min_outdoor_temp": "Надворі · °C (≥)",
           "max_outdoor_temp": "Надворі · °C (≤)",
           "max_outdoor_humidity": "Надворі · RH (%) (≤)",
-          "max_wind_kmh": "Погода та попередження · km/h (≤)",
-          "max_age_minutes": "⏱ · Відкрийте (min, ≤)",
+          "max_wind_kmh": "Провітрювання · Погода та попередження · km/h (≤)",
+          "max_age_minutes": "Провітрювання · ⏱ · Відкрийте (min, ≤)",
           "indoor_mold": "Індикатор цвілі · ≥ 70%"
         },
         "data_description": {
@@ -139,8 +139,8 @@
           "min_outdoor_temp": "Поріг рішення для «Надворі · °C (≥)». Впливає на поради, але не є медичною нормою.",
           "max_outdoor_temp": "Поріг рішення для «Надворі · °C (≤)». Впливає на поради, але не є медичною нормою.",
           "max_outdoor_humidity": "Поріг рішення для «Надворі · RH (%) (≤)». Впливає на поради, але не є медичною нормою.",
-          "max_wind_kmh": "Поріг рішення для «Погода та попередження · km/h (≤)». Впливає на поради, але не є медичною нормою.",
-          "max_age_minutes": "Поріг рішення для «⏱ · Відкрийте (min, ≤)». Впливає на поради, але не є медичною нормою.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Поріг рішення для «Індикатор цвілі · ≥ 70%». Впливає на поради, але не є медичною нормою."
         }
       },
@@ -194,7 +194,7 @@
           "language": "TTS · Обрати · джерело",
           "use_mold_indicator": "Індикатор цвілі · RH (%) → 70%",
           "pollen_entities": "Пилок · джерело · Обрати",
-          "use_announcement_hub": "Автоматичне · Announcement Hub",
+          "use_announcement_hub": "Оголошення · Announcement Hub",
           "general_away_cooldown_minutes": "Дім · Away · cooldown (min)",
           "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх",
           "away_windows_target_people": "Особи для сповіщення",
@@ -225,7 +225,7 @@
           "pollen_max_scale": "POLLEN · Пилок · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Пилок · NO VENT",
           "general_source_stale_minutes": "джерело · max (min)",
-          "general_home_policy": "Дім · Присутність · керування"
+          "general_home_policy": "Присутність удома"
         },
         "data_description": {
           "weather_entities": "Оберіть: Погода та попередження · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -244,7 +244,7 @@
           "language": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · TTS · Обрати · джерело · provider capabilities.",
           "use_mold_indicator": "🧱 Індикатор цвілі · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Пилок · джерело · Обрати.",
-          "use_announcement_hub": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Автоматичне · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Дім · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх. Особи для сповіщення (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Годинник, Планшет.",
           "away_windows_target_people": "Особи для сповіщення (person.*) - Announcement Hub: Телефон, Годинник, Планшет, Інший пристрій. Only explicitly assigned personal endpoints.",
@@ -275,7 +275,7 @@
           "pollen_max_scale": "Налаштовуйте «POLLEN · Пилок · SCALE» лише для вибраної кімнати. Недійсні дані блокують дію.",
           "pollen_avoid_ventilation": "Налаштовуйте «POLLEN · Пилок · NO VENT» лише для вибраної кімнати. Недійсні дані блокують дію.",
           "general_source_stale_minutes": "джерело · Сон / Присутність · max 240 min. Неправильно · Вимкнути.",
-          "general_home_policy": "Це налаштування керує «Дім · Присутність · керування». Фізичні команди потребують окремого дозволу й захисту."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "reconfigure": {
@@ -537,7 +537,7 @@
           "extractor_entity": "Витяжний вентилятор · джерело",
           "co2_ndir_verified": "CO₂ · Обов'язково",
           "co2_target_ppm": "CO₂ · CO₂ · ціль (ppm)",
-          "sleep_room": "Сон"
+          "sleep_room": "Шум · Сон"
         },
         "data_description": {
           "temperature_entity": "Оберіть справжнє джерело Home Assistant для «Температура · джерело». Відсутні чи застарілі дані блокують дію.",
@@ -546,8 +546,8 @@
           "purifier_entity": "Оберіть справжнє Очищувач повітря · джерело Home Assistant для «Очищувач повітря · джерело». Відсутні чи застарілі дані блокують дію.",
           "extractor_entity": "Оберіть справжнє Витяжний вентилятор · джерело Home Assistant для «Витяжний вентилятор · джерело». Відсутні чи застарілі дані блокують дію.",
           "co2_ndir_verified": "Використовуйте реальний відповідний вимір для «CO₂ · Обов'язково». Оцінка не замінює калібрований датчик.",
-          "co2_target_ppm": "Поріг рішення для «CO₂ · CO₂ · ціль (ppm)». Впливає на поради, але не є медичною нормою.",
-          "sleep_room": "Налаштовуйте «Сон» лише для вибраної кімнати. Недійсні дані блокують дію."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -699,7 +699,7 @@
           "climate_unknown_occupancy": "Присутність · Пристрої",
           "climate_unoccupied_delay_minutes": "Пристрої · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Присутність · Пристрої · датчик · Обов'язково",
-          "climate_away_policy": "Дім · Пристрої · POLICY",
+          "climate_away_policy": "Присутність удома · Дім · Пристрої · POLICY",
           "climate_manual_profile": "Пристрої · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Сон · Пристрої",
           "climate_sleep_schedule_enabled": "Сон · Автоматичне",
@@ -711,15 +711,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Оберіть справжнє джерело Home Assistant для «Присутність · датчик». Відсутні чи застарілі дані блокують дію.",
           "climate_away_entities": "Оберіть справжнє джерело Home Assistant для «Дім · Пристрої». Відсутні чи застарілі дані блокують дію.",
-          "climate_unknown_occupancy": "Це налаштування керує «Присутність · Пристрої». Фізичні команди потребують окремого дозволу й захисту.",
-          "climate_unoccupied_delay_minutes": "Цей інтервал визначає «Пристрої · CLIMATE_UNOCCUPIED_DELAY_MINUTES». Обмежує часті перемикання, але не замінює захист обладнання.",
-          "climate_occupancy_stale_minutes": "Цей інтервал визначає «Присутність · Пристрої · датчик · Обов'язково». Обмежує часті перемикання, але не замінює захист обладнання.",
-          "climate_away_policy": "Це налаштування керує «Дім · Пристрої · POLICY». Фізичні команди потребують окремого дозволу й захисту.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Це налаштування керує «Пристрої · CLIMATE_MANUAL_PROFILE». Фізичні команди потребують окремого дозволу й захисту.",
-          "climate_sleep_active": "Це налаштування керує «Сон · Пристрої». Фізичні команди потребують окремого дозволу й захисту.",
-          "climate_sleep_schedule_enabled": "Це налаштування керує «Сон · Автоматичне». Фізичні команди потребують окремого дозволу й захисту.",
-          "climate_sleep_start": "Цей інтервал визначає «Сон · Пристрої · START». Обмежує часті перемикання, але не замінює захист обладнання.",
-          "climate_sleep_end": "Цей інтервал визначає «Сон · Пристрої · END». Обмежує часті перемикання, але не замінює захист обладнання.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Поріг рішення для «Пристрої · джерело · ціль». Впливає на поради, але не є медичною нормою.",
           "climate_comfort_adjustment_max_c": "Поріг рішення для «Пристрої (°C)». Впливає на поради, але не є медичною нормою."
         }
@@ -768,7 +768,7 @@
           "climate_humidity_low_rh": "Поріг рішення для «RH · Вологість · Пристрої (%) · RH MIN». Впливає на поради, але не є медичною нормою.",
           "climate_humidity_high_rh": "Поріг рішення для «RH · Вологість · Пристрої (%) · RH MAX». Впливає на поради, але не є медичною нормою.",
           "climate_humidity_hysteresis_rh": "Поріг рішення для «RH · Вологість · Пристрої · ± RH». Впливає на поради, але не є медичною нормою.",
-          "climate_cooling_dry_deferral_rh_points": "Це налаштування керує «Пристрої · Температура −». Фізичні команди потребують окремого дозволу й захисту.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Це налаштування керує «Вологість · Автоматичне». Фізичні команди потребують окремого дозволу й захисту.",
           "climate_window_efficiency_notify": "Це налаштування керує «Пристрої · Зовнішні». Фізичні команди потребують окремого дозволу й захисту.",
           "climate_dry_fan_mode_auto": "Це налаштування керує «Швидкість · Автоматичне». Фізичні команди потребують окремого дозволу й захисту.",
@@ -921,7 +921,7 @@
           "general_occupied_rooms_entity": "Присутність · Кімната · джерело (state)",
           "general_occupied_rooms_attribute": "Присутність · Кімната · джерело (attribute)",
           "general_home_trackers": "Дім · Присутність · Пристрої",
-          "general_home_policy": "Дім · Присутність · керування",
+          "general_home_policy": "Присутність удома",
           "general_sleep_rooms_entity": "Сон · Кімната · джерело (state)",
           "general_sleep_rooms_attribute": "Сон · Кімната · джерело (attribute)",
           "general_source_stale_minutes": "джерело · max (min)"
@@ -931,7 +931,7 @@
           "general_occupied_rooms_entity": "Оберіть справжнє джерело Home Assistant для «Присутність · Кімната · джерело (state)». Відсутні чи застарілі дані блокують дію.",
           "general_occupied_rooms_attribute": "Налаштовуйте «Присутність · Кімната · джерело (attribute)» лише для вибраної кімнати. Недійсні дані блокують дію.",
           "general_home_trackers": "Оберіть справжнє джерело Home Assistant для «Дім · Присутність · Пристрої». Відсутні чи застарілі дані блокують дію.",
-          "general_home_policy": "Це налаштування керує «Дім · Присутність · керування». Фізичні команди потребують окремого дозволу й захисту.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Оберіть справжнє джерело Home Assistant для «Сон · Кімната · джерело (state)». Відсутні чи застарілі дані блокують дію.",
           "general_sleep_rooms_attribute": "Налаштовуйте «Сон · Кімната · джерело (attribute)» лише для вибраної кімнати. Недійсні дані блокують дію.",
           "general_source_stale_minutes": "джерело · Сон / Присутність · max 240 min. Неправильно · Вимкнути."
@@ -1366,7 +1366,7 @@
           "automatic_tts": "Автоматичне",
           "automatic_notifications": "Автоматичне · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Оголошення (необов’язково) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Оголошення · Announcement Hub",
           "notify_entities": "налаштування · джерело",
           "tts_engine": "налаштування · джерело · TTS_ENGINE",
           "media_players": "налаштування · джерело · MEDIA_PLAYERS",
@@ -1378,7 +1378,7 @@
           "automatic_tts": "Типово: ⛔ · Автоматичне · 🪟 90 s. Це налаштування керує «Автоматичне». Фізичні команди потребують окремого дозволу й захисту.",
           "automatic_notifications": "Типово: ⛔ · Автоматичне · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Типово: 10 min · 0 = ніколи · Доки зберігається та сама причина · Кімнати.",
-          "use_announcement_hub": "Announcement Hub · Недоступно → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Оберіть: notify.* · налаштування · джерело.",
           "tts_engine": "Оберіть: tts.* · налаштування · джерело · TTS_ENGINE.",
           "media_players": "Оберіть: media_player.* · налаштування · джерело · MEDIA_PLAYERS.",
@@ -1409,8 +1409,8 @@
           "min_outdoor_temp": "Надворі · °C (≥)",
           "max_outdoor_temp": "Надворі · °C (≤)",
           "max_outdoor_humidity": "Надворі · RH (%) (≤)",
-          "max_wind_kmh": "Погода та попередження · km/h (≤)",
-          "max_age_minutes": "⏱ · Відкрийте (min, ≤)",
+          "max_wind_kmh": "Провітрювання · Погода та попередження · km/h (≤)",
+          "max_age_minutes": "Провітрювання · ⏱ · Відкрийте (min, ≤)",
           "indoor_mold": "Індикатор цвілі · ≥ 70%"
         },
         "data_description": {
@@ -1433,8 +1433,8 @@
           "min_outdoor_temp": "Поріг рішення для «Надворі · °C (≥)». Впливає на поради, але не є медичною нормою.",
           "max_outdoor_temp": "Поріг рішення для «Надворі · °C (≤)». Впливає на поради, але не є медичною нормою.",
           "max_outdoor_humidity": "Поріг рішення для «Надворі · RH (%) (≤)». Впливає на поради, але не є медичною нормою.",
-          "max_wind_kmh": "Поріг рішення для «Погода та попередження · km/h (≤)». Впливає на поради, але не є медичною нормою.",
-          "max_age_minutes": "Поріг рішення для «⏱ · Відкрийте (min, ≤)». Впливає на поради, але не є медичною нормою.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Поріг рішення для «Індикатор цвілі · ≥ 70%». Впливає на поради, але не є медичною нормою."
         }
       },
@@ -1603,7 +1603,7 @@
           "extractor_entity": "Витяжний вентилятор · джерело",
           "co2_ndir_verified": "CO₂ · Обов'язково",
           "co2_target_ppm": "CO₂ · CO₂ · ціль (ppm)",
-          "sleep_room": "Сон"
+          "sleep_room": "Шум · Сон"
         },
         "data_description": {
           "temperature_entity": "Оберіть справжнє джерело Home Assistant для «Температура · джерело». Відсутні чи застарілі дані блокують дію.",
@@ -1612,8 +1612,8 @@
           "purifier_entity": "Оберіть справжнє Очищувач повітря · джерело Home Assistant для «Очищувач повітря · джерело». Відсутні чи застарілі дані блокують дію.",
           "extractor_entity": "Оберіть справжнє Витяжний вентилятор · джерело Home Assistant для «Витяжний вентилятор · джерело». Відсутні чи застарілі дані блокують дію.",
           "co2_ndir_verified": "Використовуйте реальний відповідний вимір для «CO₂ · Обов'язково». Оцінка не замінює калібрований датчик.",
-          "co2_target_ppm": "Поріг рішення для «CO₂ · CO₂ · ціль (ppm)». Впливає на поради, але не є медичною нормою.",
-          "sleep_room": "Налаштовуйте «Сон» лише для вибраної кімнати. Недійсні дані блокують дію."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -1765,7 +1765,7 @@
           "climate_unknown_occupancy": "Присутність · Пристрої",
           "climate_unoccupied_delay_minutes": "Пристрої · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Присутність · Пристрої · датчик · Обов'язково",
-          "climate_away_policy": "Дім · Пристрої · POLICY",
+          "climate_away_policy": "Присутність удома · Дім · Пристрої · POLICY",
           "climate_manual_profile": "Пристрої · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Сон · Пристрої",
           "climate_sleep_schedule_enabled": "Сон · Автоматичне",
@@ -1777,15 +1777,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Оберіть справжнє джерело Home Assistant для «Присутність · датчик». Відсутні чи застарілі дані блокують дію.",
           "climate_away_entities": "Оберіть справжнє джерело Home Assistant для «Дім · Пристрої». Відсутні чи застарілі дані блокують дію.",
-          "climate_unknown_occupancy": "Це налаштування керує «Присутність · Пристрої». Фізичні команди потребують окремого дозволу й захисту.",
-          "climate_unoccupied_delay_minutes": "Цей інтервал визначає «Пристрої · CLIMATE_UNOCCUPIED_DELAY_MINUTES». Обмежує часті перемикання, але не замінює захист обладнання.",
-          "climate_occupancy_stale_minutes": "Цей інтервал визначає «Присутність · Пристрої · датчик · Обов'язково». Обмежує часті перемикання, але не замінює захист обладнання.",
-          "climate_away_policy": "Це налаштування керує «Дім · Пристрої · POLICY». Фізичні команди потребують окремого дозволу й захисту.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Це налаштування керує «Пристрої · CLIMATE_MANUAL_PROFILE». Фізичні команди потребують окремого дозволу й захисту.",
-          "climate_sleep_active": "Це налаштування керує «Сон · Пристрої». Фізичні команди потребують окремого дозволу й захисту.",
-          "climate_sleep_schedule_enabled": "Це налаштування керує «Сон · Автоматичне». Фізичні команди потребують окремого дозволу й захисту.",
-          "climate_sleep_start": "Цей інтервал визначає «Сон · Пристрої · START». Обмежує часті перемикання, але не замінює захист обладнання.",
-          "climate_sleep_end": "Цей інтервал визначає «Сон · Пристрої · END». Обмежує часті перемикання, але не замінює захист обладнання.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Поріг рішення для «Пристрої · джерело · ціль». Впливає на поради, але не є медичною нормою.",
           "climate_comfort_adjustment_max_c": "Поріг рішення для «Пристрої (°C)». Впливає на поради, але не є медичною нормою."
         }
@@ -1834,7 +1834,7 @@
           "climate_humidity_low_rh": "Поріг рішення для «RH · Вологість · Пристрої (%) · RH MIN». Впливає на поради, але не є медичною нормою.",
           "climate_humidity_high_rh": "Поріг рішення для «RH · Вологість · Пристрої (%) · RH MAX». Впливає на поради, але не є медичною нормою.",
           "climate_humidity_hysteresis_rh": "Поріг рішення для «RH · Вологість · Пристрої · ± RH». Впливає на поради, але не є медичною нормою.",
-          "climate_cooling_dry_deferral_rh_points": "Це налаштування керує «Пристрої · Температура −». Фізичні команди потребують окремого дозволу й захисту.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Це налаштування керує «Вологість · Автоматичне». Фізичні команди потребують окремого дозволу й захисту.",
           "climate_window_efficiency_notify": "Це налаштування керує «Пристрої · Зовнішні». Фізичні команди потребують окремого дозволу й захисту.",
           "climate_dry_fan_mode_auto": "Це налаштування керує «Швидкість · Автоматичне». Фізичні команди потребують окремого дозволу й захисту.",
@@ -1987,7 +1987,7 @@
           "general_occupied_rooms_entity": "Присутність · Кімната · джерело (state)",
           "general_occupied_rooms_attribute": "Присутність · Кімната · джерело (attribute)",
           "general_home_trackers": "Дім · Присутність · Пристрої",
-          "general_home_policy": "Дім · Присутність · керування",
+          "general_home_policy": "Присутність удома",
           "general_sleep_rooms_entity": "Сон · Кімната · джерело (state)",
           "general_sleep_rooms_attribute": "Сон · Кімната · джерело (attribute)",
           "general_source_stale_minutes": "джерело · max (min)"
@@ -1997,7 +1997,7 @@
           "general_occupied_rooms_entity": "Оберіть справжнє джерело Home Assistant для «Присутність · Кімната · джерело (state)». Відсутні чи застарілі дані блокують дію.",
           "general_occupied_rooms_attribute": "Налаштовуйте «Присутність · Кімната · джерело (attribute)» лише для вибраної кімнати. Недійсні дані блокують дію.",
           "general_home_trackers": "Оберіть справжнє джерело Home Assistant для «Дім · Присутність · Пристрої». Відсутні чи застарілі дані блокують дію.",
-          "general_home_policy": "Це налаштування керує «Дім · Присутність · керування». Фізичні команди потребують окремого дозволу й захисту.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Оберіть справжнє джерело Home Assistant для «Сон · Кімната · джерело (state)». Відсутні чи застарілі дані блокують дію.",
           "general_sleep_rooms_attribute": "Налаштовуйте «Сон · Кімната · джерело (attribute)» лише для вибраної кімнати. Недійсні дані блокують дію.",
           "general_source_stale_minutes": "джерело · Сон / Присутність · max 240 min. Неправильно · Вимкнути."
@@ -2177,7 +2177,7 @@
           "language": "TTS · Обрати · джерело",
           "use_mold_indicator": "Індикатор цвілі · RH (%) → 70%",
           "pollen_entities": "Пилок · джерело · Обрати",
-          "use_announcement_hub": "Автоматичне · Announcement Hub",
+          "use_announcement_hub": "Оголошення · Announcement Hub",
           "general_away_cooldown_minutes": "Дім · Away · cooldown (min)",
           "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх",
           "away_windows_target_people": "Особи для сповіщення",
@@ -2208,7 +2208,7 @@
           "pollen_max_scale": "POLLEN · Пилок · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Пилок · NO VENT",
           "general_source_stale_minutes": "джерело · max (min)",
-          "general_home_policy": "Дім · Присутність · керування"
+          "general_home_policy": "Присутність удома"
         },
         "data_description": {
           "weather_entities": "Оберіть: Погода та попередження · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2227,7 +2227,7 @@
           "language": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · TTS · Обрати · джерело · provider capabilities.",
           "use_mold_indicator": "🧱 Індикатор цвілі · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Пилок · джерело · Обрати.",
-          "use_announcement_hub": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Автоматичне · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Виберіть спільні джерела й виходи сповіщень. Збереження завершує налаштування. Робочі параметри залишаються на пристроях дому й кімнат. · Дім · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Сповіщати про відкриті вікна після виходу всіх. Особи для сповіщення (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Годинник, Планшет.",
           "away_windows_target_people": "Особи для сповіщення (person.*) - Announcement Hub: Телефон, Годинник, Планшет, Інший пристрій. Only explicitly assigned personal endpoints.",
@@ -2258,7 +2258,7 @@
           "pollen_max_scale": "Налаштовуйте «POLLEN · Пилок · SCALE» лише для вибраної кімнати. Недійсні дані блокують дію.",
           "pollen_avoid_ventilation": "Налаштовуйте «POLLEN · Пилок · NO VENT» лише для вибраної кімнати. Недійсні дані блокують дію.",
           "general_source_stale_minutes": "джерело · Сон / Присутність · max 240 min. Неправильно · Вимкнути.",
-          "general_home_policy": "Це налаштування керує «Дім · Присутність · керування». Фізичні команди потребують окремого дозволу й захисту."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "room_occupancy": {
@@ -2852,436 +2852,1175 @@
     },
     "number": {
       "global_threshold_outdoor_aqi": {
-        "name": "Надворі · AQI (≤)"
+        "name": "Провітрювання · Надворі · AQI (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_outdoor_co2": {
-        "name": "Надворі · CO₂ (ppm) (≤)"
+        "name": "Провітрювання · Надворі · CO₂ (ppm) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_outdoor_pm25": {
-        "name": "Надворі · PM2.5 (µg/m³) (≤)"
+        "name": "Провітрювання · Надворі · PM2.5 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_outdoor_pm10": {
-        "name": "Надворі · PM10 (µg/m³) (≤)"
+        "name": "Провітрювання · Надворі · PM10 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_outdoor_voc": {
-        "name": "Надворі · VOC (µg/m³) (≤)"
+        "name": "Провітрювання · Надворі · VOC (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_outdoor_voc_parts": {
-        "name": "Надворі · VOC (ppb) (≤)"
+        "name": "Провітрювання · Надворі · VOC (ppb) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_outdoor_no2": {
-        "name": "NO₂ · Зовнішні (µg/m³)"
+        "name": "Провітрювання · NO₂ · Зовнішні (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_outdoor_o3": {
-        "name": "O₃ · Зовнішні (µg/m³)"
+        "name": "Провітрювання · O₃ · Зовнішні (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_outdoor_so2": {
-        "name": "SO₂ · Зовнішні (µg/m³)"
+        "name": "Провітрювання · SO₂ · Зовнішні (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_indoor_aqi": {
-        "name": "Якість повітря · AQI (≥)"
+        "name": "Провітрювання · Якість повітря · AQI (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_indoor_co2": {
-        "name": "Якість повітря · CO₂ (ppm) (≥)"
+        "name": "Провітрювання · Якість повітря · CO₂ (ppm) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_indoor_pm25": {
-        "name": "Якість повітря · PM2.5 (µg/m³) (≥)"
+        "name": "Провітрювання · Якість повітря · PM2.5 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_indoor_pm10": {
-        "name": "Якість повітря · PM10 (µg/m³) (≥)"
+        "name": "Провітрювання · Якість повітря · PM10 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_indoor_voc": {
-        "name": "Якість повітря · VOC (µg/m³) (≥)"
+        "name": "Провітрювання · Якість повітря · VOC (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_indoor_voc_parts": {
-        "name": "Якість повітря · VOC (ppb) (≥)"
+        "name": "Провітрювання · Якість повітря · VOC (ppb) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_indoor_humidity": {
-        "name": "Якість повітря · RH (%) (≥)"
+        "name": "Провітрювання · Якість повітря · RH (%) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_indoor_mold": {
-        "name": "Індикатор цвілі · ≥ 70%"
+        "name": "Провітрювання · Індикатор цвілі · ≥ 70%",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_min_outdoor_temp": {
-        "name": "Надворі · °C (≥)"
+        "name": "Провітрювання · Надворі · °C (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_max_outdoor_temp": {
-        "name": "Надворі · °C (≤)"
+        "name": "Провітрювання · Надворі · °C (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_max_outdoor_humidity": {
-        "name": "Надворі · RH (%) (≤)"
+        "name": "Провітрювання · Надворі · RH (%) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_max_wind_kmh": {
-        "name": "Погода та попередження · km/h (≤)"
+        "name": "Провітрювання · Погода та попередження · km/h (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_threshold_max_age_minutes": {
-        "name": "⏱ · Відкрийте (min, ≤)"
+        "name": "Провітрювання · ⏱ · Відкрийте (min, ≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Оголошення (необов’язково) · 0-1440 min"
+        "name": "Оголошення · Оголошення (необов’язково) · 0-1440 min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_pid_target_c": {
-        "name": "PID · ціль (°C)"
+        "name": "PID · ціль (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_pid_kp": {
-        "name": "PID · Kp · керування (% per °C)"
+        "name": "PID · Kp · керування (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_pid_ki": {
-        "name": "PID · Ki · керування (% per °C-minute)"
+        "name": "PID · Ki · керування (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_pid_kd": {
-        "name": "PID · Kd · керування (%·minute per °C)"
+        "name": "PID · Kd · керування (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_pid_offset_c": {
-        "name": "PID · (°C) · PID_OFFSET_C"
+        "name": "PID · (°C) · PID_OFFSET_C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_pid_min_setpoint_c": {
-        "name": "PID · (°C) · MIN TARGET"
+        "name": "PID · (°C) · MIN TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_pid_max_setpoint_c": {
-        "name": "PID · (°C) · MAX TARGET"
+        "name": "PID · (°C) · MAX TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_pid_sample_seconds": {
-        "name": "PID · (s)"
+        "name": "PID · (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_pid_max_change_c": {
-        "name": "PID · (°C) · MAX Δ"
+        "name": "PID · (°C) · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_pid_min_change_c": {
-        "name": "PID · (°C) · MIN Δ"
+        "name": "PID · (°C) · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_comfort_heat": {
-        "name": "Опалення · Кімната · Присутність"
+        "name": "Профіль · Опалення · Кімната · Присутність",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_comfort_cool": {
-        "name": "Охолодження · Кімната · Присутність"
+        "name": "Профіль · Охолодження · Кімната · Присутність",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_comfort_humidity": {
-        "name": "Вологість · Кімната · Присутність · ціль (%)"
+        "name": "Профіль · Вологість · Кімната · Присутність · ціль (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_home_heat": {
-        "name": "Опалення · Дім"
+        "name": "Профіль · Опалення · Дім",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_home_cool": {
-        "name": "Охолодження · Дім"
+        "name": "Профіль · Охолодження · Дім",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_home_humidity": {
-        "name": "Вологість · Дім · ціль (%)"
+        "name": "Профіль · Вологість · Дім · ціль (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_away_heat": {
-        "name": "Опалення · Відсутній"
+        "name": "Профіль · Опалення · Відсутній",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_away_cool": {
-        "name": "Охолодження · Відсутній"
+        "name": "Профіль · Охолодження · Відсутній",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_away_humidity": {
-        "name": "Вологість · Відсутній · ціль (%)"
+        "name": "Профіль · Вологість · Відсутній · ціль (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_sleep_heat": {
-        "name": "Опалення · Сон"
+        "name": "Профіль · Опалення · Сон",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_sleep_cool": {
-        "name": "Охолодження · Сон"
+        "name": "Профіль · Охолодження · Сон",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_sleep_humidity": {
-        "name": "Вологість · Сон · ціль (%)"
+        "name": "Профіль · Вологість · Сон · ціль (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_eco_heat": {
-        "name": "Опалення · ECO"
+        "name": "Профіль · Опалення · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_eco_cool": {
-        "name": "Охолодження · ECO"
+        "name": "Профіль · Охолодження · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_profile_eco_humidity": {
-        "name": "Вологість · ECO · ціль (%)"
+        "name": "Профіль · Вологість · ECO · ціль (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_environment_pollen_high_from": {
-        "name": "POLLEN · Пилок · HIGH"
+        "name": "Пилок · POLLEN · Пилок · HIGH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_environment_pollen_max_scale": {
-        "name": "POLLEN · Пилок · SCALE"
+        "name": "Пилок · POLLEN · Пилок · SCALE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "джерело · max (min)"
+        "name": "Присутність удома · джерело · max (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_area_environment_room_volume_m3": {
-        "name": "налаштування · джерело (m³)"
+        "name": "Очищення повітря · налаштування · джерело (m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_area_environment_particle_cadr_m3h": {
-        "name": "CADR (m³/h)"
+        "name": "Очищення повітря · CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_area_environment_co2_target_ppm": {
-        "name": "CO₂ · CO₂ · ціль (ppm)"
+        "name": "Очищення повітря · CO₂ · CO₂ · ціль (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_area_environment_radon_reference_bq_m3": {
-        "name": "Rn (Bq/m³)"
+        "name": "Очищення повітря · Rn (Bq/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "Швидкість · Зовнішні (m/s)"
+        "name": "Розширений комфорт · Швидкість · Зовнішні (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_area_environment_met": {
-        "name": "налаштування · джерело (met)"
+        "name": "Розширений комфорт · налаштування · джерело (met)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_area_environment_clo": {
-        "name": "налаштування · джерело (clo)"
+        "name": "Розширений комфорт · налаштування · джерело (clo)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_unoccupied_delay_minutes": {
-        "name": "Пристрої · CLIMATE_UNOCCUPIED_DELAY_MINUTES"
+        "name": "Присутність у кімнаті · Пристрої · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Присутність · Пристрої · датчик · Обов'язково"
+        "name": "Присутність у кімнаті · Присутність · Пристрої · датчик · Обов'язково",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_comfort_adjustment_max_c": {
-        "name": "Пристрої (°C)"
+        "name": "Розширений комфорт · Пристрої (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_humidity_low_rh": {
-        "name": "RH · Вологість · Пристрої (%) · RH MIN"
+        "name": "Вологість · RH · Вологість · Пристрої (%) · RH MIN",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_humidity_high_rh": {
-        "name": "RH · Вологість · Пристрої (%) · RH MAX"
+        "name": "Вологість · RH · Вологість · Пристрої (%) · RH MAX",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_humidity_hysteresis_rh": {
-        "name": "RH · Вологість · Пристрої · ± RH"
+        "name": "Вологість · RH · Вологість · Пристрої · ± RH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_cooling_dry_deferral_rh_points": {
-        "name": "Пристрої · Температура −"
+        "name": "Вологість · Пристрої · Температура −",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_pm25_action_ug_m3": {
-        "name": "PM2.5 · Пристрої (µg/m³)"
+        "name": "Очищення повітря · PM2.5 · Пристрої (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_extraction_speed_percent": {
-        "name": "EXTRACT · Пристрої · Швидкість (%) · SPEED %"
+        "name": "Очищення повітря · EXTRACT · Пристрої · Швидкість (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_purifier_speed_percent": {
-        "name": "PURIFIER · Пристрої · Швидкість (%) · SPEED %"
+        "name": "Очищення повітря · PURIFIER · Пристрої · Швидкість (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_direct_tuning_kp": {
-        "name": "PID · Kp · керування (percentage points/°C)"
+        "name": "PID · Kp · керування (percentage points/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_direct_tuning_ki": {
-        "name": "PID · Ki · керування (percentage points/(°C·minute))"
+        "name": "PID · Ki · керування (percentage points/(°C·minute))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_direct_tuning_kd": {
-        "name": "PID · Kd · керування (percentage points·minute/°C)"
+        "name": "PID · Kd · керування (percentage points·minute/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "PID · налаштування · джерело (s) · SAMPLE"
+        "name": "PID · налаштування · джерело (s) · SAMPLE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "PID · налаштування · джерело · MAX Δ"
+        "name": "PID · налаштування · джерело · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "PID · налаштування · джерело · MIN Δ"
+        "name": "PID · налаштування · джерело · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_mold_surface_critical_temperature_c": {
-        "name": "Індикатор цвілі · 🧊 °C"
+        "name": "Пліснява · Індикатор цвілі · 🧊 °C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_kp": {
-        "name": "PID · {channel}Kp · керування (% per °C)"
+        "name": "PID · {channel}Kp · керування (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_ki": {
-        "name": "PID · {channel}Ki · керування (% per °C-minute)"
+        "name": "PID · {channel}Ki · керування (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_kd": {
-        "name": "PID · {channel}Kd · керування (%·minute per °C)"
+        "name": "PID · {channel}Kd · керування (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_sample_seconds": {
-        "name": "PID · {channel}(s)"
+        "name": "PID · {channel}(s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Підсилення процесу"
+        "name": "PID · {channel}Підсилення процесу",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Стала часу"
+        "name": "PID · {channel}Стала часу",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Час затримки"
+        "name": "PID · {channel}Час затримки",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC λ"
+        "name": "PID · {channel}IMC λ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Відносна потужність 1 (%)"
+        "name": "PID · {channel}Відносна потужність 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Відносна потужність 2 (%)"
+        "name": "PID · {channel}Відносна потужність 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Відносна потужність 3 (%)"
+        "name": "PID · {channel}Відносна потужність 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Відносна потужність 4 (%)"
+        "name": "PID · {channel}Відносна потужність 4 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Швидкість вентилятора 1 (%)"
+        "name": "PID · {channel}Швидкість вентилятора 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Відносна потужність 1 (%)"
+        "name": "PID · {channel}Відносна потужність 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Швидкість вентилятора 2 (%)"
+        "name": "PID · {channel}Швидкість вентилятора 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Відносна потужність 2 (%)"
+        "name": "PID · {channel}Відносна потужність 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Швидкість вентилятора 3 (%)"
+        "name": "PID · {channel}Швидкість вентилятора 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Відносна потужність 3 (%)"
+        "name": "PID · {channel}Відносна потужність 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_cycle_seconds": {
-        "name": "PID · {channel}налаштування · джерело (s) · PWM PERIOD"
+        "name": "PID · {channel}налаштування · джерело (s) · PWM PERIOD",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_quiet_percentage": {
-        "name": "Тихий режим · {channel}Обмеження тихого вентилятора (%)"
+        "name": "Тихий режим · {channel}Обмеження тихого вентилятора (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_min_on_seconds": {
-        "name": "Потужність · {channel}min ON (s)"
+        "name": "Потужність · {channel}min ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_min_off_seconds": {
-        "name": "Потужність · {channel}min OFF (s)"
+        "name": "Потужність · {channel}min OFF (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_max_on_seconds": {
-        "name": "Потужність · {channel}max ON (s)"
+        "name": "Потужність · {channel}max ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_min_limit": {
-        "name": "Кімната · Температура · min"
+        "name": "Межі кімнати · Кімната · Температура · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_max_limit": {
-        "name": "Кімната · Температура · max"
+        "name": "Межі кімнати · Кімната · Температура · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_min_limit": {
-        "name": "Кімната · Вологість · min"
+        "name": "Межі кімнати · Кімната · Вологість · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_max_limit": {
-        "name": "Кімната · Вологість · max"
+        "name": "Межі кімнати · Кімната · Вологість · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_room_equipment_limit_fan_min_percentage": {
-        "name": "Кімната · Швидкість · min (%)"
+        "name": "Межі кімнати · Кімната · Швидкість · min (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_room_equipment_limit_fan_max_percentage": {
-        "name": "Кімната · Швидкість · max (%)"
+        "name": "Межі кімнати · Кімната · Швидкість · max (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "home_global_occupancy_away_cooldown_minutes": {
-        "name": "Дім · Away · cooldown (min)"
+        "name": "Присутність удома · Дім · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_shading_close_above_c": {
-        "name": "Закривати ролети вище температури кімнати (°C)"
+        "name": "Затінення · Закривати ролети вище температури кімнати (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_shading_min_sun_elevation": {
-        "name": "Мінімальна висота сонця (°)"
+        "name": "Затінення · Мінімальна висота сонця (°)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "shade_close_above_c": {
-        "name": "Закривати ролети вище температури кімнати (°C)"
+        "name": "Затінення · Закривати ролети вище температури кімнати (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_particle_cadr_m3h": {
-        "name": "Filter · Rated purifier particle CADR (m³/h)"
+        "name": "Filter · Rated purifier particle CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "shade_min_lux": {
-        "name": "Мінімальна освітленість для закриття (lx)"
+        "name": "Затінення · Мінімальна освітленість для закриття (lx)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_fan_min_percentage": {
-        "name": "Вентилятор · {channel}Мінімальна швидкість (%)"
+        "name": "Вентилятор · {channel}Мінімальна швидкість (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_fan_max_percentage": {
-        "name": "Вентилятор · {channel}Максимальна швидкість (%)"
+        "name": "Вентилятор · {channel}Максимальна швидкість (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
+      },
+      "global_occupancy_away_cooldown_minutes": {
+        "name": "Присутність удома · Дім · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
+      },
+      "home_aqi_custom_limit": {
+        "name": "Провітрювання · Custom AQI limit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
+      },
+      "area_device_target_fan_speed_percent": {
+        "name": "Вентилятор · Target speed (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       }
     },
     "switch": {
       "home_automatic_notifications": {
-        "name": "Автоматичне · AUTOMATIC_NOTIFICATIONS"
+        "name": "Оголошення · Автоматичне · AUTOMATIC_NOTIFICATIONS",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "home_automatic_tts": {
-        "name": "Автоматичне"
+        "name": "Оголошення · Автоматичне",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "home_use_announcement_hub": {
-        "name": "Announcement Hub"
+        "name": "Оголошення · Announcement Hub",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "home_ai_rewrite_announcements": {
-        "name": "AI · Оголошення (необов’язково)"
+        "name": "Оголошення · AI · Оголошення (необов’язково)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "home_global_environment_pollen_avoid_ventilation": {
-        "name": "POLLEN · Пилок · NO VENT"
+        "name": "Пилок · POLLEN · Пилок · NO VENT",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_area_environment_sleep_room": {
-        "name": "Сон"
+        "name": "Шум · Сон",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_area_environment_enable_pmv": {
-        "name": "PMV / PPD · Автоматичне"
+        "name": "Розширений комфорт · PMV / PPD · Автоматичне",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_sleep_active": {
-        "name": "Сон · Пристрої"
+        "name": "Сон · Пристрої",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_sleep_schedule_enabled": {
-        "name": "Сон · Автоматичне"
+        "name": "Сон · Автоматичне",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_operating_window_efficiency_notify": {
-        "name": "Пристрої · Зовнішні"
+        "name": "Оголошення · Пристрої · Зовнішні",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_quiet_sleep": {
-        "name": "Тихий режим · {channel}Менше шуму під час сну"
+        "name": "Тихий режим · {channel}Менше шуму під час сну",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_quiet_occupied": {
-        "name": "Тихий режим · {channel}Менше шуму за присутності"
+        "name": "Тихий режим · {channel}Менше шуму за присутності",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_sensor_verified": {
-        "name": "Датчик · {channel}Обов'язково"
+        "name": "Датчик · {channel}Обов'язково",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_shading_enabled": {
-        "name": "Автоматичне закриття ролет для охолодження"
+        "name": "Затінення · Автоматичне закриття ролет для охолодження",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "home_shade_announce_before_movement": {
-        "name": "Сповіщати перед відкриттям або закриттям ролет"
+        "name": "Оголошення · Сповіщати перед відкриттям або закриттям ролет",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "shade_auto_control": {
-        "name": "Автоматичне закриття ролет для охолодження"
+        "name": "Затінення · Автоматичне закриття ролет для охолодження",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "shade_announce": {
-        "name": "Сповіщати перед відкриттям або закриттям ролет"
+        "name": "Оголошення · Сповіщати перед відкриттям або закриттям ролет",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "home_away_open_window_alert": {
-        "name": "Сповіщати про відкриті вікна після виходу всіх"
+        "name": "Оголошення · Сповіщати про відкриті вікна після виходу всіх",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pause_on_window_open": {
-        "name": "Вимикати при відкритті вікна · {channel}"
+        "name": "Керування · Вимикати при відкритті вікна · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "shade_lux_enabled": {
-        "name": "Використовувати датчик освітленості для затінення"
+        "name": "Затінення · Використовувати датчик освітленості для затінення",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_announce_device_errors": {
-        "name": "Сповіщати про помилки пристрою · {channel}"
+        "name": "Оголошення · Сповіщати про помилки пристрою · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       }
     },
     "select": {
       "home_language": {
-        "name": "Мова"
+        "name": "Оголошення · Мова",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_manual_profile": {
-        "name": "Пристрої · CLIMATE_MANUAL_PROFILE"
+        "name": "Профіль · Пристрої · CLIMATE_MANUAL_PROFILE",
+        "state": {
+          "auto": "Automatic"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Gain source",
         "state": {
           "defaults": "Defaults",
           "manual": "Manual"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
         }
       },
       "home_global_policy_home_policy": {
-        "name": "Дім · Присутність · керування"
+        "name": "Присутність удома",
+        "state": {
+          "any_home": "Принаймні одна людина вдома",
+          "all_home": "Усі вдома (застаріла опція)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_policy_unknown_occupancy": {
-        "name": "Присутність · Пристрої"
+        "name": "Присутність у кімнаті · Присутність · Пристрої",
+        "state": {
+          "occupied": "Assume occupied",
+          "hold": "Hold automatic changes"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_policy_away_policy": {
-        "name": "Дім · Пристрої · POLICY"
+        "name": "Присутність удома · Дім · Пристрої · POLICY",
+        "state": {
+          "any_home": "Принаймні одна людина вдома",
+          "all_home": "Усі вдома (застаріла опція)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_policy_target_source": {
-        "name": "Пристрої · джерело · ціль",
+        "name": "Розширений комфорт · Пристрої · джерело · ціль",
         "state": {
           "temperature": "Фіксовані температури",
           "auto_comfort": "Автоматичний комфорт (температура і вологість)",
           "pmv": "Розширений ISO 7730 (потрібні вимірювання)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
         }
       },
       "equipment_control_mode": {
@@ -3292,10 +4031,20 @@
           "manual": "Вручну",
           "off": "Вимкнути",
           "pid": "PID"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "Тихий режим · {channel}Вбудована тиха швидкість"
+        "name": "Тихий режим · {channel}Вбудована тиха швидкість",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}Калібрування",
@@ -3305,6 +4054,11 @@
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Observe and suggest · Approve",
           "adaptive_auto": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3312,6 +4066,11 @@
         "state": {
           "legacy": "Початкове (без калібрування)",
           "measured": "Модель виміряної потужності"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
@@ -3322,6 +4081,11 @@
           "cool": "Охолодження",
           "dry": "Осушення",
           "fan_only": "Вентилятор"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
         }
       },
       "equipment_presence_requirement": {
@@ -3330,6 +4094,11 @@
           "always": "Автоматичне",
           "occupied": "Кімната · Присутність",
           "absent": "Кімната · Присутність · Вимкнути"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
         }
       },
       "equipment_sleep_behavior": {
@@ -3338,6 +4107,11 @@
           "normal": "Автоматичне",
           "pause": "Призупинити",
           "sleep_targets": "Сон · ціль"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
         }
       },
       "equipment_fan_purpose": {
@@ -3346,29 +4120,59 @@
           "extraction": "Зовнішні · керування",
           "filtration": "PM2.5 · керування",
           "auto": "Автоматичне"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "Температура · джерело"
+        "name": "Розширений комфорт · Температура · джерело",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_area_science_air_speed_entity": {
-        "name": "джерело · Швидкість · Зовнішні (m/s)"
+        "name": "Розширений комфорт · джерело · Швидкість · Зовнішні (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "shade_window_entity": {
-        "name": "Пов’язаний датчик вікна"
+        "name": "Затінення · Пов’язаний датчик вікна",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "home_aqi_scale": {
-        "name": "Шкала AQI",
+        "name": "Провітрювання · Шкала AQI",
         "state": {
           "auto": "Автоматично (постачальник)",
           "not_configured": "Невідома - без порівняння",
           "us_epa": "US EPA AQI (0-500)",
           "eea_category": "EEA AQI (1-6)",
           "custom": "Власна шкала"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
         }
       },
       "shade_lux_entity": {
-        "name": "Датчик освітленості для штор"
+        "name": "Затінення · Датчик освітленості для штор",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_adaptation_mode": {
         "name": "PID · {channel}Passive adaptation",
@@ -3376,35 +4180,80 @@
           "disabled": "Disabled",
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
         }
       }
     },
     "time": {
       "area_climate_sleep_start": {
-        "name": "Сон · Пристрої · START"
+        "name": "Сон · Пристрої · START",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "area_climate_sleep_end": {
-        "name": "Сон · Пристрої · END"
+        "name": "Сон · Пристрої · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       }
     },
     "button": {
       "area_recalculate_mold": {
-        "name": "Індикатор цвілі · ↻ 🌡️"
+        "name": "Пліснява · Індикатор цвілі · ↻ 🌡️",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_resume": {
-        "name": "Керування · {channel}Перевірити та продовжити"
+        "name": "Керування · {channel}Перевірити та продовжити",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Застосувати · Калібрування"
+        "name": "PID · {channel}Застосувати · Калібрування",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Застосувати · Калібрування"
+        "name": "PID · {channel}Застосувати · Калібрування",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_review_approve": {
-        "name": "PID · {channel}Approve suggestion"
+        "name": "PID · {channel}Approve suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       },
       "equipment_pid_review_discard": {
-        "name": "PID · {channel}Discard suggestion"
+        "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       }
     },
     "climate": {
@@ -3505,8 +4354,8 @@
     },
     "general_home_policy": {
       "options": {
-        "any_home": "Дім · Присутність",
-        "all_home": "Дім · Пристрої · Присутність"
+        "any_home": "Принаймні одна людина вдома",
+        "all_home": "Усі вдома (застаріла опція)"
       }
     },
     "device_method": {

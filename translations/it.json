@@ -72,7 +72,7 @@
           "automatic_tts": "Automatico",
           "automatic_notifications": "Automatico · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Annunci (facoltativi) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Annunci · Announcement Hub",
           "notify_entities": "impostazioni · fonte",
           "tts_engine": "impostazioni · fonte · TTS_ENGINE",
           "media_players": "impostazioni · fonte · MEDIA_PLAYERS",
@@ -84,7 +84,7 @@
           "automatic_tts": "Predefinito: ⛔ · Automatico · 🪟 90 s.",
           "automatic_notifications": "Predefinito: ⛔ · Automatico · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Predefinito: 10 min · 0 = mai · Finché la stessa causa persiste · Stanze.",
-          "use_announcement_hub": "Announcement Hub · Non disponibile → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Seleziona: notify.* · impostazioni · fonte.",
           "tts_engine": "Seleziona: tts.* · impostazioni · fonte · TTS_ENGINE.",
           "media_players": "Seleziona: media_player.* · impostazioni · fonte · MEDIA_PLAYERS.",
@@ -115,8 +115,8 @@
           "min_outdoor_temp": "Esterno · °C (≥)",
           "max_outdoor_temp": "Esterno · °C (≤)",
           "max_outdoor_humidity": "Esterno · RH (%) (≤)",
-          "max_wind_kmh": "Meteo e allerte · km/h (≤)",
-          "max_age_minutes": "⏱ · Apri (min, ≤)",
+          "max_wind_kmh": "Ventilazione · Meteo e allerte · km/h (≤)",
+          "max_age_minutes": "Ventilazione · ⏱ · Apri (min, ≤)",
           "indoor_mold": "Indicatore muffa · ≥ 70%"
         },
         "data_description": {
@@ -139,8 +139,8 @@
           "min_outdoor_temp": "Soglia decisionale per «Esterno · °C (≥)». Influenza i suggerimenti, non è un limite sanitario.",
           "max_outdoor_temp": "Soglia decisionale per «Esterno · °C (≤)». Influenza i suggerimenti, non è un limite sanitario.",
           "max_outdoor_humidity": "Soglia decisionale per «Esterno · RH (%) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
-          "max_wind_kmh": "Soglia decisionale per «Meteo e allerte · km/h (≤)». Influenza i suggerimenti, non è un limite sanitario.",
-          "max_age_minutes": "Soglia decisionale per «⏱ · Apri (min, ≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Soglia decisionale per «Indicatore muffa · ≥ 70%». Influenza i suggerimenti, non è un limite sanitario."
         }
       },
@@ -194,7 +194,7 @@
           "language": "TTS · Seleziona · fonte",
           "use_mold_indicator": "Indicatore muffa · RH (%) → 70%",
           "pollen_entities": "Polline · fonte · Seleziona",
-          "use_announcement_hub": "Automatico · Announcement Hub",
+          "use_announcement_hub": "Annunci · Announcement Hub",
           "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
           "away_open_window_alert": "Avvisa se le finestre restano aperte dopo l'uscita",
           "away_windows_target_people": "Persone da avvisare",
@@ -225,7 +225,7 @@
           "pollen_max_scale": "POLLEN · Polline · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Polline · NO VENT",
           "general_source_stale_minutes": "fonte · max (min)",
-          "general_home_policy": "Casa · Presenza · controllo"
+          "general_home_policy": "Presenza in casa"
         },
         "data_description": {
           "weather_entities": "Seleziona: Meteo e allerte · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -244,7 +244,7 @@
           "language": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · TTS · Seleziona · fonte · provider capabilities.",
           "use_mold_indicator": "🧱 Indicatore muffa · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Polline · fonte · Seleziona.",
-          "use_announcement_hub": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Automatico · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Casa · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Avvisa se le finestre restano aperte dopo l'uscita. Persone da avvisare (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefono, Orologio, Tablet.",
           "away_windows_target_people": "Persone da avvisare (person.*) - Announcement Hub: Telefono, Orologio, Tablet, Altro dispositivo. Only explicitly assigned personal endpoints.",
@@ -275,7 +275,7 @@
           "pollen_max_scale": "Configura «POLLEN · Polline · SCALE» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
           "pollen_avoid_ventilation": "Configura «POLLEN · Polline · NO VENT» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
           "general_source_stale_minutes": "fonte · Sonno / Presenza · max 240 min. Non valido · Spegni.",
-          "general_home_policy": "Questa opzione regola «Casa · Presenza · controllo». I comandi fisici richiedono consenso separato e protezioni indipendenti."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "reconfigure": {
@@ -537,7 +537,7 @@
           "extractor_entity": "Aspiratore · fonte",
           "co2_ndir_verified": "CO₂ · Richiesto",
           "co2_target_ppm": "CO₂ · CO₂ · obiettivo (ppm)",
-          "sleep_room": "Sonno"
+          "sleep_room": "Rumore · Sonno"
         },
         "data_description": {
           "temperature_entity": "Seleziona una fonte Home Assistant reale per «Temperatura · fonte». Dati assenti o obsoleti bloccano l'azione relativa.",
@@ -546,8 +546,8 @@
           "purifier_entity": "Seleziona una Purificatore d’aria · fonte Home Assistant reale per «Purificatore d’aria · fonte». Dati assenti o obsoleti bloccano l'azione relativa.",
           "extractor_entity": "Seleziona una Aspiratore · fonte Home Assistant reale per «Aspiratore · fonte». Dati assenti o obsoleti bloccano l'azione relativa.",
           "co2_ndir_verified": "Usa una misura reale adatta per «CO₂ · Richiesto». Una stima non sostituisce un sensore calibrato.",
-          "co2_target_ppm": "Soglia decisionale per «CO₂ · CO₂ · obiettivo (ppm)». Influenza i suggerimenti, non è un limite sanitario.",
-          "sleep_room": "Configura «Sonno» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -699,7 +699,7 @@
           "climate_unknown_occupancy": "Presenza · Dispositivi",
           "climate_unoccupied_delay_minutes": "Dispositivi · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Presenza · Dispositivi · sensore · Richiesto",
-          "climate_away_policy": "Casa · Dispositivi · POLICY",
+          "climate_away_policy": "Presenza in casa · Casa · Dispositivi · POLICY",
           "climate_manual_profile": "Dispositivi · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sonno · Dispositivi",
           "climate_sleep_schedule_enabled": "Sonno · Automatico",
@@ -711,15 +711,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Seleziona una fonte Home Assistant reale per «Presenza · sensore». Dati assenti o obsoleti bloccano l'azione relativa.",
           "climate_away_entities": "Seleziona una fonte Home Assistant reale per «Casa · Dispositivi». Dati assenti o obsoleti bloccano l'azione relativa.",
-          "climate_unknown_occupancy": "Questa opzione regola «Presenza · Dispositivi». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
-          "climate_unoccupied_delay_minutes": "Questo intervallo regola «Dispositivi · CLIMATE_UNOCCUPIED_DELAY_MINUTES». Riduce commutazioni frequenti senza sostituire le protezioni fisiche.",
-          "climate_occupancy_stale_minutes": "Questo intervallo regola «Presenza · Dispositivi · sensore · Richiesto». Riduce commutazioni frequenti senza sostituire le protezioni fisiche.",
-          "climate_away_policy": "Questa opzione regola «Casa · Dispositivi · POLICY». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Questa opzione regola «Dispositivi · CLIMATE_MANUAL_PROFILE». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
-          "climate_sleep_active": "Questa opzione regola «Sonno · Dispositivi». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
-          "climate_sleep_schedule_enabled": "Questa opzione regola «Sonno · Automatico». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
-          "climate_sleep_start": "Questo intervallo regola «Sonno · Dispositivi · START». Riduce commutazioni frequenti senza sostituire le protezioni fisiche.",
-          "climate_sleep_end": "Questo intervallo regola «Sonno · Dispositivi · END». Riduce commutazioni frequenti senza sostituire le protezioni fisiche.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Comfort automatico (temperatura e umidità); ISO 7730 requires separately verified measurements.",
           "climate_comfort_adjustment_max_c": "Soglia decisionale per «Dispositivi (°C)». Influenza i suggerimenti, non è un limite sanitario."
         }
@@ -768,7 +768,7 @@
           "climate_humidity_low_rh": "Soglia decisionale per «RH · Umidità · Dispositivi (%) · RH MIN». Influenza i suggerimenti, non è un limite sanitario.",
           "climate_humidity_high_rh": "Soglia decisionale per «RH · Umidità · Dispositivi (%) · RH MAX». Influenza i suggerimenti, non è un limite sanitario.",
           "climate_humidity_hysteresis_rh": "Soglia decisionale per «RH · Umidità · Dispositivi · ± RH». Influenza i suggerimenti, non è un limite sanitario.",
-          "climate_cooling_dry_deferral_rh_points": "Questa opzione regola «Dispositivi · Temperatura −». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Questa opzione regola «Umidità · Automatico». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
           "climate_window_efficiency_notify": "Questa opzione regola «Dispositivi · Esterno». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
           "climate_dry_fan_mode_auto": "Questa opzione regola «Velocità · Automatico». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
@@ -921,7 +921,7 @@
           "general_occupied_rooms_entity": "Presenza · Stanza · fonte (state)",
           "general_occupied_rooms_attribute": "Presenza · Stanza · fonte (attribute)",
           "general_home_trackers": "Casa · Presenza · Dispositivi",
-          "general_home_policy": "Casa · Presenza · controllo",
+          "general_home_policy": "Presenza in casa",
           "general_sleep_rooms_entity": "Sonno · Stanza · fonte (state)",
           "general_sleep_rooms_attribute": "Sonno · Stanza · fonte (attribute)",
           "general_source_stale_minutes": "fonte · max (min)"
@@ -931,7 +931,7 @@
           "general_occupied_rooms_entity": "Seleziona una fonte Home Assistant reale per «Presenza · Stanza · fonte (state)». Dati assenti o obsoleti bloccano l'azione relativa.",
           "general_occupied_rooms_attribute": "Configura «Presenza · Stanza · fonte (attribute)» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
           "general_home_trackers": "Seleziona una fonte Home Assistant reale per «Casa · Presenza · Dispositivi». Dati assenti o obsoleti bloccano l'azione relativa.",
-          "general_home_policy": "Questa opzione regola «Casa · Presenza · controllo». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Seleziona una fonte Home Assistant reale per «Sonno · Stanza · fonte (state)». Dati assenti o obsoleti bloccano l'azione relativa.",
           "general_sleep_rooms_attribute": "Configura «Sonno · Stanza · fonte (attribute)» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
           "general_source_stale_minutes": "fonte · Sonno / Presenza · max 240 min. Non valido · Spegni."
@@ -1366,7 +1366,7 @@
           "automatic_tts": "Automatico",
           "automatic_notifications": "Automatico · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Annunci (facoltativi) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Annunci · Announcement Hub",
           "notify_entities": "impostazioni · fonte",
           "tts_engine": "impostazioni · fonte · TTS_ENGINE",
           "media_players": "impostazioni · fonte · MEDIA_PLAYERS",
@@ -1378,7 +1378,7 @@
           "automatic_tts": "Predefinito: ⛔ · Automatico · 🪟 90 s.",
           "automatic_notifications": "Predefinito: ⛔ · Automatico · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Predefinito: 10 min · 0 = mai · Finché la stessa causa persiste · Stanze.",
-          "use_announcement_hub": "Announcement Hub · Non disponibile → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Seleziona: notify.* · impostazioni · fonte.",
           "tts_engine": "Seleziona: tts.* · impostazioni · fonte · TTS_ENGINE.",
           "media_players": "Seleziona: media_player.* · impostazioni · fonte · MEDIA_PLAYERS.",
@@ -1409,8 +1409,8 @@
           "min_outdoor_temp": "Esterno · °C (≥)",
           "max_outdoor_temp": "Esterno · °C (≤)",
           "max_outdoor_humidity": "Esterno · RH (%) (≤)",
-          "max_wind_kmh": "Meteo e allerte · km/h (≤)",
-          "max_age_minutes": "⏱ · Apri (min, ≤)",
+          "max_wind_kmh": "Ventilazione · Meteo e allerte · km/h (≤)",
+          "max_age_minutes": "Ventilazione · ⏱ · Apri (min, ≤)",
           "indoor_mold": "Indicatore muffa · ≥ 70%"
         },
         "data_description": {
@@ -1433,8 +1433,8 @@
           "min_outdoor_temp": "Soglia decisionale per «Esterno · °C (≥)». Influenza i suggerimenti, non è un limite sanitario.",
           "max_outdoor_temp": "Soglia decisionale per «Esterno · °C (≤)». Influenza i suggerimenti, non è un limite sanitario.",
           "max_outdoor_humidity": "Soglia decisionale per «Esterno · RH (%) (≤)». Influenza i suggerimenti, non è un limite sanitario.",
-          "max_wind_kmh": "Soglia decisionale per «Meteo e allerte · km/h (≤)». Influenza i suggerimenti, non è un limite sanitario.",
-          "max_age_minutes": "Soglia decisionale per «⏱ · Apri (min, ≤)». Influenza i suggerimenti, non è un limite sanitario.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Soglia decisionale per «Indicatore muffa · ≥ 70%». Influenza i suggerimenti, non è un limite sanitario."
         }
       },
@@ -1603,7 +1603,7 @@
           "extractor_entity": "Aspiratore · fonte",
           "co2_ndir_verified": "CO₂ · Richiesto",
           "co2_target_ppm": "CO₂ · CO₂ · obiettivo (ppm)",
-          "sleep_room": "Sonno"
+          "sleep_room": "Rumore · Sonno"
         },
         "data_description": {
           "temperature_entity": "Seleziona una fonte Home Assistant reale per «Temperatura · fonte». Dati assenti o obsoleti bloccano l'azione relativa.",
@@ -1612,8 +1612,8 @@
           "purifier_entity": "Seleziona una Purificatore d’aria · fonte Home Assistant reale per «Purificatore d’aria · fonte». Dati assenti o obsoleti bloccano l'azione relativa.",
           "extractor_entity": "Seleziona una Aspiratore · fonte Home Assistant reale per «Aspiratore · fonte». Dati assenti o obsoleti bloccano l'azione relativa.",
           "co2_ndir_verified": "Usa una misura reale adatta per «CO₂ · Richiesto». Una stima non sostituisce un sensore calibrato.",
-          "co2_target_ppm": "Soglia decisionale per «CO₂ · CO₂ · obiettivo (ppm)». Influenza i suggerimenti, non è un limite sanitario.",
-          "sleep_room": "Configura «Sonno» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -1765,7 +1765,7 @@
           "climate_unknown_occupancy": "Presenza · Dispositivi",
           "climate_unoccupied_delay_minutes": "Dispositivi · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Presenza · Dispositivi · sensore · Richiesto",
-          "climate_away_policy": "Casa · Dispositivi · POLICY",
+          "climate_away_policy": "Presenza in casa · Casa · Dispositivi · POLICY",
           "climate_manual_profile": "Dispositivi · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sonno · Dispositivi",
           "climate_sleep_schedule_enabled": "Sonno · Automatico",
@@ -1777,15 +1777,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Seleziona una fonte Home Assistant reale per «Presenza · sensore». Dati assenti o obsoleti bloccano l'azione relativa.",
           "climate_away_entities": "Seleziona una fonte Home Assistant reale per «Casa · Dispositivi». Dati assenti o obsoleti bloccano l'azione relativa.",
-          "climate_unknown_occupancy": "Questa opzione regola «Presenza · Dispositivi». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
-          "climate_unoccupied_delay_minutes": "Questo intervallo regola «Dispositivi · CLIMATE_UNOCCUPIED_DELAY_MINUTES». Riduce commutazioni frequenti senza sostituire le protezioni fisiche.",
-          "climate_occupancy_stale_minutes": "Questo intervallo regola «Presenza · Dispositivi · sensore · Richiesto». Riduce commutazioni frequenti senza sostituire le protezioni fisiche.",
-          "climate_away_policy": "Questa opzione regola «Casa · Dispositivi · POLICY». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Questa opzione regola «Dispositivi · CLIMATE_MANUAL_PROFILE». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
-          "climate_sleep_active": "Questa opzione regola «Sonno · Dispositivi». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
-          "climate_sleep_schedule_enabled": "Questa opzione regola «Sonno · Automatico». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
-          "climate_sleep_start": "Questo intervallo regola «Sonno · Dispositivi · START». Riduce commutazioni frequenti senza sostituire le protezioni fisiche.",
-          "climate_sleep_end": "Questo intervallo regola «Sonno · Dispositivi · END». Riduce commutazioni frequenti senza sostituire le protezioni fisiche.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Comfort automatico (temperatura e umidità); ISO 7730 requires separately verified measurements.",
           "climate_comfort_adjustment_max_c": "Soglia decisionale per «Dispositivi (°C)». Influenza i suggerimenti, non è un limite sanitario."
         }
@@ -1834,7 +1834,7 @@
           "climate_humidity_low_rh": "Soglia decisionale per «RH · Umidità · Dispositivi (%) · RH MIN». Influenza i suggerimenti, non è un limite sanitario.",
           "climate_humidity_high_rh": "Soglia decisionale per «RH · Umidità · Dispositivi (%) · RH MAX». Influenza i suggerimenti, non è un limite sanitario.",
           "climate_humidity_hysteresis_rh": "Soglia decisionale per «RH · Umidità · Dispositivi · ± RH». Influenza i suggerimenti, non è un limite sanitario.",
-          "climate_cooling_dry_deferral_rh_points": "Questa opzione regola «Dispositivi · Temperatura −». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Questa opzione regola «Umidità · Automatico». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
           "climate_window_efficiency_notify": "Questa opzione regola «Dispositivi · Esterno». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
           "climate_dry_fan_mode_auto": "Questa opzione regola «Velocità · Automatico». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
@@ -1987,7 +1987,7 @@
           "general_occupied_rooms_entity": "Presenza · Stanza · fonte (state)",
           "general_occupied_rooms_attribute": "Presenza · Stanza · fonte (attribute)",
           "general_home_trackers": "Casa · Presenza · Dispositivi",
-          "general_home_policy": "Casa · Presenza · controllo",
+          "general_home_policy": "Presenza in casa",
           "general_sleep_rooms_entity": "Sonno · Stanza · fonte (state)",
           "general_sleep_rooms_attribute": "Sonno · Stanza · fonte (attribute)",
           "general_source_stale_minutes": "fonte · max (min)"
@@ -1997,7 +1997,7 @@
           "general_occupied_rooms_entity": "Seleziona una fonte Home Assistant reale per «Presenza · Stanza · fonte (state)». Dati assenti o obsoleti bloccano l'azione relativa.",
           "general_occupied_rooms_attribute": "Configura «Presenza · Stanza · fonte (attribute)» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
           "general_home_trackers": "Seleziona una fonte Home Assistant reale per «Casa · Presenza · Dispositivi». Dati assenti o obsoleti bloccano l'azione relativa.",
-          "general_home_policy": "Questa opzione regola «Casa · Presenza · controllo». I comandi fisici richiedono consenso separato e protezioni indipendenti.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Seleziona una fonte Home Assistant reale per «Sonno · Stanza · fonte (state)». Dati assenti o obsoleti bloccano l'azione relativa.",
           "general_sleep_rooms_attribute": "Configura «Sonno · Stanza · fonte (attribute)» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
           "general_source_stale_minutes": "fonte · Sonno / Presenza · max 240 min. Non valido · Spegni."
@@ -2177,7 +2177,7 @@
           "language": "TTS · Seleziona · fonte",
           "use_mold_indicator": "Indicatore muffa · RH (%) → 70%",
           "pollen_entities": "Polline · fonte · Seleziona",
-          "use_announcement_hub": "Automatico · Announcement Hub",
+          "use_announcement_hub": "Annunci · Announcement Hub",
           "general_away_cooldown_minutes": "Casa · Away · cooldown (min)",
           "away_open_window_alert": "Avvisa se le finestre restano aperte dopo l'uscita",
           "away_windows_target_people": "Persone da avvisare",
@@ -2208,7 +2208,7 @@
           "pollen_max_scale": "POLLEN · Polline · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Polline · NO VENT",
           "general_source_stale_minutes": "fonte · max (min)",
-          "general_home_policy": "Casa · Presenza · controllo"
+          "general_home_policy": "Presenza in casa"
         },
         "data_description": {
           "weather_entities": "Seleziona: Meteo e allerte · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2227,7 +2227,7 @@
           "language": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · TTS · Seleziona · fonte · provider capabilities.",
           "use_mold_indicator": "🧱 Indicatore muffa · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Polline · fonte · Seleziona.",
-          "use_announcement_hub": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Automatico · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Casa · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Avvisa se le finestre restano aperte dopo l'uscita. Persone da avvisare (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefono, Orologio, Tablet.",
           "away_windows_target_people": "Persone da avvisare (person.*) - Announcement Hub: Telefono, Orologio, Tablet, Altro dispositivo. Only explicitly assigned personal endpoints.",
@@ -2258,7 +2258,7 @@
           "pollen_max_scale": "Configura «POLLEN · Polline · SCALE» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
           "pollen_avoid_ventilation": "Configura «POLLEN · Polline · NO VENT» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione.",
           "general_source_stale_minutes": "fonte · Sonno / Presenza · max 240 min. Non valido · Spegni.",
-          "general_home_policy": "Questa opzione regola «Casa · Presenza · controllo». I comandi fisici richiedono consenso separato e protezioni indipendenti."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "room_occupancy": {
@@ -2852,436 +2852,1175 @@
     },
     "number": {
       "global_threshold_outdoor_aqi": {
-        "name": "Esterno · AQI (≤)"
+        "name": "Ventilazione · Esterno · AQI (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_outdoor_co2": {
-        "name": "Esterno · CO₂ (ppm) (≤)"
+        "name": "Ventilazione · Esterno · CO₂ (ppm) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_outdoor_pm25": {
-        "name": "Esterno · PM2.5 (µg/m³) (≤)"
+        "name": "Ventilazione · Esterno · PM2.5 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_outdoor_pm10": {
-        "name": "Esterno · PM10 (µg/m³) (≤)"
+        "name": "Ventilazione · Esterno · PM10 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_outdoor_voc": {
-        "name": "Esterno · VOC (µg/m³) (≤)"
+        "name": "Ventilazione · Esterno · VOC (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_outdoor_voc_parts": {
-        "name": "Esterno · VOC (ppb) (≤)"
+        "name": "Ventilazione · Esterno · VOC (ppb) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_outdoor_no2": {
-        "name": "NO₂ · Esterno (µg/m³)"
+        "name": "Ventilazione · NO₂ · Esterno (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_outdoor_o3": {
-        "name": "O₃ · Esterno (µg/m³)"
+        "name": "Ventilazione · O₃ · Esterno (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_outdoor_so2": {
-        "name": "SO₂ · Esterno (µg/m³)"
+        "name": "Ventilazione · SO₂ · Esterno (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_indoor_aqi": {
-        "name": "Qualità dell'aria · AQI (≥)"
+        "name": "Ventilazione · Qualità dell'aria · AQI (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_indoor_co2": {
-        "name": "Qualità dell'aria · CO₂ (ppm) (≥)"
+        "name": "Ventilazione · Qualità dell'aria · CO₂ (ppm) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_indoor_pm25": {
-        "name": "Qualità dell'aria · PM2.5 (µg/m³) (≥)"
+        "name": "Ventilazione · Qualità dell'aria · PM2.5 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_indoor_pm10": {
-        "name": "Qualità dell'aria · PM10 (µg/m³) (≥)"
+        "name": "Ventilazione · Qualità dell'aria · PM10 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_indoor_voc": {
-        "name": "Qualità dell'aria · VOC (µg/m³) (≥)"
+        "name": "Ventilazione · Qualità dell'aria · VOC (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_indoor_voc_parts": {
-        "name": "Qualità dell'aria · VOC (ppb) (≥)"
+        "name": "Ventilazione · Qualità dell'aria · VOC (ppb) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_indoor_humidity": {
-        "name": "Qualità dell'aria · RH (%) (≥)"
+        "name": "Ventilazione · Qualità dell'aria · RH (%) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_indoor_mold": {
-        "name": "Indicatore muffa · ≥ 70%"
+        "name": "Ventilazione · Indicatore muffa · ≥ 70%",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_min_outdoor_temp": {
-        "name": "Esterno · °C (≥)"
+        "name": "Ventilazione · Esterno · °C (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_max_outdoor_temp": {
-        "name": "Esterno · °C (≤)"
+        "name": "Ventilazione · Esterno · °C (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_max_outdoor_humidity": {
-        "name": "Esterno · RH (%) (≤)"
+        "name": "Ventilazione · Esterno · RH (%) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_max_wind_kmh": {
-        "name": "Meteo e allerte · km/h (≤)"
+        "name": "Ventilazione · Meteo e allerte · km/h (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_threshold_max_age_minutes": {
-        "name": "⏱ · Apri (min, ≤)"
+        "name": "Ventilazione · ⏱ · Apri (min, ≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Annunci (facoltativi) · 0-1440 min"
+        "name": "Annunci · Annunci (facoltativi) · 0-1440 min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_pid_target_c": {
-        "name": "PID · obiettivo (°C)"
+        "name": "PID · obiettivo (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_pid_kp": {
-        "name": "PID · Kp · controllo (% per °C)"
+        "name": "PID · Kp · controllo (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_pid_ki": {
-        "name": "PID · Ki · controllo (% per °C-minute)"
+        "name": "PID · Ki · controllo (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_pid_kd": {
-        "name": "PID · Kd · controllo (%·minute per °C)"
+        "name": "PID · Kd · controllo (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_pid_offset_c": {
-        "name": "PID · (°C) · PID_OFFSET_C"
+        "name": "PID · (°C) · PID_OFFSET_C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_pid_min_setpoint_c": {
-        "name": "PID · (°C) · MIN TARGET"
+        "name": "PID · (°C) · MIN TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_pid_max_setpoint_c": {
-        "name": "PID · (°C) · MAX TARGET"
+        "name": "PID · (°C) · MAX TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_pid_sample_seconds": {
-        "name": "PID · (s)"
+        "name": "PID · (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_pid_max_change_c": {
-        "name": "PID · (°C) · MAX Δ"
+        "name": "PID · (°C) · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_pid_min_change_c": {
-        "name": "PID · (°C) · MIN Δ"
+        "name": "PID · (°C) · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_comfort_heat": {
-        "name": "Riscaldamento · Stanza · Presenza"
+        "name": "Profilo · Riscaldamento · Stanza · Presenza",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_comfort_cool": {
-        "name": "Raffrescamento · Stanza · Presenza"
+        "name": "Profilo · Raffrescamento · Stanza · Presenza",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_comfort_humidity": {
-        "name": "Umidità · Stanza · Presenza · obiettivo (%)"
+        "name": "Profilo · Umidità · Stanza · Presenza · obiettivo (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_home_heat": {
-        "name": "Riscaldamento · Casa"
+        "name": "Profilo · Riscaldamento · Casa",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_home_cool": {
-        "name": "Raffrescamento · Casa"
+        "name": "Profilo · Raffrescamento · Casa",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_home_humidity": {
-        "name": "Umidità · Casa · obiettivo (%)"
+        "name": "Profilo · Umidità · Casa · obiettivo (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_away_heat": {
-        "name": "Riscaldamento · Assente"
+        "name": "Profilo · Riscaldamento · Assente",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_away_cool": {
-        "name": "Raffrescamento · Assente"
+        "name": "Profilo · Raffrescamento · Assente",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_away_humidity": {
-        "name": "Umidità · Assente · obiettivo (%)"
+        "name": "Profilo · Umidità · Assente · obiettivo (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_sleep_heat": {
-        "name": "Riscaldamento · Sonno"
+        "name": "Profilo · Riscaldamento · Sonno",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_sleep_cool": {
-        "name": "Raffrescamento · Sonno"
+        "name": "Profilo · Raffrescamento · Sonno",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_sleep_humidity": {
-        "name": "Umidità · Sonno · obiettivo (%)"
+        "name": "Profilo · Umidità · Sonno · obiettivo (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_eco_heat": {
-        "name": "Riscaldamento · ECO"
+        "name": "Profilo · Riscaldamento · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_eco_cool": {
-        "name": "Raffrescamento · ECO"
+        "name": "Profilo · Raffrescamento · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_profile_eco_humidity": {
-        "name": "Umidità · ECO · obiettivo (%)"
+        "name": "Profilo · Umidità · ECO · obiettivo (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_environment_pollen_high_from": {
-        "name": "POLLEN · Polline · HIGH"
+        "name": "Polline · POLLEN · Polline · HIGH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_environment_pollen_max_scale": {
-        "name": "POLLEN · Polline · SCALE"
+        "name": "Polline · POLLEN · Polline · SCALE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "fonte · max (min)"
+        "name": "Presenza in casa · fonte · max (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_area_environment_room_volume_m3": {
-        "name": "impostazioni · fonte (m³)"
+        "name": "Purificazione dell’aria · impostazioni · fonte (m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_area_environment_particle_cadr_m3h": {
-        "name": "CADR (m³/h)"
+        "name": "Purificazione dell’aria · CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_area_environment_co2_target_ppm": {
-        "name": "CO₂ · CO₂ · obiettivo (ppm)"
+        "name": "Purificazione dell’aria · CO₂ · CO₂ · obiettivo (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_area_environment_radon_reference_bq_m3": {
-        "name": "Rn (Bq/m³)"
+        "name": "Purificazione dell’aria · Rn (Bq/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "Velocità · Esterno (m/s)"
+        "name": "Comfort avanzato · Velocità · Esterno (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_area_environment_met": {
-        "name": "impostazioni · fonte (met)"
+        "name": "Comfort avanzato · impostazioni · fonte (met)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_area_environment_clo": {
-        "name": "impostazioni · fonte (clo)"
+        "name": "Comfort avanzato · impostazioni · fonte (clo)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_unoccupied_delay_minutes": {
-        "name": "Dispositivi · CLIMATE_UNOCCUPIED_DELAY_MINUTES"
+        "name": "Presenza nella stanza · Dispositivi · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Presenza · Dispositivi · sensore · Richiesto"
+        "name": "Presenza nella stanza · Presenza · Dispositivi · sensore · Richiesto",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_comfort_adjustment_max_c": {
-        "name": "Dispositivi (°C)"
+        "name": "Comfort avanzato · Dispositivi (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_humidity_low_rh": {
-        "name": "RH · Umidità · Dispositivi (%) · RH MIN"
+        "name": "Umidità · RH · Umidità · Dispositivi (%) · RH MIN",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_humidity_high_rh": {
-        "name": "RH · Umidità · Dispositivi (%) · RH MAX"
+        "name": "Umidità · RH · Umidità · Dispositivi (%) · RH MAX",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_humidity_hysteresis_rh": {
-        "name": "RH · Umidità · Dispositivi · ± RH"
+        "name": "Umidità · RH · Umidità · Dispositivi · ± RH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_cooling_dry_deferral_rh_points": {
-        "name": "Dispositivi · Temperatura −"
+        "name": "Umidità · Dispositivi · Temperatura −",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_pm25_action_ug_m3": {
-        "name": "PM2.5 · Dispositivi (µg/m³)"
+        "name": "Purificazione dell’aria · PM2.5 · Dispositivi (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_extraction_speed_percent": {
-        "name": "EXTRACT · Dispositivi · Velocità (%) · SPEED %"
+        "name": "Purificazione dell’aria · EXTRACT · Dispositivi · Velocità (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_purifier_speed_percent": {
-        "name": "PURIFIER · Dispositivi · Velocità (%) · SPEED %"
+        "name": "Purificazione dell’aria · PURIFIER · Dispositivi · Velocità (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_direct_tuning_kp": {
-        "name": "PID · Kp · controllo (percentage points/°C)"
+        "name": "PID · Kp · controllo (percentage points/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_direct_tuning_ki": {
-        "name": "PID · Ki · controllo (percentage points/(°C·minute))"
+        "name": "PID · Ki · controllo (percentage points/(°C·minute))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_direct_tuning_kd": {
-        "name": "PID · Kd · controllo (percentage points·minute/°C)"
+        "name": "PID · Kd · controllo (percentage points·minute/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "PID · impostazioni · fonte (s) · SAMPLE"
+        "name": "PID · impostazioni · fonte (s) · SAMPLE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "PID · impostazioni · fonte · MAX Δ"
+        "name": "PID · impostazioni · fonte · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "PID · impostazioni · fonte · MIN Δ"
+        "name": "PID · impostazioni · fonte · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_mold_surface_critical_temperature_c": {
-        "name": "Indicatore muffa · 🧊 °C"
+        "name": "Muffa · Indicatore muffa · 🧊 °C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_kp": {
-        "name": "PID · {channel}Kp · controllo (% per °C)"
+        "name": "PID · {channel}Kp · controllo (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_ki": {
-        "name": "PID · {channel}Ki · controllo (% per °C-minute)"
+        "name": "PID · {channel}Ki · controllo (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_kd": {
-        "name": "PID · {channel}Kd · controllo (%·minute per °C)"
+        "name": "PID · {channel}Kd · controllo (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_sample_seconds": {
-        "name": "PID · {channel}(s)"
+        "name": "PID · {channel}(s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Guadagno di processo"
+        "name": "PID · {channel}Guadagno di processo",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Costante di tempo"
+        "name": "PID · {channel}Costante di tempo",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Tempo morto"
+        "name": "PID · {channel}Tempo morto",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC λ"
+        "name": "PID · {channel}IMC λ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Capacità relativa 1 (%)"
+        "name": "PID · {channel}Capacità relativa 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Capacità relativa 2 (%)"
+        "name": "PID · {channel}Capacità relativa 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Capacità relativa 3 (%)"
+        "name": "PID · {channel}Capacità relativa 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Capacità relativa 4 (%)"
+        "name": "PID · {channel}Capacità relativa 4 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Velocità della ventola 1 (%)"
+        "name": "PID · {channel}Velocità della ventola 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Capacità relativa 1 (%)"
+        "name": "PID · {channel}Capacità relativa 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Velocità della ventola 2 (%)"
+        "name": "PID · {channel}Velocità della ventola 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Capacità relativa 2 (%)"
+        "name": "PID · {channel}Capacità relativa 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Velocità della ventola 3 (%)"
+        "name": "PID · {channel}Velocità della ventola 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Capacità relativa 3 (%)"
+        "name": "PID · {channel}Capacità relativa 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_cycle_seconds": {
-        "name": "PID · {channel}impostazioni · fonte (s) · PWM PERIOD"
+        "name": "PID · {channel}impostazioni · fonte (s) · PWM PERIOD",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_quiet_percentage": {
-        "name": "Silenzioso · {channel}Percentuale ventola (%)"
+        "name": "Silenzioso · {channel}Percentuale ventola (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_min_on_seconds": {
-        "name": "Potenza · {channel}min ON (s)"
+        "name": "Potenza · {channel}min ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_min_off_seconds": {
-        "name": "Potenza · {channel}min OFF (s)"
+        "name": "Potenza · {channel}min OFF (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_max_on_seconds": {
-        "name": "Potenza · {channel}max ON (s)"
+        "name": "Potenza · {channel}max ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_min_limit": {
-        "name": "Stanza · Temperatura · min"
+        "name": "Limiti della stanza · Stanza · Temperatura · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_max_limit": {
-        "name": "Stanza · Temperatura · max"
+        "name": "Limiti della stanza · Stanza · Temperatura · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_min_limit": {
-        "name": "Stanza · Umidità · min"
+        "name": "Limiti della stanza · Stanza · Umidità · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_max_limit": {
-        "name": "Stanza · Umidità · max"
+        "name": "Limiti della stanza · Stanza · Umidità · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_room_equipment_limit_fan_min_percentage": {
-        "name": "Stanza · Velocità · min (%)"
+        "name": "Limiti della stanza · Stanza · Velocità · min (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_room_equipment_limit_fan_max_percentage": {
-        "name": "Stanza · Velocità · max (%)"
+        "name": "Limiti della stanza · Stanza · Velocità · max (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "home_global_occupancy_away_cooldown_minutes": {
-        "name": "Casa · Away · cooldown (min)"
+        "name": "Presenza in casa · Casa · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_shading_close_above_c": {
-        "name": "Chiudi tende sopra questa temperatura (°C)"
+        "name": "Schermatura solare · Chiudi tende sopra questa temperatura (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_shading_min_sun_elevation": {
-        "name": "Altezza minima del sole (°)"
+        "name": "Schermatura solare · Altezza minima del sole (°)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "shade_close_above_c": {
-        "name": "Chiudi tende sopra questa temperatura (°C)"
+        "name": "Schermatura solare · Chiudi tende sopra questa temperatura (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_particle_cadr_m3h": {
-        "name": "CADR particolato del purificatore (m³/h)"
+        "name": "CADR particolato del purificatore (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "shade_min_lux": {
-        "name": "Illuminamento minimo per chiudere (lx)"
+        "name": "Schermatura solare · Illuminamento minimo per chiudere (lx)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_fan_min_percentage": {
-        "name": "Ventola · {channel}Velocità minima (%)"
+        "name": "Ventola · {channel}Velocità minima (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_fan_max_percentage": {
-        "name": "Ventola · {channel}Velocità massima (%)"
+        "name": "Ventola · {channel}Velocità massima (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
+      },
+      "global_occupancy_away_cooldown_minutes": {
+        "name": "Presenza in casa · Casa · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
+      },
+      "home_aqi_custom_limit": {
+        "name": "Ventilazione · Custom AQI limit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
+      },
+      "area_device_target_fan_speed_percent": {
+        "name": "Ventilatore · Target speed (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       }
     },
     "switch": {
       "home_automatic_notifications": {
-        "name": "Automatico · AUTOMATIC_NOTIFICATIONS"
+        "name": "Annunci · Automatico · AUTOMATIC_NOTIFICATIONS",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "home_automatic_tts": {
-        "name": "Automatico"
+        "name": "Annunci · Automatico",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "home_use_announcement_hub": {
-        "name": "Announcement Hub"
+        "name": "Annunci · Announcement Hub",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "home_ai_rewrite_announcements": {
-        "name": "AI · Annunci (facoltativi)"
+        "name": "Annunci · AI · Annunci (facoltativi)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "home_global_environment_pollen_avoid_ventilation": {
-        "name": "POLLEN · Polline · NO VENT"
+        "name": "Polline · POLLEN · Polline · NO VENT",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_area_environment_sleep_room": {
-        "name": "Sonno"
+        "name": "Rumore · Sonno",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_area_environment_enable_pmv": {
-        "name": "PMV / PPD · Automatico"
+        "name": "Comfort avanzato · PMV / PPD · Automatico",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_sleep_active": {
-        "name": "Sonno · Dispositivi"
+        "name": "Sonno · Dispositivi",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_sleep_schedule_enabled": {
-        "name": "Sonno · Automatico"
+        "name": "Sonno · Automatico",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_operating_window_efficiency_notify": {
-        "name": "Dispositivi · Esterno"
+        "name": "Annunci · Dispositivi · Esterno",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_quiet_sleep": {
-        "name": "Silenzioso · {channel}Durante il sonno"
+        "name": "Silenzioso · {channel}Durante il sonno",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_quiet_occupied": {
-        "name": "Silenzioso · {channel}Con presenza"
+        "name": "Silenzioso · {channel}Con presenza",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_sensor_verified": {
-        "name": "Sensore · {channel}Richiesto"
+        "name": "Sensore · {channel}Richiesto",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_shading_enabled": {
-        "name": "Chiusura automatica tende contro il caldo"
+        "name": "Schermatura solare · Chiusura automatica tende contro il caldo",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "home_shade_announce_before_movement": {
-        "name": "Annuncia prima di aprire o chiudere le tende"
+        "name": "Annunci · Annuncia prima di aprire o chiudere le tende",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "shade_auto_control": {
-        "name": "Chiusura automatica tende contro il caldo"
+        "name": "Schermatura solare · Chiusura automatica tende contro il caldo",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "shade_announce": {
-        "name": "Annuncia prima di aprire o chiudere le tende"
+        "name": "Annunci · Annuncia prima di aprire o chiudere le tende",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "home_away_open_window_alert": {
-        "name": "Avvisa se le finestre restano aperte dopo l'uscita"
+        "name": "Annunci · Avvisa se le finestre restano aperte dopo l'uscita",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pause_on_window_open": {
-        "name": "Spegnere quando si apre una finestra · {channel}"
+        "name": "Controllo · Spegnere quando si apre una finestra · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "shade_lux_enabled": {
-        "name": "Usa il sensore di luce per la schermatura solare"
+        "name": "Schermatura solare · Usa il sensore di luce per la schermatura solare",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_announce_device_errors": {
-        "name": "Annuncia errori dispositivo · {channel}"
+        "name": "Annunci · Annuncia errori dispositivo · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       }
     },
     "select": {
       "home_language": {
-        "name": "Lingua"
+        "name": "Annunci · Lingua",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_manual_profile": {
-        "name": "Dispositivi · CLIMATE_MANUAL_PROFILE"
+        "name": "Profilo · Dispositivi · CLIMATE_MANUAL_PROFILE",
+        "state": {
+          "auto": "Automatic"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Gain source",
         "state": {
           "defaults": "Defaults",
           "manual": "Manual"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
         }
       },
       "home_global_policy_home_policy": {
-        "name": "Casa · Presenza · controllo"
+        "name": "Presenza in casa",
+        "state": {
+          "any_home": "Almeno una persona a casa",
+          "all_home": "Tutti a casa (opzione precedente)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_policy_unknown_occupancy": {
-        "name": "Presenza · Dispositivi"
+        "name": "Presenza nella stanza · Presenza · Dispositivi",
+        "state": {
+          "occupied": "Assume occupied",
+          "hold": "Hold automatic changes"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_policy_away_policy": {
-        "name": "Casa · Dispositivi · POLICY"
+        "name": "Presenza in casa · Casa · Dispositivi · POLICY",
+        "state": {
+          "any_home": "Almeno una persona a casa",
+          "all_home": "Tutti a casa (opzione precedente)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_policy_target_source": {
-        "name": "Metodo di comfort",
+        "name": "Comfort avanzato · Metodo di comfort",
         "state": {
           "temperature": "Temperature fisse",
           "auto_comfort": "Comfort automatico (temperatura e umidità)",
           "pmv": "ISO 7730 avanzato (misure richieste)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
         }
       },
       "equipment_control_mode": {
@@ -3292,10 +4031,20 @@
           "manual": "Manuale",
           "off": "Spegni",
           "pid": "PID"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "Silenzioso · {channel}Modalità ventola"
+        "name": "Silenzioso · {channel}Modalità ventola",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}Calibrazione",
@@ -3305,6 +4054,11 @@
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Observe and suggest · Approve",
           "adaptive_auto": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3312,6 +4066,11 @@
         "state": {
           "legacy": "Originale (non calibrato)",
           "measured": "Modello di capacità misurata"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
@@ -3322,6 +4081,11 @@
           "cool": "Raffrescamento",
           "dry": "Deumidificazione",
           "fan_only": "Ventola"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
         }
       },
       "equipment_presence_requirement": {
@@ -3330,6 +4094,11 @@
           "always": "Automatico",
           "occupied": "Stanza · Presenza",
           "absent": "Stanza · Presenza · Spegni"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
         }
       },
       "equipment_sleep_behavior": {
@@ -3338,6 +4107,11 @@
           "normal": "Automatico",
           "pause": "Pausa",
           "sleep_targets": "Sonno · obiettivo"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
         }
       },
       "equipment_fan_purpose": {
@@ -3346,29 +4120,59 @@
           "extraction": "Esterno · controllo",
           "filtration": "PM2.5 · controllo",
           "auto": "Automatico"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "Temperatura · fonte"
+        "name": "Comfort avanzato · Temperatura · fonte",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_area_science_air_speed_entity": {
-        "name": "fonte · Velocità · Esterno (m/s)"
+        "name": "Comfort avanzato · fonte · Velocità · Esterno (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "shade_window_entity": {
-        "name": "Contatto finestra associato"
+        "name": "Schermatura solare · Contatto finestra associato",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "home_aqi_scale": {
-        "name": "Scala AQI",
+        "name": "Ventilazione · Scala AQI",
         "state": {
           "auto": "Automatica (fornitore)",
           "not_configured": "Sconosciuta - nessun confronto",
           "us_epa": "US EPA AQI (0-500)",
           "eea_category": "EEA AQI (1-6)",
           "custom": "Scala personalizzata"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
         }
       },
       "shade_lux_entity": {
-        "name": "Sensore di illuminamento per schermatura"
+        "name": "Schermatura solare · Sensore di illuminamento per schermatura",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_adaptation_mode": {
         "name": "PID · {channel}Passive adaptation",
@@ -3376,35 +4180,80 @@
           "disabled": "Disabled",
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
         }
       }
     },
     "time": {
       "area_climate_sleep_start": {
-        "name": "Sonno · Dispositivi · START"
+        "name": "Sonno · Dispositivi · START",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "area_climate_sleep_end": {
-        "name": "Sonno · Dispositivi · END"
+        "name": "Sonno · Dispositivi · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       }
     },
     "button": {
       "area_recalculate_mold": {
-        "name": "Indicatore muffa · ↻ 🌡️"
+        "name": "Muffa · Indicatore muffa · ↻ 🌡️",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_resume": {
-        "name": "Controllo · {channel}Verifica e riprendi"
+        "name": "Controllo · {channel}Verifica e riprendi",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Applica · Calibrazione"
+        "name": "PID · {channel}Applica · Calibrazione",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Applica · Calibrazione"
+        "name": "PID · {channel}Applica · Calibrazione",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_review_approve": {
-        "name": "PID · {channel}Approve suggestion"
+        "name": "PID · {channel}Approve suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       },
       "equipment_pid_review_discard": {
-        "name": "PID · {channel}Discard suggestion"
+        "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       }
     },
     "climate": {
@@ -3505,8 +4354,8 @@
     },
     "general_home_policy": {
       "options": {
-        "any_home": "Casa · Presenza",
-        "all_home": "Casa · Dispositivi · Presenza"
+        "any_home": "Almeno una persona a casa",
+        "all_home": "Tutti a casa (opzione precedente)"
       }
     },
     "device_method": {

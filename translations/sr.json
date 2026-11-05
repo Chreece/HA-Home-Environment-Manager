@@ -72,7 +72,7 @@
           "automatic_tts": "Automatsko",
           "automatic_notifications": "Automatsko · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Обавештења (опционо) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Обавештења · Announcement Hub",
           "notify_entities": "podešavanja · izvor",
           "tts_engine": "podešavanja · izvor · TTS_ENGINE",
           "media_players": "podešavanja · izvor · MEDIA_PLAYERS",
@@ -84,7 +84,7 @@
           "automatic_tts": "Подразумевано: ⛔ · Automatsko · 🪟 90 s.",
           "automatic_notifications": "Подразумевано: ⛔ · Automatsko · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Подразумевано: 10 min · 0 = никада · Док исти узрок траје · Собе.",
-          "use_announcement_hub": "Announcement Hub · Недоступно → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Изаберите: notify.* · podešavanja · izvor.",
           "tts_engine": "Изаберите: tts.* · podešavanja · izvor · TTS_ENGINE.",
           "media_players": "Изаберите: media_player.* · podešavanja · izvor · MEDIA_PLAYERS.",
@@ -115,8 +115,8 @@
           "min_outdoor_temp": "Напољу · °C (≥)",
           "max_outdoor_temp": "Напољу · °C (≤)",
           "max_outdoor_humidity": "Напољу · RH (%) (≤)",
-          "max_wind_kmh": "Време и упозорења · km/h (≤)",
-          "max_age_minutes": "⏱ · Отворите (min, ≤)",
+          "max_wind_kmh": "Вентилација · Време и упозорења · km/h (≤)",
+          "max_age_minutes": "Вентилација · ⏱ · Отворите (min, ≤)",
           "indoor_mold": "Индикатор буђи · ≥ 70%"
         },
         "data_description": {
@@ -139,8 +139,8 @@
           "min_outdoor_temp": "Prag odluke za „Напољу · °C (≥)”. Utiče na preporuke, nije medicinska granica.",
           "max_outdoor_temp": "Prag odluke za „Напољу · °C (≤)”. Utiče na preporuke, nije medicinska granica.",
           "max_outdoor_humidity": "Prag odluke za „Напољу · RH (%) (≤)”. Utiče na preporuke, nije medicinska granica.",
-          "max_wind_kmh": "Prag odluke za „Време и упозорења · km/h (≤)”. Utiče na preporuke, nije medicinska granica.",
-          "max_age_minutes": "Prag odluke za „⏱ · Отворите (min, ≤)”. Utiče na preporuke, nije medicinska granica.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Prag odluke za „Индикатор буђи · ≥ 70%”. Utiče na preporuke, nije medicinska granica."
         }
       },
@@ -194,7 +194,7 @@
           "language": "TTS · Izaberi · izvor",
           "use_mold_indicator": "Индикатор буђи · RH (%) → 70%",
           "pollen_entities": "Polen · izvor · Izaberi",
-          "use_announcement_hub": "Automatsko · Announcement Hub",
+          "use_announcement_hub": "Обавештења · Announcement Hub",
           "general_away_cooldown_minutes": "Dom · Away · cooldown (min)",
           "away_open_window_alert": "Обавести о отвореним прозорима кад сви оду",
           "away_windows_target_people": "Особе за обавештавање",
@@ -225,7 +225,7 @@
           "pollen_max_scale": "POLLEN · Polen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Polen · NO VENT",
           "general_source_stale_minutes": "izvor · max (min)",
-          "general_home_policy": "Dom · Prisustvo · upravljanje"
+          "general_home_policy": "Присуство код куће"
         },
         "data_description": {
           "weather_entities": "Изаберите: Време и упозорења · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -244,7 +244,7 @@
           "language": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · TTS · Izaberi · izvor · provider capabilities.",
           "use_mold_indicator": "🧱 Индикатор буђи · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Polen · izvor · Izaberi.",
-          "use_announcement_hub": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Automatsko · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Dom · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Обавести о отвореним прозорима кад сви оду. Особе за обавештавање (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Сат, Таблет.",
           "away_windows_target_people": "Особе за обавештавање (person.*) - Announcement Hub: Телефон, Сат, Таблет, Други уређај. Only explicitly assigned personal endpoints.",
@@ -275,7 +275,7 @@
           "pollen_max_scale": "Podešavajte „POLLEN · Polen · SCALE” samo za odabranu sobu. Nevažeći podaci blokiraju radnju.",
           "pollen_avoid_ventilation": "Podešavajte „POLLEN · Polen · NO VENT” samo za odabranu sobu. Nevažeći podaci blokiraju radnju.",
           "general_source_stale_minutes": "izvor · Spavanje / Prisustvo · max 240 min. Neispravno · Isključi.",
-          "general_home_policy": "Ova opcija upravlja „Dom · Prisustvo · upravljanje”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "reconfigure": {
@@ -537,7 +537,7 @@
           "extractor_entity": "Izduvni ventilator · izvor",
           "co2_ndir_verified": "CO₂ · Obavezno",
           "co2_target_ppm": "CO₂ · CO₂ · cilj (ppm)",
-          "sleep_room": "Spavanje"
+          "sleep_room": "Бука · Spavanje"
         },
         "data_description": {
           "temperature_entity": "Izaberite stvarni Home Assistant izvor za „Temperatura · izvor”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
@@ -546,8 +546,8 @@
           "purifier_entity": "Izaberite stvarni Home Assistant Prečišćivač vazduha · izvor za „Prečišćivač vazduha · izvor”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "extractor_entity": "Izaberite stvarni Home Assistant Izduvni ventilator · izvor za „Izduvni ventilator · izvor”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "co2_ndir_verified": "Koristite stvarno odgovarajuće merenje za „CO₂ · Obavezno”. Procena ne zamenjuje kalibrisan senzor.",
-          "co2_target_ppm": "Prag odluke za „CO₂ · CO₂ · cilj (ppm)”. Utiče na preporuke, nije medicinska granica.",
-          "sleep_room": "Podešavajte „Spavanje” samo za odabranu sobu. Nevažeći podaci blokiraju radnju."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -699,27 +699,27 @@
           "climate_unknown_occupancy": "Prisustvo · Uređaji",
           "climate_unoccupied_delay_minutes": "Uređaji · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Prisustvo · Uređaji · senzor · Obavezno",
-          "climate_away_policy": "Dom · Uređaji · POLICY",
+          "climate_away_policy": "Присуство код куће · Dom · Uređaji · POLICY",
           "climate_manual_profile": "Uređaji · CLIMATE_MANUAL_PROFILE",
-          "climate_sleep_active": "Spavanje · Uređaji",
-          "climate_sleep_schedule_enabled": "Spavanje · Automatsko",
-          "climate_sleep_start": "Spavanje · Uređaji · START",
-          "climate_sleep_end": "Spavanje · Uređaji · END",
+          "climate_sleep_active": "Спавање · Spavanje · Uređaji",
+          "climate_sleep_schedule_enabled": "Спавање · Spavanje · Automatsko",
+          "climate_sleep_start": "Спавање · Spavanje · Uređaji · START",
+          "climate_sleep_end": "Спавање · Spavanje · Uređaji · END",
           "climate_target_source": "Uređaji · izvor · cilj",
           "climate_comfort_adjustment_max_c": "Uređaji (°C)"
         },
         "data_description": {
           "climate_occupancy_sensors": "Izaberite stvarni Home Assistant izvor za „Prisustvo · senzor”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "climate_away_entities": "Izaberite stvarni Home Assistant izvor za „Dom · Uređaji”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
-          "climate_unknown_occupancy": "Ova opcija upravlja „Prisustvo · Uređaji”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
-          "climate_unoccupied_delay_minutes": "Ovo vreme određuje „Uređaji · CLIMATE_UNOCCUPIED_DELAY_MINUTES”. Sprečava brzo uključivanje i ne zamenjuje zaštitu uređaja.",
-          "climate_occupancy_stale_minutes": "Ovo vreme određuje „Prisustvo · Uređaji · senzor · Obavezno”. Sprečava brzo uključivanje i ne zamenjuje zaštitu uređaja.",
-          "climate_away_policy": "Ova opcija upravlja „Dom · Uređaji · POLICY”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Ova opcija upravlja „Uređaji · CLIMATE_MANUAL_PROFILE”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
-          "climate_sleep_active": "Ova opcija upravlja „Spavanje · Uređaji”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
-          "climate_sleep_schedule_enabled": "Ova opcija upravlja „Spavanje · Automatsko”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
-          "climate_sleep_start": "Ovo vreme određuje „Spavanje · Uređaji · START”. Sprečava brzo uključivanje i ne zamenjuje zaštitu uređaja.",
-          "climate_sleep_end": "Ovo vreme određuje „Spavanje · Uređaji · END”. Sprečava brzo uključivanje i ne zamenjuje zaštitu uređaja.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Prag odluke za „Uređaji · izvor · cilj”. Utiče na preporuke, nije medicinska granica.",
           "climate_comfort_adjustment_max_c": "Prag odluke za „Uređaji (°C)”. Utiče na preporuke, nije medicinska granica."
         }
@@ -768,7 +768,7 @@
           "climate_humidity_low_rh": "Prag odluke za „RH · Vlažnost · Uređaji (%) · RH MIN”. Utiče na preporuke, nije medicinska granica.",
           "climate_humidity_high_rh": "Prag odluke za „RH · Vlažnost · Uređaji (%) · RH MAX”. Utiče na preporuke, nije medicinska granica.",
           "climate_humidity_hysteresis_rh": "Prag odluke za „RH · Vlažnost · Uređaji · ± RH”. Utiče na preporuke, nije medicinska granica.",
-          "climate_cooling_dry_deferral_rh_points": "Ova opcija upravlja „Uređaji · Temperatura −”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Ova opcija upravlja „Vlažnost · Automatsko”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
           "climate_window_efficiency_notify": "Ova opcija upravlja „Uređaji · Spoljašnji”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
           "climate_dry_fan_mode_auto": "Ova opcija upravlja „Brzina · Automatsko”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
@@ -921,7 +921,7 @@
           "general_occupied_rooms_entity": "Prisustvo · Soba · izvor (state)",
           "general_occupied_rooms_attribute": "Prisustvo · Soba · izvor (attribute)",
           "general_home_trackers": "Dom · Prisustvo · Uređaji",
-          "general_home_policy": "Dom · Prisustvo · upravljanje",
+          "general_home_policy": "Присуство код куће",
           "general_sleep_rooms_entity": "Spavanje · Soba · izvor (state)",
           "general_sleep_rooms_attribute": "Spavanje · Soba · izvor (attribute)",
           "general_source_stale_minutes": "izvor · max (min)"
@@ -931,7 +931,7 @@
           "general_occupied_rooms_entity": "Izaberite stvarni Home Assistant izvor za „Prisustvo · Soba · izvor (state)”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "general_occupied_rooms_attribute": "Podešavajte „Prisustvo · Soba · izvor (attribute)” samo za odabranu sobu. Nevažeći podaci blokiraju radnju.",
           "general_home_trackers": "Izaberite stvarni Home Assistant izvor za „Dom · Prisustvo · Uređaji”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
-          "general_home_policy": "Ova opcija upravlja „Dom · Prisustvo · upravljanje”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Izaberite stvarni Home Assistant izvor za „Spavanje · Soba · izvor (state)”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "general_sleep_rooms_attribute": "Podešavajte „Spavanje · Soba · izvor (attribute)” samo za odabranu sobu. Nevažeći podaci blokiraju radnju.",
           "general_source_stale_minutes": "izvor · Spavanje / Prisustvo · max 240 min. Neispravno · Isključi."
@@ -1366,7 +1366,7 @@
           "automatic_tts": "Automatsko",
           "automatic_notifications": "Automatsko · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Обавештења (опционо) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Обавештења · Announcement Hub",
           "notify_entities": "podešavanja · izvor",
           "tts_engine": "podešavanja · izvor · TTS_ENGINE",
           "media_players": "podešavanja · izvor · MEDIA_PLAYERS",
@@ -1378,7 +1378,7 @@
           "automatic_tts": "Подразумевано: ⛔ · Automatsko · 🪟 90 s.",
           "automatic_notifications": "Подразумевано: ⛔ · Automatsko · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Подразумевано: 10 min · 0 = никада · Док исти узрок траје · Собе.",
-          "use_announcement_hub": "Announcement Hub · Недоступно → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Изаберите: notify.* · podešavanja · izvor.",
           "tts_engine": "Изаберите: tts.* · podešavanja · izvor · TTS_ENGINE.",
           "media_players": "Изаберите: media_player.* · podešavanja · izvor · MEDIA_PLAYERS.",
@@ -1409,8 +1409,8 @@
           "min_outdoor_temp": "Напољу · °C (≥)",
           "max_outdoor_temp": "Напољу · °C (≤)",
           "max_outdoor_humidity": "Напољу · RH (%) (≤)",
-          "max_wind_kmh": "Време и упозорења · km/h (≤)",
-          "max_age_minutes": "⏱ · Отворите (min, ≤)",
+          "max_wind_kmh": "Вентилација · Време и упозорења · km/h (≤)",
+          "max_age_minutes": "Вентилација · ⏱ · Отворите (min, ≤)",
           "indoor_mold": "Индикатор буђи · ≥ 70%"
         },
         "data_description": {
@@ -1433,8 +1433,8 @@
           "min_outdoor_temp": "Prag odluke za „Напољу · °C (≥)”. Utiče na preporuke, nije medicinska granica.",
           "max_outdoor_temp": "Prag odluke za „Напољу · °C (≤)”. Utiče na preporuke, nije medicinska granica.",
           "max_outdoor_humidity": "Prag odluke za „Напољу · RH (%) (≤)”. Utiče na preporuke, nije medicinska granica.",
-          "max_wind_kmh": "Prag odluke za „Време и упозорења · km/h (≤)”. Utiče na preporuke, nije medicinska granica.",
-          "max_age_minutes": "Prag odluke za „⏱ · Отворите (min, ≤)”. Utiče na preporuke, nije medicinska granica.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Prag odluke za „Индикатор буђи · ≥ 70%”. Utiče na preporuke, nije medicinska granica."
         }
       },
@@ -1603,7 +1603,7 @@
           "extractor_entity": "Izduvni ventilator · izvor",
           "co2_ndir_verified": "CO₂ · Obavezno",
           "co2_target_ppm": "CO₂ · CO₂ · cilj (ppm)",
-          "sleep_room": "Spavanje"
+          "sleep_room": "Бука · Spavanje"
         },
         "data_description": {
           "temperature_entity": "Izaberite stvarni Home Assistant izvor za „Temperatura · izvor”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
@@ -1612,8 +1612,8 @@
           "purifier_entity": "Izaberite stvarni Home Assistant Prečišćivač vazduha · izvor za „Prečišćivač vazduha · izvor”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "extractor_entity": "Izaberite stvarni Home Assistant Izduvni ventilator · izvor za „Izduvni ventilator · izvor”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "co2_ndir_verified": "Koristite stvarno odgovarajuće merenje za „CO₂ · Obavezno”. Procena ne zamenjuje kalibrisan senzor.",
-          "co2_target_ppm": "Prag odluke za „CO₂ · CO₂ · cilj (ppm)”. Utiče na preporuke, nije medicinska granica.",
-          "sleep_room": "Podešavajte „Spavanje” samo za odabranu sobu. Nevažeći podaci blokiraju radnju."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -1765,27 +1765,27 @@
           "climate_unknown_occupancy": "Prisustvo · Uređaji",
           "climate_unoccupied_delay_minutes": "Uređaji · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Prisustvo · Uređaji · senzor · Obavezno",
-          "climate_away_policy": "Dom · Uređaji · POLICY",
+          "climate_away_policy": "Присуство код куће · Dom · Uređaji · POLICY",
           "climate_manual_profile": "Uređaji · CLIMATE_MANUAL_PROFILE",
-          "climate_sleep_active": "Spavanje · Uređaji",
-          "climate_sleep_schedule_enabled": "Spavanje · Automatsko",
-          "climate_sleep_start": "Spavanje · Uređaji · START",
-          "climate_sleep_end": "Spavanje · Uređaji · END",
+          "climate_sleep_active": "Спавање · Spavanje · Uređaji",
+          "climate_sleep_schedule_enabled": "Спавање · Spavanje · Automatsko",
+          "climate_sleep_start": "Спавање · Spavanje · Uređaji · START",
+          "climate_sleep_end": "Спавање · Spavanje · Uređaji · END",
           "climate_target_source": "Uređaji · izvor · cilj",
           "climate_comfort_adjustment_max_c": "Uređaji (°C)"
         },
         "data_description": {
           "climate_occupancy_sensors": "Izaberite stvarni Home Assistant izvor za „Prisustvo · senzor”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "climate_away_entities": "Izaberite stvarni Home Assistant izvor za „Dom · Uređaji”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
-          "climate_unknown_occupancy": "Ova opcija upravlja „Prisustvo · Uređaji”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
-          "climate_unoccupied_delay_minutes": "Ovo vreme određuje „Uređaji · CLIMATE_UNOCCUPIED_DELAY_MINUTES”. Sprečava brzo uključivanje i ne zamenjuje zaštitu uređaja.",
-          "climate_occupancy_stale_minutes": "Ovo vreme određuje „Prisustvo · Uređaji · senzor · Obavezno”. Sprečava brzo uključivanje i ne zamenjuje zaštitu uređaja.",
-          "climate_away_policy": "Ova opcija upravlja „Dom · Uređaji · POLICY”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Ova opcija upravlja „Uređaji · CLIMATE_MANUAL_PROFILE”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
-          "climate_sleep_active": "Ova opcija upravlja „Spavanje · Uređaji”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
-          "climate_sleep_schedule_enabled": "Ova opcija upravlja „Spavanje · Automatsko”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
-          "climate_sleep_start": "Ovo vreme određuje „Spavanje · Uređaji · START”. Sprečava brzo uključivanje i ne zamenjuje zaštitu uređaja.",
-          "climate_sleep_end": "Ovo vreme određuje „Spavanje · Uređaji · END”. Sprečava brzo uključivanje i ne zamenjuje zaštitu uređaja.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Prag odluke za „Uređaji · izvor · cilj”. Utiče na preporuke, nije medicinska granica.",
           "climate_comfort_adjustment_max_c": "Prag odluke za „Uređaji (°C)”. Utiče na preporuke, nije medicinska granica."
         }
@@ -1834,7 +1834,7 @@
           "climate_humidity_low_rh": "Prag odluke za „RH · Vlažnost · Uređaji (%) · RH MIN”. Utiče na preporuke, nije medicinska granica.",
           "climate_humidity_high_rh": "Prag odluke za „RH · Vlažnost · Uređaji (%) · RH MAX”. Utiče na preporuke, nije medicinska granica.",
           "climate_humidity_hysteresis_rh": "Prag odluke za „RH · Vlažnost · Uređaji · ± RH”. Utiče na preporuke, nije medicinska granica.",
-          "climate_cooling_dry_deferral_rh_points": "Ova opcija upravlja „Uređaji · Temperatura −”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Ova opcija upravlja „Vlažnost · Automatsko”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
           "climate_window_efficiency_notify": "Ova opcija upravlja „Uređaji · Spoljašnji”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
           "climate_dry_fan_mode_auto": "Ova opcija upravlja „Brzina · Automatsko”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
@@ -1987,7 +1987,7 @@
           "general_occupied_rooms_entity": "Prisustvo · Soba · izvor (state)",
           "general_occupied_rooms_attribute": "Prisustvo · Soba · izvor (attribute)",
           "general_home_trackers": "Dom · Prisustvo · Uređaji",
-          "general_home_policy": "Dom · Prisustvo · upravljanje",
+          "general_home_policy": "Присуство код куће",
           "general_sleep_rooms_entity": "Spavanje · Soba · izvor (state)",
           "general_sleep_rooms_attribute": "Spavanje · Soba · izvor (attribute)",
           "general_source_stale_minutes": "izvor · max (min)"
@@ -1997,7 +1997,7 @@
           "general_occupied_rooms_entity": "Izaberite stvarni Home Assistant izvor za „Prisustvo · Soba · izvor (state)”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "general_occupied_rooms_attribute": "Podešavajte „Prisustvo · Soba · izvor (attribute)” samo za odabranu sobu. Nevažeći podaci blokiraju radnju.",
           "general_home_trackers": "Izaberite stvarni Home Assistant izvor za „Dom · Prisustvo · Uređaji”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
-          "general_home_policy": "Ova opcija upravlja „Dom · Prisustvo · upravljanje”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Izaberite stvarni Home Assistant izvor za „Spavanje · Soba · izvor (state)”. Nepostojeći ili zastareli podaci zaustavljaju radnju.",
           "general_sleep_rooms_attribute": "Podešavajte „Spavanje · Soba · izvor (attribute)” samo za odabranu sobu. Nevažeći podaci blokiraju radnju.",
           "general_source_stale_minutes": "izvor · Spavanje / Prisustvo · max 240 min. Neispravno · Isključi."
@@ -2177,7 +2177,7 @@
           "language": "TTS · Izaberi · izvor",
           "use_mold_indicator": "Индикатор буђи · RH (%) → 70%",
           "pollen_entities": "Polen · izvor · Izaberi",
-          "use_announcement_hub": "Automatsko · Announcement Hub",
+          "use_announcement_hub": "Обавештења · Announcement Hub",
           "general_away_cooldown_minutes": "Dom · Away · cooldown (min)",
           "away_open_window_alert": "Обавести о отвореним прозорима кад сви оду",
           "away_windows_target_people": "Особе за обавештавање",
@@ -2208,7 +2208,7 @@
           "pollen_max_scale": "POLLEN · Polen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Polen · NO VENT",
           "general_source_stale_minutes": "izvor · max (min)",
-          "general_home_policy": "Dom · Prisustvo · upravljanje"
+          "general_home_policy": "Присуство код куће"
         },
         "data_description": {
           "weather_entities": "Изаберите: Време и упозорења · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2227,7 +2227,7 @@
           "language": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · TTS · Izaberi · izvor · provider capabilities.",
           "use_mold_indicator": "🧱 Индикатор буђи · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Polen · izvor · Izaberi.",
-          "use_announcement_hub": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Automatsko · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Dom · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Обавести о отвореним прозорима кад сви оду. Особе за обавештавање (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Телефон, Сат, Таблет.",
           "away_windows_target_people": "Особе за обавештавање (person.*) - Announcement Hub: Телефон, Сат, Таблет, Други уређај. Only explicitly assigned personal endpoints.",
@@ -2258,7 +2258,7 @@
           "pollen_max_scale": "Podešavajte „POLLEN · Polen · SCALE” samo za odabranu sobu. Nevažeći podaci blokiraju radnju.",
           "pollen_avoid_ventilation": "Podešavajte „POLLEN · Polen · NO VENT” samo za odabranu sobu. Nevažeći podaci blokiraju radnju.",
           "general_source_stale_minutes": "izvor · Spavanje / Prisustvo · max 240 min. Neispravno · Isključi.",
-          "general_home_policy": "Ova opcija upravlja „Dom · Prisustvo · upravljanje”. Fizičke komande zahtevaju posebnu dozvolu i zaštitu."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "room_occupancy": {
@@ -2852,436 +2852,1175 @@
     },
     "number": {
       "global_threshold_outdoor_aqi": {
-        "name": "Напољу · AQI (≤)"
+        "name": "Вентилација · Напољу · AQI (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_outdoor_co2": {
-        "name": "Напољу · CO₂ (ppm) (≤)"
+        "name": "Вентилација · Напољу · CO₂ (ppm) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_outdoor_pm25": {
-        "name": "Напољу · PM2.5 (µg/m³) (≤)"
+        "name": "Вентилација · Напољу · PM2.5 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_outdoor_pm10": {
-        "name": "Напољу · PM10 (µg/m³) (≤)"
+        "name": "Вентилација · Напољу · PM10 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_outdoor_voc": {
-        "name": "Напољу · VOC (µg/m³) (≤)"
+        "name": "Вентилација · Напољу · VOC (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_outdoor_voc_parts": {
-        "name": "Напољу · VOC (ppb) (≤)"
+        "name": "Вентилација · Напољу · VOC (ppb) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_outdoor_no2": {
-        "name": "NO₂ · Spoljašnji (µg/m³)"
+        "name": "Вентилација · NO₂ · Spoljašnji (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_outdoor_o3": {
-        "name": "O₃ · Spoljašnji (µg/m³)"
+        "name": "Вентилација · O₃ · Spoljašnji (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_outdoor_so2": {
-        "name": "SO₂ · Spoljašnji (µg/m³)"
+        "name": "Вентилација · SO₂ · Spoljašnji (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_indoor_aqi": {
-        "name": "Квалитет ваздуха · AQI (≥)"
+        "name": "Вентилација · Квалитет ваздуха · AQI (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_indoor_co2": {
-        "name": "Квалитет ваздуха · CO₂ (ppm) (≥)"
+        "name": "Вентилација · Квалитет ваздуха · CO₂ (ppm) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_indoor_pm25": {
-        "name": "Квалитет ваздуха · PM2.5 (µg/m³) (≥)"
+        "name": "Вентилација · Квалитет ваздуха · PM2.5 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_indoor_pm10": {
-        "name": "Квалитет ваздуха · PM10 (µg/m³) (≥)"
+        "name": "Вентилација · Квалитет ваздуха · PM10 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_indoor_voc": {
-        "name": "Квалитет ваздуха · VOC (µg/m³) (≥)"
+        "name": "Вентилација · Квалитет ваздуха · VOC (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_indoor_voc_parts": {
-        "name": "Квалитет ваздуха · VOC (ppb) (≥)"
+        "name": "Вентилација · Квалитет ваздуха · VOC (ppb) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_indoor_humidity": {
-        "name": "Квалитет ваздуха · RH (%) (≥)"
+        "name": "Вентилација · Квалитет ваздуха · RH (%) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_indoor_mold": {
-        "name": "Индикатор буђи · ≥ 70%"
+        "name": "Вентилација · Индикатор буђи · ≥ 70%",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_min_outdoor_temp": {
-        "name": "Напољу · °C (≥)"
+        "name": "Вентилација · Напољу · °C (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_max_outdoor_temp": {
-        "name": "Напољу · °C (≤)"
+        "name": "Вентилација · Напољу · °C (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_max_outdoor_humidity": {
-        "name": "Напољу · RH (%) (≤)"
+        "name": "Вентилација · Напољу · RH (%) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_max_wind_kmh": {
-        "name": "Време и упозорења · km/h (≤)"
+        "name": "Вентилација · Време и упозорења · km/h (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_threshold_max_age_minutes": {
-        "name": "⏱ · Отворите (min, ≤)"
+        "name": "Вентилација · ⏱ · Отворите (min, ≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Обавештења (опционо) · 0-1440 min"
+        "name": "Обавештења · Обавештења (опционо) · 0-1440 min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_pid_target_c": {
-        "name": "PID · cilj (°C)"
+        "name": "PID · cilj (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_pid_kp": {
-        "name": "PID · Kp · upravljanje (% per °C)"
+        "name": "PID · Kp · upravljanje (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_pid_ki": {
-        "name": "PID · Ki · upravljanje (% per °C-minute)"
+        "name": "PID · Ki · upravljanje (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_pid_kd": {
-        "name": "PID · Kd · upravljanje (%·minute per °C)"
+        "name": "PID · Kd · upravljanje (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_pid_offset_c": {
-        "name": "PID · (°C) · PID_OFFSET_C"
+        "name": "PID · (°C) · PID_OFFSET_C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_pid_min_setpoint_c": {
-        "name": "PID · (°C) · MIN TARGET"
+        "name": "PID · (°C) · MIN TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_pid_max_setpoint_c": {
-        "name": "PID · (°C) · MAX TARGET"
+        "name": "PID · (°C) · MAX TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_pid_sample_seconds": {
-        "name": "PID · (s)"
+        "name": "PID · (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_pid_max_change_c": {
-        "name": "PID · (°C) · MAX Δ"
+        "name": "PID · (°C) · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_pid_min_change_c": {
-        "name": "PID · (°C) · MIN Δ"
+        "name": "PID · (°C) · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_comfort_heat": {
-        "name": "Grejanje · Soba · Prisustvo"
+        "name": "Профил · Grejanje · Soba · Prisustvo",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_comfort_cool": {
-        "name": "Hlađenje · Soba · Prisustvo"
+        "name": "Профил · Hlađenje · Soba · Prisustvo",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_comfort_humidity": {
-        "name": "Vlažnost · Soba · Prisustvo · cilj (%)"
+        "name": "Профил · Vlažnost · Soba · Prisustvo · cilj (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_home_heat": {
-        "name": "Grejanje · Dom"
+        "name": "Профил · Grejanje · Dom",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_home_cool": {
-        "name": "Hlađenje · Dom"
+        "name": "Профил · Hlađenje · Dom",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_home_humidity": {
-        "name": "Vlažnost · Dom · cilj (%)"
+        "name": "Профил · Vlažnost · Dom · cilj (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_away_heat": {
-        "name": "Grejanje · Одсутан"
+        "name": "Профил · Grejanje · Одсутан",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_away_cool": {
-        "name": "Hlađenje · Одсутан"
+        "name": "Профил · Hlađenje · Одсутан",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_away_humidity": {
-        "name": "Vlažnost · Одсутан · cilj (%)"
+        "name": "Профил · Vlažnost · Одсутан · cilj (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_sleep_heat": {
-        "name": "Grejanje · Spavanje"
+        "name": "Профил · Grejanje · Spavanje",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_sleep_cool": {
-        "name": "Hlađenje · Spavanje"
+        "name": "Профил · Hlađenje · Spavanje",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_sleep_humidity": {
-        "name": "Vlažnost · Spavanje · cilj (%)"
+        "name": "Профил · Vlažnost · Spavanje · cilj (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_eco_heat": {
-        "name": "Grejanje · ECO"
+        "name": "Профил · Grejanje · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_eco_cool": {
-        "name": "Hlađenje · ECO"
+        "name": "Профил · Hlađenje · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_profile_eco_humidity": {
-        "name": "Vlažnost · ECO · cilj (%)"
+        "name": "Профил · Vlažnost · ECO · cilj (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_environment_pollen_high_from": {
-        "name": "POLLEN · Polen · HIGH"
+        "name": "Полен · POLLEN · Polen · HIGH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_environment_pollen_max_scale": {
-        "name": "POLLEN · Polen · SCALE"
+        "name": "Полен · POLLEN · Polen · SCALE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "izvor · max (min)"
+        "name": "Присуство код куће · izvor · max (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_area_environment_room_volume_m3": {
-        "name": "podešavanja · izvor (m³)"
+        "name": "Пречишћавање ваздуха · podešavanja · izvor (m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_area_environment_particle_cadr_m3h": {
-        "name": "CADR (m³/h)"
+        "name": "Пречишћавање ваздуха · CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_area_environment_co2_target_ppm": {
-        "name": "CO₂ · CO₂ · cilj (ppm)"
+        "name": "Пречишћавање ваздуха · CO₂ · CO₂ · cilj (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_area_environment_radon_reference_bq_m3": {
-        "name": "Rn (Bq/m³)"
+        "name": "Пречишћавање ваздуха · Rn (Bq/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "Brzina · Spoljašnji (m/s)"
+        "name": "Напредна удобност · Brzina · Spoljašnji (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_area_environment_met": {
-        "name": "podešavanja · izvor (met)"
+        "name": "Напредна удобност · podešavanja · izvor (met)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_area_environment_clo": {
-        "name": "podešavanja · izvor (clo)"
+        "name": "Напредна удобност · podešavanja · izvor (clo)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_unoccupied_delay_minutes": {
-        "name": "Uređaji · CLIMATE_UNOCCUPIED_DELAY_MINUTES"
+        "name": "Присуство у просторији · Uređaji · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Prisustvo · Uređaji · senzor · Obavezno"
+        "name": "Присуство у просторији · Prisustvo · Uređaji · senzor · Obavezno",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_comfort_adjustment_max_c": {
-        "name": "Uređaji (°C)"
+        "name": "Напредна удобност · Uređaji (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_humidity_low_rh": {
-        "name": "RH · Vlažnost · Uređaji (%) · RH MIN"
+        "name": "Влажност · RH · Vlažnost · Uređaji (%) · RH MIN",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_humidity_high_rh": {
-        "name": "RH · Vlažnost · Uređaji (%) · RH MAX"
+        "name": "Влажност · RH · Vlažnost · Uređaji (%) · RH MAX",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_humidity_hysteresis_rh": {
-        "name": "RH · Vlažnost · Uređaji · ± RH"
+        "name": "Влажност · RH · Vlažnost · Uređaji · ± RH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_cooling_dry_deferral_rh_points": {
-        "name": "Uređaji · Temperatura −"
+        "name": "Влажност · Uređaji · Temperatura −",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_pm25_action_ug_m3": {
-        "name": "PM2.5 · Uređaji (µg/m³)"
+        "name": "Пречишћавање ваздуха · PM2.5 · Uređaji (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_extraction_speed_percent": {
-        "name": "EXTRACT · Uređaji · Brzina (%) · SPEED %"
+        "name": "Пречишћавање ваздуха · EXTRACT · Uređaji · Brzina (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_purifier_speed_percent": {
-        "name": "PURIFIER · Uređaji · Brzina (%) · SPEED %"
+        "name": "Пречишћавање ваздуха · PURIFIER · Uređaji · Brzina (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_direct_tuning_kp": {
-        "name": "PID · Kp · upravljanje (percentage points/°C)"
+        "name": "PID · Kp · upravljanje (percentage points/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_direct_tuning_ki": {
-        "name": "PID · Ki · upravljanje (percentage points/(°C·minute))"
+        "name": "PID · Ki · upravljanje (percentage points/(°C·minute))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_direct_tuning_kd": {
-        "name": "PID · Kd · upravljanje (percentage points·minute/°C)"
+        "name": "PID · Kd · upravljanje (percentage points·minute/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "PID · podešavanja · izvor (s) · SAMPLE"
+        "name": "PID · podešavanja · izvor (s) · SAMPLE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "PID · podešavanja · izvor · MAX Δ"
+        "name": "PID · podešavanja · izvor · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "PID · podešavanja · izvor · MIN Δ"
+        "name": "PID · podešavanja · izvor · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_mold_surface_critical_temperature_c": {
-        "name": "Индикатор буђи · 🧊 °C"
+        "name": "Буђ · Индикатор буђи · 🧊 °C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_kp": {
-        "name": "PID · {channel}Kp · upravljanje (% per °C)"
+        "name": "PID · {channel}Kp · upravljanje (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_ki": {
-        "name": "PID · {channel}Ki · upravljanje (% per °C-minute)"
+        "name": "PID · {channel}Ki · upravljanje (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_kd": {
-        "name": "PID · {channel}Kd · upravljanje (%·minute per °C)"
+        "name": "PID · {channel}Kd · upravljanje (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_sample_seconds": {
-        "name": "PID · {channel}(s)"
+        "name": "PID · {channel}(s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Појачање процеса"
+        "name": "PID · {channel}Појачање процеса",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Временска константа"
+        "name": "PID · {channel}Временска константа",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Мртво време"
+        "name": "PID · {channel}Мртво време",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC λ"
+        "name": "PID · {channel}IMC λ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Релативни капацитет 1 (%)"
+        "name": "PID · {channel}Релативни капацитет 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Релативни капацитет 2 (%)"
+        "name": "PID · {channel}Релативни капацитет 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Релативни капацитет 3 (%)"
+        "name": "PID · {channel}Релативни капацитет 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Релативни капацитет 4 (%)"
+        "name": "PID · {channel}Релативни капацитет 4 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Брзина вентилатора 1 (%)"
+        "name": "PID · {channel}Брзина вентилатора 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Релативни капацитет 1 (%)"
+        "name": "PID · {channel}Релативни капацитет 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Брзина вентилатора 2 (%)"
+        "name": "PID · {channel}Брзина вентилатора 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Релативни капацитет 2 (%)"
+        "name": "PID · {channel}Релативни капацитет 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Брзина вентилатора 3 (%)"
+        "name": "PID · {channel}Брзина вентилатора 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Релативни капацитет 3 (%)"
+        "name": "PID · {channel}Релативни капацитет 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_cycle_seconds": {
-        "name": "PID · {channel}podešavanja · izvor (s) · PWM PERIOD"
+        "name": "PID · {channel}podešavanja · izvor (s) · PWM PERIOD",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_quiet_percentage": {
-        "name": "Тихо · {channel}Ограничење тихог рада вентилатора (%)"
+        "name": "Тихо · {channel}Ограничење тихог рада вентилатора (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_min_on_seconds": {
-        "name": "Снага · {channel}min ON (s)"
+        "name": "Снага · {channel}min ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_min_off_seconds": {
-        "name": "Снага · {channel}min OFF (s)"
+        "name": "Снага · {channel}min OFF (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_max_on_seconds": {
-        "name": "Снага · {channel}max ON (s)"
+        "name": "Снага · {channel}max ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_min_limit": {
-        "name": "Soba · Temperatura · min"
+        "name": "Ограничења просторије · Soba · Temperatura · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_max_limit": {
-        "name": "Soba · Temperatura · max"
+        "name": "Ограничења просторије · Soba · Temperatura · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_min_limit": {
-        "name": "Soba · Vlažnost · min"
+        "name": "Ограничења просторије · Soba · Vlažnost · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_max_limit": {
-        "name": "Soba · Vlažnost · max"
+        "name": "Ограничења просторије · Soba · Vlažnost · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_room_equipment_limit_fan_min_percentage": {
-        "name": "Soba · Brzina · min (%)"
+        "name": "Ограничења просторије · Soba · Brzina · min (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_room_equipment_limit_fan_max_percentage": {
-        "name": "Soba · Brzina · max (%)"
+        "name": "Ограничења просторије · Soba · Brzina · max (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "home_global_occupancy_away_cooldown_minutes": {
-        "name": "Dom · Away · cooldown (min)"
+        "name": "Присуство код куће · Dom · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_shading_close_above_c": {
-        "name": "Затвори ролетне изнад собне температуре (°C)"
+        "name": "Засенчење · Затвори ролетне изнад собне температуре (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_shading_min_sun_elevation": {
-        "name": "Минимална висина сунца (°)"
+        "name": "Засенчење · Минимална висина сунца (°)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "shade_close_above_c": {
-        "name": "Затвори ролетне изнад собне температуре (°C)"
+        "name": "Засенчење · Затвори ролетне изнад собне температуре (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_particle_cadr_m3h": {
-        "name": "Filter · Rated purifier particle CADR (m³/h)"
+        "name": "Filter · Rated purifier particle CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "shade_min_lux": {
-        "name": "Минимално осветљење за затварање (lx)"
+        "name": "Засенчење · Минимално осветљење за затварање (lx)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_fan_min_percentage": {
-        "name": "Вентилатор · {channel}Минимална брзина (%)"
+        "name": "Вентилатор · {channel}Минимална брзина (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_fan_max_percentage": {
-        "name": "Вентилатор · {channel}Максимална брзина (%)"
+        "name": "Вентилатор · {channel}Максимална брзина (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
+      },
+      "global_occupancy_away_cooldown_minutes": {
+        "name": "Присуство код куће · Dom · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
+      },
+      "home_aqi_custom_limit": {
+        "name": "Вентилација · Custom AQI limit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
+      },
+      "area_device_target_fan_speed_percent": {
+        "name": "Вентилатор · Target speed (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       }
     },
     "switch": {
       "home_automatic_notifications": {
-        "name": "Automatsko · AUTOMATIC_NOTIFICATIONS"
+        "name": "Обавештења · Automatsko · AUTOMATIC_NOTIFICATIONS",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "home_automatic_tts": {
-        "name": "Automatsko"
+        "name": "Обавештења · Automatsko",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "home_use_announcement_hub": {
-        "name": "Announcement Hub"
+        "name": "Обавештења · Announcement Hub",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "home_ai_rewrite_announcements": {
-        "name": "AI · Обавештења (опционо)"
+        "name": "Обавештења · AI · Обавештења (опционо)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "home_global_environment_pollen_avoid_ventilation": {
-        "name": "POLLEN · Polen · NO VENT"
+        "name": "Полен · POLLEN · Polen · NO VENT",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_area_environment_sleep_room": {
-        "name": "Spavanje"
+        "name": "Бука · Spavanje",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_area_environment_enable_pmv": {
-        "name": "PMV / PPD · Automatsko"
+        "name": "Напредна удобност · PMV / PPD · Automatsko",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_sleep_active": {
-        "name": "Spavanje · Uređaji"
+        "name": "Спавање · Spavanje · Uređaji",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_sleep_schedule_enabled": {
-        "name": "Spavanje · Automatsko"
+        "name": "Спавање · Spavanje · Automatsko",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_operating_window_efficiency_notify": {
-        "name": "Uređaji · Spoljašnji"
+        "name": "Обавештења · Uređaji · Spoljašnji",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_quiet_sleep": {
-        "name": "Тихо · {channel}Мања бука током спавања"
+        "name": "Тихо · {channel}Мања бука током спавања",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_quiet_occupied": {
-        "name": "Тихо · {channel}Мања бука при присуству"
+        "name": "Тихо · {channel}Мања бука при присуству",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_sensor_verified": {
-        "name": "Сензор · {channel}Obavezno"
+        "name": "Сензор · {channel}Obavezno",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_shading_enabled": {
-        "name": "Аутоматско затварање ролетни ради хлађења"
+        "name": "Засенчење · Аутоматско затварање ролетни ради хлађења",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "home_shade_announce_before_movement": {
-        "name": "Најави пре отварања или затварања ролетни"
+        "name": "Обавештења · Најави пре отварања или затварања ролетни",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "shade_auto_control": {
-        "name": "Аутоматско затварање ролетни ради хлађења"
+        "name": "Засенчење · Аутоматско затварање ролетни ради хлађења",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "shade_announce": {
-        "name": "Најави пре отварања или затварања ролетни"
+        "name": "Обавештења · Најави пре отварања или затварања ролетни",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "home_away_open_window_alert": {
-        "name": "Обавести о отвореним прозорима кад сви оду"
+        "name": "Обавештења · Обавести о отвореним прозорима кад сви оду",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pause_on_window_open": {
-        "name": "Искључи при отварању прозора · {channel}"
+        "name": "Контрола · Искључи при отварању прозора · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "shade_lux_enabled": {
-        "name": "Користи сензор осветљења за сенчење"
+        "name": "Засенчење · Користи сензор осветљења за сенчење",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_announce_device_errors": {
-        "name": "Пријављуј грешке уређаја · {channel}"
+        "name": "Обавештења · Пријављуј грешке уређаја · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       }
     },
     "select": {
       "home_language": {
-        "name": "Језик"
+        "name": "Обавештења · Језик",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_manual_profile": {
-        "name": "Uređaji · CLIMATE_MANUAL_PROFILE"
+        "name": "Профил · Uređaji · CLIMATE_MANUAL_PROFILE",
+        "state": {
+          "auto": "Automatic"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Gain source",
         "state": {
           "defaults": "Defaults",
           "manual": "Manual"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
         }
       },
       "home_global_policy_home_policy": {
-        "name": "Dom · Prisustvo · upravljanje"
+        "name": "Присуство код куће",
+        "state": {
+          "any_home": "Најмање једна особа код куће",
+          "all_home": "Сви код куће (стара опција)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_policy_unknown_occupancy": {
-        "name": "Prisustvo · Uređaji"
+        "name": "Присуство у просторији · Prisustvo · Uređaji",
+        "state": {
+          "occupied": "Assume occupied",
+          "hold": "Hold automatic changes"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_policy_away_policy": {
-        "name": "Dom · Uređaji · POLICY"
+        "name": "Присуство код куће · Dom · Uređaji · POLICY",
+        "state": {
+          "any_home": "Најмање једна особа код куће",
+          "all_home": "Сви код куће (стара опција)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_policy_target_source": {
-        "name": "Uređaji · izvor · cilj",
+        "name": "Напредна удобност · Uređaji · izvor · cilj",
         "state": {
           "temperature": "Фиксне температуре",
           "auto_comfort": "Аутоматски комфор (температура и влажност)",
           "pmv": "Напредни ISO 7730 (потребна мерења)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
         }
       },
       "equipment_control_mode": {
@@ -3292,10 +4031,20 @@
           "manual": "Ручно",
           "off": "Isključi",
           "pid": "PID"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "Тихо · {channel}Уграђена тиха брзина вентилатора"
+        "name": "Тихо · {channel}Уграђена тиха брзина вентилатора",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}Калибрација",
@@ -3305,6 +4054,11 @@
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Observe and suggest · Approve",
           "adaptive_auto": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3312,6 +4066,11 @@
         "state": {
           "legacy": "Изворно (некалибрисано)",
           "measured": "Модел измереног капацитета"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
@@ -3322,6 +4081,11 @@
           "cool": "Хлађење",
           "dry": "Одвлаживање",
           "fan_only": "Вентилатор"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
         }
       },
       "equipment_presence_requirement": {
@@ -3330,6 +4094,11 @@
           "always": "Automatsko",
           "occupied": "Soba · Prisustvo",
           "absent": "Soba · Prisustvo · Isključi"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
         }
       },
       "equipment_sleep_behavior": {
@@ -3338,6 +4107,11 @@
           "normal": "Automatsko",
           "pause": "Pauziraj",
           "sleep_targets": "Spavanje · cilj"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
         }
       },
       "equipment_fan_purpose": {
@@ -3346,29 +4120,59 @@
           "extraction": "Spoljašnji · upravljanje",
           "filtration": "PM2.5 · upravljanje",
           "auto": "Automatsko"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "Temperatura · izvor"
+        "name": "Напредна удобност · Temperatura · izvor",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_area_science_air_speed_entity": {
-        "name": "izvor · Brzina · Spoljašnji (m/s)"
+        "name": "Напредна удобност · izvor · Brzina · Spoljašnji (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "shade_window_entity": {
-        "name": "Повезани сензор прозора"
+        "name": "Засенчење · Повезани сензор прозора",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "home_aqi_scale": {
-        "name": "AQI скала",
+        "name": "Вентилација · AQI скала",
         "state": {
           "auto": "Аутоматски (провајдер)",
           "not_configured": "Непозната - без поређења",
           "us_epa": "US EPA AQI (0-500)",
           "eea_category": "EEA AQI (1-6)",
           "custom": "Прилагођена скала"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
         }
       },
       "shade_lux_entity": {
-        "name": "Сензор осветљења за сенчење"
+        "name": "Засенчење · Сензор осветљења за сенчење",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_adaptation_mode": {
         "name": "PID · {channel}Passive adaptation",
@@ -3376,35 +4180,80 @@
           "disabled": "Disabled",
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
         }
       }
     },
     "time": {
       "area_climate_sleep_start": {
-        "name": "Spavanje · Uređaji · START"
+        "name": "Спавање · Spavanje · Uređaji · START",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "area_climate_sleep_end": {
-        "name": "Spavanje · Uređaji · END"
+        "name": "Спавање · Spavanje · Uređaji · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       }
     },
     "button": {
       "area_recalculate_mold": {
-        "name": "Индикатор буђи · ↻ 🌡️"
+        "name": "Буђ · Индикатор буђи · ↻ 🌡️",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_resume": {
-        "name": "Контрола · {channel}Провери и настави"
+        "name": "Контрола · {channel}Провери и настави",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Примени · Калибрација"
+        "name": "PID · {channel}Примени · Калибрација",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Примени · Калибрација"
+        "name": "PID · {channel}Примени · Калибрација",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_review_approve": {
-        "name": "PID · {channel}Approve suggestion"
+        "name": "PID · {channel}Approve suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       },
       "equipment_pid_review_discard": {
-        "name": "PID · {channel}Discard suggestion"
+        "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       }
     },
     "climate": {
@@ -3505,8 +4354,8 @@
     },
     "general_home_policy": {
       "options": {
-        "any_home": "Dom · Prisustvo",
-        "all_home": "Dom · Uređaji · Prisustvo"
+        "any_home": "Најмање једна особа код куће",
+        "all_home": "Сви код куће (стара опција)"
       }
     },
     "device_method": {

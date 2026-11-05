@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .room_hubs import async_add_grouped_entities
+from .settings_help import SettingsMetadata
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.core import callback
@@ -81,8 +82,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
     )
 
 
-class HomeSettingSwitch(SwitchEntity):
-    _attr_has_entity_name = True
+class HomeSettingSwitch(SettingsMetadata, SwitchEntity):
+    _attr_has_entity_name = False
     _attr_should_poll = False
     _attr_entity_category = EntityCategory.CONFIG
 
@@ -139,12 +140,13 @@ class HomeSettingSwitch(SwitchEntity):
     @property
     def extra_state_attributes(self):
         if self._key != "enable_pmv" or not self._area:
-            return None
+            return super().extra_state_attributes
         room = self._manager.settings.get("environment_rooms", {}).get(self._area, {})
         needed = [key for key in ("radiant_temperature_entity", "met", "clo") if room.get(key) is None]
         if not room.get("air_speed_entity") and room.get("air_speed_m_s") is None:
             needed.append("air_speed")
-        return {"missing_configured_inputs": needed,
+        return {**super().extra_state_attributes,
+                "missing_configured_inputs": needed,
                 "input_validation": "pending_inputs" if needed else "live_measurements_required"}
 
     async def async_turn_on(self, **kwargs):
@@ -302,10 +304,10 @@ class EquipmentWindowPauseSwitch(EquipmentEntity, SwitchEntity):
         await self._manager.equipment.async_update(self._spec, {"pause_on_window_open": False})
 
 
-class ShadeCoolingSwitch(SwitchEntity):
+class ShadeCoolingSwitch(SettingsMetadata, SwitchEntity):
     """Explicit room-level permission to CLOSE selected window shades only."""
 
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_should_poll = False
     _attr_entity_category = EntityCategory.CONFIG
     _attr_translation_key = "area_shading_enabled"
@@ -326,6 +328,7 @@ class ShadeCoolingSwitch(SwitchEntity):
         from .room_sources import selected
         status = getattr(self._manager, "shading", None)
         return {
+            **super().extra_state_attributes,
             "area_id": self._area,
             "selected_shades": list(selected(self._manager.settings, self._area, "shades") or ()),
             "close_only": True,
@@ -354,10 +357,10 @@ class ShadeCoolingSwitch(SwitchEntity):
         self.async_write_ha_state()
 
 
-class ShadeDeviceSwitch(SwitchEntity):
+class ShadeDeviceSwitch(SettingsMetadata, SwitchEntity):
     """Cover-specific automation and advance-announcement permissions."""
 
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_should_poll = False
     _attr_entity_category = EntityCategory.CONFIG
 
@@ -393,6 +396,7 @@ class ShadeDeviceSwitch(SwitchEntity):
         per_cover = status.get("covers", {})
         cfg = cover_config(self._manager.settings, self._area, self._cover)
         return {
+            **super().extra_state_attributes,
             "source_cover": self._cover,
             "assigned_window": cfg["window_entity"],
             "cover_status": per_cover.get(self._cover),

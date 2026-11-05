@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from .room_hubs import async_add_grouped_entities
+from .settings_help import SettingsMetadata
 
 from homeassistant.components.button import ButtonEntity
 from homeassistant.helpers.entity import EntityCategory
@@ -58,10 +59,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
     ])
 
 
-class AreaMoldCalibrationButton(ButtonEntity):
+class AreaMoldCalibrationButton(SettingsMetadata, ButtonEntity):
     """Recalculate using fresh room/outside sensors and user-measured surface °C."""
 
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_entity_category = EntityCategory.CONFIG
     _attr_translation_key = "area_recalculate_mold"
     _attr_icon = "mdi:calculator-variant-outline"
@@ -84,6 +85,7 @@ class AreaMoldCalibrationButton(ButtonEntity):
         if not isinstance(saved, dict):
             saved = {}
         return {
+            **super().extra_state_attributes,
             "calibration_factor": saved.get("calibration_factor"),
             "calibrated_at": saved.get("calibrated_at"),
             "indoor_temperature_entity": saved.get("indoor_temperature_entity"),

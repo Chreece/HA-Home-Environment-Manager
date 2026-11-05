@@ -155,10 +155,20 @@ NS = extract()
 target_source = ast.parse((ROOT / "equipment_model.py").read_text(encoding="utf-8"))
 target_function = next(n for n in target_source.body
                        if isinstance(n, ast.FunctionDef) and n.name == "targets")
+# Target defaults now come from the same pure module as the room editors.
+for helper in ("climate_equipment", "climate_strategy"):
+    helper_spec = importlib.util.spec_from_file_location(
+        f"hem_beta88_fixture.{helper}", ROOT / f"{helper}.py")
+    helper_module = importlib.util.module_from_spec(helper_spec)
+    sys.modules[helper_spec.name] = helper_module
+    helper_spec.loader.exec_module(helper_module)
+strategy = sys.modules["hem_beta88_fixture.climate_strategy"]
 target_scope = {
     "room_config": Model.room_config,
     "profile_name": Model.profile_name,
     "device_limits": Model.device_limits,
+    "DEFAULT_PROFILE_TARGETS": strategy.DEFAULT_PROFILE_TARGETS,
+    "profile_humidity_target": strategy.profile_humidity_target,
 }
 target_tree = ast.Module(body=[ast.ImportFrom(
     module="__future__", names=[ast.alias(name="annotations")], level=0,

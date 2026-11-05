@@ -1389,6 +1389,7 @@
           state.attributes.physical_primary_entity_id,
           state.attributes.physical_hvac_mode,
           state.attributes.upstream_power_switch,
+          state.attributes.configuration_help,
         ]);
       // Activity color must update when a native device changes without a
       // corresponding HEM facade state change.
@@ -1755,6 +1756,18 @@
         '</strong></div>';
     }
 
+    _configurationHelp116(content, entityId, state, label) {
+      const help=state?.attributes?.configuration_help;
+      if (!content || !entityId || typeof help!=='string' || !help.trim()) return content;
+      // Use the entity's purpose-specific, localized explanation. Keep the
+      // information disclosure outside the label so opening it cannot change
+      // a select, toggle, or numeric input.
+      return '<div class="hem-setting-control116"><div class="hem-setting-field116">'+
+        content+'</div>'+this._info76('setting-help:'+entityId,
+          label+' · '+this._l65('information'),
+          '<strong>'+escape(label)+'</strong><p>'+escape(help.trim())+'</p>')+'</div>';
+    }
+
     _controllerPanel(room) {
       const devices=this._managedControllers(room.area_id);
       if (!devices.length) return '';
@@ -1934,7 +1947,7 @@
               const match=entry.calibrationNumbers?.find(item=>item.field===key);
               if (!match) return '';
               const bound=match.state.attributes || {};
-              return '<div class="climate-target-editor">'+
+              return this._configurationHelp116('<div class="climate-target-editor">'+
                 '<label><span>'+escape(label)+'</span>'+
                 '<input type="number" data-pid-model-input="'+escape(key)+
                 '" min="'+escape(bound.min ?? 0)+'" max="'+escape(bound.max ?? 10000)+
@@ -1942,7 +1955,7 @@
                 escape(match.state.state==='unavailable' ? '' : match.state.state)+
                 '"></label><button type="button" data-save-pid-model="'+escape(match.id)+
                 '" data-pid-model-field="'+escape(key)+'" data-controller-area="'+
-                escape(room.area_id)+'">'+escape(pidLabels[8])+'</button></div>';
+                escape(room.area_id)+'">'+escape(pidLabels[8])+'</button></div>',match.id,match.state,label);
             }).join('') : '';
         const apply=(control==='pid' && classicalCalibration &&
           entry.calibrationButtonId)
@@ -1983,7 +1996,7 @@
         };
         const renderCapacitySelect=(id,state,label)=>{
           if (!id || !Array.isArray(state?.attributes?.options)) return '';
-          return '<label class="managed-method-label"><span>'+escape(label)+'</span>'+
+          return this._configurationHelp116('<label class="managed-method-label"><span>'+escape(label)+'</span>'+
             '<select data-pid-capacity-select="'+escape(id)+
             '" data-controller-area="'+escape(room.area_id)+'" '+
             (available && control==='pid' ? '' : 'disabled')+'>'+
@@ -1991,7 +2004,7 @@
               '<option value="'+escape(option)+'" '+
               (state.state===option ? 'selected' : '')+'>'+
               escape(capChoices[option] || option)+'</option>').join('')+
-            '</select></label>';
+            '</select></label>',id,state,label);
         };
         const capVisible=control==='pid' && entry.capacityModeId &&
           entry.capacityDirectionId;
@@ -2008,7 +2021,7 @@
                 ? fanCapacityLabels[10]+' '+number+' (%)'
                 : fanCapacityLabels[11]+' '+number+' (%)';
             const limits=item.state?.attributes || {};
-            return '<div class="climate-target-editor"><label><span>'+
+            return this._configurationHelp116('<div class="climate-target-editor"><label><span>'+
               escape(fieldName)+'</span><input type="number" '+
               'data-pid-capacity-input="'+escape(name)+'" '+
               'min="'+escape(limits.min??0)+'" max="'+escape(limits.max??99)+
@@ -2017,7 +2030,7 @@
               '<button type="button" data-save-pid-capacity="'+escape(item.id)+
               '" data-pid-capacity-field="'+escape(name)+'" '+
               'data-controller-area="'+escape(room.area_id)+'">'+
-              escape(fanCapacityLabels[12])+'</button></div>';
+              escape(fanCapacityLabels[12])+'</button></div>',item.id,item.state,fieldName);
           }).join('') : '';
         const nativeOff=attrs.physical_source_state==='off';
         const applyCapacity=capVisible && capMethod?.state==='measured' && entry.capacityButtonId ?
@@ -2082,10 +2095,16 @@
           'data-managed-climate93="'+escape(entry.entityId)+'" '+
           'data-controller-area="'+escape(room.area_id)+'">'+
           nativeHeader+
-          this._deviceSummary65(entry)+faultPanel+alertSwitch+
-          recoveryPanel+resumeControl+method+timedSwitch+editors.join('')+
+          this._deviceSummary65(entry)+faultPanel+
+          this._configurationHelp116(alertSwitch,entry.errorAnnounceId,entry.errorAnnounce,errorLabels[0])+
+          recoveryPanel+this._configurationHelp116(resumeControl,entry.resumeButtonId,entry.resumeButton,continueLabel)+
+          this._configurationHelp116(method,entry.methodId,entry.method,l.method)+
+          this._configurationHelp116(timedSwitch,entry.timedSetpointId,entry.timedSetpoint,timingText[0])+editors.join('')+
           this._calibrationDetails65(entry,control==='pid' ?
-            calibrationMethod+pidInputs+apply+reviewPanel+capSelectors+capacityInput+applyCapacity+capacitySummary : '')+
+            this._configurationHelp116(calibrationMethod,entry.calibrationSelectId,entry.calibrationSelect,pidLabels[0])+
+            pidInputs+this._configurationHelp116(apply,entry.calibrationButtonId,entry.calibrationButton,pidLabels[9])+
+            reviewPanel+capSelectors+capacityInput+
+            this._configurationHelp116(applyCapacity,entry.capacityButtonId,entry.capacityButton,fanCapacityLabels[13])+capacitySummary : '')+
           '</section>';
       }).join('');
       return '<div class="managed-controllers">'+
@@ -3515,6 +3534,11 @@
     .hem-tone-good{color:var(--aqa-green);
       background:color-mix(in srgb,var(--aqa-green),transparent 90%)}
     .hem-context76{position:relative;display:inline-flex;flex:0 0 auto;margin-inline-start:auto}
+    .hem-setting-control116{display:grid;grid-template-columns:minmax(0,1fr) auto;
+      gap:6px;align-items:center;min-width:0}
+    .hem-setting-field116{min-width:0}
+    .hem-setting-control116>.hem-context76{margin:0}
+    .hem-setting-control116>.hem-context76 .hem-context-body76 p{margin:6px 0 0}
     .hem-context76>summary{cursor:pointer;list-style:none;display:grid;place-items:center;
       width:27px;height:27px;border-radius:8px;border:1px solid var(--aqa-edge);
       color:var(--primary-color,var(--aqa-blue));background:var(--aqa-surface)}
@@ -3695,7 +3719,7 @@
     // Particle filtration must never imply that a purifier removes CO2.
     if(['pm1','pm25','pm4','pm10','aqi','pollen'].includes(metric))
       return activity.filtration?'filtration':activity.ventilation?'ventilation':'neutral';
-    if(['co2','no2','o3','so2','co','tvoc','voc','hcho','formaldehyde','radon','voc_index'].includes(metric))
+    if(['co2','no2','o3','so2','co','tvoc','voc','voc_parts','hcho','formaldehyde','radon','voc_index'].includes(metric))
       return activity.ventilation?'ventilation':'neutral';
     return 'neutral';
   };
@@ -3711,8 +3735,9 @@
     so2:['SO₂','mdi:smog','ppb'],
     co:['CO','mdi:molecule-co','ppm'],
     aqi:['AQI','mdi:air-filter',''],
-    tvoc:['TVOC','mdi:chemical-weapon','ppb'],
-    voc:['VOC','mdi:chemical-weapon','ppb'],
+    tvoc:['TVOC','mdi:chemical-weapon',''],
+    voc:['VOC','mdi:chemical-weapon','µg/m³'],
+    voc_parts:['VOC','mdi:chemical-weapon','ppb'],
     hcho:['HCHO','mdi:flask-outline','µg/m³'],
     formaldehyde:['HCHO','mdi:flask-outline','µg/m³'],
     radon:['Rn','mdi:radioactive','Bq/m³'],
@@ -3720,7 +3745,7 @@
     sound:['dB','mdi:volume-high','dB'],
     noise:['dB','mdi:volume-high','dB'],
     pollen:['Pollen','mdi:flower-pollen',''],
-    voc_index:['VOC','mdi:air-filter',''],
+    voc_index:['VOC index','mdi:air-filter',''],
     mold:['Mold','mdi:water-alert-outline','%'],
   });
   const _roomAirReadings89 = (room,devices) => {
@@ -3828,8 +3853,12 @@
       }).slice(0,2);
     const airBadges=extras90.map(item=>{
       const metric=String(item.metric).toLowerCase();
+      // Use the measurement kind in a compact header. A sensor's friendly
+      // name belongs in its tooltip/details and must not widen the whole row.
+      // Keep unknown kinds truthful, bounded by the label's CSS, rather than
+      // guessing a gas from its device name.
       const [short,icon,unit]=_airMetric89[metric] ||
-        [String(item.name||metric).slice(0,22),'mdi:gauge',''];
+        [metric.replaceAll('_',' ').toUpperCase()||'—','mdi:gauge',''];
       const nativeUnit=typeof item.unit==='string'?item.unit:unit;
       const evidence=room?.environment?.measurement_evidence?.[metric];
       const measured=typeof evidence?.value==='number' &&
@@ -6032,6 +6061,9 @@
     .hem-room-glance87 .hem-room-metric-unit107{
       flex:0 0 auto;font-size:9px;font-weight:500;line-height:1.2;
       color:var(--aqa-muted);
+    }
+    .hem-room-glance87 .hem-room-metric-label107{
+      flex:0 1 auto;max-width:10ch;overflow:hidden;text-overflow:ellipsis;
     }
     .hem-room-glance87 .hem-room-metric107>ha-icon{
       --mdc-icon-size:12px;width:12px;height:12px;flex:0 0 12px;

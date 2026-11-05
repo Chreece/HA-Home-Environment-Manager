@@ -19,6 +19,7 @@ from .const import (
 )
 from .discovery import entity_area, indoor_temperature_choices, supported_metric
 from .device_hierarchy import configured_sources, native_source
+from .climate_strategy import DEFAULT_PROFILE_TARGETS
 
 
 def _field(key: str, default: Any = None, *, required: bool = False):
@@ -759,7 +760,8 @@ class CompactOptionsMixin:
             for key in ("temperature_entity", "humidity_entity", "co2_entity",
                         "pm25_entity", "fan_purpose"):
                 data[key] = user_input.get("device_"+key, old.get(key))
-            for key, default in (("humidity_target", 50), ("sleep_humidity_target", 50),
+            for key, default in (("humidity_target", DEFAULT_PROFILE_TARGETS["home"]["humidity"]),
+                                 ("sleep_humidity_target", DEFAULT_PROFILE_TARGETS["sleep"]["humidity"]),
                                  ("min_on_s", 600), ("min_off_s", 600), ("max_on_s", 7200),
                                  ("fan_speed_percent", 60)):
                 data[key] = user_input.get("device_"+key, old.get(key, default))

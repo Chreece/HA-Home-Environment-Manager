@@ -72,7 +72,7 @@
           "automatic_tts": "Automatické",
           "automatic_notifications": "Automatické · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Oznámenia (voliteľné) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Oznámenia · Announcement Hub",
           "notify_entities": "nastavenia · zdroj",
           "tts_engine": "nastavenia · zdroj · TTS_ENGINE",
           "media_players": "nastavenia · zdroj · MEDIA_PLAYERS",
@@ -84,7 +84,7 @@
           "automatic_tts": "Predvolené: ⛔ · Automatické · 🪟 90 s.",
           "automatic_notifications": "Predvolené: ⛔ · Automatické · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Predvolené: 10 min · 0 = nikdy · Kým pretrváva rovnaká príčina · Miestnosti.",
-          "use_announcement_hub": "Announcement Hub · Nedostupné → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Vyberte: notify.* · nastavenia · zdroj.",
           "tts_engine": "Vyberte: tts.* · nastavenia · zdroj · TTS_ENGINE.",
           "media_players": "Vyberte: media_player.* · nastavenia · zdroj · MEDIA_PLAYERS.",
@@ -115,8 +115,8 @@
           "min_outdoor_temp": "Vonku · °C (≥)",
           "max_outdoor_temp": "Vonku · °C (≤)",
           "max_outdoor_humidity": "Vonku · RH (%) (≤)",
-          "max_wind_kmh": "Počasie a výstrahy · km/h (≤)",
-          "max_age_minutes": "⏱ · Otvorte (min, ≤)",
+          "max_wind_kmh": "Vetranie · Počasie a výstrahy · km/h (≤)",
+          "max_age_minutes": "Vetranie · ⏱ · Otvorte (min, ≤)",
           "indoor_mold": "Indikátor plesní · ≥ 70%"
         },
         "data_description": {
@@ -139,8 +139,8 @@
           "min_outdoor_temp": "Rozhodovací prah pre „Vonku · °C (≥)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "max_outdoor_temp": "Rozhodovací prah pre „Vonku · °C (≤)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "max_outdoor_humidity": "Rozhodovací prah pre „Vonku · RH (%) (≤)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
-          "max_wind_kmh": "Rozhodovací prah pre „Počasie a výstrahy · km/h (≤)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
-          "max_age_minutes": "Rozhodovací prah pre „⏱ · Otvorte (min, ≤)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Rozhodovací prah pre „Indikátor plesní · ≥ 70%“. Ovplyvňuje odporúčania, nie je medicínskym limitom."
         }
       },
@@ -194,7 +194,7 @@
           "language": "TTS · Vybrať · zdroj",
           "use_mold_indicator": "Indikátor plesní · RH (%) → 70%",
           "pollen_entities": "Peľ · zdroj · Vybrať",
-          "use_announcement_hub": "Automatické · Announcement Hub",
+          "use_announcement_hub": "Oznámenia · Announcement Hub",
           "general_away_cooldown_minutes": "Domov · Away · cooldown (min)",
           "away_open_window_alert": "Upozorniť na otvorené okná po odchode všetkých",
           "away_windows_target_people": "Osoby na upozornenie",
@@ -225,7 +225,7 @@
           "pollen_max_scale": "POLLEN · Peľ · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Peľ · NO VENT",
           "general_source_stale_minutes": "zdroj · max (min)",
-          "general_home_policy": "Domov · Obsadenosť · ovládanie"
+          "general_home_policy": "Prítomnosť doma"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasie a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -244,7 +244,7 @@
           "language": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · TTS · Vybrať · zdroj · provider capabilities.",
           "use_mold_indicator": "🧱 Indikátor plesní · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Peľ · zdroj · Vybrať.",
-          "use_announcement_hub": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Automatické · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Domov · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Upozorniť na otvorené okná po odchode všetkých. Osoby na upozornenie (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefón, Hodinky, Tablet.",
           "away_windows_target_people": "Osoby na upozornenie (person.*) - Announcement Hub: Telefón, Hodinky, Tablet, Iné zariadenie. Only explicitly assigned personal endpoints.",
@@ -275,7 +275,7 @@
           "pollen_max_scale": "Nastavte „POLLEN · Peľ · SCALE“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii.",
           "pollen_avoid_ventilation": "Nastavte „POLLEN · Peľ · NO VENT“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii.",
           "general_source_stale_minutes": "zdroj · Spánok / Obsadenosť · max 240 min. Neplatné · Vypnúť.",
-          "general_home_policy": "Táto voľba riadi „Domov · Obsadenosť · ovládanie“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "reconfigure": {
@@ -537,7 +537,7 @@
           "extractor_entity": "Odsávací ventilátor · zdroj",
           "co2_ndir_verified": "CO₂ · Povinné",
           "co2_target_ppm": "CO₂ · CO₂ · cieľ (ppm)",
-          "sleep_room": "Spánok"
+          "sleep_room": "Hluk · Spánok"
         },
         "data_description": {
           "temperature_entity": "Vyberte skutočný zdroj Home Assistant pre „Teplota · zdroj“. Chýbajúce alebo staré dáta pozastavia akciu.",
@@ -546,8 +546,8 @@
           "purifier_entity": "Vyberte skutočný Čistička vzduchu · zdroj Home Assistant pre „Čistička vzduchu · zdroj“. Chýbajúce alebo staré dáta pozastavia akciu.",
           "extractor_entity": "Vyberte skutočný Odsávací ventilátor · zdroj Home Assistant pre „Odsávací ventilátor · zdroj“. Chýbajúce alebo staré dáta pozastavia akciu.",
           "co2_ndir_verified": "Použite skutočné vhodné meranie pre „CO₂ · Povinné“. Odhad nenahrádza kalibrovaný senzor.",
-          "co2_target_ppm": "Rozhodovací prah pre „CO₂ · CO₂ · cieľ (ppm)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
-          "sleep_room": "Nastavte „Spánok“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -699,7 +699,7 @@
           "climate_unknown_occupancy": "Obsadenosť · Zariadenia",
           "climate_unoccupied_delay_minutes": "Zariadenia · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Obsadenosť · Zariadenia · senzor · Povinné",
-          "climate_away_policy": "Domov · Zariadenia · POLICY",
+          "climate_away_policy": "Prítomnosť doma · Domov · Zariadenia · POLICY",
           "climate_manual_profile": "Zariadenia · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Spánok · Zariadenia",
           "climate_sleep_schedule_enabled": "Spánok · Automatické",
@@ -711,15 +711,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Vyberte skutočný zdroj Home Assistant pre „Obsadenosť · senzor“. Chýbajúce alebo staré dáta pozastavia akciu.",
           "climate_away_entities": "Vyberte skutočný zdroj Home Assistant pre „Domov · Zariadenia“. Chýbajúce alebo staré dáta pozastavia akciu.",
-          "climate_unknown_occupancy": "Táto voľba riadi „Obsadenosť · Zariadenia“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
-          "climate_unoccupied_delay_minutes": "Tento čas upravuje „Zariadenia · CLIMATE_UNOCCUPIED_DELAY_MINUTES“. Obmedzuje časté prepínanie, nenahrádza hardvérovú ochranu.",
-          "climate_occupancy_stale_minutes": "Tento čas upravuje „Obsadenosť · Zariadenia · senzor · Povinné“. Obmedzuje časté prepínanie, nenahrádza hardvérovú ochranu.",
-          "climate_away_policy": "Táto voľba riadi „Domov · Zariadenia · POLICY“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Táto voľba riadi „Zariadenia · CLIMATE_MANUAL_PROFILE“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
-          "climate_sleep_active": "Táto voľba riadi „Spánok · Zariadenia“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
-          "climate_sleep_schedule_enabled": "Táto voľba riadi „Spánok · Automatické“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
-          "climate_sleep_start": "Tento čas upravuje „Spánok · Zariadenia · START“. Obmedzuje časté prepínanie, nenahrádza hardvérovú ochranu.",
-          "climate_sleep_end": "Tento čas upravuje „Spánok · Zariadenia · END“. Obmedzuje časté prepínanie, nenahrádza hardvérovú ochranu.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Rozhodovací prah pre „Zariadenia · zdroj · cieľ“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "climate_comfort_adjustment_max_c": "Rozhodovací prah pre „Zariadenia (°C)“. Ovplyvňuje odporúčania, nie je medicínskym limitom."
         }
@@ -768,7 +768,7 @@
           "climate_humidity_low_rh": "Rozhodovací prah pre „RH · Vlhkosť · Zariadenia (%) · RH MIN“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "climate_humidity_high_rh": "Rozhodovací prah pre „RH · Vlhkosť · Zariadenia (%) · RH MAX“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "climate_humidity_hysteresis_rh": "Rozhodovací prah pre „RH · Vlhkosť · Zariadenia · ± RH“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
-          "climate_cooling_dry_deferral_rh_points": "Táto voľba riadi „Zariadenia · Teplota −“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Táto voľba riadi „Vlhkosť · Automatické“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
           "climate_window_efficiency_notify": "Táto voľba riadi „Zariadenia · Vonkajšie“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
           "climate_dry_fan_mode_auto": "Táto voľba riadi „Rýchlosť · Automatické“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
@@ -921,7 +921,7 @@
           "general_occupied_rooms_entity": "Obsadenosť · Miestnosť · zdroj (state)",
           "general_occupied_rooms_attribute": "Obsadenosť · Miestnosť · zdroj (attribute)",
           "general_home_trackers": "Domov · Obsadenosť · Zariadenia",
-          "general_home_policy": "Domov · Obsadenosť · ovládanie",
+          "general_home_policy": "Prítomnosť doma",
           "general_sleep_rooms_entity": "Spánok · Miestnosť · zdroj (state)",
           "general_sleep_rooms_attribute": "Spánok · Miestnosť · zdroj (attribute)",
           "general_source_stale_minutes": "zdroj · max (min)"
@@ -931,7 +931,7 @@
           "general_occupied_rooms_entity": "Vyberte skutočný zdroj Home Assistant pre „Obsadenosť · Miestnosť · zdroj (state)“. Chýbajúce alebo staré dáta pozastavia akciu.",
           "general_occupied_rooms_attribute": "Nastavte „Obsadenosť · Miestnosť · zdroj (attribute)“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii.",
           "general_home_trackers": "Vyberte skutočný zdroj Home Assistant pre „Domov · Obsadenosť · Zariadenia“. Chýbajúce alebo staré dáta pozastavia akciu.",
-          "general_home_policy": "Táto voľba riadi „Domov · Obsadenosť · ovládanie“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Vyberte skutočný zdroj Home Assistant pre „Spánok · Miestnosť · zdroj (state)“. Chýbajúce alebo staré dáta pozastavia akciu.",
           "general_sleep_rooms_attribute": "Nastavte „Spánok · Miestnosť · zdroj (attribute)“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii.",
           "general_source_stale_minutes": "zdroj · Spánok / Obsadenosť · max 240 min. Neplatné · Vypnúť."
@@ -1366,7 +1366,7 @@
           "automatic_tts": "Automatické",
           "automatic_notifications": "Automatické · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Oznámenia (voliteľné) · 0-1440 min",
-          "use_announcement_hub": "Announcement Hub",
+          "use_announcement_hub": "Oznámenia · Announcement Hub",
           "notify_entities": "nastavenia · zdroj",
           "tts_engine": "nastavenia · zdroj · TTS_ENGINE",
           "media_players": "nastavenia · zdroj · MEDIA_PLAYERS",
@@ -1378,7 +1378,7 @@
           "automatic_tts": "Predvolené: ⛔ · Automatické · 🪟 90 s.",
           "automatic_notifications": "Predvolené: ⛔ · Automatické · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Predvolené: 10 min · 0 = nikdy · Kým pretrváva rovnaká príčina · Miestnosti.",
-          "use_announcement_hub": "Announcement Hub · Nedostupné → Home Assistant.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "notify_entities": "Vyberte: notify.* · nastavenia · zdroj.",
           "tts_engine": "Vyberte: tts.* · nastavenia · zdroj · TTS_ENGINE.",
           "media_players": "Vyberte: media_player.* · nastavenia · zdroj · MEDIA_PLAYERS.",
@@ -1409,8 +1409,8 @@
           "min_outdoor_temp": "Vonku · °C (≥)",
           "max_outdoor_temp": "Vonku · °C (≤)",
           "max_outdoor_humidity": "Vonku · RH (%) (≤)",
-          "max_wind_kmh": "Počasie a výstrahy · km/h (≤)",
-          "max_age_minutes": "⏱ · Otvorte (min, ≤)",
+          "max_wind_kmh": "Vetranie · Počasie a výstrahy · km/h (≤)",
+          "max_age_minutes": "Vetranie · ⏱ · Otvorte (min, ≤)",
           "indoor_mold": "Indikátor plesní · ≥ 70%"
         },
         "data_description": {
@@ -1433,8 +1433,8 @@
           "min_outdoor_temp": "Rozhodovací prah pre „Vonku · °C (≥)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "max_outdoor_temp": "Rozhodovací prah pre „Vonku · °C (≤)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "max_outdoor_humidity": "Rozhodovací prah pre „Vonku · RH (%) (≤)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
-          "max_wind_kmh": "Rozhodovací prah pre „Počasie a výstrahy · km/h (≤)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
-          "max_age_minutes": "Rozhodovací prah pre „⏱ · Otvorte (min, ≤)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Rozhodovací prah pre „Indikátor plesní · ≥ 70%“. Ovplyvňuje odporúčania, nie je medicínskym limitom."
         }
       },
@@ -1603,7 +1603,7 @@
           "extractor_entity": "Odsávací ventilátor · zdroj",
           "co2_ndir_verified": "CO₂ · Povinné",
           "co2_target_ppm": "CO₂ · CO₂ · cieľ (ppm)",
-          "sleep_room": "Spánok"
+          "sleep_room": "Hluk · Spánok"
         },
         "data_description": {
           "temperature_entity": "Vyberte skutočný zdroj Home Assistant pre „Teplota · zdroj“. Chýbajúce alebo staré dáta pozastavia akciu.",
@@ -1612,8 +1612,8 @@
           "purifier_entity": "Vyberte skutočný Čistička vzduchu · zdroj Home Assistant pre „Čistička vzduchu · zdroj“. Chýbajúce alebo staré dáta pozastavia akciu.",
           "extractor_entity": "Vyberte skutočný Odsávací ventilátor · zdroj Home Assistant pre „Odsávací ventilátor · zdroj“. Chýbajúce alebo staré dáta pozastavia akciu.",
           "co2_ndir_verified": "Použite skutočné vhodné meranie pre „CO₂ · Povinné“. Odhad nenahrádza kalibrovaný senzor.",
-          "co2_target_ppm": "Rozhodovací prah pre „CO₂ · CO₂ · cieľ (ppm)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
-          "sleep_room": "Nastavte „Spánok“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii."
+          "co2_target_ppm": "Room CO₂ target in ppm for learning window-ventilation effectiveness from qualified NDIR history and for extraction advice. Extraction advice treats measured CO₂ at or above this target + 200 ppm as elevated; outdoor-air and source checks still apply. This does not change the separate general CO₂ window-opening threshold.",
+          "sleep_room": "Classifies this room as used for sleeping ONLY for the last completed local 22:00–07:00 calibrated-noise assessment. It has no effect without a configured calibrated noise source and does not activate a climate Sleep profile or indicate someone is asleep now."
         }
       },
       "environment_room_exposure": {
@@ -1765,7 +1765,7 @@
           "climate_unknown_occupancy": "Obsadenosť · Zariadenia",
           "climate_unoccupied_delay_minutes": "Zariadenia · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
           "climate_occupancy_stale_minutes": "Obsadenosť · Zariadenia · senzor · Povinné",
-          "climate_away_policy": "Domov · Zariadenia · POLICY",
+          "climate_away_policy": "Prítomnosť doma · Domov · Zariadenia · POLICY",
           "climate_manual_profile": "Zariadenia · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Spánok · Zariadenia",
           "climate_sleep_schedule_enabled": "Spánok · Automatické",
@@ -1777,15 +1777,15 @@
         "data_description": {
           "climate_occupancy_sensors": "Vyberte skutočný zdroj Home Assistant pre „Obsadenosť · senzor“. Chýbajúce alebo staré dáta pozastavia akciu.",
           "climate_away_entities": "Vyberte skutočný zdroj Home Assistant pre „Domov · Zariadenia“. Chýbajúce alebo staré dáta pozastavia akciu.",
-          "climate_unknown_occupancy": "Táto voľba riadi „Obsadenosť · Zariadenia“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
-          "climate_unoccupied_delay_minutes": "Tento čas upravuje „Zariadenia · CLIMATE_UNOCCUPIED_DELAY_MINUTES“. Obmedzuje časté prepínanie, nenahrádza hardvérovú ochranu.",
-          "climate_occupancy_stale_minutes": "Tento čas upravuje „Obsadenosť · Zariadenia · senzor · Povinné“. Obmedzuje časté prepínanie, nenahrádza hardvérovú ochranu.",
-          "climate_away_policy": "Táto voľba riadi „Domov · Zariadenia · POLICY“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
+          "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
+          "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Táto voľba riadi „Zariadenia · CLIMATE_MANUAL_PROFILE“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
-          "climate_sleep_active": "Táto voľba riadi „Spánok · Zariadenia“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
-          "climate_sleep_schedule_enabled": "Táto voľba riadi „Spánok · Automatické“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
-          "climate_sleep_start": "Tento čas upravuje „Spánok · Zariadenia · START“. Obmedzuje časté prepínanie, nenahrádza hardvérovú ochranu.",
-          "climate_sleep_end": "Tento čas upravuje „Spánok · Zariadenia · END“. Obmedzuje časté prepínanie, nenahrádza hardvérovú ochranu.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Rozhodovací prah pre „Zariadenia · zdroj · cieľ“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "climate_comfort_adjustment_max_c": "Rozhodovací prah pre „Zariadenia (°C)“. Ovplyvňuje odporúčania, nie je medicínskym limitom."
         }
@@ -1834,7 +1834,7 @@
           "climate_humidity_low_rh": "Rozhodovací prah pre „RH · Vlhkosť · Zariadenia (%) · RH MIN“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "climate_humidity_high_rh": "Rozhodovací prah pre „RH · Vlhkosť · Zariadenia (%) · RH MAX“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "climate_humidity_hysteresis_rh": "Rozhodovací prah pre „RH · Vlhkosť · Zariadenia · ± RH“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
-          "climate_cooling_dry_deferral_rh_points": "Táto voľba riadi „Zariadenia · Teplota −“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
+          "climate_cooling_dry_deferral_rh_points": "Extra relative-humidity percentage points required while AC is already cooling before separate dehumidification may run. Unified device controllers compare against the active profile humidity target plus this margin; legacy room coordination uses the upper room-humidity threshold plus the margin. Zero removes the extra margin; other demand checks still apply.",
           "climate_humidity_setpoint_auto": "Táto voľba riadi „Vlhkosť · Automatické“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
           "climate_window_efficiency_notify": "Táto voľba riadi „Zariadenia · Vonkajšie“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
           "climate_dry_fan_mode_auto": "Táto voľba riadi „Rýchlosť · Automatické“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
@@ -1987,7 +1987,7 @@
           "general_occupied_rooms_entity": "Obsadenosť · Miestnosť · zdroj (state)",
           "general_occupied_rooms_attribute": "Obsadenosť · Miestnosť · zdroj (attribute)",
           "general_home_trackers": "Domov · Obsadenosť · Zariadenia",
-          "general_home_policy": "Domov · Obsadenosť · ovládanie",
+          "general_home_policy": "Prítomnosť doma",
           "general_sleep_rooms_entity": "Spánok · Miestnosť · zdroj (state)",
           "general_sleep_rooms_attribute": "Spánok · Miestnosť · zdroj (attribute)",
           "general_source_stale_minutes": "zdroj · max (min)"
@@ -1997,7 +1997,7 @@
           "general_occupied_rooms_entity": "Vyberte skutočný zdroj Home Assistant pre „Obsadenosť · Miestnosť · zdroj (state)“. Chýbajúce alebo staré dáta pozastavia akciu.",
           "general_occupied_rooms_attribute": "Nastavte „Obsadenosť · Miestnosť · zdroj (attribute)“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii.",
           "general_home_trackers": "Vyberte skutočný zdroj Home Assistant pre „Domov · Obsadenosť · Zariadenia“. Chýbajúce alebo staré dáta pozastavia akciu.",
-          "general_home_policy": "Táto voľba riadi „Domov · Obsadenosť · ovládanie“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Vyberte skutočný zdroj Home Assistant pre „Spánok · Miestnosť · zdroj (state)“. Chýbajúce alebo staré dáta pozastavia akciu.",
           "general_sleep_rooms_attribute": "Nastavte „Spánok · Miestnosť · zdroj (attribute)“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii.",
           "general_source_stale_minutes": "zdroj · Spánok / Obsadenosť · max 240 min. Neplatné · Vypnúť."
@@ -2177,7 +2177,7 @@
           "language": "TTS · Vybrať · zdroj",
           "use_mold_indicator": "Indikátor plesní · RH (%) → 70%",
           "pollen_entities": "Peľ · zdroj · Vybrať",
-          "use_announcement_hub": "Automatické · Announcement Hub",
+          "use_announcement_hub": "Oznámenia · Announcement Hub",
           "general_away_cooldown_minutes": "Domov · Away · cooldown (min)",
           "away_open_window_alert": "Upozorniť na otvorené okná po odchode všetkých",
           "away_windows_target_people": "Osoby na upozornenie",
@@ -2208,7 +2208,7 @@
           "pollen_max_scale": "POLLEN · Peľ · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Peľ · NO VENT",
           "general_source_stale_minutes": "zdroj · max (min)",
-          "general_home_policy": "Domov · Obsadenosť · ovládanie"
+          "general_home_policy": "Prítomnosť doma"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasie a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2227,7 +2227,7 @@
           "language": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · TTS · Vybrať · zdroj · provider capabilities.",
           "use_mold_indicator": "🧱 Indikátor plesní · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Peľ · zdroj · Vybrať.",
-          "use_announcement_hub": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Automatické · Announcement Hub.",
+          "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
           "general_away_cooldown_minutes": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Domov · Away · cooldown (min) · occupancy transition delay.",
           "away_open_window_alert": "Upozorniť na otvorené okná po odchode všetkých. Osoby na upozornenie (person.*). Immediate on confirmed empty/away presence; number 0 = empty, positive = occupied. Announcement Hub. Telefón, Hodinky, Tablet.",
           "away_windows_target_people": "Osoby na upozornenie (person.*) - Announcement Hub: Telefón, Hodinky, Tablet, Iné zariadenie. Only explicitly assigned personal endpoints.",
@@ -2258,7 +2258,7 @@
           "pollen_max_scale": "Nastavte „POLLEN · Peľ · SCALE“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii.",
           "pollen_avoid_ventilation": "Nastavte „POLLEN · Peľ · NO VENT“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii.",
           "general_source_stale_minutes": "zdroj · Spánok / Obsadenosť · max 240 min. Neplatné · Vypnúť.",
-          "general_home_policy": "Táto voľba riadi „Domov · Obsadenosť · ovládanie“. Fyzické príkazy vyžadujú zvlášť súhlas a ochranu."
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
         }
       },
       "room_occupancy": {
@@ -2852,436 +2852,1175 @@
     },
     "number": {
       "global_threshold_outdoor_aqi": {
-        "name": "Vonku · AQI (≤)"
+        "name": "Vetranie · Vonku · AQI (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_outdoor_co2": {
-        "name": "Vonku · CO₂ (ppm) (≤)"
+        "name": "Vetranie · Vonku · CO₂ (ppm) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_outdoor_pm25": {
-        "name": "Vonku · PM2.5 (µg/m³) (≤)"
+        "name": "Vetranie · Vonku · PM2.5 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_outdoor_pm10": {
-        "name": "Vonku · PM10 (µg/m³) (≤)"
+        "name": "Vetranie · Vonku · PM10 (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_outdoor_voc": {
-        "name": "Vonku · VOC (µg/m³) (≤)"
+        "name": "Vetranie · Vonku · VOC (µg/m³) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_outdoor_voc_parts": {
-        "name": "Vonku · VOC (ppb) (≤)"
+        "name": "Vetranie · Vonku · VOC (ppb) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_outdoor_no2": {
-        "name": "NO₂ · Vonkajšie (µg/m³)"
+        "name": "Vetranie · NO₂ · Vonkajšie (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_outdoor_o3": {
-        "name": "O₃ · Vonkajšie (µg/m³)"
+        "name": "Vetranie · O₃ · Vonkajšie (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_outdoor_so2": {
-        "name": "SO₂ · Vonkajšie (µg/m³)"
+        "name": "Vetranie · SO₂ · Vonkajšie (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_indoor_aqi": {
-        "name": "Kvalita vzduchu · AQI (≥)"
+        "name": "Vetranie · Kvalita vzduchu · AQI (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_indoor_co2": {
-        "name": "Kvalita vzduchu · CO₂ (ppm) (≥)"
+        "name": "Vetranie · Kvalita vzduchu · CO₂ (ppm) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_indoor_pm25": {
-        "name": "Kvalita vzduchu · PM2.5 (µg/m³) (≥)"
+        "name": "Vetranie · Kvalita vzduchu · PM2.5 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_indoor_pm10": {
-        "name": "Kvalita vzduchu · PM10 (µg/m³) (≥)"
+        "name": "Vetranie · Kvalita vzduchu · PM10 (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_indoor_voc": {
-        "name": "Kvalita vzduchu · VOC (µg/m³) (≥)"
+        "name": "Vetranie · Kvalita vzduchu · VOC (µg/m³) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_indoor_voc_parts": {
-        "name": "Kvalita vzduchu · VOC (ppb) (≥)"
+        "name": "Vetranie · Kvalita vzduchu · VOC (ppb) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_indoor_humidity": {
-        "name": "Kvalita vzduchu · RH (%) (≥)"
+        "name": "Vetranie · Kvalita vzduchu · RH (%) (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_indoor_mold": {
-        "name": "Indikátor plesní · ≥ 70%"
+        "name": "Vetranie · Indikátor plesní · ≥ 70%",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_min_outdoor_temp": {
-        "name": "Vonku · °C (≥)"
+        "name": "Vetranie · Vonku · °C (≥)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_max_outdoor_temp": {
-        "name": "Vonku · °C (≤)"
+        "name": "Vetranie · Vonku · °C (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_max_outdoor_humidity": {
-        "name": "Vonku · RH (%) (≤)"
+        "name": "Vetranie · Vonku · RH (%) (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_max_wind_kmh": {
-        "name": "Počasie a výstrahy · km/h (≤)"
+        "name": "Vetranie · Počasie a výstrahy · km/h (≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_threshold_max_age_minutes": {
-        "name": "⏱ · Otvorte (min, ≤)"
+        "name": "Vetranie · ⏱ · Otvorte (min, ≤)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_setting_announcement_repeat_minutes": {
-        "name": "Oznámenia (voliteľné) · 0-1440 min"
+        "name": "Oznámenia · Oznámenia (voliteľné) · 0-1440 min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_pid_target_c": {
-        "name": "PID · cieľ (°C)"
+        "name": "PID · cieľ (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_pid_kp": {
-        "name": "PID · Kp · ovládanie (% per °C)"
+        "name": "PID · Kp · ovládanie (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_pid_ki": {
-        "name": "PID · Ki · ovládanie (% per °C-minute)"
+        "name": "PID · Ki · ovládanie (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_pid_kd": {
-        "name": "PID · Kd · ovládanie (%·minute per °C)"
+        "name": "PID · Kd · ovládanie (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_pid_offset_c": {
-        "name": "PID · (°C) · PID_OFFSET_C"
+        "name": "PID · (°C) · PID_OFFSET_C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_pid_min_setpoint_c": {
-        "name": "PID · (°C) · MIN TARGET"
+        "name": "PID · (°C) · MIN TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_pid_max_setpoint_c": {
-        "name": "PID · (°C) · MAX TARGET"
+        "name": "PID · (°C) · MAX TARGET",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_pid_sample_seconds": {
-        "name": "PID · (s)"
+        "name": "PID · (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_pid_max_change_c": {
-        "name": "PID · (°C) · MAX Δ"
+        "name": "PID · (°C) · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_pid_min_change_c": {
-        "name": "PID · (°C) · MIN Δ"
+        "name": "PID · (°C) · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_comfort_heat": {
-        "name": "Vykurovanie · Miestnosť · Obsadenosť"
+        "name": "Profil · Vykurovanie · Miestnosť · Obsadenosť",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_comfort_cool": {
-        "name": "Chladenie · Miestnosť · Obsadenosť"
+        "name": "Profil · Chladenie · Miestnosť · Obsadenosť",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_comfort_humidity": {
-        "name": "Vlhkosť · Miestnosť · Obsadenosť · cieľ (%)"
+        "name": "Profil · Vlhkosť · Miestnosť · Obsadenosť · cieľ (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_home_heat": {
-        "name": "Vykurovanie · Domov"
+        "name": "Profil · Vykurovanie · Domov",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_home_cool": {
-        "name": "Chladenie · Domov"
+        "name": "Profil · Chladenie · Domov",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_home_humidity": {
-        "name": "Vlhkosť · Domov · cieľ (%)"
+        "name": "Profil · Vlhkosť · Domov · cieľ (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_away_heat": {
-        "name": "Vykurovanie · Mimo domova"
+        "name": "Profil · Vykurovanie · Mimo domova",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_away_cool": {
-        "name": "Chladenie · Mimo domova"
+        "name": "Profil · Chladenie · Mimo domova",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_away_humidity": {
-        "name": "Vlhkosť · Mimo domova · cieľ (%)"
+        "name": "Profil · Vlhkosť · Mimo domova · cieľ (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_sleep_heat": {
-        "name": "Vykurovanie · Spánok"
+        "name": "Profil · Vykurovanie · Spánok",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_sleep_cool": {
-        "name": "Chladenie · Spánok"
+        "name": "Profil · Chladenie · Spánok",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_sleep_humidity": {
-        "name": "Vlhkosť · Spánok · cieľ (%)"
+        "name": "Profil · Vlhkosť · Spánok · cieľ (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_eco_heat": {
-        "name": "Vykurovanie · ECO"
+        "name": "Profil · Vykurovanie · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_eco_cool": {
-        "name": "Chladenie · ECO"
+        "name": "Profil · Chladenie · ECO",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_profile_eco_humidity": {
-        "name": "Vlhkosť · ECO · cieľ (%)"
+        "name": "Profil · Vlhkosť · ECO · cieľ (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_environment_pollen_high_from": {
-        "name": "POLLEN · Peľ · HIGH"
+        "name": "Peľ · POLLEN · Peľ · HIGH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_environment_pollen_max_scale": {
-        "name": "POLLEN · Peľ · SCALE"
+        "name": "Peľ · POLLEN · Peľ · SCALE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "zdroj · max (min)"
+        "name": "Prítomnosť doma · zdroj · max (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_area_environment_room_volume_m3": {
-        "name": "nastavenia · zdroj (m³)"
+        "name": "Čistenie vzduchu · nastavenia · zdroj (m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_area_environment_particle_cadr_m3h": {
-        "name": "CADR (m³/h)"
+        "name": "Čistenie vzduchu · CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_area_environment_co2_target_ppm": {
-        "name": "CO₂ · CO₂ · cieľ (ppm)"
+        "name": "Čistenie vzduchu · CO₂ · CO₂ · cieľ (ppm)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_area_environment_radon_reference_bq_m3": {
-        "name": "Rn (Bq/m³)"
+        "name": "Čistenie vzduchu · Rn (Bq/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "Rýchlosť · Vonkajšie (m/s)"
+        "name": "Pokročilý komfort · Rýchlosť · Vonkajšie (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_area_environment_met": {
-        "name": "nastavenia · zdroj (met)"
+        "name": "Pokročilý komfort · nastavenia · zdroj (met)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_area_environment_clo": {
-        "name": "nastavenia · zdroj (clo)"
+        "name": "Pokročilý komfort · nastavenia · zdroj (clo)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_unoccupied_delay_minutes": {
-        "name": "Zariadenia · CLIMATE_UNOCCUPIED_DELAY_MINUTES"
+        "name": "Prítomnosť v miestnosti · Zariadenia · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Obsadenosť · Zariadenia · senzor · Povinné"
+        "name": "Prítomnosť v miestnosti · Obsadenosť · Zariadenia · senzor · Povinné",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_comfort_adjustment_max_c": {
-        "name": "Zariadenia (°C)"
+        "name": "Pokročilý komfort · Zariadenia (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_humidity_low_rh": {
-        "name": "RH · Vlhkosť · Zariadenia (%) · RH MIN"
+        "name": "Vlhkosť · RH · Vlhkosť · Zariadenia (%) · RH MIN",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_humidity_high_rh": {
-        "name": "RH · Vlhkosť · Zariadenia (%) · RH MAX"
+        "name": "Vlhkosť · RH · Vlhkosť · Zariadenia (%) · RH MAX",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_humidity_hysteresis_rh": {
-        "name": "RH · Vlhkosť · Zariadenia · ± RH"
+        "name": "Vlhkosť · RH · Vlhkosť · Zariadenia · ± RH",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_cooling_dry_deferral_rh_points": {
-        "name": "Zariadenia · Teplota −"
+        "name": "Vlhkosť · Zariadenia · Teplota −",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_pm25_action_ug_m3": {
-        "name": "PM2.5 · Zariadenia (µg/m³)"
+        "name": "Čistenie vzduchu · PM2.5 · Zariadenia (µg/m³)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_extraction_speed_percent": {
-        "name": "EXTRACT · Zariadenia · Rýchlosť (%) · SPEED %"
+        "name": "Čistenie vzduchu · EXTRACT · Zariadenia · Rýchlosť (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_purifier_speed_percent": {
-        "name": "PURIFIER · Zariadenia · Rýchlosť (%) · SPEED %"
+        "name": "Čistenie vzduchu · PURIFIER · Zariadenia · Rýchlosť (%) · SPEED %",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_direct_tuning_kp": {
-        "name": "PID · Kp · ovládanie (percentage points/°C)"
+        "name": "PID · Kp · ovládanie (percentage points/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_direct_tuning_ki": {
-        "name": "PID · Ki · ovládanie (percentage points/(°C·minute))"
+        "name": "PID · Ki · ovládanie (percentage points/(°C·minute))",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_direct_tuning_kd": {
-        "name": "PID · Kd · ovládanie (percentage points·minute/°C)"
+        "name": "PID · Kd · ovládanie (percentage points·minute/°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_direct_tuning_sample_seconds": {
-        "name": "PID · nastavenia · zdroj (s) · SAMPLE"
+        "name": "PID · nastavenia · zdroj (s) · SAMPLE",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_direct_tuning_max_demand_change": {
-        "name": "PID · nastavenia · zdroj · MAX Δ"
+        "name": "PID · nastavenia · zdroj · MAX Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_direct_tuning_min_demand_change": {
-        "name": "PID · nastavenia · zdroj · MIN Δ"
+        "name": "PID · nastavenia · zdroj · MIN Δ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_mold_surface_critical_temperature_c": {
-        "name": "Indikátor plesní · 🧊 °C"
+        "name": "Pleseň · Indikátor plesní · 🧊 °C",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_kp": {
-        "name": "PID · {channel}Kp · ovládanie (% per °C)"
+        "name": "PID · {channel}Kp · ovládanie (% per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_ki": {
-        "name": "PID · {channel}Ki · ovládanie (% per °C-minute)"
+        "name": "PID · {channel}Ki · ovládanie (% per °C-minute)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_kd": {
-        "name": "PID · {channel}Kd · ovládanie (%·minute per °C)"
+        "name": "PID · {channel}Kd · ovládanie (%·minute per °C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_sample_seconds": {
-        "name": "PID · {channel}(s)"
+        "name": "PID · {channel}(s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_process_gain": {
-        "name": "PID · {channel}Zosilnenie procesu"
+        "name": "PID · {channel}Zosilnenie procesu",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_time_constant_minutes": {
-        "name": "PID · {channel}Časová konštanta"
+        "name": "PID · {channel}Časová konštanta",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_dead_time_minutes": {
-        "name": "PID · {channel}Dopravné oneskorenie"
+        "name": "PID · {channel}Dopravné oneskorenie",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_lambda_minutes": {
-        "name": "PID · {channel}IMC λ"
+        "name": "PID · {channel}IMC λ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_capacity_stage_1": {
-        "name": "PID · {channel}Relatívny výkon 1 (%)"
+        "name": "PID · {channel}Relatívny výkon 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_capacity_stage_2": {
-        "name": "PID · {channel}Relatívny výkon 2 (%)"
+        "name": "PID · {channel}Relatívny výkon 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_capacity_stage_3": {
-        "name": "PID · {channel}Relatívny výkon 3 (%)"
+        "name": "PID · {channel}Relatívny výkon 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_capacity_stage_4": {
-        "name": "PID · {channel}Relatívny výkon 4 (%)"
+        "name": "PID · {channel}Relatívny výkon 4 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_capacity_speed_1": {
-        "name": "PID · {channel}Otáčky ventilátora 1 (%)"
+        "name": "PID · {channel}Otáčky ventilátora 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_capacity_output_1": {
-        "name": "PID · {channel}Relatívny výkon 1 (%)"
+        "name": "PID · {channel}Relatívny výkon 1 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_capacity_speed_2": {
-        "name": "PID · {channel}Otáčky ventilátora 2 (%)"
+        "name": "PID · {channel}Otáčky ventilátora 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_capacity_output_2": {
-        "name": "PID · {channel}Relatívny výkon 2 (%)"
+        "name": "PID · {channel}Relatívny výkon 2 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_capacity_speed_3": {
-        "name": "PID · {channel}Otáčky ventilátora 3 (%)"
+        "name": "PID · {channel}Otáčky ventilátora 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_capacity_output_3": {
-        "name": "PID · {channel}Relatívny výkon 3 (%)"
+        "name": "PID · {channel}Relatívny výkon 3 (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_cycle_seconds": {
-        "name": "PID · {channel}nastavenia · zdroj (s) · PWM PERIOD"
+        "name": "PID · {channel}nastavenia · zdroj (s) · PWM PERIOD",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_quiet_percentage": {
-        "name": "Tichý režim · {channel}Limit tichého chodu ventilátora (%)"
+        "name": "Tichý režim · {channel}Limit tichého chodu ventilátora (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_min_on_seconds": {
-        "name": "Výkon · {channel}min ON (s)"
+        "name": "Výkon · {channel}min ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_min_off_seconds": {
-        "name": "Výkon · {channel}min OFF (s)"
+        "name": "Výkon · {channel}min OFF (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_max_on_seconds": {
-        "name": "Výkon · {channel}max ON (s)"
+        "name": "Výkon · {channel}max ON (s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_min_limit": {
-        "name": "Miestnosť · Teplota · min"
+        "name": "Limity miestnosti · Miestnosť · Teplota · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_room_equipment_limit_temperature_max_limit": {
-        "name": "Miestnosť · Teplota · max"
+        "name": "Limity miestnosti · Miestnosť · Teplota · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_min_limit": {
-        "name": "Miestnosť · Vlhkosť · min"
+        "name": "Limity miestnosti · Miestnosť · Vlhkosť · min",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_room_equipment_limit_humidity_max_limit": {
-        "name": "Miestnosť · Vlhkosť · max"
+        "name": "Limity miestnosti · Miestnosť · Vlhkosť · max",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_room_equipment_limit_fan_min_percentage": {
-        "name": "Miestnosť · Rýchlosť · min (%)"
+        "name": "Limity miestnosti · Miestnosť · Rýchlosť · min (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_room_equipment_limit_fan_max_percentage": {
-        "name": "Miestnosť · Rýchlosť · max (%)"
+        "name": "Limity miestnosti · Miestnosť · Rýchlosť · max (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "home_global_occupancy_away_cooldown_minutes": {
-        "name": "Domov · Away · cooldown (min)"
+        "name": "Prítomnosť doma · Domov · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_shading_close_above_c": {
-        "name": "Zatvoriť rolety nad izbovou teplotou (°C)"
+        "name": "Tienenie · Zatvoriť rolety nad izbovou teplotou (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_shading_min_sun_elevation": {
-        "name": "Minimálna výška slnka (°)"
+        "name": "Tienenie · Minimálna výška slnka (°)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "shade_close_above_c": {
-        "name": "Zatvoriť rolety nad izbovou teplotou (°C)"
+        "name": "Tienenie · Zatvoriť rolety nad izbovou teplotou (°C)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_particle_cadr_m3h": {
-        "name": "Filter · Rated particle CADR (m³/h)"
+        "name": "Filter · Rated particle CADR (m³/h)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "shade_min_lux": {
-        "name": "Minimálne osvetlenie na zatvorenie (lx)"
+        "name": "Tienenie · Minimálne osvetlenie na zatvorenie (lx)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_fan_min_percentage": {
-        "name": "Ventilátor · {channel}Minimálna rýchlosť (%)"
+        "name": "Ventilátor · {channel}Minimálna rýchlosť (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_fan_max_percentage": {
-        "name": "Ventilátor · {channel}Maximálna rýchlosť (%)"
+        "name": "Ventilátor · {channel}Maximálna rýchlosť (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "global_occupancy_away_cooldown_minutes": {
+        "name": "Prítomnosť doma · Domov · Away · cooldown (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "home_aqi_custom_limit": {
+        "name": "Vetranie · Custom AQI limit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "area_device_target_fan_speed_percent": {
+        "name": "Ventilátor · Target speed (%)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       }
     },
     "switch": {
       "home_automatic_notifications": {
-        "name": "Automatické · AUTOMATIC_NOTIFICATIONS"
+        "name": "Oznámenia · Automatické · AUTOMATIC_NOTIFICATIONS",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "home_automatic_tts": {
-        "name": "Automatické"
+        "name": "Oznámenia · Automatické",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "home_use_announcement_hub": {
-        "name": "Announcement Hub"
+        "name": "Oznámenia · Announcement Hub",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "home_ai_rewrite_announcements": {
-        "name": "AI · Oznámenia (voliteľné)"
+        "name": "Oznámenia · AI · Oznámenia (voliteľné)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "home_global_environment_pollen_avoid_ventilation": {
-        "name": "POLLEN · Peľ · NO VENT"
+        "name": "Peľ · POLLEN · Peľ · NO VENT",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_area_environment_sleep_room": {
-        "name": "Spánok"
+        "name": "Hluk · Spánok",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_area_environment_enable_pmv": {
-        "name": "PMV / PPD · Automatické"
+        "name": "Pokročilý komfort · PMV / PPD · Automatické",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_sleep_active": {
-        "name": "Spánok · Zariadenia"
+        "name": "Spánok · Zariadenia",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_sleep_schedule_enabled": {
-        "name": "Spánok · Automatické"
+        "name": "Spánok · Automatické",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_operating_window_efficiency_notify": {
-        "name": "Zariadenia · Vonkajšie"
+        "name": "Oznámenia · Zariadenia · Vonkajšie",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_quiet_sleep": {
-        "name": "Tichý režim · {channel}Nižší hluk pri spánku"
+        "name": "Tichý režim · {channel}Nižší hluk pri spánku",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_quiet_occupied": {
-        "name": "Tichý režim · {channel}Nižší hluk pri prítomnosti"
+        "name": "Tichý režim · {channel}Nižší hluk pri prítomnosti",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_sensor_verified": {
-        "name": "Senzor · {channel}Povinné"
+        "name": "Senzor · {channel}Povinné",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_shading_enabled": {
-        "name": "Automatické zatváranie roliet proti prehriatiu"
+        "name": "Tienenie · Automatické zatváranie roliet proti prehriatiu",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "home_shade_announce_before_movement": {
-        "name": "Oznámiť pred otvorením alebo zatvorením roliet"
+        "name": "Oznámenia · Oznámiť pred otvorením alebo zatvorením roliet",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "shade_auto_control": {
-        "name": "Automatické zatváranie roliet proti prehriatiu"
+        "name": "Tienenie · Automatické zatváranie roliet proti prehriatiu",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "shade_announce": {
-        "name": "Oznámiť pred otvorením alebo zatvorením roliet"
+        "name": "Oznámenia · Oznámiť pred otvorením alebo zatvorením roliet",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "home_away_open_window_alert": {
-        "name": "Upozorniť na otvorené okná po odchode všetkých"
+        "name": "Oznámenia · Upozorniť na otvorené okná po odchode všetkých",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pause_on_window_open": {
-        "name": "Vypnúť pri otvorení okna · {channel}"
+        "name": "Ovládanie · Vypnúť pri otvorení okna · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "shade_lux_enabled": {
-        "name": "Použiť snímač osvetlenia pre tienenie"
+        "name": "Tienenie · Použiť snímač osvetlenia pre tienenie",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_announce_device_errors": {
-        "name": "Oznamovať chyby zariadenia · {channel}"
+        "name": "Oznámenia · Oznamovať chyby zariadenia · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       }
     },
     "select": {
       "home_language": {
-        "name": "Jazyk"
+        "name": "Oznámenia · Jazyk",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_manual_profile": {
-        "name": "Zariadenia · CLIMATE_MANUAL_PROFILE"
+        "name": "Profil · Zariadenia · CLIMATE_MANUAL_PROFILE",
+        "state": {
+          "auto": "Automatic"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_pid_gain_source": {
         "name": "PID · Gain source",
         "state": {
           "defaults": "Defaults",
           "manual": "Manual"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
         }
       },
       "home_global_policy_home_policy": {
-        "name": "Domov · Obsadenosť · ovládanie"
+        "name": "Prítomnosť doma",
+        "state": {
+          "any_home": "Aspoň jedna osoba doma",
+          "all_home": "Všetci doma (staršia voľba)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_policy_unknown_occupancy": {
-        "name": "Obsadenosť · Zariadenia"
+        "name": "Prítomnosť v miestnosti · Obsadenosť · Zariadenia",
+        "state": {
+          "occupied": "Assume occupied",
+          "hold": "Hold automatic changes"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_policy_away_policy": {
-        "name": "Domov · Zariadenia · POLICY"
+        "name": "Prítomnosť doma · Domov · Zariadenia · POLICY",
+        "state": {
+          "any_home": "Aspoň jedna osoba doma",
+          "all_home": "Všetci doma (staršia voľba)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_policy_target_source": {
-        "name": "Zariadenia · zdroj · cieľ",
+        "name": "Pokročilý komfort · Zariadenia · zdroj · cieľ",
         "state": {
           "temperature": "Pevné teploty",
           "auto_comfort": "Automatický komfort (teplota a vlhkosť)",
           "pmv": "Pokročilé ISO 7730 (vyžaduje merania)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
         }
       },
       "equipment_control_mode": {
@@ -3292,10 +4031,20 @@
           "manual": "Ručne",
           "off": "Vypnúť",
           "pid": "PID"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
         }
       },
       "equipment_quiet_fan_mode": {
-        "name": "Tichý režim · {channel}Natívna tichá rýchlosť ventilátora"
+        "name": "Tichý režim · {channel}Natívna tichá rýchlosť ventilátora",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_calibration_method": {
         "name": "PID · {channel}Kalibrácia",
@@ -3305,6 +4054,11 @@
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Observe and suggest · Approve",
           "adaptive_auto": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
         }
       },
       "equipment_pid_fan_capacity_mode": {
@@ -3312,6 +4066,11 @@
         "state": {
           "legacy": "Pôvodné (nekalibrované)",
           "measured": "Model meraného výkonu"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
         }
       },
       "equipment_pid_fan_capacity_for_mode": {
@@ -3322,6 +4081,11 @@
           "cool": "Chladenie",
           "dry": "Odvlhčovanie",
           "fan_only": "Ventilátor"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
         }
       },
       "equipment_presence_requirement": {
@@ -3330,6 +4094,11 @@
           "always": "Automatické",
           "occupied": "Miestnosť · Obsadenosť",
           "absent": "Miestnosť · Obsadenosť · Vypnúť"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
         }
       },
       "equipment_sleep_behavior": {
@@ -3338,6 +4107,11 @@
           "normal": "Automatické",
           "pause": "Pozastaviť",
           "sleep_targets": "Spánok · cieľ"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
         }
       },
       "equipment_fan_purpose": {
@@ -3346,29 +4120,59 @@
           "extraction": "Vonkajšie · ovládanie",
           "filtration": "PM2.5 · ovládanie",
           "auto": "Automatické"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "Teplota · zdroj"
+        "name": "Pokročilý komfort · Teplota · zdroj",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_area_science_air_speed_entity": {
-        "name": "zdroj · Rýchlosť · Vonkajšie (m/s)"
+        "name": "Pokročilý komfort · zdroj · Rýchlosť · Vonkajšie (m/s)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "shade_window_entity": {
-        "name": "Priradený okenný kontakt"
+        "name": "Tienenie · Priradený okenný kontakt",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "home_aqi_scale": {
-        "name": "Stupnica AQI",
+        "name": "Vetranie · Stupnica AQI",
         "state": {
           "auto": "Automaticky (poskytovateľ)",
           "not_configured": "Neznáma - bez porovnania",
           "us_epa": "US EPA AQI (0-500)",
           "eea_category": "EEA AQI (1-6)",
           "custom": "Vlastná stupnica"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
         }
       },
       "shade_lux_entity": {
-        "name": "Snímač osvetlenia pre tienenie"
+        "name": "Tienenie · Snímač osvetlenia pre tienenie",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_adaptation_mode": {
         "name": "PID · {channel}Passive adaptation",
@@ -3376,35 +4180,80 @@
           "disabled": "Disabled",
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
         }
       }
     },
     "time": {
       "area_climate_sleep_start": {
-        "name": "Spánok · Zariadenia · START"
+        "name": "Spánok · Zariadenia · START",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "area_climate_sleep_end": {
-        "name": "Spánok · Zariadenia · END"
+        "name": "Spánok · Zariadenia · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       }
     },
     "button": {
       "area_recalculate_mold": {
-        "name": "Indikátor plesní · ↻ 🌡️"
+        "name": "Pleseň · Indikátor plesní · ↻ 🌡️",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_resume": {
-        "name": "Ovládanie · {channel}Overiť a pokračovať"
+        "name": "Ovládanie · {channel}Overiť a pokračovať",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_apply_calibration": {
-        "name": "PID · {channel}Použiť · Kalibrácia"
+        "name": "PID · {channel}Použiť · Kalibrácia",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_apply_fan_capacity": {
-        "name": "PID · {channel}Použiť · Kalibrácia"
+        "name": "PID · {channel}Použiť · Kalibrácia",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_review_approve": {
-        "name": "PID · {channel}Approve suggestion"
+        "name": "PID · {channel}Approve suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       },
       "equipment_pid_review_discard": {
-        "name": "PID · {channel}Discard suggestion"
+        "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       }
     },
     "climate": {
@@ -3505,8 +4354,8 @@
     },
     "general_home_policy": {
       "options": {
-        "any_home": "Domov · Obsadenosť",
-        "all_home": "Domov · Zariadenia · Obsadenosť"
+        "any_home": "Aspoň jedna osoba doma",
+        "all_home": "Všetci doma (staršia voľba)"
       }
     },
     "device_method": {
