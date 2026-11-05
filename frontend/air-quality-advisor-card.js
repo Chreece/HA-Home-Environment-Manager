@@ -6462,6 +6462,9 @@
     .hem-room-issue-detail114 ul{padding-inline-start:18px;margin:5px 0}
     .hem-room-issue-detail114 li+li{margin-top:4px}
     .hem-mold-measurement115 p{margin:0;line-height:1.45;color:var(--aqa-muted)}
+    .hem-mold-measurement115 [data-mold-value117]{color:var(--aqa-muted)}
+    .hem-mold-measurement115[data-mold-tone117="ready"] [data-mold-value117]{color:var(--aqa-green)}
+    .hem-mold-measurement115[data-mold-tone117="not-ready"] [data-mold-value117]{color:var(--aqa-red)}
     .hem-issue-source114{border:0;background:transparent;padding:0;font:inherit;
       text-align:start;color:var(--aqa-blue);cursor:pointer;text-decoration:underline}
     @container hem-rooms107 (max-width:400px){
@@ -7089,31 +7092,34 @@
  */
   const MOLD_MEASUREMENT_TEXT115={
     en:{
-      title:'Coldest-surface measurement conditions now',
+      title:'Mold indication measurement',
+      minimum:'For a reliable coldest-surface measurement, {minimum} °C is the minimum recommended indoor-minus-outdoor temperature difference.',
       temperatures_unavailable:'Measurement conditions cannot be assessed yet. Check the selected room and outdoor temperature sources; missing, invalid or stale values are not used.',
       outdoors_not_colder:'Wait for colder weather. Outside is as warm as or warmer than this room, so the colder-outside contrast needed to locate its coldest winter surface is absent.',
-      difference_too_small:'Wait for a larger temperature difference. For locating cold surfaces, aim for at least {minimum} °C with the room warmer than outside.',
-      difference_suitable:'The temperature difference meets the {minimum} °C measurement guideline. Confirm stable conditions before measuring.',
+      difference_too_small:'Wait for a larger temperature difference, with the room warmer than outdoors.',
+      difference_suitable:'The measured temperature difference meets this recommended minimum. Confirm stable conditions before measuring.',
       stability:'Stable conditions are not verified. Avoid recent airing, rapid heating changes or sun warming the surface. Measure the coldest interior surface and record the indoor and outdoor temperatures at the same time.',
       outdoorCaveat:'Weather readings may differ from the temperature at your building; check the local conditions before measuring.',
       indoor:'Room temperature',outdoor:'Outdoor temperature',difference:'Room minus outdoors',missing:'Unavailable'
     },
     de:{
-      title:'Aktuelle Bedingungen für die Messung der kältesten Oberfläche',
+      title:'Messung der Schimmelindikation',
+      minimum:'Für eine zuverlässige Messung der kältesten Oberfläche wird eine Temperaturdifferenz von mindestens {minimum} °C zwischen innen und außen (innen wärmer) empfohlen.',
       temperatures_unavailable:'Die Messbedingungen können noch nicht beurteilt werden. Prüfe die ausgewählten Raum- und Außentemperaturquellen; fehlende, ungültige oder veraltete Werte werden nicht verwendet.',
       outdoors_not_colder:'Warte auf kälteres Wetter. Draußen ist es genauso warm oder wärmer als im Raum. Der Temperaturunterschied zu kälterer Außenluft fehlt, um die kälteste winterliche Oberfläche zu finden.',
-      difference_too_small:'Warte auf einen größeren Temperaturunterschied. Zum Auffinden kalter Oberflächen sollte es im Raum mindestens {minimum} °C wärmer sein als draußen.',
-      difference_suitable:'Der Temperaturunterschied erreicht den Richtwert von {minimum} °C. Prüfe vor der Messung, ob die Bedingungen stabil sind.',
+      difference_too_small:'Warte auf einen größeren Temperaturunterschied, bei dem es im Raum wärmer ist als draußen.',
+      difference_suitable:'Der gemessene Temperaturunterschied erreicht diesen empfohlenen Mindestwert. Prüfe vor der Messung, ob die Bedingungen stabil sind.',
       stability:'Stabile Bedingungen sind nicht bestätigt. Vermeide Messungen kurz nach dem Lüften, bei schnellen Heizungsänderungen oder nach Sonneneinstrahlung auf die Oberfläche. Miss die kälteste Innenoberfläche und notiere gleichzeitig Raum- und Außentemperatur.',
       outdoorCaveat:'Wetterdaten können von der Temperatur am Gebäude abweichen. Prüfe vor der Messung die Bedingungen vor Ort.',
       indoor:'Raumtemperatur',outdoor:'Außentemperatur',difference:'Raum minus außen',missing:'Nicht verfügbar'
     },
     el:{
-      title:'Τρέχουσες συνθήκες μέτρησης της ψυχρότερης επιφάνειας',
+      title:'Μέτρηση ένδειξης μούχλας',
+      minimum:'Για αξιόπιστη μέτρηση της ψυχρότερης επιφάνειας, οι {minimum} °C είναι η ελάχιστη συνιστώμενη διαφορά εσωτερικής μείον εξωτερικής θερμοκρασίας.',
       temperatures_unavailable:'Οι συνθήκες μέτρησης δεν μπορούν ακόμη να αξιολογηθούν. Ελέγξτε τις επιλεγμένες πηγές εσωτερικής και εξωτερικής θερμοκρασίας· δεν χρησιμοποιούνται ελλιπείς, μη έγκυρες ή παλιές τιμές.',
       outdoors_not_colder:'Περιμένετε πιο κρύο καιρό. Έξω έχει την ίδια ή υψηλότερη θερμοκρασία από το δωμάτιο. Λείπει η διαφορά προς ψυχρότερο εξωτερικό αέρα που χρειάζεται για τον εντοπισμό της ψυχρότερης χειμερινής επιφάνειας.',
-      difference_too_small:'Περιμένετε μεγαλύτερη διαφορά θερμοκρασίας. Για τον εντοπισμό ψυχρών επιφανειών, το δωμάτιο πρέπει να είναι τουλάχιστον {minimum} °C θερμότερο από έξω.',
-      difference_suitable:'Η διαφορά θερμοκρασίας φτάνει την ενδεικτική τιμή των {minimum} °C. Επιβεβαιώστε ότι οι συνθήκες είναι σταθερές πριν μετρήσετε.',
+      difference_too_small:'Περιμένετε μεγαλύτερη διαφορά θερμοκρασίας, με το δωμάτιο θερμότερο από έξω.',
+      difference_suitable:'Η μετρημένη διαφορά θερμοκρασίας φτάνει αυτή την ελάχιστη συνιστώμενη τιμή. Επιβεβαιώστε ότι οι συνθήκες είναι σταθερές πριν μετρήσετε.',
       stability:'Οι σταθερές συνθήκες δεν έχουν επιβεβαιωθεί. Αποφύγετε μετρήσεις αμέσως μετά τον αερισμό, κατά απότομες αλλαγές θέρμανσης ή όταν ο ήλιος ζεσταίνει την επιφάνεια. Μετρήστε την ψυχρότερη εσωτερική επιφάνεια και καταγράψτε ταυτόχρονα την εσωτερική και εξωτερική θερμοκρασία.',
       outdoorCaveat:'Τα μετεωρολογικά δεδομένα μπορεί να διαφέρουν από τη θερμοκρασία στο κτίριο. Ελέγξτε τις τοπικές συνθήκες πριν μετρήσετε.',
       indoor:'Θερμοκρασία δωματίου',outdoor:'Εξωτερική θερμοκρασία',difference:'Δωμάτιο μείον εξωτερικό',missing:'Μη διαθέσιμο'
@@ -7130,14 +7136,21 @@
     const temperature=v=>numeric(v)?number(v)+' °C':escape(words.missing);
     const minimum=numeric(d.calibration_recommended_difference_c)
       ?this._format(d.calibration_recommended_difference_c):'10';
-    const explanation=words[d.calibration_readiness].replace('{minimum}',minimum);
+    const validTemperatures=numeric(d.indoor_temperature_c)&&numeric(d.outdoor_temperature_c)&&
+      numeric(d.calibration_temperature_difference_c)&&d.calibration_readiness!=='temperatures_unavailable';
+    // Readiness uses the backend's fresh, full-precision evidence. Display
+    // rounding must not turn a difference below 10 °C into a green value.
+    const tone=!validTemperatures?'unavailable':
+      d.calibration_readiness==='difference_suitable'?'ready':'not-ready';
     const rows=[['indoor',d.indoor_temperature_c],['outdoor',d.outdoor_temperature_c]];
     if(numeric(d.calibration_temperature_difference_c))
       rows.push(['difference',d.calibration_temperature_difference_c]);
     return '<section class="mold-calibration-details hem-mold-measurement115" role="note" '+
-      'data-mold-readiness115="'+escape(d.calibration_readiness)+'" aria-label="'+escape(words.title)+'">'+
-      '<strong>'+escape(words.title)+'</strong><p>'+escape(explanation)+'</p>'+
-      rows.map(([label,value])=>'<div><span>'+escape(words[label])+'</span><strong>'+temperature(value)+'</strong></div>').join('')+
+      'data-mold-readiness115="'+escape(d.calibration_readiness)+'" data-mold-tone117="'+tone+
+      '" aria-label="'+escape(words.title)+'">'+
+      '<strong>'+escape(words.title)+'</strong><p>'+escape(words.minimum.replace('{minimum}',minimum))+'</p>'+
+      '<p>'+escape(words[d.calibration_readiness])+'</p>'+
+      rows.map(([label,value])=>'<div><span>'+escape(words[label])+'</span><strong data-mold-value117="'+label+'">'+temperature(value)+'</strong></div>').join('')+
       '<p>'+escape(words.stability)+'</p><p><small>'+escape(words.outdoorCaveat)+'</small></p></section>';
   };
 /* HEM_MOLD_MEASUREMENT115_END */

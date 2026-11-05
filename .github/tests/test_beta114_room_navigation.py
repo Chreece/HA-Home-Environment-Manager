@@ -179,19 +179,43 @@ for(const language of ['en','de','el']){
   card._hass.language=language;
   assert.equal(card._metricName('temperature'),
     ({en:'Temperature',de:'Temperatur',el:'Θερμοκρασία'})[language]);
-  for(const state of ['temperatures_unavailable','outdoors_not_colder','difference_too_small','difference_suitable']){
+  const title=({en:'Mold indication measurement',de:'Messung der Schimmelindikation',
+    el:'Μέτρηση ένδειξης μούχλας'})[language];
+  for(const [state,outside,difference,tone] of [
+    ['temperatures_unavailable',null,null,'unavailable'],
+    ['outdoors_not_colder',22.4,-1,'not-ready'],
+    ['outdoors_not_colder',21.4,0,'not-ready'],
+    ['difference_too_small',19.4,2,'not-ready'],
+    ['difference_too_small',11.401,9.999,'not-ready'],
+    ['difference_suitable',11.4,10,'ready'],
+    ['difference_suitable',4.2,17.2,'ready'],
+  ]){
     const reading=structuredClone(moldRoom.readings.at(-1));
-    reading.details.calibration_readiness=state;
+    Object.assign(reading.details,{calibration_readiness:state,
+      outdoor_temperature_c:outside,calibration_temperature_difference_c:difference});
     const help=card._moldMeasurementGuidance115(reading);
     assert.ok(help.includes('data-mold-readiness115="'+state+'"'));
+    assert.ok(help.includes('data-mold-tone117="'+tone+'"'));
+    assert.ok(help.includes('<strong>'+title+'</strong>'));
+    assert.ok(help.includes('aria-label="'+title+'"'));
+    assert.ok(help.includes('10 °C'));
+    assert.ok(help.includes(({en:'minimum recommended',de:'mindestens 10 °C',
+      el:'ελάχιστη συνιστώμενη'})[language]));
+    assert.ok(help.includes(({en:'Stable conditions are not verified',
+      de:'Stabile Bedingungen sind nicht bestätigt',
+      el:'Οι σταθερές συνθήκες δεν έχουν επιβεβαιωθεί'})[language]));
     assert.ok(!help.includes('undefined'));
   }
 }
+const invalid=structuredClone(moldRoom.readings.at(-1));
+invalid.details.outdoor_temperature_c=NaN;
+assert.ok(card._moldMeasurementGuidance115(invalid).includes('data-mold-tone117="unavailable"'));
 const calibrated=structuredClone(moldRoom.readings.at(-1));
 calibrated.details.status='ready';calibrated.available=true;calibrated.value=62;
 assert.equal(card._moldMeasurementGuidance115(calibrated),'');
 console.log('BETA114_ROOM_PRESENCE_AND_ALERT_TARGETS=PASS');
 console.log('BETA115_MOLD_GUIDANCE_MARKUP_AND_LOCALES=PASS');
+console.log('BETA117_MOLD_MEASUREMENT_TITLES_MINIMUM_AND_VALUE_TONES=PASS');
 """
     subprocess.run(["node", "-e", script, str(CARD), json.dumps(states)], check=True)
 
@@ -381,12 +405,16 @@ def browser_checks(states):
         assert guidance.get_attribute('data-mold-readiness115') == 'difference_suitable'
         assert '17.2 °C' in guidance.inner_text()
         assert 'Stable conditions are not verified' in guidance.inner_text()
+        assert guidance.locator(':scope > strong').inner_text() == 'Mold indication measurement'
+        assert '10 °C is the minimum recommended indoor-minus-outdoor temperature difference' in guidance.inner_text()
+        values = guidance.locator('[data-mold-value117]')
+        assert values.evaluate_all('nodes=>nodes.map(el=>getComputedStyle(el).color)') == ['rgb(31, 157, 119)'] * 3
         output = os.environ.get('HEM_TEST_SCREENSHOT_DIR')
         if output:
             Path(output).mkdir(parents=True, exist_ok=True)
             page.set_viewport_size({"width": 390, "height": 960})
             guidance.scroll_into_view_if_needed()
-            page.screenshot(path=str(Path(output) / 'beta115-mold-measurement-390.png'))
+            page.screenshot(path=str(Path(output) / 'beta117-mold-measurement-ready-390.png'))
             page.set_viewport_size({"width": 590, "height": 960})
         page.evaluate("""()=>{
           const states=structuredClone(card._hass.states);
@@ -398,6 +426,31 @@ def browser_checks(states):
         }""")
         assert guidance.get_attribute('data-mold-readiness115') == 'difference_too_small'
         assert 'Wait for a larger temperature difference' in guidance.inner_text()
+        assert values.evaluate_all('nodes=>nodes.map(el=>getComputedStyle(el).color)') == ['rgb(223, 109, 85)'] * 3
+        if output:
+            page.set_viewport_size({"width": 390, "height": 960})
+            guidance.scroll_into_view_if_needed()
+            page.screenshot(path=str(Path(output) / 'beta117-mold-measurement-not-ready-390.png'))
+            page.set_viewport_size({"width": 590, "height": 960})
+        # Use the backend readiness, including a sub-threshold value that
+        # rounds to 10 °C, reverse contrast, and an unavailable outside source.
+        for readiness, outside, difference, colour, count in (
+            ('difference_too_small', 11.401, 9.999, 'rgb(223, 109, 85)', 3),
+            ('outdoors_not_colder', 23.4, -2.0, 'rgb(223, 109, 85)', 3),
+            ('temperatures_unavailable', None, None, 'rgb(154, 169, 186)', 2),
+        ):
+            page.evaluate("""({readiness,outside,difference})=>{
+              const states=structuredClone(card._hass.states);
+              const room=states['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id==='mold');
+              Object.assign(room.readings.at(-1).details,{
+                calibration_readiness:readiness,outdoor_temperature_c:outside,
+                calibration_temperature_difference_c:difference});
+              card._hass={...card._hass,states};card._renderContent(true);
+            }""", {'readiness': readiness, 'outside': outside, 'difference': difference})
+            assert values.evaluate_all('nodes=>nodes.map(el=>getComputedStyle(el).color)') == [colour] * count
+            if difference == 9.999:
+                assert guidance.locator('[data-mold-value117="difference"]').inner_text() == '10 °C'
+        assert guidance.locator('[data-mold-value117="outdoor"]').inner_text() == 'Unavailable'
         mold.locator('[data-room-issue114="missing"]').click()
         assert not guidance.is_visible()
         contact_detail = climate_only.locator('.hem-room-issue-detail114')
