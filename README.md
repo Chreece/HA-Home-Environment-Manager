@@ -8,8 +8,12 @@ provides a compact room dashboard.
 ## Current version and branches
 
 The current tested release is
-[**v0.6.0b116**](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b116).
-It keeps long VOC sensor names inside the compact room layout, groups setting
+[**v0.6.0b117**](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b117).
+The **Mold indication measurement** panel now explains the recommended minimum
+10°C indoor-to-outdoor temperature difference and colours its readings green
+or red according to temperature readiness. Missing readings remain neutral;
+stable conditions still need to be confirmed before measuring the surface.
+It also keeps long VOC sensor names inside the compact room layout, groups setting
 names by purpose, and adds contextual explanations to configuration details.
 Home Occupancy choices and the previously unnamed absence delay are labelled;
 mold calibration and the different sleep controls have explicit purposes.
@@ -36,7 +40,7 @@ Requires Home Assistant **2026.10.0 or newer**.
 1. Add `https://github.com/Chreece/HA-Home-Environment-Manager` as a HACS custom
    repository with category **Integration**, if it is not already present.
 2. Open **Home Environment Manager** in HACS. Enable **Show beta versions** in
-   version selection and choose **v0.6.0b116**.
+   version selection and choose **v0.6.0b117**.
 3. Download the update and restart Home Assistant.
 4. For a new installation, open **Settings → Devices & services → Add integration**
    and choose **Home Environment Manager**. For an existing installation, use its
@@ -79,7 +83,7 @@ are configured, room evidence and its existing Away cooldown still apply.
 A fresh empty occupied-rooms string or list is a valid empty list.
 
 For the full behavior changes in the current version, see the
-[release notes](.github/releases/v0.6.0b116.md).
+[release notes](.github/releases/v0.6.0b117.md).
 
 ## Development
 
