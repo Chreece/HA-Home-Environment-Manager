@@ -5668,7 +5668,7 @@
     const saved=this._averageDialog105,model=this._trendView114(evidence);
     saved.model114=model;
     const state=saved.view114,value=evidence.value;
-    const title=metric==='temperature'?this._t('temperature'):
+    const title=metric==='temperature'?_roomLabels87(this._language()).temperature:
       metric==='humidity'?this._t('humidity'):this._metricName(metric);
     const uid=saved.uid114 ||= ++trendSequence114;
     const accent=({temperature:'#f28a4b',humidity:'#36bcb1',pm25:'#8da4ef',
@@ -5773,6 +5773,15 @@
     if(saved.pointer114!==undefined){saved.pending114=true;return;}
     const key=JSON.stringify([evidence.value,this._hass?.language,this._hass?.config?.time_zone,saved.width114]);
     if(!force&&key===saved.last)return;
+    // Language can change while a manual popover stays open. Update its
+    // title and accessible close label together with the translated body.
+    const title=word105(this,'trend'),close=word105(this,'close');
+    saved.node.setAttribute('aria-label',title);
+    const heading=saved.node.querySelector('.hem-avg-head105>strong');
+    if(heading?.lastChild?.nodeType===3)heading.lastChild.nodeValue=title;
+    const closeButton=saved.node.querySelector('[data-close-avg105]');
+    closeButton?.setAttribute('title',close);
+    closeButton?.setAttribute('aria-label',close);
     const body=saved.node.querySelector('.hem-avg-body105');
     const position=saved.node.scrollTop;
     const temp=document.createElement('template');

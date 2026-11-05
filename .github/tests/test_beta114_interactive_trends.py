@@ -130,6 +130,8 @@ for(const language of ['en','de','el']){
   assert.ok(c._trendDate114(1793520000).length>10);
   const rendered=c._averageBody105('living','temperature',one);
   assert.ok(!rendered.includes('undefined'));
+  const title=({en:'Temperature',de:'Temperatur',el:'Θερμοκρασία'})[language];
+  assert.ok(rendered.includes('<strong>'+title+'</strong>'),'Trend metric title must be translated');
 }
 console.log('BETA114_TREND_GEOMETRY_GAPS_EXACT_VALUES_NAVIGATION=PASS');
 """
@@ -291,6 +293,13 @@ def browser_checks(states):
             assert popup.evaluate("e=>e.scrollWidth<=e.clientWidth+1"), "Trend panel overflowed horizontally"
             assert chart.is_visible()
             assert chart.evaluate("e=>getComputedStyle(e).touchAction") == "pan-y"
+            expected_title = {"en": "Temperature", "de": "Temperatur", "el": "Θερμοκρασία"}[language]
+            expected_heading = {"en": "Average trend", "de": "Mittelwertverlauf", "el": "Τάση μέσου όρου"}[language]
+            expected_close = {"en": "Close trend", "de": "Verlauf schließen", "el": "Κλείσιμο τάσης"}[language]
+            assert popup.locator(".hem-average-summary105 strong").inner_text() == expected_title
+            assert popup.locator(".hem-avg-head105>strong").inner_text() == expected_heading
+            assert popup.get_attribute("aria-label") == expected_heading
+            assert popup.locator("[data-close-avg105]").get_attribute("aria-label") == expected_close
             if screenshot_dir:
                 page.screenshot(path=str(Path(screenshot_dir) / f"beta114-trend-{width}-{theme}.png"))
         # One value and empty history keep sources usable without invented data.
