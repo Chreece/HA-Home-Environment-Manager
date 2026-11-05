@@ -228,7 +228,20 @@ def browser_checks(states):
         popup = page.locator('.hem-floating-info87')
         assert popup.is_visible()
         assert 'Reason' in popup.inner_text()
-        page.wait_for_function("card.shadowRoot.activeElement?.matches('.hem-floating-info87')")
+        try:
+            page.wait_for_function("card.shadowRoot.activeElement?.matches('.hem-floating-info87')", timeout=5000)
+        except Exception:
+            print('PROBLEM_FOCUS_DIAGNOSTIC', page.evaluate("""()=>({
+                active:card.shadowRoot.activeElement?.outerHTML,
+                requested:card._roomIssueInfo114,
+                explanation:card._floatingInfo87?.outerHTML,
+                details:[...card.shadowRoot.querySelectorAll('details.hem-context76[open]')].map(n=>n.outerHTML)
+            })"""))
+            output = os.environ.get('HEM_TEST_SCREENSHOT_DIR')
+            if output:
+                Path(output).mkdir(parents=True, exist_ok=True)
+                page.screenshot(path=str(Path(output) / 'beta114-focus-failure.png'), full_page=True)
+            raise
         page.keyboard.press('Escape')
         page.evaluate('card._renderContent(true)')
         assert fault.locator('[data-device-fold87="climate.managed_fault"]').get_attribute('open') is not None

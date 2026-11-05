@@ -191,9 +191,11 @@ jobs:
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-beta114-ui
         run: |
-          python -I .github/tests/test_beta114_room_navigation.py
-          python -I .github/tests/test_beta114_room_settings.py
-          python -I .github/tests/test_beta114_interactive_trends.py
+          hem_ui_status=0
+          python -I .github/tests/test_beta114_room_navigation.py || hem_ui_status=1
+          python -I .github/tests/test_beta114_room_settings.py || hem_ui_status=1
+          python -I .github/tests/test_beta114_interactive_trends.py || hem_ui_status=1
+          exit "$hem_ui_status"
       - name: Preserve room interface verification images
         if: always()
         uses: actions/upload-artifact@v4

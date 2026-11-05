@@ -4072,7 +4072,11 @@
       }
       if(el.matches?.('details.hem-context76,details.metric-help')) {
         if(el.open)this._openInfo87(el);
-        else this._closeInfo87();
+        else {
+          if(this._roomIssueInfo114===el.getAttribute('data-detail-id'))
+            this._roomIssueInfo114=null;
+          this._closeInfo87();
+        }
       }
     },true);
     this._closeInfo87 = ()=> {
@@ -4126,6 +4130,13 @@
         if(typeof pop.showPopover==='function')pop.showPopover();
       } catch {
         // Unsupported top-layer API: still fixed outside clipped ha-card.
+      }
+      // Native disclosure toggles and live reconciliation can recreate this
+      // popover after the originating click. Restore the requested problem
+      // focus on each recreation, not on one earlier animation frame.
+      if(this._roomIssueInfo114===detail.getAttribute('data-detail-id')){
+        pop.setAttribute('tabindex','-1');
+        pop.focus({preventScroll:true});
       }
     };
   };
@@ -6159,6 +6170,7 @@
     const room=safeArray(this._dashboard105()?.rooms).find(r=>r?.area_id===area);
     if(!room || !['missing','attention','windows','advice','ventilation',
       'faults','controllers','occupancy'].includes(kind))return;
+    this._roomIssueInfo114=null;
     this._roomsExpanded87 ||= new Set();this._roomsExpanded87.add(area);
     this._expanded.add(area);
     this._roomIssues114 ||= new Map();
@@ -6175,7 +6187,8 @@
     for(const device of affected)this._devicesExpanded87.add(device.entityId);
     if(kind==='controllers' && affected.length){
       this._detailsExpanded66 ||= new Set();
-      this._detailsExpanded66.add('device-info:'+affected[0].entityId);
+      this._roomIssueInfo114='device-info:'+affected[0].entityId;
+      this._detailsExpanded66.add(this._roomIssueInfo114);
     }
     this._renderContent(true);
     const fold=[...this.shadowRoot.querySelectorAll('[data-room-fold87]')]
@@ -6221,12 +6234,6 @@
       if(info){
         info.open=true;
         this._openInfo87(info);
-        requestAnimationFrame(()=>{
-          const pop=this._floatingInfo87;
-          if(!info.isConnected||!info.open||!pop?.isConnected)return;
-          pop.setAttribute('tabindex','-1');
-          pop.focus({preventScroll:true});
-        });
       }
     }
   };
