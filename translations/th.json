@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "ความสว่างขั้นต่ำในการปิด (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "พัดลม · {channel}ความเร็วต่ำสุด (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "พัดลม · {channel}ความเร็วสูงสุด (%)"
       }
     },
     "switch": {

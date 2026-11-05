@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Sulkemisen vähimmäisvalaistus (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Puhallin · {channel}Vähimmäisnopeus (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Puhallin · {channel}Enimmäisnopeus (%)"
       }
     },
     "switch": {

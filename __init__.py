@@ -102,6 +102,8 @@ def _exact_room_manager(hass: HomeAssistant, area: str,
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    from .advanced_comfort import async_migrate_advanced_comfort
+    async_migrate_advanced_comfort(hass, entry)
     from .room_hubs import async_sync_room_hubs, async_watch_room_hubs, home_subentry_id
     room_subentries = async_sync_room_hubs(hass, entry)
     manager = AirQualityManager(hass, entry)

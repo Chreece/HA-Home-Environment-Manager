@@ -3030,13 +3030,13 @@
         "name": "Annual radon screening reference (Bq/m³)"
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "Otherwise: explicitly estimated air speed (m/s)"
+        "name": "Advanced comfort · Air speed (m/s)"
       },
       "area_area_environment_met": {
-        "name": "Occupant activity rate (met)"
+        "name": "Advanced comfort · Activity (met)"
       },
       "area_area_environment_clo": {
-        "name": "Occupant clothing insulation (clo)"
+        "name": "Advanced comfort · Clothing (clo)"
       },
       "area_climate_operating_unoccupied_delay_minutes": {
         "name": "Delay before considering a room unoccupied (minutes)"
@@ -3196,6 +3196,12 @@
       },
       "shade_min_lux": {
         "name": "Minimum illuminance to close (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Fan · {channel}Minimum speed (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Fan · {channel}Maximum speed (%)"
       }
     },
     "switch": {
@@ -3218,7 +3224,7 @@
         "name": "This is a sleeping room"
       },
       "area_area_environment_enable_pmv": {
-        "name": "Calculate full ISO 7730 PMV/PPD (opt in)"
+        "name": "Advanced comfort (ISO 7730)"
       },
       "area_climate_operating_sleep_active": {
         "name": "Sleep profile currently active in this room"
@@ -3367,10 +3373,10 @@
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "Mean radiant temperature sensor (°C)"
+        "name": "Advanced comfort · Radiant temperature source"
       },
       "area_area_science_air_speed_entity": {
-        "name": "Measured local air-speed sensor (m/s)"
+        "name": "Advanced comfort · Air-speed source"
       },
       "shade_window_entity": {
         "name": "Associated window contact"

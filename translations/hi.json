@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "बंद करने के लिए न्यूनतम प्रकाश (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "पंखा · {channel}न्यूनतम गति (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "पंखा · {channel}अधिकतम गति (%)"
       }
     },
     "switch": {

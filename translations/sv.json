@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Minsta belysningsstyrka för stängning (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Fläkt · {channel}Lägsta hastighet (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Fläkt · {channel}Högsta hastighet (%)"
       }
     },
     "switch": {

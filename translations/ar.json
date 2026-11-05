@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "الحد الأدنى للإضاءة للإغلاق (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "المروحة · {channel}أدنى سرعة (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "المروحة · {channel}أعلى سرعة (%)"
       }
     },
     "switch": {

@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Minimálne osvetlenie na zatvorenie (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Ventilátor · {channel}Minimálna rýchlosť (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Ventilátor · {channel}Maximálna rýchlosť (%)"
       }
     },
     "switch": {

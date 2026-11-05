@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "닫기 위한 최소 조도 (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "팬 · {channel}최소 속도 (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "팬 · {channel}최대 속도 (%)"
       }
     },
     "switch": {

@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "רמת תאורה מינימלית לסגירה (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "מאוורר · {channel}מהירות מינימלית (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "מאוורר · {channel}מהירות מרבית (%)"
       }
     },
     "switch": {

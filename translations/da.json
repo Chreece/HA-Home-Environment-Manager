@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Mindste belysningsstyrke for lukning (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Ventilator · {channel}Minimumshastighed (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Ventilator · {channel}Maksimumshastighed (%)"
       }
     },
     "switch": {

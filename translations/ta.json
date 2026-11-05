@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "மூடுவதற்கான குறைந்தபட்ச ஒளி அளவு (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "விசிறி · {channel}குறைந்தபட்ச வேகம் (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "விசிறி · {channel}அதிகபட்ச வேகம் (%)"
       }
     },
     "switch": {

@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Минимална осветеност за затваряне (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Вентилатор · {channel}Минимална скорост (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Вентилатор · {channel}Максимална скорост (%)"
       }
     },
     "switch": {

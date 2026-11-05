@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Minimalna osvijetljenost za zatvaranje (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Ventilator · {channel}Najmanja brzina (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Ventilator · {channel}Najveća brzina (%)"
       }
     },
     "switch": {

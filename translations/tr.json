@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Kapanma için asgari aydınlık (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Fan · {channel}Minimum hız (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Fan · {channel}Maksimum hız (%)"
       }
     },
     "switch": {

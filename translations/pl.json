@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Minimalne natężenie światła do zamknięcia (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Wentylator · {channel}Minimalna prędkość (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Wentylator · {channel}Maksymalna prędkość (%)"
       }
     },
     "switch": {

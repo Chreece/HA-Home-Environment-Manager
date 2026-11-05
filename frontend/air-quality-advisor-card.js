@@ -1268,6 +1268,10 @@
       const capacityFields=states.filter(([id,item])=>
         id.startsWith('number.') && item?.attributes?.area_id===area &&
         typeof item.attributes.pid_fan_capacity_field==='string');
+      const fanPurposeSelectors=states.filter(([id,item])=>
+        id.startsWith('select.') && item?.attributes?.area_id===area &&
+        Array.isArray(item.attributes.options) &&
+        ['auto','extraction','filtration'].every(value=>item.attributes.options.includes(value)));
       return physical.map(([entityId, climate])=>{
         const matched = selectors.filter(([,item])=>signature(item)===signature(climate));
         const [methodId, method] = matched.length===1 ? matched[0] : [null,null];
@@ -1312,12 +1316,17 @@
           signature(item)===signature(climate)).map(([id,state])=>({
             id,state,field:state.attributes.pid_fan_capacity_field,
           }));
+        const purposes=fanPurposeSelectors.filter(([,item])=>
+          signature(item)===signature(climate) &&
+          item.attributes.source_device_id===climate.attributes.source_device_id);
+        const [fanPurposeId,fanPurpose]=purposes.length===1?purposes[0]:[null,null];
         return {entityId,climate,methodId,method,resumeButtonId,resumeButton,
                 errorAnnounceId,errorAnnounce,timedSetpointId,timedSetpoint,
                 calibrationSelectId,calibrationSelect,calibrationButtonId,calibrationButton,
                 calibrationNumbers,reviewApproveId,reviewApprove,
                 reviewDiscardId,reviewDiscard,capacityModeId,capacityMode,capacityDirectionId,
-                capacityDirection,capacityButtonId,capacityButton,capacityNumbers};
+                capacityDirection,capacityButtonId,capacityButton,capacityNumbers,
+                fanPurposeId,fanPurpose};
       }).sort((a,b)=>a.entityId.localeCompare(b.entityId));
     }
 
@@ -1368,6 +1377,9 @@
           state.attributes.setpoint_wait_until,
           state.attributes.requested_temperature,
           state.attributes.native_mode,
+          state.attributes.physical_primary_entity_id,
+          state.attributes.physical_hvac_mode,
+          state.attributes.upstream_power_switch,
         ]);
       // Activity color must update when a native device changes without a
       // corresponding HEM facade state change.
@@ -1375,8 +1387,9 @@
         Array.isArray(row[14])?row[14]:[]));
       const native=[...physicalIds].sort().map(id=>{
         const state=this._hass?.states?.[id];
-        return [id,state?.state,state?.attributes?.hvac_action,
+        return [id,state?.state,state?.attributes?.hvac_action,state?.attributes?.action,
           state?.attributes?.device_class,state?.attributes?.percentage,
+          state?.attributes?.area_id,
           // A native integration rename must immediately update its heading.
           state?.attributes?.friendly_name];
       });
@@ -3579,59 +3592,107 @@
     return {entityId,state,name};
   };
   /* HEM_NATIVE_TITLE93_END */
-  const _deviceState87 = (entry, hass) => {
+  /* HEM_ROOM_ACTIVITY112_START
+   * Read the original endpoints, not requested mode, PID demand or an ON
+   * supply plug. Humidifier `action` is distinct from powered-on `state`.
+   * Directional binary/valve colours require an observed nonzero output and
+   * the matching controller's observed, explicitly mapped physical mode.
+   */
+  const _nativeActivities112 = (entry, hass) => {
     const a=entry.climate?.attributes || {};
-    const sources=Array.isArray(a.source_entity_ids)?a.source_entity_ids:[];
-    for(const id of sources) {
-      const state=hass?.states?.[id];
-      if (!state || ['unavailable','unknown'].includes(state.state)) continue;
-      const action=state.attributes?.hvac_action;
-      if (typeof action==='string') {
-        if (['heating','cooling','drying','dehumidifying','fan','fan_only','humidifying'].includes(action))
-          return {active:true,entity:id,action};
-        continue; // HEAT or DRY mode alone is not physical operation.
+    const sources=[...new Set(safeArray(a.source_entity_ids).filter(id=>
+      typeof id==='string' && id!==entry.entityId && id!==a.upstream_power_switch))];
+    const declared=a.physical_primary_entity_id;
+    if(typeof declared==='string' && declared && !sources.includes(declared))return [];
+    const primary=declared || (sources.length===1?sources[0]:null);
+    const found=[];
+    const tones={heating:'heat',cooling:'cool',humidifying:'humidify',
+      drying:'dry',dehumidifying:'dry',fan:'fan',fan_only:'fan'};
+    for(const id of sources.sort((left,right)=>Number(right===primary)-Number(left===primary))) {
+      const state=hass?.states?.[id], attrs=state?.attributes||{};
+      if(!state || ['off','unavailable','unknown'].includes(state.state) ||
+          (typeof attrs.area_id==='string' && attrs.area_id!==a.area_id))continue;
+      const domain=id.split('.')[0];
+      const rawAction=domain==='humidifier'?(attrs.action??attrs.hvac_action):attrs.hvac_action;
+      const action=typeof rawAction==='string'?rawAction.trim().toLowerCase():null;
+      const fanTone=()=>id===primary && ['extraction','filtration'].includes(entry.fanPurpose?.state)
+        ?entry.fanPurpose.state==='extraction'?'ventilation':'filtration':'fan';
+      if(action!==null) {
+        if(['heating','cooling','drying','dehumidifying','fan','fan_only','humidifying'].includes(action))
+          found.push({active:true,entity:id,action,
+            tone:tones[action]==='fan'?fanTone():tones[action]});
+        continue; // An explicit IDLE/OFF/unknown action cannot fall back to ON.
       }
-      if (id.startsWith('climate.')) continue;
-      if (state.state==='on' || (['number','input_number'].includes(id.split('.')[0]) &&
-          Number.isFinite(Number(state.state)) && Number(state.state)>0))
-        return {active:true,entity:id,action:'on'};
+      if(['climate','humidifier'].includes(domain))continue;
+      if(domain==='fan' && state.state==='on') {
+        const percentage=attrs.percentage;
+        if(percentage!==undefined && percentage!==null &&
+            (!Number.isFinite(Number(percentage)) || Number(percentage)<=0))continue;
+        found.push({active:true,entity:id,action:'fan',tone:fanTone()});
+        continue;
+      }
+      const binary=['switch','input_boolean'].includes(domain) && state.state==='on';
+      const numeric=['number','input_number'].includes(domain) &&
+        String(state.state).trim()!=='' && Number.isFinite(Number(state.state)) &&
+        Number(state.state)>0 && Number(state.state)<=100;
+      if(!binary&&!numeric)continue;
+      const mapped=id===primary && a.physical_source_state===state.state &&
+        ['heat','cool','dry'].includes(a.physical_hvac_mode)?a.physical_hvac_mode:null;
+      found.push({active:true,entity:id,action:'on',tone:mapped||'neutral',
+        label:mapped?mapped+'Output':'output'});
     }
-    return {active:false,entity:null,action:'off'};
+    return found;
   };
-  // Actual physical feedback only. Never color a summary merely because
-  // HEM's requested HVAC mode says heat/cool/dry.
-  const _physicalActivities89 = (devices, hass) => {
-    const found={heat:false,cool:false,humidify:false,dry:false};
-    for(const entry of devices) {
-      const attrs=entry.climate?.attributes||{};
-      const sources=safeArray(attrs.source_entity_ids);
-      for(const id of sources) {
-        const physical=hass?.states?.[id];
-        if(!physical || ['unknown','unavailable'].includes(physical.state))continue;
-        const domain=id.split('.')[0];
-        const action=String(physical.attributes?.hvac_action||'').toLowerCase();
-        if(action==='heating')found.heat=true;
-        if(action==='cooling')found.cool=true;
-        if(action==='humidifying')found.humidify=true;
-        if(['drying','dehumidifying'].includes(action))found.dry=true;
-        if(physical.state==='on' && domain==='humidifier') {
-          const klass=physical.attributes?.device_class;
-          if(klass==='humidifier')found.humidify=true;
-          if(klass==='dehumidifier')found.dry=true;
-        }
-        if(physical.state==='on' && ['switch','input_boolean'].includes(domain)) {
-          const direction=attrs.requested_hvac_mode;
-          if(direction==='heat')found.heat=true;
-          if(direction==='cool')found.cool=true;
-        }
-      }
-    }
-    return {
-      temp:found.heat&&found.cool?'mixed':found.heat?'heat':found.cool?'cool':'neutral',
-      humidity:found.humidify&&found.dry?'mixed':
-        found.humidify?'humidify':found.dry?'dry':'neutral',
+  const _deviceState87 = (entry,hass) => {
+    const found=_nativeActivities112(entry,hass);
+    return found.find(item=>!['fan','neutral'].includes(item.tone)) || found[0] ||
+      {active:false,entity:null,action:'off',tone:'neutral'};
+  };
+  const _activityCopy112={
+    en:{heat:'Heating',cool:'Cooling',humidify:'Humidifying',dry:'Dehumidifying',
+      filtration:'Filtering air',ventilation:'Ventilating',fan:'Fan running',
+      neutral:'No reported device activity',output:'Output on',
+      heatOutput:'Heating output on',coolOutput:'Cooling output on',dryOutput:'Drying output on'},
+    de:{heat:'Heizt',cool:'Kühlt',humidify:'Befeuchtet',dry:'Entfeuchtet',
+      filtration:'Filtert Luft',ventilation:'Lüftet',fan:'Ventilator läuft',
+      neutral:'Keine gemeldete Geräteaktivität',output:'Ausgang eingeschaltet',
+      heatOutput:'Heizausgang eingeschaltet',coolOutput:'Kühlausgang eingeschaltet',dryOutput:'Entfeuchtungsausgang eingeschaltet'},
+    el:{heat:'Θερμαίνει',cool:'Ψύχει',humidify:'Υγραίνει',dry:'Αφυγραίνει',
+      filtration:'Φιλτράρει αέρα',ventilation:'Εξαερίζει',fan:'Ανεμιστήρας ενεργός',
+      neutral:'Δεν αναφέρεται δραστηριότητα συσκευών',output:'Έξοδος ενεργή',
+      heatOutput:'Έξοδος θέρμανσης ενεργή',coolOutput:'Έξοδος ψύξης ενεργή',dryOutput:'Έξοδος αφύγρανσης ενεργή'},
+  };
+  const _activityText112=(card,items)=>{
+    const words=_activityCopy112[card._language()]||_activityCopy112.en;
+    return [...new Set(items.map(item=>words[item.label||item.tone]||words.output))].join(' · ');
+  };
+  const _physicalActivities89 = (devices,hass) => {
+    const items=devices.flatMap(entry=>_nativeActivities112(entry,hass));
+    const tone=values=>{
+      const found=[...new Set(values.filter(value=>value!=='neutral'))];
+      return found.length>1?'mixed':found[0]||'neutral';
     };
+    const thermal=items.filter(item=>['heat','cool'].includes(item.tone));
+    const humidity=items.filter(item=>['humidify','dry'].includes(item.tone));
+    // A companion fan running with a heater does not create a conflicting
+    // room activity; independent air treatment still has its own indication.
+    const directed=items.filter(item=>!['fan','neutral'].includes(item.tone));
+    return {temp:tone(thermal.map(item=>item.tone)),
+      humidity:tone(humidity.map(item=>item.tone)),
+      overall:tone((directed.length?directed:items).map(item=>item.tone)),
+      items,thermal,moisture:humidity,
+      ventilation:items.some(item=>item.tone==='ventilation'),
+      filtration:items.some(item=>item.tone==='filtration')};
   };
+  const _airActivity112=(metric,activity)=>{
+    // Particle filtration must never imply that a purifier removes CO2.
+    if(['pm1','pm25','pm4','pm10','aqi','pollen'].includes(metric))
+      return activity.filtration?'filtration':activity.ventilation?'ventilation':'neutral';
+    if(['co2','no2','o3','so2','co','tvoc','voc','hcho','formaldehyde','radon','voc_index'].includes(metric))
+      return activity.ventilation?'ventilation':'neutral';
+    return 'neutral';
+  };
+  /* HEM_ROOM_ACTIVITY112_END */
   const _airMetric89 = Object.freeze({
     co2:['CO₂','mdi:molecule-co2','ppm'],
     pm1:['PM1','mdi:blur','µg/m³'],
@@ -3692,8 +3753,8 @@
     attention:'Needs attention',unavailable:'Missing data',temperature:'Temperature',
     humidity:'Humidity',devices:'Devices',controls:'Device controls',off:'Off'
   });
-  const _iconHint87 = (icon,label,tone='normal') =>
-    '<span class="hem-hint87 hem-hint-'+tone+'" title="'+escape(label)+
+  const _iconHint87 = (icon,label,tone='normal',extraClass='') =>
+    '<span class="hem-hint87 hem-hint-'+tone+(extraClass?' '+escape(extraClass):'')+'" title="'+escape(label)+
     '" aria-label="'+escape(label)+'"><ha-icon icon="'+escape(icon)+
     '" aria-hidden="true"></ha-icon></span>';
   const _readMetric87 = (room, metric) => {
@@ -3731,6 +3792,8 @@
     const open=this._roomsExpanded87?.has(room.area_id)===true;
     const devices=this._managedControllers(room.area_id);
     const activity=_physicalActivities89(devices,this._hass);
+    const activityText=_activityText112(this,activity.items) ||
+      (_activityCopy112[this._language()]||_activityCopy112.en).neutral;
     // Four TOTAL readings at most: temperature, humidity and the two most
     // useful distinct available environmental metrics. Never scroll a row.
     // Air/health measurements outrank lux=0 and duplicate source sensors.
@@ -3764,13 +3827,16 @@
       const measured=typeof evidence?.value==='number' &&
         Number.isFinite(evidence.value)?evidence.value:item.value;
       const formatted=this._format(measured,measured<10?1:0);
+      const tone=_airActivity112(metric,activity);
+      const actionText=tone==='neutral'?'':_activityText112(this,[{tone}]);
       const label=String(item.name||short)+' · '+formatted+
-        (nativeUnit?' '+nativeUnit:'');
+        (nativeUnit?' '+nativeUnit:'')+(actionText?' · '+actionText:'');
       const body=this._icon(icon)+
         '<span class="hem-room-metric-label107">'+escape(short)+'</span>'+
         '<span class="hem-room-metric-value107">'+escape(formatted)+'</span>'+
         (nativeUnit?'<span class="hem-room-metric-unit107">'+escape(nativeUnit)+'</span>':'');
-      return this._measurementBadge105(room,metric,'hem-room-air-chip89 hem-room-metric107',
+      return this._measurementBadge105(room,metric,
+        'hem-room-air-chip89 hem-room-metric107 hem-activity-'+tone,
         body,label,item.entity_id);
     }).join('');
     const active=devices.map(entry=>({entry,state:_deviceState87(entry,this._hass)}))
@@ -3854,9 +3920,14 @@
       blocked+' '+labels.devices+' · '+labels.attention,'warn'));
     const activeIcons=active.slice(0,3).map(item=>{
       const domain=item.state.entity.split('.')[0];
-      const name=item.entry.climate?.attributes?.friendly_name || item.state.entity;
-      return _iconHint87(_deviceIcons87[domain]||'mdi:power',
-        name+' · '+labels.active,'good');
+      const name=this._hass?.states?.[item.state.entity]?.attributes?.friendly_name ||
+        item.entry.climate?.attributes?.friendly_name || item.state.entity;
+      const icon={heat:'mdi:fire',cool:'mdi:snowflake',humidify:'mdi:water-plus-outline',
+        dry:'mdi:water-minus-outline',filtration:'mdi:air-filter',
+        ventilation:'mdi:weather-windy',fan:'mdi:fan'}[item.state.tone] ||
+        _deviceIcons87[domain]||'mdi:power';
+      return _iconHint87(icon,name+' · '+_activityText112(this,[item.state]),
+        'normal','hem-activity-'+item.state.tone);
     }).join('');
     const extra=active.length>3?'<span class="hem-compact-extra87" title="'+
       escape(active.length+' '+labels.active)+'">+'+(active.length-3)+'</span>':'';
@@ -3867,18 +3938,20 @@
     return '<details class="hem-room-fold87 hem-room-'+roomStatus+'" '+
       'data-room-fold87="'+escape(room.area_id)+'" '+(open?'open':'')+'>'+
       '<summary class="hem-room-glance87" aria-label="'+
-      escape((open?labels.collapse:labels.expand)+': '+String(room.name||room.area_id))+'">'+
-      this._icon('mdi:home-outline')+
+      escape((open?labels.collapse:labels.expand)+': '+String(room.name||room.area_id)+
+        ' · '+activityText)+'">'+
+      '<ha-icon class="hem-room-icon112 hem-activity-'+activity.overall+
+        '" icon="mdi:home-outline" aria-hidden="true" title="'+escape(activityText)+'"></ha-icon>'+
       '<strong class="hem-room-name87" title="'+escape(room.name||room.area_id)+'">'+
       escape(room.name||room.area_id)+'</strong>'+
       this._measurementBadge105(room,'temperature',
         'hem-room-reading87 hem-room-metric107 hem-activity-'+activity.temp,
         this._icon('mdi:thermometer')+formatted(temp,'°'),
-        labels.temperature)+
+        labels.temperature+(activity.thermal.length?' · '+_activityText112(this,activity.thermal):''))+
       this._measurementBadge105(room,'humidity',
         'hem-room-reading87 hem-room-metric107 hem-activity-'+activity.humidity,
         this._icon('mdi:water-percent')+formatted(humidity,'%'),
-        labels.humidity)+
+        labels.humidity+(activity.moisture.length?' · '+_activityText112(this,activity.moisture):''))+
       (airBadges?'<span class="hem-room-air89" role="group" aria-label="Air quality and environmental sensors">'+airBadges+'</span>':'')+
       '<span class="hem-room-active87" aria-label="'+
       escape(active.length+' '+labels.active)+'">'+activeIcons+extra+'</span>'+
@@ -5486,6 +5559,39 @@
   </style>`;
   proto107._styles=function(){return oldStyles107.call(this)+css107;};
   /* HEM_ROOM_METRIC_SEPARATION107_END */
+
+  /* HEM_ROOM_ACTIVITY_COLOURS112_START
+   * Target the visible metric glyph, not the value or average marker. These
+   * explicit room selectors keep colours equal on buttons and plain spans.
+   */
+  const proto112=AirQualityAdvisorCard.prototype;
+  const oldStyles112=proto112._styles;
+  const css112=`<style>
+    .hem-room-glance87 .hem-room-metric107>ha-icon,
+    .hem-room-glance87 .hem-hint87.hem-activity-neutral>ha-icon,
+    .hem-room-glance87>ha-icon.hem-room-icon112{color:var(--aqa-muted)}
+    .hem-room-glance87 .hem-activity-heat>ha-icon,
+    .hem-room-glance87>ha-icon.hem-activity-heat{color:#f28a4b}
+    .hem-room-glance87 .hem-activity-cool>ha-icon,
+    .hem-room-glance87>ha-icon.hem-activity-cool{color:#50baff}
+    .hem-room-glance87 .hem-activity-humidify>ha-icon,
+    .hem-room-glance87>ha-icon.hem-activity-humidify{color:#36cbb8}
+    .hem-room-glance87 .hem-activity-dry>ha-icon,
+    .hem-room-glance87>ha-icon.hem-activity-dry{color:#e5ad44}
+    .hem-room-glance87 .hem-activity-filtration>ha-icon,
+    .hem-room-glance87 .hem-activity-fan>ha-icon,
+    .hem-room-glance87>ha-icon.hem-activity-filtration,
+    .hem-room-glance87>ha-icon.hem-activity-fan{color:#49c98b}
+    .hem-room-glance87 .hem-activity-ventilation>ha-icon,
+    .hem-room-glance87>ha-icon.hem-activity-ventilation{color:#4dc7d9}
+    .hem-room-glance87 .hem-activity-mixed>ha-icon,
+    .hem-room-glance87>ha-icon.hem-activity-mixed{color:#b8a3f8}
+    .hem-room-glance87 .hem-room-metric107 .hem-avg-marker105>ha-icon{
+      color:var(--aqa-blue);
+    }
+  </style>`;
+  proto112._styles=function(){return oldStyles112.call(this)+css112;};
+  /* HEM_ROOM_ACTIVITY_COLOURS112_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);

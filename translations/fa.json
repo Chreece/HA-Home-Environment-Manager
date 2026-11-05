@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "حداقل روشنایی برای بستن (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "فن · {channel}حداقل سرعت (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "فن · {channel}حداکثر سرعت (%)"
       }
     },
     "switch": {

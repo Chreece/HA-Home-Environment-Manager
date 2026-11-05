@@ -287,6 +287,12 @@ class ConfigSelect(SelectEntity):
                 self._manager, self._kind, self._setting_key, option,
                 area=self._area_id, entity_id=self._entity_id
             )
+        if (self._kind == "climate_policy" and self._setting_key == "target_source"
+                and option == "pmv"):
+            from .advanced_comfort import async_enable_advanced_controls
+            async_enable_advanced_controls(
+                self.hass, self._manager.entry, self._area_id,
+            )
         self.async_write_ha_state()
 
     async def async_added_to_hass(self):
@@ -485,6 +491,10 @@ class AreaScienceSource(ConfigSelect):
 
     def __init__(self, manager, entry_id, area, key):
         super().__init__(manager, entry_id, area, "area_science", (), setting_key=key)
+        from .advanced_comfort import advanced_comfort_enabled
+        self._attr_entity_registry_enabled_default = advanced_comfort_enabled(
+            manager.settings, area,
+        )
 
     @property
     def options(self):

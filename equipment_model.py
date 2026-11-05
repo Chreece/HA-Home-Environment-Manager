@@ -55,8 +55,8 @@ POWER_FIELDS = ("min_on_seconds", "min_off_seconds", "max_on_seconds",
 LIMIT_FIELDS = (
     "temperature_min_limit", "temperature_max_limit",
     "humidity_min_limit", "humidity_max_limit",
-    "fan_min_percentage", "fan_max_percentage",
 )
+FAN_LIMIT_FIELDS = ("fan_min_percentage", "fan_max_percentage")
 DEVICE_SELECTS = {"presence_requirement": ("always", "occupied", "absent"),
                   "sleep_behavior": ("normal", "pause", "sleep_targets"),
                   "fan_purpose": ("auto", "extraction", "filtration")}
@@ -386,6 +386,88 @@ def available_room_limit_fields(manager: Any, area: str) -> tuple[str, ...]:
                  if room_limit_edit_bounds(manager, area, key) is not None)
 
 
+def fan_limit_capability(manager: Any, spec: ManagedDevice) -> Capabilities | None:
+    """Configuration-only capability, retaining an exact offline fan's bounds.
+
+    Saved capabilities never qualify an actuator write. The runtime still
+    reads live capabilities and availability before changing a native fan.
+    """
+    cap = capabilities(manager, spec)
+    if cap is not None and cap.fan_percentage:
+        return cap
+    if sources_available(manager, spec):
+        return None
+    record = getattr(getattr(manager, "equipment", None), "records", {}).get(spec.identifier, {})
+    if (record.get("area") == spec.area_id
+            and record.get("source_device_id") == spec.source_device_id
+            and tuple(record.get("sources", ())) == spec.source_entities):
+        try:
+            saved = Capabilities(**record["capabilities"])
+            if (saved.fan_percentage and saved.primary in spec.source_entities
+                    and saved.fan_entity in spec.source_entities):
+                return saved
+        except (KeyError, TypeError, ValueError, OverflowError):
+            pass
+    return None
+
+
+def fan_limit_edit_bounds(manager: Any, spec: ManagedDevice) -> tuple[float, float, float, str]:
+    """Speed limits may lie between native steps; output uses an allowed step."""
+    cap = fan_limit_capability(manager, spec)
+    low, high, _ = _fan_bounds(cap) if cap is not None else (1.0, 100.0, 1.0)
+    return low, high, 1.0, "%"
+
+
+def device_fan_limits(manager: Any, spec: ManagedDevice,
+                      cap: Capabilities | None = None) -> dict[str, float]:
+    """Independent limits, with the old effective room range until configured.
+
+    The new pair lives separately from Beta17's retired per-device keys.
+    Unedited controllers retain the Beta18–111 room policy, including its
+    conservative migration fallback. Editing one controller cannot change
+    any sibling's inherited range.
+    """
+    profiles = manager.settings.get(SETTINGS, {})
+    raw = profiles.get(spec.identifier, {}) if isinstance(profiles, dict) else {}
+    explicit = raw.get("fan_speed_limits") if isinstance(raw, dict) else None
+    explicit = explicit if isinstance(explicit, dict) else {}
+    values = {key: finite(explicit.get(key), 1, 100) for key in FAN_LIMIT_FIELDS}
+    if (any(value is None for value in values.values())
+            or values[FAN_LIMIT_FIELDS[0]] > values[FAN_LIMIT_FIELDS[1]]):
+        rooms = manager.settings.get("environment_rooms", {})
+        env = rooms.get(spec.area_id, {}) if isinstance(rooms, dict) else {}
+        saved = env.get(ROOM_LIMITS_KEY, {}) if isinstance(env, dict) else {}
+        saved = saved if isinstance(saved, dict) else {}
+        # Retain the former common range only as a compatibility fallback.
+        # With no saved legacy limit, each fan uses its own native bounds.
+        legacy_present = any(key in saved for key in FAN_LIMIT_FIELDS)
+        if not legacy_present and isinstance(profiles, dict):
+            legacy_present = any(
+                isinstance(profile, dict) and any(key in profile for key in FAN_LIMIT_FIELDS)
+                for item in specs(manager) if item.area_id == spec.area_id
+                for profile in (profiles.get(item.identifier, {}),)
+            )
+        bounds = (room_limit_bounds(manager, spec.area_id, FAN_LIMIT_FIELDS[0])
+                  if legacy_present else None)
+        fallback = bounds or (1.0, 100.0, 1.0, "%")
+        values = {}
+        for key in FAN_LIMIT_FIELDS:
+            value = finite(saved.get(key), fallback[0], fallback[1])
+            if value is None:
+                value = _legacy_room_limit(manager, spec.area_id, key, fallback)
+            values[key] = float(value if value is not None else
+                                fallback[0] if "_min_" in key else fallback[1])
+        if values[FAN_LIMIT_FIELDS[0]] > values[FAN_LIMIT_FIELDS[1]]:
+            values = dict(zip(FAN_LIMIT_FIELDS, fallback[:2]))
+    if cap is not None and cap.fan_percentage:
+        low, high, _ = _fan_bounds(cap)
+        # An incompatible newly reported native range stays empty. Never
+        # increase a configured maximum merely to force a usable speed.
+        values[FAN_LIMIT_FIELDS[0]] = max(low, values[FAN_LIMIT_FIELDS[0]])
+        values[FAN_LIMIT_FIELDS[1]] = min(high, values[FAN_LIMIT_FIELDS[1]])
+    return {key: float(value) for key, value in values.items()}
+
+
 def _legacy_room_limit(manager: Any, area: str, key: str, bounds: tuple[float, float, float, str | None]) -> float | None:
     """Conservatively merge beta17 per-device limits into one room value."""
     profiles = manager.settings.get(SETTINGS, {})
@@ -473,16 +555,14 @@ def room_limit_display_values(manager: Any, area: str) -> dict[str, float]:
 
 
 def device_limits(manager: Any, spec: ManagedDevice, cap: Capabilities) -> dict[str, float]:
-    """Apply room-wide limits while retaining this device's stricter native bounds."""
+    """Room temperature/RH bounds and this device's independent fan limits."""
     room = room_limit_values(manager, spec.area_id)
-    fan_lo, fan_hi, _ = _fan_bounds(cap)
     return {
         "temperature_min_limit": max(cap.min_temp, room.get("temperature_min_limit", cap.min_temp)),
         "temperature_max_limit": min(cap.max_temp, room.get("temperature_max_limit", cap.max_temp)),
         "humidity_min_limit": max(cap.min_humidity, room.get("humidity_min_limit", cap.min_humidity)),
         "humidity_max_limit": min(cap.max_humidity, room.get("humidity_max_limit", cap.max_humidity)),
-        "fan_min_percentage": max(fan_lo, room.get("fan_min_percentage", fan_lo)),
-        "fan_max_percentage": min(fan_hi, room.get("fan_max_percentage", fan_hi)),
+        **device_fan_limits(manager, spec, cap),
     }
 
 
@@ -497,7 +577,7 @@ def number_bounds(cap: Capabilities, key: str) -> tuple[float, float, float, str
 
 
 def applicable_limit_fields(cap: Capabilities) -> tuple[str, ...]:
-    """Capability classification retained for migration/tests; UI limits are room-owned."""
+    """Physical limit classification; only temperature/RH remain room-owned."""
     result = []
     if cap.temperature or cap.temperature_range:
         result.extend(("temperature_min_limit", "temperature_max_limit"))

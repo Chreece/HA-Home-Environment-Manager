@@ -1110,6 +1110,53 @@ class EquipmentRuntime:
         passive_review: str | None = None,
     ) -> None:
         """Validate all requested edits atomically; no hidden hardware permission."""
+        if "fan_min_percentage" in changes or "fan_max_percentage" in changes:
+            # Fan bounds are independent configuration, never a fan command
+            # or permission to acknowledge/adopt an outstanding output.
+            if set(changes) - set(model.FAN_LIMIT_FIELDS):
+                raise HomeAssistantError("Change fan speed limits separately from other controls")
+            lock = getattr(self.manager, "_device_settings_write_lock", None)
+            if lock is None:
+                lock = self.manager._device_settings_write_lock = asyncio.Lock()
+            async with lock:
+                if not self._ready or not self._current_spec(spec):
+                    raise HomeAssistantError("Controller storage or source identity is unavailable")
+                cap = model.fan_limit_capability(self.manager, spec)
+                if cap is None and model.sources_available(self.manager, spec):
+                    raise HomeAssistantError("This device does not support fan percentage control")
+                profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+                profiles = profiles if isinstance(profiles, dict) else {}
+                previous = profiles.get(spec.identifier)
+                previous = previous if isinstance(previous, dict) else {}
+                if cap is None and not isinstance(previous.get("fan_speed_limits"), dict):
+                    from .equipment_feature_registration import registered_control
+                    from homeassistant.helpers import entity_registry as er
+                    registry = er.async_get(self.hass)
+                    if not any(registered_control(registry, "number", spec, key)
+                               for key in model.FAN_LIMIT_FIELDS):
+                        raise HomeAssistantError("This controller has no previously verified percentage fan")
+                low, high, _, _ = model.fan_limit_edit_bounds(self.manager, spec)
+                proposed = model.device_fan_limits(self.manager, spec, cap)
+                for key, raw_value in changes.items():
+                    value = None if isinstance(raw_value, bool) else finite(raw_value, low, high)
+                    if value is None:
+                        raise HomeAssistantError("Fan speed limit is outside this device's supported range")
+                    proposed[key] = value
+                minimum, maximum = (proposed[key] for key in model.FAN_LIMIT_FIELDS)
+                if minimum > maximum:
+                    raise HomeAssistantError("Maximum fan speed must not be below minimum")
+                if cap is not None and not any(
+                    finite(value, minimum, maximum) is not None for value in cap.fan_modes
+                ):
+                    raise HomeAssistantError("Fan speed range must include a supported native speed")
+                options = deepcopy(self.manager.entry.options)
+                profiles[spec.identifier] = {**previous, "fan_speed_limits": proposed}
+                options[model.SETTINGS] = profiles
+                self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
+            self._presentation_updates.request(spec.identifier)
+            if getattr(self.manager, "_active", False):
+                self.manager._recalculate(initial=True)
+            return
         if "timed_setpoint_sequence" in changes:
             # This is an independent timing preference. A pending service,
             # ACK or recovery hold must not block editing or be acknowledged
@@ -1295,6 +1342,13 @@ class EquipmentRuntime:
                     adjusted["timed_setpoint_sequence"] = model.settings(
                         self.manager, spec
                     ).get("timed_setpoint_sequence") is True
+                    latest_profile = existing.get(spec.identifier)
+                    latest_fan_limits = (latest_profile.get("fan_speed_limits")
+                                         if isinstance(latest_profile, dict) else None)
+                    if isinstance(latest_fan_limits, dict):
+                        adjusted["fan_speed_limits"] = deepcopy(latest_fan_limits)
+                    else:
+                        adjusted.pop("fan_speed_limits", None)
                     existing[spec.identifier] = adjusted
                     options[model.SETTINGS] = existing
                     # Revalidate physical identity, area and competing claims
@@ -1573,6 +1627,13 @@ class EquipmentRuntime:
                 new["timed_setpoint_sequence"] = model.settings(
                     self.manager, spec
                 ).get("timed_setpoint_sequence") is True
+                latest_profile = saved.get(spec.identifier)
+                latest_fan_limits = (latest_profile.get("fan_speed_limits")
+                                     if isinstance(latest_profile, dict) else None)
+                if isinstance(latest_fan_limits, dict):
+                    new["fan_speed_limits"] = deepcopy(latest_fan_limits)
+                else:
+                    new.pop("fan_speed_limits", None)
                 saved[spec.identifier] = new
                 options[model.SETTINGS] = saved
                 # Storage awaited above: refuse a stale approval if the source

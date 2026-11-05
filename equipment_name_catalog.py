@@ -1726,9 +1726,58 @@ _TIMED_SETPOINT_LABELS = {
     "zh-Hans": "延迟应用设定值", "zh-Hant": "延遲套用設定值",
 }
 
+_FAN_LIMIT_LABELS = {
+    "en": ("Minimum speed", "Maximum speed"),
+    "el": ("Ελάχιστη ταχύτητα", "Μέγιστη ταχύτητα"),
+    "de": ("Mindestgeschwindigkeit", "Höchstgeschwindigkeit"),
+    "fr": ("Vitesse minimale", "Vitesse maximale"),
+    "es": ("Velocidad mínima", "Velocidad máxima"),
+    "it": ("Velocità minima", "Velocità massima"),
+    "nl": ("Minimumsnelheid", "Maximumsnelheid"),
+    "pt": ("Velocidade mínima", "Velocidade máxima"),
+    "pt-BR": ("Velocidade mínima", "Velocidade máxima"),
+    "pl": ("Minimalna prędkość", "Maksymalna prędkość"),
+    "cs": ("Minimální rychlost", "Maximální rychlost"),
+    "sk": ("Minimálna rýchlosť", "Maximálna rýchlosť"),
+    "sv": ("Lägsta hastighet", "Högsta hastighet"),
+    "nb": ("Minste hastighet", "Høyeste hastighet"),
+    "da": ("Minimumshastighed", "Maksimumshastighed"),
+    "fi": ("Vähimmäisnopeus", "Enimmäisnopeus"),
+    "hu": ("Minimális sebesség", "Maximális sebesség"),
+    "ro": ("Viteză minimă", "Viteză maximă"),
+    "bg": ("Минимална скорост", "Максимална скорост"),
+    "hr": ("Najmanja brzina", "Najveća brzina"),
+    "sr": ("Минимална брзина", "Максимална брзина"),
+    "ru": ("Минимальная скорость", "Максимальная скорость"),
+    "uk": ("Мінімальна швидкість", "Максимальна швидкість"),
+    "tr": ("Minimum hız", "Maksimum hız"),
+    "ar": ("أدنى سرعة", "أعلى سرعة"),
+    "he": ("מהירות מינימלית", "מהירות מרבית"),
+    "fa": ("حداقل سرعت", "حداکثر سرعت"),
+    "hi": ("न्यूनतम गति", "अधिकतम गति"),
+    "bn": ("সর্বনিম্ন গতি", "সর্বোচ্চ গতি"),
+    "ta": ("குறைந்தபட்ச வேகம்", "அதிகபட்ச வேகம்"),
+    "ur": ("کم از کم رفتار", "زیادہ سے زیادہ رفتار"),
+    "id": ("Kecepatan minimum", "Kecepatan maksimum"),
+    "ja": ("最低速度", "最高速度"),
+    "ko": ("최소 속도", "최대 속도"),
+    "th": ("ความเร็วต่ำสุด", "ความเร็วสูงสุด"),
+    "vi": ("Tốc độ tối thiểu", "Tốc độ tối đa"),
+    "zh-Hans": ("最低速度", "最高速度"),
+    "zh-Hant": ("最低速度", "最高速度"),
+}
+
 # Keep retired Beta82 adaptation label for translation audits and saved
 # entity-registry migration; never register that obsolete selector.
 for _locale, _names in EQUIPMENT_TRANSLATED_NAMES.items():
+    for _key, _label in zip(
+        ("fan_min_percentage", "fan_max_percentage"),
+        _FAN_LIMIT_LABELS.get(_locale, _FAN_LIMIT_LABELS["en"]),
+    ):
+        _names[_key] = (
+            _names["fan_purpose"].partition(" · ")[0]
+            + " · {channel}" + _label + " (%)"
+        )
     _names["timed_setpoint_sequence"] = (
         _names["control_mode"].partition(" · ")[0] + " · {channel}"
         + _TIMED_SETPOINT_LABELS.get(_locale, _TIMED_SETPOINT_LABELS["en"]) + " (30 s)"

@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Iluminância mínima para fechar (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Ventilador · {channel}Velocidade mínima (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Ventilador · {channel}Velocidade máxima (%)"
       }
     },
     "switch": {

@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "বন্ধ করার ন্যূনতম আলোকমাত্রা (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "পাখা · {channel}সর্বনিম্ন গতি (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "পাখা · {channel}সর্বোচ্চ গতি (%)"
       }
     },
     "switch": {

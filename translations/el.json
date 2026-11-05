@@ -3030,13 +3030,13 @@
         "name": "Ετήσια τιμή αναφοράς ραδονίου (Bq/m³)"
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "Εκτιμώμενη ταχύτητα αέρα (m/s)"
+        "name": "Προχωρημένη άνεση · Ταχύτητα αέρα (m/s)"
       },
       "area_area_environment_met": {
-        "name": "Δραστηριότητα ενοίκου (met)"
+        "name": "Προχωρημένη άνεση · Δραστηριότητα (met)"
       },
       "area_area_environment_clo": {
-        "name": "Θερμομόνωση ενδυμάτων (clo)"
+        "name": "Προχωρημένη άνεση · Ένδυση (clo)"
       },
       "area_climate_operating_unoccupied_delay_minutes": {
         "name": "Χρόνος πριν θεωρηθεί άδειο το δωμάτιο (λεπτά)"
@@ -3196,6 +3196,12 @@
       },
       "shade_min_lux": {
         "name": "Ελάχιστη φωτεινότητα για κλείσιμο (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Ανεμιστήρας · {channel}Ελάχιστη ταχύτητα (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Ανεμιστήρας · {channel}Μέγιστη ταχύτητα (%)"
       }
     },
     "switch": {
@@ -3218,7 +3224,7 @@
         "name": "Χώρος ύπνου"
       },
       "area_area_environment_enable_pmv": {
-        "name": "Ενεργοποίηση θερμικής άνεσης ISO 7730 PMV/PPD"
+        "name": "Προχωρημένη άνεση (ISO 7730)"
       },
       "area_climate_operating_sleep_active": {
         "name": "Ενεργό προφίλ ύπνου"
@@ -3367,10 +3373,10 @@
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "Μέση ακτινοβολούμενη θερμοκρασία (°C)"
+        "name": "Προχωρημένη άνεση · Ακτινοβολούμενη θερμοκρασία"
       },
       "area_area_science_air_speed_entity": {
-        "name": "Μετρούμενη ταχύτητα αέρα (m/s)"
+        "name": "Προχωρημένη άνεση · Αισθητήρας ταχύτητας αέρα"
       },
       "shade_window_entity": {
         "name": "Συνδεδεμένος αισθητήρας παραθύρου"

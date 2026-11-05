@@ -91,6 +91,11 @@ class HomeSettingSwitch(SwitchEntity):
         self._key = key
         self._kind = kind
         self._area = area
+        if kind == "area_environment" and key == "enable_pmv":
+            from .advanced_comfort import advanced_comfort_enabled
+            self._attr_entity_registry_enabled_default = advanced_comfort_enabled(
+                manager.settings, area,
+            )
         self._attr_unique_id = (
             f"{entry_id}_area_{area}_{kind}_{key}" if area else
             f"{entry_id}_home_{kind}_{key}" if kind != "global_setting" else
@@ -144,6 +149,11 @@ class HomeSettingSwitch(SwitchEntity):
 
     async def async_turn_on(self, **kwargs):
         await update_device_setting(self._manager, self._kind, self._key, True, area=self._area)
+        if self._kind == "area_environment" and self._key == "enable_pmv":
+            from .advanced_comfort import async_enable_advanced_controls
+            async_enable_advanced_controls(
+                self.hass, self._manager.entry, self._area, include_switch=False,
+            )
         self.async_write_ha_state()
 
     async def async_turn_off(self, **kwargs):

@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Pencahayaan minimum untuk menutup (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Kipas · {channel}Kecepatan minimum (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Kipas · {channel}Kecepatan maksimum (%)"
       }
     },
     "switch": {

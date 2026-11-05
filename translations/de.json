@@ -3030,13 +3030,13 @@
         "name": "Radon-Jahresreferenzwert (Bq/m³)"
       },
       "area_area_environment_air_speed_m_s": {
-        "name": "Angenommene Luftgeschwindigkeit (m/s)"
+        "name": "Erweiterter Komfort · Luftgeschwindigkeit (m/s)"
       },
       "area_area_environment_met": {
-        "name": "Aktivität des Bewohners (met)"
+        "name": "Erweiterter Komfort · Aktivität (met)"
       },
       "area_area_environment_clo": {
-        "name": "Bekleidungsisolierung des Bewohners (clo)"
+        "name": "Erweiterter Komfort · Kleidung (clo)"
       },
       "area_climate_operating_unoccupied_delay_minutes": {
         "name": "Verzögerung bis Raum als unbelegt gilt (Minuten)"
@@ -3196,6 +3196,12 @@
       },
       "shade_min_lux": {
         "name": "Mindestbeleuchtungsstärke zum Schließen (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Lüfter · {channel}Mindestgeschwindigkeit (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Lüfter · {channel}Höchstgeschwindigkeit (%)"
       }
     },
     "switch": {
@@ -3218,7 +3224,7 @@
         "name": "Schlafzimmer"
       },
       "area_area_environment_enable_pmv": {
-        "name": "ISO-7730-Komfort PMV/PPD aktivieren"
+        "name": "Erweiterter Komfort (ISO 7730)"
       },
       "area_climate_operating_sleep_active": {
         "name": "Schlaf · Geräte"
@@ -3367,10 +3373,10 @@
         }
       },
       "area_area_science_radiant_temperature_entity": {
-        "name": "Mittlere Strahlungstemperatur (°C)"
+        "name": "Erweiterter Komfort · Strahlungstemperaturquelle"
       },
       "area_area_science_air_speed_entity": {
-        "name": "Gemessene Luftgeschwindigkeit (m/s)"
+        "name": "Erweiterter Komfort · Luftgeschwindigkeitssensor"
       },
       "shade_window_entity": {
         "name": "Zugeordneter Fensterkontakt"

@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Độ rọi tối thiểu để đóng (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Quạt · {channel}Tốc độ tối thiểu (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Quạt · {channel}Tốc độ tối đa (%)"
       }
     },
     "switch": {

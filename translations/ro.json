@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Iluminare minimă pentru închidere (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Ventilator · {channel}Viteză minimă (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Ventilator · {channel}Viteză maximă (%)"
       }
     },
     "switch": {

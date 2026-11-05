@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Minste lysstyrke for lukking (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Vifte · {channel}Minste hastighet (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Vifte · {channel}Høyeste hastighet (%)"
       }
     },
     "switch": {

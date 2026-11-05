@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "閉じるための最低照度 (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "ファン · {channel}最低速度 (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "ファン · {channel}最高速度 (%)"
       }
     },
     "switch": {

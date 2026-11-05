@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "Минимальная освещённость для закрытия (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "Вентилятор · {channel}Минимальная скорость (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "Вентилятор · {channel}Максимальная скорость (%)"
       }
     },
     "switch": {

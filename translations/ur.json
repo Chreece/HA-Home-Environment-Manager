@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "بند کرنے کے لیے کم از کم روشنی (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "پنکھا · {channel}کم از کم رفتار (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "پنکھا · {channel}زیادہ سے زیادہ رفتار (%)"
       }
     },
     "switch": {

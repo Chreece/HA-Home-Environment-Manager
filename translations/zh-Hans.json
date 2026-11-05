@@ -3192,6 +3192,12 @@
       },
       "shade_min_lux": {
         "name": "关闭时的最低照度 (lx)"
+      },
+      "equipment_fan_min_percentage": {
+        "name": "风扇 · {channel}最低速度 (%)"
+      },
+      "equipment_fan_max_percentage": {
+        "name": "风扇 · {channel}最高速度 (%)"
       }
     },
     "switch": {

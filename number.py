@@ -68,8 +68,17 @@ def _equipment_numbers(manager, spec, registry) -> tuple["EquipmentNumber", ...]
     cap = equipment.capabilities(manager, spec)
     saved_mode = equipment.settings(manager, spec).get("control_mode")
     keys: list[str] = []
-    for key in (*equipment.NUMBER_FIELDS, *equipment.PID_MODEL_FIELDS,
+    for key in (*equipment.NUMBER_FIELDS, *equipment.FAN_LIMIT_FIELDS, *equipment.PID_MODEL_FIELDS,
                 *equipment.PID_FAN_CAPACITY_FIELDS):
+        if key in equipment.FAN_LIMIT_FIELDS:
+            profiles = manager.settings.get(equipment.SETTINGS, {})
+            profile = profiles.get(spec.identifier, {}) if isinstance(profiles, dict) else {}
+            saved = isinstance(profile, dict) and isinstance(profile.get("fan_speed_limits"), dict)
+            known = saved or _registered_number(registry, f"{spec.identifier}_{key}")
+            if (equipment.fan_limit_capability(manager, spec) is not None
+                    or known and not equipment.sources_available(manager, spec)):
+                keys.append(key)
+            continue
         if key == "particle_cadr_m3h":
             # Rated filtration capacity is not a PID gain or room property.
             # Publish it on actual native fan/purifier controllers, even when
@@ -171,9 +180,8 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
     # recovery needs this same registry even when old-entity cleanup is skipped.
     from homeassistant.helpers import entity_registry as er
     registry = er.async_get(hass)
-    # Beta17 briefly exposed room-wide limits on each physical controller.
-    # Remove only those obsolete registry entities; their stored config values
-    # remain available to equipment_model's conservative room migration.
+    # Temperature/RH limits remain room-owned. Fan limits now belong to the
+    # individual controller, so keep those stable per-device unique IDs.
     try:
         getter = getattr(registry, "async_get_entity_id", None)
         remover = getattr(registry, "async_remove", None)
@@ -189,12 +197,17 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
     # remains in options as an explicit legacy fallback until the physical
     # purifier's new per-device CADR rating is configured.
     for area_id in configured_area_ids(manager.settings):
-        old_unique_id = f"{entry.entry_id}_area_{area_id}_area_environment_particle_cadr_m3h"
         getter = getattr(registry, "async_get_entity_id", None)
         remover = getattr(registry, "async_remove", None)
         if callable(getter) and callable(remover):
-            if old_entity := getter("number", DOMAIN, old_unique_id):
-                remover(old_entity)
+            obsolete_ids = (
+                f"{entry.entry_id}_area_{area_id}_area_environment_particle_cadr_m3h",
+                *(f"{entry.entry_id}_area_{area_id}_room_equipment_limit_{key}"
+                  for key in equipment.FAN_LIMIT_FIELDS),
+            )
+            for old_unique_id in obsolete_ids:
+                if old_entity := getter("number", DOMAIN, old_unique_id):
+                    remover(old_entity)
         for key in equipment.available_room_limit_fields(manager, area_id):
             bounds = equipment.room_limit_edit_bounds(manager, area_id, key)
             if bounds is not None:
@@ -396,6 +409,11 @@ class ConfigNumber(NumberEntity):
         self._kind = kind
         self._key = key
         self._entity_id = entity_id
+        if kind == "area_environment" and key in ("air_speed_m_s", "met", "clo"):
+            from .advanced_comfort import advanced_comfort_enabled
+            self._attr_entity_registry_enabled_default = advanced_comfort_enabled(
+                manager.settings, area_id
+            )
         # Older room-level PID numbers are also sorted by friendly name;
         # avoid Home Assistant prefixing the room/device before "PID".
         if kind in ("pid", "direct_tuning"):
@@ -584,7 +602,9 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
     def __init__(self, manager, spec, key):
         self._equipment_init(manager, spec, key)
         cap = equipment.capabilities(manager, spec)
-        if key in equipment.PID_FAN_CAPACITY_FIELDS:
+        if key in equipment.FAN_LIMIT_FIELDS:
+            bounds = equipment.fan_limit_edit_bounds(manager, spec)
+        elif key in equipment.PID_FAN_CAPACITY_FIELDS:
             bounds = equipment.PID_FAN_CAPACITY_FIELDS[key]
         elif key in equipment.PID_MODEL_FIELDS:
             # 0 is a deliberate "not yet identified" sentinel, never
@@ -622,6 +642,8 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
     @property
     def extra_state_attributes(self):
         attributes = super().extra_state_attributes
+        if self._key in equipment.FAN_LIMIT_FIELDS:
+            return {**attributes, "fan_limit_scope": "device"}
         if self._key == "particle_cadr_m3h":
             return {**attributes,
                     "rating_source": "manufacturer_tested_particle_clean_air_delivery_rate",
@@ -639,10 +661,26 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
 
     @property
     def native_value(self):
+        if self._key in equipment.FAN_LIMIT_FIELDS:
+            cap = equipment.fan_limit_capability(self._manager, self._spec)
+            return equipment.device_fan_limits(self._manager, self._spec, cap)[self._key]
         return self.controller_settings[self._key]
 
     async def async_set_native_value(self, value):
         await self._manager.equipment.async_update(self._spec, {self._key: value})
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        if self._key in equipment.FAN_LIMIT_FIELDS:
+            self._watch_native_updates()
+
+    @callback
+    def _equipment_update(self):
+        if self._key in equipment.FAN_LIMIT_FIELDS:
+            bounds = equipment.fan_limit_edit_bounds(self._manager, self._spec)
+            self._attr_native_min_value, self._attr_native_max_value = bounds[:2]
+            self._attr_native_step, self._attr_native_unit_of_measurement = bounds[2:]
+        super()._equipment_update()
 
 
 class ShadeCoolingNumber(NumberEntity):

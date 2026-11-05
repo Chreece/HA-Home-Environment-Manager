@@ -799,8 +799,24 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
     async def async_step_environment_room_comfort(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """ISO 7730 requests explicit MRT, air velocity, MET and CLO assumptions."""
+        """Keep specialist ISO 7730 sources behind an explicit PMV opt-in."""
         current = self._environment_room_data
+        from collections.abc import Mapping
+        from .advanced_comfort import advanced_comfort_enabled
+        previous_rooms = self._values.get(CONF_ENVIRONMENT_ROOMS, {})
+        previous_rooms = dict(previous_rooms) if isinstance(previous_rooms, Mapping) else {}
+        proposed = {
+            **self._values,
+            CONF_ENVIRONMENT_ROOMS: {
+                **previous_rooms,
+                self._environment_area: current,
+            },
+        }
+        if user_input is None and not advanced_comfort_enabled(
+            proposed, self._environment_area,
+        ):
+            self._values[CONF_ENVIRONMENT_ROOMS] = proposed[CONF_ENVIRONMENT_ROOMS]
+            return await self._finish()
         fields = {
             _marker("radiant_temperature_entity",current.get("radiant_temperature_entity")): _optional_sensor(),
             _marker("air_speed_entity",current.get("air_speed_entity")): _optional_sensor(),
