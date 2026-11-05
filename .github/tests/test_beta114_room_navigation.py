@@ -340,11 +340,20 @@ def browser_checks(states):
         assert fault.locator('[data-room-issue114="controllers"]').get_attribute('aria-expanded') == 'false'
         fault.locator('[data-room-issue114="controllers"]').click()
         assert popup.is_visible()
-        page.keyboard.press('Escape')
         # Escape followed by one press must open again, not consume a click
-        # clearing a stale selected-warning record.
-        fault.locator('[data-room-issue114="controllers"]').click()
-        assert popup.is_visible()
+        # clearing a stale selected-warning record. Repeat this sequence to
+        # exercise the native popover/disclosure event-ordering regression.
+        for attempt in range(5):
+            page.keyboard.press('Escape')
+            fault.locator('[data-room-issue114="controllers"]').click()
+            assert popup.is_visible(), page.evaluate("""attempt=>({attempt,
+                detailOpen:card.shadowRoot.querySelector('[data-detail-id="device-info:climate.managed_fault"]')?.open,
+                popConnected:card._floatingInfo87?.isConnected,
+                popShown:card._floatingInfo87?.matches(':popover-open'),
+                selected:card._roomIssueInfo114,
+                pointer:card._roomIssuePointer115,
+                active:card.shadowRoot.activeElement?.outerHTML
+            })""", attempt)
         page.keyboard.press('Escape')
         page.evaluate('card._renderContent(true)')
         assert fault.locator('[data-device-fold87="climate.managed_fault"]').get_attribute('open') is not None

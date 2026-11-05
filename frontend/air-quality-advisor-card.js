@@ -4107,7 +4107,7 @@
       }
     };
     this._openInfo87 = detail=> {
-      if(!detail?.isConnected || !detail.open) return;
+      if(!detail?.isConnected || !detail.open || this._roomSettingsDialog114) return;
       const info=detail.querySelector('.hem-context-body76,.metric-help-content');
       const trigger=detail.querySelector(':scope > summary');
       if(!info || !trigger) return;
@@ -4135,14 +4135,26 @@
       pop.style.left=left+'px';
       pop.style.top=Math.max(12,top)+'px';
       pop.style.maxHeight=maxHeight+'px';
-      pop.addEventListener('toggle',e=>{
-        if(e.newState==='closed' && this._floatingInfo87===pop) {
-          this._floatingInfo87=null;
+      const closeOwnedDisclosure=()=>{
+        if(this._floatingInfo87===pop){
           if(detail.isConnected && detail.open) {
             detail.open=false;
             const id=detail.getAttribute('data-detail-id');
             if(id)this._detailsExpanded66?.delete(id);
+            if(this._roomIssueInfo114===id)this._roomIssueInfo114=null;
           }
+        }
+      };
+      // Escape/light-dismiss changes the native popover synchronously, but
+      // its toggle event is queued. Close the source in beforetoggle so an
+      // older queued disclosure-open event cannot recreate a dismissed popup.
+      pop.addEventListener('beforetoggle',e=>{
+        if(e.newState==='closed')closeOwnedDisclosure();
+      });
+      pop.addEventListener('toggle',e=>{
+        if(e.newState==='closed' && this._floatingInfo87===pop) {
+          closeOwnedDisclosure();
+          this._floatingInfo87=null;
           pop.remove();
         }
       });

@@ -11,19 +11,31 @@ ROOT = Path(__file__).resolve().parents[2]
 CARD = ROOT / "frontend/air-quality-advisor-card.js"
 SCRIPT = r"""
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-const registered=new Map(),toggleHandlers=[],folds=[];
+const registered=new Map(),toggleHandlers=[],folds=[],createdPopups=[];
 const shadow={
   addEventListener(type,handler){if(type==='toggle')toggleHandlers.push(handler);},
   querySelectorAll(selector){return selector==='[data-room-fold87]'?folds:[];},
   appendChild(pop){pop.isConnected=true;},
 };
 function makePopup(){
-  return {isConnected:false,shown:false,removed:false,style:{},classList:{add(){}},
-    setAttribute(){},addEventListener(){},
+  const listeners=new Map();
+  const popup={isConnected:false,shown:false,removed:false,style:{},classList:{add(){}},
+    setAttribute(){},
+    addEventListener(type,handler){
+      if(!listeners.has(type))listeners.set(type,[]);
+      listeners.get(type).push(handler);
+    },
+    deliver(type,oldState,newState){
+      for(const handler of listeners.get(type)||[])
+        handler({target:this,type,oldState,newState});
+    },
     matches(selector){return selector===':popover-open'&&this.shown;},
+    // Native visibility and queued event delivery are controlled separately,
+    // so tests can exercise the precise ordering that triggered the CI flake.
     showPopover(){this.shown=true;},hidePopover(){this.shown=false;},
     remove(){this.isConnected=false;this.removed=true;},focus(){},
   };
+  createdPopups.push(popup);return popup;
 }
 const context={HTMLElement:class{},window:{customCards:[],innerHeight:800},
   document:{createElement:makePopup,documentElement:{clientWidth:500}},
@@ -55,10 +67,10 @@ const previous=makeDetail('room-a','device-info:A');
 const current=makeDetail('room-b','device-info:B');
 const view={kind:'controllers',infoKey:current.id};
 const viewOpen=()=>card._roomIssueOpen115('room-b',view);
-function deliverClose(detail){
-  for(const handler of toggleHandlers)
-    handler({target:detail,oldState:'open',newState:'closed'});
+function deliverDetail(detail,oldState,newState){
+  for(const handler of toggleHandlers)handler({target:detail,oldState,newState});
 }
+const deliverClose=detail=>deliverDetail(detail,'open','closed');
 card._roomIssueInfo114=previous.id;
 card._openInfo87(previous);
 const oldPopup=card._floatingInfo87;
@@ -74,6 +86,8 @@ assert.equal(oldPopup.removed,true);
 assert.equal(newPopup._hemInfoSource87,current);
 assert.equal(viewOpen(),true);
 deliverClose(previous);
+oldPopup.deliver('beforetoggle','open','closed');
+oldPopup.deliver('toggle','open','closed');
 assert.equal(card._floatingInfo87,newPopup,'Old A close removed current B popup');
 assert.equal(newPopup.removed,false);
 assert.equal(newPopup.isConnected,true);
@@ -113,7 +127,59 @@ deliverClose(current);
 assert.equal(card._floatingInfo87,null,'B own close failed to remove B popup');
 assert.equal(reopened.removed,true);
 assert.equal(viewOpen(),false);
+// Exact Escape race: the popup is open, but the disclosure's original
+// OPEN notification has not yet run. Native beforetoggle(close) is synchronous;
+// deliver that old disclosure notification before the popup's queued CLOSED
+// notification. Neither notification may resurrect the dismissed popup.
+current.open=true;
+card._roomIssueInfo114=current.id;
+card._detailsExpanded66=new Set([current.id]);
+card._openInfo87(current);
+const escaping=card._floatingInfo87;
+const countBeforeEscape=createdPopups.length;
+escaping.deliver('beforetoggle','open','closed');
+const sourceClosedSynchronously=current.open===false;
+escaping.hidePopover();
+deliverDetail(current,'closed','open');
+escaping.deliver('toggle','open','closed');
+assert.equal(card._floatingInfo87,null,'Queued disclosure OPEN resurrected an escaped popup');
+assert.equal(createdPopups.length,countBeforeEscape,'Escape created another popup');
+assert.equal(sourceClosedSynchronously,true,'Source was not closed in native beforetoggle');
+assert.equal(current.open,false);
+assert.equal(card._detailsExpanded66.has(current.id),false);
+assert.equal(viewOpen(),false);
+
+// A genuine request can reopen after the dismissed view, with no stale popup
+// left for the next warning activation to interpret as a request to close it.
+current.open=true;
+card._roomIssueInfo114=current.id;
+card._openInfo87(current);
+assert.equal(viewOpen(),true);
+assert.equal(createdPopups.length,countBeforeEscape+1);
+card._closeInfo87();
+
+// A queued disclosure OPEN arriving while room settings is displayed must
+// not create another top-layer popup or steal the dialog's focus.
+card._roomSettingsDialog114={node:{isConnected:true},disposed:false};
+const countBeforeSettings=createdPopups.length;
+card._openInfo87(current);
+deliverDetail(current,'closed','open');
+assert.equal(card._floatingInfo87,null,'Information popup opened over room settings');
+assert.equal(createdPopups.length,countBeforeSettings);
+card._roomSettingsDialog114=null;
+
+// Keep the asynchronous popup-close fallback for environments/events where
+// beforetoggle was not observed. This still closes only the current source.
+card._openInfo87(current);
+const fallback=card._floatingInfo87;
+fallback.hidePopover();
+fallback.deliver('toggle','open','closed');
+assert.equal(current.open,false);
+assert.equal(card._floatingInfo87,null);
+assert.equal(fallback.removed,true);
+assert.equal(viewOpen(),false);
 console.log('BETA115_POPUP_OWNERSHIP_QUEUED_CLOSE_AND_VISIBLE_CONTROLLER_STATE=PASS');
+console.log('BETA115_POPUP_ESCAPE_OPEN_EVENT_RACE_AND_SETTINGS_GUARD=PASS');
 """
 
 
