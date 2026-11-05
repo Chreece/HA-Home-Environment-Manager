@@ -84,6 +84,10 @@ class Model:
         return manager.plan
 
     @staticmethod
+    def room_config(manager, spec):
+        return manager.room
+
+    @staticmethod
     def profile_name(cfg, plan):
         return plan["profile"]
 
@@ -146,12 +150,27 @@ def extract():
 
 
 NS = extract()
+# The target guard executes the actual production target calculation with
+# explicit room-profile inputs, rather than a fixture granting every command.
+target_source = ast.parse((ROOT / "equipment_model.py").read_text(encoding="utf-8"))
+target_function = next(n for n in target_source.body
+                       if isinstance(n, ast.FunctionDef) and n.name == "targets")
+target_scope = {
+    "room_config": Model.room_config,
+    "profile_name": Model.profile_name,
+    "device_limits": Model.device_limits,
+}
+target_tree = ast.Module(body=[ast.ImportFrom(
+    module="__future__", names=[ast.alias(name="annotations")], level=0,
+), target_function], type_ignores=[])
+exec(compile(ast.fix_missing_locations(target_tree), "equipment_model.py", "exec"), target_scope)
+Model.targets = staticmethod(target_scope["targets"])
 sys.modules["hem_beta88_fixture.equipment_model"] = Model
 pkg.equipment_model = Model
 runtime_module = ModuleType("hem_beta88_fixture.equipment_runtime")
 runtime_module.__dict__.update(NS)
 sys.modules[runtime_module.__name__] = runtime_module
-for helper in ("pid_math", "equipment_setpoint_sequence"):
+for helper in ("pid_math", "equipment_setpoint_sequence", "equipment_pid_safety"):
     helper_spec = importlib.util.spec_from_file_location(
         f"hem_beta88_fixture.{helper}", ROOT / f"{helper}.py")
     helper_module = importlib.util.module_from_spec(helper_spec)
@@ -197,6 +216,9 @@ class SimRuntime:
                               "sample_seconds": 120,
                               "power_switch_entity": None}},
             cap=Cap(), plan={"profile": "home"},
+            room={"profiles": {"home": {
+                "heat_c": 21., "cool_c": 26., "humidity": 50.,
+            }}},
             power_permission=True,
             entry=SimpleNamespace(entry_id="test"),
         )
@@ -211,6 +233,9 @@ class SimRuntime:
 
     def clock(self):
         return self.now
+
+    def measurements(self, spec, cap):
+        return {"temperature": 18., "humidity": 55., "co2": None, "pm25": None}
 
     def _record(self, spec):
         return self.record

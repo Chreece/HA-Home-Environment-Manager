@@ -290,7 +290,7 @@ async def test_negative():
     # Unknown/absent native source is acceptable only when independently
     # measured demand and explicit mode authorization are both TRUE.
     for kw in (
-        {"rh": None}, {"rh": 61}, {"target_rh": None},
+        {"rh": None}, {"rh": 60}, {"target_rh": None},
         {"direction": None}, {"direction": "auto"},
         {"direction": None, "offline_modes": ("off", "heat", "cool")},
         {"method": "existing"}, {"method": "off"},

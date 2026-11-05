@@ -105,6 +105,12 @@ model.sources_available = lambda manager, spec: all(
     and state.state not in ("unknown", "unavailable") for entity in spec.source_entities
 )
 
+# The target-crossing guard uses the real capability/target/measurement model
+# above. Keep its import conditional so the same behavioral suite can be run
+# against an isolated immutable release that predates this helper.
+if (ROOT / "equipment_pid_safety.py").exists():
+    load_pure("equipment_pid_safety", "equipment_pid_safety.py")
+
 
 def live_permission(hass, area, room, plan, device):
     if hass.fixture.sleeping and device.get("sleep_behavior") == "pause":

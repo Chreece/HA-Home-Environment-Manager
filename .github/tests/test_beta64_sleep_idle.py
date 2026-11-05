@@ -304,7 +304,7 @@ runtime_env = {
 # still take its original guarded OFF without a thermostat shutdown leg.
 sys.modules["beta64_probe.equipment_model"] = Model
 setattr(pkg, "equipment_model", Model)
-for helper in ("pid_math", "equipment_setpoint_sequence"):
+for helper in ("pid_math", "equipment_setpoint_sequence", "equipment_pid_safety"):
     helper_spec = importlib.util.spec_from_file_location(
         f"beta64_probe.{helper}", ROOT / f"{helper}.py")
     helper_module = importlib.util.module_from_spec(helper_spec)

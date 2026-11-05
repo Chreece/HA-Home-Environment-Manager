@@ -729,7 +729,8 @@ def pid_step(measured: float, target: float, now: float, *, increasing: bool,
     """Dimension-independent PID: °C, RH points, ppm or µg/m³ are never mixed.
 
     Derivative on measurement, conditional-integration anti-windup and sample
-    hold. Reset on invalid timestamps/gaps; no integral carried across profiles.
+    hold. A fresh satisfied target overrides the sample hold and clears prior
+    effort. Reset on invalid timestamps/gaps; no integral across profiles.
     """
     old = memory or PIDMemory()
     if any(isinstance(v, bool) or not isinstance(v, (float, int)) or not math.isfinite(v)
@@ -737,6 +738,12 @@ def pid_step(measured: float, target: float, now: float, *, increasing: bool,
         return PIDMemory()
     direction = 1 if increasing else -1
     error = direction * (target - measured)
+    if error <= 0:
+        # A cycle cannot outlive its measured need. Neither a cached ON demand
+        # nor accumulated integral/derivative may request heating/humidifying
+        # at or above the target, or cooling/drying at or below it. Reseed the
+        # next normal sample so the satisfied interval cannot wind up effort.
+        return PIDMemory(measured=measured, stamp=now)
     if old.stamp is None or old.measured is None or now < old.stamp or now-old.stamp > max(3*sample, 1800):
         return PIDMemory(measured=measured, stamp=now, demand=max(0., min(100., kp*error)))
     dt = now-old.stamp

@@ -226,6 +226,8 @@ class EquipmentRuntime:
     def _status(self, spec: Any, status: str, **data: Any) -> None:
         key = spec if isinstance(spec, str) else spec.identifier
         value = {"status": status, **data}
+        from .equipment_pid_safety import status_details
+        value.update(status_details(self.records.get(key, {})))
         if key in self._fan_allocations:
             value["pid_fan_capacity"] = self._fan_allocations[key]
         if key in self._pid_offline_previews:
@@ -2820,6 +2822,10 @@ class EquipmentRuntime:
         if kind == "idle" and cfg["control_mode"] in ("automatic", "pid"):
             from .equipment_power_switch import approved_demand
             return approved_demand(self, spec, cfg, cap) is False
+        if kind == "target" and cfg["control_mode"] == "pid":
+            from .equipment_pid_safety import condition
+            current = condition(self, spec, cap)
+            return current is not None and current["needed"] is False
         return False
 
     def _shutdown_allowed(self, spec: model.ManagedDevice, entity: str, expected: dict) -> bool:
@@ -3009,6 +3015,15 @@ class EquipmentRuntime:
             if matches(state, pending["expected"]):
                 record["baseline"][pending["entity"]] = snapshot(state)
                 record["pending"] = None
+                previous_target = record.get("unconfirmed_native_target")
+                if (isinstance(previous_target, dict)
+                        and previous_target.get("pid_target_satisfied") is True
+                        and previous_target.get("entity") == pending["entity"]
+                        and previous_target.get("service") == pending.get("service")
+                        and not pending.get("power")):
+                    # A later corrective target has now actually ACKed.
+                    # The superseded target is not a fresh retry permission.
+                    record.pop("unconfirmed_native_target", None)
                 if pending.get("power"):
                     entity = pending["entity"]
                     if pending.get("output_on") is False or pending["expected"].get("state") == "off":
@@ -3019,8 +3034,18 @@ class EquipmentRuntime:
                             "min_on": pending["min_on"], "max_on": pending["max_on"]})
                 await self._save()
             elif pending.get("retry_context") is not None:
-                await self._retry_pending(spec, pending, now)
-                return False
+                from .equipment_pid_safety import suppress_obsolete_pending
+                if await suppress_obsolete_pending(self, spec, pending):
+                    if record.get("pending") is not None:
+                        return False
+                    # A preserved, superseded setpoint must not block the
+                    # independently authorized OFF of an already-owned ON.
+                    # A late target ACK can arrive during its journal save;
+                    # consume that ledger before classifying ordinary diffs.
+                    return await self._reconcile(spec)
+                else:
+                    await self._retry_pending(spec, pending, now)
+                    return False
             elif now < pending["when"] or now-pending["when"] > ACK_SECONDS:
                 await self._pause(spec, "physical_acknowledgement_missing")
                 return False
@@ -3191,7 +3216,14 @@ class EquipmentRuntime:
                         if entity in record["power"]:
                             record["power"].pop(entity, None)
                             record.setdefault("off_at", {})[entity] = now
-                    elif entity in record["power"]:
+                    elif (entity in record["power"]
+                          and observed["state"] != baseline.get("state")
+                          and not (entity.startswith(("number.", "input_number."))
+                              and finite(observed["state"], .000001, 100) is not None
+                              and finite(baseline.get("state"), .000001, 100) is not None)):
+                        # A target/fan attribute update is not a new native
+                        # power episode. Genuine OFF->ON event epochs are
+                        # independently handled by _observe_native_running.
                         record["power"][entity]["since"] = now
                     record["baseline"][entity] = observed
                     await self._save()
@@ -3239,6 +3271,9 @@ class EquipmentRuntime:
                          reconnect_settle_remaining_seconds=(
                              round(settle) if settle is not None else None
                          ), command_attempts=attempts)
+            return
+        from .equipment_pid_safety import command_allowed, condition, suppress_obsolete_pending
+        if await suppress_obsolete_pending(self, spec, pending):
             return
         from .equipment_setpoint_sequence import enabled, retry_settings_match, startup_ready
         setpoint = pending.get("service") in ("set_temperature", "set_humidity")
@@ -3340,7 +3375,17 @@ class EquipmentRuntime:
             return
         if automatic and mode != "off":
             from .equipment_power_switch import approved_demand
-            if approved_demand(self, spec, cfg, cap) is not True:
+            qualified = (command_allowed(
+                self, spec, cap, pending.get("service"), pending.get("data", {}),
+                mode=mode, automatic=True, power=pending.get("power") is True,
+            ) if cfg.get("control_mode") == "pid"
+                and condition(self, spec, cap, mode) is not None else
+                approved_demand(self, spec, cfg, cap) is True)
+            if not qualified:
+                if (cfg.get("control_mode") == "pid"
+                        and condition(self, spec, cap, mode) is not None):
+                    self._status(spec, "control_measurement_missing_or_stale")
+                    return
                 await self._pause(spec, "native_retry_demand_changed")
                 return
         domain = entity.partition(".")[0]
@@ -3416,6 +3461,12 @@ class EquipmentRuntime:
                 return False
             if automatic and mode != "off":
                 from .equipment_power_switch import approved_demand
+                if (latest.get("control_mode") == "pid"
+                        and condition(self, spec, refreshed, mode) is not None):
+                    return command_allowed(
+                        self, spec, refreshed, pending["service"], pending["data"],
+                        mode=mode, automatic=True, power=pending.get("power") is True,
+                    )
                 return approved_demand(self, spec, latest, refreshed) is True
             return True
 
@@ -3433,10 +3484,20 @@ class EquipmentRuntime:
                 if not still_safe():
                     # No second call occurred; leave the original command
                     # pending for a future ACK, but never retry stale intent.
-                    pending["attempts"] -= 1
-                    pending["last_attempt_at"] = previous_last
-                    pending["phase"] = "commanded"
+                    pending.clear()
+                    pending.update(previous_attempt)
                     await self._save()
+                    if await suppress_obsolete_pending(self, spec, pending):
+                        return
+                    latest = model.settings(self.manager, spec)
+                    if (latest.get("control_mode") == "pid"
+                            and not command_allowed(
+                                self, spec, cap, service, pending["data"],
+                                mode=mode, automatic=automatic,
+                                power=pending.get("power") is True,
+                            )):
+                        self._status(spec, "control_measurement_missing_or_stale")
+                        return
                     if not matches(self.hass.states.get(entity), pending["expected"]):
                         await self._pause(spec, "native_retry_authority_or_state_changed")
                     return
@@ -3506,7 +3567,7 @@ class EquipmentRuntime:
                          reason="shutdown_finish_authority_changed")
             return False
         if policy_stop is not None:
-            if (policy_stop not in ("sleep", "idle", "window")
+            if (policy_stop not in ("sleep", "idle", "window", "target")
                     or not (power or stop_target) or action_mode != "off"
                     or not self._stop_policy_verified(spec, cap, policy_stop)):
                 self._status(spec, "authority_or_evidence_changed_before_dispatch")
@@ -3521,6 +3582,17 @@ class EquipmentRuntime:
                               window_stop=(power or stop_target) and action_mode == "off"):
             self._status(spec, why)
             return False
+        from .equipment_pid_safety import command_allowed, condition, remember_cutoff
+        if not command_allowed(
+            self, spec, cap, service, data, mode=action_mode,
+            automatic=automatic, power=power,
+        ):
+            current_target = condition(self, spec, cap, action_mode)
+            await remember_cutoff(self, spec, current_target)
+            self._status(spec, "within_target_band" if current_target
+                         and current_target["needed"] is False
+                         else "control_measurement_missing_or_stale")
+            return False
         if entity not in spec.source_entities or entity_area(self.hass, entity) != spec.area_id:
             return False
         domain = entity.partition(".")[0]
@@ -3533,8 +3605,11 @@ class EquipmentRuntime:
         reserved_budget = None
         reconnect_epoch = None
         same_target = (
-            service == "set_temperature" and not power and not stop_target
+            not stop_target
             and isinstance(target_budget, dict)
+            and (not power or target_budget.get("pid_target_satisfied") is True)
+            and (service == "set_temperature"
+                 or target_budget.get("pid_target_satisfied") is True)
             and all(target_budget.get(key) == value for key, value in (
                 ("entity", entity), ("service", service),
                 ("data", data), ("expected", expected),
@@ -3543,6 +3618,22 @@ class EquipmentRuntime:
         invalid_budget = (service == "set_temperature" and not power and not stop_target
                           and target_budget is not None
                           and not isinstance(target_budget, dict))
+        if (same_target and target_budget.get("pid_target_satisfied") is True
+                and target_budget.get("phase") == "commanded"
+                and type(target_budget.get("attempts")) is int
+                and 1 <= target_budget["attempts"] < NATIVE_COMMAND_MAX_ATTEMPTS
+                and isinstance(target_budget.get("retry_context"), dict)
+                and retry_settings_match(target_budget["retry_context"].get("settings"), cfg)):
+            # Demand returned before physical OFF (for example during a
+            # minimum-ON hold). Continue the SAME command's remaining retry
+            # budget; a target crossing must neither exhaust nor reset it.
+            resumed = deepcopy(target_budget)
+            resumed.pop("pid_target_satisfied", None)
+            record["pending"] = resumed
+            record.pop("unconfirmed_native_target", None)
+            await self._save()
+            await self._retry_pending(spec, resumed, self.clock())
+            return True
         if same_target or invalid_budget:
             # This is still the SAME exhausted target after read-only
             # reconciliation. OFF and genuinely different requests bypass
@@ -3669,6 +3760,11 @@ class EquipmentRuntime:
                 return self._shutdown_allowed(
                     spec, entity, {"state": "off"} if stop_target else expected
                 )
+            if not command_allowed(
+                self, spec, cap, service, data, mode=action_mode,
+                automatic=automatic, power=power,
+            ):
+                return False
             latest = model.settings(self.manager, spec)
             latest_plan = model.plan_for(self.manager, spec)
             return bool(self._current_spec(spec) and self.manager.settings == before_settings
@@ -3685,6 +3781,8 @@ class EquipmentRuntime:
             if budget_retry and record.get("unconfirmed_native_target") is reserved_budget:
                 record["unconfirmed_native_target"] = previous_budget
             await self._save()
+            if automatic and action_mode != "off":
+                await remember_cutoff(self, spec, condition(self, spec, cap, action_mode))
             self._status(spec, "authority_or_evidence_changed_before_dispatch")
             return False
 
@@ -4638,6 +4736,9 @@ class EquipmentRuntime:
         measured = self.measurements(spec, cap)
         soft, power = model.permission(self.manager, spec, cap)
         owned = record["power"].get(cap.primary)
+        from .equipment_pid_safety import condition, remember_cutoff, status_details
+        current_target = condition(self, spec, cap)
+        await remember_cutoff(self, spec, current_target)
         if self._stop_policy_verified(spec, cap, "sleep"):
             # A sleeping room with Pause selected is OFF, not just deprived
             # of PID/setpoint updates. Never re-tune its fan or targets while
@@ -4677,6 +4778,18 @@ class EquipmentRuntime:
                     self._status(spec, window["status"],
                                  window_resume_remaining_seconds=window["remaining_seconds"])
                 return  # No targets, fan, swing or mode control during hold.
+        if current_target is not None and current_target["needed"] is False and (power or owned):
+            # Reaching the target ends this logical PID pulse immediately.
+            # Physical OFF retains native minimum-ON, defrost and the user's
+            # optional reverse-setpoint grace; never cut the supply directly.
+            if not output_off(state):
+                await self._power(
+                    spec, cap, "off", automatic=False, shutdown=bool(owned),
+                    policy_stop="target",
+                )
+            else:
+                self._status(spec, "within_target_band", **status_details(record))
+            return
         if (auto and power and not output_off(state)
                 and self._stop_policy_verified(spec, cap, "idle")):
             # PID integral or PWM phase cannot keep an appliance energized

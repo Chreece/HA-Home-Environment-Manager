@@ -154,7 +154,7 @@ runtime_ns = {
 # delegates physical dispatch. Its real progress check must run in tick.
 sys.modules["test_beta70.equipment_model"] = model
 pkg.equipment_model = model
-for helper in ("pid_math", "equipment_setpoint_sequence"):
+for helper in ("pid_math", "equipment_setpoint_sequence", "equipment_pid_safety"):
     helper_spec = importlib.util.spec_from_file_location(
         f"test_beta70.{helper}", ROOT / f"{helper}.py")
     helper_module = importlib.util.module_from_spec(helper_spec)
@@ -234,7 +234,11 @@ async def tests():
     r=Harness()
     await tick(r,spec)
     assert not r.actions and r.status[0] == "within_target_band", r.status
-    assert r._memory[spec.identifier][0][3] == "away"
+    # A satisfied target now cancels the logical PID cycle completely; the
+    # subsequent comfort request must still begin a fresh qualified phase.
+    assert spec.identifier not in r._memory
+    assert r.records["pid_target_cutoff"]["target"] == 16.
+    assert r.records["pid_target_cutoff"]["measured"] == 19.8
     # Room occupied: away->comfort profile and target goes 16 -> 21.
     # 10%/C * 1.2 C = 12% duty (7.2 minutes) < physical min ON 10 minutes.
     r.plan = {"away":"home","occupancy":"occupied"}

@@ -89,6 +89,14 @@ def step(temp_c: float, target_c: float, now_s: float, mode: str,
         return Result("invalid_input", Memory())
     if mode not in ("heat", "cool"):
         return Result("unsupported_mode", Memory())
+    direction = 1 if mode == "heat" else -1
+    error = direction * (target - measured)
+    if error <= 0:
+        # Fresh feedback overrides retained PID effort, including while the
+        # next sample is not due. Return ready/zero so PWM callers replace a
+        # cached positive demand; setpoint-only callers merely remove the trim.
+        return Result("ready", Memory(last_c=measured, last_s=clock),
+                      0.0, round(kp * error, 3), 0.0, 0.0)
     if state.last_s is None or state.last_c is None:
         return Result("initializing", Memory(last_c=measured, last_s=clock))
     dt = clock - state.last_s
@@ -98,8 +106,6 @@ def step(temp_c: float, target_c: float, now_s: float, mode: str,
         return Result("gap_reset", Memory(last_c=measured, last_s=clock))
     if dt < sample_seconds * 0.75:
         return Result("waiting_sample", state)
-    direction = 1 if mode == "heat" else -1
-    error = direction * (target - measured)
     delta_minutes = dt / 60
     # Filter measured derivative (large sensor quantization steps are common).
     derivative = 0.25 * ((measured - state.last_c) / delta_minutes) + (

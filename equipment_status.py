@@ -176,6 +176,9 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
                 "sleep_room_evidence_unknown" else None),
             "last_evaluated_mode": observed.get("mode"),
             "demand_percent": observed.get("demand_percent"),
+            "pid_target_reached": observed.get("pid_target_reached"),
+            "pid_control_target": observed.get("pid_control_target"),
+            "pid_control_measurement": observed.get("pid_control_measurement"),
             "pid_control_metric": observed.get("pid_control_metric"),
             "pid_pwm_state": observed.get("pid_pwm_state"),
             "pid_pwm_effective_cycle_seconds": observed.get(

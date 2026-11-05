@@ -104,7 +104,7 @@ package.equipment_model=ExtendedModel
 runtime_module=ModuleType('beta73_fixture.equipment_runtime')
 runtime_module.__dict__.update(namespace)
 sys.modules[runtime_module.__name__]=runtime_module
-for helper in ('pid_math','equipment_setpoint_sequence'):
+for helper in ('pid_math','equipment_setpoint_sequence','equipment_pid_safety'):
     helper_spec=importlib.util.spec_from_file_location(
         f'beta73_fixture.{helper}',ROOT/f'{helper}.py')
     helper_module=importlib.util.module_from_spec(helper_spec)

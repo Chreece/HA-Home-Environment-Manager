@@ -353,7 +353,9 @@ def output_required(cap: Any, targets: Mapping, measurements: Mapping,
 
     None means insufficient evidence or unsupported intent. No outlet ON/OFF
     can be inferred from a disconnected appliance alone. PID PWM gaps still
-    count as demand while temperature/humidity/air quality is out of band.
+    count as demand while the measured value needs the selected direction.
+    PID temperature/humidity demand ends exactly at the selected target;
+    ordinary automatic control retains its separate hysteresis policy.
     """
     if method == "off":
         return False
@@ -405,17 +407,35 @@ def output_required(cap: Any, targets: Mapping, measurements: Mapping,
             return None
         humidifying = bool(getattr(cap, "humidifying", False))
         gap = target-current if humidifying else current-target
+        if method == "pid":
+            return gap > 0
         return True if gap > 2 else False if gap < -2 else None
 
     if "heat" in modes or "cool" in modes or "heat_cool" in modes or "auto" in modes:
         value = reading("temperature", -40, 80)
         heat = finite(targets.get("heat"), -30, 60)
         cool = finite(targets.get("cool"), -30, 60)
-        if value is None or heat is None or cool is None or cool-heat < 1:
-            return None
         allowed = {requested_mode} if requested_mode else modes
         heat_allowed = bool(allowed & {"heat", "heat_cool", "auto"})
         cool_allowed = bool(allowed & {"cool", "heat_cool", "auto"})
+        if method == "pid":
+            if value is None or not (heat_allowed or cool_allowed):
+                return None
+            if heat_allowed and cool_allowed:
+                # A supply may serve either native thermal direction, but
+                # no thermal need exists inside the validated comfort band.
+                # The native dispatch path separately verifies its exact
+                # action mode before it can send HEAT or COOL.
+                if heat is None or cool is None or cool-heat < 1:
+                    return None
+                return value < heat or value > cool
+            if heat_allowed:
+                # A HEAT-only/selected controller cannot inherit a COOL
+                # boundary: it is idle at every value >= its heat target.
+                return value < heat if heat is not None else None
+            return value > cool if cool is not None else None
+        if value is None or heat is None or cool is None or cool-heat < 1:
+            return None
         if heat_allowed and value < heat - .3:
             return True
         if cool_allowed and value > cool + .3:
@@ -433,6 +453,8 @@ def output_required(cap: Any, targets: Mapping, measurements: Mapping,
         target = finite(targets.get("humidity"), 0, 100)
         if current is None or target is None:
             return None
+        if method == "pid":
+            return current > target
         return True if current > target + 2 else False if current < target - 2 else None
     return None
 

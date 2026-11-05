@@ -77,13 +77,13 @@ async def main():
   hass=N(loop=asyncio.get_running_loop(),signals=defaultdict(list),watchers=defaultdict(list))
   hass.states=FakeStates(hass)
  manager=N(hass=hass,entry=N(entry_id='entry'),settings={})
- runtime=N(hass=hass,manager=manager,_active=True,statuses={},_fan_allocations={},_pid_offline_previews={})
+ runtime=N(hass=hass,manager=manager,_active=True,statuses={},records={},_fan_allocations={},_pid_offline_previews={})
  runtime._presentation_updates=updates.EquipmentUpdates(runtime)
  # Extract actual source _status, not a test substitute for its decisions.
  tree=ast.parse((ROOT/'equipment_runtime.py').read_text())
  cls=next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='EquipmentRuntime')
  fn=next(n for n in cls.body if isinstance(n,ast.FunctionDef) and n.name=='_status')
- ns={'Any':object}
+ ns={'Any':object,'__name__':'hem68test.equipment_runtime','__package__':'hem68test'}
  exec(compile(ast.Module(body=[fn],type_ignores=[]),'equipment_runtime.py','exec'),ns)
  status=ns['_status']
  specs=[N(identifier=f'device-{i}',source_entities=(f'climate.native_{i}',)) for i in range(24)]
