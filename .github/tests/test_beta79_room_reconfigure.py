@@ -2,7 +2,7 @@
 
 No real appliance calls. Actual ReconfigureRoomsMixin is AST-compiled intact
 and given deterministic HA registries and a config entry. Covers per-room
-direct navigation, all eight selectors, first-time defaults, explicit empty,
+direct navigation, all seven active selectors, first-time defaults, explicit empty,
 room isolation, no unnecessary permission changes, and room removals.
 """
 from __future__ import annotations
@@ -39,7 +39,7 @@ restriction_ns={}
 exec(compile(ast.Module([restriction],type_ignores=[]),"room_sources.py","exec"),restriction_ns)
 
 group_names=("windows","air_quality","temperature","humidity",
-             "pressure","climate_devices","shades")
+             "climate_devices","shades")
 rooms={"badezimmer":"Badezimmer","wohnzimmer":"Wohnzimmer",
        "schlafzimmer":"Schlafzimmer"}
 actual={
@@ -54,7 +54,7 @@ actual={
 candidate_defaults={
  "windows":["binary_sensor.window"],"air_quality":[],
  "temperature":["sensor.bath_temp"],"humidity":["sensor.bath_rh"],
- "pressure":[],"climate_devices":["climate.comfee"],"shades":[],
+ "climate_devices":["climate.comfee"],"shades":[],
 }
 calls=[]
 def saved_defaults(hass,opts,area):

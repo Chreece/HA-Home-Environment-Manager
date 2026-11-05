@@ -209,10 +209,11 @@ class ReconfigureRoomsMixin:
                 selected_sources = {k: picked[k] for k in sources.GROUPS}
                 existing = self._values.get(sources.CONF_ROOM_SOURCES, {})
                 previous = existing.get(area) if isinstance(existing, dict) else None
-                if (not isinstance(previous, dict) and
-                        selected_sources == {k: defaults[k] for k in sources.GROUPS}):
-                    # Initial save materializes existing discovery as explicit
-                    # choices without touching device safety grants/PID pins.
+                if (not isinstance(previous, dict) and not selected_sources["shades"]
+                        and selected_sources == {k: defaults[k] for k in sources.GROUPS}):
+                    # Initial save materializes existing sensor discovery.
+                    # Newly enrolled covers must use store_selection below,
+                    # which revokes any stale per-cover automation grants.
                     self._values.setdefault(sources.CONF_ROOM_SOURCES, {})[area] = deepcopy(selected_sources)
                 elif not isinstance(previous, dict) or any(
                         previous.get(group, []) != selected_sources[group]

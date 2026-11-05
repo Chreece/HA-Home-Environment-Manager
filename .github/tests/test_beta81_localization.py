@@ -28,7 +28,7 @@ for file in locales:
             f=steps[alias]
             assert f["title"] and f["description"],(file,flow,alias)
             for key in ("windows","air_quality","temperature","humidity",
-                        "pressure","climate_devices","shades","occupancy_sensors"):
+                        "climate_devices","shades","occupancy_sensors"):
                 assert f["data"][key] and f["data_description"][key],(file,flow,alias,key)
         assert steps["setup_general"]["title"],(file,flow,"general title")
 

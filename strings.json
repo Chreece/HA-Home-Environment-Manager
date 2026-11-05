@@ -162,16 +162,14 @@
           "air_quality": "Air quality and environmental sensors",
           "temperature": "Temperature",
           "humidity": "Humidity",
-          "pressure": "Pressure sensors",
           "climate_devices": "Devices",
           "shades": "Window blinds, shades and shutters"
         },
         "data_description": {
           "windows": "Windows. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "air_quality": "Air quality and environmental sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "air_quality": "Select this room's air-quality sensors and optional light sensors (lux). Lux records light history. For solar shading, enable lux on the individual cover controller and choose a same-room sensor or the selected room mean: new automatic closing then requires the configured minimum brightness. Selecting sensors here does not enable movement.",
           "temperature": "Temperature. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
           "humidity": "Humidity. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "pressure": "Pressure sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "Formaldehyde measurement is real and verified",
           "noise_entity": "Calibrated A-weighted sound level (dB(A))",
           "noise_sensor_calibrated": "Sound-level sensor delivers equivalent calibrated readings",
-          "illuminance_entity": "Photopic illuminance (lux)",
+          "illuminance_entity": "Illuminance (lux)",
           "melanopic_edi_entity": "Spectral sensor's melanopic EDI (lx)",
           "melanopic_spectral_verified": "Melanopic EDI comes from a real spectral measurement"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Confirm this is a genuine HCHO measurement before using its 30-minute average. WHO short-term guidance is 100 µg/m³ (30 min), not a universal single-reading threshold.",
           "noise_entity": "Choose calibrated A-weighted equivalent sound level in dB(A). The integration uses logarithmic sound-energy averaging; uncalibrated phone peaks are not suitable.",
           "noise_sensor_calibrated": "Enable only if the selected source produces calibrated equivalent levels over known intervals. Peak-only or guessed readings cannot form valid LAeq estimates.",
-          "illuminance_entity": "Choose measured photopic illuminance in lux. Useful for describing daylight exposure; ordinary lux cannot establish biological melanopic stimulus.",
+          "illuminance_entity": "Choose a real illuminance sensor (lux) for the room's descriptive light-history report. Solar shading is configured separately: choose the lux source, minimum brightness and lux switch on each cover controller. This report does not infer melanopic EDI from lux.",
           "melanopic_edi_entity": "Select a real spectral sensor providing melanopic equivalent daylight illuminance in lux. Never derive it from ordinary photopic lux with an arbitrary multiplier.",
           "melanopic_spectral_verified": "Confirm independent actual spectral evidence for the melanopic EDI source. The system will not infer it from color temperature or ordinary lux."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Air quality and environmental sensors",
           "temperature": "Temperature",
           "humidity": "Humidity",
-          "pressure": "Pressure sensors",
           "climate_devices": "Devices",
           "shades": "Window blinds, shades and shutters",
           "occupancy_sensors": "Occupancy/presence sensors in this room"
         },
         "data_description": {
           "windows": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
-          "air_quality": "Select indoor CO₂, particulate matter, VOC and other air-quality sensors assigned to this room. Multiple valid sources can contribute measurements.",
+          "air_quality": "Select this room's air-quality sensors and optional light sensors (lux). Lux records light history. For solar shading, enable lux on the individual cover controller and choose a same-room sensor or the selected room mean: new automatic closing then requires the configured minimum brightness. Selecting sensors here does not enable movement.",
           "temperature": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
           "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
-          "pressure": "Select pressure sensors for this room, if installed. Leave empty when no such sensor is available.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
           "occupancy_sensors": "Select the actual room-presence/occupancy binary sensors. A detected presence means occupied; an unknown sensor never proves the room is empty."
@@ -1129,17 +1125,15 @@
           "air_quality": "Air quality and environmental sensors",
           "temperature": "Temperature",
           "humidity": "Humidity",
-          "pressure": "Pressure sensors",
           "climate_devices": "Devices",
           "shades": "Window blinds, shades and shutters",
           "occupancy_sensors": "Occupancy/presence sensors in this room"
         },
         "data_description": {
           "windows": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
-          "air_quality": "Select indoor CO₂, particulate matter, VOC and other air-quality sensors assigned to this room. Multiple valid sources can contribute measurements.",
+          "air_quality": "Select this room's air-quality sensors and optional light sensors (lux). Lux records light history. For solar shading, enable lux on the individual cover controller and choose a same-room sensor or the selected room mean: new automatic closing then requires the configured minimum brightness. Selecting sensors here does not enable movement.",
           "temperature": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
           "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
-          "pressure": "Select pressure sensors for this room, if installed. Leave empty when no such sensor is available.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
           "occupancy_sensors": "Select the actual room-presence/occupancy binary sensors. A detected presence means occupied; an unknown sensor never proves the room is empty."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "Formaldehyde measurement is real and verified",
           "noise_entity": "Calibrated A-weighted sound level (dB(A))",
           "noise_sensor_calibrated": "Sound-level sensor delivers equivalent calibrated readings",
-          "illuminance_entity": "Photopic illuminance (lux)",
+          "illuminance_entity": "Illuminance (lux)",
           "melanopic_edi_entity": "Spectral sensor's melanopic EDI (lx)",
           "melanopic_spectral_verified": "Melanopic EDI comes from a real spectral measurement"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Confirm this is a genuine HCHO measurement before using its 30-minute average. WHO short-term guidance is 100 µg/m³ (30 min), not a universal single-reading threshold.",
           "noise_entity": "Choose calibrated A-weighted equivalent sound level in dB(A). The integration uses logarithmic sound-energy averaging; uncalibrated phone peaks are not suitable.",
           "noise_sensor_calibrated": "Enable only if the selected source produces calibrated equivalent levels over known intervals. Peak-only or guessed readings cannot form valid LAeq estimates.",
-          "illuminance_entity": "Choose measured photopic illuminance in lux. Useful for describing daylight exposure; ordinary lux cannot establish biological melanopic stimulus.",
+          "illuminance_entity": "Choose a real illuminance sensor (lux) for the room's descriptive light-history report. Solar shading is configured separately: choose the lux source, minimum brightness and lux switch on each cover controller. This report does not infer melanopic EDI from lux.",
           "melanopic_edi_entity": "Select a real spectral sensor providing melanopic equivalent daylight illuminance in lux. Never derive it from ordinary photopic lux with an arbitrary multiplier.",
           "melanopic_spectral_verified": "Confirm independent actual spectral evidence for the melanopic EDI source. The system will not infer it from color temperature or ordinary lux."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Air quality and environmental sensors",
           "temperature": "Temperature",
           "humidity": "Humidity",
-          "pressure": "Pressure sensors",
           "climate_devices": "Devices",
           "shades": "Window blinds, shades and shutters"
         },
         "data_description": {
           "windows": "Windows. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "air_quality": "Air quality and environmental sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+          "air_quality": "Select this room's air-quality sensors and optional light sensors (lux). Lux records light history. For solar shading, enable lux on the individual cover controller and choose a same-room sensor or the selected room mean: new automatic closing then requires the configured minimum brightness. Selecting sensors here does not enable movement.",
           "temperature": "Temperature. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
           "humidity": "Humidity. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
-          "pressure": "Pressure sensors. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Air quality and environmental sensors",
           "temperature": "Temperature",
           "humidity": "Humidity",
-          "pressure": "Pressure sensors",
           "climate_devices": "Devices",
           "shades": "Window blinds, shades and shutters",
           "occupancy_sensors": "Occupancy/presence sensors in this room"
         },
         "data_description": {
           "windows": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
-          "air_quality": "Select indoor CO₂, particulate matter, VOC and other air-quality sensors assigned to this room. Multiple valid sources can contribute measurements.",
+          "air_quality": "Select this room's air-quality sensors and optional light sensors (lux). Lux records light history. For solar shading, enable lux on the individual cover controller and choose a same-room sensor or the selected room mean: new automatic closing then requires the configured minimum brightness. Selecting sensors here does not enable movement.",
           "temperature": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
           "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
-          "pressure": "Select pressure sensors for this room, if installed. Leave empty when no such sensor is available.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
           "occupancy_sensors": "Select the actual room-presence/occupancy binary sensors. A detected presence means occupied; an unknown sensor never proves the room is empty."
@@ -2335,17 +2325,15 @@
           "air_quality": "Air quality and environmental sensors",
           "temperature": "Temperature",
           "humidity": "Humidity",
-          "pressure": "Pressure sensors",
           "climate_devices": "Devices",
           "shades": "Window blinds, shades and shutters",
           "occupancy_sensors": "Occupancy/presence sensors in this room"
         },
         "data_description": {
           "windows": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
-          "air_quality": "Select indoor CO₂, particulate matter, VOC and other air-quality sensors assigned to this room. Multiple valid sources can contribute measurements.",
+          "air_quality": "Select this room's air-quality sensors and optional light sensors (lux). Lux records light history. For solar shading, enable lux on the individual cover controller and choose a same-room sensor or the selected room mean: new automatic closing then requires the configured minimum brightness. Selecting sensors here does not enable movement.",
           "temperature": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
           "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
-          "pressure": "Select pressure sensors for this room, if installed. Leave empty when no such sensor is available.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
           "occupancy_sensors": "Select the actual room-presence/occupancy binary sensors. A detected presence means occupied; an unknown sensor never proves the room is empty."

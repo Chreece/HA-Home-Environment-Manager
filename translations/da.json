@@ -162,16 +162,14 @@
           "air_quality": "Luftkvalitets- og miljøsensorer",
           "temperature": "Temperatur",
           "humidity": "Luftfugtighed",
-          "pressure": "Tryksensorer",
           "climate_devices": "Enheder",
           "shades": "Persienner, rullegardiner og skodder"
         },
         "data_description": {
           "windows": "Vinduer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
-          "air_quality": "Luftkvalitets- og miljøsensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "air_quality": "Vælg rummets luftkvalitetssensorer og valgfrie lyssensorer (lux). Lux giver lyshistorik. Aktivér lux på hver solafskærmnings styring, og vælg en sensor i samme rum eller gennemsnittet af de valgte rumsensorer: hver ny automatisk lukning kræver derefter den indstillede mindste lysstyrke. Valg af sensorer her tillader ingen bevægelse.",
           "temperature": "Temperatur. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
           "humidity": "Luftfugtighed. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
-          "pressure": "Tryksensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
           "climate_devices": "Enheder. Vælg kun fysiske climate.*, humidifier.* og fan.* i rummet. De indbyggede funktioner afgør varme, køling, affugtning, temperaturmål og blæserhastighed. Valget betjener intet; aktiver automatik særskilt på hver enhed.",
           "shades": "Persienner, rullegardiner og skodder. Vælg rullegardiner, persienner og skodder som cover.* i rummet. Covers uden device_class er tilladt med CLOSE, hvis de reelt skygger vinduer. Garager, porte, døre, vinduer og markiser er udelukket. Valget flytter intet: tilknyt vindueskontakt og indstil automatik, annoncering og temperatur på controlleren. Ukendt status forhindrer bevægelse."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensor · Påkrævet · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · kilde · sensor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensor · Påkrævet",
-          "illuminance_entity": "LUX · kilde (lux)",
+          "illuminance_entity": "Belysningsstyrke (lux)",
           "melanopic_edi_entity": "EDI · EDI · kilde (lx)",
           "melanopic_spectral_verified": "EDI · Påkrævet"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Brug en reel passende måling til »HCHO · sensor · Påkrævet · SENSOR ✓ · VERIFIED«. Skøn erstatter ikke kalibreret HCHO · sensor · Påkrævet · SENSOR ✓ · VERIFIED.",
           "noise_entity": "Vælg en reel Home Assistant-dB(A) · kilde · sensor (dB(A)) til »dB(A) · kilde · sensor (dB(A))«. Manglende eller gamle værdier standser handlingen.",
           "noise_sensor_calibrated": "Brug en reel passende måling til »dB(A) · sensor · Påkrævet«. Skøn erstatter ikke kalibreret dB(A) · sensor · Påkrævet.",
-          "illuminance_entity": "Vælg en reel Home Assistant-LUX · kilde (lux) til »LUX · kilde (lux)«. Manglende eller gamle værdier standser handlingen.",
+          "illuminance_entity": "Vælg en reel belysningssensor (lux) til rummets beskrivende rapport om lyshistorik. Solafskærmning indstilles separat: vælg luxkilde, mindste lysstyrke og luxkontakt på hver solafskærmnings styring. Rapporten beregner ikke melanopisk EDI ud fra lux.",
           "melanopic_edi_entity": "Vælg en reel Home Assistant-EDI · EDI · kilde (lx) til »EDI · EDI · kilde (lx)«. Manglende eller gamle værdier standser handlingen.",
           "melanopic_spectral_verified": "Brug en reel passende måling til »EDI · Påkrævet«. Skøn erstatter ikke kalibreret sensor."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Luftkvalitets- og miljøsensorer",
           "temperature": "Temperatur",
           "humidity": "Luftfugtighed",
-          "pressure": "Tryksensorer",
           "climate_devices": "Enheder",
           "shades": "Persienner, rullegardiner og skodder",
           "occupancy_sensors": "Tilstedeværelse · sensor"
         },
         "data_description": {
           "windows": "Vinduer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
-          "air_quality": "Luftkvalitets- og miljøsensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "air_quality": "Vælg rummets luftkvalitetssensorer og valgfrie lyssensorer (lux). Lux giver lyshistorik. Aktivér lux på hver solafskærmnings styring, og vælg en sensor i samme rum eller gennemsnittet af de valgte rumsensorer: hver ny automatisk lukning kræver derefter den indstillede mindste lysstyrke. Valg af sensorer her tillader ingen bevægelse.",
           "temperature": "Temperatur. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
           "humidity": "Luftfugtighed. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
-          "pressure": "Tryksensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
           "climate_devices": "Enheder. Vælg kun fysiske climate.*, humidifier.* og fan.* i rummet. De indbyggede funktioner afgør varme, køling, affugtning, temperaturmål og blæserhastighed. Valget betjener intet; aktiver automatik særskilt på hver enhed.",
           "shades": "Persienner, rullegardiner og skodder. Vælg rullegardiner, persienner og skodder som cover.* i rummet. Covers uden device_class er tilladt med CLOSE, hvis de reelt skygger vinduer. Garager, porte, døre, vinduer og markiser er udelukket. Valget flytter intet: tilknyt vindueskontakt og indstil automatik, annoncering og temperatur på controlleren. Ukendt status forhindrer bevægelse.",
           "occupancy_sensors": "Vælg en reel Home Assistant-kilde til »Tilstedeværelse · sensor«. Manglende eller gamle værdier standser handlingen."
@@ -1129,17 +1125,15 @@
           "air_quality": "Luftkvalitets- og miljøsensorer",
           "temperature": "Temperatur",
           "humidity": "Luftfugtighed",
-          "pressure": "Tryksensorer",
           "climate_devices": "Enheder",
           "shades": "Persienner, rullegardiner og skodder",
           "occupancy_sensors": "Tilstedeværelse · sensor"
         },
         "data_description": {
           "windows": "Vinduer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
-          "air_quality": "Luftkvalitets- og miljøsensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "air_quality": "Vælg rummets luftkvalitetssensorer og valgfrie lyssensorer (lux). Lux giver lyshistorik. Aktivér lux på hver solafskærmnings styring, og vælg en sensor i samme rum eller gennemsnittet af de valgte rumsensorer: hver ny automatisk lukning kræver derefter den indstillede mindste lysstyrke. Valg af sensorer her tillader ingen bevægelse.",
           "temperature": "Temperatur. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
           "humidity": "Luftfugtighed. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
-          "pressure": "Tryksensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
           "climate_devices": "Enheder. Vælg kun fysiske climate.*, humidifier.* og fan.* i rummet. De indbyggede funktioner afgør varme, køling, affugtning, temperaturmål og blæserhastighed. Valget betjener intet; aktiver automatik særskilt på hver enhed.",
           "shades": "Persienner, rullegardiner og skodder. Vælg rullegardiner, persienner og skodder som cover.* i rummet. Covers uden device_class er tilladt med CLOSE, hvis de reelt skygger vinduer. Garager, porte, døre, vinduer og markiser er udelukket. Valget flytter intet: tilknyt vindueskontakt og indstil automatik, annoncering og temperatur på controlleren. Ukendt status forhindrer bevægelse.",
           "occupancy_sensors": "Vælg en reel Home Assistant-kilde til »Tilstedeværelse · sensor«. Manglende eller gamle værdier standser handlingen."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensor · Påkrævet · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · kilde · sensor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensor · Påkrævet",
-          "illuminance_entity": "LUX · kilde (lux)",
+          "illuminance_entity": "Belysningsstyrke (lux)",
           "melanopic_edi_entity": "EDI · EDI · kilde (lx)",
           "melanopic_spectral_verified": "EDI · Påkrævet"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Brug en reel passende måling til »HCHO · sensor · Påkrævet · SENSOR ✓ · VERIFIED«. Skøn erstatter ikke kalibreret HCHO · sensor · Påkrævet · SENSOR ✓ · VERIFIED.",
           "noise_entity": "Vælg en reel Home Assistant-dB(A) · kilde · sensor (dB(A)) til »dB(A) · kilde · sensor (dB(A))«. Manglende eller gamle værdier standser handlingen.",
           "noise_sensor_calibrated": "Brug en reel passende måling til »dB(A) · sensor · Påkrævet«. Skøn erstatter ikke kalibreret dB(A) · sensor · Påkrævet.",
-          "illuminance_entity": "Vælg en reel Home Assistant-LUX · kilde (lux) til »LUX · kilde (lux)«. Manglende eller gamle værdier standser handlingen.",
+          "illuminance_entity": "Vælg en reel belysningssensor (lux) til rummets beskrivende rapport om lyshistorik. Solafskærmning indstilles separat: vælg luxkilde, mindste lysstyrke og luxkontakt på hver solafskærmnings styring. Rapporten beregner ikke melanopisk EDI ud fra lux.",
           "melanopic_edi_entity": "Vælg en reel Home Assistant-EDI · EDI · kilde (lx) til »EDI · EDI · kilde (lx)«. Manglende eller gamle værdier standser handlingen.",
           "melanopic_spectral_verified": "Brug en reel passende måling til »EDI · Påkrævet«. Skøn erstatter ikke kalibreret sensor."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Luftkvalitets- og miljøsensorer",
           "temperature": "Temperatur",
           "humidity": "Luftfugtighed",
-          "pressure": "Tryksensorer",
           "climate_devices": "Enheder",
           "shades": "Persienner, rullegardiner og skodder"
         },
         "data_description": {
           "windows": "Vinduer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
-          "air_quality": "Luftkvalitets- og miljøsensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "air_quality": "Vælg rummets luftkvalitetssensorer og valgfrie lyssensorer (lux). Lux giver lyshistorik. Aktivér lux på hver solafskærmnings styring, og vælg en sensor i samme rum eller gennemsnittet af de valgte rumsensorer: hver ny automatisk lukning kræver derefter den indstillede mindste lysstyrke. Valg af sensorer her tillader ingen bevægelse.",
           "temperature": "Temperatur. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
           "humidity": "Luftfugtighed. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
-          "pressure": "Tryksensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
           "climate_devices": "Enheder. Vælg kun fysiske climate.*, humidifier.* og fan.* i rummet. De indbyggede funktioner afgør varme, køling, affugtning, temperaturmål og blæserhastighed. Valget betjener intet; aktiver automatik særskilt på hver enhed.",
           "shades": "Persienner, rullegardiner og skodder. Vælg rullegardiner, persienner og skodder som cover.* i rummet. Covers uden device_class er tilladt med CLOSE, hvis de reelt skygger vinduer. Garager, porte, døre, vinduer og markiser er udelukket. Valget flytter intet: tilknyt vindueskontakt og indstil automatik, annoncering og temperatur på controlleren. Ukendt status forhindrer bevægelse."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Luftkvalitets- og miljøsensorer",
           "temperature": "Temperatur",
           "humidity": "Luftfugtighed",
-          "pressure": "Tryksensorer",
           "climate_devices": "Enheder",
           "shades": "Persienner, rullegardiner og skodder",
           "occupancy_sensors": "Tilstedeværelse · sensor"
         },
         "data_description": {
           "windows": "Vinduer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
-          "air_quality": "Luftkvalitets- og miljøsensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "air_quality": "Vælg rummets luftkvalitetssensorer og valgfrie lyssensorer (lux). Lux giver lyshistorik. Aktivér lux på hver solafskærmnings styring, og vælg en sensor i samme rum eller gennemsnittet af de valgte rumsensorer: hver ny automatisk lukning kræver derefter den indstillede mindste lysstyrke. Valg af sensorer her tillader ingen bevægelse.",
           "temperature": "Temperatur. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
           "humidity": "Luftfugtighed. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
-          "pressure": "Tryksensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
           "climate_devices": "Enheder. Vælg kun fysiske climate.*, humidifier.* og fan.* i rummet. De indbyggede funktioner afgør varme, køling, affugtning, temperaturmål og blæserhastighed. Valget betjener intet; aktiver automatik særskilt på hver enhed.",
           "shades": "Persienner, rullegardiner og skodder. Vælg rullegardiner, persienner og skodder som cover.* i rummet. Covers uden device_class er tilladt med CLOSE, hvis de reelt skygger vinduer. Garager, porte, døre, vinduer og markiser er udelukket. Valget flytter intet: tilknyt vindueskontakt og indstil automatik, annoncering og temperatur på controlleren. Ukendt status forhindrer bevægelse.",
           "occupancy_sensors": "Vælg en reel Home Assistant-kilde til »Tilstedeværelse · sensor«. Manglende eller gamle værdier standser handlingen."
@@ -2335,17 +2325,15 @@
           "air_quality": "Luftkvalitets- og miljøsensorer",
           "temperature": "Temperatur",
           "humidity": "Luftfugtighed",
-          "pressure": "Tryksensorer",
           "climate_devices": "Enheder",
           "shades": "Persienner, rullegardiner og skodder",
           "occupancy_sensors": "Tilstedeværelse · sensor"
         },
         "data_description": {
           "windows": "Vinduer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
-          "air_quality": "Luftkvalitets- og miljøsensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
+          "air_quality": "Vælg rummets luftkvalitetssensorer og valgfrie lyssensorer (lux). Lux giver lyshistorik. Aktivér lux på hver solafskærmnings styring, og vælg en sensor i samme rum eller gennemsnittet af de valgte rumsensorer: hver ny automatisk lukning kræver derefter den indstillede mindste lysstyrke. Valg af sensorer her tillader ingen bevægelse.",
           "temperature": "Temperatur. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
           "humidity": "Luftfugtighed. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
-          "pressure": "Tryksensorer. Vælg rummets indgange: enhedsnavn - entitetsnavn. Tomme grupper bruges ikke og aktiverer ikke automatisk registrering eller styring.",
           "climate_devices": "Enheder. Vælg kun fysiske climate.*, humidifier.* og fan.* i rummet. De indbyggede funktioner afgør varme, køling, affugtning, temperaturmål og blæserhastighed. Valget betjener intet; aktiver automatik særskilt på hver enhed.",
           "shades": "Persienner, rullegardiner og skodder. Vælg rullegardiner, persienner og skodder som cover.* i rummet. Covers uden device_class er tilladt med CLOSE, hvis de reelt skygger vinduer. Garager, porte, døre, vinduer og markiser er udelukket. Valget flytter intet: tilknyt vindueskontakt og indstil automatik, annoncering og temperatur på controlleren. Ukendt status forhindrer bevægelse.",
           "occupancy_sensors": "Vælg en reel Home Assistant-kilde til »Tilstedeværelse · sensor«. Manglende eller gamle værdier standser handlingen."

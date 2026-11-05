@@ -64,6 +64,7 @@ def fixture():
         ("warning", "occupied", "home", "attention"),
         ("fault", "occupied", "home", "safe"),
         ("climate_only", "occupied", "home", "unknown"),
+        ("mold", "occupied", "home", "unknown"),
     ):
         readings = []
         for metric, value, unit in (("temperature", 21.4, "°C"),
@@ -86,9 +87,17 @@ def fixture():
                 "occupancy": occupancy, "away": home, "temperature_c": 21.4,
                 "equipment_plan": {"humidity": {"status": "advisory", "measured_rh": 54.2}},
                 "actuation": {"status": "advisory_only"}}}})
-    rooms[3]["readings"].append({"metric": "pressure", "entity_id": "sensor.missing_pressure",
-        "available": False, "value": None, "unit": "hPa", "name": "Pressure sensor offline"})
-    states["sensor.missing_pressure"] = {"state": "unavailable", "attributes": {}}
+    rooms[3]["readings"].append({"metric": "pm10", "entity_id": "sensor.missing_pm10",
+        "available": False, "value": None, "unit": "µg/m³", "name": "PM10 sensor offline"})
+    states["sensor.missing_pm10"] = {"state": "unavailable", "attributes": {}}
+    rooms[-1]["status_detail"] = "mold_not_calibrated"
+    rooms[-1]["mold_warnings"] = ["calibration"]
+    rooms[-1]["readings"].append({"metric": "mold", "entity_id": "mold:mold",
+        "available": False, "value": None, "unit": "%", "name": "Mold indication",
+        "details": {"status": "needs_calibration", "calibration_readiness": "difference_suitable",
+            "calibration_recommended_difference_c": 10.0, "calibration_stability": "not_verified",
+            "indoor_temperature_c": 21.4, "outdoor_temperature_c": 4.2,
+            "calibration_temperature_difference_c": 17.2}})
     source = "climate.physical_fault"
     common = {"area_id": "fault", "source_entity_ids": [source]}
     states[source] = {"state": "off", "attributes": {"friendly_name": "Physical appliance"}}
@@ -129,6 +138,10 @@ for(const room of rooms) {
   assert.ok(html.includes('data-room-presence114="'+expected+'"'));
   assert.ok(html.includes('data-room-settings114="'+room.area_id+'"'));
   assert.ok(!html.includes('mdi:home-export-outline'));
+  const header=html.slice(0,html.indexOf('</summary>'));
+  assert.ok(!header.includes('hem-room-icon112'));
+  assert.ok(!header.includes('mdi:home-outline'));
+  assert.ok(!header.includes('aria-expanded="undefined"'));
 }
 const away=card._room(rooms.find(r=>r.area_id==='away'));
 assert.ok(away.includes('Nobody home · room empty'));
@@ -147,16 +160,38 @@ assert.ok(fault.includes('data-room-issue114="faults"'));
 assert.ok(fault.includes('data-room-issue114="controllers"'));
 card._roomIssues114=new Map([['missing','missing']]);
 const details=card._roomIssueDetail114(rooms.find(r=>r.area_id==='missing'));
-assert.ok(details.includes('Pressure sensor offline'));
-assert.ok(details.includes('data-hem-source105="sensor.missing_pressure"'));
+assert.ok(details.includes('PM10 sensor offline'));
+assert.ok(details.includes('data-hem-source105="sensor.missing_pm10"'));
 const recovered=structuredClone(rooms.find(r=>r.area_id==='missing'));
-recovered.readings.at(-1).available=true;recovered.readings.at(-1).value=1013;
+recovered.readings.at(-1).available=true;recovered.readings.at(-1).value=12.3;
 recovered.status='safe';
 assert.equal(card._roomIssueDetail114(recovered),'','stale missing-data warning after recovery');
 card._roomIssues114.set('climate_only','windows');
 const contactDetail=card._roomIssueDetail114(rooms.find(r=>r.area_id==='climate_only'));
 assert.ok(contactDetail.includes('data-hem-source105="binary_sensor.climate_only_window"'));
+const moldRoom=rooms.find(r=>r.area_id==='mold');
+card._roomIssues114.set('mold','missing');
+let moldHelp=card._roomIssueDetail114(moldRoom);
+assert.ok(moldHelp.includes('data-mold-readiness115="difference_suitable"'));
+assert.ok(moldHelp.includes('Stable conditions are not verified'));
+assert.ok(moldHelp.includes('17.2 °C'));
+for(const language of ['en','de','el']){
+  card._hass.language=language;
+  assert.equal(card._metricName('temperature'),
+    ({en:'Temperature',de:'Temperatur',el:'Θερμοκρασία'})[language]);
+  for(const state of ['temperatures_unavailable','outdoors_not_colder','difference_too_small','difference_suitable']){
+    const reading=structuredClone(moldRoom.readings.at(-1));
+    reading.details.calibration_readiness=state;
+    const help=card._moldMeasurementGuidance115(reading);
+    assert.ok(help.includes('data-mold-readiness115="'+state+'"'));
+    assert.ok(!help.includes('undefined'));
+  }
+}
+const calibrated=structuredClone(moldRoom.readings.at(-1));
+calibrated.details.status='ready';calibrated.available=true;calibrated.value=62;
+assert.equal(card._moldMeasurementGuidance115(calibrated),'');
 console.log('BETA114_ROOM_PRESENCE_AND_ALERT_TARGETS=PASS');
+console.log('BETA115_MOLD_GUIDANCE_MARKUP_AND_LOCALES=PASS');
 """
     subprocess.run(["node", "-e", script, str(CARD), json.dumps(states)], check=True)
 
@@ -193,10 +228,13 @@ def browser_checks(states):
             for header in page.locator(".hem-room-glance87").all():
                 result = header.evaluate("""el=>({width:el.clientWidth,scroll:el.scrollWidth,
                   height:el.getBoundingClientRect().height,
-                  left:el.querySelector('.hem-room-name87').previousElementSibling.hasAttribute('data-room-settings114')})""")
+                  left:el.querySelector('.hem-room-name87').previousElementSibling.hasAttribute('data-room-settings114'),
+                  first:el.firstElementChild.hasAttribute('data-room-settings114'),
+                  homes:el.querySelectorAll('.hem-room-icon112,[icon="mdi:home-outline"]').length})""")
                 assert result["scroll"] <= result["width"] + 1, (width, result)
                 assert result["height"] <= 52, (width, result)
                 assert result["left"], result
+                assert result["first"] and result["homes"] == 0, result
         name = lambda area: page.locator(f'[data-room-fold87="{area}"] .hem-room-name87')
         colors = [name(area).evaluate("el=>getComputedStyle(el).color")
                   for area in ("occupied", "empty", "missing")]
@@ -206,22 +244,56 @@ def browser_checks(states):
         detail = missing.locator('.hem-room-issue-detail114')
         assert detail.is_visible()
         assert detail.evaluate('el=>el.getRootNode().activeElement===el')
-        assert "Pressure sensor offline" in detail.inner_text()
-        detail.locator('[data-hem-source105="sensor.missing_pressure"]').click()
-        assert page.evaluate('info')[-1] == 'sensor.missing_pressure'
+        assert "PM10 sensor offline" in detail.inner_text()
+        # A repeated press closes its generated panel, including after an HA
+        # render; the room returns to its previously folded state.
+        page.evaluate('card._renderContent(true)')
+        missing.locator('[data-room-issue114="missing"]').click()
+        assert not detail.is_visible()
+        assert missing.get_attribute('open') is None
+        assert missing.locator('[data-room-issue114="missing"]').get_attribute('aria-expanded') == 'false'
+        assert missing.locator('[data-room-issue114="missing"]').evaluate('el=>el.getRootNode().activeElement===el')
+        missing.locator('[data-room-issue114="missing"]').click()
+        assert detail.is_visible()
+        detail.locator('[data-hem-source105="sensor.missing_pm10"]').click()
+        assert page.evaluate('info')[-1] == 'sensor.missing_pm10'
         warning = page.locator('[data-room-fold87="warning"]')
         warning.locator('[data-room-issue114="attention"]').click()
         metric = warning.locator('[data-room-metric114="co2"]')
         assert metric.is_visible()
         assert metric.evaluate('el=>el.getRootNode().activeElement===el')
+        warning.locator('[data-room-issue114="attention"]').click()
+        assert warning.get_attribute('open') is None
+        warning.locator('[data-room-issue114="attention"]').click()
         warning.locator('[data-room-issue114="windows"]').click()
         assert warning.locator('.window-section').evaluate('el=>el.getRootNode().activeElement===el')
+        warning.locator('[data-room-issue114="windows"]').click()
+        assert warning.get_attribute('open') is None
+        warning.locator('[data-room-issue114="windows"]').click()
         fault = page.locator('[data-room-fold87="fault"]')
         fault.locator('[data-room-issue114="faults"]').click()
         error = fault.locator('.hem-device-error')
         assert error.is_visible() and "E24" in error.inner_text()
         assert error.evaluate('el=>el.getRootNode().activeElement===el')
         assert fault.locator('[data-device-fold87="climate.managed_fault"]').get_attribute('open') is not None
+        fault.locator('[data-room-issue114="faults"]').click()
+        assert fault.get_attribute('open') is None
+        assert not error.is_visible()
+        # If the room was already open, dismissing an error closes only the
+        # device disclosure that the error button itself opened.
+        fault.locator('.hem-room-name87').click()
+        fault.locator('[data-room-issue114="faults"]').click()
+        assert error.is_visible()
+        # Manually hiding the problem makes the next warning press reveal
+        # it again, even though the room itself is still expanded.
+        fault.locator('[data-device-fold87="climate.managed_fault"] > summary').evaluate('(el)=>el.click()')
+        assert not error.is_visible()
+        fault.locator('[data-room-issue114="faults"]').click()
+        assert error.is_visible()
+        fault.locator('[data-room-issue114="faults"]').click()
+        assert fault.get_attribute('open') is not None
+        assert fault.locator('[data-device-fold87="climate.managed_fault"]').get_attribute('open') is None
+        fault.locator('[data-room-issue114="faults"]').click()
         fault.locator('[data-room-issue114="controllers"]').click()
         problem = fault.locator('[data-detail-id="device-info:climate.managed_fault"]')
         assert problem.get_attribute('open') is not None
@@ -242,6 +314,46 @@ def browser_checks(states):
                 Path(output).mkdir(parents=True, exist_ok=True)
                 page.screenshot(path=str(Path(output) / 'beta114-focus-failure.png'), full_page=True)
             raise
+        previous_reason = popup.inner_text()
+        page.evaluate("""()=>{
+          const states=structuredClone(card._hass.states);
+          states['sensor.fault_status'].attributes.status_reason_code='minimum_off_hold';
+          card._hass={...card._hass,states};card._renderContent(true);
+        }""")
+        assert popup.inner_text() != previous_reason, 'open controller explanation did not refresh'
+        assert popup.inner_html() == problem.locator('.hem-context-body76').inner_html()
+        other_info = page.locator('[data-room-fold87="mold"] [data-room-issue114="missing"]')
+        other_info.focus()
+        page.keyboard.press('Enter')
+        assert not popup.is_visible(), 'keyboard navigation left the previous room popup open'
+        assert page.locator('[data-room-fold87="mold"] .hem-mold-measurement115').is_visible()
+        other_info.focus()
+        page.keyboard.press('Enter')
+        fault.locator('[data-room-issue114="controllers"]').click()
+        assert popup.is_visible()
+        # Real pointer activation also closes the top-layer popup; native
+        # light-dismiss must not make the same click reopen it immediately.
+        fault.locator('[data-room-issue114="controllers"]').click()
+        assert not popup.is_visible()
+        assert problem.get_attribute('open') is None
+        assert fault.get_attribute('open') is not None
+        assert fault.locator('[data-room-issue114="controllers"]').get_attribute('aria-expanded') == 'false'
+        fault.locator('[data-room-issue114="controllers"]').click()
+        assert popup.is_visible()
+        # Escape followed by one press must open again, not consume a click
+        # clearing a stale selected-warning record. Repeat this sequence to
+        # exercise the native popover/disclosure event-ordering regression.
+        for attempt in range(5):
+            page.keyboard.press('Escape')
+            fault.locator('[data-room-issue114="controllers"]').click()
+            assert popup.is_visible(), page.evaluate("""attempt=>({attempt,
+                detailOpen:card.shadowRoot.querySelector('[data-detail-id="device-info:climate.managed_fault"]')?.open,
+                popConnected:card._floatingInfo87?.isConnected,
+                popShown:card._floatingInfo87?.matches(':popover-open'),
+                selected:card._roomIssueInfo114,
+                pointer:card._roomIssuePointer115,
+                active:card.shadowRoot.activeElement?.outerHTML
+            })""", attempt)
         page.keyboard.press('Escape')
         page.evaluate('card._renderContent(true)')
         assert fault.locator('[data-device-fold87="climate.managed_fault"]').get_attribute('open') is not None
@@ -250,20 +362,52 @@ def browser_checks(states):
         # Native button keyboard activation takes the same guarded path.
         missing.locator('[data-room-issue114="missing"]').focus()
         page.keyboard.press('Enter')
+        assert not detail.is_visible()
+        page.keyboard.press('Enter')
         assert detail.evaluate('el=>el.getRootNode().activeElement===el')
         page.evaluate("""()=>{
           const states=structuredClone(card._hass.states);
           const room=states['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id==='missing');
-          room.status='safe';room.readings.at(-1).available=true;room.readings.at(-1).value=1013;
+          room.status='safe';room.readings.at(-1).available=true;room.readings.at(-1).value=12.3;
           card._hass={...card._hass,states};card._renderContent(true);
         }""")
         assert missing.locator('.hem-room-issue-detail114').count() == 0
         climate_only = page.locator('[data-room-fold87="climate_only"]')
         climate_only.locator('[data-room-issue114="windows"]').click()
+        mold = page.locator('[data-room-fold87="mold"]')
+        mold.locator('[data-room-issue114="missing"]').click()
+        guidance = mold.locator('.hem-mold-measurement115')
+        assert guidance.is_visible()
+        assert guidance.get_attribute('data-mold-readiness115') == 'difference_suitable'
+        assert '17.2 °C' in guidance.inner_text()
+        assert 'Stable conditions are not verified' in guidance.inner_text()
+        output = os.environ.get('HEM_TEST_SCREENSHOT_DIR')
+        if output:
+            Path(output).mkdir(parents=True, exist_ok=True)
+            page.set_viewport_size({"width": 390, "height": 960})
+            guidance.scroll_into_view_if_needed()
+            page.screenshot(path=str(Path(output) / 'beta115-mold-measurement-390.png'))
+            page.set_viewport_size({"width": 590, "height": 960})
+        page.evaluate("""()=>{
+          const states=structuredClone(card._hass.states);
+          const room=states['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id==='mold');
+          Object.assign(room.readings.at(-1).details,{
+            calibration_readiness:'difference_too_small',outdoor_temperature_c:19.4,
+            calibration_temperature_difference_c:2.0});
+          card._hass={...card._hass,states};card._renderContent(true);
+        }""")
+        assert guidance.get_attribute('data-mold-readiness115') == 'difference_too_small'
+        assert 'Wait for a larger temperature difference' in guidance.inner_text()
+        mold.locator('[data-room-issue114="missing"]').click()
+        assert not guidance.is_visible()
         contact_detail = climate_only.locator('.hem-room-issue-detail114')
         assert contact_detail.is_visible()
         contact_detail.locator('[data-hem-source105="binary_sensor.climate_only_window"]').click()
         assert page.evaluate('info')[-1] == 'binary_sensor.climate_only_window'
+        climate_only.locator('[data-room-issue114="windows"]').click()
+        assert not contact_detail.is_visible()
+        assert climate_only.get_attribute('open') is None
+        climate_only.locator('[data-room-issue114="windows"]').click()
         output = os.environ.get('HEM_TEST_SCREENSHOT_DIR')
         if output:
             Path(output).mkdir(parents=True, exist_ok=True)
@@ -271,6 +415,7 @@ def browser_checks(states):
         assert not errors, errors
         browser.close()
     print('BETA114_ROOM_NAVIGATION_BROWSER=PASS')
+    print('BETA115_ROOM_HEADER_AND_ERROR_INFO_TOGGLES=PASS')
 
 
 if __name__ == '__main__':

@@ -162,16 +162,14 @@
           "air_quality": "Luchtkwaliteits- en omgevingssensoren",
           "temperature": "Temperatuur",
           "humidity": "Vochtigheid",
-          "pressure": "Druksensoren",
           "climate_devices": "Apparaten",
           "shades": "Raamzonwering, jaloezieën en rolluiken"
         },
         "data_description": {
           "windows": "Ramen. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
-          "air_quality": "Luchtkwaliteits- en omgevingssensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "air_quality": "Selecteer de luchtkwaliteitssensoren en optionele lichtsensoren (lux) van deze kamer. Lux levert de lichtgeschiedenis. Schakel voor zonwering lux in op de afzonderlijke zonweringscontroller en kies een sensor in dezelfde kamer of het gemiddelde van de geselecteerde kamersensoren: elke nieuwe automatische sluiting vereist dan de ingestelde minimumhelderheid. Sensoren selecteren geeft hier geen toestemming voor beweging.",
           "temperature": "Temperatuur. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
-          "pressure": "Druksensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensor · Vereist · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · bron · sensor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensor · Vereist",
-          "illuminance_entity": "LUX · bron (lux)",
+          "illuminance_entity": "Verlichtingssterkte (lux)",
           "melanopic_edi_entity": "EDI · EDI · bron (lx)",
           "melanopic_spectral_verified": "EDI · Vereist"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Gebruik echte passende meetgegevens voor ‘HCHO · sensor · Vereist · SENSOR ✓ · VERIFIED’. Schattingen vervangen geen gekalibreerde HCHO · sensor · Vereist · SENSOR ✓ · VERIFIEDen.",
           "noise_entity": "Kies een echte Home Assistant-dB(A) · bron · sensor (dB(A)) voor ‘dB(A) · bron · sensor (dB(A))’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
           "noise_sensor_calibrated": "Gebruik echte passende meetgegevens voor ‘dB(A) · sensor · Vereist’. Schattingen vervangen geen gekalibreerde dB(A) · sensor · Vereisten.",
-          "illuminance_entity": "Kies een echte Home Assistant-LUX · bron (lux) voor ‘LUX · bron (lux)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "illuminance_entity": "Kies een echte verlichtingssterktesensor (lux) voor het beschrijvende rapport over de lichtgeschiedenis van de kamer. Zonwering wordt apart ingesteld: kies de luxbron, minimumhelderheid en luxschakelaar op elke zonweringscontroller. Het rapport leidt geen melanopische EDI af uit lux.",
           "melanopic_edi_entity": "Kies een echte Home Assistant-EDI · EDI · bron (lx) voor ‘EDI · EDI · bron (lx)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
           "melanopic_spectral_verified": "Gebruik echte passende meetgegevens voor ‘EDI · Vereist’. Schattingen vervangen geen gekalibreerde sensoren."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Luchtkwaliteits- en omgevingssensoren",
           "temperature": "Temperatuur",
           "humidity": "Vochtigheid",
-          "pressure": "Druksensoren",
           "climate_devices": "Apparaten",
           "shades": "Raamzonwering, jaloezieën en rolluiken",
           "occupancy_sensors": "Aanwezigheid · sensor"
         },
         "data_description": {
           "windows": "Ramen. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
-          "air_quality": "Luchtkwaliteits- en omgevingssensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "air_quality": "Selecteer de luchtkwaliteitssensoren en optionele lichtsensoren (lux) van deze kamer. Lux levert de lichtgeschiedenis. Schakel voor zonwering lux in op de afzonderlijke zonweringscontroller en kies een sensor in dezelfde kamer of het gemiddelde van de geselecteerde kamersensoren: elke nieuwe automatische sluiting vereist dan de ingestelde minimumhelderheid. Sensoren selecteren geeft hier geen toestemming voor beweging.",
           "temperature": "Temperatuur. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
-          "pressure": "Druksensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
           "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."
@@ -1129,17 +1125,15 @@
           "air_quality": "Luchtkwaliteits- en omgevingssensoren",
           "temperature": "Temperatuur",
           "humidity": "Vochtigheid",
-          "pressure": "Druksensoren",
           "climate_devices": "Apparaten",
           "shades": "Raamzonwering, jaloezieën en rolluiken",
           "occupancy_sensors": "Aanwezigheid · sensor"
         },
         "data_description": {
           "windows": "Ramen. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
-          "air_quality": "Luchtkwaliteits- en omgevingssensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "air_quality": "Selecteer de luchtkwaliteitssensoren en optionele lichtsensoren (lux) van deze kamer. Lux levert de lichtgeschiedenis. Schakel voor zonwering lux in op de afzonderlijke zonweringscontroller en kies een sensor in dezelfde kamer of het gemiddelde van de geselecteerde kamersensoren: elke nieuwe automatische sluiting vereist dan de ingestelde minimumhelderheid. Sensoren selecteren geeft hier geen toestemming voor beweging.",
           "temperature": "Temperatuur. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
-          "pressure": "Druksensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
           "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensor · Vereist · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · bron · sensor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensor · Vereist",
-          "illuminance_entity": "LUX · bron (lux)",
+          "illuminance_entity": "Verlichtingssterkte (lux)",
           "melanopic_edi_entity": "EDI · EDI · bron (lx)",
           "melanopic_spectral_verified": "EDI · Vereist"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Gebruik echte passende meetgegevens voor ‘HCHO · sensor · Vereist · SENSOR ✓ · VERIFIED’. Schattingen vervangen geen gekalibreerde HCHO · sensor · Vereist · SENSOR ✓ · VERIFIEDen.",
           "noise_entity": "Kies een echte Home Assistant-dB(A) · bron · sensor (dB(A)) voor ‘dB(A) · bron · sensor (dB(A))’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
           "noise_sensor_calibrated": "Gebruik echte passende meetgegevens voor ‘dB(A) · sensor · Vereist’. Schattingen vervangen geen gekalibreerde dB(A) · sensor · Vereisten.",
-          "illuminance_entity": "Kies een echte Home Assistant-LUX · bron (lux) voor ‘LUX · bron (lux)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "illuminance_entity": "Kies een echte verlichtingssterktesensor (lux) voor het beschrijvende rapport over de lichtgeschiedenis van de kamer. Zonwering wordt apart ingesteld: kies de luxbron, minimumhelderheid en luxschakelaar op elke zonweringscontroller. Het rapport leidt geen melanopische EDI af uit lux.",
           "melanopic_edi_entity": "Kies een echte Home Assistant-EDI · EDI · bron (lx) voor ‘EDI · EDI · bron (lx)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
           "melanopic_spectral_verified": "Gebruik echte passende meetgegevens voor ‘EDI · Vereist’. Schattingen vervangen geen gekalibreerde sensoren."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Luchtkwaliteits- en omgevingssensoren",
           "temperature": "Temperatuur",
           "humidity": "Vochtigheid",
-          "pressure": "Druksensoren",
           "climate_devices": "Apparaten",
           "shades": "Raamzonwering, jaloezieën en rolluiken"
         },
         "data_description": {
           "windows": "Ramen. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
-          "air_quality": "Luchtkwaliteits- en omgevingssensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "air_quality": "Selecteer de luchtkwaliteitssensoren en optionele lichtsensoren (lux) van deze kamer. Lux levert de lichtgeschiedenis. Schakel voor zonwering lux in op de afzonderlijke zonweringscontroller en kies een sensor in dezelfde kamer of het gemiddelde van de geselecteerde kamersensoren: elke nieuwe automatische sluiting vereist dan de ingestelde minimumhelderheid. Sensoren selecteren geeft hier geen toestemming voor beweging.",
           "temperature": "Temperatuur. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
-          "pressure": "Druksensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Luchtkwaliteits- en omgevingssensoren",
           "temperature": "Temperatuur",
           "humidity": "Vochtigheid",
-          "pressure": "Druksensoren",
           "climate_devices": "Apparaten",
           "shades": "Raamzonwering, jaloezieën en rolluiken",
           "occupancy_sensors": "Aanwezigheid · sensor"
         },
         "data_description": {
           "windows": "Ramen. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
-          "air_quality": "Luchtkwaliteits- en omgevingssensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "air_quality": "Selecteer de luchtkwaliteitssensoren en optionele lichtsensoren (lux) van deze kamer. Lux levert de lichtgeschiedenis. Schakel voor zonwering lux in op de afzonderlijke zonweringscontroller en kies een sensor in dezelfde kamer of het gemiddelde van de geselecteerde kamersensoren: elke nieuwe automatische sluiting vereist dan de ingestelde minimumhelderheid. Sensoren selecteren geeft hier geen toestemming voor beweging.",
           "temperature": "Temperatuur. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
-          "pressure": "Druksensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
           "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."
@@ -2335,17 +2325,15 @@
           "air_quality": "Luchtkwaliteits- en omgevingssensoren",
           "temperature": "Temperatuur",
           "humidity": "Vochtigheid",
-          "pressure": "Druksensoren",
           "climate_devices": "Apparaten",
           "shades": "Raamzonwering, jaloezieën en rolluiken",
           "occupancy_sensors": "Aanwezigheid · sensor"
         },
         "data_description": {
           "windows": "Ramen. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
-          "air_quality": "Luchtkwaliteits- en omgevingssensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
+          "air_quality": "Selecteer de luchtkwaliteitssensoren en optionele lichtsensoren (lux) van deze kamer. Lux levert de lichtgeschiedenis. Schakel voor zonwering lux in op de afzonderlijke zonweringscontroller en kies een sensor in dezelfde kamer of het gemiddelde van de geselecteerde kamersensoren: elke nieuwe automatische sluiting vereist dan de ingestelde minimumhelderheid. Sensoren selecteren geeft hier geen toestemming voor beweging.",
           "temperature": "Temperatuur. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
-          "pressure": "Druksensoren. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
           "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."

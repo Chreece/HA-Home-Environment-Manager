@@ -162,16 +162,14 @@
           "air_quality": "Snímače kvality vzduchu a prostředí",
           "temperature": "Teplota",
           "humidity": "Vlhkost",
-          "pressure": "Snímače tlaku",
           "climate_devices": "Zařízení",
           "shades": "Okenní rolety, žaluzie a závěsy"
         },
         "data_description": {
           "windows": "Okna. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "air_quality": "Snímače kvality vzduchu a prostředí. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "air_quality": "Vyberte snímače kvality vzduchu a volitelné snímače světla (lux) této místnosti. Lux slouží k historii osvětlení. Pro sluneční stínění zapněte lux u ovladače každé clony a zvolte snímač ve stejné místnosti nebo průměr vybraných snímačů: každé nové automatické zavření pak vyžaduje nastavenou minimální osvětlenost. Samotný výběr snímačů nepovoluje pohyb.",
           "temperature": "Teplota. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "pressure": "Snímače tlaku. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
           "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · senzor · Povinné · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · zdroj · senzor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · senzor · Povinné",
-          "illuminance_entity": "LUX · zdroj (lux)",
+          "illuminance_entity": "Osvětlenost (lux)",
           "melanopic_edi_entity": "EDI · EDI · zdroj (lx)",
           "melanopic_spectral_verified": "EDI · Povinné"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Použijte skutečné vhodné měření pro „HCHO · senzor · Povinné · SENSOR ✓ · VERIFIED“. Odhad nenahrazuje kalibrovaný HCHO · senzor · Povinné · SENSOR ✓ · VERIFIED.",
           "noise_entity": "Vyberte skutečný dB(A) · zdroj · senzor (dB(A)) Home Assistant pro „dB(A) · zdroj · senzor (dB(A))“. Chybějící nebo zastaralá data pozastaví akci.",
           "noise_sensor_calibrated": "Použijte skutečné vhodné měření pro „dB(A) · senzor · Povinné“. Odhad nenahrazuje kalibrovaný dB(A) · senzor · Povinné.",
-          "illuminance_entity": "Vyberte skutečný LUX · zdroj (lux) Home Assistant pro „LUX · zdroj (lux)“. Chybějící nebo zastaralá data pozastaví akci.",
+          "illuminance_entity": "Vyberte skutečný snímač osvětlenosti (lux) pro popisný přehled historie světla v místnosti. Sluneční stínění se nastavuje zvlášť: u ovladače každé clony vyberte zdroj lux, minimální osvětlenost a přepínač lux. Přehled neodvozuje melanopickou EDI z lux.",
           "melanopic_edi_entity": "Vyberte skutečný EDI · EDI · zdroj (lx) Home Assistant pro „EDI · EDI · zdroj (lx)“. Chybějící nebo zastaralá data pozastaví akci.",
           "melanopic_spectral_verified": "Použijte skutečné vhodné měření pro „EDI · Povinné“. Odhad nenahrazuje kalibrovaný senzor."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Snímače kvality vzduchu a prostředí",
           "temperature": "Teplota",
           "humidity": "Vlhkost",
-          "pressure": "Snímače tlaku",
           "climate_devices": "Zařízení",
           "shades": "Okenní rolety, žaluzie a závěsy",
           "occupancy_sensors": "Obsazenost · senzor"
         },
         "data_description": {
           "windows": "Okna. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "air_quality": "Snímače kvality vzduchu a prostředí. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "air_quality": "Vyberte snímače kvality vzduchu a volitelné snímače světla (lux) této místnosti. Lux slouží k historii osvětlení. Pro sluneční stínění zapněte lux u ovladače každé clony a zvolte snímač ve stejné místnosti nebo průměr vybraných snímačů: každé nové automatické zavření pak vyžaduje nastavenou minimální osvětlenost. Samotný výběr snímačů nepovoluje pohyb.",
           "temperature": "Teplota. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "pressure": "Snímače tlaku. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
           "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje.",
           "occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci."
@@ -1129,17 +1125,15 @@
           "air_quality": "Snímače kvality vzduchu a prostředí",
           "temperature": "Teplota",
           "humidity": "Vlhkost",
-          "pressure": "Snímače tlaku",
           "climate_devices": "Zařízení",
           "shades": "Okenní rolety, žaluzie a závěsy",
           "occupancy_sensors": "Obsazenost · senzor"
         },
         "data_description": {
           "windows": "Okna. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "air_quality": "Snímače kvality vzduchu a prostředí. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "air_quality": "Vyberte snímače kvality vzduchu a volitelné snímače světla (lux) této místnosti. Lux slouží k historii osvětlení. Pro sluneční stínění zapněte lux u ovladače každé clony a zvolte snímač ve stejné místnosti nebo průměr vybraných snímačů: každé nové automatické zavření pak vyžaduje nastavenou minimální osvětlenost. Samotný výběr snímačů nepovoluje pohyb.",
           "temperature": "Teplota. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "pressure": "Snímače tlaku. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
           "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje.",
           "occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · senzor · Povinné · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · zdroj · senzor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · senzor · Povinné",
-          "illuminance_entity": "LUX · zdroj (lux)",
+          "illuminance_entity": "Osvětlenost (lux)",
           "melanopic_edi_entity": "EDI · EDI · zdroj (lx)",
           "melanopic_spectral_verified": "EDI · Povinné"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Použijte skutečné vhodné měření pro „HCHO · senzor · Povinné · SENSOR ✓ · VERIFIED“. Odhad nenahrazuje kalibrovaný HCHO · senzor · Povinné · SENSOR ✓ · VERIFIED.",
           "noise_entity": "Vyberte skutečný dB(A) · zdroj · senzor (dB(A)) Home Assistant pro „dB(A) · zdroj · senzor (dB(A))“. Chybějící nebo zastaralá data pozastaví akci.",
           "noise_sensor_calibrated": "Použijte skutečné vhodné měření pro „dB(A) · senzor · Povinné“. Odhad nenahrazuje kalibrovaný dB(A) · senzor · Povinné.",
-          "illuminance_entity": "Vyberte skutečný LUX · zdroj (lux) Home Assistant pro „LUX · zdroj (lux)“. Chybějící nebo zastaralá data pozastaví akci.",
+          "illuminance_entity": "Vyberte skutečný snímač osvětlenosti (lux) pro popisný přehled historie světla v místnosti. Sluneční stínění se nastavuje zvlášť: u ovladače každé clony vyberte zdroj lux, minimální osvětlenost a přepínač lux. Přehled neodvozuje melanopickou EDI z lux.",
           "melanopic_edi_entity": "Vyberte skutečný EDI · EDI · zdroj (lx) Home Assistant pro „EDI · EDI · zdroj (lx)“. Chybějící nebo zastaralá data pozastaví akci.",
           "melanopic_spectral_verified": "Použijte skutečné vhodné měření pro „EDI · Povinné“. Odhad nenahrazuje kalibrovaný senzor."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Snímače kvality vzduchu a prostředí",
           "temperature": "Teplota",
           "humidity": "Vlhkost",
-          "pressure": "Snímače tlaku",
           "climate_devices": "Zařízení",
           "shades": "Okenní rolety, žaluzie a závěsy"
         },
         "data_description": {
           "windows": "Okna. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "air_quality": "Snímače kvality vzduchu a prostředí. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "air_quality": "Vyberte snímače kvality vzduchu a volitelné snímače světla (lux) této místnosti. Lux slouží k historii osvětlení. Pro sluneční stínění zapněte lux u ovladače každé clony a zvolte snímač ve stejné místnosti nebo průměr vybraných snímačů: každé nové automatické zavření pak vyžaduje nastavenou minimální osvětlenost. Samotný výběr snímačů nepovoluje pohyb.",
           "temperature": "Teplota. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "pressure": "Snímače tlaku. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
           "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Snímače kvality vzduchu a prostředí",
           "temperature": "Teplota",
           "humidity": "Vlhkost",
-          "pressure": "Snímače tlaku",
           "climate_devices": "Zařízení",
           "shades": "Okenní rolety, žaluzie a závěsy",
           "occupancy_sensors": "Obsazenost · senzor"
         },
         "data_description": {
           "windows": "Okna. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "air_quality": "Snímače kvality vzduchu a prostředí. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "air_quality": "Vyberte snímače kvality vzduchu a volitelné snímače světla (lux) této místnosti. Lux slouží k historii osvětlení. Pro sluneční stínění zapněte lux u ovladače každé clony a zvolte snímač ve stejné místnosti nebo průměr vybraných snímačů: každé nové automatické zavření pak vyžaduje nastavenou minimální osvětlenost. Samotný výběr snímačů nepovoluje pohyb.",
           "temperature": "Teplota. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "pressure": "Snímače tlaku. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
           "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje.",
           "occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci."
@@ -2335,17 +2325,15 @@
           "air_quality": "Snímače kvality vzduchu a prostředí",
           "temperature": "Teplota",
           "humidity": "Vlhkost",
-          "pressure": "Snímače tlaku",
           "climate_devices": "Zařízení",
           "shades": "Okenní rolety, žaluzie a závěsy",
           "occupancy_sensors": "Obsazenost · senzor"
         },
         "data_description": {
           "windows": "Okna. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "air_quality": "Snímače kvality vzduchu a prostředí. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
+          "air_quality": "Vyberte snímače kvality vzduchu a volitelné snímače světla (lux) této místnosti. Lux slouží k historii osvětlení. Pro sluneční stínění zapněte lux u ovladače každé clony a zvolte snímač ve stejné místnosti nebo průměr vybraných snímačů: každé nové automatické zavření pak vyžaduje nastavenou minimální osvětlenost. Samotný výběr snímačů nepovoluje pohyb.",
           "temperature": "Teplota. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
-          "pressure": "Snímače tlaku. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
           "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje.",
           "occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci."

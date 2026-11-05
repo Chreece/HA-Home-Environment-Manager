@@ -162,16 +162,14 @@
           "air_quality": "Luftkvalitets- och miljösensorer",
           "temperature": "Temperatur",
           "humidity": "Luftfuktighet",
-          "pressure": "Trycksensorer",
           "climate_devices": "Enheter",
           "shades": "Persienner, rullgardiner och fönsterluckor"
         },
         "data_description": {
           "windows": "Fönster. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "air_quality": "Luftkvalitets- och miljösensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "air_quality": "Välj rummets luftkvalitetssensorer och valfria ljussensorer (lux). Lux ger ljushistorik. Aktivera lux på varje solskydds styrenhet och välj en sensor i samma rum eller medelvärdet av de valda rumssensorerna: varje ny automatisk stängning kräver då den inställda lägsta ljusstyrkan. Att välja sensorer här tillåter ingen rörelse.",
           "temperature": "Temperatur. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "pressure": "Trycksensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
           "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensor · Krävs · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · källa · sensor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensor · Krävs",
-          "illuminance_entity": "LUX · källa (lux)",
+          "illuminance_entity": "Belysningsstyrka (lux)",
           "melanopic_edi_entity": "EDI · EDI · källa (lx)",
           "melanopic_spectral_verified": "EDI · Krävs"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Använd en riktig lämplig mätning för ”HCHO · sensor · Krävs · SENSOR ✓ · VERIFIED”. En uppskattning ersätter inte kalibrerad HCHO · sensor · Krävs · SENSOR ✓ · VERIFIED.",
           "noise_entity": "Välj en riktig Home Assistant-dB(A) · källa · sensor (dB(A)) för ”dB(A) · källa · sensor (dB(A))”. Saknade eller gamla värden stoppar åtgärden.",
           "noise_sensor_calibrated": "Använd en riktig lämplig mätning för ”dB(A) · sensor · Krävs”. En uppskattning ersätter inte kalibrerad dB(A) · sensor · Krävs.",
-          "illuminance_entity": "Välj en riktig Home Assistant-LUX · källa (lux) för ”LUX · källa (lux)”. Saknade eller gamla värden stoppar åtgärden.",
+          "illuminance_entity": "Välj en riktig belysningssensor (lux) för rummets beskrivande rapport om ljushistorik. Solskydd ställs in separat: välj luxkälla, lägsta ljusstyrka och luxbrytare på varje solskydds styrenhet. Rapporten beräknar inte melanopisk EDI från lux.",
           "melanopic_edi_entity": "Välj en riktig Home Assistant-EDI · EDI · källa (lx) för ”EDI · EDI · källa (lx)”. Saknade eller gamla värden stoppar åtgärden.",
           "melanopic_spectral_verified": "Använd en riktig lämplig mätning för ”EDI · Krävs”. En uppskattning ersätter inte kalibrerad sensor."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Luftkvalitets- och miljösensorer",
           "temperature": "Temperatur",
           "humidity": "Luftfuktighet",
-          "pressure": "Trycksensorer",
           "climate_devices": "Enheter",
           "shades": "Persienner, rullgardiner och fönsterluckor",
           "occupancy_sensors": "Närvaro · sensor"
         },
         "data_description": {
           "windows": "Fönster. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "air_quality": "Luftkvalitets- och miljösensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "air_quality": "Välj rummets luftkvalitetssensorer och valfria ljussensorer (lux). Lux ger ljushistorik. Aktivera lux på varje solskydds styrenhet och välj en sensor i samma rum eller medelvärdet av de valda rumssensorerna: varje ny automatisk stängning kräver då den inställda lägsta ljusstyrkan. Att välja sensorer här tillåter ingen rörelse.",
           "temperature": "Temperatur. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "pressure": "Trycksensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
           "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
           "occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden."
@@ -1129,17 +1125,15 @@
           "air_quality": "Luftkvalitets- och miljösensorer",
           "temperature": "Temperatur",
           "humidity": "Luftfuktighet",
-          "pressure": "Trycksensorer",
           "climate_devices": "Enheter",
           "shades": "Persienner, rullgardiner och fönsterluckor",
           "occupancy_sensors": "Närvaro · sensor"
         },
         "data_description": {
           "windows": "Fönster. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "air_quality": "Luftkvalitets- och miljösensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "air_quality": "Välj rummets luftkvalitetssensorer och valfria ljussensorer (lux). Lux ger ljushistorik. Aktivera lux på varje solskydds styrenhet och välj en sensor i samma rum eller medelvärdet av de valda rumssensorerna: varje ny automatisk stängning kräver då den inställda lägsta ljusstyrkan. Att välja sensorer här tillåter ingen rörelse.",
           "temperature": "Temperatur. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "pressure": "Trycksensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
           "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
           "occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensor · Krävs · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · källa · sensor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensor · Krävs",
-          "illuminance_entity": "LUX · källa (lux)",
+          "illuminance_entity": "Belysningsstyrka (lux)",
           "melanopic_edi_entity": "EDI · EDI · källa (lx)",
           "melanopic_spectral_verified": "EDI · Krävs"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Använd en riktig lämplig mätning för ”HCHO · sensor · Krävs · SENSOR ✓ · VERIFIED”. En uppskattning ersätter inte kalibrerad HCHO · sensor · Krävs · SENSOR ✓ · VERIFIED.",
           "noise_entity": "Välj en riktig Home Assistant-dB(A) · källa · sensor (dB(A)) för ”dB(A) · källa · sensor (dB(A))”. Saknade eller gamla värden stoppar åtgärden.",
           "noise_sensor_calibrated": "Använd en riktig lämplig mätning för ”dB(A) · sensor · Krävs”. En uppskattning ersätter inte kalibrerad dB(A) · sensor · Krävs.",
-          "illuminance_entity": "Välj en riktig Home Assistant-LUX · källa (lux) för ”LUX · källa (lux)”. Saknade eller gamla värden stoppar åtgärden.",
+          "illuminance_entity": "Välj en riktig belysningssensor (lux) för rummets beskrivande rapport om ljushistorik. Solskydd ställs in separat: välj luxkälla, lägsta ljusstyrka och luxbrytare på varje solskydds styrenhet. Rapporten beräknar inte melanopisk EDI från lux.",
           "melanopic_edi_entity": "Välj en riktig Home Assistant-EDI · EDI · källa (lx) för ”EDI · EDI · källa (lx)”. Saknade eller gamla värden stoppar åtgärden.",
           "melanopic_spectral_verified": "Använd en riktig lämplig mätning för ”EDI · Krävs”. En uppskattning ersätter inte kalibrerad sensor."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Luftkvalitets- och miljösensorer",
           "temperature": "Temperatur",
           "humidity": "Luftfuktighet",
-          "pressure": "Trycksensorer",
           "climate_devices": "Enheter",
           "shades": "Persienner, rullgardiner och fönsterluckor"
         },
         "data_description": {
           "windows": "Fönster. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "air_quality": "Luftkvalitets- och miljösensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "air_quality": "Välj rummets luftkvalitetssensorer och valfria ljussensorer (lux). Lux ger ljushistorik. Aktivera lux på varje solskydds styrenhet och välj en sensor i samma rum eller medelvärdet av de valda rumssensorerna: varje ny automatisk stängning kräver då den inställda lägsta ljusstyrkan. Att välja sensorer här tillåter ingen rörelse.",
           "temperature": "Temperatur. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "pressure": "Trycksensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
           "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Luftkvalitets- och miljösensorer",
           "temperature": "Temperatur",
           "humidity": "Luftfuktighet",
-          "pressure": "Trycksensorer",
           "climate_devices": "Enheter",
           "shades": "Persienner, rullgardiner och fönsterluckor",
           "occupancy_sensors": "Närvaro · sensor"
         },
         "data_description": {
           "windows": "Fönster. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "air_quality": "Luftkvalitets- och miljösensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "air_quality": "Välj rummets luftkvalitetssensorer och valfria ljussensorer (lux). Lux ger ljushistorik. Aktivera lux på varje solskydds styrenhet och välj en sensor i samma rum eller medelvärdet av de valda rumssensorerna: varje ny automatisk stängning kräver då den inställda lägsta ljusstyrkan. Att välja sensorer här tillåter ingen rörelse.",
           "temperature": "Temperatur. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "pressure": "Trycksensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
           "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
           "occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden."
@@ -2335,17 +2325,15 @@
           "air_quality": "Luftkvalitets- och miljösensorer",
           "temperature": "Temperatur",
           "humidity": "Luftfuktighet",
-          "pressure": "Trycksensorer",
           "climate_devices": "Enheter",
           "shades": "Persienner, rullgardiner och fönsterluckor",
           "occupancy_sensors": "Närvaro · sensor"
         },
         "data_description": {
           "windows": "Fönster. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "air_quality": "Luftkvalitets- och miljösensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
+          "air_quality": "Välj rummets luftkvalitetssensorer och valfria ljussensorer (lux). Lux ger ljushistorik. Aktivera lux på varje solskydds styrenhet och välj en sensor i samma rum eller medelvärdet av de valda rumssensorerna: varje ny automatisk stängning kräver då den inställda lägsta ljusstyrkan. Att välja sensorer här tillåter ingen rörelse.",
           "temperature": "Temperatur. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
-          "pressure": "Trycksensorer. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
           "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
           "occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden."

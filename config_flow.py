@@ -431,7 +431,10 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
         )
 
     async def async_step_outdoor(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        from .discovery import is_pressure_sensor
         choices = outdoor_choices(self.hass, self._values.get(CONF_AREAS, []))
+        default = [entity for entity in self._values.get(CONF_OUTDOOR, [])
+                   if not is_pressure_sensor(self.hass, entity)]
         errors: dict[str, str] = {}
         if user_input is not None:
             selected = user_input.get(CONF_OUTDOOR, [])
@@ -445,7 +448,7 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
         return self.async_show_form(
             step_id="outdoor",
             data_schema=probatio.Schema({
-                _marker(CONF_OUTDOOR, self._values.get(CONF_OUTDOOR, []), required=True): _multi(choices),
+                _marker(CONF_OUTDOOR, default, required=True): _multi(choices),
             }), errors=errors,
         )
 

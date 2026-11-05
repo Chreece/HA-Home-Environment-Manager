@@ -162,16 +162,14 @@
           "air_quality": "Sensores de qualidade do ar e do ambiente",
           "temperature": "Temperatura",
           "humidity": "Humidade",
-          "pressure": "Sensores de pressão",
           "climate_devices": "Dispositivos",
           "shades": "Estores, persianas e cortinas de janela"
         },
         "data_description": {
           "windows": "Janelas. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "air_quality": "Sensores de qualidade do ar e do ambiente. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "air_quality": "Selecione os sensores de qualidade do ar e, opcionalmente, de luz (lux) desta divisão. Os lux alimentam o histórico de luz. Para a proteção solar, ative lux no controlador de cada estore e escolha um sensor da mesma divisão ou a média dos selecionados: cada novo fecho automático exige a luminosidade mínima configurada. Selecionar sensores aqui não autoriza movimento.",
           "temperature": "Temperatura. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "pressure": "Sensores de pressão. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
           "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensor · Obrigatório · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · fonte · sensor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensor · Obrigatório",
-          "illuminance_entity": "LUX · fonte (lux)",
+          "illuminance_entity": "Iluminância (lux)",
           "melanopic_edi_entity": "EDI · EDI · fonte (lx)",
           "melanopic_spectral_verified": "EDI · Obrigatório"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Use medições reais adequadas para «HCHO · sensor · Obrigatório · SENSOR ✓ · VERIFIED». Uma estimativa não substitui HCHO · sensor · Obrigatório · SENSOR ✓ · VERIFIEDes calibrados.",
           "noise_entity": "Escolha uma dB(A) · fonte · sensor (dB(A)) real do Home Assistant para «dB(A) · fonte · sensor (dB(A))». Dados ausentes ou antigos suspendem a ação correspondente.",
           "noise_sensor_calibrated": "Use medições reais adequadas para «dB(A) · sensor · Obrigatório». Uma estimativa não substitui dB(A) · sensor · Obrigatórioes calibrados.",
-          "illuminance_entity": "Escolha uma LUX · fonte (lux) real do Home Assistant para «LUX · fonte (lux)». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "illuminance_entity": "Escolha um sensor real de iluminância (lux) para o relatório descritivo do histórico de luz da divisão. A proteção solar é configurada separadamente: escolha a fonte lux, a luminosidade mínima e o interruptor lux no controlador de cada estore. O relatório não calcula EDI melanópica a partir de lux.",
           "melanopic_edi_entity": "Escolha uma EDI · EDI · fonte (lx) real do Home Assistant para «EDI · EDI · fonte (lx)». Dados ausentes ou antigos suspendem a ação correspondente.",
           "melanopic_spectral_verified": "Use medições reais adequadas para «EDI · Obrigatório». Uma estimativa não substitui sensores calibrados."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Sensores de qualidade do ar e do ambiente",
           "temperature": "Temperatura",
           "humidity": "Humidade",
-          "pressure": "Sensores de pressão",
           "climate_devices": "Dispositivos",
           "shades": "Estores, persianas e cortinas de janela",
           "occupancy_sensors": "Ocupação · sensor"
         },
         "data_description": {
           "windows": "Janelas. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "air_quality": "Sensores de qualidade do ar e do ambiente. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "air_quality": "Selecione os sensores de qualidade do ar e, opcionalmente, de luz (lux) desta divisão. Os lux alimentam o histórico de luz. Para a proteção solar, ative lux no controlador de cada estore e escolha um sensor da mesma divisão ou a média dos selecionados: cada novo fecho automático exige a luminosidade mínima configurada. Selecionar sensores aqui não autoriza movimento.",
           "temperature": "Temperatura. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "pressure": "Sensores de pressão. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
           "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
           "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente."
@@ -1129,17 +1125,15 @@
           "air_quality": "Sensores de qualidade do ar e do ambiente",
           "temperature": "Temperatura",
           "humidity": "Humidade",
-          "pressure": "Sensores de pressão",
           "climate_devices": "Dispositivos",
           "shades": "Estores, persianas e cortinas de janela",
           "occupancy_sensors": "Ocupação · sensor"
         },
         "data_description": {
           "windows": "Janelas. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "air_quality": "Sensores de qualidade do ar e do ambiente. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "air_quality": "Selecione os sensores de qualidade do ar e, opcionalmente, de luz (lux) desta divisão. Os lux alimentam o histórico de luz. Para a proteção solar, ative lux no controlador de cada estore e escolha um sensor da mesma divisão ou a média dos selecionados: cada novo fecho automático exige a luminosidade mínima configurada. Selecionar sensores aqui não autoriza movimento.",
           "temperature": "Temperatura. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "pressure": "Sensores de pressão. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
           "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
           "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensor · Obrigatório · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · fonte · sensor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensor · Obrigatório",
-          "illuminance_entity": "LUX · fonte (lux)",
+          "illuminance_entity": "Iluminância (lux)",
           "melanopic_edi_entity": "EDI · EDI · fonte (lx)",
           "melanopic_spectral_verified": "EDI · Obrigatório"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Use medições reais adequadas para «HCHO · sensor · Obrigatório · SENSOR ✓ · VERIFIED». Uma estimativa não substitui HCHO · sensor · Obrigatório · SENSOR ✓ · VERIFIEDes calibrados.",
           "noise_entity": "Escolha uma dB(A) · fonte · sensor (dB(A)) real do Home Assistant para «dB(A) · fonte · sensor (dB(A))». Dados ausentes ou antigos suspendem a ação correspondente.",
           "noise_sensor_calibrated": "Use medições reais adequadas para «dB(A) · sensor · Obrigatório». Uma estimativa não substitui dB(A) · sensor · Obrigatórioes calibrados.",
-          "illuminance_entity": "Escolha uma LUX · fonte (lux) real do Home Assistant para «LUX · fonte (lux)». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "illuminance_entity": "Escolha um sensor real de iluminância (lux) para o relatório descritivo do histórico de luz da divisão. A proteção solar é configurada separadamente: escolha a fonte lux, a luminosidade mínima e o interruptor lux no controlador de cada estore. O relatório não calcula EDI melanópica a partir de lux.",
           "melanopic_edi_entity": "Escolha uma EDI · EDI · fonte (lx) real do Home Assistant para «EDI · EDI · fonte (lx)». Dados ausentes ou antigos suspendem a ação correspondente.",
           "melanopic_spectral_verified": "Use medições reais adequadas para «EDI · Obrigatório». Uma estimativa não substitui sensores calibrados."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Sensores de qualidade do ar e do ambiente",
           "temperature": "Temperatura",
           "humidity": "Humidade",
-          "pressure": "Sensores de pressão",
           "climate_devices": "Dispositivos",
           "shades": "Estores, persianas e cortinas de janela"
         },
         "data_description": {
           "windows": "Janelas. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "air_quality": "Sensores de qualidade do ar e do ambiente. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "air_quality": "Selecione os sensores de qualidade do ar e, opcionalmente, de luz (lux) desta divisão. Os lux alimentam o histórico de luz. Para a proteção solar, ative lux no controlador de cada estore e escolha um sensor da mesma divisão ou a média dos selecionados: cada novo fecho automático exige a luminosidade mínima configurada. Selecionar sensores aqui não autoriza movimento.",
           "temperature": "Temperatura. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "pressure": "Sensores de pressão. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
           "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Sensores de qualidade do ar e do ambiente",
           "temperature": "Temperatura",
           "humidity": "Humidade",
-          "pressure": "Sensores de pressão",
           "climate_devices": "Dispositivos",
           "shades": "Estores, persianas e cortinas de janela",
           "occupancy_sensors": "Ocupação · sensor"
         },
         "data_description": {
           "windows": "Janelas. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "air_quality": "Sensores de qualidade do ar e do ambiente. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "air_quality": "Selecione os sensores de qualidade do ar e, opcionalmente, de luz (lux) desta divisão. Os lux alimentam o histórico de luz. Para a proteção solar, ative lux no controlador de cada estore e escolha um sensor da mesma divisão ou a média dos selecionados: cada novo fecho automático exige a luminosidade mínima configurada. Selecionar sensores aqui não autoriza movimento.",
           "temperature": "Temperatura. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "pressure": "Sensores de pressão. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
           "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
           "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente."
@@ -2335,17 +2325,15 @@
           "air_quality": "Sensores de qualidade do ar e do ambiente",
           "temperature": "Temperatura",
           "humidity": "Humidade",
-          "pressure": "Sensores de pressão",
           "climate_devices": "Dispositivos",
           "shades": "Estores, persianas e cortinas de janela",
           "occupancy_sensors": "Ocupação · sensor"
         },
         "data_description": {
           "windows": "Janelas. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "air_quality": "Sensores de qualidade do ar e do ambiente. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
+          "air_quality": "Selecione os sensores de qualidade do ar e, opcionalmente, de luz (lux) desta divisão. Os lux alimentam o histórico de luz. Para a proteção solar, ative lux no controlador de cada estore e escolha um sensor da mesma divisão ou a média dos selecionados: cada novo fecho automático exige a luminosidade mínima configurada. Selecionar sensores aqui não autoriza movimento.",
           "temperature": "Temperatura. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
-          "pressure": "Sensores de pressão. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
           "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
           "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente."

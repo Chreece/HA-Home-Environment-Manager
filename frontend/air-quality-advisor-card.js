@@ -1151,6 +1151,7 @@
     }
 
     _metricName(metric) {
+      if(metric==='temperature')return _roomLabels87(this._language()).temperature;
       if (metric === 'mold') {
         const translated = this._t('metric_mold');
         return translated === 'metric_mold' ? 'Mold indication' : translated;
@@ -3715,7 +3716,6 @@
     hcho:['HCHO','mdi:flask-outline','µg/m³'],
     formaldehyde:['HCHO','mdi:flask-outline','µg/m³'],
     radon:['Rn','mdi:radioactive','Bq/m³'],
-    pressure:['hPa','mdi:gauge','hPa'],
     illuminance:['Lux','mdi:brightness-5','lx'],
     sound:['dB','mdi:volume-high','dB'],
     noise:['dB','mdi:volume-high','dB'],
@@ -3739,7 +3739,8 @@
     return readings.filter(item=>{
       const metric=String(item?.metric||'').toLowerCase();
       return metric!=='temperature' && metric!=='temp' &&
-        metric!=='humidity' && item.available===true &&
+        metric!=='humidity' && metric!=='pressure' && metric!=='atmospheric_pressure' &&
+        item.available===true &&
         typeof item.value==='number' && Number.isFinite(item.value);
     });
   };
@@ -3808,7 +3809,7 @@
       co2:0,pm25:1,aqi:2,pm10:3,mold:4,pm1:5,pm4:6,
       voc:7,tvoc:7,voc_parts:7,formaldehyde:8,hcho:8,
       no2:9,o3:10,so2:11,co:12,radon:13,
-      noise:14,sound:14,pressure:15,illuminance:16
+      noise:14,sound:14,illuminance:16
     };
     const seen90=new Set();
     const extras90=_roomAirReadings89(room,devices)
@@ -3947,8 +3948,6 @@
       '<summary class="hem-room-glance87" aria-label="'+
       escape((open?labels.collapse:labels.expand)+': '+String(room.name||room.area_id)+
         ' · '+presence.label+' · '+activityText)+'">'+
-      '<ha-icon class="hem-room-icon112 hem-activity-'+activity.overall+
-        '" icon="mdi:home-outline" aria-hidden="true" title="'+escape(activityText)+'"></ha-icon>'+
       this._roomSettingsButton114(room)+
       '<strong class="hem-room-name87 hem-room-presence-'+presence.state+'" '+
       'data-room-presence114="'+presence.state+'" title="'+
@@ -3981,6 +3980,18 @@
     this.addEventListener('wheel',scrolledByUser90,{passive:true});
     this.addEventListener('touchmove',scrolledByUser90,{passive:true});
     this.addEventListener('keydown',scrolledByUser90,{passive:true});
+    // Remember a second press before a native popover's outside-click
+    // dismissal closes its disclosure between pointerdown and click.
+    this.shadowRoot.addEventListener('pointerdown',event=>{
+      this._roomIssuePointer115=null;
+      const button=event.target?.closest?.('[data-room-issue114]');
+      if(!button)return;
+      const area=button.getAttribute('data-issue-area114');
+      const kind=button.getAttribute('data-room-issue114');
+      const view=this._roomIssueViews115?.get(area);
+      if(view?.kind===kind&&this._roomIssueOpen115(area,view))
+        this._roomIssuePointer115={area,kind};
+    },true);
     this.shadowRoot.addEventListener('click',event=>{
       const settings114=event.target?.closest?.('[data-room-settings114]');
       if(settings114){
@@ -3991,8 +4002,11 @@
       const issue114=event.target?.closest?.('[data-room-issue114]');
       if(issue114){
         event.preventDefault();event.stopImmediatePropagation();
-        this._navigateRoomIssue114(issue114.getAttribute('data-issue-area114'),
-          issue114.getAttribute('data-room-issue114'));
+        const area=issue114.getAttribute('data-issue-area114');
+        const kind=issue114.getAttribute('data-room-issue114');
+        const pressed=this._roomIssuePointer115;
+        this._roomIssuePointer115=null;
+        this._navigateRoomIssue114(area,kind,pressed?.area===area&&pressed.kind===kind);
         return;
       }
       // The expanded physical-device heading opens ONLY its real native
@@ -4064,6 +4078,7 @@
         const key=el.getAttribute('data-room-fold87');
         if(el.open)this._roomsExpanded87.add(key);
         else this._roomsExpanded87.delete(key);
+        this._syncRoomIssueButtons115?.(key);
       }
       if(el.matches?.('details.hem-device-fold87')) {
         const key=el.getAttribute('data-device-fold87');
@@ -4075,8 +4090,12 @@
         else {
           if(this._roomIssueInfo114===el.getAttribute('data-detail-id'))
             this._roomIssueInfo114=null;
-          this._closeInfo87();
+          // Toggle events are queued. A previous disclosure closing must
+          // not dismiss a newer explanation opened in the meantime.
+          if(this._floatingInfo87?._hemInfoSource87===el)this._closeInfo87();
         }
+        const area=el.closest('[data-room-fold87]')?.getAttribute('data-room-fold87');
+        if(area)this._syncRoomIssueButtons115?.(area);
       }
     },true);
     this._closeInfo87 = ()=> {
@@ -4088,13 +4107,14 @@
       }
     };
     this._openInfo87 = detail=> {
-      if(!detail?.isConnected || !detail.open) return;
+      if(!detail?.isConnected || !detail.open || this._roomSettingsDialog114) return;
       const info=detail.querySelector('.hem-context-body76,.metric-help-content');
       const trigger=detail.querySelector(':scope > summary');
       if(!info || !trigger) return;
       this._closeInfo87();
       const pop=document.createElement('div');
       pop.className='hem-floating-info87';
+      pop._hemInfoSource87=detail;
       pop.setAttribute('popover','auto');
       pop.setAttribute('role','note');
       pop.setAttribute('aria-label',trigger.getAttribute('aria-label')||'Information');
@@ -4115,14 +4135,26 @@
       pop.style.left=left+'px';
       pop.style.top=Math.max(12,top)+'px';
       pop.style.maxHeight=maxHeight+'px';
-      pop.addEventListener('toggle',e=>{
-        if(e.newState==='closed' && this._floatingInfo87===pop) {
-          this._floatingInfo87=null;
+      const closeOwnedDisclosure=()=>{
+        if(this._floatingInfo87===pop){
           if(detail.isConnected && detail.open) {
             detail.open=false;
             const id=detail.getAttribute('data-detail-id');
             if(id)this._detailsExpanded66?.delete(id);
+            if(this._roomIssueInfo114===id)this._roomIssueInfo114=null;
           }
+        }
+      };
+      // Escape/light-dismiss changes the native popover synchronously, but
+      // its toggle event is queued. Close the source in beforetoggle so an
+      // older queued disclosure-open event cannot recreate a dismissed popup.
+      pop.addEventListener('beforetoggle',e=>{
+        if(e.newState==='closed')closeOwnedDisclosure();
+      });
+      pop.addEventListener('toggle',e=>{
+        if(e.newState==='closed' && this._floatingInfo87===pop) {
+          closeOwnedDisclosure();
+          this._floatingInfo87=null;
           pop.remove();
         }
       });
@@ -4432,6 +4464,18 @@
       this._compactAfterRender87(card);
     const replaced=card!==before;
     const reconciled=!!card && (this._stableDomUpdates91||0)!==revisionsBefore;
+    // A room warning can stay open while HA supplies a new reason. The
+    // detached candidate cannot refresh a connected top-layer popover.
+    if(reconciled&&this._roomIssueInfo114&&this._floatingInfo87?.isConnected){
+      const detail=[...card.querySelectorAll('[data-detail-id]')]
+        .find(node=>node.getAttribute('data-detail-id')===this._roomIssueInfo114&&node.open);
+      const content=detail?.querySelector('.hem-context-body76,.metric-help-content');
+      if(content&&this._floatingInfo87.innerHTML!==content.innerHTML){
+        const fresh=this._floatingInfo87.cloneNode(false);
+        fresh.innerHTML=content.innerHTML;
+        _reconcile91(this._floatingInfo87,fresh);
+      }
+    }
     if((replaced||reconciled) && positions.length) {
       // Preserve Beta90's full-replacement fallback. For normal Beta91
       // in-place updates, rescue only dramatic upward jumps, not small
@@ -6119,15 +6163,20 @@
       this._icon('mdi:cog-outline')+'</button>';
   };
   protoRoom114._roomAlert114=function(room,kind,icon,label,tone='normal'){
+    const view=this._roomIssueViews115?.get(room.area_id);
+    const expanded=Boolean(view?.kind===kind&&this._roomsExpanded87?.has(room.area_id)&&
+      (kind!=='controllers'||!view.infoKey||this._detailsExpanded66?.has(view.infoKey)));
     return '<button type="button" class="hem-hint87 hem-hint-'+escape(tone)+
       ' hem-room-issue114" data-room-issue114="'+escape(kind)+
       '" data-issue-area114="'+escape(room.area_id)+'" title="'+escape(label)+
-      '" aria-label="'+escape(label)+'">'+this._icon(icon)+'</button>';
+      '" aria-expanded="'+expanded+'" aria-label="'+escape(label)+'">'+this._icon(icon)+'</button>';
   };
   protoRoom114._roomIssueDetail114=function(room){
     const kind=this._roomIssues114?.get(room.area_id);
     if(!kind)return '';
     const words=roomWords114(this),labels=_roomLabels87(this._language());
+    const moldGuidance=kind==='missing'?this._moldMeasurementGuidance115(
+      safeArray(room.readings).find(item=>item.metric==='mold')):'';
     const rows=[];
     const add=(text,id)=>{
       const native=typeof id==='string'&&this._nativeAllowed105(id);
@@ -6173,13 +6222,20 @@
       escape(kind)+'" tabindex="-1" role="region" aria-label="'+
       escape(kind==='missing'?labels.unavailable:words.details)+'">'+
       '<strong>'+escape(kind==='missing'?labels.unavailable:words.details)+'</strong>'+
-      '<ul>'+rows.join('')+'</ul>'+this._roomSettingsButton114(room)+'</section>';
+      '<ul>'+rows.join('')+'</ul>'+moldGuidance+this._roomSettingsButton114(room)+'</section>';
   };
-  protoRoom114._navigateRoomIssue114=function(area,kind){
+  protoRoom114._revealRoomIssue114=function(area,kind){
     const room=safeArray(this._dashboard105()?.rooms).find(r=>r?.area_id===area);
     if(!room || !['missing','attention','windows','advice','ventilation',
       'faults','controllers','occupancy'].includes(kind))return;
-    this._roomIssueInfo114=null;
+    if(this._roomIssueInfo114){
+      const previous=this._roomIssueInfo114;
+      for(const detail of this.shadowRoot.querySelectorAll('[data-detail-id]'))
+        if(detail.getAttribute('data-detail-id')===previous)detail.open=false;
+      this._detailsExpanded66?.delete(previous);
+      this._roomIssueInfo114=null;
+      this._closeInfo87?.();
+    }
     this._roomsExpanded87 ||= new Set();this._roomsExpanded87.add(area);
     this._expanded.add(area);
     this._roomIssues114 ||= new Map();
@@ -6246,6 +6302,108 @@
       }
     }
   };
+  protoRoom114._roomIssueOpen115=function(area,view){
+    const fold=[...this.shadowRoot.querySelectorAll('[data-room-fold87]')]
+      .find(el=>el.getAttribute('data-room-fold87')===area);
+    if(!fold?.open)return false;
+    const visible=node=>{
+      if(!node)return false;
+      for(let parent=node;parent&&parent!==this.shadowRoot;parent=parent.parentElement)
+        if(parent.hidden||(parent.localName==='details'&&!parent.open))return false;
+      return true;
+    };
+    const panel=fold.querySelector('[data-room-issue-detail114="'+view.kind+'"]');
+    if(['missing','occupancy'].includes(view.kind))
+      return this._roomIssues114?.get(area)===view.kind&&visible(panel);
+    if(view.kind==='controllers'&&view.infoKey){
+      const detail=[...fold.querySelectorAll('[data-detail-id]')]
+        .find(el=>el.getAttribute('data-detail-id')===view.infoKey);
+      const pop=this._floatingInfo87;
+      let shown=Boolean(pop?.isConnected&&pop._hemInfoSource87===detail);
+      if(shown&&typeof pop.showPopover==='function'){
+        try{shown=pop.matches(':popover-open');}catch{}
+      }
+      return detail?.open===true&&visible(detail)&&shown;
+    }
+    if(view.kind==='faults')return [...fold.querySelectorAll('.hem-device-error')].some(visible)||visible(panel);
+    if(view.kind==='attention'){
+      const room=safeArray(this._dashboard105()?.rooms).find(r=>r?.area_id===area);
+      const item=safeArray(room?.readings).find(r=>r.exceeded===true);
+      const metric=item&&[...fold.querySelectorAll('[data-room-metric114]')].find(el=>
+        el.getAttribute('data-room-metric114')===item.metric&&
+        el.getAttribute('data-metric-source114')===String(item.entity_id||''));
+      return visible(metric)||visible(panel)||(!item&&visible(fold.querySelector(
+        '.advice,.mold-warnings,.hem-physics-fold105,.empty-measurements')));
+    }
+    const selector={windows:'.window-section',advice:'.advice,.window-section',
+      ventilation:'.hem-room-ventilation95'}[view.kind];
+    return visible(selector&&fold.querySelector(selector))||visible(panel);
+  };
+  protoRoom114._syncRoomIssueButtons115=function(area){
+    const view=this._roomIssueViews115?.get(area);
+    const open=Boolean(view&&this._roomIssueOpen115(area,view));
+    for(const button of this.shadowRoot.querySelectorAll('[data-room-issue114]')){
+      if(button.getAttribute('data-issue-area114')===area)
+        button.setAttribute('aria-expanded',String(open&&
+          button.getAttribute('data-room-issue114')===view.kind));
+    }
+  };
+  protoRoom114._closeRoomIssue115=function(area,focus=true){
+    const view=this._roomIssueViews115?.get(area);
+    if(!view)return;
+    this._roomIssueViews115.delete(area);
+    this._roomIssues114?.delete(area);
+    if(view.infoKey){
+      for(const detail of this.shadowRoot.querySelectorAll('[data-detail-id]')){
+        if(detail.getAttribute('data-detail-id')!==view.infoKey)continue;
+        detail.open=false;
+      }
+      this._detailsExpanded66?.delete(view.infoKey);
+      if(this._roomIssueInfo114===view.infoKey){
+        this._roomIssueInfo114=null;
+        this._closeInfo87?.();
+      }
+    }
+    // Undo only the disclosures opened by this problem button. A room or
+    // device already open before navigation keeps its previous state.
+    if(!view.roomOpen)this._roomsExpanded87?.delete(area);
+    if(!view.metricsOpen)this._expanded.delete(area);
+    for(const id of view.openedDevices||[])this._devicesExpanded87?.delete(id);
+    for(const id of view.openedDetails||[])this._detailsExpanded66?.delete(id);
+    for(const id of view.openedSections||[])this._foldSections105?.delete(id);
+    this._hemScrollEpoch90=(this._hemScrollEpoch90||0)+1;
+    this._renderContent(true);
+    if(focus){
+      const button=[...this.shadowRoot.querySelectorAll('[data-room-issue114]')]
+        .find(el=>el.getAttribute('data-issue-area114')===area&&
+          el.getAttribute('data-room-issue114')===view.kind);
+      button?.focus({preventScroll:true});
+    }
+  };
+  protoRoom114._navigateRoomIssue114=function(area,kind,dismissRequested=false){
+    const room=safeArray(this._dashboard105()?.rooms).find(r=>r?.area_id===area);
+    if(!room||!['missing','attention','windows','advice','ventilation',
+      'faults','controllers','occupancy'].includes(kind))return;
+    this._roomIssueViews115 ||= new Map();
+    const previous=this._roomIssueViews115.get(area);
+    if(previous){
+      const dismiss=previous.kind===kind&&
+        (dismissRequested||this._roomIssueOpen115(area,previous));
+      this._closeRoomIssue115(area,dismiss);
+      if(dismiss)return;
+    }
+    const beforeDevices=new Set(this._devicesExpanded87||[]);
+    const beforeDetails=new Set(this._detailsExpanded66||[]);
+    const beforeSections=new Set(this._foldSections105||[]);
+    const view={kind,roomOpen:this._roomsExpanded87?.has(area)===true,
+      metricsOpen:this._expanded.has(area)};
+    this._roomIssueViews115.set(area,view);
+    this._revealRoomIssue114(area,kind);
+    view.openedDevices=[...(this._devicesExpanded87||[])].filter(id=>!beforeDevices.has(id));
+    view.openedDetails=[...(this._detailsExpanded66||[])].filter(id=>!beforeDetails.has(id));
+    view.openedSections=[...(this._foldSections105||[])].filter(id=>!beforeSections.has(id));
+    if(kind==='controllers')view.infoKey=this._roomIssueInfo114;
+  };
   const oldRoomStyles114=protoRoom114._styles;
   protoRoom114._styles=function(){return oldRoomStyles114.call(this)+`<style>
     .hem-room-glance87 .hem-room-presence-occupied{color:var(--aqa-green)}
@@ -6271,10 +6429,10 @@
       font-size:12px;line-height:1.5;overflow-wrap:anywhere}
     .hem-room-issue-detail114 ul{padding-inline-start:18px;margin:5px 0}
     .hem-room-issue-detail114 li+li{margin-top:4px}
+    .hem-mold-measurement115 p{margin:0;line-height:1.45;color:var(--aqa-muted)}
     .hem-issue-source114{border:0;background:transparent;padding:0;font:inherit;
       text-align:start;color:var(--aqa-blue);cursor:pointer;text-decoration:underline}
     @container hem-rooms107 (max-width:400px){
-      .hem-room-glance87>ha-icon.hem-room-icon112{display:none}
       .hem-room-glance87 .hem-room-settings114{width:20px;flex-basis:20px}
     }
   </style>`;};
@@ -6288,10 +6446,10 @@
    */
   const _roomOptionsProto114=AirQualityAdvisorCard.prototype;
   const _roomOptionsKeys114=['windows','air_quality','temperature','humidity',
-    'pressure','climate_devices','shades','occupancy_sensors'];
+    'climate_devices','shades','occupancy_sensors'];
   const _roomOptionsIcons114={windows:'mdi:window-closed-variant',
     air_quality:'mdi:air-filter',temperature:'mdi:thermometer',
-    humidity:'mdi:water-percent',pressure:'mdi:gauge',
+    humidity:'mdi:water-percent',
     climate_devices:'mdi:thermostat',shades:'mdi:blinds',
     occupancy_sensors:'mdi:account-outline'};
   const _roomOptionsWords114={
@@ -6299,6 +6457,7 @@
       save:'Save',saving:'Saving…',saved:'Room settings saved.',close:'Close',
       done:'Done',retry:'Reload settings',controls:'Room controls',
       search:'Search entities',clear:'Clear selection',selected:'selected',
+      detectShades:'Select detected covers',
       none:'No available entities',noMatches:'No matching entities',
       unavailable:'Unavailable selection',
       loadError:'Room settings could not be loaded. Reload to try again.',
@@ -6307,12 +6466,13 @@
       invalid:'Review the highlighted selections before saving.',
       invalidSelection:'Choose only entities currently listed for this room.',
       windows:'Windows',air_quality:'Air quality',temperature:'Temperature',
-      humidity:'Humidity',pressure:'Pressure',climate_devices:'Climate devices',
+      humidity:'Humidity',climate_devices:'Climate devices',
       shades:'Window shades',occupancy_sensors:'Occupancy sensors'},
     de:{title:'Raumeinstellungen',loading:'Raumeinstellungen werden geladen…',
       save:'Speichern',saving:'Wird gespeichert…',saved:'Raumeinstellungen gespeichert.',
       close:'Schließen',done:'Fertig',retry:'Einstellungen neu laden',
       controls:'Raumsteuerung',search:'Entitäten suchen',clear:'Auswahl leeren',
+      detectShades:'Erkannte Beschattungen auswählen',
       selected:'ausgewählt',none:'Keine verfügbaren Entitäten',
       noMatches:'Keine passenden Entitäten',unavailable:'Nicht verfügbare Auswahl',
       loadError:'Die Raumeinstellungen konnten nicht geladen werden. Erneut laden.',
@@ -6321,12 +6481,13 @@
       invalid:'Die markierte Auswahl vor dem Speichern prüfen.',
       invalidSelection:'Nur aktuell für diesen Raum aufgeführte Entitäten auswählen.',
       windows:'Fenster',air_quality:'Luftqualität',temperature:'Temperatur',
-      humidity:'Luftfeuchtigkeit',pressure:'Luftdruck',climate_devices:'Klimageräte',
+      humidity:'Luftfeuchtigkeit',climate_devices:'Klimageräte',
       shades:'Beschattung',occupancy_sensors:'Anwesenheitssensoren'},
     el:{title:'Ρυθμίσεις χώρου',loading:'Φόρτωση ρυθμίσεων χώρου…',
       save:'Αποθήκευση',saving:'Αποθήκευση…',saved:'Οι ρυθμίσεις χώρου αποθηκεύτηκαν.',
       close:'Κλείσιμο',done:'Τέλος',retry:'Επαναφόρτωση ρυθμίσεων',
       controls:'Έλεγχοι χώρου',search:'Αναζήτηση οντοτήτων',clear:'Εκκαθάριση επιλογής',
+      detectShades:'Επιλογή εντοπισμένων σκιάστρων',
       selected:'επιλεγμένα',none:'Δεν υπάρχουν διαθέσιμες οντότητες',
       noMatches:'Δεν βρέθηκαν οντότητες',unavailable:'Μη διαθέσιμη επιλογή',
       loadError:'Δεν ήταν δυνατή η φόρτωση των ρυθμίσεων. Δοκίμασε ξανά.',
@@ -6335,7 +6496,7 @@
       invalid:'Έλεγξε τις επισημασμένες επιλογές πριν την αποθήκευση.',
       invalidSelection:'Επίλεξε μόνο οντότητες που αναφέρονται για αυτόν τον χώρο.',
       windows:'Παράθυρα',air_quality:'Ποιότητα αέρα',temperature:'Θερμοκρασία',
-      humidity:'Υγρασία',pressure:'Πίεση',climate_devices:'Συσκευές κλιματισμού',
+      humidity:'Υγρασία',climate_devices:'Συσκευές κλιματισμού',
       shades:'Σκίαστρα',occupancy_sensors:'Αισθητήρες παρουσίας'},
   };
   const _roomOptionsWord114=(card,key)=>
@@ -6346,6 +6507,7 @@
       return typeof text==='string'&&text&&text!==key?text:null;
     }catch{return null;}
   };
+  const _roomOptionsHelp115={"en":{"air_quality":"Select this room's air-quality sensors and optional light sensors (lux). Lux records light history. For solar shading, enable lux on the individual cover controller and choose a same-room sensor or the selected room mean: new automatic closing then requires the configured minimum brightness. Selecting sensors here does not enable movement.","shades":"Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available."},"de":{"air_quality":"Wähle die Luftqualitätssensoren und optionalen Lichtsensoren (Lux) dieses Raums. Lux liefert den Beleuchtungsverlauf. Für die Sonnenbeschattung Lux am jeweiligen Beschattungscontroller aktivieren und einen Sensor desselben Raums oder den Mittelwert der ausgewählten Raumsensoren wählen: Jedes neue automatische Schließen erfordert dann die eingestellte Mindesthelligkeit. Die Sensorauswahl hier gibt keine Bewegung frei.","shades":"Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung."},"el":{"air_quality":"Επίλεξε αισθητήρες ποιότητας αέρα και προαιρετικά φωτισμού (lux) για αυτό το δωμάτιο. Τα lux καταγράφουν το ιστορικό φωτισμού. Για ηλιακή σκίαση, ενεργοποίησε τα lux στον ελεγκτή κάθε καλύμματος και επίλεξε αισθητήρα του ίδιου δωματίου ή τον μέσο όρο των επιλεγμένων αισθητήρων του: κάθε νέο αυτόματο κλείσιμο απαιτεί τότε την ελάχιστη ρυθμισμένη φωτεινότητα. Η επιλογή αισθητήρων εδώ δεν ενεργοποιεί κίνηση.","shades":"Σκίαστρα, περσίδες και ρολά παραθύρων. Επίλεξε ρολά, περσίδες, σκίαστρα ή κουρτίνες τύπου cover.* αυτού του χώρου. Δεκτά είναι και γενικά cover χωρίς device_class, εφόσον υποστηρίζουν την εντολή CLOSE· βεβαιώσου ότι πρόκειται πράγματι για σκίαση παραθύρου. Γκαραζόπορτες, πόρτες, πύλες, πραγματικά παράθυρα, αεραγωγοί και εξωτερικές τέντες εξαιρούνται. Η επιλογή δεν κινεί το ρολό: στη δική του συσκευή-ελεγκτή αντιστοιχίζεις επαφή παραθύρου, αυτόματο έλεγχο, προαιρετική ανακοίνωση και όριο θερμοκρασίας. Αν η κατάσταση είναι unknown/unavailable, επιτρέπεται η επιλογή αλλά όχι η κίνηση."}};
   const _roomOptionsLabel114=(card,name,form)=>
     _roomOptionsLocalized114(card,
       'component.environment_manager.options.step.edit_room.data.'+name,
@@ -6450,7 +6612,7 @@
     saved.node.setAttribute('aria-busy',String(busy));
     const blocked=busy||saved.failed||saved.finished;
     for(const input of saved.node.querySelectorAll(
-        '[data-room-option114],[data-room-options-search114],[data-room-clear114]'))
+        '[data-room-option114],[data-room-options-search114],[data-room-clear114],[data-room-detect-shades115]'))
       input.disabled=blocked;
     for(const native of saved.nativeForms||[])native.disabled=blocked;
     const save=saved.node.querySelector('[data-room-options-save114]');
@@ -6525,6 +6687,9 @@
     groups.replaceChildren();
     for(const field of fields){
       const name=field.name,label=_roomOptionsLabel114(this,name,form);
+      const helper=_roomOptionsLocalized114(this,
+        'component.environment_manager.options.step.edit_room.data_description.'+name,
+        form.description_placeholders)||(_roomOptionsHelp115[this._language()]||_roomOptionsHelp115.en)[name]||'';
       const selected=saved.draft[name];
       const orphan=selected.filter(value=>!field.values.has(value));
       if(orphan.length)saved.clientErrors.add(name);
@@ -6543,7 +6708,10 @@
         '</span>'+this._icon('mdi:chevron-down')+'</summary>'+
         '<div class="hem-room-options-group-body114"><div data-room-options-mount114></div>'+
         '<p class="hem-room-options-field-error114" data-room-options-field-error114 '+
-        'role="alert" hidden></p><button class="hem-room-options-clear114" type="button" '+
+        'role="alert" hidden></p>'+
+        (name==='shades'&&field.options.length?'<button class="hem-room-options-clear114" type="button" '+
+          'data-room-detect-shades115>'+escape(_roomOptionsWord114(this,'detectShades'))+'</button>':'')+
+        '<button class="hem-room-options-clear114" type="button" '+
         'data-room-clear114="'+name+'" aria-label="'+escape(_roomOptionsWord114(this,'clear')+
           ' · '+label)+'">'+escape(_roomOptionsWord114(this,'clear'))+'</button></div>';
       groups.appendChild(group);
@@ -6554,9 +6722,7 @@
         native.schema=[field.schema];
         native.data={[name]:[...selected]};
         native.computeLabel=()=>label;
-        native.computeHelper=()=>_roomOptionsLocalized114(this,
-          'component.environment_manager.options.step.edit_room.data_description.'+name,
-          form.description_placeholders)||'';
+        native.computeHelper=()=>helper;
         native.computeError=error=>_roomOptionsError114(this,error,form);
         native.addEventListener('value-changed',event=>{
           event.stopPropagation();
@@ -6569,7 +6735,8 @@
       }else{
         const choices=[...field.options,...orphan.map(value=>({value,
           label:value+' · '+_roomOptionsWord114(this,'unavailable')}))];
-        mount.innerHTML='<input type="search" class="hem-room-options-search114" '+
+        mount.innerHTML=(helper?'<p class="hem-room-options-helper115">'+escape(helper)+'</p>':'')+
+          '<input type="search" class="hem-room-options-search114" '+
           'data-room-options-search114="'+name+'" autocomplete="off" '+
           'placeholder="'+escape(_roomOptionsWord114(this,'search'))+'" aria-label="'+
           escape(_roomOptionsWord114(this,'search')+' · '+label)+'">'+
@@ -6710,6 +6877,12 @@
       if(button.hasAttribute('data-room-clear114')){
         this._roomSettingsSelection114(saved,button.getAttribute('data-room-clear114'),[]);return;
       }
+      if(button.hasAttribute('data-room-detect-shades115')){
+        const field=saved.fields?.find(item=>item.name==='shades');
+        if(field)this._roomSettingsSelection114(saved,'shades',[
+          ...new Set([...(saved.draft.shades||[]),...field.options.map(option=>option.value)])]);
+        return;
+      }
       if(button.hasAttribute('data-room-controls114')){
         const verified=_roomOptionsContext114(this,saved.area,saved.entryId,saved.owner);
         if(!verified)return;
@@ -6845,6 +7018,8 @@
       border-radius:7px;background:color-mix(in srgb,var(--primary-color,#53b8ee),transparent 87%);
       color:var(--primary-text-color,#e8edf3);font-size:11px;font-variant-numeric:tabular-nums}
     .hem-room-options-group-body114{padding:3px 10px 10px;min-width:0}
+    .hem-room-options-helper115{font-size:12px;line-height:1.5;margin:7px 2px 10px;
+      color:var(--secondary-text-color,#aebbc8);overflow-wrap:anywhere;white-space:pre-line}
     .hem-room-options-group-body114 ha-form{display:block;min-width:0;width:100%;max-width:100%}
     .hem-room-options-search114{width:100%;min-width:0;height:35px;border-radius:8px;
       border:1px solid var(--divider-color,#455463);padding:6px 9px;font:inherit;font-size:12px;
@@ -6875,6 +7050,65 @@
       .hem-room-options-group114>summary{padding:8px;gap:6px}}
   </style>`;};
   /* HEM_DIRECT_ROOM_OPTIONS114_END */
+
+/* HEM_MOLD_MEASUREMENT115_START
+ * Live room guidance uses the same selected, freshness-checked temperatures
+ * as the mold calculation; sufficient contrast does not establish stability.
+ */
+  const MOLD_MEASUREMENT_TEXT115={
+    en:{
+      title:'Coldest-surface measurement conditions now',
+      temperatures_unavailable:'Measurement conditions cannot be assessed yet. Check the selected room and outdoor temperature sources; missing, invalid or stale values are not used.',
+      outdoors_not_colder:'Wait for colder weather. Outside is as warm as or warmer than this room, so the colder-outside contrast needed to locate its coldest winter surface is absent.',
+      difference_too_small:'Wait for a larger temperature difference. For locating cold surfaces, aim for at least {minimum} °C with the room warmer than outside.',
+      difference_suitable:'The temperature difference meets the {minimum} °C measurement guideline. Confirm stable conditions before measuring.',
+      stability:'Stable conditions are not verified. Avoid recent airing, rapid heating changes or sun warming the surface. Measure the coldest interior surface and record the indoor and outdoor temperatures at the same time.',
+      outdoorCaveat:'Weather readings may differ from the temperature at your building; check the local conditions before measuring.',
+      indoor:'Room temperature',outdoor:'Outdoor temperature',difference:'Room minus outdoors',missing:'Unavailable'
+    },
+    de:{
+      title:'Aktuelle Bedingungen für die Messung der kältesten Oberfläche',
+      temperatures_unavailable:'Die Messbedingungen können noch nicht beurteilt werden. Prüfe die ausgewählten Raum- und Außentemperaturquellen; fehlende, ungültige oder veraltete Werte werden nicht verwendet.',
+      outdoors_not_colder:'Warte auf kälteres Wetter. Draußen ist es genauso warm oder wärmer als im Raum. Der Temperaturunterschied zu kälterer Außenluft fehlt, um die kälteste winterliche Oberfläche zu finden.',
+      difference_too_small:'Warte auf einen größeren Temperaturunterschied. Zum Auffinden kalter Oberflächen sollte es im Raum mindestens {minimum} °C wärmer sein als draußen.',
+      difference_suitable:'Der Temperaturunterschied erreicht den Richtwert von {minimum} °C. Prüfe vor der Messung, ob die Bedingungen stabil sind.',
+      stability:'Stabile Bedingungen sind nicht bestätigt. Vermeide Messungen kurz nach dem Lüften, bei schnellen Heizungsänderungen oder nach Sonneneinstrahlung auf die Oberfläche. Miss die kälteste Innenoberfläche und notiere gleichzeitig Raum- und Außentemperatur.',
+      outdoorCaveat:'Wetterdaten können von der Temperatur am Gebäude abweichen. Prüfe vor der Messung die Bedingungen vor Ort.',
+      indoor:'Raumtemperatur',outdoor:'Außentemperatur',difference:'Raum minus außen',missing:'Nicht verfügbar'
+    },
+    el:{
+      title:'Τρέχουσες συνθήκες μέτρησης της ψυχρότερης επιφάνειας',
+      temperatures_unavailable:'Οι συνθήκες μέτρησης δεν μπορούν ακόμη να αξιολογηθούν. Ελέγξτε τις επιλεγμένες πηγές εσωτερικής και εξωτερικής θερμοκρασίας· δεν χρησιμοποιούνται ελλιπείς, μη έγκυρες ή παλιές τιμές.',
+      outdoors_not_colder:'Περιμένετε πιο κρύο καιρό. Έξω έχει την ίδια ή υψηλότερη θερμοκρασία από το δωμάτιο. Λείπει η διαφορά προς ψυχρότερο εξωτερικό αέρα που χρειάζεται για τον εντοπισμό της ψυχρότερης χειμερινής επιφάνειας.',
+      difference_too_small:'Περιμένετε μεγαλύτερη διαφορά θερμοκρασίας. Για τον εντοπισμό ψυχρών επιφανειών, το δωμάτιο πρέπει να είναι τουλάχιστον {minimum} °C θερμότερο από έξω.',
+      difference_suitable:'Η διαφορά θερμοκρασίας φτάνει την ενδεικτική τιμή των {minimum} °C. Επιβεβαιώστε ότι οι συνθήκες είναι σταθερές πριν μετρήσετε.',
+      stability:'Οι σταθερές συνθήκες δεν έχουν επιβεβαιωθεί. Αποφύγετε μετρήσεις αμέσως μετά τον αερισμό, κατά απότομες αλλαγές θέρμανσης ή όταν ο ήλιος ζεσταίνει την επιφάνεια. Μετρήστε την ψυχρότερη εσωτερική επιφάνεια και καταγράψτε ταυτόχρονα την εσωτερική και εξωτερική θερμοκρασία.',
+      outdoorCaveat:'Τα μετεωρολογικά δεδομένα μπορεί να διαφέρουν από τη θερμοκρασία στο κτίριο. Ελέγξτε τις τοπικές συνθήκες πριν μετρήσετε.',
+      indoor:'Θερμοκρασία δωματίου',outdoor:'Εξωτερική θερμοκρασία',difference:'Δωμάτιο μείον εξωτερικό',missing:'Μη διαθέσιμο'
+    }
+  };
+  AirQualityAdvisorCard.prototype._moldMeasurementGuidance115=function(reading){
+    const d=reading?.details;
+    if(reading?.metric!=='mold'||d?.status!=='needs_calibration')return '';
+    const statuses=['temperatures_unavailable','outdoors_not_colder','difference_too_small','difference_suitable'];
+    if(!statuses.includes(d.calibration_readiness))return '';
+    const words=MOLD_MEASUREMENT_TEXT115[this._language()]||MOLD_MEASUREMENT_TEXT115.en;
+    const numeric=v=>typeof v==='number'&&Number.isFinite(v);
+    const number=v=>escape(this._format(v));
+    const temperature=v=>numeric(v)?number(v)+' °C':escape(words.missing);
+    const minimum=numeric(d.calibration_recommended_difference_c)
+      ?this._format(d.calibration_recommended_difference_c):'10';
+    const explanation=words[d.calibration_readiness].replace('{minimum}',minimum);
+    const rows=[['indoor',d.indoor_temperature_c],['outdoor',d.outdoor_temperature_c]];
+    if(numeric(d.calibration_temperature_difference_c))
+      rows.push(['difference',d.calibration_temperature_difference_c]);
+    return '<section class="mold-calibration-details hem-mold-measurement115" role="note" '+
+      'data-mold-readiness115="'+escape(d.calibration_readiness)+'" aria-label="'+escape(words.title)+'">'+
+      '<strong>'+escape(words.title)+'</strong><p>'+escape(explanation)+'</p>'+
+      rows.map(([label,value])=>'<div><span>'+escape(words[label])+'</span><strong>'+temperature(value)+'</strong></div>').join('')+
+      '<p>'+escape(words.stability)+'</p><p><small>'+escape(words.outdoorCaveat)+'</small></p></section>';
+  };
+/* HEM_MOLD_MEASUREMENT115_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);

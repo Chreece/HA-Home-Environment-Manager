@@ -162,16 +162,14 @@
           "air_quality": "Sensores de calidad del aire y del entorno",
           "temperature": "Temperatura",
           "humidity": "Humedad",
-          "pressure": "Sensores de presión",
           "climate_devices": "Dispositivos",
           "shades": "Persianas, estores y cortinas de ventana"
         },
         "data_description": {
           "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "air_quality": "Sensores de calidad del aire y del entorno. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "air_quality": "Selecciona los sensores de calidad del aire y, opcionalmente, de luz (lux) de esta habitación. Los lux alimentan el historial de luz. Para la protección solar, activa lux en el controlador de cada persiana y elige un sensor de la habitación o la media de los seleccionados: cada nuevo cierre automático requerirá el brillo mínimo configurado. Seleccionar sensores aquí no habilita el movimiento.",
           "temperature": "Temperatura. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "pressure": "Sensores de presión. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
           "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve."
         }
@@ -563,7 +561,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensor · Obligatorio · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · fuente · sensor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensor · Obligatorio",
-          "illuminance_entity": "LUX · fuente (lux)",
+          "illuminance_entity": "Iluminancia (lux)",
           "melanopic_edi_entity": "EDI · EDI · fuente (lx)",
           "melanopic_spectral_verified": "EDI · Obligatorio"
         },
@@ -575,7 +573,7 @@
           "formaldehyde_sensor_verified": "Utiliza una medición real y adecuada para «HCHO · sensor · Obligatorio · SENSOR ✓ · VERIFIED». Una estimación no sustituye HCHO · sensor · Obligatorio · SENSOR ✓ · VERIFIEDes calibrados.",
           "noise_entity": "Elige una dB(A) · fuente · sensor (dB(A)) real de Home Assistant para «dB(A) · fuente · sensor (dB(A))». Los datos ausentes o antiguos detienen la acción asociada.",
           "noise_sensor_calibrated": "Utiliza una medición real y adecuada para «dB(A) · sensor · Obligatorio». Una estimación no sustituye dB(A) · sensor · Obligatorioes calibrados.",
-          "illuminance_entity": "Elige una LUX · fuente (lux) real de Home Assistant para «LUX · fuente (lux)». Los datos ausentes o antiguos detienen la acción asociada.",
+          "illuminance_entity": "Elige un sensor real de iluminancia (lux) para el informe descriptivo del historial de luz de la habitación. La protección solar se configura por separado: elige la fuente lux, el brillo mínimo y el interruptor lux en el controlador de cada persiana. El informe no deduce la EDI melanópica a partir de lux.",
           "melanopic_edi_entity": "Elige una EDI · EDI · fuente (lx) real de Home Assistant para «EDI · EDI · fuente (lx)». Los datos ausentes o antiguos detienen la acción asociada.",
           "melanopic_spectral_verified": "Utiliza una medición real y adecuada para «EDI · Obligatorio». Una estimación no sustituye sensores calibrados."
         }
@@ -1098,17 +1096,15 @@
           "air_quality": "Sensores de calidad del aire y del entorno",
           "temperature": "Temperatura",
           "humidity": "Humedad",
-          "pressure": "Sensores de presión",
           "climate_devices": "Dispositivos",
           "shades": "Persianas, estores y cortinas de ventana",
           "occupancy_sensors": "Ocupación · sensor"
         },
         "data_description": {
           "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "air_quality": "Sensores de calidad del aire y del entorno. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "air_quality": "Selecciona los sensores de calidad del aire y, opcionalmente, de luz (lux) de esta habitación. Los lux alimentan el historial de luz. Para la protección solar, activa lux en el controlador de cada persiana y elige un sensor de la habitación o la media de los seleccionados: cada nuevo cierre automático requerirá el brillo mínimo configurado. Seleccionar sensores aquí no habilita el movimiento.",
           "temperature": "Temperatura. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "pressure": "Sensores de presión. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
           "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve.",
           "occupancy_sensors": "Elige una fuente real de Home Assistant para «Ocupación · sensor». Los datos ausentes o antiguos detienen la acción asociada."
@@ -1129,17 +1125,15 @@
           "air_quality": "Sensores de calidad del aire y del entorno",
           "temperature": "Temperatura",
           "humidity": "Humedad",
-          "pressure": "Sensores de presión",
           "climate_devices": "Dispositivos",
           "shades": "Persianas, estores y cortinas de ventana",
           "occupancy_sensors": "Ocupación · sensor"
         },
         "data_description": {
           "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "air_quality": "Sensores de calidad del aire y del entorno. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "air_quality": "Selecciona los sensores de calidad del aire y, opcionalmente, de luz (lux) de esta habitación. Los lux alimentan el historial de luz. Para la protección solar, activa lux en el controlador de cada persiana y elige un sensor de la habitación o la media de los seleccionados: cada nuevo cierre automático requerirá el brillo mínimo configurado. Seleccionar sensores aquí no habilita el movimiento.",
           "temperature": "Temperatura. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "pressure": "Sensores de presión. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
           "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve.",
           "occupancy_sensors": "Elige una fuente real de Home Assistant para «Ocupación · sensor». Los datos ausentes o antiguos detienen la acción asociada."
@@ -1633,7 +1627,7 @@
           "formaldehyde_sensor_verified": "HCHO · sensor · Obligatorio · SENSOR ✓ · VERIFIED",
           "noise_entity": "dB(A) · fuente · sensor (dB(A))",
           "noise_sensor_calibrated": "dB(A) · sensor · Obligatorio",
-          "illuminance_entity": "LUX · fuente (lux)",
+          "illuminance_entity": "Iluminancia (lux)",
           "melanopic_edi_entity": "EDI · EDI · fuente (lx)",
           "melanopic_spectral_verified": "EDI · Obligatorio"
         },
@@ -1645,7 +1639,7 @@
           "formaldehyde_sensor_verified": "Utiliza una medición real y adecuada para «HCHO · sensor · Obligatorio · SENSOR ✓ · VERIFIED». Una estimación no sustituye HCHO · sensor · Obligatorio · SENSOR ✓ · VERIFIEDes calibrados.",
           "noise_entity": "Elige una dB(A) · fuente · sensor (dB(A)) real de Home Assistant para «dB(A) · fuente · sensor (dB(A))». Los datos ausentes o antiguos detienen la acción asociada.",
           "noise_sensor_calibrated": "Utiliza una medición real y adecuada para «dB(A) · sensor · Obligatorio». Una estimación no sustituye dB(A) · sensor · Obligatorioes calibrados.",
-          "illuminance_entity": "Elige una LUX · fuente (lux) real de Home Assistant para «LUX · fuente (lux)». Los datos ausentes o antiguos detienen la acción asociada.",
+          "illuminance_entity": "Elige un sensor real de iluminancia (lux) para el informe descriptivo del historial de luz de la habitación. La protección solar se configura por separado: elige la fuente lux, el brillo mínimo y el interruptor lux en el controlador de cada persiana. El informe no deduce la EDI melanópica a partir de lux.",
           "melanopic_edi_entity": "Elige una EDI · EDI · fuente (lx) real de Home Assistant para «EDI · EDI · fuente (lx)». Los datos ausentes o antiguos detienen la acción asociada.",
           "melanopic_spectral_verified": "Utiliza una medición real y adecuada para «EDI · Obligatorio». Una estimación no sustituye sensores calibrados."
         }
@@ -2151,16 +2145,14 @@
           "air_quality": "Sensores de calidad del aire y del entorno",
           "temperature": "Temperatura",
           "humidity": "Humedad",
-          "pressure": "Sensores de presión",
           "climate_devices": "Dispositivos",
           "shades": "Persianas, estores y cortinas de ventana"
         },
         "data_description": {
           "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "air_quality": "Sensores de calidad del aire y del entorno. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "air_quality": "Selecciona los sensores de calidad del aire y, opcionalmente, de luz (lux) de esta habitación. Los lux alimentan el historial de luz. Para la protección solar, activa lux en el controlador de cada persiana y elige un sensor de la habitación o la media de los seleccionados: cada nuevo cierre automático requerirá el brillo mínimo configurado. Seleccionar sensores aquí no habilita el movimiento.",
           "temperature": "Temperatura. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "pressure": "Sensores de presión. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
           "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve."
         }
@@ -2304,17 +2296,15 @@
           "air_quality": "Sensores de calidad del aire y del entorno",
           "temperature": "Temperatura",
           "humidity": "Humedad",
-          "pressure": "Sensores de presión",
           "climate_devices": "Dispositivos",
           "shades": "Persianas, estores y cortinas de ventana",
           "occupancy_sensors": "Ocupación · sensor"
         },
         "data_description": {
           "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "air_quality": "Sensores de calidad del aire y del entorno. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "air_quality": "Selecciona los sensores de calidad del aire y, opcionalmente, de luz (lux) de esta habitación. Los lux alimentan el historial de luz. Para la protección solar, activa lux en el controlador de cada persiana y elige un sensor de la habitación o la media de los seleccionados: cada nuevo cierre automático requerirá el brillo mínimo configurado. Seleccionar sensores aquí no habilita el movimiento.",
           "temperature": "Temperatura. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "pressure": "Sensores de presión. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
           "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve.",
           "occupancy_sensors": "Elige una fuente real de Home Assistant para «Ocupación · sensor». Los datos ausentes o antiguos detienen la acción asociada."
@@ -2335,17 +2325,15 @@
           "air_quality": "Sensores de calidad del aire y del entorno",
           "temperature": "Temperatura",
           "humidity": "Humedad",
-          "pressure": "Sensores de presión",
           "climate_devices": "Dispositivos",
           "shades": "Persianas, estores y cortinas de ventana",
           "occupancy_sensors": "Ocupación · sensor"
         },
         "data_description": {
           "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "air_quality": "Sensores de calidad del aire y del entorno. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
+          "air_quality": "Selecciona los sensores de calidad del aire y, opcionalmente, de luz (lux) de esta habitación. Los lux alimentan el historial de luz. Para la protección solar, activa lux en el controlador de cada persiana y elige un sensor de la habitación o la media de los seleccionados: cada nuevo cierre automático requerirá el brillo mínimo configurado. Seleccionar sensores aquí no habilita el movimiento.",
           "temperature": "Temperatura. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
-          "pressure": "Sensores de presión. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
           "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve.",
           "occupancy_sensors": "Elige una fuente real de Home Assistant para «Ocupación · sensor». Los datos ausentes o antiguos detienen la acción asociada."

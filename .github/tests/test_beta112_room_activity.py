@@ -131,8 +131,8 @@ expect(c,'humidify',['neutral','humidify','neutral','neutral']);
 expect(c,'dry',['neutral','dry','neutral','neutral']);
 expect(c,'air',['neutral','neutral','neutral','filtration']);
 expect(c,'mixed',['mixed','mixed','neutral','neutral']);
-assert.ok(glance(c,'heat').includes('hem-room-icon112 hem-activity-heat'));
-assert.ok(glance(c,'mixed').includes('hem-room-icon112 hem-activity-mixed'));
+assert.ok(!glance(c,'heat').includes('hem-room-icon112'));
+assert.ok(!glance(c,'mixed').includes('hem-room-icon112'));
 assert.ok(glance(c,'heat').includes('mdi:fire'));
 assert.ok(glance(c,'cool').includes('mdi:snowflake'));
 assert.ok(glance(c,'air').includes('Filtering air'));
@@ -226,7 +226,7 @@ COLOURS = {"heat": "rgb(242, 138, 75)", "cool": "rgb(80, 186, 255)",
 REPORT = """area=>{
  const root=card.shadowRoot.querySelector('[data-room-fold87="'+area+'"] > summary');
  const colour=el=>getComputedStyle(el).color;
- return {home:colour(root.querySelector('.hem-room-icon112')),
+ return {homeCount:root.querySelectorAll('.hem-room-icon112').length,
    metric:[...root.querySelectorAll('.hem-room-metric107')].map(el=>({
      colour:colour(el.querySelector(':scope > ha-icon')),valueColour:colour(el.querySelector('.hem-room-metric-value107')),
      average:el.querySelector('.hem-avg-marker105 ha-icon')?colour(el.querySelector('.hem-avg-marker105 ha-icon')):null,
@@ -274,12 +274,13 @@ def browser_checks(states):
         for area, metric, tone in (("heat", 0, "heat"), ("cool", 0, "cool"),
                 ("humidify", 1, "humidify"), ("dry", 1, "dry"), ("air", 3, "filtration")):
             report = page.evaluate(REPORT, area)
-            assert report["home"] == COLOURS[tone], (area, report)
+            assert report["homeCount"] == 0, (area, report)
             assert report["metric"][metric]["colour"] == COLOURS[tone], (area, report)
             assert report["active"][0]["colour"] == COLOURS[tone], (area, report)
             assert report["metric"][metric]["valueColour"] != COLOURS[tone], (area, report)
         mixed = page.evaluate(REPORT, "mixed")
-        assert mixed["home"] == mixed["metric"][0]["colour"] == mixed["metric"][1]["colour"] == COLOURS["mixed"]
+        assert mixed["homeCount"] == 0
+        assert mixed["metric"][0]["colour"] == mixed["metric"][1]["colour"] == COLOURS["mixed"]
         assert {a["colour"] for a in mixed["active"]} >= {COLOURS["heat"], COLOURS["cool"]}
         assert page.evaluate(REPORT, "air")["metric"][2]["colour"] == neutral, "Purifier implied CO2 removal"
         assert page.evaluate(REPORT, "heat")["metric"][0]["average"] not in COLOURS.values()
@@ -307,7 +308,7 @@ def browser_checks(states):
                 assert page.evaluate("card.shadowRoot.querySelector('[data-room-fold87=\"humidify\"]')===previousRow")
                 for area in ("heat", "cool", "humidify", "dry", "air", "mixed"):
                     report = page.evaluate(REPORT, area)
-                    assert report["home"] == neutral and not report["active"], (area, report)
+                    assert report["homeCount"] == 0 and not report["active"], (area, report)
                     assert all(metric["colour"] == neutral for metric in report["metric"]), (area, report)
             for width in (590, 390, 320):
                 page.set_viewport_size({"width": width, "height": 1000})
