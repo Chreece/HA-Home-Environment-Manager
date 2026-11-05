@@ -38,4 +38,6 @@ publication.
 
 Repository cleanup keeps the newest published release and the `main` and `dev`
 branches. The validation workflow remains read-only; only the publishing
-workflow can publish and retire releases. Historical tags remain available.
+workflow can publish and retire releases. The requested one-time tag cleanup
+removed tags older than beta113. The publisher preserves beta113 and newer
+tags when retiring older releases.

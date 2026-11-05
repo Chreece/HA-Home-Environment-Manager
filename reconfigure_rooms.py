@@ -57,10 +57,13 @@ class ReconfigureRoomsMixin:
     _ROOM_PREFIX = "async_step_edit_room_"
 
     def _selected_edit_rooms(self) -> list[tuple[str, str]]:
+        from .device_hierarchy import configured_area_ids
+
         registry = ar.async_get(self.hass)
-        values = self._values.get(CONF_AREAS, [])
-        if not isinstance(values, list):
-            return []
+        # Room hubs may exist for climate/PID devices outside air-quality
+        # monitoring. Use their existing bounded membership, without adding
+        # monitored areas or granting any device control by opening settings.
+        values = configured_area_ids(self._values)
         result = []
         for area in dict.fromkeys(values):
             if not isinstance(area, str) or not area:

@@ -19,6 +19,25 @@ nodes=[n for n in source.body if isinstance(n,(ast.ClassDef,ast.FunctionDef))
        and n.name in ("ReconfigureRoomsMixin","_locale_menu")]
 assert len(nodes)==2
 
+# Use the production room-hub membership and removal rules. Menu access must
+# match existing configured climate/PID hubs, and removing a monitored room
+# must withdraw its grants just as the actual room-selection flow does.
+hierarchy_source=ast.parse((ROOT/"device_hierarchy.py").read_text(encoding="utf-8"))
+membership=next(n for n in hierarchy_source.body
+                if isinstance(n,ast.FunctionDef) and n.name=="configured_area_ids")
+native_domains=next(n for n in hierarchy_source.body if isinstance(n,ast.Assign)
+                    and any(isinstance(target,ast.Name) and target.id=="NATIVE_DOMAINS"
+                            for target in n.targets))
+membership_ns={"Any":object,"CONF_AREAS":"areas",
+               "CONF_CLIMATE_ROOMS":"climate_rooms","CONF_PID_ROOMS":"pid_rooms"}
+exec(compile(ast.Module([native_domains,membership],type_ignores=[]),
+             "device_hierarchy.py","exec"),membership_ns)
+sources_source=ast.parse((ROOT/"room_sources.py").read_text(encoding="utf-8"))
+restriction=next(n for n in sources_source.body
+                if isinstance(n,ast.FunctionDef) and n.name=="restrict_rooms")
+restriction_ns={}
+exec(compile(ast.Module([restriction],type_ignores=[]),"room_sources.py","exec"),restriction_ns)
+
 group_names=("windows","air_quality","temperature","humidity",
              "pressure","climate_devices","shades")
 rooms={"badezimmer":"Badezimmer","wohnzimmer":"Wohnzimmer",
@@ -52,7 +71,7 @@ def store_selection(hass,opts,area,values):
     opts.setdefault("room_sources",{})[area]=deepcopy(values)
 def restrict_rooms(opts,areas):
     calls.append(("restrict_rooms",list(areas)))
-    opts["areas"]=list(areas)
+    restriction_ns["restrict_rooms"](opts,areas)
 
 module_source=N(GROUPS=group_names,CONF_ROOM_SOURCES="room_sources",
     defaults=saved_defaults,choices=choices,store_selection=store_selection,
@@ -65,9 +84,11 @@ presence.room_sensor_choices=lambda hass,area: [
 ] + (["binary_sensor.bath_empty"] if area=="badezimmer" else [])
 discovery=ModuleType("beta79_fixture.discovery")
 discovery.entity_area=lambda hass,eid:actual.get(eid)
+hierarchy=ModuleType("beta79_fixture.device_hierarchy")
+hierarchy.configured_area_ids=membership_ns["configured_area_ids"]
 sys.modules.update({
  "beta79_fixture":pack,"beta79_fixture.occupancy_policy":presence,
- "beta79_fixture.discovery":discovery
+ "beta79_fixture.discovery":discovery,"beta79_fixture.device_hierarchy":hierarchy
 })
 def schema(fields):return fields
 class Probatio:
@@ -205,6 +226,59 @@ async def run():
     assert (await f5.async_step_general_settings({"hello":"world"}))=={
         "type":"general","data":{"hello":"world"}
     }
+
+    # A dashboard room can be climate-only, with no CONF_AREAS membership.
+    # The same exact room step must open without enrolling it in monitoring
+    # or changing its existing actuation/PID permissions.
+    rooms.update({"kueche":"Küche","lager":"Lager"})
+    configured=UI()
+    configured._values["areas"]=["badezimmer"]
+    living_sources={key:[] for key in group_names}
+    living_sources.update(temperature=["sensor.living_temp"],
+                          climate_devices=["climate.radiator"])
+    configured._values["room_sources"]={"wohnzimmer":deepcopy(living_sources)}
+    configured._values["climate_rooms"]["wohnzimmer"]={
+        "enabled":True,"allow_actuation":True,
+        "selected_devices":["climate.radiator"],"occupancy_sensors":[],
+        "device_settings":{"climate.radiator":{"auto_control":True,"method":"pid"}},
+    }
+    # Exact-device automatic control can make this room appear in planning
+    # while its legacy room-level enabled flag is still false.
+    configured._values["climate_rooms"]["kueche"]={
+        "enabled":False,"selected_devices":["climate.kitchen"],
+    }
+    configured._values["climate_rooms"]["lager"]={"enabled":False}
+    configured._values["pid_rooms"]={
+        "schlafzimmer":{"enabled":True,"climate_entities":["climate.bedroom"]},
+        "removed_area":{"enabled":True},
+    }
+    before=deepcopy(configured._values)
+    room_menu=await configured._room_edit_menu()
+    assert list(room_menu)==["choose_rooms","edit_room_badezimmer",
+        "edit_room_wohnzimmer","edit_room_kueche","edit_room_schlafzimmer",
+        "general_settings"],room_menu
+    assert not hasattr(configured,"async_step_edit_room_lager")
+    assert not hasattr(configured,"async_step_edit_room_removed_area")
+    page=await getattr(configured,"async_step_edit_room_wohnzimmer")()
+    assert page["type"]=="form" and page["step_id"]=="edit_room"
+    assert page["description_placeholders"]=={"area_name":"Wohnzimmer"}
+    assert configured._values==before and configured.saves==0
+    original_calls=len(calls)
+    result=await configured.async_step_room_settings({**living_sources,"occupancy_sensors":[]})
+    assert result["type"]=="save" and result["data"]==before
+    assert len(calls)==original_calls, calls
+    assert result["data"]["areas"]==["badezimmer"]
+    assert result["data"]["climate_rooms"]["wohnzimmer"]["allow_actuation"] is True
+    assert result["data"]["pid_rooms"]==before["pid_rooms"]
+    # A room removed after its menu was shown cannot be edited through a
+    # retained step callback, even when its old source selections remain.
+    stale_step=getattr(configured,"async_step_edit_room_wohnzimmer")
+    configured._values["climate_rooms"]["wohnzimmer"].update(
+        enabled=False,selected_devices=[])
+    rejected=await stale_step()
+    assert rejected=={"type":"abort","reason":"setup_area_removed"},rejected
+    assert configured.saves==1
+    print("BETA114_MONITORED_AND_CONFIGURED_ROOM_SETTINGS_NO_NEW_GRANTS=PASS")
     print("BETA79_ROOM_MENU_AND_SOURCE_FORM=PASS")
 
 asyncio.run(run())
