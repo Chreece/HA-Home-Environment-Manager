@@ -667,6 +667,21 @@
           })).catch((error)=>console.warn('Home Environment Manager shade toggle failed',error));
           return;
         }
+        const timing = event.target.closest?.('[data-timed-setpoint-switch]');
+        if (timing && this._hass?.callService) {
+          const area=timing.getAttribute('data-controller-area');
+          const id=timing.getAttribute('data-timed-setpoint-switch');
+          const ctrl=timing.getAttribute('data-managed-controller');
+          const entry=this._managedControllers(area).find(item=>
+            item.entityId===ctrl && item.timedSetpointId===id);
+          if (timing.disabled || !entry || !['on','off'].includes(entry.timedSetpoint?.state)) return;
+          timing.disabled=true;
+          Promise.resolve(this._hass.callService('switch',
+            entry.timedSetpoint.state==='on'?'turn_off':'turn_on',{entity_id:id}))
+            .catch(error=>console.warn('HEM setpoint timing setting failed',error))
+            .finally(()=>{timing.disabled=!['on','off'].includes(this._hass?.states?.[id]?.state);});
+          return;
+        }
         const errorAnnouncements = event.target.closest?.('[data-device-error-announce]');
         if (errorAnnouncements && this._hass?.callService) {
           const area=errorAnnouncements.getAttribute('data-controller-area');
@@ -1221,6 +1236,9 @@
         ['automatic','manual','off'].every((mode)=>item.attributes.options.includes(mode)));
       const signature = (item) => JSON.stringify(
         safeArray(item.attributes.source_entity_ids).slice().sort());
+      const timedSetpointSwitches=states.filter(([id,item])=>
+        id.startsWith('switch.') && item?.attributes?.area_id===area &&
+        item.attributes.timed_setpoint_role==='policy');
       const errorAnnouncementSwitches=states.filter(([id,item])=>
         id.startsWith('switch.') && item?.attributes?.area_id===area &&
         item.attributes.device_fault_role==='announce');
@@ -1259,6 +1277,11 @@
         const buttons=calibrationButtons.filter(([,item])=>signature(item)===signature(climate));
         const [calibrationButtonId,calibrationButton]=buttons.length===1 ?
           buttons[0] : [null,null];
+        const timingSettings=timedSetpointSwitches.filter(([,item])=>
+          signature(item)===signature(climate) &&
+          item.attributes.source_device_id===climate.attributes.source_device_id);
+        const [timedSetpointId,timedSetpoint]=timingSettings.length===1
+          ? timingSettings[0] : [null,null];
         const faultSettings=errorAnnouncementSwitches.filter(([,item])=>
           signature(item)===signature(climate));
         const [errorAnnounceId,errorAnnounce]=faultSettings.length===1
@@ -1290,7 +1313,7 @@
             id,state,field:state.attributes.pid_fan_capacity_field,
           }));
         return {entityId,climate,methodId,method,resumeButtonId,resumeButton,
-                errorAnnounceId,errorAnnounce,
+                errorAnnounceId,errorAnnounce,timedSetpointId,timedSetpoint,
                 calibrationSelectId,calibrationSelect,calibrationButtonId,calibrationButton,
                 calibrationNumbers,reviewApproveId,reviewApprove,
                 reviewDiscardId,reviewDiscard,capacityModeId,capacityMode,capacityDirectionId,
@@ -1304,7 +1327,8 @@
       const rows = Object.entries(this._hass?.states || {})
         .filter(([id, state]) =>
           (id.startsWith('select.') || id.startsWith('climate.') || (id.startsWith('sensor.') && state?.attributes?.status_code) ||
-           (id.startsWith('switch.') && state?.attributes?.device_fault_role==='announce') ||
+           (id.startsWith('switch.') && (state?.attributes?.device_fault_role==='announce' ||
+             state?.attributes?.timed_setpoint_role==='policy')) ||
            (id.startsWith('button.') && (
              state?.attributes?.pid_calibration_role || state?.attributes?.pid_fan_capacity_role ||
              state?.attributes?.pid_review_role ||
@@ -1323,6 +1347,8 @@
           state.attributes.source_entity_ids,
           state.attributes.pid_calibration_role,
           state.attributes.device_fault_role,
+          state.attributes.timed_setpoint_role,
+          state.attributes.source_device_id,
           state.attributes.native_error,
           state.attributes.pid_review_role,
           state.attributes.controller_resume_role,
@@ -1761,6 +1787,23 @@
           de:['Adaptiv · Vorschlag bestätigen','Adaptiv · Automatisch','Übernehmen','Verwerfen','Vorgeschlagene PID-Anpassung'],
           el:['Προσαρμοστικό · Πρόταση για έγκριση','Προσαρμοστικό · Αυτόματο','Έγκριση','Απόρριψη','Προτεινόμενη ρύθμιση PID'],
         }[this._language()] || ['Adaptive · Suggest & approve','Adaptive · Automatic','Approve','Discard','Proposed PID adjustment'];
+        const timingLabels={
+          en:['Timed setpoints (30 s)','Wait 30 seconds after ON before sending a setpoint. Before switching off on/off heating or cooling, send the opposite temperature limit and wait 30 seconds.'],
+          de:['Zeitgesteuerte Sollwerte (30 s)','Nach dem Einschalten 30 Sekunden bis zum Setzen des Sollwerts warten. Vor dem Ausschalten einer Ein/Aus-Heizung oder -Kühlung den entgegengesetzten Temperaturgrenzwert senden und 30 Sekunden warten.'],
+          el:['Χρονισμός στόχων (30 s)','Μετά την ενεργοποίηση, αναμονή 30 δευτερολέπτων πριν σταλεί ο στόχος. Πριν την απενεργοποίηση θέρμανσης ή ψύξης on/off, αποστολή του αντίθετου ορίου θερμοκρασίας και αναμονή 30 δευτερολέπτων.'],
+        };
+        const timingText=timingLabels[this._language()] || [
+          entry.timedSetpoint?.attributes?.friendly_name || timingLabels.en[0],timingLabels.en[1]];
+        const timingState=entry.timedSetpoint?.state;
+        const timedSwitch=entry.timedSetpointId
+          ? '<div class="hem-device-error-toggle"><button type="button" role="switch" '+
+            'data-timed-setpoint-switch="'+escape(entry.timedSetpointId)+'" '+
+            'data-controller-area="'+escape(room.area_id)+'" data-managed-controller="'+escape(entry.entityId)+'" '+
+            (['on','off'].includes(timingState)?'':'disabled ')+
+            'aria-checked="'+(timingState==='on')+'" aria-label="'+escape(timingText[0])+
+            '" aria-description="'+escape(timingText[1])+'" title="'+escape(timingText[1])+'">'+
+            this._icon('mdi:timer-outline')+'<span>'+escape(timingText[0])+'</span><b>'+
+            escape(this._controllerStatusLabel(timingState))+'</b></button></div>' : '';
         const deviceFault=entry.errorAnnounce?.attributes?.native_error;
         const errorLabels={
           en:['Announce errors','Physical device error','Severity','Code','Details',
@@ -2018,7 +2061,7 @@
           'data-controller-area="'+escape(room.area_id)+'">'+
           nativeHeader+
           this._deviceSummary65(entry)+faultPanel+alertSwitch+
-          recoveryPanel+resumeControl+method+editors.join('')+
+          recoveryPanel+resumeControl+method+timedSwitch+editors.join('')+
           this._calibrationDetails65(entry,control==='pid' ?
             calibrationMethod+pidInputs+apply+reviewPanel+capSelectors+capacityInput+applyCapacity+capacitySummary : '')+
           '</section>';

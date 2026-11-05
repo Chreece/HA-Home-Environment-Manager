@@ -1,0 +1,28 @@
+name: Verify HEM beta 110 device option
+on:
+  push:
+    branches: ['work/v0.6.0b110']
+permissions:
+  contents: read
+jobs:
+  device-option:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - run: python -m pip install 'playwright==1.57.0'
+      - name: Check per-device control and exact targeting at mobile width
+        env:
+          HEM_TEST_SCREENSHOT_DIR: artifacts/device-option
+        run: |
+          node --check frontend/air-quality-advisor-card.js
+          python -I .github/tests/test_beta110_device_option_browser.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hem-beta110-device-option
+          path: artifacts/device-option
+          if-no-files-found: error
+          retention-days: 7
