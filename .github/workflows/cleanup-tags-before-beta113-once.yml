@@ -1,0 +1,32 @@
+name: Remove reviewed HEM tags older than beta113 once
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - .github/workflows/cleanup-tags-before-beta113-once.yml
+      - .github/maintenance/tags-before-beta113/**
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hem-tags-before-beta113-cleanup
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    if: github.repository == 'Chreece/HA-Home-Environment-Manager' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Verify tag cleanup guards
+        run: python -I .github/maintenance/tags-before-beta113/test_cleanup.py
+      - name: Remove only the reviewed tags older than beta113
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python -I .github/maintenance/tags-before-beta113/cleanup.py
