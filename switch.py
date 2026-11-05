@@ -41,18 +41,22 @@ async def async_setup_entry(hass, entry, async_add_entities):
     from . import equipment_model as equipment
     from homeassistant.helpers import entity_registry as er
     from .equipment_feature_registration import (
-        quiet_keys, register_late_capabilities,
+        quiet_keys, register_late_capabilities, timed_setpoint_supported,
     )
     registry = er.async_get(hass)
 
-    def native_quiet_switches():
+    def native_feature_switches():
         return [
             EquipmentQuietSwitch(manager, spec, key)
             for spec in equipment.specs(manager)
             for key in quiet_keys(manager, registry, spec, platform="switch")
+        ] + [
+            EquipmentTimedSetpointSwitch(manager, spec)
+            for spec in equipment.specs(manager)
+            if timed_setpoint_supported(manager, registry, spec)
         ]
 
-    entities.extend(native_quiet_switches())
+    entities.extend(native_feature_switches())
     entities.extend(EquipmentWindowPauseSwitch(manager, spec)
                     for spec in equipment.specs(manager))
     # ONLY a per-device announcement setting is new. Error evidence is
@@ -73,7 +77,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
                 entities.append(ShadeDeviceSwitch(manager, entry.entry_id, area, cover, key))
     async_add_grouped_entities(entry.runtime_data, async_add_entities, entities)
     register_late_capabilities(
-        hass, entry, async_add_entities, entities, native_quiet_switches,
+        hass, entry, async_add_entities, entities, native_feature_switches,
     )
 
 
@@ -230,6 +234,34 @@ class EquipmentErrorAnnouncementSwitch(EquipmentEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs):
         await self._manager.faults.async_set_announcements(self._spec, False)
+
+
+class EquipmentTimedSetpointSwitch(EquipmentEntity, SwitchEntity):
+    """Opt this controller into native setpoint timing; never command its device."""
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_icon = "mdi:timer-outline"
+
+    def __init__(self, manager, spec):
+        self._equipment_init(manager, spec, "timed_setpoint_sequence")
+
+    @property
+    def available(self):
+        # Config stays writable across a native disconnect or pending ACK.
+        return self._manager.equipment._ready
+
+    @property
+    def is_on(self):
+        return self.controller_settings.get("timed_setpoint_sequence") is True
+
+    @property
+    def extra_state_attributes(self):
+        return {**super().extra_state_attributes, "timed_setpoint_role": "policy"}
+
+    async def async_turn_on(self, **kwargs):
+        await self._manager.equipment.async_update(self._spec, {"timed_setpoint_sequence": True})
+
+    async def async_turn_off(self, **kwargs):
+        await self._manager.equipment.async_update(self._spec, {"timed_setpoint_sequence": False})
 
 
 class EquipmentWindowPauseSwitch(EquipmentEntity, SwitchEntity):

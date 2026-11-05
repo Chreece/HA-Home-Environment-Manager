@@ -17,6 +17,7 @@ SimRuntime,SPEC=fixture["SimRuntime"],fixture["SPEC"]
 async def run():
     for mode,expected in (("heat",35.0),("cool",5.0)):
         controlled=SimRuntime("off")
+        controlled.manager.settings["cfg"]["timed_setpoint_sequence"]=True
         controlled.now=5000.
         # Native set_temperature may auto-start hardware; it is forbidden
         # until the native mode is already positively observed ON.

@@ -13,10 +13,31 @@ from copy import deepcopy
 from .pid_math import finite
 
 SETPOINT_GRACE_SECONDS = 30.0
+OPTION = "timed_setpoint_sequence"
 _RECOVERABLE_PAUSES = frozenset((
     None, "restart_reconciliation_required", "physical_acknowledgement_missing",
     "native_command_failed_or_uncertain", "native_retry_intent_uncertain",
 ))
+
+
+def enabled(settings) -> bool:
+    """Old profiles and non-boolean values never opt a device in."""
+    return settings.get(OPTION) is True
+
+
+def retry_settings_match(saved, current) -> bool:
+    """Timing is checked live; all original command authority still has to match.
+
+    In particular, a pre-upgrade pending journal has no timing preference.
+    Changing this one preference does not cancel a dispatched command, grant
+    another attempt, or turn a device setting edit into a manual override.
+    """
+    if not isinstance(saved, dict) or not isinstance(current, dict):
+        return False
+    return saved == current or (
+        {k: v for k, v in saved.items() if k != OPTION}
+        == {k: v for k, v in current.items() if k != OPTION}
+    )
 
 
 def wake_at(runtime, spec, deadline: float) -> None:
@@ -78,6 +99,9 @@ async def startup_ready(runtime, spec, cap, state) -> bool:
     """
     if state is None or state.state in ("off", "unknown", "unavailable"):
         return False
+    from . import equipment_model as model
+    if not enabled(model.settings(runtime.manager, spec)):
+        return True
     record, now = runtime._record(spec), runtime.clock()
     owned = record.get("power", {}).get(cap.primary)
     observed = record.get("native_power_observations", {}).get(cap.primary)
@@ -190,7 +214,8 @@ def target_authorized(runtime, spec, cap, entity, data, expected) -> bool:
     record = runtime._record(spec)
     sequence = record.get("native_setpoint_stop")
     state = runtime.hass.states.get(entity)
-    if not (_valid(sequence, record, spec) and sequence["phase"] == "preparing"
+    if not (enabled(model.settings(runtime.manager, spec))
+            and _valid(sequence, record, spec) and sequence["phase"] == "preparing"
             and not sequence.get("invalidated_on_epoch")
             and entity == cap.primary == sequence["entity"]
             and supports_stop(cap, state) and state.state == sequence["mode"]
@@ -249,6 +274,8 @@ async def begin_stop(runtime, spec, cap, *, automatic, shutdown, policy_stop):
     record = runtime._record(spec)
     if record.get("native_setpoint_stop"):
         await progress_stop(runtime, spec)
+        return False
+    if not enabled(model.settings(runtime.manager, spec)):
         return False
     state = runtime.hass.states.get(cap.primary)
     value = _opposite(state)

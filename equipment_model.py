@@ -67,6 +67,7 @@ DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None
             "power_switch_entity": None,
             "quiet_sleep": False, "quiet_occupied": False,
             "pause_on_window_open": True,
+            "timed_setpoint_sequence": False,
             # New native fault announcements are independently enabled by
             # default per selected controller; no synthetic error sensor.
             "announce_device_errors": True,
@@ -123,6 +124,8 @@ def settings(manager: Any, spec: ManagedDevice) -> dict:
     raw = profiles.get(spec.identifier, {}) if isinstance(profiles, dict) else {}
     raw = raw if isinstance(raw, dict) else {}
     result = {**DEFAULTS, **raw}
+    # Missing settings and legacy strings/numbers never opt a device in.
+    result["timed_setpoint_sequence"] = raw.get("timed_setpoint_sequence") is True
     # Beta84 resolves the previous overlapping passive/calculator selectors
     # into exactly one persisted gain authority. Legacy settings are read
     # conservatively: an explicit classical tune always wins.

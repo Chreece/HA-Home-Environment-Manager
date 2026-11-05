@@ -1108,6 +1108,43 @@ class EquipmentRuntime:
         passive_review: str | None = None,
     ) -> None:
         """Validate all requested edits atomically; no hidden hardware permission."""
+        if "timed_setpoint_sequence" in changes:
+            # This is an independent timing preference. A pending service,
+            # ACK or recovery hold must not block editing or be acknowledged
+            # by the edit. Serialize only the options write, not hardware.
+            if (set(changes) != {"timed_setpoint_sequence"}
+                    or type(changes["timed_setpoint_sequence"]) is not bool):
+                raise HomeAssistantError("Change the timed setpoint switch separately using ON or OFF")
+            lock = getattr(self.manager, "_device_settings_write_lock", None)
+            if lock is None:
+                lock = self.manager._device_settings_write_lock = asyncio.Lock()
+            async with lock:
+                if not self._ready or not self._current_spec(spec):
+                    raise HomeAssistantError("Controller storage or source identity is unavailable")
+                options = deepcopy(self.manager.entry.options)
+                profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+                profiles = profiles if isinstance(profiles, dict) else {}
+                previous = profiles.get(spec.identifier)
+                profiles[spec.identifier] = {
+                    **(previous if isinstance(previous, dict) else {}),
+                    "timed_setpoint_sequence": changes["timed_setpoint_sequence"],
+                }
+                options[model.SETTINGS] = profiles
+                self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
+            self._presentation_updates.request(spec.identifier)
+            if self._active:
+                # Refresh just this device. An in-flight tick may abort an
+                # unsent preparation when it sees the saved preference.
+                # Let its lock unwind before evaluating the new policy.
+                task = self._tasks.get(spec.identifier)
+                if task is not None and not task.done():
+                    rerun = getattr(self, "_setpoint_rerun", None)
+                    if rerun is None:
+                        rerun = self._setpoint_rerun = set()
+                    rerun.add(spec.identifier)
+                elif self.statuses.get(spec.identifier, {}).get("status") == "native_setpoint_startup_grace":
+                    self._tasks[spec.identifier] = self.hass.async_create_task(self._run(spec))
+            return
         async with self._lock(spec.identifier):
             if not self._ready:
                 raise HomeAssistantError("Controller state storage is unavailable")
@@ -1252,6 +1289,10 @@ class EquipmentRuntime:
                     options = deepcopy(self.manager.entry.options)
                     existing = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
                     existing = existing if isinstance(existing, dict) else {}
+                    # The independent timing switch may have changed while we waited.
+                    adjusted["timed_setpoint_sequence"] = model.settings(
+                        self.manager, spec
+                    ).get("timed_setpoint_sequence") is True
                     existing[spec.identifier] = adjusted
                     options[model.SETTINGS] = existing
                     # Revalidate physical identity, area and competing claims
@@ -1527,6 +1568,9 @@ class EquipmentRuntime:
                 options = deepcopy(self.manager.entry.options)
                 saved = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
                 saved = saved if isinstance(saved, dict) else {}
+                new["timed_setpoint_sequence"] = model.settings(
+                    self.manager, spec
+                ).get("timed_setpoint_sequence") is True
                 saved[spec.identifier] = new
                 options[model.SETTINGS] = saved
                 # Storage awaited above: refuse a stale approval if the source
@@ -3196,8 +3240,9 @@ class EquipmentRuntime:
                              round(settle) if settle is not None else None
                          ), command_attempts=attempts)
             return
-        if pending.get("service") in ("set_temperature", "set_humidity"):
-            from .equipment_setpoint_sequence import startup_ready
+        from .equipment_setpoint_sequence import enabled, retry_settings_match, startup_ready
+        setpoint = pending.get("service") in ("set_temperature", "set_humidity")
+        if setpoint and enabled(model.settings(self.manager, spec)):
             cap = model.capabilities(self.manager, spec)
             if cap is None or not await startup_ready(self, spec, cap, state):
                 return
@@ -3215,8 +3260,8 @@ class EquipmentRuntime:
                     and now - last >= NATIVE_COMMAND_RETRY_SECONDS
                     and pending.get("phase") == "commanded"
                     and isinstance(pending.get("retry_context"), dict)
-                    and pending["retry_context"].get("settings")
-                        == model.settings(self.manager, spec)):
+                    and retry_settings_match(pending["retry_context"].get("settings"),
+                                             model.settings(self.manager, spec))):
                 pending["reconnect_retry_grant"] = True
                 decision = "retry"
                 # The actual grant will be consumed durably in retry_intent
@@ -3258,7 +3303,7 @@ class EquipmentRuntime:
             or not self._current_spec(spec)
             or not self._identity_ok(spec)
             or asdict(cap) != record.get("capabilities")
-            or cfg != context.get("settings")
+            or not retry_settings_match(context.get("settings"), cfg)
             or (context.get("profile") != model.profile_name(cfg, plan)
                 if context.get("automatic") else False)
             or before is None or observed is None
@@ -3309,6 +3354,7 @@ class EquipmentRuntime:
         # Reserve the next attempt durably BEFORE dispatch. An interrupted
         # retry stays uncertain; it cannot silently replay across restart.
         previous_last = pending["last_attempt_at"]
+        previous_attempt = dict(pending)
         reconnect_grant = pending.get("reconnect_retry_grant") is True
         pending["attempts"] += 1
         pending["last_attempt_at"] = now
@@ -3337,7 +3383,7 @@ class EquipmentRuntime:
             if (record.get("pending") is not pending
                     or not self._active or not self._ready
                     or record.get("paused") or not self._current_spec(spec)
-                    or latest != context["settings"]
+                    or not retry_settings_match(context["settings"], latest)
                     or refreshed is None
                     or asdict(refreshed) != record.get("capabilities")
                     or _manual_output_changes(before, snapshot(current))
@@ -3375,6 +3421,15 @@ class EquipmentRuntime:
 
         try:
             async with self._commands:
+                if (setpoint and enabled(model.settings(self.manager, spec))
+                        and not await startup_ready(self, spec, cap, self.hass.states.get(entity))):
+                    # Timing can be enabled during persistence or while the
+                    # command semaphore is busy. No retry has run: preserve
+                    # even an unused reconnect credit and wait for eligibility.
+                    pending.clear()
+                    pending.update(previous_attempt)
+                    await self._save()
+                    return
                 if not still_safe():
                     # No second call occurred; leave the original command
                     # pending for a future ACK, but never retry stale intent.
@@ -3423,8 +3478,15 @@ class EquipmentRuntime:
         plan = model.plan_for(self.manager, spec)
         action_mode = mode or primary.state
         from .equipment_setpoint_sequence import (
-            finish_authorized, mark_target_sent, startup_ready, target_authorized,
+            enabled, finish_authorized, mark_target_sent, retry_settings_match,
+            startup_ready, supports_stop, target_authorized,
         )
+        plain_binary_off = (power and not stop_finish and action_mode == "off"
+                            and supports_stop(cap, primary))
+        if plain_binary_off and enabled(cfg):
+            # Re-evaluate through _power to start the newly opted-in stop.
+            self._status(spec, "authority_or_evidence_changed_before_dispatch")
+            return False
         if service in ("set_temperature", "set_humidity"):
             if not await startup_ready(self, spec, cap, primary):
                 return False
@@ -3506,7 +3568,7 @@ class EquipmentRuntime:
                 and reconnect_epoch != target_budget.get("reconnect_retry_epoch_used")
                 and now - reconnect_epoch >= NATIVE_RECONNECT_SETTLE_SECONDS
                 and now - last >= NATIVE_COMMAND_RETRY_SECONDS
-                and isinstance(context, dict) and context.get("settings") == cfg
+                and isinstance(context, dict) and retry_settings_match(context.get("settings"), cfg)
                 and callable(settle_fn) and settle_fn(spec) == 0
                 and self._identity_ok(spec)
             )
@@ -3592,6 +3654,10 @@ class EquipmentRuntime:
                 return False
             if (policy_stop is not None
                     and not self._stop_policy_verified(spec, cap, policy_stop)):
+                return False
+            if plain_binary_off and enabled(model.settings(self.manager, spec)):
+                # Owned shutdown normally survives settings changes, but an
+                # undispatched direct OFF must now use the selected sequence.
                 return False
             if stop_target and not target_authorized(
                 self, spec, cap, entity, data, expected
@@ -3753,8 +3819,8 @@ class EquipmentRuntime:
                 )
                 return False
         if desired == "off":
-            from .equipment_setpoint_sequence import begin_stop, supports_stop
-            if supports_stop(cap, state):
+            from .equipment_setpoint_sequence import begin_stop, enabled, supports_stop
+            if enabled(model.settings(self.manager, spec)) and supports_stop(cap, state):
                 return await begin_stop(
                     self, spec, cap, automatic=automatic, shutdown=shutdown,
                     policy_stop=policy_stop,
@@ -4261,6 +4327,7 @@ class EquipmentRuntime:
         last = pending.get("last_attempt_at")
         attempts = pending.get("attempts", 0)
         used = pending.get("reconnect_retry_uses", 0)
+        from .equipment_setpoint_sequence import retry_settings_match
         if (not isinstance(stamp, (int, float))
                 or not isinstance(last, (int, float))
                 or not isinstance(attempts, int) or not 1 <= attempts <= (
@@ -4274,8 +4341,8 @@ class EquipmentRuntime:
                 or now - last < NATIVE_COMMAND_RETRY_SECONDS
                 or (attempts >= NATIVE_COMMAND_MAX_ATTEMPTS
                     and used >= NATIVE_RECONNECT_EXTRA_ATTEMPTS)
-                or pending["retry_context"].get("settings")
-                    != model.settings(self.manager, spec)
+                or not retry_settings_match(pending["retry_context"].get("settings"),
+                                            model.settings(self.manager, spec))
                 or self._native_settle_remaining(spec) != 0
                 or not self._current_spec(spec)
                 or not self._identity_ok(spec)
@@ -4627,8 +4694,10 @@ class EquipmentRuntime:
         if owned and not power:
             await self._power(spec, cap, "off", automatic=auto, shutdown=True)
             return
-        from .equipment_setpoint_sequence import SETPOINT_GRACE_SECONDS, supports_stop
-        shutdown_lead = SETPOINT_GRACE_SECONDS if supports_stop(cap, state) else 0
+        from .equipment_setpoint_sequence import SETPOINT_GRACE_SECONDS, enabled, supports_stop
+        shutdown_lead = (SETPOINT_GRACE_SECONDS if owned
+                         and enabled(model.settings(self.manager, spec))
+                         and supports_stop(cap, state) else 0)
         if owned and self.clock()-owned["since"] >= max(
             owned["min_on"], owned["max_on"] - shutdown_lead
         ):

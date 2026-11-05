@@ -1704,9 +1704,35 @@ _DEVICE_ERROR_ANNOUNCE_LABELS = {
     "zh-Hant": "通報裝置錯誤",
 }
 
+# The switch uses a full grouped name, like the other equipment controls.
+_TIMED_SETPOINT_LABELS = {
+    "en": "Timed setpoints", "de": "Zeitgesteuerte Sollwerte", "el": "Χρονισμός στόχων",
+    "fr": "Consignes temporisées", "es": "Consignas temporizadas",
+    "it": "Setpoint temporizzati", "nl": "Vertraagde instelwaarden",
+    "pt": "Valores de referência temporizados", "pt-BR": "Valores de referência temporizados",
+    "pl": "Opóźnione wartości zadane", "cs": "Zpožděné žádané hodnoty",
+    "sk": "Oneskorené žiadané hodnoty", "sv": "Fördröjda börvärden",
+    "nb": "Forsinkede settpunkter", "da": "Forsinkede sætpunkter",
+    "fi": "Viivästetyt asetusarvot", "hu": "Késleltetett célértékek",
+    "ro": "Valori țintă temporizate", "bg": "Отложени зададени стойности",
+    "hr": "Odgođene zadane vrijednosti", "sr": "Одложене задате вредности",
+    "ru": "Уставки с задержкой", "uk": "Задані значення із затримкою",
+    "tr": "Gecikmeli hedef değerler", "ar": "القيم المستهدفة المؤجلة",
+    "he": "ערכי יעד בהשהיה", "fa": "مقادیر هدف با تأخیر",
+    "hi": "विलंबित लक्ष्य मान", "bn": "বিলম্বিত লক্ষ্যমান",
+    "ta": "தாமதத்துடன் இலக்கு மதிப்புகள்", "ur": "تاخیر سے لاگو ہونے والی ہدفی اقدار",
+    "id": "Nilai target tertunda", "ja": "設定値の適用遅延", "ko": "설정값 지연 적용",
+    "th": "หน่วงเวลาค่าเป้าหมาย", "vi": "Trì hoãn áp dụng giá trị đặt",
+    "zh-Hans": "延迟应用设定值", "zh-Hant": "延遲套用設定值",
+}
+
 # Keep retired Beta82 adaptation label for translation audits and saved
 # entity-registry migration; never register that obsolete selector.
 for _locale, _names in EQUIPMENT_TRANSLATED_NAMES.items():
+    _names["timed_setpoint_sequence"] = (
+        _names["control_mode"].partition(" · ")[0] + " · {channel}"
+        + _TIMED_SETPOINT_LABELS.get(_locale, _TIMED_SETPOINT_LABELS["en"]) + " (30 s)"
+    )
     _names["announce_device_errors"] = (
         _DEVICE_ERROR_ANNOUNCE_LABELS.get(_locale, _DEVICE_ERROR_ANNOUNCE_LABELS["en"])
         + " · {channel}"

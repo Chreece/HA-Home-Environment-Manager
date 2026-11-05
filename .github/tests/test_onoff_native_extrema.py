@@ -184,6 +184,8 @@ class NativeRuntime:
         self.measurement = 18.6 if mode == "heat" else 29.0
         self.manager = N(
             settings={
+                # Exercise the optional Beta109 start/stop sequence explicitly.
+                "timed_setpoint_sequence": True,
                 "control_mode": method, "requested_mode": mode, "preset": "none",
                 "kp": 10.0, "ki": 0.1, "kd": 0.0, "sample_seconds": 300.0,
                 "cycle_seconds": 3600.0, "min_on_seconds": 600.0,

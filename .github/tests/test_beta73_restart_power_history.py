@@ -167,6 +167,7 @@ class Controller(Parent):
         }
         self.records={spec.identifier:self.record}
         self.manager.original_store={'version':1,'records':deepcopy(self.records)}
+        self.manager.settings[Model.SETTINGS][spec.identifier]["timed_setpoint_sequence"]=True
         self.manager.native_permission=True
         self.manager.source_valid=True
         self.manager.cap=Capabilities()

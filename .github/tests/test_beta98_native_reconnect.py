@@ -105,7 +105,11 @@ async def tests():
     # consume zero attempts. Only a VERIFIED offline→online edge after the
     # old attempt may grant at most TWO extra attempts (one per reconnect).
     b88=runpy.run_path(str(ROOT/'.github/tests/test_beta88_power_startup_and_retries.py'))
-    retry_after.__globals__['model']=b88['Model']
+    # Reuse the same package as the production retry helpers loaded below.
+    retry_after.__globals__.update(
+        model=b88['Model'], __name__=b88['pkg'].__name__+'.equipment_runtime',
+        __package__=b88['pkg'].__name__,
+    )
     Sim=b88['SimRuntime']
     s=b88['SPEC']
     sim=Sim()
