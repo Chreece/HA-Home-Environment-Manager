@@ -308,7 +308,7 @@ def browser_checks(states):
                 assert page.evaluate("card.shadowRoot.querySelector('[data-room-fold87=\"humidify\"]')===previousRow")
                 for area in ("heat", "cool", "humidify", "dry", "air", "mixed"):
                     report = page.evaluate(REPORT, area)
-                    assert report["home"] == neutral and not report["active"], (area, report)
+                    assert report["homeCount"] == 0 and not report["active"], (area, report)
                     assert all(metric["colour"] == neutral for metric in report["metric"]), (area, report)
             for width in (590, 390, 320):
                 page.set_viewport_size({"width": width, "height": 1000})
