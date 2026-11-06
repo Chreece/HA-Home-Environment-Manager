@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Presencia · {channel}Ocupación",
         "state": {
-          "always": "Automático",
-          "occupied": "Habitación · Ocupación",
-          "absent": "Habitación · Ocupación · Apagar"
+          "always": "Sin restricción de presencia",
+          "occupied": "Solo con presencia en la habitación",
+          "absent": "Solo con la habitación vacía"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automático",
-        "room": "Habitación · Ocupación",
-        "home": "Casa · Ocupación"
+        "always": "Sin restricción de presencia",
+        "room": "Solo con presencia en la habitación",
+        "home": "Solo si hay alguien en casa"
       }
     },
     "device_absence_action": {

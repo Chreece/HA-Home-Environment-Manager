@@ -1812,7 +1812,7 @@
       return '<div class="hem-setting-control116"><div class="hem-setting-field116">'+
         content+'</div>'+this._info76('setting-help:'+entityId,
           label+' · '+this._l65('information'),
-          '<strong>'+escape(label)+'</strong><p>'+escape(help.trim())+'</p>')+'</div>';
+          '<strong>'+escape(label)+'</strong><p class="hem-help-text116">'+escape(help.trim())+'</p>')+'</div>';
     }
 
     _controllerPanel(room) {
@@ -3589,6 +3589,7 @@
     .hem-setting-field116{min-width:0}
     .hem-setting-control116>.hem-context76{margin:0}
     .hem-setting-control116>.hem-context76 .hem-context-body76 p{margin:6px 0 0}
+    .hem-help-text116{white-space:pre-line}
     .hem-context76>summary{cursor:pointer;list-style:none;display:grid;place-items:center;
       width:27px;height:27px;border-radius:8px;border:1px solid var(--aqa-edge);
       color:var(--primary-color,var(--aqa-blue));background:var(--aqa-surface)}
@@ -4264,24 +4265,35 @@
         if(area)this._syncRoomIssueButtons115?.(area);
       }
     },true);
-    this._closeInfo87 = ()=> {
+    this._closeInfo87 = (dismiss=false)=> {
       const pop=this._floatingInfo87;
+      if(dismiss)pop?._hemInfoCloseSource87?.();
       this._floatingInfo87=null;
+      pop?._hemInfoCleanup87?.();
       if(pop?.isConnected) {
         try { if(pop.matches(':popover-open'))pop.hidePopover(); } catch {}
-        pop.remove();
       }
+      // Disconnect callbacks run after the shadow tree leaves the document.
+      // Remove its portal there too, so reconnect cannot retain an orphan.
+      pop?.remove();
     };
     this._openInfo87 = detail=> {
       if(!detail?.isConnected || !detail.open || this._roomSettingsDialog114) return;
       const info=detail.querySelector('.hem-context-body76,.metric-help-content');
       const trigger=detail.querySelector(':scope > summary');
       if(!info || !trigger) return;
-      this._closeInfo87();
+      const previous=this._floatingInfo87;
+      const key=detail.getAttribute('data-detail-id');
+      const sameSource=previous?._hemInfoKey87===key &&
+        (previous?._hemInfoSource87===detail || Boolean(key));
+      this._closeInfo87(!sameSource);
       const pop=document.createElement('div');
       pop.className='hem-floating-info87';
       pop._hemInfoSource87=detail;
-      pop.setAttribute('popover','auto');
+      pop._hemInfoKey87=key;
+      // Own dismissal so shadow-DOM retargeting and native light-dismiss
+      // cannot close the disclosure before a second trigger click toggles it.
+      pop.setAttribute('popover','manual');
       pop.setAttribute('role','note');
       pop.setAttribute('aria-label',trigger.getAttribute('aria-label')||'Information');
       pop.innerHTML=info.innerHTML;
@@ -4302,32 +4314,55 @@
       pop.style.top=Math.max(12,top)+'px';
       pop.style.maxHeight=maxHeight+'px';
       const closeOwnedDisclosure=()=>{
-        if(this._floatingInfo87===pop){
-          if(detail.isConnected && detail.open) {
-            detail.open=false;
-            const id=detail.getAttribute('data-detail-id');
-            if(id)this._detailsExpanded66?.delete(id);
-            if(this._roomIssueInfo114===id)this._roomIssueInfo114=null;
-          }
-        }
+        if(this._floatingInfo87!==pop)return;
+        if(detail.isConnected&&detail.getAttribute('data-detail-id')===key)detail.open=false;
+        if(key)this._detailsExpanded66?.delete(key);
+        if(this._roomIssueInfo114===key)this._roomIssueInfo114=null;
+        const area=detail.closest('[data-room-fold87]')?.getAttribute('data-room-fold87');
+        if(area)this._syncRoomIssueButtons115?.(area);
       };
-      // Escape/light-dismiss changes the native popover synchronously, but
-      // its toggle event is queued. Close the source in beforetoggle so an
-      // older queued disclosure-open event cannot recreate a dismissed popup.
+      pop._hemInfoCloseSource87=closeOwnedDisclosure;
+      const owner=this.ownerDocument;
+      const outside=event=>{
+        if(this._floatingInfo87!==pop)return;
+        const path=typeof event.composedPath==='function'?event.composedPath():[event.target];
+        const inside=node=>node&&path.some(target=>target===node||
+          (target?.nodeType&&node.contains(target)));
+        if(inside(pop)||inside(detail.querySelector(':scope > summary')))return;
+        // A room problem button can own this disclosure. Let its existing
+        // toggle path close the view, including only the folds it opened.
+        const button=path.find(node=>node?.matches?.('[data-room-issue114]'));
+        if(button&&this.shadowRoot.contains(button)){
+          const view=this._roomIssueViews115?.get(button.getAttribute('data-issue-area114'));
+          if(view?.infoKey===key&&view.kind===button.getAttribute('data-room-issue114'))return;
+        }
+        this._closeInfo87(true);
+      };
+      const escape=event=>{
+        if(event.key==='Escape'&&this._floatingInfo87===pop)this._closeInfo87(true);
+      };
+      // Capture on the document also sees clicks outside this card, while
+      // composedPath distinguishes its portal content from the host element.
+      owner.addEventListener('click',outside,true);
+      owner.addEventListener('keydown',escape,true);
+      pop._hemInfoCleanup87=()=>{
+        owner.removeEventListener('click',outside,true);
+        owner.removeEventListener('keydown',escape,true);
+      };
+      // Clear saved open state before a queued disclosure event can reopen
+      // an externally hidden popover; all removal paths release listeners.
       pop.addEventListener('beforetoggle',e=>{
         if(e.newState==='closed')closeOwnedDisclosure();
       });
       pop.addEventListener('toggle',e=>{
-        if(e.newState==='closed' && this._floatingInfo87===pop) {
-          closeOwnedDisclosure();
-          this._floatingInfo87=null;
-          pop.remove();
-        }
+        if(e.newState==='closed' && this._floatingInfo87===pop)this._closeInfo87(true);
       });
       try {
         if(typeof pop.showPopover==='function')pop.showPopover();
+        else pop.removeAttribute('popover');
       } catch {
         // Unsupported top-layer API: still fixed outside clipped ha-card.
+        pop.removeAttribute('popover');
       }
       // Native disclosure toggles and live reconciliation can recreate this
       // popover after the originating click. Restore the requested problem
@@ -4450,9 +4485,13 @@
     }
     // Older information bubbles are permanently inside the shell. A real
     // top-layer popover is copied outside the clipped card at open time.
-    const openHelp=card.querySelector('details.hem-context76[open],details.metric-help[open]');
-    if(openHelp)this._openInfo87(openHelp);
-    else this._closeInfo87();
+    // Preparing a detached reconciliation candidate must not change the
+    // connected popup, its listeners, or its source disclosure.
+    if(card.isConnected){
+      const openHelp=card.querySelector('details.hem-context76[open],details.metric-help[open]');
+      if(openHelp)this._openInfo87(openHelp);
+      else this._closeInfo87();
+    }
   };
   // HA pushes frequent weather, occupancy and native device updates. The
   // original _renderContent replaces every card child, which detaches the
@@ -4623,16 +4662,27 @@
       this._compactAfterRender87(card);
     const replaced=card!==before;
     const reconciled=!!card && (this._stableDomUpdates91||0)!==revisionsBefore;
-    // A room warning can stay open while HA supplies a new reason. The
-    // detached candidate cannot refresh a connected top-layer popover.
-    if(reconciled&&this._roomIssueInfo114&&this._floatingInfo87?.isConnected){
-      const detail=[...card.querySelectorAll('[data-detail-id]')]
-        .find(node=>node.getAttribute('data-detail-id')===this._roomIssueInfo114&&node.open);
-      const content=detail?.querySelector('.hem-context-body76,.metric-help-content');
-      if(content&&this._floatingInfo87.innerHTML!==content.innerHTML){
-        const fresh=this._floatingInfo87.cloneNode(false);
+    // Refresh every open information bubble from its connected source, not
+    // only controller warnings. The detached candidate cannot own a portal.
+    if(reconciled){
+      const pop=this._floatingInfo87;
+      const source=pop?._hemInfoSource87;
+      const key=pop?._hemInfoKey87;
+      const detail=pop?.isConnected
+        ? source?.isConnected&&card.contains(source)&&source.getAttribute('data-detail-id')===key
+          ? source
+          : key?[...card.querySelectorAll('[data-detail-id]')]
+            .find(node=>node.getAttribute('data-detail-id')===key):null
+        : card.querySelector('details.hem-context76[open],details.metric-help[open]');
+      const content=detail?.open&&detail.querySelector('.hem-context-body76,.metric-help-content');
+      if(!content)this._closeInfo87(true);
+      else if(!pop?.isConnected||detail!==source){
+        // Reconnection or source replacement needs fresh ownership closures.
+        this._openInfo87(detail);
+      }else if(pop.innerHTML!==content.innerHTML){
+        const fresh=pop.cloneNode(false);
         fresh.innerHTML=content.innerHTML;
-        _reconcile91(this._floatingInfo87,fresh);
+        _reconcile91(pop,fresh);
       }
     }
     if((replaced||reconciled) && positions.length) {
@@ -4856,6 +4906,9 @@
         box-shadow:0 12px 30px #0008;font:12px/1.45 Roboto,Arial,sans-serif;
         overflow-wrap:anywhere}
       .hem-floating-info87>div,.hem-floating-info87>small{margin:4px 0}
+      /* The portal copies the source's children, so retain its block text
+       * layout even though the .hem-context-body76 wrapper stays in the card. */
+      .hem-floating-info87 small{display:block;font-size:11px;line-height:1.4;margin:3px 0}
       @media(max-width:480px){
         .card-heading h2{font-size:16px}
         .hem-overview87{gap:3px;padding:6px}

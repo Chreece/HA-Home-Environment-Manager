@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "التواجد · {channel}الإشغال",
         "state": {
-          "always": "تلقائي",
-          "occupied": "غرفة · الإشغال",
-          "absent": "غرفة · الإشغال · إيقاف"
+          "always": "بلا شرط لوجود أشخاص",
+          "occupied": "فقط عند وجود شخص في الغرفة",
+          "absent": "فقط عندما تكون الغرفة خالية"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "تلقائي",
-        "room": "غرفة · الإشغال",
-        "home": "المنزل · الإشغال"
+        "always": "بلا شرط لوجود أشخاص",
+        "room": "فقط عند وجود شخص في الغرفة",
+        "home": "فقط عند وجود شخص في المنزل"
       }
     },
     "device_absence_action": {

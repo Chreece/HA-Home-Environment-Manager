@@ -37,14 +37,19 @@ function makePopup(){
   };
   createdPopups.push(popup);return popup;
 }
+// A real HTMLElement's ownerDocument is an EventTarget. Object.create below
+// bypasses that native constructor, so provide the document explicitly.
+const ownerDocument=Object.assign(new EventTarget(),{
+  createElement:makePopup,documentElement:{clientWidth:500},
+});
 const context={HTMLElement:class{},window:{customCards:[],innerHeight:800},
-  document:{createElement:makePopup,documentElement:{clientWidth:500}},
+  document:ownerDocument,
   customElements:{get:name=>registered.get(name),define:(name,ctor)=>registered.set(name,ctor)},
 };
 vm.createContext(context);
 vm.runInContext(fs.readFileSync(process.argv[1],'utf8'),context,{filename:process.argv[1]});
 const card=Object.create(registered.get('home-environment-manager-card').prototype);
-Object.assign(card,{shadowRoot:shadow,addEventListener(){}});
+Object.assign(card,{ownerDocument,shadowRoot:shadow,addEventListener(){}});
 // Capture the production listeners, including the original information toggle
 // handler through all later installation wrappers. Never reimplement it here.
 card._installFolds87();

@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Присутствие · {channel}Присутствие",
         "state": {
-          "always": "Автоматическое",
-          "occupied": "Комната · Присутствие",
-          "absent": "Комната · Присутствие · Выключить"
+          "always": "Независимо от присутствия",
+          "occupied": "Только когда в комнате есть люди",
+          "absent": "Только когда комната пуста"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Автоматическое",
-        "room": "Комната · Присутствие",
-        "home": "Дом · Присутствие"
+        "always": "Независимо от присутствия",
+        "room": "Только когда в комнате есть люди",
+        "home": "Только когда кто-то дома"
       }
     },
     "device_absence_action": {

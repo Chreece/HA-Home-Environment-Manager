@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "在室 · {channel}在室",
         "state": {
-          "always": "自動",
-          "occupied": "部屋 · 在室",
-          "absent": "部屋 · 在室 · オフ"
+          "always": "在室状況による制限なし",
+          "occupied": "部屋に人がいるときのみ",
+          "absent": "部屋に人がいないときのみ"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "自動",
-        "room": "部屋 · 在室",
-        "home": "自宅 · 在室"
+        "always": "在室状況による制限なし",
+        "room": "部屋に人がいるときのみ",
+        "home": "誰かが在宅しているときのみ"
       }
     },
     "device_absence_action": {

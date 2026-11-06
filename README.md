@@ -16,7 +16,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b1](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b1)
+**Current release:** [v0.6.1b2](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b2)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
@@ -221,6 +221,29 @@ A manual change on the appliance can pause automatic control. Use
 **Control · Continue Automatic** when you want HEM to resume. Window state,
 availability, presence policies and minimum ON/OFF times still apply; the reason
 display explains ordinary waiting periods.
+
+### Room-presence choices
+
+The controller's **Presence · Requirement** setting decides when **Automatic**
+and **PID** may operate this particular device:
+
+| Choice | Meaning |
+| --- | --- |
+| **No room-presence restriction** | Meet demand whether this room is occupied or empty, using the active target profile. This does not mean continuously ON. |
+| **Only while room is occupied** | Allow operation only when HEM confirms someone is in this room. |
+| **Only while room is empty** | Allow operation only when HEM confirms this room is empty. Someone may still be elsewhere at home. |
+
+If room presence is unknown, the two restricted choices pause operation.
+Confirmed whole-home **Away** takes priority over room sensors and counts every
+room as empty. A valid shared occupied-room list is authoritative: a room
+included in it is occupied and a room omitted from it is empty. With neither a
+configured room list nor any room-presence sensors, HEM treats the room as empty.
+
+When a presence condition stops matching, HEM requests OFF for an output it
+already controls, respecting its current minimum ON time and native protections.
+Presence permission does not create demand or override sleep, window or other
+control rules. The stored choices and existing selections remain unchanged;
+the labels now state their meaning directly.
 
 ### Minimum device ON and OFF times
 
@@ -496,7 +519,7 @@ steps to reproduce. Remove personal details from logs and screenshots.
 
 Install published betas from the
 [Releases page](https://github.com/Chreece/HA-Home-Environment-Manager/releases).
-Read the [current release notes](.github/releases/v0.6.1b1.md) for recent changes.
+Read the [current release notes](.github/releases/v0.6.1b2.md) for recent changes.
 
 | Branch | Purpose |
 | --- | --- |

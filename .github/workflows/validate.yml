@@ -91,6 +91,11 @@ jobs:
         run: |
           python -I .github/tests/test_061b1_operating_timing.py
           python -I .github/tests/test_061b1_operating_timing_ui.py
+      - name: Presence choice meanings and automatic timing constraints
+        run: |
+          python -I .github/tests/test_061b2_presence_labels.py
+          python -I .github/tests/test_061b2_automatic_timing.py
+          python -I .github/tests/test_061b2_info_bubbles.py --logic-only
       - name: PID target cutoff, original retry budgets and live native shutdown
         run: |
           python -I .github/tests/test_beta111_pid_cutoff_math.py
@@ -233,9 +238,13 @@ jobs:
           python -I .github/tests/test_beta68_metadata.py
       - name: Install runner-only Home Assistant and browser test packages
         run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+      - name: Room info layout, live refresh and outside-click dismissal
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b2-ui
+        run: python -I .github/tests/test_061b2_info_bubbles.py
       - name: Compact VOC labels and purpose-specific configuration help
         env:
-          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b1-ui
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b2-ui
         run: |
           hem_ui_status=0
           python -I .github/tests/test_beta116_compact_metric_labels.py || hem_ui_status=1
@@ -243,7 +252,7 @@ jobs:
           exit "$hem_ui_status"
       - name: Interactive trends, direct room settings and problem toggles
         env:
-          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b1-ui
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b2-ui
         run: |
           hem_ui_status=0
           python -I .github/tests/test_beta114_room_navigation.py || hem_ui_status=1
@@ -252,7 +261,7 @@ jobs:
           exit "$hem_ui_status"
       - name: Entity history, complementary details and stable room fold controls
         env:
-          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b1-ui
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b2-ui
         run: |
           hem_ui_status=0
           python -I .github/tests/test_beta122_entity_trends.py || hem_ui_status=1
@@ -263,8 +272,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hem-061b1-ui-${{ github.sha }}
-          path: /tmp/hem-061b1-ui/
+          name: hem-061b2-ui-${{ github.sha }}
+          path: /tmp/hem-061b2-ui/
           if-no-files-found: ignore
       - name: Home Assistant dispatcher and compact card browser interactions
         run: |

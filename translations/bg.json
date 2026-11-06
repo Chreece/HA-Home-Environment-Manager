@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Присъствие · {channel}Присъствие",
         "state": {
-          "always": "Автоматично",
-          "occupied": "Стая · Присъствие",
-          "absent": "Стая · Присъствие · Изключване"
+          "always": "Без ограничение по присъствие",
+          "occupied": "Само когато стаята е заета",
+          "absent": "Само когато стаята е празна"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Автоматично",
-        "room": "Стая · Присъствие",
-        "home": "Дом · Присъствие"
+        "always": "Без ограничение по присъствие",
+        "room": "Само когато стаята е заета",
+        "home": "Само когато има някой вкъщи"
       }
     },
     "device_absence_action": {

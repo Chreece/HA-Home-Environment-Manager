@@ -1043,7 +1043,7 @@
         "data_description": {
           "device_auto_control": "Master opt-in for this exact device. OFF means monitoring/advice only. When enabled, all other device-specific capability and safety gates still apply.",
           "device_method": "Select a control supported by this device: thermostat setpoints, verified native modes, humidity setpoint, fan speed or separately protected power. Unsupported modes are blocked.",
-          "device_presence_requirement": "Choose unconditional device control, only while this room is occupied, or only while someone is home. Unknown occupancy pauses new commands.",
+          "device_presence_requirement": "For Existing room controller: No room-presence restriction allows demand-based control in either room state. Only while room is occupied requires presence in this room. Only while someone is home requires whole-home presence. Unknown required presence pauses new commands; the separate absence action applies after confirmed absence. Automatic and PID use the presence choice on the individual device controller.",
           "device_absence_action": "Select HOLD or OFF when occupancy requirement is not met. OFF is allowed only for explicitly commissioned supported equipment after safety dwell; no automatic restart.",
           "device_sleep_behavior": "When a selected room is sleeping, choose normal operation, pause device control or sleep targets. Unknown sleep evidence does not trigger shutdown.",
           "device_hardware_confirmed": "Confirm you have independently checked protection of this exact device. The checkbox is an assertion by the installer, not a software hardware-certification test.",
@@ -2114,7 +2114,7 @@
         "data_description": {
           "device_auto_control": "Master opt-in for this exact device. OFF means monitoring/advice only. When enabled, all other device-specific capability and safety gates still apply.",
           "device_method": "Select a control supported by this device: thermostat setpoints, verified native modes, humidity setpoint, fan speed or separately protected power. Unsupported modes are blocked.",
-          "device_presence_requirement": "Choose unconditional device control, only while this room is occupied, or only while someone is home. Unknown occupancy pauses new commands.",
+          "device_presence_requirement": "For Existing room controller: No room-presence restriction allows demand-based control in either room state. Only while room is occupied requires presence in this room. Only while someone is home requires whole-home presence. Unknown required presence pauses new commands; the separate absence action applies after confirmed absence. Automatic and PID use the presence choice on the individual device controller.",
           "device_absence_action": "Select HOLD or OFF when occupancy requirement is not met. OFF is allowed only for explicitly commissioned supported equipment after safety dwell; no automatic restart.",
           "device_sleep_behavior": "When a selected room is sleeping, choose normal operation, pause device control or sleep targets. Unknown sleep evidence does not trigger shutdown.",
           "device_hardware_confirmed": "Confirm you have independently checked protection of this exact device. The checkbox is an assertion by the installer, not a software hardware-certification test.",
@@ -4131,9 +4131,9 @@
       "equipment_presence_requirement": {
         "name": "Presence · {channel}Requirement",
         "state": {
-          "always": "Automatic",
-          "occupied": "Room · Occupancy",
-          "absent": "Room · Occupancy · Off"
+          "always": "No room-presence restriction",
+          "occupied": "Only while room is occupied",
+          "absent": "Only while room is empty"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4416,9 +4416,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automatic",
-        "room": "Room · Occupancy",
-        "home": "Home · Occupancy"
+        "always": "No room-presence restriction",
+        "room": "Only while room is occupied",
+        "home": "Only while someone is home"
       }
     },
     "device_absence_action": {

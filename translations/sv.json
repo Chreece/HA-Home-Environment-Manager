@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Närvaro · {channel}Närvaro",
         "state": {
-          "always": "Automatisk",
-          "occupied": "Rum · Närvaro",
-          "absent": "Rum · Närvaro · Stäng av"
+          "always": "Oberoende av närvaro",
+          "occupied": "Endast när någon är i rummet",
+          "absent": "Endast när rummet är tomt"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automatisk",
-        "room": "Rum · Närvaro",
-        "home": "Hem · Närvaro"
+        "always": "Oberoende av närvaro",
+        "room": "Endast när någon är i rummet",
+        "home": "Endast när någon är hemma"
       }
     },
     "device_absence_action": {

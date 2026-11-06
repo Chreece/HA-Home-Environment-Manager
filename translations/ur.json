@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "موجودگی · {channel}موجودگی",
         "state": {
-          "always": "خودکار",
-          "occupied": "کمرہ · موجودگی",
-          "absent": "کمرہ · موجودگی · بند"
+          "always": "موجودگی کی کوئی شرط نہیں",
+          "occupied": "صرف جب کمرے میں کوئی ہو",
+          "absent": "صرف جب کمرہ خالی ہو"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "خودکار",
-        "room": "کمرہ · موجودگی",
-        "home": "گھر · موجودگی"
+        "always": "موجودگی کی کوئی شرط نہیں",
+        "room": "صرف جب کمرے میں کوئی ہو",
+        "home": "صرف جب گھر میں کوئی ہو"
       }
     },
     "device_absence_action": {

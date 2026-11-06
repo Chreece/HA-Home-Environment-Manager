@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Varlık · {channel}Doluluk",
         "state": {
-          "always": "Otomatik",
-          "occupied": "Oda · Doluluk",
-          "absent": "Oda · Doluluk · Kapat"
+          "always": "Varlık kısıtlaması yok",
+          "occupied": "Yalnızca odada biri varken",
+          "absent": "Yalnızca oda boşken"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Otomatik",
-        "room": "Oda · Doluluk",
-        "home": "Ev · Doluluk"
+        "always": "Varlık kısıtlaması yok",
+        "room": "Yalnızca odada biri varken",
+        "home": "Yalnızca evde biri varken"
       }
     },
     "device_absence_action": {

@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "उपस्थिति · {channel}उपस्थिति",
         "state": {
-          "always": "स्वचालित",
-          "occupied": "कमरा · उपस्थिति",
-          "absent": "कमरा · उपस्थिति · बंद करें"
+          "always": "उपस्थिति की कोई शर्त नहीं",
+          "occupied": "केवल जब कमरे में कोई हो",
+          "absent": "केवल जब कमरा खाली हो"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "स्वचालित",
-        "room": "कमरा · उपस्थिति",
-        "home": "घर · उपस्थिति"
+        "always": "उपस्थिति की कोई शर्त नहीं",
+        "room": "केवल जब कमरे में कोई हो",
+        "home": "केवल जब घर में कोई हो"
       }
     },
     "device_absence_action": {

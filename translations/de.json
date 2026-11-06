@@ -1043,7 +1043,7 @@
         "data_description": {
           "device_auto_control": "Diese Option steuert „Automatische Steuerung“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
           "device_method": "Diese Option steuert „Steuerung · Quelle“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
-          "device_presence_requirement": "„Steuerung · Belegung“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
+          "device_presence_requirement": "Für den vorhandenen Raumregler: Unabhängig von der Raumbelegung erlaubt bedarfsgerechte Regelung bei belegtem oder leerem Raum. Nur bei belegtem Raum erfordert Anwesenheit in diesem Raum. Nur wenn jemand zu Hause ist erfordert Anwesenheit im Zuhause. Unbekannte erforderliche Anwesenheit pausiert neue Befehle; die separate Abwesenheitsaktion gilt nach bestätigter Abwesenheit. Automatik und PID verwenden die Anwesenheitsauswahl am jeweiligen Gerätekontroller.",
           "device_absence_action": "Diese Option steuert „Ausschalten · Belegung“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
           "device_sleep_behavior": "„Schlaf · Steuerung“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
           "device_hardware_confirmed": "Für „Erforderlich · Geräte · Leistung“ echte passende Messdaten verwenden. Schätzungen ersetzen keine kalibrierten Sensoren.",
@@ -2114,7 +2114,7 @@
         "data_description": {
           "device_auto_control": "Diese Option steuert „Automatische Steuerung“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
           "device_method": "Diese Option steuert „Steuerung · Quelle“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
-          "device_presence_requirement": "„Steuerung · Belegung“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
+          "device_presence_requirement": "Für den vorhandenen Raumregler: Unabhängig von der Raumbelegung erlaubt bedarfsgerechte Regelung bei belegtem oder leerem Raum. Nur bei belegtem Raum erfordert Anwesenheit in diesem Raum. Nur wenn jemand zu Hause ist erfordert Anwesenheit im Zuhause. Unbekannte erforderliche Anwesenheit pausiert neue Befehle; die separate Abwesenheitsaktion gilt nach bestätigter Abwesenheit. Automatik und PID verwenden die Anwesenheitsauswahl am jeweiligen Gerätekontroller.",
           "device_absence_action": "Diese Option steuert „Ausschalten · Belegung“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
           "device_sleep_behavior": "„Schlaf · Steuerung“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
           "device_hardware_confirmed": "Für „Erforderlich · Geräte · Leistung“ echte passende Messdaten verwenden. Schätzungen ersetzen keine kalibrierten Sensoren.",
@@ -4131,9 +4131,9 @@
       "equipment_presence_requirement": {
         "name": "Anwesenheit · {channel}Voraussetzung",
         "state": {
-          "always": "Automatische",
-          "occupied": "Raum · Belegung",
-          "absent": "Raum · Belegung · Ausschalten"
+          "always": "Unabhängig von der Raumbelegung",
+          "occupied": "Nur bei belegtem Raum",
+          "absent": "Nur bei leerem Raum"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4416,9 +4416,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automatische",
-        "room": "Raum · Belegung",
-        "home": "Zuhause · Belegung"
+        "always": "Unabhängig von der Raumbelegung",
+        "room": "Nur bei belegtem Raum",
+        "home": "Nur wenn jemand zu Hause ist"
       }
     },
     "device_absence_action": {

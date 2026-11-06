@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Kehadiran · {channel}Kehadiran",
         "state": {
-          "always": "Otomatis",
-          "occupied": "Ruangan · Kehadiran",
-          "absent": "Ruangan · Kehadiran · Matikan"
+          "always": "Tanpa syarat keberadaan orang",
+          "occupied": "Hanya saat ruangan berpenghuni",
+          "absent": "Hanya saat ruangan kosong"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Otomatis",
-        "room": "Ruangan · Kehadiran",
-        "home": "Rumah · Kehadiran"
+        "always": "Tanpa syarat keberadaan orang",
+        "room": "Hanya saat ruangan berpenghuni",
+        "home": "Hanya saat ada orang di rumah"
       }
     },
     "device_absence_action": {

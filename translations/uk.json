@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Присутність · {channel}Присутність",
         "state": {
-          "always": "Автоматичне",
-          "occupied": "Кімната · Присутність",
-          "absent": "Кімната · Присутність · Вимкнути"
+          "always": "Незалежно від присутності",
+          "occupied": "Лише коли в кімнаті є люди",
+          "absent": "Лише коли кімната порожня"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Автоматичне",
-        "room": "Кімната · Присутність",
-        "home": "Дім · Присутність"
+        "always": "Незалежно від присутності",
+        "room": "Лише коли в кімнаті є люди",
+        "home": "Лише коли хтось удома"
       }
     },
     "device_absence_action": {

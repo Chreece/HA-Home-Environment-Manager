@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Prezență · {channel}Ocupare",
         "state": {
-          "always": "Automat",
-          "occupied": "Cameră · Ocupare",
-          "absent": "Cameră · Ocupare · Oprire"
+          "always": "Fără restricție de prezență",
+          "occupied": "Doar când camera este ocupată",
+          "absent": "Doar când camera este goală"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automat",
-        "room": "Cameră · Ocupare",
-        "home": "Acasă · Ocupare"
+        "always": "Fără restricție de prezență",
+        "room": "Doar când camera este ocupată",
+        "home": "Doar când cineva este acasă"
       }
     },
     "device_absence_action": {
