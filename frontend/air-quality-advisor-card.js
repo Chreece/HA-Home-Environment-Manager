@@ -7651,7 +7651,7 @@
         min-width:min-content;max-width:none}
       .hem-outside-details87 .out-metrics>.out-chip{
         display:inline-grid;grid-template-columns:minmax(0,1fr) max-content max-content;
-        min-width:min-content;gap:3px;box-sizing:border-box}
+        min-width:min-content;gap:4px;box-sizing:border-box}
       .hem-outside-details87 .out-chip b,.hem-outside-details87 .out-chip small{margin:0}
       .hem-outside-details87 .outside-alerts{
         flex:1 1 auto;width:auto;min-width:min-content}

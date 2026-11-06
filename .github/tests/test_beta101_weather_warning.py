@@ -105,12 +105,30 @@ with sync_playwright() as p:
     chips=page.locator('button.hem-wx-chip103')
     assert 'Sturmböen' in chips.nth(0).inner_text()
     assert 'Glätte' in chips.nth(1).inner_text()
+    assert 'Glatteis' in chips.nth(1).get_attribute('title')
+    assert chips.nth(1).get_attribute('data-wx-open103')=='sensor.second_warning'
     page.set_viewport_size({'width':360,'height':740})
-    chips.nth(1).click()
+    # Narrow cards retain the first warning inline and expose additional
+    # warnings through the explicit outdoor information disclosure.
+    assert chips.nth(0).is_visible() and not chips.nth(1).is_visible()
+    page.locator('details.hem-outside-info123 > summary').click()
+    information=page.locator('.hem-floating-info87')
+    information.wait_for(state='visible')
+    second=information.locator('[data-outside-warning123="sensor.second_warning"]')
+    assert 'Sturmböen' in information.locator(
+        '[data-outside-warning123="binary_sensor.warnung_wesseling"]').inner_text()
+    assert 'Glätte' in second.inner_text() and 'Glatteis' in second.inner_text()
+    second.click()
+    assert information.count()==0
     pop=page.locator('.hem-wx-dialog103')
+    pop.wait_for(state='visible')
     assert pop.is_visible() and pop.bounding_box()['width']<=360
     assert 'Glatteis' in pop.inner_text()
-    pop.locator('[data-wx-close103]').click()
+    assert pop.locator('.hem-wx-row103').count()==4
+    assert all(key in pop.inner_text() for key in ('friendly_name','headline','description'))
+    pop.locator('[data-wx-native103="sensor.second_warning"]').click()
+    assert page.evaluate('info')==[entity,'sensor.second_warning']
+    assert pop.count()==0
     assert not errors,errors
     browser.close()
 print('BETA101_WEATHER_WARNING_NATIVE_SUBJECT_ALL_ATTRS_RETAINED=PASS')
