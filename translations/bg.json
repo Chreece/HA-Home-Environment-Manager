@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Мощност · {channel}min ON (s)",
+        "name": "Работа · {channel}Минимално време на работа на устройството (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Помощ"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Мощност · {channel}min OFF (s)",
+        "name": "Работа · {channel}Минимално време на престой на устройството (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Помощ"

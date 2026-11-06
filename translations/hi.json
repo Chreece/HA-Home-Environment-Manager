@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "पावर · {channel}min ON (s)",
+        "name": "संचालन · {channel}उपकरण के चालू रहने का न्यूनतम समय (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "पावर · {channel}min OFF (s)",
+        "name": "संचालन · {channel}उपकरण के बंद रहने का न्यूनतम समय (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"

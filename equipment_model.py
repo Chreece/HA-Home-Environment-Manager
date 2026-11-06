@@ -32,8 +32,8 @@ NUMBER_FIELDS = {
     "sample_seconds": (120.0, 3600.0, 30.0, "s", 300.0),
     "cycle_seconds": (600.0, 86400.0, 60.0, "s", 3600.0),
     "quiet_percentage": (1.0, 100.0, 1.0, "%", 30.0),
-    "min_on_seconds": (120.0, 7200.0, 60.0, "s", 600.0),
-    "min_off_seconds": (120.0, 14400.0, 60.0, "s", 600.0),
+    "min_on_seconds": (0.0, 7200.0, 1.0, "s", 600.0),
+    "min_off_seconds": (0.0, 14400.0, 1.0, "s", 600.0),
     "max_on_seconds": (900.0, 86400.0, 60.0, "s", 7200.0),
     # Upstream outlet remains separate from the native output. A continuously
     # verified idle period is required before any controller-owned outlet OFF.
@@ -623,8 +623,60 @@ def permission(manager: Any, spec: ManagedDevice, cap: Capabilities) -> tuple[bo
     return direct, direct
 
 
+def normalize_native_timing(
+    manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict,
+) -> dict:
+    """Separate operating holds on the first explicit minimum-time edit.
+
+    Reading/upgrading an existing controller does not change its settings or
+    pending command context. The editor calls this before overlaying the user's
+    requested value, preserving the other effective native minimum and maximum.
+    A selected external supply keeps the limits it used before this edit; a
+    shorter valve operating hold is not permission to cycle its power supply.
+    """
+    normalized = deepcopy(config)
+    version = config.get("_native_timing_version")
+    if version is not None:
+        if type(version) is not int or version != 1:
+            raise ValueError("unsupported_native_timing_version")
+        return normalized
+    native_on, native_off, maximum = _legacy_timing(manager, spec, cap)
+    supply_on, supply_off, _ = _legacy_timing(
+        manager, spec, cap, config=config,
+    )
+    normalized.update({
+        "_native_timing_version": 1,
+        "min_on_seconds": native_on,
+        "min_off_seconds": native_off,
+        "max_on_seconds": maximum,
+        "_power_switch_min_on_seconds": supply_on,
+        "_power_switch_min_off_seconds": supply_off,
+    })
+    return normalized
+
+
 def timing(manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict | None = None) -> tuple[float, float, float]:
-    """Hardware minimums cannot be shortened by switching control strategies."""
+    """Native operating holds; zero explicitly disables that particular hold."""
+    cfg = config if config is not None else settings(manager, spec)
+    version = cfg.get("_native_timing_version")
+    if version is None:
+        return _legacy_timing(manager, spec, cap, config=config)
+    if type(version) is not int or version != 1:
+        raise ValueError("unsupported_native_timing_version")
+    values = []
+    for key in ("min_on_seconds", "min_off_seconds", "max_on_seconds"):
+        bounds = NUMBER_FIELDS[key]
+        value = finite(cfg.get(key), bounds[0], bounds[1])
+        if value is None:
+            raise ValueError("invalid_native_operating_timing")
+        values.append(value)
+    if values[2] <= values[0]:
+        raise ValueError("maximum_runtime_must_exceed_minimum_on")
+    return tuple(values)
+
+
+def _legacy_timing(manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict | None = None) -> tuple[float, float, float]:
+    """Preserve commissioned timing until the user edits an operating hold."""
     room, dev = room_config(manager, spec), device_config(manager, spec, cap.primary)
     prefix = "fan_power_" if cap.domain == "fan" else "humidity_power_" if cap.domain == "humidifier" else ""
     minimum = 120 if cap.domain == "fan" else 600
@@ -915,7 +967,11 @@ def duty_on(demand: float, elapsed: float, cycle: float, min_on: float, min_off:
     Sub-minimum demand is skipped; near-full demand is bounded by min-OFF.
     The runtime separately enforces actual observed transitions and max-ON.
     """
-    if any(not math.isfinite(v) for v in (demand, elapsed, cycle, min_on, min_off)) or cycle < min_on+min_off or elapsed < 0:
+    if (any(isinstance(v, bool) or not isinstance(v, (int, float))
+            or not math.isfinite(v)
+            for v in (demand, elapsed, cycle, min_on, min_off))
+            or cycle <= 0 or min_on < 0 or min_off < 0
+            or cycle < min_on+min_off or elapsed < 0):
         return False
     if demand >= 100:
         return True

@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Công suất · {channel}min ON (s)",
+        "name": "Hoạt động · {channel}Thời gian thiết bị bật tối thiểu (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Công suất · {channel}min OFF (s)",
+        "name": "Hoạt động · {channel}Thời gian thiết bị tắt tối thiểu (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"

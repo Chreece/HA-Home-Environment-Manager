@@ -89,15 +89,25 @@ def device_supply_dwell(
 ) -> tuple[float, float] | None:
     """Minimum ON/OFF for this device's *physical upstream supply*.
 
-    Use native controller timing (including the legacy physical and room
-    minimums) when capabilities are verified/cached. For a first unpowered
-    setup with no native capabilities, use the actual per-device settings
-    with conservative physical baseline; never assume a sub-600s compressor
-    minimum just because the external switch is a generic switch.*.
+    An explicit native operating-time edit freezes the previous independent
+    supply minimums. Lowering a valve's operating minimum cannot shorten its
+    external relay's protection. Unmigrated settings retain the legacy native
+    and room constraints, including conservative unavailable-device fallbacks.
     Invalid settings HOLD, they do not become permissive timing.
     """
     if cap is None:
         cap = verified_capabilities(runtime, spec)
+    if "_native_timing_version" in cfg:
+        if type(cfg["_native_timing_version"]) is not int or cfg["_native_timing_version"] != 1:
+            return None
+        fan_only = (cap.domain == "fan" if cap is not None else
+                    bool(spec.source_entities) and all(
+                        entity.startswith("fan.") for entity in spec.source_entities
+                    ))
+        baseline = 120.0 if fan_only else float(UPSTREAM_MIN_OFF_SECONDS)
+        on = finite(cfg.get("_power_switch_min_on_seconds"), baseline, 86400)
+        off = finite(cfg.get("_power_switch_min_off_seconds"), baseline, 86400)
+        return (on, off) if on is not None and off is not None else None
     if cap is not None:
         try:
             on, off, _ = model.timing(runtime.manager, spec, cap, config=cfg)

@@ -3631,7 +3631,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Power · {channel}Minimum ON time (s)",
+        "name": "Operation · {channel}Minimum device ON time (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
@@ -3639,7 +3639,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Power · {channel}Minimum OFF time (s)",
+        "name": "Operation · {channel}Minimum device OFF time (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"

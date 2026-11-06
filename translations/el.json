@@ -3631,7 +3631,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Ισχύς · {channel}Ελάχιστος χρόνος λειτουργίας (δευτ.)",
+        "name": "Λειτουργία · {channel}Ελάχιστος χρόνος λειτουργίας συσκευής (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"
@@ -3639,7 +3639,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Ισχύς · {channel}Ελάχιστος χρόνος εκτός λειτουργίας (δευτ.)",
+        "name": "Λειτουργία · {channel}Ελάχιστος χρόνος εκτός λειτουργίας συσκευής (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"

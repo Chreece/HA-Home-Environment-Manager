@@ -34,7 +34,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
-      - name: Publish exact validated commit and retire older betas
+      - name: Publish exact validated commit and retain release history
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python -I .github/scripts/publish_release.py

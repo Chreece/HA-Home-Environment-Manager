@@ -3631,7 +3631,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Leistung · {channel}Mindest-EIN-Zeit (s)",
+        "name": "Betrieb · {channel}Mindestlaufzeit des Geräts (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
@@ -3639,7 +3639,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Leistung · {channel}Mindest-AUS-Zeit (s)",
+        "name": "Betrieb · {channel}Mindeststillstandszeit des Geräts (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"

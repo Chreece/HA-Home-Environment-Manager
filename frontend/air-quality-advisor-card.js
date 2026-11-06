@@ -4232,7 +4232,9 @@
         if(open)this._devicesExpanded87.add(entity);
         else this._devicesExpanded87.delete(entity);
       }
-      const chevron=summary.querySelector('ha-icon:last-child');
+      // Only the summary's trailing icon is its fold indicator. Nested icons
+      // (including the leading settings cog) may also be their parent's last child.
+      const chevron=summary.querySelector(':scope > ha-icon:last-child');
       if(chevron)chevron.setAttribute('icon',open?'mdi:chevron-up':'mdi:chevron-down');
     },true);
     this.shadowRoot.addEventListener('toggle',event=>{

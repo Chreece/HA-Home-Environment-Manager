@@ -32,12 +32,12 @@ request. Validate on `dev`, then promote it to `main` after review.
 The separate **Publish validated beta** workflow runs after a successful
 validation push on `main`. It verifies the exact commit, creates a prerelease
 and installation ZIP for a new version, and checks the tag, manifest and
-uploaded ZIP before retiring older published betas. Already published versions
-are never overwritten. A changed `main` head or failed validation prevents
-publication.
+uploaded and downloaded ZIP. Already published versions are never overwritten.
+A changed `main` head or failed validation prevents publication.
 
-Repository cleanup keeps the newest published release and the `main` and `dev`
-branches. The validation workflow remains read-only; only the publishing
-workflow can publish and retire releases. The requested one-time tag cleanup
-removed tags older than beta113. The publisher preserves beta113 and newer
-tags when retiring older releases.
+Keep all releases and tags, including older prereleases. Publishing adds a new
+release and leaves existing releases, their assets and all tags intact. Do not
+delete or rewrite release history as part of publication or repository
+maintenance. The validation workflow remains read-only; the publishing workflow
+only adds newly versioned releases. An interrupted draft requires explicit
+review before retrying.

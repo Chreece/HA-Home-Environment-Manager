@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Výkon · {channel}min ON (s)",
+        "name": "Prevádzka · {channel}Minimálny čas chodu zariadenia (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Výkon · {channel}min OFF (s)",
+        "name": "Prevádzka · {channel}Minimálny čas vypnutia zariadenia (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"

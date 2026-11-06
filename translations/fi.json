@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Teho · {channel}min ON (s)",
+        "name": "Toiminta · {channel}Laitteen vähimmäiskäyntiaika (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Teho · {channel}min OFF (s)",
+        "name": "Toiminta · {channel}Laitteen vähimmäispysähdysaika (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"

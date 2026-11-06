@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Daya · {channel}min ON (s)",
+        "name": "Pengoperasian · {channel}Waktu minimum perangkat menyala (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Daya · {channel}min OFF (s)",
+        "name": "Pengoperasian · {channel}Waktu minimum perangkat mati (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"

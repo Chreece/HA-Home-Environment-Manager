@@ -628,8 +628,6 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
             fan_bounds = equipment.number_bounds(cap, "fan_min_percentage")
             self._attr_native_min_value, self._attr_native_max_value = fan_bounds[:2]
             self._attr_native_step = fan_bounds[2]
-        if key in ("min_on_seconds", "min_off_seconds") and cap and cap.domain != "fan":
-            self._attr_native_min_value = 600
         if key == "max_on_seconds" and cap and cap.domain != "fan":
             self._attr_native_max_value = 28800
 

@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "전력 · {channel}min ON (s)",
+        "name": "작동 · {channel}장치 최소 작동 시간 (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "전력 · {channel}min OFF (s)",
+        "name": "작동 · {channel}장치 최소 정지 시간 (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"

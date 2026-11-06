@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Effekt · {channel}min ON (s)",
+        "name": "Drift · {channel}Minsta drifttid för enheten (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjälp"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Effekt · {channel}min OFF (s)",
+        "name": "Drift · {channel}Minsta avstängningstid för enheten (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjälp"

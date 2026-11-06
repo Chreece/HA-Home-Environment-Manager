@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "הספק · {channel}min ON (s)",
+        "name": "פעולה · {channel}זמן פעולה מזערי של המכשיר (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "עזרה"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "הספק · {channel}min OFF (s)",
+        "name": "פעולה · {channel}זמן השבתה מזערי של המכשיר (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "עזרה"

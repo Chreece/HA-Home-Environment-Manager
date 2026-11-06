@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "بجلی · {channel}min ON (s)",
+        "name": "عمل · {channel}آلے کے چلنے کا کم از کم وقت (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "بجلی · {channel}min OFF (s)",
+        "name": "عمل · {channel}آلے کے بند رہنے کا کم از کم وقت (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"

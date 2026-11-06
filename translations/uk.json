@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Потужність · {channel}min ON (s)",
+        "name": "Робота · {channel}Мінімальний час роботи пристрою (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Потужність · {channel}min OFF (s)",
+        "name": "Робота · {channel}Мінімальний час простою пристрою (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"

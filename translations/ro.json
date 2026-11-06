@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Putere · {channel}min ON (s)",
+        "name": "Funcționare · {channel}Durata minimă de funcționare a dispozitivului (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Putere · {channel}min OFF (s)",
+        "name": "Funcționare · {channel}Durata minimă de oprire a dispozitivului (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
