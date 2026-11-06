@@ -7674,7 +7674,7 @@
        * The existing status icon becomes a disclosure only when rows hide. */
       .hem-outside-details87 .out-metrics>.out-chip:nth-child(n+3),
       .hem-outside-details87 .outside-alerts>.reason~.reason~.reason,
-      .hem-outside-details87 .outside-alerts>.hem-wx-chip103:nth-child(n+3){display:none}
+      .hem-outside-details87 .outside-alerts>.hem-wx-chip103~.hem-wx-chip103~.hem-wx-chip103{display:none}
       .outside[data-outside-count123="3"]{
         --hem-outside-more123:block;--hem-outside-status123:none}
       .outdoor-status:has(>.hem-outside-info123){flex:0 0 21px;min-width:21px}
@@ -7709,7 +7709,7 @@
         .outside-title{max-width:none}
         .hem-outside-details87 .out-metrics>.out-chip:nth-child(n+2),
         .hem-outside-details87 .outside-alerts>.reason~.reason,
-        .hem-outside-details87 .outside-alerts>.hem-wx-chip103:nth-child(n+2){display:none}
+        .hem-outside-details87 .outside-alerts>.hem-wx-chip103~.hem-wx-chip103{display:none}
         .outside[data-outside-count123="2"]{
           --hem-outside-more123:block;--hem-outside-status123:none}
       }
