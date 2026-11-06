@@ -1607,7 +1607,7 @@
     _outsideBlocker(reason) {
       const code = reason.code || '';
       const label = String(reason.label || '');
-      const value = String(reason.value || '');
+      const value = String(reason.value ?? '');
       const prefix = code.startsWith('outside_') ? this._t('unsafeReason') : ({
         weather_condition:this._t('weather'), weather_cold:this._t('cold'),
         weather_hot:this._t('hot'), weather_humid:this._t('wet'),
@@ -1618,8 +1618,14 @@
       }[code] || this._t('conditions'));
       const metric = code.startsWith('outside_') ? this._metricName(code.slice(8)) : '';
       const suffix = code === 'weather_condition' ? this._weatherName(value) : value;
-      return `<span class="reason">${this._icon('mdi:alert-circle-outline')}${escape(prefix)}${metric ? `: ${escape(metric)}` : ''}
-       ${suffix ? `· ${escape(suffix)}` : (code === 'active_warning' && label ? `· ${escape(label)}` : '')}</span>`;
+      const name = prefix + (metric ? ': ' + metric : '');
+      const detail = suffix || (code === 'active_warning' ? label : '');
+      // Only measured values need an indivisible cell. Free-text warnings
+      // remain shrinkable, including descriptions supplied by older backends.
+      const measured = /^[+\-−]?\d[\d.,]*(?:\s*(?:°[CF]|%|km\/h|m\/s|ppm|ppb|[µμu]g\/m[³3]|AQI|lx))?$/.test(detail);
+      const full = name + (detail ? ' · ' + detail : '');
+      return `<span class="reason hem-outside-blocker123" data-outside-blocker123="${escape(code)}"
+        title="${escape(full)}" aria-label="${escape(full)}">${this._icon('mdi:alert-circle-outline')}<span class="hem-outside-blocker-label123">${escape(name + (detail ? measured ? ' ·' : ' · ' + detail : ''))}</span>${measured ? ` <span class="hem-outside-blocker-value123">${escape(detail)}</span>` : ''}</span>`;
     }
 
     _outside(outdoor) {
@@ -1628,22 +1634,27 @@
       const main = status === 'safe' ? this._t('goodOutside') : status === 'partial' ?
         this._t('partialOutside') : status === 'unsafe' ? this._t('badOutside') : this._t('missingOutside');
       const wx = safeArray(outdoor.weather).find((item) => item.condition) || safeArray(outdoor.weather)[0];
+      const condition = wx?.condition ? this._weatherName(wx.condition) : this._t('missing');
       const icon = wx?.condition ? (ICON[wx.condition] || 'mdi:weather-cloudy') : 'mdi:weather-cloudy-alert';
       const temperature = typeof wx?.temperature_c === 'number' ? `${this._format(wx.temperature_c)}°C` : null;
       const extras = [
         ...(typeof wx?.humidity === 'number' ? [this._icon('mdi:water-percent') + escape(this._format(wx.humidity)) + '%'] : []),
         ...(typeof wx?.wind_kmh === 'number' ? [this._icon('mdi:weather-windy') + escape(this._format(wx.wind_kmh)) + ' km/h'] : [])
       ];
+      const weatherSummary = [condition, temperature,
+        typeof wx?.humidity === 'number' ? this._format(wx.humidity) + '%' : null,
+        typeof wx?.wind_kmh === 'number' ? this._format(wx.wind_kmh) + ' km/h' : null
+      ].filter(Boolean).join(' · ');
       const readings = safeArray(outdoor.readings);
       const blockers = safeArray(outdoor.blockers);
       const warnings = safeArray(outdoor.warnings).filter((item) => item.active === true);
       return `<section class="outside outside-${status}" aria-label="${escape(this._t('outside'))}">
-        <div class="outdoor-head"><div class="outdoor-icon">${this._icon(icon)}</div>
+        <div class="outdoor-head"><div class="outdoor-icon" title="${escape(weatherSummary)}">${this._icon(icon)}</div>
           <div class="outdoor-text"><span class="eyebrow">${escape(this._t('outside'))}</span>
             <div class="outside-title">${escape(main)}</div>
-            <div class="weather-line">${escape(wx?.condition ? this._weatherName(wx.condition) : this._t('missing'))}
+            <div class="weather-line" role="group" title="${escape(weatherSummary)}" aria-label="${escape(weatherSummary)}"><span class="hem-weather-condition123" title="${escape(condition)}">${escape(condition)}</span>
               ${temperature ? `<strong>${escape(temperature)}</strong>` : ''}
-              ${extras.length ? `<span>${extras.join('<span class="sep">·</span>')}</span>` : ''}
+              ${extras.length ? `<span class="hem-weather-extras123">${extras.join('<span class="sep">·</span>')}</span>` : ''}
             </div>
           </div>
           <div class="outdoor-status">${this._icon(status === 'safe' ? 'mdi:check' : status === 'unsafe' ? 'mdi:alert' : 'mdi:information-outline')}</div>
@@ -1651,7 +1662,7 @@
         ${readings.length ? `<div class="out-metrics" aria-label="${escape(this._t('outdoorSensors'))}">
           ${readings.map((item) => `<span class="out-chip ${!item.available ? 'dim' : item.exceeded ? 'elevated' : ''} ${item.entity_id && /^sensor\.[a-z0-9_]+$/.test(item.entity_id) ? 'hem-source-click105' : ''}"
               ${item.entity_id && /^sensor\.[a-z0-9_]+$/.test(item.entity_id) ? 'data-hem-source105="'+escape(item.entity_id)+'" role="button" tabindex="0"' : ''}>
-            ${escape(this._metricName(item.metric))} <b>${item.available ? escape(this._format(item.value)) : '-'}</b>
+            <span class="hem-outside-metric-label123">${escape(this._metricName(item.metric))}</span> <b>${item.available ? escape(this._format(item.value)) : '-'}</b>
             <small>${escape(item.unit)}</small></span>`).join('')}
         </div>` : `<div class="out-empty">${escape(this._t('noOutdoor'))}</div>`}
         ${blockers.length ? `<div class="outside-alerts">${blockers.slice(0,5).map((item) => this._outsideBlocker(item)).join('')}
@@ -2569,7 +2580,7 @@
         String(a.area_id).localeCompare(String(b.area_id)));
       const nextHtml91 = `${this._styles()}<ha-card class="shell" dir="${RTL_LANGUAGES.has(lang) ? 'rtl' : 'ltr'}">
         <header class="card-heading"><div><div class="overline">HOME ASSISTANT</div>
-        <h2>${escape(this._config.title || this._t('title'))}</h2><span>${escape(this._t('subtitle'))}</span></div>
+        <h2 title="${escape(this._config.title || this._t('title'))}">${escape(this._config.title || this._t('title'))}</h2><span>${escape(this._t('subtitle'))}</span></div>
         <div class="header-actions"><button class="edit-device" type="button" data-edit-home
           aria-label="${escape(this._deviceEditLabel(true))}" title="${escape(this._deviceEditLabel(true))}"
           ${this._homeDeviceId ? '' : 'disabled'}>${this._icon('mdi:cog-outline')}</button>
@@ -3956,7 +3967,7 @@
     const tones=['good','warn','neutral'];
     return '<div class="hem-overview87" role="group" aria-label="'+
       escape(this._t('roomStatus'))+'">'+
-      '<span class="hem-overview-title87">'+this._icon('mdi:home-heart')+
+      '<span class="hem-overview-title87" title="'+escape(labels.rooms)+'">'+this._icon('mdi:home-heart')+
       '<b>'+escape(labels.rooms)+'</b><strong>'+escape(counts.reduce((a,b)=>a+b,0))+
       '</strong></span>'+
       ['safe','attention','unknown'].map((key,i)=>
@@ -7561,6 +7572,63 @@
       '<p>'+escape(words.stability)+'</p><p><small>'+escape(words.outdoorCaveat)+'</small></p></section>';
   };
 /* HEM_MOLD_MEASUREMENT115_END */
+
+  /* HEM_TEXT_BOUNDARIES123_START
+   * Allocate compact rows by their contents. Labels may shorten, while a
+   * measured value and its unit remain together inside their own chip.
+   * Container queries also apply to narrow columns on a wide dashboard.
+   */
+  const stylesBefore123=AirQualityAdvisorCard.prototype._styles;
+  AirQualityAdvisorCard.prototype._styles=function(){
+    return stylesBefore123.call(this)+`<style>
+      :host{min-width:0;max-width:100%}
+      .shell{display:block;min-width:0;max-width:100%;box-sizing:border-box;
+        container-type:inline-size;container-name:hem-card123}
+      .card-heading,.content{min-width:0;max-width:100%;box-sizing:border-box}
+      .header-actions{flex:0 0 auto}
+      .card-heading h2{max-width:100%}
+      .outside-title{flex:1 1 auto}
+      .weather-line{flex:0 0 auto;overflow:visible}
+      .weather-line>.hem-weather-condition123{display:block;flex:0 1 auto;
+        max-width:14ch;min-width:0;overflow:hidden;text-overflow:ellipsis}
+      .weather-line>strong,.weather-line>.hem-weather-extras123{flex:0 0 auto}
+      .hem-weather-extras123 ha-icon{flex:0 0 auto}
+      .hem-outside-details87 .out-metrics{flex:0 0 auto}
+      .hem-outside-details87 .outside-alerts{flex:1 1 auto;width:auto}
+      .hem-outside-details87 .outside-alerts:has(>.hem-wx-chip103){
+        flex:0 1 auto;min-width:44px}
+      .hem-outside-details87 .outside-alerts>.hem-wx-chip103{
+        flex:0 1 auto!important}
+      .hem-outside-details87 .hem-outside-blocker123{
+        display:flex;gap:3px;padding-inline:4px;box-sizing:border-box}
+      .hem-outside-blocker123>ha-icon{flex:0 0 13px;width:13px}
+      .hem-outside-blocker-label123,.hem-outside-metric-label123{
+        min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;
+        white-space:nowrap}
+      .hem-outside-blocker-value123,.hem-outside-details87 .out-chip b,
+      .hem-outside-details87 .out-chip small{flex:0 0 auto;white-space:nowrap}
+      .hem-outside-details87 .out-empty{min-width:0;overflow:hidden;
+        text-overflow:ellipsis}
+      .hem-overview-title87>b,.hem-overview-stat87>small{
+        min-width:0;overflow:hidden;text-overflow:ellipsis}
+      .hem-overview-title87>ha-icon,.hem-overview-title87>strong,
+      .hem-overview-stat87>ha-icon,.hem-overview-stat87>b{flex:0 0 auto}
+      footer{min-width:0;overflow-wrap:anywhere}
+      @container hem-card123 (max-width:480px){
+        .card-heading h2{font-size:16px}
+        .hem-overview-stat87 small{display:none}
+        .weather-line>.hem-weather-condition123{display:none}
+        .outside-title{max-width:none}
+      }
+      @container hem-card123 (max-width:380px){
+        .outdoor-text{gap:4px}
+        .hem-outside-details87{gap:3px}
+        .hem-outside-details87 .outside-alerts:has(>.hem-outside-blocker123:nth-child(2))
+          .hem-outside-blocker123>ha-icon{display:none}
+      }
+    </style>`;
+  };
+  /* HEM_TEXT_BOUNDARIES123_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
