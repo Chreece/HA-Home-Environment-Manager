@@ -4280,13 +4280,15 @@
       const info=detail.querySelector('.hem-context-body76,.metric-help-content');
       const trigger=detail.querySelector(':scope > summary');
       if(!info || !trigger) return;
-      const previous=this._floatingInfo87?._hemInfoSource87;
+      const previous=this._floatingInfo87;
       const key=detail.getAttribute('data-detail-id');
-      const sameSource=previous===detail || Boolean(key&&previous?.getAttribute('data-detail-id')===key);
+      const sameSource=previous?._hemInfoKey87===key &&
+        (previous?._hemInfoSource87===detail || Boolean(key));
       this._closeInfo87(!sameSource);
       const pop=document.createElement('div');
       pop.className='hem-floating-info87';
       pop._hemInfoSource87=detail;
+      pop._hemInfoKey87=key;
       // Own dismissal so shadow-DOM retargeting and native light-dismiss
       // cannot close the disclosure before a second trigger click toggles it.
       pop.setAttribute('popover','manual');
@@ -4311,10 +4313,9 @@
       pop.style.maxHeight=maxHeight+'px';
       const closeOwnedDisclosure=()=>{
         if(this._floatingInfo87!==pop)return;
-        if(detail.isConnected)detail.open=false;
-        const id=detail.getAttribute('data-detail-id');
-        if(id)this._detailsExpanded66?.delete(id);
-        if(this._roomIssueInfo114===id)this._roomIssueInfo114=null;
+        if(detail.isConnected&&detail.getAttribute('data-detail-id')===key)detail.open=false;
+        if(key)this._detailsExpanded66?.delete(key);
+        if(this._roomIssueInfo114===key)this._roomIssueInfo114=null;
         const area=detail.closest('[data-room-fold87]')?.getAttribute('data-room-fold87');
         if(area)this._syncRoomIssueButtons115?.(area);
       };
@@ -4482,9 +4483,13 @@
     }
     // Older information bubbles are permanently inside the shell. A real
     // top-layer popover is copied outside the clipped card at open time.
-    const openHelp=card.querySelector('details.hem-context76[open],details.metric-help[open]');
-    if(openHelp)this._openInfo87(openHelp);
-    else this._closeInfo87();
+    // Preparing a detached reconciliation candidate must not change the
+    // connected popup, its listeners, or its source disclosure.
+    if(card.isConnected){
+      const openHelp=card.querySelector('details.hem-context76[open],details.metric-help[open]');
+      if(openHelp)this._openInfo87(openHelp);
+      else this._closeInfo87();
+    }
   };
   // HA pushes frequent weather, occupancy and native device updates. The
   // original _renderContent replaces every card child, which detaches the
@@ -4655,16 +4660,27 @@
       this._compactAfterRender87(card);
     const replaced=card!==before;
     const reconciled=!!card && (this._stableDomUpdates91||0)!==revisionsBefore;
-    // A room warning can stay open while HA supplies a new reason. The
-    // detached candidate cannot refresh a connected top-layer popover.
-    if(reconciled&&this._roomIssueInfo114&&this._floatingInfo87?.isConnected){
-      const detail=[...card.querySelectorAll('[data-detail-id]')]
-        .find(node=>node.getAttribute('data-detail-id')===this._roomIssueInfo114&&node.open);
-      const content=detail?.querySelector('.hem-context-body76,.metric-help-content');
-      if(content&&this._floatingInfo87.innerHTML!==content.innerHTML){
-        const fresh=this._floatingInfo87.cloneNode(false);
+    // Refresh every open information bubble from its connected source, not
+    // only controller warnings. The detached candidate cannot own a portal.
+    if(reconciled){
+      const pop=this._floatingInfo87;
+      const source=pop?._hemInfoSource87;
+      const key=pop?._hemInfoKey87;
+      const detail=pop?.isConnected
+        ? source?.isConnected&&card.contains(source)&&source.getAttribute('data-detail-id')===key
+          ? source
+          : key?[...card.querySelectorAll('[data-detail-id]')]
+            .find(node=>node.getAttribute('data-detail-id')===key):null
+        : card.querySelector('details.hem-context76[open],details.metric-help[open]');
+      const content=detail?.open&&detail.querySelector('.hem-context-body76,.metric-help-content');
+      if(!content)this._closeInfo87(true);
+      else if(!pop?.isConnected||detail!==source){
+        // Reconnection or source replacement needs fresh ownership closures.
+        this._openInfo87(detail);
+      }else if(pop.innerHTML!==content.innerHTML){
+        const fresh=pop.cloneNode(false);
         fresh.innerHTML=content.innerHTML;
-        _reconcile91(this._floatingInfo87,fresh);
+        _reconcile91(pop,fresh);
       }
     }
     if((replaced||reconciled) && positions.length) {

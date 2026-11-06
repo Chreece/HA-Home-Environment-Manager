@@ -80,6 +80,25 @@ SETUP = r"""data => {
       popup:Boolean(card._floatingInfo87),
       listeners:Object.fromEntries(Object.entries(captureListeners061b2).map(([type,set])=>[type,set.size]))};
   };
+  window.diagnostics061b2=()=>{
+    const pop=card._floatingInfo87,source=pop?._hemInfoSource87;
+    const roomInfo=card.shadowRoot.querySelector('[data-detail-id="room-info:living"]');
+    const state=card._hass.states['sensor.hem'];
+    const humidity=state.attributes.dashboard.rooms[0].environment.climate_plan
+      .equipment_plan.humidity.measured_rh;
+    return {language:card._hass.language,humidity,formattedHumidity:card._format(humidity),
+      renderedCurrentState:card._lastState===state,stableUpdates:card._stableDomUpdates91,
+      pendingRender:card._pendingRender,pendingForce:card._pendingForceRender,
+      pendingFrame:card._frameHandle68,detailPointer:card._detailPointer66,
+      focusedEditor:card._focusedEditor?.outerHTML||null,
+      roomInfoOpen:roomInfo?.open,roomInfoText:roomInfo?.textContent,
+      popupConnected:pop?.isConnected||false,popupText:pop?.textContent||null,
+      popupKey:pop?._hemInfoKey87,sourceKey:source?.getAttribute('data-detail-id'),
+      sourceConnected:source?.isConnected,sourceOpen:source?.open,sourceText:source?.textContent,
+      savedDetails:[...(card._detailsExpanded66||[])],roomIssueInfo:card._roomIssueInfo114,
+      listeners:Object.fromEntries(Object.entries(captureListeners061b2).map(([type,set])=>[type,set.size])),
+      calls,info};
+  };
 }"""
 
 
@@ -147,6 +166,7 @@ def browser_checks(data):
     icons = runpy.run_path(str(ROOT / ".github/tests/test_061b1_room_fold.py"))["icon_fixture"]()
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(executable_path=executable, headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+        page = None
         try:
             for width, label in ((1024, "desktop"), (375, "mobile"), (320, "narrow")):
                 page = browser.new_page(viewport={"width": width, "height": 1000})
@@ -159,7 +179,7 @@ def browser_checks(data):
                   home-environment-manager-card{display:block;max-width:760px;margin:56px auto 0}
                   #outside{position:fixed;z-index:1;top:8px;left:8px;padding:7px 10px}
                   </style></head><body><button id="outside">Outside card</button></body></html>""")
-                page.add_script_tag(content=icons)
+                page.evaluate(icons)
                 page.add_script_tag(path=str(CARD))
                 page.evaluate(SETUP, data)
                 room = page.locator('[data-room-fold87="living"]')
@@ -174,8 +194,11 @@ def browser_checks(data):
                 bubble.locator("small").first.click()
                 expect(bubble).to_be_visible()
                 # Refresh an open bubble in place with genuinely changed data.
-                page.evaluate("refresh061b2(57.4)")
+                page.evaluate("window.popupBeforeRefresh061b2=card._floatingInfo87;refresh061b2(57.4)")
+                page.wait_for_function("card._lastState===card._hass.states['sensor.hem']")
+                page.wait_for_function("card.shadowRoot.querySelector('[data-detail-id=\"room-info:living\"]')?.textContent.includes('57,4')")
                 page.wait_for_function("card._floatingInfo87?.textContent.includes('57,4')")
+                assert page.evaluate("card._floatingInfo87===popupBeforeRefresh061b2"), "Live refresh replaced the open portal"
                 assert_multiline(page)
                 assert_listeners(page, 1)
                 # Inside the card, outside the popup: close without any action.
@@ -260,6 +283,19 @@ def browser_checks(data):
                 assert page.evaluate("info") == []
                 assert errors == [], errors
                 page.close()
+        except Exception as error:
+            if page is not None and not page.is_closed():
+                try:
+                    diagnostics = page.evaluate("() => typeof diagnostics061b2==='function' ? diagnostics061b2() : {body:document.body.innerText}")
+                    report = {"viewport": label, "error": str(error), "pageErrors": errors, "state": diagnostics}
+                    rendered = json.dumps(report, ensure_ascii=False, indent=2)
+                    print("061B2_INFO_BUBBLE_FAILURE_DIAGNOSTICS\n" + rendered, file=sys.stderr, flush=True)
+                    if output:
+                        (output / f"061b2-info-failure-{label}.json").write_text(rendered, encoding="utf-8")
+                        page.screenshot(path=str(output / f"061b2-info-failure-{label}.png"), full_page=True)
+                except Exception as diagnostic_error:
+                    print(f"Could not capture bubble failure diagnostics: {diagnostic_error}", file=sys.stderr)
+            raise
         finally:
             browser.close()
     print("061B2_GREEK_INFO_BUBBLES_DESKTOP_MOBILE_OUTSIDE_CLICK=PASS")

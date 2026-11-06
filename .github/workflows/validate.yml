@@ -238,6 +238,10 @@ jobs:
           python -I .github/tests/test_beta68_metadata.py
       - name: Install runner-only Home Assistant and browser test packages
         run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+      - name: Room info layout, live refresh and outside-click dismissal
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b2-ui
+        run: python -I .github/tests/test_061b2_info_bubbles.py
       - name: Compact VOC labels and purpose-specific configuration help
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b2-ui
@@ -263,7 +267,6 @@ jobs:
           python -I .github/tests/test_beta122_entity_trends.py || hem_ui_status=1
           python -I .github/tests/test_beta122_card_details.py || hem_ui_status=1
           python -I .github/tests/test_061b1_room_fold.py || hem_ui_status=1
-          python -I .github/tests/test_061b2_info_bubbles.py || hem_ui_status=1
           exit "$hem_ui_status"
       - name: Preserve room interface verification images
         if: always()
