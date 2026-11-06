@@ -85,7 +85,7 @@ model.__dict__.update(dataclass=dataclass, math=math, finite=maths.finite,
                       room_config=lambda manager, spec: manager.room)
 extract(ROOT / "equipment_model.py", (
     "Capabilities", "_strings", "features", "capabilities", "PIDMemory",
-    "pid_step", "duty_on", "profile_name",
+    "pid_step", "duty_on", "profile_name", "automatic_profile_reason",
 ), model.__dict__, constants=("TEMP", "RANGE", "HUMIDITY", "FAN", "PRESET", "SWING",
                              "SWING_H", "HVAC_MODES", "PRESETS"))
 # The feature constants share a tuple assignment in the production source.

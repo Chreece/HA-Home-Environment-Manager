@@ -17,7 +17,7 @@ from types import ModuleType, SimpleNamespace as N
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def extract(file, names, ns):
+def extract(file, names, ns, *, constants=()):
     nodes = ast.parse((ROOT / file).read_text()).body
     chosen = []
     for node in nodes:
@@ -26,7 +26,12 @@ def extract(file, names, ns):
         if isinstance(node, ast.ClassDef):
             chosen.extend(c for c in node.body if isinstance(
                 c, (ast.FunctionDef, ast.AsyncFunctionDef)) and c.name in names)
-    assert {n.name for n in chosen} == set(names), (file, names)
+        if isinstance(node, ast.Assign) and any(
+            isinstance(target, ast.Name) and target.id in constants
+            for target in node.targets
+        ):
+            chosen.append(node)
+    assert {n.name for n in chosen if hasattr(n, "name")} == set(names), (file, names)
     exec(compile(ast.Module(body=chosen, type_ignores=[]), file, "exec"), ns)
     return tuple(ns[x] for x in names)
 
@@ -37,9 +42,10 @@ phase_ns = {"math": math, "TARGET_CHANGE_C": 0.25, "COMFORT_ERROR_C": 0.5}
                      "binary_pwm_off_phase"), phase_ns
 )
 model_ns = {"math": math, "dataclass": dataclass}
-PIDMemory, pid_step, duty_on, profile_name = extract(
-    "equipment_model.py", ("PIDMemory", "pid_step", "duty_on", "profile_name"),
-    model_ns,
+PIDMemory, pid_step, duty_on, profile_name, automatic_profile_reason = extract(
+    "equipment_model.py", ("PIDMemory", "pid_step", "duty_on", "profile_name",
+                           "automatic_profile_reason"),
+    model_ns, constants=("PRESETS",),
 )
 assert duty_on(12.0, 0.0, 3600, 600, 600, starting=True) is False
 
@@ -131,6 +137,7 @@ model = N(
     sources_available=lambda manager, spec: True,
     capabilities=lambda manager, spec: Cap(),
     profile_name=make_profile,
+    automatic_profile_reason=automatic_profile_reason,
     targets=lambda manager, spec, cap, cfg, plan: {
         "heat": manager.goals[make_profile(cfg, plan)],
         "cool": 26., "humidity": 50.,

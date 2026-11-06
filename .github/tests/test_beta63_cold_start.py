@@ -107,6 +107,18 @@ def load_functions(path, names, globals_):
     return tuple(globals_[name] for name in names)
 
 
+# Presence is unrelated to the supply/identity scenarios below, but must be
+# explicitly known. Exercise the production guard rather than bypassing it.
+presence_source = ast.parse((ROOT / "equipment_model.py").read_text(encoding="utf-8"))
+presence_scope = {"PRESETS": ast.literal_eval(next(
+    node.value for node in presence_source.body if isinstance(node, ast.Assign)
+    and any(isinstance(target, ast.Name) and target.id == "PRESETS" for target in node.targets)
+))}
+Model.automatic_profile_reason = staticmethod(load_functions(
+    "equipment_model.py", ("automatic_profile_reason",), presence_scope,
+)[0])
+
+
 spec = NS(
     identifier="sleeproom_comfee_controller", area_id="bedroom",
     source_device_id="comfee-device-id", source_entities=("climate.comfee",)
@@ -188,7 +200,7 @@ class Simulator:
             target_rh=target_rh,
             offline_modes=offline_modes,
             dry_role=dry_role,
-            plan={"permission": permission, "window_safe": window_safe},
+            plan={"away": "home", "permission": permission, "window_safe": window_safe},
         )
         self.records = {}
         self.hass = NS(states=NS(get=self.states.get), services=NS())
