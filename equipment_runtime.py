@@ -1402,7 +1402,16 @@ class EquipmentRuntime:
                     "observe":"adaptive_suggest",
                     "bounded":"adaptive_auto",
                 }[legacy]
-            new = {**old, **changes}
+            # Operating ON/OFF preferences belong to the native endpoint.
+            # Resolve legacy effective timings before the first explicit edit,
+            # retaining the other native minimum and the independent supply
+            # protections. Existing pending/owned command journals stay intact.
+            timing_base = (
+                model.normalize_native_timing(self.manager, spec, cap, old)
+                if {"min_on_seconds", "min_off_seconds"} & changes.keys()
+                else old
+            )
+            new = {**timing_base, **changes}
             if "pid_calibration_method" in changes:
                 new["pid_adaptation_mode"] = "disabled"
             if ("pause_on_window_open" in new

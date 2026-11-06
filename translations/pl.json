@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Moc · {channel}min ON (s)",
+        "name": "Praca · {channel}Minimalny czas pracy urządzenia (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Moc · {channel}min OFF (s)",
+        "name": "Praca · {channel}Minimalny czas postoju urządzenia (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"

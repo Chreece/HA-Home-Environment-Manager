@@ -88,7 +88,7 @@ def safe_binary_pwm_cycle(
     if (any(isinstance(v, bool) or not isinstance(v, (int, float))
             or not isfinite(v) for v in args)
             or not 0 <= demand <= 100
-            or min_on_s <= 0 or min_off_s <= 0
+            or cycle_s <= 0 or min_on_s < 0 or min_off_s < 0
             or cycle_s < min_on_s + min_off_s
             or maximum_s < cycle_s):
         return None

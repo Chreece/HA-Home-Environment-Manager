@@ -16,7 +16,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.0b120](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b120)
+**Current release:** [v0.6.1b1](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b1)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
@@ -221,6 +221,28 @@ A manual change on the appliance can pause automatic control. Use
 **Control · Continue Automatic** when you want HEM to resume. Window state,
 availability, presence policies and minimum ON/OFF times still apply; the reason
 display explains ordinary waiting periods.
+
+### Minimum device ON and OFF times
+
+Each controller has **Operation · Minimum device ON time (s)** and
+**Operation · Minimum device OFF time (s)**. These govern how long HEM keeps
+the device operating or stopped before requesting the opposite state. For a
+radiator valve, this is its controlled heating operation.
+
+Both settings accept **0 seconds**, which disables that forced operating
+hold, and can be adjusted in one-second increments. Choose any required
+minimum interval from the appliance manufacturer's guidance; compressor
+equipment and radiator valves need different operating policies. Aqara's
+[E1 guidance](https://www.aqara.com/eu/product/radiator-thermostat-e1/faq/)
+also notes that frequent on/off cycling increases valve motor use and battery
+consumption.
+
+Updating HEM preserves existing effective timings until you explicitly edit
+one of these minimums. Editing one preserves the other minimum. An ON minimum
+already recorded for a running cycle completes first; following cycles use
+the new setting. Zero does not fabricate device feedback or skip confirmation
+of a pending command. Existing external supply-switch protections remain
+independent of the newly chosen operating hold.
 
 ### Targets and profiles
 
@@ -474,7 +496,7 @@ steps to reproduce. Remove personal details from logs and screenshots.
 
 Install published betas from the
 [Releases page](https://github.com/Chreece/HA-Home-Environment-Manager/releases).
-Read the [current release notes](.github/releases/v0.6.0b120.md) for recent changes.
+Read the [current release notes](.github/releases/v0.6.1b1.md) for recent changes.
 
 | Branch | Purpose |
 | --- | --- |
@@ -486,6 +508,7 @@ The [validation workflow](https://github.com/Chreece/HA-Home-Environment-Manager
 checks the integration, existing regressions, browser interactions and installation
 ZIP before promotion. New beta versions are published after their `main` commit
 passes validation; already published versions are never overwritten.
+Publishing a new version retains all existing releases, assets and tags.
 
 ## Support and license
 

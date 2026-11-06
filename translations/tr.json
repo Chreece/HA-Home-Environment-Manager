@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Güç · {channel}min ON (s)",
+        "name": "Çalışma · {channel}Cihazın asgari çalışma süresi (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Güç · {channel}min OFF (s)",
+        "name": "Çalışma · {channel}Cihazın asgari kapalı kalma süresi (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"

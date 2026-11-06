@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Teljesítmény · {channel}min ON (s)",
+        "name": "Működés · {channel}Az eszköz minimális működési ideje (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Teljesítmény · {channel}min OFF (s)",
+        "name": "Működés · {channel}Az eszköz minimális kikapcsolt ideje (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"

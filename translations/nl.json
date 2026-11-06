@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Vermogen · {channel}min ON (s)",
+        "name": "Werking · {channel}Minimale AAN-tijd van het apparaat (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Vermogen · {channel}min OFF (s)",
+        "name": "Werking · {channel}Minimale UIT-tijd van het apparaat (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"

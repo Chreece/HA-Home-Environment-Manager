@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Potencia · {channel}min ON (s)",
+        "name": "Funcionamiento · {channel}Tiempo mínimo de funcionamiento del dispositivo (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ayuda"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Potencia · {channel}min OFF (s)",
+        "name": "Funcionamiento · {channel}Tiempo mínimo de parada del dispositivo (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ayuda"

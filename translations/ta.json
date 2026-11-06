@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "சக்தி · {channel}min ON (s)",
+        "name": "இயக்கம் · {channel}சாதனம் இயங்க வேண்டிய குறைந்தபட்ச நேரம் (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "சக்தி · {channel}min OFF (s)",
+        "name": "இயக்கம் · {channel}சாதனம் அணைந்திருக்க வேண்டிய குறைந்தபட்ச நேரம் (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"

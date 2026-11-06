@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "الطاقة · {channel}min ON (s)",
+        "name": "التشغيل · {channel}الحد الأدنى لوقت تشغيل الجهاز (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "الطاقة · {channel}min OFF (s)",
+        "name": "التشغيل · {channel}الحد الأدنى لوقت توقف الجهاز (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"

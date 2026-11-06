@@ -1,8 +1,8 @@
-"""Publish only a newly versioned, validated main beta; retain tags on cleanup.
+"""Publish only a newly versioned, validated main beta; preserve release history.
 
 Authenticated requests never follow redirects. Asset downloads are separate,
-unauthenticated HTTPS requests. Any failure before full publication verification
-leaves older releases intact; an interrupted draft requires explicit review.
+unauthenticated HTTPS requests. Existing releases, assets and tags remain intact
+throughout publication; an interrupted draft requires explicit review.
 """
 from __future__ import annotations
 
@@ -56,22 +56,17 @@ def version_key(value):
             int(beta) if beta is not None else 0)
 
 
-def cleanup_candidates(releases, version):
-    """Never delete drafts, stable releases, unknown tags, or a newer beta."""
+def validate_release_history(releases, version):
+    """Refuse newer releases or unrecognized published versions without mutation."""
     target = version_key(version)
     require(target is not None and target[3] == 0, "A canonical beta version is required")
-    candidates = []
     for release in releases:
         key = version_key(release.get("tag_name"))
         if key is None:
             require(release.get("draft") is True,
                     "An unrecognized published version requires manual review")
             continue
-        require(key <= target, "A newer release exists; refusing publication or cleanup")
-        if (key < target and key[3] == 0 and release.get("draft") is False
-                and release.get("prerelease") is True and release.get("published_at")):
-            candidates.append(release)
-    return sorted(candidates, key=lambda item: version_key(item["tag_name"]))
+        require(key <= target, "A newer release exists; refusing publication")
 
 
 def is_new_version(releases, version):
@@ -79,7 +74,7 @@ def is_new_version(releases, version):
     if any(release.get("draft") is False for release in matching):
         return False  # Published versions are immutable to this publisher.
     require(not matching, "A draft for this version already exists; review it before retrying")
-    cleanup_candidates(releases, version)
+    validate_release_history(releases, version)
     return True
 
 
@@ -152,6 +147,7 @@ class GitHub:
         self._opener = build_opener(NoRedirect())
 
     def request(self, method, path, data=None, *, upload=False, missing=False):
+        require(method.upper() != "DELETE", "Release, asset and tag deletion is disabled")
         require(path.startswith("/") and not path.startswith("//"), "Invalid GitHub API path")
         host = "uploads.github.com" if upload else "api.github.com"
         payload = data if upload else json.dumps(data).encode() if data is not None else None
@@ -276,7 +272,7 @@ def publish(api, repo, sha):
                 data, upload=True)
     verified_asset(api, release_id, tag, sha, name, digest, len(data), published=False)
     main_head(api, sha)
-    cleanup_candidates(api.releases(), version)
+    validate_release_history(api.releases(), version)
     api.request("PATCH", f"/releases/{release_id}",
                 {"draft": False, "prerelease": True, "make_latest": "false"})
     asset = verified_asset(api, release_id, tag, sha, name, digest, len(data), published=True)
@@ -284,16 +280,6 @@ def publish(api, repo, sha):
     require(hashlib.sha256(downloaded).hexdigest() == digest, "Published download SHA256 mismatch")
     inspect_zip(downloaded, version)
     print("Verified published beta:", tag, sha, "SHA256", digest)
-    # Every deletion is scoped to a freshly checked older, published beta.
-    # The tag endpoint is read-only throughout this script.
-    for old in cleanup_candidates(api.releases(), version):
-        main_head(api, sha)
-        verified_asset(api, release_id, tag, sha, name, digest, len(data), published=True)
-        current = cleanup_candidates(api.releases(), version)
-        require(any(item["id"] == old["id"] and item["tag_name"] == old["tag_name"]
-                    for item in current), "Older release changed before cleanup")
-        api.request("DELETE", f"/releases/{old['id']}")
-        print("Retired older beta release; tag retained:", old["tag_name"])
 
 
 def main():

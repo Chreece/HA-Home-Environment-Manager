@@ -1,4 +1,4 @@
-"""Offline tests for exact-commit packaging and guarded release mutations."""
+"""Offline tests for exact-commit publication and preservation of release history."""
 from __future__ import annotations
 
 from copy import deepcopy
@@ -12,6 +12,7 @@ import tempfile
 import unittest
 from unittest.mock import patch, Mock
 from urllib.error import HTTPError
+from urllib.parse import unquote
 from urllib.request import Request
 from zipfile import ZipFile
 
@@ -20,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("hem_publisher", ROOT / ".github/scripts/publish_release.py")
 publisher = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(publisher)
-VERSION = "0.6.0b113"
+VERSION = "0.6.1b1"
 
 
 def release(version, *, identifier=1, draft=False, prerelease=True):
@@ -32,7 +33,8 @@ class FakeGitHub:
     """A release transport, with no credentials or network access."""
     def __init__(self, sha, *, initial=None, corrupt_digest=False, wrong_tag=False):
         self.sha = sha
-        self.items = deepcopy(initial if initial is not None else [release("0.6.0b112")])
+        self.items = deepcopy(initial if initial is not None else [release("0.6.0b122")])
+        self.tags = {item["tag_name"]: "1" * 40 for item in self.items if not item["draft"]}
         self.events = []
         self.data = b""
         self.corrupt_digest = corrupt_digest
@@ -47,8 +49,8 @@ class FakeGitHub:
         if method == "GET" and path == "/git/ref/heads/main":
             return {"object": {"type": "commit", "sha": self.sha}}
         if method == "GET" and path.startswith("/git/ref/tags/"):
-            return ({"object": {"type": "commit", "sha": "0" * 40 if self.wrong_tag else self.sha}}
-                    if self.published else None)
+            sha = self.tags.get(unquote(path.removeprefix("/git/ref/tags/")))
+            return {"object": {"type": "commit", "sha": sha}} if sha else None
         if method == "POST" and path == "/releases":
             self.created = {**data, "id": 2, "assets": [], "published_at": None}
             self.items.append(self.created)
@@ -70,10 +72,8 @@ class FakeGitHub:
         if method == "PATCH" and path == "/releases/2":
             self.created.update(data, published_at="2026-11-05T01:00:00Z")
             self.published = True
+            self.tags[self.created["tag_name"]] = "0" * 40 if self.wrong_tag else self.sha
             return deepcopy(self.created)
-        if method == "DELETE" and path == "/releases/1":
-            self.items = [item for item in self.items if item["id"] != 1]
-            return None
         raise AssertionError(f"Unexpected offline API operation: {method} {path}")
 
 
@@ -118,22 +118,28 @@ class PublishReleaseTests(unittest.TestCase):
             self.assertEqual(set(archive.namelist()), expected)
             self.assertEqual(archive.read(publisher.PREFIX + "README.md"), self.files["README.md"])
         with self.assertRaises(publisher.ReleaseError):
-            publisher.inspect_zip(first, "0.6.0b114")
+            publisher.inspect_zip(first, "0.6.1b2")
 
     def test_numeric_beta_order_and_stable_version_order(self):
-        self.assertLess(publisher.version_key("0.6.0b9"), publisher.version_key(VERSION))
-        self.assertLess(publisher.version_key(VERSION), publisher.version_key("0.6.0"))
+        self.assertLess(publisher.version_key("0.6.0b9"), publisher.version_key("0.6.0b122"))
+        self.assertLess(publisher.version_key("0.6.0b122"), publisher.version_key(VERSION))
+        self.assertLess(publisher.version_key("0.6.0"), publisher.version_key(VERSION))
+        self.assertLess(publisher.version_key(VERSION), publisher.version_key("0.6.1"))
         self.assertLess(publisher.version_key("0.6.0b999"), publisher.version_key("0.7.0b1"))
         self.assertIsNone(publisher.version_key("0.6.0rc1"))
 
-    def test_cleanup_selects_only_older_published_betas(self):
-        items = [release("0.6.0b112"), release(VERSION, identifier=2),
-                 release("0.5.0", identifier=3, prerelease=False),
-                 release("0.6.0b111", identifier=4, draft=True)]
-        self.assertEqual([item["id"] for item in publisher.cleanup_candidates(items, VERSION)], [1])
-        for unexpected in (release("0.6.0b114"), release("0.6.0", prerelease=False), release("unknown")):
+    def test_release_history_still_rejects_newer_and_unknown_published_versions(self):
+        items = [release("0.6.0b122"), release(VERSION, identifier=2),
+                 release("0.6.0", identifier=3, prerelease=False),
+                 release("0.6.0b121", identifier=4, draft=True),
+                 release("work-in-progress", identifier=5, draft=True)]
+        original = deepcopy(items)
+        publisher.validate_release_history(items, VERSION)
+        self.assertEqual(items, original)
+        for unexpected in (release("0.6.1b2"), release("0.6.1", prerelease=False),
+                           release("0.6.1b2", draft=True), release("unknown")):
             with self.subTest(tag=unexpected["tag_name"]), self.assertRaises(publisher.ReleaseError):
-                publisher.cleanup_candidates([unexpected], VERSION)
+                publisher.validate_release_history([unexpected], VERSION)
         with self.assertRaises(publisher.ReleaseError):
             publisher.is_new_version([release(VERSION, draft=True)], VERSION)
 
@@ -157,16 +163,47 @@ class PublishReleaseTests(unittest.TestCase):
         with self.assertRaises(publisher.ReleaseError):
             publisher.main_head(FakeGitHub("0" * 40), self.sha)
 
-    def test_cleanup_follows_verified_published_download(self):
-        api = FakeGitHub(self.sha)
+    def test_publication_preserves_all_older_releases_tags_and_assets(self):
+        older = [release("0.6.0b121", identifier=11), release("0.6.0b122", identifier=12),
+                 release("0.6.0", identifier=13, prerelease=False),
+                 release("0.6.0b120", identifier=14, draft=True),
+                 release("work-in-progress", identifier=15, draft=True)]
+        for item in older:
+            item.update(body="Existing release notes for " + item["tag_name"], assets=[{
+                "id": 100 + item["id"], "name": item["tag_name"] + ".zip", "size": 123,
+            }])
+        api = FakeGitHub(self.sha, initial=older)
+        api.tags["v0.5.0b1"] = "3" * 40  # A tag without a release also remains intact.
+        original_tags = deepcopy(api.tags)
         def download(*args):
             api.events.append(("DOWNLOAD", "verified"))
             return api.data
         with patch.object(publisher, "download_asset", side_effect=download):
             publisher.publish(api, self.repo, self.sha)
-        self.assertEqual([item["tag_name"] for item in api.items], ["v" + VERSION])
-        self.assertLess(api.events.index(("DOWNLOAD", "verified")), api.events.index(("DELETE", "/releases/1")))
-        self.assertFalse(any(method == "DELETE" and "git/" in path for method, path in api.events))
+        self.assertTrue(api.published)
+        self.assertEqual(api.items[:-1], older)
+        self.assertEqual(api.items[-1]["tag_name"], "v" + VERSION)
+        self.assertEqual(api.tags, {**original_tags, "v" + VERSION: self.sha})
+        self.assertIn(("DOWNLOAD", "verified"), api.events)
+        self.assertFalse(any(method == "DELETE" for method, path in api.events))
+        self.assertEqual([(method, path) for method, path in api.events
+                          if method not in ("GET", "DOWNLOAD")], [
+            ("POST", "/releases"),
+            ("POST", f"/releases/2/assets?name=HA-Home-Environment-Manager-v{VERSION}.zip"),
+            ("PATCH", "/releases/2"),
+        ])
+
+    def test_newer_release_during_upload_still_stops_publication(self):
+        api = FakeGitHub(self.sha)
+        original = deepcopy(api.items)
+        api.releases = lambda: deepcopy(api.items) + (
+            [release("0.6.1b2", identifier=9)] if api.data else [])
+        with patch.object(publisher, "download_asset") as download, self.assertRaises(publisher.ReleaseError):
+            publisher.publish(api, self.repo, self.sha)
+        download.assert_not_called()
+        self.assertFalse(api.published)
+        self.assertEqual(api.items[:-1], original)
+        self.assertFalse(any(method in ("PATCH", "DELETE") for method, path in api.events))
 
     def test_verification_failures_preserve_old_release(self):
         for failure in ("server_digest", "tag", "download"):
@@ -175,10 +212,19 @@ class PublishReleaseTests(unittest.TestCase):
                 publisher, "download_asset", side_effect=lambda *args: b"bad" if failure == "download" else api.data
             ), self.assertRaises(publisher.ReleaseError):
                 publisher.publish(api, self.repo, self.sha)
-            self.assertTrue(any(item["tag_name"] == "v0.6.0b112" for item in api.items))
+            self.assertTrue(any(item["tag_name"] == "v0.6.0b122" for item in api.items))
             self.assertFalse(any(method == "DELETE" for method, path in api.events))
             if failure == "server_digest":
                 self.assertFalse(api.published)
+
+    def test_authenticated_transport_rejects_release_asset_and_tag_deletion(self):
+        with patch.object(publisher, "build_opener") as opener:
+            api = publisher.GitHub("offline-test-token")
+        for method in ("DELETE", "delete"):
+            for path in ("/releases/1", "/releases/assets/7", "/git/refs/tags/v0.6.0b122"):
+                with self.subTest(method=method, path=path), self.assertRaises(publisher.ReleaseError):
+                    api.request(method, path)
+        opener.return_value.open.assert_not_called()
 
     def test_asset_download_retries_without_authorization(self):
         name = "asset.zip"

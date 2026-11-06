@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "功率 · {channel}min ON (s)",
+        "name": "運作 · {channel}裝置最短運作時間 (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "功率 · {channel}min OFF (s)",
+        "name": "運作 · {channel}裝置最短停機時間 (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"

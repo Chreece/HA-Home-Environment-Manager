@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "توان · {channel}min ON (s)",
+        "name": "کارکرد · {channel}حداقل زمان کارکرد دستگاه (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "راهنما"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "توان · {channel}min OFF (s)",
+        "name": "کارکرد · {channel}حداقل زمان توقف دستگاه (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "راهنما"

@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Снага · {channel}min ON (s)",
+        "name": "Рад · {channel}Минимално време рада уређаја (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Помоћ"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Снага · {channel}min OFF (s)",
+        "name": "Рад · {channel}Минимално време искљученог уређаја (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Помоћ"

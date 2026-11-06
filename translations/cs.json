@@ -3630,7 +3630,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Výkon · {channel}min ON (s)",
+        "name": "Provoz · {channel}Minimální doba chodu zařízení (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"
@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Výkon · {channel}min OFF (s)",
+        "name": "Provoz · {channel}Minimální doba vypnutí zařízení (s)",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"
