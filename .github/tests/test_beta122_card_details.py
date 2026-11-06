@@ -7,6 +7,7 @@ navigation and service transport are local fixtures; no physical device is used.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import json
 import os
 from pathlib import Path
@@ -227,14 +228,32 @@ if(failed)process.exitCode=1;else console.log('BETA122_DEVICE_NAVIGATION_AND_ROO
 """
 
 
+@contextmanager
+def browser_page(playwright, executable):
+    browser = playwright.chromium.launch(executable_path=executable, headless=True,
+        args=["--no-sandbox", "--disable-dev-shm-usage"])
+    page = browser.new_page(viewport={"width": 1024, "height": 1000})
+    try:
+        yield page
+    except Exception:
+        screenshot_dir = os.environ.get("HEM_TEST_SCREENSHOT_DIR")
+        if screenshot_dir:
+            try:
+                destination = Path(screenshot_dir)
+                destination.mkdir(parents=True, exist_ok=True)
+                page.screenshot(path=str(destination / "beta122-card-details-failure.png"), full_page=True)
+            except Exception as capture_error:
+                print(f"Could not capture Beta122 failure screenshot: {capture_error}")
+        raise
+    finally:
+        browser.close()
+
+
 def browser_checks(data):
-    from playwright.sync_api import sync_playwright
+    from playwright.sync_api import expect, sync_playwright
     executable = os.environ.get("CHROME_BIN") or shutil.which("chromium") or shutil.which("google-chrome")
     assert executable, "Chromium required for Beta122 browser checks"
-    with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(executable_path=executable, headless=True,
-            args=["--no-sandbox", "--disable-dev-shm-usage"])
-        page = browser.new_page(viewport={"width": 1024, "height": 1000})
+    with sync_playwright() as playwright, browser_page(playwright, executable) as page:
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.set_content("""<!doctype html><html><head><style>
@@ -282,7 +301,7 @@ def browser_checks(data):
         announce.click()
         assert page.evaluate("calls") == [["switch", "turn_off", {"entity_id": "switch.hem_announce"}]]
         tiles = room.locator(".metric-grid > .metric")
-        assert tiles.count() == 4
+        expect(tiles).to_have_count(4)
         assert room.locator('.metric-grid [data-room-metric114="temperature"]').count() == 0
         assert room.locator('.metric-grid [data-room-metric114="humidity"]').count() == 0
         assert room.locator('.metric-grid [data-room-metric114="pm25"]').count() == 0
@@ -301,29 +320,34 @@ def browser_checks(data):
         page.keyboard.press("Escape")
         assert room.locator(".hem-room-readings66").is_hidden()
         assert room.locator('[data-detail-id="room-info:living"]').count() == 1
-        room.locator('[data-expand="living"]').click()
-        assert tiles.count() == 6
-        room.locator('[data-expand="living"]').click()
-        assert tiles.count() == 4
+        more = room.locator('[data-expand="living"]')
+        more.click()
+        # The click queues _render on requestAnimationFrame. Wait for the
+        # resulting DOM, retaining the exact complementary-tile requirements.
+        expect(more).to_have_attribute("aria-expanded", "true")
+        expect(tiles).to_have_count(6)
+        more.click()
+        expect(more).to_have_attribute("aria-expanded", "false")
+        expect(tiles).to_have_count(4)
         # Re-render only registry data: the existing source device must never
         # become a fallback when the HEM registry association is missing.
         page.evaluate("""()=>{
           card._hass={...card._hass,entities:{...card._hass.entities,
             'climate.hem_heater':{device_id:null}}};card._renderContent();
         }""")
-        assert controller.locator('[data-open-controller-device122]').is_disabled()
-        assert heading.locator('[data-open-physical-device122]').is_enabled()
+        expect(controller.locator('[data-open-controller-device122]')).to_be_disabled()
+        expect(heading.locator('[data-open-physical-device122]')).to_be_enabled()
         page.evaluate("""()=>{card._hass.entities['climate.hem_heater']={device_id:'hem-controller-device'};
           card._renderContent();}""")
-        assert controller.locator('[data-open-controller-device122]').is_enabled()
+        expect(controller.locator('[data-open-controller-device122]')).to_be_enabled()
         screenshot_dir = os.environ.get("HEM_TEST_SCREENSHOT_DIR")
         for width, label in ((1024, "desktop"), (375, "mobile"), (320, "narrow")):
             page.set_viewport_size({"width": width, "height": 1000})
             page.evaluate("card._renderContent(true)")
             assert page.evaluate("document.documentElement.scrollWidth") <= width
-            assert tiles.count() == 4
-            assert controller.locator('[data-open-controller-device122]').is_visible()
-            assert heading.locator('[data-open-physical-device122]').is_visible()
+            expect(tiles).to_have_count(4)
+            expect(controller.locator('[data-open-controller-device122]')).to_be_visible()
+            expect(heading.locator('[data-open-physical-device122]')).to_be_visible()
             for selector in (".hem-device-main87", ".hem-physical-heading122", ".metric-grid"):
                 for element in room.locator(selector).all():
                     rect = element.bounding_box()
@@ -333,7 +357,6 @@ def browser_checks(data):
                 destination.mkdir(parents=True, exist_ok=True)
                 page.screenshot(path=str(destination / f"beta122-card-details-{label}.png"), full_page=True)
         assert not errors, errors
-        browser.close()
     print("BETA122_CARD_DETAILS_BROWSER=PASS (desktop, mobile, narrow; mocked HA only)")
 
 

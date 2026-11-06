@@ -524,7 +524,12 @@ def browser_checks(data):
         page.wait_for_function("count=>historyRequests.length===count+1", arg=contributor_request)
         assert page.evaluate("card._averageDialog105.entity122") == "sensor.temp_a"
         assert page.evaluate("[card._averageDialog105.area,card._averageDialog105.metric]") == ["living", "temperature"]
-        average_trigger.click()
+        # The manual popover can cover this summary button at this viewport.
+        # Focus the real button and use native keyboard activation, keeping
+        # its normal click binding without clicking through the popup.
+        average_trigger.focus()
+        assert average_trigger.evaluate("el=>el.getRootNode().activeElement===el")
+        average_trigger.press("Enter")
         assert popup.is_visible(), "A contributor popup was mistaken for the already-open average"
         assert page.evaluate("!card._averageDialog105.entity122")
         assert page.evaluate("card._averageDialog105.sources") == "sensor.temp_a|sensor.temp_b"
