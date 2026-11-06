@@ -123,6 +123,8 @@ class UI:
           'general_occupied_rooms_entity':[
                {'value':'none'},{'value':'input_text.occupied_rooms'}],
           'general_sleep_rooms_entity':[{'value':'none'}],
+          'general_wake_alarm_entity':[{'value':'none'},{'value':'sensor.next_alarm'}],
+          'general_wake_lead_minutes_entity':[{'value':'none'},{'value':'input_number.minutes'}],
           'away_windows_target_people':[],
           'away_windows_delivery_channels':[{'value':'mobile_notification'}],
         }

@@ -248,9 +248,7 @@ class CompactOptionsMixin:
             return parsed is not None and all(_room_key(v) in aliases for v in parsed)
         language = str(getattr(getattr(hass, "config", None), "language", "en")).split("-")[0]
         state_name = {"el": "Κατάσταση", "de": "Zustand", "fr": "État", "es": "Estado"}.get(language, "State")
-        values = []
-        if state is None or template or usable(state.state):
-            values.append({"value": "__state__", "label": state_name})
+        values = [{"value": "__state__", "label": state_name}]
         ignored = {"friendly_name", "icon", "device_class", "unit_of_measurement", "state_class", "attribution"}
         for key, value in state.attributes.items() if state else ():
             if key.startswith("_") or key in ignored:

@@ -184,6 +184,7 @@ class EquipmentRuntime:
         self.clock = clock or time.time
         self.records: dict[str, dict] = {}
         self.statuses: dict[str, dict] = {}
+        self._presentation_context: dict[str, tuple] = {}
         self._tasks: dict[str, asyncio.Task] = {}
         self._locks: dict[str, asyncio.Lock] = {}
         self._memory: dict[str, tuple[Any, model.PIDMemory, float]] = {}
@@ -410,6 +411,7 @@ class EquipmentRuntime:
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
         self._tasks.clear()
+        getattr(self, "_presentation_context", {}).clear()
         getattr(self, "_automatic_recovery_tasks", {}).clear()
         self._profile_wake.clear()
         self._native_session_observations.clear()
@@ -1161,13 +1163,14 @@ class EquipmentRuntime:
             if getattr(self.manager, "_active", False):
                 self.manager._recalculate(initial=True)
             return
-        if "timed_setpoint_sequence" in changes:
-            # This is an independent timing preference. A pending service,
+        if ("timed_setpoint_sequence" in changes
+                or "sleep_when_everyone_asleep" in changes):
+            # These are independent device preferences. A pending service,
             # ACK or recovery hold must not block editing or be acknowledged
             # by the edit. Serialize only the options write, not hardware.
-            if (set(changes) != {"timed_setpoint_sequence"}
-                    or type(changes["timed_setpoint_sequence"]) is not bool):
-                raise HomeAssistantError("Change the timed setpoint switch separately using ON or OFF")
+            key = "sleep_when_everyone_asleep" if "sleep_when_everyone_asleep" in changes else "timed_setpoint_sequence"
+            if set(changes) != {key} or type(changes[key]) is not bool:
+                raise HomeAssistantError("Change this device preference separately using ON or OFF")
             lock = getattr(self.manager, "_device_settings_write_lock", None)
             if lock is None:
                 lock = self.manager._device_settings_write_lock = asyncio.Lock()
@@ -1180,11 +1183,15 @@ class EquipmentRuntime:
                 previous = profiles.get(spec.identifier)
                 profiles[spec.identifier] = {
                     **(previous if isinstance(previous, dict) else {}),
-                    "timed_setpoint_sequence": changes["timed_setpoint_sequence"],
+                    key: changes[key],
                 }
                 options[model.SETTINGS] = profiles
                 self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
             self._presentation_updates.request(spec.identifier)
+            if key == "sleep_when_everyone_asleep":
+                if getattr(self.manager, "_active", False):
+                    self.manager._recalculate(initial=True)
+                return
             if self._active:
                 # Refresh just this device. An in-flight tick may abort an
                 # unsent preparation when it sees the saved preference.
@@ -1342,10 +1349,11 @@ class EquipmentRuntime:
                     options = deepcopy(self.manager.entry.options)
                     existing = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
                     existing = existing if isinstance(existing, dict) else {}
-                    # The independent timing switch may have changed while we waited.
+                    # Independent switches may have changed while we waited.
                     adjusted["timed_setpoint_sequence"] = model.settings(
                         self.manager, spec
                     ).get("timed_setpoint_sequence") is True
+                    adjusted["sleep_when_everyone_asleep"] = model.settings(self.manager, spec).get("sleep_when_everyone_asleep") is True
                     latest_profile = existing.get(spec.identifier)
                     latest_fan_limits = (latest_profile.get("fan_speed_limits")
                                          if isinstance(latest_profile, dict) else None)
@@ -1631,6 +1639,7 @@ class EquipmentRuntime:
                 new["timed_setpoint_sequence"] = model.settings(
                     self.manager, spec
                 ).get("timed_setpoint_sequence") is True
+                new["sleep_when_everyone_asleep"] = model.settings(self.manager, spec).get("sleep_when_everyone_asleep") is True
                 latest_profile = saved.get(spec.identifier)
                 latest_fan_limits = (latest_profile.get("fan_speed_limits")
                                      if isinstance(latest_profile, dict) else None)
@@ -2812,6 +2821,8 @@ class EquipmentRuntime:
 
     def _quiet_context(self, spec: model.ManagedDevice, cfg: dict, plan: dict) -> bool:
         """Do not raise fan speed on missing sleep/presence evidence."""
+        if not (cfg.get("quiet_sleep") or cfg.get("quiet_occupied")):
+            return False
         room = model.room_config(self.manager, spec)
         shared = plan.get("global_presence", {})
         shared = shared if isinstance(shared, dict) else {}
@@ -2837,8 +2848,10 @@ class EquipmentRuntime:
             local_sleep, local_reason = scheduled_sleep(room, self.clock(), zone)
             sleeping, _ = controlled_sleep_presence(
                 self.hass, spec.area_id, shared, known or {spec.area_id},
-                home_status=home, local_sleeping=local_sleep,
-                local_reason=local_reason,
+                home_status=home, room_status=occupied, local_sleeping=local_sleep,
+                local_reason=local_reason, now=self.clock(),
+                inherit_household=(cfg.get("sleep_when_everyone_asleep") is True
+                                   and cfg.get("control_mode") in ("automatic", "pid")),
             )
         # Unavailable optional presence/sleep sensors must never prevent a
         # humidity or thermal output from operating. When they cannot prove
@@ -3410,8 +3423,6 @@ class EquipmentRuntime:
             or not self._identity_ok(spec)
             or asdict(cap) != record.get("capabilities")
             or not retry_settings_match(context.get("settings"), cfg)
-            or (context.get("profile") != model.profile_name(cfg, plan)
-                if context.get("automatic") else False)
             or before is None or observed is None
             or _manual_output_changes(before, observed)
             or (supply and (
@@ -3428,6 +3439,35 @@ class EquipmentRuntime:
             await self._pause(spec, "native_retry_authority_or_state_changed")
             return
         automatic = context.get("automatic") is True
+        def changed_sleep_policy(current_cfg, current_plan):
+            if (current_cfg.get("control_mode") not in ("automatic", "pid")
+                    or record.get("native_setpoint_stop")):
+                return False
+            previous_profile = context.get("profile")
+            current_profile = model.profile_name(current_cfg, current_plan)
+            return ((automatic and previous_profile != current_profile and
+                     "sleep" in (previous_profile, current_profile)) or
+                    (automatic and context.get("mode") != "off" and
+                     current_plan.get("sleeping") is True and
+                     self._stop_policy_verified(spec, cap, "sleep")) or
+                    (context.get("policy_stop") == "sleep" and
+                     not self._stop_policy_verified(spec, cap, "sleep")))
+
+        if changed_sleep_policy(cfg, plan):
+            # An alarm or household change is not a manual intervention. The
+            # old dispatch remains uncertain: observe it through the normal
+            # automatic verifier without replaying a now-obsolete sleep command.
+            record["automatic_continue_requested"] = {
+                "at": now, "method": cfg["control_mode"],
+                "awaiting_physical_verification": True,
+            }
+            self._status(spec, "awaiting_physical_acknowledgement",
+                         reason="automatic_recovery_requested")
+            await self._save()
+            return
+        if automatic and context.get("profile") != model.profile_name(cfg, plan):
+            await self._pause(spec, "native_retry_authority_or_state_changed")
+            return
         before_on_epoch = getattr(self, "_native_on_epoch", {}).get(entity)
         mode = context.get("mode")
         shutdown = context.get("shutdown") is True
@@ -3562,6 +3602,10 @@ class EquipmentRuntime:
                     if await suppress_obsolete_pending(self, spec, pending):
                         return
                     latest = model.settings(self.manager, spec)
+                    if changed_sleep_policy(latest, model.plan_for(self.manager, spec)):
+                        # The original journal was restored above. Re-evaluate
+                        # its authority and reconcile the old feedback next tick.
+                        return
                     if (latest.get("control_mode") == "pid"
                             and not command_allowed(
                                 self, spec, cap, service, pending["data"],
@@ -4027,7 +4071,13 @@ class EquipmentRuntime:
                 return None
         config = model.settings(self.manager, spec)
         limits = model.device_limits(self.manager, spec, cap)
-        profile = model.profile_name(config, model.plan_for(self.manager, spec))
+        plan = model.plan_for(self.manager, spec)
+        profile = model.profile_name(config, plan)
+        if automatic:
+            # An alarm/profile can change while tick persists PID evidence or
+            # waits for native startup. Do not attach the old Sleep target
+            # to a newly refreshed wake plan at the dispatch boundary.
+            targets = model.targets(self.manager, spec, cap, config, plan)
         manual_humidity = not automatic and "humidity" in config.get("profile_targets", {}).get(profile, {})
         # For genuinely binary climate regulation, the physical HVAC mode is
         # HEM's actuator. A native thermostat setpoint close to the room goal
@@ -4809,6 +4859,17 @@ class EquipmentRuntime:
         record["baseline"].setdefault(cap.primary, snapshot(state))
         await self._observe_native_running(spec, cap, state)
         plan = model.plan_for(self.manager, spec)
+        presentation = getattr(self, "_presentation_context", None)
+        if isinstance(presentation, dict):
+            context = (model.profile_name(cfg, plan), plan.get("sleeping"),
+                       plan.get("sleep_schedule_evidence"), plan.get("occupancy"),
+                       plan.get("away"))
+            if presentation.get(spec.identifier) != context:
+                presentation[spec.identifier] = context
+                # Sleep -> Home can leave demand/status unchanged (e.g. the
+                # same RH target). Still refresh this device's effective
+                # preset and sleep evidence without waking every room's UI.
+                self._presentation_updates.request(spec.identifier)
         target = model.targets(self.manager, spec, cap, cfg, plan)
         mode = cfg.get("requested_mode")
         auto = cfg["control_mode"] in ("automatic", "pid")

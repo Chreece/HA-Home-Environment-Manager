@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Polen · HIGH",
           "pollen_max_scale": "POLLEN · Polen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Polen · NO VENT",
-          "general_source_stale_minutes": "sursă · max (min)",
-          "general_home_policy": "Prezență acasă"
+          "general_source_stale_minutes": "Prezență acasă · Vechimea maximă a datelor de urmărire/numărare (min)",
+          "general_home_policy": "Prezență acasă",
+          "general_wake_alarm_entity": "Somn · Următoarea alarmă",
+          "general_wake_lead_minutes_entity": "Somn · Minute înainte de alarmă"
         },
         "data_description": {
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Alegeți: Calitatea aerului exterior · AQI, CO₂, PM2.5, PM10, VOC. Indisponibil: ⚠",
           "weather_warnings": "Vreme și avertizări · ⚠ (Indisponibil) → 🪟🔒",
-          "general_room_occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Cameră · Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
           "general_home_trackers": "Alegeți o sursă Home Assistant reală pentru „Acasă · Ocupare · Dispozitive”. Datele lipsă sau vechi suspendă acțiunea. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Alegeți o sursă Home Assistant reală pentru „Ocupare · Cameră · sursă (state)”. Datele lipsă sau vechi suspendă acțiunea.",
+          "general_occupied_rooms_entity": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
           "general_occupied_rooms_attribute": "Configurați „Ocupare · Cameră · sursă (attribute)” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
-          "general_sleep_rooms_entity": "Alegeți o sursă Home Assistant reală pentru „Somn · Cameră · sursă (state)”. Datele lipsă sau vechi suspendă acțiunea.",
+          "general_sleep_rooms_entity": "Selectați lista camerelor în care se doarme din stare sau atribut, folosind numele sau ID-urile zonelor Home Assistant. O cameră listată doarme doar dacă este și ocupată. Lista neschimbată rămâne validă; sursa lipsă sau invalidă este necunoscută. Alarma configurată poate încheia somnul automat înainte de sonerie.",
           "general_sleep_rooms_attribute": "Configurați „Somn · Cameră · sursă (attribute)” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
           "notify_entities": "Alegeți: notify.* · setări · sursă.",
           "media_players": "Alegeți: media_player.* · setări · sursă · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Configurați „POLLEN · Polen · HIGH” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
           "pollen_max_scale": "Configurați „POLLEN · Polen · SCALE” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
           "pollen_avoid_ventilation": "Configurați „POLLEN · Polen · NO VENT” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
-          "general_source_stale_minutes": "sursă · Somn / Ocupare · max 240 min. Invalid · Oprire.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Limita de vechime se aplică rapoartelor de urmărire și numărului numeric de persoane. Listele camerelor și stările binare de prezență nu expiră dacă nu se schimbă. Sursele indisponibile, restaurate sau invalide rămân necunoscute. Aceasta nu este durata somnului.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Selectați o entitate cu ora sau data și ora următoarei alarme și o entitate pentru minutele de avans. HEM încheie somnul automat cu acest avans și reia țintele normale. Orele fără dată folosesc fusul Home Assistant. Absența, controlul manual și protecțiile rămân prioritare.",
+          "general_wake_lead_minutes_entity": "Selectați o entitate numerică cu minute nenegative, cu unitatea min sau fără unitate. O alarmă la 07:00 și valoarea 30 încheie somnul automat la 06:30; 0 înseamnă la sonerie. Pentru dezactivare, ștergeți ambele surse."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Acasă · Dispozitive",
           "climate_unknown_occupancy": "Ocupare · Dispozitive",
           "climate_unoccupied_delay_minutes": "Dispozitive · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Ocupare · Dispozitive · senzor · Obligatoriu",
+          "climate_occupancy_stale_minutes": "Prezență în cameră · Vechimea maximă a numărului de persoane (min)",
           "climate_away_policy": "Prezență acasă · Acasă · Dispozitive · POLICY",
           "climate_manual_profile": "Dispozitive · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Somn · Dispozitive",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Dispozitive (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea.",
+          "climate_occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
           "climate_away_entities": "Alegeți o sursă Home Assistant reală pentru „Acasă · Dispozitive”. Datele lipsă sau vechi suspendă acțiunea.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Vechimea maximă a datelor numerice despre numărul de persoane din cameră. Valorile vechi sau indisponibile sunt necunoscute. Stările binare de prezență și listele camerelor neschimbate nu expiră.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Această opțiune controlează „Dispozitive · CLIMATE_MANUAL_PROFILE”. Comenzile fizice cer acord separat și protecții independente.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Generale · setări",
-        "description": "Generale · setări: Selectați sursă, senzor / Dispozitive · control.",
+        "description": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
         "data": {
           "general_room_occupancy_sensors": "Cameră · Ocupare · senzor",
           "general_occupied_rooms_entity": "Ocupare · Cameră · sursă (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Prezență acasă",
           "general_sleep_rooms_entity": "Somn · Cameră · sursă (state)",
           "general_sleep_rooms_attribute": "Somn · Cameră · sursă (attribute)",
-          "general_source_stale_minutes": "sursă · max (min)"
+          "general_source_stale_minutes": "Prezență acasă · Vechimea maximă a datelor de urmărire/numărare (min)",
+          "general_wake_alarm_entity": "Somn · Următoarea alarmă",
+          "general_wake_lead_minutes_entity": "Somn · Minute înainte de alarmă"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Cameră · Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea.",
-          "general_occupied_rooms_entity": "Alegeți o sursă Home Assistant reală pentru „Ocupare · Cameră · sursă (state)”. Datele lipsă sau vechi suspendă acțiunea.",
+          "general_room_occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
+          "general_occupied_rooms_entity": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
           "general_occupied_rooms_attribute": "Configurați „Ocupare · Cameră · sursă (attribute)” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
           "general_home_trackers": "Alegeți o sursă Home Assistant reală pentru „Acasă · Ocupare · Dispozitive”. Datele lipsă sau vechi suspendă acțiunea.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Alegeți o sursă Home Assistant reală pentru „Somn · Cameră · sursă (state)”. Datele lipsă sau vechi suspendă acțiunea.",
+          "general_sleep_rooms_entity": "Selectați lista camerelor în care se doarme din stare sau atribut, folosind numele sau ID-urile zonelor Home Assistant. O cameră listată doarme doar dacă este și ocupată. Lista neschimbată rămâne validă; sursa lipsă sau invalidă este necunoscută. Alarma configurată poate încheia somnul automat înainte de sonerie.",
           "general_sleep_rooms_attribute": "Configurați „Somn · Cameră · sursă (attribute)” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
-          "general_source_stale_minutes": "sursă · Somn / Ocupare · max 240 min. Invalid · Oprire."
+          "general_source_stale_minutes": "Limita de vechime se aplică rapoartelor de urmărire și numărului numeric de persoane. Listele camerelor și stările binare de prezență nu expiră dacă nu se schimbă. Sursele indisponibile, restaurate sau invalide rămân necunoscute. Aceasta nu este durata somnului.",
+          "general_wake_alarm_entity": "Selectați o entitate cu ora sau data și ora următoarei alarme și o entitate pentru minutele de avans. HEM încheie somnul automat cu acest avans și reia țintele normale. Orele fără dată folosesc fusul Home Assistant. Absența, controlul manual și protecțiile rămân prioritare.",
+          "general_wake_lead_minutes_entity": "Selectați o entitate numerică cu minute nenegative, cu unitatea min sau fără unitate. O alarmă la 07:00 și valoarea 30 încheie somnul automat la 06:30; 0 înseamnă la sonerie. Pentru dezactivare, ștergeți ambele surse."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
           "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea.",
-          "occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea."
+          "occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
           "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea.",
-          "occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea."
+          "occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Invalid · senzor · setări",
       "device_temperature_band_invalid": "Invalid · Temperatură · setări",
       "device_humidity_invalid": "Invalid · Umiditate · setări",
-      "device_runtime_invalid": "Invalid · Putere · setări"
+      "device_runtime_invalid": "Invalid · Putere · setări",
+      "wake_sources_pair": "Selectați atât entitatea alarmei, cât și entitatea minutelor, sau ștergeți-le pe ambele."
     },
     "abort": {
       "already_configured": "Home Environment Manager - deja configurat.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Acasă · Dispozitive",
           "climate_unknown_occupancy": "Ocupare · Dispozitive",
           "climate_unoccupied_delay_minutes": "Dispozitive · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Ocupare · Dispozitive · senzor · Obligatoriu",
+          "climate_occupancy_stale_minutes": "Prezență în cameră · Vechimea maximă a numărului de persoane (min)",
           "climate_away_policy": "Prezență acasă · Acasă · Dispozitive · POLICY",
           "climate_manual_profile": "Dispozitive · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Somn · Dispozitive",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Dispozitive (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea.",
+          "climate_occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
           "climate_away_entities": "Alegeți o sursă Home Assistant reală pentru „Acasă · Dispozitive”. Datele lipsă sau vechi suspendă acțiunea.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Vechimea maximă a datelor numerice despre numărul de persoane din cameră. Valorile vechi sau indisponibile sunt necunoscute. Stările binare de prezență și listele camerelor neschimbate nu expiră.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Această opțiune controlează „Dispozitive · CLIMATE_MANUAL_PROFILE”. Comenzile fizice cer acord separat și protecții independente.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Generale · setări",
-        "description": "Generale · setări: Selectați sursă, senzor / Dispozitive · control.",
+        "description": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
         "data": {
           "general_room_occupancy_sensors": "Cameră · Ocupare · senzor",
           "general_occupied_rooms_entity": "Ocupare · Cameră · sursă (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Prezență acasă",
           "general_sleep_rooms_entity": "Somn · Cameră · sursă (state)",
           "general_sleep_rooms_attribute": "Somn · Cameră · sursă (attribute)",
-          "general_source_stale_minutes": "sursă · max (min)"
+          "general_source_stale_minutes": "Prezență acasă · Vechimea maximă a datelor de urmărire/numărare (min)",
+          "general_wake_alarm_entity": "Somn · Următoarea alarmă",
+          "general_wake_lead_minutes_entity": "Somn · Minute înainte de alarmă"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Cameră · Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea.",
-          "general_occupied_rooms_entity": "Alegeți o sursă Home Assistant reală pentru „Ocupare · Cameră · sursă (state)”. Datele lipsă sau vechi suspendă acțiunea.",
+          "general_room_occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
+          "general_occupied_rooms_entity": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
           "general_occupied_rooms_attribute": "Configurați „Ocupare · Cameră · sursă (attribute)” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
           "general_home_trackers": "Alegeți o sursă Home Assistant reală pentru „Acasă · Ocupare · Dispozitive”. Datele lipsă sau vechi suspendă acțiunea.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Alegeți o sursă Home Assistant reală pentru „Somn · Cameră · sursă (state)”. Datele lipsă sau vechi suspendă acțiunea.",
+          "general_sleep_rooms_entity": "Selectați lista camerelor în care se doarme din stare sau atribut, folosind numele sau ID-urile zonelor Home Assistant. O cameră listată doarme doar dacă este și ocupată. Lista neschimbată rămâne validă; sursa lipsă sau invalidă este necunoscută. Alarma configurată poate încheia somnul automat înainte de sonerie.",
           "general_sleep_rooms_attribute": "Configurați „Somn · Cameră · sursă (attribute)” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
-          "general_source_stale_minutes": "sursă · Somn / Ocupare · max 240 min. Invalid · Oprire."
+          "general_source_stale_minutes": "Limita de vechime se aplică rapoartelor de urmărire și numărului numeric de persoane. Listele camerelor și stările binare de prezență nu expiră dacă nu se schimbă. Sursele indisponibile, restaurate sau invalide rămân necunoscute. Aceasta nu este durata somnului.",
+          "general_wake_alarm_entity": "Selectați o entitate cu ora sau data și ora următoarei alarme și o entitate pentru minutele de avans. HEM încheie somnul automat cu acest avans și reia țintele normale. Orele fără dată folosesc fusul Home Assistant. Absența, controlul manual și protecțiile rămân prioritare.",
+          "general_wake_lead_minutes_entity": "Selectați o entitate numerică cu minute nenegative, cu unitatea min sau fără unitate. O alarmă la 07:00 și valoarea 30 încheie somnul automat la 06:30; 0 înseamnă la sonerie. Pentru dezactivare, ștergeți ambele surse."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Polen · HIGH",
           "pollen_max_scale": "POLLEN · Polen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Polen · NO VENT",
-          "general_source_stale_minutes": "sursă · max (min)",
-          "general_home_policy": "Prezență acasă"
+          "general_source_stale_minutes": "Prezență acasă · Vechimea maximă a datelor de urmărire/numărare (min)",
+          "general_home_policy": "Prezență acasă",
+          "general_wake_alarm_entity": "Somn · Următoarea alarmă",
+          "general_wake_lead_minutes_entity": "Somn · Minute înainte de alarmă"
         },
         "data_description": {
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Alegeți: Calitatea aerului exterior · AQI, CO₂, PM2.5, PM10, VOC. Indisponibil: ⚠",
           "weather_warnings": "Vreme și avertizări · ⚠ (Indisponibil) → 🪟🔒",
-          "general_room_occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Cameră · Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
           "general_home_trackers": "Alegeți o sursă Home Assistant reală pentru „Acasă · Ocupare · Dispozitive”. Datele lipsă sau vechi suspendă acțiunea. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Alegeți o sursă Home Assistant reală pentru „Ocupare · Cameră · sursă (state)”. Datele lipsă sau vechi suspendă acțiunea.",
+          "general_occupied_rooms_entity": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
           "general_occupied_rooms_attribute": "Configurați „Ocupare · Cameră · sursă (attribute)” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
-          "general_sleep_rooms_entity": "Alegeți o sursă Home Assistant reală pentru „Somn · Cameră · sursă (state)”. Datele lipsă sau vechi suspendă acțiunea.",
+          "general_sleep_rooms_entity": "Selectați lista camerelor în care se doarme din stare sau atribut, folosind numele sau ID-urile zonelor Home Assistant. O cameră listată doarme doar dacă este și ocupată. Lista neschimbată rămâne validă; sursa lipsă sau invalidă este necunoscută. Alarma configurată poate încheia somnul automat înainte de sonerie.",
           "general_sleep_rooms_attribute": "Configurați „Somn · Cameră · sursă (attribute)” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
           "notify_entities": "Alegeți: notify.* · setări · sursă.",
           "media_players": "Alegeți: media_player.* · setări · sursă · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Configurați „POLLEN · Polen · HIGH” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
           "pollen_max_scale": "Configurați „POLLEN · Polen · SCALE” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
           "pollen_avoid_ventilation": "Configurați „POLLEN · Polen · NO VENT” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
-          "general_source_stale_minutes": "sursă · Somn / Ocupare · max 240 min. Invalid · Oprire.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Limita de vechime se aplică rapoartelor de urmărire și numărului numeric de persoane. Listele camerelor și stările binare de prezență nu expiră dacă nu se schimbă. Sursele indisponibile, restaurate sau invalide rămân necunoscute. Aceasta nu este durata somnului.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Selectați o entitate cu ora sau data și ora următoarei alarme și o entitate pentru minutele de avans. HEM încheie somnul automat cu acest avans și reia țintele normale. Orele fără dată folosesc fusul Home Assistant. Absența, controlul manual și protecțiile rămân prioritare.",
+          "general_wake_lead_minutes_entity": "Selectați o entitate numerică cu minute nenegative, cu unitatea min sau fără unitate. O alarmă la 07:00 și valoarea 30 încheie somnul automat la 06:30; 0 înseamnă la sonerie. Pentru dezactivare, ștergeți ambele surse."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
           "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea.",
-          "occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea."
+          "occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
           "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea.",
-          "occupancy_sensors": "Alegeți o sursă Home Assistant reală pentru „Ocupare · senzor”. Datele lipsă sau vechi suspendă acțiunea."
+          "occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Invalid · Putere · setări",
       "invalid_setup_rooms": "Invalid: Camere de monitorizat",
       "invalid_room_source": "Invalid: Cameră · sursă",
-      "invalid_away_windows_recipients": "Persoane de anunțat; Canale pentru alerta ferestrelor. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Persoane de anunțat; Canale pentru alerta ferestrelor. Announcement Hub (person.*).",
+      "wake_sources_pair": "Selectați atât entitatea alarmei, cât și entitatea minutelor, sau ștergeți-le pe ambele."
     },
     "abort": {
       "setup_area_removed": "Invalid: Camere de monitorizat",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Prezență acasă · sursă · max (min)",
+        "name": "Prezență acasă · Vechimea maximă a datelor de urmărire/numărare (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Prezență în cameră · Ocupare · Dispozitive · senzor · Obligatoriu",
+        "name": "Prezență în cameră · Vechimea maximă a numărului de persoane (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Anunțuri · Anunță erorile dispozitivului · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajutor"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Somn · {channel}Când toată lumea doarme",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"

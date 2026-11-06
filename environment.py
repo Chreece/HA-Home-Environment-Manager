@@ -142,6 +142,7 @@ def build_environment(
     purifier_ratings_by_room: dict[str, list[dict]] | None = None,
     outside_safe: bool = False, now: float | None = None,
     home_status: str = "unknown",
+    observed_rooms: dict | None = None,
 ) -> tuple[dict[str, dict], bool]:
     """Return scientific diagnostics for dashboard and whether history changed."""
     stamp = time.time() if now is None else now
@@ -232,13 +233,18 @@ def build_environment(
                        False if win_values and all(v is False for v in win_values) else None)
         # Whole-home absence is sufficient vacancy evidence. Do not consult
         # room sensors after the configured home sources prove everyone away.
-        occupied = (False if home_status == "away" else
-                    _occupancy_state(hass, room.area_id, max_age_minutes))
-        occupancy_evidence = (
-            "verified_home_away" if home_status == "away" else
-            "room_occupancy_sensors" if occupied is not None else
-            "room_occupancy_source_unknown"
-        )
+        if home_status == "away":
+            occupied, occupancy_evidence = False, "verified_home_away"
+        elif observed_rooms is not None and room.area_id in observed_rooms:
+            status, occupancy_evidence, _ = observed_rooms[room.area_id]
+            # Uninstrumented rooms are empty for control purposes. A CO₂
+            # decay estimate still needs evidence that the room is vacant.
+            occupied = (None if occupancy_evidence == "no_room_presence_sensors"
+                        else {"occupied": True, "unoccupied": False}.get(status))
+        else:
+            occupied = _occupancy_state(hass, room.area_id, max_age_minutes)
+            occupancy_evidence = ("room_occupancy_sensors" if occupied is not None
+                                  else "room_occupancy_source_unknown")
         changed = history.add(room.area_id, {
             "temperature_c": indoor_t, "humidity": indoor_rh,
             "pm25": pm25, "pm10": pm10, "co2": co2,

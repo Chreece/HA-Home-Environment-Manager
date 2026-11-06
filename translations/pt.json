@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Pólen · HIGH",
           "pollen_max_scale": "POLLEN · Pólen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pólen · NO VENT",
-          "general_source_stale_minutes": "fonte · max (min)",
-          "general_home_policy": "Presença em casa"
+          "general_source_stale_minutes": "Presença em casa · Idade máxima dos dados de localização/contagem (min)",
+          "general_home_policy": "Presença em casa",
+          "general_wake_alarm_entity": "Sono · Próximo despertador",
+          "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador"
         },
         "data_description": {
           "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Selecione: Qualidade do ar exterior · AQI, CO₂, PM2.5, PM10, VOC. Indisponível: ⚠",
           "weather_warnings": "Tempo e avisos · ⚠ (Indisponível) → 🪟🔒",
-          "general_room_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Divisão · Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
           "general_home_trackers": "Escolha uma fonte real do Home Assistant para «Casa · Ocupação · Dispositivos». Dados ausentes ou antigos suspendem a ação correspondente. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Escolha uma fonte real do Home Assistant para «Ocupação · Divisão · fonte (state)». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "general_occupied_rooms_entity": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
           "general_occupied_rooms_attribute": "Configure «Ocupação · Divisão · fonte (attribute)» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
-          "general_sleep_rooms_entity": "Escolha uma fonte real do Home Assistant para «Sono · Divisão · fonte (state)». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "general_sleep_rooms_entity": "Selecione uma lista de divisões onde há pessoas a dormir no estado ou atributo, com nomes ou IDs das áreas do Home Assistant. Uma divisão listada só está a dormir se também estiver ocupada. A lista sem alterações continua válida; fonte ausente ou inválida é desconhecida. O despertador configurado pode terminar o sono automático antes de tocar.",
           "general_sleep_rooms_attribute": "Configure «Sono · Divisão · fonte (attribute)» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
           "notify_entities": "Selecione: notify.* · definições · fonte.",
           "media_players": "Selecione: media_player.* · definições · fonte · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Configure «POLLEN · Pólen · HIGH» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
           "pollen_max_scale": "Configure «POLLEN · Pólen · SCALE» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
           "pollen_avoid_ventilation": "Configure «POLLEN · Pólen · NO VENT» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
-          "general_source_stale_minutes": "fonte · Sono / Ocupação · max 240 min. Inválido · Desligar.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "O limite de idade aplica-se a relatórios de localização e contagens numéricas de pessoas. Listas de divisões e estados binários de presença não expiram sem alterações. Fontes indisponíveis, restauradas ou inválidas continuam desconhecidas. Isto não é uma duração de sono.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Selecione uma entidade de hora ou data e hora para o próximo despertador e uma entidade para os minutos de antecedência. O HEM termina o sono automático com essa antecedência e retoma os objetivos normais. Horas sem data usam o fuso do Home Assistant. Ausência, controlo manual e proteções mantêm a prioridade.",
+          "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 terminam o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Casa · Dispositivos",
           "climate_unknown_occupancy": "Ocupação · Dispositivos",
           "climate_unoccupied_delay_minutes": "Dispositivos · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Ocupação · Dispositivos · sensor · Obrigatório",
+          "climate_occupancy_stale_minutes": "Presença na divisão · Idade máxima da contagem de pessoas (min)",
           "climate_away_policy": "Presença em casa · Casa · Dispositivos · POLICY",
           "climate_manual_profile": "Dispositivos · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sono · Dispositivos",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Dispositivos (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "climate_occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
           "climate_away_entities": "Escolha uma fonte real do Home Assistant para «Casa · Dispositivos». Dados ausentes ou antigos suspendem a ação correspondente.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Idade máxima das contagens numéricas de pessoas na divisão. Valores antigos ou indisponíveis são desconhecidos. Estados binários de presença e listas de divisões sem alterações não expiram.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Esta opção controla «Dispositivos · CLIMATE_MANUAL_PROFILE». Comandos físicos exigem autorização separada e proteções independentes.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Gerais · definições",
-        "description": "Gerais · definições: Selecionar fonte, sensor / Dispositivos · controlo.",
+        "description": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
         "data": {
           "general_room_occupancy_sensors": "Divisão · Ocupação · sensor",
           "general_occupied_rooms_entity": "Ocupação · Divisão · fonte (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Presença em casa",
           "general_sleep_rooms_entity": "Sono · Divisão · fonte (state)",
           "general_sleep_rooms_attribute": "Sono · Divisão · fonte (attribute)",
-          "general_source_stale_minutes": "fonte · max (min)"
+          "general_source_stale_minutes": "Presença em casa · Idade máxima dos dados de localização/contagem (min)",
+          "general_wake_alarm_entity": "Sono · Próximo despertador",
+          "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Divisão · Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente.",
-          "general_occupied_rooms_entity": "Escolha uma fonte real do Home Assistant para «Ocupação · Divisão · fonte (state)». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "general_room_occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
+          "general_occupied_rooms_entity": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
           "general_occupied_rooms_attribute": "Configure «Ocupação · Divisão · fonte (attribute)» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
           "general_home_trackers": "Escolha uma fonte real do Home Assistant para «Casa · Ocupação · Dispositivos». Dados ausentes ou antigos suspendem a ação correspondente.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Escolha uma fonte real do Home Assistant para «Sono · Divisão · fonte (state)». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "general_sleep_rooms_entity": "Selecione uma lista de divisões onde há pessoas a dormir no estado ou atributo, com nomes ou IDs das áreas do Home Assistant. Uma divisão listada só está a dormir se também estiver ocupada. A lista sem alterações continua válida; fonte ausente ou inválida é desconhecida. O despertador configurado pode terminar o sono automático antes de tocar.",
           "general_sleep_rooms_attribute": "Configure «Sono · Divisão · fonte (attribute)» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
-          "general_source_stale_minutes": "fonte · Sono / Ocupação · max 240 min. Inválido · Desligar."
+          "general_source_stale_minutes": "O limite de idade aplica-se a relatórios de localização e contagens numéricas de pessoas. Listas de divisões e estados binários de presença não expiram sem alterações. Fontes indisponíveis, restauradas ou inválidas continuam desconhecidas. Isto não é uma duração de sono.",
+          "general_wake_alarm_entity": "Selecione uma entidade de hora ou data e hora para o próximo despertador e uma entidade para os minutos de antecedência. O HEM termina o sono automático com essa antecedência e retoma os objetivos normais. Horas sem data usam o fuso do Home Assistant. Ausência, controlo manual e proteções mantêm a prioridade.",
+          "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 terminam o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
           "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
-          "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente."
+          "occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
           "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
-          "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente."
+          "occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Inválido · sensor · definições",
       "device_temperature_band_invalid": "Inválido · Temperatura · definições",
       "device_humidity_invalid": "Inválido · Humidade · definições",
-      "device_runtime_invalid": "Inválido · Potência · definições"
+      "device_runtime_invalid": "Inválido · Potência · definições",
+      "wake_sources_pair": "Selecione tanto a entidade do despertador como a dos minutos, ou limpe ambas."
     },
     "abort": {
       "already_configured": "Home Environment Manager - já configurado.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Casa · Dispositivos",
           "climate_unknown_occupancy": "Ocupação · Dispositivos",
           "climate_unoccupied_delay_minutes": "Dispositivos · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Ocupação · Dispositivos · sensor · Obrigatório",
+          "climate_occupancy_stale_minutes": "Presença na divisão · Idade máxima da contagem de pessoas (min)",
           "climate_away_policy": "Presença em casa · Casa · Dispositivos · POLICY",
           "climate_manual_profile": "Dispositivos · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sono · Dispositivos",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Dispositivos (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "climate_occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
           "climate_away_entities": "Escolha uma fonte real do Home Assistant para «Casa · Dispositivos». Dados ausentes ou antigos suspendem a ação correspondente.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Idade máxima das contagens numéricas de pessoas na divisão. Valores antigos ou indisponíveis são desconhecidos. Estados binários de presença e listas de divisões sem alterações não expiram.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Esta opção controla «Dispositivos · CLIMATE_MANUAL_PROFILE». Comandos físicos exigem autorização separada e proteções independentes.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Gerais · definições",
-        "description": "Gerais · definições: Selecionar fonte, sensor / Dispositivos · controlo.",
+        "description": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
         "data": {
           "general_room_occupancy_sensors": "Divisão · Ocupação · sensor",
           "general_occupied_rooms_entity": "Ocupação · Divisão · fonte (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Presença em casa",
           "general_sleep_rooms_entity": "Sono · Divisão · fonte (state)",
           "general_sleep_rooms_attribute": "Sono · Divisão · fonte (attribute)",
-          "general_source_stale_minutes": "fonte · max (min)"
+          "general_source_stale_minutes": "Presença em casa · Idade máxima dos dados de localização/contagem (min)",
+          "general_wake_alarm_entity": "Sono · Próximo despertador",
+          "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Divisão · Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente.",
-          "general_occupied_rooms_entity": "Escolha uma fonte real do Home Assistant para «Ocupação · Divisão · fonte (state)». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "general_room_occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
+          "general_occupied_rooms_entity": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
           "general_occupied_rooms_attribute": "Configure «Ocupação · Divisão · fonte (attribute)» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
           "general_home_trackers": "Escolha uma fonte real do Home Assistant para «Casa · Ocupação · Dispositivos». Dados ausentes ou antigos suspendem a ação correspondente.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Escolha uma fonte real do Home Assistant para «Sono · Divisão · fonte (state)». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "general_sleep_rooms_entity": "Selecione uma lista de divisões onde há pessoas a dormir no estado ou atributo, com nomes ou IDs das áreas do Home Assistant. Uma divisão listada só está a dormir se também estiver ocupada. A lista sem alterações continua válida; fonte ausente ou inválida é desconhecida. O despertador configurado pode terminar o sono automático antes de tocar.",
           "general_sleep_rooms_attribute": "Configure «Sono · Divisão · fonte (attribute)» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
-          "general_source_stale_minutes": "fonte · Sono / Ocupação · max 240 min. Inválido · Desligar."
+          "general_source_stale_minutes": "O limite de idade aplica-se a relatórios de localização e contagens numéricas de pessoas. Listas de divisões e estados binários de presença não expiram sem alterações. Fontes indisponíveis, restauradas ou inválidas continuam desconhecidas. Isto não é uma duração de sono.",
+          "general_wake_alarm_entity": "Selecione uma entidade de hora ou data e hora para o próximo despertador e uma entidade para os minutos de antecedência. O HEM termina o sono automático com essa antecedência e retoma os objetivos normais. Horas sem data usam o fuso do Home Assistant. Ausência, controlo manual e proteções mantêm a prioridade.",
+          "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 terminam o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Pólen · HIGH",
           "pollen_max_scale": "POLLEN · Pólen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pólen · NO VENT",
-          "general_source_stale_minutes": "fonte · max (min)",
-          "general_home_policy": "Presença em casa"
+          "general_source_stale_minutes": "Presença em casa · Idade máxima dos dados de localização/contagem (min)",
+          "general_home_policy": "Presença em casa",
+          "general_wake_alarm_entity": "Sono · Próximo despertador",
+          "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador"
         },
         "data_description": {
           "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Selecione: Qualidade do ar exterior · AQI, CO₂, PM2.5, PM10, VOC. Indisponível: ⚠",
           "weather_warnings": "Tempo e avisos · ⚠ (Indisponível) → 🪟🔒",
-          "general_room_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Divisão · Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
           "general_home_trackers": "Escolha uma fonte real do Home Assistant para «Casa · Ocupação · Dispositivos». Dados ausentes ou antigos suspendem a ação correspondente. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Escolha uma fonte real do Home Assistant para «Ocupação · Divisão · fonte (state)». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "general_occupied_rooms_entity": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
           "general_occupied_rooms_attribute": "Configure «Ocupação · Divisão · fonte (attribute)» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
-          "general_sleep_rooms_entity": "Escolha uma fonte real do Home Assistant para «Sono · Divisão · fonte (state)». Dados ausentes ou antigos suspendem a ação correspondente.",
+          "general_sleep_rooms_entity": "Selecione uma lista de divisões onde há pessoas a dormir no estado ou atributo, com nomes ou IDs das áreas do Home Assistant. Uma divisão listada só está a dormir se também estiver ocupada. A lista sem alterações continua válida; fonte ausente ou inválida é desconhecida. O despertador configurado pode terminar o sono automático antes de tocar.",
           "general_sleep_rooms_attribute": "Configure «Sono · Divisão · fonte (attribute)» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
           "notify_entities": "Selecione: notify.* · definições · fonte.",
           "media_players": "Selecione: media_player.* · definições · fonte · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Configure «POLLEN · Pólen · HIGH» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
           "pollen_max_scale": "Configure «POLLEN · Pólen · SCALE» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
           "pollen_avoid_ventilation": "Configure «POLLEN · Pólen · NO VENT» apenas na divisão escolhida. Dados inválidos ou ausentes impedem a ação.",
-          "general_source_stale_minutes": "fonte · Sono / Ocupação · max 240 min. Inválido · Desligar.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "O limite de idade aplica-se a relatórios de localização e contagens numéricas de pessoas. Listas de divisões e estados binários de presença não expiram sem alterações. Fontes indisponíveis, restauradas ou inválidas continuam desconhecidas. Isto não é uma duração de sono.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Selecione uma entidade de hora ou data e hora para o próximo despertador e uma entidade para os minutos de antecedência. O HEM termina o sono automático com essa antecedência e retoma os objetivos normais. Horas sem data usam o fuso do Home Assistant. Ausência, controlo manual e proteções mantêm a prioridade.",
+          "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 terminam o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
           "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
-          "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente."
+          "occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
           "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
-          "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou antigos suspendem a ação correspondente."
+          "occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Inválido · Potência · definições",
       "invalid_setup_rooms": "Inválido: Divisões a monitorizar",
       "invalid_room_source": "Inválido: Divisão · fonte",
-      "invalid_away_windows_recipients": "Pessoas a avisar; Canais de aviso de janelas abertas. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Pessoas a avisar; Canais de aviso de janelas abertas. Announcement Hub (person.*).",
+      "wake_sources_pair": "Selecione tanto a entidade do despertador como a dos minutos, ou limpe ambas."
     },
     "abort": {
       "setup_area_removed": "Inválido: Divisões a monitorizar",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Presença em casa · fonte · max (min)",
+        "name": "Presença em casa · Idade máxima dos dados de localização/contagem (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Presença na divisão · Ocupação · Dispositivos · sensor · Obrigatório",
+        "name": "Presença na divisão · Idade máxima da contagem de pessoas (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Anúncios · Anunciar erros do dispositivo · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajuda"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Sono · {channel}Quando todos estão a dormir",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"

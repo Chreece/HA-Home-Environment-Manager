@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Pollen · HIGH",
           "pollen_max_scale": "POLLEN · Pollen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
-          "general_source_stale_minutes": "forrás · max (min)",
-          "general_home_policy": "Otthoni jelenlét"
+          "general_source_stale_minutes": "Otthoni jelenlét · Követési/létszámadatok legnagyobb kora (perc)",
+          "general_home_policy": "Otthoni jelenlét",
+          "general_wake_alarm_entity": "Alvás · Következő ébresztő",
+          "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt"
         },
         "data_description": {
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Válassz: Kültéri levegőminőség · AQI, CO₂, PM2.5, PM10, VOC. Nem érhető el: ⚠",
           "weather_warnings": "Időjárás és riasztások · ⚠ (Nem érhető el) → 🪟🔒",
-          "general_room_occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Szoba · Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
           "general_home_trackers": "Válasszon valódi Home Assistant-forrást ehhez: „Otthon · Jelenlét · Eszközök”. A hiányzó vagy régi adat leállítja a műveletet. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · Szoba · forrás (state)”. A hiányzó vagy régi adat leállítja a műveletet.",
+          "general_occupied_rooms_entity": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
           "general_occupied_rooms_attribute": "„Jelenlét · Szoba · forrás (attribute)” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
-          "general_sleep_rooms_entity": "Válasszon valódi Home Assistant-forrást ehhez: „Alvás · Szoba · forrás (state)”. A hiányzó vagy régi adat leállítja a műveletet.",
+          "general_sleep_rooms_entity": "Válassza ki az alvó helyiségek listáját egy állapotból vagy attribútumból, Home Assistant-területnevekkel vagy -azonosítókkal. Egy felsorolt helyiség csak akkor alszik, ha foglalt is. A változatlan lista érvényes marad; a hiányzó vagy hibás forrás ismeretlen. A beállított ébresztő a csörgés előtt lezárhatja az automatikus alvást.",
           "general_sleep_rooms_attribute": "„Alvás · Szoba · forrás (attribute)” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
           "notify_entities": "Válassz: notify.* · beállítások · forrás.",
           "media_players": "Válassz: media_player.* · beállítások · forrás · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "„POLLEN · Pollen · HIGH” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
           "pollen_max_scale": "„POLLEN · Pollen · SCALE” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
           "pollen_avoid_ventilation": "„POLLEN · Pollen · NO VENT” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
-          "general_source_stale_minutes": "forrás · Alvás / Jelenlét · max 240 min. Érvénytelen · Kikapcsolás.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "A korhatár a követési jelentésekre és a numerikus létszámadatokra vonatkozik. A helyiséglisták és bináris jelenlétállapotok változatlanul nem évülnek el. Az elérhetetlen, visszaállított vagy hibás források ismeretlenek maradnak. Ez nem az alvás időtartama.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Válassza ki a következő ébresztő idő- vagy időbélyeg-entitását és a perceket megadó entitást. A HEM ennyi perccel korábban kilép az automatikus alvásból, és visszatér a normál célértékekhez. A dátum nélküli idő a Home Assistant időzónáját használja. A távollét, a kézi vezérlés és a védelmek elsőbbsége megmarad.",
+          "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Otthon · Eszközök",
           "climate_unknown_occupancy": "Jelenlét · Eszközök",
           "climate_unoccupied_delay_minutes": "Eszközök · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Jelenlét · Eszközök · érzékelő · Kötelező",
+          "climate_occupancy_stale_minutes": "Jelenlét a helyiségben · Létszámadatok legnagyobb kora (perc)",
           "climate_away_policy": "Otthoni jelenlét · Otthon · Eszközök · POLICY",
           "climate_manual_profile": "Eszközök · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Alvás · Eszközök",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Eszközök (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet.",
+          "climate_occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
           "climate_away_entities": "Válasszon valódi Home Assistant-forrást ehhez: „Otthon · Eszközök”. A hiányzó vagy régi adat leállítja a műveletet.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "A helyiség numerikus létszámadatainak legnagyobb kora. A régi vagy elérhetetlen értékek ismeretlenek. A bináris jelenlétállapotok és helyiséglisták változatlanul nem évülnek el.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Ez a beállítás ezt vezérli: „Eszközök · CLIMATE_MANUAL_PROFILE”. Fizikai parancshoz külön engedély és védelem kell.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Általános · beállítások",
-        "description": "Általános · beállítások: Választás forrás, érzékelő / Eszközök · vezérlés.",
+        "description": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
         "data": {
           "general_room_occupancy_sensors": "Szoba · Jelenlét · érzékelő",
           "general_occupied_rooms_entity": "Jelenlét · Szoba · forrás (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Otthoni jelenlét",
           "general_sleep_rooms_entity": "Alvás · Szoba · forrás (state)",
           "general_sleep_rooms_attribute": "Alvás · Szoba · forrás (attribute)",
-          "general_source_stale_minutes": "forrás · max (min)"
+          "general_source_stale_minutes": "Otthoni jelenlét · Követési/létszámadatok legnagyobb kora (perc)",
+          "general_wake_alarm_entity": "Alvás · Következő ébresztő",
+          "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Szoba · Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet.",
-          "general_occupied_rooms_entity": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · Szoba · forrás (state)”. A hiányzó vagy régi adat leállítja a műveletet.",
+          "general_room_occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
+          "general_occupied_rooms_entity": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
           "general_occupied_rooms_attribute": "„Jelenlét · Szoba · forrás (attribute)” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
           "general_home_trackers": "Válasszon valódi Home Assistant-forrást ehhez: „Otthon · Jelenlét · Eszközök”. A hiányzó vagy régi adat leállítja a műveletet.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Válasszon valódi Home Assistant-forrást ehhez: „Alvás · Szoba · forrás (state)”. A hiányzó vagy régi adat leállítja a műveletet.",
+          "general_sleep_rooms_entity": "Válassza ki az alvó helyiségek listáját egy állapotból vagy attribútumból, Home Assistant-területnevekkel vagy -azonosítókkal. Egy felsorolt helyiség csak akkor alszik, ha foglalt is. A változatlan lista érvényes marad; a hiányzó vagy hibás forrás ismeretlen. A beállított ébresztő a csörgés előtt lezárhatja az automatikus alvást.",
           "general_sleep_rooms_attribute": "„Alvás · Szoba · forrás (attribute)” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
-          "general_source_stale_minutes": "forrás · Alvás / Jelenlét · max 240 min. Érvénytelen · Kikapcsolás."
+          "general_source_stale_minutes": "A korhatár a követési jelentésekre és a numerikus létszámadatokra vonatkozik. A helyiséglisták és bináris jelenlétállapotok változatlanul nem évülnek el. Az elérhetetlen, visszaállított vagy hibás források ismeretlenek maradnak. Ez nem az alvás időtartama.",
+          "general_wake_alarm_entity": "Válassza ki a következő ébresztő idő- vagy időbélyeg-entitását és a perceket megadó entitást. A HEM ennyi perccel korábban kilép az automatikus alvásból, és visszatér a normál célértékekhez. A dátum nélküli idő a Home Assistant időzónáját használja. A távollét, a kézi vezérlés és a védelmek elsőbbsége megmarad.",
+          "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Páratartalom. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
           "climate_devices": "Eszközök. Csak a szoba valódi climate.*, humidifier.* és fan.* entitásait válaszd. A natív képességek határozzák meg a fűtést, hűtést, párátlanítást, célértékeket és ventilátorsebességet. A kiválasztás nem kapcsol be semmit; az automatika eszközönként engedélyezhető.",
           "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás.",
-          "occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet."
+          "occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Páratartalom. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
           "climate_devices": "Eszközök. Csak a szoba valódi climate.*, humidifier.* és fan.* entitásait válaszd. A natív képességek határozzák meg a fűtést, hűtést, párátlanítást, célértékeket és ventilátorsebességet. A kiválasztás nem kapcsol be semmit; az automatika eszközönként engedélyezhető.",
           "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás.",
-          "occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet."
+          "occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Érvénytelen · érzékelő · beállítások",
       "device_temperature_band_invalid": "Érvénytelen · Hőmérséklet · beállítások",
       "device_humidity_invalid": "Érvénytelen · Páratartalom · beállítások",
-      "device_runtime_invalid": "Érvénytelen · Teljesítmény · beállítások"
+      "device_runtime_invalid": "Érvénytelen · Teljesítmény · beállítások",
+      "wake_sources_pair": "Válassza ki az ébresztő és a percek entitását is, vagy törölje mindkettőt."
     },
     "abort": {
       "already_configured": "Home Environment Manager - már be van állítva.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Otthon · Eszközök",
           "climate_unknown_occupancy": "Jelenlét · Eszközök",
           "climate_unoccupied_delay_minutes": "Eszközök · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Jelenlét · Eszközök · érzékelő · Kötelező",
+          "climate_occupancy_stale_minutes": "Jelenlét a helyiségben · Létszámadatok legnagyobb kora (perc)",
           "climate_away_policy": "Otthoni jelenlét · Otthon · Eszközök · POLICY",
           "climate_manual_profile": "Eszközök · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Alvás · Eszközök",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Eszközök (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet.",
+          "climate_occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
           "climate_away_entities": "Válasszon valódi Home Assistant-forrást ehhez: „Otthon · Eszközök”. A hiányzó vagy régi adat leállítja a műveletet.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "A helyiség numerikus létszámadatainak legnagyobb kora. A régi vagy elérhetetlen értékek ismeretlenek. A bináris jelenlétállapotok és helyiséglisták változatlanul nem évülnek el.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Ez a beállítás ezt vezérli: „Eszközök · CLIMATE_MANUAL_PROFILE”. Fizikai parancshoz külön engedély és védelem kell.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Általános · beállítások",
-        "description": "Általános · beállítások: Választás forrás, érzékelő / Eszközök · vezérlés.",
+        "description": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
         "data": {
           "general_room_occupancy_sensors": "Szoba · Jelenlét · érzékelő",
           "general_occupied_rooms_entity": "Jelenlét · Szoba · forrás (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Otthoni jelenlét",
           "general_sleep_rooms_entity": "Alvás · Szoba · forrás (state)",
           "general_sleep_rooms_attribute": "Alvás · Szoba · forrás (attribute)",
-          "general_source_stale_minutes": "forrás · max (min)"
+          "general_source_stale_minutes": "Otthoni jelenlét · Követési/létszámadatok legnagyobb kora (perc)",
+          "general_wake_alarm_entity": "Alvás · Következő ébresztő",
+          "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Szoba · Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet.",
-          "general_occupied_rooms_entity": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · Szoba · forrás (state)”. A hiányzó vagy régi adat leállítja a műveletet.",
+          "general_room_occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
+          "general_occupied_rooms_entity": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
           "general_occupied_rooms_attribute": "„Jelenlét · Szoba · forrás (attribute)” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
           "general_home_trackers": "Válasszon valódi Home Assistant-forrást ehhez: „Otthon · Jelenlét · Eszközök”. A hiányzó vagy régi adat leállítja a műveletet.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Válasszon valódi Home Assistant-forrást ehhez: „Alvás · Szoba · forrás (state)”. A hiányzó vagy régi adat leállítja a műveletet.",
+          "general_sleep_rooms_entity": "Válassza ki az alvó helyiségek listáját egy állapotból vagy attribútumból, Home Assistant-területnevekkel vagy -azonosítókkal. Egy felsorolt helyiség csak akkor alszik, ha foglalt is. A változatlan lista érvényes marad; a hiányzó vagy hibás forrás ismeretlen. A beállított ébresztő a csörgés előtt lezárhatja az automatikus alvást.",
           "general_sleep_rooms_attribute": "„Alvás · Szoba · forrás (attribute)” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
-          "general_source_stale_minutes": "forrás · Alvás / Jelenlét · max 240 min. Érvénytelen · Kikapcsolás."
+          "general_source_stale_minutes": "A korhatár a követési jelentésekre és a numerikus létszámadatokra vonatkozik. A helyiséglisták és bináris jelenlétállapotok változatlanul nem évülnek el. Az elérhetetlen, visszaállított vagy hibás források ismeretlenek maradnak. Ez nem az alvás időtartama.",
+          "general_wake_alarm_entity": "Válassza ki a következő ébresztő idő- vagy időbélyeg-entitását és a perceket megadó entitást. A HEM ennyi perccel korábban kilép az automatikus alvásból, és visszatér a normál célértékekhez. A dátum nélküli idő a Home Assistant időzónáját használja. A távollét, a kézi vezérlés és a védelmek elsőbbsége megmarad.",
+          "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Pollen · HIGH",
           "pollen_max_scale": "POLLEN · Pollen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
-          "general_source_stale_minutes": "forrás · max (min)",
-          "general_home_policy": "Otthoni jelenlét"
+          "general_source_stale_minutes": "Otthoni jelenlét · Követési/létszámadatok legnagyobb kora (perc)",
+          "general_home_policy": "Otthoni jelenlét",
+          "general_wake_alarm_entity": "Alvás · Következő ébresztő",
+          "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt"
         },
         "data_description": {
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Válassz: Kültéri levegőminőség · AQI, CO₂, PM2.5, PM10, VOC. Nem érhető el: ⚠",
           "weather_warnings": "Időjárás és riasztások · ⚠ (Nem érhető el) → 🪟🔒",
-          "general_room_occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Szoba · Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
           "general_home_trackers": "Válasszon valódi Home Assistant-forrást ehhez: „Otthon · Jelenlét · Eszközök”. A hiányzó vagy régi adat leállítja a műveletet. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · Szoba · forrás (state)”. A hiányzó vagy régi adat leállítja a műveletet.",
+          "general_occupied_rooms_entity": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
           "general_occupied_rooms_attribute": "„Jelenlét · Szoba · forrás (attribute)” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
-          "general_sleep_rooms_entity": "Válasszon valódi Home Assistant-forrást ehhez: „Alvás · Szoba · forrás (state)”. A hiányzó vagy régi adat leállítja a műveletet.",
+          "general_sleep_rooms_entity": "Válassza ki az alvó helyiségek listáját egy állapotból vagy attribútumból, Home Assistant-területnevekkel vagy -azonosítókkal. Egy felsorolt helyiség csak akkor alszik, ha foglalt is. A változatlan lista érvényes marad; a hiányzó vagy hibás forrás ismeretlen. A beállított ébresztő a csörgés előtt lezárhatja az automatikus alvást.",
           "general_sleep_rooms_attribute": "„Alvás · Szoba · forrás (attribute)” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
           "notify_entities": "Válassz: notify.* · beállítások · forrás.",
           "media_players": "Válassz: media_player.* · beállítások · forrás · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "„POLLEN · Pollen · HIGH” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
           "pollen_max_scale": "„POLLEN · Pollen · SCALE” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
           "pollen_avoid_ventilation": "„POLLEN · Pollen · NO VENT” csak a választott helyiségre állítható. Hibás adat esetén nincs művelet.",
-          "general_source_stale_minutes": "forrás · Alvás / Jelenlét · max 240 min. Érvénytelen · Kikapcsolás.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "A korhatár a követési jelentésekre és a numerikus létszámadatokra vonatkozik. A helyiséglisták és bináris jelenlétállapotok változatlanul nem évülnek el. Az elérhetetlen, visszaállított vagy hibás források ismeretlenek maradnak. Ez nem az alvás időtartama.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Válassza ki a következő ébresztő idő- vagy időbélyeg-entitását és a perceket megadó entitást. A HEM ennyi perccel korábban kilép az automatikus alvásból, és visszatér a normál célértékekhez. A dátum nélküli idő a Home Assistant időzónáját használja. A távollét, a kézi vezérlés és a védelmek elsőbbsége megmarad.",
+          "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Páratartalom. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
           "climate_devices": "Eszközök. Csak a szoba valódi climate.*, humidifier.* és fan.* entitásait válaszd. A natív képességek határozzák meg a fűtést, hűtést, párátlanítást, célértékeket és ventilátorsebességet. A kiválasztás nem kapcsol be semmit; az automatika eszközönként engedélyezhető.",
           "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás.",
-          "occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet."
+          "occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Páratartalom. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
           "climate_devices": "Eszközök. Csak a szoba valódi climate.*, humidifier.* és fan.* entitásait válaszd. A natív képességek határozzák meg a fűtést, hűtést, párátlanítást, célértékeket és ventilátorsebességet. A kiválasztás nem kapcsol be semmit; az automatika eszközönként engedélyezhető.",
           "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás.",
-          "occupancy_sensors": "Válasszon valódi Home Assistant-forrást ehhez: „Jelenlét · érzékelő”. A hiányzó vagy régi adat leállítja a műveletet."
+          "occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Érvénytelen · Teljesítmény · beállítások",
       "invalid_setup_rooms": "Érvénytelen: Figyelendő helyiségek",
       "invalid_room_source": "Érvénytelen: Szoba · forrás",
-      "invalid_away_windows_recipients": "Értesítendő személyek; Ablakriasztás csatornái. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Értesítendő személyek; Ablakriasztás csatornái. Announcement Hub (person.*).",
+      "wake_sources_pair": "Válassza ki az ébresztő és a percek entitását is, vagy törölje mindkettőt."
     },
     "abort": {
       "setup_area_removed": "Érvénytelen: Figyelendő helyiségek",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Otthoni jelenlét · forrás · max (min)",
+        "name": "Otthoni jelenlét · Követési/létszámadatok legnagyobb kora (perc)",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Jelenlét a helyiségben · Jelenlét · Eszközök · érzékelő · Kötelező",
+        "name": "Jelenlét a helyiségben · Létszámadatok legnagyobb kora (perc)",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Értesítések · Eszközhibák bejelentése · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Alvás · {channel}Amikor mindenki alszik",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"

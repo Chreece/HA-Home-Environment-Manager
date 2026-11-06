@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · 꽃가루 · HIGH",
           "pollen_max_scale": "POLLEN · 꽃가루 · SCALE",
           "pollen_avoid_ventilation": "POLLEN · 꽃가루 · NO VENT",
-          "general_source_stale_minutes": "정보원 · max (min)",
-          "general_home_policy": "재택 상태"
+          "general_source_stale_minutes": "재택 상태 · 추적·인원수 데이터의 최대 경과 시간(분)",
+          "general_home_policy": "재택 상태",
+          "general_wake_alarm_entity": "수면 · 다음 알람",
+          "general_wake_lead_minutes_entity": "수면 · 알람 몇 분 전에 해제할지"
         },
         "data_description": {
           "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "선택하세요: 실외 공기질 · AQI, CO₂, PM2.5, PM10, VOC. 사용할 수 없음: ⚠",
           "weather_warnings": "“기상 경보”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
-          "general_room_occupancy_sensors": "“방 · 재실 · 센서”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
           "general_home_trackers": "“집 · 재실 · 장치”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "“재실 · 방 · 정보원 (state)”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
+          "general_occupied_rooms_entity": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
           "general_occupied_rooms_attribute": "“재실 · 방 · 정보원 (attribute)”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
-          "general_sleep_rooms_entity": "“수면 · 방 · 정보원 (state)”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
+          "general_sleep_rooms_entity": "Home Assistant 영역 이름이나 ID로 이루어진 수면 중인 방 목록을 상태 또는 속성에서 선택하세요. 목록에 있는 방은 실제로 재실일 때만 수면 중입니다. 변하지 않은 목록은 계속 유효하며, 없거나 잘못된 소스는 알 수 없음입니다. 설정한 알람으로 울리기 전에 자동 수면을 끝낼 수 있습니다.",
           "general_sleep_rooms_attribute": "“수면 · 방 · 정보원 (attribute)”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "notify_entities": "“설정 · 정보원”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
           "media_players": "“설정 · 정보원 · MEDIA_PLAYERS”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "“POLLEN · 꽃가루 · HIGH”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "pollen_max_scale": "“POLLEN · 꽃가루 · SCALE”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "pollen_avoid_ventilation": "“POLLEN · 꽃가루 · NO VENT”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
-          "general_source_stale_minutes": "정보원 · 수면 / 재실 · max 240 min. 잘못됨 · 끄기.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "경과 시간 제한은 추적 보고와 숫자 인원수 데이터에 적용됩니다. 방 목록과 이진 재실 상태는 변하지 않아도 만료되지 않습니다. 사용할 수 없거나 복원되었거나 잘못된 소스는 알 수 없음으로 남습니다. 수면 시간 설정이 아닙니다.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "다음 알람의 시간 또는 날짜·시간 엔티티와 미리 해제할 분 수의 엔티티를 선택하세요. HEM은 그만큼 일찍 자동 수면 모드를 끝내고 일반 목표값으로 돌아갑니다. 날짜 없는 시간에는 Home Assistant의 시간대를 사용합니다. 외출, 수동 제어와 기기 보호 기능이 계속 우선합니다.",
+          "general_wake_lead_minutes_entity": "0 이상의 분 수를 나타내는 숫자 엔티티를 선택하세요. 단위는 min이거나 없어야 합니다. 알람이 07:00이고 값이 30이면 06:30에 자동 수면이 끝납니다. 0은 알람이 울리는 시각입니다. 비활성화하려면 두 선택을 모두 지우세요."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "집 · 장치",
           "climate_unknown_occupancy": "재실 · 장치",
           "climate_unoccupied_delay_minutes": "장치 · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "재실 · 장치 · 센서 · 필수",
+          "climate_occupancy_stale_minutes": "실내 재실 · 인원수 데이터의 최대 경과 시간(분)",
           "climate_away_policy": "재택 상태 · 집 · 장치 · POLICY",
           "climate_manual_profile": "장치 · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "수면 · 장치",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "장치 (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "“재실 · 센서”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
+          "climate_occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
           "climate_away_entities": "“집 · 장치”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "방의 숫자 인원수 데이터에 허용하는 최대 경과 시간입니다. 오래되었거나 사용할 수 없는 값은 알 수 없음입니다. 변하지 않은 이진 재실 상태와 방 목록은 만료되지 않습니다.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "이 옵션은 “장치 · CLIMATE_MANUAL_PROFILE”을 제어합니다. 물리적 명령에는 별도 승인과 독립 보호가 필요합니다.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "일반 · 설정",
-        "description": "일반 · 설정: 선택 정보원, 센서 / 장치 · 제어.",
+        "description": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
         "data": {
           "general_room_occupancy_sensors": "방 · 재실 · 센서",
           "general_occupied_rooms_entity": "재실 · 방 · 정보원 (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "재택 상태",
           "general_sleep_rooms_entity": "수면 · 방 · 정보원 (state)",
           "general_sleep_rooms_attribute": "수면 · 방 · 정보원 (attribute)",
-          "general_source_stale_minutes": "정보원 · max (min)"
+          "general_source_stale_minutes": "재택 상태 · 추적·인원수 데이터의 최대 경과 시간(분)",
+          "general_wake_alarm_entity": "수면 · 다음 알람",
+          "general_wake_lead_minutes_entity": "수면 · 알람 몇 분 전에 해제할지"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "“방 · 재실 · 센서”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
-          "general_occupied_rooms_entity": "“재실 · 방 · 정보원 (state)”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
+          "general_room_occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
+          "general_occupied_rooms_entity": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
           "general_occupied_rooms_attribute": "“재실 · 방 · 정보원 (attribute)”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "general_home_trackers": "“집 · 재실 · 장치”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "“수면 · 방 · 정보원 (state)”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
+          "general_sleep_rooms_entity": "Home Assistant 영역 이름이나 ID로 이루어진 수면 중인 방 목록을 상태 또는 속성에서 선택하세요. 목록에 있는 방은 실제로 재실일 때만 수면 중입니다. 변하지 않은 목록은 계속 유효하며, 없거나 잘못된 소스는 알 수 없음입니다. 설정한 알람으로 울리기 전에 자동 수면을 끝낼 수 있습니다.",
           "general_sleep_rooms_attribute": "“수면 · 방 · 정보원 (attribute)”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
-          "general_source_stale_minutes": "정보원 · 수면 / 재실 · max 240 min. 잘못됨 · 끄기."
+          "general_source_stale_minutes": "경과 시간 제한은 추적 보고와 숫자 인원수 데이터에 적용됩니다. 방 목록과 이진 재실 상태는 변하지 않아도 만료되지 않습니다. 사용할 수 없거나 복원되었거나 잘못된 소스는 알 수 없음으로 남습니다. 수면 시간 설정이 아닙니다.",
+          "general_wake_alarm_entity": "다음 알람의 시간 또는 날짜·시간 엔티티와 미리 해제할 분 수의 엔티티를 선택하세요. HEM은 그만큼 일찍 자동 수면 모드를 끝내고 일반 목표값으로 돌아갑니다. 날짜 없는 시간에는 Home Assistant의 시간대를 사용합니다. 외출, 수동 제어와 기기 보호 기능이 계속 우선합니다.",
+          "general_wake_lead_minutes_entity": "0 이상의 분 수를 나타내는 숫자 엔티티를 선택하세요. 단위는 min이거나 없어야 합니다. 알람이 07:00이고 값이 30이면 06:30에 자동 수면이 끝납니다. 0은 알람이 울리는 시각입니다. 비활성화하려면 두 선택을 모두 지우세요."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "습도. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
           "climate_devices": "장치. 방에 속한 실제 climate.*, humidifier.*, fan.* 엔티티만 선택하세요. 기기의 기본 기능에 따라 난방, 냉방, 제습, 목표값, 팬 속도를 제어할 수 있습니다. 선택만으로 기기는 동작하지 않으며 각 컨트롤러에서 자동 제어를 별도로 켜야 합니다.",
           "shades": "창문 블라인드, 차양 및 셔터. 이 방의 cover.* 블라인드, 롤러 셔터, 커튼을 선택하세요. device_class가 없어도 CLOSE를 지원하고 실제 창문 차양이라면 선택할 수 있습니다. 차고문, 대문, 출입문, 창문 및 외부 차양은 제외합니다. 선택만으로 움직이지 않으며 컨트롤러에서 창문 센서, 자동 제어, 사전 알림 및 온도 기준을 설정하세요. 알 수 없는 상태에서는 작동하지 않습니다.",
-          "occupancy_sensors": "“재실 · 센서”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다."
+          "occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "습도. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
           "climate_devices": "장치. 방에 속한 실제 climate.*, humidifier.*, fan.* 엔티티만 선택하세요. 기기의 기본 기능에 따라 난방, 냉방, 제습, 목표값, 팬 속도를 제어할 수 있습니다. 선택만으로 기기는 동작하지 않으며 각 컨트롤러에서 자동 제어를 별도로 켜야 합니다.",
           "shades": "창문 블라인드, 차양 및 셔터. 이 방의 cover.* 블라인드, 롤러 셔터, 커튼을 선택하세요. device_class가 없어도 CLOSE를 지원하고 실제 창문 차양이라면 선택할 수 있습니다. 차고문, 대문, 출입문, 창문 및 외부 차양은 제외합니다. 선택만으로 움직이지 않으며 컨트롤러에서 창문 센서, 자동 제어, 사전 알림 및 온도 기준을 설정하세요. 알 수 없는 상태에서는 작동하지 않습니다.",
-          "occupancy_sensors": "“재실 · 센서”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다."
+          "occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "잘못됨 · 센서 · 설정",
       "device_temperature_band_invalid": "잘못됨 · 온도 · 설정",
       "device_humidity_invalid": "잘못됨 · 습도 · 설정",
-      "device_runtime_invalid": "잘못됨 · 전력 · 설정"
+      "device_runtime_invalid": "잘못됨 · 전력 · 설정",
+      "wake_sources_pair": "알람과 분 수 엔티티를 모두 선택하거나 두 선택을 모두 지우세요."
     },
     "abort": {
       "already_configured": "Home Environment Manager - 이미 설정됨.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "집 · 장치",
           "climate_unknown_occupancy": "재실 · 장치",
           "climate_unoccupied_delay_minutes": "장치 · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "재실 · 장치 · 센서 · 필수",
+          "climate_occupancy_stale_minutes": "실내 재실 · 인원수 데이터의 최대 경과 시간(분)",
           "climate_away_policy": "재택 상태 · 집 · 장치 · POLICY",
           "climate_manual_profile": "장치 · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "수면 · 장치",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "장치 (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "“재실 · 센서”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
+          "climate_occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
           "climate_away_entities": "“집 · 장치”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "방의 숫자 인원수 데이터에 허용하는 최대 경과 시간입니다. 오래되었거나 사용할 수 없는 값은 알 수 없음입니다. 변하지 않은 이진 재실 상태와 방 목록은 만료되지 않습니다.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "이 옵션은 “장치 · CLIMATE_MANUAL_PROFILE”을 제어합니다. 물리적 명령에는 별도 승인과 독립 보호가 필요합니다.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "일반 · 설정",
-        "description": "일반 · 설정: 선택 정보원, 센서 / 장치 · 제어.",
+        "description": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
         "data": {
           "general_room_occupancy_sensors": "방 · 재실 · 센서",
           "general_occupied_rooms_entity": "재실 · 방 · 정보원 (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "재택 상태",
           "general_sleep_rooms_entity": "수면 · 방 · 정보원 (state)",
           "general_sleep_rooms_attribute": "수면 · 방 · 정보원 (attribute)",
-          "general_source_stale_minutes": "정보원 · max (min)"
+          "general_source_stale_minutes": "재택 상태 · 추적·인원수 데이터의 최대 경과 시간(분)",
+          "general_wake_alarm_entity": "수면 · 다음 알람",
+          "general_wake_lead_minutes_entity": "수면 · 알람 몇 분 전에 해제할지"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "“방 · 재실 · 센서”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
-          "general_occupied_rooms_entity": "“재실 · 방 · 정보원 (state)”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
+          "general_room_occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
+          "general_occupied_rooms_entity": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
           "general_occupied_rooms_attribute": "“재실 · 방 · 정보원 (attribute)”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "general_home_trackers": "“집 · 재실 · 장치”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "“수면 · 방 · 정보원 (state)”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
+          "general_sleep_rooms_entity": "Home Assistant 영역 이름이나 ID로 이루어진 수면 중인 방 목록을 상태 또는 속성에서 선택하세요. 목록에 있는 방은 실제로 재실일 때만 수면 중입니다. 변하지 않은 목록은 계속 유효하며, 없거나 잘못된 소스는 알 수 없음입니다. 설정한 알람으로 울리기 전에 자동 수면을 끝낼 수 있습니다.",
           "general_sleep_rooms_attribute": "“수면 · 방 · 정보원 (attribute)”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
-          "general_source_stale_minutes": "정보원 · 수면 / 재실 · max 240 min. 잘못됨 · 끄기."
+          "general_source_stale_minutes": "경과 시간 제한은 추적 보고와 숫자 인원수 데이터에 적용됩니다. 방 목록과 이진 재실 상태는 변하지 않아도 만료되지 않습니다. 사용할 수 없거나 복원되었거나 잘못된 소스는 알 수 없음으로 남습니다. 수면 시간 설정이 아닙니다.",
+          "general_wake_alarm_entity": "다음 알람의 시간 또는 날짜·시간 엔티티와 미리 해제할 분 수의 엔티티를 선택하세요. HEM은 그만큼 일찍 자동 수면 모드를 끝내고 일반 목표값으로 돌아갑니다. 날짜 없는 시간에는 Home Assistant의 시간대를 사용합니다. 외출, 수동 제어와 기기 보호 기능이 계속 우선합니다.",
+          "general_wake_lead_minutes_entity": "0 이상의 분 수를 나타내는 숫자 엔티티를 선택하세요. 단위는 min이거나 없어야 합니다. 알람이 07:00이고 값이 30이면 06:30에 자동 수면이 끝납니다. 0은 알람이 울리는 시각입니다. 비활성화하려면 두 선택을 모두 지우세요."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · 꽃가루 · HIGH",
           "pollen_max_scale": "POLLEN · 꽃가루 · SCALE",
           "pollen_avoid_ventilation": "POLLEN · 꽃가루 · NO VENT",
-          "general_source_stale_minutes": "정보원 · max (min)",
-          "general_home_policy": "재택 상태"
+          "general_source_stale_minutes": "재택 상태 · 추적·인원수 데이터의 최대 경과 시간(분)",
+          "general_home_policy": "재택 상태",
+          "general_wake_alarm_entity": "수면 · 다음 알람",
+          "general_wake_lead_minutes_entity": "수면 · 알람 몇 분 전에 해제할지"
         },
         "data_description": {
           "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "선택하세요: 실외 공기질 · AQI, CO₂, PM2.5, PM10, VOC. 사용할 수 없음: ⚠",
           "weather_warnings": "“기상 경보”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
-          "general_room_occupancy_sensors": "“방 · 재실 · 센서”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
           "general_home_trackers": "“집 · 재실 · 장치”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "“재실 · 방 · 정보원 (state)”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
+          "general_occupied_rooms_entity": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
           "general_occupied_rooms_attribute": "“재실 · 방 · 정보원 (attribute)”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
-          "general_sleep_rooms_entity": "“수면 · 방 · 정보원 (state)”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
+          "general_sleep_rooms_entity": "Home Assistant 영역 이름이나 ID로 이루어진 수면 중인 방 목록을 상태 또는 속성에서 선택하세요. 목록에 있는 방은 실제로 재실일 때만 수면 중입니다. 변하지 않은 목록은 계속 유효하며, 없거나 잘못된 소스는 알 수 없음입니다. 설정한 알람으로 울리기 전에 자동 수면을 끝낼 수 있습니다.",
           "general_sleep_rooms_attribute": "“수면 · 방 · 정보원 (attribute)”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "notify_entities": "“설정 · 정보원”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다.",
           "media_players": "“설정 · 정보원 · MEDIA_PLAYERS”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "“POLLEN · 꽃가루 · HIGH”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "pollen_max_scale": "“POLLEN · 꽃가루 · SCALE”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "pollen_avoid_ventilation": "“POLLEN · 꽃가루 · NO VENT”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
-          "general_source_stale_minutes": "정보원 · 수면 / 재실 · max 240 min. 잘못됨 · 끄기.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "경과 시간 제한은 추적 보고와 숫자 인원수 데이터에 적용됩니다. 방 목록과 이진 재실 상태는 변하지 않아도 만료되지 않습니다. 사용할 수 없거나 복원되었거나 잘못된 소스는 알 수 없음으로 남습니다. 수면 시간 설정이 아닙니다.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "다음 알람의 시간 또는 날짜·시간 엔티티와 미리 해제할 분 수의 엔티티를 선택하세요. HEM은 그만큼 일찍 자동 수면 모드를 끝내고 일반 목표값으로 돌아갑니다. 날짜 없는 시간에는 Home Assistant의 시간대를 사용합니다. 외출, 수동 제어와 기기 보호 기능이 계속 우선합니다.",
+          "general_wake_lead_minutes_entity": "0 이상의 분 수를 나타내는 숫자 엔티티를 선택하세요. 단위는 min이거나 없어야 합니다. 알람이 07:00이고 값이 30이면 06:30에 자동 수면이 끝납니다. 0은 알람이 울리는 시각입니다. 비활성화하려면 두 선택을 모두 지우세요."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "습도. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
           "climate_devices": "장치. 방에 속한 실제 climate.*, humidifier.*, fan.* 엔티티만 선택하세요. 기기의 기본 기능에 따라 난방, 냉방, 제습, 목표값, 팬 속도를 제어할 수 있습니다. 선택만으로 기기는 동작하지 않으며 각 컨트롤러에서 자동 제어를 별도로 켜야 합니다.",
           "shades": "창문 블라인드, 차양 및 셔터. 이 방의 cover.* 블라인드, 롤러 셔터, 커튼을 선택하세요. device_class가 없어도 CLOSE를 지원하고 실제 창문 차양이라면 선택할 수 있습니다. 차고문, 대문, 출입문, 창문 및 외부 차양은 제외합니다. 선택만으로 움직이지 않으며 컨트롤러에서 창문 센서, 자동 제어, 사전 알림 및 온도 기준을 설정하세요. 알 수 없는 상태에서는 작동하지 않습니다.",
-          "occupancy_sensors": "“재실 · 센서”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다."
+          "occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "습도. 방의 입력을 선택하세요. 기기 이름 - 엔티티 이름으로 표시됩니다. 빈 그룹은 사용하지 않으며 자동 검색이나 제어를 켜지 않습니다.",
           "climate_devices": "장치. 방에 속한 실제 climate.*, humidifier.*, fan.* 엔티티만 선택하세요. 기기의 기본 기능에 따라 난방, 냉방, 제습, 목표값, 팬 속도를 제어할 수 있습니다. 선택만으로 기기는 동작하지 않으며 각 컨트롤러에서 자동 제어를 별도로 켜야 합니다.",
           "shades": "창문 블라인드, 차양 및 셔터. 이 방의 cover.* 블라인드, 롤러 셔터, 커튼을 선택하세요. device_class가 없어도 CLOSE를 지원하고 실제 창문 차양이라면 선택할 수 있습니다. 차고문, 대문, 출입문, 창문 및 외부 차양은 제외합니다. 선택만으로 움직이지 않으며 컨트롤러에서 창문 센서, 자동 제어, 사전 알림 및 온도 기준을 설정하세요. 알 수 없는 상태에서는 작동하지 않습니다.",
-          "occupancy_sensors": "“재실 · 센서”에 실제 Home Assistant 데이터 소스를 선택하세요. 누락되거나 오래된 값은 관련 작업을 보류합니다."
+          "occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "잘못됨 · 전력 · 설정",
       "invalid_setup_rooms": "잘못됨: 모니터링할 방",
       "invalid_room_source": "잘못됨: 방 · 정보원",
-      "invalid_away_windows_recipients": "알림을 받을 사람; 창문 알림 전송 채널. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "알림을 받을 사람; 창문 알림 전송 채널. Announcement Hub (person.*).",
+      "wake_sources_pair": "알람과 분 수 엔티티를 모두 선택하거나 두 선택을 모두 지우세요."
     },
     "abort": {
       "setup_area_removed": "잘못됨: 모니터링할 방",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "재택 상태 · 정보원 · max (min)",
+        "name": "재택 상태 · 추적·인원수 데이터의 최대 경과 시간(분)",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "실내 재실 · 재실 · 장치 · 센서 · 필수",
+        "name": "실내 재실 · 인원수 데이터의 최대 경과 시간(분)",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "알림 · 기기 오류 알림 · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "수면 · {channel}모두가 자고 있을 때",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"

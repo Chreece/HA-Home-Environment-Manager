@@ -1884,6 +1884,49 @@ for _locale, _overrides in _GROUPED_SETTING_OVERRIDES.items():
     EQUIPMENT_TRANSLATED_NAMES[_locale].update(_overrides)
 
 
+# Default-off household sleep inheritance for each managed device.
+_HOUSEHOLD_SLEEP_NAMES = {'ar': 'النوم · {channel}عندما يكون الجميع نائمين',
+ 'bg': 'Сън · {channel}Когато всички спят',
+ 'bn': 'ঘুম · {channel}সবাই যখন ঘুমাচ্ছেন',
+ 'cs': 'Spánek · {channel}Když všichni spí',
+ 'da': 'Søvn · {channel}Når alle sover',
+ 'de': 'Schlaf · {channel}Wenn alle schlafen',
+ 'el': 'Ύπνος · {channel}Όταν όλοι κοιμούνται',
+ 'en': 'Sleep · {channel}When everyone is sleeping',
+ 'es': 'Sueño · {channel}Cuando todos duermen',
+ 'fa': 'خواب · {channel}وقتی همه خواب هستند',
+ 'fi': 'Uni · {channel}Kun kaikki nukkuvat',
+ 'fr': 'Sommeil · {channel}Quand tout le monde dort',
+ 'he': 'שינה · {channel}כשכולם ישנים',
+ 'hi': 'नींद · {channel}जब सभी सो रहे हों',
+ 'hr': 'Spavanje · {channel}Kad svi spavaju',
+ 'hu': 'Alvás · {channel}Amikor mindenki alszik',
+ 'id': 'Tidur · {channel}Saat semua orang tidur',
+ 'it': 'Sonno · {channel}Quando tutti dormono',
+ 'ja': '睡眠 · {channel}全員が睡眠中のとき',
+ 'ko': '수면 · {channel}모두가 자고 있을 때',
+ 'nb': 'Søvn · {channel}Når alle sover',
+ 'nl': 'Slaap · {channel}Wanneer iedereen slaapt',
+ 'pl': 'Sen · {channel}Gdy wszyscy śpią',
+ 'pt': 'Sono · {channel}Quando todos estão a dormir',
+ 'pt-BR': 'Sono · {channel}Quando todos estão dormindo',
+ 'ro': 'Somn · {channel}Când toată lumea doarme',
+ 'ru': 'Сон · {channel}Когда все спят',
+ 'sk': 'Spánok · {channel}Keď všetci spia',
+ 'sr': 'Спавање · {channel}Када сви спавају',
+ 'sv': 'Sömn · {channel}När alla sover',
+ 'ta': 'உறக்கம் · {channel}அனைவரும் உறங்கும்போது',
+ 'th': 'การนอน · {channel}เมื่อทุกคนกำลังหลับ',
+ 'tr': 'Uyku · {channel}Herkes uyurken',
+ 'uk': 'Сон · {channel}Коли всі сплять',
+ 'ur': 'نیند · {channel}جب سب سو رہے ہوں',
+ 'vi': 'Ngủ · {channel}Khi mọi người đều đang ngủ',
+ 'zh-Hans': '睡眠 · {channel}所有人都在睡觉时',
+ 'zh-Hant': '睡眠 · {channel}所有人都在睡覺時'}
+for _locale, _name in _HOUSEHOLD_SLEEP_NAMES.items():
+    EQUIPMENT_TRANSLATED_NAMES[_locale]["sleep_when_everyone_asleep"] = _name
+
+
 def _pid_parameter_label(key: str) -> str | None:
     if key in _PID_PARAMETER_LABELS:
         return _PID_PARAMETER_LABELS[key]

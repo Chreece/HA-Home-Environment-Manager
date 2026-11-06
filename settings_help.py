@@ -252,27 +252,20 @@ SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftges
                                                   'selected profile target and room/device limits are '
                                                   'separate settings; hysteresis prevents rapid decisions '
                                                   'around the band.'},
- 'area_climate_operating_occupancy_stale_minutes': {'de': 'Maximales Alter der Meldungen ausgewählter '
-                                                          'lokaler Raumanwesenheitssensoren in Minuten. '
-                                                          'Ältere oder fehlende Meldungen gelten als '
-                                                          'unbekannt und belegen weder Anwesenheit noch '
-                                                          'Abwesenheit. Gemeinsame Raumlisten haben eine '
-                                                          'eigene Altersgrenze; diese Einstellung wählt '
-                                                          'kein Ersatz-Klimaprofil.',
-                                                    'el': 'Μέγιστη ηλικία, σε λεπτά, αναφορών από τους '
-                                                          'επιλεγμένους τοπικούς αισθητήρες παρουσίας '
-                                                          'χώρου. Παλιές ή ελλιπείς αναφορές θεωρούνται '
-                                                          'άγνωστες και δεν αποδεικνύουν παρουσία ή '
-                                                          'απουσία. Οι κοινές λίστες δωματίων έχουν '
-                                                          'ξεχωριστό όριο ηλικίας· αυτή η ρύθμιση δεν '
-                                                          'επιλέγει εφεδρικό κλιματικό προφίλ.',
-                                                    'en': 'Maximum age in minutes of selected local '
-                                                          'room-presence sensor reports. Older or '
-                                                          'missing reports count as unknown and cannot '
-                                                          'establish occupancy or absence. Shared '
-                                                          'room-list sources have a separate age limit; '
-                                                          'this setting does not choose a fallback '
-                                                          'climate profile.'},
+ 'area_climate_operating_occupancy_stale_minutes': {'de': 'Höchstalter ausgewählter numerischer Personenzählungen im Raum in Minuten. Ältere oder '
+       'nicht verfügbare Zählwerte sind unbekannt. Binäre EIN/AUS-Raumanwesenheit und gemeinsame '
+       'Belegungs-/Schlaflisten laufen bei unverändertem Wert nicht ab; fehlende, '
+       'wiederhergestellte oder ungültige ausgewählte Quellen können weiterhin unbekannt sein. '
+       'Diese Einstellung wählt kein Ersatz-Klimaprofil.',
+ 'el': 'Μέγιστη ηλικία, σε λεπτά, των επιλεγμένων αριθμητικών μετρήσεων πλήθους ατόμων στο '
+       'δωμάτιο. Παλιές ή μη διαθέσιμες μετρήσεις είναι άγνωστες. Οι δυαδικές καταστάσεις '
+       'παρουσίας ON/OFF και οι κοινές λίστες παρουσίας/ύπνου δεν λήγουν όσο δεν αλλάζουν. '
+       'Ελλιπείς, επαναφερμένες ή άκυρες επιλεγμένες πηγές μπορεί να παραμένουν άγνωστες. Δεν '
+       'επιλέγει εφεδρικό κλιματικό προφίλ.',
+ 'en': 'Maximum age in minutes of selected numeric room-occupancy counts. Older or unavailable '
+       'counts are unknown. Binary room-presence ON/OFF states and shared occupied/sleep-room '
+       'lists do not expire while unchanged; missing, restored or invalid selected sources can '
+       'still be unknown. This setting does not choose a fallback climate profile.'},
  'area_climate_operating_pm25_action_ug_m3': {'de': 'Momentane PM2.5-Raumschwelle in µg/m³ für '
                                                     'Luftreinigerbedarf. Betriebsschwelle, kein '
                                                     'Tagesexpositionsgrenzwert. Die Regelung benötigt '
@@ -297,37 +290,39 @@ SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftges
                                                          'already on when particle demand is present. It '
                                                          'changes airflow demand, not the purifier’s rated '
                                                          'CADR or measured filtration efficiency.'},
- 'area_climate_operating_sleep_active': {'de': 'Kennzeichnet manuell aktuellen Schlaf für automatische '
-                                               'Schlafprofile und konfigurierte Ruhe-/Pausenregeln. Aus '
-                                               'erzwingt kein Wachsein: Zeitplan oder gewählte '
-                                               'Schlafraumquelle können weiterhin Schlaf melden. Explizite '
-                                               'Profile und bestätigte Abwesenheit behalten Vorrang.',
-                                         'el': 'Δηλώνει χειροκίνητα ύπνο τώρα για αυτόματο προφίλ Ύπνου και '
-                                               'ρυθμισμένη ήσυχη λειτουργία ή παύση. Το Off δεν επιβάλλει '
-                                               'εγρήγορση: ωράριο ή επιλεγμένη πηγή ύπνου μπορεί ακόμη να '
-                                               'δηλώνει ύπνο. Ρητά προφίλ και επιβεβαιωμένη Απουσία '
-                                               'υπερισχύουν.',
-                                         'en': 'Manually marks this room as sleeping now for automatic '
-                                               'sleep/profile and configured quiet or pause behavior. Off '
-                                               'does not force awake: an enabled schedule or selected '
-                                               'sleeping-room source can still indicate sleep. Explicit '
-                                               'profile overrides and verified Away keep their precedence.'},
- 'area_climate_operating_sleep_schedule_enabled': {'de': 'Verwendet Beginn und Ende des Raumschlafzeitplans '
-                                                         'in der lokalen Home-Assistant-Zeitzone als '
-                                                         'Schlafnachweis. Vorgabe 22:00–07:00. Manuelle '
-                                                         'Angabe und Schlafraumquelle wirken zusätzlich; die '
-                                                         'statische Lärmraum-Einstufung bleibt unverändert.',
-                                                   'el': 'Χρησιμοποιεί ώρες έναρξης/λήξης ύπνου στην τοπική '
-                                                         'ζώνη ώρας Home Assistant ως ένδειξη τρέχοντος '
-                                                         'ύπνου. Προεπιλογή 22:00–07:00. Συνυπολογίζονται η '
-                                                         'χειροκίνητη ένδειξη και η πηγή χώρων ύπνου· δεν '
-                                                         'αλλάζει η ταξινόμηση χώρου για θόρυβο.',
-                                                   'en': 'Uses the room sleep start/end times in the Home '
-                                                         'Assistant local time zone as sleeping-now '
-                                                         'evidence. The default interval is 22:00–07:00. '
-                                                         'Manual sleep and the selected sleeping-room source '
-                                                         'also contribute; enabling a schedule does not '
-                                                         'change the static noise-room classification.'},
+ 'area_climate_operating_sleep_active': {'de': 'Kennzeichnet manuell aktuellen Schlaf für automatische Schlafprofile und konfigurierte '
+       'Ruhe-/Pausenregeln. Aus erzwingt kein Wachsein: Zeitplan oder gewählte Schlafraumquelle '
+       'können weiterhin Schlaf melden. Explizite Profile und bestätigte Abwesenheit behalten '
+       'Vorrang. Der konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus '
+       'beenden, bevor dieses Schlafsignal endet. Die normale Regelung wird innerhalb der '
+       'bestehenden Freigaben fortgesetzt.',
+ 'el': 'Δηλώνει χειροκίνητα ύπνο τώρα για αυτόματο προφίλ Ύπνου και ρυθμισμένη ήσυχη λειτουργία '
+       'ή παύση. Το Off δεν επιβάλλει εγρήγορση: ωράριο ή επιλεγμένη πηγή ύπνου μπορεί ακόμη να '
+       'δηλώνει ύπνο. Ρητά προφίλ και επιβεβαιωμένη Απουσία υπερισχύουν. Το ρυθμισμένο ξυπνητήρι '
+       'και τα λεπτά προετοιμασίας μπορούν να τερματίσουν τον αυτόματο Ύπνο πριν λήξει αυτή η '
+       'πηγή, ώστε να επανέλθει ο κανονικός έλεγχος εντός των υπαρχουσών αδειών.',
+ 'en': 'Manually marks this room as sleeping now for automatic sleep/profile and configured '
+       'quiet or pause behavior. Off does not force awake: an enabled schedule or selected '
+       'sleeping-room source can still indicate sleep. Explicit profile overrides and verified '
+       'Away keep their precedence. The configured wake alarm and lead time can end automatic '
+       'Sleep before this source ends, so normal control resumes within its existing '
+       'permissions.'},
+ 'area_climate_operating_sleep_schedule_enabled': {'de': 'Verwendet Beginn und Ende des Raumschlafzeitplans in der lokalen Home-Assistant-Zeitzone '
+       'als Schlafnachweis. Vorgabe 22:00–07:00. Manuelle Angabe und Schlafraumquelle wirken '
+       'zusätzlich; die statische Lärmraum-Einstufung bleibt unverändert. Der konfigurierte '
+       'Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor dieses Schlafsignal '
+       'endet. Die normale Regelung wird innerhalb der bestehenden Freigaben fortgesetzt.',
+ 'el': 'Χρησιμοποιεί ώρες έναρξης/λήξης ύπνου στην τοπική ζώνη ώρας Home Assistant ως ένδειξη '
+       'τρέχοντος ύπνου. Προεπιλογή 22:00–07:00. Συνυπολογίζονται η χειροκίνητη ένδειξη και η '
+       'πηγή χώρων ύπνου· δεν αλλάζει η ταξινόμηση χώρου για θόρυβο. Το ρυθμισμένο ξυπνητήρι και '
+       'τα λεπτά προετοιμασίας μπορούν να τερματίσουν τον αυτόματο Ύπνο πριν λήξει αυτή η πηγή, '
+       'ώστε να επανέλθει ο κανονικός έλεγχος εντός των υπαρχουσών αδειών.',
+ 'en': 'Uses the room sleep start/end times in the Home Assistant local time zone as '
+       'sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the '
+       'selected sleeping-room source also contribute; enabling a schedule does not change the '
+       'static noise-room classification. The configured wake alarm and lead time can end '
+       'automatic Sleep before this source ends, so normal control resumes within its existing '
+       'permissions.'},
  'area_climate_operating_unoccupied_delay_minutes': {'de': 'Verzögerung für durchgehend gemeldete '
                                                            'Abwesenheit lokaler Raumanwesenheitssensoren '
                                                            'vor einem automatischen Raumprofilwechsel. '
@@ -581,24 +576,35 @@ SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftges
                                                'active. This saved target is applied within the room/device '
                                                'limits by permitted controllers; editing it does not grant '
                                                'control permission.'},
- 'area_climate_sleep_end': {'de': 'Lokale Endzeit des Schlafintervalls, wirksam nur bei aktiviertem '
-                                  'Zeitplan. Das Ende hebt Schlafmeldungen des manuellen Schalters oder '
-                                  'einer anderen gewählten Quelle nicht auf.',
-                            'el': 'Τοπική ώρα λήξης του διαστήματος ύπνου, μόνο με ενεργή «Χρήση ωραρίου». Η '
-                                  'λήξη δεν αναιρεί ύπνο που δηλώνεται από τον χειροκίνητο διακόπτη ή άλλη '
-                                  'επιλεγμένη πηγή.',
-                            'en': 'Local end time of this room’s sleep interval. It contributes only when '
-                                  'Use schedule is enabled. Reaching the end does not cancel sleep indicated '
-                                  'by the manual switch or another selected sleep source.'},
- 'area_climate_sleep_start': {'de': 'Lokale Beginnzeit des Schlafintervalls. Sie trägt nur bei aktiviertem '
-                                    'Zeitplan zum Schlafnachweis bei. Das Intervall kann über Mitternacht '
-                                    'reichen, etwa 22:00–07:00.',
-                              'el': 'Τοπική ώρα έναρξης του διαστήματος ύπνου. Χρησιμοποιείται μόνο όταν '
-                                    'είναι ενεργή η «Χρήση ωραρίου». Το διάστημα μπορεί να περνά τα '
-                                    'μεσάνυχτα, π.χ. 22:00–07:00.',
-                              'en': 'Local start time of this room’s sleep interval. It contributes to '
-                                    'sleeping-now evidence only when Use schedule is enabled. An interval '
-                                    'may cross midnight, such as 22:00–07:00.'},
+ 'area_climate_sleep_end': {'de': 'Lokale Endzeit des Schlafintervalls, wirksam nur bei aktiviertem Zeitplan. Das Ende hebt '
+       'Schlafmeldungen des manuellen Schalters oder einer anderen gewählten Quelle nicht auf. '
+       'Der konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor '
+       'dieses Schlafsignal endet. Die normale Regelung wird innerhalb der bestehenden Freigaben '
+       'fortgesetzt.',
+ 'el': 'Τοπική ώρα λήξης του διαστήματος ύπνου, μόνο με ενεργή «Χρήση ωραρίου». Η λήξη δεν '
+       'αναιρεί ύπνο που δηλώνεται από τον χειροκίνητο διακόπτη ή άλλη επιλεγμένη πηγή. Το '
+       'ρυθμισμένο ξυπνητήρι και τα λεπτά προετοιμασίας μπορούν να τερματίσουν τον αυτόματο Ύπνο '
+       'πριν λήξει αυτή η πηγή, ώστε να επανέλθει ο κανονικός έλεγχος εντός των υπαρχουσών '
+       'αδειών.',
+ 'en': 'Local end time of this room’s sleep interval. It contributes only when Use schedule is '
+       'enabled. Reaching the end does not cancel sleep indicated by the manual switch or '
+       'another selected sleep source. The configured wake alarm and lead time can end automatic '
+       'Sleep before this source ends, so normal control resumes within its existing '
+       'permissions.'},
+ 'area_climate_sleep_start': {'de': 'Lokale Beginnzeit des Schlafintervalls. Sie trägt nur bei aktiviertem Zeitplan zum '
+       'Schlafnachweis bei. Das Intervall kann über Mitternacht reichen, etwa 22:00–07:00. Der '
+       'konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor '
+       'dieses Schlafsignal endet. Die normale Regelung wird innerhalb der bestehenden Freigaben '
+       'fortgesetzt.',
+ 'el': 'Τοπική ώρα έναρξης του διαστήματος ύπνου. Χρησιμοποιείται μόνο όταν είναι ενεργή η '
+       '«Χρήση ωραρίου». Το διάστημα μπορεί να περνά τα μεσάνυχτα, π.χ. 22:00–07:00. Το '
+       'ρυθμισμένο ξυπνητήρι και τα λεπτά προετοιμασίας μπορούν να τερματίσουν τον αυτόματο Ύπνο '
+       'πριν λήξει αυτή η πηγή, ώστε να επανέλθει ο κανονικός έλεγχος εντός των υπαρχουσών '
+       'αδειών.',
+ 'en': 'Local start time of this room’s sleep interval. It contributes to sleeping-now evidence '
+       'only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00. '
+       'The configured wake alarm and lead time can end automatic Sleep before this source ends, '
+       'so normal control resumes within its existing permissions.'},
  'area_device_target_fan_speed_percent': {'de': 'Gewünschte Drehzahl für die konfigurierte Abluft- oder '
                                                 'Filterrolle des gewählten Ventilators. Die vorhandene '
                                                 'Strategie wendet Grenzen und Prüfungen an; Bearbeiten gibt '
@@ -921,19 +927,18 @@ SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftges
                                                   'are configured. Direct verified trackers reporting '
                                                   'everyone away take effect immediately. A verified person '
                                                   'at home always takes precedence.'},
- 'global_occupancy_source_stale_minutes': {'de': 'Höchstalter der Meldung für konfigurierte Listen belegter '
-                                                 'Räume und Schlafräume. Veraltete oder ungültige Listen '
-                                                 'gelten als unbekannt. Direkte Personen-/Geräte-Tracker '
-                                                 'folgen ihren eigenen Nachweisregeln.',
-                                           'el': 'Μέγιστη ηλικία αναφοράς για τις λίστες κατειλημμένων χώρων '
-                                                 'και χώρων όπου κάποιος κοιμάται. Παλιές ή άκυρες λίστες '
-                                                 'θεωρούνται άγνωστες. Οι άμεσοι ανιχνευτές '
-                                                 'προσώπων/συσκευών ακολουθούν τους δικούς τους κανόνες.',
-                                           'en': 'Maximum report age for the configured occupied-room and '
-                                                 'sleeping-room list sources. Older or invalid lists become '
-                                                 'unknown and cannot establish that a room is empty or '
-                                                 'asleep. Direct person/device trackers follow their own '
-                                                 'evidence rules.'},
+ 'global_occupancy_source_stale_minutes': {'de': 'Höchstalter der Meldungen direkter Anwesenheits-Tracker und numerischer '
+       'Personenzählungen. Standard: 240 Minuten. Unveränderte Belegungs-/Schlaflisten und '
+       'binäre Raumanwesenheitszustände bleiben gültig. Nicht verfügbare, wiederhergestellte '
+       'oder ungültige ausgewählte Quellen bleiben unbekannt. Dies ist keine Schlafdauer.',
+ 'el': 'Μέγιστη ηλικία αναφορών από άμεσες πηγές παρουσίας στο σπίτι και αριθμητικές μετρήσεις '
+       'πλήθους ατόμων. Προεπιλογή: 240 λεπτά. Οι λίστες παρουσίας/ύπνου και οι δυαδικές '
+       'καταστάσεις παρουσίας χώρου παραμένουν έγκυρες όσο δεν αλλάζουν. Μη διαθέσιμες, '
+       'επαναφερμένες ή άκυρες επιλεγμένες πηγές παραμένουν άγνωστες. Δεν είναι διάρκεια ύπνου.',
+ 'en': 'Maximum age of reports from direct home trackers and sampled numeric occupancy counts. '
+       'The default is 240 minutes. Stable occupied/sleep-room lists and binary room-presence '
+       'states remain valid until they change; unavailable, restored or invalid selected sources '
+       'remain unknown. This is not a sleep duration.'},
  'global_setting_announcement_repeat_minutes': {'de': 'Minuten zwischen wiederholten Ansagen, solange '
                                                       'dieselbe Empfehlung gilt und automatische '
                                                       'Benachrichtigung oder Sprache aktiviert ist. HEM '

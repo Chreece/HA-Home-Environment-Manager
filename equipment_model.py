@@ -67,6 +67,7 @@ DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None
             # 'None' preserves exact Beta54 behavior on every existing device.
             "power_switch_entity": None,
             "quiet_sleep": False, "quiet_occupied": False,
+            "sleep_when_everyone_asleep": False,
             "pause_on_window_open": True,
             "timed_setpoint_sequence": False,
             # New native fault announcements are independently enabled by
@@ -127,6 +128,7 @@ def settings(manager: Any, spec: ManagedDevice) -> dict:
     result = {**DEFAULTS, **raw}
     # Missing settings and legacy strings/numbers never opt a device in.
     result["timed_setpoint_sequence"] = raw.get("timed_setpoint_sequence") is True
+    result["sleep_when_everyone_asleep"] = raw.get("sleep_when_everyone_asleep") is True
     # Beta84 resolves the previous overlapping passive/calculator selectors
     # into exactly one persisted gain authority. Legacy settings are read
     # conservatively: an explicit classical tune always wins.
@@ -670,53 +672,82 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
     environment = getattr(getattr(manager, "plan", None), "environment", {}) or {}
     item = environment.get(spec.area_id, {})
     plan = item.get("climate_plan", {}) if isinstance(item, dict) else {}
-    if isinstance(plan, dict) and plan:
+    cached = isinstance(plan, dict) and bool(plan) and plan.get("status") != "disabled"
+    cfg = settings(manager, spec)
+    shared = plan.get("global_presence") if cached else None
+    if not isinstance(shared, dict):
+        shared = manager.settings.get("occupancy_global", {})
+        continuity = getattr(manager, "presence_continuity", None)
+        if continuity is not None:
+            shared = continuity.context(shared)
+    shared = shared if isinstance(shared, dict) else {}
+    inherit = (cfg.get("sleep_when_everyone_asleep") is True
+               and cfg.get("control_mode") in ("automatic", "pid"))
+    if cached and not (inherit or shared.get("wake_alarm_entity")
+                       or shared.get("sleep_rooms_entity")):
         return plan
-    # Legacy PID-only rooms have no climate profile plan. Derive live contacts
-    # and presence without pretending that absent contacts are verified closed.
-    from .discovery import entity_area
-    from .occupancy_policy import room_presence, home_presence, sleep_presence
-    contacts = [state for state in manager.hass.states.async_all("binary_sensor")
-                if entity_area(manager.hass, state.entity_id) == spec.area_id
-                and state.attributes.get("device_class") == "window"]
-    from .room_sources import selected
-    chosen_contacts = selected(manager.settings, spec.area_id, "windows")
-    if chosen_contacts is not None:
-        contacts = [hass_state for e in chosen_contacts
-                    if (hass_state := manager.hass.states.get(e)) is not None
-                    and entity_area(manager.hass, e) == spec.area_id
-                    and hass_state.attributes.get("device_class") == "window"]
-    shared = manager.settings.get("occupancy_global", {})
-    continuity = getattr(manager, "presence_continuity", None)
-    if continuity is not None:
-        shared = continuity.context(shared)
+    # A native-only controller can run before a room plan exists. Give that
+    # fallback the same explicit selections and numeric freshness limits as
+    # the manager's room plan, including a deliberately empty sensor list.
+    rooms = manager.settings.get("climate_rooms", {})
+    rooms = rooms if isinstance(rooms, dict) else {}
+    shared = {**shared,
+              "_room_occupancy_selections": {
+                  area: list(value["occupancy_sensors"])
+                  for area, value in rooms.items()
+                  if isinstance(value, dict) and isinstance(value.get("occupancy_sensors"), list)
+              },
+              "_room_occupancy_stale_minutes": {
+                  area: value["occupancy_stale_minutes"]
+                  for area, value in rooms.items()
+                  if isinstance(value, dict) and "occupancy_stale_minutes" in value
+              }}
+    from .occupancy_policy import room_presence, home_presence, controlled_sleep_presence
+    from .climate_schedule import scheduled_sleep
+    import time
     room = room_config(manager, spec)
-    known = {item.area_id for item in specs(manager)}
+    known = set(plan.get("known_presence_areas", ())) if cached else set()
+    if not known:
+        known = ({spec.area_id} | set(manager.settings.get("areas", ()))
+                 | set(rooms))
     home, home_evidence, trackers = home_presence(
         manager.hass, shared, room.get("away_entities", []))
     occupancy, evidence, sensors = room_presence(
-        manager.hass, spec.area_id, room, shared,
-        known_areas=known, home_status=home,
-    )
-    # Climate-only controller hubs do not always have a room-wide plan.
-    # Reconstruct local sleep schedule and source evidence, not an accidental
-    # None returned simply because no optional sleeping-room list exists.
-    from .climate_schedule import scheduled_sleep
-    from .occupancy_policy import controlled_sleep_presence
-    import time
+        manager.hass, spec.area_id, room, shared, known_areas=known, home_status=home)
     zone = getattr(getattr(manager.hass, "config", None), "time_zone", None) or "UTC"
-    local_sleeping, local_reason = scheduled_sleep(room, time.time(), zone)
+    now = time.time()
+    local_sleep, local_reason = scheduled_sleep(room, now, zone)
     sleeping, sleep_evidence = controlled_sleep_presence(
         manager.hass, spec.area_id, shared, known, home_status=home,
-        local_sleeping=local_sleeping, local_reason=local_reason,
+        room_status=occupancy, local_sleeping=local_sleep, local_reason=local_reason,
+        inherit_household=inherit, now=now,
     )
-    return {"window_safe": (chosen_contacts is None or len(contacts) == len(chosen_contacts)) and all(s.state == "off" for s in contacts),
-            "window_contacts": [s.entity_id for s in contacts],
-            "occupancy": occupancy, "occupancy_evidence": evidence,
-            "away": home, "away_evidence": home_evidence, "sleeping": sleeping,
-            "sleep_schedule_evidence": sleep_evidence,
-            "presence_entities": sensors, "tracker_entities": trackers,
-            "global_presence": shared, "known_presence_areas": sorted(known)}
+    # A per-device policy must not mutate the room plan shared by its peers.
+    # Re-reading before dispatch also catches a wake boundary crossed during IO.
+    facts = {"away": home, "away_evidence": home_evidence, "sleeping": sleeping,
+             "sleep_schedule_evidence": sleep_evidence,
+             "occupancy": occupancy, "occupancy_evidence": evidence,
+             "presence_entities": sensors, "tracker_entities": trackers,
+             "global_presence": shared, "known_presence_areas": sorted(known)}
+    if cached:
+        return {**plan, **facts}
+    # Legacy PID-only rooms have no climate profile/window plan.
+    from .discovery import entity_area
+    from .room_sources import selected
+    chosen_contacts = selected(manager.settings, spec.area_id, "windows")
+    if chosen_contacts is None:
+        contacts = [state for state in manager.hass.states.async_all("binary_sensor")
+                    if entity_area(manager.hass, state.entity_id) == spec.area_id
+                    and state.attributes.get("device_class") == "window"]
+    else:
+        contacts = [state for entity in chosen_contacts
+                    if (state := manager.hass.states.get(entity)) is not None
+                    and entity_area(manager.hass, entity) == spec.area_id
+                    and state.attributes.get("device_class") == "window"]
+    return {**facts,
+            "window_safe": (chosen_contacts is None or len(contacts) == len(chosen_contacts))
+                           and all(state.state == "off" for state in contacts),
+            "window_contacts": [state.entity_id for state in contacts]}
 
 
 def profile_name(config: dict, plan: dict) -> str:

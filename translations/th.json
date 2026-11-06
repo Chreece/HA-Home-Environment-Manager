@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · ละอองเกสร · HIGH",
           "pollen_max_scale": "POLLEN · ละอองเกสร · SCALE",
           "pollen_avoid_ventilation": "POLLEN · ละอองเกสร · NO VENT",
-          "general_source_stale_minutes": "แหล่งข้อมูล · max (min)",
-          "general_home_policy": "การอยู่บ้าน"
+          "general_source_stale_minutes": "การอยู่บ้าน · อายุสูงสุดของข้อมูลติดตาม/จำนวนคน (นาที)",
+          "general_home_policy": "การอยู่บ้าน",
+          "general_wake_alarm_entity": "การนอน · นาฬิกาปลุกครั้งถัดไป",
+          "general_wake_lead_minutes_entity": "การนอน · จำนวนนาทีก่อนนาฬิกาปลุก"
         },
         "data_description": {
           "weather_entities": "เลือก: สภาพอากาศและคำเตือน · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "เลือก: คุณภาพอากาศภายนอก · AQI, CO₂, PM2.5, PM10, VOC. ไม่พร้อมใช้งาน: ⚠",
           "weather_warnings": "สภาพอากาศและคำเตือน · ⚠ (ไม่พร้อมใช้งาน) → 🪟🔒",
-          "general_room_occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “ห้อง · การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ",
           "general_home_trackers": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “บ้าน · การมีคนอยู่ · อุปกรณ์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · ห้อง · แหล่งข้อมูล (state)” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
+          "general_occupied_rooms_entity": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ",
           "general_occupied_rooms_attribute": "ตั้งค่า “การมีคนอยู่ · ห้อง · แหล่งข้อมูล (attribute)” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
-          "general_sleep_rooms_entity": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “นอน · ห้อง · แหล่งข้อมูล (state)” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
+          "general_sleep_rooms_entity": "เลือกรายการห้องที่กำลังนอนจากสถานะหรือแอตทริบิวต์ โดยใช้ชื่อหรือ ID พื้นที่ของ Home Assistant ห้องในรายการจะถือว่ากำลังนอนเมื่อมีคนอยู่ด้วยเท่านั้น รายการที่ไม่เปลี่ยนยังใช้ได้ แหล่งข้อมูลที่หายไปหรือไม่ถูกต้องเป็นสถานะไม่ทราบ นาฬิกาปลุกที่ตั้งไว้สามารถจบโหมดนอนอัตโนมัติก่อนดังได้",
           "general_sleep_rooms_attribute": "ตั้งค่า “นอน · ห้อง · แหล่งข้อมูล (attribute)” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
           "notify_entities": "เลือก: notify.* · การตั้งค่า · แหล่งข้อมูล.",
           "media_players": "เลือก: media_player.* · การตั้งค่า · แหล่งข้อมูล · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "ตั้งค่า “POLLEN · ละอองเกสร · HIGH” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
           "pollen_max_scale": "ตั้งค่า “POLLEN · ละอองเกสร · SCALE” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
           "pollen_avoid_ventilation": "ตั้งค่า “POLLEN · ละอองเกสร · NO VENT” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
-          "general_source_stale_minutes": "แหล่งข้อมูล · นอน / การมีคนอยู่ · max 240 min. ไม่ถูกต้อง · ปิด.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "ขีดจำกัดอายุข้อมูลใช้กับรายงานการติดตามและจำนวนคนแบบตัวเลข รายการห้องและสถานะตรวจคนแบบไบนารีจะไม่หมดอายุหากไม่เปลี่ยน แหล่งข้อมูลที่ไม่พร้อมใช้งาน ถูกกู้คืน หรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ ค่านี้ไม่ใช่ระยะเวลานอน",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "เลือกเอนทิตีเวลาหรือวันที่และเวลาของนาฬิกาปลุกครั้งถัดไป พร้อมเอนทิตีจำนวนนาทีล่วงหน้า HEM จะออกจากโหมดนอนอัตโนมัติล่วงหน้าตามเวลานั้นและกลับไปใช้ค่าเป้าหมายปกติ เวลาที่ไม่มีวันที่จะใช้เขตเวลาของ Home Assistant การไม่อยู่บ้าน การควบคุมด้วยตนเอง และระบบป้องกันยังมีลำดับความสำคัญเดิม",
+          "general_wake_lead_minutes_entity": "เลือกเอนทิตีตัวเลขที่มีค่านาทีตั้งแต่ 0 ขึ้นไป หน่วย min หรือไม่มีหน่วย หากตั้งปลุก 07:00 และค่า 30 โหมดนอนอัตโนมัติจะสิ้นสุด 06:30 ค่า 0 หมายถึงเมื่อปลุกดัง หากต้องการปิด ให้ล้างทั้งสองแหล่งข้อมูล"
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "บ้าน · อุปกรณ์",
           "climate_unknown_occupancy": "การมีคนอยู่ · อุปกรณ์",
           "climate_unoccupied_delay_minutes": "อุปกรณ์ · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "การมีคนอยู่ · อุปกรณ์ · เซนเซอร์ · จำเป็น",
+          "climate_occupancy_stale_minutes": "การอยู่ในห้อง · อายุสูงสุดของข้อมูลจำนวนคน (นาที)",
           "climate_away_policy": "การอยู่บ้าน · บ้าน · อุปกรณ์ · POLICY",
           "climate_manual_profile": "อุปกรณ์ · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "การนอน · นอน · อุปกรณ์",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "อุปกรณ์ (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
+          "climate_occupancy_sensors": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ",
           "climate_away_entities": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “บ้าน · อุปกรณ์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "อายุสูงสุดของข้อมูลจำนวนคนแบบตัวเลขในห้อง ค่าที่เก่าหรือไม่พร้อมใช้งานเป็นสถานะไม่ทราบ สถานะตรวจคนแบบไบนารีและรายการห้องที่ไม่เปลี่ยนจะไม่หมดอายุ",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "ตัวเลือกนี้ควบคุม “อุปกรณ์ · CLIMATE_MANUAL_PROFILE” คำสั่งอุปกรณ์ · CLIMATE_MANUAL_PROFILEต้องได้รับอนุญาตแยกและมีระบบป้องกันอิสระ",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "ทั่วไป · การตั้งค่า",
-        "description": "ทั่วไป · การตั้งค่า: เลือก แหล่งข้อมูล, เซนเซอร์ / อุปกรณ์ · ควบคุม.",
+        "description": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ",
         "data": {
           "general_room_occupancy_sensors": "ห้อง · การมีคนอยู่ · เซนเซอร์",
           "general_occupied_rooms_entity": "การมีคนอยู่ · ห้อง · แหล่งข้อมูล (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "การอยู่บ้าน",
           "general_sleep_rooms_entity": "นอน · ห้อง · แหล่งข้อมูล (state)",
           "general_sleep_rooms_attribute": "นอน · ห้อง · แหล่งข้อมูล (attribute)",
-          "general_source_stale_minutes": "แหล่งข้อมูล · max (min)"
+          "general_source_stale_minutes": "การอยู่บ้าน · อายุสูงสุดของข้อมูลติดตาม/จำนวนคน (นาที)",
+          "general_wake_alarm_entity": "การนอน · นาฬิกาปลุกครั้งถัดไป",
+          "general_wake_lead_minutes_entity": "การนอน · จำนวนนาทีก่อนนาฬิกาปลุก"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “ห้อง · การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
-          "general_occupied_rooms_entity": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · ห้อง · แหล่งข้อมูล (state)” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
+          "general_room_occupancy_sensors": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ",
+          "general_occupied_rooms_entity": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ",
           "general_occupied_rooms_attribute": "ตั้งค่า “การมีคนอยู่ · ห้อง · แหล่งข้อมูล (attribute)” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
           "general_home_trackers": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “บ้าน · การมีคนอยู่ · อุปกรณ์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “นอน · ห้อง · แหล่งข้อมูล (state)” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
+          "general_sleep_rooms_entity": "เลือกรายการห้องที่กำลังนอนจากสถานะหรือแอตทริบิวต์ โดยใช้ชื่อหรือ ID พื้นที่ของ Home Assistant ห้องในรายการจะถือว่ากำลังนอนเมื่อมีคนอยู่ด้วยเท่านั้น รายการที่ไม่เปลี่ยนยังใช้ได้ แหล่งข้อมูลที่หายไปหรือไม่ถูกต้องเป็นสถานะไม่ทราบ นาฬิกาปลุกที่ตั้งไว้สามารถจบโหมดนอนอัตโนมัติก่อนดังได้",
           "general_sleep_rooms_attribute": "ตั้งค่า “นอน · ห้อง · แหล่งข้อมูล (attribute)” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
-          "general_source_stale_minutes": "แหล่งข้อมูล · นอน / การมีคนอยู่ · max 240 min. ไม่ถูกต้อง · ปิด."
+          "general_source_stale_minutes": "ขีดจำกัดอายุข้อมูลใช้กับรายงานการติดตามและจำนวนคนแบบตัวเลข รายการห้องและสถานะตรวจคนแบบไบนารีจะไม่หมดอายุหากไม่เปลี่ยน แหล่งข้อมูลที่ไม่พร้อมใช้งาน ถูกกู้คืน หรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ ค่านี้ไม่ใช่ระยะเวลานอน",
+          "general_wake_alarm_entity": "เลือกเอนทิตีเวลาหรือวันที่และเวลาของนาฬิกาปลุกครั้งถัดไป พร้อมเอนทิตีจำนวนนาทีล่วงหน้า HEM จะออกจากโหมดนอนอัตโนมัติล่วงหน้าตามเวลานั้นและกลับไปใช้ค่าเป้าหมายปกติ เวลาที่ไม่มีวันที่จะใช้เขตเวลาของ Home Assistant การไม่อยู่บ้าน การควบคุมด้วยตนเอง และระบบป้องกันยังมีลำดับความสำคัญเดิม",
+          "general_wake_lead_minutes_entity": "เลือกเอนทิตีตัวเลขที่มีค่านาทีตั้งแต่ 0 ขึ้นไป หน่วย min หรือไม่มีหน่วย หากตั้งปลุก 07:00 และค่า 30 โหมดนอนอัตโนมัติจะสิ้นสุด 06:30 ค่า 0 หมายถึงเมื่อปลุกดัง หากต้องการปิด ให้ล้างทั้งสองแหล่งข้อมูล"
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "ความชื้น. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
           "climate_devices": "อุปกรณ์. เลือกเฉพาะเอนทิตีอุปกรณ์จริง climate.*, humidifier.* และ fan.* ในห้องนี้ ความสามารถของอุปกรณ์กำหนดการทำความร้อน ความเย็น ลดความชื้น ค่าเป้าหมาย และความเร็วพัดลม การเลือกยังไม่สั่งงาน ต้องเปิดระบบอัตโนมัติแยกในแต่ละตัวควบคุม",
           "shades": "ม่าน มู่ลี่ และบานเกล็ดหน้าต่าง. เลือกม่าน มู่ลี่ และบานเกล็ดหน้าต่าง cover.* ของห้อง Covers ที่ไม่มี device_class ใช้ได้เมื่อรองรับ CLOSE และเป็นอุปกรณ์บังแดดหน้าต่างจริง โรงรถ ประตู รั้ว หน้าต่างและกันสาดภายนอกถูกยกเว้น การเลือกไม่ทำให้เคลื่อนที่: เชื่อมเซ็นเซอร์หน้าต่างแล้วตั้งค่าอัตโนมัติ การแจ้งล่วงหน้า และอุณหภูมิที่ตัวควบคุม สถานะไม่ทราบห้ามเคลื่อนไหว",
-          "occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน"
+          "occupancy_sensors": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ"
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "ความชื้น. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
           "climate_devices": "อุปกรณ์. เลือกเฉพาะเอนทิตีอุปกรณ์จริง climate.*, humidifier.* และ fan.* ในห้องนี้ ความสามารถของอุปกรณ์กำหนดการทำความร้อน ความเย็น ลดความชื้น ค่าเป้าหมาย และความเร็วพัดลม การเลือกยังไม่สั่งงาน ต้องเปิดระบบอัตโนมัติแยกในแต่ละตัวควบคุม",
           "shades": "ม่าน มู่ลี่ และบานเกล็ดหน้าต่าง. เลือกม่าน มู่ลี่ และบานเกล็ดหน้าต่าง cover.* ของห้อง Covers ที่ไม่มี device_class ใช้ได้เมื่อรองรับ CLOSE และเป็นอุปกรณ์บังแดดหน้าต่างจริง โรงรถ ประตู รั้ว หน้าต่างและกันสาดภายนอกถูกยกเว้น การเลือกไม่ทำให้เคลื่อนที่: เชื่อมเซ็นเซอร์หน้าต่างแล้วตั้งค่าอัตโนมัติ การแจ้งล่วงหน้า และอุณหภูมิที่ตัวควบคุม สถานะไม่ทราบห้ามเคลื่อนไหว",
-          "occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน"
+          "occupancy_sensors": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ"
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "ไม่ถูกต้อง · เซนเซอร์ · การตั้งค่า",
       "device_temperature_band_invalid": "ไม่ถูกต้อง · อุณหภูมิ · การตั้งค่า",
       "device_humidity_invalid": "ไม่ถูกต้อง · ความชื้น · การตั้งค่า",
-      "device_runtime_invalid": "ไม่ถูกต้อง · กำลังไฟ · การตั้งค่า"
+      "device_runtime_invalid": "ไม่ถูกต้อง · กำลังไฟ · การตั้งค่า",
+      "wake_sources_pair": "เลือกทั้งเอนทิตีนาฬิกาปลุกและเอนทิตีนาที หรือล้างทั้งคู่"
     },
     "abort": {
       "already_configured": "Home Environment Manager - ตั้งค่าแล้ว.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "บ้าน · อุปกรณ์",
           "climate_unknown_occupancy": "การมีคนอยู่ · อุปกรณ์",
           "climate_unoccupied_delay_minutes": "อุปกรณ์ · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "การมีคนอยู่ · อุปกรณ์ · เซนเซอร์ · จำเป็น",
+          "climate_occupancy_stale_minutes": "การอยู่ในห้อง · อายุสูงสุดของข้อมูลจำนวนคน (นาที)",
           "climate_away_policy": "การอยู่บ้าน · บ้าน · อุปกรณ์ · POLICY",
           "climate_manual_profile": "อุปกรณ์ · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "การนอน · นอน · อุปกรณ์",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "อุปกรณ์ (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
+          "climate_occupancy_sensors": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ",
           "climate_away_entities": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “บ้าน · อุปกรณ์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "อายุสูงสุดของข้อมูลจำนวนคนแบบตัวเลขในห้อง ค่าที่เก่าหรือไม่พร้อมใช้งานเป็นสถานะไม่ทราบ สถานะตรวจคนแบบไบนารีและรายการห้องที่ไม่เปลี่ยนจะไม่หมดอายุ",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "ตัวเลือกนี้ควบคุม “อุปกรณ์ · CLIMATE_MANUAL_PROFILE” คำสั่งอุปกรณ์ · CLIMATE_MANUAL_PROFILEต้องได้รับอนุญาตแยกและมีระบบป้องกันอิสระ",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "ทั่วไป · การตั้งค่า",
-        "description": "ทั่วไป · การตั้งค่า: เลือก แหล่งข้อมูล, เซนเซอร์ / อุปกรณ์ · ควบคุม.",
+        "description": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ",
         "data": {
           "general_room_occupancy_sensors": "ห้อง · การมีคนอยู่ · เซนเซอร์",
           "general_occupied_rooms_entity": "การมีคนอยู่ · ห้อง · แหล่งข้อมูล (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "การอยู่บ้าน",
           "general_sleep_rooms_entity": "นอน · ห้อง · แหล่งข้อมูล (state)",
           "general_sleep_rooms_attribute": "นอน · ห้อง · แหล่งข้อมูล (attribute)",
-          "general_source_stale_minutes": "แหล่งข้อมูล · max (min)"
+          "general_source_stale_minutes": "การอยู่บ้าน · อายุสูงสุดของข้อมูลติดตาม/จำนวนคน (นาที)",
+          "general_wake_alarm_entity": "การนอน · นาฬิกาปลุกครั้งถัดไป",
+          "general_wake_lead_minutes_entity": "การนอน · จำนวนนาทีก่อนนาฬิกาปลุก"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “ห้อง · การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
-          "general_occupied_rooms_entity": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · ห้อง · แหล่งข้อมูล (state)” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
+          "general_room_occupancy_sensors": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ",
+          "general_occupied_rooms_entity": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ",
           "general_occupied_rooms_attribute": "ตั้งค่า “การมีคนอยู่ · ห้อง · แหล่งข้อมูล (attribute)” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
           "general_home_trackers": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “บ้าน · การมีคนอยู่ · อุปกรณ์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “นอน · ห้อง · แหล่งข้อมูล (state)” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
+          "general_sleep_rooms_entity": "เลือกรายการห้องที่กำลังนอนจากสถานะหรือแอตทริบิวต์ โดยใช้ชื่อหรือ ID พื้นที่ของ Home Assistant ห้องในรายการจะถือว่ากำลังนอนเมื่อมีคนอยู่ด้วยเท่านั้น รายการที่ไม่เปลี่ยนยังใช้ได้ แหล่งข้อมูลที่หายไปหรือไม่ถูกต้องเป็นสถานะไม่ทราบ นาฬิกาปลุกที่ตั้งไว้สามารถจบโหมดนอนอัตโนมัติก่อนดังได้",
           "general_sleep_rooms_attribute": "ตั้งค่า “นอน · ห้อง · แหล่งข้อมูล (attribute)” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
-          "general_source_stale_minutes": "แหล่งข้อมูล · นอน / การมีคนอยู่ · max 240 min. ไม่ถูกต้อง · ปิด."
+          "general_source_stale_minutes": "ขีดจำกัดอายุข้อมูลใช้กับรายงานการติดตามและจำนวนคนแบบตัวเลข รายการห้องและสถานะตรวจคนแบบไบนารีจะไม่หมดอายุหากไม่เปลี่ยน แหล่งข้อมูลที่ไม่พร้อมใช้งาน ถูกกู้คืน หรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ ค่านี้ไม่ใช่ระยะเวลานอน",
+          "general_wake_alarm_entity": "เลือกเอนทิตีเวลาหรือวันที่และเวลาของนาฬิกาปลุกครั้งถัดไป พร้อมเอนทิตีจำนวนนาทีล่วงหน้า HEM จะออกจากโหมดนอนอัตโนมัติล่วงหน้าตามเวลานั้นและกลับไปใช้ค่าเป้าหมายปกติ เวลาที่ไม่มีวันที่จะใช้เขตเวลาของ Home Assistant การไม่อยู่บ้าน การควบคุมด้วยตนเอง และระบบป้องกันยังมีลำดับความสำคัญเดิม",
+          "general_wake_lead_minutes_entity": "เลือกเอนทิตีตัวเลขที่มีค่านาทีตั้งแต่ 0 ขึ้นไป หน่วย min หรือไม่มีหน่วย หากตั้งปลุก 07:00 และค่า 30 โหมดนอนอัตโนมัติจะสิ้นสุด 06:30 ค่า 0 หมายถึงเมื่อปลุกดัง หากต้องการปิด ให้ล้างทั้งสองแหล่งข้อมูล"
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · ละอองเกสร · HIGH",
           "pollen_max_scale": "POLLEN · ละอองเกสร · SCALE",
           "pollen_avoid_ventilation": "POLLEN · ละอองเกสร · NO VENT",
-          "general_source_stale_minutes": "แหล่งข้อมูล · max (min)",
-          "general_home_policy": "การอยู่บ้าน"
+          "general_source_stale_minutes": "การอยู่บ้าน · อายุสูงสุดของข้อมูลติดตาม/จำนวนคน (นาที)",
+          "general_home_policy": "การอยู่บ้าน",
+          "general_wake_alarm_entity": "การนอน · นาฬิกาปลุกครั้งถัดไป",
+          "general_wake_lead_minutes_entity": "การนอน · จำนวนนาทีก่อนนาฬิกาปลุก"
         },
         "data_description": {
           "weather_entities": "เลือก: สภาพอากาศและคำเตือน · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "เลือก: คุณภาพอากาศภายนอก · AQI, CO₂, PM2.5, PM10, VOC. ไม่พร้อมใช้งาน: ⚠",
           "weather_warnings": "สภาพอากาศและคำเตือน · ⚠ (ไม่พร้อมใช้งาน) → 🪟🔒",
-          "general_room_occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “ห้อง · การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ",
           "general_home_trackers": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “บ้าน · การมีคนอยู่ · อุปกรณ์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · ห้อง · แหล่งข้อมูล (state)” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
+          "general_occupied_rooms_entity": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ",
           "general_occupied_rooms_attribute": "ตั้งค่า “การมีคนอยู่ · ห้อง · แหล่งข้อมูล (attribute)” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
-          "general_sleep_rooms_entity": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “นอน · ห้อง · แหล่งข้อมูล (state)” หากข้อมูลหายหรือเก่าจะระงับการทำงาน",
+          "general_sleep_rooms_entity": "เลือกรายการห้องที่กำลังนอนจากสถานะหรือแอตทริบิวต์ โดยใช้ชื่อหรือ ID พื้นที่ของ Home Assistant ห้องในรายการจะถือว่ากำลังนอนเมื่อมีคนอยู่ด้วยเท่านั้น รายการที่ไม่เปลี่ยนยังใช้ได้ แหล่งข้อมูลที่หายไปหรือไม่ถูกต้องเป็นสถานะไม่ทราบ นาฬิกาปลุกที่ตั้งไว้สามารถจบโหมดนอนอัตโนมัติก่อนดังได้",
           "general_sleep_rooms_attribute": "ตั้งค่า “นอน · ห้อง · แหล่งข้อมูล (attribute)” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
           "notify_entities": "เลือก: notify.* · การตั้งค่า · แหล่งข้อมูล.",
           "media_players": "เลือก: media_player.* · การตั้งค่า · แหล่งข้อมูล · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "ตั้งค่า “POLLEN · ละอองเกสร · HIGH” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
           "pollen_max_scale": "ตั้งค่า “POLLEN · ละอองเกสร · SCALE” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
           "pollen_avoid_ventilation": "ตั้งค่า “POLLEN · ละอองเกสร · NO VENT” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน",
-          "general_source_stale_minutes": "แหล่งข้อมูล · นอน / การมีคนอยู่ · max 240 min. ไม่ถูกต้อง · ปิด.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "ขีดจำกัดอายุข้อมูลใช้กับรายงานการติดตามและจำนวนคนแบบตัวเลข รายการห้องและสถานะตรวจคนแบบไบนารีจะไม่หมดอายุหากไม่เปลี่ยน แหล่งข้อมูลที่ไม่พร้อมใช้งาน ถูกกู้คืน หรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ ค่านี้ไม่ใช่ระยะเวลานอน",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "เลือกเอนทิตีเวลาหรือวันที่และเวลาของนาฬิกาปลุกครั้งถัดไป พร้อมเอนทิตีจำนวนนาทีล่วงหน้า HEM จะออกจากโหมดนอนอัตโนมัติล่วงหน้าตามเวลานั้นและกลับไปใช้ค่าเป้าหมายปกติ เวลาที่ไม่มีวันที่จะใช้เขตเวลาของ Home Assistant การไม่อยู่บ้าน การควบคุมด้วยตนเอง และระบบป้องกันยังมีลำดับความสำคัญเดิม",
+          "general_wake_lead_minutes_entity": "เลือกเอนทิตีตัวเลขที่มีค่านาทีตั้งแต่ 0 ขึ้นไป หน่วย min หรือไม่มีหน่วย หากตั้งปลุก 07:00 และค่า 30 โหมดนอนอัตโนมัติจะสิ้นสุด 06:30 ค่า 0 หมายถึงเมื่อปลุกดัง หากต้องการปิด ให้ล้างทั้งสองแหล่งข้อมูล"
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "ความชื้น. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
           "climate_devices": "อุปกรณ์. เลือกเฉพาะเอนทิตีอุปกรณ์จริง climate.*, humidifier.* และ fan.* ในห้องนี้ ความสามารถของอุปกรณ์กำหนดการทำความร้อน ความเย็น ลดความชื้น ค่าเป้าหมาย และความเร็วพัดลม การเลือกยังไม่สั่งงาน ต้องเปิดระบบอัตโนมัติแยกในแต่ละตัวควบคุม",
           "shades": "ม่าน มู่ลี่ และบานเกล็ดหน้าต่าง. เลือกม่าน มู่ลี่ และบานเกล็ดหน้าต่าง cover.* ของห้อง Covers ที่ไม่มี device_class ใช้ได้เมื่อรองรับ CLOSE และเป็นอุปกรณ์บังแดดหน้าต่างจริง โรงรถ ประตู รั้ว หน้าต่างและกันสาดภายนอกถูกยกเว้น การเลือกไม่ทำให้เคลื่อนที่: เชื่อมเซ็นเซอร์หน้าต่างแล้วตั้งค่าอัตโนมัติ การแจ้งล่วงหน้า และอุณหภูมิที่ตัวควบคุม สถานะไม่ทราบห้ามเคลื่อนไหว",
-          "occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน"
+          "occupancy_sensors": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ"
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "ความชื้น. เลือกอินพุตของห้อง โดยแสดงชื่ออุปกรณ์ - ชื่อเอนทิตี กลุ่มว่างจะไม่ใช้และไม่เปิดการค้นหาหรือควบคุมอัตโนมัติ",
           "climate_devices": "อุปกรณ์. เลือกเฉพาะเอนทิตีอุปกรณ์จริง climate.*, humidifier.* และ fan.* ในห้องนี้ ความสามารถของอุปกรณ์กำหนดการทำความร้อน ความเย็น ลดความชื้น ค่าเป้าหมาย และความเร็วพัดลม การเลือกยังไม่สั่งงาน ต้องเปิดระบบอัตโนมัติแยกในแต่ละตัวควบคุม",
           "shades": "ม่าน มู่ลี่ และบานเกล็ดหน้าต่าง. เลือกม่าน มู่ลี่ และบานเกล็ดหน้าต่าง cover.* ของห้อง Covers ที่ไม่มี device_class ใช้ได้เมื่อรองรับ CLOSE และเป็นอุปกรณ์บังแดดหน้าต่างจริง โรงรถ ประตู รั้ว หน้าต่างและกันสาดภายนอกถูกยกเว้น การเลือกไม่ทำให้เคลื่อนที่: เชื่อมเซ็นเซอร์หน้าต่างแล้วตั้งค่าอัตโนมัติ การแจ้งล่วงหน้า และอุณหภูมิที่ตัวควบคุม สถานะไม่ทราบห้ามเคลื่อนไหว",
-          "occupancy_sensors": "เลือกแหล่งข้อมูล Home Assistant ที่วัดจริงสำหรับ “การมีคนอยู่ · เซนเซอร์” หากข้อมูลหายหรือเก่าจะระงับการทำงาน"
+          "occupancy_sensors": "รายการห้องที่มีคนซึ่งถูกต้องในสถานะหรือแอตทริบิวต์ที่เลือกมีลำดับความสำคัญสูงสุด ห้องในรายการมีคน ห้องที่ไม่อยู่ในรายการว่าง หากไม่มีรายการ เซนเซอร์ตรวจคนใดเปิดอยู่หมายถึงมีคน ถ้าทั้งหมดปิดหรือไม่ได้เลือกเซนเซอร์หมายถึงห้องว่าง แหล่งข้อมูลที่เลือกแต่ไม่พร้อมใช้งานหรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ รายการและสถานะไบนารีที่ไม่เปลี่ยนจะไม่หมดอายุ"
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "ไม่ถูกต้อง · กำลังไฟ · การตั้งค่า",
       "invalid_setup_rooms": "ไม่ถูกต้อง: ห้องที่จะตรวจสอบ",
       "invalid_room_source": "ไม่ถูกต้อง: ห้อง · แหล่งข้อมูล",
-      "invalid_away_windows_recipients": "บุคคลที่จะรับการแจ้งเตือน; ช่องทางแจ้งเตือนหน้าต่าง. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "บุคคลที่จะรับการแจ้งเตือน; ช่องทางแจ้งเตือนหน้าต่าง. Announcement Hub (person.*).",
+      "wake_sources_pair": "เลือกทั้งเอนทิตีนาฬิกาปลุกและเอนทิตีนาที หรือล้างทั้งคู่"
     },
     "abort": {
       "setup_area_removed": "ไม่ถูกต้อง: ห้องที่จะตรวจสอบ",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "การอยู่บ้าน · แหล่งข้อมูล · max (min)",
+        "name": "การอยู่บ้าน · อายุสูงสุดของข้อมูลติดตาม/จำนวนคน (นาที)",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "การอยู่ในห้อง · การมีคนอยู่ · อุปกรณ์ · เซนเซอร์ · จำเป็น",
+        "name": "การอยู่ในห้อง · อายุสูงสุดของข้อมูลจำนวนคน (นาที)",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "ประกาศ · แจ้งเตือนข้อผิดพลาดของอุปกรณ์ · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ความช่วยเหลือ"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "การนอน · {channel}เมื่อทุกคนกำลังหลับ",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"

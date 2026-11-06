@@ -25,31 +25,37 @@ def backend_checks():
     loop = next(n for n in ast.walk(tree) if isinstance(n, ast.For)
                 and isinstance(n.target, ast.Name) and n.target.id == 'monitored_room')
     start = next(i for i, n in enumerate(loop.body)
-                 if isinstance(n, ast.If) and 'isinstance(climate, dict)' in ast.unparse(n.test))
+                 if isinstance(n, ast.Assign) and isinstance(n.value, ast.BoolOp)
+                 and 'observed_rooms.get(' in ast.unparse(n.value))
     end = next(i for i, n in enumerate(loop.body) if isinstance(n, ast.Assign)
-               and any('room_presence' in ast.unparse(t) for t in n.targets))
+               and any("['room_presence']" in ast.unparse(t) for t in n.targets))
     code = compile(ast.Module(body=loop.body[start:end + 1], type_ignores=[]), 'manager.py', 'exec')
     calls = []
-    for climate, home, room_state, expected in (
-        ({'status': 'disabled'}, 'home', 'occupied', 'occupied'),
-        ({'status': 'disabled'}, 'away', 'unoccupied', 'unoccupied'),
+    # Existing snapshots and newly seen climate-only rooms share the same
+    # observed presence. Climate's comfort or vacancy assumptions never
+    # override the header, even when its cached value is contradictory.
+    for climate, home, current, cached in (
+        ({'status': 'disabled'}, 'home', ('occupied','verified_room_occupied',[]), False),
+        ({'status': 'disabled'}, 'away', ('unoccupied','verified_home_away',[]), True),
         ({'status': 'ready', 'occupancy': 'occupied', 'occupancy_evidence': 'assumed_occupied'},
-         'home', 'occupied', 'unknown'),
-        ({'status': 'ready', 'occupancy': 'unoccupied', 'away': 'away',
-          'occupancy_evidence': 'verified_home_away'}, 'away', 'unoccupied', 'unoccupied'),
+         'home', ('unoccupied','no_room_presence_sensors',[]), True),
+        ({'status': 'ready', 'occupancy': 'occupied'}, 'home',
+         ('unknown','room_occupancy_source_unknown',[]), False),
     ):
         def room_presence(*args, **kwargs):
             calls.append(kwargs['home_status'])
-            return room_state, 'verified_home_away' if home == 'away' else 'verified_room_occupied', []
+            return current
         scope = dict(climate=climate, local_settings={}, area_id='room', environment={},
             shared={}, known_areas={'room'}, self=SimpleNamespace(hass=SimpleNamespace(
                 config=SimpleNamespace(time_zone='UTC'))),
-            home_presence=lambda *a: (home, 'configured_home_source', []),
+            home_status=home, observed_rooms={'room':current} if cached else {},
             room_presence=room_presence, scheduled_sleep=lambda *a: (False, 'outside_sleep'),
             controlled_sleep_presence=lambda *a, **k: (False, 'outside_sleep'), time=lambda: 0)
         exec(code, scope)
-        assert scope['environment']['room']['room_presence']['occupancy'] == expected
-    assert calls == ['home', 'away'], calls
+        actual = scope['environment']['room']['room_presence']
+        assert actual['occupancy'] == current[0] and actual['occupancy_evidence'] == current[1]
+        assert actual['home'] == home
+    assert calls == ['home', 'home'], calls
     print('BETA114_ALL_ROOMS_VERIFIED_PRESENCE_SNAPSHOT=PASS')
 
 

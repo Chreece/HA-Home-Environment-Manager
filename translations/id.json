@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Serbuk sari · HIGH",
           "pollen_max_scale": "POLLEN · Serbuk sari · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Serbuk sari · NO VENT",
-          "general_source_stale_minutes": "sumber · max (min)",
-          "general_home_policy": "Kehadiran di rumah"
+          "general_source_stale_minutes": "Kehadiran di rumah · Usia maksimum data pelacak/jumlah orang (menit)",
+          "general_home_policy": "Kehadiran di rumah",
+          "general_wake_alarm_entity": "Tidur · Alarm berikutnya",
+          "general_wake_lead_minutes_entity": "Tidur · Menit sebelum alarm"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Pilih: Kualitas udara luar · AQI, CO₂, PM2.5, PM10, VOC. Tidak tersedia: ⚠",
           "weather_warnings": "Cuaca dan peringatan · ⚠ (Tidak tersedia) → 🪟🔒",
-          "general_room_occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Ruangan · Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
           "general_home_trackers": "Pilih sumber Home Assistant nyata untuk “Rumah · Kehadiran · Perangkat”. Data hilang atau usang menghentikan tindakan terkait. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Pilih sumber Home Assistant nyata untuk “Kehadiran · Ruangan · sumber (state)”. Data hilang atau usang menghentikan tindakan terkait.",
+          "general_occupied_rooms_entity": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
           "general_occupied_rooms_attribute": "Atur “Kehadiran · Ruangan · sumber (attribute)” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
-          "general_sleep_rooms_entity": "Pilih sumber Home Assistant nyata untuk “Tidur · Ruangan · sumber (state)”. Data hilang atau usang menghentikan tindakan terkait.",
+          "general_sleep_rooms_entity": "Pilih daftar ruangan yang sedang tidur dari status atau atribut, memakai nama atau ID area Home Assistant. Ruangan dalam daftar dianggap tidur hanya jika juga terisi. Daftar yang tidak berubah tetap valid; sumber hilang atau tidak valid tidak diketahui. Alarm yang diatur dapat mengakhiri tidur otomatis sebelum berbunyi.",
           "general_sleep_rooms_attribute": "Atur “Tidur · Ruangan · sumber (attribute)” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "notify_entities": "Pilih: notify.* · pengaturan · sumber.",
           "media_players": "Pilih: media_player.* · pengaturan · sumber · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Atur “POLLEN · Serbuk sari · HIGH” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "pollen_max_scale": "Atur “POLLEN · Serbuk sari · SCALE” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "pollen_avoid_ventilation": "Atur “POLLEN · Serbuk sari · NO VENT” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
-          "general_source_stale_minutes": "sumber · Tidur / Kehadiran · max 240 min. Tidak valid · Matikan.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Batas usia berlaku untuk laporan pelacak dan hitungan orang numerik. Daftar ruangan dan status kehadiran biner tidak kedaluwarsa saat tidak berubah. Sumber yang tidak tersedia, dipulihkan, atau tidak valid tetap tidak diketahui. Ini bukan durasi tidur.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Pilih entitas waktu atau tanggal dan waktu alarm berikutnya, serta entitas menit sebelumnya. HEM keluar dari tidur otomatis beberapa menit lebih awal untuk melanjutkan target normal. Waktu tanpa tanggal memakai zona waktu Home Assistant. Ketidakhadiran, kendali manual, dan perlindungan perangkat tetap diprioritaskan.",
+          "general_wake_lead_minutes_entity": "Pilih entitas numerik dengan nilai menit nonnegatif, bersatuan min atau tanpa satuan. Alarm 07:00 dan nilai 30 mengakhiri tidur otomatis pukul 06:30; 0 berarti saat alarm berbunyi. Kosongkan kedua sumber untuk menonaktifkan."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Rumah · Perangkat",
           "climate_unknown_occupancy": "Kehadiran · Perangkat",
           "climate_unoccupied_delay_minutes": "Perangkat · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Kehadiran · Perangkat · sensor · Wajib",
+          "climate_occupancy_stale_minutes": "Kehadiran di ruangan · Usia maksimum data jumlah orang (menit)",
           "climate_away_policy": "Kehadiran di rumah · Rumah · Perangkat · POLICY",
           "climate_manual_profile": "Perangkat · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Tidur · Perangkat",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Perangkat (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait.",
+          "climate_occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
           "climate_away_entities": "Pilih sumber Home Assistant nyata untuk “Rumah · Perangkat”. Data hilang atau usang menghentikan tindakan terkait.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Usia maksimum data numerik jumlah orang di ruangan. Nilai lama atau tidak tersedia dianggap tidak diketahui. Status kehadiran biner dan daftar ruangan yang tidak berubah tidak kedaluwarsa.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Opsi ini mengatur “Perangkat · CLIMATE_MANUAL_PROFILE”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Umum · pengaturan",
-        "description": "Umum · pengaturan: Pilih sumber, sensor / Perangkat · kendali.",
+        "description": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
         "data": {
           "general_room_occupancy_sensors": "Ruangan · Kehadiran · sensor",
           "general_occupied_rooms_entity": "Kehadiran · Ruangan · sumber (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Kehadiran di rumah",
           "general_sleep_rooms_entity": "Tidur · Ruangan · sumber (state)",
           "general_sleep_rooms_attribute": "Tidur · Ruangan · sumber (attribute)",
-          "general_source_stale_minutes": "sumber · max (min)"
+          "general_source_stale_minutes": "Kehadiran di rumah · Usia maksimum data pelacak/jumlah orang (menit)",
+          "general_wake_alarm_entity": "Tidur · Alarm berikutnya",
+          "general_wake_lead_minutes_entity": "Tidur · Menit sebelum alarm"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Ruangan · Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait.",
-          "general_occupied_rooms_entity": "Pilih sumber Home Assistant nyata untuk “Kehadiran · Ruangan · sumber (state)”. Data hilang atau usang menghentikan tindakan terkait.",
+          "general_room_occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
+          "general_occupied_rooms_entity": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
           "general_occupied_rooms_attribute": "Atur “Kehadiran · Ruangan · sumber (attribute)” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "general_home_trackers": "Pilih sumber Home Assistant nyata untuk “Rumah · Kehadiran · Perangkat”. Data hilang atau usang menghentikan tindakan terkait.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Pilih sumber Home Assistant nyata untuk “Tidur · Ruangan · sumber (state)”. Data hilang atau usang menghentikan tindakan terkait.",
+          "general_sleep_rooms_entity": "Pilih daftar ruangan yang sedang tidur dari status atau atribut, memakai nama atau ID area Home Assistant. Ruangan dalam daftar dianggap tidur hanya jika juga terisi. Daftar yang tidak berubah tetap valid; sumber hilang atau tidak valid tidak diketahui. Alarm yang diatur dapat mengakhiri tidur otomatis sebelum berbunyi.",
           "general_sleep_rooms_attribute": "Atur “Tidur · Ruangan · sumber (attribute)” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
-          "general_source_stale_minutes": "sumber · Tidur / Kehadiran · max 240 min. Tidak valid · Matikan."
+          "general_source_stale_minutes": "Batas usia berlaku untuk laporan pelacak dan hitungan orang numerik. Daftar ruangan dan status kehadiran biner tidak kedaluwarsa saat tidak berubah. Sumber yang tidak tersedia, dipulihkan, atau tidak valid tetap tidak diketahui. Ini bukan durasi tidur.",
+          "general_wake_alarm_entity": "Pilih entitas waktu atau tanggal dan waktu alarm berikutnya, serta entitas menit sebelumnya. HEM keluar dari tidur otomatis beberapa menit lebih awal untuk melanjutkan target normal. Waktu tanpa tanggal memakai zona waktu Home Assistant. Ketidakhadiran, kendali manual, dan perlindungan perangkat tetap diprioritaskan.",
+          "general_wake_lead_minutes_entity": "Pilih entitas numerik dengan nilai menit nonnegatif, bersatuan min atau tanpa satuan. Alarm 07:00 dan nilai 30 mengakhiri tidur otomatis pukul 06:30; 0 berarti saat alarm berbunyi. Kosongkan kedua sumber untuk menonaktifkan."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
-          "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."
+          "occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
-          "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."
+          "occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Tidak valid · sensor · pengaturan",
       "device_temperature_band_invalid": "Tidak valid · Suhu · pengaturan",
       "device_humidity_invalid": "Tidak valid · Kelembapan · pengaturan",
-      "device_runtime_invalid": "Tidak valid · Daya · pengaturan"
+      "device_runtime_invalid": "Tidak valid · Daya · pengaturan",
+      "wake_sources_pair": "Pilih entitas alarm dan entitas menit, atau kosongkan keduanya."
     },
     "abort": {
       "already_configured": "Home Environment Manager - sudah dikonfigurasi.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Rumah · Perangkat",
           "climate_unknown_occupancy": "Kehadiran · Perangkat",
           "climate_unoccupied_delay_minutes": "Perangkat · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Kehadiran · Perangkat · sensor · Wajib",
+          "climate_occupancy_stale_minutes": "Kehadiran di ruangan · Usia maksimum data jumlah orang (menit)",
           "climate_away_policy": "Kehadiran di rumah · Rumah · Perangkat · POLICY",
           "climate_manual_profile": "Perangkat · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Tidur · Perangkat",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Perangkat (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait.",
+          "climate_occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
           "climate_away_entities": "Pilih sumber Home Assistant nyata untuk “Rumah · Perangkat”. Data hilang atau usang menghentikan tindakan terkait.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Usia maksimum data numerik jumlah orang di ruangan. Nilai lama atau tidak tersedia dianggap tidak diketahui. Status kehadiran biner dan daftar ruangan yang tidak berubah tidak kedaluwarsa.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Opsi ini mengatur “Perangkat · CLIMATE_MANUAL_PROFILE”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Umum · pengaturan",
-        "description": "Umum · pengaturan: Pilih sumber, sensor / Perangkat · kendali.",
+        "description": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
         "data": {
           "general_room_occupancy_sensors": "Ruangan · Kehadiran · sensor",
           "general_occupied_rooms_entity": "Kehadiran · Ruangan · sumber (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Kehadiran di rumah",
           "general_sleep_rooms_entity": "Tidur · Ruangan · sumber (state)",
           "general_sleep_rooms_attribute": "Tidur · Ruangan · sumber (attribute)",
-          "general_source_stale_minutes": "sumber · max (min)"
+          "general_source_stale_minutes": "Kehadiran di rumah · Usia maksimum data pelacak/jumlah orang (menit)",
+          "general_wake_alarm_entity": "Tidur · Alarm berikutnya",
+          "general_wake_lead_minutes_entity": "Tidur · Menit sebelum alarm"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Ruangan · Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait.",
-          "general_occupied_rooms_entity": "Pilih sumber Home Assistant nyata untuk “Kehadiran · Ruangan · sumber (state)”. Data hilang atau usang menghentikan tindakan terkait.",
+          "general_room_occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
+          "general_occupied_rooms_entity": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
           "general_occupied_rooms_attribute": "Atur “Kehadiran · Ruangan · sumber (attribute)” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "general_home_trackers": "Pilih sumber Home Assistant nyata untuk “Rumah · Kehadiran · Perangkat”. Data hilang atau usang menghentikan tindakan terkait.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Pilih sumber Home Assistant nyata untuk “Tidur · Ruangan · sumber (state)”. Data hilang atau usang menghentikan tindakan terkait.",
+          "general_sleep_rooms_entity": "Pilih daftar ruangan yang sedang tidur dari status atau atribut, memakai nama atau ID area Home Assistant. Ruangan dalam daftar dianggap tidur hanya jika juga terisi. Daftar yang tidak berubah tetap valid; sumber hilang atau tidak valid tidak diketahui. Alarm yang diatur dapat mengakhiri tidur otomatis sebelum berbunyi.",
           "general_sleep_rooms_attribute": "Atur “Tidur · Ruangan · sumber (attribute)” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
-          "general_source_stale_minutes": "sumber · Tidur / Kehadiran · max 240 min. Tidak valid · Matikan."
+          "general_source_stale_minutes": "Batas usia berlaku untuk laporan pelacak dan hitungan orang numerik. Daftar ruangan dan status kehadiran biner tidak kedaluwarsa saat tidak berubah. Sumber yang tidak tersedia, dipulihkan, atau tidak valid tetap tidak diketahui. Ini bukan durasi tidur.",
+          "general_wake_alarm_entity": "Pilih entitas waktu atau tanggal dan waktu alarm berikutnya, serta entitas menit sebelumnya. HEM keluar dari tidur otomatis beberapa menit lebih awal untuk melanjutkan target normal. Waktu tanpa tanggal memakai zona waktu Home Assistant. Ketidakhadiran, kendali manual, dan perlindungan perangkat tetap diprioritaskan.",
+          "general_wake_lead_minutes_entity": "Pilih entitas numerik dengan nilai menit nonnegatif, bersatuan min atau tanpa satuan. Alarm 07:00 dan nilai 30 mengakhiri tidur otomatis pukul 06:30; 0 berarti saat alarm berbunyi. Kosongkan kedua sumber untuk menonaktifkan."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Serbuk sari · HIGH",
           "pollen_max_scale": "POLLEN · Serbuk sari · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Serbuk sari · NO VENT",
-          "general_source_stale_minutes": "sumber · max (min)",
-          "general_home_policy": "Kehadiran di rumah"
+          "general_source_stale_minutes": "Kehadiran di rumah · Usia maksimum data pelacak/jumlah orang (menit)",
+          "general_home_policy": "Kehadiran di rumah",
+          "general_wake_alarm_entity": "Tidur · Alarm berikutnya",
+          "general_wake_lead_minutes_entity": "Tidur · Menit sebelum alarm"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Pilih: Kualitas udara luar · AQI, CO₂, PM2.5, PM10, VOC. Tidak tersedia: ⚠",
           "weather_warnings": "Cuaca dan peringatan · ⚠ (Tidak tersedia) → 🪟🔒",
-          "general_room_occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Ruangan · Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
           "general_home_trackers": "Pilih sumber Home Assistant nyata untuk “Rumah · Kehadiran · Perangkat”. Data hilang atau usang menghentikan tindakan terkait. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Pilih sumber Home Assistant nyata untuk “Kehadiran · Ruangan · sumber (state)”. Data hilang atau usang menghentikan tindakan terkait.",
+          "general_occupied_rooms_entity": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
           "general_occupied_rooms_attribute": "Atur “Kehadiran · Ruangan · sumber (attribute)” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
-          "general_sleep_rooms_entity": "Pilih sumber Home Assistant nyata untuk “Tidur · Ruangan · sumber (state)”. Data hilang atau usang menghentikan tindakan terkait.",
+          "general_sleep_rooms_entity": "Pilih daftar ruangan yang sedang tidur dari status atau atribut, memakai nama atau ID area Home Assistant. Ruangan dalam daftar dianggap tidur hanya jika juga terisi. Daftar yang tidak berubah tetap valid; sumber hilang atau tidak valid tidak diketahui. Alarm yang diatur dapat mengakhiri tidur otomatis sebelum berbunyi.",
           "general_sleep_rooms_attribute": "Atur “Tidur · Ruangan · sumber (attribute)” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "notify_entities": "Pilih: notify.* · pengaturan · sumber.",
           "media_players": "Pilih: media_player.* · pengaturan · sumber · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Atur “POLLEN · Serbuk sari · HIGH” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "pollen_max_scale": "Atur “POLLEN · Serbuk sari · SCALE” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
           "pollen_avoid_ventilation": "Atur “POLLEN · Serbuk sari · NO VENT” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
-          "general_source_stale_minutes": "sumber · Tidur / Kehadiran · max 240 min. Tidak valid · Matikan.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Batas usia berlaku untuk laporan pelacak dan hitungan orang numerik. Daftar ruangan dan status kehadiran biner tidak kedaluwarsa saat tidak berubah. Sumber yang tidak tersedia, dipulihkan, atau tidak valid tetap tidak diketahui. Ini bukan durasi tidur.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Pilih entitas waktu atau tanggal dan waktu alarm berikutnya, serta entitas menit sebelumnya. HEM keluar dari tidur otomatis beberapa menit lebih awal untuk melanjutkan target normal. Waktu tanpa tanggal memakai zona waktu Home Assistant. Ketidakhadiran, kendali manual, dan perlindungan perangkat tetap diprioritaskan.",
+          "general_wake_lead_minutes_entity": "Pilih entitas numerik dengan nilai menit nonnegatif, bersatuan min atau tanpa satuan. Alarm 07:00 dan nilai 30 mengakhiri tidur otomatis pukul 06:30; 0 berarti saat alarm berbunyi. Kosongkan kedua sumber untuk menonaktifkan."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
-          "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."
+          "occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
-          "occupancy_sensors": "Pilih sumber Home Assistant nyata untuk “Kehadiran · sensor”. Data hilang atau usang menghentikan tindakan terkait."
+          "occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Tidak valid · Daya · pengaturan",
       "invalid_setup_rooms": "Tidak valid: Ruangan untuk dipantau",
       "invalid_room_source": "Tidak valid: Ruangan · sumber",
-      "invalid_away_windows_recipients": "Orang yang diberi tahu; Saluran peringatan jendela. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Orang yang diberi tahu; Saluran peringatan jendela. Announcement Hub (person.*).",
+      "wake_sources_pair": "Pilih entitas alarm dan entitas menit, atau kosongkan keduanya."
     },
     "abort": {
       "setup_area_removed": "Tidak valid: Ruangan untuk dipantau",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Kehadiran di rumah · sumber · max (min)",
+        "name": "Kehadiran di rumah · Usia maksimum data pelacak/jumlah orang (menit)",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Kehadiran di ruangan · Kehadiran · Perangkat · sensor · Wajib",
+        "name": "Kehadiran di ruangan · Usia maksimum data jumlah orang (menit)",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Pengumuman · Umumkan kesalahan perangkat · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Tidur · {channel}Saat semua orang tidur",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"

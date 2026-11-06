@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · אבקנים · HIGH",
           "pollen_max_scale": "POLLEN · אבקנים · SCALE",
           "pollen_avoid_ventilation": "POLLEN · אבקנים · NO VENT",
-          "general_source_stale_minutes": "מקור · max (min)",
-          "general_home_policy": "נוכחות בבית"
+          "general_source_stale_minutes": "נוכחות בבית · גיל מרבי לנתוני מעקב/ספירת אנשים (דקות)",
+          "general_home_policy": "נוכחות בבית",
+          "general_wake_alarm_entity": "שינה · השעון המעורר הבא",
+          "general_wake_lead_minutes_entity": "שינה · דקות לפני השעון המעורר"
         },
         "data_description": {
           "weather_entities": "בחרו: מזג אוויר ואזהרות · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "בחרו: איכות האוויר בחוץ · AQI, CO₂, PM2.5, PM10, VOC. לא זמין: ⚠",
           "weather_warnings": "מזג אוויר ואזהרות · ⚠ (לא זמין) → 🪟🔒",
-          "general_room_occupancy_sensors": "בחר מקור Home Assistant אמיתי עבור „חדר · נוכחות · חיישן”. נתונים חסרים או ישנים עוצרים את הפעולה. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים.",
           "general_home_trackers": "בחר מקור Home Assistant אמיתי עבור „בית · נוכחות · התקנים”. נתונים חסרים או ישנים עוצרים את הפעולה. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "בחר מקור Home Assistant אמיתי עבור „נוכחות · חדר · מקור (state)”. נתונים חסרים או ישנים עוצרים את הפעולה.",
+          "general_occupied_rooms_entity": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים.",
           "general_occupied_rooms_attribute": "הגדר „נוכחות · חדר · מקור (attribute)” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
-          "general_sleep_rooms_entity": "בחר מקור Home Assistant אמיתי עבור „שינה · חדר · מקור (state)”. נתונים חסרים או ישנים עוצרים את הפעולה.",
+          "general_sleep_rooms_entity": "בחרו רשימת חדרים שבהם ישנים מתוך המצב או מאפיין, לפי שמות או מזהי האזורים של Home Assistant. חדר ברשימה נחשב ישן רק אם הוא גם מאוכלס. רשימה שלא השתנתה נשארת תקפה; מקור חסר או לא תקין אינו ידוע. השעון המעורר שהוגדר יכול לסיים שינה אוטומטית לפני הצלצול.",
           "general_sleep_rooms_attribute": "הגדר „שינה · חדר · מקור (attribute)” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
           "notify_entities": "בחר מקור Home Assistant אמיתי עבור „הגדרות · מקור”. נתונים חסרים או ישנים עוצרים את הפעולה.",
           "media_players": "בחרו: media_player.* · הגדרות · מקור · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "הגדר „POLLEN · אבקנים · HIGH” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
           "pollen_max_scale": "הגדר „POLLEN · אבקנים · SCALE” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
           "pollen_avoid_ventilation": "הגדר „POLLEN · אבקנים · NO VENT” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
-          "general_source_stale_minutes": "מקור · שינה / נוכחות · max 240 min. לא תקין · כיבוי.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "מגבלת הגיל חלה על דיווחי מעקב וספירות מספריות של אנשים. רשימות חדרים ומצבי נוכחות בינאריים אינם פגים כל עוד לא השתנו. מקורות לא זמינים, משוחזרים או לא תקינים נשארים לא ידועים. זה אינו משך השינה.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "בחרו ישות שעה או תאריך ושעה לשעון המעורר הבא, וגם ישות למספר הדקות. HEM יוצא משינה אוטומטית מספר דקות זה לפני הצלצול וחוזר ליעדים הרגילים. שעה ללא תאריך משתמשת באזור הזמן של Home Assistant. היעדרות, שליטה ידנית והגנות המכשיר ממשיכות לקבל עדיפות.",
+          "general_wake_lead_minutes_entity": "בחרו ישות מספרית עם מספר דקות לא שלילי, ביחידות min או ללא יחידה. שעון ב-07:00 וערך 30 מסיימים שינה אוטומטית ב-06:30; 0 פירושו בזמן הצלצול. להשבתה נקו את שני המקורות."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "בית · התקנים",
           "climate_unknown_occupancy": "נוכחות · התקנים",
           "climate_unoccupied_delay_minutes": "התקנים · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "נוכחות · התקנים · חיישן · נדרש",
+          "climate_occupancy_stale_minutes": "נוכחות בחדר · גיל מרבי לנתוני ספירת אנשים (דקות)",
           "climate_away_policy": "נוכחות בבית · בית · התקנים · POLICY",
           "climate_manual_profile": "התקנים · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "שינה · התקנים",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "התקנים (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "בחר מקור Home Assistant אמיתי עבור „נוכחות · חיישן”. נתונים חסרים או ישנים עוצרים את הפעולה.",
+          "climate_occupancy_sensors": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים.",
           "climate_away_entities": "בחר מקור Home Assistant אמיתי עבור „בית · התקנים”. נתונים חסרים או ישנים עוצרים את הפעולה.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "גיל מרבי לנתונים מספריים של ספירת אנשים בחדר. ערכים ישנים או לא זמינים אינם ידועים. מצבי נוכחות בינאריים ורשימות חדרים שלא השתנו אינם פגים.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "האפשרות שולטת ב־„התקנים · CLIMATE_MANUAL_PROFILE”. פקודות למכשיר דורשות אישור נפרד והגנות עצמאיות.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "כלליות · הגדרות",
-        "description": "כלליות · הגדרות: בחר מקור, חיישן / התקנים · בקרה.",
+        "description": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים.",
         "data": {
           "general_room_occupancy_sensors": "חדר · נוכחות · חיישן",
           "general_occupied_rooms_entity": "נוכחות · חדר · מקור (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "נוכחות בבית",
           "general_sleep_rooms_entity": "שינה · חדר · מקור (state)",
           "general_sleep_rooms_attribute": "שינה · חדר · מקור (attribute)",
-          "general_source_stale_minutes": "מקור · max (min)"
+          "general_source_stale_minutes": "נוכחות בבית · גיל מרבי לנתוני מעקב/ספירת אנשים (דקות)",
+          "general_wake_alarm_entity": "שינה · השעון המעורר הבא",
+          "general_wake_lead_minutes_entity": "שינה · דקות לפני השעון המעורר"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "בחר מקור Home Assistant אמיתי עבור „חדר · נוכחות · חיישן”. נתונים חסרים או ישנים עוצרים את הפעולה.",
-          "general_occupied_rooms_entity": "בחר מקור Home Assistant אמיתי עבור „נוכחות · חדר · מקור (state)”. נתונים חסרים או ישנים עוצרים את הפעולה.",
+          "general_room_occupancy_sensors": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים.",
+          "general_occupied_rooms_entity": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים.",
           "general_occupied_rooms_attribute": "הגדר „נוכחות · חדר · מקור (attribute)” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
           "general_home_trackers": "בחר מקור Home Assistant אמיתי עבור „בית · נוכחות · התקנים”. נתונים חסרים או ישנים עוצרים את הפעולה.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "בחר מקור Home Assistant אמיתי עבור „שינה · חדר · מקור (state)”. נתונים חסרים או ישנים עוצרים את הפעולה.",
+          "general_sleep_rooms_entity": "בחרו רשימת חדרים שבהם ישנים מתוך המצב או מאפיין, לפי שמות או מזהי האזורים של Home Assistant. חדר ברשימה נחשב ישן רק אם הוא גם מאוכלס. רשימה שלא השתנתה נשארת תקפה; מקור חסר או לא תקין אינו ידוע. השעון המעורר שהוגדר יכול לסיים שינה אוטומטית לפני הצלצול.",
           "general_sleep_rooms_attribute": "הגדר „שינה · חדר · מקור (attribute)” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
-          "general_source_stale_minutes": "מקור · שינה / נוכחות · max 240 min. לא תקין · כיבוי."
+          "general_source_stale_minutes": "מגבלת הגיל חלה על דיווחי מעקב וספירות מספריות של אנשים. רשימות חדרים ומצבי נוכחות בינאריים אינם פגים כל עוד לא השתנו. מקורות לא זמינים, משוחזרים או לא תקינים נשארים לא ידועים. זה אינו משך השינה.",
+          "general_wake_alarm_entity": "בחרו ישות שעה או תאריך ושעה לשעון המעורר הבא, וגם ישות למספר הדקות. HEM יוצא משינה אוטומטית מספר דקות זה לפני הצלצול וחוזר ליעדים הרגילים. שעה ללא תאריך משתמשת באזור הזמן של Home Assistant. היעדרות, שליטה ידנית והגנות המכשיר ממשיכות לקבל עדיפות.",
+          "general_wake_lead_minutes_entity": "בחרו ישות מספרית עם מספר דקות לא שלילי, ביחידות min או ללא יחידה. שעון ב-07:00 וערך 30 מסיימים שינה אוטומטית ב-06:30; 0 פירושו בזמן הצלצול. להשבתה נקו את שני המקורות."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "לחות. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
           "climate_devices": "התקנים. בחר רק ישויות פיזיות climate.*, humidifier.* ו־fan.* בחדר. יכולות המכשיר קובעות חימום, קירור, ייבוש, ערכי יעד ומהירות מאוורר. הבחירה אינה מפעילה דבר; יש לאפשר שליטה אוטומטית לכל מכשיר בנפרד.",
           "shades": "תריסים, וילונות וצלונים לחלונות. בחר תריסים, וילונות והצללות cover.* בחדר. Covers ללא device_class מותרים אם CLOSE נתמך והם אכן הצללת חלון. דלתות, שערים, חניות, חלונות וסוככים מוחרגים. הבחירה אינה מזיזה דבר: שייך חיישן חלון והגדר אוטומציה, הודעה וטמפרטורה בבקר. מצב לא ידוע חוסם תנועה.",
-          "occupancy_sensors": "בחר מקור Home Assistant אמיתי עבור „נוכחות · חיישן”. נתונים חסרים או ישנים עוצרים את הפעולה."
+          "occupancy_sensors": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "לחות. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
           "climate_devices": "התקנים. בחר רק ישויות פיזיות climate.*, humidifier.* ו־fan.* בחדר. יכולות המכשיר קובעות חימום, קירור, ייבוש, ערכי יעד ומהירות מאוורר. הבחירה אינה מפעילה דבר; יש לאפשר שליטה אוטומטית לכל מכשיר בנפרד.",
           "shades": "תריסים, וילונות וצלונים לחלונות. בחר תריסים, וילונות והצללות cover.* בחדר. Covers ללא device_class מותרים אם CLOSE נתמך והם אכן הצללת חלון. דלתות, שערים, חניות, חלונות וסוככים מוחרגים. הבחירה אינה מזיזה דבר: שייך חיישן חלון והגדר אוטומציה, הודעה וטמפרטורה בבקר. מצב לא ידוע חוסם תנועה.",
-          "occupancy_sensors": "בחר מקור Home Assistant אמיתי עבור „נוכחות · חיישן”. נתונים חסרים או ישנים עוצרים את הפעולה."
+          "occupancy_sensors": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "לא תקין · חיישן · הגדרות",
       "device_temperature_band_invalid": "לא תקין · טמפרטורה · הגדרות",
       "device_humidity_invalid": "לא תקין · לחות · הגדרות",
-      "device_runtime_invalid": "לא תקין · הספק · הגדרות"
+      "device_runtime_invalid": "לא תקין · הספק · הגדרות",
+      "wake_sources_pair": "בחרו גם ישות לשעון המעורר וגם ישות לדקות, או נקו את שתיהן."
     },
     "abort": {
       "already_configured": "Home Environment Manager - כבר הוגדר.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "בית · התקנים",
           "climate_unknown_occupancy": "נוכחות · התקנים",
           "climate_unoccupied_delay_minutes": "התקנים · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "נוכחות · התקנים · חיישן · נדרש",
+          "climate_occupancy_stale_minutes": "נוכחות בחדר · גיל מרבי לנתוני ספירת אנשים (דקות)",
           "climate_away_policy": "נוכחות בבית · בית · התקנים · POLICY",
           "climate_manual_profile": "התקנים · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "שינה · התקנים",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "התקנים (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "בחר מקור Home Assistant אמיתי עבור „נוכחות · חיישן”. נתונים חסרים או ישנים עוצרים את הפעולה.",
+          "climate_occupancy_sensors": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים.",
           "climate_away_entities": "בחר מקור Home Assistant אמיתי עבור „בית · התקנים”. נתונים חסרים או ישנים עוצרים את הפעולה.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "גיל מרבי לנתונים מספריים של ספירת אנשים בחדר. ערכים ישנים או לא זמינים אינם ידועים. מצבי נוכחות בינאריים ורשימות חדרים שלא השתנו אינם פגים.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "האפשרות שולטת ב־„התקנים · CLIMATE_MANUAL_PROFILE”. פקודות למכשיר דורשות אישור נפרד והגנות עצמאיות.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "כלליות · הגדרות",
-        "description": "כלליות · הגדרות: בחר מקור, חיישן / התקנים · בקרה.",
+        "description": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים.",
         "data": {
           "general_room_occupancy_sensors": "חדר · נוכחות · חיישן",
           "general_occupied_rooms_entity": "נוכחות · חדר · מקור (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "נוכחות בבית",
           "general_sleep_rooms_entity": "שינה · חדר · מקור (state)",
           "general_sleep_rooms_attribute": "שינה · חדר · מקור (attribute)",
-          "general_source_stale_minutes": "מקור · max (min)"
+          "general_source_stale_minutes": "נוכחות בבית · גיל מרבי לנתוני מעקב/ספירת אנשים (דקות)",
+          "general_wake_alarm_entity": "שינה · השעון המעורר הבא",
+          "general_wake_lead_minutes_entity": "שינה · דקות לפני השעון המעורר"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "בחר מקור Home Assistant אמיתי עבור „חדר · נוכחות · חיישן”. נתונים חסרים או ישנים עוצרים את הפעולה.",
-          "general_occupied_rooms_entity": "בחר מקור Home Assistant אמיתי עבור „נוכחות · חדר · מקור (state)”. נתונים חסרים או ישנים עוצרים את הפעולה.",
+          "general_room_occupancy_sensors": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים.",
+          "general_occupied_rooms_entity": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים.",
           "general_occupied_rooms_attribute": "הגדר „נוכחות · חדר · מקור (attribute)” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
           "general_home_trackers": "בחר מקור Home Assistant אמיתי עבור „בית · נוכחות · התקנים”. נתונים חסרים או ישנים עוצרים את הפעולה.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "בחר מקור Home Assistant אמיתי עבור „שינה · חדר · מקור (state)”. נתונים חסרים או ישנים עוצרים את הפעולה.",
+          "general_sleep_rooms_entity": "בחרו רשימת חדרים שבהם ישנים מתוך המצב או מאפיין, לפי שמות או מזהי האזורים של Home Assistant. חדר ברשימה נחשב ישן רק אם הוא גם מאוכלס. רשימה שלא השתנתה נשארת תקפה; מקור חסר או לא תקין אינו ידוע. השעון המעורר שהוגדר יכול לסיים שינה אוטומטית לפני הצלצול.",
           "general_sleep_rooms_attribute": "הגדר „שינה · חדר · מקור (attribute)” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
-          "general_source_stale_minutes": "מקור · שינה / נוכחות · max 240 min. לא תקין · כיבוי."
+          "general_source_stale_minutes": "מגבלת הגיל חלה על דיווחי מעקב וספירות מספריות של אנשים. רשימות חדרים ומצבי נוכחות בינאריים אינם פגים כל עוד לא השתנו. מקורות לא זמינים, משוחזרים או לא תקינים נשארים לא ידועים. זה אינו משך השינה.",
+          "general_wake_alarm_entity": "בחרו ישות שעה או תאריך ושעה לשעון המעורר הבא, וגם ישות למספר הדקות. HEM יוצא משינה אוטומטית מספר דקות זה לפני הצלצול וחוזר ליעדים הרגילים. שעה ללא תאריך משתמשת באזור הזמן של Home Assistant. היעדרות, שליטה ידנית והגנות המכשיר ממשיכות לקבל עדיפות.",
+          "general_wake_lead_minutes_entity": "בחרו ישות מספרית עם מספר דקות לא שלילי, ביחידות min או ללא יחידה. שעון ב-07:00 וערך 30 מסיימים שינה אוטומטית ב-06:30; 0 פירושו בזמן הצלצול. להשבתה נקו את שני המקורות."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · אבקנים · HIGH",
           "pollen_max_scale": "POLLEN · אבקנים · SCALE",
           "pollen_avoid_ventilation": "POLLEN · אבקנים · NO VENT",
-          "general_source_stale_minutes": "מקור · max (min)",
-          "general_home_policy": "נוכחות בבית"
+          "general_source_stale_minutes": "נוכחות בבית · גיל מרבי לנתוני מעקב/ספירת אנשים (דקות)",
+          "general_home_policy": "נוכחות בבית",
+          "general_wake_alarm_entity": "שינה · השעון המעורר הבא",
+          "general_wake_lead_minutes_entity": "שינה · דקות לפני השעון המעורר"
         },
         "data_description": {
           "weather_entities": "בחרו: מזג אוויר ואזהרות · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "בחרו: איכות האוויר בחוץ · AQI, CO₂, PM2.5, PM10, VOC. לא זמין: ⚠",
           "weather_warnings": "מזג אוויר ואזהרות · ⚠ (לא זמין) → 🪟🔒",
-          "general_room_occupancy_sensors": "בחר מקור Home Assistant אמיתי עבור „חדר · נוכחות · חיישן”. נתונים חסרים או ישנים עוצרים את הפעולה. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים.",
           "general_home_trackers": "בחר מקור Home Assistant אמיתי עבור „בית · נוכחות · התקנים”. נתונים חסרים או ישנים עוצרים את הפעולה. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "בחר מקור Home Assistant אמיתי עבור „נוכחות · חדר · מקור (state)”. נתונים חסרים או ישנים עוצרים את הפעולה.",
+          "general_occupied_rooms_entity": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים.",
           "general_occupied_rooms_attribute": "הגדר „נוכחות · חדר · מקור (attribute)” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
-          "general_sleep_rooms_entity": "בחר מקור Home Assistant אמיתי עבור „שינה · חדר · מקור (state)”. נתונים חסרים או ישנים עוצרים את הפעולה.",
+          "general_sleep_rooms_entity": "בחרו רשימת חדרים שבהם ישנים מתוך המצב או מאפיין, לפי שמות או מזהי האזורים של Home Assistant. חדר ברשימה נחשב ישן רק אם הוא גם מאוכלס. רשימה שלא השתנתה נשארת תקפה; מקור חסר או לא תקין אינו ידוע. השעון המעורר שהוגדר יכול לסיים שינה אוטומטית לפני הצלצול.",
           "general_sleep_rooms_attribute": "הגדר „שינה · חדר · מקור (attribute)” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
           "notify_entities": "בחר מקור Home Assistant אמיתי עבור „הגדרות · מקור”. נתונים חסרים או ישנים עוצרים את הפעולה.",
           "media_players": "בחרו: media_player.* · הגדרות · מקור · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "הגדר „POLLEN · אבקנים · HIGH” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
           "pollen_max_scale": "הגדר „POLLEN · אבקנים · SCALE” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
           "pollen_avoid_ventilation": "הגדר „POLLEN · אבקנים · NO VENT” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
-          "general_source_stale_minutes": "מקור · שינה / נוכחות · max 240 min. לא תקין · כיבוי.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "מגבלת הגיל חלה על דיווחי מעקב וספירות מספריות של אנשים. רשימות חדרים ומצבי נוכחות בינאריים אינם פגים כל עוד לא השתנו. מקורות לא זמינים, משוחזרים או לא תקינים נשארים לא ידועים. זה אינו משך השינה.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "בחרו ישות שעה או תאריך ושעה לשעון המעורר הבא, וגם ישות למספר הדקות. HEM יוצא משינה אוטומטית מספר דקות זה לפני הצלצול וחוזר ליעדים הרגילים. שעה ללא תאריך משתמשת באזור הזמן של Home Assistant. היעדרות, שליטה ידנית והגנות המכשיר ממשיכות לקבל עדיפות.",
+          "general_wake_lead_minutes_entity": "בחרו ישות מספרית עם מספר דקות לא שלילי, ביחידות min או ללא יחידה. שעון ב-07:00 וערך 30 מסיימים שינה אוטומטית ב-06:30; 0 פירושו בזמן הצלצול. להשבתה נקו את שני המקורות."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "לחות. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
           "climate_devices": "התקנים. בחר רק ישויות פיזיות climate.*, humidifier.* ו־fan.* בחדר. יכולות המכשיר קובעות חימום, קירור, ייבוש, ערכי יעד ומהירות מאוורר. הבחירה אינה מפעילה דבר; יש לאפשר שליטה אוטומטית לכל מכשיר בנפרד.",
           "shades": "תריסים, וילונות וצלונים לחלונות. בחר תריסים, וילונות והצללות cover.* בחדר. Covers ללא device_class מותרים אם CLOSE נתמך והם אכן הצללת חלון. דלתות, שערים, חניות, חלונות וסוככים מוחרגים. הבחירה אינה מזיזה דבר: שייך חיישן חלון והגדר אוטומציה, הודעה וטמפרטורה בבקר. מצב לא ידוע חוסם תנועה.",
-          "occupancy_sensors": "בחר מקור Home Assistant אמיתי עבור „נוכחות · חיישן”. נתונים חסרים או ישנים עוצרים את הפעולה."
+          "occupancy_sensors": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "לחות. בחר את קלטי החדר: שם המכשיר - שם הישות. קבוצות ריקות אינן בשימוש ולא מפעילות גילוי או בקרה אוטומטיים.",
           "climate_devices": "התקנים. בחר רק ישויות פיזיות climate.*, humidifier.* ו־fan.* בחדר. יכולות המכשיר קובעות חימום, קירור, ייבוש, ערכי יעד ומהירות מאוורר. הבחירה אינה מפעילה דבר; יש לאפשר שליטה אוטומטית לכל מכשיר בנפרד.",
           "shades": "תריסים, וילונות וצלונים לחלונות. בחר תריסים, וילונות והצללות cover.* בחדר. Covers ללא device_class מותרים אם CLOSE נתמך והם אכן הצללת חלון. דלתות, שערים, חניות, חלונות וסוככים מוחרגים. הבחירה אינה מזיזה דבר: שייך חיישן חלון והגדר אוטומציה, הודעה וטמפרטורה בבקר. מצב לא ידוע חוסם תנועה.",
-          "occupancy_sensors": "בחר מקור Home Assistant אמיתי עבור „נוכחות · חיישן”. נתונים חסרים או ישנים עוצרים את הפעולה."
+          "occupancy_sensors": "רשימה תקינה של חדרים מאוכלסים במצב או במאפיין שנבחר קובעת: החדרים ברשימה מאוכלסים, והחסרים ריקים. ללא רשימה, חיישן נוכחות פעיל אחד מספיק; כולם כבויים או ללא חיישנים נבחרים משמע חדר ריק. מקור שנבחר אך אינו זמין או תקין נשאר לא ידוע. רשימות ומצבים בינאריים שלא השתנו אינם פגים."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "לא תקין · הספק · הגדרות",
       "invalid_setup_rooms": "לא תקין: חדרים למעקב",
       "invalid_room_source": "לא תקין: חדר · מקור",
-      "invalid_away_windows_recipients": "אנשים לקבלת התראה; ערוצי התרעה על חלונות. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "אנשים לקבלת התראה; ערוצי התרעה על חלונות. Announcement Hub (person.*).",
+      "wake_sources_pair": "בחרו גם ישות לשעון המעורר וגם ישות לדקות, או נקו את שתיהן."
     },
     "abort": {
       "setup_area_removed": "לא תקין: חדרים למעקב",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "נוכחות בבית · מקור · max (min)",
+        "name": "נוכחות בבית · גיל מרבי לנתוני מעקב/ספירת אנשים (דקות)",
         "state_attributes": {
           "configuration_help": {
             "name": "עזרה"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "נוכחות בחדר · נוכחות · התקנים · חיישן · נדרש",
+        "name": "נוכחות בחדר · גיל מרבי לנתוני ספירת אנשים (דקות)",
         "state_attributes": {
           "configuration_help": {
             "name": "עזרה"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "הודעות · הודעה על שגיאות מכשיר · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "עזרה"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "שינה · {channel}כשכולם ישנים",
         "state_attributes": {
           "configuration_help": {
             "name": "עזרה"

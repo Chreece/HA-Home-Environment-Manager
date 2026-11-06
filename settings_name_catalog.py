@@ -752,8 +752,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'الرطوبة · RH · الرطوبة · الأجهزة (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'الرطوبة · RH · الرطوبة · الأجهزة · ± RH',
         'area_climate_operating_humidity_low_rh': 'الرطوبة · RH · الرطوبة · الأجهزة (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'التواجد في الغرفة · الإشغال · الأجهزة · مستشعر · '
-                                                          'مطلوب',
+        'area_climate_operating_occupancy_stale_minutes': 'التواجد في الغرفة · أقصى عمر لقراءة عدد الأشخاص (دقيقة)',
         'area_climate_operating_pm25_action_ug_m3': 'تنقية الهواء · PM2.5 · الأجهزة (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'تنقية الهواء · PURIFIER · الأجهزة · السرعة (%) · '
                                                          'SPEED %',
@@ -815,7 +814,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'حبوب اللقاح · POLLEN · حبوب اللقاح · HIGH',
         'global_environment_pollen_max_scale': 'حبوب اللقاح · POLLEN · حبوب اللقاح · SCALE',
         'global_occupancy_away_cooldown_minutes': 'التواجد في المنزل · المنزل · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'التواجد في المنزل · المصدر · max (min)',
+        'global_occupancy_source_stale_minutes': 'التواجد في المنزل · أقصى عمر لقراءة المتتبّع أو عدد الأشخاص (دقيقة)',
         'global_setting_announcement_repeat_minutes': 'الإعلانات · الإعلانات (اختياري) · 0-1440 min',
         'global_threshold_indoor_aqi': 'التهوية · جودة الهواء · AQI (≥)',
         'global_threshold_indoor_co2': 'التهوية · جودة الهواء · CO₂ (ppm) (≥)',
@@ -876,8 +875,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Влажност · RH · Влажност · Устройства (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Влажност · RH · Влажност · Устройства · ± RH',
         'area_climate_operating_humidity_low_rh': 'Влажност · RH · Влажност · Устройства (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Присъствие в стаята · Присъствие · Устройства · '
-                                                          'сензор · Задължително',
+        'area_climate_operating_occupancy_stale_minutes': 'Присъствие в стаята · Максимална възраст на броя на хората (мин)',
         'area_climate_operating_pm25_action_ug_m3': 'Пречистване на въздуха · PM2.5 · Устройства (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Пречистване на въздуха · PURIFIER · Устройства · '
                                                          'Скорост (%) · SPEED %',
@@ -939,7 +937,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Полени · POLLEN · Полени · HIGH',
         'global_environment_pollen_max_scale': 'Полени · POLLEN · Полени · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Присъствие у дома · Дом · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Присъствие у дома · източник · max (min)',
+        'global_occupancy_source_stale_minutes': 'Присъствие у дома · Максимална възраст на данните от тракерите/броячите (мин)',
         'global_setting_announcement_repeat_minutes': 'Известия · Съобщения (по избор) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Проветряване · Качество на въздуха · AQI (≥)',
         'global_threshold_indoor_co2': 'Проветряване · Качество на въздуха · CO₂ (ppm) (≥)',
@@ -1000,8 +998,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'আর্দ্রতা · RH · আর্দ্রতা · ডিভাইস (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'আর্দ্রতা · RH · আর্দ্রতা · ডিভাইস · ± RH',
         'area_climate_operating_humidity_low_rh': 'আর্দ্রতা · RH · আর্দ্রতা · ডিভাইস (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'ঘরে উপস্থিতি · উপস্থিতি · ডিভাইস · সেন্সর · '
-                                                          'আবশ্যক',
+        'area_climate_operating_occupancy_stale_minutes': 'ঘরে উপস্থিতি · লোকসংখ্যার তথ্যের সর্বোচ্চ বয়স (মিনিট)',
         'area_climate_operating_pm25_action_ug_m3': 'বায়ু পরিশোধন · PM2.5 · ডিভাইস (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'বায়ু পরিশোধন · PURIFIER · ডিভাইস · গতি (%) · '
                                                          'SPEED %',
@@ -1063,7 +1060,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'পরাগ · POLLEN · পরাগ · HIGH',
         'global_environment_pollen_max_scale': 'পরাগ · POLLEN · পরাগ · SCALE',
         'global_occupancy_away_cooldown_minutes': 'বাড়িতে উপস্থিতি · বাড়ি · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'বাড়িতে উপস্থিতি · উৎস · max (min)',
+        'global_occupancy_source_stale_minutes': 'বাড়িতে উপস্থিতি · ট্র্যাকার/লোকসংখ্যার তথ্যের সর্বোচ্চ বয়স (মিনিট)',
         'global_setting_announcement_repeat_minutes': 'ঘোষণা · ঘোষণা (ঐচ্ছিক) · 0-1440 min',
         'global_threshold_indoor_aqi': 'বায়ু চলাচল · বায়ুর মান · AQI (≥)',
         'global_threshold_indoor_co2': 'বায়ু চলাচল · বায়ুর মান · CO₂ (ppm) (≥)',
@@ -1124,8 +1121,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Vlhkost · RH · Vlhkost · Zařízení (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Vlhkost · RH · Vlhkost · Zařízení · ± RH',
         'area_climate_operating_humidity_low_rh': 'Vlhkost · RH · Vlhkost · Zařízení (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Přítomnost v místnosti · Obsazenost · Zařízení · '
-                                                          'senzor · Povinné',
+        'area_climate_operating_occupancy_stale_minutes': 'Přítomnost v místnosti · Maximální stáří počtu osob (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Čištění vzduchu · PM2.5 · Zařízení (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Čištění vzduchu · PURIFIER · Zařízení · Rychlost '
                                                          '(%) · SPEED %',
@@ -1187,7 +1183,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Pyl · POLLEN · Pyl · HIGH',
         'global_environment_pollen_max_scale': 'Pyl · POLLEN · Pyl · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Přítomnost doma · Domov · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Přítomnost doma · zdroj · max (min)',
+        'global_occupancy_source_stale_minutes': 'Přítomnost doma · Maximální stáří údajů sledování/počtu osob (min)',
         'global_setting_announcement_repeat_minutes': 'Oznámení · Oznámení (volitelně) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Větrání · Kvalita vzduchu · AQI (≥)',
         'global_threshold_indoor_co2': 'Větrání · Kvalita vzduchu · CO₂ (ppm) (≥)',
@@ -1250,8 +1246,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_hysteresis_rh': 'Luftfugtighed · RH · Luftfugtighed · Enheder · ± '
                                                          'RH',
         'area_climate_operating_humidity_low_rh': 'Luftfugtighed · RH · Luftfugtighed · Enheder (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Tilstedeværelse i rummet · Tilstedeværelse · '
-                                                          'Enheder · sensor · Påkrævet',
+        'area_climate_operating_occupancy_stale_minutes': 'Tilstedeværelse i rummet · Maksimal alder på personantal (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Luftrensning · PM2.5 · Enheder (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Luftrensning · PURIFIER · Enheder · Hastighed (%) '
                                                          '· SPEED %',
@@ -1313,7 +1308,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Pollen · POLLEN · Pollen · HIGH',
         'global_environment_pollen_max_scale': 'Pollen · POLLEN · Pollen · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Tilstedeværelse hjemme · Hjem · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Tilstedeværelse hjemme · kilde · max (min)',
+        'global_occupancy_source_stale_minutes': 'Tilstedeværelse hjemme · Maksimal alder på tracker-/personantaldata (min)',
         'global_setting_announcement_repeat_minutes': 'Meddelelser · Meddelelser (valgfrit) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Ventilation · Luftkvalitet · AQI (≥)',
         'global_threshold_indoor_co2': 'Ventilation · Luftkvalitet · CO₂ (ppm) (≥)',
@@ -1381,8 +1376,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_hysteresis_rh': 'Luftfeuchte · Entscheidungshysterese '
                                                          '(Prozentpunkte)',
         'area_climate_operating_humidity_low_rh': 'Luftfeuchte · Befeuchtungsschwelle (% rF)',
-        'area_climate_operating_occupancy_stale_minutes': 'Raumanwesenheit · Höchstalter der Sensormeldung '
-                                                          '(min)',
+        'area_climate_operating_occupancy_stale_minutes': 'Raumanwesenheit · Höchstalter der Personenzählung (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Luftreinigung · PM2.5-Lüfterschwelle (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Luftreinigung · Maximale Luftreinigerdrehzahl (%)',
         'area_climate_operating_sleep_active': 'Schlaf · Jetzt schlafen',
@@ -1444,8 +1438,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Pollen · Pollenindex ab diesem Wert hoch',
         'global_environment_pollen_max_scale': 'Pollen · Maximalwert der Pollen-Skala',
         'global_occupancy_away_cooldown_minutes': 'Anwesenheit zu Hause · Abwesenheitsverzögerung (min)',
-        'global_occupancy_source_stale_minutes': 'Anwesenheit zu Hause · Höchstalter der Raum-/Schlafliste '
-                                                 '(min)',
+        'global_occupancy_source_stale_minutes': 'Anwesenheit zu Hause · Höchstalter von Tracker-/Zählwerten (min)',
         'global_setting_announcement_repeat_minutes': 'Ansagen · Wiederholungsintervall (min)',
         'global_threshold_indoor_aqi': 'Lüftung · Innen-AQI als Lüftungsschwelle',
         'global_threshold_indoor_co2': 'Lüftung · CO₂-Grenzwert innen für Lüftung (ppm)',
@@ -1511,8 +1504,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Υγρασία · Όριο αφύγρανσης (% RH)',
         'area_climate_operating_humidity_hysteresis_rh': 'Υγρασία · Υστέρηση απόφασης (μονάδες %)',
         'area_climate_operating_humidity_low_rh': 'Υγρασία · Όριο ύγρανσης (% RH)',
-        'area_climate_operating_occupancy_stale_minutes': 'Παρουσία χώρου · Μέγιστη ηλικία αναφοράς '
-                                                          'αισθητήρα (λεπτά)',
+        'area_climate_operating_occupancy_stale_minutes': 'Παρουσία χώρου · Μέγιστη ηλικία αναφοράς πλήθους (λεπτά)',
         'area_climate_operating_pm25_action_ug_m3': 'Καθαρισμός αέρα · Όριο ανεμιστήρα PM2.5 (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Καθαρισμός αέρα · Μέγιστη ταχύτητα καθαριστή (%)',
         'area_climate_operating_sleep_active': 'Ύπνος · Ύπνος τώρα',
@@ -1575,8 +1567,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Γύρη · Υψηλή γύρη από αυτή την τιμή',
         'global_environment_pollen_max_scale': 'Γύρη · Μέγιστη τιμή κλίμακας γύρης',
         'global_occupancy_away_cooldown_minutes': 'Σπίτι - Παρουσία · Καθυστέρηση απουσίας (λεπτά)',
-        'global_occupancy_source_stale_minutes': 'Σπίτι - Παρουσία · Μέγιστη ηλικία λίστας παρουσίας/ύπνου '
-                                                 '(λεπτά)',
+        'global_occupancy_source_stale_minutes': 'Σπίτι - Παρουσία · Μέγιστη ηλικία αναφοράς παρουσίας/πλήθους (λεπτά)',
         'global_setting_announcement_repeat_minutes': 'Ανακοινώσεις · Διάστημα επανάληψης (λεπτά)',
         'global_threshold_indoor_aqi': 'Αερισμός · Όριο εσωτερικού AQI για αερισμό',
         'global_threshold_indoor_co2': 'Αερισμός · Όριο εσωτερικού CO₂ για αερισμό (ppm)',
@@ -1640,7 +1631,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Humidity · Drying threshold (% RH)',
         'area_climate_operating_humidity_hysteresis_rh': 'Humidity · Decision hysteresis (pp)',
         'area_climate_operating_humidity_low_rh': 'Humidity · Humidification threshold (% RH)',
-        'area_climate_operating_occupancy_stale_minutes': 'Room occupancy · Maximum sensor report age (min)',
+        'area_climate_operating_occupancy_stale_minutes': 'Room occupancy · Maximum count report age (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Air cleaning · PM2.5 fan threshold (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Air cleaning · Maximum purifier speed (%)',
         'area_climate_operating_sleep_active': 'Sleep · Sleeping now',
@@ -1700,7 +1691,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Pollen · Pollen scale: threshold treated as high',
         'global_environment_pollen_max_scale': "Pollen · Pollen provider's maximum scale value",
         'global_occupancy_away_cooldown_minutes': 'Home Occupancy · Away delay (min)',
-        'global_occupancy_source_stale_minutes': 'Home Occupancy · Maximum room/sleep list age (min)',
+        'global_occupancy_source_stale_minutes': 'Home Occupancy · Maximum tracker/count report age (min)',
         'global_setting_announcement_repeat_minutes': 'Announcement · Repeat interval (min)',
         'global_threshold_indoor_aqi': 'Ventilation · Indoor AQI triggering ventilation',
         'global_threshold_indoor_co2': 'Ventilation · Indoor CO₂ triggering ventilation (ppm)',
@@ -1763,8 +1754,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Humedad · RH · Humedad · Dispositivos (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Humedad · RH · Humedad · Dispositivos · ± RH',
         'area_climate_operating_humidity_low_rh': 'Humedad · RH · Humedad · Dispositivos (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Ocupación de la habitación · Ocupación · '
-                                                          'Dispositivos · sensor · Obligatorio',
+        'area_climate_operating_occupancy_stale_minutes': 'Ocupación de la habitación · Antigüedad máxima del recuento de personas (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Purificación del aire · PM2.5 · Dispositivos (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Purificación del aire · PURIFIER · Dispositivos · '
                                                          'Velocidad (%) · SPEED %',
@@ -1833,7 +1823,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Polen · POLLEN · Polen · HIGH',
         'global_environment_pollen_max_scale': 'Polen · POLLEN · Polen · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Presencia en casa · Casa · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Presencia en casa · fuente · max (min)',
+        'global_occupancy_source_stale_minutes': 'Presencia en casa · Antigüedad máxima de rastreadores/recuentos (min)',
         'global_setting_announcement_repeat_minutes': 'Avisos · Repetir anuncios (minutos)',
         'global_threshold_indoor_aqi': 'Ventilación · Umbral de AQI interior que activa la ventilación',
         'global_threshold_indoor_co2': 'Ventilación · Umbral de CO₂ interior que activa la ventilación (ppm)',
@@ -1901,8 +1891,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'رطوبت · RH · رطوبت · دستگاه\u200cها (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'رطوبت · RH · رطوبت · دستگاه\u200cها · ± RH',
         'area_climate_operating_humidity_low_rh': 'رطوبت · RH · رطوبت · دستگاه\u200cها (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'حضور در اتاق · حضور · دستگاه\u200cها · حسگر · '
-                                                          'الزامی',
+        'area_climate_operating_occupancy_stale_minutes': 'حضور در اتاق · حداکثر عمر دادهٔ تعداد افراد (دقیقه)',
         'area_climate_operating_pm25_action_ug_m3': 'تصفیه هوا · PM2.5 · دستگاه\u200cها (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'تصفیه هوا · PURIFIER · دستگاه\u200cها · سرعت (%) · '
                                                          'SPEED %',
@@ -1964,7 +1953,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'گرده · POLLEN · گرده · HIGH',
         'global_environment_pollen_max_scale': 'گرده · POLLEN · گرده · SCALE',
         'global_occupancy_away_cooldown_minutes': 'حضور در خانه · خانه · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'حضور در خانه · منبع · max (min)',
+        'global_occupancy_source_stale_minutes': 'حضور در خانه · حداکثر عمر دادهٔ ردیاب/تعداد افراد (دقیقه)',
         'global_setting_announcement_repeat_minutes': 'اعلان\u200cها · اعلان\u200cها (اختیاری) · 0-1440 min',
         'global_threshold_indoor_aqi': 'تهویه · کیفیت هوا · AQI (≥)',
         'global_threshold_indoor_co2': 'تهویه · کیفیت هوا · CO₂ (ppm) (≥)',
@@ -2025,8 +2014,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Kosteus · RH · Kosteus · Laitteet (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Kosteus · RH · Kosteus · Laitteet · ± RH',
         'area_climate_operating_humidity_low_rh': 'Kosteus · RH · Kosteus · Laitteet (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Huoneen läsnäolo · Läsnäolo · Laitteet · anturi · '
-                                                          'Vaaditaan',
+        'area_climate_operating_occupancy_stale_minutes': 'Huoneen läsnäolo · Henkilömäärätiedon enimmäisikä (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Ilmanpuhdistus · PM2.5 · Laitteet (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Ilmanpuhdistus · PURIFIER · Laitteet · Nopeus (%) '
                                                          '· SPEED %',
@@ -2088,7 +2076,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Siitepöly · POLLEN · Siitepöly · HIGH',
         'global_environment_pollen_max_scale': 'Siitepöly · POLLEN · Siitepöly · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Kotonaolo · Koti · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Kotonaolo · lähde · max (min)',
+        'global_occupancy_source_stale_minutes': 'Kotonaolo · Seuranta- ja henkilömäärätietojen enimmäisikä (min)',
         'global_setting_announcement_repeat_minutes': 'Ilmoitukset · Ilmoitukset (valinnainen) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Ilmanvaihto · Ilmanlaatu · AQI (≥)',
         'global_threshold_indoor_co2': 'Ilmanvaihto · Ilmanlaatu · CO₂ (ppm) (≥)',
@@ -2150,8 +2138,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Humidité · RH · Humidité · Appareils (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Humidité · RH · Humidité · Appareils · ± RH',
         'area_climate_operating_humidity_low_rh': 'Humidité · RH · Humidité · Appareils (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Présence dans la pièce · Présence · Appareils · '
-                                                          'capteur · Obligatoire',
+        'area_climate_operating_occupancy_stale_minutes': 'Présence dans la pièce · Âge maximal du nombre de personnes (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Purification de l’air · PM2.5 · Appareils (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Purification de l’air · PURIFIER · Appareils · '
                                                          'Vitesse (%) · SPEED %',
@@ -2214,7 +2201,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Pollen · POLLEN · Pollen · HIGH',
         'global_environment_pollen_max_scale': 'Pollen · POLLEN · Pollen · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Présence à domicile · Maison · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Présence à domicile · source · max (min)',
+        'global_occupancy_source_stale_minutes': 'Présence à domicile · Âge maximal des données de suivi/comptage (min)',
         'global_setting_announcement_repeat_minutes': 'Annonces · Répéter les annonces (minutes)',
         'global_threshold_indoor_aqi': "Aération · Seuil d'AQI intérieur déclenchant l'aération",
         'global_threshold_indoor_co2': "Aération · Seuil de CO₂ intérieur déclenchant l'aération (ppm)",
@@ -2277,7 +2264,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'לחות · RH · לחות · התקנים (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'לחות · RH · לחות · התקנים · ± RH',
         'area_climate_operating_humidity_low_rh': 'לחות · RH · לחות · התקנים (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'נוכחות בחדר · נוכחות · התקנים · חיישן · נדרש',
+        'area_climate_operating_occupancy_stale_minutes': 'נוכחות בחדר · גיל מרבי לנתוני ספירת אנשים (דקות)',
         'area_climate_operating_pm25_action_ug_m3': 'טיהור אוויר · PM2.5 · התקנים (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'טיהור אוויר · PURIFIER · התקנים · מהירות (%) · '
                                                          'SPEED %',
@@ -2339,7 +2326,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'אבקנים · POLLEN · אבקנים · HIGH',
         'global_environment_pollen_max_scale': 'אבקנים · POLLEN · אבקנים · SCALE',
         'global_occupancy_away_cooldown_minutes': 'נוכחות בבית · בית · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'נוכחות בבית · מקור · max (min)',
+        'global_occupancy_source_stale_minutes': 'נוכחות בבית · גיל מרבי לנתוני מעקב/ספירת אנשים (דקות)',
         'global_setting_announcement_repeat_minutes': 'הודעות · הודעות (אופציונלי) · 0-1440 min',
         'global_threshold_indoor_aqi': 'אוורור · איכות האוויר · AQI (≥)',
         'global_threshold_indoor_co2': 'אוורור · איכות האוויר · CO₂ (ppm) (≥)',
@@ -2399,8 +2386,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'आर्द्रता · RH · आर्द्रता · उपकरण (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'आर्द्रता · RH · आर्द्रता · उपकरण · ± RH',
         'area_climate_operating_humidity_low_rh': 'आर्द्रता · RH · आर्द्रता · उपकरण (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'कमरे में उपस्थिति · उपस्थिति · उपकरण · सेंसर · '
-                                                          'आवश्यक',
+        'area_climate_operating_occupancy_stale_minutes': 'कमरे में उपस्थिति · लोगों की गिनती के डेटा की अधिकतम आयु (मिनट)',
         'area_climate_operating_pm25_action_ug_m3': 'वायु शोधन · PM2.5 · उपकरण (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'वायु शोधन · PURIFIER · उपकरण · गति (%) · SPEED %',
         'area_climate_operating_sleep_active': 'नींद · उपकरण',
@@ -2461,7 +2447,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'पराग · POLLEN · पराग · HIGH',
         'global_environment_pollen_max_scale': 'पराग · POLLEN · पराग · SCALE',
         'global_occupancy_away_cooldown_minutes': 'घर में उपस्थिति · घर · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'घर में उपस्थिति · स्रोत · max (min)',
+        'global_occupancy_source_stale_minutes': 'घर में उपस्थिति · ट्रैकर/लोगों की गिनती के डेटा की अधिकतम आयु (मिनट)',
         'global_setting_announcement_repeat_minutes': 'घोषणाएँ · घोषणाएँ (वैकल्पिक) · 0-1440 min',
         'global_threshold_indoor_aqi': 'वेंटिलेशन · वायु गुणवत्ता · AQI (≥)',
         'global_threshold_indoor_co2': 'वेंटिलेशन · वायु गुणवत्ता · CO₂ (ppm) (≥)',
@@ -2522,8 +2508,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Vlažnost · RH · Vlažnost · Uređaji (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Vlažnost · RH · Vlažnost · Uređaji · ± RH',
         'area_climate_operating_humidity_low_rh': 'Vlažnost · RH · Vlažnost · Uređaji (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Prisutnost u prostoriji · Prisutnost · Uređaji · '
-                                                          'senzor · Obavezno',
+        'area_climate_operating_occupancy_stale_minutes': 'Prisutnost u prostoriji · Najveća starost broja osoba (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Pročišćavanje zraka · PM2.5 · Uređaji (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Pročišćavanje zraka · PURIFIER · Uređaji · Brzina '
                                                          '(%) · SPEED %',
@@ -2587,7 +2572,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Pelud · POLLEN · Pelud · HIGH',
         'global_environment_pollen_max_scale': 'Pelud · POLLEN · Pelud · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Prisutnost kod kuće · Dom · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Prisutnost kod kuće · izvor · max (min)',
+        'global_occupancy_source_stale_minutes': 'Prisutnost kod kuće · Najveća starost podataka praćenja/broja osoba (min)',
         'global_setting_announcement_repeat_minutes': 'Obavijesti · Obavijesti (neobavezno) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Ventilacija · Kvaliteta zraka · AQI (≥)',
         'global_threshold_indoor_co2': 'Ventilacija · Kvaliteta zraka · CO₂ (ppm) (≥)',
@@ -2648,8 +2633,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Páratartalom · RH · Páratartalom · Eszközök (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Páratartalom · RH · Páratartalom · Eszközök · ± RH',
         'area_climate_operating_humidity_low_rh': 'Páratartalom · RH · Páratartalom · Eszközök (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Jelenlét a helyiségben · Jelenlét · Eszközök · '
-                                                          'érzékelő · Kötelező',
+        'area_climate_operating_occupancy_stale_minutes': 'Jelenlét a helyiségben · Létszámadatok legnagyobb kora (perc)',
         'area_climate_operating_pm25_action_ug_m3': 'Légtisztítás · PM2.5 · Eszközök (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Légtisztítás · PURIFIER · Eszközök · Sebesség (%) '
                                                          '· SPEED %',
@@ -2711,7 +2695,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Pollen · POLLEN · Pollen · HIGH',
         'global_environment_pollen_max_scale': 'Pollen · POLLEN · Pollen · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Otthoni jelenlét · Otthon · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Otthoni jelenlét · forrás · max (min)',
+        'global_occupancy_source_stale_minutes': 'Otthoni jelenlét · Követési/létszámadatok legnagyobb kora (perc)',
         'global_setting_announcement_repeat_minutes': 'Értesítések · Értesítések (opcionális) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Szellőztetés · Levegőminőség · AQI (≥)',
         'global_threshold_indoor_co2': 'Szellőztetés · Levegőminőség · CO₂ (ppm) (≥)',
@@ -2772,8 +2756,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Kelembapan · RH · Kelembapan · Perangkat (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Kelembapan · RH · Kelembapan · Perangkat · ± RH',
         'area_climate_operating_humidity_low_rh': 'Kelembapan · RH · Kelembapan · Perangkat (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Kehadiran di ruangan · Kehadiran · Perangkat · '
-                                                          'sensor · Wajib',
+        'area_climate_operating_occupancy_stale_minutes': 'Kehadiran di ruangan · Usia maksimum data jumlah orang (menit)',
         'area_climate_operating_pm25_action_ug_m3': 'Pemurnian udara · PM2.5 · Perangkat (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Pemurnian udara · PURIFIER · Perangkat · Kecepatan '
                                                          '(%) · SPEED %',
@@ -2835,7 +2818,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Serbuk sari · POLLEN · Serbuk sari · HIGH',
         'global_environment_pollen_max_scale': 'Serbuk sari · POLLEN · Serbuk sari · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Kehadiran di rumah · Rumah · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Kehadiran di rumah · sumber · max (min)',
+        'global_occupancy_source_stale_minutes': 'Kehadiran di rumah · Usia maksimum data pelacak/jumlah orang (menit)',
         'global_setting_announcement_repeat_minutes': 'Pengumuman · Pengumuman (opsional) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Ventilasi · Kualitas udara · AQI (≥)',
         'global_threshold_indoor_co2': 'Ventilasi · Kualitas udara · CO₂ (ppm) (≥)',
@@ -2896,8 +2879,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Umidità · RH · Umidità · Dispositivi (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Umidità · RH · Umidità · Dispositivi · ± RH',
         'area_climate_operating_humidity_low_rh': 'Umidità · RH · Umidità · Dispositivi (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Presenza nella stanza · Presenza · Dispositivi · '
-                                                          'sensore · Richiesto',
+        'area_climate_operating_occupancy_stale_minutes': 'Presenza nella stanza · Età massima del conteggio delle persone (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Purificazione dell’aria · PM2.5 · Dispositivi (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Purificazione dell’aria · PURIFIER · Dispositivi · '
                                                          'Velocità (%) · SPEED %',
@@ -2959,7 +2941,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Polline · POLLEN · Polline · HIGH',
         'global_environment_pollen_max_scale': 'Polline · POLLEN · Polline · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Presenza in casa · Casa · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Presenza in casa · fonte · max (min)',
+        'global_occupancy_source_stale_minutes': 'Presenza in casa · Età massima dei dati di tracciamento/conteggio (min)',
         'global_setting_announcement_repeat_minutes': 'Annunci · Annunci (facoltativi) · 0-1440 min',
         'global_threshold_indoor_aqi': "Ventilazione · Qualità dell'aria · AQI (≥)",
         'global_threshold_indoor_co2': "Ventilazione · Qualità dell'aria · CO₂ (ppm) (≥)",
@@ -3019,7 +3001,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': '湿度 · RH · 湿度 · デバイス (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': '湿度 · RH · 湿度 · デバイス · ± RH',
         'area_climate_operating_humidity_low_rh': '湿度 · RH · 湿度 · デバイス (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': '部屋の在室状況 · 在室 · デバイス · センサー · 必須',
+        'area_climate_operating_occupancy_stale_minutes': '部屋の在室状況 · 人数データの最大経過時間（分）',
         'area_climate_operating_pm25_action_ug_m3': '空気清浄 · PM2.5 · デバイス (µg/m³)',
         'area_climate_operating_purifier_speed_percent': '空気清浄 · PURIFIER · デバイス · 速度 (%) · SPEED %',
         'area_climate_operating_sleep_active': '睡眠 · デバイス',
@@ -3080,7 +3062,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': '花粉 · POLLEN · 花粉 · HIGH',
         'global_environment_pollen_max_scale': '花粉 · POLLEN · 花粉 · SCALE',
         'global_occupancy_away_cooldown_minutes': '在宅状況 · 自宅 · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': '在宅状況 · 情報源 · max (min)',
+        'global_occupancy_source_stale_minutes': '在宅状況 · 追跡・人数データの最大経過時間（分）',
         'global_setting_announcement_repeat_minutes': '通知 · 通知（任意） · 0-1440 min',
         'global_threshold_indoor_aqi': '換気 · 空気質 · AQI (≥)',
         'global_threshold_indoor_co2': '換気 · 空気質 · CO₂ (ppm) (≥)',
@@ -3140,7 +3122,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': '습도 · RH · 습도 · 장치 (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': '습도 · RH · 습도 · 장치 · ± RH',
         'area_climate_operating_humidity_low_rh': '습도 · RH · 습도 · 장치 (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': '실내 재실 · 재실 · 장치 · 센서 · 필수',
+        'area_climate_operating_occupancy_stale_minutes': '실내 재실 · 인원수 데이터의 최대 경과 시간(분)',
         'area_climate_operating_pm25_action_ug_m3': '공기 정화 · PM2.5 · 장치 (µg/m³)',
         'area_climate_operating_purifier_speed_percent': '공기 정화 · PURIFIER · 장치 · 속도 (%) · SPEED %',
         'area_climate_operating_sleep_active': '수면 · 장치',
@@ -3200,7 +3182,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': '꽃가루 · POLLEN · 꽃가루 · HIGH',
         'global_environment_pollen_max_scale': '꽃가루 · POLLEN · 꽃가루 · SCALE',
         'global_occupancy_away_cooldown_minutes': '재택 상태 · 집 · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': '재택 상태 · 정보원 · max (min)',
+        'global_occupancy_source_stale_minutes': '재택 상태 · 추적·인원수 데이터의 최대 경과 시간(분)',
         'global_setting_announcement_repeat_minutes': '알림 · 알림(선택 사항) · 0-1440 min',
         'global_threshold_indoor_aqi': '환기 · 공기질 · AQI (≥)',
         'global_threshold_indoor_co2': '환기 · 공기질 · CO₂ (ppm) (≥)',
@@ -3263,8 +3245,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_hysteresis_rh': 'Luftfuktighet · RH · Luftfuktighet · Enheter · ± '
                                                          'RH',
         'area_climate_operating_humidity_low_rh': 'Luftfuktighet · RH · Luftfuktighet · Enheter (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Tilstedeværelse i rommet · Tilstedeværelse · '
-                                                          'Enheter · sensor · Påkrevd',
+        'area_climate_operating_occupancy_stale_minutes': 'Tilstedeværelse i rommet · Maksimal alder på persontall (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Luftrensing · PM2.5 · Enheter (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Luftrensing · PURIFIER · Enheter · Hastighet (%) · '
                                                          'SPEED %',
@@ -3326,7 +3307,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Pollen · POLLEN · Pollen · HIGH',
         'global_environment_pollen_max_scale': 'Pollen · POLLEN · Pollen · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Tilstedeværelse hjemme · Hjem · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Tilstedeværelse hjemme · kilde · max (min)',
+        'global_occupancy_source_stale_minutes': 'Tilstedeværelse hjemme · Maksimal alder på sporings-/persontallsdata (min)',
         'global_setting_announcement_repeat_minutes': 'Meldinger · Kunngjøringer (valgfritt) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Ventilasjon · Luftkvalitet · AQI (≥)',
         'global_threshold_indoor_co2': 'Ventilasjon · Luftkvalitet · CO₂ (ppm) (≥)',
@@ -3392,8 +3373,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
                                                          '± RH',
         'area_climate_operating_humidity_low_rh': 'Luchtvochtigheid · RH · Vochtigheid · Apparaten (%) · RH '
                                                   'MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Aanwezigheid in kamer · Aanwezigheid · Apparaten '
-                                                          '· sensor · Vereist',
+        'area_climate_operating_occupancy_stale_minutes': 'Aanwezigheid in kamer · Maximale ouderdom van het aantal personen (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Luchtreiniging · PM2.5 · Apparaten (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Luchtreiniging · PURIFIER · Apparaten · Snelheid '
                                                          '(%) · SPEED %',
@@ -3456,7 +3436,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Pollen · POLLEN · Pollen · HIGH',
         'global_environment_pollen_max_scale': 'Pollen · POLLEN · Pollen · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Aanwezigheid thuis · Thuis · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Aanwezigheid thuis · bron · max (min)',
+        'global_occupancy_source_stale_minutes': 'Aanwezigheid thuis · Maximale ouderdom van tracker-/telgegevens (min)',
         'global_setting_announcement_repeat_minutes': 'Meldingen · Meldingen (optioneel) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Ventilatie · Luchtkwaliteit · AQI (≥)',
         'global_threshold_indoor_co2': 'Ventilatie · Luchtkwaliteit · CO₂ (ppm) (≥)',
@@ -3517,8 +3497,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Wilgotność · RH · Wilgotność · Urządzenia (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Wilgotność · RH · Wilgotność · Urządzenia · ± RH',
         'area_climate_operating_humidity_low_rh': 'Wilgotność · RH · Wilgotność · Urządzenia (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Obecność w pomieszczeniu · Obecność · Urządzenia '
-                                                          '· czujnik · Wymagane',
+        'area_climate_operating_occupancy_stale_minutes': 'Obecność w pomieszczeniu · Maksymalny wiek danych o liczbie osób (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Oczyszczanie powietrza · PM2.5 · Urządzenia (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Oczyszczanie powietrza · PURIFIER · Urządzenia · '
                                                          'Prędkość (%) · SPEED %',
@@ -3580,7 +3559,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Pyłki · POLLEN · Pyłki · HIGH',
         'global_environment_pollen_max_scale': 'Pyłki · POLLEN · Pyłki · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Obecność w domu · Dom · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Obecność w domu · źródło · max (min)',
+        'global_occupancy_source_stale_minutes': 'Obecność w domu · Maksymalny wiek danych śledzenia/liczby osób (min)',
         'global_setting_announcement_repeat_minutes': 'Powiadomienia · Komunikaty (opcjonalnie) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Wentylacja · Jakość powietrza · AQI (≥)',
         'global_threshold_indoor_co2': 'Wentylacja · Jakość powietrza · CO₂ (ppm) (≥)',
@@ -3642,8 +3621,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Humidade · RH · Humidade · Dispositivos (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Humidade · RH · Humidade · Dispositivos · ± RH',
         'area_climate_operating_humidity_low_rh': 'Humidade · RH · Humidade · Dispositivos (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Presença na divisão · Ocupação · Dispositivos · '
-                                                          'sensor · Obrigatório',
+        'area_climate_operating_occupancy_stale_minutes': 'Presença na divisão · Idade máxima da contagem de pessoas (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Purificação do ar · PM2.5 · Dispositivos (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Purificação do ar · PURIFIER · Dispositivos · '
                                                          'Velocidade (%) · SPEED %',
@@ -3705,7 +3683,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Pólen · POLLEN · Pólen · HIGH',
         'global_environment_pollen_max_scale': 'Pólen · POLLEN · Pólen · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Presença em casa · Casa · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Presença em casa · fonte · max (min)',
+        'global_occupancy_source_stale_minutes': 'Presença em casa · Idade máxima dos dados de localização/contagem (min)',
         'global_setting_announcement_repeat_minutes': 'Anúncios · Anúncios (opcional) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Ventilação · Qualidade do ar · AQI (≥)',
         'global_threshold_indoor_co2': 'Ventilação · Qualidade do ar · CO₂ (ppm) (≥)',
@@ -3766,8 +3744,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
            'area_climate_operating_humidity_high_rh': 'Umidade · RH · Umidade · Dispositivos (%) · RH MAX',
            'area_climate_operating_humidity_hysteresis_rh': 'Umidade · RH · Umidade · Dispositivos · ± RH',
            'area_climate_operating_humidity_low_rh': 'Umidade · RH · Umidade · Dispositivos (%) · RH MIN',
-           'area_climate_operating_occupancy_stale_minutes': 'Presença no cômodo · Ocupação · Dispositivos · '
-                                                             'sensor · Obrigatório',
+           'area_climate_operating_occupancy_stale_minutes': 'Presença no cômodo · Idade máxima da contagem de pessoas (min)',
            'area_climate_operating_pm25_action_ug_m3': 'Purificação do ar · PM2.5 · Dispositivos (µg/m³)',
            'area_climate_operating_purifier_speed_percent': 'Purificação do ar · PURIFIER · Dispositivos · '
                                                             'Velocidade (%) · SPEED %',
@@ -3833,7 +3810,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
            'global_environment_pollen_high_from': 'Pólen · POLLEN · Pólen · HIGH',
            'global_environment_pollen_max_scale': 'Pólen · POLLEN · Pólen · SCALE',
            'global_occupancy_away_cooldown_minutes': 'Presença em casa · Casa · Away · cooldown (min)',
-           'global_occupancy_source_stale_minutes': 'Presença em casa · fonte · max (min)',
+           'global_occupancy_source_stale_minutes': 'Presença em casa · Idade máxima dos dados de rastreamento/contagem (min)',
            'global_setting_announcement_repeat_minutes': 'Anúncios · Avisos (opcional) · 0-1440 min',
            'global_threshold_indoor_aqi': 'Ventilação · Qualidade do ar · AQI (≥)',
            'global_threshold_indoor_co2': 'Ventilação · Qualidade do ar · CO₂ (ppm) (≥)',
@@ -3894,8 +3871,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Umiditate · RH · Umiditate · Dispozitive (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Umiditate · RH · Umiditate · Dispozitive · ± RH',
         'area_climate_operating_humidity_low_rh': 'Umiditate · RH · Umiditate · Dispozitive (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Prezență în cameră · Ocupare · Dispozitive · '
-                                                          'senzor · Obligatoriu',
+        'area_climate_operating_occupancy_stale_minutes': 'Prezență în cameră · Vechimea maximă a numărului de persoane (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Purificarea aerului · PM2.5 · Dispozitive (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Purificarea aerului · PURIFIER · Dispozitive · '
                                                          'Viteză (%) · SPEED %',
@@ -3957,7 +3933,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Polen · POLLEN · Polen · HIGH',
         'global_environment_pollen_max_scale': 'Polen · POLLEN · Polen · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Prezență acasă · Acasă · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Prezență acasă · sursă · max (min)',
+        'global_occupancy_source_stale_minutes': 'Prezență acasă · Vechimea maximă a datelor de urmărire/numărare (min)',
         'global_setting_announcement_repeat_minutes': 'Anunțuri · Anunțuri (opțional) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Ventilație · Calitatea aerului · AQI (≥)',
         'global_threshold_indoor_co2': 'Ventilație · Calitatea aerului · CO₂ (ppm) (≥)',
@@ -4019,8 +3995,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Влажность · RH · Влажность · Устройства (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Влажность · RH · Влажность · Устройства · ± RH',
         'area_climate_operating_humidity_low_rh': 'Влажность · RH · Влажность · Устройства (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Присутствие в комнате · Присутствие · Устройства '
-                                                          '· датчик · Обязательно',
+        'area_climate_operating_occupancy_stale_minutes': 'Присутствие в комнате · Максимальный возраст данных о числе людей (мин)',
         'area_climate_operating_pm25_action_ug_m3': 'Очистка воздуха · PM2.5 · Устройства (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Очистка воздуха · PURIFIER · Устройства · Скорость '
                                                          '(%) · SPEED %',
@@ -4084,7 +4059,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Пыльца · POLLEN · Пыльца · HIGH',
         'global_environment_pollen_max_scale': 'Пыльца · POLLEN · Пыльца · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Присутствие дома · Дом · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Присутствие дома · источник · max (min)',
+        'global_occupancy_source_stale_minutes': 'Присутствие дома · Максимальный возраст данных трекеров/счётчиков (мин)',
         'global_setting_announcement_repeat_minutes': 'Объявления · Оповещения (необязательно) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Проветривание · Качество воздуха · AQI (≥)',
         'global_threshold_indoor_co2': 'Проветривание · Качество воздуха · CO₂ (ppm) (≥)',
@@ -4145,8 +4120,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Vlhkosť · RH · Vlhkosť · Zariadenia (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Vlhkosť · RH · Vlhkosť · Zariadenia · ± RH',
         'area_climate_operating_humidity_low_rh': 'Vlhkosť · RH · Vlhkosť · Zariadenia (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Prítomnosť v miestnosti · Obsadenosť · Zariadenia '
-                                                          '· senzor · Povinné',
+        'area_climate_operating_occupancy_stale_minutes': 'Prítomnosť v miestnosti · Maximálny vek počtu osôb (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Čistenie vzduchu · PM2.5 · Zariadenia (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Čistenie vzduchu · PURIFIER · Zariadenia · '
                                                          'Rýchlosť (%) · SPEED %',
@@ -4208,7 +4182,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Peľ · POLLEN · Peľ · HIGH',
         'global_environment_pollen_max_scale': 'Peľ · POLLEN · Peľ · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Prítomnosť doma · Domov · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Prítomnosť doma · zdroj · max (min)',
+        'global_occupancy_source_stale_minutes': 'Prítomnosť doma · Maximálny vek údajov sledovania/počtu osôb (min)',
         'global_setting_announcement_repeat_minutes': 'Oznámenia · Oznámenia (voliteľné) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Vetranie · Kvalita vzduchu · AQI (≥)',
         'global_threshold_indoor_co2': 'Vetranie · Kvalita vzduchu · CO₂ (ppm) (≥)',
@@ -4269,8 +4243,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Влажност · RH · Vlažnost · Uređaji (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Влажност · RH · Vlažnost · Uređaji · ± RH',
         'area_climate_operating_humidity_low_rh': 'Влажност · RH · Vlažnost · Uređaji (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Присуство у просторији · Prisustvo · Uređaji · '
-                                                          'senzor · Obavezno',
+        'area_climate_operating_occupancy_stale_minutes': 'Присуство у просторији · Највећа старост података о броју особа (мин)',
         'area_climate_operating_pm25_action_ug_m3': 'Пречишћавање ваздуха · PM2.5 · Uređaji (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Пречишћавање ваздуха · PURIFIER · Uređaji · Brzina '
                                                          '(%) · SPEED %',
@@ -4332,7 +4305,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Полен · POLLEN · Polen · HIGH',
         'global_environment_pollen_max_scale': 'Полен · POLLEN · Polen · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Присуство код куће · Dom · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Присуство код куће · izvor · max (min)',
+        'global_occupancy_source_stale_minutes': 'Присуство код куће · Највећа старост података праћења/броја особа (мин)',
         'global_setting_announcement_repeat_minutes': 'Обавештења · Обавештења (опционо) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Вентилација · Квалитет ваздуха · AQI (≥)',
         'global_threshold_indoor_co2': 'Вентилација · Квалитет ваздуха · CO₂ (ppm) (≥)',
@@ -4395,8 +4368,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_hysteresis_rh': 'Luftfuktighet · RH · Luftfuktighet · Enheter · ± '
                                                          'RH',
         'area_climate_operating_humidity_low_rh': 'Luftfuktighet · RH · Luftfuktighet · Enheter (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Närvaro i rummet · Närvaro · Enheter · sensor · '
-                                                          'Krävs',
+        'area_climate_operating_occupancy_stale_minutes': 'Närvaro i rummet · Högsta ålder på personantal (min)',
         'area_climate_operating_pm25_action_ug_m3': 'Luftrening · PM2.5 · Enheter (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Luftrening · PURIFIER · Enheter · Hastighet (%) · '
                                                          'SPEED %',
@@ -4458,7 +4430,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Pollen · POLLEN · Pollen · HIGH',
         'global_environment_pollen_max_scale': 'Pollen · POLLEN · Pollen · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Närvaro hemma · Hem · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Närvaro hemma · källa · max (min)',
+        'global_occupancy_source_stale_minutes': 'Närvaro hemma · Högsta ålder på spårnings-/personantalsdata (min)',
         'global_setting_announcement_repeat_minutes': 'Meddelanden · Meddelanden (valfritt) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Ventilation · Luftkvalitet · AQI (≥)',
         'global_threshold_indoor_co2': 'Ventilation · Luftkvalitet · CO₂ (ppm) (≥)',
@@ -4519,8 +4491,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'ஈரப்பதம் · RH · ஈரப்பதம் · சாதனங்கள் (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'ஈரப்பதம் · RH · ஈரப்பதம் · சாதனங்கள் · ± RH',
         'area_climate_operating_humidity_low_rh': 'ஈரப்பதம் · RH · ஈரப்பதம் · சாதனங்கள் (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'அறையில் இருப்பு · இருப்பு · சாதனங்கள் · உணரி · '
-                                                          'தேவை',
+        'area_climate_operating_occupancy_stale_minutes': 'அறையில் இருப்பு · நபர் எண்ணிக்கைத் தரவின் அதிகபட்ச வயது (நிமி)',
         'area_climate_operating_pm25_action_ug_m3': 'காற்று சுத்திகரிப்பு · PM2.5 · சாதனங்கள் (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'காற்று சுத்திகரிப்பு · PURIFIER · சாதனங்கள் · '
                                                          'வேகம் (%) · SPEED %',
@@ -4582,7 +4553,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'மகரந்தம் · POLLEN · மகரந்தம் · HIGH',
         'global_environment_pollen_max_scale': 'மகரந்தம் · POLLEN · மகரந்தம் · SCALE',
         'global_occupancy_away_cooldown_minutes': 'வீட்டில் இருப்பு · வீடு · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'வீட்டில் இருப்பு · மூலம் · max (min)',
+        'global_occupancy_source_stale_minutes': 'வீட்டில் இருப்பு · இருப்பிடம்/நபர் எண்ணிக்கைத் தரவின் அதிகபட்ச வயது (நிமி)',
         'global_setting_announcement_repeat_minutes': 'அறிவிப்புகள் · அறிவிப்புகள் (விருப்பம்) · 0-1440 min',
         'global_threshold_indoor_aqi': 'காற்றோட்டம் · காற்றுத் தரம் · AQI (≥)',
         'global_threshold_indoor_co2': 'காற்றோட்டம் · காற்றுத் தரம் · CO₂ (ppm) (≥)',
@@ -4644,8 +4615,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'ความชื้น · RH · ความชื้น · อุปกรณ์ (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'ความชื้น · RH · ความชื้น · อุปกรณ์ · ± RH',
         'area_climate_operating_humidity_low_rh': 'ความชื้น · RH · ความชื้น · อุปกรณ์ (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'การอยู่ในห้อง · การมีคนอยู่ · อุปกรณ์ · เซนเซอร์ '
-                                                          '· จำเป็น',
+        'area_climate_operating_occupancy_stale_minutes': 'การอยู่ในห้อง · อายุสูงสุดของข้อมูลจำนวนคน (นาที)',
         'area_climate_operating_pm25_action_ug_m3': 'การฟอกอากาศ · PM2.5 · อุปกรณ์ (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'การฟอกอากาศ · PURIFIER · อุปกรณ์ · ความเร็ว (%) · '
                                                          'SPEED %',
@@ -4707,7 +4677,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'ละอองเกสร · POLLEN · ละอองเกสร · HIGH',
         'global_environment_pollen_max_scale': 'ละอองเกสร · POLLEN · ละอองเกสร · SCALE',
         'global_occupancy_away_cooldown_minutes': 'การอยู่บ้าน · บ้าน · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'การอยู่บ้าน · แหล่งข้อมูล · max (min)',
+        'global_occupancy_source_stale_minutes': 'การอยู่บ้าน · อายุสูงสุดของข้อมูลติดตาม/จำนวนคน (นาที)',
         'global_setting_announcement_repeat_minutes': 'ประกาศ · การประกาศ (ไม่บังคับ) · 0-1440 min',
         'global_threshold_indoor_aqi': 'การระบายอากาศ · คุณภาพอากาศ · AQI (≥)',
         'global_threshold_indoor_co2': 'การระบายอากาศ · คุณภาพอากาศ · CO₂ (ppm) (≥)',
@@ -4768,8 +4738,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Nem · RH · Nem · Cihazlar (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Nem · RH · Nem · Cihazlar · ± RH',
         'area_climate_operating_humidity_low_rh': 'Nem · RH · Nem · Cihazlar (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Odada bulunma · Doluluk · Cihazlar · sensör · '
-                                                          'Gerekli',
+        'area_climate_operating_occupancy_stale_minutes': 'Odada bulunma · Kişi sayısı verisinin azami yaşı (dk)',
         'area_climate_operating_pm25_action_ug_m3': 'Hava temizleme · PM2.5 · Cihazlar (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Hava temizleme · PURIFIER · Cihazlar · Hız (%) · '
                                                          'SPEED %',
@@ -4831,7 +4800,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Polen · POLLEN · Polen · HIGH',
         'global_environment_pollen_max_scale': 'Polen · POLLEN · Polen · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Evde bulunma · Ev · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Evde bulunma · kaynak · max (min)',
+        'global_occupancy_source_stale_minutes': 'Evde bulunma · Takip/kişi sayısı verisinin azami yaşı (dk)',
         'global_setting_announcement_repeat_minutes': 'Duyurular · Duyurular (isteğe bağlı) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Havalandırma · Hava kalitesi · AQI (≥)',
         'global_threshold_indoor_co2': 'Havalandırma · Hava kalitesi · CO₂ (ppm) (≥)',
@@ -4892,8 +4861,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Вологість · RH · Вологість · Пристрої (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Вологість · RH · Вологість · Пристрої · ± RH',
         'area_climate_operating_humidity_low_rh': 'Вологість · RH · Вологість · Пристрої (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Присутність у кімнаті · Присутність · Пристрої · '
-                                                          "датчик · Обов'язково",
+        'area_climate_operating_occupancy_stale_minutes': 'Присутність у кімнаті · Максимальний вік даних про кількість людей (хв)',
         'area_climate_operating_pm25_action_ug_m3': 'Очищення повітря · PM2.5 · Пристрої (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Очищення повітря · PURIFIER · Пристрої · Швидкість '
                                                          '(%) · SPEED %',
@@ -4955,7 +4923,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Пилок · POLLEN · Пилок · HIGH',
         'global_environment_pollen_max_scale': 'Пилок · POLLEN · Пилок · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Присутність удома · Дім · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Присутність удома · джерело · max (min)',
+        'global_occupancy_source_stale_minutes': 'Присутність удома · Максимальний вік даних трекерів/лічильників (хв)',
         'global_setting_announcement_repeat_minutes': 'Оголошення · Оголошення (необов’язково) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Провітрювання · Якість повітря · AQI (≥)',
         'global_threshold_indoor_co2': 'Провітрювання · Якість повітря · CO₂ (ppm) (≥)',
@@ -5016,7 +4984,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'نمی · RH · نمی · آلات (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'نمی · RH · نمی · آلات · ± RH',
         'area_climate_operating_humidity_low_rh': 'نمی · RH · نمی · آلات (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'کمرے میں موجودگی · موجودگی · آلات · سینسر · ضروری',
+        'area_climate_operating_occupancy_stale_minutes': 'کمرے میں موجودگی · افراد کی گنتی کے ڈیٹا کی زیادہ سے زیادہ عمر (منٹ)',
         'area_climate_operating_pm25_action_ug_m3': 'ہوا کی صفائی · PM2.5 · آلات (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'ہوا کی صفائی · PURIFIER · آلات · رفتار (%) · SPEED '
                                                          '%',
@@ -5078,7 +5046,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'زرگل · POLLEN · زرگل · HIGH',
         'global_environment_pollen_max_scale': 'زرگل · POLLEN · زرگل · SCALE',
         'global_occupancy_away_cooldown_minutes': 'گھر میں موجودگی · گھر · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'گھر میں موجودگی · ماخذ · max (min)',
+        'global_occupancy_source_stale_minutes': 'گھر میں موجودگی · ٹریکر/افراد کی گنتی کے ڈیٹا کی زیادہ سے زیادہ عمر (منٹ)',
         'global_setting_announcement_repeat_minutes': 'اعلانات · اعلانات (اختیاری) · 0-1440 min',
         'global_threshold_indoor_aqi': 'ہوا کی آمدورفت · ہوا کا معیار · AQI (≥)',
         'global_threshold_indoor_co2': 'ہوا کی آمدورفت · ہوا کا معیار · CO₂ (ppm) (≥)',
@@ -5139,8 +5107,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'area_climate_operating_humidity_high_rh': 'Độ ẩm · RH · Độ ẩm · Thiết bị (%) · RH MAX',
         'area_climate_operating_humidity_hysteresis_rh': 'Độ ẩm · RH · Độ ẩm · Thiết bị · ± RH',
         'area_climate_operating_humidity_low_rh': 'Độ ẩm · RH · Độ ẩm · Thiết bị (%) · RH MIN',
-        'area_climate_operating_occupancy_stale_minutes': 'Có mặt trong phòng · Hiện diện · Thiết bị · cảm '
-                                                          'biến · Bắt buộc',
+        'area_climate_operating_occupancy_stale_minutes': 'Có mặt trong phòng · Tuổi tối đa của dữ liệu số người (phút)',
         'area_climate_operating_pm25_action_ug_m3': 'Lọc không khí · PM2.5 · Thiết bị (µg/m³)',
         'area_climate_operating_purifier_speed_percent': 'Lọc không khí · PURIFIER · Thiết bị · Tốc độ (%) · '
                                                          'SPEED %',
@@ -5202,7 +5169,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
         'global_environment_pollen_high_from': 'Phấn hoa · POLLEN · Phấn hoa · HIGH',
         'global_environment_pollen_max_scale': 'Phấn hoa · POLLEN · Phấn hoa · SCALE',
         'global_occupancy_away_cooldown_minutes': 'Có mặt ở nhà · Nhà · Away · cooldown (min)',
-        'global_occupancy_source_stale_minutes': 'Có mặt ở nhà · nguồn · max (min)',
+        'global_occupancy_source_stale_minutes': 'Có mặt ở nhà · Tuổi tối đa của dữ liệu theo dõi/số người (phút)',
         'global_setting_announcement_repeat_minutes': 'Thông báo · Thông báo (tùy chọn) · 0-1440 min',
         'global_threshold_indoor_aqi': 'Thông gió · Chất lượng không khí · AQI (≥)',
         'global_threshold_indoor_co2': 'Thông gió · Chất lượng không khí · CO₂ (ppm) (≥)',
@@ -5262,7 +5229,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
              'area_climate_operating_humidity_high_rh': '湿度 · RH · 湿度 · 设备 (%) · RH MAX',
              'area_climate_operating_humidity_hysteresis_rh': '湿度 · RH · 湿度 · 设备 · ± RH',
              'area_climate_operating_humidity_low_rh': '湿度 · RH · 湿度 · 设备 (%) · RH MIN',
-             'area_climate_operating_occupancy_stale_minutes': '房间占用 · 占用 · 设备 · 传感器 · 必填',
+             'area_climate_operating_occupancy_stale_minutes': '房间占用 · 人数数据的最大有效时长（分钟）',
              'area_climate_operating_pm25_action_ug_m3': '空气净化 · PM2.5 · 设备 (µg/m³)',
              'area_climate_operating_purifier_speed_percent': '空气净化 · PURIFIER · 设备 · 速度 (%) · SPEED %',
              'area_climate_operating_sleep_active': '睡眠 · 设备',
@@ -5323,7 +5290,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
              'global_environment_pollen_high_from': '花粉 · POLLEN · 花粉 · HIGH',
              'global_environment_pollen_max_scale': '花粉 · POLLEN · 花粉 · SCALE',
              'global_occupancy_away_cooldown_minutes': '在家状态 · 家中 · Away · cooldown (min)',
-             'global_occupancy_source_stale_minutes': '在家状态 · 来源 · max (min)',
+             'global_occupancy_source_stale_minutes': '在家状态 · 追踪/人数数据的最大有效时长（分钟）',
              'global_setting_announcement_repeat_minutes': '播报 · 播报（可选） · 0-1440 min',
              'global_threshold_indoor_aqi': '通风 · 空气质量 · AQI (≥)',
              'global_threshold_indoor_co2': '通风 · 空气质量 · CO₂ (ppm) (≥)',
@@ -5383,7 +5350,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
              'area_climate_operating_humidity_high_rh': '濕度 · RH · 濕度 · 裝置 (%) · RH MAX',
              'area_climate_operating_humidity_hysteresis_rh': '濕度 · RH · 濕度 · 裝置 · ± RH',
              'area_climate_operating_humidity_low_rh': '濕度 · RH · 濕度 · 裝置 (%) · RH MIN',
-             'area_climate_operating_occupancy_stale_minutes': '房間使用 · 佔用 · 裝置 · 感測器 · 必填',
+             'area_climate_operating_occupancy_stale_minutes': '房間使用 · 人數資料的最大有效時間（分鐘）',
              'area_climate_operating_pm25_action_ug_m3': '空氣淨化 · PM2.5 · 裝置 (µg/m³)',
              'area_climate_operating_purifier_speed_percent': '空氣淨化 · PURIFIER · 裝置 · 速度 (%) · SPEED %',
              'area_climate_operating_sleep_active': '睡眠 · 裝置',
@@ -5444,7 +5411,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
              'global_environment_pollen_high_from': '花粉 · POLLEN · 花粉 · HIGH',
              'global_environment_pollen_max_scale': '花粉 · POLLEN · 花粉 · SCALE',
              'global_occupancy_away_cooldown_minutes': '在家狀態 · 家中 · Away · cooldown (min)',
-             'global_occupancy_source_stale_minutes': '在家狀態 · 來源 · max (min)',
+             'global_occupancy_source_stale_minutes': '在家狀態 · 追蹤/人數資料的最大有效時間（分鐘）',
              'global_setting_announcement_repeat_minutes': '播報 · 播報（選用） · 0-1440 min',
              'global_threshold_indoor_aqi': '通風 · 空氣品質 · AQI (≥)',
              'global_threshold_indoor_co2': '通風 · 空氣品質 · CO₂ (ppm) (≥)',

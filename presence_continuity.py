@@ -131,6 +131,11 @@ class PresenceContinuity:
         config = dict(raw) if isinstance(raw, dict) else {}
         # Internal keys are generated at runtime, never trusted from config.
         config.pop("_verified_absence_since", None)
+        config.pop("_room_occupancy_selections", None)
+        config.pop("_room_occupancy_stale_minutes", None)
+        config.pop("_wake_entry_id", None)
+        if config.get("wake_alarm_entity") and config.get("wake_lead_minutes_entity"):
+            config["_wake_entry_id"] = self.entry_id
         signature = source_signature(config)
         if self._signature != signature:
             self._signature, self._since = signature, None

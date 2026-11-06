@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · 花粉 · HIGH",
           "pollen_max_scale": "POLLEN · 花粉 · SCALE",
           "pollen_avoid_ventilation": "POLLEN · 花粉 · NO VENT",
-          "general_source_stale_minutes": "來源 · max (min)",
-          "general_home_policy": "在家狀態"
+          "general_source_stale_minutes": "在家狀態 · 追蹤/人數資料的最大有效時間（分鐘）",
+          "general_home_policy": "在家狀態",
+          "general_wake_alarm_entity": "睡眠 · 下次鬧鐘",
+          "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "請選擇: 室外空氣品質 · AQI, CO₂, PM2.5, PM10, VOC. 無法使用: ⚠",
           "weather_warnings": "僅為選定房間設定「天氣警報」。資料無效或缺失將停止操作。",
-          "general_room_occupancy_sensors": "為「房間 · 佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
           "general_home_trackers": "為「家中 · 佔用 · 裝置」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "為「佔用 · 房間 · 來源 (state)」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
+          "general_occupied_rooms_entity": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
           "general_occupied_rooms_attribute": "僅為選定房間設定「佔用 · 房間 · 來源 (attribute)」。資料無效或缺失將停止操作。",
-          "general_sleep_rooms_entity": "為「睡眠 · 房間 · 來源 (state)」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
+          "general_sleep_rooms_entity": "從狀態或屬性中選擇睡眠房間清單，使用 Home Assistant 區域名稱或 ID。列出的房間只有同時有人時才算睡眠中。未變化的清單仍有效；缺失或無效的來源為未知。設定的鬧鐘可在響鈴前結束自動睡眠。",
           "general_sleep_rooms_attribute": "僅為選定房間設定「睡眠 · 房間 · 來源 (attribute)」。資料無效或缺失將停止操作。",
           "notify_entities": "為「設定 · 來源」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
           "media_players": "僅為選定房間設定「設定 · 來源 · MEDIA_PLAYERS」。資料無效或缺失將停止操作。",
@@ -274,8 +276,10 @@
           "pollen_high_from": "僅為選定房間設定「POLLEN · 花粉 · HIGH」。資料無效或缺失將停止操作。",
           "pollen_max_scale": "僅為選定房間設定「POLLEN · 花粉 · SCALE」。資料無效或缺失將停止操作。",
           "pollen_avoid_ventilation": "僅為選定房間設定「POLLEN · 花粉 · NO VENT」。資料無效或缺失將停止操作。",
-          "general_source_stale_minutes": "來源 · 睡眠 / 佔用 · max 240 min. 無效 · 關閉.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "有效時間限制適用於追蹤報告和數字人數。房間清單及二元存在狀態在未變化時不會過期。無法使用、已還原或無效的來源仍為未知。這不是睡眠時間。",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "選擇下次鬧鐘的時間或日期時間實體，以及提前分鐘數實體。HEM 會提前這些分鐘結束自動睡眠模式，恢復一般目標值。只有時間的值使用 Home Assistant 的時區。離家、手動控制和裝置保護仍保持優先順序。",
+          "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。"
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "家中 · 裝置",
           "climate_unknown_occupancy": "佔用 · 裝置",
           "climate_unoccupied_delay_minutes": "裝置 · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "佔用 · 裝置 · 感測器 · 必填",
+          "climate_occupancy_stale_minutes": "房間使用 · 人數資料的最大有效時間（分鐘）",
           "climate_away_policy": "在家狀態 · 家中 · 裝置 · POLICY",
           "climate_manual_profile": "裝置 · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "睡眠 · 裝置",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "裝置 (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "為「佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
+          "climate_occupancy_sensors": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
           "climate_away_entities": "為「家中 · 裝置」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "房間數字人數資料允許的最大有效時間。舊值或無法使用的值為未知。未變化的二元存在狀態和房間清單不會過期。",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "此選項控制「裝置 · CLIMATE_MANUAL_PROFILE」。實際裝置 · CLIMATE_MANUAL_PROFILE指令需個別授權並有獨立保護。",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "一般 · 設定",
-        "description": "一般 · 設定: 選擇 來源, 感測器 / 裝置 · 控制.",
+        "description": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
         "data": {
           "general_room_occupancy_sensors": "房間 · 佔用 · 感測器",
           "general_occupied_rooms_entity": "佔用 · 房間 · 來源 (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "在家狀態",
           "general_sleep_rooms_entity": "睡眠 · 房間 · 來源 (state)",
           "general_sleep_rooms_attribute": "睡眠 · 房間 · 來源 (attribute)",
-          "general_source_stale_minutes": "來源 · max (min)"
+          "general_source_stale_minutes": "在家狀態 · 追蹤/人數資料的最大有效時間（分鐘）",
+          "general_wake_alarm_entity": "睡眠 · 下次鬧鐘",
+          "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "為「房間 · 佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
-          "general_occupied_rooms_entity": "為「佔用 · 房間 · 來源 (state)」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
+          "general_room_occupancy_sensors": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
+          "general_occupied_rooms_entity": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
           "general_occupied_rooms_attribute": "僅為選定房間設定「佔用 · 房間 · 來源 (attribute)」。資料無效或缺失將停止操作。",
           "general_home_trackers": "為「家中 · 佔用 · 裝置」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "為「睡眠 · 房間 · 來源 (state)」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
+          "general_sleep_rooms_entity": "從狀態或屬性中選擇睡眠房間清單，使用 Home Assistant 區域名稱或 ID。列出的房間只有同時有人時才算睡眠中。未變化的清單仍有效；缺失或無效的來源為未知。設定的鬧鐘可在響鈴前結束自動睡眠。",
           "general_sleep_rooms_attribute": "僅為選定房間設定「睡眠 · 房間 · 來源 (attribute)」。資料無效或缺失將停止操作。",
-          "general_source_stale_minutes": "來源 · 睡眠 / 佔用 · max 240 min. 無效 · 關閉."
+          "general_source_stale_minutes": "有效時間限制適用於追蹤報告和數字人數。房間清單及二元存在狀態在未變化時不會過期。無法使用、已還原或無效的來源仍為未知。這不是睡眠時間。",
+          "general_wake_alarm_entity": "選擇下次鬧鐘的時間或日期時間實體，以及提前分鐘數實體。HEM 會提前這些分鐘結束自動睡眠模式，恢復一般目標值。只有時間的值使用 Home Assistant 的時區。離家、手動控制和裝置保護仍保持優先順序。",
+          "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。"
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "濕度. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
           "climate_devices": "裝置. 只選擇本房間實際的 climate.*、humidifier.* 和 fan.* 實體。裝置本身的能力決定暖氣、冷房、除濕、溫濕度目標與風扇速度。選取不會立即控制裝置；須在各裝置控制器內分別啟用自動控制。",
           "shades": "窗簾、百葉簾及捲簾. 選擇本房間的 cover.* 百葉簾、捲簾、捲閘與窗簾。沒有 device_class 的 covers 只要支援 CLOSE 且確實用於窗戶遮陽，也可選擇。車庫門、門、閘門、窗戶與室外遮陽棚均排除。僅選取不會移動：請在控制器中指定窗戶感測器、自動控制、提前通知及溫度門檻。狀態未知時禁止移動。",
-          "occupancy_sensors": "為「佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。"
+          "occupancy_sensors": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。"
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "濕度. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
           "climate_devices": "裝置. 只選擇本房間實際的 climate.*、humidifier.* 和 fan.* 實體。裝置本身的能力決定暖氣、冷房、除濕、溫濕度目標與風扇速度。選取不會立即控制裝置；須在各裝置控制器內分別啟用自動控制。",
           "shades": "窗簾、百葉簾及捲簾. 選擇本房間的 cover.* 百葉簾、捲簾、捲閘與窗簾。沒有 device_class 的 covers 只要支援 CLOSE 且確實用於窗戶遮陽，也可選擇。車庫門、門、閘門、窗戶與室外遮陽棚均排除。僅選取不會移動：請在控制器中指定窗戶感測器、自動控制、提前通知及溫度門檻。狀態未知時禁止移動。",
-          "occupancy_sensors": "為「佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。"
+          "occupancy_sensors": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。"
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "無效 · 感測器 · 設定",
       "device_temperature_band_invalid": "無效 · 溫度 · 設定",
       "device_humidity_invalid": "無效 · 濕度 · 設定",
-      "device_runtime_invalid": "無效 · 功率 · 設定"
+      "device_runtime_invalid": "無效 · 功率 · 設定",
+      "wake_sources_pair": "請選擇鬧鐘和分鐘數兩個實體，或將兩者都清除。"
     },
     "abort": {
       "already_configured": "Home Environment Manager - 已設定.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "家中 · 裝置",
           "climate_unknown_occupancy": "佔用 · 裝置",
           "climate_unoccupied_delay_minutes": "裝置 · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "佔用 · 裝置 · 感測器 · 必填",
+          "climate_occupancy_stale_minutes": "房間使用 · 人數資料的最大有效時間（分鐘）",
           "climate_away_policy": "在家狀態 · 家中 · 裝置 · POLICY",
           "climate_manual_profile": "裝置 · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "睡眠 · 裝置",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "裝置 (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "為「佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
+          "climate_occupancy_sensors": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
           "climate_away_entities": "為「家中 · 裝置」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "房間數字人數資料允許的最大有效時間。舊值或無法使用的值為未知。未變化的二元存在狀態和房間清單不會過期。",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "此選項控制「裝置 · CLIMATE_MANUAL_PROFILE」。實際裝置 · CLIMATE_MANUAL_PROFILE指令需個別授權並有獨立保護。",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "一般 · 設定",
-        "description": "一般 · 設定: 選擇 來源, 感測器 / 裝置 · 控制.",
+        "description": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
         "data": {
           "general_room_occupancy_sensors": "房間 · 佔用 · 感測器",
           "general_occupied_rooms_entity": "佔用 · 房間 · 來源 (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "在家狀態",
           "general_sleep_rooms_entity": "睡眠 · 房間 · 來源 (state)",
           "general_sleep_rooms_attribute": "睡眠 · 房間 · 來源 (attribute)",
-          "general_source_stale_minutes": "來源 · max (min)"
+          "general_source_stale_minutes": "在家狀態 · 追蹤/人數資料的最大有效時間（分鐘）",
+          "general_wake_alarm_entity": "睡眠 · 下次鬧鐘",
+          "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "為「房間 · 佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
-          "general_occupied_rooms_entity": "為「佔用 · 房間 · 來源 (state)」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
+          "general_room_occupancy_sensors": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
+          "general_occupied_rooms_entity": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
           "general_occupied_rooms_attribute": "僅為選定房間設定「佔用 · 房間 · 來源 (attribute)」。資料無效或缺失將停止操作。",
           "general_home_trackers": "為「家中 · 佔用 · 裝置」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "為「睡眠 · 房間 · 來源 (state)」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
+          "general_sleep_rooms_entity": "從狀態或屬性中選擇睡眠房間清單，使用 Home Assistant 區域名稱或 ID。列出的房間只有同時有人時才算睡眠中。未變化的清單仍有效；缺失或無效的來源為未知。設定的鬧鐘可在響鈴前結束自動睡眠。",
           "general_sleep_rooms_attribute": "僅為選定房間設定「睡眠 · 房間 · 來源 (attribute)」。資料無效或缺失將停止操作。",
-          "general_source_stale_minutes": "來源 · 睡眠 / 佔用 · max 240 min. 無效 · 關閉."
+          "general_source_stale_minutes": "有效時間限制適用於追蹤報告和數字人數。房間清單及二元存在狀態在未變化時不會過期。無法使用、已還原或無效的來源仍為未知。這不是睡眠時間。",
+          "general_wake_alarm_entity": "選擇下次鬧鐘的時間或日期時間實體，以及提前分鐘數實體。HEM 會提前這些分鐘結束自動睡眠模式，恢復一般目標值。只有時間的值使用 Home Assistant 的時區。離家、手動控制和裝置保護仍保持優先順序。",
+          "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。"
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · 花粉 · HIGH",
           "pollen_max_scale": "POLLEN · 花粉 · SCALE",
           "pollen_avoid_ventilation": "POLLEN · 花粉 · NO VENT",
-          "general_source_stale_minutes": "來源 · max (min)",
-          "general_home_policy": "在家狀態"
+          "general_source_stale_minutes": "在家狀態 · 追蹤/人數資料的最大有效時間（分鐘）",
+          "general_home_policy": "在家狀態",
+          "general_wake_alarm_entity": "睡眠 · 下次鬧鐘",
+          "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "請選擇: 室外空氣品質 · AQI, CO₂, PM2.5, PM10, VOC. 無法使用: ⚠",
           "weather_warnings": "僅為選定房間設定「天氣警報」。資料無效或缺失將停止操作。",
-          "general_room_occupancy_sensors": "為「房間 · 佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
           "general_home_trackers": "為「家中 · 佔用 · 裝置」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "為「佔用 · 房間 · 來源 (state)」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
+          "general_occupied_rooms_entity": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
           "general_occupied_rooms_attribute": "僅為選定房間設定「佔用 · 房間 · 來源 (attribute)」。資料無效或缺失將停止操作。",
-          "general_sleep_rooms_entity": "為「睡眠 · 房間 · 來源 (state)」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
+          "general_sleep_rooms_entity": "從狀態或屬性中選擇睡眠房間清單，使用 Home Assistant 區域名稱或 ID。列出的房間只有同時有人時才算睡眠中。未變化的清單仍有效；缺失或無效的來源為未知。設定的鬧鐘可在響鈴前結束自動睡眠。",
           "general_sleep_rooms_attribute": "僅為選定房間設定「睡眠 · 房間 · 來源 (attribute)」。資料無效或缺失將停止操作。",
           "notify_entities": "為「設定 · 來源」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。",
           "media_players": "僅為選定房間設定「設定 · 來源 · MEDIA_PLAYERS」。資料無效或缺失將停止操作。",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "僅為選定房間設定「POLLEN · 花粉 · HIGH」。資料無效或缺失將停止操作。",
           "pollen_max_scale": "僅為選定房間設定「POLLEN · 花粉 · SCALE」。資料無效或缺失將停止操作。",
           "pollen_avoid_ventilation": "僅為選定房間設定「POLLEN · 花粉 · NO VENT」。資料無效或缺失將停止操作。",
-          "general_source_stale_minutes": "來源 · 睡眠 / 佔用 · max 240 min. 無效 · 關閉.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "有效時間限制適用於追蹤報告和數字人數。房間清單及二元存在狀態在未變化時不會過期。無法使用、已還原或無效的來源仍為未知。這不是睡眠時間。",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "選擇下次鬧鐘的時間或日期時間實體，以及提前分鐘數實體。HEM 會提前這些分鐘結束自動睡眠模式，恢復一般目標值。只有時間的值使用 Home Assistant 的時區。離家、手動控制和裝置保護仍保持優先順序。",
+          "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。"
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "濕度. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
           "climate_devices": "裝置. 只選擇本房間實際的 climate.*、humidifier.* 和 fan.* 實體。裝置本身的能力決定暖氣、冷房、除濕、溫濕度目標與風扇速度。選取不會立即控制裝置；須在各裝置控制器內分別啟用自動控制。",
           "shades": "窗簾、百葉簾及捲簾. 選擇本房間的 cover.* 百葉簾、捲簾、捲閘與窗簾。沒有 device_class 的 covers 只要支援 CLOSE 且確實用於窗戶遮陽，也可選擇。車庫門、門、閘門、窗戶與室外遮陽棚均排除。僅選取不會移動：請在控制器中指定窗戶感測器、自動控制、提前通知及溫度門檻。狀態未知時禁止移動。",
-          "occupancy_sensors": "為「佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。"
+          "occupancy_sensors": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。"
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "濕度. 選擇房間的輸入，顯示為裝置名稱 - 實體名稱。空群組不使用，也不會啟用自動探索或控制。",
           "climate_devices": "裝置. 只選擇本房間實際的 climate.*、humidifier.* 和 fan.* 實體。裝置本身的能力決定暖氣、冷房、除濕、溫濕度目標與風扇速度。選取不會立即控制裝置；須在各裝置控制器內分別啟用自動控制。",
           "shades": "窗簾、百葉簾及捲簾. 選擇本房間的 cover.* 百葉簾、捲簾、捲閘與窗簾。沒有 device_class 的 covers 只要支援 CLOSE 且確實用於窗戶遮陽，也可選擇。車庫門、門、閘門、窗戶與室外遮陽棚均排除。僅選取不會移動：請在控制器中指定窗戶感測器、自動控制、提前通知及溫度門檻。狀態未知時禁止移動。",
-          "occupancy_sensors": "為「佔用 · 感測器」選擇真實的 Home Assistant 資料來源。資料缺失或過期時暫停操作。"
+          "occupancy_sensors": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。"
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "無效 · 功率 · 設定",
       "invalid_setup_rooms": "無效: 要監測的房間",
       "invalid_room_source": "無效: 房間 · 來源",
-      "invalid_away_windows_recipients": "接收提醒的人員; 窗戶提醒發送管道. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "接收提醒的人員; 窗戶提醒發送管道. Announcement Hub (person.*).",
+      "wake_sources_pair": "請選擇鬧鐘和分鐘數兩個實體，或將兩者都清除。"
     },
     "abort": {
       "setup_area_removed": "無效: 要監測的房間",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "在家狀態 · 來源 · max (min)",
+        "name": "在家狀態 · 追蹤/人數資料的最大有效時間（分鐘）",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "房間使用 · 佔用 · 裝置 · 感測器 · 必填",
+        "name": "房間使用 · 人數資料的最大有效時間（分鐘）",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "播報 · 通報裝置錯誤 · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "睡眠 · {channel}所有人都在睡覺時",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"

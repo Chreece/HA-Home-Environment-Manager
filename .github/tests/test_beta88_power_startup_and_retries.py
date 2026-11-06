@@ -399,6 +399,9 @@ class CommandRetryTests(unittest.IsolatedAsyncioTestCase):
         r = SimRuntime("heat")
         r.now = 5000
         r.manager.power_permission = False
+        # Automatic dispatch re-resolves the saved profile after any await;
+        # the configured goal and this fixture's supplied target must agree.
+        r.manager.room["profiles"]["home"]["heat_c"] = 18.0
         self.assertTrue(await r._native_target(
             SPEC, r.manager.cap, "heat",
             {"heat": 18.0, "cool": 26.0}, None, True))

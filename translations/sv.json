@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Pollen · HIGH",
           "pollen_max_scale": "POLLEN · Pollen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
-          "general_source_stale_minutes": "källa · max (min)",
-          "general_home_policy": "Närvaro hemma"
+          "general_source_stale_minutes": "Närvaro hemma · Högsta ålder på spårnings-/personantalsdata (min)",
+          "general_home_policy": "Närvaro hemma",
+          "general_wake_alarm_entity": "Sömn · Nästa alarm",
+          "general_wake_lead_minutes_entity": "Sömn · Minuter före alarmet"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Välj: Utomhusluftens kvalitet · AQI, CO₂, PM2.5, PM10, VOC. Inte tillgänglig: ⚠",
           "weather_warnings": "Väder och varningar · ⚠ (Inte tillgänglig) → 🪟🔒",
-          "general_room_occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Rum · Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
           "general_home_trackers": "Välj en riktig Home Assistant-källa för ”Hem · Närvaro · Enheter”. Saknade eller gamla värden stoppar åtgärden. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Välj en riktig Home Assistant-källa för ”Närvaro · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
+          "general_occupied_rooms_entity": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
           "general_occupied_rooms_attribute": "Ställ in ”Närvaro · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
-          "general_sleep_rooms_entity": "Välj en riktig Home Assistant-källa för ”Sömn · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
+          "general_sleep_rooms_entity": "Välj en lista över sovande rum från tillståndet eller ett attribut, med områdesnamn eller ID i Home Assistant. Ett listat rum sover bara om det också är upptaget. En oförändrad lista förblir giltig; en saknad eller ogiltig källa är okänd. Det inställda alarmet kan avsluta automatisk sömn innan det ringer.",
           "general_sleep_rooms_attribute": "Ställ in ”Sömn · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "notify_entities": "Välj: notify.* · inställningar · källa.",
           "media_players": "Välj: media_player.* · inställningar · källa · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Ställ in ”POLLEN · Pollen · HIGH” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "pollen_max_scale": "Ställ in ”POLLEN · Pollen · SCALE” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "pollen_avoid_ventilation": "Ställ in ”POLLEN · Pollen · NO VENT” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
-          "general_source_stale_minutes": "källa · Sömn / Närvaro · max 240 min. Ogiltig · Stäng av.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Åldersgränsen gäller spårningsrapporter och numeriska personantal. Rumslistor och binära närvarotillstånd går inte ut när de är oförändrade. Otillgängliga, återställda eller ogiltiga källor är okända. Detta är inte sömnens längd.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Välj en tids- eller tidsstämpelentitet för nästa alarm och en entitet för minuterna. HEM avslutar automatisk sömn så många minuter före alarmet och återgår till normala mål. Klockslag utan datum använder Home Assistants tidszon. Frånvaro, manuell styrning och enhetsskydd har fortsatt företräde.",
+          "general_wake_lead_minutes_entity": "Välj en numerisk entitet med ett icke-negativt antal minuter, med enheten min eller utan enhet. Alarm 07:00 och värdet 30 avslutar automatisk sömn 06:30; 0 betyder när alarmet ringer. Rensa båda källorna för att inaktivera."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Hem · Enheter",
           "climate_unknown_occupancy": "Närvaro · Enheter",
           "climate_unoccupied_delay_minutes": "Enheter · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Närvaro · Enheter · sensor · Krävs",
+          "climate_occupancy_stale_minutes": "Närvaro i rummet · Högsta ålder på personantal (min)",
           "climate_away_policy": "Närvaro hemma · Hem · Enheter · POLICY",
           "climate_manual_profile": "Enheter · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sömn · Enheter",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Enheter (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden.",
+          "climate_occupancy_sensors": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
           "climate_away_entities": "Välj en riktig Home Assistant-källa för ”Hem · Enheter”. Saknade eller gamla värden stoppar åtgärden.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Högsta ålder på numeriska personantal i rummet. Gamla eller otillgängliga värden är okända. Oförändrade binära närvarotillstånd och rumslistor går inte ut.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Detta alternativ styr ”Enheter · CLIMATE_MANUAL_PROFILE”. Fysiska kommandon kräver separat godkännande och skydd.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Allmänna · inställningar",
-        "description": "Allmänna · inställningar: Välj källa, sensor / Enheter · styrning.",
+        "description": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
         "data": {
           "general_room_occupancy_sensors": "Rum · Närvaro · sensor",
           "general_occupied_rooms_entity": "Närvaro · Rum · källa (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Närvaro hemma",
           "general_sleep_rooms_entity": "Sömn · Rum · källa (state)",
           "general_sleep_rooms_attribute": "Sömn · Rum · källa (attribute)",
-          "general_source_stale_minutes": "källa · max (min)"
+          "general_source_stale_minutes": "Närvaro hemma · Högsta ålder på spårnings-/personantalsdata (min)",
+          "general_wake_alarm_entity": "Sömn · Nästa alarm",
+          "general_wake_lead_minutes_entity": "Sömn · Minuter före alarmet"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Rum · Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden.",
-          "general_occupied_rooms_entity": "Välj en riktig Home Assistant-källa för ”Närvaro · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
+          "general_room_occupancy_sensors": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
+          "general_occupied_rooms_entity": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
           "general_occupied_rooms_attribute": "Ställ in ”Närvaro · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "general_home_trackers": "Välj en riktig Home Assistant-källa för ”Hem · Närvaro · Enheter”. Saknade eller gamla värden stoppar åtgärden.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Välj en riktig Home Assistant-källa för ”Sömn · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
+          "general_sleep_rooms_entity": "Välj en lista över sovande rum från tillståndet eller ett attribut, med områdesnamn eller ID i Home Assistant. Ett listat rum sover bara om det också är upptaget. En oförändrad lista förblir giltig; en saknad eller ogiltig källa är okänd. Det inställda alarmet kan avsluta automatisk sömn innan det ringer.",
           "general_sleep_rooms_attribute": "Ställ in ”Sömn · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
-          "general_source_stale_minutes": "källa · Sömn / Närvaro · max 240 min. Ogiltig · Stäng av."
+          "general_source_stale_minutes": "Åldersgränsen gäller spårningsrapporter och numeriska personantal. Rumslistor och binära närvarotillstånd går inte ut när de är oförändrade. Otillgängliga, återställda eller ogiltiga källor är okända. Detta är inte sömnens längd.",
+          "general_wake_alarm_entity": "Välj en tids- eller tidsstämpelentitet för nästa alarm och en entitet för minuterna. HEM avslutar automatisk sömn så många minuter före alarmet och återgår till normala mål. Klockslag utan datum använder Home Assistants tidszon. Frånvaro, manuell styrning och enhetsskydd har fortsatt företräde.",
+          "general_wake_lead_minutes_entity": "Välj en numerisk entitet med ett icke-negativt antal minuter, med enheten min eller utan enhet. Alarm 07:00 och värdet 30 avslutar automatisk sömn 06:30; 0 betyder när alarmet ringer. Rensa båda källorna för att inaktivera."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
           "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
-          "occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden."
+          "occupancy_sensors": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
           "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
-          "occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden."
+          "occupancy_sensors": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Ogiltig · sensor · inställningar",
       "device_temperature_band_invalid": "Ogiltig · Temperatur · inställningar",
       "device_humidity_invalid": "Ogiltig · Luftfuktighet · inställningar",
-      "device_runtime_invalid": "Ogiltig · Effekt · inställningar"
+      "device_runtime_invalid": "Ogiltig · Effekt · inställningar",
+      "wake_sources_pair": "Välj både alarm- och minutentiteten, eller rensa båda."
     },
     "abort": {
       "already_configured": "Home Environment Manager - redan konfigurerad.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Hem · Enheter",
           "climate_unknown_occupancy": "Närvaro · Enheter",
           "climate_unoccupied_delay_minutes": "Enheter · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Närvaro · Enheter · sensor · Krävs",
+          "climate_occupancy_stale_minutes": "Närvaro i rummet · Högsta ålder på personantal (min)",
           "climate_away_policy": "Närvaro hemma · Hem · Enheter · POLICY",
           "climate_manual_profile": "Enheter · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sömn · Enheter",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Enheter (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden.",
+          "climate_occupancy_sensors": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
           "climate_away_entities": "Välj en riktig Home Assistant-källa för ”Hem · Enheter”. Saknade eller gamla värden stoppar åtgärden.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Högsta ålder på numeriska personantal i rummet. Gamla eller otillgängliga värden är okända. Oförändrade binära närvarotillstånd och rumslistor går inte ut.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Detta alternativ styr ”Enheter · CLIMATE_MANUAL_PROFILE”. Fysiska kommandon kräver separat godkännande och skydd.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Allmänna · inställningar",
-        "description": "Allmänna · inställningar: Välj källa, sensor / Enheter · styrning.",
+        "description": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
         "data": {
           "general_room_occupancy_sensors": "Rum · Närvaro · sensor",
           "general_occupied_rooms_entity": "Närvaro · Rum · källa (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Närvaro hemma",
           "general_sleep_rooms_entity": "Sömn · Rum · källa (state)",
           "general_sleep_rooms_attribute": "Sömn · Rum · källa (attribute)",
-          "general_source_stale_minutes": "källa · max (min)"
+          "general_source_stale_minutes": "Närvaro hemma · Högsta ålder på spårnings-/personantalsdata (min)",
+          "general_wake_alarm_entity": "Sömn · Nästa alarm",
+          "general_wake_lead_minutes_entity": "Sömn · Minuter före alarmet"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Rum · Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden.",
-          "general_occupied_rooms_entity": "Välj en riktig Home Assistant-källa för ”Närvaro · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
+          "general_room_occupancy_sensors": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
+          "general_occupied_rooms_entity": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
           "general_occupied_rooms_attribute": "Ställ in ”Närvaro · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "general_home_trackers": "Välj en riktig Home Assistant-källa för ”Hem · Närvaro · Enheter”. Saknade eller gamla värden stoppar åtgärden.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Välj en riktig Home Assistant-källa för ”Sömn · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
+          "general_sleep_rooms_entity": "Välj en lista över sovande rum från tillståndet eller ett attribut, med områdesnamn eller ID i Home Assistant. Ett listat rum sover bara om det också är upptaget. En oförändrad lista förblir giltig; en saknad eller ogiltig källa är okänd. Det inställda alarmet kan avsluta automatisk sömn innan det ringer.",
           "general_sleep_rooms_attribute": "Ställ in ”Sömn · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
-          "general_source_stale_minutes": "källa · Sömn / Närvaro · max 240 min. Ogiltig · Stäng av."
+          "general_source_stale_minutes": "Åldersgränsen gäller spårningsrapporter och numeriska personantal. Rumslistor och binära närvarotillstånd går inte ut när de är oförändrade. Otillgängliga, återställda eller ogiltiga källor är okända. Detta är inte sömnens längd.",
+          "general_wake_alarm_entity": "Välj en tids- eller tidsstämpelentitet för nästa alarm och en entitet för minuterna. HEM avslutar automatisk sömn så många minuter före alarmet och återgår till normala mål. Klockslag utan datum använder Home Assistants tidszon. Frånvaro, manuell styrning och enhetsskydd har fortsatt företräde.",
+          "general_wake_lead_minutes_entity": "Välj en numerisk entitet med ett icke-negativt antal minuter, med enheten min eller utan enhet. Alarm 07:00 och värdet 30 avslutar automatisk sömn 06:30; 0 betyder när alarmet ringer. Rensa båda källorna för att inaktivera."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Pollen · HIGH",
           "pollen_max_scale": "POLLEN · Pollen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
-          "general_source_stale_minutes": "källa · max (min)",
-          "general_home_policy": "Närvaro hemma"
+          "general_source_stale_minutes": "Närvaro hemma · Högsta ålder på spårnings-/personantalsdata (min)",
+          "general_home_policy": "Närvaro hemma",
+          "general_wake_alarm_entity": "Sömn · Nästa alarm",
+          "general_wake_lead_minutes_entity": "Sömn · Minuter före alarmet"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Välj: Utomhusluftens kvalitet · AQI, CO₂, PM2.5, PM10, VOC. Inte tillgänglig: ⚠",
           "weather_warnings": "Väder och varningar · ⚠ (Inte tillgänglig) → 🪟🔒",
-          "general_room_occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Rum · Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
           "general_home_trackers": "Välj en riktig Home Assistant-källa för ”Hem · Närvaro · Enheter”. Saknade eller gamla värden stoppar åtgärden. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Välj en riktig Home Assistant-källa för ”Närvaro · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
+          "general_occupied_rooms_entity": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
           "general_occupied_rooms_attribute": "Ställ in ”Närvaro · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
-          "general_sleep_rooms_entity": "Välj en riktig Home Assistant-källa för ”Sömn · Rum · källa (state)”. Saknade eller gamla värden stoppar åtgärden.",
+          "general_sleep_rooms_entity": "Välj en lista över sovande rum från tillståndet eller ett attribut, med områdesnamn eller ID i Home Assistant. Ett listat rum sover bara om det också är upptaget. En oförändrad lista förblir giltig; en saknad eller ogiltig källa är okänd. Det inställda alarmet kan avsluta automatisk sömn innan det ringer.",
           "general_sleep_rooms_attribute": "Ställ in ”Sömn · Rum · källa (attribute)” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "notify_entities": "Välj: notify.* · inställningar · källa.",
           "media_players": "Välj: media_player.* · inställningar · källa · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Ställ in ”POLLEN · Pollen · HIGH” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "pollen_max_scale": "Ställ in ”POLLEN · Pollen · SCALE” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
           "pollen_avoid_ventilation": "Ställ in ”POLLEN · Pollen · NO VENT” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
-          "general_source_stale_minutes": "källa · Sömn / Närvaro · max 240 min. Ogiltig · Stäng av.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Åldersgränsen gäller spårningsrapporter och numeriska personantal. Rumslistor och binära närvarotillstånd går inte ut när de är oförändrade. Otillgängliga, återställda eller ogiltiga källor är okända. Detta är inte sömnens längd.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Välj en tids- eller tidsstämpelentitet för nästa alarm och en entitet för minuterna. HEM avslutar automatisk sömn så många minuter före alarmet och återgår till normala mål. Klockslag utan datum använder Home Assistants tidszon. Frånvaro, manuell styrning och enhetsskydd har fortsatt företräde.",
+          "general_wake_lead_minutes_entity": "Välj en numerisk entitet med ett icke-negativt antal minuter, med enheten min eller utan enhet. Alarm 07:00 och värdet 30 avslutar automatisk sömn 06:30; 0 betyder när alarmet ringer. Rensa båda källorna för att inaktivera."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
           "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
-          "occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden."
+          "occupancy_sensors": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Luftfuktighet. Välj rummets ingångar: enhetsnamn - entitetsnamn. Tomma grupper används inte och aktiverar varken automatisk upptäckt eller styrning.",
           "climate_devices": "Enheter. Välj bara fysiska climate.*, humidifier.* och fan.* i rummet. Enhetens funktioner styr värme, kyla, avfuktning, börvärden och fläkthastighet. Valet startar inget; automatiken aktiveras separat på varje styrdon.",
           "shades": "Persienner, rullgardiner och fönsterluckor. Välj persienner, rullgardiner och fönsterluckor som cover.* i rummet. Även covers utan device_class stöds med CLOSE om de verkligen skuggar ett fönster. Garage, grindar, dörrar, fönster och markiser utesluts. Valet flyttar inget: tilldela fönsterkontakt och ställ in automatik, avisering och temperatur på styrdonet. Okänd status stoppar rörelse.",
-          "occupancy_sensors": "Välj en riktig Home Assistant-källa för ”Närvaro · sensor”. Saknade eller gamla värden stoppar åtgärden."
+          "occupancy_sensors": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Ogiltig · Effekt · inställningar",
       "invalid_setup_rooms": "Ogiltig: Rum att övervaka",
       "invalid_room_source": "Ogiltig: Rum · källa",
-      "invalid_away_windows_recipients": "Personer som ska varnas; Kanaler för fönstervarningar. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Personer som ska varnas; Kanaler för fönstervarningar. Announcement Hub (person.*).",
+      "wake_sources_pair": "Välj både alarm- och minutentiteten, eller rensa båda."
     },
     "abort": {
       "setup_area_removed": "Ogiltig: Rum att övervaka",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Närvaro hemma · källa · max (min)",
+        "name": "Närvaro hemma · Högsta ålder på spårnings-/personantalsdata (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjälp"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Närvaro i rummet · Närvaro · Enheter · sensor · Krävs",
+        "name": "Närvaro i rummet · Högsta ålder på personantal (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjälp"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Meddelanden · Meddela enhetsfel · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Sömn · {channel}När alla sover",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjälp"

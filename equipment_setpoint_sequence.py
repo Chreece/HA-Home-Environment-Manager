@@ -26,17 +26,21 @@ def enabled(settings) -> bool:
 
 
 def retry_settings_match(saved, current) -> bool:
-    """Timing is checked live; all original command authority still has to match.
+    """Recheck independent preferences live; original command authority must match.
 
-    In particular, a pre-upgrade pending journal has no timing preference.
-    Changing this one preference does not cancel a dispatched command, grant
+    In particular, an older pending journal may omit the newer preferences.
+    Changing these preferences does not cancel a dispatched command, grant
     another attempt, or turn a device setting edit into a manual override.
     """
     if not isinstance(saved, dict) or not isinstance(current, dict):
         return False
+    # Both independent preferences are enforced again by the live policy,
+    # profile, and timing checks. They confer no control authority. Profiles
+    # saved before these switches were introduced remain usable.
+    independent = {OPTION, "sleep_when_everyone_asleep"}
     return saved == current or (
-        {k: v for k, v in saved.items() if k != OPTION}
-        == {k: v for k, v in current.items() if k != OPTION}
+        {k: v for k, v in saved.items() if k not in independent}
+        == {k: v for k, v in current.items() if k not in independent}
     )
 
 

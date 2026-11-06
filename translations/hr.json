@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Pelud · HIGH",
           "pollen_max_scale": "POLLEN · Pelud · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pelud · NO VENT",
-          "general_source_stale_minutes": "izvor · max (min)",
-          "general_home_policy": "Prisutnost kod kuće"
+          "general_source_stale_minutes": "Prisutnost kod kuće · Najveća starost podataka praćenja/broja osoba (min)",
+          "general_home_policy": "Prisutnost kod kuće",
+          "general_wake_alarm_entity": "Spavanje · Sljedeći alarm",
+          "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Odaberite: Kvaliteta vanjskog zraka · AQI, CO₂, PM2.5, PM10, VOC. Nedostupno: ⚠",
           "weather_warnings": "Vrijeme i upozorenja · ⚠ (Nedostupno) → 🪟🔒",
-          "general_room_occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Soba · Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
           "general_home_trackers": "Odaberite stvarni izvor Home Assistant za „Dom · Prisutnost · Uređaji”. Nedostajući ili zastarjeli podaci zaustavljaju radnju. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Odaberite stvarni izvor Home Assistant za „Prisutnost · Soba · izvor (state)”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
+          "general_occupied_rooms_entity": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
           "general_occupied_rooms_attribute": "Postavite „Prisutnost · Soba · izvor (attribute)” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
-          "general_sleep_rooms_entity": "Odaberite stvarni izvor Home Assistant za „Spavanje · Soba · izvor (state)”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
+          "general_sleep_rooms_entity": "Odaberite popis soba u kojima se spava iz stanja ili atributa, s nazivima ili ID-ovima područja Home Assistanta. Navedena soba spava samo ako je i zauzeta. Nepromijenjen popis ostaje valjan; izvor koji nedostaje ili je nevaljan je nepoznat. Postavljeni alarm može završiti automatsko spavanje prije zvonjave.",
           "general_sleep_rooms_attribute": "Postavite „Spavanje · Soba · izvor (attribute)” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
           "notify_entities": "Odaberite: notify.* · postavke · izvor.",
           "media_players": "Odaberite: media_player.* · postavke · izvor · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Postavite „POLLEN · Pelud · HIGH” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
           "pollen_max_scale": "Postavite „POLLEN · Pelud · SCALE” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
           "pollen_avoid_ventilation": "Postavite „POLLEN · Pelud · NO VENT” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
-          "general_source_stale_minutes": "izvor · Spavanje / Prisutnost · max 240 min. Neispravno · Isključi.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Ograničenje starosti odnosi se na izvješća praćenja i brojčani broj osoba. Popisi soba i binarna stanja prisutnosti ne istječu dok se ne promijene. Nedostupni, obnovljeni ili nevaljani izvori ostaju nepoznati. To nije trajanje spavanja.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Odaberite entitet vremena ili datuma i vremena sljedećeg alarma te entitet za minute. HEM završava automatsko spavanje toliko minuta ranije i vraća uobičajene ciljeve. Vrijeme bez datuma koristi vremensku zonu Home Assistanta. Odsutnost, ručno upravljanje i zaštite zadržavaju prednost.",
+          "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Dom · Uređaji",
           "climate_unknown_occupancy": "Prisutnost · Uređaji",
           "climate_unoccupied_delay_minutes": "Uređaji · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Prisutnost · Uređaji · senzor · Obavezno",
+          "climate_occupancy_stale_minutes": "Prisutnost u prostoriji · Najveća starost broja osoba (min)",
           "climate_away_policy": "Prisutnost kod kuće · Dom · Uređaji · POLICY",
           "climate_manual_profile": "Uređaji · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Spavanje · Uređaji",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Uređaji (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
+          "climate_occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
           "climate_away_entities": "Odaberite stvarni izvor Home Assistant za „Dom · Uređaji”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Najveća starost brojčanih podataka o broju osoba u sobi. Stare ili nedostupne vrijednosti su nepoznate. Binarna stanja prisutnosti i popisi soba ne istječu dok su nepromijenjeni.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Ova opcija upravlja „Uređaji · CLIMATE_MANUAL_PROFILE”. Fizičke naredbe traže zasebno odobrenje i zaštitu.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Opće · postavke",
-        "description": "Opće · postavke: Odaberi izvor, senzor / Uređaji · upravljanje.",
+        "description": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
         "data": {
           "general_room_occupancy_sensors": "Soba · Prisutnost · senzor",
           "general_occupied_rooms_entity": "Prisutnost · Soba · izvor (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Prisutnost kod kuće",
           "general_sleep_rooms_entity": "Spavanje · Soba · izvor (state)",
           "general_sleep_rooms_attribute": "Spavanje · Soba · izvor (attribute)",
-          "general_source_stale_minutes": "izvor · max (min)"
+          "general_source_stale_minutes": "Prisutnost kod kuće · Najveća starost podataka praćenja/broja osoba (min)",
+          "general_wake_alarm_entity": "Spavanje · Sljedeći alarm",
+          "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Soba · Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
-          "general_occupied_rooms_entity": "Odaberite stvarni izvor Home Assistant za „Prisutnost · Soba · izvor (state)”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
+          "general_room_occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
+          "general_occupied_rooms_entity": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
           "general_occupied_rooms_attribute": "Postavite „Prisutnost · Soba · izvor (attribute)” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
           "general_home_trackers": "Odaberite stvarni izvor Home Assistant za „Dom · Prisutnost · Uređaji”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Odaberite stvarni izvor Home Assistant za „Spavanje · Soba · izvor (state)”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
+          "general_sleep_rooms_entity": "Odaberite popis soba u kojima se spava iz stanja ili atributa, s nazivima ili ID-ovima područja Home Assistanta. Navedena soba spava samo ako je i zauzeta. Nepromijenjen popis ostaje valjan; izvor koji nedostaje ili je nevaljan je nepoznat. Postavljeni alarm može završiti automatsko spavanje prije zvonjave.",
           "general_sleep_rooms_attribute": "Postavite „Spavanje · Soba · izvor (attribute)” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
-          "general_source_stale_minutes": "izvor · Spavanje / Prisutnost · max 240 min. Neispravno · Isključi."
+          "general_source_stale_minutes": "Ograničenje starosti odnosi se na izvješća praćenja i brojčani broj osoba. Popisi soba i binarna stanja prisutnosti ne istječu dok se ne promijene. Nedostupni, obnovljeni ili nevaljani izvori ostaju nepoznati. To nije trajanje spavanja.",
+          "general_wake_alarm_entity": "Odaberite entitet vremena ili datuma i vremena sljedećeg alarma te entitet za minute. HEM završava automatsko spavanje toliko minuta ranije i vraća uobičajene ciljeve. Vrijeme bez datuma koristi vremensku zonu Home Assistanta. Odsutnost, ručno upravljanje i zaštite zadržavaju prednost.",
+          "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Vlažnost. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
           "climate_devices": "Uređaji. Odaberi samo fizičke entitete climate.*, humidifier.* i fan.* ove sobe. Izvorne funkcije određuju grijanje, hlađenje, odvlaživanje, zadane vrijednosti i brzinu ventilatora. Sam odabir ništa ne pokreće; automatiku uključi zasebno za uređaj.",
           "shades": "Prozorske rolete, sjenila i žaluzine. Odaberi rolete, žaluzine i zavjese cover.* ove sobe. Covers bez device_class prihvaćaju se uz CLOSE ako su stvarno zasjenjivači prozora. Garaže, vrata, kapije, prozori i tende su isključeni. Odabir ništa ne pomiče: dodijeli senzor prozora i postavi automatiku, najavu i temperaturu na kontroleru. Nepoznato stanje blokira pokret.",
-          "occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju."
+          "occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Vlažnost. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
           "climate_devices": "Uređaji. Odaberi samo fizičke entitete climate.*, humidifier.* i fan.* ove sobe. Izvorne funkcije određuju grijanje, hlađenje, odvlaživanje, zadane vrijednosti i brzinu ventilatora. Sam odabir ništa ne pokreće; automatiku uključi zasebno za uređaj.",
           "shades": "Prozorske rolete, sjenila i žaluzine. Odaberi rolete, žaluzine i zavjese cover.* ove sobe. Covers bez device_class prihvaćaju se uz CLOSE ako su stvarno zasjenjivači prozora. Garaže, vrata, kapije, prozori i tende su isključeni. Odabir ništa ne pomiče: dodijeli senzor prozora i postavi automatiku, najavu i temperaturu na kontroleru. Nepoznato stanje blokira pokret.",
-          "occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju."
+          "occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Neispravno · senzor · postavke",
       "device_temperature_band_invalid": "Neispravno · Temperatura · postavke",
       "device_humidity_invalid": "Neispravno · Vlažnost · postavke",
-      "device_runtime_invalid": "Neispravno · Snaga · postavke"
+      "device_runtime_invalid": "Neispravno · Snaga · postavke",
+      "wake_sources_pair": "Odaberite i entitet alarma i entitet minuta ili uklonite oba."
     },
     "abort": {
       "already_configured": "Home Environment Manager - već postavljeno.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Dom · Uređaji",
           "climate_unknown_occupancy": "Prisutnost · Uređaji",
           "climate_unoccupied_delay_minutes": "Uređaji · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Prisutnost · Uređaji · senzor · Obavezno",
+          "climate_occupancy_stale_minutes": "Prisutnost u prostoriji · Najveća starost broja osoba (min)",
           "climate_away_policy": "Prisutnost kod kuće · Dom · Uređaji · POLICY",
           "climate_manual_profile": "Uređaji · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Spavanje · Uređaji",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Uređaji (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
+          "climate_occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
           "climate_away_entities": "Odaberite stvarni izvor Home Assistant za „Dom · Uređaji”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Najveća starost brojčanih podataka o broju osoba u sobi. Stare ili nedostupne vrijednosti su nepoznate. Binarna stanja prisutnosti i popisi soba ne istječu dok su nepromijenjeni.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Ova opcija upravlja „Uređaji · CLIMATE_MANUAL_PROFILE”. Fizičke naredbe traže zasebno odobrenje i zaštitu.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Opće · postavke",
-        "description": "Opće · postavke: Odaberi izvor, senzor / Uređaji · upravljanje.",
+        "description": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
         "data": {
           "general_room_occupancy_sensors": "Soba · Prisutnost · senzor",
           "general_occupied_rooms_entity": "Prisutnost · Soba · izvor (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Prisutnost kod kuće",
           "general_sleep_rooms_entity": "Spavanje · Soba · izvor (state)",
           "general_sleep_rooms_attribute": "Spavanje · Soba · izvor (attribute)",
-          "general_source_stale_minutes": "izvor · max (min)"
+          "general_source_stale_minutes": "Prisutnost kod kuće · Najveća starost podataka praćenja/broja osoba (min)",
+          "general_wake_alarm_entity": "Spavanje · Sljedeći alarm",
+          "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Soba · Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
-          "general_occupied_rooms_entity": "Odaberite stvarni izvor Home Assistant za „Prisutnost · Soba · izvor (state)”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
+          "general_room_occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
+          "general_occupied_rooms_entity": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
           "general_occupied_rooms_attribute": "Postavite „Prisutnost · Soba · izvor (attribute)” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
           "general_home_trackers": "Odaberite stvarni izvor Home Assistant za „Dom · Prisutnost · Uređaji”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Odaberite stvarni izvor Home Assistant za „Spavanje · Soba · izvor (state)”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
+          "general_sleep_rooms_entity": "Odaberite popis soba u kojima se spava iz stanja ili atributa, s nazivima ili ID-ovima područja Home Assistanta. Navedena soba spava samo ako je i zauzeta. Nepromijenjen popis ostaje valjan; izvor koji nedostaje ili je nevaljan je nepoznat. Postavljeni alarm može završiti automatsko spavanje prije zvonjave.",
           "general_sleep_rooms_attribute": "Postavite „Spavanje · Soba · izvor (attribute)” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
-          "general_source_stale_minutes": "izvor · Spavanje / Prisutnost · max 240 min. Neispravno · Isključi."
+          "general_source_stale_minutes": "Ograničenje starosti odnosi se na izvješća praćenja i brojčani broj osoba. Popisi soba i binarna stanja prisutnosti ne istječu dok se ne promijene. Nedostupni, obnovljeni ili nevaljani izvori ostaju nepoznati. To nije trajanje spavanja.",
+          "general_wake_alarm_entity": "Odaberite entitet vremena ili datuma i vremena sljedećeg alarma te entitet za minute. HEM završava automatsko spavanje toliko minuta ranije i vraća uobičajene ciljeve. Vrijeme bez datuma koristi vremensku zonu Home Assistanta. Odsutnost, ručno upravljanje i zaštite zadržavaju prednost.",
+          "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Pelud · HIGH",
           "pollen_max_scale": "POLLEN · Pelud · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pelud · NO VENT",
-          "general_source_stale_minutes": "izvor · max (min)",
-          "general_home_policy": "Prisutnost kod kuće"
+          "general_source_stale_minutes": "Prisutnost kod kuće · Najveća starost podataka praćenja/broja osoba (min)",
+          "general_home_policy": "Prisutnost kod kuće",
+          "general_wake_alarm_entity": "Spavanje · Sljedeći alarm",
+          "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Odaberite: Kvaliteta vanjskog zraka · AQI, CO₂, PM2.5, PM10, VOC. Nedostupno: ⚠",
           "weather_warnings": "Vrijeme i upozorenja · ⚠ (Nedostupno) → 🪟🔒",
-          "general_room_occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Soba · Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
           "general_home_trackers": "Odaberite stvarni izvor Home Assistant za „Dom · Prisutnost · Uređaji”. Nedostajući ili zastarjeli podaci zaustavljaju radnju. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Odaberite stvarni izvor Home Assistant za „Prisutnost · Soba · izvor (state)”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
+          "general_occupied_rooms_entity": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
           "general_occupied_rooms_attribute": "Postavite „Prisutnost · Soba · izvor (attribute)” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
-          "general_sleep_rooms_entity": "Odaberite stvarni izvor Home Assistant za „Spavanje · Soba · izvor (state)”. Nedostajući ili zastarjeli podaci zaustavljaju radnju.",
+          "general_sleep_rooms_entity": "Odaberite popis soba u kojima se spava iz stanja ili atributa, s nazivima ili ID-ovima područja Home Assistanta. Navedena soba spava samo ako je i zauzeta. Nepromijenjen popis ostaje valjan; izvor koji nedostaje ili je nevaljan je nepoznat. Postavljeni alarm može završiti automatsko spavanje prije zvonjave.",
           "general_sleep_rooms_attribute": "Postavite „Spavanje · Soba · izvor (attribute)” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
           "notify_entities": "Odaberite: notify.* · postavke · izvor.",
           "media_players": "Odaberite: media_player.* · postavke · izvor · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Postavite „POLLEN · Pelud · HIGH” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
           "pollen_max_scale": "Postavite „POLLEN · Pelud · SCALE” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
           "pollen_avoid_ventilation": "Postavite „POLLEN · Pelud · NO VENT” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
-          "general_source_stale_minutes": "izvor · Spavanje / Prisutnost · max 240 min. Neispravno · Isključi.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Ograničenje starosti odnosi se na izvješća praćenja i brojčani broj osoba. Popisi soba i binarna stanja prisutnosti ne istječu dok se ne promijene. Nedostupni, obnovljeni ili nevaljani izvori ostaju nepoznati. To nije trajanje spavanja.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Odaberite entitet vremena ili datuma i vremena sljedećeg alarma te entitet za minute. HEM završava automatsko spavanje toliko minuta ranije i vraća uobičajene ciljeve. Vrijeme bez datuma koristi vremensku zonu Home Assistanta. Odsutnost, ručno upravljanje i zaštite zadržavaju prednost.",
+          "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Vlažnost. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
           "climate_devices": "Uređaji. Odaberi samo fizičke entitete climate.*, humidifier.* i fan.* ove sobe. Izvorne funkcije određuju grijanje, hlađenje, odvlaživanje, zadane vrijednosti i brzinu ventilatora. Sam odabir ništa ne pokreće; automatiku uključi zasebno za uređaj.",
           "shades": "Prozorske rolete, sjenila i žaluzine. Odaberi rolete, žaluzine i zavjese cover.* ove sobe. Covers bez device_class prihvaćaju se uz CLOSE ako su stvarno zasjenjivači prozora. Garaže, vrata, kapije, prozori i tende su isključeni. Odabir ništa ne pomiče: dodijeli senzor prozora i postavi automatiku, najavu i temperaturu na kontroleru. Nepoznato stanje blokira pokret.",
-          "occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju."
+          "occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Vlažnost. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
           "climate_devices": "Uređaji. Odaberi samo fizičke entitete climate.*, humidifier.* i fan.* ove sobe. Izvorne funkcije određuju grijanje, hlađenje, odvlaživanje, zadane vrijednosti i brzinu ventilatora. Sam odabir ništa ne pokreće; automatiku uključi zasebno za uređaj.",
           "shades": "Prozorske rolete, sjenila i žaluzine. Odaberi rolete, žaluzine i zavjese cover.* ove sobe. Covers bez device_class prihvaćaju se uz CLOSE ako su stvarno zasjenjivači prozora. Garaže, vrata, kapije, prozori i tende su isključeni. Odabir ništa ne pomiče: dodijeli senzor prozora i postavi automatiku, najavu i temperaturu na kontroleru. Nepoznato stanje blokira pokret.",
-          "occupancy_sensors": "Odaberite stvarni izvor Home Assistant za „Prisutnost · senzor”. Nedostajući ili zastarjeli podaci zaustavljaju radnju."
+          "occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Neispravno · Snaga · postavke",
       "invalid_setup_rooms": "Neispravno: Sobe za praćenje",
       "invalid_room_source": "Neispravno: Soba · izvor",
-      "invalid_away_windows_recipients": "Osobe za obavijest; Kanali obavijesti o prozorima. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Osobe za obavijest; Kanali obavijesti o prozorima. Announcement Hub (person.*).",
+      "wake_sources_pair": "Odaberite i entitet alarma i entitet minuta ili uklonite oba."
     },
     "abort": {
       "setup_area_removed": "Neispravno: Sobe za praćenje",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Prisutnost kod kuće · izvor · max (min)",
+        "name": "Prisutnost kod kuće · Najveća starost podataka praćenja/broja osoba (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Prisutnost u prostoriji · Prisutnost · Uređaji · senzor · Obavezno",
+        "name": "Prisutnost u prostoriji · Najveća starost broja osoba (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Obavijesti · Najavi pogreške uređaja · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Spavanje · {channel}Kad svi spavaju",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"

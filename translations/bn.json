@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · পরাগ · HIGH",
           "pollen_max_scale": "POLLEN · পরাগ · SCALE",
           "pollen_avoid_ventilation": "POLLEN · পরাগ · NO VENT",
-          "general_source_stale_minutes": "উৎস · max (min)",
-          "general_home_policy": "বাড়িতে উপস্থিতি"
+          "general_source_stale_minutes": "বাড়িতে উপস্থিতি · ট্র্যাকার/লোকসংখ্যার তথ্যের সর্বোচ্চ বয়স (মিনিট)",
+          "general_home_policy": "বাড়িতে উপস্থিতি",
+          "general_wake_alarm_entity": "ঘুম · পরবর্তী অ্যালার্ম",
+          "general_wake_lead_minutes_entity": "ঘুম · অ্যালার্মের কত মিনিট আগে"
         },
         "data_description": {
           "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "নির্বাচন করুন: বাইরের বায়ুর মান · AQI, CO₂, PM2.5, PM10, VOC. পাওয়া যাচ্ছে না: ⚠",
           "weather_warnings": "আবহাওয়া ও সতর্কতা · ⚠ (পাওয়া যাচ্ছে না) → 🪟🔒",
-          "general_room_occupancy_sensors": "“ঘর · উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে। number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।",
           "general_home_trackers": "“বাড়ি · উপস্থিতি · ডিভাইস” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে। number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "“উপস্থিতি · ঘর · উৎস (state)” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
+          "general_occupied_rooms_entity": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।",
           "general_occupied_rooms_attribute": "“উপস্থিতি · ঘর · উৎস (attribute)” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
-          "general_sleep_rooms_entity": "“ঘুম · ঘর · উৎস (state)” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
+          "general_sleep_rooms_entity": "Home Assistant এলাকার নাম বা ID দিয়ে ঘুমন্ত ঘরের তালিকা state বা attribute থেকে বেছে নিন। তালিকায় থাকা ঘর তখনই ঘুমন্ত যখন সেখানে মানুষও আছে। অপরিবর্তিত তালিকা বৈধ থাকে; অনুপস্থিত বা অবৈধ উৎস অজানা। নির্ধারিত অ্যালার্ম স্বয়ংক্রিয় ঘুম বাজার আগেই শেষ করতে পারে।",
           "general_sleep_rooms_attribute": "“ঘুম · ঘর · উৎস (attribute)” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
           "notify_entities": "নির্বাচন করুন: notify.* · সেটিংস · উৎস.",
           "media_players": "নির্বাচন করুন: media_player.* · সেটিংস · উৎস · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "“POLLEN · পরাগ · HIGH” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
           "pollen_max_scale": "“POLLEN · পরাগ · SCALE” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
           "pollen_avoid_ventilation": "“POLLEN · পরাগ · NO VENT” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
-          "general_source_stale_minutes": "উৎস · ঘুম / উপস্থিতি · max 240 min. অবৈধ · বন্ধ.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "তথ্যের বয়সসীমা ট্র্যাকার ও সংখ্যাসূচক লোকগণনার ক্ষেত্রে প্রযোজ্য। ঘরের তালিকা ও বাইনারি উপস্থিতির অবস্থা অপরিবর্তিত থাকলে মেয়াদোত্তীর্ণ হয় না। অনুপলব্ধ, পুনরুদ্ধার করা বা অবৈধ উৎস অজানা থাকে। এটি ঘুমের সময়কাল নয়।",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "পরবর্তী অ্যালার্মের সময় বা তারিখ-সময় সত্তা এবং মিনিটের সত্তা বেছে নিন। স্বাভাবিক লক্ষ্যগুলো ফিরিয়ে আনতে HEM নির্দিষ্ট মিনিট আগে স্বয়ংক্রিয় ঘুম মোড ছাড়ে। শুধু সময় থাকলে Home Assistant-এর সময় অঞ্চল ব্যবহৃত হয়। অনুপস্থিতি, ম্যানুয়াল নিয়ন্ত্রণ ও ডিভাইসের সুরক্ষার অগ্রাধিকার বজায় থাকে।",
+          "general_wake_lead_minutes_entity": "মিনিটে অঋণাত্মক মানের সংখ্যাসূচক সত্তা বেছে নিন; একক min অথবা এককবিহীন। 07:00 অ্যালার্ম ও 30 হলে 06:30-এ স্বয়ংক্রিয় ঘুম শেষ হয়; 0 মানে অ্যালার্ম বাজার সময়। বন্ধ করতে দুটি উৎসই সরান।"
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "বাড়ি · ডিভাইস",
           "climate_unknown_occupancy": "উপস্থিতি · ডিভাইস",
           "climate_unoccupied_delay_minutes": "ডিভাইস · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "উপস্থিতি · ডিভাইস · সেন্সর · আবশ্যক",
+          "climate_occupancy_stale_minutes": "ঘরে উপস্থিতি · লোকসংখ্যার তথ্যের সর্বোচ্চ বয়স (মিনিট)",
           "climate_away_policy": "বাড়িতে উপস্থিতি · বাড়ি · ডিভাইস · POLICY",
           "climate_manual_profile": "ডিভাইস · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "ঘুম · ডিভাইস",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "ডিভাইস (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "“উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
+          "climate_occupancy_sensors": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।",
           "climate_away_entities": "“বাড়ি · ডিভাইস” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "ঘরের সংখ্যাসূচক লোকগণনার তথ্যের সর্বোচ্চ বয়স। পুরোনো বা অনুপলব্ধ মান অজানা। ঘরের বাইনারি উপস্থিতি ও ঘরের তালিকা অপরিবর্তিত থাকলে মেয়াদোত্তীর্ণ হয় না।",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "এই বিকল্প “ডিভাইস · CLIMATE_MANUAL_PROFILE” নিয়ন্ত্রণ করে। যন্ত্রে আদেশ দিতে আলাদা অনুমতি ও স্বাধীন সুরক্ষা দরকার।",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "সাধারণ · সেটিংস",
-        "description": "সাধারণ · সেটিংস: নির্বাচন উৎস, সেন্সর / ডিভাইস · নিয়ন্ত্রণ.",
+        "description": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।",
         "data": {
           "general_room_occupancy_sensors": "ঘর · উপস্থিতি · সেন্সর",
           "general_occupied_rooms_entity": "উপস্থিতি · ঘর · উৎস (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "বাড়িতে উপস্থিতি",
           "general_sleep_rooms_entity": "ঘুম · ঘর · উৎস (state)",
           "general_sleep_rooms_attribute": "ঘুম · ঘর · উৎস (attribute)",
-          "general_source_stale_minutes": "উৎস · max (min)"
+          "general_source_stale_minutes": "বাড়িতে উপস্থিতি · ট্র্যাকার/লোকসংখ্যার তথ্যের সর্বোচ্চ বয়স (মিনিট)",
+          "general_wake_alarm_entity": "ঘুম · পরবর্তী অ্যালার্ম",
+          "general_wake_lead_minutes_entity": "ঘুম · অ্যালার্মের কত মিনিট আগে"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "“ঘর · উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
-          "general_occupied_rooms_entity": "“উপস্থিতি · ঘর · উৎস (state)” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
+          "general_room_occupancy_sensors": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।",
+          "general_occupied_rooms_entity": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।",
           "general_occupied_rooms_attribute": "“উপস্থিতি · ঘর · উৎস (attribute)” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
           "general_home_trackers": "“বাড়ি · উপস্থিতি · ডিভাইস” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "“ঘুম · ঘর · উৎস (state)” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
+          "general_sleep_rooms_entity": "Home Assistant এলাকার নাম বা ID দিয়ে ঘুমন্ত ঘরের তালিকা state বা attribute থেকে বেছে নিন। তালিকায় থাকা ঘর তখনই ঘুমন্ত যখন সেখানে মানুষও আছে। অপরিবর্তিত তালিকা বৈধ থাকে; অনুপস্থিত বা অবৈধ উৎস অজানা। নির্ধারিত অ্যালার্ম স্বয়ংক্রিয় ঘুম বাজার আগেই শেষ করতে পারে।",
           "general_sleep_rooms_attribute": "“ঘুম · ঘর · উৎস (attribute)” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
-          "general_source_stale_minutes": "উৎস · ঘুম / উপস্থিতি · max 240 min. অবৈধ · বন্ধ."
+          "general_source_stale_minutes": "তথ্যের বয়সসীমা ট্র্যাকার ও সংখ্যাসূচক লোকগণনার ক্ষেত্রে প্রযোজ্য। ঘরের তালিকা ও বাইনারি উপস্থিতির অবস্থা অপরিবর্তিত থাকলে মেয়াদোত্তীর্ণ হয় না। অনুপলব্ধ, পুনরুদ্ধার করা বা অবৈধ উৎস অজানা থাকে। এটি ঘুমের সময়কাল নয়।",
+          "general_wake_alarm_entity": "পরবর্তী অ্যালার্মের সময় বা তারিখ-সময় সত্তা এবং মিনিটের সত্তা বেছে নিন। স্বাভাবিক লক্ষ্যগুলো ফিরিয়ে আনতে HEM নির্দিষ্ট মিনিট আগে স্বয়ংক্রিয় ঘুম মোড ছাড়ে। শুধু সময় থাকলে Home Assistant-এর সময় অঞ্চল ব্যবহৃত হয়। অনুপস্থিতি, ম্যানুয়াল নিয়ন্ত্রণ ও ডিভাইসের সুরক্ষার অগ্রাধিকার বজায় থাকে।",
+          "general_wake_lead_minutes_entity": "মিনিটে অঋণাত্মক মানের সংখ্যাসূচক সত্তা বেছে নিন; একক min অথবা এককবিহীন। 07:00 অ্যালার্ম ও 30 হলে 06:30-এ স্বয়ংক্রিয় ঘুম শেষ হয়; 0 মানে অ্যালার্ম বাজার সময়। বন্ধ করতে দুটি উৎসই সরান।"
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "আর্দ্রতা. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
           "climate_devices": "ডিভাইস. এই ঘরের প্রকৃত climate.*, humidifier.* এবং fan.* সত্তা নির্বাচন করুন। ডিভাইসের নিজস্ব ক্ষমতা গরম, ঠান্ডা, আর্দ্রতা কমানো, লক্ষ্য মান ও ফ্যানের গতি নির্ধারণ করে। নির্বাচন করলে কিছু চালু হয় না; প্রতিটি নিয়ন্ত্রকে স্বয়ংক্রিয় নিয়ন্ত্রণ আলাদাভাবে চালু করুন।",
           "shades": "জানালার পর্দা, ব্লাইন্ড ও শাটার. এই ঘরের cover.* জানালার ব্লাইন্ড, রোলার শাটার ও পর্দা নির্বাচন করুন। device_class না থাকলেও CLOSE সমর্থিত এবং এটি সত্যিকারের জানালার ছায়া হলে গ্রহণযোগ্য। গ্যারেজ, গেট, দরজা, জানালা ও বাইরের ছাউনি বাদ। নির্বাচন কিছু নড়ায় না; জানালার সেন্সর যুক্ত করে স্বয়ংক্রিয় নিয়ন্ত্রণ, ঘোষণা ও তাপমাত্রা নির্ধারণ করুন। অজানা অবস্থায় চলাচল বন্ধ।",
-          "occupancy_sensors": "“উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।"
+          "occupancy_sensors": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।"
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "আর্দ্রতা. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
           "climate_devices": "ডিভাইস. এই ঘরের প্রকৃত climate.*, humidifier.* এবং fan.* সত্তা নির্বাচন করুন। ডিভাইসের নিজস্ব ক্ষমতা গরম, ঠান্ডা, আর্দ্রতা কমানো, লক্ষ্য মান ও ফ্যানের গতি নির্ধারণ করে। নির্বাচন করলে কিছু চালু হয় না; প্রতিটি নিয়ন্ত্রকে স্বয়ংক্রিয় নিয়ন্ত্রণ আলাদাভাবে চালু করুন।",
           "shades": "জানালার পর্দা, ব্লাইন্ড ও শাটার. এই ঘরের cover.* জানালার ব্লাইন্ড, রোলার শাটার ও পর্দা নির্বাচন করুন। device_class না থাকলেও CLOSE সমর্থিত এবং এটি সত্যিকারের জানালার ছায়া হলে গ্রহণযোগ্য। গ্যারেজ, গেট, দরজা, জানালা ও বাইরের ছাউনি বাদ। নির্বাচন কিছু নড়ায় না; জানালার সেন্সর যুক্ত করে স্বয়ংক্রিয় নিয়ন্ত্রণ, ঘোষণা ও তাপমাত্রা নির্ধারণ করুন। অজানা অবস্থায় চলাচল বন্ধ।",
-          "occupancy_sensors": "“উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।"
+          "occupancy_sensors": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।"
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "অবৈধ · সেন্সর · সেটিংস",
       "device_temperature_band_invalid": "অবৈধ · তাপমাত্রা · সেটিংস",
       "device_humidity_invalid": "অবৈধ · আর্দ্রতা · সেটিংস",
-      "device_runtime_invalid": "অবৈধ · শক্তি · সেটিংস"
+      "device_runtime_invalid": "অবৈধ · শক্তি · সেটিংস",
+      "wake_sources_pair": "অ্যালার্ম ও মিনিটের সত্তা দুটিই বেছে নিন অথবা দুটিই সরান।"
     },
     "abort": {
       "already_configured": "Home Environment Manager - আগেই সেট করা হয়েছে.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "বাড়ি · ডিভাইস",
           "climate_unknown_occupancy": "উপস্থিতি · ডিভাইস",
           "climate_unoccupied_delay_minutes": "ডিভাইস · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "উপস্থিতি · ডিভাইস · সেন্সর · আবশ্যক",
+          "climate_occupancy_stale_minutes": "ঘরে উপস্থিতি · লোকসংখ্যার তথ্যের সর্বোচ্চ বয়স (মিনিট)",
           "climate_away_policy": "বাড়িতে উপস্থিতি · বাড়ি · ডিভাইস · POLICY",
           "climate_manual_profile": "ডিভাইস · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "ঘুম · ডিভাইস",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "ডিভাইস (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "“উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
+          "climate_occupancy_sensors": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।",
           "climate_away_entities": "“বাড়ি · ডিভাইস” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "ঘরের সংখ্যাসূচক লোকগণনার তথ্যের সর্বোচ্চ বয়স। পুরোনো বা অনুপলব্ধ মান অজানা। ঘরের বাইনারি উপস্থিতি ও ঘরের তালিকা অপরিবর্তিত থাকলে মেয়াদোত্তীর্ণ হয় না।",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "এই বিকল্প “ডিভাইস · CLIMATE_MANUAL_PROFILE” নিয়ন্ত্রণ করে। যন্ত্রে আদেশ দিতে আলাদা অনুমতি ও স্বাধীন সুরক্ষা দরকার।",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "সাধারণ · সেটিংস",
-        "description": "সাধারণ · সেটিংস: নির্বাচন উৎস, সেন্সর / ডিভাইস · নিয়ন্ত্রণ.",
+        "description": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।",
         "data": {
           "general_room_occupancy_sensors": "ঘর · উপস্থিতি · সেন্সর",
           "general_occupied_rooms_entity": "উপস্থিতি · ঘর · উৎস (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "বাড়িতে উপস্থিতি",
           "general_sleep_rooms_entity": "ঘুম · ঘর · উৎস (state)",
           "general_sleep_rooms_attribute": "ঘুম · ঘর · উৎস (attribute)",
-          "general_source_stale_minutes": "উৎস · max (min)"
+          "general_source_stale_minutes": "বাড়িতে উপস্থিতি · ট্র্যাকার/লোকসংখ্যার তথ্যের সর্বোচ্চ বয়স (মিনিট)",
+          "general_wake_alarm_entity": "ঘুম · পরবর্তী অ্যালার্ম",
+          "general_wake_lead_minutes_entity": "ঘুম · অ্যালার্মের কত মিনিট আগে"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "“ঘর · উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
-          "general_occupied_rooms_entity": "“উপস্থিতি · ঘর · উৎস (state)” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
+          "general_room_occupancy_sensors": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।",
+          "general_occupied_rooms_entity": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।",
           "general_occupied_rooms_attribute": "“উপস্থিতি · ঘর · উৎস (attribute)” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
           "general_home_trackers": "“বাড়ি · উপস্থিতি · ডিভাইস” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "“ঘুম · ঘর · উৎস (state)” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
+          "general_sleep_rooms_entity": "Home Assistant এলাকার নাম বা ID দিয়ে ঘুমন্ত ঘরের তালিকা state বা attribute থেকে বেছে নিন। তালিকায় থাকা ঘর তখনই ঘুমন্ত যখন সেখানে মানুষও আছে। অপরিবর্তিত তালিকা বৈধ থাকে; অনুপস্থিত বা অবৈধ উৎস অজানা। নির্ধারিত অ্যালার্ম স্বয়ংক্রিয় ঘুম বাজার আগেই শেষ করতে পারে।",
           "general_sleep_rooms_attribute": "“ঘুম · ঘর · উৎস (attribute)” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
-          "general_source_stale_minutes": "উৎস · ঘুম / উপস্থিতি · max 240 min. অবৈধ · বন্ধ."
+          "general_source_stale_minutes": "তথ্যের বয়সসীমা ট্র্যাকার ও সংখ্যাসূচক লোকগণনার ক্ষেত্রে প্রযোজ্য। ঘরের তালিকা ও বাইনারি উপস্থিতির অবস্থা অপরিবর্তিত থাকলে মেয়াদোত্তীর্ণ হয় না। অনুপলব্ধ, পুনরুদ্ধার করা বা অবৈধ উৎস অজানা থাকে। এটি ঘুমের সময়কাল নয়।",
+          "general_wake_alarm_entity": "পরবর্তী অ্যালার্মের সময় বা তারিখ-সময় সত্তা এবং মিনিটের সত্তা বেছে নিন। স্বাভাবিক লক্ষ্যগুলো ফিরিয়ে আনতে HEM নির্দিষ্ট মিনিট আগে স্বয়ংক্রিয় ঘুম মোড ছাড়ে। শুধু সময় থাকলে Home Assistant-এর সময় অঞ্চল ব্যবহৃত হয়। অনুপস্থিতি, ম্যানুয়াল নিয়ন্ত্রণ ও ডিভাইসের সুরক্ষার অগ্রাধিকার বজায় থাকে।",
+          "general_wake_lead_minutes_entity": "মিনিটে অঋণাত্মক মানের সংখ্যাসূচক সত্তা বেছে নিন; একক min অথবা এককবিহীন। 07:00 অ্যালার্ম ও 30 হলে 06:30-এ স্বয়ংক্রিয় ঘুম শেষ হয়; 0 মানে অ্যালার্ম বাজার সময়। বন্ধ করতে দুটি উৎসই সরান।"
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · পরাগ · HIGH",
           "pollen_max_scale": "POLLEN · পরাগ · SCALE",
           "pollen_avoid_ventilation": "POLLEN · পরাগ · NO VENT",
-          "general_source_stale_minutes": "উৎস · max (min)",
-          "general_home_policy": "বাড়িতে উপস্থিতি"
+          "general_source_stale_minutes": "বাড়িতে উপস্থিতি · ট্র্যাকার/লোকসংখ্যার তথ্যের সর্বোচ্চ বয়স (মিনিট)",
+          "general_home_policy": "বাড়িতে উপস্থিতি",
+          "general_wake_alarm_entity": "ঘুম · পরবর্তী অ্যালার্ম",
+          "general_wake_lead_minutes_entity": "ঘুম · অ্যালার্মের কত মিনিট আগে"
         },
         "data_description": {
           "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "নির্বাচন করুন: বাইরের বায়ুর মান · AQI, CO₂, PM2.5, PM10, VOC. পাওয়া যাচ্ছে না: ⚠",
           "weather_warnings": "আবহাওয়া ও সতর্কতা · ⚠ (পাওয়া যাচ্ছে না) → 🪟🔒",
-          "general_room_occupancy_sensors": "“ঘর · উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে। number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।",
           "general_home_trackers": "“বাড়ি · উপস্থিতি · ডিভাইস” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে। number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "“উপস্থিতি · ঘর · উৎস (state)” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
+          "general_occupied_rooms_entity": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।",
           "general_occupied_rooms_attribute": "“উপস্থিতি · ঘর · উৎস (attribute)” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
-          "general_sleep_rooms_entity": "“ঘুম · ঘর · উৎস (state)” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।",
+          "general_sleep_rooms_entity": "Home Assistant এলাকার নাম বা ID দিয়ে ঘুমন্ত ঘরের তালিকা state বা attribute থেকে বেছে নিন। তালিকায় থাকা ঘর তখনই ঘুমন্ত যখন সেখানে মানুষও আছে। অপরিবর্তিত তালিকা বৈধ থাকে; অনুপস্থিত বা অবৈধ উৎস অজানা। নির্ধারিত অ্যালার্ম স্বয়ংক্রিয় ঘুম বাজার আগেই শেষ করতে পারে।",
           "general_sleep_rooms_attribute": "“ঘুম · ঘর · উৎস (attribute)” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
           "notify_entities": "নির্বাচন করুন: notify.* · সেটিংস · উৎস.",
           "media_players": "নির্বাচন করুন: media_player.* · সেটিংস · উৎস · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "“POLLEN · পরাগ · HIGH” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
           "pollen_max_scale": "“POLLEN · পরাগ · SCALE” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
           "pollen_avoid_ventilation": "“POLLEN · পরাগ · NO VENT” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
-          "general_source_stale_minutes": "উৎস · ঘুম / উপস্থিতি · max 240 min. অবৈধ · বন্ধ.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "তথ্যের বয়সসীমা ট্র্যাকার ও সংখ্যাসূচক লোকগণনার ক্ষেত্রে প্রযোজ্য। ঘরের তালিকা ও বাইনারি উপস্থিতির অবস্থা অপরিবর্তিত থাকলে মেয়াদোত্তীর্ণ হয় না। অনুপলব্ধ, পুনরুদ্ধার করা বা অবৈধ উৎস অজানা থাকে। এটি ঘুমের সময়কাল নয়।",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "পরবর্তী অ্যালার্মের সময় বা তারিখ-সময় সত্তা এবং মিনিটের সত্তা বেছে নিন। স্বাভাবিক লক্ষ্যগুলো ফিরিয়ে আনতে HEM নির্দিষ্ট মিনিট আগে স্বয়ংক্রিয় ঘুম মোড ছাড়ে। শুধু সময় থাকলে Home Assistant-এর সময় অঞ্চল ব্যবহৃত হয়। অনুপস্থিতি, ম্যানুয়াল নিয়ন্ত্রণ ও ডিভাইসের সুরক্ষার অগ্রাধিকার বজায় থাকে।",
+          "general_wake_lead_minutes_entity": "মিনিটে অঋণাত্মক মানের সংখ্যাসূচক সত্তা বেছে নিন; একক min অথবা এককবিহীন। 07:00 অ্যালার্ম ও 30 হলে 06:30-এ স্বয়ংক্রিয় ঘুম শেষ হয়; 0 মানে অ্যালার্ম বাজার সময়। বন্ধ করতে দুটি উৎসই সরান।"
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "আর্দ্রতা. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
           "climate_devices": "ডিভাইস. এই ঘরের প্রকৃত climate.*, humidifier.* এবং fan.* সত্তা নির্বাচন করুন। ডিভাইসের নিজস্ব ক্ষমতা গরম, ঠান্ডা, আর্দ্রতা কমানো, লক্ষ্য মান ও ফ্যানের গতি নির্ধারণ করে। নির্বাচন করলে কিছু চালু হয় না; প্রতিটি নিয়ন্ত্রকে স্বয়ংক্রিয় নিয়ন্ত্রণ আলাদাভাবে চালু করুন।",
           "shades": "জানালার পর্দা, ব্লাইন্ড ও শাটার. এই ঘরের cover.* জানালার ব্লাইন্ড, রোলার শাটার ও পর্দা নির্বাচন করুন। device_class না থাকলেও CLOSE সমর্থিত এবং এটি সত্যিকারের জানালার ছায়া হলে গ্রহণযোগ্য। গ্যারেজ, গেট, দরজা, জানালা ও বাইরের ছাউনি বাদ। নির্বাচন কিছু নড়ায় না; জানালার সেন্সর যুক্ত করে স্বয়ংক্রিয় নিয়ন্ত্রণ, ঘোষণা ও তাপমাত্রা নির্ধারণ করুন। অজানা অবস্থায় চলাচল বন্ধ।",
-          "occupancy_sensors": "“উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।"
+          "occupancy_sensors": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।"
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "আর্দ্রতা. ঘরের ইনপুট বেছে নিন: ডিভাইসের নাম - এনটিটির নাম। খালি গোষ্ঠী ব্যবহার হয় না এবং স্বয়ংক্রিয় খোঁজ বা নিয়ন্ত্রণ চালু করে না।",
           "climate_devices": "ডিভাইস. এই ঘরের প্রকৃত climate.*, humidifier.* এবং fan.* সত্তা নির্বাচন করুন। ডিভাইসের নিজস্ব ক্ষমতা গরম, ঠান্ডা, আর্দ্রতা কমানো, লক্ষ্য মান ও ফ্যানের গতি নির্ধারণ করে। নির্বাচন করলে কিছু চালু হয় না; প্রতিটি নিয়ন্ত্রকে স্বয়ংক্রিয় নিয়ন্ত্রণ আলাদাভাবে চালু করুন।",
           "shades": "জানালার পর্দা, ব্লাইন্ড ও শাটার. এই ঘরের cover.* জানালার ব্লাইন্ড, রোলার শাটার ও পর্দা নির্বাচন করুন। device_class না থাকলেও CLOSE সমর্থিত এবং এটি সত্যিকারের জানালার ছায়া হলে গ্রহণযোগ্য। গ্যারেজ, গেট, দরজা, জানালা ও বাইরের ছাউনি বাদ। নির্বাচন কিছু নড়ায় না; জানালার সেন্সর যুক্ত করে স্বয়ংক্রিয় নিয়ন্ত্রণ, ঘোষণা ও তাপমাত্রা নির্ধারণ করুন। অজানা অবস্থায় চলাচল বন্ধ।",
-          "occupancy_sensors": "“উপস্থিতি · সেন্সর” এর জন্য প্রকৃত Home Assistant উৎস বেছে নিন। অনুপস্থিত বা পুরোনো তথ্য কাজ স্থগিত করে।"
+          "occupancy_sensors": "নির্বাচিত state বা attribute-এর বৈধ উপস্থিত ঘরের তালিকা অগ্রাধিকার পায়: তালিকাভুক্ত ঘরে মানুষ আছে, বাদ পড়া ঘর ফাঁকা। তালিকা না থাকলে কোনো নির্বাচিত উপস্থিতি সেন্সর ON মানে মানুষ আছে; সব OFF বা কোনো সেন্সর নির্বাচন না করা মানে ফাঁকা। অনুপলব্ধ বা অবৈধ নির্বাচিত উৎস অজানা থাকে। অপরিবর্তিত তালিকা ও বাইনারি অবস্থা পুরোনো হয়ে বাতিল হয় না।"
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "অবৈধ · শক্তি · সেটিংস",
       "invalid_setup_rooms": "অবৈধ: পর্যবেক্ষণের ঘর",
       "invalid_room_source": "অবৈধ: ঘর · উৎস",
-      "invalid_away_windows_recipients": "বিজ্ঞপ্তি পাবেন যাঁরা; জানালার সতর্কতার মাধ্যম. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "বিজ্ঞপ্তি পাবেন যাঁরা; জানালার সতর্কতার মাধ্যম. Announcement Hub (person.*).",
+      "wake_sources_pair": "অ্যালার্ম ও মিনিটের সত্তা দুটিই বেছে নিন অথবা দুটিই সরান।"
     },
     "abort": {
       "setup_area_removed": "অবৈধ: পর্যবেক্ষণের ঘর",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "বাড়িতে উপস্থিতি · উৎস · max (min)",
+        "name": "বাড়িতে উপস্থিতি · ট্র্যাকার/লোকসংখ্যার তথ্যের সর্বোচ্চ বয়স (মিনিট)",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "ঘরে উপস্থিতি · উপস্থিতি · ডিভাইস · সেন্সর · আবশ্যক",
+        "name": "ঘরে উপস্থিতি · লোকসংখ্যার তথ্যের সর্বোচ্চ বয়স (মিনিট)",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "ঘোষণা · ডিভাইসের ত্রুটির ঘোষণা · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "সাহায্য"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "ঘুম · {channel}সবাই যখন ঘুমাচ্ছেন",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"

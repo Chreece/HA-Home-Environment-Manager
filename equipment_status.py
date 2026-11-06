@@ -70,7 +70,14 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         area = environment.get(self._spec.area_id, {})
         plan = area.get("climate_plan", {}) if isinstance(area, dict) else {}
         plan = plan if isinstance(plan, dict) else {}
-        shared = self._manager.settings.get("occupancy_global") or {}
+        if callable(getattr(self._manager.hass.states, "async_all", None)):
+            # Household Sleep is a per-device opt-in; its target profile can
+            # differ from another device sharing this same room. Use the same
+            # live facts as control, including a just-crossed wake boundary.
+            plan = equipment.plan_for(self._manager, self._spec)
+        shared = plan.get("global_presence")
+        if not isinstance(shared, dict):
+            shared = self._manager.settings.get("occupancy_global") or {}
         sleep_id = shared.get("sleep_rooms_entity") if isinstance(shared, dict) else None
         sleep_source = self._manager.hass.states.get(sleep_id) if (
             isinstance(sleep_id, str) and sleep_id not in ("", "none")
@@ -165,6 +172,7 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "home_presence_reason": plan.get("away_evidence", "unknown"),
             "room_occupancy": plan.get("occupancy", "unknown"),
             "sleep_behavior": cfg.get("sleep_behavior", "normal"),
+            "sleep_when_everyone_asleep": cfg.get("sleep_when_everyone_asleep") is True,
             "sleep_rooms_entity": sleep_id,
             "sleep_rooms_source_state": (sleep_source.state if sleep_source is not None
                                          else "not_configured" if sleep_id in (None, "", "none")

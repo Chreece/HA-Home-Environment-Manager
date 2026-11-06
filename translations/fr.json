@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Pollen · HIGH",
           "pollen_max_scale": "POLLEN · Pollen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
-          "general_source_stale_minutes": "source · max (min)",
-          "general_home_policy": "Présence à domicile"
+          "general_source_stale_minutes": "Présence à domicile · Âge maximal des données de suivi/comptage (min)",
+          "general_home_policy": "Présence à domicile",
+          "general_wake_alarm_entity": "Sommeil · Prochain réveil",
+          "general_wake_lead_minutes_entity": "Sommeil · Minutes avant le réveil"
         },
         "data_description": {
           "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres. L'indicateur de moisissure utilise l'attribut temperature (°C/°F) d'une entité météo sélectionnée comme température extérieure. Sélectionnez une source qui fournit une température.",
           "outdoor_sensors": "Choisissez des capteurs réellement situés à l'extérieur. Les valeurs dépassant les seuils empêchent d'ouvrir; les mesures inconnues, indisponibles ou anciennes sont signalées comme données manquantes.",
           "weather_warnings": "Facultatif. Les alertes sélectionnées actives ou indisponibles empêchent d'ouvrir les fenêtres.",
-          "general_room_occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Pièce · Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée. Les entités number et input_number peuvent compter les présences : 0 signifie pièce vide, une valeur positive indique une présence. Les données absentes ou périmées ne prouvent jamais l'absence.",
+          "general_room_occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
           "general_home_trackers": "Choisissez une source Home Assistant réelle pour « Maison · Présence · Appareils ». Une valeur absente ou périmée suspend l'action concernée. Les entités number et input_number peuvent compter les présences : 0 signifie pièce vide, une valeur positive indique une présence. Les données absentes ou périmées ne prouvent jamais l'absence.",
-          "general_occupied_rooms_entity": "Choisissez une source Home Assistant réelle pour « Présence · Pièce · source (state) ». Une valeur absente ou périmée suspend l'action concernée.",
+          "general_occupied_rooms_entity": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
           "general_occupied_rooms_attribute": "Configurez « Présence · Pièce · source (attribute) » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
-          "general_sleep_rooms_entity": "Choisissez une source Home Assistant réelle pour « Sommeil · Pièce · source (state) ». Une valeur absente ou périmée suspend l'action concernée.",
+          "general_sleep_rooms_entity": "Sélectionnez une liste de pièces en sommeil dans l’état ou un attribut, avec les noms ou identifiants des zones Home Assistant. Une pièce listée ne dort que si elle est aussi occupée. La liste inchangée reste valide ; une source absente ou invalide est inconnue. Le réveil configuré peut terminer le sommeil automatique avant la sonnerie.",
           "general_sleep_rooms_attribute": "Configurez « Sommeil · Pièce · source (attribute) » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
           "notify_entities": "Destinations de notification directe lorsqu'Announcement Hub n'est pas utilisé.",
           "media_players": "Lecteurs pour les annonces vocales directes. L'affectation aux pièces détermine les destinataires.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Configurez « POLLEN · Pollen · HIGH » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
           "pollen_max_scale": "Configurez « POLLEN · Pollen · SCALE » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
           "pollen_avoid_ventilation": "Configurez « POLLEN · Pollen · NO VENT » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
-          "general_source_stale_minutes": "source · Sommeil / Présence · max 240 min. Invalide · Arrêt.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "La limite d’âge concerne les rapports des traceurs et les comptages numériques de personnes. Les listes de pièces et les états binaires de présence n’expirent pas tant qu’ils ne changent pas. Les sources indisponibles, restaurées ou invalides restent inconnues. Ce n’est pas une durée de sommeil.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Sélectionnez une entité d’heure ou d’horodatage pour le prochain réveil, ainsi qu’une entité pour les minutes d’avance. HEM quitte le sommeil automatique avec cette avance et reprend les cibles normales. Une heure sans date utilise le fuseau de Home Assistant. L’absence, le contrôle manuel et les protections restent prioritaires.",
+          "general_wake_lead_minutes_entity": "Sélectionnez une entité numérique indiquant un nombre de minutes positif ou nul, avec l’unité min ou sans unité. Un réveil à 07:00 avec 30 minutes termine le sommeil automatique à 06:30 ; 0 signifie à la sonnerie. Pour désactiver, effacez les deux sources."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Maison · Appareils",
           "climate_unknown_occupancy": "Présence · Appareils",
           "climate_unoccupied_delay_minutes": "Appareils · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Présence · Appareils · capteur · Obligatoire",
+          "climate_occupancy_stale_minutes": "Présence dans la pièce · Âge maximal du nombre de personnes (min)",
           "climate_away_policy": "Présence à domicile · Maison · Appareils · POLICY",
           "climate_manual_profile": "Appareils · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sommeil · Appareils",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Appareils (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée.",
+          "climate_occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
           "climate_away_entities": "Choisissez une source Home Assistant réelle pour « Maison · Appareils ». Une valeur absente ou périmée suspend l'action concernée.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Âge maximal des comptages numériques de personnes dans la pièce. Les valeurs anciennes ou indisponibles sont inconnues. Les états binaires de présence et les listes de pièces inchangés n’expirent pas.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Cette option règle « Appareils · CLIMATE_MANUAL_PROFILE ». Les commandes physiques exigent un accord distinct et des protections indépendantes.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Général · paramètres",
-        "description": "Général · paramètres: Choisir source, capteur / Appareils · contrôle.",
+        "description": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
         "data": {
           "general_room_occupancy_sensors": "Pièce · Présence · capteur",
           "general_occupied_rooms_entity": "Présence · Pièce · source (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Présence à domicile",
           "general_sleep_rooms_entity": "Sommeil · Pièce · source (state)",
           "general_sleep_rooms_attribute": "Sommeil · Pièce · source (attribute)",
-          "general_source_stale_minutes": "source · max (min)"
+          "general_source_stale_minutes": "Présence à domicile · Âge maximal des données de suivi/comptage (min)",
+          "general_wake_alarm_entity": "Sommeil · Prochain réveil",
+          "general_wake_lead_minutes_entity": "Sommeil · Minutes avant le réveil"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Pièce · Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée.",
-          "general_occupied_rooms_entity": "Choisissez une source Home Assistant réelle pour « Présence · Pièce · source (state) ». Une valeur absente ou périmée suspend l'action concernée.",
+          "general_room_occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
+          "general_occupied_rooms_entity": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
           "general_occupied_rooms_attribute": "Configurez « Présence · Pièce · source (attribute) » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
           "general_home_trackers": "Choisissez une source Home Assistant réelle pour « Maison · Présence · Appareils ». Une valeur absente ou périmée suspend l'action concernée.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Choisissez une source Home Assistant réelle pour « Sommeil · Pièce · source (state) ». Une valeur absente ou périmée suspend l'action concernée.",
+          "general_sleep_rooms_entity": "Sélectionnez une liste de pièces en sommeil dans l’état ou un attribut, avec les noms ou identifiants des zones Home Assistant. Une pièce listée ne dort que si elle est aussi occupée. La liste inchangée reste valide ; une source absente ou invalide est inconnue. Le réveil configuré peut terminer le sommeil automatique avant la sonnerie.",
           "general_sleep_rooms_attribute": "Configurez « Sommeil · Pièce · source (attribute) » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
-          "general_source_stale_minutes": "source · Sommeil / Présence · max 240 min. Invalide · Arrêt."
+          "general_source_stale_minutes": "La limite d’âge concerne les rapports des traceurs et les comptages numériques de personnes. Les listes de pièces et les états binaires de présence n’expirent pas tant qu’ils ne changent pas. Les sources indisponibles, restaurées ou invalides restent inconnues. Ce n’est pas une durée de sommeil.",
+          "general_wake_alarm_entity": "Sélectionnez une entité d’heure ou d’horodatage pour le prochain réveil, ainsi qu’une entité pour les minutes d’avance. HEM quitte le sommeil automatique avec cette avance et reprend les cibles normales. Une heure sans date utilise le fuseau de Home Assistant. L’absence, le contrôle manuel et les protections restent prioritaires.",
+          "general_wake_lead_minutes_entity": "Sélectionnez une entité numérique indiquant un nombre de minutes positif ou nul, avec l’unité min ou sans unité. Un réveil à 07:00 avec 30 minutes termine le sommeil automatique à 06:30 ; 0 signifie à la sonnerie. Pour désactiver, effacez les deux sources."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
-          "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
+          "occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
-          "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
+          "occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Invalide · capteur · paramètres",
       "device_temperature_band_invalid": "Invalide · Température · paramètres",
       "device_humidity_invalid": "Invalide · Humidité · paramètres",
-      "device_runtime_invalid": "Invalide · Puissance · paramètres"
+      "device_runtime_invalid": "Invalide · Puissance · paramètres",
+      "wake_sources_pair": "Sélectionnez l’entité du réveil et celle des minutes, ou effacez les deux."
     },
     "abort": {
       "already_configured": "Home Environment Manager est déjà configuré.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Maison · Appareils",
           "climate_unknown_occupancy": "Présence · Appareils",
           "climate_unoccupied_delay_minutes": "Appareils · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Présence · Appareils · capteur · Obligatoire",
+          "climate_occupancy_stale_minutes": "Présence dans la pièce · Âge maximal du nombre de personnes (min)",
           "climate_away_policy": "Présence à domicile · Maison · Appareils · POLICY",
           "climate_manual_profile": "Appareils · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sommeil · Appareils",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Appareils (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée.",
+          "climate_occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
           "climate_away_entities": "Choisissez une source Home Assistant réelle pour « Maison · Appareils ». Une valeur absente ou périmée suspend l'action concernée.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Âge maximal des comptages numériques de personnes dans la pièce. Les valeurs anciennes ou indisponibles sont inconnues. Les états binaires de présence et les listes de pièces inchangés n’expirent pas.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Cette option règle « Appareils · CLIMATE_MANUAL_PROFILE ». Les commandes physiques exigent un accord distinct et des protections indépendantes.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Général · paramètres",
-        "description": "Général · paramètres: Choisir source, capteur / Appareils · contrôle.",
+        "description": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
         "data": {
           "general_room_occupancy_sensors": "Pièce · Présence · capteur",
           "general_occupied_rooms_entity": "Présence · Pièce · source (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Présence à domicile",
           "general_sleep_rooms_entity": "Sommeil · Pièce · source (state)",
           "general_sleep_rooms_attribute": "Sommeil · Pièce · source (attribute)",
-          "general_source_stale_minutes": "source · max (min)"
+          "general_source_stale_minutes": "Présence à domicile · Âge maximal des données de suivi/comptage (min)",
+          "general_wake_alarm_entity": "Sommeil · Prochain réveil",
+          "general_wake_lead_minutes_entity": "Sommeil · Minutes avant le réveil"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Pièce · Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée.",
-          "general_occupied_rooms_entity": "Choisissez une source Home Assistant réelle pour « Présence · Pièce · source (state) ». Une valeur absente ou périmée suspend l'action concernée.",
+          "general_room_occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
+          "general_occupied_rooms_entity": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
           "general_occupied_rooms_attribute": "Configurez « Présence · Pièce · source (attribute) » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
           "general_home_trackers": "Choisissez une source Home Assistant réelle pour « Maison · Présence · Appareils ». Une valeur absente ou périmée suspend l'action concernée.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Choisissez une source Home Assistant réelle pour « Sommeil · Pièce · source (state) ». Une valeur absente ou périmée suspend l'action concernée.",
+          "general_sleep_rooms_entity": "Sélectionnez une liste de pièces en sommeil dans l’état ou un attribut, avec les noms ou identifiants des zones Home Assistant. Une pièce listée ne dort que si elle est aussi occupée. La liste inchangée reste valide ; une source absente ou invalide est inconnue. Le réveil configuré peut terminer le sommeil automatique avant la sonnerie.",
           "general_sleep_rooms_attribute": "Configurez « Sommeil · Pièce · source (attribute) » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
-          "general_source_stale_minutes": "source · Sommeil / Présence · max 240 min. Invalide · Arrêt."
+          "general_source_stale_minutes": "La limite d’âge concerne les rapports des traceurs et les comptages numériques de personnes. Les listes de pièces et les états binaires de présence n’expirent pas tant qu’ils ne changent pas. Les sources indisponibles, restaurées ou invalides restent inconnues. Ce n’est pas une durée de sommeil.",
+          "general_wake_alarm_entity": "Sélectionnez une entité d’heure ou d’horodatage pour le prochain réveil, ainsi qu’une entité pour les minutes d’avance. HEM quitte le sommeil automatique avec cette avance et reprend les cibles normales. Une heure sans date utilise le fuseau de Home Assistant. L’absence, le contrôle manuel et les protections restent prioritaires.",
+          "general_wake_lead_minutes_entity": "Sélectionnez une entité numérique indiquant un nombre de minutes positif ou nul, avec l’unité min ou sans unité. Un réveil à 07:00 avec 30 minutes termine le sommeil automatique à 06:30 ; 0 signifie à la sonnerie. Pour désactiver, effacez les deux sources."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Pollen · HIGH",
           "pollen_max_scale": "POLLEN · Pollen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
-          "general_source_stale_minutes": "source · max (min)",
-          "general_home_policy": "Présence à domicile"
+          "general_source_stale_minutes": "Présence à domicile · Âge maximal des données de suivi/comptage (min)",
+          "general_home_policy": "Présence à domicile",
+          "general_wake_alarm_entity": "Sommeil · Prochain réveil",
+          "general_wake_lead_minutes_entity": "Sommeil · Minutes avant le réveil"
         },
         "data_description": {
           "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres. L'indicateur de moisissure utilise l'attribut temperature (°C/°F) d'une entité météo sélectionnée comme température extérieure. Sélectionnez une source qui fournit une température.",
           "outdoor_sensors": "Choisissez des capteurs réellement situés à l'extérieur. Les valeurs dépassant les seuils empêchent d'ouvrir; les mesures inconnues, indisponibles ou anciennes sont signalées comme données manquantes.",
           "weather_warnings": "Facultatif. Les alertes sélectionnées actives ou indisponibles empêchent d'ouvrir les fenêtres.",
-          "general_room_occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Pièce · Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée. Les entités number et input_number peuvent compter les présences : 0 signifie pièce vide, une valeur positive indique une présence. Les données absentes ou périmées ne prouvent jamais l'absence.",
+          "general_room_occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
           "general_home_trackers": "Choisissez une source Home Assistant réelle pour « Maison · Présence · Appareils ». Une valeur absente ou périmée suspend l'action concernée. Les entités number et input_number peuvent compter les présences : 0 signifie pièce vide, une valeur positive indique une présence. Les données absentes ou périmées ne prouvent jamais l'absence.",
-          "general_occupied_rooms_entity": "Choisissez une source Home Assistant réelle pour « Présence · Pièce · source (state) ». Une valeur absente ou périmée suspend l'action concernée.",
+          "general_occupied_rooms_entity": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
           "general_occupied_rooms_attribute": "Configurez « Présence · Pièce · source (attribute) » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
-          "general_sleep_rooms_entity": "Choisissez une source Home Assistant réelle pour « Sommeil · Pièce · source (state) ». Une valeur absente ou périmée suspend l'action concernée.",
+          "general_sleep_rooms_entity": "Sélectionnez une liste de pièces en sommeil dans l’état ou un attribut, avec les noms ou identifiants des zones Home Assistant. Une pièce listée ne dort que si elle est aussi occupée. La liste inchangée reste valide ; une source absente ou invalide est inconnue. Le réveil configuré peut terminer le sommeil automatique avant la sonnerie.",
           "general_sleep_rooms_attribute": "Configurez « Sommeil · Pièce · source (attribute) » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
           "notify_entities": "Destinations de notification directe lorsqu'Announcement Hub n'est pas utilisé.",
           "media_players": "Lecteurs pour les annonces vocales directes. L'affectation aux pièces détermine les destinataires.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Configurez « POLLEN · Pollen · HIGH » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
           "pollen_max_scale": "Configurez « POLLEN · Pollen · SCALE » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
           "pollen_avoid_ventilation": "Configurez « POLLEN · Pollen · NO VENT » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action.",
-          "general_source_stale_minutes": "source · Sommeil / Présence · max 240 min. Invalide · Arrêt.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "La limite d’âge concerne les rapports des traceurs et les comptages numériques de personnes. Les listes de pièces et les états binaires de présence n’expirent pas tant qu’ils ne changent pas. Les sources indisponibles, restaurées ou invalides restent inconnues. Ce n’est pas une durée de sommeil.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Sélectionnez une entité d’heure ou d’horodatage pour le prochain réveil, ainsi qu’une entité pour les minutes d’avance. HEM quitte le sommeil automatique avec cette avance et reprend les cibles normales. Une heure sans date utilise le fuseau de Home Assistant. L’absence, le contrôle manuel et les protections restent prioritaires.",
+          "general_wake_lead_minutes_entity": "Sélectionnez une entité numérique indiquant un nombre de minutes positif ou nul, avec l’unité min ou sans unité. Un réveil à 07:00 avec 30 minutes termine le sommeil automatique à 06:30 ; 0 signifie à la sonnerie. Pour désactiver, effacez les deux sources."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
-          "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
+          "occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
-          "occupancy_sensors": "Choisissez une source Home Assistant réelle pour « Présence · capteur ». Une valeur absente ou périmée suspend l'action concernée."
+          "occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Invalide · Puissance · paramètres",
       "invalid_setup_rooms": "Invalide: Pièces à surveiller",
       "invalid_room_source": "Invalide: Pièce · source",
-      "invalid_away_windows_recipients": "Choisissez au moins une personne et un canal de livraison pour cet avertissement."
+      "invalid_away_windows_recipients": "Choisissez au moins une personne et un canal de livraison pour cet avertissement.",
+      "wake_sources_pair": "Sélectionnez l’entité du réveil et celle des minutes, ou effacez les deux."
     },
     "abort": {
       "setup_area_removed": "Invalide: Pièces à surveiller",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Présence à domicile · source · max (min)",
+        "name": "Présence à domicile · Âge maximal des données de suivi/comptage (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Aide"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Présence dans la pièce · Présence · Appareils · capteur · Obligatoire",
+        "name": "Présence dans la pièce · Âge maximal du nombre de personnes (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Aide"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Annonces · Annoncer les erreurs de l’appareil · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aide"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Sommeil · {channel}Quand tout le monde dort",
         "state_attributes": {
           "configuration_help": {
             "name": "Aide"

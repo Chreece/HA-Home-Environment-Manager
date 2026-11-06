@@ -16,7 +16,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.0b119](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b119)
+**Current release:** [v0.6.0b120](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.0b120)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
@@ -46,7 +46,7 @@ creates its controls; choose its control method when you want HEM to operate it.
 1. In HACS, add `https://github.com/Chreece/HA-Home-Environment-Manager` as a
    **custom repository**, with category **Integration**.
 2. Open **Home Environment Manager**, enable **Show beta versions** in version
-   selection, and download **v0.6.0b119**.
+   selection, and download **v0.6.0b120**.
 3. Restart Home Assistant.
 4. Open **Settings → Devices & services → Add integration**, then choose
    **Home Environment Manager**.
@@ -272,9 +272,19 @@ or the attribute containing the list. For example:
 
 Use your actual Home Assistant area IDs, names or unambiguous aliases. A valid
 list takes priority over local room sensors: listed rooms are occupied and
-omitted rooms are unoccupied. `[]` or a fresh empty state means no rooms are
-occupied. Missing/stale evidence can fall back to local sensors; malformed lists
-or unknown room names remain unknown. Verified whole-home Away takes precedence.
+omitted rooms are unoccupied. `[]` or an empty state means no rooms are occupied.
+An unchanged list remains valid overnight; it does not need to publish the same
+value repeatedly. The same applies to binary occupancy/presence sensors that
+remain On or Off.
+
+When no shared list is configured, or its entity is missing, unavailable or
+awaiting a live report, HEM checks local presence sensors. Any selected sensor
+that is On means the room is occupied; all selected sensors Off means unoccupied.
+A room with no presence sources is also treated as unoccupied for control and
+room display. Unavailable selected sources can still produce Unknown. Malformed
+lists and unknown room names remain Unknown rather than using sensor fallback.
+Sampled numeric occupancy counts retain their configured freshness limit.
+Verified whole-home Away takes precedence over room activity.
 
 ### What the room sleep settings do
 
@@ -282,13 +292,60 @@ or unknown room names remain unknown. Verified whole-home Away takes precedence.
 | --- | --- |
 | **Sleep · Sleeping now** | Marks the room as currently sleeping for climate sleep behavior |
 | **Sleep · Use schedule** | Enables the local-time sleep interval; the default is **22:00–07:00** |
-| **Shared sleeping-room list** | Supplies current sleep context from your selected entity/list |
+| **Shared sleeping-room list** | Activates Sleep when the room is both occupied and in the selected list |
 | **Noise · Room used for sleeping** | Classifies the room for calibrated nighttime noise assessment |
 
 Sleep context can select sleep targets or a device's configured sleep/quiet
 behavior. Turning **Sleeping now** off does not override an active schedule or
 shared sleeping-room list. The noise classification does not activate climate
 Sleep.
+
+### Leave Sleep before an alarm
+
+In **General settings**, select both of these inputs:
+
+| Setting | What to select |
+| --- | --- |
+| **Sleep · Next alarm** | A timestamp sensor such as a phone's next alarm, a date-and-time helper, or a time entity/helper |
+| **Sleep · Minutes before alarm** | A numeric sensor, Number or Input Number helper containing a nonnegative number of minutes |
+
+For example, an alarm at **07:00** and a minutes value of **30** make HEM leave
+automatic Sleep at **06:30**. Devices then use their normal automatic targets
+and sleep-related pauses or quiet limits are released. Other quiet settings
+still apply. This gives the room time
+to warm, cool or adjust humidity before waking. It does not guarantee that a
+target will be reached by the alarm; that depends on the room and equipment.
+
+Use **0** to leave Sleep when the alarm rings. A time-only source repeats in
+Home Assistant's configured local timezone; a dated timestamp identifies a
+specific alarm. The minutes source can have a minutes unit or no unit. Select
+neither input to disable the feature.
+
+Changes to the alarm or lead time are applied immediately. Once an alarm has
+rung, a phone clearing it or publishing tomorrow's alarm will not put devices
+back to Sleep during the same sleep episode. The episode ends when its room or
+household sleep condition ends. A reload preserves an already-triggered wake
+episode. Missing or invalid alarm inputs cannot start a new wake transition.
+
+This feature releases **automatic** Sleep. An explicitly selected Sleep preset,
+Manual control, Away behavior, window checks and device protection delays keep
+their normal priority.
+
+### Let other devices sleep when everybody is sleeping
+
+Each HEM device controller has **Sleep · When everyone is sleeping**, disabled
+by default. Enable it for devices that should follow household sleep, such as
+a living-room purifier while everybody is sleeping in bedrooms.
+
+HEM applies this option when **at least one room is occupied and every occupied
+room is also in the shared sleeping-room list**. It checks occupied rooms
+throughout Home Assistant, including rooms without HEM equipment. An empty
+occupied-room list does not mean everybody is sleeping, and an occupied room
+outside the sleeping-room list ends household Sleep.
+
+This option applies separately to each device in **Automatic** or **PID**
+control. The device follows its configured Sleep behavior, targets and quiet
+settings. The alarm wake-up feature releases this inherited Sleep too.
 
 ## Optional solar shading
 
@@ -395,7 +452,7 @@ steps to reproduce. Remove personal details from logs and screenshots.
 
 Install published betas from the
 [Releases page](https://github.com/Chreece/HA-Home-Environment-Manager/releases).
-Read the [current release notes](.github/releases/v0.6.0b119.md) for recent changes.
+Read the [current release notes](.github/releases/v0.6.0b120.md) for recent changes.
 
 | Branch | Purpose |
 | --- | --- |

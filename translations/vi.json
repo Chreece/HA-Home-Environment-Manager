@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Phấn hoa · HIGH",
           "pollen_max_scale": "POLLEN · Phấn hoa · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Phấn hoa · NO VENT",
-          "general_source_stale_minutes": "nguồn · max (min)",
-          "general_home_policy": "Có mặt ở nhà"
+          "general_source_stale_minutes": "Có mặt ở nhà · Tuổi tối đa của dữ liệu theo dõi/số người (phút)",
+          "general_home_policy": "Có mặt ở nhà",
+          "general_wake_alarm_entity": "Ngủ · Báo thức tiếp theo",
+          "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Chọn: Chất lượng không khí ngoài trời · AQI, CO₂, PM2.5, PM10, VOC. Không khả dụng: ⚠",
           "weather_warnings": "Thời tiết và cảnh báo · ⚠ (Không khả dụng) → 🪟🔒",
-          "general_room_occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Phòng · Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
           "general_home_trackers": "Chọn nguồn Home Assistant thực cho “Nhà · Hiện diện · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Chọn nguồn Home Assistant thực cho “Hiện diện · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "general_occupied_rooms_entity": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
           "general_occupied_rooms_attribute": "Chỉ thiết lập “Hiện diện · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
-          "general_sleep_rooms_entity": "Chọn nguồn Home Assistant thực cho “Ngủ · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "general_sleep_rooms_entity": "Chọn danh sách phòng đang ngủ từ trạng thái hoặc thuộc tính, dùng tên hoặc ID khu vực Home Assistant. Phòng trong danh sách chỉ được xem là đang ngủ khi cũng có người. Danh sách không đổi vẫn hợp lệ; nguồn thiếu hoặc không hợp lệ là chưa rõ. Báo thức đã cấu hình có thể kết thúc ngủ tự động trước khi reo.",
           "general_sleep_rooms_attribute": "Chỉ thiết lập “Ngủ · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "notify_entities": "Chọn: notify.* · cài đặt · nguồn. Chọn nguồn Home Assistant thực cho “cài đặt · nguồn”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "media_players": "Chọn: media_player.* · cài đặt · nguồn · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Chỉ thiết lập “POLLEN · Phấn hoa · HIGH” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "pollen_max_scale": "Chỉ thiết lập “POLLEN · Phấn hoa · SCALE” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "pollen_avoid_ventilation": "Chỉ thiết lập “POLLEN · Phấn hoa · NO VENT” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
-          "general_source_stale_minutes": "nguồn · Ngủ / Hiện diện · max 240 min. Không hợp lệ · Tắt.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Giới hạn tuổi áp dụng cho báo cáo theo dõi và dữ liệu đếm người dạng số. Danh sách phòng và trạng thái hiện diện nhị phân không hết hạn khi không đổi. Nguồn không khả dụng, được khôi phục hoặc không hợp lệ vẫn là chưa rõ. Đây không phải thời lượng ngủ.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Chọn thực thể giờ hoặc ngày giờ của báo thức tiếp theo và thực thể số phút sớm hơn. HEM kết thúc chế độ ngủ tự động sớm hơn số phút đó để tiếp tục các mục tiêu thông thường. Giờ không có ngày dùng múi giờ Home Assistant. Vắng nhà, điều khiển thủ công và bảo vệ thiết bị vẫn được ưu tiên.",
+          "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Nhà · Thiết bị",
           "climate_unknown_occupancy": "Hiện diện · Thiết bị",
           "climate_unoccupied_delay_minutes": "Thiết bị · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Hiện diện · Thiết bị · cảm biến · Bắt buộc",
+          "climate_occupancy_stale_minutes": "Có mặt trong phòng · Tuổi tối đa của dữ liệu số người (phút)",
           "climate_away_policy": "Có mặt ở nhà · Nhà · Thiết bị · POLICY",
           "climate_manual_profile": "Thiết bị · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Ngủ · Thiết bị",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Thiết bị (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "climate_occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
           "climate_away_entities": "Chọn nguồn Home Assistant thực cho “Nhà · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Tuổi tối đa của dữ liệu số người dạng số trong phòng. Giá trị cũ hoặc không khả dụng là chưa rõ. Trạng thái hiện diện nhị phân và danh sách phòng không đổi không hết hạn.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Tùy chọn này điều khiển “Thiết bị · CLIMATE_MANUAL_PROFILE”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Chung · cài đặt",
-        "description": "Chung · cài đặt: Chọn nguồn, cảm biến / Thiết bị · điều khiển.",
+        "description": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
         "data": {
           "general_room_occupancy_sensors": "Phòng · Hiện diện · cảm biến",
           "general_occupied_rooms_entity": "Hiện diện · Phòng · nguồn (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Có mặt ở nhà",
           "general_sleep_rooms_entity": "Ngủ · Phòng · nguồn (state)",
           "general_sleep_rooms_attribute": "Ngủ · Phòng · nguồn (attribute)",
-          "general_source_stale_minutes": "nguồn · max (min)"
+          "general_source_stale_minutes": "Có mặt ở nhà · Tuổi tối đa của dữ liệu theo dõi/số người (phút)",
+          "general_wake_alarm_entity": "Ngủ · Báo thức tiếp theo",
+          "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Phòng · Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
-          "general_occupied_rooms_entity": "Chọn nguồn Home Assistant thực cho “Hiện diện · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "general_room_occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
+          "general_occupied_rooms_entity": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
           "general_occupied_rooms_attribute": "Chỉ thiết lập “Hiện diện · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "general_home_trackers": "Chọn nguồn Home Assistant thực cho “Nhà · Hiện diện · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Chọn nguồn Home Assistant thực cho “Ngủ · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "general_sleep_rooms_entity": "Chọn danh sách phòng đang ngủ từ trạng thái hoặc thuộc tính, dùng tên hoặc ID khu vực Home Assistant. Phòng trong danh sách chỉ được xem là đang ngủ khi cũng có người. Danh sách không đổi vẫn hợp lệ; nguồn thiếu hoặc không hợp lệ là chưa rõ. Báo thức đã cấu hình có thể kết thúc ngủ tự động trước khi reo.",
           "general_sleep_rooms_attribute": "Chỉ thiết lập “Ngủ · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
-          "general_source_stale_minutes": "nguồn · Ngủ / Hiện diện · max 240 min. Không hợp lệ · Tắt."
+          "general_source_stale_minutes": "Giới hạn tuổi áp dụng cho báo cáo theo dõi và dữ liệu đếm người dạng số. Danh sách phòng và trạng thái hiện diện nhị phân không hết hạn khi không đổi. Nguồn không khả dụng, được khôi phục hoặc không hợp lệ vẫn là chưa rõ. Đây không phải thời lượng ngủ.",
+          "general_wake_alarm_entity": "Chọn thực thể giờ hoặc ngày giờ của báo thức tiếp theo và thực thể số phút sớm hơn. HEM kết thúc chế độ ngủ tự động sớm hơn số phút đó để tiếp tục các mục tiêu thông thường. Giờ không có ngày dùng múi giờ Home Assistant. Vắng nhà, điều khiển thủ công và bảo vệ thiết bị vẫn được ưu tiên.",
+          "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
-          "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."
+          "occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
-          "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."
+          "occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Không hợp lệ · cảm biến · cài đặt",
       "device_temperature_band_invalid": "Không hợp lệ · Nhiệt độ · cài đặt",
       "device_humidity_invalid": "Không hợp lệ · Độ ẩm · cài đặt",
-      "device_runtime_invalid": "Không hợp lệ · Công suất · cài đặt"
+      "device_runtime_invalid": "Không hợp lệ · Công suất · cài đặt",
+      "wake_sources_pair": "Chọn cả thực thể báo thức và thực thể số phút, hoặc xóa cả hai."
     },
     "abort": {
       "already_configured": "Home Environment Manager - đã được cấu hình.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Nhà · Thiết bị",
           "climate_unknown_occupancy": "Hiện diện · Thiết bị",
           "climate_unoccupied_delay_minutes": "Thiết bị · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Hiện diện · Thiết bị · cảm biến · Bắt buộc",
+          "climate_occupancy_stale_minutes": "Có mặt trong phòng · Tuổi tối đa của dữ liệu số người (phút)",
           "climate_away_policy": "Có mặt ở nhà · Nhà · Thiết bị · POLICY",
           "climate_manual_profile": "Thiết bị · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Ngủ · Thiết bị",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Thiết bị (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "climate_occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
           "climate_away_entities": "Chọn nguồn Home Assistant thực cho “Nhà · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Tuổi tối đa của dữ liệu số người dạng số trong phòng. Giá trị cũ hoặc không khả dụng là chưa rõ. Trạng thái hiện diện nhị phân và danh sách phòng không đổi không hết hạn.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Tùy chọn này điều khiển “Thiết bị · CLIMATE_MANUAL_PROFILE”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Chung · cài đặt",
-        "description": "Chung · cài đặt: Chọn nguồn, cảm biến / Thiết bị · điều khiển.",
+        "description": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
         "data": {
           "general_room_occupancy_sensors": "Phòng · Hiện diện · cảm biến",
           "general_occupied_rooms_entity": "Hiện diện · Phòng · nguồn (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Có mặt ở nhà",
           "general_sleep_rooms_entity": "Ngủ · Phòng · nguồn (state)",
           "general_sleep_rooms_attribute": "Ngủ · Phòng · nguồn (attribute)",
-          "general_source_stale_minutes": "nguồn · max (min)"
+          "general_source_stale_minutes": "Có mặt ở nhà · Tuổi tối đa của dữ liệu theo dõi/số người (phút)",
+          "general_wake_alarm_entity": "Ngủ · Báo thức tiếp theo",
+          "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Phòng · Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
-          "general_occupied_rooms_entity": "Chọn nguồn Home Assistant thực cho “Hiện diện · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "general_room_occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
+          "general_occupied_rooms_entity": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
           "general_occupied_rooms_attribute": "Chỉ thiết lập “Hiện diện · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "general_home_trackers": "Chọn nguồn Home Assistant thực cho “Nhà · Hiện diện · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Chọn nguồn Home Assistant thực cho “Ngủ · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "general_sleep_rooms_entity": "Chọn danh sách phòng đang ngủ từ trạng thái hoặc thuộc tính, dùng tên hoặc ID khu vực Home Assistant. Phòng trong danh sách chỉ được xem là đang ngủ khi cũng có người. Danh sách không đổi vẫn hợp lệ; nguồn thiếu hoặc không hợp lệ là chưa rõ. Báo thức đã cấu hình có thể kết thúc ngủ tự động trước khi reo.",
           "general_sleep_rooms_attribute": "Chỉ thiết lập “Ngủ · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
-          "general_source_stale_minutes": "nguồn · Ngủ / Hiện diện · max 240 min. Không hợp lệ · Tắt."
+          "general_source_stale_minutes": "Giới hạn tuổi áp dụng cho báo cáo theo dõi và dữ liệu đếm người dạng số. Danh sách phòng và trạng thái hiện diện nhị phân không hết hạn khi không đổi. Nguồn không khả dụng, được khôi phục hoặc không hợp lệ vẫn là chưa rõ. Đây không phải thời lượng ngủ.",
+          "general_wake_alarm_entity": "Chọn thực thể giờ hoặc ngày giờ của báo thức tiếp theo và thực thể số phút sớm hơn. HEM kết thúc chế độ ngủ tự động sớm hơn số phút đó để tiếp tục các mục tiêu thông thường. Giờ không có ngày dùng múi giờ Home Assistant. Vắng nhà, điều khiển thủ công và bảo vệ thiết bị vẫn được ưu tiên.",
+          "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Phấn hoa · HIGH",
           "pollen_max_scale": "POLLEN · Phấn hoa · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Phấn hoa · NO VENT",
-          "general_source_stale_minutes": "nguồn · max (min)",
-          "general_home_policy": "Có mặt ở nhà"
+          "general_source_stale_minutes": "Có mặt ở nhà · Tuổi tối đa của dữ liệu theo dõi/số người (phút)",
+          "general_home_policy": "Có mặt ở nhà",
+          "general_wake_alarm_entity": "Ngủ · Báo thức tiếp theo",
+          "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Chọn: Chất lượng không khí ngoài trời · AQI, CO₂, PM2.5, PM10, VOC. Không khả dụng: ⚠",
           "weather_warnings": "Thời tiết và cảnh báo · ⚠ (Không khả dụng) → 🪟🔒",
-          "general_room_occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Phòng · Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
           "general_home_trackers": "Chọn nguồn Home Assistant thực cho “Nhà · Hiện diện · Thiết bị”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Chọn nguồn Home Assistant thực cho “Hiện diện · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "general_occupied_rooms_entity": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
           "general_occupied_rooms_attribute": "Chỉ thiết lập “Hiện diện · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
-          "general_sleep_rooms_entity": "Chọn nguồn Home Assistant thực cho “Ngủ · Phòng · nguồn (state)”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
+          "general_sleep_rooms_entity": "Chọn danh sách phòng đang ngủ từ trạng thái hoặc thuộc tính, dùng tên hoặc ID khu vực Home Assistant. Phòng trong danh sách chỉ được xem là đang ngủ khi cũng có người. Danh sách không đổi vẫn hợp lệ; nguồn thiếu hoặc không hợp lệ là chưa rõ. Báo thức đã cấu hình có thể kết thúc ngủ tự động trước khi reo.",
           "general_sleep_rooms_attribute": "Chỉ thiết lập “Ngủ · Phòng · nguồn (attribute)” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "notify_entities": "Chọn: notify.* · cài đặt · nguồn. Chọn nguồn Home Assistant thực cho “cài đặt · nguồn”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác.",
           "media_players": "Chọn: media_player.* · cài đặt · nguồn · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Chỉ thiết lập “POLLEN · Phấn hoa · HIGH” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "pollen_max_scale": "Chỉ thiết lập “POLLEN · Phấn hoa · SCALE” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
           "pollen_avoid_ventilation": "Chỉ thiết lập “POLLEN · Phấn hoa · NO VENT” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác.",
-          "general_source_stale_minutes": "nguồn · Ngủ / Hiện diện · max 240 min. Không hợp lệ · Tắt.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Giới hạn tuổi áp dụng cho báo cáo theo dõi và dữ liệu đếm người dạng số. Danh sách phòng và trạng thái hiện diện nhị phân không hết hạn khi không đổi. Nguồn không khả dụng, được khôi phục hoặc không hợp lệ vẫn là chưa rõ. Đây không phải thời lượng ngủ.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Chọn thực thể giờ hoặc ngày giờ của báo thức tiếp theo và thực thể số phút sớm hơn. HEM kết thúc chế độ ngủ tự động sớm hơn số phút đó để tiếp tục các mục tiêu thông thường. Giờ không có ngày dùng múi giờ Home Assistant. Vắng nhà, điều khiển thủ công và bảo vệ thiết bị vẫn được ưu tiên.",
+          "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
-          "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."
+          "occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
-          "occupancy_sensors": "Chọn nguồn Home Assistant thực cho “Hiện diện · cảm biến”. Dữ liệu thiếu hoặc cũ sẽ tạm dừng thao tác."
+          "occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Không hợp lệ · Công suất · cài đặt",
       "invalid_setup_rooms": "Không hợp lệ: Phòng cần giám sát",
       "invalid_room_source": "Không hợp lệ: Phòng · nguồn",
-      "invalid_away_windows_recipients": "Người nhận thông báo; Kênh cảnh báo cửa sổ. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Người nhận thông báo; Kênh cảnh báo cửa sổ. Announcement Hub (person.*).",
+      "wake_sources_pair": "Chọn cả thực thể báo thức và thực thể số phút, hoặc xóa cả hai."
     },
     "abort": {
       "setup_area_removed": "Không hợp lệ: Phòng cần giám sát",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Có mặt ở nhà · nguồn · max (min)",
+        "name": "Có mặt ở nhà · Tuổi tối đa của dữ liệu theo dõi/số người (phút)",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Có mặt trong phòng · Hiện diện · Thiết bị · cảm biến · Bắt buộc",
+        "name": "Có mặt trong phòng · Tuổi tối đa của dữ liệu số người (phút)",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Thông báo · Thông báo lỗi thiết bị · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Ngủ · {channel}Khi mọi người đều đang ngủ",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"

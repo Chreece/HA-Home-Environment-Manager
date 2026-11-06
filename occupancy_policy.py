@@ -1,7 +1,8 @@
 """Global, room and device occupancy policy.
 
 Only actual Home Assistant states and configured Area Registry IDs are accepted.
-A missing/old/ambiguous source is UNKNOWN, never 'nobody home'. A fresh empty
+Unavailable/ambiguous sources are unknown. Room lists and binary presence
+states are change-driven and do not expire simply because nobody moved. An empty
 room list (including an empty string) means no rooms are occupied. Configured
 whole-home sources take priority; verified Away does not consult room sources.
 """
@@ -19,8 +20,8 @@ from typing import Any
 from .discovery import entity_area, _device_class
 
 
-def _fresh(state: Any, max_age_minutes: float = 240, *, allow_empty: bool = False) -> bool:
-    if state is None:
+def _fresh(state: Any, max_age_minutes: float | None = 240, *, allow_empty: bool = False) -> bool:
+    if state is None or (getattr(state, "attributes", {}) or {}).get("restored") is True:
         return False
     value = str(getattr(state, "state", "")).strip().casefold()
     if value in ("unknown", "unavailable") or not allow_empty and value in ("none", ""):
@@ -29,7 +30,7 @@ def _fresh(state: Any, max_age_minutes: float = 240, *, allow_empty: bool = Fals
     if not isinstance(stamp, datetime) or stamp.tzinfo is None:
         return False
     age = (datetime.now(timezone.utc) - stamp).total_seconds()
-    return 0 <= age <= max_age_minutes * 60
+    return age >= 0 and (max_age_minutes is None or age <= max_age_minutes * 60)
 
 
 def _room_key(value: str) -> str:
@@ -102,7 +103,9 @@ def configured_rooms(hass: Any, entity_id: str | None, attribute: str | None,
     if not isinstance(entity_id, str) or not entity_id:
         return None, "not_configured"
     state = hass.states.get(entity_id)
-    if not _fresh(state, max_age_minutes, allow_empty=True):
+    # A list is a current set, including when stored in a sensor attribute.
+    # Keep a stable list through a full night without change notifications.
+    if not _fresh(state, None, allow_empty=True):
         return None, "missing_or_stale_rooms_source"
     if isinstance(attribute, str) and attribute.strip() not in ("", "__state__"):
         raw = state.attributes.get(attribute.strip())
@@ -121,8 +124,10 @@ def configured_rooms(hass: Any, entity_id: str | None, attribute: str | None,
     return resolved, "verified_rooms_list"
 
 
-def _bool_presence(state: Any, minutes: float = 240) -> bool | None:
-    if not _fresh(state, minutes):
+def _bool_presence(state: Any, minutes: float = 240, *, room_input: bool = False) -> bool | None:
+    # Room presence contacts hold ON/OFF until their next transition.
+    # Whole-home trackers and sampled counts keep their age limit.
+    if not _fresh(state, None if room_input and getattr(state, "domain", None) == "binary_sensor" else minutes):
         return None
     if state.domain == "binary_sensor":
         if state.state == "on":
@@ -205,7 +210,8 @@ def home_presence(hass: Any, global_settings: Mapping,
                                "number.", "input_number.", "sensor."))
     ))
     if allowed:
-        tracker_values = [_bool_presence(hass.states.get(e)) for e in allowed]
+        tracker_values = [_bool_presence(hass.states.get(e), global_settings.get("source_stale_minutes", 240))
+                          for e in allowed]
         if any(value is True for value in tracker_values):
             return "home", "any_home_policy", allowed
         if any(value is None for value in tracker_values):
@@ -226,10 +232,11 @@ def home_presence(hass: Any, global_settings: Mapping,
         *([room_entity] if isinstance(room_entity, str) and room_entity else []),
         *allowed_rooms,
     ]))
-    room_values = [_bool_presence(hass.states.get(e)) for e in allowed_rooms]
+    room_values = [_bool_presence(hass.states.get(e), global_settings.get("source_stale_minutes", 240),
+                                  room_input=True) for e in allowed_rooms]
     resumed_since = global_settings.get("_verified_absence_since")
 
-    # With no direct home source, retain the existing room-only inference.
+    # No whole-home absence is inferred merely from an unconfigured room.
     if any(value is True for value in room_values):
         return "home", "room_sensor_occupied", all_sources
 
@@ -295,18 +302,19 @@ def selected_room_sensors(hass: Any, area: str, settings: Mapping,
         )
     result = []
     for eid in candidates:
-        if not isinstance(eid, str) or not eid.startswith("binary_sensor."):
+        if not isinstance(eid, str) or not eid.startswith(("binary_sensor.", "number.", "input_number.", "sensor.")):
             continue
         assigned = entity_area(hass, eid)
         state = hass.states.get(eid)
-        if state is None:
+        if (state is None or state.state in ("unknown", "unavailable") or
+                (getattr(state, "attributes", {}) or {}).get("restored") is True):
             # An explicitly selected source that has disappeared is unknown,
             # not permission to infer vacancy from the remaining OFF sources.
             # A known assignment to another room is still excluded.
             if assigned in (None, area):
                 result.append(eid)
-        elif (assigned == area and
-              _device_class(hass, state).casefold() in ("occupancy", "presence")):
+        elif assigned == area and (not eid.startswith("binary_sensor.") or
+                                   _device_class(hass, state).casefold() in ("occupancy", "presence")):
             result.append(eid)
     return list(dict.fromkeys(result))
 
@@ -321,8 +329,8 @@ def room_presence(hass: Any, area: str, settings: Mapping,
     may pass a just-evaluated home status to share one consistent decision.
     Valid list: a room omitted from it is immediately UNoccupied, regardless
     of another sensor's ON reading. Valid empty string/list: all rooms are
-    unoccupied. Missing/unavailable/stale list: use the sensors explicitly
-    selected for this area; any fresh ON qualifies, all fresh OFF is negative.
+    unoccupied. Missing/unavailable list: use the sensors explicitly
+    selected for this area; any live ON qualifies, all live OFF is negative.
     Other broken list formats/unknown room names fail UNKNOWN and never
     grant inferred presence or absence. An explicit [] sensor selection is
     honoured even during fallback.
@@ -353,14 +361,17 @@ def room_presence(hass: Any, area: str, settings: Mapping,
 
     values = [
         _bool_presence(hass.states.get(eid),
-                       settings.get("occupancy_stale_minutes", 240))
+                       settings.get("occupancy_stale_minutes", 240), room_input=True)
         for eid in sensors
     ]
     if any(value is True for value in values):
         return "occupied", "selected_room_sensor_on", sources
     if values and all(value is False for value in values):
         return "unoccupied", "all_selected_room_sensors_off", sources
+    if not sensors and not has_list:
+        return "unoccupied", "no_room_presence_sensors", sources
     return "unknown", "room_occupancy_source_unknown", sources
+
 
 def sleep_presence(hass: Any, area: str, global_settings: Mapping,
                    known_areas: set[str]) -> tuple[bool | None, str]:
@@ -374,39 +385,133 @@ def sleep_presence(hass: Any, area: str, global_settings: Mapping,
 
 
 
+def household_sleep_presence(
+    hass: Any, global_settings: Mapping, known_areas: set[str], *, home_status: str,
+) -> tuple[bool | None, str]:
+    """All occupied rooms must be listed as asleep, and at least one occupied.
+
+    Compare the complete HA room lists, including rooms without HEM equipment.
+    If occupancy comes from contacts, use explicit room selections (including
+    empty selections) before global selections or area-bound discovery.
+    """
+    if home_status == "away":
+        return False, "verified_home_away_no_sleeping_occupants"
+    if not global_settings.get("sleep_rooms_entity"):
+        return False, "sleep_room_source_not_configured"
+    sleeping, why = configured_rooms(hass, global_settings["sleep_rooms_entity"],
+                                     global_settings.get("sleep_rooms_attribute"), known_areas)
+    if sleeping is None:
+        return None, why
+    if not sleeping:
+        return False, "no_sleeping_rooms"
+    occupied, why = configured_rooms(hass, global_settings.get("occupied_rooms_entity"),
+                                     global_settings.get("occupied_rooms_attribute"), known_areas)
+    if occupied is None:
+        if why not in ("not_configured", "missing_or_stale_rooms_source"):
+            return None, why
+        overrides = global_settings.get("_room_occupancy_selections", {})
+        overrides = overrides if isinstance(overrides, Mapping) else {}
+        age_limits = global_settings.get("_room_occupancy_stale_minutes", {})
+        age_limits = age_limits if isinstance(age_limits, Mapping) else {}
+        general = global_settings.get("room_occupancy_sensors")
+        if isinstance(general, list) and general:
+            candidates = [eid for eid in general if isinstance(eid, str)
+                          and eid.startswith(("binary_sensor.", "number.", "input_number.", "sensor."))]
+        else:
+            candidates = [state.entity_id for state in hass.states.async_all("binary_sensor")
+                          if _device_class(hass, state).casefold() in ("occupancy", "presence")]
+        by_area: dict[str, list[str]] = {}
+        for eid in candidates:
+            assigned = entity_area(hass, eid)
+            if assigned:
+                by_area.setdefault(assigned, []).append(eid)
+            elif isinstance(general, list) and eid in general:
+                return None, "room_occupancy_source_unknown"
+        occupied = set()
+        unknown = False
+        for candidate in set(known_areas) | set(overrides) | set(by_area):
+            selected = overrides.get(candidate, by_area.get(candidate, []))
+            status, _, _ = room_presence(
+                hass, candidate, {"occupancy_sensors": selected,
+                                  "occupancy_stale_minutes": age_limits.get(candidate, 240)},
+                global_settings,
+                known_areas=known_areas, home_status=home_status,
+            )
+            if status == "occupied":
+                if candidate not in sleeping:
+                    return False, "occupied_room_awake"
+                occupied.add(candidate)
+            elif status == "unknown":
+                unknown = True
+        if unknown:
+            return None, "room_occupancy_source_unknown"
+    if not occupied:
+        return False, "no_occupied_rooms"
+    if occupied <= sleeping:
+        return True, "all_occupied_rooms_sleeping"
+    return False, "occupied_room_awake"
+
+
 def controlled_sleep_presence(
     hass: Any, area: str, global_settings: Mapping,
     known_areas: set[str], *, home_status: str,
     local_sleeping: bool | None = False,
     local_reason: str = "sleep_schedule_disabled",
+    room_status: str | None = None,
+    inherit_household: bool = False,
+    now: float | None = None,
 ) -> tuple[bool | None, str]:
-    """Resolve sleeping for BOTH profile planning and physical-write gating.
+    """One sleep decision for profiles, quiet operation and live write guards."""
+    away = home_status == "away"
+    if away:
+        own, reason = False, "verified_home_away_no_sleeping_occupants"
+    elif local_sleeping is True:
+        # Sleeping now and an explicitly enabled schedule are deliberate
+        # room controls, independent of list-inferred occupancy.
+        own, reason = True, local_reason
+    elif str(global_settings.get("sleep_rooms_entity") or "").strip().casefold() in (
+        "", "none", "unknown", "unavailable"
+    ):
+        own, reason = False, "sleep_room_source_not_configured"
+    elif room_status == "unoccupied":
+        own, reason = False, "room_unoccupied"
+    else:
+        own, reason = sleep_presence(hass, area, global_settings, known_areas)
+        if own is True:
+            if room_status is None:
+                selected = global_settings.get("_room_occupancy_selections") or {}
+                age_limits = global_settings.get("_room_occupancy_stale_minutes") or {}
+                room_status, _, _ = room_presence(
+                    hass, area, {"occupancy_sensors": selected.get(area),
+                                 "occupancy_stale_minutes": age_limits.get(area, 240)},
+                    global_settings,
+                    known_areas=known_areas, home_status=home_status,
+                )
+            if room_status != "occupied":
+                own = False if room_status == "unoccupied" else None
+                reason = "room_unoccupied" if own is False else "room_occupancy_source_unknown"
 
-    A deliberately active local sleep schedule always counts. An explicitly
-    configured sleeping-room list also counts when it affirmatively identifies
-    this room. If that list is unavailable while the whole home is VERIFIED
-    away, nobody can presently be sleeping: continue using the Away profile
-    instead of silently disabling essential heating. When presence is unknown,
-    an unknown sleep source remains unknown; an intentional PAUSE policy may
-    still hold rather than overriding possible sleep.
-    """
-    if local_sleeping is True:
-        return True, local_reason
-    source = global_settings.get("sleep_rooms_entity") if isinstance(global_settings, Mapping) else None
-    if isinstance(source, str) and source.strip().casefold() in ("", "none", "unknown", "unavailable"):
-        source = None
-    if not isinstance(source, str):
-        # The optional list was never configured. No negative proof is needed
-        # merely to keep a normal heating controller operating.
-        return False, "sleep_room_source_not_configured"
-    observed, reason = sleep_presence(hass, area, global_settings, known_areas)
-    if observed is True:
-        return True, reason
-    if observed is False:
-        return False, reason
-    if home_status == "away":
-        return False, "verified_home_away_no_sleeping_occupants"
-    return None, reason
+    alarm_configured = bool(global_settings.get("wake_alarm_entity")
+                            and global_settings.get("wake_lead_minutes_entity"))
+    if alarm_configured:
+        from .wake_alarm import wake_override
+        if wake_override(hass, global_settings, "room:" + area, own, now=now) and own is True:
+            own, reason = False, "wake_before_alarm"
+    if inherit_household:
+        household, household_reason = household_sleep_presence(
+            hass, global_settings, known_areas, home_status=home_status)
+        if alarm_configured:
+            if wake_override(hass, global_settings, "household", household, now=now) and household is True:
+                household, household_reason = False, "wake_before_alarm"
+        # Either continuing wake episode suppresses automatic Sleep. A later
+        # household transition must not put an already-woken room back to
+        # sleep, or vice versa. Observe both scopes first so actual negative
+        # sleep evidence still clears the appropriate episode for next night.
+        if reason == "wake_before_alarm" or household_reason == "wake_before_alarm":
+            return False, "wake_before_alarm"
+        if household is True:
+            return True, household_reason
+    return own, reason
 
 
 def device_permission(device: Mapping, room_status: str, home_status: str,
@@ -486,11 +591,13 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
         from time import time as _time
         from .climate_schedule import scheduled_sleep
         zone = getattr(getattr(hass, "config", None), "time_zone", None) or "UTC"
-        local_sleeping, local_reason = scheduled_sleep(room_config, _time(), zone)
+        now = _time()
+        local_sleeping, local_reason = scheduled_sleep(room_config, now, zone)
         sleeping, _ = controlled_sleep_presence(
             hass, area, global_settings, known or {area},
             home_status=home, local_sleeping=local_sleeping,
-            local_reason=local_reason,
+            local_reason=local_reason, room_status=room,
+            inherit_household=device.get("sleep_when_everyone_asleep") is True, now=now,
         )
         return device_permission(device,room,home,sleeping)
     home=plan.get("away","unknown")
@@ -507,9 +614,11 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
     from time import time as _time
     from .climate_schedule import scheduled_sleep
     zone = getattr(getattr(hass, "config", None), "time_zone", None) or "UTC"
-    local_sleeping, local_reason = scheduled_sleep(room_config, _time(), zone)
+    now = _time()
+    local_sleeping, local_reason = scheduled_sleep(room_config, now, zone)
     sleeping, _ = controlled_sleep_presence(
         hass, area, {}, {area}, home_status=home,
-        local_sleeping=local_sleeping, local_reason=local_reason,
+        local_sleeping=local_sleeping, local_reason=local_reason, room_status=room,
+        inherit_household=device.get("sleep_when_everyone_asleep") is True, now=now,
     )
     return device_permission(device,room,home,sleeping)

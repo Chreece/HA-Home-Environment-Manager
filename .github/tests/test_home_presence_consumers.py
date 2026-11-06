@@ -85,8 +85,8 @@ class States:
 
     def get(self, entity):
         self.reads.append(entity)
-        if entity == ROOMS:
-            raise AssertionError("A direct home source must bypass the room list")
+        if self.forbid_room_scan and entity in (ROOMS, MOTION):
+            raise AssertionError("Verified Away must bypass room sources")
         return self.data.get(entity)
 
     def async_all(self, domain=None):
@@ -122,12 +122,13 @@ class Hass:
         )
 
 
-def capture_environment(hass, rooms=None):
+def capture_environment(hass, rooms=None, global_changes=None):
     config = {
         constants.CONF_OCCUPANCY_GLOBAL: {
             "home_trackers": [PERSON],
             "occupied_rooms_entity": ROOMS,
             "room_occupancy_sensors": [MOTION],
+            **(global_changes or {}),
         },
         "climate_rooms": rooms or {},
         "room_sources": {AREA: {
@@ -168,13 +169,14 @@ class EnvironmentalPresenceTests(unittest.TestCase):
         self.assertEqual(hass.states.binary_scans, 0)
         self.assertNotIn(MOTION, hass.states.reads)
 
-    def test_unknown_home_preserves_sensor_scan_and_unknown_room(self):
+    def test_unknown_home_preserves_explicit_sensor_selection_and_unknown_room(self):
         hass = Hass()
         hass.put(PERSON, "unavailable")
         hass.put(MOTION, "unavailable")
         home, report, sample = capture_environment(hass)
         self.assertEqual(home, "unknown")
-        self.assertGreater(hass.states.binary_scans, 0)
+        self.assertIn(MOTION, hass.states.reads)
+        self.assertEqual(hass.states.binary_scans, 0)
         self.assertIsNone(sample.get("occupied"))
         self.assertFalse(report["sources"]["occupancy_known"])
 
@@ -190,8 +192,9 @@ class EnvironmentalPresenceTests(unittest.TestCase):
         })
         self.assertEqual(home, "home")
         self.assertIs(sample["occupied"], True)
-        self.assertGreater(hass.states.binary_scans, 0)
-        self.assertEqual(report["sources"]["occupancy_evidence"], "room_occupancy_sensors")
+        self.assertIn(MOTION, hass.states.reads)
+        self.assertEqual(hass.states.binary_scans, 0)
+        self.assertEqual(report["sources"]["occupancy_evidence"], "selected_room_sensor_on")
 
     def test_unknown_legacy_tracker_prevents_derived_vacancy(self):
         hass = Hass()
@@ -202,9 +205,37 @@ class EnvironmentalPresenceTests(unittest.TestCase):
             "bedroom": {"away_entities": [LEGACY]},
         })
         self.assertEqual(home, "unknown")
-        self.assertGreater(hass.states.binary_scans, 0)
+        self.assertIn(MOTION, hass.states.reads)
+        self.assertEqual(hass.states.binary_scans, 0)
         self.assertIsNone(sample.get("occupied"))
         self.assertEqual(report["sources"]["occupancy_evidence"], "room_occupancy_source_unknown")
+
+    def test_room_list_overrides_contradictory_sensor_in_observed_history(self):
+        hass = Hass()
+        hass.put(PERSON, "home")
+        hass.put(MOTION, "on")
+        configured = {"occupied_rooms_attribute":"rooms"}
+        hass.put(ROOMS, "ready")
+        hass.states.data[ROOMS].attributes["rooms"] = []
+        home, report, sample = capture_environment(hass, global_changes=configured)
+        self.assertEqual(home, "home")
+        self.assertIs(sample["occupied"], False)
+        self.assertEqual(report["sources"]["occupancy_evidence"], "verified_room_list_unoccupied")
+        hass.states.data[ROOMS].attributes["rooms"] = [AREA]
+        hass.put(MOTION, "off")
+        _, report, sample = capture_environment(hass, global_changes=configured)
+        self.assertIs(sample["occupied"], True)
+        self.assertEqual(report["sources"]["occupancy_evidence"], "verified_room_occupied")
+
+    def test_room_without_occupancy_sensors_does_not_prove_vacancy_for_science(self):
+        hass = Hass()
+        hass.put(PERSON, "home")
+        hass.put(MOTION, "off")
+        _, report, sample = capture_environment(hass, {AREA: {"occupancy_sensors": []}},
+                                               {"occupied_rooms_entity": None})
+        self.assertIsNone(sample.get("occupied"))
+        self.assertFalse(report["sources"]["occupancy_known"])
+        self.assertEqual(report["sources"]["occupancy_evidence"], "no_room_presence_sensors")
 
 
 if __name__ == "__main__":

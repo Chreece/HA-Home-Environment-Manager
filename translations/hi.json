@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · पराग · HIGH",
           "pollen_max_scale": "POLLEN · पराग · SCALE",
           "pollen_avoid_ventilation": "POLLEN · पराग · NO VENT",
-          "general_source_stale_minutes": "स्रोत · max (min)",
-          "general_home_policy": "घर में उपस्थिति"
+          "general_source_stale_minutes": "घर में उपस्थिति · ट्रैकर/लोगों की गिनती के डेटा की अधिकतम आयु (मिनट)",
+          "general_home_policy": "घर में उपस्थिति",
+          "general_wake_alarm_entity": "नींद · अगला अलार्म",
+          "general_wake_lead_minutes_entity": "नींद · अलार्म से पहले के मिनट"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "चुनें: बाहरी वायु गुणवत्ता · AQI, CO₂, PM2.5, PM10, VOC. उपलब्ध नहीं: ⚠",
           "weather_warnings": "मौसम और चेतावनियाँ · ⚠ (उपलब्ध नहीं) → 🪟🔒",
-          "general_room_occupancy_sensors": "“कमरा · उपस्थिति · सेंसर” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है। number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
           "general_home_trackers": "“घर · उपस्थिति · उपकरण” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है। number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "“उपस्थिति · कमरा · स्रोत (state)” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
+          "general_occupied_rooms_entity": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
           "general_occupied_rooms_attribute": "“उपस्थिति · कमरा · स्रोत (attribute)” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
-          "general_sleep_rooms_entity": "“नींद · कमरा · स्रोत (state)” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
+          "general_sleep_rooms_entity": "Home Assistant क्षेत्र के नाम या ID से सोते हुए कमरों की सूची स्थिति या विशेषता में चुनें। सूची का कमरा तभी सोता हुआ माना जाता है जब वह भरा भी हो। अपरिवर्तित सूची मान्य रहती है; गायब या अमान्य स्रोत अज्ञात है। सेट किया गया अलार्म बजने से पहले स्वचालित नींद समाप्त कर सकता है।",
           "general_sleep_rooms_attribute": "“नींद · कमरा · स्रोत (attribute)” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
           "notify_entities": "चुनें: notify.* · सेटिंग · स्रोत. “सेटिंग · स्रोत” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
           "media_players": "चुनें: media_player.* · सेटिंग · स्रोत · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "“POLLEN · पराग · HIGH” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
           "pollen_max_scale": "“POLLEN · पराग · SCALE” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
           "pollen_avoid_ventilation": "“POLLEN · पराग · NO VENT” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
-          "general_source_stale_minutes": "स्रोत · नींद / उपस्थिति · max 240 min. अमान्य · बंद करें.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "डेटा की आयु सीमा ट्रैकर रिपोर्ट और लोगों की संख्यात्मक गिनती पर लागू होती है। कमरे की सूचियाँ और बाइनरी उपस्थिति अवस्थाएँ अपरिवर्तित रहने पर समाप्त नहीं होतीं। अनुपलब्ध, बहाल या अमान्य स्रोत अज्ञात रहते हैं। यह नींद की अवधि नहीं है।",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "अगले अलार्म के समय या दिनांक-समय की एंटिटी और पहले के मिनटों की एंटिटी चुनें। HEM इतने मिनट पहले स्वचालित नींद मोड छोड़कर सामान्य लक्ष्यों पर लौटता है। केवल समय वाली एंटिटी Home Assistant का समय क्षेत्र उपयोग करती है। अनुपस्थिति, मैन्युअल नियंत्रण और डिवाइस सुरक्षा की प्राथमिकता बनी रहती है।",
+          "general_wake_lead_minutes_entity": "मिनटों में शून्य या धनात्मक मान वाली संख्यात्मक एंटिटी चुनें; इकाई min या कोई इकाई नहीं। 07:00 का अलार्म और 30 का मान स्वचालित नींद 06:30 पर समाप्त करते हैं; 0 का अर्थ अलार्म बजने का समय है। बंद करने के लिए दोनों स्रोत हटाएँ।"
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "घर · उपकरण",
           "climate_unknown_occupancy": "उपस्थिति · उपकरण",
           "climate_unoccupied_delay_minutes": "उपकरण · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "उपस्थिति · उपकरण · सेंसर · आवश्यक",
+          "climate_occupancy_stale_minutes": "कमरे में उपस्थिति · लोगों की गिनती के डेटा की अधिकतम आयु (मिनट)",
           "climate_away_policy": "घर में उपस्थिति · घर · उपकरण · POLICY",
           "climate_manual_profile": "उपकरण · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "नींद · उपकरण",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "उपकरण (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "“उपस्थिति · सेंसर” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
+          "climate_occupancy_sensors": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
           "climate_away_entities": "“घर · उपकरण” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "कमरे में लोगों की संख्यात्मक गिनती के डेटा की अधिकतम आयु। पुराने या अनुपलब्ध मान अज्ञात हैं। बाइनरी उपस्थिति अवस्थाएँ और कमरों की सूचियाँ अपरिवर्तित रहने पर समाप्त नहीं होतीं।",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "यह विकल्प “उपकरण · CLIMATE_MANUAL_PROFILE” नियंत्रित करता है। उपकरण · CLIMATE_MANUAL_PROFILE आदेशों के लिए अलग अनुमति और सुरक्षा आवश्यक है।",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "सामान्य · सेटिंग",
-        "description": "सामान्य · सेटिंग: चुनें स्रोत, सेंसर / उपकरण · नियंत्रण.",
+        "description": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
         "data": {
           "general_room_occupancy_sensors": "कमरा · उपस्थिति · सेंसर",
           "general_occupied_rooms_entity": "उपस्थिति · कमरा · स्रोत (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "घर में उपस्थिति",
           "general_sleep_rooms_entity": "नींद · कमरा · स्रोत (state)",
           "general_sleep_rooms_attribute": "नींद · कमरा · स्रोत (attribute)",
-          "general_source_stale_minutes": "स्रोत · max (min)"
+          "general_source_stale_minutes": "घर में उपस्थिति · ट्रैकर/लोगों की गिनती के डेटा की अधिकतम आयु (मिनट)",
+          "general_wake_alarm_entity": "नींद · अगला अलार्म",
+          "general_wake_lead_minutes_entity": "नींद · अलार्म से पहले के मिनट"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "“कमरा · उपस्थिति · सेंसर” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
-          "general_occupied_rooms_entity": "“उपस्थिति · कमरा · स्रोत (state)” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
+          "general_room_occupancy_sensors": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
+          "general_occupied_rooms_entity": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
           "general_occupied_rooms_attribute": "“उपस्थिति · कमरा · स्रोत (attribute)” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
           "general_home_trackers": "“घर · उपस्थिति · उपकरण” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "“नींद · कमरा · स्रोत (state)” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
+          "general_sleep_rooms_entity": "Home Assistant क्षेत्र के नाम या ID से सोते हुए कमरों की सूची स्थिति या विशेषता में चुनें। सूची का कमरा तभी सोता हुआ माना जाता है जब वह भरा भी हो। अपरिवर्तित सूची मान्य रहती है; गायब या अमान्य स्रोत अज्ञात है। सेट किया गया अलार्म बजने से पहले स्वचालित नींद समाप्त कर सकता है।",
           "general_sleep_rooms_attribute": "“नींद · कमरा · स्रोत (attribute)” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
-          "general_source_stale_minutes": "स्रोत · नींद / उपस्थिति · max 240 min. अमान्य · बंद करें."
+          "general_source_stale_minutes": "डेटा की आयु सीमा ट्रैकर रिपोर्ट और लोगों की संख्यात्मक गिनती पर लागू होती है। कमरे की सूचियाँ और बाइनरी उपस्थिति अवस्थाएँ अपरिवर्तित रहने पर समाप्त नहीं होतीं। अनुपलब्ध, बहाल या अमान्य स्रोत अज्ञात रहते हैं। यह नींद की अवधि नहीं है।",
+          "general_wake_alarm_entity": "अगले अलार्म के समय या दिनांक-समय की एंटिटी और पहले के मिनटों की एंटिटी चुनें। HEM इतने मिनट पहले स्वचालित नींद मोड छोड़कर सामान्य लक्ष्यों पर लौटता है। केवल समय वाली एंटिटी Home Assistant का समय क्षेत्र उपयोग करती है। अनुपस्थिति, मैन्युअल नियंत्रण और डिवाइस सुरक्षा की प्राथमिकता बनी रहती है।",
+          "general_wake_lead_minutes_entity": "मिनटों में शून्य या धनात्मक मान वाली संख्यात्मक एंटिटी चुनें; इकाई min या कोई इकाई नहीं। 07:00 का अलार्म और 30 का मान स्वचालित नींद 06:30 पर समाप्त करते हैं; 0 का अर्थ अलार्म बजने का समय है। बंद करने के लिए दोनों स्रोत हटाएँ।"
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "आर्द्रता. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
           "climate_devices": "उपकरण. इस कमरे के वास्तविक climate.*, humidifier.* और fan.* उपकरण चुनें। उनकी मूल क्षमताएँ हीटिंग, कूलिंग, नमी हटाने, लक्ष्य मान और पंखे की गति तय करती हैं। चुनने से उपकरण नहीं चलता; प्रत्येक नियंत्रक पर स्वचालन अलग से सक्षम करें।",
           "shades": "खिड़की के परदे, ब्लाइंड और शटर. कमरे की cover.* खिड़की की ब्लाइंड, रोलर शटर और पर्दे चुनें। device_class के बिना covers भी CLOSE समर्थन पर मान्य हैं, यदि वे सचमुच खिड़की पर लगे हों। गैराज, गेट, दरवाज़े, खिड़कियाँ और बाहरी शामियाने मान्य नहीं हैं। चयन कुछ नहीं हिलाता; विंडो सेंसर, ऑटो नियंत्रण, घोषणा और ताप सीमा नियंत्रक पर सेट करें। अज्ञात स्थिति में गति निषिद्ध है।",
-          "occupancy_sensors": "“उपस्थिति · सेंसर” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।"
+          "occupancy_sensors": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।"
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "आर्द्रता. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
           "climate_devices": "उपकरण. इस कमरे के वास्तविक climate.*, humidifier.* और fan.* उपकरण चुनें। उनकी मूल क्षमताएँ हीटिंग, कूलिंग, नमी हटाने, लक्ष्य मान और पंखे की गति तय करती हैं। चुनने से उपकरण नहीं चलता; प्रत्येक नियंत्रक पर स्वचालन अलग से सक्षम करें।",
           "shades": "खिड़की के परदे, ब्लाइंड और शटर. कमरे की cover.* खिड़की की ब्लाइंड, रोलर शटर और पर्दे चुनें। device_class के बिना covers भी CLOSE समर्थन पर मान्य हैं, यदि वे सचमुच खिड़की पर लगे हों। गैराज, गेट, दरवाज़े, खिड़कियाँ और बाहरी शामियाने मान्य नहीं हैं। चयन कुछ नहीं हिलाता; विंडो सेंसर, ऑटो नियंत्रण, घोषणा और ताप सीमा नियंत्रक पर सेट करें। अज्ञात स्थिति में गति निषिद्ध है।",
-          "occupancy_sensors": "“उपस्थिति · सेंसर” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।"
+          "occupancy_sensors": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।"
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "अमान्य · सेंसर · सेटिंग",
       "device_temperature_band_invalid": "अमान्य · तापमान · सेटिंग",
       "device_humidity_invalid": "अमान्य · आर्द्रता · सेटिंग",
-      "device_runtime_invalid": "अमान्य · शक्ति · सेटिंग"
+      "device_runtime_invalid": "अमान्य · शक्ति · सेटिंग",
+      "wake_sources_pair": "अलार्म और मिनटों की दोनों एंटिटी चुनें, या दोनों हटाएँ।"
     },
     "abort": {
       "already_configured": "Home Environment Manager - पहले से कॉन्फ़िगर है.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "घर · उपकरण",
           "climate_unknown_occupancy": "उपस्थिति · उपकरण",
           "climate_unoccupied_delay_minutes": "उपकरण · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "उपस्थिति · उपकरण · सेंसर · आवश्यक",
+          "climate_occupancy_stale_minutes": "कमरे में उपस्थिति · लोगों की गिनती के डेटा की अधिकतम आयु (मिनट)",
           "climate_away_policy": "घर में उपस्थिति · घर · उपकरण · POLICY",
           "climate_manual_profile": "उपकरण · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "नींद · उपकरण",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "उपकरण (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "“उपस्थिति · सेंसर” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
+          "climate_occupancy_sensors": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
           "climate_away_entities": "“घर · उपकरण” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "कमरे में लोगों की संख्यात्मक गिनती के डेटा की अधिकतम आयु। पुराने या अनुपलब्ध मान अज्ञात हैं। बाइनरी उपस्थिति अवस्थाएँ और कमरों की सूचियाँ अपरिवर्तित रहने पर समाप्त नहीं होतीं।",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "यह विकल्प “उपकरण · CLIMATE_MANUAL_PROFILE” नियंत्रित करता है। उपकरण · CLIMATE_MANUAL_PROFILE आदेशों के लिए अलग अनुमति और सुरक्षा आवश्यक है।",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "सामान्य · सेटिंग",
-        "description": "सामान्य · सेटिंग: चुनें स्रोत, सेंसर / उपकरण · नियंत्रण.",
+        "description": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
         "data": {
           "general_room_occupancy_sensors": "कमरा · उपस्थिति · सेंसर",
           "general_occupied_rooms_entity": "उपस्थिति · कमरा · स्रोत (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "घर में उपस्थिति",
           "general_sleep_rooms_entity": "नींद · कमरा · स्रोत (state)",
           "general_sleep_rooms_attribute": "नींद · कमरा · स्रोत (attribute)",
-          "general_source_stale_minutes": "स्रोत · max (min)"
+          "general_source_stale_minutes": "घर में उपस्थिति · ट्रैकर/लोगों की गिनती के डेटा की अधिकतम आयु (मिनट)",
+          "general_wake_alarm_entity": "नींद · अगला अलार्म",
+          "general_wake_lead_minutes_entity": "नींद · अलार्म से पहले के मिनट"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "“कमरा · उपस्थिति · सेंसर” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
-          "general_occupied_rooms_entity": "“उपस्थिति · कमरा · स्रोत (state)” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
+          "general_room_occupancy_sensors": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
+          "general_occupied_rooms_entity": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
           "general_occupied_rooms_attribute": "“उपस्थिति · कमरा · स्रोत (attribute)” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
           "general_home_trackers": "“घर · उपस्थिति · उपकरण” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "“नींद · कमरा · स्रोत (state)” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
+          "general_sleep_rooms_entity": "Home Assistant क्षेत्र के नाम या ID से सोते हुए कमरों की सूची स्थिति या विशेषता में चुनें। सूची का कमरा तभी सोता हुआ माना जाता है जब वह भरा भी हो। अपरिवर्तित सूची मान्य रहती है; गायब या अमान्य स्रोत अज्ञात है। सेट किया गया अलार्म बजने से पहले स्वचालित नींद समाप्त कर सकता है।",
           "general_sleep_rooms_attribute": "“नींद · कमरा · स्रोत (attribute)” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
-          "general_source_stale_minutes": "स्रोत · नींद / उपस्थिति · max 240 min. अमान्य · बंद करें."
+          "general_source_stale_minutes": "डेटा की आयु सीमा ट्रैकर रिपोर्ट और लोगों की संख्यात्मक गिनती पर लागू होती है। कमरे की सूचियाँ और बाइनरी उपस्थिति अवस्थाएँ अपरिवर्तित रहने पर समाप्त नहीं होतीं। अनुपलब्ध, बहाल या अमान्य स्रोत अज्ञात रहते हैं। यह नींद की अवधि नहीं है।",
+          "general_wake_alarm_entity": "अगले अलार्म के समय या दिनांक-समय की एंटिटी और पहले के मिनटों की एंटिटी चुनें। HEM इतने मिनट पहले स्वचालित नींद मोड छोड़कर सामान्य लक्ष्यों पर लौटता है। केवल समय वाली एंटिटी Home Assistant का समय क्षेत्र उपयोग करती है। अनुपस्थिति, मैन्युअल नियंत्रण और डिवाइस सुरक्षा की प्राथमिकता बनी रहती है।",
+          "general_wake_lead_minutes_entity": "मिनटों में शून्य या धनात्मक मान वाली संख्यात्मक एंटिटी चुनें; इकाई min या कोई इकाई नहीं। 07:00 का अलार्म और 30 का मान स्वचालित नींद 06:30 पर समाप्त करते हैं; 0 का अर्थ अलार्म बजने का समय है। बंद करने के लिए दोनों स्रोत हटाएँ।"
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · पराग · HIGH",
           "pollen_max_scale": "POLLEN · पराग · SCALE",
           "pollen_avoid_ventilation": "POLLEN · पराग · NO VENT",
-          "general_source_stale_minutes": "स्रोत · max (min)",
-          "general_home_policy": "घर में उपस्थिति"
+          "general_source_stale_minutes": "घर में उपस्थिति · ट्रैकर/लोगों की गिनती के डेटा की अधिकतम आयु (मिनट)",
+          "general_home_policy": "घर में उपस्थिति",
+          "general_wake_alarm_entity": "नींद · अगला अलार्म",
+          "general_wake_lead_minutes_entity": "नींद · अलार्म से पहले के मिनट"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "चुनें: बाहरी वायु गुणवत्ता · AQI, CO₂, PM2.5, PM10, VOC. उपलब्ध नहीं: ⚠",
           "weather_warnings": "मौसम और चेतावनियाँ · ⚠ (उपलब्ध नहीं) → 🪟🔒",
-          "general_room_occupancy_sensors": "“कमरा · उपस्थिति · सेंसर” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है। number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
           "general_home_trackers": "“घर · उपस्थिति · उपकरण” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है। number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "“उपस्थिति · कमरा · स्रोत (state)” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
+          "general_occupied_rooms_entity": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
           "general_occupied_rooms_attribute": "“उपस्थिति · कमरा · स्रोत (attribute)” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
-          "general_sleep_rooms_entity": "“नींद · कमरा · स्रोत (state)” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
+          "general_sleep_rooms_entity": "Home Assistant क्षेत्र के नाम या ID से सोते हुए कमरों की सूची स्थिति या विशेषता में चुनें। सूची का कमरा तभी सोता हुआ माना जाता है जब वह भरा भी हो। अपरिवर्तित सूची मान्य रहती है; गायब या अमान्य स्रोत अज्ञात है। सेट किया गया अलार्म बजने से पहले स्वचालित नींद समाप्त कर सकता है।",
           "general_sleep_rooms_attribute": "“नींद · कमरा · स्रोत (attribute)” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
           "notify_entities": "चुनें: notify.* · सेटिंग · स्रोत. “सेटिंग · स्रोत” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।",
           "media_players": "चुनें: media_player.* · सेटिंग · स्रोत · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "“POLLEN · पराग · HIGH” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
           "pollen_max_scale": "“POLLEN · पराग · SCALE” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
           "pollen_avoid_ventilation": "“POLLEN · पराग · NO VENT” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
-          "general_source_stale_minutes": "स्रोत · नींद / उपस्थिति · max 240 min. अमान्य · बंद करें.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "डेटा की आयु सीमा ट्रैकर रिपोर्ट और लोगों की संख्यात्मक गिनती पर लागू होती है। कमरे की सूचियाँ और बाइनरी उपस्थिति अवस्थाएँ अपरिवर्तित रहने पर समाप्त नहीं होतीं। अनुपलब्ध, बहाल या अमान्य स्रोत अज्ञात रहते हैं। यह नींद की अवधि नहीं है।",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "अगले अलार्म के समय या दिनांक-समय की एंटिटी और पहले के मिनटों की एंटिटी चुनें। HEM इतने मिनट पहले स्वचालित नींद मोड छोड़कर सामान्य लक्ष्यों पर लौटता है। केवल समय वाली एंटिटी Home Assistant का समय क्षेत्र उपयोग करती है। अनुपस्थिति, मैन्युअल नियंत्रण और डिवाइस सुरक्षा की प्राथमिकता बनी रहती है।",
+          "general_wake_lead_minutes_entity": "मिनटों में शून्य या धनात्मक मान वाली संख्यात्मक एंटिटी चुनें; इकाई min या कोई इकाई नहीं। 07:00 का अलार्म और 30 का मान स्वचालित नींद 06:30 पर समाप्त करते हैं; 0 का अर्थ अलार्म बजने का समय है। बंद करने के लिए दोनों स्रोत हटाएँ।"
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "आर्द्रता. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
           "climate_devices": "उपकरण. इस कमरे के वास्तविक climate.*, humidifier.* और fan.* उपकरण चुनें। उनकी मूल क्षमताएँ हीटिंग, कूलिंग, नमी हटाने, लक्ष्य मान और पंखे की गति तय करती हैं। चुनने से उपकरण नहीं चलता; प्रत्येक नियंत्रक पर स्वचालन अलग से सक्षम करें।",
           "shades": "खिड़की के परदे, ब्लाइंड और शटर. कमरे की cover.* खिड़की की ब्लाइंड, रोलर शटर और पर्दे चुनें। device_class के बिना covers भी CLOSE समर्थन पर मान्य हैं, यदि वे सचमुच खिड़की पर लगे हों। गैराज, गेट, दरवाज़े, खिड़कियाँ और बाहरी शामियाने मान्य नहीं हैं। चयन कुछ नहीं हिलाता; विंडो सेंसर, ऑटो नियंत्रण, घोषणा और ताप सीमा नियंत्रक पर सेट करें। अज्ञात स्थिति में गति निषिद्ध है।",
-          "occupancy_sensors": "“उपस्थिति · सेंसर” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।"
+          "occupancy_sensors": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।"
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "आर्द्रता. कमरे के इनपुट चुनें: उपकरण का नाम - एंटिटी का नाम। खाली समूह उपयोग नहीं होते और स्वचालित खोज या नियंत्रण चालू नहीं करते।",
           "climate_devices": "उपकरण. इस कमरे के वास्तविक climate.*, humidifier.* और fan.* उपकरण चुनें। उनकी मूल क्षमताएँ हीटिंग, कूलिंग, नमी हटाने, लक्ष्य मान और पंखे की गति तय करती हैं। चुनने से उपकरण नहीं चलता; प्रत्येक नियंत्रक पर स्वचालन अलग से सक्षम करें।",
           "shades": "खिड़की के परदे, ब्लाइंड और शटर. कमरे की cover.* खिड़की की ब्लाइंड, रोलर शटर और पर्दे चुनें। device_class के बिना covers भी CLOSE समर्थन पर मान्य हैं, यदि वे सचमुच खिड़की पर लगे हों। गैराज, गेट, दरवाज़े, खिड़कियाँ और बाहरी शामियाने मान्य नहीं हैं। चयन कुछ नहीं हिलाता; विंडो सेंसर, ऑटो नियंत्रण, घोषणा और ताप सीमा नियंत्रक पर सेट करें। अज्ञात स्थिति में गति निषिद्ध है।",
-          "occupancy_sensors": "“उपस्थिति · सेंसर” के लिए वास्तविक Home Assistant स्रोत चुनें। गायब या पुराना डेटा संबंधित कार्रवाई रोकता है।"
+          "occupancy_sensors": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।"
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "अमान्य · शक्ति · सेटिंग",
       "invalid_setup_rooms": "अमान्य: निगरानी के कमरे",
       "invalid_room_source": "अमान्य: कमरा · स्रोत",
-      "invalid_away_windows_recipients": "सूचना पाने वाले व्यक्ति; खिड़की सूचना के माध्यम. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "सूचना पाने वाले व्यक्ति; खिड़की सूचना के माध्यम. Announcement Hub (person.*).",
+      "wake_sources_pair": "अलार्म और मिनटों की दोनों एंटिटी चुनें, या दोनों हटाएँ।"
     },
     "abort": {
       "setup_area_removed": "अमान्य: निगरानी के कमरे",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "घर में उपस्थिति · स्रोत · max (min)",
+        "name": "घर में उपस्थिति · ट्रैकर/लोगों की गिनती के डेटा की अधिकतम आयु (मिनट)",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "कमरे में उपस्थिति · उपस्थिति · उपकरण · सेंसर · आवश्यक",
+        "name": "कमरे में उपस्थिति · लोगों की गिनती के डेटा की अधिकतम आयु (मिनट)",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "घोषणाएँ · डिवाइस त्रुटियों की सूचना · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "सहायता"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "नींद · {channel}जब सभी सो रहे हों",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"

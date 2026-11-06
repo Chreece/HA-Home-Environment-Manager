@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · گرده · HIGH",
           "pollen_max_scale": "POLLEN · گرده · SCALE",
           "pollen_avoid_ventilation": "POLLEN · گرده · NO VENT",
-          "general_source_stale_minutes": "منبع · max (min)",
-          "general_home_policy": "حضور در خانه"
+          "general_source_stale_minutes": "حضور در خانه · حداکثر عمر دادهٔ ردیاب/تعداد افراد (دقیقه)",
+          "general_home_policy": "حضور در خانه",
+          "general_wake_alarm_entity": "خواب · زنگ بیدارباش بعدی",
+          "general_wake_lead_minutes_entity": "خواب · دقایق پیش از زنگ"
         },
         "data_description": {
           "weather_entities": "انتخاب کنید: آب‌وهوا و هشدارها · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "انتخاب کنید: کیفیت هوای بیرون · AQI, CO₂, PM2.5, PM10, VOC. در دسترس نیست: ⚠",
           "weather_warnings": "آب‌وهوا و هشدارها · ⚠ (در دسترس نیست) → 🪟🔒",
-          "general_room_occupancy_sensors": "برای «اتاق · حضور · حسگر» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند.",
           "general_home_trackers": "برای «خانه · حضور · دستگاه‌ها» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "برای «حضور · اتاق · منبع (state)» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
+          "general_occupied_rooms_entity": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند.",
           "general_occupied_rooms_attribute": "«حضور · اتاق · منبع (attribute)» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
-          "general_sleep_rooms_entity": "برای «خواب · اتاق · منبع (state)» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
+          "general_sleep_rooms_entity": "فهرست اتاق‌های خواب را از وضعیت یا ویژگی، با نام یا شناسهٔ ناحیه‌های Home Assistant انتخاب کنید. اتاق فهرست‌شده فقط وقتی در خواب است که کسی هم در آن باشد. فهرست بدون تغییر معتبر می‌ماند؛ منبع مفقود یا نامعتبر ناشناخته است. زنگ تنظیم‌شده می‌تواند خواب خودکار را پیش از زنگ پایان دهد.",
           "general_sleep_rooms_attribute": "«خواب · اتاق · منبع (attribute)» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "notify_entities": "انتخاب کنید: notify.* · تنظیمات · منبع.",
           "media_players": "انتخاب کنید: media_player.* · تنظیمات · منبع · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "«POLLEN · گرده · HIGH» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "pollen_max_scale": "«POLLEN · گرده · SCALE» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "pollen_avoid_ventilation": "«POLLEN · گرده · NO VENT» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
-          "general_source_stale_minutes": "منبع · خواب / حضور · max 240 min. نامعتبر · خاموش.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "محدودیت عمر گزارش برای ردیاب‌ها و شمارش عددی افراد است. فهرست اتاق‌ها و وضعیت دودویی حضور اتاق تا زمانی که تغییر نکنند منقضی نمی‌شوند. منابع ناموجود، بازیابی‌شده یا نامعتبر ناشناخته می‌مانند. این مدت خواب نیست.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "موجودیت ساعت یا تاریخ‌وساعت زنگ بعدی و موجودیت دقایق پیش از زنگ را انتخاب کنید. HEM به همان تعداد دقیقه زودتر از خواب خودکار خارج می‌شود و هدف‌های معمول را از سر می‌گیرد. ساعت بدون تاریخ از منطقهٔ زمانی Home Assistant استفاده می‌کند. غیبت، کنترل دستی و حفاظت دستگاه همچنان اولویت دارند.",
+          "general_wake_lead_minutes_entity": "یک موجودیت عددی با دقیقهٔ نامنفی، با واحد min یا بدون واحد انتخاب کنید. زنگ 07:00 و مقدار 30، خواب خودکار را در 06:30 پایان می‌دهد؛ 0 یعنی هنگام زنگ. برای غیرفعال‌سازی هر دو منبع را پاک کنید."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "خانه · دستگاه‌ها",
           "climate_unknown_occupancy": "حضور · دستگاه‌ها",
           "climate_unoccupied_delay_minutes": "دستگاه‌ها · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "حضور · دستگاه‌ها · حسگر · الزامی",
+          "climate_occupancy_stale_minutes": "حضور در اتاق · حداکثر عمر دادهٔ تعداد افراد (دقیقه)",
           "climate_away_policy": "حضور در خانه · خانه · دستگاه‌ها · POLICY",
           "climate_manual_profile": "دستگاه‌ها · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "خواب · دستگاه‌ها",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "دستگاه‌ها (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "برای «حضور · حسگر» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
+          "climate_occupancy_sensors": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند.",
           "climate_away_entities": "برای «خانه · دستگاه‌ها» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "حداکثر عمر شمارش عددی افراد اتاق. مقادیر قدیمی یا ناموجود ناشناخته‌اند. وضعیت دودویی حضور و فهرست اتاق‌ها بدون تغییر منقضی نمی‌شوند.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "این گزینه «دستگاه‌ها · CLIMATE_MANUAL_PROFILE» را کنترل می‌کند. فرمان دستگاه نیازمند مجوز جداگانه و حفاظت مستقل است.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "عمومی · تنظیمات",
-        "description": "عمومی · تنظیمات: انتخاب منبع, حسگر / دستگاه‌ها · کنترل.",
+        "description": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند.",
         "data": {
           "general_room_occupancy_sensors": "اتاق · حضور · حسگر",
           "general_occupied_rooms_entity": "حضور · اتاق · منبع (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "حضور در خانه",
           "general_sleep_rooms_entity": "خواب · اتاق · منبع (state)",
           "general_sleep_rooms_attribute": "خواب · اتاق · منبع (attribute)",
-          "general_source_stale_minutes": "منبع · max (min)"
+          "general_source_stale_minutes": "حضور در خانه · حداکثر عمر دادهٔ ردیاب/تعداد افراد (دقیقه)",
+          "general_wake_alarm_entity": "خواب · زنگ بیدارباش بعدی",
+          "general_wake_lead_minutes_entity": "خواب · دقایق پیش از زنگ"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "برای «اتاق · حضور · حسگر» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
-          "general_occupied_rooms_entity": "برای «حضور · اتاق · منبع (state)» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
+          "general_room_occupancy_sensors": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند.",
+          "general_occupied_rooms_entity": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند.",
           "general_occupied_rooms_attribute": "«حضور · اتاق · منبع (attribute)» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "general_home_trackers": "برای «خانه · حضور · دستگاه‌ها» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "برای «خواب · اتاق · منبع (state)» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
+          "general_sleep_rooms_entity": "فهرست اتاق‌های خواب را از وضعیت یا ویژگی، با نام یا شناسهٔ ناحیه‌های Home Assistant انتخاب کنید. اتاق فهرست‌شده فقط وقتی در خواب است که کسی هم در آن باشد. فهرست بدون تغییر معتبر می‌ماند؛ منبع مفقود یا نامعتبر ناشناخته است. زنگ تنظیم‌شده می‌تواند خواب خودکار را پیش از زنگ پایان دهد.",
           "general_sleep_rooms_attribute": "«خواب · اتاق · منبع (attribute)» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
-          "general_source_stale_minutes": "منبع · خواب / حضور · max 240 min. نامعتبر · خاموش."
+          "general_source_stale_minutes": "محدودیت عمر گزارش برای ردیاب‌ها و شمارش عددی افراد است. فهرست اتاق‌ها و وضعیت دودویی حضور اتاق تا زمانی که تغییر نکنند منقضی نمی‌شوند. منابع ناموجود، بازیابی‌شده یا نامعتبر ناشناخته می‌مانند. این مدت خواب نیست.",
+          "general_wake_alarm_entity": "موجودیت ساعت یا تاریخ‌وساعت زنگ بعدی و موجودیت دقایق پیش از زنگ را انتخاب کنید. HEM به همان تعداد دقیقه زودتر از خواب خودکار خارج می‌شود و هدف‌های معمول را از سر می‌گیرد. ساعت بدون تاریخ از منطقهٔ زمانی Home Assistant استفاده می‌کند. غیبت، کنترل دستی و حفاظت دستگاه همچنان اولویت دارند.",
+          "general_wake_lead_minutes_entity": "یک موجودیت عددی با دقیقهٔ نامنفی، با واحد min یا بدون واحد انتخاب کنید. زنگ 07:00 و مقدار 30، خواب خودکار را در 06:30 پایان می‌دهد؛ 0 یعنی هنگام زنگ. برای غیرفعال‌سازی هر دو منبع را پاک کنید."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "رطوبت. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
           "climate_devices": "دستگاه‌ها. فقط موجودیت‌های فیزیکی climate.*، humidifier.* و fan.* اتاق را انتخاب کنید. توانایی دستگاه نوع گرمایش، سرمایش، خشک‌سازی، هدف‌ها و سرعت فن را تعیین می‌کند. انتخاب دستگاه را روشن نمی‌کند؛ کنترل خودکار را جداگانه برای هر دستگاه فعال کنید.",
           "shades": "پرده‌ها، کرکره‌ها و سایه‌بان‌های پنجره. پرده، کرکره و سایه‌بان پنجره از نوع cover.* این اتاق را انتخاب کنید. Covers بدون device_class با قابلیت CLOSE و پس از تأیید کاربرد پنجره پذیرفته می‌شوند. درها، دروازه‌ها، گاراژ، پنجره و سایبان بیرونی مجاز نیستند. انتخاب حرکتی ایجاد نمی‌کند: حسگر پنجره، کنترل خودکار، اعلان و دما را در کنترل‌کننده تنظیم کنید. وضعیت نامعلوم مانع حرکت است.",
-          "occupancy_sensors": "برای «حضور · حسگر» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند."
+          "occupancy_sensors": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "رطوبت. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
           "climate_devices": "دستگاه‌ها. فقط موجودیت‌های فیزیکی climate.*، humidifier.* و fan.* اتاق را انتخاب کنید. توانایی دستگاه نوع گرمایش، سرمایش، خشک‌سازی، هدف‌ها و سرعت فن را تعیین می‌کند. انتخاب دستگاه را روشن نمی‌کند؛ کنترل خودکار را جداگانه برای هر دستگاه فعال کنید.",
           "shades": "پرده‌ها، کرکره‌ها و سایه‌بان‌های پنجره. پرده، کرکره و سایه‌بان پنجره از نوع cover.* این اتاق را انتخاب کنید. Covers بدون device_class با قابلیت CLOSE و پس از تأیید کاربرد پنجره پذیرفته می‌شوند. درها، دروازه‌ها، گاراژ، پنجره و سایبان بیرونی مجاز نیستند. انتخاب حرکتی ایجاد نمی‌کند: حسگر پنجره، کنترل خودکار، اعلان و دما را در کنترل‌کننده تنظیم کنید. وضعیت نامعلوم مانع حرکت است.",
-          "occupancy_sensors": "برای «حضور · حسگر» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند."
+          "occupancy_sensors": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "نامعتبر · حسگر · تنظیمات",
       "device_temperature_band_invalid": "نامعتبر · دما · تنظیمات",
       "device_humidity_invalid": "نامعتبر · رطوبت · تنظیمات",
-      "device_runtime_invalid": "نامعتبر · توان · تنظیمات"
+      "device_runtime_invalid": "نامعتبر · توان · تنظیمات",
+      "wake_sources_pair": "موجودیت زنگ و موجودیت دقیقه را با هم انتخاب کنید یا هر دو را پاک کنید."
     },
     "abort": {
       "already_configured": "Home Environment Manager - قبلاً تنظیم شده.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "خانه · دستگاه‌ها",
           "climate_unknown_occupancy": "حضور · دستگاه‌ها",
           "climate_unoccupied_delay_minutes": "دستگاه‌ها · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "حضور · دستگاه‌ها · حسگر · الزامی",
+          "climate_occupancy_stale_minutes": "حضور در اتاق · حداکثر عمر دادهٔ تعداد افراد (دقیقه)",
           "climate_away_policy": "حضور در خانه · خانه · دستگاه‌ها · POLICY",
           "climate_manual_profile": "دستگاه‌ها · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "خواب · دستگاه‌ها",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "دستگاه‌ها (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "برای «حضور · حسگر» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
+          "climate_occupancy_sensors": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند.",
           "climate_away_entities": "برای «خانه · دستگاه‌ها» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "حداکثر عمر شمارش عددی افراد اتاق. مقادیر قدیمی یا ناموجود ناشناخته‌اند. وضعیت دودویی حضور و فهرست اتاق‌ها بدون تغییر منقضی نمی‌شوند.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "این گزینه «دستگاه‌ها · CLIMATE_MANUAL_PROFILE» را کنترل می‌کند. فرمان دستگاه نیازمند مجوز جداگانه و حفاظت مستقل است.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "عمومی · تنظیمات",
-        "description": "عمومی · تنظیمات: انتخاب منبع, حسگر / دستگاه‌ها · کنترل.",
+        "description": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند.",
         "data": {
           "general_room_occupancy_sensors": "اتاق · حضور · حسگر",
           "general_occupied_rooms_entity": "حضور · اتاق · منبع (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "حضور در خانه",
           "general_sleep_rooms_entity": "خواب · اتاق · منبع (state)",
           "general_sleep_rooms_attribute": "خواب · اتاق · منبع (attribute)",
-          "general_source_stale_minutes": "منبع · max (min)"
+          "general_source_stale_minutes": "حضور در خانه · حداکثر عمر دادهٔ ردیاب/تعداد افراد (دقیقه)",
+          "general_wake_alarm_entity": "خواب · زنگ بیدارباش بعدی",
+          "general_wake_lead_minutes_entity": "خواب · دقایق پیش از زنگ"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "برای «اتاق · حضور · حسگر» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
-          "general_occupied_rooms_entity": "برای «حضور · اتاق · منبع (state)» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
+          "general_room_occupancy_sensors": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند.",
+          "general_occupied_rooms_entity": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند.",
           "general_occupied_rooms_attribute": "«حضور · اتاق · منبع (attribute)» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "general_home_trackers": "برای «خانه · حضور · دستگاه‌ها» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "برای «خواب · اتاق · منبع (state)» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
+          "general_sleep_rooms_entity": "فهرست اتاق‌های خواب را از وضعیت یا ویژگی، با نام یا شناسهٔ ناحیه‌های Home Assistant انتخاب کنید. اتاق فهرست‌شده فقط وقتی در خواب است که کسی هم در آن باشد. فهرست بدون تغییر معتبر می‌ماند؛ منبع مفقود یا نامعتبر ناشناخته است. زنگ تنظیم‌شده می‌تواند خواب خودکار را پیش از زنگ پایان دهد.",
           "general_sleep_rooms_attribute": "«خواب · اتاق · منبع (attribute)» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
-          "general_source_stale_minutes": "منبع · خواب / حضور · max 240 min. نامعتبر · خاموش."
+          "general_source_stale_minutes": "محدودیت عمر گزارش برای ردیاب‌ها و شمارش عددی افراد است. فهرست اتاق‌ها و وضعیت دودویی حضور اتاق تا زمانی که تغییر نکنند منقضی نمی‌شوند. منابع ناموجود، بازیابی‌شده یا نامعتبر ناشناخته می‌مانند. این مدت خواب نیست.",
+          "general_wake_alarm_entity": "موجودیت ساعت یا تاریخ‌وساعت زنگ بعدی و موجودیت دقایق پیش از زنگ را انتخاب کنید. HEM به همان تعداد دقیقه زودتر از خواب خودکار خارج می‌شود و هدف‌های معمول را از سر می‌گیرد. ساعت بدون تاریخ از منطقهٔ زمانی Home Assistant استفاده می‌کند. غیبت، کنترل دستی و حفاظت دستگاه همچنان اولویت دارند.",
+          "general_wake_lead_minutes_entity": "یک موجودیت عددی با دقیقهٔ نامنفی، با واحد min یا بدون واحد انتخاب کنید. زنگ 07:00 و مقدار 30، خواب خودکار را در 06:30 پایان می‌دهد؛ 0 یعنی هنگام زنگ. برای غیرفعال‌سازی هر دو منبع را پاک کنید."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · گرده · HIGH",
           "pollen_max_scale": "POLLEN · گرده · SCALE",
           "pollen_avoid_ventilation": "POLLEN · گرده · NO VENT",
-          "general_source_stale_minutes": "منبع · max (min)",
-          "general_home_policy": "حضور در خانه"
+          "general_source_stale_minutes": "حضور در خانه · حداکثر عمر دادهٔ ردیاب/تعداد افراد (دقیقه)",
+          "general_home_policy": "حضور در خانه",
+          "general_wake_alarm_entity": "خواب · زنگ بیدارباش بعدی",
+          "general_wake_lead_minutes_entity": "خواب · دقایق پیش از زنگ"
         },
         "data_description": {
           "weather_entities": "انتخاب کنید: آب‌وهوا و هشدارها · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "انتخاب کنید: کیفیت هوای بیرون · AQI, CO₂, PM2.5, PM10, VOC. در دسترس نیست: ⚠",
           "weather_warnings": "آب‌وهوا و هشدارها · ⚠ (در دسترس نیست) → 🪟🔒",
-          "general_room_occupancy_sensors": "برای «اتاق · حضور · حسگر» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند.",
           "general_home_trackers": "برای «خانه · حضور · دستگاه‌ها» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "برای «حضور · اتاق · منبع (state)» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
+          "general_occupied_rooms_entity": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند.",
           "general_occupied_rooms_attribute": "«حضور · اتاق · منبع (attribute)» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
-          "general_sleep_rooms_entity": "برای «خواب · اتاق · منبع (state)» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند.",
+          "general_sleep_rooms_entity": "فهرست اتاق‌های خواب را از وضعیت یا ویژگی، با نام یا شناسهٔ ناحیه‌های Home Assistant انتخاب کنید. اتاق فهرست‌شده فقط وقتی در خواب است که کسی هم در آن باشد. فهرست بدون تغییر معتبر می‌ماند؛ منبع مفقود یا نامعتبر ناشناخته است. زنگ تنظیم‌شده می‌تواند خواب خودکار را پیش از زنگ پایان دهد.",
           "general_sleep_rooms_attribute": "«خواب · اتاق · منبع (attribute)» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "notify_entities": "انتخاب کنید: notify.* · تنظیمات · منبع.",
           "media_players": "انتخاب کنید: media_player.* · تنظیمات · منبع · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "«POLLEN · گرده · HIGH» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "pollen_max_scale": "«POLLEN · گرده · SCALE» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "pollen_avoid_ventilation": "«POLLEN · گرده · NO VENT» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
-          "general_source_stale_minutes": "منبع · خواب / حضور · max 240 min. نامعتبر · خاموش.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "محدودیت عمر گزارش برای ردیاب‌ها و شمارش عددی افراد است. فهرست اتاق‌ها و وضعیت دودویی حضور اتاق تا زمانی که تغییر نکنند منقضی نمی‌شوند. منابع ناموجود، بازیابی‌شده یا نامعتبر ناشناخته می‌مانند. این مدت خواب نیست.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "موجودیت ساعت یا تاریخ‌وساعت زنگ بعدی و موجودیت دقایق پیش از زنگ را انتخاب کنید. HEM به همان تعداد دقیقه زودتر از خواب خودکار خارج می‌شود و هدف‌های معمول را از سر می‌گیرد. ساعت بدون تاریخ از منطقهٔ زمانی Home Assistant استفاده می‌کند. غیبت، کنترل دستی و حفاظت دستگاه همچنان اولویت دارند.",
+          "general_wake_lead_minutes_entity": "یک موجودیت عددی با دقیقهٔ نامنفی، با واحد min یا بدون واحد انتخاب کنید. زنگ 07:00 و مقدار 30، خواب خودکار را در 06:30 پایان می‌دهد؛ 0 یعنی هنگام زنگ. برای غیرفعال‌سازی هر دو منبع را پاک کنید."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "رطوبت. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
           "climate_devices": "دستگاه‌ها. فقط موجودیت‌های فیزیکی climate.*، humidifier.* و fan.* اتاق را انتخاب کنید. توانایی دستگاه نوع گرمایش، سرمایش، خشک‌سازی، هدف‌ها و سرعت فن را تعیین می‌کند. انتخاب دستگاه را روشن نمی‌کند؛ کنترل خودکار را جداگانه برای هر دستگاه فعال کنید.",
           "shades": "پرده‌ها، کرکره‌ها و سایه‌بان‌های پنجره. پرده، کرکره و سایه‌بان پنجره از نوع cover.* این اتاق را انتخاب کنید. Covers بدون device_class با قابلیت CLOSE و پس از تأیید کاربرد پنجره پذیرفته می‌شوند. درها، دروازه‌ها، گاراژ، پنجره و سایبان بیرونی مجاز نیستند. انتخاب حرکتی ایجاد نمی‌کند: حسگر پنجره، کنترل خودکار، اعلان و دما را در کنترل‌کننده تنظیم کنید. وضعیت نامعلوم مانع حرکت است.",
-          "occupancy_sensors": "برای «حضور · حسگر» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند."
+          "occupancy_sensors": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "رطوبت. ورودی‌های اتاق را انتخاب کنید: نام دستگاه - نام موجودیت. گروه‌های خالی استفاده نمی‌شوند و کشف یا کنترل خودکار را فعال نمی‌کنند.",
           "climate_devices": "دستگاه‌ها. فقط موجودیت‌های فیزیکی climate.*، humidifier.* و fan.* اتاق را انتخاب کنید. توانایی دستگاه نوع گرمایش، سرمایش، خشک‌سازی، هدف‌ها و سرعت فن را تعیین می‌کند. انتخاب دستگاه را روشن نمی‌کند؛ کنترل خودکار را جداگانه برای هر دستگاه فعال کنید.",
           "shades": "پرده‌ها، کرکره‌ها و سایه‌بان‌های پنجره. پرده، کرکره و سایه‌بان پنجره از نوع cover.* این اتاق را انتخاب کنید. Covers بدون device_class با قابلیت CLOSE و پس از تأیید کاربرد پنجره پذیرفته می‌شوند. درها، دروازه‌ها، گاراژ، پنجره و سایبان بیرونی مجاز نیستند. انتخاب حرکتی ایجاد نمی‌کند: حسگر پنجره، کنترل خودکار، اعلان و دما را در کنترل‌کننده تنظیم کنید. وضعیت نامعلوم مانع حرکت است.",
-          "occupancy_sensors": "برای «حضور · حسگر» منبع واقعی Home Assistant را انتخاب کنید. دادهٔ قدیمی یا ناموجود اقدام مربوطه را متوقف می‌کند."
+          "occupancy_sensors": "فهرست معتبر اتاق‌های دارای حضور در وضعیت یا ویژگی انتخابی اولویت دارد: اتاق‌های فهرست‌شده دارای حضور و اتاق‌های حذف‌شده خالی‌اند. بدون فهرست، هر حسگر حضور روشن یعنی حضور؛ همه خاموش یا هیچ حسگر انتخابی یعنی خالی. منبع انتخابی ناموجود یا نامعتبر ناشناخته می‌ماند. فهرست‌ها و وضعیت‌های دودویی بدون تغییر منقضی نمی‌شوند."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "نامعتبر · توان · تنظیمات",
       "invalid_setup_rooms": "نامعتبر: اتاق‌های مورد پایش",
       "invalid_room_source": "نامعتبر: اتاق · منبع",
-      "invalid_away_windows_recipients": "افراد دریافت کننده هشدار; کانال های هشدار پنجره. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "افراد دریافت کننده هشدار; کانال های هشدار پنجره. Announcement Hub (person.*).",
+      "wake_sources_pair": "موجودیت زنگ و موجودیت دقیقه را با هم انتخاب کنید یا هر دو را پاک کنید."
     },
     "abort": {
       "setup_area_removed": "نامعتبر: اتاق‌های مورد پایش",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "حضور در خانه · منبع · max (min)",
+        "name": "حضور در خانه · حداکثر عمر دادهٔ ردیاب/تعداد افراد (دقیقه)",
         "state_attributes": {
           "configuration_help": {
             "name": "راهنما"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "حضور در اتاق · حضور · دستگاه‌ها · حسگر · الزامی",
+        "name": "حضور در اتاق · حداکثر عمر دادهٔ تعداد افراد (دقیقه)",
         "state_attributes": {
           "configuration_help": {
             "name": "راهنما"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "اعلان‌ها · اعلام خطاهای دستگاه · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "راهنما"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "خواب · {channel}وقتی همه خواب هستند",
         "state_attributes": {
           "configuration_help": {
             "name": "راهنما"
