@@ -169,12 +169,19 @@ target_scope = {
     "device_limits": Model.device_limits,
     "DEFAULT_PROFILE_TARGETS": strategy.DEFAULT_PROFILE_TARGETS,
     "profile_humidity_target": strategy.profile_humidity_target,
+    "PRESETS": ast.literal_eval(next(
+        node.value for node in target_source.body if isinstance(node, ast.Assign)
+        and any(isinstance(target, ast.Name) and target.id == "PRESETS" for target in node.targets)
+    )),
 }
+profile_guard = next(node for node in target_source.body
+                     if isinstance(node, ast.FunctionDef) and node.name == "automatic_profile_reason")
 target_tree = ast.Module(body=[ast.ImportFrom(
     module="__future__", names=[ast.alias(name="annotations")], level=0,
-), target_function], type_ignores=[])
+), target_function, profile_guard], type_ignores=[])
 exec(compile(ast.fix_missing_locations(target_tree), "equipment_model.py", "exec"), target_scope)
 Model.targets = staticmethod(target_scope["targets"])
+Model.automatic_profile_reason = staticmethod(target_scope["automatic_profile_reason"])
 sys.modules["hem_beta88_fixture.equipment_model"] = Model
 pkg.equipment_model = Model
 runtime_module = ModuleType("hem_beta88_fixture.equipment_runtime")
@@ -225,7 +232,7 @@ class SimRuntime:
             settings={"cfg": {"control_mode": "pid", "requested_mode": "heat",
                               "sample_seconds": 120,
                               "power_switch_entity": None}},
-            cap=Cap(), plan={"profile": "home"},
+            cap=Cap(), plan={"away": "home", "profile": "home"},
             room={"profiles": {"home": {
                 "heat_c": 21., "cool_c": 26., "humidity": 50.,
             }}},

@@ -158,7 +158,10 @@ def supported_metric(hass: HomeAssistant, state: State, *, outdoor: bool) -> str
 
 
 def is_stale(state: State | None, max_age_minutes: float) -> bool:
-    if state is None or state.state in ("unknown", "unavailable", "none", ""):
+    if (state is None or state.state in ("unknown", "unavailable", "none", "")
+            or (getattr(state, "attributes", {}) or {}).get("restored") is True):
+        # HA can recreate an old measurement with a new startup timestamp.
+        # Its explicit restore placeholder is not a fresh physical report.
         return True
     last = getattr(state, "last_reported", None) or state.last_updated
     return dt_util.utcnow() - last > timedelta(minutes=max_age_minutes)

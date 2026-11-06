@@ -3356,7 +3356,23 @@ class EquipmentRuntime:
                              round(settle) if settle is not None else None
                          ), command_attempts=attempts)
             return
-        from .equipment_pid_safety import command_allowed, condition, suppress_obsolete_pending
+        from .equipment_pid_safety import (
+            command_allowed, command_profile_reason, condition, reducing_command,
+            stopping_command, suppress_obsolete_pending,
+        )
+        context = pending.get("retry_context")
+        cap = model.capabilities(self.manager, spec)
+        if isinstance(context, dict) and cap is not None:
+            why = command_profile_reason(
+                self, spec, cap, pending.get("service"), pending.get("data", {}),
+                mode=context.get("mode"), automatic=context.get("automatic") is True,
+                stop_target=pending.get("stop_target") is True,
+            )
+            if why:
+                # A restored/missing tracker is a temporary evidence hold,
+                # not a new retry attempt or a permanent manual pause.
+                self._status(spec, why, command_attempts=attempts)
+                return
         if await suppress_obsolete_pending(self, spec, pending):
             return
         from .equipment_setpoint_sequence import enabled, retry_settings_match, startup_ready
@@ -3439,24 +3455,30 @@ class EquipmentRuntime:
             await self._pause(spec, "native_retry_authority_or_state_changed")
             return
         automatic = context.get("automatic") is True
-        def changed_sleep_policy(current_cfg, current_plan):
+        def changed_automatic_policy(current_cfg, current_plan):
             if (current_cfg.get("control_mode") not in ("automatic", "pid")
                     or record.get("native_setpoint_stop")):
                 return False
             previous_profile = context.get("profile")
             current_profile = model.profile_name(current_cfg, current_plan)
-            return ((automatic and previous_profile != current_profile and
-                     "sleep" in (previous_profile, current_profile)) or
+            changed_profile = (
+                automatic and previous_profile != current_profile
+                and not pending.get("stop_target") and not pending.get("stop_finish")
+                and not stopping_command(pending.get("service"), pending.get("data", {}))
+                and not reducing_command(self, cap, pending.get("service"),
+                                         pending.get("data", {}), context.get("mode"))
+            )
+            return (changed_profile or
                     (automatic and context.get("mode") != "off" and
                      current_plan.get("sleeping") is True and
                      self._stop_policy_verified(spec, cap, "sleep")) or
                     (context.get("policy_stop") == "sleep" and
                      not self._stop_policy_verified(spec, cap, "sleep")))
 
-        if changed_sleep_policy(cfg, plan):
-            # An alarm or household change is not a manual intervention. The
+        if changed_automatic_policy(cfg, plan):
+            # A Home/Away, alarm or household change is not a manual intervention. The
             # old dispatch remains uncertain: observe it through the normal
-            # automatic verifier without replaying a now-obsolete sleep command.
+            # automatic verifier without replaying a now-obsolete profile command.
             record["automatic_continue_requested"] = {
                 "at": now, "method": cfg["control_mode"],
                 "awaiting_physical_verification": True,
@@ -3465,13 +3487,14 @@ class EquipmentRuntime:
                          reason="automatic_recovery_requested")
             await self._save()
             return
-        if automatic and context.get("profile") != model.profile_name(cfg, plan):
-            await self._pause(spec, "native_retry_authority_or_state_changed")
-            return
         before_on_epoch = getattr(self, "_native_on_epoch", {}).get(entity)
         mode = context.get("mode")
         shutdown = context.get("shutdown") is True
         policy_stop = context.get("policy_stop")
+        active_command = automatic and not (
+            pending.get("stop_target") or pending.get("stop_finish")
+            or stopping_command(pending.get("service"), pending.get("data", {}))
+        )
         if (not isinstance(mode, str)
                 or (policy_stop is not None
                     and not self._stop_policy_verified(spec, cap, policy_stop))
@@ -3484,18 +3507,20 @@ class EquipmentRuntime:
                     and not model.permission(self.manager, spec, cap)[1])):
             await self._pause(spec, "native_retry_policy_changed")
             return
-        if automatic and mode != "off":
+        if active_command:
             from .equipment_power_switch import approved_demand
-            qualified = (command_allowed(
+            current_target = condition(self, spec, cap, mode, include_automatic=True)
+            qualified = command_allowed(
                 self, spec, cap, pending.get("service"), pending.get("data", {}),
                 mode=mode, automatic=True, power=pending.get("power") is True,
-            ) if cfg.get("control_mode") == "pid"
-                and condition(self, spec, cap, mode) is not None else
-                approved_demand(self, spec, cfg, cap) is True)
+            ) and (current_target is not None
+                   or reducing_command(self, cap, pending.get("service"),
+                                       pending.get("data", {}), mode)
+                   or approved_demand(self, spec, cfg, cap) is True)
             if not qualified:
-                if (cfg.get("control_mode") == "pid"
-                        and condition(self, spec, cap, mode) is not None):
-                    self._status(spec, "control_measurement_missing_or_stale")
+                if current_target is not None:
+                    self._status(spec, "within_target_band" if current_target["needed"] is False
+                                 else "control_measurement_missing_or_stale")
                     return
                 await self._pause(spec, "native_retry_demand_changed")
                 return
@@ -3555,7 +3580,9 @@ class EquipmentRuntime:
                         or relay_now.get("owned") is not context.get("upstream_owned")):
                     return False
             latest_plan = model.plan_for(self.manager, spec)
-            if automatic and model.profile_name(latest, latest_plan) != context["profile"]:
+            if (active_command
+                    and not reducing_command(self, refreshed, pending["service"], pending["data"], mode)
+                    and model.profile_name(latest, latest_plan) != context["profile"]):
                 return False
             if policy_stop is not None and not self._stop_policy_verified(
                 spec, refreshed, policy_stop
@@ -3571,15 +3598,14 @@ class EquipmentRuntime:
                 self.manager, spec, refreshed
             )[1]:
                 return False
-            if automatic and mode != "off":
+            if active_command:
                 from .equipment_power_switch import approved_demand
-                if (latest.get("control_mode") == "pid"
-                        and condition(self, spec, refreshed, mode) is not None):
-                    return command_allowed(
-                        self, spec, refreshed, pending["service"], pending["data"],
-                        mode=mode, automatic=True, power=pending.get("power") is True,
-                    )
-                return approved_demand(self, spec, latest, refreshed) is True
+                return command_allowed(
+                    self, spec, refreshed, pending["service"], pending["data"],
+                    mode=mode, automatic=True, power=pending.get("power") is True,
+                ) and (condition(self, spec, refreshed, mode, include_automatic=True) is not None
+                       or reducing_command(self, refreshed, pending["service"], pending["data"], mode)
+                       or approved_demand(self, spec, latest, refreshed) is True)
             return True
 
         try:
@@ -3602,11 +3628,19 @@ class EquipmentRuntime:
                     if await suppress_obsolete_pending(self, spec, pending):
                         return
                     latest = model.settings(self.manager, spec)
-                    if changed_sleep_policy(latest, model.plan_for(self.manager, spec)):
+                    if changed_automatic_policy(latest, model.plan_for(self.manager, spec)):
                         # The original journal was restored above. Re-evaluate
                         # its authority and reconcile the old feedback next tick.
                         return
-                    if (latest.get("control_mode") == "pid"
+                    why = command_profile_reason(
+                        self, spec, cap, service, pending["data"], mode=mode,
+                        automatic=automatic,
+                        stop_target=pending.get("stop_target") is True,
+                    )
+                    if why:
+                        self._status(spec, why, command_attempts=pending["attempts"])
+                        return
+                    if (condition(self, spec, cap, mode, include_automatic=True) is not None
                             and not command_allowed(
                                 self, spec, cap, service, pending["data"],
                                 mode=mode, automatic=automatic,
@@ -3698,16 +3732,22 @@ class EquipmentRuntime:
                               window_stop=(power or stop_target) and action_mode == "off"):
             self._status(spec, why)
             return False
-        from .equipment_pid_safety import command_allowed, condition, remember_cutoff
+        from .equipment_pid_safety import (
+            command_allowed, command_profile_reason, condition, remember_cutoff,
+        )
         if not command_allowed(
             self, spec, cap, service, data, mode=action_mode,
-            automatic=automatic, power=power,
+            automatic=automatic, power=power, stop_target=stop_target,
         ):
-            current_target = condition(self, spec, cap, action_mode)
-            await remember_cutoff(self, spec, current_target)
-            self._status(spec, "within_target_band" if current_target
+            current_target = condition(self, spec, cap, action_mode, include_automatic=True)
+            await remember_cutoff(self, spec, condition(self, spec, cap, action_mode))
+            why = command_profile_reason(
+                self, spec, cap, service, data, mode=action_mode, automatic=automatic,
+                stop_target=stop_target,
+            )
+            self._status(spec, why or ("within_target_band" if current_target
                          and current_target["needed"] is False
-                         else "control_measurement_missing_or_stale")
+                         else "control_measurement_missing_or_stale"))
             return False
         if entity not in spec.source_entities or entity_area(self.hass, entity) != spec.area_id:
             return False
@@ -3885,7 +3925,7 @@ class EquipmentRuntime:
                 )
             if not command_allowed(
                 self, spec, cap, service, data, mode=action_mode,
-                automatic=automatic, power=power,
+                automatic=automatic, power=power, stop_target=stop_target,
             ):
                 return False
             latest = model.settings(self.manager, spec)
@@ -3906,7 +3946,11 @@ class EquipmentRuntime:
             await self._save()
             if automatic and action_mode != "off":
                 await remember_cutoff(self, spec, condition(self, spec, cap, action_mode))
-            self._status(spec, "authority_or_evidence_changed_before_dispatch")
+            why = command_profile_reason(
+                self, spec, cap, service, data, mode=action_mode, automatic=automatic,
+                stop_target=stop_target,
+            )
+            self._status(spec, why or "authority_or_evidence_changed_before_dispatch")
             return False
 
         if not current():

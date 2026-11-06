@@ -255,6 +255,16 @@ becomes Away and overrides room activity. Automatic profile selection uses Away
 unless an explicit preset is selected. Unknown or unavailable evidence does not
 prove that everybody is away.
 
+While configured home-presence sources are unresolved, Automatic/PID cannot
+start an appliance or increase its output using a fallback Home target. HEM
+rechecks the live presence and target before a command, including after a
+restart. A valid explicit preset or Manual selection keeps its own control
+semantics. Physical OFF protections and settings editing remain available.
+
+Sensor values marked as restored by Home Assistant are ignored until the
+sensor publishes a real reading. A restored old temperature cannot lower a
+room's current average and create heating demand.
+
 Without direct home sources, HEM can derive home presence from room evidence.
 The Home occupancy away-delay setting applies to that room-derived absence.
 It is separate from the announcement repeat interval, even when both show

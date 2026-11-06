@@ -118,6 +118,16 @@ class Model:
         return 600, 600, 7200
 
 
+presence_source = ast.parse((ROOT / "equipment_model.py").read_text(encoding="utf-8"))
+presence_scope = {"PRESETS": ast.literal_eval(next(
+    node.value for node in presence_source.body if isinstance(node, ast.Assign)
+    and any(isinstance(target, ast.Name) and target.id == "PRESETS" for target in node.targets)
+))}
+Model.automatic_profile_reason = staticmethod(extract(
+    "equipment_model.py", ("automatic_profile_reason",), presence_scope,
+)[0])
+
+
 spec = NS(identifier="sleep-comfee", area_id="schlafzimmer",
           source_device_id="comfee", source_entities=("climate.comfee",))
 IDENTITY = {"entity": "switch.strip", "registry_id": "real-switch-id",
@@ -148,7 +158,7 @@ class Simulator:
                 "power_switch_entity": "switch.strip",
                 "power_switch_cooldown_seconds": 600,
             }}},
-            plan={"sleeping": sleeping, "window_safe": True},
+            plan={"away": "home", "sleeping": sleeping, "window_safe": True},
             sleep_behavior=sleep_behavior,
             authorized=authorized, target=target,
         )

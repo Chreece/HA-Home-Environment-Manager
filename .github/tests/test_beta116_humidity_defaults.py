@@ -43,6 +43,11 @@ module("homeassistant.helpers", __path__=[])
 module("homeassistant.helpers.entity", EntityCategory=N(CONFIG="config"))
 module("homeassistant.helpers.entity_registry", async_get=lambda hass: hass.registry)
 module("homeassistant.helpers.dispatcher", async_dispatcher_connect=lambda *args: lambda: None)
+# Registry transport for the real occupancy policy reached by live plan_for.
+# This RH-only fixture installs one climate endpoint and no presence sources.
+module(PKG + ".discovery",
+       entity_area=lambda hass, entity: AREA if entity == ENTITY else None,
+       _device_class=lambda hass, state: state.attributes.get("device_class", ""))
 # Unrelated cover-control entities are not instantiated by this regression.
 module(PKG + ".shade_cooling", SHADE_NUMBERS={})
 model = importlib.import_module(PKG + ".equipment_model")
@@ -77,7 +82,7 @@ device_form = method(
 class Fixture:
     def __init__(self, room=None, *, config=None, maximum=80):
         self.spec = model.ManagedDevice("controller", AREA, "Humidity", "physical", (ENTITY,))
-        room = {"selected_devices": [ENTITY], **deepcopy(room or {})}
+        room = {"selected_devices": [ENTITY], "occupancy_sensors": [], **deepcopy(room or {})}
         self.entry = N(entry_id="entry", data={"areas": [AREA], "climate_rooms": {AREA: room},
                                               "unrelated": {"keep": True}}, options={})
         if config:

@@ -1,4 +1,4 @@
-"""Fresh, directional target limits for managed PID output.
+"""Fresh, directional target limits for managed automatic output.
 
 This is a limit on requested effort, never a new physical power permission.
 Native OFF still passes the existing ownership, dwell and defrost checks.
@@ -13,14 +13,17 @@ from .pid_math import finite, quantize_target, target_to_unit
 
 
 def condition(runtime: Any, spec: Any, cap: Any,
-              mode: str | None = None) -> dict | None:
+              mode: str | None = None, *,
+              include_automatic: bool = False) -> dict | None:
     """Read the exact command direction against the current room measurement.
 
-None means this is not a supported PID direction. A recognized direction
-with missing feedback has needed=None, which cannot authorize active output.
+None means this is not a supported direction. The default remains the PID
+cutoff; command checks also opt into Automatic's native-state hysteresis.
+Missing feedback has needed=None, which cannot authorize active output.
 """
     cfg = model.settings(runtime.manager, spec)
-    if cfg.get("control_mode") != "pid":
+    method = cfg.get("control_mode")
+    if method != "pid" and not (include_automatic and method == "automatic"):
         return None
     native = runtime.hass.states.get(cap.primary)
     plan = model.plan_for(runtime.manager, spec)
@@ -37,7 +40,7 @@ with missing feedback has needed=None, which cannot authorize active output.
             mode = automatic_mode(
                 cap, native, measured, targets,
                 dedicated_dry=room.get("dry_climate_entity") == cap.primary,
-                pid=True,
+                pid=method == "pid",
             )
         if mode is None:
             single = set(cap.modes) - {"off"}
@@ -51,24 +54,103 @@ with missing feedback has needed=None, which cannot authorize active output.
         metric, increasing = "temperature", mode == "heat"
         target = finite(targets.get(mode), -60, 85)
         value = finite(measured.get(metric), -60, 85)
+    elif method == "automatic" and cap.domain == "climate" and mode in ("heat_cool", "auto"):
+        metric = "temperature"
+        value = finite(measured.get(metric), -60, 85)
+        heat, cool = (finite(targets.get(key), -60, 85) for key in ("heat", "cool"))
+        increasing = value is not None and heat is not None and value < heat
+        target = (heat if increasing else cool) if None not in (heat, cool) and heat < cool else None
     else:
         return None
-    needed = None if target is None or value is None else (
+    needed = None if (target is None or value is None
+                      or model.automatic_profile_reason(cfg, plan)) else (
         value < target if increasing else value > target
     )
+    if method == "automatic" and needed is not None:
+        # Match tick's hysteresis at the LAST dispatch boundary. An OFF
+        # device needs a full start gap; running output may remain inside
+        # the opposite edge. Cached tick measurements cannot authorize ON.
+        running = bool(native is not None and (
+            native.state == mode if cap.domain == "climate" else
+            finite(native.state, .000001, 100) is not None
+            if cap.domain in ("number", "input_number") else native.state == "on"
+        ))
+        band = .3 if metric == "temperature" else 2
+        error = target - value if increasing else value - target
+        needed = (None if native is None or native.state in ("unknown", "unavailable")
+                  else error > (-band if running else band))
     return {"mode": mode, "metric": metric, "measured": value,
             "target": target, "increasing": increasing, "needed": needed}
 
 
+def reducing_command(runtime: Any, cap: Any, service: str,
+                     data: dict, mode: str) -> bool:
+    """Recognize a smaller physical request without relying on a room profile."""
+    entity = (cap.fan_entity or cap.primary) if service == "set_percentage" else cap.primary
+    native = runtime.hass.states.get(entity)
+    if native is None or native.state in ("off", "unknown", "unavailable"):
+        return False
+    attrs = native.attributes
+    if service == "set_value" and cap.domain in ("number", "input_number"):
+        requested, actual = finite(data.get("value"), 0, 100), finite(native.state, 0, 100)
+        increasing = True
+    elif service == "set_percentage":
+        requested, actual = finite(data.get("percentage"), 0, 100), finite(attrs.get("percentage"), 0, 100)
+        increasing = True
+    elif (service == "set_temperature" and set(data) == {"temperature"}
+          and mode in ("heat", "cool") and native.state == mode):
+        requested = finite(data.get("temperature"), -100, 250)
+        actual = finite(attrs.get("temperature"), -100, 250)
+        increasing = mode == "heat"
+    elif service == "set_humidity" and (cap.domain == "humidifier" or mode == native.state == "dry"):
+        requested, actual = finite(data.get("humidity"), 0, 100), finite(attrs.get("humidity"), 0, 100)
+        increasing = bool(cap.humidifying)
+    else:
+        return False
+    return bool(requested is not None and actual is not None and (
+        requested < actual if increasing else requested > actual
+    ))
+
+
+def stopping_command(service: str, data: dict) -> bool:
+    """Recognize an actual OFF payload, not the output's current mode."""
+    return bool(service == "turn_off"
+                or service == "set_hvac_mode" and data.get("hvac_mode") == "off"
+                or service == "set_percentage" and data.get("percentage") == 0
+                or service == "set_value" and data.get("value") == 0)
+
+
+def command_profile_reason(runtime: Any, spec: Any, cap: Any, service: str,
+                           data: dict, *, mode: str, automatic: bool,
+                           stop_target: bool = False) -> str | None:
+    """Unknown Home/Away cannot authorize an implicit automatic power increase."""
+    if not automatic or stop_target or stopping_command(service, data):
+        return None
+    reason = model.automatic_profile_reason(
+        model.settings(runtime.manager, spec), model.plan_for(runtime.manager, spec),
+    )
+    return reason if reason and not reducing_command(runtime, cap, service, data, mode) else None
+
+
 def command_allowed(runtime: Any, spec: Any, cap: Any, service: str,
                     data: dict, *, mode: str, automatic: bool,
-                    power: bool = False) -> bool:
+                    power: bool = False, stop_target: bool = False) -> bool:
     """Do not start, boost or repeat a satisfied direction, including at yields."""
-    if (not automatic or mode == "off" or service == "turn_off"
-            or service == "set_value" and data.get("value") == 0):
+    if not automatic or stop_target or stopping_command(service, data):
         return True
-    current = condition(runtime, spec, cap, mode)
+    if command_profile_reason(
+        runtime, spec, cap, service, data, mode=mode, automatic=automatic,
+    ):
+        return False
+    if (model.automatic_profile_reason(model.settings(runtime.manager, spec),
+                                       model.plan_for(runtime.manager, spec))
+            and reducing_command(runtime, cap, service, data, mode)):
+        return True
+    current = condition(runtime, spec, cap, mode, include_automatic=True)
     if current is None or current["needed"] is True:
+        return True
+    if (model.settings(runtime.manager, spec).get("control_mode") == "automatic"
+            and reducing_command(runtime, cap, service, data, mode)):
         return True
     if current["needed"] is None or power:
         return False

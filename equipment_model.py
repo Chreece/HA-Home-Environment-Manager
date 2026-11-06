@@ -669,27 +669,33 @@ def control_modes(manager: Any, spec: ManagedDevice) -> tuple[str, ...]:
 
 
 def plan_for(manager: Any, spec: ManagedDevice) -> dict:
+    from collections.abc import Mapping
+
     environment = getattr(getattr(manager, "plan", None), "environment", {}) or {}
     item = environment.get(spec.area_id, {})
     plan = item.get("climate_plan", {}) if isinstance(item, dict) else {}
     cached = isinstance(plan, dict) and bool(plan) and plan.get("status") != "disabled"
     cfg = settings(manager, spec)
-    shared = plan.get("global_presence") if cached else None
-    if not isinstance(shared, dict):
-        shared = manager.settings.get("occupancy_global", {})
-        continuity = getattr(manager, "presence_continuity", None)
-        if continuity is not None:
-            shared = continuity.context(shared)
-    shared = shared if isinstance(shared, dict) else {}
+    current = manager.settings
+    # Current configuration owns presence, including an intentional empty
+    # selection. A cached room plan can predate a tracker change or HA restart.
+    # Older callers without the configuration key may supply its context in
+    # the plan, but its states and persisted absence still need live checks.
+    shared = (current["occupancy_global"] if "occupancy_global" in current
+              else plan.get("global_presence") if cached else {})
+    shared = dict(shared) if isinstance(shared, Mapping) else {}
+    continuity = getattr(manager, "presence_continuity", None)
+    if continuity is not None:
+        shared = continuity.context(shared)
     inherit = (cfg.get("sleep_when_everyone_asleep") is True
                and cfg.get("control_mode") in ("automatic", "pid"))
-    if cached and not (inherit or shared.get("wake_alarm_entity")
-                       or shared.get("sleep_rooms_entity")):
-        return plan
+    # Home/Away and room presence must be refreshed even without optional
+    # sleep/alarm features. Otherwise a live Away gate can approve operating
+    # an always-allowed heater using an old, higher Home/Comfort target.
     # A native-only controller can run before a room plan exists. Give that
     # fallback the same explicit selections and numeric freshness limits as
     # the manager's room plan, including a deliberately empty sensor list.
-    rooms = manager.settings.get("climate_rooms", {})
+    rooms = current.get("climate_rooms", {})
     rooms = rooms if isinstance(rooms, dict) else {}
     shared = {**shared,
               "_room_occupancy_selections": {
@@ -708,7 +714,7 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
     room = room_config(manager, spec)
     known = set(plan.get("known_presence_areas", ())) if cached else set()
     if not known:
-        known = ({spec.area_id} | set(manager.settings.get("areas", ()))
+        known = ({spec.area_id} | set(current.get("areas", ()))
                  | set(rooms))
     home, home_evidence, trackers = home_presence(
         manager.hass, shared, room.get("away_entities", []))
@@ -748,6 +754,24 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
             "window_safe": (chosen_contacts is None or len(contacts) == len(chosen_contacts))
                            and all(state.state == "off" for state in contacts),
             "window_contacts": [state.entity_id for state in contacts]}
+
+
+def automatic_profile_reason(config: dict, plan: dict) -> str | None:
+    """Require verified home evidence before using an inferred active target.
+
+    A restored or unavailable home source is neither Home nor Away. The
+    presentation fallback in profile_name must not authorize a new output or
+    boost until that source recovers. Explicit presets and Manual control
+    keep their own authority; their other live policies still apply.
+    """
+    if config.get("control_mode") not in ("automatic", "pid"):
+        return None
+    requested = config.get("preset", "none")
+    if requested != "none" and requested in PRESETS:
+        return None
+    if plan.get("away") not in ("home", "away"):
+        return "house_occupancy_unknown"
+    return None
 
 
 def profile_name(config: dict, plan: dict) -> str:

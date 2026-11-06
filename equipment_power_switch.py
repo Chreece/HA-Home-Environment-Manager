@@ -602,6 +602,10 @@ def approved_demand(runtime: Any, spec: Any, cfg: dict,
         if window["blocked"]:
             return None if window["status"] == "window_state_unknown" else False
     plan = model.plan_for(runtime.manager, spec)
+    if model.automatic_profile_reason(cfg, plan):
+        # Startup/restored presence is not a verified Home target. Unknown
+        # demand may neither energize the supply nor prove safe idle for OFF.
+        return None
     live = effective_device(runtime.manager, spec, cap.primary)
     room = model.room_config(runtime.manager, spec)
     if method != "off":
@@ -729,8 +733,10 @@ async def _send(runtime: Any, spec: Any, record: dict, identity: dict,
         return False
     try:
         async with runtime._commands:
+            cfg = model.settings(runtime.manager, spec)
             if (not runtime._active or not runtime._ready
                     or cfg.get("power_switch_entity") != entity
+                    or runtime.manager.settings != before_settings
                     or permitted_supply(runtime.manager, spec, entity, identity) is None
                     or runtime.hass.states.get(entity) is not observed
                     or not safe_to_dispatch(cfg)):
