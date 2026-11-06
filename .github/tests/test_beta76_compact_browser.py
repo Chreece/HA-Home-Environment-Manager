@@ -66,13 +66,13 @@ with sync_playwright() as p:
     assert not errors,errors
     assert page.locator('.hem-compact-climate76').count()==1
     assert page.locator('.hem-compact-device76').count()==1
-    assert page.locator('.hem-room-readings66 b').count()==2
-    assert page.locator('.hem-room-readings66').is_visible()
+    assert page.locator('.hem-room-readings66 b').count()==0
+    assert page.locator('.hem-room-readings66').is_hidden()
+    assert page.locator('.hem-room-glance87 .hem-room-reading87').count()==2
     assert page.locator('.hem-device-data>div').count()==1  # native off state only; no fabricated readings
     assert page.locator('.hem-device-state76 .hem-status-pill76').count()>=3
     assert page.locator('.hem-context-row76 .hem-status-pill76').count()>=3
-    assert page.locator('.hem-room-readings66').evaluate(
-        '(e)=>getComputedStyle(e).gridTemplateColumns.split(" ").length')==2
+    assert page.locator('.hem-room-glance87').is_visible()
     # Tiles: fixed compact density with no hidden data or blank spacer rows.
     metrics=page.locator('.hem-compact-device76 .hem-device-data>div')
     sizes=[metrics.nth(i).bounding_box() for i in range(metrics.count())]
@@ -117,7 +117,7 @@ with sync_playwright() as p:
         result=page.evaluate('''lang=>{
           card._hass={...card._hass,language:lang};
           draw();
-          return {room:card.shadowRoot.querySelectorAll('.hem-room-readings66 b').length,
+          return {room:card.shadowRoot.querySelectorAll('.hem-room-glance87 .hem-room-reading87').length,
                   device:card.shadowRoot.querySelectorAll('.hem-device-data>div').length,
                   info:card.shadowRoot.querySelector('[data-detail-id="room-info:bedroom"] summary').getAttribute('aria-label')};
         }''',lang)
@@ -127,7 +127,8 @@ with sync_playwright() as p:
         page.set_viewport_size({'width':width,'height':1000})
         page.evaluate('draw()')
         assert page.evaluate('document.documentElement.scrollWidth')<=width,width
-        assert page.locator('.hem-room-readings66 b').count()==2
+        assert page.locator('.hem-room-readings66 b').count()==0
+        assert page.locator('.hem-room-glance87 .hem-room-reading87').count()==2
         assert page.locator('[data-window-policy-switch]').count()==1
         if width==320:
             assert page.locator('.hem-compact-device76 .hem-device-data').evaluate(

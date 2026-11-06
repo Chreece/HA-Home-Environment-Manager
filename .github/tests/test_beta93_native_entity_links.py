@@ -45,20 +45,25 @@ with sync_playwright() as playwright:
        body{background:#111;color:#eee;margin:0;}
        </style></head><body></body></html>""")
     page.add_script_tag(path=str(ROOT/'frontend/air-quality-advisor-card.js'))
-    page.evaluate("""({states})=>{
+    page.evaluate("""({states,entities})=>{
       window.calls=[];
       window.info=[];
+      window.routes=[];
+      window.history.pushState=(_state,_title,path)=>routes.push(path);
       window.card=document.createElement('home-environment-manager-card');
       document.body.append(card);
       card.addEventListener('hass-more-info',event=>info.push(event.detail.entityId));
-      card._hass={language:'el',states,localize:()=>undefined,
+      card._hass={language:'el',states,entities,localize:()=>undefined,
         callService:(...args)=>{
           calls.push(args);
           throw Error('Test must not call any device service');
         }};
       card._config={entity:'sensor.hem'};
       card._renderContent(true);
-    }""",{'states':states})
+    }""",{'states':states,'entities':{
+      hem:{'device_id':'hem-controller-device'},native:{'device_id':'physical-device'},
+      fan:{'device_id':'physical-fan-device'},
+    }})
 
     room=page.locator('[data-room-fold87="room0"]')
     room.locator(':scope > summary').click()
@@ -71,10 +76,11 @@ with sync_playwright() as playwright:
     assert page.evaluate('info')==[hem],page.evaluate('info')
     assert device.get_attribute('open') is None,'HEM title click must not expand'
 
-    icon=device.locator(':scope > summary button[data-open-native89]')
+    icon=device.locator(':scope > summary button[data-open-controller-device122]')
     assert icon.count()==1
     icon.click()
-    assert page.evaluate('info')[-1]==native
+    assert page.evaluate('routes')[-1]=='/config/devices/device/hem-controller-device'
+    assert page.evaluate('info')==[hem]
     assert device.get_attribute('open') is None
 
     device.locator(':scope > summary').evaluate('(node)=>node.click()')
@@ -91,6 +97,10 @@ with sync_playwright() as playwright:
     assert 'Controller' not in link.inner_text()
     assert section.locator('button[data-open-climate]').count()==0
     assert native in link.get_attribute('title')
+    source_icon=section.locator('button[data-open-physical-device122]')
+    assert source_icon.get_attribute('data-open-physical-device122')==native
+    source_icon.click()
+    assert page.evaluate('routes')[-1]=='/config/devices/device/physical-device'
     link.click()
     assert page.evaluate('info')[-1]==native,page.evaluate('info')
     assert device.get_attribute('open') is not None

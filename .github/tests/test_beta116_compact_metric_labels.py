@@ -161,7 +161,7 @@ with sync_playwright() as playwright:
       window.card=document.createElement('home-environment-manager-card');
       document.getElementById('card-frame').append(card);
       card.addEventListener('hass-more-info',event=>info.push(event.detail.entityId));
-      card._hass={language:'de',states,localize:()=>undefined,
+      card._hass={language:'de',states,localize:()=>undefined,callWS:async()=>({}),
         callService:(...args)=>{calls.push(args);return Promise.resolve()}};
       card._config={entity:'sensor.hem'};card._renderContent(true);
     }""", {"states": states})
@@ -205,6 +205,9 @@ with sync_playwright() as playwright:
     page.evaluate("document.getElementById('card-frame').style.width='100%'")
     guest = page.locator('[data-room-fold87="room1"]')
     trigger('room1', 'voc_parts', ['sensor.room1_voc_parts']).click()
+    assert page.evaluate('info') == []
+    assert page.evaluate('card._averageDialog105.entity122') == 'sensor.room1_voc_parts'
+    page.locator('.hem-avg-dialog105 [data-open-entity122="sensor.room1_voc_parts"]').click()
     assert page.evaluate('info') == ['sensor.room1_voc_parts']
     assert guest.get_attribute('open') is None, "metric click expanded room"
     assert page.locator('.hem-avg-dialog105').count() == 0
@@ -231,8 +234,10 @@ with sync_playwright() as playwright:
     assert long_name in popup.text_content(), "average details lost full native name"
     assert guest.get_attribute('open') is None
     popup.locator('[data-hem-source105="sensor.room1_voc_parts"]').click()
+    assert page.evaluate('info') == ['sensor.room1_voc_parts']
+    assert page.evaluate('card._averageDialog105.entity122') == 'sensor.room1_voc_parts'
+    popup.locator('[data-open-entity122="sensor.room1_voc_parts"]').click()
     assert page.evaluate('info') == ['sensor.room1_voc_parts', 'sensor.room1_voc_parts']
-    popup.locator('[data-close-avg105]').click()
     assert popup.count() == 0
     assert page.evaluate('calls') == [], "read-only metric interaction sent a service call"
     assert not errors, errors

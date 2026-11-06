@@ -42,7 +42,9 @@ restored=mod.EnvironmentHistory.restore(old,now=instant+900)
 assert restored.average_trend('room','humidity',values['humidity']['source_ids'])==trend
 assert restored.add_average('room','humidity',['sensor.rh_a','sensor.rh_c'],63.,now=instant+1800)
 assert len(restored.average_trend('room','humidity',['sensor.rh_a','sensor.rh_c']))==1
-assert restored.average_trend('room','humidity',values['humidity']['source_ids'])==[]
+# Beta122 retains other exact contributor sets; values from a changed set
+# must never replace or be mixed into the former set's measured history.
+assert restored.average_trend('room','humidity',values['humidity']['source_ids'])==trend
 assert not restored.add_average('room','humidity',['sensor.rh_a'],58.,now=instant+2700)
 assert len(restored.average_trend('room','humidity',['sensor.rh_a','sensor.rh_c']))==1
 assert not restored.add_average('room','humidity',['sensor.bad','sensor.bad'],58.,now=instant+2700)

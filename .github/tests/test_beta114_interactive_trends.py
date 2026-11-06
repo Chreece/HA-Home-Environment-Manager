@@ -160,7 +160,7 @@ def browser_checks(states):
           document.body.append(card);
           card.addEventListener('hass-more-info',e=>info.push(e.detail.entityId));
           card._config={entity:'sensor.hem'};
-          card._hass={language:'en',config:{time_zone:'Europe/Berlin'},states,
+          card._hass={language:'en',config:{time_zone:'Europe/Berlin'},states,callWS:async()=>({}),
             localize:()=>undefined,callService:(...args)=>{calls.push(args);return Promise.resolve()}};
           card._renderContent(true);
         }""", states)
@@ -269,8 +269,14 @@ def browser_checks(states):
         chart.press("ArrowRight")
         assert popup.locator("[data-trend-value114]").get_attribute("data-sample-time114")
         popup.locator('[data-hem-source105="sensor.temp_a"]').click()
+        assert page.evaluate("info") == []
+        assert page.evaluate("card._averageDialog105.entity122") == "sensor.temp_a"
+        popup.locator('[data-open-entity122="sensor.temp_a"]').click()
         assert page.evaluate("info") == ["sensor.temp_a"]
+        assert popup.count() == 0
         assert page.evaluate("calls") == []
+        trigger.click()
+        popup.wait_for(state="visible")
 
         screenshot_dir = os.environ.get("HEM_TEST_SCREENSHOT_DIR")
         if screenshot_dir:

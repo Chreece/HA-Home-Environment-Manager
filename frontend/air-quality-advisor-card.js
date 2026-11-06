@@ -1436,6 +1436,7 @@
           state.attributes.physical_hvac_mode,
           state.attributes.upstream_power_switch,
           state.attributes.configuration_help,
+          this._hass?.entities?.[id]?.device_id,
         ]);
       // Activity color must update when a native device changes without a
       // corresponding HEM facade state change.
@@ -1447,7 +1448,7 @@
           state?.attributes?.device_class,state?.attributes?.percentage,
           state?.attributes?.area_id,
           // A native integration rename must immediately update its heading.
-          state?.attributes?.friendly_name];
+          state?.attributes?.friendly_name,this._hass?.entities?.[id]?.device_id];
       });
       return JSON.stringify([rows,native]);
     }
@@ -1841,18 +1842,20 @@
           fan:'mdi:fan',switch:'mdi:power-plug-outline',
           number:'mdi:valve',input_number:'mdi:valve'
         })[nativeEndpoint?.entityId?.split('.')[0]] || 'mdi:devices';
-        const nativeHeader=nativeEndpoint?.state
+        const nativeHeader='<div class="hem-physical-heading122">'+
+          this._devicePageButton122('physical',room.area_id,entry.entityId,
+            nativeEndpoint?.entityId,nativeIcon,nativeName)+
+          (nativeEndpoint?.state
           ? '<button type="button" class="climate-entity-link hem-physical-title93" '+
             'data-open-physical93="'+escape(nativeEndpoint.entityId)+'" '+
             'data-hem-controller93="'+escape(entry.entityId)+'" '+
             'data-controller-area="'+escape(room.area_id)+'" '+
             'title="'+escape(nativeEndpoint.name+' · '+nativeEndpoint.entityId)+'" '+
             'aria-label="'+escape(l.selectedDevice+': '+nativeEndpoint.name)+'">'+
-            this._icon(nativeIcon)+' <strong>'+escape(nativeName)+'</strong> '+
-            this._icon('mdi:open-in-new')+'</button>'
+            '<strong>'+escape(nativeName)+'</strong></button>'
           : '<span class="climate-entity-link hem-physical-title93 hem-physical-title93-unavailable" '+
             'title="'+escape(nativeEndpoint?.entityId || l.selectedDevice)+'">'+
-            this._icon(nativeIcon)+' <strong>'+escape(nativeName)+'</strong></span>';
+            '<strong>'+escape(nativeName)+'</strong></span>')+'</div>';
         const method=entry.methodId && options.length
           ? '<label class="managed-method-label"><span>'+escape(l.method)+'</span>'+
           '<select data-climate-method="'+escape(entry.methodId)+
@@ -1903,7 +1906,6 @@
             'aria-checked="'+(entry.errorAnnounce.state==='on')+'" '+
             'aria-label="'+escape(errorLabels[0])+'" title="'+escape(errorLabels[0])+'">'+
             this._icon(entry.errorAnnounce.state==='on'?'mdi:bell-ring-outline':'mdi:bell-off-outline')+
-            '<span>'+escape(errorLabels[0])+'</span>'+
             '<b>'+(entry.errorAnnounce.state==='on'?'ON':'OFF')+'</b></button></div>'
           : '';
         const faultStatus=deviceFault?.status;
@@ -2160,7 +2162,7 @@
         sections+'</div>';
     }
 
-    _climatePanel(room) {
+    _climatePanel(room, overview122) {
       const p=room?.environment?.climate_plan || {};
       const managed=this._managedControllers(room.area_id);
       if ((!p.status || p.status==='disabled') && !managed.length) return '';
@@ -2268,7 +2270,7 @@
       const reason=(p.reason==='secondary_thermal_driver_pending' && active)
         ? '' : p.reason==='environment_only_no_hvac' ? l.environmentOnly
           : (p.reason ? this._controllerStatusLabel(p.reason) : '');
-      const measuredTemp=typeof p.temperature_c==='number'
+      const measuredTemp=Number.isFinite(overview122?.temperature)?'':typeof p.temperature_c==='number'
         ? '<span>'+escape(l.roomTemperature)+': <b>'+
           escape(this._format(p.temperature_c))+' °C</b></span>'
         : '<span>'+escape(l.temperatureMissing)+'</span>';
@@ -2286,7 +2288,8 @@
           '<span>'+escape(l.target)+': <b>'+escape(target)+'</b></span>'+
           '<span>'+escape(l.mode)+': <b>'+escape(p.mode||'-')+'</b></span>')+
         '<span>'+escape(l[p.profile] || p.profile || 'home')+'</span>'+sources+'</div>'+
-        '<div class="hem-room-readings66">'+measuredTemp+this._roomHumidity66(room)+'</div>'+sourceDiagnostic+
+        '<div class="hem-room-readings66">'+measuredTemp+
+        (Number.isFinite(overview122?.humidity)?'':this._roomHumidity66(room))+'</div>'+sourceDiagnostic+
         controllerDetails+priorityDetail+heldDetails+
         humidityDetails+airDetails+dryAdvice+windowAdvice+
         (blocked?'<small>'+escape(l.holding)+'</small>':'')+
@@ -2386,7 +2389,7 @@
         '<div class="shade-sources">'+list+'</div></section>';
     }
 
-    _room(room) {
+    _room(room, overview122) {
       if (room?.climate_only === true) {
         const labels=CLIMATE_LABELS[this._language()] || CLIMATE_LABELS.en;
         return `<article class="room room-climate-only">
@@ -2396,12 +2399,13 @@
               <span>${escape(labels.title)}</span></div>
             ${this._editButton(room.area_id)}
           </div>
-          ${this._climatePanel(room)}
+          ${this._climatePanel(room,overview122)}
           ${this._shadePanel(room)}
         </article>`;
       }
       const status = ['safe','attention','unknown'].includes(room.status) ? room.status : 'unknown';
       const readings = safeArray(room.readings);
+      const details122 = this._roomDetailReadings122(room,overview122);
       const windows = safeArray(room.windows);
       const moldReading = readings.find((item) => item.metric === 'mold' && !item.available);
       const moldCalibration = readings.find((item) => item.metric === 'mold' &&
@@ -2434,8 +2438,8 @@
           }).join('')}
         </div>` : '';
       const expanded = this._expanded.has(String(room.area_id));
-      const shown = expanded ? readings : readings.slice(0,3);
-      const button = (readings.length > 3 || moldCalibration) &&
+      const shown = expanded ? details122 : details122.slice(0,4);
+      const button = (details122.length > 4 || moldCalibration) &&
         this._config.show_metrics !== false ? `<button type="button" class="expand" data-expand="${escape(room.area_id)}"
         aria-expanded="${expanded}">${escape(this._t(expanded ? 'less' : 'more'))} ${this._icon(expanded ? 'mdi:chevron-up' : 'mdi:chevron-down')}</button>` : '';
       const urgent = room.action === 'close';
@@ -2471,12 +2475,12 @@
           ${this._editButton(room.area_id)}
           <span class="status-tag">${this._icon(ICON[status])}${escape(roomStatusLabel)}</span>
         </div>
-        ${this._config.show_metrics === false ? '' : readings.length ? `<div class="metric-grid">${shown.map((item) => this._metric(item)).join('')}</div>`
-          : `<div class="empty-measurements">${this._icon('mdi:gauge-empty')} ${escape(this._t('missingIndoor'))}</div>`}
+        ${this._config.show_metrics === false ? '' : details122.length ? `<div class="metric-grid">${shown.map((item) => item.overview_detail122?this._metricInfo122(item):this._metric(item)).join('')}</div>`
+          : readings.length || overview122?.metrics?.size ? '' : `<div class="empty-measurements">${this._icon('mdi:gauge-empty')} ${escape(this._t('missingIndoor'))}</div>`}
         ${button}
         ${expanded && this._config.show_metrics !== false
           ? this._moldCalibrationDetails(moldCalibration) : ''}
-        ${this._climatePanel(room)}
+        ${this._climatePanel(room,overview122)}
         ${this._shadePanel(room)}
         ${this._pidPanel(room)}
         ${this._config.show_science === false ? '' : this._environmentReport(room)}
@@ -3295,7 +3299,7 @@
       (typeof rh==='number' && Number.isFinite(rh)?escape(this._format(rh))+' %':escape(this._t('missing')))+'</b></span>';
   };
   const originalClimate66=proto66._climatePanel;
-  proto66._climatePanel=function(room){this._installInteractions66();return originalClimate66.call(this,room);};
+  proto66._climatePanel=function(room,overview122){this._installInteractions66();return originalClimate66.call(this,room,overview122);};
   const originalBlocker66=proto66._outsideBlocker;
   proto66._outsideBlocker=function(reason) {
     if(reason.code==='aqi_scale_unconfigured') {
@@ -3386,8 +3390,8 @@
       '<div class="hem-context-body76">'+details+'</div></details>';
   };
   const originalClimate76=proto76._climatePanel;
-  proto76._climatePanel=function(room) {
-    const rendered=originalClimate76.call(this,room);
+  proto76._climatePanel=function(room,overview122) {
+    const rendered=originalClimate76.call(this,room,overview122);
     if (!rendered || !rendered.includes('<div class="hem-room-readings66">')) return rendered;
     const p=room?.environment?.climate_plan || {};
     const lang=this._language();
@@ -3669,6 +3673,41 @@
     return {entityId,state,name};
   };
   /* HEM_NATIVE_TITLE93_END */
+  /* HEM_DEVICE_NAVIGATION122_START
+   * Device-page icons and entity names have separate, read-only actions.
+   * Resolve the registry on every click; a HEM controller is never linked
+   * through its physical source_device_id or a previously rendered URL.
+   */
+  proto87._entityDeviceId122=function(entityId){
+    const id=typeof entityId==='string'?this._hass?.entities?.[entityId]?.device_id:null;
+    return typeof id==='string'&&id.trim()?id:null;
+  };
+  proto87._devicePageButton122=function(kind,area,controllerId,entityId,icon,name){
+    const id=this._entityDeviceId122(entityId);
+    const label=(this._hass?.localize?.('ui.panel.config.devices.caption')||
+      _roomLabels87(this._language()).devices)+' · '+name;
+    return '<button type="button" class="hem-device-page122" '+
+      'data-open-'+kind+'-device122="'+escape(entityId||'')+'" '+
+      'data-controller-area="'+escape(area)+'" data-controller-id122="'+escape(controllerId)+'" '+
+      'title="'+escape(label)+'" aria-label="'+escape(label)+'" '+(id?'':'disabled')+'>'+this._icon(icon)+'</button>';
+  };
+  proto87._openDevicePage122=function(area,controllerId,entityId,kind){
+    const entry=this._managedControllers(area).find(row=>row.entityId===controllerId);
+    if(!entry)return false;
+    const expected=kind==='physical'?this._nativeEndpoint93(entry)?.entityId:
+      kind==='controller'?entry.entityId:null;
+    if(!expected||entityId!==expected)return false;
+    const id=this._entityDeviceId122(entityId);
+    if(!id)return false;
+    const path='/config/devices/device/'+encodeURIComponent(id);
+    if(window.history?.pushState&&window.dispatchEvent){
+      window.history.pushState(null,'',path);
+      window.dispatchEvent(new Event('location-changed'));
+    }else if(window.location)window.location.assign(path);
+    else return false;
+    return true;
+  };
+  /* HEM_DEVICE_NAVIGATION122_END */
   /* HEM_ROOM_ACTIVITY112_START
    * Read the original endpoints, not requested mode, PID demand or an ON
    * supply plug. Humidifier `action` is distinct from powered-on `state`.
@@ -3845,6 +3884,68 @@
       item.available!==false && typeof item.value==='number' && Number.isFinite(item.value));
     return values.length?values[0].value:null;
   };
+  /* HEM_ROOM_DETAILS122_START
+   * The overview and expanded information use the same measurement selection.
+   * A warning/calibration keeps its explanatory tile, without another copy of
+   * the current reading already shown in the room overview.
+   */
+  proto87._roomGlance122=function(room,devices){
+    const priority={co2:0,pm25:1,aqi:2,pm10:3,mold:4,pm1:5,pm4:6,
+      voc:7,tvoc:7,voc_parts:7,formaldehyde:8,hcho:8,no2:9,o3:10,so2:11,co:12,
+      radon:13,noise:14,sound:14,illuminance:16};
+    const seen=new Set();
+    const extras=_roomAirReadings89(room,devices||this._managedControllers(room.area_id))
+      .sort((a,b)=>{
+        const left=String(a.metric||'').toLowerCase(),right=String(b.metric||'').toLowerCase();
+        return (priority[left]??50)-(priority[right]??50)||
+          String(a.name||left).localeCompare(String(b.name||right));
+      }).filter(item=>{
+        const key=String(item.metric||'').toLowerCase();
+        if(seen.has(key))return false;
+        seen.add(key);return true;
+      }).slice(0,2);
+    const reading=metric=>{
+      const value=room?.environment?.measurement_evidence?.[metric]?.value;
+      return Number.isFinite(value)?value:_readMetric87(room,metric);
+    };
+    const temperature=reading('temperature'),humidity=reading('humidity');
+    const metrics=new Set(extras.map(item=>String(item.metric).toLowerCase()));
+    if(Number.isFinite(temperature))metrics.add('temperature');
+    if(Number.isFinite(humidity))metrics.add('humidity');
+    return {temperature,humidity,extras,metrics};
+  };
+  proto87._roomDetailReadings122=function(room,overview){
+    const summary=overview||this._roomGlance122(room);
+    return safeArray(room.readings).flatMap(item=>{
+      const key=String(item.metric||'').toLowerCase();
+      const represented=summary.metrics.has(key==='temp'?'temperature':key)&&
+        item.available===true&&Number.isFinite(item.value);
+      if(!represented)return [item];
+      const calibrated=item.metric==='mold'&&Number.isFinite(item.details?.calibration_factor);
+      return item.exceeded===true||calibrated?[{...item,overview_detail122:true}]:[];
+    });
+  };
+  proto87._metricInfo122=function(item){
+    const title=this._metricName(item.metric),help=this._metricHelp(item);
+    const source=[item.name,item.entity_id].filter(Boolean).join(' · ');
+    const threshold=Number.isFinite(item.threshold)&&item.threshold>0
+      ?this._t('limits')+' '+this._format(item.threshold)+' '+(item.unit||''):'';
+    const calibration=item.metric==='mold'&&Number.isFinite(item.details?.calibration_factor)
+      ?this._moldLabels()[4]+': '+this._formatCalibration(item.details.calibration_factor):'';
+    return '<div class="metric hem-metric-info122 metric-'+(item.exceeded?'attention':'safe')+'" '+
+      'data-room-metric114="'+escape(item.metric)+'" data-metric-source114="'+escape(item.entity_id||'')+'" '+
+      'data-overview-detail122="'+escape(item.metric)+'">'+
+      '<div class="metric-line"><span class="metric-name">'+this._icon(METRIC_ICON[item.metric]||'mdi:gauge')+
+      '<span class="metric-title" title="'+escape(source||title)+'">'+escape(title)+'</span>'+
+      '<details class="metric-help"><summary aria-label="'+escape(this._l65('information')+': '+title)+'" '+
+      'title="'+escape(help)+'">'+this._icon('mdi:information-outline')+'</summary>'+
+      '<div class="metric-help-content" role="note">'+escape(help)+
+      (calibration?this._moldCalibrationDetails(item):'')+'</div></details></span></div>'+
+      (item.exceeded?'<small class="hem-metric-alert122">'+escape(this._t('indoorHigh'))+'</small>':'')+
+      (threshold?'<div class="metric-limit">'+escape(threshold)+'</div>':'')+
+      (calibration?'<div class="metric-limit">'+escape(calibration)+'</div>':'')+'</div>';
+  };
+  /* HEM_ROOM_DETAILS122_END */
   proto87._summary = function(summary) {
     const counts=['safe','attention','unknown'].map(k=>
       Math.max(0,Math.trunc(Number(summary?.[k])||0)));
@@ -3864,11 +3965,12 @@
         '<small>'+escape(this._t(key))+'</small></span>').join('')+'</div>';
   };
   proto87._room = function(room) {
-    const original=_room87.call(this,room);
-    if(!room || typeof room.area_id!=='string') return original;
+    if(!room || typeof room.area_id!=='string') return _room87.call(this,room);
+    const devices=this._managedControllers(room.area_id);
+    const overview122=this._roomGlance122(room,devices);
+    const original=_room87.call(this,room,overview122);
     const labels=_roomLabels87(this._language());
     const open=this._roomsExpanded87?.has(room.area_id)===true;
-    const devices=this._managedControllers(room.area_id);
     const presence=this._roomPresence114(room);
     const activity=_physicalActivities89(devices,this._hass);
     const activityText=_activityText112(this,activity.items) ||
@@ -3876,27 +3978,7 @@
     // Four TOTAL readings at most: temperature, humidity and the two most
     // useful distinct available environmental metrics. Never scroll a row.
     // Air/health measurements outrank lux=0 and duplicate source sensors.
-    const priority90={
-      co2:0,pm25:1,aqi:2,pm10:3,mold:4,pm1:5,pm4:6,
-      voc:7,tvoc:7,voc_parts:7,formaldehyde:8,hcho:8,
-      no2:9,o3:10,so2:11,co:12,radon:13,
-      noise:14,sound:14,illuminance:16
-    };
-    const seen90=new Set();
-    const extras90=_roomAirReadings89(room,devices)
-      .filter(item=>item && Number.isFinite(item.value))
-      .sort((a,b)=>{
-        const aKey=String(a.metric||'').toLowerCase();
-        const bKey=String(b.metric||'').toLowerCase();
-        const score=key=>priority90[key]??50;
-        return score(aKey)-score(bKey) ||
-          String(a.name||aKey).localeCompare(String(b.name||bKey));
-      }).filter(item=>{
-        const key=String(item.metric||'').toLowerCase();
-        if(seen90.has(key))return false;
-        seen90.add(key);
-        return true;
-      }).slice(0,2);
+    const extras90=overview122.extras;
     const airBadges=extras90.map(item=>{
       const metric=String(item.metric).toLowerCase();
       // Use the measurement kind in a compact header. A sensor's friendly
@@ -3924,12 +4006,7 @@
     }).join('');
     const active=devices.map(entry=>({entry,state:_deviceState87(entry,this._hass)}))
       .filter(item=>item.state.active);
-    const tempEvidence=room?.environment?.measurement_evidence?.temperature;
-    const humidityEvidence=room?.environment?.measurement_evidence?.humidity;
-    const temp=typeof tempEvidence?.value==='number'?tempEvidence.value:
-      _readMetric87(room,'temperature');
-    const humidity=typeof humidityEvidence?.value==='number'?humidityEvidence.value:
-      _readMetric87(room,'humidity');
+    const temp=overview122.temperature,humidity=overview122.humidity;
     const roomStatus=room.status==='attention'?'attention':
       room.status==='safe'?'safe':'unknown';
     const alerts=[];
@@ -4084,6 +4161,18 @@
         this._navigateRoomIssue114(area,kind,pressed?.area===area&&pressed.kind===kind);
         return;
       }
+      const devicePage122=event.target?.closest?.(
+        'button[data-open-physical-device122],button[data-open-controller-device122]');
+      if(devicePage122){
+        event.preventDefault();event.stopImmediatePropagation();
+        if(devicePage122.disabled)return;
+        const physical=devicePage122.getAttribute('data-open-physical-device122');
+        this._openDevicePage122(devicePage122.getAttribute('data-controller-area'),
+          devicePage122.getAttribute('data-controller-id122'),
+          physical??devicePage122.getAttribute('data-open-controller-device122'),
+          physical!==null?'physical':'controller');
+        return;
+      }
       // The expanded physical-device heading opens ONLY its real native
       // entity, not the HEM controller. Verify its association on every click.
       const physicalTitle=event.target?.closest?.('button[data-open-physical93]');
@@ -4101,8 +4190,8 @@
           }));
         return;
       }
-      // The FOLDED controller title opens the HEM facade, while its source
-      // icon opens the physical entity; neither click expands the fold.
+      // Names open native HA entity controls; device-page icons above remain
+      // separate. Neither action expands the enclosing disclosure.
       const link=event.target?.closest?.(
         'button[data-open-native89],button[data-open-controller89]'
       );
@@ -4316,7 +4405,6 @@
       const nativeId=typeof declared==='string' && sources.includes(declared)
         ? declared : sources.length===1?sources[0]:null;
       const realNative=nativeId && this._hass?.states?.[nativeId]?nativeId:null;
-      const primaryIcon=_deviceIcons87[realNative?.split('.')[0]]||'mdi:thermostat';
       const observedNative=realNative?this._hass?.states?.[realNative]:null;
       const actualMode=observedNative && !['unknown','unavailable'].includes(observedNative.state)
         ?observedNative.state:null;
@@ -4330,13 +4418,7 @@
         ? [fault.code,fault.description].filter(Boolean).join(' · ')
         : this._controllerStatusLabel(status.status_reason_code||code||'unknown');
       summary.innerHTML='<span class="hem-device-main87">'+
-        (realNative?
-          '<button type="button" class="hem-device-native-link89" '+
-          'data-open-native89="'+escape(realNative)+'" '+
-          'data-controller-area="'+escape(area)+'" '+
-          'data-controller-id89="'+escape(entity)+'" '+
-          'title="'+escape(realNative)+'" aria-label="Open native device '+escape(realNative)+'">'+
-          this._icon(primaryIcon)+'</button>' : this._icon(primaryIcon))+
+        this._devicePageButton122('controller',area,entity,entity,'mdi:cog-outline',name)+
         '<button type="button" class="hem-device-controller-link89" '+
         'data-open-controller89="'+escape(entity)+'" '+
         'data-controller-id89="'+escape(entity)+'" '+
@@ -4693,6 +4775,9 @@
       .hem-room-body87>.room{border:0;padding:0;background:transparent;border-radius:0}
       .hem-room-body87>.room>.room-heading{display:none}
       .hem-room-body87>.room>.metric-grid{margin:5px 0}
+      .hem-room-readings66:empty{display:none}
+      .hem-metric-info122 .metric-name{max-width:100%}
+      .hem-metric-alert122{color:var(--aqa-amber);font-size:10px;line-height:1.4}
       .hem-room-body87 .section-head{margin-top:8px}
       .hem-room-body87 .pid-panel{margin:6px 0;padding:7px}
       /* One compact glance per managed device; everything else folded. */
@@ -4715,6 +4800,15 @@
       .hem-device-native-link89 ha-icon{--mdc-icon-size:16px}
       .hem-device-controller-link89{flex:1 1 auto;text-align:start;overflow:hidden}
       .hem-device-controller-link89:hover strong{text-decoration:underline}
+      .hem-device-page122{display:inline-flex;align-items:center;justify-content:center;
+        width:28px;height:28px;flex:0 0 28px;border:0;border-radius:6px;padding:4px;
+        background:transparent;color:var(--aqa-blue);cursor:pointer}
+      .hem-device-page122 ha-icon{--mdc-icon-size:17px}
+      .hem-device-page122:disabled{opacity:.4;cursor:default}
+      .hem-device-page122:not(:disabled):hover{background:color-mix(in srgb,var(--aqa-blue),transparent 86%)}
+      .hem-device-page122:focus-visible{outline:2px solid var(--aqa-blue);outline-offset:1px}
+      .hem-physical-heading122{display:flex;align-items:center;gap:4px;min-width:0;max-width:100%}
+      .hem-physical-heading122 .hem-physical-title93{flex:1;overflow:hidden;text-align:start}
       .hem-physical-title93{display:inline-flex;align-items:center;
         gap:5px;max-width:100%;min-width:0}
       .hem-physical-title93 strong{display:inline-block;min-width:0;
@@ -5478,7 +5572,7 @@
   proto105._openAverage105=function(area,metric){
     const evidence=this._evidence105(area,metric);
     if(!evidence||evidence.value.source_count<2)return;
-    if(this._averageDialog105?.area===area &&
+    if(!this._averageDialog105?.entity122 && this._averageDialog105?.area===area &&
        this._averageDialog105?.metric===metric){
       this._closeAverage105();return;
     }
@@ -5518,14 +5612,34 @@
     this.shadowRoot.addEventListener('click',event=>{
       const close=event.target?.closest?.('[data-close-avg105]');
       if(close){event.preventDefault();this._closeAverage105();return;}
+      const entityLink=event.target?.closest?.('[data-open-entity122]');
+      if(entityLink){
+        event.preventDefault();event.stopImmediatePropagation();
+        const id=entityLink.getAttribute('data-open-entity122');
+        if(this._averageDialog105?.entity122===id && this._nativeAllowed105(id)){
+          this._closeAverage105();
+          this.dispatchEvent(new CustomEvent('hass-more-info',{
+            detail:{entityId:id},bubbles:true,composed:true,
+          }));
+        }
+        return;
+      }
+      const retryHistory=event.target?.closest?.('[data-retry-history122]');
+      if(retryHistory){
+        event.preventDefault();event.stopImmediatePropagation();
+        if(this._averageDialog105?.entity122)this._loadEntityTrend122(this._averageDialog105);
+        return;
+      }
       const source=event.target?.closest?.('[data-hem-source105]');
       if(source){
         event.preventDefault();event.stopImmediatePropagation();
         const id=source.getAttribute('data-hem-source105');
-        if(this._nativeAllowed105(id))
-          this.dispatchEvent(new CustomEvent('hass-more-info',{
-            detail:{entityId:id},bubbles:true,composed:true,
-          }));
+        if(this._nativeAllowed105(id)){
+          if(id.startsWith('sensor.'))this._openEntityTrend122(id);
+          else this.dispatchEvent(new CustomEvent('hass-more-info',{
+              detail:{entityId:id},bubbles:true,composed:true,
+            }));
+        }
         return;
       }
       const average=event.target?.closest?.('[data-hem-average105]');
@@ -5677,11 +5791,161 @@
       collecting:'Το ιστορικό εμφανίζεται καθώς καταγράφονται μετρήσεις.'},
   };
   const tw114=(card,key)=>(trendWords114[card._language()]||trendWords114.en)[key];
+  const entityWords122={
+    en:{title:'Entity history',current:'Current value',open:'Open entity',
+      loading:'Loading recorded history…',empty:'No recorded history in the last 7 days.',
+      error:'History could not be loaded.',retry:'Try again',
+      recent:'Recorded values · up to 7 days'},
+    de:{title:'Entitätsverlauf',current:'Aktueller Wert',open:'Entität öffnen',
+      loading:'Gespeicherter Verlauf wird geladen…',empty:'Kein aufgezeichneter Verlauf in den letzten 7 Tagen.',
+      error:'Der Verlauf konnte nicht geladen werden.',retry:'Erneut versuchen',
+      recent:'Aufgezeichnete Werte · bis zu 7 Tage'},
+    el:{title:'Ιστορικό οντότητας',current:'Τρέχουσα τιμή',open:'Άνοιγμα οντότητας',
+      loading:'Φόρτωση καταγεγραμμένου ιστορικού…',empty:'Δεν υπάρχει καταγεγραμμένο ιστορικό τις τελευταίες 7 ημέρες.',
+      error:'Δεν ήταν δυνατή η φόρτωση του ιστορικού.',retry:'Δοκιμή ξανά',
+      recent:'Καταγεγραμμένες τιμές · έως 7 ημέρες'},
+  };
+  const ew122=(card,key)=>(entityWords122[card._language()]||entityWords122.en)[key];
+  const historyNumber122=value=>{
+    if(typeof value!=='number' && (typeof value!=='string'||!value.trim()))return null;
+    const number=Number(value);
+    return Number.isFinite(number)&&Math.abs(number)<=1e12?number:null;
+  };
+  trend114._entityHistoryPoints122=function(result,entityId,start,end,unit){
+    const unique=new Map();
+    for(const row of safeArray(result?.[entityId])){
+      if(!row||typeof row!=='object')continue;
+      const t=historyNumber122(row.lu??row.lc);
+      if(t===null||t<=0||t<start||t>end)continue;
+      const attrs=row.a&&typeof row.a==='object'?row.a:{};
+      const differentUnit=typeof attrs.unit_of_measurement==='string'&&
+        attrs.unit_of_measurement!==unit;
+      const value=attrs.restored===true||differentUnit?null:historyNumber122(row.s);
+      unique.set(t,{t,v:value});
+    }
+    const rows=[...unique.values()].sort((a,b)=>a.t-b.t);
+    if(rows.length<=1000)return rows;
+    // Keep the complete requested period, including its real extremes and
+    // boundaries. Taking the last 1000 rows would silently discard days.
+    const selected=new Set([0,rows.length-1]);
+    const stride=Math.ceil((rows.length-2)/498);
+    for(let begin=1;begin<rows.length-1;begin+=stride){
+      const stop=Math.min(rows.length-1,begin+stride);
+      let low=null,high=null;
+      for(let i=begin;i<stop;i++)if(rows[i].v!==null){
+        if(low===null||rows[i].v<rows[low].v)low=i;
+        if(high===null||rows[i].v>rows[high].v)high=i;
+      }
+      if(low===null)selected.add(begin);
+      else{selected.add(low);selected.add(high);}
+    }
+    let previous=-1;
+    return [...selected].sort((a,b)=>a-b).map(index=>{
+      const row={...rows[index]};
+      // An omitted unavailable value must still break the rendered line.
+      if(row.v!==null&&rows.slice(previous+1,index).some(item=>item.v===null))
+        row.break_before=true;
+      previous=index;
+      return row;
+    });
+  };
+  trend114._entityTrendEvidence122=function(saved){
+    const id=saved?.entity122;
+    if(!id||!this._nativeAllowed105(id))return null;
+    const state=this._hass.states[id],dashboard=this._dashboard105();
+    let room=safeArray(dashboard?.rooms).find(item=>
+      safeArray(item.readings).some(reading=>reading.entity_id===id)||
+      Object.values(item.environment?.measurement_evidence||{}).some(value=>
+        safeArray(value?.source_ids).includes(id)));
+    const reading=safeArray(room?.readings||dashboard?.outdoor?.readings).find(item=>item.entity_id===id);
+    const metric=reading?.metric||Object.entries(room?.environment?.measurement_evidence||{})
+      .find(([,value])=>safeArray(value?.source_ids).includes(id))?.[0]||state.attributes?.device_class||'value';
+    const unit=state.attributes?.unit_of_measurement??reading?.unit??saved.unit122??'';
+    room=room||{name:this._t('outside'),readings:[]};
+    return {entity_id:id,title:state.attributes?.friendly_name||id,unit,metric,
+      room:{...room,readings:[{metric,unit}]},
+      value:{value:state.attributes?.restored===true?null:historyNumber122(state.state),
+        source_ids:[id],source_count:1,trend:saved.history122||[]}};
+  };
+  trend114._loadEntityTrend122=async function(saved,keepView=false){
+    if(!saved?.entity122||this._averageDialog105!==saved)return;
+    const hass=this._hass,id=saved.entity122;
+    const evidence=this._entityTrendEvidence122(saved);
+    if(!evidence)return;
+    const request=saved.request122=(saved.request122||0)+1;
+    const end=Date.now()/1000,start=end-604800;
+    const reported=hass.states[id]?.last_updated;
+    saved.unit122=evidence.unit;saved.loading122=true;
+    if(!keepView){
+      saved.status122='loading';saved.history122=[];
+      saved.view114={range:86400,end:null,cursor:null};
+    }
+    const current=()=>this._averageDialog105===saved&&saved.request122===request&&
+      this._hass?.connection===saved.connection122&&this._state()[0]===saved.dashboard122&&
+      this._nativeAllowed105(id);
+    this._refreshAverage105(true);
+    let timer;
+    try{
+      if(typeof hass.callWS!=='function')throw new Error('History unavailable');
+      const timeout=new Promise((resolve,reject)=>{
+        timer=setTimeout(()=>reject(new Error('History timeout')),30000);
+        saved.historyTimer122=timer;
+      });
+      const result=await Promise.race([hass.callWS({
+        type:'history/history_during_period',entity_ids:[id],
+        start_time:new Date(start*1000).toISOString(),end_time:new Date(end*1000).toISOString(),
+        minimal_response:false,no_attributes:false,significant_changes_only:false,
+        // HA projects a carry-in state to the requested start timestamp.
+        // The inspector promises actual recorded sample times, so exclude it.
+        include_start_time_state:false,
+      }),timeout]);
+      if(!current())return;
+      // A unit setting changed while the request was in flight. Reload in
+      // that new unit context instead of relabelling an old value series.
+      if(this._entityTrendEvidence122(saved)?.unit!==saved.unit122){
+        this._loadEntityTrend122(saved);return;
+      }
+      saved.history122=this._entityHistoryPoints122(result,id,start,end,saved.unit122);
+      saved.status122=saved.history122.some(point=>point.v!==null)?'ready':'empty';
+    }catch{
+      if(!current())return;
+      saved.status122='error';
+    }finally{
+      if(timer)clearTimeout(timer);
+      if(saved.historyTimer122===timer)delete saved.historyTimer122;
+      if(saved.request122===request){
+        saved.loading122=false;saved.loadedAt122=Date.now()/1000;saved.reported122=reported;
+      }
+    }
+    if(current())this._refreshAverage105(true);
+  };
+  trend114._openEntityTrend122=function(id){
+    if(typeof id!=='string'||!id.startsWith('sensor.')||!this._nativeAllowed105(id))return;
+    if(this._averageDialog105?.entity122===id){this._closeAverage105();return;}
+    const returnTo=this.shadowRoot.activeElement;
+    this._closeAverage105();this._closeWeather103?.();
+    const pop=document.createElement('div');
+    pop.className='hem-avg-dialog105';
+    pop.setAttribute('popover','manual');pop.setAttribute('role','dialog');pop.setAttribute('tabindex','-1');
+    pop.innerHTML='<header class="hem-avg-head105"><strong>'+this._icon('mdi:chart-line')+
+      escape(ew122(this,'title'))+'</strong><button type="button" data-close-avg105>'+this._icon('mdi:close')+
+      '</button></header><div class="hem-avg-body105"></div>';
+    this.shadowRoot.appendChild(pop);
+    const saved=this._averageDialog105={node:pop,entity122:id,history122:[],status122:'loading',
+      connection122:this._hass.connection,dashboard122:this._state()[0],returnTo114:returnTo,last:null};
+    const evidence=this._entityTrendEvidence122(saved);
+    saved.metric=evidence.metric;saved.area=evidence.room.area_id||'__outside__';saved.unit122=evidence.unit;
+    this._refreshAverage105(true);this._bindTrend114(saved,returnTo);
+    try{pop.showPopover?.();}catch{}
+    pop.focus({preventScroll:true});
+    this._loadEntityTrend122(saved);
+  };
   const trendPoints114=value=>{
-    const points=new Map(),missing=[];
+    const points=new Map(),missing=[],times=[];
     for(const row of safeArray(value.trend).slice(-1000)){
       if(!row||!Number.isFinite(row.t)||row.t<=0||row.t>8640000000000)continue;
-      if(Number.isFinite(row.v))points.set(row.t,{t:row.t,v:row.v});
+      times.push(row.t);
+      if(Number.isFinite(row.v))points.set(row.t,{t:row.t,v:row.v,...(row.break_before===true?{break_before:true}:{})});
       else missing.push(row.t);
     }
     const ordered=[...points.values()].sort((a,b)=>a.t-b.t);
@@ -5693,9 +5957,12 @@
     const gaps=[];
     for(let i=1;i<ordered.length;i++){
       const a=ordered[i-1].t,b=ordered[i].t;
-      if(b-a>cadence*2.5||missing.some(t=>t>a&&t<b))gaps.push([a,b]);
+      if(ordered[i].break_before||b-a>cadence*2.5||missing.some(t=>t>a&&t<b))gaps.push([a,b]);
     }
-    return {points:ordered,gaps,cadence};
+    const first=times.length?Math.min(...times):0,last=times.length?Math.max(...times):0;
+    if(ordered.length&&first<ordered[0].t)gaps.unshift([first,ordered[0].t]);
+    if(ordered.length&&last>ordered.at(-1).t)gaps.push([ordered.at(-1).t,last]);
+    return {points:ordered,gaps,cadence,first,last};
   };
   trend114._trendDate114=function(stamp,mode='full'){
     const zone=this._hass?.config?.time_zone;
@@ -5710,7 +5977,7 @@
   trend114._trendView114=function(evidence){
     const saved=this._averageDialog105;
     const data=trendPoints114(evidence.value),points=data.points;
-    const first=points[0]?.t??0,last=points.at(-1)?.t??0;
+    const first=points.length?data.first:0,last=points.length?data.last:0;
     const state=saved.view114 ||= {
       range:last-first>21600?86400:0,end:null,cursor:null,
     };
@@ -5719,8 +5986,9 @@
     const end=state.range?Math.max(earliestEnd,Math.min(last,state.end??last)):
       Math.max(first,Math.min(last,state.end??last));
     const start=state.range?end-duration:first;
-    const viewStart=points.length===1&&!state.range?first-900:start;
-    const viewEnd=points.length===1&&!state.range?first+900:
+    const singleMoment=points.length===1&&first===last&&!state.range;
+    const viewStart=singleMoment?first-900:start;
+    const viewEnd=singleMoment?first+900:
       end>viewStart?end:viewStart+1800;
     const visible=points.filter(p=>p.t>=viewStart&&p.t<=viewEnd);
     const width=Math.max(240,Math.min(800,saved.width114||
@@ -5731,7 +5999,7 @@
     return { ...data,visible,first,last,start:viewStart,end:viewEnd,
       width,left:48,right:width-14,top:18,bottom:164,min:low-padding,max:high+padding,
       older:!!state.range&&start>first,newer:!!state.range&&end<last,
-      unit:saved.metric==='temperature'?'°C':saved.metric==='humidity'?'%':
+      unit:evidence.entity_id?evidence.unit:saved.metric==='temperature'?'°C':saved.metric==='humidity'?'%':
         (safeArray(evidence.room.readings).find(r=>r.metric===saved.metric)?.unit||''),
     };
   };
@@ -5741,7 +6009,9 @@
     const cursor=this._averageDialog105.view114.cursor;
     if(!model.visible.length)return {point:null,time:cursor??model.end,index:0};
     const time=cursor??model.visible.at(-1).t;
-    const gap=model.gaps.some(([a,b])=>time>a+model.cadence*.5&&time<b-model.cadence*.5);
+    // Even a short, explicitly observed outage is missing evidence. A
+    // sampling-cadence tolerance must not turn its interior into a reading.
+    const gap=model.gaps.some(([a,b])=>time>a&&time<b);
     const nearest=model.visible.reduce((best,p)=>Math.abs(p.t-time)<Math.abs(best.t-time)?p:best);
     const outside=time<model.visible[0].t-model.cadence*.5||
       time>model.visible.at(-1).t+model.cadence*.5;
@@ -5787,7 +6057,7 @@
     const saved=this._averageDialog105,model=this._trendView114(evidence);
     saved.model114=model;
     const state=saved.view114,value=evidence.value;
-    const title=metric==='temperature'?_roomLabels87(this._language()).temperature:
+    const title=evidence.entity_id?evidence.title:metric==='temperature'?_roomLabels87(this._language()).temperature:
       metric==='humidity'?this._t('humidity'):this._metricName(metric);
     const uid=saved.uid114 ||= ++trendSequence114;
     const accent=({temperature:'#f28a4b',humidity:'#36bcb1',pm25:'#8da4ef',
@@ -5837,7 +6107,7 @@
       '" cy="'+trendY114(model,point.v).toFixed(2)+'" r="2.5"/>').join(''):'';
     const chart=model.points.length?'<svg class="hem-avg-chart105 hem-trend-chart114" '+
       'data-trend-chart114 viewBox="0 0 '+model.width+' 204" role="slider" tabindex="0" '+
-      'aria-label="'+escape(title+' · '+tw114(this,'chart'))+'" aria-orientation="horizontal" '+
+      'aria-label="'+escape(title+' · '+(evidence.entity_id?ew122(this,'recent'):tw114(this,'chart')))+'" aria-orientation="horizontal" '+
       'aria-valuemin="0" aria-valuemax="'+Math.max(0,model.points.length-1)+'" aria-valuenow="0" '+
       'aria-describedby="hem-trend-help114-'+uid+'">'+
       '<defs><linearGradient id="hem-trend-fill114-'+uid+'" x1="0" y1="0" x2="0" y2="1">'+
@@ -5857,12 +6127,23 @@
     const sources=value.source_ids.map(id=>{
       const label=this._hass?.states?.[id]?.attributes?.friendly_name||id;
       return '<button type="button" class="hem-average-source105" data-hem-source105="'+escape(id)+
-        '" title="'+escape(id)+'">'+this._icon('mdi:open-in-new')+escape(label)+'</button>';
+        '" title="'+escape(id)+'">'+this._icon('mdi:chart-line')+escape(label)+'</button>';
     }).join('');
+    const entityStatus=evidence.entity_id?saved.status122:null;
+    const historyMessage=entityStatus&&entityStatus!=='ready'?ew122(this,entityStatus):null;
+    const historyStatus=evidence.entity_id?'<div class="hem-entity-history-status122" data-entity-history-status122="'+
+      escape(entityStatus||'loading')+'" role="status">'+escape(historyMessage||'')+
+      (entityStatus==='error'||entityStatus==='empty'?'<button type="button" data-retry-history122>'+escape(ew122(this,'retry'))+'</button>':'')+'</div>':'';
+    const currentValue=Number.isFinite(value.value)?this._format(value.value,3)+' '+model.unit:word105(this,'unavailable');
+    const footer=evidence.entity_id?'<div class="hem-entity-history-footer122"><small>'+escape(ew122(this,'recent'))+
+      '</small><button type="button" class="hem-average-source105" data-open-entity122="'+escape(evidence.entity_id)+
+      '" title="'+escape(evidence.entity_id)+'">'+this._icon('mdi:open-in-new')+escape(ew122(this,'open'))+'</button></div>':
+      '<div class="hem-average-caption105">'+escape(word105(this,'average')+' '+value.source_count+' '+
+      word105(this,'sensors'))+'</div><div class="hem-average-sources105">'+sources+'</div>';
     return '<div class="hem-trend114" style="--hem-trend-accent114:'+accent+'">'+
       '<div class="hem-average-summary105"><div><strong>'+escape(title)+'</strong><small>'+escape(evidence.room.name||area)+
-      '</small></div><span class="hem-trend-current114">'+escape(tw114(this,'current'))+'<b>'+
-      escape(this._format(value.value,3))+' '+escape(model.unit)+'</b></span></div>'+
+      '</small></div><span class="hem-trend-current114">'+escape(evidence.entity_id?ew122(this,'current'):tw114(this,'current'))+'<b>'+
+      escape(currentValue)+'</b></span></div>'+historyStatus+
       '<div class="hem-trend-toolbar114"><div class="hem-trend-ranges114" role="group" aria-label="'+
       escape(tw114(this,'range'))+'">'+rangeButtons+'</div><div class="hem-trend-nav114">'+
       nav('older','mdi:chevron-left',tw114(this,'older'),!model.older)+
@@ -5872,29 +6153,42 @@
       '<div><span data-trend-label114>'+escape(tw114(this,'sample'))+'</span><strong><b data-trend-value114>—</b>'+
       '<small>'+escape(model.unit)+'</small></strong></div><time data-trend-time114></time></div>'+
       '<div class="hem-trend-plot114">'+chart+
-      (!model.visible.length?'<div class="hem-avg-collect105">'+this._icon('mdi:chart-line')+
-      '<span>'+escape(tw114(this,model.points.length?'empty':'collecting'))+'</span></div>':'')+'</div>'+stats+
+      (!model.visible.length&&!historyMessage?'<div class="hem-avg-collect105">'+this._icon('mdi:chart-line')+
+      '<span>'+escape(historyMessage||tw114(this,model.points.length?'empty':'collecting'))+'</span></div>':'')+'</div>'+stats+
       (model.points.length?'<div class="hem-avg-period105">'+escape(this._trendDate114(model.start,'period'))+
         ' — '+escape(this._trendDate114(model.end,'period'))+'</div>':'')+
       '<p class="hem-trend-help114" id="hem-trend-help114-'+uid+'">'+
       escape(model.points.length===1?tw114(this,'one')+' · ':'')+escape(tw114(this,'help'))+
       (visibleGaps.length?' '+escape(tw114(this,'gapHelp')):'')+'</p>'+
-      '<div class="hem-average-caption105">'+escape(word105(this,'average')+' '+value.source_count+' '+
-      word105(this,'sensors'))+'</div><div class="hem-average-sources105">'+sources+'</div></div>';
+      footer+'</div>';
   };
   trend114._refreshAverage105=function(force=false){
     const saved=this._averageDialog105;
     if(!saved)return;
-    const evidence=this._evidence105(saved.area,saved.metric);
-    if(!evidence||evidence.value.source_count<2||evidence.value.source_ids.join('|')!==saved.sources){
+    if(saved.entity122&&(saved.connection122!==this._hass?.connection||saved.dashboard122!==this._state()[0])){
       this._closeAverage105();return;
     }
+    const evidence=saved.entity122?this._entityTrendEvidence122(saved):this._evidence105(saved.area,saved.metric);
+    if(!evidence||!saved.entity122&&(evidence.value.source_count<2||evidence.value.source_ids.join('|')!==saved.sources)){
+      this._closeAverage105();return;
+    }
+    if(saved.entity122&&evidence.unit!==saved.unit122&&saved.status122!=='loading'){
+      this._loadEntityTrend122(saved);return;
+    }
+    if(saved.entity122&&!saved.loading122&&['ready','empty'].includes(saved.status122)&&
+       Date.now()/1000-(saved.loadedAt122||0)>60&&
+       this._hass.states[saved.entity122]?.last_updated!==saved.reported122){
+      // Refresh an open history at most once a minute after a real entity
+      // update. Keep the inspected period, cursor and existing chart visible.
+      this._loadEntityTrend122(saved,true);return;
+    }
     if(saved.pointer114!==undefined){saved.pending114=true;return;}
-    const key=JSON.stringify([evidence.value,this._hass?.language,this._hass?.config?.time_zone,saved.width114]);
+    const key=JSON.stringify([evidence.value,evidence.title,evidence.unit,saved.status122,
+      this._hass?.language,this._hass?.config?.time_zone,saved.width114]);
     if(!force&&key===saved.last)return;
     // Language can change while a manual popover stays open. Update its
     // title and accessible close label together with the translated body.
-    const title=word105(this,'trend'),close=word105(this,'close');
+    const title=saved.entity122?ew122(this,'title'):word105(this,'trend'),close=word105(this,'close');
     saved.node.setAttribute('aria-label',title);
     const heading=saved.node.querySelector('.hem-avg-head105>strong');
     if(heading?.lastChild?.nodeType===3)heading.lastChild.nodeValue=title;
@@ -5927,6 +6221,9 @@
     const returnTo=this.shadowRoot.activeElement;
     openTrend114.call(this,area,metric);
     const saved=this._averageDialog105;
+    this._bindTrend114(saved,returnTo);
+  };
+  trend114._bindTrend114=function(saved,returnTo){
     if(!saved||saved.interactive114)return;
     saved.interactive114=true;saved.returnTo114=returnTo;
     const pop=saved.node;
@@ -6004,6 +6301,7 @@
   trend114._closeAverage105=function(){
     const saved=this._averageDialog105;
     const restore=!!saved?.node?.contains(this.shadowRoot.activeElement);
+    if(saved?.historyTimer122)clearTimeout(saved.historyTimer122);
     saved?.resize114?.disconnect();
     if(saved?.frame114)cancelAnimationFrame(saved.frame114);
     closeTrend114.call(this);
@@ -6020,6 +6318,14 @@
     .hem-avg-head105 button{width:36px;height:36px;border-radius:50%}
     .hem-avg-head105 button:hover{background:color-mix(in srgb,currentColor,transparent 93%)}
     .hem-trend114{--hem-trend-muted114:var(--secondary-text-color,#a5b2c4);min-width:0}
+    .hem-entity-history-status122{font-size:12px;color:var(--hem-trend-muted114);text-align:center;
+      display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;min-height:70px;padding:10px}
+    .hem-entity-history-status122[data-entity-history-status122="ready"]{display:none}
+    .hem-entity-history-status122 button{border:1px solid var(--divider-color,#556070);border-radius:7px;
+      background:transparent;color:var(--primary-text-color,#e8edf4);padding:7px 10px;min-height:32px}
+    .hem-entity-history-footer122{display:flex;align-items:center;justify-content:space-between;gap:10px;
+      flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--divider-color,#556070)}
+    .hem-entity-history-footer122 small{color:var(--hem-trend-muted114);font-size:10px}
     .hem-trend114 .hem-average-summary105{margin:14px 0 12px;align-items:center;gap:12px}
     .hem-trend114 .hem-average-summary105>div{min-width:0}
     .hem-trend114 .hem-average-summary105 strong{font-size:16px;line-height:1.25}

@@ -23,7 +23,8 @@ with sync_playwright() as p:
   card.setConfig({entity:'sensor.hem'});card.hass={language:'el',states,localize:()=>undefined,callService:(...args)=>{calls.push(args);return Promise.resolve();}};
  }''',{'states':states,'room':room})
  page.wait_for_function('card._hasValidRender===true')
- assert page.locator('.hem-room-readings66 b').count()==2
+ assert page.locator('.hem-room-readings66 b').count()==0
+ assert page.locator('.hem-room-glance87 .hem-room-reading87').count()==2
  result=page.evaluate('''async()=>{
   const start=renders;const states=card._hass.states;
   for(let i=0;i<1000;i++) card.hass={...card._hass,states:{...states,'sensor.unrelated_0':{state:String(i),attributes:{}}}};

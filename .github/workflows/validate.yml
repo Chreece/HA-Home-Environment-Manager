@@ -81,6 +81,12 @@ jobs:
           python -I .github/tests/test_beta121_restored_measurements.py
           python -I .github/tests/test_beta121_restart_dispatch.py
           python -I .github/tests/test_beta121_automatic_target.py
+      - name: Restart-safe average history and shared entity trend views
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta122_average_restart.py
+          python -I .github/tests/test_beta122_entity_trends.py --logic-only
+          python -I .github/tests/test_beta122_card_details.py --logic-only
       - name: PID target cutoff, original retry budgets and live native shutdown
         run: |
           python -I .github/tests/test_beta111_pid_cutoff_math.py
@@ -225,7 +231,7 @@ jobs:
         run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
       - name: Compact VOC labels and purpose-specific configuration help
         env:
-          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-beta121-ui
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-beta122-ui
         run: |
           hem_ui_status=0
           python -I .github/tests/test_beta116_compact_metric_labels.py || hem_ui_status=1
@@ -233,46 +239,60 @@ jobs:
           exit "$hem_ui_status"
       - name: Interactive trends, direct room settings and problem toggles
         env:
-          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-beta121-ui
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-beta122-ui
         run: |
           hem_ui_status=0
           python -I .github/tests/test_beta114_room_navigation.py || hem_ui_status=1
           python -I .github/tests/test_beta114_room_settings.py || hem_ui_status=1
           python -I .github/tests/test_beta114_interactive_trends.py || hem_ui_status=1
           exit "$hem_ui_status"
+      - name: Entity history and complementary card details in the browser
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-beta122-ui
+        run: |
+          hem_ui_status=0
+          python -I .github/tests/test_beta122_entity_trends.py || hem_ui_status=1
+          python -I .github/tests/test_beta122_card_details.py || hem_ui_status=1
+          exit "$hem_ui_status"
       - name: Preserve room interface verification images
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hem-beta121-ui-${{ github.sha }}
-          path: /tmp/hem-beta121-ui/
+          name: hem-beta122-ui-${{ github.sha }}
+          path: /tmp/hem-beta122-ui/
           if-no-files-found: ignore
       - name: Home Assistant dispatcher and compact card browser interactions
         run: |
-          python -I .github/tests/test_beta68_events.py
-          python -I .github/tests/test_beta66_browser.py
-          python -I .github/tests/test_beta68_browser.py
-          python -I .github/tests/test_beta76_compact_browser.py
-          python -I .github/tests/test_beta84_review_browser.py
-          python -I .github/tests/test_beta85_resume_browser.py
-          python -I .github/tests/test_beta86_fault_card.py
-          python -I .github/tests/test_beta87_compact_browser.py
-          python -I .github/tests/test_beta89_card.py
-          python -I .github/tests/test_beta90_scroll_card.py
-          python -I .github/tests/test_beta91_stable_dom.py
-          python -I .github/tests/test_beta92_lovelace_scroll.py
-          python -I .github/tests/test_beta93_native_entity_links.py
-          python -I .github/tests/test_beta95_card.py
-          python -I .github/tests/test_beta98_resume_card.py
-          python -I .github/tests/test_beta101_weather_warning.py
-          python -I .github/tests/test_beta103_weather_persistent.py
-          python -I .github/tests/test_beta104_weather_no_scroll.py
-          python -I .github/tests/test_beta105_card.py
-          python -I .github/tests/test_beta107_room_metrics.py
-          python -I .github/tests/test_beta112_room_activity.py
-          python -I .github/tests/test_beta108_setpoint_feedback_browser.py
-          python -I .github/tests/test_beta109_setpoint_grace_browser.py
-          python -I .github/tests/test_beta110_device_option_browser.py
+          hem_browser_status=0
+          for hem_browser_test in \
+            .github/tests/test_beta68_events.py \
+            .github/tests/test_beta66_browser.py \
+            .github/tests/test_beta68_browser.py \
+            .github/tests/test_beta76_compact_browser.py \
+            .github/tests/test_beta84_review_browser.py \
+            .github/tests/test_beta85_resume_browser.py \
+            .github/tests/test_beta86_fault_card.py \
+            .github/tests/test_beta87_compact_browser.py \
+            .github/tests/test_beta89_card.py \
+            .github/tests/test_beta90_scroll_card.py \
+            .github/tests/test_beta91_stable_dom.py \
+            .github/tests/test_beta92_lovelace_scroll.py \
+            .github/tests/test_beta93_native_entity_links.py \
+            .github/tests/test_beta95_card.py \
+            .github/tests/test_beta98_resume_card.py \
+            .github/tests/test_beta101_weather_warning.py \
+            .github/tests/test_beta103_weather_persistent.py \
+            .github/tests/test_beta104_weather_no_scroll.py \
+            .github/tests/test_beta105_card.py \
+            .github/tests/test_beta107_room_metrics.py \
+            .github/tests/test_beta112_room_activity.py \
+            .github/tests/test_beta108_setpoint_feedback_browser.py \
+            .github/tests/test_beta109_setpoint_grace_browser.py \
+            .github/tests/test_beta110_device_option_browser.py
+          do
+            python -I "$hem_browser_test" || hem_browser_status=1
+          done
+          exit "$hem_browser_status"
       - name: Package and inspect canonical HACS integration
         run: |
           python -I - <<'PY'
