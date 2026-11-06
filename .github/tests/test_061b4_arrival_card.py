@@ -230,13 +230,17 @@ def actions(page, expect):
     expect(action).to_have_attribute("data-arrival-entity124", PREPARE_B)
     expect(page.locator('.hem-arrival-error124')).to_have_count(0)
     assert page.evaluate("calls.length") == 3
-    page.evaluate("nativeService124=(...args)=>{calls.push(args);return Promise.resolve();}")
+    # Playwright invokes an evaluated function result. Install the mock from
+    # a block that returns nothing, so setup itself cannot record a press.
+    page.evaluate("() => {nativeService124=(...args)=>{calls.push(args);return Promise.resolve();};}")
+    assert page.evaluate("calls.length") == 3
     action.click()
     page.wait_for_function("calls.length===4&&!card._arrivalRequest124")
     assert page.evaluate("calls.at(-1)") == ["button", "press", {"entity_id": PREPARE_B}]
     duration.click()
     assert page.evaluate("info.at(-1)") == "number.renamed_timeout_b"
-    page.evaluate("nativeService124=(...args)=>{calls.push(args);return Promise.reject(Error('Rejected'));}")
+    page.evaluate("() => {nativeService124=(...args)=>{calls.push(args);return Promise.reject(Error('Rejected'));};}")
+    assert page.evaluate("calls.length") == 4
     action.click()
     expect(page.locator('.hem-arrival-error124')).to_contain_text("failed")
     expect(action).to_be_enabled()
