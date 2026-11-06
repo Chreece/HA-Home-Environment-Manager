@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Pyłki · HIGH",
           "pollen_max_scale": "POLLEN · Pyłki · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pyłki · NO VENT",
-          "general_source_stale_minutes": "źródło · max (min)",
-          "general_home_policy": "Obecność w domu"
+          "general_source_stale_minutes": "Obecność w domu · Maksymalny wiek danych śledzenia/liczby osób (min)",
+          "general_home_policy": "Obecność w domu",
+          "general_wake_alarm_entity": "Sen · Następny budzik",
+          "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Wybierz: Jakość powietrza na zewnątrz · AQI, CO₂, PM2.5, PM10, VOC. Niedostępne: ⚠",
           "weather_warnings": "Pogoda i ostrzeżenia · ⚠ (Niedostępne) → 🪟🔒",
-          "general_room_occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Pokój · Obecność · czujnik”. Brak lub stare dane wstrzymują działanie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
           "general_home_trackers": "Wybierz rzeczywiste źródło Home Assistant dla „Dom · Obecność · Urządzenia”. Brak lub stare dane wstrzymują działanie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · Pokój · źródło (state)”. Brak lub stare dane wstrzymują działanie.",
+          "general_occupied_rooms_entity": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
           "general_occupied_rooms_attribute": "Ustaw „Obecność · Pokój · źródło (attribute)” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
-          "general_sleep_rooms_entity": "Wybierz rzeczywiste źródło Home Assistant dla „Sen · Pokój · źródło (state)”. Brak lub stare dane wstrzymują działanie.",
+          "general_sleep_rooms_entity": "Wybierz listę pokoi, w których się śpi, ze stanu lub atrybutu, z nazwami lub ID obszarów Home Assistant. Wymieniony pokój jest w trybie snu tylko wtedy, gdy jest też zajęty. Niezmieniona lista pozostaje ważna; brakujące lub błędne źródło jest nieznane. Ustawiony budzik może zakończyć automatyczny sen przed dzwonieniem.",
           "general_sleep_rooms_attribute": "Ustaw „Sen · Pokój · źródło (attribute)” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
           "notify_entities": "Wybierz: notify.* · ustawienia · źródło.",
           "media_players": "Wybierz: media_player.* · ustawienia · źródło · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Ustaw „POLLEN · Pyłki · HIGH” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
           "pollen_max_scale": "Ustaw „POLLEN · Pyłki · SCALE” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
           "pollen_avoid_ventilation": "Ustaw „POLLEN · Pyłki · NO VENT” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
-          "general_source_stale_minutes": "źródło · Sen / Obecność · max 240 min. Nieprawidłowe · Wyłącz.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Limit wieku dotyczy raportów śledzenia i liczbowych danych o liczbie osób. Listy pokoi i binarne stany obecności nie tracą ważności, gdy się nie zmieniają. Niedostępne, przywrócone lub błędne źródła pozostają nieznane. To nie jest długość snu.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Wybierz encję godziny lub daty i godziny następnego budzika oraz encję minut wyprzedzenia. HEM kończy automatyczny sen o tyle minut wcześniej i przywraca zwykłe cele. Godziny bez daty używają strefy Home Assistant. Nieobecność, sterowanie ręczne i zabezpieczenia zachowują pierwszeństwo.",
+          "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Dom · Urządzenia",
           "climate_unknown_occupancy": "Obecność · Urządzenia",
           "climate_unoccupied_delay_minutes": "Urządzenia · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Obecność · Urządzenia · czujnik · Wymagane",
+          "climate_occupancy_stale_minutes": "Obecność w pomieszczeniu · Maksymalny wiek danych o liczbie osób (min)",
           "climate_away_policy": "Obecność w domu · Dom · Urządzenia · POLICY",
           "climate_manual_profile": "Urządzenia · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sen · Urządzenia",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Urządzenia (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · czujnik”. Brak lub stare dane wstrzymują działanie.",
+          "climate_occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
           "climate_away_entities": "Wybierz rzeczywiste źródło Home Assistant dla „Dom · Urządzenia”. Brak lub stare dane wstrzymują działanie.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Maksymalny wiek liczbowych danych o liczbie osób w pokoju. Stare lub niedostępne wartości są nieznane. Niezmienione binarne stany obecności i listy pokoi nie tracą ważności.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Ta opcja steruje „Urządzenia · CLIMATE_MANUAL_PROFILE”. Polecenia sprzętowe wymagają osobnej zgody i zabezpieczeń.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Ogólne · ustawienia",
-        "description": "Ogólne · ustawienia: Wybierz źródło, czujnik / Urządzenia · sterowanie.",
+        "description": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
         "data": {
           "general_room_occupancy_sensors": "Pokój · Obecność · czujnik",
           "general_occupied_rooms_entity": "Obecność · Pokój · źródło (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Obecność w domu",
           "general_sleep_rooms_entity": "Sen · Pokój · źródło (state)",
           "general_sleep_rooms_attribute": "Sen · Pokój · źródło (attribute)",
-          "general_source_stale_minutes": "źródło · max (min)"
+          "general_source_stale_minutes": "Obecność w domu · Maksymalny wiek danych śledzenia/liczby osób (min)",
+          "general_wake_alarm_entity": "Sen · Następny budzik",
+          "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Pokój · Obecność · czujnik”. Brak lub stare dane wstrzymują działanie.",
-          "general_occupied_rooms_entity": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · Pokój · źródło (state)”. Brak lub stare dane wstrzymują działanie.",
+          "general_room_occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
+          "general_occupied_rooms_entity": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
           "general_occupied_rooms_attribute": "Ustaw „Obecność · Pokój · źródło (attribute)” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
           "general_home_trackers": "Wybierz rzeczywiste źródło Home Assistant dla „Dom · Obecność · Urządzenia”. Brak lub stare dane wstrzymują działanie.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Wybierz rzeczywiste źródło Home Assistant dla „Sen · Pokój · źródło (state)”. Brak lub stare dane wstrzymują działanie.",
+          "general_sleep_rooms_entity": "Wybierz listę pokoi, w których się śpi, ze stanu lub atrybutu, z nazwami lub ID obszarów Home Assistant. Wymieniony pokój jest w trybie snu tylko wtedy, gdy jest też zajęty. Niezmieniona lista pozostaje ważna; brakujące lub błędne źródło jest nieznane. Ustawiony budzik może zakończyć automatyczny sen przed dzwonieniem.",
           "general_sleep_rooms_attribute": "Ustaw „Sen · Pokój · źródło (attribute)” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
-          "general_source_stale_minutes": "źródło · Sen / Obecność · max 240 min. Nieprawidłowe · Wyłącz."
+          "general_source_stale_minutes": "Limit wieku dotyczy raportów śledzenia i liczbowych danych o liczbie osób. Listy pokoi i binarne stany obecności nie tracą ważności, gdy się nie zmieniają. Niedostępne, przywrócone lub błędne źródła pozostają nieznane. To nie jest długość snu.",
+          "general_wake_alarm_entity": "Wybierz encję godziny lub daty i godziny następnego budzika oraz encję minut wyprzedzenia. HEM kończy automatyczny sen o tyle minut wcześniej i przywraca zwykłe cele. Godziny bez daty używają strefy Home Assistant. Nieobecność, sterowanie ręczne i zabezpieczenia zachowują pierwszeństwo.",
+          "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
           "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch.",
-          "occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · czujnik”. Brak lub stare dane wstrzymują działanie."
+          "occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
           "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch.",
-          "occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · czujnik”. Brak lub stare dane wstrzymują działanie."
+          "occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Nieprawidłowe · czujnik · ustawienia",
       "device_temperature_band_invalid": "Nieprawidłowe · Temperatura · ustawienia",
       "device_humidity_invalid": "Nieprawidłowe · Wilgotność · ustawienia",
-      "device_runtime_invalid": "Nieprawidłowe · Moc · ustawienia"
+      "device_runtime_invalid": "Nieprawidłowe · Moc · ustawienia",
+      "wake_sources_pair": "Wybierz zarówno encję budzika, jak i encję minut, albo usuń obie."
     },
     "abort": {
       "already_configured": "Home Environment Manager - już skonfigurowano.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Dom · Urządzenia",
           "climate_unknown_occupancy": "Obecność · Urządzenia",
           "climate_unoccupied_delay_minutes": "Urządzenia · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Obecność · Urządzenia · czujnik · Wymagane",
+          "climate_occupancy_stale_minutes": "Obecność w pomieszczeniu · Maksymalny wiek danych o liczbie osób (min)",
           "climate_away_policy": "Obecność w domu · Dom · Urządzenia · POLICY",
           "climate_manual_profile": "Urządzenia · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sen · Urządzenia",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Urządzenia (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · czujnik”. Brak lub stare dane wstrzymują działanie.",
+          "climate_occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
           "climate_away_entities": "Wybierz rzeczywiste źródło Home Assistant dla „Dom · Urządzenia”. Brak lub stare dane wstrzymują działanie.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Maksymalny wiek liczbowych danych o liczbie osób w pokoju. Stare lub niedostępne wartości są nieznane. Niezmienione binarne stany obecności i listy pokoi nie tracą ważności.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Ta opcja steruje „Urządzenia · CLIMATE_MANUAL_PROFILE”. Polecenia sprzętowe wymagają osobnej zgody i zabezpieczeń.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Ogólne · ustawienia",
-        "description": "Ogólne · ustawienia: Wybierz źródło, czujnik / Urządzenia · sterowanie.",
+        "description": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
         "data": {
           "general_room_occupancy_sensors": "Pokój · Obecność · czujnik",
           "general_occupied_rooms_entity": "Obecność · Pokój · źródło (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Obecność w domu",
           "general_sleep_rooms_entity": "Sen · Pokój · źródło (state)",
           "general_sleep_rooms_attribute": "Sen · Pokój · źródło (attribute)",
-          "general_source_stale_minutes": "źródło · max (min)"
+          "general_source_stale_minutes": "Obecność w domu · Maksymalny wiek danych śledzenia/liczby osób (min)",
+          "general_wake_alarm_entity": "Sen · Następny budzik",
+          "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Pokój · Obecność · czujnik”. Brak lub stare dane wstrzymują działanie.",
-          "general_occupied_rooms_entity": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · Pokój · źródło (state)”. Brak lub stare dane wstrzymują działanie.",
+          "general_room_occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
+          "general_occupied_rooms_entity": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
           "general_occupied_rooms_attribute": "Ustaw „Obecność · Pokój · źródło (attribute)” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
           "general_home_trackers": "Wybierz rzeczywiste źródło Home Assistant dla „Dom · Obecność · Urządzenia”. Brak lub stare dane wstrzymują działanie.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Wybierz rzeczywiste źródło Home Assistant dla „Sen · Pokój · źródło (state)”. Brak lub stare dane wstrzymują działanie.",
+          "general_sleep_rooms_entity": "Wybierz listę pokoi, w których się śpi, ze stanu lub atrybutu, z nazwami lub ID obszarów Home Assistant. Wymieniony pokój jest w trybie snu tylko wtedy, gdy jest też zajęty. Niezmieniona lista pozostaje ważna; brakujące lub błędne źródło jest nieznane. Ustawiony budzik może zakończyć automatyczny sen przed dzwonieniem.",
           "general_sleep_rooms_attribute": "Ustaw „Sen · Pokój · źródło (attribute)” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
-          "general_source_stale_minutes": "źródło · Sen / Obecność · max 240 min. Nieprawidłowe · Wyłącz."
+          "general_source_stale_minutes": "Limit wieku dotyczy raportów śledzenia i liczbowych danych o liczbie osób. Listy pokoi i binarne stany obecności nie tracą ważności, gdy się nie zmieniają. Niedostępne, przywrócone lub błędne źródła pozostają nieznane. To nie jest długość snu.",
+          "general_wake_alarm_entity": "Wybierz encję godziny lub daty i godziny następnego budzika oraz encję minut wyprzedzenia. HEM kończy automatyczny sen o tyle minut wcześniej i przywraca zwykłe cele. Godziny bez daty używają strefy Home Assistant. Nieobecność, sterowanie ręczne i zabezpieczenia zachowują pierwszeństwo.",
+          "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Pyłki · HIGH",
           "pollen_max_scale": "POLLEN · Pyłki · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pyłki · NO VENT",
-          "general_source_stale_minutes": "źródło · max (min)",
-          "general_home_policy": "Obecność w domu"
+          "general_source_stale_minutes": "Obecność w domu · Maksymalny wiek danych śledzenia/liczby osób (min)",
+          "general_home_policy": "Obecność w domu",
+          "general_wake_alarm_entity": "Sen · Następny budzik",
+          "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Wybierz: Jakość powietrza na zewnątrz · AQI, CO₂, PM2.5, PM10, VOC. Niedostępne: ⚠",
           "weather_warnings": "Pogoda i ostrzeżenia · ⚠ (Niedostępne) → 🪟🔒",
-          "general_room_occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Pokój · Obecność · czujnik”. Brak lub stare dane wstrzymują działanie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
           "general_home_trackers": "Wybierz rzeczywiste źródło Home Assistant dla „Dom · Obecność · Urządzenia”. Brak lub stare dane wstrzymują działanie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · Pokój · źródło (state)”. Brak lub stare dane wstrzymują działanie.",
+          "general_occupied_rooms_entity": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
           "general_occupied_rooms_attribute": "Ustaw „Obecność · Pokój · źródło (attribute)” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
-          "general_sleep_rooms_entity": "Wybierz rzeczywiste źródło Home Assistant dla „Sen · Pokój · źródło (state)”. Brak lub stare dane wstrzymują działanie.",
+          "general_sleep_rooms_entity": "Wybierz listę pokoi, w których się śpi, ze stanu lub atrybutu, z nazwami lub ID obszarów Home Assistant. Wymieniony pokój jest w trybie snu tylko wtedy, gdy jest też zajęty. Niezmieniona lista pozostaje ważna; brakujące lub błędne źródło jest nieznane. Ustawiony budzik może zakończyć automatyczny sen przed dzwonieniem.",
           "general_sleep_rooms_attribute": "Ustaw „Sen · Pokój · źródło (attribute)” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
           "notify_entities": "Wybierz: notify.* · ustawienia · źródło.",
           "media_players": "Wybierz: media_player.* · ustawienia · źródło · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Ustaw „POLLEN · Pyłki · HIGH” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
           "pollen_max_scale": "Ustaw „POLLEN · Pyłki · SCALE” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
           "pollen_avoid_ventilation": "Ustaw „POLLEN · Pyłki · NO VENT” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie.",
-          "general_source_stale_minutes": "źródło · Sen / Obecność · max 240 min. Nieprawidłowe · Wyłącz.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Limit wieku dotyczy raportów śledzenia i liczbowych danych o liczbie osób. Listy pokoi i binarne stany obecności nie tracą ważności, gdy się nie zmieniają. Niedostępne, przywrócone lub błędne źródła pozostają nieznane. To nie jest długość snu.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Wybierz encję godziny lub daty i godziny następnego budzika oraz encję minut wyprzedzenia. HEM kończy automatyczny sen o tyle minut wcześniej i przywraca zwykłe cele. Godziny bez daty używają strefy Home Assistant. Nieobecność, sterowanie ręczne i zabezpieczenia zachowują pierwszeństwo.",
+          "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
           "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch.",
-          "occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · czujnik”. Brak lub stare dane wstrzymują działanie."
+          "occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Wilgotność. Wybierz wejścia pomieszczenia: nazwa urządzenia - nazwa encji. Puste grupy pozostają nieużywane i nie włączają automatycznego wykrywania ani sterowania.",
           "climate_devices": "Urządzenia. Wybierz tylko fizyczne encje climate.*, humidifier.* i fan.* tego pokoju. Dostępne funkcje określają ogrzewanie, chłodzenie, osuszanie, nastawy i prędkość wentylatora. Sam wybór niczego nie uruchamia; automatykę włącza się osobno dla urządzenia.",
           "shades": "Rolety, żaluzje i zasłony okienne. Wybierz rolety, żaluzje i zasłony cover.* tego pokoju. Covers bez device_class są dozwolone z funkcją CLOSE, jeśli naprawdę osłaniają okno. Bramy garażowe, drzwi, furtki, okna i markizy są wykluczone. Wybór niczego nie porusza: przypisz czujnik okna oraz ustaw automatykę, zapowiedź i temperaturę w kontrolerze. Nieznany stan blokuje ruch.",
-          "occupancy_sensors": "Wybierz rzeczywiste źródło Home Assistant dla „Obecność · czujnik”. Brak lub stare dane wstrzymują działanie."
+          "occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Nieprawidłowe · Moc · ustawienia",
       "invalid_setup_rooms": "Nieprawidłowe: Pomieszczenia do monitorowania",
       "invalid_room_source": "Nieprawidłowe: Pokój · źródło",
-      "invalid_away_windows_recipients": "Osoby do powiadomienia; Kanały powiadomień o oknach. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Osoby do powiadomienia; Kanały powiadomień o oknach. Announcement Hub (person.*).",
+      "wake_sources_pair": "Wybierz zarówno encję budzika, jak i encję minut, albo usuń obie."
     },
     "abort": {
       "setup_area_removed": "Nieprawidłowe: Pomieszczenia do monitorowania",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Obecność w domu · źródło · max (min)",
+        "name": "Obecność w domu · Maksymalny wiek danych śledzenia/liczby osób (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Obecność w pomieszczeniu · Obecność · Urządzenia · czujnik · Wymagane",
+        "name": "Obecność w pomieszczeniu · Maksymalny wiek danych o liczbie osób (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Powiadomienia · Powiadamiaj o błędach urządzenia · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Sen · {channel}Gdy wszyscy śpią",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"

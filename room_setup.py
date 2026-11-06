@@ -301,6 +301,22 @@ class RoomSetupMixin:
                     "person_count", "persons_count", "home_count", "people_home")))
         )
         room_entities = [{"value": "none", "label": "-"}, *self._room_source_options(self.hass)]
+        saved = self._values.get(CONF_OCCUPANCY_GLOBAL, {})
+        saved = saved if isinstance(saved, dict) else {}
+        available_lists = {item["value"] for item in room_entities}
+        for key in ("occupied_rooms_entity", "sleep_rooms_entity"):
+            entity = saved.get(key)
+            if isinstance(entity, str) and entity and entity not in available_lists:
+                room_entities.append({"value": entity, "label": sources.label(self.hass, entity)})
+                available_lists.add(entity)
+        from .wake_alarm import wake_source_options
+        alarm_ids, lead_ids = wake_source_options(
+            self.hass, self._values.get(CONF_OCCUPANCY_GLOBAL, {}))
+        def optional_entities(ids):
+            return [{"value": "none", "label": "-"}, *(
+                {"value": eid, "label": sources.label(self.hass, eid)} for eid in ids
+                if sources.native(self.hass, eid)
+            )]
         env = self._values.get(CONF_ENVIRONMENT_GLOBAL, {})
         saved_pollen = set(env.get("pollen_entities", [])) if isinstance(env, dict) else set()
         if isinstance(env, dict) and isinstance(env.get("pollen_entity"), str):
@@ -326,6 +342,8 @@ class RoomSetupMixin:
             "general_home_trackers": [*state_options("person"), *state_options("device_tracker"), *pres],
             "general_occupied_rooms_entity": room_entities,
             "general_sleep_rooms_entity": room_entities,
+            "general_wake_alarm_entity": optional_entities(alarm_ids),
+            "general_wake_lead_minutes_entity": optional_entities(lead_ids),
             "pollen_entities": pollen,
             CONF_NOTIFY_TARGETS: state_options("notify"),
             CONF_MEDIA_PLAYERS: _tts_player_options(self.hass),
@@ -379,6 +397,8 @@ class RoomSetupMixin:
             "general_away_cooldown_minutes": old.get("away_cooldown_minutes", 10),
             "general_source_stale_minutes": old.get("source_stale_minutes", 240),
             "general_home_policy": old.get("home_policy", "any_home"),
+            "general_wake_alarm_entity": old.get("wake_alarm_entity") or "none",
+            "general_wake_lead_minutes_entity": old.get("wake_lead_minutes_entity") or "none",
             "pollen_high_from": env.get("pollen_high_from", 3),
             "pollen_max_scale": env.get("pollen_max_scale", 5),
             "pollen_avoid_ventilation": env.get("pollen_avoid_ventilation", False),
@@ -414,6 +434,9 @@ class RoomSetupMixin:
                     errors[key] = "invalid_room_source"
             if value[CONF_LANGUAGE] not in language_values:
                 errors[CONF_LANGUAGE] = "invalid_room_source"
+            if ((value["general_wake_alarm_entity"] == "none") !=
+                    (value["general_wake_lead_minutes_entity"] == "none")):
+                errors["general_wake_lead_minutes_entity"] = "wake_sources_pair"
             if type(value[CONF_USE_MOLD]) is not bool:
                 errors[CONF_USE_MOLD] = "invalid_room_source"
             if type(value[CONF_AWAY_WINDOWS_ALERT]) is not bool:
@@ -481,8 +504,10 @@ class RoomSetupMixin:
                     continue
                 attrs = self._room_attribute_options(self.hass, entity)
                 allowed = {a["value"] for a in attrs}
+                if entity == old.get(f"{prefix}_rooms_entity"):
+                    allowed.add(old.get(f"{prefix}_rooms_attribute") or "__state__")
                 if value[attr_key] not in allowed:
-                    value[attr_key] = "__state__"
+                    errors[attr_key] = "general_invalid_attribute"
             if not errors:
                 # No implicit activation; preserve previously configured policies.
                 for key in (CONF_WEATHER, CONF_OUTDOOR, CONF_WARNINGS, CONF_NOTIFY_TARGETS, CONF_MEDIA_PLAYERS):
@@ -522,6 +547,8 @@ class RoomSetupMixin:
                     occupancy[name] = list(dict.fromkeys(value["general_"+name]))
                 occupancy["away_cooldown_minutes"] = float(value["general_away_cooldown_minutes"])
                 occupancy["source_stale_minutes"] = source_age
+                for name in ("wake_alarm_entity", "wake_lead_minutes_entity"):
+                    occupancy[name] = None if value["general_" + name] == "none" else value["general_" + name]
                 occupancy["home_policy"] = value["general_home_policy"]
                 for prefix in ("occupied", "sleep"):
                     entity = value[f"general_{prefix}_rooms_entity"]
@@ -536,13 +563,15 @@ class RoomSetupMixin:
         fields = {}
         for key in (CONF_WEATHER, CONF_OUTDOOR, CONF_WARNINGS, "general_room_occupancy_sensors",
                     "general_home_trackers", "general_occupied_rooms_entity", "general_sleep_rooms_entity",
+                    "general_wake_alarm_entity", "general_wake_lead_minutes_entity",
                     "pollen_entities", CONF_NOTIFY_TARGETS, CONF_MEDIA_PLAYERS, CONF_TTS_ENGINE, CONF_AI_AGENT):
             fields[field(key, value[key])] = select(options[key], multiple=key in multi)
             if key in ("general_occupied_rooms_entity", "general_sleep_rooms_entity"):
                 attr_key = key.removesuffix("entity") + "attribute"
                 # Offer the union of relevant attributes from all room-list
                 # candidates so entity + attribute can be chosen on this one page.
-                attrs_by_value = {"__state__": {"value": "__state__", "label": "State"}}
+                attrs_by_value = {a["value"]: a for a in
+                                  self._room_attribute_options(self.hass, None)}
                 for candidate in options[key]:
                     entity_id = candidate["value"]
                     if entity_id == "none":
@@ -550,6 +579,10 @@ class RoomSetupMixin:
                     for option in self._room_attribute_options(self.hass, entity_id):
                         attrs_by_value.setdefault(option["value"], option)
                 attrs = list(attrs_by_value.values())
+                if value[attr_key] and value[attr_key] not in attrs_by_value and value[attr_key] == old.get(
+                        attr_key.removeprefix("general_")):
+                    attrs_by_value[value[attr_key]] = {"value": value[attr_key], "label": value[attr_key]}
+                    attrs = list(attrs_by_value.values())
                 chosen = value[attr_key] if value[attr_key] in attrs_by_value else "__state__"
                 fields[field(attr_key, chosen)] = select(attrs)
         fields[field("general_away_cooldown_minutes", value["general_away_cooldown_minutes"])] = (

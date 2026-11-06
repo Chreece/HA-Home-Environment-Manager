@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Pyl · HIGH",
           "pollen_max_scale": "POLLEN · Pyl · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pyl · NO VENT",
-          "general_source_stale_minutes": "zdroj · max (min)",
-          "general_home_policy": "Přítomnost doma"
+          "general_source_stale_minutes": "Přítomnost doma · Maximální stáří údajů sledování/počtu osob (min)",
+          "general_home_policy": "Přítomnost doma",
+          "general_wake_alarm_entity": "Spánek · Příští budík",
+          "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Vyberte: Kvalita venkovního vzduchu · AQI, CO₂, PM2.5, PM10, VOC. Nedostupné: ⚠",
           "weather_warnings": "Počasí a výstrahy · ⚠ (Nedostupné) → 🪟🔒",
-          "general_room_occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Místnost · Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
           "general_home_trackers": "Vyberte skutečný zdroj Home Assistant pro „Domov · Obsazenost · Zařízení“. Chybějící nebo zastaralá data pozastaví akci. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · Místnost · zdroj (state)“. Chybějící nebo zastaralá data pozastaví akci.",
+          "general_occupied_rooms_entity": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
           "general_occupied_rooms_attribute": "Nastavte „Obsazenost · Místnost · zdroj (attribute)“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
-          "general_sleep_rooms_entity": "Vyberte skutečný zdroj Home Assistant pro „Spánek · Místnost · zdroj (state)“. Chybějící nebo zastaralá data pozastaví akci.",
+          "general_sleep_rooms_entity": "Vyberte seznam spících místností ve stavu či atributu pomocí názvů nebo ID oblastí Home Assistant. Uvedená místnost je ve spánku pouze tehdy, pokud je také obsazená. Nezměněný seznam zůstává platný; chybějící nebo neplatný zdroj je neznámý. Nastavený budík může automatický spánek ukončit před zazvoněním.",
           "general_sleep_rooms_attribute": "Nastavte „Spánek · Místnost · zdroj (attribute)“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
           "notify_entities": "Vyberte: notify.* · nastavení · zdroj.",
           "media_players": "Vyberte: media_player.* · nastavení · zdroj · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Nastavte „POLLEN · Pyl · HIGH“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
           "pollen_max_scale": "Nastavte „POLLEN · Pyl · SCALE“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
           "pollen_avoid_ventilation": "Nastavte „POLLEN · Pyl · NO VENT“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
-          "general_source_stale_minutes": "zdroj · Spánek / Obsazenost · max 240 min. Neplatné · Vypnout.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Věkové omezení platí pro hlášení sledovačů a číselné počty osob. Seznamy místností a binární přítomnostní stavy při nezměněné hodnotě nevyprší. Nedostupné, obnovené nebo neplatné zdroje zůstávají neznámé. Nejde o délku spánku.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Vyberte entitu času nebo časového razítka příštího budíku a také entitu s minutami předstihu. HEM ukončí automatický spánek s tímto předstihem a obnoví běžné cíle. Samotný čas používá časové pásmo Home Assistant. Nepřítomnost, ruční ovládání a ochrany zařízení mají nadále přednost.",
+          "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Domov · Zařízení",
           "climate_unknown_occupancy": "Obsazenost · Zařízení",
           "climate_unoccupied_delay_minutes": "Zařízení · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Obsazenost · Zařízení · senzor · Povinné",
+          "climate_occupancy_stale_minutes": "Přítomnost v místnosti · Maximální stáří počtu osob (min)",
           "climate_away_policy": "Přítomnost doma · Domov · Zařízení · POLICY",
           "climate_manual_profile": "Zařízení · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Spánek · Zařízení",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Zařízení (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci.",
+          "climate_occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
           "climate_away_entities": "Vyberte skutečný zdroj Home Assistant pro „Domov · Zařízení“. Chybějící nebo zastaralá data pozastaví akci.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Maximální stáří číselných údajů o počtu osob v místnosti. Staré nebo nedostupné hodnoty jsou neznámé. Binární přítomnostní stavy a seznamy místností při nezměněné hodnotě nevyprší.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Tato volba řídí „Zařízení · CLIMATE_MANUAL_PROFILE“. Fyzické příkazy vyžadují samostatný souhlas a ochrany.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Obecná · nastavení",
-        "description": "Obecná · nastavení: Vybrat zdroj, senzor / Zařízení · řízení.",
+        "description": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
         "data": {
           "general_room_occupancy_sensors": "Místnost · Obsazenost · senzor",
           "general_occupied_rooms_entity": "Obsazenost · Místnost · zdroj (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Přítomnost doma",
           "general_sleep_rooms_entity": "Spánek · Místnost · zdroj (state)",
           "general_sleep_rooms_attribute": "Spánek · Místnost · zdroj (attribute)",
-          "general_source_stale_minutes": "zdroj · max (min)"
+          "general_source_stale_minutes": "Přítomnost doma · Maximální stáří údajů sledování/počtu osob (min)",
+          "general_wake_alarm_entity": "Spánek · Příští budík",
+          "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Místnost · Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci.",
-          "general_occupied_rooms_entity": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · Místnost · zdroj (state)“. Chybějící nebo zastaralá data pozastaví akci.",
+          "general_room_occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
+          "general_occupied_rooms_entity": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
           "general_occupied_rooms_attribute": "Nastavte „Obsazenost · Místnost · zdroj (attribute)“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
           "general_home_trackers": "Vyberte skutečný zdroj Home Assistant pro „Domov · Obsazenost · Zařízení“. Chybějící nebo zastaralá data pozastaví akci.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Vyberte skutečný zdroj Home Assistant pro „Spánek · Místnost · zdroj (state)“. Chybějící nebo zastaralá data pozastaví akci.",
+          "general_sleep_rooms_entity": "Vyberte seznam spících místností ve stavu či atributu pomocí názvů nebo ID oblastí Home Assistant. Uvedená místnost je ve spánku pouze tehdy, pokud je také obsazená. Nezměněný seznam zůstává platný; chybějící nebo neplatný zdroj je neznámý. Nastavený budík může automatický spánek ukončit před zazvoněním.",
           "general_sleep_rooms_attribute": "Nastavte „Spánek · Místnost · zdroj (attribute)“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
-          "general_source_stale_minutes": "zdroj · Spánek / Obsazenost · max 240 min. Neplatné · Vypnout."
+          "general_source_stale_minutes": "Věkové omezení platí pro hlášení sledovačů a číselné počty osob. Seznamy místností a binární přítomnostní stavy při nezměněné hodnotě nevyprší. Nedostupné, obnovené nebo neplatné zdroje zůstávají neznámé. Nejde o délku spánku.",
+          "general_wake_alarm_entity": "Vyberte entitu času nebo časového razítka příštího budíku a také entitu s minutami předstihu. HEM ukončí automatický spánek s tímto předstihem a obnoví běžné cíle. Samotný čas používá časové pásmo Home Assistant. Nepřítomnost, ruční ovládání a ochrany zařízení mají nadále přednost.",
+          "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
           "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje.",
-          "occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci."
+          "occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
           "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje.",
-          "occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci."
+          "occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Neplatné · senzor · nastavení",
       "device_temperature_band_invalid": "Neplatné · Teplota · nastavení",
       "device_humidity_invalid": "Neplatné · Vlhkost · nastavení",
-      "device_runtime_invalid": "Neplatné · Výkon · nastavení"
+      "device_runtime_invalid": "Neplatné · Výkon · nastavení",
+      "wake_sources_pair": "Vyberte entitu budíku i entitu minut, nebo obě vymažte."
     },
     "abort": {
       "already_configured": "Home Environment Manager - již nastaveno.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Domov · Zařízení",
           "climate_unknown_occupancy": "Obsazenost · Zařízení",
           "climate_unoccupied_delay_minutes": "Zařízení · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Obsazenost · Zařízení · senzor · Povinné",
+          "climate_occupancy_stale_minutes": "Přítomnost v místnosti · Maximální stáří počtu osob (min)",
           "climate_away_policy": "Přítomnost doma · Domov · Zařízení · POLICY",
           "climate_manual_profile": "Zařízení · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Spánek · Zařízení",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Zařízení (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci.",
+          "climate_occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
           "climate_away_entities": "Vyberte skutečný zdroj Home Assistant pro „Domov · Zařízení“. Chybějící nebo zastaralá data pozastaví akci.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Maximální stáří číselných údajů o počtu osob v místnosti. Staré nebo nedostupné hodnoty jsou neznámé. Binární přítomnostní stavy a seznamy místností při nezměněné hodnotě nevyprší.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Tato volba řídí „Zařízení · CLIMATE_MANUAL_PROFILE“. Fyzické příkazy vyžadují samostatný souhlas a ochrany.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Obecná · nastavení",
-        "description": "Obecná · nastavení: Vybrat zdroj, senzor / Zařízení · řízení.",
+        "description": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
         "data": {
           "general_room_occupancy_sensors": "Místnost · Obsazenost · senzor",
           "general_occupied_rooms_entity": "Obsazenost · Místnost · zdroj (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Přítomnost doma",
           "general_sleep_rooms_entity": "Spánek · Místnost · zdroj (state)",
           "general_sleep_rooms_attribute": "Spánek · Místnost · zdroj (attribute)",
-          "general_source_stale_minutes": "zdroj · max (min)"
+          "general_source_stale_minutes": "Přítomnost doma · Maximální stáří údajů sledování/počtu osob (min)",
+          "general_wake_alarm_entity": "Spánek · Příští budík",
+          "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Místnost · Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci.",
-          "general_occupied_rooms_entity": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · Místnost · zdroj (state)“. Chybějící nebo zastaralá data pozastaví akci.",
+          "general_room_occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
+          "general_occupied_rooms_entity": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
           "general_occupied_rooms_attribute": "Nastavte „Obsazenost · Místnost · zdroj (attribute)“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
           "general_home_trackers": "Vyberte skutečný zdroj Home Assistant pro „Domov · Obsazenost · Zařízení“. Chybějící nebo zastaralá data pozastaví akci.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Vyberte skutečný zdroj Home Assistant pro „Spánek · Místnost · zdroj (state)“. Chybějící nebo zastaralá data pozastaví akci.",
+          "general_sleep_rooms_entity": "Vyberte seznam spících místností ve stavu či atributu pomocí názvů nebo ID oblastí Home Assistant. Uvedená místnost je ve spánku pouze tehdy, pokud je také obsazená. Nezměněný seznam zůstává platný; chybějící nebo neplatný zdroj je neznámý. Nastavený budík může automatický spánek ukončit před zazvoněním.",
           "general_sleep_rooms_attribute": "Nastavte „Spánek · Místnost · zdroj (attribute)“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
-          "general_source_stale_minutes": "zdroj · Spánek / Obsazenost · max 240 min. Neplatné · Vypnout."
+          "general_source_stale_minutes": "Věkové omezení platí pro hlášení sledovačů a číselné počty osob. Seznamy místností a binární přítomnostní stavy při nezměněné hodnotě nevyprší. Nedostupné, obnovené nebo neplatné zdroje zůstávají neznámé. Nejde o délku spánku.",
+          "general_wake_alarm_entity": "Vyberte entitu času nebo časového razítka příštího budíku a také entitu s minutami předstihu. HEM ukončí automatický spánek s tímto předstihem a obnoví běžné cíle. Samotný čas používá časové pásmo Home Assistant. Nepřítomnost, ruční ovládání a ochrany zařízení mají nadále přednost.",
+          "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Pyl · HIGH",
           "pollen_max_scale": "POLLEN · Pyl · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pyl · NO VENT",
-          "general_source_stale_minutes": "zdroj · max (min)",
-          "general_home_policy": "Přítomnost doma"
+          "general_source_stale_minutes": "Přítomnost doma · Maximální stáří údajů sledování/počtu osob (min)",
+          "general_home_policy": "Přítomnost doma",
+          "general_wake_alarm_entity": "Spánek · Příští budík",
+          "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Vyberte: Kvalita venkovního vzduchu · AQI, CO₂, PM2.5, PM10, VOC. Nedostupné: ⚠",
           "weather_warnings": "Počasí a výstrahy · ⚠ (Nedostupné) → 🪟🔒",
-          "general_room_occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Místnost · Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
           "general_home_trackers": "Vyberte skutečný zdroj Home Assistant pro „Domov · Obsazenost · Zařízení“. Chybějící nebo zastaralá data pozastaví akci. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · Místnost · zdroj (state)“. Chybějící nebo zastaralá data pozastaví akci.",
+          "general_occupied_rooms_entity": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
           "general_occupied_rooms_attribute": "Nastavte „Obsazenost · Místnost · zdroj (attribute)“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
-          "general_sleep_rooms_entity": "Vyberte skutečný zdroj Home Assistant pro „Spánek · Místnost · zdroj (state)“. Chybějící nebo zastaralá data pozastaví akci.",
+          "general_sleep_rooms_entity": "Vyberte seznam spících místností ve stavu či atributu pomocí názvů nebo ID oblastí Home Assistant. Uvedená místnost je ve spánku pouze tehdy, pokud je také obsazená. Nezměněný seznam zůstává platný; chybějící nebo neplatný zdroj je neznámý. Nastavený budík může automatický spánek ukončit před zazvoněním.",
           "general_sleep_rooms_attribute": "Nastavte „Spánek · Místnost · zdroj (attribute)“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
           "notify_entities": "Vyberte: notify.* · nastavení · zdroj.",
           "media_players": "Vyberte: media_player.* · nastavení · zdroj · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Nastavte „POLLEN · Pyl · HIGH“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
           "pollen_max_scale": "Nastavte „POLLEN · Pyl · SCALE“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
           "pollen_avoid_ventilation": "Nastavte „POLLEN · Pyl · NO VENT“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
-          "general_source_stale_minutes": "zdroj · Spánek / Obsazenost · max 240 min. Neplatné · Vypnout.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Věkové omezení platí pro hlášení sledovačů a číselné počty osob. Seznamy místností a binární přítomnostní stavy při nezměněné hodnotě nevyprší. Nedostupné, obnovené nebo neplatné zdroje zůstávají neznámé. Nejde o délku spánku.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Vyberte entitu času nebo časového razítka příštího budíku a také entitu s minutami předstihu. HEM ukončí automatický spánek s tímto předstihem a obnoví běžné cíle. Samotný čas používá časové pásmo Home Assistant. Nepřítomnost, ruční ovládání a ochrany zařízení mají nadále přednost.",
+          "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
           "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje.",
-          "occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci."
+          "occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Vlhkost. Vyberte vstupy místnosti: název zařízení - název entity. Prázdné skupiny se nepoužívají a nezapínají automatické vyhledávání ani řízení.",
           "climate_devices": "Zařízení. Vyberte pouze fyzické entity climate.*, humidifier.* a fan.* této místnosti. Nativní možnosti určují vytápění, chlazení, odvlhčování, požadované hodnoty i rychlosti ventilátoru. Výběr nic nespustí; automatiku povolte zvlášť pro každé zařízení.",
           "shades": "Okenní rolety, žaluzie a závěsy. Vyberte rolety, žaluzie a závěsy cover.* této místnosti. Cover bez device_class lze použít s funkcí CLOSE, pokud skutečně stíní okno. Garáže, vrata, dveře, okna a markýzy jsou vyloučené. Výběr ničím nepohybuje: přiřaďte okenní kontakt a nastavte automatiku, oznámení a teplotu na ovladači. Neznámý stav pohyb blokuje.",
-          "occupancy_sensors": "Vyberte skutečný zdroj Home Assistant pro „Obsazenost · senzor“. Chybějící nebo zastaralá data pozastaví akci."
+          "occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Neplatné · Výkon · nastavení",
       "invalid_setup_rooms": "Neplatné: Sledované místnosti",
       "invalid_room_source": "Neplatné: Místnost · zdroj",
-      "invalid_away_windows_recipients": "Příjemci upozornění; Kanály upozornění na okna. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Příjemci upozornění; Kanály upozornění na okna. Announcement Hub (person.*).",
+      "wake_sources_pair": "Vyberte entitu budíku i entitu minut, nebo obě vymažte."
     },
     "abort": {
       "setup_area_removed": "Neplatné: Sledované místnosti",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Přítomnost doma · zdroj · max (min)",
+        "name": "Přítomnost doma · Maximální stáří údajů sledování/počtu osob (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Přítomnost v místnosti · Obsazenost · Zařízení · senzor · Povinné",
+        "name": "Přítomnost v místnosti · Maximální stáří počtu osob (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Oznámení · Oznamovat chyby zařízení · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Spánek · {channel}Když všichni spí",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"

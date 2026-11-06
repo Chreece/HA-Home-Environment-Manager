@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Pollen · HIGH",
           "pollen_max_scale": "POLLEN · Pollen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
-          "general_source_stale_minutes": "kilde · max (min)",
-          "general_home_policy": "Tilstedeværelse hjemme"
+          "general_source_stale_minutes": "Tilstedeværelse hjemme · Maksimal alder på sporings-/persontallsdata (min)",
+          "general_home_policy": "Tilstedeværelse hjemme",
+          "general_wake_alarm_entity": "Søvn · Neste alarm",
+          "general_wake_lead_minutes_entity": "Søvn · Minutter før alarmen"
         },
         "data_description": {
           "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Velg: Luftkvalitet ute · AQI, CO₂, PM2.5, PM10, VOC. Ikke tilgjengelig: ⚠",
           "weather_warnings": "Vær og varsler · ⚠ (Ikke tilgjengelig) → 🪟🔒",
-          "general_room_occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Rom · Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
           "general_home_trackers": "Velg en ekte Home Assistant-kilde for «Hjem · Tilstedeværelse · Enheter». Manglende eller gamle verdier stopper handlingen. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · Rom · kilde (state)». Manglende eller gamle verdier stopper handlingen.",
+          "general_occupied_rooms_entity": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
           "general_occupied_rooms_attribute": "Konfigurer «Tilstedeværelse · Rom · kilde (attribute)» bare for valgt rom. Feil data stopper handlingen.",
-          "general_sleep_rooms_entity": "Velg en ekte Home Assistant-kilde for «Søvn · Rom · kilde (state)». Manglende eller gamle verdier stopper handlingen.",
+          "general_sleep_rooms_entity": "Velg en liste over sovende rom fra tilstand eller attributt, med områdenavn eller -ID-er i Home Assistant. Et oppført rom sover bare hvis det også er opptatt. En uendret liste er fortsatt gyldig; en manglende eller ugyldig kilde er ukjent. Den innstilte alarmen kan avslutte automatisk søvn før den ringer.",
           "general_sleep_rooms_attribute": "Konfigurer «Søvn · Rom · kilde (attribute)» bare for valgt rom. Feil data stopper handlingen.",
           "notify_entities": "Velg: notify.* · innstillinger · kilde.",
           "media_players": "Velg: media_player.* · innstillinger · kilde · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Konfigurer «POLLEN · Pollen · HIGH» bare for valgt rom. Feil data stopper handlingen.",
           "pollen_max_scale": "Konfigurer «POLLEN · Pollen · SCALE» bare for valgt rom. Feil data stopper handlingen.",
           "pollen_avoid_ventilation": "Konfigurer «POLLEN · Pollen · NO VENT» bare for valgt rom. Feil data stopper handlingen.",
-          "general_source_stale_minutes": "kilde · Søvn / Tilstedeværelse · max 240 min. Ugyldig · Slå av.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Aldersgrensen gjelder sporingsrapporter og numeriske persontall. Romlister og binære tilstedeværelsestilstander utløper ikke mens de er uendret. Utilgjengelige, gjenopprettede eller ugyldige kilder er ukjente. Dette er ikke søvnens varighet.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Velg en tids- eller tidsstempelentitet for neste alarm og en entitet for minuttene. HEM avslutter automatisk søvn så mange minutter før alarmen og gjenopptar vanlige mål. Klokkeslett uten dato bruker Home Assistants tidssone. Fravær, manuell styring og enhetsbeskyttelse beholder prioritet.",
+          "general_wake_lead_minutes_entity": "Velg en numerisk entitet med et ikke-negativt antall minutter, med enheten min eller uten enhet. Alarm kl. 07:00 og verdien 30 avslutter automatisk søvn kl. 06:30; 0 betyr når alarmen ringer. Tøm begge kildene for å deaktivere."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Hjem · Enheter",
           "climate_unknown_occupancy": "Tilstedeværelse · Enheter",
           "climate_unoccupied_delay_minutes": "Enheter · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Tilstedeværelse · Enheter · sensor · Påkrevd",
+          "climate_occupancy_stale_minutes": "Tilstedeværelse i rommet · Maksimal alder på persontall (min)",
           "climate_away_policy": "Tilstedeværelse hjemme · Hjem · Enheter · POLICY",
           "climate_manual_profile": "Enheter · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Søvn · Enheter",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Enheter (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen.",
+          "climate_occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
           "climate_away_entities": "Velg en ekte Home Assistant-kilde for «Hjem · Enheter». Manglende eller gamle verdier stopper handlingen.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Maksimal alder på numeriske persontall i rommet. Gamle eller utilgjengelige verdier er ukjente. Binære tilstedeværelsestilstander og romlister utløper ikke mens de er uendret.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Dette valget styrer «Enheter · CLIMATE_MANUAL_PROFILE». Fysiske kommandoer krever separat tillatelse og sikkerhet.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Generelle · innstillinger",
-        "description": "Generelle · innstillinger: Velg kilde, sensor / Enheter · styring.",
+        "description": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
         "data": {
           "general_room_occupancy_sensors": "Rom · Tilstedeværelse · sensor",
           "general_occupied_rooms_entity": "Tilstedeværelse · Rom · kilde (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Tilstedeværelse hjemme",
           "general_sleep_rooms_entity": "Søvn · Rom · kilde (state)",
           "general_sleep_rooms_attribute": "Søvn · Rom · kilde (attribute)",
-          "general_source_stale_minutes": "kilde · max (min)"
+          "general_source_stale_minutes": "Tilstedeværelse hjemme · Maksimal alder på sporings-/persontallsdata (min)",
+          "general_wake_alarm_entity": "Søvn · Neste alarm",
+          "general_wake_lead_minutes_entity": "Søvn · Minutter før alarmen"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Rom · Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen.",
-          "general_occupied_rooms_entity": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · Rom · kilde (state)». Manglende eller gamle verdier stopper handlingen.",
+          "general_room_occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
+          "general_occupied_rooms_entity": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
           "general_occupied_rooms_attribute": "Konfigurer «Tilstedeværelse · Rom · kilde (attribute)» bare for valgt rom. Feil data stopper handlingen.",
           "general_home_trackers": "Velg en ekte Home Assistant-kilde for «Hjem · Tilstedeværelse · Enheter». Manglende eller gamle verdier stopper handlingen.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Velg en ekte Home Assistant-kilde for «Søvn · Rom · kilde (state)». Manglende eller gamle verdier stopper handlingen.",
+          "general_sleep_rooms_entity": "Velg en liste over sovende rom fra tilstand eller attributt, med områdenavn eller -ID-er i Home Assistant. Et oppført rom sover bare hvis det også er opptatt. En uendret liste er fortsatt gyldig; en manglende eller ugyldig kilde er ukjent. Den innstilte alarmen kan avslutte automatisk søvn før den ringer.",
           "general_sleep_rooms_attribute": "Konfigurer «Søvn · Rom · kilde (attribute)» bare for valgt rom. Feil data stopper handlingen.",
-          "general_source_stale_minutes": "kilde · Søvn / Tilstedeværelse · max 240 min. Ugyldig · Slå av."
+          "general_source_stale_minutes": "Aldersgrensen gjelder sporingsrapporter og numeriske persontall. Romlister og binære tilstedeværelsestilstander utløper ikke mens de er uendret. Utilgjengelige, gjenopprettede eller ugyldige kilder er ukjente. Dette er ikke søvnens varighet.",
+          "general_wake_alarm_entity": "Velg en tids- eller tidsstempelentitet for neste alarm og en entitet for minuttene. HEM avslutter automatisk søvn så mange minutter før alarmen og gjenopptar vanlige mål. Klokkeslett uten dato bruker Home Assistants tidssone. Fravær, manuell styring og enhetsbeskyttelse beholder prioritet.",
+          "general_wake_lead_minutes_entity": "Velg en numerisk entitet med et ikke-negativt antall minutter, med enheten min eller uten enhet. Alarm kl. 07:00 og verdien 30 avslutter automatisk søvn kl. 06:30; 0 betyr når alarmen ringer. Tøm begge kildene for å deaktivere."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Luftfuktighet. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
           "climate_devices": "Enheter. Velg bare fysiske climate.*, humidifier.* og fan.* i rommet. Enhetens egne funksjoner bestemmer varme, kjøling, avfukting, målverdier og viftehastighet. Valget betjener ingenting; automatikken aktiveres separat på hver enhet.",
           "shades": "Persienner, rullegardiner og skodder. Velg rullegardiner, persienner og skodder som cover.* i rommet. Covers uten device_class støttes med CLOSE hvis de faktisk skjermer vinduer. Garasjer, porter, dører, vinduer og markiser er utelukket. Valget beveger ingenting: koble vinduskontakt og konfigurer automatikk, kunngjøring og temperatur i kontrolleren. Ukjent status hindrer bevegelse.",
-          "occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen."
+          "occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Luftfuktighet. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
           "climate_devices": "Enheter. Velg bare fysiske climate.*, humidifier.* og fan.* i rommet. Enhetens egne funksjoner bestemmer varme, kjøling, avfukting, målverdier og viftehastighet. Valget betjener ingenting; automatikken aktiveres separat på hver enhet.",
           "shades": "Persienner, rullegardiner og skodder. Velg rullegardiner, persienner og skodder som cover.* i rommet. Covers uten device_class støttes med CLOSE hvis de faktisk skjermer vinduer. Garasjer, porter, dører, vinduer og markiser er utelukket. Valget beveger ingenting: koble vinduskontakt og konfigurer automatikk, kunngjøring og temperatur i kontrolleren. Ukjent status hindrer bevegelse.",
-          "occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen."
+          "occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Ugyldig · sensor · innstillinger",
       "device_temperature_band_invalid": "Ugyldig · Temperatur · innstillinger",
       "device_humidity_invalid": "Ugyldig · Luftfuktighet · innstillinger",
-      "device_runtime_invalid": "Ugyldig · Effekt · innstillinger"
+      "device_runtime_invalid": "Ugyldig · Effekt · innstillinger",
+      "wake_sources_pair": "Velg både alarm- og minuttentiteten, eller tøm begge."
     },
     "abort": {
       "already_configured": "Home Environment Manager - allerede konfigurert.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Hjem · Enheter",
           "climate_unknown_occupancy": "Tilstedeværelse · Enheter",
           "climate_unoccupied_delay_minutes": "Enheter · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Tilstedeværelse · Enheter · sensor · Påkrevd",
+          "climate_occupancy_stale_minutes": "Tilstedeværelse i rommet · Maksimal alder på persontall (min)",
           "climate_away_policy": "Tilstedeværelse hjemme · Hjem · Enheter · POLICY",
           "climate_manual_profile": "Enheter · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Søvn · Enheter",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Enheter (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen.",
+          "climate_occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
           "climate_away_entities": "Velg en ekte Home Assistant-kilde for «Hjem · Enheter». Manglende eller gamle verdier stopper handlingen.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Maksimal alder på numeriske persontall i rommet. Gamle eller utilgjengelige verdier er ukjente. Binære tilstedeværelsestilstander og romlister utløper ikke mens de er uendret.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Dette valget styrer «Enheter · CLIMATE_MANUAL_PROFILE». Fysiske kommandoer krever separat tillatelse og sikkerhet.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Generelle · innstillinger",
-        "description": "Generelle · innstillinger: Velg kilde, sensor / Enheter · styring.",
+        "description": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
         "data": {
           "general_room_occupancy_sensors": "Rom · Tilstedeværelse · sensor",
           "general_occupied_rooms_entity": "Tilstedeværelse · Rom · kilde (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Tilstedeværelse hjemme",
           "general_sleep_rooms_entity": "Søvn · Rom · kilde (state)",
           "general_sleep_rooms_attribute": "Søvn · Rom · kilde (attribute)",
-          "general_source_stale_minutes": "kilde · max (min)"
+          "general_source_stale_minutes": "Tilstedeværelse hjemme · Maksimal alder på sporings-/persontallsdata (min)",
+          "general_wake_alarm_entity": "Søvn · Neste alarm",
+          "general_wake_lead_minutes_entity": "Søvn · Minutter før alarmen"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Rom · Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen.",
-          "general_occupied_rooms_entity": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · Rom · kilde (state)». Manglende eller gamle verdier stopper handlingen.",
+          "general_room_occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
+          "general_occupied_rooms_entity": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
           "general_occupied_rooms_attribute": "Konfigurer «Tilstedeværelse · Rom · kilde (attribute)» bare for valgt rom. Feil data stopper handlingen.",
           "general_home_trackers": "Velg en ekte Home Assistant-kilde for «Hjem · Tilstedeværelse · Enheter». Manglende eller gamle verdier stopper handlingen.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Velg en ekte Home Assistant-kilde for «Søvn · Rom · kilde (state)». Manglende eller gamle verdier stopper handlingen.",
+          "general_sleep_rooms_entity": "Velg en liste over sovende rom fra tilstand eller attributt, med områdenavn eller -ID-er i Home Assistant. Et oppført rom sover bare hvis det også er opptatt. En uendret liste er fortsatt gyldig; en manglende eller ugyldig kilde er ukjent. Den innstilte alarmen kan avslutte automatisk søvn før den ringer.",
           "general_sleep_rooms_attribute": "Konfigurer «Søvn · Rom · kilde (attribute)» bare for valgt rom. Feil data stopper handlingen.",
-          "general_source_stale_minutes": "kilde · Søvn / Tilstedeværelse · max 240 min. Ugyldig · Slå av."
+          "general_source_stale_minutes": "Aldersgrensen gjelder sporingsrapporter og numeriske persontall. Romlister og binære tilstedeværelsestilstander utløper ikke mens de er uendret. Utilgjengelige, gjenopprettede eller ugyldige kilder er ukjente. Dette er ikke søvnens varighet.",
+          "general_wake_alarm_entity": "Velg en tids- eller tidsstempelentitet for neste alarm og en entitet for minuttene. HEM avslutter automatisk søvn så mange minutter før alarmen og gjenopptar vanlige mål. Klokkeslett uten dato bruker Home Assistants tidssone. Fravær, manuell styring og enhetsbeskyttelse beholder prioritet.",
+          "general_wake_lead_minutes_entity": "Velg en numerisk entitet med et ikke-negativt antall minutter, med enheten min eller uten enhet. Alarm kl. 07:00 og verdien 30 avslutter automatisk søvn kl. 06:30; 0 betyr når alarmen ringer. Tøm begge kildene for å deaktivere."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Pollen · HIGH",
           "pollen_max_scale": "POLLEN · Pollen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
-          "general_source_stale_minutes": "kilde · max (min)",
-          "general_home_policy": "Tilstedeværelse hjemme"
+          "general_source_stale_minutes": "Tilstedeværelse hjemme · Maksimal alder på sporings-/persontallsdata (min)",
+          "general_home_policy": "Tilstedeværelse hjemme",
+          "general_wake_alarm_entity": "Søvn · Neste alarm",
+          "general_wake_lead_minutes_entity": "Søvn · Minutter før alarmen"
         },
         "data_description": {
           "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Velg: Luftkvalitet ute · AQI, CO₂, PM2.5, PM10, VOC. Ikke tilgjengelig: ⚠",
           "weather_warnings": "Vær og varsler · ⚠ (Ikke tilgjengelig) → 🪟🔒",
-          "general_room_occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Rom · Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
           "general_home_trackers": "Velg en ekte Home Assistant-kilde for «Hjem · Tilstedeværelse · Enheter». Manglende eller gamle verdier stopper handlingen. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · Rom · kilde (state)». Manglende eller gamle verdier stopper handlingen.",
+          "general_occupied_rooms_entity": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
           "general_occupied_rooms_attribute": "Konfigurer «Tilstedeværelse · Rom · kilde (attribute)» bare for valgt rom. Feil data stopper handlingen.",
-          "general_sleep_rooms_entity": "Velg en ekte Home Assistant-kilde for «Søvn · Rom · kilde (state)». Manglende eller gamle verdier stopper handlingen.",
+          "general_sleep_rooms_entity": "Velg en liste over sovende rom fra tilstand eller attributt, med områdenavn eller -ID-er i Home Assistant. Et oppført rom sover bare hvis det også er opptatt. En uendret liste er fortsatt gyldig; en manglende eller ugyldig kilde er ukjent. Den innstilte alarmen kan avslutte automatisk søvn før den ringer.",
           "general_sleep_rooms_attribute": "Konfigurer «Søvn · Rom · kilde (attribute)» bare for valgt rom. Feil data stopper handlingen.",
           "notify_entities": "Velg: notify.* · innstillinger · kilde.",
           "media_players": "Velg: media_player.* · innstillinger · kilde · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Konfigurer «POLLEN · Pollen · HIGH» bare for valgt rom. Feil data stopper handlingen.",
           "pollen_max_scale": "Konfigurer «POLLEN · Pollen · SCALE» bare for valgt rom. Feil data stopper handlingen.",
           "pollen_avoid_ventilation": "Konfigurer «POLLEN · Pollen · NO VENT» bare for valgt rom. Feil data stopper handlingen.",
-          "general_source_stale_minutes": "kilde · Søvn / Tilstedeværelse · max 240 min. Ugyldig · Slå av.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Aldersgrensen gjelder sporingsrapporter og numeriske persontall. Romlister og binære tilstedeværelsestilstander utløper ikke mens de er uendret. Utilgjengelige, gjenopprettede eller ugyldige kilder er ukjente. Dette er ikke søvnens varighet.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Velg en tids- eller tidsstempelentitet for neste alarm og en entitet for minuttene. HEM avslutter automatisk søvn så mange minutter før alarmen og gjenopptar vanlige mål. Klokkeslett uten dato bruker Home Assistants tidssone. Fravær, manuell styring og enhetsbeskyttelse beholder prioritet.",
+          "general_wake_lead_minutes_entity": "Velg en numerisk entitet med et ikke-negativt antall minutter, med enheten min eller uten enhet. Alarm kl. 07:00 og verdien 30 avslutter automatisk søvn kl. 06:30; 0 betyr når alarmen ringer. Tøm begge kildene for å deaktivere."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Luftfuktighet. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
           "climate_devices": "Enheter. Velg bare fysiske climate.*, humidifier.* og fan.* i rommet. Enhetens egne funksjoner bestemmer varme, kjøling, avfukting, målverdier og viftehastighet. Valget betjener ingenting; automatikken aktiveres separat på hver enhet.",
           "shades": "Persienner, rullegardiner og skodder. Velg rullegardiner, persienner og skodder som cover.* i rommet. Covers uten device_class støttes med CLOSE hvis de faktisk skjermer vinduer. Garasjer, porter, dører, vinduer og markiser er utelukket. Valget beveger ingenting: koble vinduskontakt og konfigurer automatikk, kunngjøring og temperatur i kontrolleren. Ukjent status hindrer bevegelse.",
-          "occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen."
+          "occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Luftfuktighet. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
           "climate_devices": "Enheter. Velg bare fysiske climate.*, humidifier.* og fan.* i rommet. Enhetens egne funksjoner bestemmer varme, kjøling, avfukting, målverdier og viftehastighet. Valget betjener ingenting; automatikken aktiveres separat på hver enhet.",
           "shades": "Persienner, rullegardiner og skodder. Velg rullegardiner, persienner og skodder som cover.* i rommet. Covers uten device_class støttes med CLOSE hvis de faktisk skjermer vinduer. Garasjer, porter, dører, vinduer og markiser er utelukket. Valget beveger ingenting: koble vinduskontakt og konfigurer automatikk, kunngjøring og temperatur i kontrolleren. Ukjent status hindrer bevegelse.",
-          "occupancy_sensors": "Velg en ekte Home Assistant-kilde for «Tilstedeværelse · sensor». Manglende eller gamle verdier stopper handlingen."
+          "occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Ugyldig · Effekt · innstillinger",
       "invalid_setup_rooms": "Ugyldig: Rom som skal overvåkes",
       "invalid_room_source": "Ugyldig: Rom · kilde",
-      "invalid_away_windows_recipients": "Personer som skal varsles; Kanaler for vindusvarsler. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Personer som skal varsles; Kanaler for vindusvarsler. Announcement Hub (person.*).",
+      "wake_sources_pair": "Velg både alarm- og minuttentiteten, eller tøm begge."
     },
     "abort": {
       "setup_area_removed": "Ugyldig: Rom som skal overvåkes",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Tilstedeværelse hjemme · kilde · max (min)",
+        "name": "Tilstedeværelse hjemme · Maksimal alder på sporings-/persontallsdata (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Tilstedeværelse i rommet · Tilstedeværelse · Enheter · sensor · Påkrevd",
+        "name": "Tilstedeværelse i rommet · Maksimal alder på persontall (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Meldinger · Varsle om enhetsfeil · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjelp"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Søvn · {channel}Når alle sover",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"

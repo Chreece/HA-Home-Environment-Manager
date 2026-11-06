@@ -74,6 +74,8 @@ class AirQualityManager:
         self._tracked: set[str] = set()
         self._unsubs: list[Any] = []
         self._source_refresh_handle = None
+        self._wake_boundary = None
+        self._wake_boundary_unsub = None
         # Timers are per room; unrelated sensor changes must not postpone
         # reminders in another room. Values are (action key, reason key).
         self._active_actions: dict[str, tuple[str, str]] = {}
@@ -306,9 +308,24 @@ class AirQualityManager:
         shared_presence=self.presence_continuity.context(
             config.get(CONF_OCCUPANCY_GLOBAL, {})
         )
-        from .occupancy_policy import home_presence
+        from .occupancy_policy import home_presence, room_presence
+        shared_presence["_room_occupancy_selections"] = {
+            area: list(cfg["occupancy_sensors"]) for area, cfg in room_climate_configs.items()
+            if isinstance(cfg, dict) and isinstance(cfg.get("occupancy_sensors"), list)
+        }
+        shared_presence["_room_occupancy_stale_minutes"] = {
+            area: cfg["occupancy_stale_minutes"] for area, cfg in room_climate_configs.items()
+            if isinstance(cfg, dict) and "occupancy_stale_minutes" in cfg
+        }
         home_status, _home_evidence, _home_sources = home_presence(
             self.hass,shared_presence,environment_trackers)
+        known_presence_areas = set(room_climate_configs) | {r.area_id for r in raw_rooms}
+        observed_rooms = {
+            r.area_id: room_presence(
+                self.hass, r.area_id, room_climate_configs.get(r.area_id) or {},
+                shared_presence, known_areas=known_presence_areas, home_status=home_status,
+            ) for r in raw_rooms
+        }
         environment, changed = build_environment(
             self.hass, raw_rooms, selected_rooms, current_weather, outdoor_readings,
             history=self._environment_history, max_age_minutes=max_age,
@@ -318,9 +335,19 @@ class AirQualityManager:
             purifier_ratings_by_room=purifier_ratings,
             outside_safe=base_plan.outdoor_safe,
             home_status=home_status,
+            observed_rooms=observed_rooms,
         )
         environment["__outside__"] = {"pollen": pollen}
-        for key in ("occupied_rooms_entity","sleep_rooms_entity"):
+        from .wake_alarm import observe_wake_episodes
+        observe_wake_episodes(
+            self.hass, self.entry.entry_id, shared_presence, known_presence_areas,
+            home_status=home_status, room_settings=room_climate_configs,
+            observed_rooms=observed_rooms,
+        )
+        if (shared_presence.get("wake_alarm_entity") and shared_presence.get("wake_lead_minutes_entity")
+                or self._wake_boundary_unsub is not None):
+            self._sync_wake_boundary(shared_presence)
+        for key in ("occupied_rooms_entity","sleep_rooms_entity","wake_alarm_entity","wake_lead_minutes_entity"):
             entity=shared_presence.get(key)
             if isinstance(entity,str):
                 self._tracked.add(entity)
@@ -539,9 +566,19 @@ class AirQualityManager:
         }
         # Observe occupancy changes for conditional CO2 decay, but never
         # treat motion activity as reliable evidence of an unoccupied room.
+        profiles = config.get(managed_equipment.SETTINGS, {})
+        watch_household = bool(shared_presence.get("wake_alarm_entity")
+                               and shared_presence.get("wake_lead_minutes_entity")) or (
+            isinstance(profiles, dict) and any(
+            isinstance(profile, dict) and profile.get("sleep_when_everyone_asleep") is True
+            and profile.get("control_mode") in ("automatic", "pid") for profile in profiles.values()))
+        if watch_household:
+            for selection in shared_presence["_room_occupancy_selections"].values():
+                self._tracked.update(s for s in selection if isinstance(s, str) and native_room_source(self.hass, s))
         for state in self.hass.states.async_all("binary_sensor"):
             if (str(state.attributes.get("device_class", "")).casefold() in ("occupancy", "presence")
-                    and entity_area(self.hass, state.entity_id) in monitored_areas):
+                    and (watch_household or entity_area(self.hass, state.entity_id) in monitored_areas)
+                    and native_room_source(self.hass, state.entity_id)):
                 self._tracked.add(state.entity_id)
         if changed and self._environment_store is not None:
             self._environment_store.async_delay_save(
@@ -606,39 +643,18 @@ class AirQualityManager:
             climate = environment.get(area_id,{}).get("climate_plan",{})
             local_settings = room_climate_configs.get(area_id,{})
             local_settings = local_settings if isinstance(local_settings,dict) else {}
-            if isinstance(climate,dict) and climate and climate.get("status") != "disabled":
-                occupied = climate.get("occupancy","unknown")
-                evidence = climate.get("occupancy_evidence")
-                if evidence not in (
-                    "verified_room_occupied", "selected_room_sensor_on",
-                    "verified_room_list_unoccupied",
-                    "all_selected_room_sensors_off",
-                    "verified_home_away",
-                ):
-                    # Climate may assume occupancy for comfort. That is not
-                    # permission to infer somebody has actually entered.
-                    occupied = "unknown"
-                sleeping = climate.get("sleeping")
-                display_home = climate.get("away", "unknown")
-                display_presence_evidence = evidence
-            else:
-                home, _evidence, _trackers = home_presence(
-                    self.hass,shared,local_settings.get("away_entities",[]))
-                occupied, _why, _sources = room_presence(
+            # Room indicators report current presence. A controller's vacancy
+            # delay or comfort assumption must not replace those observations.
+            occupied, display_presence_evidence, _sources = (
+                observed_rooms.get(area_id) or room_presence(
                     self.hass,area_id,local_settings,shared,
-                    known_areas=known_areas,home_status=home,
-                )
-                display_home = home
-                display_presence_evidence = _why
-                local_sleep, local_reason = scheduled_sleep(
-                    local_settings,time(),
-                    getattr(self.hass.config,"time_zone",None) or "UTC",
-                )
-                sleeping, _why = controlled_sleep_presence(
-                    self.hass,area_id,shared,known_areas,
-                    home_status=home,local_sleeping=local_sleep,
-                    local_reason=local_reason,
-                )
+                    known_areas=known_areas,home_status=home_status))
+            display_home = home_status
+            local_sleep, local_reason = scheduled_sleep(
+                local_settings,time(), getattr(self.hass.config,"time_zone",None) or "UTC")
+            sleeping, _sleep_reason = controlled_sleep_presence(
+                self.hass,area_id,shared,known_areas,home_status=home_status,
+                room_status=occupied,local_sleeping=local_sleep,local_reason=local_reason)
             # Expose the same verified evidence to every room header,
             # including air-quality-only rooms with no climate controller.
             # Comfort-policy assumptions must not appear as known presence.
@@ -647,6 +663,7 @@ class AirQualityManager:
                 "occupancy_evidence": display_presence_evidence,
                 "home": display_home,
                 "sleeping": sleeping,
+                "sleep_evidence": _sleep_reason,
             }
             from .room_sources import room_temperature_evidence
             room_temp, _temperature_sources = room_temperature_evidence(
@@ -716,6 +733,9 @@ class AirQualityManager:
         # Restore source-bound absence evidence before building any room plan.
         # Every recovered interval is live-revalidated during _capture.
         await self.presence_continuity.async_start()
+        from .wake_alarm import async_start_wake
+        await async_start_wake(self.hass, self.entry.entry_id,
+                               self.settings.get(CONF_OCCUPANCY_GLOBAL, {}))
         # Load latching PID manual overrides and expected targets first.
         # If its storage fails, the PID controller remains fail-closed.
         await self.pid.async_start()
@@ -946,6 +966,26 @@ class AirQualityManager:
         self._source_refresh_handle = None
         if self._active:
             self._recalculate()
+
+    @callback
+    def _sync_wake_boundary(self, settings: dict) -> None:
+        """One timer per entry; source changes can move or cancel the deadline."""
+        from .wake_alarm import alarm_evidence
+        stamp = time()
+        deadline = alarm_evidence(self.hass, settings, now=stamp).get("wake_at")
+        deadline = deadline if deadline is not None and deadline > stamp else None
+        if self._wake_boundary == deadline:
+            return
+        if self._wake_boundary_unsub is not None:
+            self._wake_boundary_unsub()
+        self._wake_boundary, self._wake_boundary_unsub = deadline, None
+        if deadline is not None:
+            @callback
+            def due(_now):
+                if self._active and self._wake_boundary == deadline:
+                    self._wake_boundary, self._wake_boundary_unsub = None, None
+                    self._recalculate()
+            self._wake_boundary_unsub = async_call_later(self.hass, deadline - stamp, due)
 
     @callback
     def _on_interval(self, _now: Any) -> None:
@@ -1292,6 +1332,9 @@ class AirQualityManager:
         convert a teardown failure into permission to re-energize equipment.
         """
         self._active = False
+        if self._wake_boundary_unsub is not None:
+            self._wake_boundary_unsub()
+        self._wake_boundary, self._wake_boundary_unsub = None, None
         if self._source_refresh_handle is not None:
             self._source_refresh_handle.cancel()
             self._source_refresh_handle = None
@@ -1312,11 +1355,13 @@ class AirQualityManager:
             ("native_air_mode",self.native_air_mode),
         )
         try:
+            from .wake_alarm import async_stop_wake
             outcomes = await asyncio.gather(
                 *(controller.async_stop() for _,controller in controllers),
+                async_stop_wake(self.hass, self.entry.entry_id),
                 return_exceptions=True,
             )
-            for (name,_),outcome in zip(controllers,outcomes):
+            for (name,_),outcome in zip((*controllers, ("wake_alarm", None)),outcomes):
                 if isinstance(outcome,BaseException):
                     _LOGGER.error(
                         "Controller %s failed while unloading: %r",

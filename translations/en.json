@@ -224,18 +224,20 @@
           "pollen_high_from": "Pollen scale: threshold treated as high",
           "pollen_max_scale": "Pollen provider's maximum scale value",
           "pollen_avoid_ventilation": "Avoid window ventilation when pollen is high (opt in)",
-          "general_source_stale_minutes": "Maximum room/sleep source age (minutes)",
-          "general_home_policy": "Home Occupancy"
+          "general_source_stale_minutes": "Home Occupancy · Maximum tracker/count report age (min)",
+          "general_home_policy": "Home Occupancy",
+          "general_wake_alarm_entity": "Sleep · Next alarm",
+          "general_wake_lead_minutes_entity": "Sleep · Minutes before alarm"
         },
         "data_description": {
           "weather_entities": "At least one weather provider. Rain, storms and extreme wind/temperature block opening. Mold indication uses the current temperature attribute (°C/°F) of a selected weather entity for outdoor temperature. Choose a source that reports temperature.",
           "outdoor_sensors": "Choose genuine outdoor sensors. Available readings above limits block opening; unknown, unavailable or stale readings are reported, not classified as unsafe.",
           "weather_warnings": "Optional. Active and unavailable selected warnings block window opening.",
-          "general_room_occupancy_sensors": "Select actual binary presence sensors assigned to Home Assistant rooms. An ON confirms occupancy; missing or stale OFF readings cannot prove a room empty. Numbers and input_number helpers can be chosen as presence counts. A finite 0 means empty; a positive value means occupied. Unknown, stale or unavailable never means empty.",
+          "general_room_occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
           "general_home_trackers": "Select actual person/device tracker entities for home/away evidence. Unknown trackers do not prove everyone has left. Numbers and input_number helpers can be chosen as presence counts. A finite 0 means empty; a positive value means occupied. Unknown, stale or unavailable never means empty.",
-          "general_occupied_rooms_entity": "Select an entity whose state or attribute contains an explicit list of HA room IDs/names, e.g. [\"living_room\"]. Do not select ordinary on/off sensors as room lists.",
+          "general_occupied_rooms_entity": "Select an entity whose state or chosen attribute lists Home Assistant area IDs or names, such as [\"living_room\"]. A valid list has priority over room sensors: included rooms are occupied, omitted rooms are empty, and [] means all rooms are empty. An unchanged list stays valid overnight. Missing or invalid data is not an empty list.",
           "general_occupied_rooms_attribute": "Choose State when the entity state itself is a valid room list, or select an actual attribute that contains that list. Choices refresh when changing entity.",
-          "general_sleep_rooms_entity": "Choose an entity listing which HA rooms currently count as sleeping rooms. Sleep presence differs from general room occupancy.",
+          "general_sleep_rooms_entity": "Select an entity listing sleeping rooms by Home Assistant area ID or name, in its state or a chosen attribute. A listed room counts as asleep only while it is also occupied. The list remains valid while unchanged; a missing or invalid source is unknown. Manual Sleeping now and an enabled room schedule are separate sleep inputs. A configured wake alarm can end automatic Sleep before ringing.",
           "general_sleep_rooms_attribute": "Choose the State field or a verified room-list attribute from the selected sleep entity. A missing or unrecognized list makes sleep state unknown.",
           "notify_entities": "Direct outputs when Announcement Hub is not used.",
           "media_players": "Direct audio destinations; room assignment controls targeting.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Define the index value above which the selected provider considers pollen high. Use the provider's scale, not a universal allergy safety threshold.",
           "pollen_max_scale": "Maximum value on the pollen provider's numerical scale, e.g. 5 for 0-5. Used to interpret relative severity without assuming a country.",
           "pollen_avoid_ventilation": "When enabled, reliable high-pollen evidence blocks advice to open windows. Turn on only when avoiding pollen is relevant to occupants.",
-          "general_source_stale_minutes": "Maximum time since either occupied-room or sleep-room source last updated (default 240 min). This is NOT how long someone must sleep; stale sources cannot authorize power OFF.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Maximum age of reports from direct home trackers and sampled numeric occupancy counts. The default is 240 minutes. Stable occupied/sleep-room lists and binary room-presence states remain valid until they change; unavailable, restored or invalid selected sources remain unknown. This is not a sleep duration.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Select the next wake-up alarm from a time or timestamp entity, such as a phone alarm or input_datetime helper. Also select the minutes-before-alarm entity below. HEM leaves automatic Sleep at alarm time minus those minutes so normal targets can resume. Time-only values use the Home Assistant time zone; dated values describe one alarm. Away, explicit profiles, manual control and device protections keep their priority.",
+          "general_wake_lead_minutes_entity": "Select a numeric sensor, number or input_number whose value is minutes before the alarm. Use min or no unit and a finite value of 0 or greater. With a 07:00 alarm and 30 minutes, automatic Sleep ends at 06:30; 0 means at ringing. Choose both sources, or clear both to disable this feature. This schedules normal control; it does not guarantee the target will be reached by the alarm."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "People or device trackers for home/away",
           "climate_unknown_occupancy": "If occupancy is unknown: assume occupied or hold",
           "climate_unoccupied_delay_minutes": "Delay before considering a room unoccupied (minutes)",
-          "climate_occupancy_stale_minutes": "Maximum age of last occupancy sensor report (minutes)",
+          "climate_occupancy_stale_minutes": "Room occupancy · Maximum count report age (min)",
           "climate_away_policy": "Home Occupancy · Away policy",
           "climate_manual_profile": "Override occupancy/away profile (auto recommended)",
           "climate_sleep_active": "Sleep · Sleeping now",
@@ -709,17 +713,17 @@
           "climate_comfort_adjustment_max_c": "Maximum comfort adjustment (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Select actual room presence/occupancy binary sensors. A positive value means occupied; an unavailable sensor does not prove an empty room.",
+          "climate_occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
           "climate_away_entities": "People or device trackers for home/away status. Absence is considered only with explicit, fresh evidence; unknown trackers are treated conservatively.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected numeric room-occupancy counts. Older or unavailable counts are unknown. Binary room-presence ON/OFF states and shared occupied/sleep-room lists do not expire while unchanged; missing, restored or invalid selected sources can still be unknown. This setting does not choose a fallback climate profile.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Explicitly override the automatically selected home/unoccupied/away/sleep profile for this room. Use for diagnostics or deliberate preferences; it still obeys safety gates.",
-          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
-          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
-          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
-          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
           "climate_target_source": "Fixed setpoints, small measured-humidity adjustment without guessed clothes/air speed, or advanced ISO 7730 with all verified inputs.",
           "climate_comfort_adjustment_max_c": "Maximum absolute °C offset from the chosen temperature target when the qualified PMV/PPD comfort estimate is available. Avoids uncontrolled target shifts."
         }
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "General settings",
-        "description": "Choose shared presence sensors, home trackers, and entities listing occupied or sleeping rooms. The source can hold a JSON list in its state or in a named attribute. Stale or unknown evidence NEVER means nobody is home.",
+        "description": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
         "data": {
           "general_room_occupancy_sensors": "Room · Occupancy · sensor",
           "general_occupied_rooms_entity": "Occupancy · Room · source (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Home Occupancy",
           "general_sleep_rooms_entity": "Sleep · Room · source (state)",
           "general_sleep_rooms_attribute": "Sleep · Room · source (attribute)",
-          "general_source_stale_minutes": "Maximum room/sleep source age (minutes)"
+          "general_source_stale_minutes": "Home Occupancy · Maximum tracker/count report age (min)",
+          "general_wake_alarm_entity": "Sleep · Next alarm",
+          "general_wake_lead_minutes_entity": "Sleep · Minutes before alarm"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Select actual binary presence sensors assigned to Home Assistant rooms. An ON confirms occupancy; missing or stale OFF readings cannot prove a room empty.",
-          "general_occupied_rooms_entity": "Select an entity whose state or attribute contains an explicit list of HA room IDs/names, e.g. [\"living_room\"]. Do not select ordinary on/off sensors as room lists.",
+          "general_room_occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
+          "general_occupied_rooms_entity": "Select an entity whose state or chosen attribute lists Home Assistant area IDs or names, such as [\"living_room\"]. A valid list has priority over room sensors: included rooms are occupied, omitted rooms are empty, and [] means all rooms are empty. An unchanged list stays valid overnight. Missing or invalid data is not an empty list.",
           "general_occupied_rooms_attribute": "Choose State when the entity state itself is a valid room list, or select an actual attribute that contains that list. Choices refresh when changing entity.",
           "general_home_trackers": "Select actual person/device tracker entities for home/away evidence. Unknown trackers do not prove everyone has left.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Choose an entity listing which HA rooms currently count as sleeping rooms. Sleep presence differs from general room occupancy.",
+          "general_sleep_rooms_entity": "Select an entity listing sleeping rooms by Home Assistant area ID or name, in its state or a chosen attribute. A listed room counts as asleep only while it is also occupied. The list remains valid while unchanged; a missing or invalid source is unknown. Manual Sleeping now and an enabled room schedule are separate sleep inputs. A configured wake alarm can end automatic Sleep before ringing.",
           "general_sleep_rooms_attribute": "Choose the State field or a verified room-list attribute from the selected sleep entity. A missing or unrecognized list makes sleep state unknown.",
-          "general_source_stale_minutes": "Maximum time since either occupied-room or sleep-room source last updated (default 240 min). This is NOT how long someone must sleep; stale sources cannot authorize power OFF."
+          "general_source_stale_minutes": "Maximum age of reports from direct home trackers and sampled numeric occupancy counts. The default is 240 minutes. Stable occupied/sleep-room lists and binary room-presence states remain valid until they change; unavailable, restored or invalid selected sources remain unknown. This is not a sleep duration.",
+          "general_wake_alarm_entity": "Select the next wake-up alarm from a time or timestamp entity, such as a phone alarm or input_datetime helper. Also select the minutes-before-alarm entity below. HEM leaves automatic Sleep at alarm time minus those minutes so normal targets can resume. Time-only values use the Home Assistant time zone; dated values describe one alarm. Away, explicit profiles, manual control and device protections keep their priority.",
+          "general_wake_lead_minutes_entity": "Select a numeric sensor, number or input_number whose value is minutes before the alarm. Use min or no unit and a finite value of 0 or greater. With a 07:00 alarm and 30 minutes, automatic Sleep ends at 06:30; 0 means at ringing. Choose both sources, or clear both to disable this feature. This schedules normal control; it does not guarantee the target will be reached by the alarm."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
-          "occupancy_sensors": "Select the actual room-presence/occupancy binary sensors. A detected presence means occupied; an unknown sensor never proves the room is empty."
+          "occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
-          "occupancy_sensors": "Select the actual room-presence/occupancy binary sensors. A detected presence means occupied; an unknown sensor never proves the room is empty."
+          "occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Invalid · sensor · settings",
       "device_temperature_band_invalid": "Invalid · Temperature · settings",
       "device_humidity_invalid": "Invalid · Humidity · settings",
-      "device_runtime_invalid": "Invalid · Power · settings"
+      "device_runtime_invalid": "Invalid · Power · settings",
+      "wake_sources_pair": "Select both the next-alarm entity and the minutes-before-alarm entity, or clear both."
     },
     "abort": {
       "already_configured": "Home Environment Manager is already configured.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "People or device trackers for home/away",
           "climate_unknown_occupancy": "If occupancy is unknown: assume occupied or hold",
           "climate_unoccupied_delay_minutes": "Delay before considering a room unoccupied (minutes)",
-          "climate_occupancy_stale_minutes": "Maximum age of last occupancy sensor report (minutes)",
+          "climate_occupancy_stale_minutes": "Room occupancy · Maximum count report age (min)",
           "climate_away_policy": "Home Occupancy · Away policy",
           "climate_manual_profile": "Override occupancy/away profile (auto recommended)",
           "climate_sleep_active": "Sleep · Sleeping now",
@@ -1775,17 +1784,17 @@
           "climate_comfort_adjustment_max_c": "Maximum comfort adjustment (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Select actual room presence/occupancy binary sensors. A positive value means occupied; an unavailable sensor does not prove an empty room.",
+          "climate_occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
           "climate_away_entities": "People or device trackers for home/away status. Absence is considered only with explicit, fresh evidence; unknown trackers are treated conservatively.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected numeric room-occupancy counts. Older or unavailable counts are unknown. Binary room-presence ON/OFF states and shared occupied/sleep-room lists do not expire while unchanged; missing, restored or invalid selected sources can still be unknown. This setting does not choose a fallback climate profile.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Explicitly override the automatically selected home/unoccupied/away/sleep profile for this room. Use for diagnostics or deliberate preferences; it still obeys safety gates.",
-          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
-          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification.",
-          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
-          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
+          "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
+          "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
+          "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
+          "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
           "climate_target_source": "Fixed setpoints, small measured-humidity adjustment without guessed clothes/air speed, or advanced ISO 7730 with all verified inputs.",
           "climate_comfort_adjustment_max_c": "Maximum absolute °C offset from the chosen temperature target when the qualified PMV/PPD comfort estimate is available. Avoids uncontrolled target shifts."
         }
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "General settings",
-        "description": "Choose shared presence sensors, home trackers, and entities listing occupied or sleeping rooms. The source can hold a JSON list in its state or in a named attribute. Stale or unknown evidence NEVER means nobody is home.",
+        "description": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
         "data": {
           "general_room_occupancy_sensors": "Room · Occupancy · sensor",
           "general_occupied_rooms_entity": "Occupancy · Room · source (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Home Occupancy",
           "general_sleep_rooms_entity": "Sleep · Room · source (state)",
           "general_sleep_rooms_attribute": "Sleep · Room · source (attribute)",
-          "general_source_stale_minutes": "Maximum room/sleep source age (minutes)"
+          "general_source_stale_minutes": "Home Occupancy · Maximum tracker/count report age (min)",
+          "general_wake_alarm_entity": "Sleep · Next alarm",
+          "general_wake_lead_minutes_entity": "Sleep · Minutes before alarm"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Select actual binary presence sensors assigned to Home Assistant rooms. An ON confirms occupancy; missing or stale OFF readings cannot prove a room empty.",
-          "general_occupied_rooms_entity": "Select an entity whose state or attribute contains an explicit list of HA room IDs/names, e.g. [\"living_room\"]. Do not select ordinary on/off sensors as room lists.",
+          "general_room_occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
+          "general_occupied_rooms_entity": "Select an entity whose state or chosen attribute lists Home Assistant area IDs or names, such as [\"living_room\"]. A valid list has priority over room sensors: included rooms are occupied, omitted rooms are empty, and [] means all rooms are empty. An unchanged list stays valid overnight. Missing or invalid data is not an empty list.",
           "general_occupied_rooms_attribute": "Choose State when the entity state itself is a valid room list, or select an actual attribute that contains that list. Choices refresh when changing entity.",
           "general_home_trackers": "Select actual person/device tracker entities for home/away evidence. Unknown trackers do not prove everyone has left.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Choose an entity listing which HA rooms currently count as sleeping rooms. Sleep presence differs from general room occupancy.",
+          "general_sleep_rooms_entity": "Select an entity listing sleeping rooms by Home Assistant area ID or name, in its state or a chosen attribute. A listed room counts as asleep only while it is also occupied. The list remains valid while unchanged; a missing or invalid source is unknown. Manual Sleeping now and an enabled room schedule are separate sleep inputs. A configured wake alarm can end automatic Sleep before ringing.",
           "general_sleep_rooms_attribute": "Choose the State field or a verified room-list attribute from the selected sleep entity. A missing or unrecognized list makes sleep state unknown.",
-          "general_source_stale_minutes": "Maximum time since either occupied-room or sleep-room source last updated (default 240 min). This is NOT how long someone must sleep; stale sources cannot authorize power OFF."
+          "general_source_stale_minutes": "Maximum age of reports from direct home trackers and sampled numeric occupancy counts. The default is 240 minutes. Stable occupied/sleep-room lists and binary room-presence states remain valid until they change; unavailable, restored or invalid selected sources remain unknown. This is not a sleep duration.",
+          "general_wake_alarm_entity": "Select the next wake-up alarm from a time or timestamp entity, such as a phone alarm or input_datetime helper. Also select the minutes-before-alarm entity below. HEM leaves automatic Sleep at alarm time minus those minutes so normal targets can resume. Time-only values use the Home Assistant time zone; dated values describe one alarm. Away, explicit profiles, manual control and device protections keep their priority.",
+          "general_wake_lead_minutes_entity": "Select a numeric sensor, number or input_number whose value is minutes before the alarm. Use min or no unit and a finite value of 0 or greater. With a 07:00 alarm and 30 minutes, automatic Sleep ends at 06:30; 0 means at ringing. Choose both sources, or clear both to disable this feature. This schedules normal control; it does not guarantee the target will be reached by the alarm."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "Pollen scale: threshold treated as high",
           "pollen_max_scale": "Pollen provider's maximum scale value",
           "pollen_avoid_ventilation": "Avoid window ventilation when pollen is high (opt in)",
-          "general_source_stale_minutes": "Maximum room/sleep source age (minutes)",
-          "general_home_policy": "Home Occupancy"
+          "general_source_stale_minutes": "Home Occupancy · Maximum tracker/count report age (min)",
+          "general_home_policy": "Home Occupancy",
+          "general_wake_alarm_entity": "Sleep · Next alarm",
+          "general_wake_lead_minutes_entity": "Sleep · Minutes before alarm"
         },
         "data_description": {
           "weather_entities": "At least one weather provider. Rain, storms and extreme wind/temperature block opening. Mold indication uses the current temperature attribute (°C/°F) of a selected weather entity for outdoor temperature. Choose a source that reports temperature.",
           "outdoor_sensors": "Choose genuine outdoor sensors. Available readings above limits block opening; unknown, unavailable or stale readings are reported, not classified as unsafe.",
           "weather_warnings": "Optional. Active and unavailable selected warnings block window opening.",
-          "general_room_occupancy_sensors": "Select actual binary presence sensors assigned to Home Assistant rooms. An ON confirms occupancy; missing or stale OFF readings cannot prove a room empty. Numbers and input_number helpers can be chosen as presence counts. A finite 0 means empty; a positive value means occupied. Unknown, stale or unavailable never means empty.",
+          "general_room_occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
           "general_home_trackers": "Select actual person/device tracker entities for home/away evidence. Unknown trackers do not prove everyone has left. Numbers and input_number helpers can be chosen as presence counts. A finite 0 means empty; a positive value means occupied. Unknown, stale or unavailable never means empty.",
-          "general_occupied_rooms_entity": "Select an entity whose state or attribute contains an explicit list of HA room IDs/names, e.g. [\"living_room\"]. Do not select ordinary on/off sensors as room lists.",
+          "general_occupied_rooms_entity": "Select an entity whose state or chosen attribute lists Home Assistant area IDs or names, such as [\"living_room\"]. A valid list has priority over room sensors: included rooms are occupied, omitted rooms are empty, and [] means all rooms are empty. An unchanged list stays valid overnight. Missing or invalid data is not an empty list.",
           "general_occupied_rooms_attribute": "Choose State when the entity state itself is a valid room list, or select an actual attribute that contains that list. Choices refresh when changing entity.",
-          "general_sleep_rooms_entity": "Choose an entity listing which HA rooms currently count as sleeping rooms. Sleep presence differs from general room occupancy.",
+          "general_sleep_rooms_entity": "Select an entity listing sleeping rooms by Home Assistant area ID or name, in its state or a chosen attribute. A listed room counts as asleep only while it is also occupied. The list remains valid while unchanged; a missing or invalid source is unknown. Manual Sleeping now and an enabled room schedule are separate sleep inputs. A configured wake alarm can end automatic Sleep before ringing.",
           "general_sleep_rooms_attribute": "Choose the State field or a verified room-list attribute from the selected sleep entity. A missing or unrecognized list makes sleep state unknown.",
           "notify_entities": "Direct outputs when Announcement Hub is not used.",
           "media_players": "Direct audio destinations; room assignment controls targeting.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Define the index value above which the selected provider considers pollen high. Use the provider's scale, not a universal allergy safety threshold.",
           "pollen_max_scale": "Maximum value on the pollen provider's numerical scale, e.g. 5 for 0-5. Used to interpret relative severity without assuming a country.",
           "pollen_avoid_ventilation": "When enabled, reliable high-pollen evidence blocks advice to open windows. Turn on only when avoiding pollen is relevant to occupants.",
-          "general_source_stale_minutes": "Maximum time since either occupied-room or sleep-room source last updated (default 240 min). This is NOT how long someone must sleep; stale sources cannot authorize power OFF.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Maximum age of reports from direct home trackers and sampled numeric occupancy counts. The default is 240 minutes. Stable occupied/sleep-room lists and binary room-presence states remain valid until they change; unavailable, restored or invalid selected sources remain unknown. This is not a sleep duration.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Select the next wake-up alarm from a time or timestamp entity, such as a phone alarm or input_datetime helper. Also select the minutes-before-alarm entity below. HEM leaves automatic Sleep at alarm time minus those minutes so normal targets can resume. Time-only values use the Home Assistant time zone; dated values describe one alarm. Away, explicit profiles, manual control and device protections keep their priority.",
+          "general_wake_lead_minutes_entity": "Select a numeric sensor, number or input_number whose value is minutes before the alarm. Use min or no unit and a finite value of 0 or greater. With a 07:00 alarm and 30 minutes, automatic Sleep ends at 06:30; 0 means at ringing. Choose both sources, or clear both to disable this feature. This schedules normal control; it does not guarantee the target will be reached by the alarm."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
-          "occupancy_sensors": "Select the actual room-presence/occupancy binary sensors. A detected presence means occupied; an unknown sensor never proves the room is empty."
+          "occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
-          "occupancy_sensors": "Select the actual room-presence/occupancy binary sensors. A detected presence means occupied; an unknown sensor never proves the room is empty."
+          "occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Invalid · Power · settings",
       "invalid_setup_rooms": "Invalid: Rooms to monitor",
       "invalid_room_source": "Invalid: Room · source",
-      "invalid_away_windows_recipients": "Select at least one person and one delivery channel for the open-window departure alert."
+      "invalid_away_windows_recipients": "Select at least one person and one delivery channel for the open-window departure alert.",
+      "wake_sources_pair": "Select both the next-alarm entity and the minutes-before-alarm entity, or clear both."
     },
     "abort": {
       "setup_area_removed": "Invalid: Rooms to monitor",
@@ -3253,7 +3271,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Home Occupancy · Maximum room/sleep list age (min)",
+        "name": "Home Occupancy · Maximum tracker/count report age (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
@@ -3325,7 +3343,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Room occupancy · Maximum sensor report age (min)",
+        "name": "Room occupancy · Maximum count report age (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
@@ -3944,6 +3962,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Announcement · {channel}Device errors",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Sleep · {channel}When everyone is sleeping",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"

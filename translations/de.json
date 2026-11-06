@@ -224,18 +224,20 @@
           "pollen_high_from": "Pollenindex ab diesem Wert hoch",
           "pollen_max_scale": "Maximalwert der Pollen-Skala",
           "pollen_avoid_ventilation": "Bei hoher Pollenbelastung Lüften vermeiden",
-          "general_source_stale_minutes": "Maximales Datenalter für Raumbelegung/Schlaf (Minuten)",
-          "general_home_policy": "Anwesenheit zu Hause"
+          "general_source_stale_minutes": "Anwesenheit zu Hause · Höchstalter von Tracker-/Zählwerten (min)",
+          "general_home_policy": "Anwesenheit zu Hause",
+          "general_wake_alarm_entity": "Schlaf · Nächster Wecker",
+          "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
           "outdoor_sensors": "Wähle echte Außensensoren. Messwerte über den Grenzwerten verhindern das Öffnen; unbekannte, nicht verfügbare oder veraltete Werte werden als fehlende Daten angezeigt.",
           "weather_warnings": "Optional. Aktive oder nicht verfügbare ausgewählte Warnungen verhindern das Öffnen der Fenster.",
-          "general_room_occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Raum · Belegung · Sensor“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion. Auch number- und input_number-Helfer zählen als Anwesenheitszähler: 0 bedeutet niemand da, ein positiver Wert bedeutet anwesend. Unbekannte, veraltete oder nicht verfügbare Werte gelten nie als abwesend.",
+          "general_room_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
           "general_home_trackers": "Eine passende Home-Assistant-Quelle für „Zuhause · Belegung · Geräte“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion. Auch number- und input_number-Helfer zählen als Anwesenheitszähler: 0 bedeutet niemand da, ein positiver Wert bedeutet anwesend. Unbekannte, veraltete oder nicht verfügbare Werte gelten nie als abwesend.",
-          "general_occupied_rooms_entity": "Eine passende Home-Assistant-Quelle für „Belegung · Raum · Quelle (state)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
+          "general_occupied_rooms_entity": "Wählen Sie eine Entität, deren Zustand oder gewähltes Attribut Home-Assistant-Bereichs-IDs oder -Namen enthält, etwa [\"living_room\"]. Eine gültige Liste hat Vorrang vor Raumsensoren: aufgeführte Räume sind belegt, ausgelassene leer; [] bedeutet alle Räume leer. Eine unveränderte Liste bleibt über Nacht gültig. Fehlende oder ungültige Daten sind keine leere Liste.",
           "general_occupied_rooms_attribute": "„Belegung · Raum · Quelle (attribute)“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
-          "general_sleep_rooms_entity": "Eine passende Home-Assistant-Quelle für „Schlaf · Raum · Quelle (state)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
+          "general_sleep_rooms_entity": "Wählen Sie eine Entität mit Schlafräumen als Home-Assistant-Bereichs-IDs oder -Namen im Zustand oder einem gewählten Attribut. Ein aufgeführter Raum gilt nur dann als schlafend, wenn er auch belegt ist. Eine unveränderte Liste bleibt gültig; fehlende oder ungültige Quellen sind unbekannt. Der manuelle Schalter Jetzt schlafen und der Raumzeitplan sind separate Schlafsignale. Ein konfigurierter Wecker kann den automatischen Schlafmodus vor dem Klingeln beenden.",
           "general_sleep_rooms_attribute": "Zustand oder ein tatsächlich mit einer Raumliste gefülltes Attribut wählen.",
           "notify_entities": "Direkte Benachrichtigungsziele, wenn Announcement Hub nicht verwendet wird.",
           "media_players": "Mediaplayer für direkte Sprachausgabe. Die Raumzuordnung bestimmt die Ziele.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Die Pollen-Warnschwelle hängt von der Skala des Anbieters ab.",
           "pollen_max_scale": "Oberster Zahlenwert der Anbieterskala, z. B. 5.",
           "pollen_avoid_ventilation": "Hohe Pollenwerte können die Empfehlung zum Fensteröffnen optional sperren.",
-          "general_source_stale_minutes": "Maximales Alter der letzten Quellenaktualisierung, bevor die Raum-/Schlafliste als unbekannt gilt. Keine Mindestschlafdauer. Standard: 240 Minuten. Veraltete Daten dürfen kein automatisches Ausschalten auslösen.",
-          "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind."
+          "general_source_stale_minutes": "Höchstalter der Meldungen direkter Anwesenheits-Tracker und numerischer Personenzählungen. Standard: 240 Minuten. Unveränderte Belegungs-/Schlaflisten und binäre Raumanwesenheitszustände bleiben gültig. Nicht verfügbare, wiederhergestellte oder ungültige ausgewählte Quellen bleiben unbekannt. Dies ist keine Schlafdauer.",
+          "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
+          "general_wake_alarm_entity": "Wählen Sie den nächsten Wecker aus einer Zeit- oder Zeitstempel-Entität, etwa dem Handywecker oder einem input_datetime-Helfer. Wählen Sie darunter auch die Entität für den Vorlauf in Minuten. HEM beendet den automatischen Schlafmodus um diese Zeit vor dem Wecker und verwendet wieder die normalen Sollwerte. Reine Uhrzeiten verwenden die Home-Assistant-Zeitzone; datierte Werte bezeichnen einen einzelnen Wecker. Abwesenheit, ausdrücklich gewählte Profile, manuelle Steuerung und Geräteschutz behalten Vorrang.",
+          "general_wake_lead_minutes_entity": "Wählen Sie einen numerischen sensor, number oder input_number mit den Minuten vor dem Wecker. Zulässig sind min oder keine Einheit und ein endlicher Wert ab 0. Bei 07:00 und 30 Minuten endet der automatische Schlafmodus um 06:30; 0 bedeutet beim Klingeln. Beide Quellen auswählen oder zum Deaktivieren beide leeren. Die normale Regelung beginnt entsprechend früher; das Erreichen des Sollwerts bis zum Wecker wird nicht garantiert."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Personen und Tracker für Zuhause/Abwesend",
           "climate_unknown_occupancy": "Belegung · Geräte",
           "climate_unoccupied_delay_minutes": "Verzögerung bis Raum als unbelegt gilt (Minuten)",
-          "climate_occupancy_stale_minutes": "Maximales Alter der Präsenzmessung (Minuten)",
+          "climate_occupancy_stale_minutes": "Raumanwesenheit · Höchstalter der Personenzählung (min)",
           "climate_away_policy": "Anwesenheit zu Hause · Abwesenheitsregel",
           "climate_manual_profile": "Geräte",
           "climate_sleep_active": "Schlaf · Jetzt schlafen",
@@ -709,17 +713,17 @@
           "climate_comfort_adjustment_max_c": "Maximale Komfortkorrektur (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Präsenzsensoren in diesem Raum“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
+          "climate_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
           "climate_away_entities": "Eine passende Home-Assistant-Quelle für „Personen und Tracker für Zuhause/Abwesend“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "climate_unknown_occupancy": "Ältere Raumprofil-Ersatzregel ohne konfigurierte gemeinsame Anwesenheit: Belegt-Annahme setzt Belegung voraus; Aussetzen lässt das Profil unbekannt. Mit gemeinsamer Anwesenheit bleiben unbekannte Nachweise unbekannt. Einheitliche Regler nutzen dann Home, sofern Away, Sleep oder ein explizites Profil nicht vorrangig ist; gerätespezifische Belegt-/Leer-Anforderungen benötigen weiterhin bestätigte Nachweise.",
           "climate_unoccupied_delay_minutes": "Verzögerung für durchgehend gemeldete Abwesenheit lokaler Raumanwesenheitssensoren vor einem automatischen Raumprofilwechsel. Eine gültige gemeinsame Liste belegter Räume, die diesen Raum auslässt, oder bestätigte Abwesenheit im gesamten Zuhause gilt sofort und umgeht diese Verzögerung.",
-          "climate_occupancy_stale_minutes": "Maximales Alter der Meldungen ausgewählter lokaler Raumanwesenheitssensoren in Minuten. Ältere oder fehlende Meldungen gelten als unbekannt und belegen weder Anwesenheit noch Abwesenheit. Gemeinsame Raumlisten haben eine eigene Altersgrenze; diese Einstellung wählt kein Ersatz-Klimaprofil.",
+          "climate_occupancy_stale_minutes": "Höchstalter ausgewählter numerischer Personenzählungen im Raum in Minuten. Ältere oder nicht verfügbare Zählwerte sind unbekannt. Binäre EIN/AUS-Raumanwesenheit und gemeinsame Belegungs-/Schlaflisten laufen bei unverändertem Wert nicht ab; fehlende, wiederhergestellte oder ungültige ausgewählte Quellen können weiterhin unbekannt sein. Diese Einstellung wählt kein Ersatz-Klimaprofil.",
           "climate_away_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
           "climate_manual_profile": "Diese Option steuert „Geräte“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
-          "climate_sleep_active": "Kennzeichnet manuell aktuellen Schlaf für automatische Schlafprofile und konfigurierte Ruhe-/Pausenregeln. Aus erzwingt kein Wachsein: Zeitplan oder gewählte Schlafraumquelle können weiterhin Schlaf melden. Explizite Profile und bestätigte Abwesenheit behalten Vorrang.",
-          "climate_sleep_schedule_enabled": "Verwendet Beginn und Ende des Raumschlafzeitplans in der lokalen Home-Assistant-Zeitzone als Schlafnachweis. Vorgabe 22:00–07:00. Manuelle Angabe und Schlafraumquelle wirken zusätzlich; die statische Lärmraum-Einstufung bleibt unverändert.",
-          "climate_sleep_start": "Lokale Beginnzeit des Schlafintervalls. Sie trägt nur bei aktiviertem Zeitplan zum Schlafnachweis bei. Das Intervall kann über Mitternacht reichen, etwa 22:00–07:00.",
-          "climate_sleep_end": "Lokale Endzeit des Schlafintervalls, wirksam nur bei aktiviertem Zeitplan. Das Ende hebt Schlafmeldungen des manuellen Schalters oder einer anderen gewählten Quelle nicht auf.",
+          "climate_sleep_active": "Kennzeichnet manuell aktuellen Schlaf für automatische Schlafprofile und konfigurierte Ruhe-/Pausenregeln. Aus erzwingt kein Wachsein: Zeitplan oder gewählte Schlafraumquelle können weiterhin Schlaf melden. Explizite Profile und bestätigte Abwesenheit behalten Vorrang. Der konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor dieses Schlafsignal endet. Die normale Regelung wird innerhalb der bestehenden Freigaben fortgesetzt.",
+          "climate_sleep_schedule_enabled": "Verwendet Beginn und Ende des Raumschlafzeitplans in der lokalen Home-Assistant-Zeitzone als Schlafnachweis. Vorgabe 22:00–07:00. Manuelle Angabe und Schlafraumquelle wirken zusätzlich; die statische Lärmraum-Einstufung bleibt unverändert. Der konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor dieses Schlafsignal endet. Die normale Regelung wird innerhalb der bestehenden Freigaben fortgesetzt.",
+          "climate_sleep_start": "Lokale Beginnzeit des Schlafintervalls. Sie trägt nur bei aktiviertem Zeitplan zum Schlafnachweis bei. Das Intervall kann über Mitternacht reichen, etwa 22:00–07:00. Der konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor dieses Schlafsignal endet. Die normale Regelung wird innerhalb der bestehenden Freigaben fortgesetzt.",
+          "climate_sleep_end": "Lokale Endzeit des Schlafintervalls, wirksam nur bei aktiviertem Zeitplan. Das Ende hebt Schlafmeldungen des manuellen Schalters oder einer anderen gewählten Quelle nicht auf. Der konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor dieses Schlafsignal endet. Die normale Regelung wird innerhalb der bestehenden Freigaben fortgesetzt.",
           "climate_target_source": "Feste Temperaturen, begrenzte Korrektur nach gemessener Luftfeuchte oder ISO 7730 mit echten Messwerten.",
           "climate_comfort_adjustment_max_c": "Dies ist ein Entscheidungswert für „Maximale Komfortkorrektur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert."
         }
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Allgemeine Einstellungen",
-        "description": "Präsenzsensoren, Anwesenheitstracker und Sensoren für belegte oder schlafende Räume festlegen. Raumlisten im Zustand oder einem benannten Attribut (z. B. JSON). Fehlende oder alte Werte bedeuten NIEMALS, dass das Haus leer ist.",
+        "description": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
         "data": {
           "general_room_occupancy_sensors": "Raum · Belegung · Sensor",
           "general_occupied_rooms_entity": "Belegung · Raum · Quelle (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Anwesenheit zu Hause",
           "general_sleep_rooms_entity": "Schlaf · Raum · Quelle (state)",
           "general_sleep_rooms_attribute": "Schlaf · Raum · Quelle (attribute)",
-          "general_source_stale_minutes": "Maximales Datenalter für Raumbelegung/Schlaf (Minuten)"
+          "general_source_stale_minutes": "Anwesenheit zu Hause · Höchstalter von Tracker-/Zählwerten (min)",
+          "general_wake_alarm_entity": "Schlaf · Nächster Wecker",
+          "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Raum · Belegung · Sensor“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
-          "general_occupied_rooms_entity": "Eine passende Home-Assistant-Quelle für „Belegung · Raum · Quelle (state)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
+          "general_room_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
+          "general_occupied_rooms_entity": "Wählen Sie eine Entität, deren Zustand oder gewähltes Attribut Home-Assistant-Bereichs-IDs oder -Namen enthält, etwa [\"living_room\"]. Eine gültige Liste hat Vorrang vor Raumsensoren: aufgeführte Räume sind belegt, ausgelassene leer; [] bedeutet alle Räume leer. Eine unveränderte Liste bleibt über Nacht gültig. Fehlende oder ungültige Daten sind keine leere Liste.",
           "general_occupied_rooms_attribute": "„Belegung · Raum · Quelle (attribute)“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
           "general_home_trackers": "Eine passende Home-Assistant-Quelle für „Zuhause · Belegung · Geräte“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
-          "general_sleep_rooms_entity": "Eine passende Home-Assistant-Quelle für „Schlaf · Raum · Quelle (state)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
+          "general_sleep_rooms_entity": "Wählen Sie eine Entität mit Schlafräumen als Home-Assistant-Bereichs-IDs oder -Namen im Zustand oder einem gewählten Attribut. Ein aufgeführter Raum gilt nur dann als schlafend, wenn er auch belegt ist. Eine unveränderte Liste bleibt gültig; fehlende oder ungültige Quellen sind unbekannt. Der manuelle Schalter Jetzt schlafen und der Raumzeitplan sind separate Schlafsignale. Ein konfigurierter Wecker kann den automatischen Schlafmodus vor dem Klingeln beenden.",
           "general_sleep_rooms_attribute": "Zustand oder ein tatsächlich mit einer Raumliste gefülltes Attribut wählen.",
-          "general_source_stale_minutes": "Maximales Alter der letzten Quellenaktualisierung, bevor die Raum-/Schlafliste als unbekannt gilt. Keine Mindestschlafdauer. Standard: 240 Minuten. Veraltete Daten dürfen kein automatisches Ausschalten auslösen."
+          "general_source_stale_minutes": "Höchstalter der Meldungen direkter Anwesenheits-Tracker und numerischer Personenzählungen. Standard: 240 Minuten. Unveränderte Belegungs-/Schlaflisten und binäre Raumanwesenheitszustände bleiben gültig. Nicht verfügbare, wiederhergestellte oder ungültige ausgewählte Quellen bleiben unbekannt. Dies ist keine Schlafdauer.",
+          "general_wake_alarm_entity": "Wählen Sie den nächsten Wecker aus einer Zeit- oder Zeitstempel-Entität, etwa dem Handywecker oder einem input_datetime-Helfer. Wählen Sie darunter auch die Entität für den Vorlauf in Minuten. HEM beendet den automatischen Schlafmodus um diese Zeit vor dem Wecker und verwendet wieder die normalen Sollwerte. Reine Uhrzeiten verwenden die Home-Assistant-Zeitzone; datierte Werte bezeichnen einen einzelnen Wecker. Abwesenheit, ausdrücklich gewählte Profile, manuelle Steuerung und Geräteschutz behalten Vorrang.",
+          "general_wake_lead_minutes_entity": "Wählen Sie einen numerischen sensor, number oder input_number mit den Minuten vor dem Wecker. Zulässig sind min oder keine Einheit und ein endlicher Wert ab 0. Bei 07:00 und 30 Minuten endet der automatische Schlafmodus um 06:30; 0 bedeutet beim Klingeln. Beide Quellen auswählen oder zum Deaktivieren beide leeren. Die normale Regelung beginnt entsprechend früher; das Erreichen des Sollwerts bis zum Wecker wird nicht garantiert."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Wähle Luftfeuchtigkeitssensoren des Raums. Gültige Werte unterstützen Komfort-, Entfeuchtungs- und Schimmelrisikohinweise; fehlende Werte gelten nicht als null.",
           "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
-          "occupancy_sensors": "Wähle echte binäre Präsenzsensoren des Raums. Erkannte Präsenz bedeutet belegt; ein unbekannter Zustand beweist nicht, dass der Raum leer ist."
+          "occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Wähle Luftfeuchtigkeitssensoren des Raums. Gültige Werte unterstützen Komfort-, Entfeuchtungs- und Schimmelrisikohinweise; fehlende Werte gelten nicht als null.",
           "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
-          "occupancy_sensors": "Wähle echte binäre Präsenzsensoren des Raums. Erkannte Präsenz bedeutet belegt; ein unbekannter Zustand beweist nicht, dass der Raum leer ist."
+          "occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Ungültig · Sensor · Einstellungen",
       "device_temperature_band_invalid": "Ungültig · Temperatur · Einstellungen",
       "device_humidity_invalid": "Ungültig · Luftfeuchtigkeit · Einstellungen",
-      "device_runtime_invalid": "Ungültig · Leistung · Einstellungen"
+      "device_runtime_invalid": "Ungültig · Leistung · Einstellungen",
+      "wake_sources_pair": "Wählen Sie sowohl die Wecker- als auch die Minuten-Entität aus oder leeren Sie beide."
     },
     "abort": {
       "already_configured": "Home Environment Manager ist bereits eingerichtet.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Personen und Tracker für Zuhause/Abwesend",
           "climate_unknown_occupancy": "Belegung · Geräte",
           "climate_unoccupied_delay_minutes": "Verzögerung bis Raum als unbelegt gilt (Minuten)",
-          "climate_occupancy_stale_minutes": "Maximales Alter der Präsenzmessung (Minuten)",
+          "climate_occupancy_stale_minutes": "Raumanwesenheit · Höchstalter der Personenzählung (min)",
           "climate_away_policy": "Anwesenheit zu Hause · Abwesenheitsregel",
           "climate_manual_profile": "Geräte",
           "climate_sleep_active": "Schlaf · Jetzt schlafen",
@@ -1775,17 +1784,17 @@
           "climate_comfort_adjustment_max_c": "Maximale Komfortkorrektur (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Präsenzsensoren in diesem Raum“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
+          "climate_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
           "climate_away_entities": "Eine passende Home-Assistant-Quelle für „Personen und Tracker für Zuhause/Abwesend“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "climate_unknown_occupancy": "Ältere Raumprofil-Ersatzregel ohne konfigurierte gemeinsame Anwesenheit: Belegt-Annahme setzt Belegung voraus; Aussetzen lässt das Profil unbekannt. Mit gemeinsamer Anwesenheit bleiben unbekannte Nachweise unbekannt. Einheitliche Regler nutzen dann Home, sofern Away, Sleep oder ein explizites Profil nicht vorrangig ist; gerätespezifische Belegt-/Leer-Anforderungen benötigen weiterhin bestätigte Nachweise.",
           "climate_unoccupied_delay_minutes": "Verzögerung für durchgehend gemeldete Abwesenheit lokaler Raumanwesenheitssensoren vor einem automatischen Raumprofilwechsel. Eine gültige gemeinsame Liste belegter Räume, die diesen Raum auslässt, oder bestätigte Abwesenheit im gesamten Zuhause gilt sofort und umgeht diese Verzögerung.",
-          "climate_occupancy_stale_minutes": "Maximales Alter der Meldungen ausgewählter lokaler Raumanwesenheitssensoren in Minuten. Ältere oder fehlende Meldungen gelten als unbekannt und belegen weder Anwesenheit noch Abwesenheit. Gemeinsame Raumlisten haben eine eigene Altersgrenze; diese Einstellung wählt kein Ersatz-Klimaprofil.",
+          "climate_occupancy_stale_minutes": "Höchstalter ausgewählter numerischer Personenzählungen im Raum in Minuten. Ältere oder nicht verfügbare Zählwerte sind unbekannt. Binäre EIN/AUS-Raumanwesenheit und gemeinsame Belegungs-/Schlaflisten laufen bei unverändertem Wert nicht ab; fehlende, wiederhergestellte oder ungültige ausgewählte Quellen können weiterhin unbekannt sein. Diese Einstellung wählt kein Ersatz-Klimaprofil.",
           "climate_away_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
           "climate_manual_profile": "Diese Option steuert „Geräte“. Gerätebefehle erfordern eine separate Freigabe und unabhängige Schutzfunktionen.",
-          "climate_sleep_active": "Kennzeichnet manuell aktuellen Schlaf für automatische Schlafprofile und konfigurierte Ruhe-/Pausenregeln. Aus erzwingt kein Wachsein: Zeitplan oder gewählte Schlafraumquelle können weiterhin Schlaf melden. Explizite Profile und bestätigte Abwesenheit behalten Vorrang.",
-          "climate_sleep_schedule_enabled": "Verwendet Beginn und Ende des Raumschlafzeitplans in der lokalen Home-Assistant-Zeitzone als Schlafnachweis. Vorgabe 22:00–07:00. Manuelle Angabe und Schlafraumquelle wirken zusätzlich; die statische Lärmraum-Einstufung bleibt unverändert.",
-          "climate_sleep_start": "Lokale Beginnzeit des Schlafintervalls. Sie trägt nur bei aktiviertem Zeitplan zum Schlafnachweis bei. Das Intervall kann über Mitternacht reichen, etwa 22:00–07:00.",
-          "climate_sleep_end": "Lokale Endzeit des Schlafintervalls, wirksam nur bei aktiviertem Zeitplan. Das Ende hebt Schlafmeldungen des manuellen Schalters oder einer anderen gewählten Quelle nicht auf.",
+          "climate_sleep_active": "Kennzeichnet manuell aktuellen Schlaf für automatische Schlafprofile und konfigurierte Ruhe-/Pausenregeln. Aus erzwingt kein Wachsein: Zeitplan oder gewählte Schlafraumquelle können weiterhin Schlaf melden. Explizite Profile und bestätigte Abwesenheit behalten Vorrang. Der konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor dieses Schlafsignal endet. Die normale Regelung wird innerhalb der bestehenden Freigaben fortgesetzt.",
+          "climate_sleep_schedule_enabled": "Verwendet Beginn und Ende des Raumschlafzeitplans in der lokalen Home-Assistant-Zeitzone als Schlafnachweis. Vorgabe 22:00–07:00. Manuelle Angabe und Schlafraumquelle wirken zusätzlich; die statische Lärmraum-Einstufung bleibt unverändert. Der konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor dieses Schlafsignal endet. Die normale Regelung wird innerhalb der bestehenden Freigaben fortgesetzt.",
+          "climate_sleep_start": "Lokale Beginnzeit des Schlafintervalls. Sie trägt nur bei aktiviertem Zeitplan zum Schlafnachweis bei. Das Intervall kann über Mitternacht reichen, etwa 22:00–07:00. Der konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor dieses Schlafsignal endet. Die normale Regelung wird innerhalb der bestehenden Freigaben fortgesetzt.",
+          "climate_sleep_end": "Lokale Endzeit des Schlafintervalls, wirksam nur bei aktiviertem Zeitplan. Das Ende hebt Schlafmeldungen des manuellen Schalters oder einer anderen gewählten Quelle nicht auf. Der konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor dieses Schlafsignal endet. Die normale Regelung wird innerhalb der bestehenden Freigaben fortgesetzt.",
           "climate_target_source": "Feste Temperaturen, begrenzte Korrektur nach gemessener Luftfeuchte oder ISO 7730 mit echten Messwerten.",
           "climate_comfort_adjustment_max_c": "Dies ist ein Entscheidungswert für „Maximale Komfortkorrektur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert."
         }
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Allgemeine Einstellungen",
-        "description": "Präsenzsensoren, Anwesenheitstracker und Sensoren für belegte oder schlafende Räume festlegen. Raumlisten im Zustand oder einem benannten Attribut (z. B. JSON). Fehlende oder alte Werte bedeuten NIEMALS, dass das Haus leer ist.",
+        "description": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
         "data": {
           "general_room_occupancy_sensors": "Raum · Belegung · Sensor",
           "general_occupied_rooms_entity": "Belegung · Raum · Quelle (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Anwesenheit zu Hause",
           "general_sleep_rooms_entity": "Schlaf · Raum · Quelle (state)",
           "general_sleep_rooms_attribute": "Schlaf · Raum · Quelle (attribute)",
-          "general_source_stale_minutes": "Maximales Datenalter für Raumbelegung/Schlaf (Minuten)"
+          "general_source_stale_minutes": "Anwesenheit zu Hause · Höchstalter von Tracker-/Zählwerten (min)",
+          "general_wake_alarm_entity": "Schlaf · Nächster Wecker",
+          "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Raum · Belegung · Sensor“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
-          "general_occupied_rooms_entity": "Eine passende Home-Assistant-Quelle für „Belegung · Raum · Quelle (state)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
+          "general_room_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
+          "general_occupied_rooms_entity": "Wählen Sie eine Entität, deren Zustand oder gewähltes Attribut Home-Assistant-Bereichs-IDs oder -Namen enthält, etwa [\"living_room\"]. Eine gültige Liste hat Vorrang vor Raumsensoren: aufgeführte Räume sind belegt, ausgelassene leer; [] bedeutet alle Räume leer. Eine unveränderte Liste bleibt über Nacht gültig. Fehlende oder ungültige Daten sind keine leere Liste.",
           "general_occupied_rooms_attribute": "„Belegung · Raum · Quelle (attribute)“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
           "general_home_trackers": "Eine passende Home-Assistant-Quelle für „Zuhause · Belegung · Geräte“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
-          "general_sleep_rooms_entity": "Eine passende Home-Assistant-Quelle für „Schlaf · Raum · Quelle (state)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
+          "general_sleep_rooms_entity": "Wählen Sie eine Entität mit Schlafräumen als Home-Assistant-Bereichs-IDs oder -Namen im Zustand oder einem gewählten Attribut. Ein aufgeführter Raum gilt nur dann als schlafend, wenn er auch belegt ist. Eine unveränderte Liste bleibt gültig; fehlende oder ungültige Quellen sind unbekannt. Der manuelle Schalter Jetzt schlafen und der Raumzeitplan sind separate Schlafsignale. Ein konfigurierter Wecker kann den automatischen Schlafmodus vor dem Klingeln beenden.",
           "general_sleep_rooms_attribute": "Zustand oder ein tatsächlich mit einer Raumliste gefülltes Attribut wählen.",
-          "general_source_stale_minutes": "Maximales Alter der letzten Quellenaktualisierung, bevor die Raum-/Schlafliste als unbekannt gilt. Keine Mindestschlafdauer. Standard: 240 Minuten. Veraltete Daten dürfen kein automatisches Ausschalten auslösen."
+          "general_source_stale_minutes": "Höchstalter der Meldungen direkter Anwesenheits-Tracker und numerischer Personenzählungen. Standard: 240 Minuten. Unveränderte Belegungs-/Schlaflisten und binäre Raumanwesenheitszustände bleiben gültig. Nicht verfügbare, wiederhergestellte oder ungültige ausgewählte Quellen bleiben unbekannt. Dies ist keine Schlafdauer.",
+          "general_wake_alarm_entity": "Wählen Sie den nächsten Wecker aus einer Zeit- oder Zeitstempel-Entität, etwa dem Handywecker oder einem input_datetime-Helfer. Wählen Sie darunter auch die Entität für den Vorlauf in Minuten. HEM beendet den automatischen Schlafmodus um diese Zeit vor dem Wecker und verwendet wieder die normalen Sollwerte. Reine Uhrzeiten verwenden die Home-Assistant-Zeitzone; datierte Werte bezeichnen einen einzelnen Wecker. Abwesenheit, ausdrücklich gewählte Profile, manuelle Steuerung und Geräteschutz behalten Vorrang.",
+          "general_wake_lead_minutes_entity": "Wählen Sie einen numerischen sensor, number oder input_number mit den Minuten vor dem Wecker. Zulässig sind min oder keine Einheit und ein endlicher Wert ab 0. Bei 07:00 und 30 Minuten endet der automatische Schlafmodus um 06:30; 0 bedeutet beim Klingeln. Beide Quellen auswählen oder zum Deaktivieren beide leeren. Die normale Regelung beginnt entsprechend früher; das Erreichen des Sollwerts bis zum Wecker wird nicht garantiert."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "Pollenindex ab diesem Wert hoch",
           "pollen_max_scale": "Maximalwert der Pollen-Skala",
           "pollen_avoid_ventilation": "Bei hoher Pollenbelastung Lüften vermeiden",
-          "general_source_stale_minutes": "Maximales Datenalter für Raumbelegung/Schlaf (Minuten)",
-          "general_home_policy": "Anwesenheit zu Hause"
+          "general_source_stale_minutes": "Anwesenheit zu Hause · Höchstalter von Tracker-/Zählwerten (min)",
+          "general_home_policy": "Anwesenheit zu Hause",
+          "general_wake_alarm_entity": "Schlaf · Nächster Wecker",
+          "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
           "outdoor_sensors": "Wähle echte Außensensoren. Messwerte über den Grenzwerten verhindern das Öffnen; unbekannte, nicht verfügbare oder veraltete Werte werden als fehlende Daten angezeigt.",
           "weather_warnings": "Optional. Aktive oder nicht verfügbare ausgewählte Warnungen verhindern das Öffnen der Fenster.",
-          "general_room_occupancy_sensors": "Eine passende Home-Assistant-Quelle für „Raum · Belegung · Sensor“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion. Auch number- und input_number-Helfer zählen als Anwesenheitszähler: 0 bedeutet niemand da, ein positiver Wert bedeutet anwesend. Unbekannte, veraltete oder nicht verfügbare Werte gelten nie als abwesend.",
+          "general_room_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
           "general_home_trackers": "Eine passende Home-Assistant-Quelle für „Zuhause · Belegung · Geräte“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion. Auch number- und input_number-Helfer zählen als Anwesenheitszähler: 0 bedeutet niemand da, ein positiver Wert bedeutet anwesend. Unbekannte, veraltete oder nicht verfügbare Werte gelten nie als abwesend.",
-          "general_occupied_rooms_entity": "Eine passende Home-Assistant-Quelle für „Belegung · Raum · Quelle (state)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
+          "general_occupied_rooms_entity": "Wählen Sie eine Entität, deren Zustand oder gewähltes Attribut Home-Assistant-Bereichs-IDs oder -Namen enthält, etwa [\"living_room\"]. Eine gültige Liste hat Vorrang vor Raumsensoren: aufgeführte Räume sind belegt, ausgelassene leer; [] bedeutet alle Räume leer. Eine unveränderte Liste bleibt über Nacht gültig. Fehlende oder ungültige Daten sind keine leere Liste.",
           "general_occupied_rooms_attribute": "„Belegung · Raum · Quelle (attribute)“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
-          "general_sleep_rooms_entity": "Eine passende Home-Assistant-Quelle für „Schlaf · Raum · Quelle (state)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
+          "general_sleep_rooms_entity": "Wählen Sie eine Entität mit Schlafräumen als Home-Assistant-Bereichs-IDs oder -Namen im Zustand oder einem gewählten Attribut. Ein aufgeführter Raum gilt nur dann als schlafend, wenn er auch belegt ist. Eine unveränderte Liste bleibt gültig; fehlende oder ungültige Quellen sind unbekannt. Der manuelle Schalter Jetzt schlafen und der Raumzeitplan sind separate Schlafsignale. Ein konfigurierter Wecker kann den automatischen Schlafmodus vor dem Klingeln beenden.",
           "general_sleep_rooms_attribute": "Zustand oder ein tatsächlich mit einer Raumliste gefülltes Attribut wählen.",
           "notify_entities": "Direkte Benachrichtigungsziele, wenn Announcement Hub nicht verwendet wird.",
           "media_players": "Mediaplayer für direkte Sprachausgabe. Die Raumzuordnung bestimmt die Ziele.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Die Pollen-Warnschwelle hängt von der Skala des Anbieters ab.",
           "pollen_max_scale": "Oberster Zahlenwert der Anbieterskala, z. B. 5.",
           "pollen_avoid_ventilation": "Hohe Pollenwerte können die Empfehlung zum Fensteröffnen optional sperren.",
-          "general_source_stale_minutes": "Maximales Alter der letzten Quellenaktualisierung, bevor die Raum-/Schlafliste als unbekannt gilt. Keine Mindestschlafdauer. Standard: 240 Minuten. Veraltete Daten dürfen kein automatisches Ausschalten auslösen.",
-          "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind."
+          "general_source_stale_minutes": "Höchstalter der Meldungen direkter Anwesenheits-Tracker und numerischer Personenzählungen. Standard: 240 Minuten. Unveränderte Belegungs-/Schlaflisten und binäre Raumanwesenheitszustände bleiben gültig. Nicht verfügbare, wiederhergestellte oder ungültige ausgewählte Quellen bleiben unbekannt. Dies ist keine Schlafdauer.",
+          "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
+          "general_wake_alarm_entity": "Wählen Sie den nächsten Wecker aus einer Zeit- oder Zeitstempel-Entität, etwa dem Handywecker oder einem input_datetime-Helfer. Wählen Sie darunter auch die Entität für den Vorlauf in Minuten. HEM beendet den automatischen Schlafmodus um diese Zeit vor dem Wecker und verwendet wieder die normalen Sollwerte. Reine Uhrzeiten verwenden die Home-Assistant-Zeitzone; datierte Werte bezeichnen einen einzelnen Wecker. Abwesenheit, ausdrücklich gewählte Profile, manuelle Steuerung und Geräteschutz behalten Vorrang.",
+          "general_wake_lead_minutes_entity": "Wählen Sie einen numerischen sensor, number oder input_number mit den Minuten vor dem Wecker. Zulässig sind min oder keine Einheit und ein endlicher Wert ab 0. Bei 07:00 und 30 Minuten endet der automatische Schlafmodus um 06:30; 0 bedeutet beim Klingeln. Beide Quellen auswählen oder zum Deaktivieren beide leeren. Die normale Regelung beginnt entsprechend früher; das Erreichen des Sollwerts bis zum Wecker wird nicht garantiert."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Wähle Luftfeuchtigkeitssensoren des Raums. Gültige Werte unterstützen Komfort-, Entfeuchtungs- und Schimmelrisikohinweise; fehlende Werte gelten nicht als null.",
           "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
-          "occupancy_sensors": "Wähle echte binäre Präsenzsensoren des Raums. Erkannte Präsenz bedeutet belegt; ein unbekannter Zustand beweist nicht, dass der Raum leer ist."
+          "occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Wähle Luftfeuchtigkeitssensoren des Raums. Gültige Werte unterstützen Komfort-, Entfeuchtungs- und Schimmelrisikohinweise; fehlende Werte gelten nicht als null.",
           "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
-          "occupancy_sensors": "Wähle echte binäre Präsenzsensoren des Raums. Erkannte Präsenz bedeutet belegt; ein unbekannter Zustand beweist nicht, dass der Raum leer ist."
+          "occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Ungültig · Leistung · Einstellungen",
       "invalid_setup_rooms": "Ungültig: Zu überwachende Räume",
       "invalid_room_source": "Ungültig: Raum · Quelle",
-      "invalid_away_windows_recipients": "Mindestens eine Person und einen Zustellweg für die Fensterwarnung auswählen."
+      "invalid_away_windows_recipients": "Mindestens eine Person und einen Zustellweg für die Fensterwarnung auswählen.",
+      "wake_sources_pair": "Wählen Sie sowohl die Wecker- als auch die Minuten-Entität aus oder leeren Sie beide."
     },
     "abort": {
       "setup_area_removed": "Ungültig: Zu überwachende Räume",
@@ -3253,7 +3271,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Anwesenheit zu Hause · Höchstalter der Raum-/Schlafliste (min)",
+        "name": "Anwesenheit zu Hause · Höchstalter von Tracker-/Zählwerten (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
@@ -3325,7 +3343,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Raumanwesenheit · Höchstalter der Sensormeldung (min)",
+        "name": "Raumanwesenheit · Höchstalter der Personenzählung (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
@@ -3944,6 +3962,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Ansagen · {channel}Gerätefehler",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Schlaf · {channel}Wenn alle schlafen",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"

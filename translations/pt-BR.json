@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Pólen · HIGH",
           "pollen_max_scale": "POLLEN · Pólen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pólen · NO VENT",
-          "general_source_stale_minutes": "fonte · max (min)",
-          "general_home_policy": "Presença em casa"
+          "general_source_stale_minutes": "Presença em casa · Idade máxima dos dados de rastreamento/contagem (min)",
+          "general_home_policy": "Presença em casa",
+          "general_wake_alarm_entity": "Sono · Próximo despertador",
+          "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador"
         },
         "data_description": {
           "weather_entities": "Selecione: Clima e alertas · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Selecione: Qualidade do ar externo · AQI, CO₂, PM2.5, PM10, VOC. Indisponível: ⚠",
           "weather_warnings": "Clima e alertas · ⚠ (Indisponível) → 🪟🔒",
-          "general_room_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Cômodo · Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
           "general_home_trackers": "Escolha uma fonte real do Home Assistant para «Casa · Ocupação · Dispositivos». Dados ausentes ou desatualizados suspendem a ação. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Escolha uma fonte real do Home Assistant para «Ocupação · Cômodo · fonte (state)». Dados ausentes ou desatualizados suspendem a ação.",
+          "general_occupied_rooms_entity": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
           "general_occupied_rooms_attribute": "Configure «Ocupação · Cômodo · fonte (attribute)» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
-          "general_sleep_rooms_entity": "Escolha uma fonte real do Home Assistant para «Sono · Cômodo · fonte (state)». Dados ausentes ou desatualizados suspendem a ação.",
+          "general_sleep_rooms_entity": "Selecione uma lista de cômodos em que há pessoas dormindo no estado ou atributo, com nomes ou IDs das áreas do Home Assistant. Um cômodo listado só está dormindo se também estiver ocupado. A lista sem mudanças continua válida; fonte ausente ou inválida é desconhecida. O despertador configurado pode encerrar o sono automático antes de tocar.",
           "general_sleep_rooms_attribute": "Configure «Sono · Cômodo · fonte (attribute)» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
           "notify_entities": "Selecione: notify.* · configurações · fonte.",
           "media_players": "Selecione: media_player.* · configurações · fonte · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Configure «POLLEN · Pólen · HIGH» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
           "pollen_max_scale": "Configure «POLLEN · Pólen · SCALE» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
           "pollen_avoid_ventilation": "Configure «POLLEN · Pólen · NO VENT» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
-          "general_source_stale_minutes": "fonte · Sono / Ocupação · max 240 min. Inválido · Desligar.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "O limite de idade vale para relatórios de rastreadores e contagens numéricas de pessoas. Listas de cômodos e estados binários de presença não expiram sem mudanças. Fontes indisponíveis, restauradas ou inválidas continuam desconhecidas. Isso não é uma duração de sono.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Selecione uma entidade de hora ou data e hora para o próximo despertador e uma entidade para os minutos de antecedência. O HEM sai do sono automático com essa antecedência e retoma as metas normais. Horas sem data usam o fuso do Home Assistant. Ausência, controle manual e proteções mantêm a prioridade.",
+          "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 encerram o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Casa · Dispositivos",
           "climate_unknown_occupancy": "Ocupação · Dispositivos",
           "climate_unoccupied_delay_minutes": "Dispositivos · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Ocupação · Dispositivos · sensor · Obrigatório",
+          "climate_occupancy_stale_minutes": "Presença no cômodo · Idade máxima da contagem de pessoas (min)",
           "climate_away_policy": "Presença em casa · Casa · Dispositivos · POLICY",
           "climate_manual_profile": "Dispositivos · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sono · Dispositivos",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Dispositivos (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação.",
+          "climate_occupancy_sensors": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
           "climate_away_entities": "Escolha uma fonte real do Home Assistant para «Casa · Dispositivos». Dados ausentes ou desatualizados suspendem a ação.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Idade máxima das contagens numéricas de pessoas no cômodo. Valores antigos ou indisponíveis são desconhecidos. Estados binários de presença e listas de cômodos sem mudanças não expiram.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Esta opção controla «Dispositivos · CLIMATE_MANUAL_PROFILE». Comandos físicos exigem autorização específica e proteções independentes.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Gerais · configurações",
-        "description": "Gerais · configurações: Selecionar fonte, sensor / Dispositivos · controle.",
+        "description": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
         "data": {
           "general_room_occupancy_sensors": "Cômodo · Ocupação · sensor",
           "general_occupied_rooms_entity": "Ocupação · Cômodo · fonte (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Presença em casa",
           "general_sleep_rooms_entity": "Sono · Cômodo · fonte (state)",
           "general_sleep_rooms_attribute": "Sono · Cômodo · fonte (attribute)",
-          "general_source_stale_minutes": "fonte · max (min)"
+          "general_source_stale_minutes": "Presença em casa · Idade máxima dos dados de rastreamento/contagem (min)",
+          "general_wake_alarm_entity": "Sono · Próximo despertador",
+          "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Cômodo · Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação.",
-          "general_occupied_rooms_entity": "Escolha uma fonte real do Home Assistant para «Ocupação · Cômodo · fonte (state)». Dados ausentes ou desatualizados suspendem a ação.",
+          "general_room_occupancy_sensors": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
+          "general_occupied_rooms_entity": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
           "general_occupied_rooms_attribute": "Configure «Ocupação · Cômodo · fonte (attribute)» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
           "general_home_trackers": "Escolha uma fonte real do Home Assistant para «Casa · Ocupação · Dispositivos». Dados ausentes ou desatualizados suspendem a ação.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Escolha uma fonte real do Home Assistant para «Sono · Cômodo · fonte (state)». Dados ausentes ou desatualizados suspendem a ação.",
+          "general_sleep_rooms_entity": "Selecione uma lista de cômodos em que há pessoas dormindo no estado ou atributo, com nomes ou IDs das áreas do Home Assistant. Um cômodo listado só está dormindo se também estiver ocupado. A lista sem mudanças continua válida; fonte ausente ou inválida é desconhecida. O despertador configurado pode encerrar o sono automático antes de tocar.",
           "general_sleep_rooms_attribute": "Configure «Sono · Cômodo · fonte (attribute)» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
-          "general_source_stale_minutes": "fonte · Sono / Ocupação · max 240 min. Inválido · Desligar."
+          "general_source_stale_minutes": "O limite de idade vale para relatórios de rastreadores e contagens numéricas de pessoas. Listas de cômodos e estados binários de presença não expiram sem mudanças. Fontes indisponíveis, restauradas ou inválidas continuam desconhecidas. Isso não é uma duração de sono.",
+          "general_wake_alarm_entity": "Selecione uma entidade de hora ou data e hora para o próximo despertador e uma entidade para os minutos de antecedência. O HEM sai do sono automático com essa antecedência e retoma as metas normais. Horas sem data usam o fuso do Home Assistant. Ausência, controle manual e proteções mantêm a prioridade.",
+          "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 encerram o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Umidade. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
           "climate_devices": "Dispositivos. Selecione apenas entidades físicas climate.*, humidifier.* e fan.* deste ambiente. Os recursos nativos determinam aquecimento, resfriamento, secagem, temperaturas, umidade e velocidades. Selecionar não aciona o equipamento; ative o controle automático individualmente.",
           "shades": "Persianas, cortinas e venezianas de janela. Selecione persianas, venezianas e cortinas cover.* deste ambiente. Covers sem device_class são aceitos com CLOSE, após confirmar que realmente protegem janelas. Portas, garagens, portões, janelas e toldos são excluídos. Selecionar não movimenta nada: vincule o sensor da janela e configure automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
-          "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação."
+          "occupancy_sensors": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Umidade. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
           "climate_devices": "Dispositivos. Selecione apenas entidades físicas climate.*, humidifier.* e fan.* deste ambiente. Os recursos nativos determinam aquecimento, resfriamento, secagem, temperaturas, umidade e velocidades. Selecionar não aciona o equipamento; ative o controle automático individualmente.",
           "shades": "Persianas, cortinas e venezianas de janela. Selecione persianas, venezianas e cortinas cover.* deste ambiente. Covers sem device_class são aceitos com CLOSE, após confirmar que realmente protegem janelas. Portas, garagens, portões, janelas e toldos são excluídos. Selecionar não movimenta nada: vincule o sensor da janela e configure automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
-          "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação."
+          "occupancy_sensors": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Inválido · sensor · configurações",
       "device_temperature_band_invalid": "Inválido · Temperatura · configurações",
       "device_humidity_invalid": "Inválido · Umidade · configurações",
-      "device_runtime_invalid": "Inválido · Potência · configurações"
+      "device_runtime_invalid": "Inválido · Potência · configurações",
+      "wake_sources_pair": "Selecione tanto a entidade do despertador quanto a dos minutos, ou limpe ambas."
     },
     "abort": {
       "already_configured": "Home Environment Manager - já configurado.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Casa · Dispositivos",
           "climate_unknown_occupancy": "Ocupação · Dispositivos",
           "climate_unoccupied_delay_minutes": "Dispositivos · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Ocupação · Dispositivos · sensor · Obrigatório",
+          "climate_occupancy_stale_minutes": "Presença no cômodo · Idade máxima da contagem de pessoas (min)",
           "climate_away_policy": "Presença em casa · Casa · Dispositivos · POLICY",
           "climate_manual_profile": "Dispositivos · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Sono · Dispositivos",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Dispositivos (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação.",
+          "climate_occupancy_sensors": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
           "climate_away_entities": "Escolha uma fonte real do Home Assistant para «Casa · Dispositivos». Dados ausentes ou desatualizados suspendem a ação.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Idade máxima das contagens numéricas de pessoas no cômodo. Valores antigos ou indisponíveis são desconhecidos. Estados binários de presença e listas de cômodos sem mudanças não expiram.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Esta opção controla «Dispositivos · CLIMATE_MANUAL_PROFILE». Comandos físicos exigem autorização específica e proteções independentes.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Gerais · configurações",
-        "description": "Gerais · configurações: Selecionar fonte, sensor / Dispositivos · controle.",
+        "description": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
         "data": {
           "general_room_occupancy_sensors": "Cômodo · Ocupação · sensor",
           "general_occupied_rooms_entity": "Ocupação · Cômodo · fonte (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Presença em casa",
           "general_sleep_rooms_entity": "Sono · Cômodo · fonte (state)",
           "general_sleep_rooms_attribute": "Sono · Cômodo · fonte (attribute)",
-          "general_source_stale_minutes": "fonte · max (min)"
+          "general_source_stale_minutes": "Presença em casa · Idade máxima dos dados de rastreamento/contagem (min)",
+          "general_wake_alarm_entity": "Sono · Próximo despertador",
+          "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Cômodo · Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação.",
-          "general_occupied_rooms_entity": "Escolha uma fonte real do Home Assistant para «Ocupação · Cômodo · fonte (state)». Dados ausentes ou desatualizados suspendem a ação.",
+          "general_room_occupancy_sensors": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
+          "general_occupied_rooms_entity": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
           "general_occupied_rooms_attribute": "Configure «Ocupação · Cômodo · fonte (attribute)» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
           "general_home_trackers": "Escolha uma fonte real do Home Assistant para «Casa · Ocupação · Dispositivos». Dados ausentes ou desatualizados suspendem a ação.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Escolha uma fonte real do Home Assistant para «Sono · Cômodo · fonte (state)». Dados ausentes ou desatualizados suspendem a ação.",
+          "general_sleep_rooms_entity": "Selecione uma lista de cômodos em que há pessoas dormindo no estado ou atributo, com nomes ou IDs das áreas do Home Assistant. Um cômodo listado só está dormindo se também estiver ocupado. A lista sem mudanças continua válida; fonte ausente ou inválida é desconhecida. O despertador configurado pode encerrar o sono automático antes de tocar.",
           "general_sleep_rooms_attribute": "Configure «Sono · Cômodo · fonte (attribute)» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
-          "general_source_stale_minutes": "fonte · Sono / Ocupação · max 240 min. Inválido · Desligar."
+          "general_source_stale_minutes": "O limite de idade vale para relatórios de rastreadores e contagens numéricas de pessoas. Listas de cômodos e estados binários de presença não expiram sem mudanças. Fontes indisponíveis, restauradas ou inválidas continuam desconhecidas. Isso não é uma duração de sono.",
+          "general_wake_alarm_entity": "Selecione uma entidade de hora ou data e hora para o próximo despertador e uma entidade para os minutos de antecedência. O HEM sai do sono automático com essa antecedência e retoma as metas normais. Horas sem data usam o fuso do Home Assistant. Ausência, controle manual e proteções mantêm a prioridade.",
+          "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 encerram o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Pólen · HIGH",
           "pollen_max_scale": "POLLEN · Pólen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pólen · NO VENT",
-          "general_source_stale_minutes": "fonte · max (min)",
-          "general_home_policy": "Presença em casa"
+          "general_source_stale_minutes": "Presença em casa · Idade máxima dos dados de rastreamento/contagem (min)",
+          "general_home_policy": "Presença em casa",
+          "general_wake_alarm_entity": "Sono · Próximo despertador",
+          "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador"
         },
         "data_description": {
           "weather_entities": "Selecione: Clima e alertas · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Selecione: Qualidade do ar externo · AQI, CO₂, PM2.5, PM10, VOC. Indisponível: ⚠",
           "weather_warnings": "Clima e alertas · ⚠ (Indisponível) → 🪟🔒",
-          "general_room_occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Cômodo · Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
           "general_home_trackers": "Escolha uma fonte real do Home Assistant para «Casa · Ocupação · Dispositivos». Dados ausentes ou desatualizados suspendem a ação. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Escolha uma fonte real do Home Assistant para «Ocupação · Cômodo · fonte (state)». Dados ausentes ou desatualizados suspendem a ação.",
+          "general_occupied_rooms_entity": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
           "general_occupied_rooms_attribute": "Configure «Ocupação · Cômodo · fonte (attribute)» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
-          "general_sleep_rooms_entity": "Escolha uma fonte real do Home Assistant para «Sono · Cômodo · fonte (state)». Dados ausentes ou desatualizados suspendem a ação.",
+          "general_sleep_rooms_entity": "Selecione uma lista de cômodos em que há pessoas dormindo no estado ou atributo, com nomes ou IDs das áreas do Home Assistant. Um cômodo listado só está dormindo se também estiver ocupado. A lista sem mudanças continua válida; fonte ausente ou inválida é desconhecida. O despertador configurado pode encerrar o sono automático antes de tocar.",
           "general_sleep_rooms_attribute": "Configure «Sono · Cômodo · fonte (attribute)» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
           "notify_entities": "Selecione: notify.* · configurações · fonte.",
           "media_players": "Selecione: media_player.* · configurações · fonte · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Configure «POLLEN · Pólen · HIGH» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
           "pollen_max_scale": "Configure «POLLEN · Pólen · SCALE» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
           "pollen_avoid_ventilation": "Configure «POLLEN · Pólen · NO VENT» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
-          "general_source_stale_minutes": "fonte · Sono / Ocupação · max 240 min. Inválido · Desligar.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "O limite de idade vale para relatórios de rastreadores e contagens numéricas de pessoas. Listas de cômodos e estados binários de presença não expiram sem mudanças. Fontes indisponíveis, restauradas ou inválidas continuam desconhecidas. Isso não é uma duração de sono.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Selecione uma entidade de hora ou data e hora para o próximo despertador e uma entidade para os minutos de antecedência. O HEM sai do sono automático com essa antecedência e retoma as metas normais. Horas sem data usam o fuso do Home Assistant. Ausência, controle manual e proteções mantêm a prioridade.",
+          "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 encerram o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Umidade. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
           "climate_devices": "Dispositivos. Selecione apenas entidades físicas climate.*, humidifier.* e fan.* deste ambiente. Os recursos nativos determinam aquecimento, resfriamento, secagem, temperaturas, umidade e velocidades. Selecionar não aciona o equipamento; ative o controle automático individualmente.",
           "shades": "Persianas, cortinas e venezianas de janela. Selecione persianas, venezianas e cortinas cover.* deste ambiente. Covers sem device_class são aceitos com CLOSE, após confirmar que realmente protegem janelas. Portas, garagens, portões, janelas e toldos são excluídos. Selecionar não movimenta nada: vincule o sensor da janela e configure automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
-          "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação."
+          "occupancy_sensors": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Umidade. Selecione entradas do ambiente: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controle automático.",
           "climate_devices": "Dispositivos. Selecione apenas entidades físicas climate.*, humidifier.* e fan.* deste ambiente. Os recursos nativos determinam aquecimento, resfriamento, secagem, temperaturas, umidade e velocidades. Selecionar não aciona o equipamento; ative o controle automático individualmente.",
           "shades": "Persianas, cortinas e venezianas de janela. Selecione persianas, venezianas e cortinas cover.* deste ambiente. Covers sem device_class são aceitos com CLOSE, após confirmar que realmente protegem janelas. Portas, garagens, portões, janelas e toldos são excluídos. Selecionar não movimenta nada: vincule o sensor da janela e configure automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
-          "occupancy_sensors": "Escolha uma fonte real do Home Assistant para «Ocupação · sensor». Dados ausentes ou desatualizados suspendem a ação."
+          "occupancy_sensors": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Inválido · Potência · configurações",
       "invalid_setup_rooms": "Inválido: Ambientes para monitorar",
       "invalid_room_source": "Inválido: Cômodo · fonte",
-      "invalid_away_windows_recipients": "Pessoas a avisar; Canais de aviso de janelas abertas. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Pessoas a avisar; Canais de aviso de janelas abertas. Announcement Hub (person.*).",
+      "wake_sources_pair": "Selecione tanto a entidade do despertador quanto a dos minutos, ou limpe ambas."
     },
     "abort": {
       "setup_area_removed": "Inválido: Ambientes para monitorar",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Presença em casa · fonte · max (min)",
+        "name": "Presença em casa · Idade máxima dos dados de rastreamento/contagem (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Presença no cômodo · Ocupação · Dispositivos · sensor · Obrigatório",
+        "name": "Presença no cômodo · Idade máxima da contagem de pessoas (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Anúncios · Anunciar erros do dispositivo · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajuda"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Sono · {channel}Quando todos estão dormindo",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"

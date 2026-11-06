@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · حبوب اللقاح · HIGH",
           "pollen_max_scale": "POLLEN · حبوب اللقاح · SCALE",
           "pollen_avoid_ventilation": "POLLEN · حبوب اللقاح · NO VENT",
-          "general_source_stale_minutes": "المصدر · max (min)",
-          "general_home_policy": "التواجد في المنزل"
+          "general_source_stale_minutes": "التواجد في المنزل · أقصى عمر لقراءة المتتبّع أو عدد الأشخاص (دقيقة)",
+          "general_home_policy": "التواجد في المنزل",
+          "general_wake_alarm_entity": "النوم · المنبّه التالي",
+          "general_wake_lead_minutes_entity": "النوم · الدقائق قبل المنبّه"
         },
         "data_description": {
           "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "اختر: جودة الهواء الخارجي · AQI, CO₂, PM2.5, PM10, VOC. غير متاح: ⚠",
           "weather_warnings": "الطقس والتحذيرات · ⚠ (غير متاح) → 🪟🔒",
-          "general_room_occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «غرفة · الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير.",
           "general_home_trackers": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الإشغال · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
+          "general_occupied_rooms_entity": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير.",
           "general_occupied_rooms_attribute": "اضبط «الإشغال · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
-          "general_sleep_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «النوم · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
+          "general_sleep_rooms_entity": "اختر قائمة غرف النوم في حالة الكيان أو إحدى سماته، باستخدام أسماء مناطق Home Assistant أو معرّفاتها. الغرفة المدرجة تُعد نائمة فقط إذا كانت مشغولة أيضًا. القائمة التي لا تتغير تبقى صالحة؛ المصدر المفقود أو غير الصالح مجهول. يمكن للمنبّه المحدد إنهاء النوم التلقائي قبل الرنين.",
           "general_sleep_rooms_attribute": "اضبط «النوم · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "notify_entities": "اختر مصدر Home Assistant حقيقيًا لـ «الإعدادات · المصدر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "media_players": "اختر: media_player.* · الإعدادات · المصدر · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "اضبط «POLLEN · حبوب اللقاح · HIGH» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "pollen_max_scale": "اضبط «POLLEN · حبوب اللقاح · SCALE» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "pollen_avoid_ventilation": "اضبط «POLLEN · حبوب اللقاح · NO VENT» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
-          "general_source_stale_minutes": "المصدر · النوم / الإشغال · max 240 min. غير صالح · إيقاف.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "حد عمر التقارير يخص المتتبّعات وعدادات الأشخاص الرقمية. قوائم الغرف وحالات حضور الغرفة الثنائية لا تنتهي صلاحيتها ما دامت لم تتغير. المصادر غير المتاحة أو المستعادة أو غير الصالحة تبقى مجهولة. هذه ليست مدة النوم.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "اختر كيان وقت أو طابع زمني للمنبّه التالي، واختر أيضًا كيان الدقائق. ينهي HEM وضع النوم التلقائي قبل المنبّه بالمدة المحددة لاستئناف الأهداف العادية. الوقت دون تاريخ يستخدم المنطقة الزمنية في Home Assistant. تبقى أولوية الغياب والتحكم اليدوي وحماية الأجهزة سارية.",
+          "general_wake_lead_minutes_entity": "اختر كيانًا رقميًا بقيمة غير سالبة بالدقائق، بوحدة min أو دون وحدة. منبّه 07:00 مع قيمة 30 ينهي النوم التلقائي عند 06:30؛ القيمة 0 تعني وقت الرنين. لتعطيل الميزة، امسح المصدرين."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "المنزل · الأجهزة",
           "climate_unknown_occupancy": "الإشغال · الأجهزة",
           "climate_unoccupied_delay_minutes": "الأجهزة · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "الإشغال · الأجهزة · مستشعر · مطلوب",
+          "climate_occupancy_stale_minutes": "التواجد في الغرفة · أقصى عمر لقراءة عدد الأشخاص (دقيقة)",
           "climate_away_policy": "التواجد في المنزل · المنزل · الأجهزة · POLICY",
           "climate_manual_profile": "الأجهزة · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "النوم · الأجهزة",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "الأجهزة (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
+          "climate_occupancy_sensors": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير.",
           "climate_away_entities": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "أقصى عمر لقراءات عدد الأشخاص الرقمية في الغرفة. القراءات القديمة أو غير المتاحة مجهولة. حالات حضور الغرفة الثنائية وقوائم الغرف لا تنتهي صلاحيتها لمجرد عدم تغيّرها.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "يتحكم هذا الخيار في «الأجهزة · CLIMATE_MANUAL_PROFILE». أوامر الأجهزة · CLIMATE_MANUAL_PROFILE تتطلب موافقة مستقلة ووسائل حماية.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "عام · الإعدادات",
-        "description": "عام · الإعدادات: اختيار المصدر, مستشعر / الأجهزة · التحكم.",
+        "description": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير.",
         "data": {
           "general_room_occupancy_sensors": "غرفة · الإشغال · مستشعر",
           "general_occupied_rooms_entity": "الإشغال · غرفة · المصدر (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "التواجد في المنزل",
           "general_sleep_rooms_entity": "النوم · غرفة · المصدر (state)",
           "general_sleep_rooms_attribute": "النوم · غرفة · المصدر (attribute)",
-          "general_source_stale_minutes": "المصدر · max (min)"
+          "general_source_stale_minutes": "التواجد في المنزل · أقصى عمر لقراءة المتتبّع أو عدد الأشخاص (دقيقة)",
+          "general_wake_alarm_entity": "النوم · المنبّه التالي",
+          "general_wake_lead_minutes_entity": "النوم · الدقائق قبل المنبّه"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «غرفة · الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
-          "general_occupied_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
+          "general_room_occupancy_sensors": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير.",
+          "general_occupied_rooms_entity": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير.",
           "general_occupied_rooms_attribute": "اضبط «الإشغال · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "general_home_trackers": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الإشغال · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «النوم · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
+          "general_sleep_rooms_entity": "اختر قائمة غرف النوم في حالة الكيان أو إحدى سماته، باستخدام أسماء مناطق Home Assistant أو معرّفاتها. الغرفة المدرجة تُعد نائمة فقط إذا كانت مشغولة أيضًا. القائمة التي لا تتغير تبقى صالحة؛ المصدر المفقود أو غير الصالح مجهول. يمكن للمنبّه المحدد إنهاء النوم التلقائي قبل الرنين.",
           "general_sleep_rooms_attribute": "اضبط «النوم · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
-          "general_source_stale_minutes": "المصدر · النوم / الإشغال · max 240 min. غير صالح · إيقاف."
+          "general_source_stale_minutes": "حد عمر التقارير يخص المتتبّعات وعدادات الأشخاص الرقمية. قوائم الغرف وحالات حضور الغرفة الثنائية لا تنتهي صلاحيتها ما دامت لم تتغير. المصادر غير المتاحة أو المستعادة أو غير الصالحة تبقى مجهولة. هذه ليست مدة النوم.",
+          "general_wake_alarm_entity": "اختر كيان وقت أو طابع زمني للمنبّه التالي، واختر أيضًا كيان الدقائق. ينهي HEM وضع النوم التلقائي قبل المنبّه بالمدة المحددة لاستئناف الأهداف العادية. الوقت دون تاريخ يستخدم المنطقة الزمنية في Home Assistant. تبقى أولوية الغياب والتحكم اليدوي وحماية الأجهزة سارية.",
+          "general_wake_lead_minutes_entity": "اختر كيانًا رقميًا بقيمة غير سالبة بالدقائق، بوحدة min أو دون وحدة. منبّه 07:00 مع قيمة 30 ينهي النوم التلقائي عند 06:30؛ القيمة 0 تعني وقت الرنين. لتعطيل الميزة، امسح المصدرين."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "الرطوبة. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
           "climate_devices": "الأجهزة. اختر فقط كيانات climate.* و humidifier.* و fan.* الفعلية في الغرفة. تحدد قدرات الجهاز أوضاع التدفئة والتبريد وإزالة الرطوبة والقيم المستهدفة وسرعات المروحة. الاختيار لا يشغّل أي جهاز؛ فعّل التحكم الآلي لكل جهاز بشكل مستقل.",
           "shades": "ستائر النوافذ والمصاريع والستائر الدوارة. اختر ستائر ونوافذ التظليل من نوع cover.* في الغرفة. تُقبل covers دون device_class إذا دعمت CLOSE وكانت فعلًا لتظليل النافذة. تُستبعد أبواب المرآب والبوابات والأبواب والنوافذ والمظلات الخارجية. الاختيار لا يحرك شيئًا: اربط مستشعر النافذة واضبط التحكم والإعلان ودرجة الحرارة في وحدة التحكم. الحالة غير المعروفة تمنع الحركة.",
-          "occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط."
+          "occupancy_sensors": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "الرطوبة. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
           "climate_devices": "الأجهزة. اختر فقط كيانات climate.* و humidifier.* و fan.* الفعلية في الغرفة. تحدد قدرات الجهاز أوضاع التدفئة والتبريد وإزالة الرطوبة والقيم المستهدفة وسرعات المروحة. الاختيار لا يشغّل أي جهاز؛ فعّل التحكم الآلي لكل جهاز بشكل مستقل.",
           "shades": "ستائر النوافذ والمصاريع والستائر الدوارة. اختر ستائر ونوافذ التظليل من نوع cover.* في الغرفة. تُقبل covers دون device_class إذا دعمت CLOSE وكانت فعلًا لتظليل النافذة. تُستبعد أبواب المرآب والبوابات والأبواب والنوافذ والمظلات الخارجية. الاختيار لا يحرك شيئًا: اربط مستشعر النافذة واضبط التحكم والإعلان ودرجة الحرارة في وحدة التحكم. الحالة غير المعروفة تمنع الحركة.",
-          "occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط."
+          "occupancy_sensors": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "غير صالح · مستشعر · الإعدادات",
       "device_temperature_band_invalid": "غير صالح · الحرارة · الإعدادات",
       "device_humidity_invalid": "غير صالح · الرطوبة · الإعدادات",
-      "device_runtime_invalid": "غير صالح · الطاقة · الإعدادات"
+      "device_runtime_invalid": "غير صالح · الطاقة · الإعدادات",
+      "wake_sources_pair": "اختر كيان المنبّه وكيان الدقائق معًا، أو امسح كليهما."
     },
     "abort": {
       "already_configured": "Home Environment Manager - تم الإعداد مسبقًا.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "المنزل · الأجهزة",
           "climate_unknown_occupancy": "الإشغال · الأجهزة",
           "climate_unoccupied_delay_minutes": "الأجهزة · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "الإشغال · الأجهزة · مستشعر · مطلوب",
+          "climate_occupancy_stale_minutes": "التواجد في الغرفة · أقصى عمر لقراءة عدد الأشخاص (دقيقة)",
           "climate_away_policy": "التواجد في المنزل · المنزل · الأجهزة · POLICY",
           "climate_manual_profile": "الأجهزة · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "النوم · الأجهزة",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "الأجهزة (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
+          "climate_occupancy_sensors": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير.",
           "climate_away_entities": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "أقصى عمر لقراءات عدد الأشخاص الرقمية في الغرفة. القراءات القديمة أو غير المتاحة مجهولة. حالات حضور الغرفة الثنائية وقوائم الغرف لا تنتهي صلاحيتها لمجرد عدم تغيّرها.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "يتحكم هذا الخيار في «الأجهزة · CLIMATE_MANUAL_PROFILE». أوامر الأجهزة · CLIMATE_MANUAL_PROFILE تتطلب موافقة مستقلة ووسائل حماية.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "عام · الإعدادات",
-        "description": "عام · الإعدادات: اختيار المصدر, مستشعر / الأجهزة · التحكم.",
+        "description": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير.",
         "data": {
           "general_room_occupancy_sensors": "غرفة · الإشغال · مستشعر",
           "general_occupied_rooms_entity": "الإشغال · غرفة · المصدر (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "التواجد في المنزل",
           "general_sleep_rooms_entity": "النوم · غرفة · المصدر (state)",
           "general_sleep_rooms_attribute": "النوم · غرفة · المصدر (attribute)",
-          "general_source_stale_minutes": "المصدر · max (min)"
+          "general_source_stale_minutes": "التواجد في المنزل · أقصى عمر لقراءة المتتبّع أو عدد الأشخاص (دقيقة)",
+          "general_wake_alarm_entity": "النوم · المنبّه التالي",
+          "general_wake_lead_minutes_entity": "النوم · الدقائق قبل المنبّه"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «غرفة · الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
-          "general_occupied_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
+          "general_room_occupancy_sensors": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير.",
+          "general_occupied_rooms_entity": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير.",
           "general_occupied_rooms_attribute": "اضبط «الإشغال · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "general_home_trackers": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الإشغال · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «النوم · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
+          "general_sleep_rooms_entity": "اختر قائمة غرف النوم في حالة الكيان أو إحدى سماته، باستخدام أسماء مناطق Home Assistant أو معرّفاتها. الغرفة المدرجة تُعد نائمة فقط إذا كانت مشغولة أيضًا. القائمة التي لا تتغير تبقى صالحة؛ المصدر المفقود أو غير الصالح مجهول. يمكن للمنبّه المحدد إنهاء النوم التلقائي قبل الرنين.",
           "general_sleep_rooms_attribute": "اضبط «النوم · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
-          "general_source_stale_minutes": "المصدر · النوم / الإشغال · max 240 min. غير صالح · إيقاف."
+          "general_source_stale_minutes": "حد عمر التقارير يخص المتتبّعات وعدادات الأشخاص الرقمية. قوائم الغرف وحالات حضور الغرفة الثنائية لا تنتهي صلاحيتها ما دامت لم تتغير. المصادر غير المتاحة أو المستعادة أو غير الصالحة تبقى مجهولة. هذه ليست مدة النوم.",
+          "general_wake_alarm_entity": "اختر كيان وقت أو طابع زمني للمنبّه التالي، واختر أيضًا كيان الدقائق. ينهي HEM وضع النوم التلقائي قبل المنبّه بالمدة المحددة لاستئناف الأهداف العادية. الوقت دون تاريخ يستخدم المنطقة الزمنية في Home Assistant. تبقى أولوية الغياب والتحكم اليدوي وحماية الأجهزة سارية.",
+          "general_wake_lead_minutes_entity": "اختر كيانًا رقميًا بقيمة غير سالبة بالدقائق، بوحدة min أو دون وحدة. منبّه 07:00 مع قيمة 30 ينهي النوم التلقائي عند 06:30؛ القيمة 0 تعني وقت الرنين. لتعطيل الميزة، امسح المصدرين."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · حبوب اللقاح · HIGH",
           "pollen_max_scale": "POLLEN · حبوب اللقاح · SCALE",
           "pollen_avoid_ventilation": "POLLEN · حبوب اللقاح · NO VENT",
-          "general_source_stale_minutes": "المصدر · max (min)",
-          "general_home_policy": "التواجد في المنزل"
+          "general_source_stale_minutes": "التواجد في المنزل · أقصى عمر لقراءة المتتبّع أو عدد الأشخاص (دقيقة)",
+          "general_home_policy": "التواجد في المنزل",
+          "general_wake_alarm_entity": "النوم · المنبّه التالي",
+          "general_wake_lead_minutes_entity": "النوم · الدقائق قبل المنبّه"
         },
         "data_description": {
           "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "اختر: جودة الهواء الخارجي · AQI, CO₂, PM2.5, PM10, VOC. غير متاح: ⚠",
           "weather_warnings": "الطقس والتحذيرات · ⚠ (غير متاح) → 🪟🔒",
-          "general_room_occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «غرفة · الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير.",
           "general_home_trackers": "اختر مصدر Home Assistant حقيقيًا لـ «المنزل · الإشغال · الأجهزة». البيانات المفقودة أو القديمة توقف الإجراء المرتبط. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
+          "general_occupied_rooms_entity": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير.",
           "general_occupied_rooms_attribute": "اضبط «الإشغال · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
-          "general_sleep_rooms_entity": "اختر مصدر Home Assistant حقيقيًا لـ «النوم · غرفة · المصدر (state)». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
+          "general_sleep_rooms_entity": "اختر قائمة غرف النوم في حالة الكيان أو إحدى سماته، باستخدام أسماء مناطق Home Assistant أو معرّفاتها. الغرفة المدرجة تُعد نائمة فقط إذا كانت مشغولة أيضًا. القائمة التي لا تتغير تبقى صالحة؛ المصدر المفقود أو غير الصالح مجهول. يمكن للمنبّه المحدد إنهاء النوم التلقائي قبل الرنين.",
           "general_sleep_rooms_attribute": "اضبط «النوم · غرفة · المصدر (attribute)» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "notify_entities": "اختر مصدر Home Assistant حقيقيًا لـ «الإعدادات · المصدر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط.",
           "media_players": "اختر: media_player.* · الإعدادات · المصدر · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "اضبط «POLLEN · حبوب اللقاح · HIGH» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "pollen_max_scale": "اضبط «POLLEN · حبوب اللقاح · SCALE» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
           "pollen_avoid_ventilation": "اضبط «POLLEN · حبوب اللقاح · NO VENT» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
-          "general_source_stale_minutes": "المصدر · النوم / الإشغال · max 240 min. غير صالح · إيقاف.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "حد عمر التقارير يخص المتتبّعات وعدادات الأشخاص الرقمية. قوائم الغرف وحالات حضور الغرفة الثنائية لا تنتهي صلاحيتها ما دامت لم تتغير. المصادر غير المتاحة أو المستعادة أو غير الصالحة تبقى مجهولة. هذه ليست مدة النوم.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "اختر كيان وقت أو طابع زمني للمنبّه التالي، واختر أيضًا كيان الدقائق. ينهي HEM وضع النوم التلقائي قبل المنبّه بالمدة المحددة لاستئناف الأهداف العادية. الوقت دون تاريخ يستخدم المنطقة الزمنية في Home Assistant. تبقى أولوية الغياب والتحكم اليدوي وحماية الأجهزة سارية.",
+          "general_wake_lead_minutes_entity": "اختر كيانًا رقميًا بقيمة غير سالبة بالدقائق، بوحدة min أو دون وحدة. منبّه 07:00 مع قيمة 30 ينهي النوم التلقائي عند 06:30؛ القيمة 0 تعني وقت الرنين. لتعطيل الميزة، امسح المصدرين."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "الرطوبة. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
           "climate_devices": "الأجهزة. اختر فقط كيانات climate.* و humidifier.* و fan.* الفعلية في الغرفة. تحدد قدرات الجهاز أوضاع التدفئة والتبريد وإزالة الرطوبة والقيم المستهدفة وسرعات المروحة. الاختيار لا يشغّل أي جهاز؛ فعّل التحكم الآلي لكل جهاز بشكل مستقل.",
           "shades": "ستائر النوافذ والمصاريع والستائر الدوارة. اختر ستائر ونوافذ التظليل من نوع cover.* في الغرفة. تُقبل covers دون device_class إذا دعمت CLOSE وكانت فعلًا لتظليل النافذة. تُستبعد أبواب المرآب والبوابات والأبواب والنوافذ والمظلات الخارجية. الاختيار لا يحرك شيئًا: اربط مستشعر النافذة واضبط التحكم والإعلان ودرجة الحرارة في وحدة التحكم. الحالة غير المعروفة تمنع الحركة.",
-          "occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط."
+          "occupancy_sensors": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "الرطوبة. اختر مدخلات الغرفة: اسم الجهاز - اسم الكيان. المجموعات الفارغة لا تستخدم ولا تفعّل الاكتشاف أو التحكم التلقائي.",
           "climate_devices": "الأجهزة. اختر فقط كيانات climate.* و humidifier.* و fan.* الفعلية في الغرفة. تحدد قدرات الجهاز أوضاع التدفئة والتبريد وإزالة الرطوبة والقيم المستهدفة وسرعات المروحة. الاختيار لا يشغّل أي جهاز؛ فعّل التحكم الآلي لكل جهاز بشكل مستقل.",
           "shades": "ستائر النوافذ والمصاريع والستائر الدوارة. اختر ستائر ونوافذ التظليل من نوع cover.* في الغرفة. تُقبل covers دون device_class إذا دعمت CLOSE وكانت فعلًا لتظليل النافذة. تُستبعد أبواب المرآب والبوابات والأبواب والنوافذ والمظلات الخارجية. الاختيار لا يحرك شيئًا: اربط مستشعر النافذة واضبط التحكم والإعلان ودرجة الحرارة في وحدة التحكم. الحالة غير المعروفة تمنع الحركة.",
-          "occupancy_sensors": "اختر مصدر Home Assistant حقيقيًا لـ «الإشغال · مستشعر». البيانات المفقودة أو القديمة توقف الإجراء المرتبط."
+          "occupancy_sensors": "قائمة الغرف المشغولة الصحيحة في الحالة أو السمة المختارة لها الأولوية: الغرف المدرجة مشغولة وغير المدرجة فارغة. دون قائمة، أي مستشعر حضور يعمل يعني وجود أشخاص؛ جميعها متوقفة أو عدم اختيار مستشعرات يعني غرفة فارغة. المصدر المختار غير المتاح أو غير الصالح يبقى مجهولًا. القوائم والحالات الثنائية لا تنتهي صلاحيتها لمجرد بقائها دون تغيير."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "غير صالح · الطاقة · الإعدادات",
       "invalid_setup_rooms": "غير صالح: الغرف المراد مراقبتها",
       "invalid_room_source": "غير صالح: غرفة · المصدر",
-      "invalid_away_windows_recipients": "الأشخاص المطلوب تنبيههم; قنوات تنبيه النوافذ المفتوحة. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "الأشخاص المطلوب تنبيههم; قنوات تنبيه النوافذ المفتوحة. Announcement Hub (person.*).",
+      "wake_sources_pair": "اختر كيان المنبّه وكيان الدقائق معًا، أو امسح كليهما."
     },
     "abort": {
       "setup_area_removed": "غير صالح: الغرف المراد مراقبتها",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "التواجد في المنزل · المصدر · max (min)",
+        "name": "التواجد في المنزل · أقصى عمر لقراءة المتتبّع أو عدد الأشخاص (دقيقة)",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "التواجد في الغرفة · الإشغال · الأجهزة · مستشعر · مطلوب",
+        "name": "التواجد في الغرفة · أقصى عمر لقراءة عدد الأشخاص (دقيقة)",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "الإعلانات · إعلان أخطاء الجهاز · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "النوم · {channel}عندما يكون الجميع نائمين",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"

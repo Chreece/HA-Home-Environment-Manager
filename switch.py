@@ -60,6 +60,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
     entities.extend(native_feature_switches())
     entities.extend(EquipmentWindowPauseSwitch(manager, spec)
                     for spec in equipment.specs(manager))
+    entities.extend(EquipmentHouseholdSleepSwitch(manager, spec)
+                    for spec in equipment.specs(manager))
     # ONLY a per-device announcement setting is new. Error evidence is
     # read directly from the manufacturer's existing HA entities/attributes.
     entities.extend(EquipmentErrorAnnouncementSwitch(manager, spec)
@@ -274,6 +276,29 @@ class EquipmentTimedSetpointSwitch(EquipmentEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs):
         await self._manager.equipment.async_update(self._spec, {"timed_setpoint_sequence": False})
+
+
+class EquipmentHouseholdSleepSwitch(EquipmentEntity, SwitchEntity):
+    """Follow household sleep on this controller, independently of other devices."""
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_icon = "mdi:bed-clock"
+
+    def __init__(self, manager, spec):
+        self._equipment_init(manager, spec, "sleep_when_everyone_asleep")
+
+    @property
+    def available(self):
+        return self._manager.equipment._ready
+
+    @property
+    def is_on(self):
+        return self.controller_settings.get(self._key) is True
+
+    async def async_turn_on(self, **kwargs):
+        await self._manager.equipment.async_update(self._spec, {self._key: True})
+
+    async def async_turn_off(self, **kwargs):
+        await self._manager.equipment.async_update(self._spec, {self._key: False})
 
 
 class EquipmentWindowPauseSwitch(EquipmentEntity, SwitchEntity):

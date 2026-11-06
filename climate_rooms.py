@@ -197,7 +197,7 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
     from .occupancy_policy import controlled_sleep_presence
     sleeping,sleep_evidence=controlled_sleep_presence(
         hass,area,global_presence or {},known_areas or {area},
-        home_status=at_home,local_sleeping=local_sleeping,
+        home_status=at_home,room_status=occupied,now=now,local_sleeping=local_sleeping,
         local_reason=local_evidence,
     )
     sleep_verified=sleeping is not None

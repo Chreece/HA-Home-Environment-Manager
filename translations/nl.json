@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Pollen · HIGH",
           "pollen_max_scale": "POLLEN · Pollen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
-          "general_source_stale_minutes": "bron · max (min)",
-          "general_home_policy": "Aanwezigheid thuis"
+          "general_source_stale_minutes": "Aanwezigheid thuis · Maximale ouderdom van tracker-/telgegevens (min)",
+          "general_home_policy": "Aanwezigheid thuis",
+          "general_wake_alarm_entity": "Slaap · Volgende wekker",
+          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Kies: Buitenluchtkwaliteit · AQI, CO₂, PM2.5, PM10, VOC. Niet beschikbaar: ⚠",
           "weather_warnings": "Weer en waarschuwingen · ⚠ (Niet beschikbaar) → 🪟🔒",
-          "general_room_occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Kamer · Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
           "general_home_trackers": "Kies een echte Home Assistant-bron voor ‘Thuis · Aanwezigheid · Apparaten’. Ontbrekende of oude waarden blokkeren de bijbehorende actie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · Kamer · bron (state)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "general_occupied_rooms_entity": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
           "general_occupied_rooms_attribute": "Stel ‘Aanwezigheid · Kamer · bron (attribute)’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
-          "general_sleep_rooms_entity": "Kies een echte Home Assistant-bron voor ‘Slaap · Kamer · bron (state)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "general_sleep_rooms_entity": "Kies een lijst met slapende kamers uit de status of een attribuut, met Home Assistant-gebiedsnamen of -ID’s. Een vermelde kamer slaapt alleen als deze ook bezet is. Een ongewijzigde lijst blijft geldig; een ontbrekende of ongeldige bron is onbekend. De ingestelde wekker kan automatische slaap vóór het afgaan beëindigen.",
           "general_sleep_rooms_attribute": "Stel ‘Slaap · Kamer · bron (attribute)’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
           "notify_entities": "Kies: notify.* · instellingen · bron.",
           "media_players": "Kies: media_player.* · instellingen · bron · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Stel ‘POLLEN · Pollen · HIGH’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
           "pollen_max_scale": "Stel ‘POLLEN · Pollen · SCALE’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
           "pollen_avoid_ventilation": "Stel ‘POLLEN · Pollen · NO VENT’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
-          "general_source_stale_minutes": "bron · Slaap / Aanwezigheid · max 240 min. Ongeldig · Uitschakelen.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "De ouderdomsgrens geldt voor trackerberichten en numerieke personentellingen. Kamerlijsten en binaire aanwezigheidsstatussen verlopen niet zolang ze ongewijzigd zijn. Onbeschikbare, herstelde of ongeldige bronnen blijven onbekend. Dit is geen slaapduur.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Kies een tijd- of tijdstempelentiteit voor de volgende wekker en een entiteit voor de minuten. HEM beëindigt automatische slaap zoveel minuten eerder en hervat de normale doelen. Tijden zonder datum gebruiken de Home Assistant-tijdzone. Afwezigheid, handmatige bediening en beveiligingen houden voorrang.",
+          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Thuis · Apparaten",
           "climate_unknown_occupancy": "Aanwezigheid · Apparaten",
           "climate_unoccupied_delay_minutes": "Apparaten · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Aanwezigheid · Apparaten · sensor · Vereist",
+          "climate_occupancy_stale_minutes": "Aanwezigheid in kamer · Maximale ouderdom van het aantal personen (min)",
           "climate_away_policy": "Aanwezigheid thuis · Thuis · Apparaten · POLICY",
           "climate_manual_profile": "Apparaten · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Slaap · Apparaten",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Apparaten (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "climate_occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
           "climate_away_entities": "Kies een echte Home Assistant-bron voor ‘Thuis · Apparaten’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Maximale ouderdom van numerieke personentellingen in de kamer. Oude of onbeschikbare waarden zijn onbekend. Ongewijzigde binaire aanwezigheidsstatussen en kamerlijsten verlopen niet.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Deze optie regelt ‘Apparaten · CLIMATE_MANUAL_PROFILE’. Fysieke opdrachten vereisen afzonderlijke toestemming en beveiligingen.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Algemene · instellingen",
-        "description": "Algemene · instellingen: Kiezen bron, sensor / Apparaten · regeling.",
+        "description": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
         "data": {
           "general_room_occupancy_sensors": "Kamer · Aanwezigheid · sensor",
           "general_occupied_rooms_entity": "Aanwezigheid · Kamer · bron (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Aanwezigheid thuis",
           "general_sleep_rooms_entity": "Slaap · Kamer · bron (state)",
           "general_sleep_rooms_attribute": "Slaap · Kamer · bron (attribute)",
-          "general_source_stale_minutes": "bron · max (min)"
+          "general_source_stale_minutes": "Aanwezigheid thuis · Maximale ouderdom van tracker-/telgegevens (min)",
+          "general_wake_alarm_entity": "Slaap · Volgende wekker",
+          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Kamer · Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
-          "general_occupied_rooms_entity": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · Kamer · bron (state)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "general_room_occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
+          "general_occupied_rooms_entity": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
           "general_occupied_rooms_attribute": "Stel ‘Aanwezigheid · Kamer · bron (attribute)’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
           "general_home_trackers": "Kies een echte Home Assistant-bron voor ‘Thuis · Aanwezigheid · Apparaten’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Kies een echte Home Assistant-bron voor ‘Slaap · Kamer · bron (state)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "general_sleep_rooms_entity": "Kies een lijst met slapende kamers uit de status of een attribuut, met Home Assistant-gebiedsnamen of -ID’s. Een vermelde kamer slaapt alleen als deze ook bezet is. Een ongewijzigde lijst blijft geldig; een ontbrekende of ongeldige bron is onbekend. De ingestelde wekker kan automatische slaap vóór het afgaan beëindigen.",
           "general_sleep_rooms_attribute": "Stel ‘Slaap · Kamer · bron (attribute)’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
-          "general_source_stale_minutes": "bron · Slaap / Aanwezigheid · max 240 min. Ongeldig · Uitschakelen."
+          "general_source_stale_minutes": "De ouderdomsgrens geldt voor trackerberichten en numerieke personentellingen. Kamerlijsten en binaire aanwezigheidsstatussen verlopen niet zolang ze ongewijzigd zijn. Onbeschikbare, herstelde of ongeldige bronnen blijven onbekend. Dit is geen slaapduur.",
+          "general_wake_alarm_entity": "Kies een tijd- of tijdstempelentiteit voor de volgende wekker en een entiteit voor de minuten. HEM beëindigt automatische slaap zoveel minuten eerder en hervat de normale doelen. Tijden zonder datum gebruiken de Home Assistant-tijdzone. Afwezigheid, handmatige bediening en beveiligingen houden voorrang.",
+          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
-          "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."
+          "occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
-          "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."
+          "occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Ongeldig · sensor · instellingen",
       "device_temperature_band_invalid": "Ongeldig · Temperatuur · instellingen",
       "device_humidity_invalid": "Ongeldig · Vochtigheid · instellingen",
-      "device_runtime_invalid": "Ongeldig · Vermogen · instellingen"
+      "device_runtime_invalid": "Ongeldig · Vermogen · instellingen",
+      "wake_sources_pair": "Kies zowel de wekker- als de minutenentiteit, of wis beide."
     },
     "abort": {
       "already_configured": "Home Environment Manager - al ingesteld.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Thuis · Apparaten",
           "climate_unknown_occupancy": "Aanwezigheid · Apparaten",
           "climate_unoccupied_delay_minutes": "Apparaten · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Aanwezigheid · Apparaten · sensor · Vereist",
+          "climate_occupancy_stale_minutes": "Aanwezigheid in kamer · Maximale ouderdom van het aantal personen (min)",
           "climate_away_policy": "Aanwezigheid thuis · Thuis · Apparaten · POLICY",
           "climate_manual_profile": "Apparaten · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Slaap · Apparaten",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Apparaten (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "climate_occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
           "climate_away_entities": "Kies een echte Home Assistant-bron voor ‘Thuis · Apparaten’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Maximale ouderdom van numerieke personentellingen in de kamer. Oude of onbeschikbare waarden zijn onbekend. Ongewijzigde binaire aanwezigheidsstatussen en kamerlijsten verlopen niet.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Deze optie regelt ‘Apparaten · CLIMATE_MANUAL_PROFILE’. Fysieke opdrachten vereisen afzonderlijke toestemming en beveiligingen.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Algemene · instellingen",
-        "description": "Algemene · instellingen: Kiezen bron, sensor / Apparaten · regeling.",
+        "description": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
         "data": {
           "general_room_occupancy_sensors": "Kamer · Aanwezigheid · sensor",
           "general_occupied_rooms_entity": "Aanwezigheid · Kamer · bron (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Aanwezigheid thuis",
           "general_sleep_rooms_entity": "Slaap · Kamer · bron (state)",
           "general_sleep_rooms_attribute": "Slaap · Kamer · bron (attribute)",
-          "general_source_stale_minutes": "bron · max (min)"
+          "general_source_stale_minutes": "Aanwezigheid thuis · Maximale ouderdom van tracker-/telgegevens (min)",
+          "general_wake_alarm_entity": "Slaap · Volgende wekker",
+          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Kamer · Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
-          "general_occupied_rooms_entity": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · Kamer · bron (state)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "general_room_occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
+          "general_occupied_rooms_entity": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
           "general_occupied_rooms_attribute": "Stel ‘Aanwezigheid · Kamer · bron (attribute)’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
           "general_home_trackers": "Kies een echte Home Assistant-bron voor ‘Thuis · Aanwezigheid · Apparaten’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Kies een echte Home Assistant-bron voor ‘Slaap · Kamer · bron (state)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "general_sleep_rooms_entity": "Kies een lijst met slapende kamers uit de status of een attribuut, met Home Assistant-gebiedsnamen of -ID’s. Een vermelde kamer slaapt alleen als deze ook bezet is. Een ongewijzigde lijst blijft geldig; een ontbrekende of ongeldige bron is onbekend. De ingestelde wekker kan automatische slaap vóór het afgaan beëindigen.",
           "general_sleep_rooms_attribute": "Stel ‘Slaap · Kamer · bron (attribute)’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
-          "general_source_stale_minutes": "bron · Slaap / Aanwezigheid · max 240 min. Ongeldig · Uitschakelen."
+          "general_source_stale_minutes": "De ouderdomsgrens geldt voor trackerberichten en numerieke personentellingen. Kamerlijsten en binaire aanwezigheidsstatussen verlopen niet zolang ze ongewijzigd zijn. Onbeschikbare, herstelde of ongeldige bronnen blijven onbekend. Dit is geen slaapduur.",
+          "general_wake_alarm_entity": "Kies een tijd- of tijdstempelentiteit voor de volgende wekker en een entiteit voor de minuten. HEM beëindigt automatische slaap zoveel minuten eerder en hervat de normale doelen. Tijden zonder datum gebruiken de Home Assistant-tijdzone. Afwezigheid, handmatige bediening en beveiligingen houden voorrang.",
+          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Pollen · HIGH",
           "pollen_max_scale": "POLLEN · Pollen · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Pollen · NO VENT",
-          "general_source_stale_minutes": "bron · max (min)",
-          "general_home_policy": "Aanwezigheid thuis"
+          "general_source_stale_minutes": "Aanwezigheid thuis · Maximale ouderdom van tracker-/telgegevens (min)",
+          "general_home_policy": "Aanwezigheid thuis",
+          "general_wake_alarm_entity": "Slaap · Volgende wekker",
+          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Kies: Buitenluchtkwaliteit · AQI, CO₂, PM2.5, PM10, VOC. Niet beschikbaar: ⚠",
           "weather_warnings": "Weer en waarschuwingen · ⚠ (Niet beschikbaar) → 🪟🔒",
-          "general_room_occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Kamer · Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
           "general_home_trackers": "Kies een echte Home Assistant-bron voor ‘Thuis · Aanwezigheid · Apparaten’. Ontbrekende of oude waarden blokkeren de bijbehorende actie. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · Kamer · bron (state)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "general_occupied_rooms_entity": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
           "general_occupied_rooms_attribute": "Stel ‘Aanwezigheid · Kamer · bron (attribute)’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
-          "general_sleep_rooms_entity": "Kies een echte Home Assistant-bron voor ‘Slaap · Kamer · bron (state)’. Ontbrekende of oude waarden blokkeren de bijbehorende actie.",
+          "general_sleep_rooms_entity": "Kies een lijst met slapende kamers uit de status of een attribuut, met Home Assistant-gebiedsnamen of -ID’s. Een vermelde kamer slaapt alleen als deze ook bezet is. Een ongewijzigde lijst blijft geldig; een ontbrekende of ongeldige bron is onbekend. De ingestelde wekker kan automatische slaap vóór het afgaan beëindigen.",
           "general_sleep_rooms_attribute": "Stel ‘Slaap · Kamer · bron (attribute)’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
           "notify_entities": "Kies: notify.* · instellingen · bron.",
           "media_players": "Kies: media_player.* · instellingen · bron · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Stel ‘POLLEN · Pollen · HIGH’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
           "pollen_max_scale": "Stel ‘POLLEN · Pollen · SCALE’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
           "pollen_avoid_ventilation": "Stel ‘POLLEN · Pollen · NO VENT’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
-          "general_source_stale_minutes": "bron · Slaap / Aanwezigheid · max 240 min. Ongeldig · Uitschakelen.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "De ouderdomsgrens geldt voor trackerberichten en numerieke personentellingen. Kamerlijsten en binaire aanwezigheidsstatussen verlopen niet zolang ze ongewijzigd zijn. Onbeschikbare, herstelde of ongeldige bronnen blijven onbekend. Dit is geen slaapduur.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Kies een tijd- of tijdstempelentiteit voor de volgende wekker en een entiteit voor de minuten. HEM beëindigt automatische slaap zoveel minuten eerder en hervat de normale doelen. Tijden zonder datum gebruiken de Home Assistant-tijdzone. Afwezigheid, handmatige bediening en beveiligingen houden voorrang.",
+          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
-          "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."
+          "occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
-          "occupancy_sensors": "Kies een echte Home Assistant-bron voor ‘Aanwezigheid · sensor’. Ontbrekende of oude waarden blokkeren de bijbehorende actie."
+          "occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Ongeldig · Vermogen · instellingen",
       "invalid_setup_rooms": "Ongeldig: Te bewaken kamers",
       "invalid_room_source": "Ongeldig: Kamer · bron",
-      "invalid_away_windows_recipients": "Personen voor waarschuwingen; Meldingskanalen voor open ramen. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Personen voor waarschuwingen; Meldingskanalen voor open ramen. Announcement Hub (person.*).",
+      "wake_sources_pair": "Kies zowel de wekker- als de minutenentiteit, of wis beide."
     },
     "abort": {
       "setup_area_removed": "Ongeldig: Te bewaken kamers",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Aanwezigheid thuis · bron · max (min)",
+        "name": "Aanwezigheid thuis · Maximale ouderdom van tracker-/telgegevens (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Aanwezigheid in kamer · Aanwezigheid · Apparaten · sensor · Vereist",
+        "name": "Aanwezigheid in kamer · Maximale ouderdom van het aantal personen (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Meldingen · Apparaatfouten melden · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Slaap · {channel}Wanneer iedereen slaapt",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"

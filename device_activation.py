@@ -42,6 +42,8 @@ def effective_device(manager, spec, entity):
     original = model.device_config(manager, spec, entity)
     result = dict(original)
     cfg = model.settings(manager, spec)
+    result["sleep_when_everyone_asleep"] = (cfg.get("sleep_when_everyone_asleep") is True
+                                            and cfg.get("control_mode") in ("automatic", "pid"))
     if authorized(manager, spec):
         result["auto_control"] = True
     for key in ("presence_requirement", "sleep_behavior", "fan_purpose", "sensor_verified"):

@@ -83,7 +83,7 @@ source_module("room_sources", "room_sources.py", ("selected",),
               CONF_ROOM_SOURCES="room_sources")
 equipment = source_module(
     "equipment_model", "equipment_model.py", ("room_config", "plan_for"),
-    specs=lambda manager: manager.device_specs,
+    specs=lambda manager: manager.device_specs, settings=lambda manager, spec: {},
 )
 runtime = source_module(
     "equipment_runtime", "equipment_runtime.py", ("_quiet_context",),
@@ -282,7 +282,7 @@ class HomeAuthorityTests(unittest.TestCase):
         self.assertEqual(occupancy.home_presence(hass, {}),
                          ("home", "no_trackers_assume_home", []))
         self.assertEqual(occupancy.room_presence(hass, AREA, {}, {},
-                                               known_areas={AREA})[0], "unknown")
+                                               known_areas={AREA})[0], "unoccupied")
         config = room_config()
         hass.put(ROOMS, "Living room")
         self.assertEqual(occupancy.home_presence(hass, config)[:2],
@@ -298,11 +298,12 @@ class HomeAuthorityTests(unittest.TestCase):
                     occupancy.room_presence(hass, AREA, {}, config, known_areas={AREA})[:2],
                     ("unoccupied", "verified_room_list_unoccupied"),
                 )
-        # No home sources means old empty text cannot establish vacancy.
+        # An available event-driven list still means empty overnight.
         hass.put(ROOMS, "", age=400)
-        self.assertEqual(occupancy.home_presence(hass, config)[0], "unknown")
+        self.assertEqual(occupancy.home_presence(hass, config)[0], "away")
         self.assertEqual(occupancy.room_presence(hass, AREA, {"occupancy_sensors": []},
-                                               config, known_areas={AREA})[0], "unknown")
+                                               config, known_areas={AREA})[0], "unoccupied")
+        hass.put(ROOMS, "unavailable")
         hass.put(MOTION, "on")
         sensor_config = {"room_occupancy_sensors": [MOTION]}
         self.assertEqual(occupancy.home_presence(hass, sensor_config)[:2],
@@ -312,7 +313,7 @@ class HomeAuthorityTests(unittest.TestCase):
         self.assertEqual(occupancy.room_presence(hass, AREA, {"occupancy_sensors": []},
                                                config, known_areas={AREA})[0], "unknown")
         hass.put(MOTION, "on", age=400)
-        self.assertEqual(occupancy.home_presence(hass, sensor_config)[0], "unknown")
+        self.assertEqual(occupancy.home_presence(hass, sensor_config)[0], "home")
 
     def test_room_only_cooldown_uses_the_relevant_change_timestamp(self):
         hass = Hass()
@@ -416,7 +417,7 @@ class HomeAuthorityTests(unittest.TestCase):
                          ("home", "unoccupied", "home"))
         self.assertEqual(plan["occupancy_evidence"], "verified_room_list_unoccupied")
 
-    def test_returning_home_revalidates_a_stale_empty_room_source(self):
+    def test_returning_home_revalidates_a_missing_room_source(self):
         hass = Hass()
         hass.put(PERSON, "not_home")
         hass.put(ROOMS, "", age=400)
@@ -426,8 +427,9 @@ class HomeAuthorityTests(unittest.TestCase):
         self.assertEqual(occupancy.room_presence(
             hass, AREA, settings, config, known_areas={AREA})[:2],
             ("unoccupied", "verified_home_away"))
-        # A return invalidates the derived empty-room result. An old blank
-        # source alone still cannot tell us which room the person entered.
+        # A return invalidates the derived empty-room result. A now-
+        # unavailable list cannot tell us which room the person entered.
+        hass.put(ROOMS, "unavailable")
         hass.put(PERSON, "home", changed_age=0)
         hass.states.blocked.clear()
         hass.states.forbid_discovery = False
@@ -539,9 +541,9 @@ class HomeAuthorityTests(unittest.TestCase):
             ("eligible", "device_policy_approved"))
         self.assertTrue(runtime._quiet_context(
             controller, spec, {"quiet_sleep": False, "quiet_occupied": True}, plan))
-        # A stale sensor after returning is unknown, never permission for
-        # absence-only control based on the previously verified away plan.
-        hass.put(MOTION, "on", age=400)
+        # A restored placeholder after returning is unknown, never permission
+        # for absence-only control based on the previously verified away plan.
+        hass.put(MOTION, "on", age=400, attributes={"restored": True})
         for requirement in ("occupied", "absent"):
             self.assertEqual(occupancy.live_device_permission(
                 hass, AREA, settings, plan, device(requirement)),
@@ -618,7 +620,7 @@ class ContinuityTests(unittest.IsolatedAsyncioTestCase):
         context = restored.context(config)
         self.assertEqual(context["_verified_absence_since"], since)
         self.assertEqual(occupancy.home_presence(hass, context)[0], "away")
-        for value, age in (("unknown", 1), ("unavailable", 1), ("", 400)):
+        for value, age in (("unknown", 1), ("unavailable", 1), ("[malformed", 400)):
             with self.subTest(value=value, age=age):
                 hass.put(ROOMS, value, age=age)
                 context = restored.context(config)

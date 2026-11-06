@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Пыльца · HIGH",
           "pollen_max_scale": "POLLEN · Пыльца · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Пыльца · NO VENT",
-          "general_source_stale_minutes": "источник · max (min)",
-          "general_home_policy": "Присутствие дома"
+          "general_source_stale_minutes": "Присутствие дома · Максимальный возраст данных трекеров/счётчиков (мин)",
+          "general_home_policy": "Присутствие дома",
+          "general_wake_alarm_entity": "Сон · Следующий будильник",
+          "general_wake_lead_minutes_entity": "Сон · Минуты до будильника"
         },
         "data_description": {
           "weather_entities": "Выберите: Погода и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Выберите: Качество воздуха снаружи · AQI, CO₂, PM2.5, PM10, VOC. Недоступно: ⚠",
           "weather_warnings": "Погода и предупреждения · ⚠ (Недоступно) → 🪟🔒",
-          "general_room_occupancy_sensors": "Выберите реальный источник Home Assistant для «Комната · Присутствие · датчик». Старые или отсутствующие данные блокируют действие. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают.",
           "general_home_trackers": "Выберите реальный источник Home Assistant для «Дом · Присутствие · Устройства». Старые или отсутствующие данные блокируют действие. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Выберите реальный источник Home Assistant для «Присутствие · Комната · источник (state)». Старые или отсутствующие данные блокируют действие.",
+          "general_occupied_rooms_entity": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают.",
           "general_occupied_rooms_attribute": "Настройка «Присутствие · Комната · источник (attribute)» только для выбранной комнаты. Неверные данные блокируют действие.",
-          "general_sleep_rooms_entity": "Выберите реальный источник Home Assistant для «Сон · Комната · источник (state)». Старые или отсутствующие данные блокируют действие.",
+          "general_sleep_rooms_entity": "Выберите список комнат, в которых спят, из состояния или атрибута с названиями или ID зон Home Assistant. Указанная комната считается спящей только если она также занята. Неизменный список остаётся действительным; отсутствующий или некорректный источник неизвестен. Настроенный будильник может завершить автоматический сон до звонка.",
           "general_sleep_rooms_attribute": "Настройка «Сон · Комната · источник (attribute)» только для выбранной комнаты. Неверные данные блокируют действие.",
           "notify_entities": "Выберите: notify.* · настройки · источник.",
           "media_players": "Выберите: media_player.* · настройки · источник · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Настройка «POLLEN · Пыльца · HIGH» только для выбранной комнаты. Неверные данные блокируют действие.",
           "pollen_max_scale": "Настройка «POLLEN · Пыльца · SCALE» только для выбранной комнаты. Неверные данные блокируют действие.",
           "pollen_avoid_ventilation": "Настройка «POLLEN · Пыльца · NO VENT» только для выбранной комнаты. Неверные данные блокируют действие.",
-          "general_source_stale_minutes": "источник · Сон / Присутствие · max 240 min. Ошибка · Выключить.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Ограничение возраста относится к отчётам трекеров и числовым счётчикам людей. Списки комнат и бинарные состояния присутствия не устаревают, пока не меняются. Недоступные, восстановленные или некорректные источники остаются неизвестными. Это не длительность сна.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Выберите сущность времени или даты и времени следующего будильника, а также сущность минут упреждения. HEM завершит автоматический сон на это число минут раньше и вернётся к обычным целям. Время без даты использует часовой пояс Home Assistant. Отсутствие, ручное управление и защиты сохраняют приоритет.",
+          "general_wake_lead_minutes_entity": "Выберите числовую сущность с неотрицательным количеством минут, с единицей min или без единицы. Будильник на 07:00 и значение 30 завершают автоматический сон в 06:30; 0 означает момент звонка. Для отключения очистите оба источника."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Дом · Устройства",
           "climate_unknown_occupancy": "Присутствие · Устройства",
           "climate_unoccupied_delay_minutes": "Устройства · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Присутствие · Устройства · датчик · Обязательно",
+          "climate_occupancy_stale_minutes": "Присутствие в комнате · Максимальный возраст данных о числе людей (мин)",
           "climate_away_policy": "Присутствие дома · Дом · Устройства · POLICY",
           "climate_manual_profile": "Устройства · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Сон · Устройства",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Устройства (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Выберите реальный источник Home Assistant для «Присутствие · датчик». Старые или отсутствующие данные блокируют действие.",
+          "climate_occupancy_sensors": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают.",
           "climate_away_entities": "Выберите реальный источник Home Assistant для «Дом · Устройства». Старые или отсутствующие данные блокируют действие.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Максимальный возраст числовых данных о количестве людей в комнате. Старые или недоступные значения неизвестны. Неизменные бинарные состояния присутствия и списки комнат не устаревают.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Эта опция управляет «Устройства · CLIMATE_MANUAL_PROFILE». Команды устройству требуют отдельного разрешения и защиты.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Общие · настройки",
-        "description": "Общие · настройки: Выбрать источник, датчик / Устройства · управление.",
+        "description": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают.",
         "data": {
           "general_room_occupancy_sensors": "Комната · Присутствие · датчик",
           "general_occupied_rooms_entity": "Присутствие · Комната · источник (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Присутствие дома",
           "general_sleep_rooms_entity": "Сон · Комната · источник (state)",
           "general_sleep_rooms_attribute": "Сон · Комната · источник (attribute)",
-          "general_source_stale_minutes": "источник · max (min)"
+          "general_source_stale_minutes": "Присутствие дома · Максимальный возраст данных трекеров/счётчиков (мин)",
+          "general_wake_alarm_entity": "Сон · Следующий будильник",
+          "general_wake_lead_minutes_entity": "Сон · Минуты до будильника"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Выберите реальный источник Home Assistant для «Комната · Присутствие · датчик». Старые или отсутствующие данные блокируют действие.",
-          "general_occupied_rooms_entity": "Выберите реальный источник Home Assistant для «Присутствие · Комната · источник (state)». Старые или отсутствующие данные блокируют действие.",
+          "general_room_occupancy_sensors": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают.",
+          "general_occupied_rooms_entity": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают.",
           "general_occupied_rooms_attribute": "Настройка «Присутствие · Комната · источник (attribute)» только для выбранной комнаты. Неверные данные блокируют действие.",
           "general_home_trackers": "Выберите реальный источник Home Assistant для «Дом · Присутствие · Устройства». Старые или отсутствующие данные блокируют действие.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Выберите реальный источник Home Assistant для «Сон · Комната · источник (state)». Старые или отсутствующие данные блокируют действие.",
+          "general_sleep_rooms_entity": "Выберите список комнат, в которых спят, из состояния или атрибута с названиями или ID зон Home Assistant. Указанная комната считается спящей только если она также занята. Неизменный список остаётся действительным; отсутствующий или некорректный источник неизвестен. Настроенный будильник может завершить автоматический сон до звонка.",
           "general_sleep_rooms_attribute": "Настройка «Сон · Комната · источник (attribute)» только для выбранной комнаты. Неверные данные блокируют действие.",
-          "general_source_stale_minutes": "источник · Сон / Присутствие · max 240 min. Ошибка · Выключить."
+          "general_source_stale_minutes": "Ограничение возраста относится к отчётам трекеров и числовым счётчикам людей. Списки комнат и бинарные состояния присутствия не устаревают, пока не меняются. Недоступные, восстановленные или некорректные источники остаются неизвестными. Это не длительность сна.",
+          "general_wake_alarm_entity": "Выберите сущность времени или даты и времени следующего будильника, а также сущность минут упреждения. HEM завершит автоматический сон на это число минут раньше и вернётся к обычным целям. Время без даты использует часовой пояс Home Assistant. Отсутствие, ручное управление и защиты сохраняют приоритет.",
+          "general_wake_lead_minutes_entity": "Выберите числовую сущность с неотрицательным количеством минут, с единицей min или без единицы. Будильник на 07:00 и значение 30 завершают автоматический сон в 06:30; 0 означает момент звонка. Для отключения очистите оба источника."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Влажность. Выберите входы комнаты: имя устройства - имя сущности. Пустые группы не используются и не включают автоматическое обнаружение или управление.",
           "climate_devices": "Устройства. Выберите только физические climate.*, humidifier.* и fan.* этой комнаты. Поддерживаемые устройством функции определяют отопление, охлаждение, осушение, уставки и скорость вентилятора. Сам выбор ничего не включает; автоматическое управление включается отдельно для каждого устройства.",
           "shades": "Оконные жалюзи, шторы и ставни. Выберите рольставни, жалюзи и шторы cover.* этой комнаты. Covers без device_class допускаются при наличии CLOSE, если это действительно оконная защита. Гаражи, ворота, двери, окна и маркизы исключены. Выбор ничего не двигает: привяжите датчик окна и настройте автоматику, оповещение и температуру в контроллере. Неизвестное состояние блокирует движение.",
-          "occupancy_sensors": "Выберите реальный источник Home Assistant для «Присутствие · датчик». Старые или отсутствующие данные блокируют действие."
+          "occupancy_sensors": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Влажность. Выберите входы комнаты: имя устройства - имя сущности. Пустые группы не используются и не включают автоматическое обнаружение или управление.",
           "climate_devices": "Устройства. Выберите только физические climate.*, humidifier.* и fan.* этой комнаты. Поддерживаемые устройством функции определяют отопление, охлаждение, осушение, уставки и скорость вентилятора. Сам выбор ничего не включает; автоматическое управление включается отдельно для каждого устройства.",
           "shades": "Оконные жалюзи, шторы и ставни. Выберите рольставни, жалюзи и шторы cover.* этой комнаты. Covers без device_class допускаются при наличии CLOSE, если это действительно оконная защита. Гаражи, ворота, двери, окна и маркизы исключены. Выбор ничего не двигает: привяжите датчик окна и настройте автоматику, оповещение и температуру в контроллере. Неизвестное состояние блокирует движение.",
-          "occupancy_sensors": "Выберите реальный источник Home Assistant для «Присутствие · датчик». Старые или отсутствующие данные блокируют действие."
+          "occupancy_sensors": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Ошибка · датчик · настройки",
       "device_temperature_band_invalid": "Ошибка · Температура · настройки",
       "device_humidity_invalid": "Ошибка · Влажность · настройки",
-      "device_runtime_invalid": "Ошибка · Мощность · настройки"
+      "device_runtime_invalid": "Ошибка · Мощность · настройки",
+      "wake_sources_pair": "Выберите и сущность будильника, и сущность минут либо очистите обе."
     },
     "abort": {
       "already_configured": "Home Environment Manager - уже настроено.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Дом · Устройства",
           "climate_unknown_occupancy": "Присутствие · Устройства",
           "climate_unoccupied_delay_minutes": "Устройства · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Присутствие · Устройства · датчик · Обязательно",
+          "climate_occupancy_stale_minutes": "Присутствие в комнате · Максимальный возраст данных о числе людей (мин)",
           "climate_away_policy": "Присутствие дома · Дом · Устройства · POLICY",
           "climate_manual_profile": "Устройства · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Сон · Устройства",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Устройства (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Выберите реальный источник Home Assistant для «Присутствие · датчик». Старые или отсутствующие данные блокируют действие.",
+          "climate_occupancy_sensors": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают.",
           "climate_away_entities": "Выберите реальный источник Home Assistant для «Дом · Устройства». Старые или отсутствующие данные блокируют действие.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Максимальный возраст числовых данных о количестве людей в комнате. Старые или недоступные значения неизвестны. Неизменные бинарные состояния присутствия и списки комнат не устаревают.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Эта опция управляет «Устройства · CLIMATE_MANUAL_PROFILE». Команды устройству требуют отдельного разрешения и защиты.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Общие · настройки",
-        "description": "Общие · настройки: Выбрать источник, датчик / Устройства · управление.",
+        "description": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают.",
         "data": {
           "general_room_occupancy_sensors": "Комната · Присутствие · датчик",
           "general_occupied_rooms_entity": "Присутствие · Комната · источник (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Присутствие дома",
           "general_sleep_rooms_entity": "Сон · Комната · источник (state)",
           "general_sleep_rooms_attribute": "Сон · Комната · источник (attribute)",
-          "general_source_stale_minutes": "источник · max (min)"
+          "general_source_stale_minutes": "Присутствие дома · Максимальный возраст данных трекеров/счётчиков (мин)",
+          "general_wake_alarm_entity": "Сон · Следующий будильник",
+          "general_wake_lead_minutes_entity": "Сон · Минуты до будильника"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Выберите реальный источник Home Assistant для «Комната · Присутствие · датчик». Старые или отсутствующие данные блокируют действие.",
-          "general_occupied_rooms_entity": "Выберите реальный источник Home Assistant для «Присутствие · Комната · источник (state)». Старые или отсутствующие данные блокируют действие.",
+          "general_room_occupancy_sensors": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают.",
+          "general_occupied_rooms_entity": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают.",
           "general_occupied_rooms_attribute": "Настройка «Присутствие · Комната · источник (attribute)» только для выбранной комнаты. Неверные данные блокируют действие.",
           "general_home_trackers": "Выберите реальный источник Home Assistant для «Дом · Присутствие · Устройства». Старые или отсутствующие данные блокируют действие.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Выберите реальный источник Home Assistant для «Сон · Комната · источник (state)». Старые или отсутствующие данные блокируют действие.",
+          "general_sleep_rooms_entity": "Выберите список комнат, в которых спят, из состояния или атрибута с названиями или ID зон Home Assistant. Указанная комната считается спящей только если она также занята. Неизменный список остаётся действительным; отсутствующий или некорректный источник неизвестен. Настроенный будильник может завершить автоматический сон до звонка.",
           "general_sleep_rooms_attribute": "Настройка «Сон · Комната · источник (attribute)» только для выбранной комнаты. Неверные данные блокируют действие.",
-          "general_source_stale_minutes": "источник · Сон / Присутствие · max 240 min. Ошибка · Выключить."
+          "general_source_stale_minutes": "Ограничение возраста относится к отчётам трекеров и числовым счётчикам людей. Списки комнат и бинарные состояния присутствия не устаревают, пока не меняются. Недоступные, восстановленные или некорректные источники остаются неизвестными. Это не длительность сна.",
+          "general_wake_alarm_entity": "Выберите сущность времени или даты и времени следующего будильника, а также сущность минут упреждения. HEM завершит автоматический сон на это число минут раньше и вернётся к обычным целям. Время без даты использует часовой пояс Home Assistant. Отсутствие, ручное управление и защиты сохраняют приоритет.",
+          "general_wake_lead_minutes_entity": "Выберите числовую сущность с неотрицательным количеством минут, с единицей min или без единицы. Будильник на 07:00 и значение 30 завершают автоматический сон в 06:30; 0 означает момент звонка. Для отключения очистите оба источника."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Пыльца · HIGH",
           "pollen_max_scale": "POLLEN · Пыльца · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Пыльца · NO VENT",
-          "general_source_stale_minutes": "источник · max (min)",
-          "general_home_policy": "Присутствие дома"
+          "general_source_stale_minutes": "Присутствие дома · Максимальный возраст данных трекеров/счётчиков (мин)",
+          "general_home_policy": "Присутствие дома",
+          "general_wake_alarm_entity": "Сон · Следующий будильник",
+          "general_wake_lead_minutes_entity": "Сон · Минуты до будильника"
         },
         "data_description": {
           "weather_entities": "Выберите: Погода и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Выберите: Качество воздуха снаружи · AQI, CO₂, PM2.5, PM10, VOC. Недоступно: ⚠",
           "weather_warnings": "Погода и предупреждения · ⚠ (Недоступно) → 🪟🔒",
-          "general_room_occupancy_sensors": "Выберите реальный источник Home Assistant для «Комната · Присутствие · датчик». Старые или отсутствующие данные блокируют действие. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают.",
           "general_home_trackers": "Выберите реальный источник Home Assistant для «Дом · Присутствие · Устройства». Старые или отсутствующие данные блокируют действие. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Выберите реальный источник Home Assistant для «Присутствие · Комната · источник (state)». Старые или отсутствующие данные блокируют действие.",
+          "general_occupied_rooms_entity": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают.",
           "general_occupied_rooms_attribute": "Настройка «Присутствие · Комната · источник (attribute)» только для выбранной комнаты. Неверные данные блокируют действие.",
-          "general_sleep_rooms_entity": "Выберите реальный источник Home Assistant для «Сон · Комната · источник (state)». Старые или отсутствующие данные блокируют действие.",
+          "general_sleep_rooms_entity": "Выберите список комнат, в которых спят, из состояния или атрибута с названиями или ID зон Home Assistant. Указанная комната считается спящей только если она также занята. Неизменный список остаётся действительным; отсутствующий или некорректный источник неизвестен. Настроенный будильник может завершить автоматический сон до звонка.",
           "general_sleep_rooms_attribute": "Настройка «Сон · Комната · источник (attribute)» только для выбранной комнаты. Неверные данные блокируют действие.",
           "notify_entities": "Выберите: notify.* · настройки · источник.",
           "media_players": "Выберите: media_player.* · настройки · источник · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Настройка «POLLEN · Пыльца · HIGH» только для выбранной комнаты. Неверные данные блокируют действие.",
           "pollen_max_scale": "Настройка «POLLEN · Пыльца · SCALE» только для выбранной комнаты. Неверные данные блокируют действие.",
           "pollen_avoid_ventilation": "Настройка «POLLEN · Пыльца · NO VENT» только для выбранной комнаты. Неверные данные блокируют действие.",
-          "general_source_stale_minutes": "источник · Сон / Присутствие · max 240 min. Ошибка · Выключить.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Ограничение возраста относится к отчётам трекеров и числовым счётчикам людей. Списки комнат и бинарные состояния присутствия не устаревают, пока не меняются. Недоступные, восстановленные или некорректные источники остаются неизвестными. Это не длительность сна.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Выберите сущность времени или даты и времени следующего будильника, а также сущность минут упреждения. HEM завершит автоматический сон на это число минут раньше и вернётся к обычным целям. Время без даты использует часовой пояс Home Assistant. Отсутствие, ручное управление и защиты сохраняют приоритет.",
+          "general_wake_lead_minutes_entity": "Выберите числовую сущность с неотрицательным количеством минут, с единицей min или без единицы. Будильник на 07:00 и значение 30 завершают автоматический сон в 06:30; 0 означает момент звонка. Для отключения очистите оба источника."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Влажность. Выберите входы комнаты: имя устройства - имя сущности. Пустые группы не используются и не включают автоматическое обнаружение или управление.",
           "climate_devices": "Устройства. Выберите только физические climate.*, humidifier.* и fan.* этой комнаты. Поддерживаемые устройством функции определяют отопление, охлаждение, осушение, уставки и скорость вентилятора. Сам выбор ничего не включает; автоматическое управление включается отдельно для каждого устройства.",
           "shades": "Оконные жалюзи, шторы и ставни. Выберите рольставни, жалюзи и шторы cover.* этой комнаты. Covers без device_class допускаются при наличии CLOSE, если это действительно оконная защита. Гаражи, ворота, двери, окна и маркизы исключены. Выбор ничего не двигает: привяжите датчик окна и настройте автоматику, оповещение и температуру в контроллере. Неизвестное состояние блокирует движение.",
-          "occupancy_sensors": "Выберите реальный источник Home Assistant для «Присутствие · датчик». Старые или отсутствующие данные блокируют действие."
+          "occupancy_sensors": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Влажность. Выберите входы комнаты: имя устройства - имя сущности. Пустые группы не используются и не включают автоматическое обнаружение или управление.",
           "climate_devices": "Устройства. Выберите только физические climate.*, humidifier.* и fan.* этой комнаты. Поддерживаемые устройством функции определяют отопление, охлаждение, осушение, уставки и скорость вентилятора. Сам выбор ничего не включает; автоматическое управление включается отдельно для каждого устройства.",
           "shades": "Оконные жалюзи, шторы и ставни. Выберите рольставни, жалюзи и шторы cover.* этой комнаты. Covers без device_class допускаются при наличии CLOSE, если это действительно оконная защита. Гаражи, ворота, двери, окна и маркизы исключены. Выбор ничего не двигает: привяжите датчик окна и настройте автоматику, оповещение и температуру в контроллере. Неизвестное состояние блокирует движение.",
-          "occupancy_sensors": "Выберите реальный источник Home Assistant для «Присутствие · датчик». Старые или отсутствующие данные блокируют действие."
+          "occupancy_sensors": "Корректный список занятых комнат в выбранном состоянии или атрибуте имеет приоритет: перечисленные комнаты заняты, пропущенные пусты. Без списка любой включённый датчик присутствия означает занятость; все выключены или ни один не выбран — пустую комнату. Недоступный или некорректный выбранный источник остаётся неизвестным. Неизменные списки и бинарные состояния не устаревают."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Ошибка · Мощность · настройки",
       "invalid_setup_rooms": "Ошибка: Комнаты для наблюдения",
       "invalid_room_source": "Ошибка: Комната · источник",
-      "invalid_away_windows_recipients": "Получатели уведомления; Каналы уведомления об окнах. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Получатели уведомления; Каналы уведомления об окнах. Announcement Hub (person.*).",
+      "wake_sources_pair": "Выберите и сущность будильника, и сущность минут либо очистите обе."
     },
     "abort": {
       "setup_area_removed": "Ошибка: Комнаты для наблюдения",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Присутствие дома · источник · max (min)",
+        "name": "Присутствие дома · Максимальный возраст данных трекеров/счётчиков (мин)",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Присутствие в комнате · Присутствие · Устройства · датчик · Обязательно",
+        "name": "Присутствие в комнате · Максимальный возраст данных о числе людей (мин)",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Объявления · Сообщать об ошибках устройства · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Справка"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Сон · {channel}Когда все спят",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"

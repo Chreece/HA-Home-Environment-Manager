@@ -114,11 +114,12 @@ for value in ('unknown','unavailable'):
     # Existing rooms without an explicit choice get suggested HA candidates.
     assert 'binary_sensor.bath_occupancy' in ns['room_sensor_choices'](h,'badezimmer')
     expect('badezimmer',{},'occupied','selected_room_sensor_on')
-    # Unknown sensors do not prove absence; none available is UNKNOWN.
-    expect('badezimmer',{'occupancy_sensors':['binary_sensor.old_bath']},'unknown')
-# Stale list can similarly fall back, never be taken as a fresh room list.
+    # Change-only binary sensors retain ON/OFF even on a quiet night.
+    expect('badezimmer',{'occupancy_sensors':['binary_sensor.old_bath']},
+           'occupied','selected_room_sensor_on')
+# A stable list remains authoritative even if it did not change overnight.
 h.put('input_text.occupied_rooms','Wohnzimmer',age=400)
-expect('badezimmer',setting,'occupied','selected_room_sensor_on')
+expect('badezimmer',setting,'unoccupied','verified_room_list_unoccupied')
 # Malformed list/unknown area is NOT permission to adopt local false-positive.
 h.put('input_text.occupied_rooms','["Unknown room"]')
 expect('badezimmer',setting,'unknown','unrecognized_room_in_occupancy_source')

@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · Siitepöly · HIGH",
           "pollen_max_scale": "POLLEN · Siitepöly · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Siitepöly · NO VENT",
-          "general_source_stale_minutes": "lähde · max (min)",
-          "general_home_policy": "Kotonaolo"
+          "general_source_stale_minutes": "Kotonaolo · Seuranta- ja henkilömäärätietojen enimmäisikä (min)",
+          "general_home_policy": "Kotonaolo",
+          "general_wake_alarm_entity": "Uni · Seuraava herätys",
+          "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Valitse: Ulkoilman laatu · AQI, CO₂, PM2.5, PM10, VOC. Ei saatavilla: ⚠",
           "weather_warnings": "Sää ja varoitukset · ⚠ (Ei saatavilla) → 🪟🔒",
-          "general_room_occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Huone · Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
           "general_home_trackers": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Läsnäolo · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "general_occupied_rooms_entity": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
           "general_occupied_rooms_attribute": "Määritä ”Läsnäolo · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
-          "general_sleep_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Uni · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "general_sleep_rooms_entity": "Valitse nukkuvien huoneiden lista tilasta tai attribuutista käyttäen Home Assistantin alueiden nimiä tai tunnuksia. Listattu huone nukkuu vain, jos se on myös varattu. Muuttumaton lista pysyy kelvollisena; puuttuva tai virheellinen lähde on tuntematon. Asetettu herätys voi lopettaa automaattisen unitilan ennen soittoa.",
           "general_sleep_rooms_attribute": "Määritä ”Uni · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "notify_entities": "Valitse: notify.* · asetukset · lähde.",
           "media_players": "Valitse: media_player.* · asetukset · lähde · MEDIA_PLAYERS.",
@@ -274,8 +276,10 @@
           "pollen_high_from": "Määritä ”POLLEN · Siitepöly · HIGH” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "pollen_max_scale": "Määritä ”POLLEN · Siitepöly · SCALE” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "pollen_avoid_ventilation": "Määritä ”POLLEN · Siitepöly · NO VENT” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
-          "general_source_stale_minutes": "lähde · Uni / Läsnäolo · max 240 min. Virheellinen · Sammuta.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Ikäraja koskee seurantalaitteiden raportteja ja numeerisia henkilömäärätietoja. Huonelistat ja binääriset huoneläsnäolotilat eivät vanhene muuttumattomina. Puuttuvat, palautetut tai virheelliset lähteet ovat tuntemattomia. Tämä ei ole unen kesto.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Valitse seuraavan herätyksen aika- tai aikaleimaentiteetti sekä minuuttien entiteetti. HEM lopettaa automaattisen unitilan näin monta minuuttia ennen herätystä ja palauttaa normaalit tavoitteet. Pelkkä kellonaika käyttää Home Assistantin aikavyöhykettä. Poissaolo, käsiohjaus ja laitesuojaukset ovat edelleen etusijalla.",
+          "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten."
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "Koti · Laitteet",
           "climate_unknown_occupancy": "Läsnäolo · Laitteet",
           "climate_unoccupied_delay_minutes": "Laitteet · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Läsnäolo · Laitteet · anturi · Vaaditaan",
+          "climate_occupancy_stale_minutes": "Huoneen läsnäolo · Henkilömäärätiedon enimmäisikä (min)",
           "climate_away_policy": "Kotonaolo · Koti · Laitteet · POLICY",
           "climate_manual_profile": "Laitteet · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Uni · Laitteet",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "Laitteet (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "climate_occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
           "climate_away_entities": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Huoneen numeeristen henkilömäärätietojen enimmäisikä. Vanhat tai puuttuvat arvot ovat tuntemattomia. Binääriset läsnäolotilat ja huonelistat eivät vanhene muuttumattomina.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Tämä asetus ohjaa kohtaa ”Laitteet · CLIMATE_MANUAL_PROFILE”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "Yleiset · asetukset",
-        "description": "Yleiset · asetukset: Valitse lähde, anturi / Laitteet · ohjaus.",
+        "description": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
         "data": {
           "general_room_occupancy_sensors": "Huone · Läsnäolo · anturi",
           "general_occupied_rooms_entity": "Läsnäolo · Huone · lähde (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "Kotonaolo",
           "general_sleep_rooms_entity": "Uni · Huone · lähde (state)",
           "general_sleep_rooms_attribute": "Uni · Huone · lähde (attribute)",
-          "general_source_stale_minutes": "lähde · max (min)"
+          "general_source_stale_minutes": "Kotonaolo · Seuranta- ja henkilömäärätietojen enimmäisikä (min)",
+          "general_wake_alarm_entity": "Uni · Seuraava herätys",
+          "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Huone · Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
-          "general_occupied_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "general_room_occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
+          "general_occupied_rooms_entity": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
           "general_occupied_rooms_attribute": "Määritä ”Läsnäolo · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "general_home_trackers": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Läsnäolo · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Uni · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "general_sleep_rooms_entity": "Valitse nukkuvien huoneiden lista tilasta tai attribuutista käyttäen Home Assistantin alueiden nimiä tai tunnuksia. Listattu huone nukkuu vain, jos se on myös varattu. Muuttumaton lista pysyy kelvollisena; puuttuva tai virheellinen lähde on tuntematon. Asetettu herätys voi lopettaa automaattisen unitilan ennen soittoa.",
           "general_sleep_rooms_attribute": "Määritä ”Uni · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
-          "general_source_stale_minutes": "lähde · Uni / Läsnäolo · max 240 min. Virheellinen · Sammuta."
+          "general_source_stale_minutes": "Ikäraja koskee seurantalaitteiden raportteja ja numeerisia henkilömäärätietoja. Huonelistat ja binääriset huoneläsnäolotilat eivät vanhene muuttumattomina. Puuttuvat, palautetut tai virheelliset lähteet ovat tuntemattomia. Tämä ei ole unen kesto.",
+          "general_wake_alarm_entity": "Valitse seuraavan herätyksen aika- tai aikaleimaentiteetti sekä minuuttien entiteetti. HEM lopettaa automaattisen unitilan näin monta minuuttia ennen herätystä ja palauttaa normaalit tavoitteet. Pelkkä kellonaika käyttää Home Assistantin aikavyöhykettä. Poissaolo, käsiohjaus ja laitesuojaukset ovat edelleen etusijalla.",
+          "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten."
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
-          "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."
+          "occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene."
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
-          "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."
+          "occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene."
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "Virheellinen · anturi · asetukset",
       "device_temperature_band_invalid": "Virheellinen · Lämpötila · asetukset",
       "device_humidity_invalid": "Virheellinen · Kosteus · asetukset",
-      "device_runtime_invalid": "Virheellinen · Teho · asetukset"
+      "device_runtime_invalid": "Virheellinen · Teho · asetukset",
+      "wake_sources_pair": "Valitse sekä herätys- että minuuttientiteetti tai tyhjennä molemmat."
     },
     "abort": {
       "already_configured": "Home Environment Manager - on jo määritetty.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "Koti · Laitteet",
           "climate_unknown_occupancy": "Läsnäolo · Laitteet",
           "climate_unoccupied_delay_minutes": "Laitteet · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "Läsnäolo · Laitteet · anturi · Vaaditaan",
+          "climate_occupancy_stale_minutes": "Huoneen läsnäolo · Henkilömäärätiedon enimmäisikä (min)",
           "climate_away_policy": "Kotonaolo · Koti · Laitteet · POLICY",
           "climate_manual_profile": "Laitteet · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "Uni · Laitteet",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "Laitteet (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "climate_occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
           "climate_away_entities": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "Huoneen numeeristen henkilömäärätietojen enimmäisikä. Vanhat tai puuttuvat arvot ovat tuntemattomia. Binääriset läsnäolotilat ja huonelistat eivät vanhene muuttumattomina.",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "Tämä asetus ohjaa kohtaa ”Laitteet · CLIMATE_MANUAL_PROFILE”. Fyysiset komennot vaativat erillisen luvan ja suojaukset.",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "Yleiset · asetukset",
-        "description": "Yleiset · asetukset: Valitse lähde, anturi / Laitteet · ohjaus.",
+        "description": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
         "data": {
           "general_room_occupancy_sensors": "Huone · Läsnäolo · anturi",
           "general_occupied_rooms_entity": "Läsnäolo · Huone · lähde (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "Kotonaolo",
           "general_sleep_rooms_entity": "Uni · Huone · lähde (state)",
           "general_sleep_rooms_attribute": "Uni · Huone · lähde (attribute)",
-          "general_source_stale_minutes": "lähde · max (min)"
+          "general_source_stale_minutes": "Kotonaolo · Seuranta- ja henkilömäärätietojen enimmäisikä (min)",
+          "general_wake_alarm_entity": "Uni · Seuraava herätys",
+          "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Huone · Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
-          "general_occupied_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "general_room_occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
+          "general_occupied_rooms_entity": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
           "general_occupied_rooms_attribute": "Määritä ”Läsnäolo · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "general_home_trackers": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Läsnäolo · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Uni · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "general_sleep_rooms_entity": "Valitse nukkuvien huoneiden lista tilasta tai attribuutista käyttäen Home Assistantin alueiden nimiä tai tunnuksia. Listattu huone nukkuu vain, jos se on myös varattu. Muuttumaton lista pysyy kelvollisena; puuttuva tai virheellinen lähde on tuntematon. Asetettu herätys voi lopettaa automaattisen unitilan ennen soittoa.",
           "general_sleep_rooms_attribute": "Määritä ”Uni · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
-          "general_source_stale_minutes": "lähde · Uni / Läsnäolo · max 240 min. Virheellinen · Sammuta."
+          "general_source_stale_minutes": "Ikäraja koskee seurantalaitteiden raportteja ja numeerisia henkilömäärätietoja. Huonelistat ja binääriset huoneläsnäolotilat eivät vanhene muuttumattomina. Puuttuvat, palautetut tai virheelliset lähteet ovat tuntemattomia. Tämä ei ole unen kesto.",
+          "general_wake_alarm_entity": "Valitse seuraavan herätyksen aika- tai aikaleimaentiteetti sekä minuuttien entiteetti. HEM lopettaa automaattisen unitilan näin monta minuuttia ennen herätystä ja palauttaa normaalit tavoitteet. Pelkkä kellonaika käyttää Home Assistantin aikavyöhykettä. Poissaolo, käsiohjaus ja laitesuojaukset ovat edelleen etusijalla.",
+          "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten."
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · Siitepöly · HIGH",
           "pollen_max_scale": "POLLEN · Siitepöly · SCALE",
           "pollen_avoid_ventilation": "POLLEN · Siitepöly · NO VENT",
-          "general_source_stale_minutes": "lähde · max (min)",
-          "general_home_policy": "Kotonaolo"
+          "general_source_stale_minutes": "Kotonaolo · Seuranta- ja henkilömäärätietojen enimmäisikä (min)",
+          "general_home_policy": "Kotonaolo",
+          "general_wake_alarm_entity": "Uni · Seuraava herätys",
+          "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "Valitse: Ulkoilman laatu · AQI, CO₂, PM2.5, PM10, VOC. Ei saatavilla: ⚠",
           "weather_warnings": "Sää ja varoitukset · ⚠ (Ei saatavilla) → 🪟🔒",
-          "general_room_occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Huone · Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
           "general_home_trackers": "Valitse todellinen Home Assistant -lähde kohdalle ”Koti · Läsnäolo · Laitteet”. Puuttuvat tai vanhat tiedot estävät toiminnon. number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "general_occupied_rooms_entity": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
           "general_occupied_rooms_attribute": "Määritä ”Läsnäolo · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
-          "general_sleep_rooms_entity": "Valitse todellinen Home Assistant -lähde kohdalle ”Uni · Huone · lähde (state)”. Puuttuvat tai vanhat tiedot estävät toiminnon.",
+          "general_sleep_rooms_entity": "Valitse nukkuvien huoneiden lista tilasta tai attribuutista käyttäen Home Assistantin alueiden nimiä tai tunnuksia. Listattu huone nukkuu vain, jos se on myös varattu. Muuttumaton lista pysyy kelvollisena; puuttuva tai virheellinen lähde on tuntematon. Asetettu herätys voi lopettaa automaattisen unitilan ennen soittoa.",
           "general_sleep_rooms_attribute": "Määritä ”Uni · Huone · lähde (attribute)” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "notify_entities": "Valitse: notify.* · asetukset · lähde.",
           "media_players": "Valitse: media_player.* · asetukset · lähde · MEDIA_PLAYERS.",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "Määritä ”POLLEN · Siitepöly · HIGH” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "pollen_max_scale": "Määritä ”POLLEN · Siitepöly · SCALE” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
           "pollen_avoid_ventilation": "Määritä ”POLLEN · Siitepöly · NO VENT” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon.",
-          "general_source_stale_minutes": "lähde · Uni / Läsnäolo · max 240 min. Virheellinen · Sammuta.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "Ikäraja koskee seurantalaitteiden raportteja ja numeerisia henkilömäärätietoja. Huonelistat ja binääriset huoneläsnäolotilat eivät vanhene muuttumattomina. Puuttuvat, palautetut tai virheelliset lähteet ovat tuntemattomia. Tämä ei ole unen kesto.",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "Valitse seuraavan herätyksen aika- tai aikaleimaentiteetti sekä minuuttien entiteetti. HEM lopettaa automaattisen unitilan näin monta minuuttia ennen herätystä ja palauttaa normaalit tavoitteet. Pelkkä kellonaika käyttää Home Assistantin aikavyöhykettä. Poissaolo, käsiohjaus ja laitesuojaukset ovat edelleen etusijalla.",
+          "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten."
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
-          "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."
+          "occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene."
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
-          "occupancy_sensors": "Valitse todellinen Home Assistant -lähde kohdalle ”Läsnäolo · anturi”. Puuttuvat tai vanhat tiedot estävät toiminnon."
+          "occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene."
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "Virheellinen · Teho · asetukset",
       "invalid_setup_rooms": "Virheellinen: Valvottavat huoneet",
       "invalid_room_source": "Virheellinen: Huone · lähde",
-      "invalid_away_windows_recipients": "Ilmoituksen saavat henkilöt; Ikkunavaroituksen kanavat. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "Ilmoituksen saavat henkilöt; Ikkunavaroituksen kanavat. Announcement Hub (person.*).",
+      "wake_sources_pair": "Valitse sekä herätys- että minuuttientiteetti tai tyhjennä molemmat."
     },
     "abort": {
       "setup_area_removed": "Virheellinen: Valvottavat huoneet",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Kotonaolo · lähde · max (min)",
+        "name": "Kotonaolo · Seuranta- ja henkilömäärätietojen enimmäisikä (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Huoneen läsnäolo · Läsnäolo · Laitteet · anturi · Vaaditaan",
+        "name": "Huoneen läsnäolo · Henkilömäärätiedon enimmäisikä (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "Ilmoitukset · Ilmoita laitteen virheistä · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "Uni · {channel}Kun kaikki nukkuvat",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"

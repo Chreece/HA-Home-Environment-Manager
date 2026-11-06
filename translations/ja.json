@@ -224,18 +224,20 @@
           "pollen_high_from": "POLLEN · 花粉 · HIGH",
           "pollen_max_scale": "POLLEN · 花粉 · SCALE",
           "pollen_avoid_ventilation": "POLLEN · 花粉 · NO VENT",
-          "general_source_stale_minutes": "情報源 · max (min)",
-          "general_home_policy": "在宅状況"
+          "general_source_stale_minutes": "在宅状況 · 追跡・人数データの最大経過時間（分）",
+          "general_home_policy": "在宅状況",
+          "general_wake_alarm_entity": "睡眠 · 次のアラーム",
+          "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "選択してください: 屋外の空気質 · AQI, CO₂, PM2.5, PM10, VOC. 利用できません: ⚠",
           "weather_warnings": "「気象警報」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
-          "general_room_occupancy_sensors": "「部屋 · 在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
           "general_home_trackers": "「自宅 · 在室 · デバイス」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "「在室 · 部屋 · 情報源 (state)」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
+          "general_occupied_rooms_entity": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
           "general_occupied_rooms_attribute": "「在室 · 部屋 · 情報源 (attribute)」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
-          "general_sleep_rooms_entity": "「睡眠 · 部屋 · 情報源 (state)」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
+          "general_sleep_rooms_entity": "Home Assistant のエリア名または ID を含む睡眠中の部屋リストを、状態または属性から選択します。記載された部屋は、在室でもある場合にのみ睡眠中と判断されます。変化のないリストは有効なままです。情報源がない場合や無効な場合は不明です。設定したアラームで、鳴る前に自動睡眠を終了できます。",
           "general_sleep_rooms_attribute": "「睡眠 · 部屋 · 情報源 (attribute)」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "notify_entities": "「設定 · 情報源」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
           "media_players": "「設定 · 情報源 · MEDIA_PLAYERS」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
@@ -274,8 +276,10 @@
           "pollen_high_from": "「POLLEN · 花粉 · HIGH」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "pollen_max_scale": "「POLLEN · 花粉 · SCALE」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "pollen_avoid_ventilation": "「POLLEN · 花粉 · NO VENT」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
-          "general_source_stale_minutes": "情報源 · 睡眠 / 在室 · max 240 min. 無効 · オフ.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "経過時間の制限は追跡レポートや数値の人数データに適用されます。部屋リストとバイナリの在室状態は、変化がなくても期限切れになりません。利用不可・復元済み・無効の情報源は不明のままです。睡眠時間の設定ではありません。",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "次のアラームの時刻または日時エンティティと、解除までの分数を持つエンティティを選択します。HEM は指定した分数だけ早く自動睡眠モードを終了し、通常の目標値に戻します。日付のない時刻には Home Assistant のタイムゾーンを使います。不在、手動制御、機器の保護機能は引き続き優先されます。",
+          "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。"
         }
       },
       "reconfigure": {
@@ -698,7 +702,7 @@
           "climate_away_entities": "自宅 · デバイス",
           "climate_unknown_occupancy": "在室 · デバイス",
           "climate_unoccupied_delay_minutes": "デバイス · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "在室 · デバイス · センサー · 必須",
+          "climate_occupancy_stale_minutes": "部屋の在室状況 · 人数データの最大経過時間（分）",
           "climate_away_policy": "在宅状況 · 自宅 · デバイス · POLICY",
           "climate_manual_profile": "デバイス · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "睡眠 · デバイス",
@@ -709,11 +713,11 @@
           "climate_comfort_adjustment_max_c": "デバイス (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "「在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
+          "climate_occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
           "climate_away_entities": "「自宅 · デバイス」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "部屋の数値の人数データに許可する最大経過時間です。古い値や利用できない値は不明です。変化のないバイナリ在室状態と部屋リストは期限切れになりません。",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "この項目は「デバイス · CLIMATE_MANUAL_PROFILE」を設定します。機器への指示には個別の許可と独立した保護が必要です。",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -915,7 +919,7 @@
       },
       "general_settings": {
         "title": "一般 · 設定",
-        "description": "一般 · 設定: 選択 情報源, センサー / デバイス · 制御.",
+        "description": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
         "data": {
           "general_room_occupancy_sensors": "部屋 · 在室 · センサー",
           "general_occupied_rooms_entity": "在室 · 部屋 · 情報源 (state)",
@@ -924,17 +928,21 @@
           "general_home_policy": "在宅状況",
           "general_sleep_rooms_entity": "睡眠 · 部屋 · 情報源 (state)",
           "general_sleep_rooms_attribute": "睡眠 · 部屋 · 情報源 (attribute)",
-          "general_source_stale_minutes": "情報源 · max (min)"
+          "general_source_stale_minutes": "在宅状況 · 追跡・人数データの最大経過時間（分）",
+          "general_wake_alarm_entity": "睡眠 · 次のアラーム",
+          "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "「部屋 · 在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
-          "general_occupied_rooms_entity": "「在室 · 部屋 · 情報源 (state)」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
+          "general_room_occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
+          "general_occupied_rooms_entity": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
           "general_occupied_rooms_attribute": "「在室 · 部屋 · 情報源 (attribute)」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "general_home_trackers": "「自宅 · 在室 · デバイス」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "「睡眠 · 部屋 · 情報源 (state)」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
+          "general_sleep_rooms_entity": "Home Assistant のエリア名または ID を含む睡眠中の部屋リストを、状態または属性から選択します。記載された部屋は、在室でもある場合にのみ睡眠中と判断されます。変化のないリストは有効なままです。情報源がない場合や無効な場合は不明です。設定したアラームで、鳴る前に自動睡眠を終了できます。",
           "general_sleep_rooms_attribute": "「睡眠 · 部屋 · 情報源 (attribute)」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
-          "general_source_stale_minutes": "情報源 · 睡眠 / 在室 · max 240 min. 無効 · オフ."
+          "general_source_stale_minutes": "経過時間の制限は追跡レポートや数値の人数データに適用されます。部屋リストとバイナリの在室状態は、変化がなくても期限切れになりません。利用不可・復元済み・無効の情報源は不明のままです。睡眠時間の設定ではありません。",
+          "general_wake_alarm_entity": "次のアラームの時刻または日時エンティティと、解除までの分数を持つエンティティを選択します。HEM は指定した分数だけ早く自動睡眠モードを終了し、通常の目標値に戻します。日付のない時刻には Home Assistant のタイムゾーンを使います。不在、手動制御、機器の保護機能は引き続き優先されます。",
+          "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。"
         }
       },
       "pollen": {
@@ -1107,7 +1115,7 @@
           "humidity": "湿度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
           "climate_devices": "デバイス. この部屋の実機 climate.*、humidifier.*、fan.* のエンティティだけを選択します。対応する暖房・冷房・除湿、設定温湿度、ファン速度は機器の機能に依存します。選択だけでは動作せず、各コントローラーで自動制御を個別に有効にします。",
           "shades": "窓のブラインド・シェード・シャッター. 部屋の cover.* ブラインド、ローラーシャッター、カーテンを選択します。device_class がなくても CLOSE に対応し、実際の窓の日除けなら選択できます。ガレージ、門、ドア、窓、屋外オーニングは除外します。選択だけでは動かず、コントローラーで窓センサー、自動制御、事前通知、温度しきい値を設定します。状態不明時は動作しません。",
-          "occupancy_sensors": "「在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。"
+          "occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。"
         }
       },
       "select_room": {
@@ -1136,7 +1144,7 @@
           "humidity": "湿度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
           "climate_devices": "デバイス. この部屋の実機 climate.*、humidifier.*、fan.* のエンティティだけを選択します。対応する暖房・冷房・除湿、設定温湿度、ファン速度は機器の機能に依存します。選択だけでは動作せず、各コントローラーで自動制御を個別に有効にします。",
           "shades": "窓のブラインド・シェード・シャッター. 部屋の cover.* ブラインド、ローラーシャッター、カーテンを選択します。device_class がなくても CLOSE に対応し、実際の窓の日除けなら選択できます。ガレージ、門、ドア、窓、屋外オーニングは除外します。選択だけでは動かず、コントローラーで窓センサー、自動制御、事前通知、温度しきい値を設定します。状態不明時は動作しません。",
-          "occupancy_sensors": "「在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。"
+          "occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。"
         }
       }
     },
@@ -1207,7 +1215,8 @@
       "device_air_sensor_required": "無効 · センサー · 設定",
       "device_temperature_band_invalid": "無効 · 温度 · 設定",
       "device_humidity_invalid": "無効 · 湿度 · 設定",
-      "device_runtime_invalid": "無効 · 電力 · 設定"
+      "device_runtime_invalid": "無効 · 電力 · 設定",
+      "wake_sources_pair": "アラームと分数の両方のエンティティを選択するか、両方の選択を解除してください。"
     },
     "abort": {
       "already_configured": "Home Environment Manager - 設定済みです.",
@@ -1764,7 +1773,7 @@
           "climate_away_entities": "自宅 · デバイス",
           "climate_unknown_occupancy": "在室 · デバイス",
           "climate_unoccupied_delay_minutes": "デバイス · CLIMATE_UNOCCUPIED_DELAY_MINUTES",
-          "climate_occupancy_stale_minutes": "在室 · デバイス · センサー · 必須",
+          "climate_occupancy_stale_minutes": "部屋の在室状況 · 人数データの最大経過時間（分）",
           "climate_away_policy": "在宅状況 · 自宅 · デバイス · POLICY",
           "climate_manual_profile": "デバイス · CLIMATE_MANUAL_PROFILE",
           "climate_sleep_active": "睡眠 · デバイス",
@@ -1775,11 +1784,11 @@
           "climate_comfort_adjustment_max_c": "デバイス (°C)"
         },
         "data_description": {
-          "climate_occupancy_sensors": "「在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
+          "climate_occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
           "climate_away_entities": "「自宅 · デバイス」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
           "climate_unknown_occupancy": "Legacy room-profile fallback when shared presence is not configured: assume occupied substitutes occupied evidence; hold leaves the profile unknown. With shared presence, unknown evidence stays unknown. Unified controllers use Home for unknown room occupancy unless Away, Sleep or an explicit preset takes priority, and device-specific occupied/absent requirements still need verified evidence.",
           "climate_unoccupied_delay_minutes": "Delay applied to continuous absence reported by local room-presence sensors before changing automatic room profiles. A valid shared occupied-room list that omits this room, or verified whole-home Away, applies immediately and bypasses this delay.",
-          "climate_occupancy_stale_minutes": "Maximum age in minutes of selected local room-presence sensor reports. Older or missing reports count as unknown and cannot establish occupancy or absence. Shared room-list sources have a separate age limit; this setting does not choose a fallback climate profile.",
+          "climate_occupancy_stale_minutes": "部屋の数値の人数データに許可する最大経過時間です。古い値や利用できない値は不明です。変化のないバイナリ在室状態と部屋リストは期限切れになりません。",
           "climate_away_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "climate_manual_profile": "この項目は「デバイス · CLIMATE_MANUAL_PROFILE」を設定します。機器への指示には個別の許可と独立した保護が必要です。",
           "climate_sleep_active": "Manually marks this room as sleeping now for automatic sleep/profile and configured quiet or pause behavior. Off does not force awake: an enabled schedule or selected sleeping-room source can still indicate sleep. Explicit profile overrides and verified Away keep their precedence.",
@@ -1981,7 +1990,7 @@
       },
       "general_settings": {
         "title": "一般 · 設定",
-        "description": "一般 · 設定: 選択 情報源, センサー / デバイス · 制御.",
+        "description": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
         "data": {
           "general_room_occupancy_sensors": "部屋 · 在室 · センサー",
           "general_occupied_rooms_entity": "在室 · 部屋 · 情報源 (state)",
@@ -1990,17 +1999,21 @@
           "general_home_policy": "在宅状況",
           "general_sleep_rooms_entity": "睡眠 · 部屋 · 情報源 (state)",
           "general_sleep_rooms_attribute": "睡眠 · 部屋 · 情報源 (attribute)",
-          "general_source_stale_minutes": "情報源 · max (min)"
+          "general_source_stale_minutes": "在宅状況 · 追跡・人数データの最大経過時間（分）",
+          "general_wake_alarm_entity": "睡眠 · 次のアラーム",
+          "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか"
         },
         "data_description": {
-          "general_room_occupancy_sensors": "「部屋 · 在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
-          "general_occupied_rooms_entity": "「在室 · 部屋 · 情報源 (state)」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
+          "general_room_occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
+          "general_occupied_rooms_entity": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
           "general_occupied_rooms_attribute": "「在室 · 部屋 · 情報源 (attribute)」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "general_home_trackers": "「自宅 · 在室 · デバイス」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
-          "general_sleep_rooms_entity": "「睡眠 · 部屋 · 情報源 (state)」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
+          "general_sleep_rooms_entity": "Home Assistant のエリア名または ID を含む睡眠中の部屋リストを、状態または属性から選択します。記載された部屋は、在室でもある場合にのみ睡眠中と判断されます。変化のないリストは有効なままです。情報源がない場合や無効な場合は不明です。設定したアラームで、鳴る前に自動睡眠を終了できます。",
           "general_sleep_rooms_attribute": "「睡眠 · 部屋 · 情報源 (attribute)」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
-          "general_source_stale_minutes": "情報源 · 睡眠 / 在室 · max 240 min. 無効 · オフ."
+          "general_source_stale_minutes": "経過時間の制限は追跡レポートや数値の人数データに適用されます。部屋リストとバイナリの在室状態は、変化がなくても期限切れになりません。利用不可・復元済み・無効の情報源は不明のままです。睡眠時間の設定ではありません。",
+          "general_wake_alarm_entity": "次のアラームの時刻または日時エンティティと、解除までの分数を持つエンティティを選択します。HEM は指定した分数だけ早く自動睡眠モードを終了し、通常の目標値に戻します。日付のない時刻には Home Assistant のタイムゾーンを使います。不在、手動制御、機器の保護機能は引き続き優先されます。",
+          "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。"
         }
       },
       "pollen": {
@@ -2207,18 +2220,20 @@
           "pollen_high_from": "POLLEN · 花粉 · HIGH",
           "pollen_max_scale": "POLLEN · 花粉 · SCALE",
           "pollen_avoid_ventilation": "POLLEN · 花粉 · NO VENT",
-          "general_source_stale_minutes": "情報源 · max (min)",
-          "general_home_policy": "在宅状況"
+          "general_source_stale_minutes": "在宅状況 · 追跡・人数データの最大経過時間（分）",
+          "general_home_policy": "在宅状況",
+          "general_wake_alarm_entity": "睡眠 · 次のアラーム",
+          "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
           "outdoor_sensors": "選択してください: 屋外の空気質 · AQI, CO₂, PM2.5, PM10, VOC. 利用できません: ⚠",
           "weather_warnings": "「気象警報」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
-          "general_room_occupancy_sensors": "「部屋 · 在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
+          "general_room_occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
           "general_home_trackers": "「自宅 · 在室 · デバイス」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。 number.*, input_number.*: 0 = empty, positive = occupied; unknown/unavailable/stale is not proof of absence.",
-          "general_occupied_rooms_entity": "「在室 · 部屋 · 情報源 (state)」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
+          "general_occupied_rooms_entity": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
           "general_occupied_rooms_attribute": "「在室 · 部屋 · 情報源 (attribute)」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
-          "general_sleep_rooms_entity": "「睡眠 · 部屋 · 情報源 (state)」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
+          "general_sleep_rooms_entity": "Home Assistant のエリア名または ID を含む睡眠中の部屋リストを、状態または属性から選択します。記載された部屋は、在室でもある場合にのみ睡眠中と判断されます。変化のないリストは有効なままです。情報源がない場合や無効な場合は不明です。設定したアラームで、鳴る前に自動睡眠を終了できます。",
           "general_sleep_rooms_attribute": "「睡眠 · 部屋 · 情報源 (attribute)」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "notify_entities": "「設定 · 情報源」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。",
           "media_players": "「設定 · 情報源 · MEDIA_PLAYERS」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
@@ -2257,8 +2272,10 @@
           "pollen_high_from": "「POLLEN · 花粉 · HIGH」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "pollen_max_scale": "「POLLEN · 花粉 · SCALE」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "pollen_avoid_ventilation": "「POLLEN · 花粉 · NO VENT」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
-          "general_source_stale_minutes": "情報源 · 睡眠 / 在室 · max 240 min. 無効 · オフ.",
-          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left."
+          "general_source_stale_minutes": "経過時間の制限は追跡レポートや数値の人数データに適用されます。部屋リストとバイナリの在室状態は、変化がなくても期限切れになりません。利用不可・復元済み・無効の情報源は不明のままです。睡眠時間の設定ではありません。",
+          "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
+          "general_wake_alarm_entity": "次のアラームの時刻または日時エンティティと、解除までの分数を持つエンティティを選択します。HEM は指定した分数だけ早く自動睡眠モードを終了し、通常の目標値に戻します。日付のない時刻には Home Assistant のタイムゾーンを使います。不在、手動制御、機器の保護機能は引き続き優先されます。",
+          "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。"
         }
       },
       "room_occupancy": {
@@ -2307,7 +2324,7 @@
           "humidity": "湿度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
           "climate_devices": "デバイス. この部屋の実機 climate.*、humidifier.*、fan.* のエンティティだけを選択します。対応する暖房・冷房・除湿、設定温湿度、ファン速度は機器の機能に依存します。選択だけでは動作せず、各コントローラーで自動制御を個別に有効にします。",
           "shades": "窓のブラインド・シェード・シャッター. 部屋の cover.* ブラインド、ローラーシャッター、カーテンを選択します。device_class がなくても CLOSE に対応し、実際の窓の日除けなら選択できます。ガレージ、門、ドア、窓、屋外オーニングは除外します。選択だけでは動かず、コントローラーで窓センサー、自動制御、事前通知、温度しきい値を設定します。状態不明時は動作しません。",
-          "occupancy_sensors": "「在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。"
+          "occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。"
         }
       },
       "select_room": {
@@ -2336,7 +2353,7 @@
           "humidity": "湿度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
           "climate_devices": "デバイス. この部屋の実機 climate.*、humidifier.*、fan.* のエンティティだけを選択します。対応する暖房・冷房・除湿、設定温湿度、ファン速度は機器の機能に依存します。選択だけでは動作せず、各コントローラーで自動制御を個別に有効にします。",
           "shades": "窓のブラインド・シェード・シャッター. 部屋の cover.* ブラインド、ローラーシャッター、カーテンを選択します。device_class がなくても CLOSE に対応し、実際の窓の日除けなら選択できます。ガレージ、門、ドア、窓、屋外オーニングは除外します。選択だけでは動かず、コントローラーで窓センサー、自動制御、事前通知、温度しきい値を設定します。状態不明時は動作しません。",
-          "occupancy_sensors": "「在室 · センサー」には実際の Home Assistant データ源を選んでください。欠落や古い値では操作を保留します。"
+          "occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。"
         }
       }
     },
@@ -2407,7 +2424,8 @@
       "device_runtime_invalid": "無効 · 電力 · 設定",
       "invalid_setup_rooms": "無効: 監視する部屋",
       "invalid_room_source": "無効: 部屋 · 情報源",
-      "invalid_away_windows_recipients": "通知する人物; 窓の通知先と方法. Announcement Hub (person.*)."
+      "invalid_away_windows_recipients": "通知する人物; 窓の通知先と方法. Announcement Hub (person.*).",
+      "wake_sources_pair": "アラームと分数の両方のエンティティを選択するか、両方の選択を解除してください。"
     },
     "abort": {
       "setup_area_removed": "無効: 監視する部屋",
@@ -3252,7 +3270,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "在宅状況 · 情報源 · max (min)",
+        "name": "在宅状況 · 追跡・人数データの最大経過時間（分）",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
@@ -3324,7 +3342,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "部屋の在室状況 · 在室 · デバイス · センサー · 必須",
+        "name": "部屋の在室状況 · 人数データの最大経過時間（分）",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
@@ -3935,6 +3953,14 @@
       },
       "equipment_announce_device_errors": {
         "name": "通知 · デバイスのエラーを通知 · {channel}",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
+      },
+      "equipment_sleep_when_everyone_asleep": {
+        "name": "睡眠 · {channel}全員が睡眠中のとき",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
