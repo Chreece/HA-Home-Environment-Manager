@@ -263,30 +263,36 @@ jobs:
           if-no-files-found: ignore
       - name: Home Assistant dispatcher and compact card browser interactions
         run: |
-          python -I .github/tests/test_beta68_events.py
-          python -I .github/tests/test_beta66_browser.py
-          python -I .github/tests/test_beta68_browser.py
-          python -I .github/tests/test_beta76_compact_browser.py
-          python -I .github/tests/test_beta84_review_browser.py
-          python -I .github/tests/test_beta85_resume_browser.py
-          python -I .github/tests/test_beta86_fault_card.py
-          python -I .github/tests/test_beta87_compact_browser.py
-          python -I .github/tests/test_beta89_card.py
-          python -I .github/tests/test_beta90_scroll_card.py
-          python -I .github/tests/test_beta91_stable_dom.py
-          python -I .github/tests/test_beta92_lovelace_scroll.py
-          python -I .github/tests/test_beta93_native_entity_links.py
-          python -I .github/tests/test_beta95_card.py
-          python -I .github/tests/test_beta98_resume_card.py
-          python -I .github/tests/test_beta101_weather_warning.py
-          python -I .github/tests/test_beta103_weather_persistent.py
-          python -I .github/tests/test_beta104_weather_no_scroll.py
-          python -I .github/tests/test_beta105_card.py
-          python -I .github/tests/test_beta107_room_metrics.py
-          python -I .github/tests/test_beta112_room_activity.py
-          python -I .github/tests/test_beta108_setpoint_feedback_browser.py
-          python -I .github/tests/test_beta109_setpoint_grace_browser.py
-          python -I .github/tests/test_beta110_device_option_browser.py
+          hem_browser_status=0
+          for hem_browser_test in \
+            .github/tests/test_beta68_events.py \
+            .github/tests/test_beta66_browser.py \
+            .github/tests/test_beta68_browser.py \
+            .github/tests/test_beta76_compact_browser.py \
+            .github/tests/test_beta84_review_browser.py \
+            .github/tests/test_beta85_resume_browser.py \
+            .github/tests/test_beta86_fault_card.py \
+            .github/tests/test_beta87_compact_browser.py \
+            .github/tests/test_beta89_card.py \
+            .github/tests/test_beta90_scroll_card.py \
+            .github/tests/test_beta91_stable_dom.py \
+            .github/tests/test_beta92_lovelace_scroll.py \
+            .github/tests/test_beta93_native_entity_links.py \
+            .github/tests/test_beta95_card.py \
+            .github/tests/test_beta98_resume_card.py \
+            .github/tests/test_beta101_weather_warning.py \
+            .github/tests/test_beta103_weather_persistent.py \
+            .github/tests/test_beta104_weather_no_scroll.py \
+            .github/tests/test_beta105_card.py \
+            .github/tests/test_beta107_room_metrics.py \
+            .github/tests/test_beta112_room_activity.py \
+            .github/tests/test_beta108_setpoint_feedback_browser.py \
+            .github/tests/test_beta109_setpoint_grace_browser.py \
+            .github/tests/test_beta110_device_option_browser.py
+          do
+            python -I "$hem_browser_test" || hem_browser_status=1
+          done
+          exit "$hem_browser_status"
       - name: Package and inspect canonical HACS integration
         run: |
           python -I - <<'PY'

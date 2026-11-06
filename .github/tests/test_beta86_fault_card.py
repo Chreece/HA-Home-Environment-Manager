@@ -35,6 +35,23 @@ states["switch.hem_device_error_alerts"]={
         "device_fault_role":"announce", "native_error":native_fault,
     }
 }
+
+
+def assert_announcement(page, label, state):
+    control = page.locator('[data-device-error-announce]')
+    assert control.count() == 1
+    assert control.get_attribute("role") == "switch"
+    assert control.get_attribute("aria-checked") == str(state == "on").lower()
+    assert control.get_attribute("aria-label") == label
+    assert control.get_attribute("title") == label
+    # Its purpose stays localized and accessible; the compact visible control
+    # consists only of the bell and the existing ON/OFF state indicator.
+    assert control.inner_text().strip() == state.upper()
+    assert control.locator("ha-icon").count() == 1
+    assert control.locator("ha-icon").get_attribute("icon") == (
+        "mdi:bell-ring-outline" if state == "on" else "mdi:bell-off-outline")
+
+
 executable=shutil.which("chromium") or shutil.which("google-chrome")
 assert executable,"Chromium required for actual UI test"
 with sync_playwright() as p:
@@ -68,8 +85,7 @@ with sync_playwright() as p:
         assert value in error.inner_text(),(value,error.inner_text())
     assert "sensor.other_device_error" not in error.inner_text()
     announcement=page.locator('[data-device-error-announce]')
-    assert announcement.count()==1
-    assert announcement.get_attribute("aria-checked")=="true"
+    assert_announcement(page, "Announce errors", "on")
     assert page.evaluate("calls.length")==0
     source=page.locator('[data-open-native-error="sensor.comfee_error_code"]')
     source.click()
@@ -100,7 +116,7 @@ with sync_playwright() as p:
        card._hass={...card._hass,states:copy};draw();
     }""")
     assert page.locator('.hem-device-error').count()==0
-    assert page.locator('[data-device-error-announce]').get_attribute('aria-checked')=='false'
+    assert_announcement(page, "Announce errors", "off")
     page.locator('[data-device-error-announce]').click()
     page.wait_for_timeout(50)
     assert page.evaluate("calls")[-1]==[
@@ -127,8 +143,17 @@ with sync_playwright() as p:
         ("de","Fehler ansagen"),
         ("en","Announce errors"),
     ]:
-        page.evaluate("(locale)=>{card._hass={...card._hass,language:locale};draw();}",locale)
-        assert label in page.locator('.hem-device-error-toggle').inner_text(),locale
+        for state in ("on", "off"):
+            page.evaluate("""({locale,state})=>{
+                const id='switch.hem_device_error_alerts';
+                card._hass={...card._hass,language:locale,states:{...card._hass.states,
+                    [id]:{...card._hass.states[id],state}}};draw();
+            }""", {"locale": locale, "state": state})
+            assert_announcement(page, label, state)
+    assert page.evaluate("calls") == [
+        ["switch", "turn_off", {"entity_id": "switch.hem_device_error_alerts"}],
+        ["switch", "turn_on", {"entity_id": "switch.hem_device_error_alerts"}],
+    ]
     assert not failures,failures
     browser.close()
 print("BETA86_CHROMIUM_NATIVE_FAULT_ORIGINAL_ENTITY_AND_DEFAULT_ON_SWITCH=PASS")

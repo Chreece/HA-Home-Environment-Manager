@@ -266,7 +266,7 @@ def browser_checks(states):
           window.card=document.createElement('home-environment-manager-card');
           document.getElementById('card-frame').append(card);
           card.addEventListener('hass-more-info',event=>info.push(event.detail.entityId));
-          card._hass={language:'el',states,localize:()=>undefined,
+          card._hass={language:'el',states,localize:()=>undefined,callWS:async()=>({}),
             callService:(...args)=>{calls.push(args);return Promise.resolve()}};
           card._config={entity:'sensor.hem'};card._renderContent(true);
         }""", states)
@@ -328,7 +328,13 @@ def browser_checks(states):
         assert page.evaluate(REPORT, "heat")["metric"][0]["colour"] == neutral
         # Existing single-source/average interactions remain read-only.
         page.locator('[data-room-fold87="humidify"] > .hem-room-glance87 > [data-hem-source105="sensor.humidify_humidity"]').click()
+        assert page.evaluate("info") == []
+        assert page.evaluate("card._averageDialog105.entity122") == "sensor.humidify_humidity"
+        popup = page.locator('.hem-avg-dialog105')
+        assert popup.is_visible()
+        popup.locator('[data-open-entity122="sensor.humidify_humidity"]').click()
         assert page.evaluate("info") == ["sensor.humidify_humidity"]
+        assert popup.count() == 0
         assert page.locator('[data-room-fold87="humidify"]').get_attribute("open") is None
         assert page.evaluate("calls") == []
         assert not errors, errors

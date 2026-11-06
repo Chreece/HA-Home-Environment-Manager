@@ -257,7 +257,7 @@ with sync_playwright() as playwright:
       window.card=document.createElement('home-environment-manager-card');
       document.getElementById('card-frame').append(card);
       card.addEventListener('hass-more-info',event=>info.push(event.detail.entityId));
-      card._hass={language:'el',states,localize:()=>undefined,
+      card._hass={language:'el',states,localize:()=>undefined,callWS:async()=>({}),
         callService:(...args)=>{calls.push(args);return Promise.resolve()}};
       card._config={entity:'sensor.hem'};card._renderContent(true);
     }""", {"states": states})
@@ -306,10 +306,12 @@ with sync_playwright() as playwright:
             "nodes=>nodes.map(node=>node.getAttribute('data-hem-source105'))")
         assert actual == expected, (metric, actual, expected)
         popup.locator(f'[data-hem-source105="{expected[0]}"]').click()
-        assert page.evaluate("info") == previous + [expected[0]]
+        assert page.evaluate("info") == previous, "Contributor click should open its recorded trend first"
+        assert page.evaluate("card._averageDialog105.entity122") == expected[0]
         page.evaluate("card._renderContent(true)")
         assert popup.is_visible() and row.get_attribute("open") is None
-        popup.locator('[data-close-avg105]').click()
+        popup.locator(f'[data-open-entity122="{expected[0]}"]').click()
+        assert page.evaluate("info") == previous + [expected[0]]
         assert popup.count() == 0
     for area, entity_id in (("room0", "sensor.room0_illuminance"), ("room4", "sensor.room4_pm25")):
         source_row = page.locator(f'[data-room-fold87="{area}"]')
@@ -317,6 +319,11 @@ with sync_playwright() as playwright:
         assert trigger.locator('.hem-avg-marker105').count() == 0
         previous = page.evaluate("info")
         trigger.click()
+        assert page.evaluate("info") == previous, "Single-source click should open its recorded trend first"
+        assert page.evaluate("card._averageDialog105.entity122") == entity_id
+        popup = page.locator('.hem-avg-dialog105')
+        assert popup.is_visible()
+        popup.locator(f'[data-open-entity122="{entity_id}"]').click()
         assert page.evaluate("info") == previous + [entity_id]
         assert source_row.get_attribute("open") is None, "native click expanded room"
         assert page.locator('.hem-avg-dialog105').count() == 0
