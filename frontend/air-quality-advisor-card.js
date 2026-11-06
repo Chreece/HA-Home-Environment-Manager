@@ -2580,11 +2580,12 @@
       const nextHtml91 = `${this._styles()}<ha-card class="shell" dir="${RTL_LANGUAGES.has(lang) ? 'rtl' : 'ltr'}">
         <header class="card-heading"><div><div class="overline">HOME ASSISTANT</div>
         <h2 title="${escape(this._config.title || this._t('title'))}">${escape(this._config.title || this._t('title'))}</h2><span>${escape(this._t('subtitle'))}</span></div>
-        <div class="header-actions"><button class="edit-device" type="button" data-edit-home
+        <div class="header-actions">${this._arrivalHeader124()}<button class="edit-device" type="button" data-edit-home
           aria-label="${escape(this._deviceEditLabel(true))}" title="${escape(this._deviceEditLabel(true))}"
           ${this._homeDeviceId ? '' : 'disabled'}>${this._icon('mdi:cog-outline')}</button>
         <div class="card-logo">${this._icon('mdi:air-filter')}</div></div></header>
         <div class="content">
+          ${this._arrivalError124()}
           ${this._outside(data.outdoor || {})}
           ${this._pollenIndicator(data.outdoor || {})}
           ${this._summary(data.summary || {})}
@@ -7661,7 +7662,7 @@
         flex:0 1 auto!important;min-width:48px!important}
       .hem-outside-details87 .outside-alerts>.hem-outside-blocker123{
         display:grid;grid-template-columns:13px minmax(0,1fr) max-content;
-        flex:1 1 auto;min-width:min-content;gap:3px;padding-inline:4px;box-sizing:border-box}
+        flex:0 1 auto;min-width:min-content;gap:3px;padding-inline:4px;box-sizing:border-box}
       .hem-outside-blocker123>ha-icon{flex:0 0 13px;width:13px}
       .hem-outside-blocker-label123,.hem-outside-metric-label123{
         min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;
@@ -7721,6 +7722,246 @@
     </style>`;
   };
   /* HEM_TEXT_BOUNDARIES123_END */
+
+  /* HEM_ARRIVAL_PREPARATION124_START
+   * These are native integration controls for the selected dashboard's home.
+   * Never guess an entity ID, adopt another entry, or write presence facts.
+   */
+  const ARRIVAL_TEXT124={
+    en:{prepare:'Prepare for arrival',preparing:'Preparing',cancel:'Cancel arrival preparation',
+      paused:'Paused',ending:'Finishing',minute:'min',duration:'Preparation timeout',
+      remaining:'Time remaining',edit:'Edit the timeout for the next preparation.',
+      away:'Temporarily use Home settings while everyone is away.',
+      home:'Preparation is available when everyone is confirmed away.',
+      unknown:'Waiting for confirmed home presence. Preparation is available only while away.',
+      suspended:'Preparation is paused while home presence is unknown. The timeout continues.',
+      expired:'The preparation timeout has ended. Waiting for the home status to refresh.',
+      unavailable:'Arrival controls are unavailable for this home. Check the Home Environment device.',
+      requesting:'Sending request…',failed:'The arrival preparation request failed. Please try again.',
+      reasonPreparing:'Home settings for arrival preparation',
+      reasonChanged:'Arrival preparation changed; recalculating device control'},
+    de:{prepare:'Ankunft vorbereiten',preparing:'Vorbereitung',cancel:'Ankunftsvorbereitung abbrechen',
+      paused:'Pausiert',ending:'Wird beendet',minute:'Min.',duration:'Dauer der Ankunftsvorbereitung',
+      remaining:'Verbleibende Zeit',edit:'Dauer für die nächste Vorbereitung ändern.',
+      away:'Vorübergehend die Einstellungen für Zuhause verwenden, während alle abwesend sind.',
+      home:'Die Vorbereitung ist verfügbar, wenn alle sicher abwesend sind.',
+      unknown:'Warte auf einen bestätigten Anwesenheitsstatus. Die Vorbereitung ist nur bei Abwesenheit verfügbar.',
+      suspended:'Die Vorbereitung pausiert bei unbekanntem Anwesenheitsstatus. Die Zeit läuft weiter.',
+      expired:'Die Vorbereitungszeit ist abgelaufen. Warte auf die Aktualisierung des Hausstatus.',
+      unavailable:'Die Ankunftssteuerung ist für dieses Zuhause nicht verfügbar. Prüfe das Gerät Home Environment.',
+      requesting:'Anfrage wird gesendet…',failed:'Die Anfrage zur Ankunftsvorbereitung ist fehlgeschlagen. Bitte erneut versuchen.',
+      reasonPreparing:'Einstellungen für Zuhause zur Ankunftsvorbereitung',
+      reasonChanged:'Ankunftsvorbereitung geändert; Gerätesteuerung wird neu berechnet'},
+    el:{prepare:'Προετοιμασία άφιξης',preparing:'Προετοιμασία',cancel:'Ακύρωση προετοιμασίας άφιξης',
+      paused:'Σε παύση',ending:'Ολοκλήρωση',minute:'λεπ.',duration:'Χρονικό όριο προετοιμασίας',
+      remaining:'Χρόνος που απομένει',edit:'Αλλαγή του χρονικού ορίου για την επόμενη προετοιμασία.',
+      away:'Προσωρινή χρήση των ρυθμίσεων Στο σπίτι ενώ όλοι απουσιάζουν.',
+      home:'Η προετοιμασία είναι διαθέσιμη όταν έχει επιβεβαιωθεί ότι όλοι απουσιάζουν.',
+      unknown:'Αναμονή για επιβεβαιωμένη παρουσία στο σπίτι. Η προετοιμασία είναι διαθέσιμη μόνο κατά την απουσία.',
+      suspended:'Η προετοιμασία είναι σε παύση όσο η παρουσία στο σπίτι είναι άγνωστη. Το χρονικό όριο συνεχίζει να μετρά.',
+      expired:'Το χρονικό όριο προετοιμασίας έληξε. Αναμονή για ενημέρωση της κατάστασης του σπιτιού.',
+      unavailable:'Τα χειριστήρια άφιξης δεν είναι διαθέσιμα για αυτό το σπίτι. Ελέγξτε τη συσκευή Home Environment.',
+      requesting:'Αποστολή αιτήματος…',failed:'Το αίτημα προετοιμασίας άφιξης απέτυχε. Δοκιμάστε ξανά.',
+      reasonPreparing:'Ρυθμίσεις Στο σπίτι για προετοιμασία άφιξης',
+      reasonChanged:'Η προετοιμασία άφιξης άλλαξε· επανυπολογισμός ελέγχου συσκευών'}
+  };
+  const arrivalProto124=AirQualityAdvisorCard.prototype;
+  arrivalProto124._arrivalWords124=function(){
+    return ARRIVAL_TEXT124[this._language()]||ARRIVAL_TEXT124.en;
+  };
+  const arrivalStatusBefore124=arrivalProto124._controllerStatusLabel;
+  arrivalProto124._controllerStatusLabel=function(code){
+    const key={preparing_for_arrival:'reasonPreparing',arrival_preparation_changed:'reasonChanged'}[code];
+    return key?this._arrivalWords124()[key]:arrivalStatusBefore124.call(this,code);
+  };
+  arrivalProto124._arrivalSource124=function(){
+    const payload=this._dashboard105()?.arrival_preparation;
+    if(!payload||typeof payload!=='object')return null;
+    const [owner,ownerState]=this._state(),hass=this._hass,registry=hass?.entities||{};
+    const entry=typeof payload.entry_id==='string'?payload.entry_id:null;
+    const ownerDevice=registry[owner]?.device_id;
+    // Older HA entity summaries omit config_entry_id. In that case use the
+    // registry result only when its hub is exactly this sensor's device.
+    const ownerEntry=registry[owner]?.config_entry_id||(
+      ownerDevice&&ownerDevice===this._homeDeviceId&&this._configEntryOwner114===owner
+        ?this._configEntryId114:null);
+    const owned=Boolean(owner&&ownerState&&ownerState.state!=='unavailable'&&entry&&ownerEntry===entry);
+    const controls={};
+    for(const role of ['prepare','cancel','timeout']){
+      const id=payload.entity_ids?.[role],state=hass?.states?.[id];
+      const domain=role==='timeout'?'number':'button';
+      const nativeEntry=registry[id]?.config_entry_id;
+      const controlOwned=Boolean(owned&&typeof id==='string'&&
+        new RegExp('^'+domain+'\\.[a-z0-9_]+$').test(id)&&state&&
+        state.attributes?.entry_id===entry&&
+        state.attributes?.arrival_preparation_role===role&&
+        (!nativeEntry||nativeEntry===entry));
+      controls[role]={id,state,owned:controlOwned,valid:controlOwned&&state.state!=='unavailable'};
+    }
+    const active=payload.active===true;
+    const expires=typeof payload.expires_at==='number'&&Number.isFinite(payload.expires_at)
+      ?payload.expires_at:null;
+    const remaining=active&&expires!==null?Math.max(0,Math.ceil(expires-Date.now()/1000)):null;
+    const nativeTimeout=Number(controls.timeout.state?.state);
+    const configured=controls.timeout.valid&&Number.isFinite(nativeTimeout)&&nativeTimeout>=1&&nativeTimeout<=1440
+      ?nativeTimeout:Number(payload.timeout_minutes);
+    const timeout=Number.isFinite(configured)&&configured>=1&&configured<=1440?Math.round(configured):null;
+    const context={owner,entry,connection:hass?.connection};
+    const matches=value=>value&&value.owner===owner&&value.entry===entry&&value.connection===context.connection;
+    const action=active?'cancel':'prepare';
+    return {...context,payload,owned,controls,active,expires,remaining,timeout,action,
+      expired:active&&remaining===0,homeStatus:payload.home_status,
+      canStart:owned&&payload.home_status==='away'&&payload.can_start===true&&!active,
+      pending:matches(this._arrivalRequest124)&&this._arrivalRequest124.action===action,
+      error:matches(this._arrivalFailure124)?this._arrivalFailure124.message:null};
+  };
+  arrivalProto124._arrivalHeader124=function(){
+    const source=this._arrivalSource124();
+    if(!source)return '';
+    const words=this._arrivalWords124(),control=source.controls[source.action];
+    const available=control.valid&&(source.active||source.canStart);
+    const label=source.active?(source.expired?words.ending:
+      source.homeStatus==='unknown'?words.paused:words.preparing):words.prepare;
+    const actionName=source.active?words.cancel:words.prepare;
+    const reason=!control.owned?words.unavailable:source.expired?words.expired:
+      source.active&&source.homeStatus==='unknown'?words.suspended:
+      source.active?(control.valid?words.cancel:words.unavailable):source.canStart?
+      (control.valid?words.away:words.unavailable):source.homeStatus==='home'?words.home:
+      source.homeStatus==='unknown'?words.unknown:words.unavailable;
+    const minutes=source.active&&source.remaining!==null?Math.ceil(source.remaining/60):source.timeout;
+    const duration=minutes===null?'—':this._format(minutes)+' '+words.minute;
+    const configured=source.timeout===null?'—':this._format(source.timeout)+' '+words.minute;
+    const durationTitle=(source.active?words.remaining+': '+duration+'. ':'')+
+      words.duration+': '+configured+'. '+words.edit;
+    const actionTitle=actionName+'. '+(source.pending?words.requesting:reason);
+    return '<div class="hem-arrival124'+(source.active?' is-active':'')+'"'+
+      ' data-arrival-status124="'+(source.expired?'expired':source.active?
+        (source.homeStatus==='unknown'?'paused':'active'):source.homeStatus==='away'?'away':'unavailable')+'">'+
+      '<button type="button" class="hem-arrival-action124" data-arrival-action124="'+source.action+'"'+
+      ' data-arrival-owner124="'+escape(source.owner)+'" data-arrival-entity124="'+escape(control.id||'')+'"'+
+      ' aria-label="'+escape(actionTitle)+'" title="'+escape(actionTitle)+'"'+
+      (source.pending?' aria-busy="true"':'')+(!available||source.pending?' disabled':'')+'>'+
+      this._icon(source.active?'mdi:close':'mdi:home-clock-outline')+
+      '<span class="hem-arrival-label124">'+escape(label)+'</span></button>'+
+      '<button type="button" class="hem-arrival-duration124" data-arrival-action124="timeout"'+
+      ' data-arrival-owner124="'+escape(source.owner)+'" data-arrival-entity124="'+escape(source.controls.timeout.id||'')+'"'+
+      ' aria-label="'+escape(source.controls.timeout.valid?durationTitle:words.unavailable)+'"'+
+      ' title="'+escape(source.controls.timeout.valid?durationTitle:words.unavailable)+'"'+
+      (!source.controls.timeout.valid?' disabled':'')+'>'+this._icon('mdi:timer-outline')+
+      '<span class="hem-arrival-minutes124">'+escape(duration)+'</span></button></div>';
+  };
+  arrivalProto124._arrivalError124=function(){
+    const error=this._arrivalSource124()?.error;
+    return error?'<div class="hem-arrival-error124" role="alert">'+escape(error)+'</div>':'';
+  };
+  arrivalProto124._arrivalAction124=async function(button){
+    const source=this._arrivalSource124(),action=button?.getAttribute('data-arrival-action124');
+    if(!source||!['prepare','cancel','timeout'].includes(action))return;
+    const control=source.controls[action];
+    // Revalidate at click time: a stale DOM node cannot target a previous home.
+    if(button.getAttribute('data-arrival-owner124')!==source.owner){this._render(true);return;}
+    const allowed=action==='timeout'||(action===source.action&&!source.pending&&
+      (source.active||source.canStart));
+    if(button.getAttribute('data-arrival-entity124')!==control.id||!control.owned||
+       (allowed&&!control.valid)){
+      this._arrivalFailure124={owner:source.owner,entry:source.entry,connection:source.connection,
+        message:this._arrivalWords124().unavailable};
+      this._render(true);return;
+    }
+    if(!allowed)return;
+    if(action==='timeout'){
+      this.dispatchEvent(new CustomEvent('hass-more-info',{
+        detail:{entityId:control.id},bubbles:true,composed:true}));return;
+    }
+    const request={owner:source.owner,entry:source.entry,connection:source.connection,action};
+    this._arrivalRequest124=request;this._arrivalFailure124=null;this._render(true);
+    try{
+      // Only wait for HA to accept the native button service. The dashboard
+      // owns the actual preparation state; no optimistic presence/profile edit.
+      await this._hass.callService('button','press',{entity_id:control.id});
+    }catch(error){
+      const current=this._arrivalSource124();
+      if(this._arrivalRequest124===request&&current?.owner===request.owner&&
+         current.entry===request.entry&&current.connection===request.connection)
+        this._arrivalFailure124={...request,message:this._arrivalWords124().failed};
+    }finally{
+      if(this._arrivalRequest124===request){
+        this._arrivalRequest124=null;
+        const current=this._arrivalSource124();
+        if(current?.owner===request.owner&&current.entry===request.entry&&
+           current.connection===request.connection)this._render(true);
+      }
+    }
+  };
+  const arrivalInstallBefore124=arrivalProto124._installFolds87;
+  arrivalProto124._installFolds87=function(){
+    arrivalInstallBefore124.call(this);
+    if(this._arrivalHandlers124)return;
+    this._arrivalHandlers124=true;
+    this.shadowRoot.addEventListener('click',event=>{
+      const button=event.target?.closest?.('[data-arrival-action124]');
+      if(!button)return;
+      event.preventDefault();event.stopImmediatePropagation();
+      this._arrivalAction124(button);
+    },true);
+  };
+  const arrivalSignatureBefore124=arrivalProto124._controllerSignature;
+  arrivalProto124._controllerSignature=function(){
+    const source=this._arrivalSource124();
+    if(!source)return arrivalSignatureBefore124.call(this);
+    const controls=Object.entries(source.controls).map(([role,control])=>[
+      role,control.id,control.owned,control.valid,control.state?.state]);
+    return arrivalSignatureBefore124.call(this)+JSON.stringify([
+      source.owner,source.entry,source.owned,source.active,source.expires,source.homeStatus,
+      source.canStart,source.timeout,source.remaining===null?null:Math.ceil(source.remaining/60),
+      source.pending,source.error,controls]);
+  };
+  const arrivalRenderBefore124=arrivalProto124._renderContent;
+  arrivalProto124._renderContent=function(force=false){
+    arrivalRenderBefore124.call(this,force);
+    clearTimeout(this._arrivalTick124);this._arrivalTick124=null;
+    const source=this._arrivalSource124();
+    if(!this.isConnected||!source?.active||source.expires===null)return;
+    const seconds=source.expires-Date.now()/1000;
+    if(seconds<=0)return;
+    // Refresh at the next displayed-minute boundary, including exact expiry.
+    const delay=Math.max(250,Math.min(60000,(seconds-(Math.ceil(seconds/60)-1)*60)*1000+50));
+    this._arrivalTick124=setTimeout(()=>{
+      this._arrivalTick124=null;
+      const current=this._arrivalSource124();
+      if(this.isConnected&&current?.owner===source.owner&&current.entry===source.entry&&
+         current.connection===source.connection)this._render(true);
+    },delay);
+  };
+  const arrivalDisconnectBefore124=arrivalProto124.disconnectedCallback;
+  arrivalProto124.disconnectedCallback=function(){
+    clearTimeout(this._arrivalTick124);this._arrivalTick124=null;
+    return arrivalDisconnectBefore124.call(this);
+  };
+  const arrivalStylesBefore124=arrivalProto124._styles;
+  arrivalProto124._styles=function(){
+    return arrivalStylesBefore124.call(this)+`<style>
+      .hem-arrival124{display:flex;align-items:center;gap:4px;min-width:0;max-width:100%}
+      .hem-arrival124>button{display:inline-flex;align-items:center;justify-content:center;
+        gap:5px;min-width:32px;min-height:32px;max-width:100%;padding:5px 7px;
+        box-sizing:border-box;border:1px solid var(--aqa-edge);border-radius:9px;
+        background:var(--card-background-color,#1c1c1c);color:var(--aqa-blue);
+        font:inherit;font-size:11px;line-height:1.25;cursor:pointer;white-space:nowrap}
+      .hem-arrival124>button:disabled{opacity:.55;cursor:default}
+      .hem-arrival124>button:focus-visible{outline:2px solid var(--aqa-blue);outline-offset:2px}
+      .hem-arrival124>button>ha-icon{width:16px;height:16px;--mdc-icon-size:16px;flex:0 0 16px}
+      .hem-arrival124.is-active>.hem-arrival-action124{background:color-mix(in srgb,var(--aqa-blue) 12%,transparent)}
+      .hem-arrival-label124{min-width:0;max-width:18ch;overflow:hidden;text-overflow:ellipsis}
+      .hem-arrival-minutes124{flex:0 0 auto;font-variant-numeric:tabular-nums}
+      .hem-arrival-error124{min-width:0;max-width:100%;padding:8px;border:1px solid var(--aqa-edge);
+        border-radius:8px;color:var(--error-color,#db4437);font-size:12px;overflow-wrap:anywhere}
+      @container hem-card123 (max-width:480px){
+        .hem-arrival-label124{display:none}
+        .hem-arrival124>.hem-arrival-action124{width:32px;padding:5px}
+      }
+    </style>`;
+  };
+  /* HEM_ARRIVAL_PREPARATION124_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);

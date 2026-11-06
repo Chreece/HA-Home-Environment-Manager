@@ -3788,6 +3788,14 @@
             "name": "Súgó"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Otthoni jelenlét · Érkezési előkészítés időtartama (perc)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Otthoni jelenlét · Felkészülés az érkezésre",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Otthoni jelenlét · Érkezési előkészítés leállítása",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"

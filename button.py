@@ -1,13 +1,15 @@
-"""Opt-in per-area manual mold calibration. No actuator services."""
+"""Home preparation and explicit room/controller maintenance actions."""
 from __future__ import annotations
 
 from .room_hubs import async_add_grouped_entities
 from .settings_help import SettingsMetadata
 
 from homeassistant.components.button import ButtonEntity
+from homeassistant.core import callback
+from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import EntityCategory
 
-from .const import CONF_AREAS, CONF_USE_MOLD, CONF_MOLD_ROOMS, DOMAIN
+from .const import CONF_AREAS, CONF_USE_MOLD, CONF_MOLD_ROOMS, DOMAIN, SIGNAL_UPDATED
 from .mold_controls import async_recalculate_mold_factor
 
 
@@ -41,6 +43,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
         return result
 
     buttons = [
+        ArrivalPreparationButton(manager, "prepare"),
+        ArrivalPreparationButton(manager, "cancel"),
         *(EquipmentResumeButton(manager, spec) for spec in controllers),
         *native_calibration_buttons(),
     ]
@@ -57,6 +61,57 @@ async def async_setup_entry(hass, entry, async_add_entities):
         for area in settings.get(CONF_AREAS, [])
         if isinstance(area, str)
     ])
+
+
+class ArrivalPreparationButton(SettingsMetadata, ButtonEntity):
+    """Deliberately start/renew or immediately cancel one home's preparation."""
+
+    _attr_has_entity_name = False
+    _attr_should_poll = False
+
+    def __init__(self, manager, role):
+        from .arrival_preparation import ENTITY_SUFFIXES
+        self._manager, self._role = manager, role
+        suffix = ENTITY_SUFFIXES[role][1]
+        self._attr_translation_key = suffix
+        self._attr_unique_id = f"{manager.entry.entry_id}_{suffix}"
+        self._attr_device_info = {"identifiers": {(DOMAIN, manager.entry.entry_id)}}
+        self._attr_icon = "mdi:home-clock" if role == "prepare" else "mdi:close-circle-outline"
+
+    @property
+    def available(self):
+        preparation = self._manager.arrival_preparation
+        if self._role == "cancel":
+            return preparation.armed
+        return preparation.snapshot()["can_start"]
+
+    @property
+    def extra_state_attributes(self):
+        preparation = self._manager.arrival_preparation
+        return {**super().extra_state_attributes,
+                "arrival_preparation_role": self._role,
+                "entry_id": self._manager.entry.entry_id,
+                "active": preparation.armed,
+                "expires_at": preparation.expires_at if preparation.armed else None,
+                "timeout_minutes": preparation.timeout_minutes,
+                "home_status": preparation.home_status()}
+
+    async def async_press(self):
+        preparation = self._manager.arrival_preparation
+        if self._role == "prepare":
+            await preparation.async_prepare()
+        else:
+            await preparation.async_cancel()
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(async_dispatcher_connect(
+            self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}", self._update,
+        ))
+
+    @callback
+    def _update(self):
+        self.async_write_ha_state()
 
 
 class AreaMoldCalibrationButton(SettingsMetadata, ButtonEntity):

@@ -3788,6 +3788,14 @@
             "name": "說明"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "在家狀態 · 回家準備時限（分鐘）",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "在家狀態 · 準備迎接回家",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "在家狀態 · 取消回家準備",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"

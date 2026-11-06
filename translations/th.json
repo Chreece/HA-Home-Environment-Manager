@@ -3788,6 +3788,14 @@
             "name": "ความช่วยเหลือ"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "การอยู่บ้าน · ระยะเวลาเตรียมพร้อมก่อนกลับบ้าน (นาที)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ความช่วยเหลือ"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ความช่วยเหลือ"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "การอยู่บ้าน · เตรียมพร้อมก่อนกลับบ้าน",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ความช่วยเหลือ"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "การอยู่บ้าน · ยกเลิกการเตรียมพร้อมก่อนกลับบ้าน",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"

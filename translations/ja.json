@@ -3788,6 +3788,14 @@
             "name": "ヘルプ"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "在宅状況 · 帰宅準備の制限時間（分）",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "在宅状況 · 帰宅に備える",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "在宅状況 · 帰宅準備をキャンセル",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"

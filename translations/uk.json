@@ -3788,6 +3788,14 @@
             "name": "Довідка"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Присутність удома · Час підготовки до повернення (хв)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Присутність удома · Підготувати до повернення",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Присутність удома · Скасувати підготовку до повернення",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"

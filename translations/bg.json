@@ -3788,6 +3788,14 @@
             "name": "Помощ"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Присъствие у дома · Време за подготовка за пристигане (мин)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помощ"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помощ"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Присъствие у дома · Подготовка за пристигане",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помощ"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Присъствие у дома · Отмяна на подготовката за пристигане",
         "state_attributes": {
           "configuration_help": {
             "name": "Помощ"

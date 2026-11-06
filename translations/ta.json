@@ -3788,6 +3788,14 @@
             "name": "உதவி"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "வீட்டில் இருப்பு · வருகை தயாரிப்புக்கான காலவரம்பு (நிமிடம்)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "வீட்டில் இருப்பு · வருகைக்குத் தயாராக்கு",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "வீட்டில் இருப்பு · வருகைக்கான தயாரிப்பை ரத்துசெய்",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"

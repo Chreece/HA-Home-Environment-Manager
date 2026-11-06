@@ -76,7 +76,7 @@ activation = ModuleType("beta63_runtime.device_activation")
 occupancy = ModuleType("beta63_runtime.occupancy_policy")
 arbitration = ModuleType("beta63_runtime.climate_arbitration")
 activation.authorized = lambda manager, spec: manager.authorized
-activation.effective_device = lambda manager, spec, entity: {"presence_requirement": "always"}
+activation.effective_device = lambda manager, spec, entity, *, cap=None: {"presence_requirement": "always"}
 occupancy.live_device_permission = lambda hass, area, room, plan, live: (
     ("eligible", "good") if plan.get("permission") else ("held", "blocked")
 )

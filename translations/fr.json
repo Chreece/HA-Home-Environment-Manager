@@ -3788,6 +3788,14 @@
             "name": "Aide"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Présence à domicile · Durée de préparation de l’arrivée (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aide"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aide"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Présence à domicile · Préparer l’arrivée",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aide"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Présence à domicile · Annuler la préparation de l’arrivée",
         "state_attributes": {
           "configuration_help": {
             "name": "Aide"

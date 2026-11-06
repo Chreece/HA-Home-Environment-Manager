@@ -37,11 +37,24 @@ def authorized(manager, spec):
     return isinstance(value, dict) and value == authority_context(manager, spec)
 
 
-def effective_device(manager, spec, entity):
+def effective_device(manager, spec, entity, *, cap=None):
     from . import equipment_model as model
     original = model.device_config(manager, spec, entity)
     result = dict(original)
     cfg = model.settings(manager, spec)
+    from .arrival_preparation import automatic_eligible
+    result["_arrival_preparation_eligible"] = automatic_eligible(cfg)
+    result["_arrival_preparation_entry_id"] = manager.entry.entry_id
+    # Temporarily overriding occupied-only operation needs an existing owned
+    # shutdown path when the timer ends. A setpoint-only controller cannot
+    # leave its last Home target latched behind a restored presence hold.
+    # Supply control can pass its already-validated cached native capability;
+    # its independent startup/identity gates still own any power decision.
+    cap = cap if cap is not None else model.capabilities(manager, spec)
+    result["_arrival_preparation_presence_override"] = bool(
+        automatic_eligible(cfg) and cap is not None and "off" in cap.modes
+        and model.permission(manager, spec, cap)[1]
+    )
     result["sleep_when_everyone_asleep"] = (cfg.get("sleep_when_everyone_asleep") is True
                                             and cfg.get("control_mode") in ("automatic", "pid"))
     if authorized(manager, spec):

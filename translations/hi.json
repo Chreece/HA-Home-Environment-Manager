@@ -3788,6 +3788,14 @@
             "name": "सहायता"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "घर में उपस्थिति · आगमन की तैयारी की समय सीमा (मिनट)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "सहायता"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "सहायता"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "घर में उपस्थिति · आगमन की तैयारी करें",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "सहायता"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "घर में उपस्थिति · आगमन की तैयारी रद्द करें",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"

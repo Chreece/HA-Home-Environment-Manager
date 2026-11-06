@@ -420,6 +420,14 @@ class NativeClimateControl:
         if state is None or state.state in ("unknown","unavailable"):
             self.statuses[area]={"status":"unavailable"}
             return
+        if (report.get("reason")=="native_profile_setpoint_within_deadband"
+                and state.state!=mode):
+            # This plan only maintains the already-running thermostat's
+            # profile target. A changed physical mode is not permission to
+            # switch it back, even when ordinary automatic mode switching is
+            # enabled. Replan from the next native observation instead.
+            self.statuses[area]={"status":"native_mode_changed_since_plan"}
+            return
         attrs=state.attributes
         prior_commanded_mode=self.expected_hvac.get(area)
         if prior_commanded_mode and state.state!=prior_commanded_mode:

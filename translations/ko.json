@@ -3788,6 +3788,14 @@
             "name": "도움말"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "재택 상태 · 귀가 준비 제한 시간 (분)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "재택 상태 · 귀가 준비",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "재택 상태 · 귀가 준비 취소",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"

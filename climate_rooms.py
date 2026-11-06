@@ -57,7 +57,8 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
            known_areas:set[str]|None=None,
            selected_temperature_c:float|None=None,
            temperature_evidence:dict|None=None,
-           selected_humidity_entities:list[str]|None=None)->tuple[dict,set[str]]:
+           selected_humidity_entities:list[str]|None=None,
+           arrival_preparation:dict|None=None)->tuple[dict,set[str]]:
     """Expose what should happen, with provenance, without operating devices."""
     if not isinstance(settings,dict) or not settings.get("enabled"):
         return {"status":"disabled"},set()
@@ -229,7 +230,9 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
                   occupied=profile_occupied,sleeping=sleeping,
                   manual_profile=settings.get("manual_profile"),prior_mode=prior_mode,
                   window_safe=window_safe,comfort_target_c=comfort_target_c,
-                  comfort_humidity_rh=comfort_rh)
+                  comfort_humidity_rh=comfort_rh,
+                  preparing_arrival=bool(arrival_preparation and
+                                         arrival_preparation.get("arrival_preparing")))
 
     temperature_intent={"status":result.state,"mode":result.desired_hvac_mode,
                         "window_safe":window_safe}
@@ -254,6 +257,7 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
 
     return {
         "humidity_source_entities": humidity_sources if humidity_sources is not None else [],
+        **(arrival_preparation or {}),
         "automatic_comfort_input_rh": comfort_rh if settings.get("target_source")=="auto_comfort" else None,
         "humidity_management":equipment.get("humidity", {"status":"unavailable"}),
         "equipment_plan":equipment,

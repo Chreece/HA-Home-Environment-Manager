@@ -3788,6 +3788,14 @@
             "name": "Hulp"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Aanwezigheid thuis · Duur van voorbereiding op thuiskomst (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Aanwezigheid thuis · Thuiskomst voorbereiden",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Aanwezigheid thuis · Voorbereiding op thuiskomst annuleren",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"

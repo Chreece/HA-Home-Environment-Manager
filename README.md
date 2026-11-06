@@ -16,7 +16,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b3](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b3)
+**Current release:** [v0.6.1b4](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b4)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
@@ -34,6 +34,7 @@ connected to Home Assistant.
 - Enable automatic or PID control individually for supported climate devices,
   humidifiers and fans.
 - Use home occupancy, room presence and sleep context to select operating targets.
+- Prepare your home before arrival with a timed Home-target override while away.
 - Configure solar shading, mold indication and spoken or written announcements.
 
 You can start with monitoring and advice. Selecting an appliance during setup
@@ -245,6 +246,12 @@ Presence permission does not create demand or override sleep, window or other
 control rules. The stored choices and existing selections remain unchanged;
 the labels now state their meaning directly.
 
+The optional **Prepare for arrival** action temporarily allows eligible automatic
+controllers restricted to occupied rooms to prepare those rooms while everyone
+is still away, using their existing permission for native ON/OFF control. It
+preserves the actual presence readings and the stored choices.
+See [Prepare for arrival](#prepare-for-arrival) for its scope and timeout.
+
 ### Minimum device ON and OFF times
 
 Each controller has **Operation · Minimum device ON time (s)** and
@@ -326,6 +333,52 @@ Without direct home sources, HEM can derive home presence from room evidence.
 The Home occupancy away-delay setting applies to that room-derived absence.
 It is separate from the announcement repeat interval, even when both show
 10 minutes.
+
+### Prepare for arrival
+
+When HEM confirms that everyone is away, press **Prepare for arrival** in the
+card header or on the **Home Environment** device. HEM temporarily uses the
+room's configured **Home** targets for eligible automatic controllers so heating,
+cooling and humidity control can begin before you get home. Devices still run
+according to measured demand; the action does not turn every appliance on.
+
+Set **Arrival preparation timeout (min)** on the Home Environment device, or
+open that setting from the duration control in the card. The default is
+**60 minutes**; the allowed range is **1–1440 minutes**. Changing the setting
+affects the next press and leaves a running deadline unchanged.
+
+| Event | Result |
+| --- | --- |
+| Press Prepare while confirmed Away | Start the configured duration using Home targets. |
+| Press the native Prepare button again | Renew from now using the current timeout setting. |
+| Someone arrives | End preparation and let normal home/room presence and sleep rules select the profile. |
+| Timeout expires while still Away | Return automatic profile selection to Away. |
+| Press Cancel in the card or on the device | End preparation immediately and recalculate from actual presence and current settings. |
+| Presence becomes unknown | Suspend the preparation effect; the original countdown continues. Resume only if Away is confirmed before expiry. |
+| Home Assistant restarts | Restore the original expiry time; never restart the full duration. |
+
+The card shows the remaining time and changes the action to **Cancel** while
+preparation is active. Narrow cards use an accessible icon with the full action
+in its tooltip. Start is unavailable when someone is home or home presence is
+unknown; it does not queue an action for a later absence.
+
+Preparation applies to **Automatic/PID with automatic profile selection** and
+eligible automatic room control. It includes devices normally restricted to
+occupied rooms when their managed controller already has permission and support
+for native ON/OFF control. Actual home and room presence remain unchanged, and empty-room
+requirements continue to use the actual absence. Explicit presets, Manual, Off
+and manual pauses retain their authority. Window checks, valid sensor inputs,
+device availability, minimum ON/OFF times, power limits and startup protections
+continue to apply. Therefore cancellation or expiry can change the requested
+profile before an appliance's permitted physical transition occurs.
+
+Existing room controllers and migrated controls authorized only to change a
+setpoint keep their original presence restrictions. Unrestricted ones can follow
+Home and Away targets normally. Preparation does not grant them new power
+control or leave an elevated Home setpoint behind a closed presence gate.
+An already-running native thermostat also receives the current profile's
+setpoint when the room is within the profile's temperature range, without a
+mode change, so its temporary Home setpoint can return to Away after expiry.
 
 ### Room presence and shared lists
 

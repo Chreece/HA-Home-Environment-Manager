@@ -3788,6 +3788,14 @@
             "name": "Hjälp"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Närvaro hemma · Tidsgräns för förberedelse inför hemkomst (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Närvaro hemma · Förbered hemkomst",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Närvaro hemma · Avbryt förberedelse inför hemkomst",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjälp"

@@ -616,7 +616,7 @@ def approved_demand(runtime: Any, spec: Any, cfg: dict,
         # Startup/restored presence is not a verified Home target. Unknown
         # demand may neither energize the supply nor prove safe idle for OFF.
         return None
-    live = effective_device(runtime.manager, spec, cap.primary)
+    live = effective_device(runtime.manager, spec, cap.primary, cap=cap)
     room = model.room_config(runtime.manager, spec)
     if method != "off":
         approved, reason = live_device_permission(

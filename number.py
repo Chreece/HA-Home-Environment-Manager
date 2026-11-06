@@ -155,6 +155,7 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
 
     manager = entry.runtime_data
     numbers = [
+        ArrivalPreparationTimeoutNumber(manager),
         ConfigNumber(manager, entry.entry_id, None, "global_setting",
                      CONF_REPEAT_MINUTES, (0.0, 1440.0, 1.0, "min")),
     ]
@@ -397,6 +398,51 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
         entry.async_on_unload(
             hass.bus.async_listen(EVENT_STATE_CHANGED, _source_updated)
         )
+
+
+class ArrivalPreparationTimeoutNumber(SettingsMetadata, NumberEntity):
+    """Duration for the next preparation press; current deadlines stay fixed."""
+
+    _attr_has_entity_name = False
+    _attr_should_poll = False
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_mode = NumberMode.BOX
+    _attr_translation_key = "arrival_preparation_timeout"
+    _attr_icon = "mdi:timer-outline"
+    _attr_native_min_value = 1
+    _attr_native_max_value = 1440
+    _attr_native_step = 1
+    _attr_native_unit_of_measurement = "min"
+
+    def __init__(self, manager):
+        self._manager = manager
+        self._attr_unique_id = f"{manager.entry.entry_id}_arrival_preparation_timeout"
+        self._attr_device_info = {"identifiers": {(DOMAIN, manager.entry.entry_id)}}
+
+    @property
+    def native_value(self):
+        return self._manager.arrival_preparation.timeout_minutes
+
+    @property
+    def extra_state_attributes(self):
+        return {**super().extra_state_attributes,
+                "arrival_preparation_role": "timeout",
+                "entry_id": self._manager.entry.entry_id}
+
+    async def async_set_native_value(self, value):
+        from .arrival_preparation import CONF_TIMEOUT
+        await update_device_setting(self._manager, "global_setting", CONF_TIMEOUT, value)
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(async_dispatcher_connect(
+            self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}", self._update,
+        ))
+
+    @callback
+    def _update(self):
+        self.async_write_ha_state()
 
 
 class ConfigNumber(SettingsMetadata, NumberEntity):

@@ -3788,6 +3788,14 @@
             "name": "Nápověda"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Přítomnost doma · Doba přípravy na příchod (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Přítomnost doma · Připravit na příchod",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Přítomnost doma · Zrušit přípravu na příchod",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"

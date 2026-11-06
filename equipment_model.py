@@ -721,8 +721,6 @@ def control_modes(manager: Any, spec: ManagedDevice) -> tuple[str, ...]:
 
 
 def plan_for(manager: Any, spec: ManagedDevice) -> dict:
-    from collections.abc import Mapping
-
     environment = getattr(getattr(manager, "plan", None), "environment", {}) or {}
     item = environment.get(spec.area_id, {})
     plan = item.get("climate_plan", {}) if isinstance(item, dict) else {}
@@ -735,7 +733,10 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
     # the plan, but its states and persisted absence still need live checks.
     shared = (current["occupancy_global"] if "occupancy_global" in current
               else plan.get("global_presence") if cached else {})
-    shared = dict(shared) if isinstance(shared, Mapping) else {}
+    rooms = current.get("climate_rooms", {})
+    rooms = rooms if isinstance(rooms, dict) else {}
+    from .occupancy_policy import shared_home_settings
+    shared = shared_home_settings(shared, rooms)
     continuity = getattr(manager, "presence_continuity", None)
     if continuity is not None:
         shared = continuity.context(shared)
@@ -747,8 +748,6 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
     # A native-only controller can run before a room plan exists. Give that
     # fallback the same explicit selections and numeric freshness limits as
     # the manager's room plan, including a deliberately empty sensor list.
-    rooms = current.get("climate_rooms", {})
-    rooms = rooms if isinstance(rooms, dict) else {}
     shared = {**shared,
               "_room_occupancy_selections": {
                   area: list(value["occupancy_sensors"])
@@ -787,6 +786,13 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
              "occupancy": occupancy, "occupancy_evidence": evidence,
              "presence_entities": sensors, "tracker_entities": trackers,
              "global_presence": shared, "known_presence_areas": sorted(known)}
+    preparation = getattr(manager, "arrival_preparation", None)
+    if preparation is not None:
+        from .arrival_preparation import automatic_eligible
+        facts.update(preparation.context(home, eligible=automatic_eligible(cfg)))
+    else:
+        # Never inherit an active marker from a previous manager instance.
+        facts.update(arrival_preparing=False, arrival_preparation_expires_at=None)
     if cached:
         return {**plan, **facts}
     # Legacy PID-only rooms have no climate profile/window plan.
@@ -832,6 +838,9 @@ def profile_name(config: dict, plan: dict) -> str:
         return requested
     if config.get("control_mode") == "manual":
         return "manual"  # Manual None keeps its independent explicit targets.
+    if (config.get("control_mode") in ("automatic", "pid")
+            and plan.get("arrival_preparing") is True and plan.get("away") == "away"):
+        return "home"
     if plan.get("away") == "away":
         return "away"
     if plan.get("sleeping") is True:

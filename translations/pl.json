@@ -3788,6 +3788,14 @@
             "name": "Pomoc"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Obecność w domu · Czas przygotowania na powrót (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Obecność w domu · Przygotuj na powrót",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Obecność w domu · Anuluj przygotowanie na powrót",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"

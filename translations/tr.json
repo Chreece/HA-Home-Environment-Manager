@@ -3788,6 +3788,14 @@
             "name": "Yardım"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Evde bulunma · Varış hazırlığı süresi (dk)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Yardım"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Yardım"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Evde bulunma · Varış için hazırla",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Yardım"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Evde bulunma · Varış hazırlığını iptal et",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"

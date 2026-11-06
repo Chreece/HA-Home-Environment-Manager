@@ -3788,6 +3788,14 @@
             "name": "Справка"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Присутствие дома · Время подготовки к возвращению (мин)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Справка"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Справка"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Присутствие дома · Подготовить к возвращению",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Справка"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Присутствие дома · Отменить подготовку к возвращению",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"
