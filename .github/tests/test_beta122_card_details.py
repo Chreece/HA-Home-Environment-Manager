@@ -200,8 +200,10 @@ test('first expansion has four complementary tiles and More retains additional r
   card._expanded.add('living');html=card._room(room);
   assert.equal((html.match(/data-room-metric114=/g)||[]).length,6);
   const warning=card._metricInfo122(room.readings.find(item=>item.metric==='co2'));
-  assert.ok(!warning.includes('metric-number')&&!warning.includes('1600'));
-  assert.ok(warning.includes('1000')&&warning.includes('metric-help-content'));
+  assert.ok(!warning.includes('metric-number')&&!warning.includes('role="progressbar"'));
+  assert.ok(!warning.includes('1,600'));
+  assert.equal(warning.match(/<div class="metric-limit">([^<]*)<\/div>/)[1],'Limit 1,000 ppm');
+  assert.ok(warning.includes('metric-help-content'));
   assert.ok(warning.includes('data-room-metric114="co2"'));
 });
 test('unavailable measurements and mold calibration remain available without duplicate headlines',()=>{
@@ -285,8 +287,14 @@ def browser_checks(data):
         assert room.locator('.metric-grid [data-room-metric114="humidity"]').count() == 0
         assert room.locator('.metric-grid [data-room-metric114="pm25"]').count() == 0
         warning = room.locator('[data-overview-detail122="co2"]')
-        assert warning.locator(".metric-number").count() == 0
-        assert "1000" in warning.inner_text() and "1600" not in warning.inner_text()
+        # The English fixture uses grouped numbers. Assert the threshold's own
+        # DOM text, not a raw-number substring that can match hidden help text.
+        assert warning.locator(":scope > .metric-limit").inner_text() == "Limit 1,000 ppm"
+        assert warning.locator('.metric-number, .hem-room-metric-value107, [role="progressbar"]').count() == 0
+        assert "1,600" not in warning.inner_text()
+        headline = room.locator('.hem-room-glance87 [data-hem-source105="sensor.co2"] .hem-room-metric-value107')
+        assert headline.count() == 1
+        assert headline.inner_text() == "1,600"
         warning.locator("details.metric-help > summary").click()
         page.wait_for_function("!!card._floatingInfo87")
         assert page.locator(".hem-floating-info87").is_visible()

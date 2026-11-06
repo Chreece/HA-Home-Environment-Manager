@@ -511,6 +511,32 @@ def browser_checks(data):
         assert page.evaluate("info") == ["sensor.humidity"]
         assert popup.count() == 0
 
+        # Average and contributor history may share the same area/metric.
+        # Returning to the average replaces the entity popup rather than
+        # treating it as a second press of the already-open average.
+        average_trigger = page.locator(
+            '[data-room-fold87="living"] [data-hem-average105="temperature"]').first
+        average_trigger.click()
+        popup.wait_for(state="visible")
+        mean_points = page.evaluate("structuredClone(card._averageDialog105.model114.points)")
+        contributor_request = requests()
+        popup.locator('[data-hem-source105="sensor.temp_a"]').click()
+        page.wait_for_function("count=>historyRequests.length===count+1", arg=contributor_request)
+        assert page.evaluate("card._averageDialog105.entity122") == "sensor.temp_a"
+        assert page.evaluate("[card._averageDialog105.area,card._averageDialog105.metric]") == ["living", "temperature"]
+        average_trigger.click()
+        assert popup.is_visible(), "A contributor popup was mistaken for the already-open average"
+        assert page.evaluate("!card._averageDialog105.entity122")
+        assert page.evaluate("card._averageDialog105.sources") == "sensor.temp_a|sensor.temp_b"
+        assert page.evaluate("card._averageDialog105.model114.points") == mean_points
+        page.evaluate("window.retainedAveragePopup=card._averageDialog105.node")
+        resolve(contributor_request, "sensor.temp_a")
+        page.wait_for_timeout(20)
+        assert page.evaluate("card._averageDialog105.node===retainedAveragePopup")
+        assert page.evaluate("!card._averageDialog105.entity122")
+        assert page.evaluate("card._averageDialog105.model114.points") == mean_points
+        popup.locator("[data-close-avg105]").click()
+
         # Reverse-resolved replies cannot replace another entity's popup.
         older = open_entity("sensor.temp_a")
         newer = open_entity("sensor.humidity")

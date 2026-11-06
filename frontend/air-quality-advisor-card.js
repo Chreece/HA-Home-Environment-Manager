@@ -5572,7 +5572,7 @@
   proto105._openAverage105=function(area,metric){
     const evidence=this._evidence105(area,metric);
     if(!evidence||evidence.value.source_count<2)return;
-    if(this._averageDialog105?.area===area &&
+    if(!this._averageDialog105?.entity122 && this._averageDialog105?.area===area &&
        this._averageDialog105?.metric===metric){
       this._closeAverage105();return;
     }
