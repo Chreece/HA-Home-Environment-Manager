@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "இருப்பு · {channel}இருப்பு",
         "state": {
-          "always": "தானியங்கி",
-          "occupied": "அறை · இருப்பு",
-          "absent": "அறை · இருப்பு · அணை"
+          "always": "இருப்பு நிபந்தனை இல்லை",
+          "occupied": "அறையில் யாராவது இருக்கும்போது மட்டும்",
+          "absent": "அறை காலியாக இருக்கும்போது மட்டும்"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "தானியங்கி",
-        "room": "அறை · இருப்பு",
-        "home": "வீடு · இருப்பு"
+        "always": "இருப்பு நிபந்தனை இல்லை",
+        "room": "அறையில் யாராவது இருக்கும்போது மட்டும்",
+        "home": "வீட்டில் யாராவது இருக்கும்போது மட்டும்"
       }
     },
     "device_absence_action": {

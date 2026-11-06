@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Läsnäolo · {channel}Läsnäolo",
         "state": {
-          "always": "Automaattinen",
-          "occupied": "Huone · Läsnäolo",
-          "absent": "Huone · Läsnäolo · Sammuta"
+          "always": "Ilman läsnäolorajoitusta",
+          "occupied": "Vain kun huoneessa on joku",
+          "absent": "Vain kun huone on tyhjä"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automaattinen",
-        "room": "Huone · Läsnäolo",
-        "home": "Koti · Läsnäolo"
+        "always": "Ilman läsnäolorajoitusta",
+        "room": "Vain kun huoneessa on joku",
+        "home": "Vain kun joku on kotona"
       }
     },
     "device_absence_action": {

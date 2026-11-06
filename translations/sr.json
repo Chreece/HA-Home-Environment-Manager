@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Присуство · {channel}Prisustvo",
         "state": {
-          "always": "Automatsko",
-          "occupied": "Soba · Prisustvo",
-          "absent": "Soba · Prisustvo · Isključi"
+          "always": "Без ограничења присуства",
+          "occupied": "Само када је соба заузета",
+          "absent": "Само када је соба празна"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automatsko",
-        "room": "Soba · Prisustvo",
-        "home": "Dom · Prisustvo"
+        "always": "Без ограничења присуства",
+        "room": "Само када је соба заузета",
+        "home": "Само када је неко код куће"
       }
     },
     "device_absence_action": {

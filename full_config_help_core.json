@@ -280,8 +280,9 @@
     "el": "Επίλεξε πραγματική δυνατότητα: στόχους θερμοστάτη, ελεγμένες εγγενείς λειτουργίες, στόχο υγρασίας, ταχύτητα ανεμιστήρα ή προστατευμένο έλεγχο ισχύος."
   },
   "device_settings.device_presence_requirement": {
-    "en": "Choose unconditional device control, only while this room is occupied, or only while someone is home. Unknown occupancy pauses new commands.",
-    "el": "Επίλεξε έλεγχο πάντα, μόνο με παρουσία στον συγκεκριμένο χώρο ή με κάποιον στο σπίτι. Άγνωστη παρουσία παγώνει νέες εντολές."
+    "en": "For Existing room controller: No room-presence restriction allows demand-based control in either room state. Only while room is occupied requires presence in this room. Only while someone is home requires whole-home presence. Unknown required presence pauses new commands; the separate absence action applies after confirmed absence. Automatic and PID use the presence choice on the individual device controller.",
+    "el": "Για τον Υπάρχοντα ελεγκτή δωματίου: Χωρίς περιορισμό παρουσίας επιτρέπει έλεγχο βάσει ζήτησης είτε το δωμάτιο έχει κόσμο είτε είναι άδειο. Μόνο με παρουσία στο δωμάτιο απαιτεί παρουσία σε αυτό το δωμάτιο. Μόνο όταν υπάρχει κάποιος στο σπίτι απαιτεί παρουσία στο σπίτι. Αν η απαιτούμενη παρουσία είναι άγνωστη, παύουν οι νέες εντολές· η ξεχωριστή ενέργεια απουσίας ισχύει μετά από επιβεβαιωμένη απουσία. Τα Αυτόματα και PID χρησιμοποιούν την επιλογή παρουσίας στον ελεγκτή της κάθε συσκευής.",
+    "de": "Für den vorhandenen Raumregler: Unabhängig von der Raumbelegung erlaubt bedarfsgerechte Regelung bei belegtem oder leerem Raum. Nur bei belegtem Raum erfordert Anwesenheit in diesem Raum. Nur wenn jemand zu Hause ist erfordert Anwesenheit im Zuhause. Unbekannte erforderliche Anwesenheit pausiert neue Befehle; die separate Abwesenheitsaktion gilt nach bestätigter Abwesenheit. Automatik und PID verwenden die Anwesenheitsauswahl am jeweiligen Gerätekontroller."
   },
   "device_settings.device_absence_action": {
     "en": "Select HOLD or OFF when occupancy requirement is not met. OFF is allowed only for explicitly commissioned supported equipment after safety dwell; no automatic restart.",

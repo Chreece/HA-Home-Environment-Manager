@@ -21,9 +21,24 @@ HELP = {
         "Wählt den Versorgungsschalter dieses Geräts. HEM schaltet zuerst die Versorgung ein und kann sie nach bestätigtem Leerlauf und Ablauf der Abschaltverzögerung wieder ausschalten.",
     ),
     "presence_requirement": (
-        "Restrict automatic operation to an occupied room, an empty room, or allow either. HEM uses the configured room presence evidence and gives confirmed whole-home absence priority over room activity.",
-        "Περιορίζει την αυτόματη λειτουργία σε κατειλημμένο ή άδειο δωμάτιο, ή επιτρέπει και τα δύο. Το HEM χρησιμοποιεί τις επιλεγμένες πηγές παρουσίας και δίνει προτεραιότητα στην επιβεβαιωμένη απουσία από ολόκληρο το σπίτι.",
-        "Erlaubt den Automatikbetrieb nur bei belegtem Raum, nur bei leerem Raum oder unabhängig davon. Bestätigte Abwesenheit im gesamten Zuhause hat Vorrang vor Raumsignalen.",
+        "Applies to Automatic and PID; this chooses when the device may operate.\n"
+        "No room-presence restriction: meet demand whether the room is occupied or empty; this does not mean continuously ON.\n"
+        "Only while room is occupied: require confirmed presence in this room.\n"
+        "Only while room is empty: require confirmed absence from this room, even if someone is elsewhere at home.\n"
+        "Unknown room presence pauses the two restricted choices. Confirmed whole-home Away counts every room as empty.\n"
+        "When the condition stops matching, HEM requests OFF for an output it controls after its minimum ON time, retaining command confirmation and native protections. Target demand, sleep and window rules still apply.",
+        "Ισχύει για Αυτόματα και PID· ορίζει πότε επιτρέπεται να λειτουργεί η συσκευή.\n"
+        "Χωρίς περιορισμό παρουσίας: καλύπτει τη ζήτηση είτε το δωμάτιο έχει κόσμο είτε είναι άδειο· δεν σημαίνει συνεχή λειτουργία.\n"
+        "Μόνο με παρουσία στο δωμάτιο: απαιτεί επιβεβαιωμένη παρουσία σε αυτό το δωμάτιο.\n"
+        "Μόνο σε άδειο δωμάτιο: απαιτεί επιβεβαιωμένη απουσία από αυτό το δωμάτιο, ακόμη κι αν υπάρχει κάποιος αλλού στο σπίτι.\n"
+        "Η άγνωστη παρουσία παύει τις δύο επιλογές με περιορισμό. Η επιβεβαιωμένη Απουσία από το σπίτι θεωρεί όλα τα δωμάτια άδεια.\n"
+        "Όταν η συνθήκη πάψει να ισχύει, το HEM ζητά κλείσιμο της εξόδου που ελέγχει μετά τον ελάχιστο χρόνο ON, τηρώντας την επιβεβαίωση εντολών και τις προστασίες της συσκευής. Η ζήτηση, οι κανόνες ύπνου και τα παράθυρα εξακολουθούν να ισχύουν.",
+        "Gilt für Automatik und PID und legt fest, wann das Gerät arbeiten darf.\n"
+        "Unabhängig von der Raumbelegung: deckt den Bedarf bei belegtem oder leerem Raum; bedeutet keinen Dauerbetrieb.\n"
+        "Nur bei belegtem Raum: erfordert bestätigte Anwesenheit in diesem Raum.\n"
+        "Nur bei leerem Raum: erfordert bestätigte Abwesenheit in diesem Raum, auch wenn jemand anderswo zu Hause ist.\n"
+        "Unbekannte Raumbelegung pausiert die beiden eingeschränkten Optionen. Bei bestätigter Abwesenheit im gesamten Zuhause gelten alle Räume als leer.\n"
+        "Wenn die Bedingung nicht mehr zutrifft, fordert HEM für einen von ihm gesteuerten Ausgang nach dessen Mindestlaufzeit Aus an; Befehlsbestätigung und Geräteschutz bleiben wirksam. Bedarf, Schlaf- und Fensterregeln gelten weiterhin.",
     ),
     "sleep_behavior": (
         "Normal continues HEM control; Pause requests this device off during Sleep, respecting minimum runtime and native protections; Sleep targets requests the Sleep target set. Sleep comes from this room or, when enabled on this device, from everyone sleeping. Automatic profile selection can also select Sleep under Normal. The configured wake alarm ends automatic Sleep early. Away and explicit presets retain their priority.",

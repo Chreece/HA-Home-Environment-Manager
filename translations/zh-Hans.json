@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "在场 · {channel}占用",
         "state": {
-          "always": "自动",
-          "occupied": "房间 · 占用",
-          "absent": "房间 · 占用 · 关闭"
+          "always": "不受房间占用状态限制",
+          "occupied": "仅当房间有人时",
+          "absent": "仅当房间无人时"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "自动",
-        "room": "房间 · 占用",
-        "home": "家中 · 占用"
+        "always": "不受房间占用状态限制",
+        "room": "仅当房间有人时",
+        "home": "仅当家中有人时"
       }
     },
     "device_absence_action": {

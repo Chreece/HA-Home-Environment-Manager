@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Tilstedeværelse · {channel}Tilstedeværelse",
         "state": {
-          "always": "Automatisk",
-          "occupied": "Rom · Tilstedeværelse",
-          "absent": "Rom · Tilstedeværelse · Slå av"
+          "always": "Uavhengig av tilstedeværelse",
+          "occupied": "Bare når noen er i rommet",
+          "absent": "Bare når rommet er tomt"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automatisk",
-        "room": "Rom · Tilstedeværelse",
-        "home": "Hjem · Tilstedeværelse"
+        "always": "Uavhengig av tilstedeværelse",
+        "room": "Bare når noen er i rommet",
+        "home": "Bare når noen er hjemme"
       }
     },
     "device_absence_action": {

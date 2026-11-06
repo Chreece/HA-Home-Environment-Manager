@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Aanwezigheid · {channel}Aanwezigheid",
         "state": {
-          "always": "Automatische",
-          "occupied": "Kamer · Aanwezigheid",
-          "absent": "Kamer · Aanwezigheid · Uitschakelen"
+          "always": "Ongeacht aanwezigheid in de kamer",
+          "occupied": "Alleen als de kamer bezet is",
+          "absent": "Alleen als de kamer leeg is"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automatische",
-        "room": "Kamer · Aanwezigheid",
-        "home": "Thuis · Aanwezigheid"
+        "always": "Ongeacht aanwezigheid in de kamer",
+        "room": "Alleen als de kamer bezet is",
+        "home": "Alleen als er iemand thuis is"
       }
     },
     "device_absence_action": {

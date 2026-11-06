@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "재실 · {channel}재실",
         "state": {
-          "always": "자동",
-          "occupied": "방 · 재실",
-          "absent": "방 · 재실 · 끄기"
+          "always": "재실 여부와 관계없이",
+          "occupied": "방에 사람이 있을 때만",
+          "absent": "방이 비어 있을 때만"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "자동",
-        "room": "방 · 재실",
-        "home": "집 · 재실"
+        "always": "재실 여부와 관계없이",
+        "room": "방에 사람이 있을 때만",
+        "home": "집에 사람이 있을 때만"
       }
     },
     "device_absence_action": {

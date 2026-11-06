@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Obecność · {channel}Obecność",
         "state": {
-          "always": "Automatyczne",
-          "occupied": "Pokój · Obecność",
-          "absent": "Pokój · Obecność · Wyłącz"
+          "always": "Bez ograniczeń obecności",
+          "occupied": "Tylko gdy ktoś jest w pokoju",
+          "absent": "Tylko gdy pokój jest pusty"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automatyczne",
-        "room": "Pokój · Obecność",
-        "home": "Dom · Obecność"
+        "always": "Bez ograniczeń obecności",
+        "room": "Tylko gdy ktoś jest w pokoju",
+        "home": "Tylko gdy ktoś jest w domu"
       }
     },
     "device_absence_action": {

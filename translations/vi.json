@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Hiện diện · {channel}Hiện diện",
         "state": {
-          "always": "Tự động",
-          "occupied": "Phòng · Hiện diện",
-          "absent": "Phòng · Hiện diện · Tắt"
+          "always": "Không giới hạn theo sự hiện diện",
+          "occupied": "Chỉ khi có người trong phòng",
+          "absent": "Chỉ khi phòng không có người"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Tự động",
-        "room": "Phòng · Hiện diện",
-        "home": "Nhà · Hiện diện"
+        "always": "Không giới hạn theo sự hiện diện",
+        "room": "Chỉ khi có người trong phòng",
+        "home": "Chỉ khi có người ở nhà"
       }
     },
     "device_absence_action": {

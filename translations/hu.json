@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Jelenlét · {channel}Jelenlét",
         "state": {
-          "always": "Automatikus",
-          "occupied": "Szoba · Jelenlét",
-          "absent": "Szoba · Jelenlét · Kikapcsolás"
+          "always": "Jelenléttől függetlenül",
+          "occupied": "Csak ha valaki a szobában van",
+          "absent": "Csak ha a szoba üres"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automatikus",
-        "room": "Szoba · Jelenlét",
-        "home": "Otthon · Jelenlét"
+        "always": "Jelenléttől függetlenül",
+        "room": "Csak ha valaki a szobában van",
+        "home": "Csak ha valaki otthon van"
       }
     },
     "device_absence_action": {

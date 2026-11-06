@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Prisutnost · {channel}Prisutnost",
         "state": {
-          "always": "Automatsko",
-          "occupied": "Soba · Prisutnost",
-          "absent": "Soba · Prisutnost · Isključi"
+          "always": "Neovisno o prisutnosti",
+          "occupied": "Samo kada je soba zauzeta",
+          "absent": "Samo kada je soba prazna"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automatsko",
-        "room": "Soba · Prisutnost",
-        "home": "Dom · Prisutnost"
+        "always": "Neovisno o prisutnosti",
+        "room": "Samo kada je soba zauzeta",
+        "home": "Samo kada je netko kod kuće"
       }
     },
     "device_absence_action": {

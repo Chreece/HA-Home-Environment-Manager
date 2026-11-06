@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "การอยู่ในห้อง · {channel}การมีคนอยู่",
         "state": {
-          "always": "อัตโนมัติ",
-          "occupied": "ห้อง · การมีคนอยู่",
-          "absent": "ห้อง · การมีคนอยู่ · ปิด"
+          "always": "ไม่จำกัดตามการมีคนอยู่",
+          "occupied": "เฉพาะเมื่อมีคนอยู่ในห้อง",
+          "absent": "เฉพาะเมื่อห้องไม่มีคน"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "อัตโนมัติ",
-        "room": "ห้อง · การมีคนอยู่",
-        "home": "บ้าน · การมีคนอยู่"
+        "always": "ไม่จำกัดตามการมีคนอยู่",
+        "room": "เฉพาะเมื่อมีคนอยู่ในห้อง",
+        "home": "เฉพาะเมื่อมีคนอยู่บ้าน"
       }
     },
     "device_absence_action": {

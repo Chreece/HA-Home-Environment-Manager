@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "উপস্থিতি · {channel}উপস্থিতি",
         "state": {
-          "always": "স্বয়ংক্রিয়",
-          "occupied": "ঘর · উপস্থিতি",
-          "absent": "ঘর · উপস্থিতি · বন্ধ"
+          "always": "উপস্থিতির কোনো শর্ত নেই",
+          "occupied": "শুধু ঘরে কেউ থাকলে",
+          "absent": "শুধু ঘর খালি থাকলে"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "স্বয়ংক্রিয়",
-        "room": "ঘর · উপস্থিতি",
-        "home": "বাড়ি · উপস্থিতি"
+        "always": "উপস্থিতির কোনো শর্ত নেই",
+        "room": "শুধু ঘরে কেউ থাকলে",
+        "home": "শুধু বাড়িতে কেউ থাকলে"
       }
     },
     "device_absence_action": {

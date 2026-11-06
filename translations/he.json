@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "נוכחות · {channel}נוכחות",
         "state": {
-          "always": "אוטומטי",
-          "occupied": "חדר · נוכחות",
-          "absent": "חדר · נוכחות · כיבוי"
+          "always": "ללא הגבלת נוכחות",
+          "occupied": "רק כשיש מישהו בחדר",
+          "absent": "רק כשהחדר ריק"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "אוטומטי",
-        "room": "חדר · נוכחות",
-        "home": "בית · נוכחות"
+        "always": "ללא הגבלת נוכחות",
+        "room": "רק כשיש מישהו בחדר",
+        "home": "רק כשיש מישהו בבית"
       }
     },
     "device_absence_action": {

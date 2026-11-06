@@ -4117,9 +4117,9 @@
       "equipment_presence_requirement": {
         "name": "Přítomnost · {channel}Obsazenost",
         "state": {
-          "always": "Automatické",
-          "occupied": "Místnost · Obsazenost",
-          "absent": "Místnost · Obsazenost · Vypnout"
+          "always": "Bez podmínky přítomnosti",
+          "occupied": "Pouze při obsazené místnosti",
+          "absent": "Pouze při prázdné místnosti"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4394,9 +4394,9 @@
     },
     "device_presence_requirement": {
       "options": {
-        "always": "Automatické",
-        "room": "Místnost · Obsazenost",
-        "home": "Domov · Obsazenost"
+        "always": "Bez podmínky přítomnosti",
+        "room": "Pouze při obsazené místnosti",
+        "home": "Pouze pokud je někdo doma"
       }
     },
     "device_absence_action": {
