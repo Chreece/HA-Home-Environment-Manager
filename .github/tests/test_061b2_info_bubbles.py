@@ -93,6 +93,9 @@ SETUP = r"""data => {
       focusedEditor:card._focusedEditor?.outerHTML||null,
       roomInfoOpen:roomInfo?.open,roomInfoText:roomInfo?.textContent,
       popupConnected:pop?.isConnected||false,popupText:pop?.textContent||null,
+      popupNodes:[...card.shadowRoot.querySelectorAll('.hem-floating-info87')].map(node=>({
+        active:node===pop,connected:node.isConnected,popover:node.getAttribute('popover'),
+        sourceKey:node._hemInfoKey87,text:node.textContent})),
       popupKey:pop?._hemInfoKey87,sourceKey:source?.getAttribute('data-detail-id'),
       sourceConnected:source?.isConnected,sourceOpen:source?.open,sourceText:source?.textContent,
       savedDetails:[...(card._detailsExpanded66||[])],roomIssueInfo:card._roomIssueInfo114,
@@ -110,11 +113,14 @@ def assert_listeners(page, count):
     assert page.evaluate("Object.fromEntries(Object.entries(captureListeners061b2).map(([type,set])=>[type,set.size]))") == {
         "click": count, "keydown": count,
     }
+    # Inspect the shadow root directly, including while its host is detached.
+    assert page.evaluate("card.shadowRoot.querySelectorAll('.hem-floating-info87').length") == count, "Unexpected floating popup node count"
 
 
 def assert_closed(page, key):
     page.wait_for_function("key=>!card._floatingInfo87&&!bubbleState061b2(key).open", arg=key)
     settle(page)
+    assert_listeners(page, 0)
     assert page.evaluate("key=>bubbleState061b2(key)", key) == {
         "open": False, "saved": False, "popup": False,
         "listeners": {"click": 0, "keydown": 0},

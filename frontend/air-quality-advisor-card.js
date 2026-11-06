@@ -4272,8 +4272,10 @@
       pop?._hemInfoCleanup87?.();
       if(pop?.isConnected) {
         try { if(pop.matches(':popover-open'))pop.hidePopover(); } catch {}
-        pop.remove();
       }
+      // Disconnect callbacks run after the shadow tree leaves the document.
+      // Remove its portal there too, so reconnect cannot retain an orphan.
+      pop?.remove();
     };
     this._openInfo87 = detail=> {
       if(!detail?.isConnected || !detail.open || this._roomSettingsDialog114) return;

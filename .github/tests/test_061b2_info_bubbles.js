@@ -82,6 +82,8 @@ const source = key => {
 const room = source('room-info:living'), device = source('device-info:climate.hem_heater');
 function listeners(count) {
   for (const type of ['click','keydown']) assert.equal((doc.handlers.get(type) || []).length, count, type);
+  assert.equal(card.shadowRoot.children.filter(node => node.className === 'hem-floating-info87').length,
+    count, 'floating popup node count');
 }
 function open(detail) {
   detail.open = true;
@@ -137,7 +139,12 @@ doc.emit('click', [problem,card.shadowRoot,card,doc], {target:card});
 assert.equal(device.open, true);
 card._closeInfo87(true); closed(device);
 open(room);
+const detachedPopup = card._floatingInfo87;
+// disconnectedCallback runs after the card and its shadow descendants have
+// already left the document; the popup still has a parent in that subtree.
+detachedPopup.isConnected = false;
 card.disconnectedCallback();
+assert.equal(card.shadowRoot.contains(detachedPopup), false, 'Disconnect retained an orphan popup');
 assert.equal(card._floatingInfo87, null); listeners(0);
 // Simulate the reconnect render rebuilding the still-open disclosure.
 open(room); doc.emit('click', [outside,doc]); closed(room);
