@@ -270,7 +270,11 @@ def browser_checks(data):
                 expect(history).to_be_visible()
                 history.click()
                 expect(page.locator(".hem-avg-dialog105")).to_be_visible()
-                page.locator("#outside").click()
+                # The narrow history dialog covers the fixed test button.
+                # Its 12px inset leaves the page's outer corner available
+                # for a real click outside both the dialog and card.
+                assert page.evaluate("document.elementFromPoint(2,2)!==card")
+                page.mouse.click(2, 2)
                 expect(page.locator(".hem-avg-dialog105")).to_be_visible()
                 assert_listeners(page, 0)
                 page.locator("[data-close-avg105]").click()
