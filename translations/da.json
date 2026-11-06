@@ -3788,6 +3788,14 @@
             "name": "Hjælp"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Tilstedeværelse hjemme · Tidsgrænse for forberedelse til hjemkomst (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjælp"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjælp"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Tilstedeværelse hjemme · Forbered hjemkomst",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjælp"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Tilstedeværelse hjemme · Annuller forberedelse til hjemkomst",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjælp"

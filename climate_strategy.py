@@ -119,10 +119,13 @@ def home_away_evidence(states: list[bool|None], *, mode: str="any_home") -> tupl
 
 
 def select_profile(settings:dict, *, at_home:str, occupied:str,
-                   sleeping:bool=False, manual:str|None=None) -> tuple[str,str]:
+                   sleeping:bool=False, manual:str|None=None,
+                   preparing_arrival:bool=False) -> tuple[str,str]:
     # Eco is intentionally explicit-only; it is not another occupancy state.
     if manual in ("comfort","home","away","sleep","eco"):
         return manual,"manual_profile"
+    if preparing_arrival and at_home=="away":
+        return "home","preparing_for_arrival"
     if at_home=="away":
         return "away","nobody_home"
     if sleeping:
@@ -179,13 +182,15 @@ def policy(settings:dict, *, temp_c:float|None,
            sleeping:bool=False, manual_profile:str|None=None,
            prior_mode:str|None=None, window_safe:bool=True,
            comfort_target_c:float|None=None,
-           comfort_humidity_rh:float|None=None) -> Output:
+           comfort_humidity_rh:float|None=None,
+           preparing_arrival:bool=False) -> Output:
     default=Output("disabled","home",None,None,"not_enabled","none")
     if not isinstance(settings,dict) or settings.get("enabled") is not True: return default
     all_profiles,err=profiles(settings)
     if err: return Output("invalid_config","home",None,None,err,"none")
     name,why=select_profile(settings,at_home=at_home,occupied=occupied,
-                            sleeping=sleeping,manual=manual_profile)
+                            sleeping=sleeping,manual=manual_profile,
+                            preparing_arrival=preparing_arrival)
     band=all_profiles[name]
     heat_target,cool_target=band.heat_c,band.cool_c
     # "Auto comfort" is a bounded measured-humidity heuristic, not an ISO
@@ -275,6 +280,19 @@ def policy(settings:dict, *, temp_c:float|None,
         return Output("ready",name,None,"heat_cool",
                       "native_heat_cool_range",strategy,
                       heat_target,cool_target)
+    if desired=="off" and strategy=="device" and capability.get("setpoint"):
+        # A running native thermostat still owns its compressor. Leaving its
+        # old Home setpoint in place when the Away band is satisfied would
+        # keep heating/cooling after arrival preparation ends. Maintain the
+        # new profile target in its already-observed mode, without requesting
+        # a native OFF/ON or routing synthetic demand to a secondary unit.
+        current=capability.get("current")
+        primary=settings.get("climate_entity")
+        role=settings.get("heat_climate_entity" if current=="heat" else "cool_climate_entity")
+        if (current in ("heat","cool") and current in capability.get("modes",())
+                and isinstance(primary,str) and primary.startswith("climate.")
+                and role in (None,"",primary)):
+            desired,reason=current,"native_profile_setpoint_within_deadband"
     target=heat_target if desired=="heat" else cool_target if desired=="cool" else None
     # Manual setpoint PID must never be stacked over an unknown device's PID.
     if strategy=="setpoint_pid" and settings.get("native_pid",False):

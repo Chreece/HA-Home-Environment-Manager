@@ -59,6 +59,7 @@ from .logic import Plan, evaluate
 from .messages import announcement, language_code
 from .away_windows import AwayWindowAlert, watched_entities
 from .presence_continuity import PresenceContinuity
+from .arrival_preparation import ArrivalPreparation, room_eligible
 from .room_ventilation import RoomVentilationMonitor, has_indoor_air_sensor, thermal_targets
 
 _LOGGER = logging.getLogger(__name__)
@@ -88,6 +89,7 @@ class AirQualityManager:
         self._environment_store: Any | None = None
         self.away_windows = AwayWindowAlert(self)
         self.presence_continuity = PresenceContinuity(self.hass, self.entry.entry_id)
+        self.arrival_preparation = ArrivalPreparation(self)
         self.ventilation = RoomVentilationMonitor()
         self.equipment = EquipmentRuntime(self)
         from .device_faults import NativeDeviceFaultMonitor
@@ -294,21 +296,21 @@ class AirQualityManager:
         }
         from .device_activation import planning_rooms
         room_climate_configs=planning_rooms(self)
+        from .occupancy_policy import home_presence, room_presence, shared_home_settings
         # Legacy room trackers also describe household presence. Include
         # every configured room so a known or possible occupant cannot be
-        # mislabeled as absent in the shared environmental history.
-        environment_trackers=[]
-        if isinstance(room_climate_configs,dict):
-            for room_settings in room_climate_configs.values():
-                trackers = (room_settings.get("away_entities")
-                            if isinstance(room_settings,dict) else None)
-                if isinstance(trackers,list):
-                    environment_trackers.extend(
-                        entity for entity in trackers if isinstance(entity,str))
-        shared_presence=self.presence_continuity.context(
-            config.get(CONF_OCCUPANCY_GLOBAL, {})
+        # mislabeled as absent by another room's plan or live command gate.
+        shared_presence=self.presence_continuity.context(shared_home_settings(
+            config.get(CONF_OCCUPANCY_GLOBAL, {}), room_climate_configs,
+        ))
+        selected_home_trackers=shared_presence.get("home_trackers")
+        environment_trackers=(
+            [entity for entity in selected_home_trackers if isinstance(entity,str)]
+            if isinstance(selected_home_trackers,list) else []
         )
-        from .occupancy_policy import home_presence, room_presence
+        # These sources decide whole-home presence even when their legacy
+        # room controller is disabled. Arrival must be observed immediately.
+        self._tracked.update(environment_trackers)
         shared_presence["_room_occupancy_selections"] = {
             area: list(cfg["occupancy_sensors"]) for area, cfg in room_climate_configs.items()
             if isinstance(cfg, dict) and isinstance(cfg.get("occupancy_sensors"), list)
@@ -318,7 +320,8 @@ class AirQualityManager:
             if isinstance(cfg, dict) and "occupancy_stale_minutes" in cfg
         }
         home_status, _home_evidence, _home_sources = home_presence(
-            self.hass,shared_presence,environment_trackers)
+            self.hass,shared_presence)
+        self.arrival_preparation.observe(home_status)
         known_presence_areas = set(room_climate_configs) | {r.area_id for r in raw_rooms}
         observed_rooms = {
             r.area_id: room_presence(
@@ -338,6 +341,14 @@ class AirQualityManager:
             observed_rooms=observed_rooms,
         )
         environment["__outside__"] = {"pollen": pollen}
+        # Stable metadata refreshes even an empty home's card without storing
+        # a ticking countdown in sensor attributes or the plan.
+        environment["__arrival_preparation__"] = {
+            **self.arrival_preparation.context(home_status),
+            "armed": self.arrival_preparation.armed,
+            "timeout_minutes": self.arrival_preparation.timeout_minutes,
+            "home_status": home_status,
+        }
         from .wake_alarm import observe_wake_episodes
         observe_wake_episodes(
             self.hass, self.entry.entry_id, shared_presence, known_presence_areas,
@@ -411,6 +422,8 @@ class AirQualityManager:
                     require_window_contact=False,
                     global_presence=shared_presence,
                     known_areas=set(room_climate_configs) | set(monitored_areas),
+                    arrival_preparation=self.arrival_preparation.context(
+                        home_status, eligible=room_eligible(settings)),
                 )
                 basis=settings.get("target_source","temperature")
                 state["target_source"]=basis
@@ -733,6 +746,7 @@ class AirQualityManager:
         # Restore source-bound absence evidence before building any room plan.
         # Every recovered interval is live-revalidated during _capture.
         await self.presence_continuity.async_start()
+        await self.arrival_preparation.async_start()
         from .wake_alarm import async_start_wake
         await async_start_wake(self.hass, self.entry.entry_id,
                                self.settings.get(CONF_OCCUPANCY_GLOBAL, {}))
@@ -932,6 +946,17 @@ class AirQualityManager:
             from homeassistant.helpers import entity_registry as er
             record = er.async_get(self.hass).async_get(entity_id)
             if record is not None and getattr(record, "platform", None) == DOMAIN:
+                from .arrival_preparation import ENTITY_SUFFIXES
+                if getattr(record, "unique_id", None) in {
+                    f"{self.entry.entry_id}_{suffix}"
+                    for _platform, suffix in ENTITY_SUFFIXES.values()
+                }:
+                    # The card follows registry IDs, including user renames.
+                    # Refresh presentation only; registration is not new
+                    # physical evidence and must not restart device loops.
+                    async_dispatcher_send(
+                        self.hass, f"{SIGNAL_UPDATED}_{self.entry.entry_id}",
+                    )
                 return
         device_id = event.data.get("device_id")
         if isinstance(device_id, str):
@@ -1070,6 +1095,9 @@ class AirQualityManager:
         if (old is not None and new is not None and
                 old.state == new.state and old.attributes == new.attributes):
             return  # A repeated report has not changed the source evidence.
+        preparation = getattr(self, "arrival_preparation", None)
+        if preparation is not None:
+            preparation.observe_current()
         self._queue_source_refresh()
 
     def _automatic_channels_enabled(self) -> bool:
@@ -1345,6 +1373,7 @@ class AirQualityManager:
             ("equipment",self.equipment),
             ("shading",self.shading),
             ("presence_continuity",self.presence_continuity),
+            ("arrival_preparation",self.arrival_preparation),
             ("pid",self.pid),("native_climate",self.native_climate),
             ("direct_climate",self.direct_climate),
             ("native_humidity",self.native_humidity),

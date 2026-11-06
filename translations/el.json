@@ -3797,6 +3797,14 @@
             "name": "Βοήθεια"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Σπίτι - Παρουσία · Διάρκεια προετοιμασίας άφιξης (λεπτά)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Βοήθεια"
+          }
+        }
       }
     },
     "switch": {
@@ -4297,6 +4305,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Απόρριψη πρότασης",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Βοήθεια"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Σπίτι - Παρουσία · Προετοιμασία άφιξης",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Βοήθεια"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Σπίτι - Παρουσία · Ακύρωση προετοιμασίας άφιξης",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"

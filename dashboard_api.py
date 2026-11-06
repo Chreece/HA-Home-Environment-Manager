@@ -65,9 +65,11 @@ def websocket_dashboard(
 
     # Pure transformation of the latest validated Plan; no I/O, no physical
     # control, no registry changes, and no Recorder/database writes.
-    connection.send_result(
-        msg["id"], dashboard_snapshot(manager.plan, manager.thresholds),
-    )
+    result = dashboard_snapshot(manager.plan, manager.thresholds)
+    preparation = getattr(manager, "arrival_preparation", None)
+    if preparation is not None:
+        result["arrival_preparation"] = preparation.snapshot()
+    connection.send_result(msg["id"], result)
 
 
 @callback

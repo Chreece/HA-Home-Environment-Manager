@@ -3788,6 +3788,14 @@
             "name": "Ohje"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Kotonaolo · Kotiintulon valmistelun aikaraja (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Kotonaolo · Valmistele kotiintuloa",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Kotonaolo · Peru kotiintulon valmistelu",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"

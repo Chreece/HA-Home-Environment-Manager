@@ -120,7 +120,7 @@ def live_permission(hass, area, room, plan, device):
 
 activation = module(f"{PACKAGE}.device_activation")
 activation.authorized = lambda manager, spec: manager.soft_grant
-activation.effective_device = lambda manager, spec, entity: manager.device
+activation.effective_device = lambda manager, spec, entity, *, cap=None: manager.device
 occupancy = module(f"{PACKAGE}.occupancy_policy")
 occupancy.live_device_permission = live_permission
 windows = module(f"{PACKAGE}.equipment_window")

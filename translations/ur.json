@@ -3788,6 +3788,14 @@
             "name": "مدد"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "گھر میں موجودگی · آمد کی تیاری کی مدت (منٹ)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مدد"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مدد"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "گھر میں موجودگی · آمد کی تیاری کریں",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مدد"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "گھر میں موجودگی · آمد کی تیاری منسوخ کریں",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"

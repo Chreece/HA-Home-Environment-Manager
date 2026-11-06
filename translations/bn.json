@@ -3788,6 +3788,14 @@
             "name": "সাহায্য"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "বাড়িতে উপস্থিতি · আগমনের প্রস্তুতির সময়সীমা (মিনিট)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "সাহায্য"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "সাহায্য"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "বাড়িতে উপস্থিতি · আগমনের প্রস্তুতি",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "সাহায্য"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "বাড়িতে উপস্থিতি · আগমনের প্রস্তুতি বাতিল",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"

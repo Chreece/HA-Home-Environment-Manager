@@ -3789,6 +3789,14 @@
             "name": "Help"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Home Occupancy · Arrival preparation timeout (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
       }
     },
     "switch": {
@@ -4289,6 +4297,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Home Occupancy · Prepare for arrival",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Home Occupancy · Cancel arrival preparation",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"

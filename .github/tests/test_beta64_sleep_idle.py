@@ -83,7 +83,7 @@ occupancy.live_device_permission = lambda hass, area, room, plan, device: device
     device, "occupied", "home", plan["sleeping"]
 )
 activation.authorized = lambda manager, spec: manager.authorized
-activation.effective_device = lambda manager, spec, entity: {
+activation.effective_device = lambda manager, spec, entity, *, cap=None: {
     "auto_control": manager.authorized,
     "sleep_behavior": manager.sleep_behavior,
     "presence_requirement": "always",

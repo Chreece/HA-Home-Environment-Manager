@@ -3788,6 +3788,14 @@
             "name": "Pomoc"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Prítomnosť doma · Trvanie prípravy na príchod (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Prítomnosť doma · Pripraviť na príchod",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Prítomnosť doma · Zrušiť prípravu na príchod",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"

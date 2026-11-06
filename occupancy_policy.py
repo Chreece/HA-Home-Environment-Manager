@@ -185,6 +185,28 @@ def _after_away_cooldown(states: list[Any], minutes: Any, reason: str,
     return "away", reason
 
 
+def shared_home_settings(global_settings: Any, rooms: Any) -> dict:
+    """Use every explicitly configured household tracker for every room.
+
+    Legacy trackers belong to the whole home even when their room controller
+    is disabled. Merge them into a fresh runtime context before continuity is
+    evaluated, so planning, arrival controls and live command checks use one
+    source signature without changing the user's saved selections.
+    """
+    shared = dict(global_settings) if isinstance(global_settings, Mapping) else {}
+    legacy = []
+    for room in rooms.values() if isinstance(rooms, Mapping) else ():
+        selected = room.get("away_entities") if isinstance(room, Mapping) else None
+        if isinstance(selected, list):
+            legacy.extend(entity for entity in selected if isinstance(entity, str))
+    if legacy:
+        direct = shared.get("home_trackers")
+        direct = ([entity for entity in direct if isinstance(entity, str)]
+                  if isinstance(direct, list) else [])
+        shared["home_trackers"] = list(dict.fromkeys([*direct, *legacy]))
+    return shared
+
+
 def home_presence(hass: Any, global_settings: Mapping,
                   fallback_trackers: list[str] | None = None) -> tuple[str, str, list[str]]:
     """Resolve configured whole-home sources before consulting any room.
@@ -515,7 +537,8 @@ def controlled_sleep_presence(
 
 
 def device_permission(device: Mapping, room_status: str, home_status: str,
-                      sleeping: bool | None) -> tuple[str, str]:
+                      sleeping: bool | None, *,
+                      preparing_arrival: bool = False) -> tuple[str, str]:
     """Prioritize explicit sleep pause over occupancy-triggered power OFF.
 
     Device controllers must still pass the independent electrical,
@@ -544,6 +567,11 @@ def device_permission(device: Mapping, room_status: str, home_status: str,
     if home_status == "away":
         room_status = "unoccupied"
     source = device.get("presence_requirement", "always")
+    # A deliberate, still-valid arrival request permits automatic preparation
+    # in currently empty rooms. It does not claim anyone is physically present
+    # and does not override sleep pause, disabled control, or absent-only rules.
+    if preparing_arrival and home_status == "away" and source in ("room", "home", "occupied"):
+        return "eligible", "preparing_for_arrival"
     # Legacy room/home semantics are retained for the old room drivers only.
     # The new per-controller UI never offers these values.
     if source == "room":
@@ -581,6 +609,18 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
     """
     global_settings = plan.get("global_presence")
     area_ids = plan.get("known_presence_areas")
+    def permission(room, home, sleeping):
+        from .arrival_preparation import live_preparation, room_eligible
+        preparing, problem = live_preparation(
+            hass, plan, home,
+            eligible=device.get("_arrival_preparation_eligible", room_eligible(room_config)),
+            entry_id=device.get("_arrival_preparation_entry_id"),
+        )
+        if problem:
+            return "held", problem
+        return device_permission(device, room, home, sleeping,
+                                 preparing_arrival=preparing and device.get(
+                                     "_arrival_preparation_presence_override") is True)
     if isinstance(global_settings, Mapping) and global_settings:
         known = (set(area_ids) if isinstance(area_ids, (tuple,list,set))
                  else {area})
@@ -599,7 +639,7 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
             local_reason=local_reason, room_status=room,
             inherit_household=device.get("sleep_when_everyone_asleep") is True, now=now,
         )
-        return device_permission(device,room,home,sleeping)
+        return permission(room,home,sleeping)
     home=plan.get("away","unknown")
     trackers=room_config.get("away_entities",plan.get("tracker_entities"))
     if isinstance(trackers,list) and trackers:
@@ -621,4 +661,4 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
         local_sleeping=local_sleeping, local_reason=local_reason, room_status=room,
         inherit_household=device.get("sleep_when_everyone_asleep") is True, now=now,
     )
-    return device_permission(device,room,home,sleeping)
+    return permission(room,home,sleeping)

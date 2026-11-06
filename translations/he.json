@@ -3788,6 +3788,14 @@
             "name": "עזרה"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "נוכחות בבית · משך ההכנה להגעה (דקות)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "עזרה"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "עזרה"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "נוכחות בבית · הכנה להגעה",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "עזרה"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "נוכחות בבית · ביטול ההכנה להגעה",
         "state_attributes": {
           "configuration_help": {
             "name": "עזרה"

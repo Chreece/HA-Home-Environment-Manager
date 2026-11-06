@@ -33,7 +33,7 @@ REQUIRED = (
     "equipment_name_catalog.py", "equipment_labels.json", "equipment_window.py",
     "climate_arbitration.py", "pid_phase.py", "pid_restart.py", "equipment_status.py",
     "equipment_battery.py", "room_ventilation.py", "messages.py", "select.py",
-    "number.py", "device_controls.py", "translations/el.json",
+    "number.py", "device_controls.py", "arrival_preparation.py", "translations/el.json",
     "frontend/air-quality-advisor-card.js",
 )
 

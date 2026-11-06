@@ -3011,7 +3011,7 @@ class EquipmentRuntime:
             if self.clock()-self._started < STARTUP_SECONDS:
                 return "startup_warmup"
             from .device_activation import effective_device
-            device = effective_device(self.manager, spec, cap.primary)
+            device = effective_device(self.manager, spec, cap.primary, cap=cap)
             if device:
                 allowed, reason = live_device_permission(self.hass, spec.area_id, room, plan, device)
                 if allowed != "eligible":

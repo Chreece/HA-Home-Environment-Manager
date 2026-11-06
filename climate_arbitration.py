@@ -299,6 +299,13 @@ def new_command_gate(hass: Any, area: str, config: dict,
         return hold
     if purpose not in CHANNELS or not isinstance(plan,dict):
         return "invalid_coordination_request"
+    from .arrival_preparation import live_preparation, room_eligible
+    _preparing, preparation_problem = live_preparation(
+        hass, plan, plan.get("away", "unknown"),
+        eligible=room_eligible(config), entry_id=entry_id,
+    )
+    if preparation_problem:
+        return preparation_problem
     selected=config.get("selected_devices") if isinstance(config,dict) else None
     if isinstance(selected,list) and entity not in selected:
         # A deselected device cannot remain live via an old room role.

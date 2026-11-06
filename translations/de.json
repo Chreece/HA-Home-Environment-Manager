@@ -3797,6 +3797,14 @@
             "name": "Hilfe"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Anwesenheit zu Hause · Dauer der Ankunftsvorbereitung (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       }
     },
     "switch": {
@@ -4297,6 +4305,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Vorschlag verwerfen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Anwesenheit zu Hause · Ankunft vorbereiten",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Anwesenheit zu Hause · Ankunftsvorbereitung abbrechen",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"

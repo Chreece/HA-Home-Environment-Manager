@@ -3788,6 +3788,14 @@
             "name": "Pomoć"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Prisutnost kod kuće · Trajanje pripreme za dolazak (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Prisutnost kod kuće · Pripremi za dolazak",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Prisutnost kod kuće · Otkaži pripremu za dolazak",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"

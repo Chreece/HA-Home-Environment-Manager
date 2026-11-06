@@ -3788,6 +3788,14 @@
             "name": "Trợ giúp"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Có mặt ở nhà · Thời hạn chuẩn bị đón về nhà (phút)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Có mặt ở nhà · Chuẩn bị đón về nhà",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Có mặt ở nhà · Hủy chuẩn bị đón về nhà",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"

@@ -3788,6 +3788,14 @@
             "name": "Bantuan"
           }
         }
+      },
+      "arrival_preparation_timeout": {
+        "name": "Kehadiran di rumah · Batas waktu persiapan kedatangan (menit)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       }
     },
     "switch": {
@@ -4275,6 +4283,22 @@
       },
       "equipment_pid_review_discard": {
         "name": "PID · {channel}Discard suggestion",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
+      },
+      "prepare_for_arrival": {
+        "name": "Kehadiran di rumah · Persiapkan kedatangan",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
+      },
+      "cancel_arrival_preparation": {
+        "name": "Kehadiran di rumah · Batalkan persiapan kedatangan",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"

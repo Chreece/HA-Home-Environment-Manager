@@ -773,7 +773,13 @@ async def update_device_setting(manager: Any, kind: str, key: str,
         elif kind == "global_setting":
             if area is not None:
                 raise HomeAssistantError("Home-wide settings cannot target one room")
-            if key == CONF_REPEAT_MINUTES:
+            from .arrival_preparation import CONF_TIMEOUT, MIN_TIMEOUT, MAX_TIMEOUT
+            if key == CONF_TIMEOUT:
+                number = _finite(value, (float(MIN_TIMEOUT), float(MAX_TIMEOUT)))
+                if not number.is_integer():
+                    raise HomeAssistantError("Arrival preparation timeout must be whole minutes")
+                options[key] = int(number)
+            elif key == CONF_REPEAT_MINUTES:
                 number = _finite(value, (0.0, float(MAX_REPEAT_MINUTES)))
                 if not number.is_integer():
                     raise HomeAssistantError("Announcement interval must be whole minutes")

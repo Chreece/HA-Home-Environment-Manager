@@ -1399,7 +1399,29 @@ SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftges
                          'en': 'Actual Window-class contact associated with this cover. Automatic movement '
                                'uses its known open/closed state and rejects incompatible or unknown window '
                                'evidence. Selecting a contact does not enable the cover’s automation '
-                               'permission.'}}
+                               'permission.'},
+ 'prepare_for_arrival': {'en': 'While the home is confirmed Away, temporarily use Home targets for Automatic/PID with '
+                               'automatic profile selection. Controllers already authorized for native ON/OFF can also '
+                               'prepare occupied-only rooms. Default 60 minutes; press again to renew. Arrival ends '
+                               'preparation; unknown presence suspends its effect. Manual choices, explicit presets, '
+                               'windows and minimum ON/OFF times still apply. Legacy and setpoint-only controls keep '
+                               'their original presence gates.',
+                         'el': 'Με επιβεβαιωμένη απουσία, χρησιμοποιεί προσωρινά στόχους Σπιτιού για Αυτόματο/PID με '
+                               'αυτόματη επιλογή προφίλ. Ελεγκτές με υπάρχουσα άδεια ενεργοποίησης/απενεργοποίησης '
+                               'μπορούν να προετοιμάζουν και δωμάτια με απαίτηση παρουσίας. Προεπιλογή 60 λεπτά· νέο '
+                               'πάτημα ανανεώνει τη διάρκεια. Η άφιξη ολοκληρώνει την προετοιμασία· άγνωστη παρουσία την '
+                               'αναστέλλει. Ισχύουν χειροκίνητες επιλογές, ρητά προφίλ, παράθυρα και ελάχιστοι χρόνοι '
+                               'ON/OFF. Παλαιοί ελεγκτές και ελεγκτές μόνο στόχου διατηρούν τους αρχικούς περιορισμούς '
+                               'παρουσίας.',
+                         'de': 'Bei bestätigter Abwesenheit vorübergehend Zuhause-Ziele für Automatik/PID mit '
+                               'automatischer Profilwahl verwenden. Bereits zur Ein-/Ausschaltsteuerung berechtigte '
+                               'Regler dürfen auch Räume mit Anwesenheitspflicht vorbereiten. Standard 60 Minuten; '
+                               'erneutes Drücken erneuert die Dauer. Heimkehr beendet die Vorbereitung; unbekannte '
+                               'Anwesenheit setzt sie aus. Manuelle Einstellungen, feste Profile, Fenster und '
+                               'Mindestlauf-/Mindeststillstandszeiten gelten weiter. Ältere Regler und reine '
+                               'Sollwertregler behalten ihre Anwesenheitsregeln.'},
+ 'cancel_arrival_preparation': {'en': 'End this home’s temporary arrival preparation now and recalculate from actual presence and current settings. If everyone is still away, automatic profile selection returns to Away. The device’s minimum ON/OFF times and other protections still govern physical transitions; cancel does not force all appliances off.', 'el': 'Τερματίζει τώρα την προσωρινή προετοιμασία άφιξης αυτού του σπιτιού και επανυπολογίζει βάσει πραγματικής παρουσίας και τρεχουσών ρυθμίσεων. Αν όλοι λείπουν ακόμη, η αυτόματη επιλογή επιστρέφει στην Απουσία. Οι ελάχιστοι χρόνοι ON/OFF και οι άλλες προστασίες συνεχίζουν να καθορίζουν τις μεταβάσεις· δεν απενεργοποιούνται αναγκαστικά όλες οι συσκευές.', 'de': 'Die vorübergehende Ankunftsvorbereitung dieses Zuhauses jetzt beenden und anhand der tatsächlichen Anwesenheit und aktuellen Einstellungen neu berechnen. Sind weiterhin alle abwesend, kehrt die automatische Profilwahl zu Abwesend zurück. Mindestlauf-/Mindeststillstandszeiten und andere Schutzregeln gelten weiter; Abbrechen erzwingt nicht das sofortige Ausschalten aller Geräte.'},
+ 'arrival_preparation_timeout': {'en': 'Maximum duration in minutes for the next Prepare for arrival press: 1–1440 minutes, default 60. Changing this setting leaves a running deadline unchanged; press Prepare again to renew with the new duration. The original expiry survives a Home Assistant restart. Arrival, cancel or expiry returns control to actual presence and current settings.', 'el': 'Μέγιστη διάρκεια σε λεπτά για το επόμενο πάτημα Προετοιμασίας άφιξης: 1–1440 λεπτά, προεπιλογή 60. Η αλλαγή δεν μεταβάλλει ενεργή προθεσμία· πάτησε ξανά Προετοιμασία για ανανέωση με τη νέα διάρκεια. Η αρχική λήξη διατηρείται μετά από επανεκκίνηση του Home Assistant. Άφιξη, ακύρωση ή λήξη επαναφέρουν τον έλεγχο στην πραγματική παρουσία και τις τρέχουσες ρυθμίσεις.', 'de': 'Maximale Dauer in Minuten für das nächste Drücken von Ankunft vorbereiten: 1–1440 Minuten, Standard 60. Eine Änderung lässt eine laufende Frist unverändert; zum Verlängern mit der neuen Dauer erneut Vorbereiten drücken. Der ursprüngliche Ablaufzeitpunkt bleibt nach einem Home-Assistant-Neustart erhalten. Heimkehr, Abbruch oder Ablauf übergeben die Steuerung an die tatsächliche Anwesenheit und aktuellen Einstellungen.'}}
 
 def configuration_help(key: str, locale: str = "en") -> str | None:
     """One current setting explanation; never the complete help catalog."""
