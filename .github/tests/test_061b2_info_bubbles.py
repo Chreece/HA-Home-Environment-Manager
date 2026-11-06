@@ -294,7 +294,7 @@ def browser_checks(data):
                 expect(bubble).to_be_visible()
                 page.locator("#outside").click()
                 assert_closed(page, ROOM_KEY)
-                page.evaluate("HTMLElement.prototype.showPopover=window.savedShow061b2")
+                page.evaluate("() => { HTMLElement.prototype.showPopover=window.savedShow061b2; }")
                 assert page.evaluate("calls") == []
                 assert page.evaluate("info") == []
                 assert errors == [], errors
