@@ -78,7 +78,7 @@ with sync_playwright() as playwright:
       window.card=document.createElement('home-environment-manager-card');
       document.body.append(card);
       card.addEventListener('hass-more-info',ev=>info.push(ev.detail.entityId));
-      card._hass={language:'el',states,localize:()=>undefined,
+      card._hass={language:'el',states,localize:()=>undefined,callWS:async()=>({}),
         callService:(...args)=>{calls.push(args);return Promise.resolve()}};
       card._config={entity:'sensor.hem'};
       card._renderContent(true);
@@ -96,14 +96,18 @@ with sync_playwright() as playwright:
     assert popup.locator('.hem-avg-line105').count()==1
     assert 'αισθητήρες' in popup.inner_text()
     popup.locator('[data-hem-source105="sensor.temp_a"]').click()
+    assert page.evaluate('info')==[]
+    assert page.evaluate('card._averageDialog105.entity122')=='sensor.temp_a'
+    popup.locator('[data-open-entity122="sensor.temp_a"]').click()
     assert page.evaluate('info')[-1]=='sensor.temp_a'
-    popup.locator('[data-close-avg105]').click()
     assert popup.count()==0
-    # One real humidity sensor: direct HA dialog, no mean icon.
+    # One real humidity sensor: entity trend and explicit HA link, no mean icon.
     humidity=row.locator('button[data-hem-source105="sensor.humidity_1"]')
     assert humidity.count()==1
     assert humidity.locator('.hem-avg-marker105').count()==0
     humidity.click()
+    assert page.evaluate('card._averageDialog105.entity122')=='sensor.humidity_1'
+    popup.locator('[data-open-entity122="sensor.humidity_1"]').click()
     assert page.evaluate('info')[-1]=='sensor.humidity_1'
     assert row.get_attribute('open') is None
     # Distinct compact PM2.5 uses validated TWO-sensor mean; CO₂ remains
@@ -121,16 +125,19 @@ with sync_playwright() as playwright:
     gap=aqi.evaluate("el=>getComputedStyle(el).columnGap")
     assert float(gap.replace('px',''))>=4,gap
     aqi.click()
+    assert page.evaluate('card._averageDialog105.entity122')=='sensor.outdoor_aqi'
+    popup.locator('[data-open-entity122="sensor.outdoor_aqi"]').click()
     assert page.evaluate('info')[-1]=='sensor.outdoor_aqi'
-    # Source click in full metric card and window contact must use exactly
-    # the native source and not interfere with built-in info/help buttons.
+    # Headline measurements stay clickable without a duplicate expanded
+    # tile. Window contacts keep their direct native navigation.
     # Click the room NAME, not the center of a summary containing
     # interactive sensor buttons (Playwright's center can hit those instead).
     row.locator('.hem-room-name87').click()
     assert row.get_attribute('open') is not None
     rhTile=row.locator('.metric-number[data-hem-source105="sensor.humidity_1"]')
-    assert rhTile.count()==1
-    rhTile.click()
+    assert rhTile.count()==0
+    humidity.click()
+    popup.locator('[data-open-entity122="sensor.humidity_1"]').click()
     assert page.evaluate('info')[-1]=='sensor.humidity_1'
     contact=row.locator('[data-hem-source105="binary_sensor.room0_window"]')
     assert contact.count()==1

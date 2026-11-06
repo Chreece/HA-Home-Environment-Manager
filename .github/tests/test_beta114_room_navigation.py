@@ -249,7 +249,7 @@ def browser_checks(states):
           window.card=document.createElement('home-environment-manager-card');
           document.body.append(card);window.info=[];window.calls=[];
           card.addEventListener('hass-more-info',e=>info.push(e.detail.entityId));
-          card._hass={states,language:'en',user:{is_admin:true},localize:()=>undefined,
+          card._hass={states,language:'en',user:{is_admin:true},localize:()=>undefined,callWS:async()=>({}),
             callService:(...args)=>{calls.push(args);return Promise.resolve();}};
           card._config={entity:'sensor.hem'};card._renderContent(true);
         }""", states)
@@ -286,6 +286,8 @@ def browser_checks(states):
         missing.locator('[data-room-issue114="missing"]').click()
         assert detail.is_visible()
         detail.locator('[data-hem-source105="sensor.missing_pm10"]').click()
+        assert page.evaluate('card._averageDialog105.entity122') == 'sensor.missing_pm10'
+        page.locator('.hem-avg-dialog105 [data-open-entity122="sensor.missing_pm10"]').click()
         assert page.evaluate('info')[-1] == 'sensor.missing_pm10'
         warning = page.locator('[data-room-fold87="warning"]')
         warning.locator('[data-room-issue114="attention"]').click()

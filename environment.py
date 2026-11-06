@@ -171,6 +171,11 @@ def build_environment(
     settings = mold_calibrations if isinstance(mold_calibrations, dict) else {}
     profiles = room_profiles if isinstance(room_profiles, dict) else {}
     result: dict[str, dict] = {}
+    present_areas = {room.area_id for room in raw_rooms}
+    for area, metrics in list(history.averages.items()):
+        if area not in present_areas:
+            for metric in list(metrics):
+                changed = history.pause_average(area, metric, now=stamp) or changed
     for room in raw_rooms:
         raw_mold = readings_after_mold.get(room.area_id)
         calibrated = settings.get(room.area_id, {})
@@ -207,6 +212,9 @@ def build_environment(
             hass, room, indoor_t=indoor_t, temperature_inputs=temperature_inputs,
             temperature_entity=temp_source, max_age=max_age_minutes,
         )
+        for metric in list(history.averages.get(room.area_id, {})):
+            if display.get(metric, {}).get("source_count", 0) < 2:
+                changed = history.pause_average(room.area_id, metric, now=stamp) or changed
         for metric, aggregate in display.items():
             if aggregate["source_count"] >= 2:
                 contributors = aggregate["source_ids"]

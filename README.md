@@ -147,7 +147,9 @@ Entity IDs can differ with your language, naming and renames. The older
 ### Using the card
 
 - Read the outdoor summary and room status, then expand a room for its advice,
-  measurements and device controllers.
+  additional measurements and device controllers. Expanded tiles show data
+  that is not already in the room overview; warning and calibration details
+  remain available without repeating the same current value.
 - Open information and warning details to understand missing inputs or the
   reason for a recommendation.
 - Use a room's settings gear to edit its selected sources. **Room controls**
@@ -155,7 +157,17 @@ Entity IDs can differ with your language, naming and renames. The older
 - Open an averaged room reading (**≈**, with multiple contributing sensors) for
   HEM's trend view and choose **6 h**, **24 h**, **7 d** or **All**. Inspect points
   with the pointer, touch/drag or keyboard; gaps represent missing readings.
-  Single-source badges open the sensor's native Home Assistant details/history.
+  Single-sensor readings and contributing sensors open the same trend window
+  using their recorded Home Assistant history. **Open entity** opens that
+  sensor's native Home Assistant details. History remains useful when a current
+  value is unavailable; sources excluded from recording may have no history.
+- Average history keeps separate records for each exact group of contributing
+  sensors. Temporary startup outages do not replace the original group's
+  samples. A returning group resumes its history with a visible gap.
+- The icon before a physical entity's name opens its device page; the icon
+  before a HEM controller's name opens its HEM device page. Clicking either
+  name opens the corresponding entity. Announcement controls show the bell
+  icon and current On/Off state.
 - For a waiting controller, read its **Reason** and **Diagnostics** before
   changing settings.
 

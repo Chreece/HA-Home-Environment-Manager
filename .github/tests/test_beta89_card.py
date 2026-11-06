@@ -59,16 +59,20 @@ with sync_playwright() as playwright:
     page.on('pageerror',lambda error:errors.append(str(error)))
     page.set_content('<html><body></body></html>')
     page.add_script_tag(path=str(ROOT/'frontend/air-quality-advisor-card.js'))
-    page.evaluate("""({states})=>{
-        window.calls=[]; window.info=[];
+    page.evaluate("""({states,entities})=>{
+        window.calls=[]; window.info=[];window.routes=[];
+        window.history.pushState=(_state,_title,path)=>routes.push(path);
         window.card=document.createElement('home-environment-manager-card');
         document.body.append(card);
         card.addEventListener('hass-more-info',ev=>info.push(ev.detail.entityId));
-        card._hass={language:'el',states,localize:()=>undefined,
+        card._hass={language:'el',states,entities,localize:()=>undefined,
           callService:(...args)=>{calls.push(args);return Promise.resolve();}};
         card._config={entity:'sensor.hem'};
         card._renderContent(true);
-    }""",{'states':states})
+    }""",{'states':states,'entities':{
+        ctrl_heat:{'device_id':'hem-heater-device'},
+        source_heat:{'device_id':'physical-heater-device'},
+    }})
     room=page.locator('[data-room-fold87="room0"]')
     glance=room.locator(':scope > summary')
     assert 'hem-activity-heat' in glance.locator('.hem-room-reading87').nth(0).get_attribute('class')
@@ -82,24 +86,28 @@ with sync_playwright() as playwright:
     assert all(name not in text for name in ('Lux','PM10','TVOC','HCHO','Rn')), text
     assert '900' not in text
     assert glance.bounding_box()['height']<=52,glance.bounding_box()
-    # Click room, then controller name: opens HEM facade only. Native icon
-    # opens the physical climate endpoint and does not toggle the fold.
+    # Names open entities; the leading icon opens this HEM controller's own
+    # device page. Neither action toggles its disclosure.
     glance.click()
     controller=room.locator('[data-device-fold87="climate.managed_0_0"]')
     assert controller.get_attribute('open') is None
     controller.locator('button[data-open-controller89]').click()
     assert page.evaluate('info')[-1]==ctrl_heat
     assert controller.get_attribute('open') is None
-    controller.locator('button[data-open-native89]').click()
-    assert page.evaluate('info')[-1]==source_heat
+    controller.locator('button[data-open-controller-device122]').click()
+    assert page.evaluate('routes')[-1]=='/config/devices/device/hem-heater-device'
     assert controller.get_attribute('open') is None
-    controller.locator('button[data-open-native89]').evaluate(
-      "(el)=>el.setAttribute('data-open-native89','climate.unrelated')")
-    length=page.evaluate('info.length')
-    controller.locator('button[data-open-native89]').click()
-    assert page.evaluate('info.length')==length
+    controller.locator('button[data-open-controller-device122]').evaluate(
+      "(el)=>el.setAttribute('data-open-controller-device122','climate.unrelated')")
+    length=page.evaluate('routes.length')
+    controller.locator('button[data-open-controller-device122]').click()
+    assert page.evaluate('routes.length')==length
     controller.locator(':scope > summary').evaluate('(el)=>el.click()')
     assert controller.get_attribute('open') is not None
+    controller.locator('button[data-open-physical93]').click()
+    assert page.evaluate('info')[-1]==source_heat
+    controller.locator('button[data-open-physical-device122]').click()
+    assert page.evaluate('routes')[-1]=='/config/devices/device/physical-heater-device'
     auto=controller.locator('.hem-continue-auto89')
     assert auto.count()==1
     assert auto.is_disabled()
