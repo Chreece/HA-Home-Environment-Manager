@@ -183,8 +183,11 @@ def browser_checks(data):
                 page.add_script_tag(path=str(CARD))
                 page.evaluate(SETUP, data)
                 room = page.locator('[data-room-fold87="living"]')
-                room.locator(":scope > summary").click()
+                # Headers also contain history/settings buttons. Use the
+                # visible fold arrow, not the compound header's center.
+                room.locator(":scope > summary > ha-icon:last-child").click()
                 expect(room).to_have_attribute("open", "")
+                assert page.evaluate("info") == []
                 bubble = open_bubble(page, ROOM_KEY)
                 assert_multiline(page)
                 if output:
@@ -218,8 +221,9 @@ def browser_checks(data):
                 assert_closed(page, ROOM_KEY)
                 # Device and setting help use the same portal/dismissal path.
                 device = room.locator('[data-device-fold87="climate.hem_heater"]')
-                device.locator(":scope > summary").click()
+                device.locator(":scope > summary > ha-icon:last-child").click()
                 expect(device).to_have_attribute("open", "")
+                assert page.evaluate("info") == []
                 open_bubble(page, DEVICE_KEY)
                 page.locator("#outside").click()
                 assert_closed(page, DEVICE_KEY)
@@ -235,7 +239,11 @@ def browser_checks(data):
                 assert_closed(page, HELP_KEY)
                 # Metric help has no saved disclosure key. Its own open
                 # state must close and stay closed across reconciliation.
+                # Elevated CO2 is in the first four complementary tiles;
+                # opening this room exposes it without the More control.
                 metric = room.locator('[data-overview-detail122="co2"] details.metric-help')
+                expect(room).to_have_attribute("open", "")
+                expect(metric.locator(":scope > summary")).to_be_visible()
                 metric.locator(":scope > summary").click()
                 page.wait_for_function("Boolean(card._floatingInfo87)")
                 page.locator(".hem-floating-info87").click()
@@ -252,7 +260,9 @@ def browser_checks(data):
                 assert not page.evaluate("Boolean(card._floatingInfo87)")
                 # This persistent sensor history is a separate dialog. Outside
                 # clicks must not be reinterpreted as info-bubble dismissal.
-                room.locator('.hem-room-glance87 [data-hem-source105="sensor.co2"]').click()
+                history = room.locator('.hem-room-glance87 [data-hem-source105="sensor.co2"]')
+                expect(history).to_be_visible()
+                history.click()
                 expect(page.locator(".hem-avg-dialog105")).to_be_visible()
                 page.locator("#outside").click()
                 expect(page.locator(".hem-avg-dialog105")).to_be_visible()
