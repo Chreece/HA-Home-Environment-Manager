@@ -94,6 +94,13 @@ SETUP = r"""data => {
       'Καθιστικό και τραπεζαρία με αναλυτικές ενδείξεις περιβάλλοντος '.repeat(3)});
     card.hass={...card._hass,states};
   };
+  window.refreshHiddenValue061b3=value=>{
+    const states=structuredClone(card._hass.states),root=states['sensor.hem'];
+    root.attributes.dashboard_revision=(root.attributes.dashboard_revision||0)+1;
+    root.attributes.dashboard.outdoor.readings.find(item=>item.entity_id==='sensor.outdoor_pm25').value=value;
+    states['sensor.outdoor_pm25'].state=String(value);
+    card.hass={...card._hass,states};
+  };
 }"""
 
 
@@ -121,27 +128,36 @@ REPORT = r"""() => {
     for(let parent=range.startContainer.parentElement;parent;parent=parent.parentElement){
       if(!inside(rects[0]||{left:-Infinity,right:Infinity},box(parent))||
           rects.some(r=>!inside(r,box(parent))))clipped.push(parent.className||parent.tagName);
-      if(parent.matches('ha-card'))break;
+      // A top-layer portal is viewport-bound and may be wider than its card.
+      if(parent.matches('ha-card,.hem-floating-info87'))break;
     }
     return {label,text:needle,visible:Boolean(visible(node)),rects,box:box(node),clipped};
   };
   const cold=root.querySelector('.outside-alerts .reason'),outside=root.querySelector('.outside');
   const value=card._hass.states['sensor.hem'].attributes.dashboard.outdoor.blockers[0].value;
-  const samples=[sample(cold,value,'cold blocker'),
+  const hidden=[],samples=[sample(cold,value,'cold blocker'),
     sample(root.querySelector('.weather-line strong'),card._format(
       card._hass.states['sensor.hem'].attributes.dashboard.outdoor.weather[0].temperature_c)+'°C','weather temperature')];
-  for(const reading of card._hass.states['sensor.hem'].attributes.dashboard.outdoor.readings){
+  const outdoor=card._hass.states['sensor.hem'].attributes.dashboard.outdoor;
+  for(const [index,reading] of outdoor.readings.entries()){
     const chip=root.querySelector('.out-chip[data-hem-source105="'+reading.entity_id+'"]');
-    samples.push(sample(chip?.querySelector('b'),card._format(reading.value),'outdoor '+reading.metric+' value'),
+    const formatted=card._format(reading.value);
+    // The first reading is always a complete inline value. Extra readings
+    // may move to the explicit disclosure when the card has insufficient room.
+    if(index===0||visible(chip))samples.push(
+      sample(chip?.querySelector('b'),formatted,'outdoor '+reading.metric+' value'),
       sample(chip?.querySelector('small'),reading.unit,'outdoor '+reading.metric+' unit'));
+    else hidden.push({kind:'reading',id:reading.entity_id,value:formatted,unit:reading.unit});
   }
   const weather=card._hass.states['sensor.hem'].attributes.dashboard.outdoor.weather[0];
   for(const [key,unit] of [['humidity','%'],['wind_kmh',' km/h']]){
     if(typeof weather[key]==='number')samples.push(sample(root.querySelector('.hem-weather-extras123'),
       card._format(weather[key])+unit,'weather '+key));
   }
-  for(const node of root.querySelectorAll('.hem-outside-blocker-value123')){
-    samples.push(sample(node,node.textContent.trim(),'measured blocker'));
+  for(const blocker of outdoor.blockers.filter(item=>item.value)){
+    const node=root.querySelector('[data-outside-blocker123="'+blocker.code+'"]');
+    if(visible(node))samples.push(sample(node,blocker.value,'measured blocker '+blocker.code));
+    else hidden.push({kind:'blocker',id:blocker.code,value:blocker.value});
   }
   for(const node of root.querySelectorAll('.hem-room-metric-value107,.hem-room-metric-unit107,.hem-overview-stat87 b,.hem-overview-title87 strong')){
     if(visible(node))samples.push(sample(node,node.textContent.trim(),node.className||'room count'));
@@ -155,10 +171,23 @@ REPORT = r"""() => {
     .map(node=>({text:node.textContent,box:box(node),parent:box(node.parentElement),
       title:node.title||node.parentElement.title,ellipsis:getComputedStyle(node).textOverflow,
       client:node.clientWidth,scroll:node.scrollWidth}));
-  return {viewport:innerWidth,pageScroll:document.documentElement.scrollWidth,
+  const disclosure=root.querySelector('details.hem-outside-info123 > summary');
+  const popup=root.querySelector('.hem-floating-info87 .hem-outside-info-content123');
+  const popupSamples=[];
+  if(popup)for(const item of hidden){
+    const attribute=item.kind==='reading'?'data-outside-source123':'data-outside-info-blocker123';
+    const row=popup.querySelector('['+attribute+'="'+item.id+'"]');
+    const measured=row?.querySelector('.hem-outside-info-value123');
+    popupSamples.push(sample(measured,item.value,'disclosed '+item.id));
+    if(item.unit)popupSamples.push(sample(measured,item.unit,'disclosed '+item.id+' unit'));
+  }
+  return {viewport:innerWidth,viewportHeight:innerHeight,pageScroll:document.documentElement.scrollWidth,
     frame:box(document.querySelector('main')),outside:box(outside),
     head:box(root.querySelector('.outdoor-head')),row:box(root.querySelector('.hem-outside-details87')),
-    coldTitle:cold?.title,coldAria:cold?.getAttribute('aria-label'),samples,containers,labels};
+    coldTitle:cold?.title,coldAria:cold?.getAttribute('aria-label'),samples,hidden,containers,labels,
+    disclosure:disclosure?{visible:Boolean(visible(disclosure)),box:box(disclosure),
+      label:disclosure.getAttribute('aria-label')||disclosure.title}:null,
+    popup:popup?box(popup.closest('.hem-floating-info87')):null,popupSamples};
 }"""
 
 
@@ -167,12 +196,19 @@ def settle(page):
     page.evaluate("async()=>{await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));}")
 
 
-def assert_layout(report):
+def assert_layout(report, *, allow_disclosure=False):
     assert report["pageScroll"] <= report["viewport"] + 1, report
     assert report["row"]["height"] <= 29, report
     assert report["head"]["height"] <= 32, report
     assert report["row"]["top"] >= report["head"]["bottom"] - 1, report
     assert report["outside"]["height"] <= 85, report
+    if not allow_disclosure:
+        assert not report["hidden"], ("Baseline readings and blockers must stay inline", report)
+    elif report["hidden"]:
+        assert report["disclosure"] and report["disclosure"]["visible"], report
+        assert report["disclosure"]["label"], report
+        assert report["disclosure"]["box"]["left"] >= report["row"]["left"] - 1, report
+        assert report["disclosure"]["box"]["right"] <= report["row"]["right"] + 1, report
     assert report["samples"][0]["text"] in report["coldTitle"], report
     assert report["samples"][0]["text"] in report["coldAria"], report
     for sample in report["samples"]:
@@ -231,10 +267,55 @@ def run():
                 page.evaluate("refresh061b3()")
                 settle(page)
                 report = page.evaluate(REPORT)
-                assert_layout(report)
+                assert_layout(report, allow_disclosure=True)
+                assert report["hidden"], "Crowded narrow cards must expose extra values through More info"
+                disclosure = page.locator('details.hem-outside-info123 > summary')
+                disclosure.click()
+                popup = page.locator('.hem-floating-info87')
+                expect(popup).to_be_visible()
+                expect(popup.locator('[data-outside-source123="sensor.outdoor_pm25"]')).to_contain_text('14')
+                page.evaluate('refreshHiddenValue061b3(15.2)')
+                settle(page)
+                page.wait_for_function("""()=>card._floatingInfo87?.querySelector(
+                  '[data-outside-source123="sensor.outdoor_pm25"]')?.textContent.includes(card._format(15.2))""")
+                expect(popup).to_have_count(1)
+                expect(popup).to_be_visible()
+                expect(page.locator('details.hem-outside-info123')).to_have_attribute('open', '')
+                report = page.evaluate(REPORT)
+                assert_layout(report, allow_disclosure=True)
+                assert report["popup"], report
+                assert len(report["popupSamples"]) == sum(1 + bool(item.get("unit")) for item in report["hidden"]), report
+                for sample in report["popupSamples"]:
+                    assert not sample.get("missing"), sample
+                    assert sample["visible"] and sample["rects"] and not sample["clipped"], sample
+                assert 0 <= report["popup"]["left"] < report["popup"]["right"] <= report["viewport"] + 1, report
+                assert 0 <= report["popup"]["top"] < report["popup"]["bottom"] <= report["viewportHeight"] + 1, report
+                if shots:
+                    page.screenshot(path=str(shots / f"061b3-overflow-{language}.png"), full_page=True)
+                popup.locator('[data-outside-source123="sensor.outdoor_pm25"]').click()
+                expect(popup).to_have_count(0)
+                history = page.locator('.hem-avg-dialog105')
+                expect(history).to_be_visible()
+                assert page.evaluate('card._averageDialog105.entity122') == 'sensor.outdoor_pm25'
+                history.locator('[data-open-entity122="sensor.outdoor_pm25"]').click()
+                expect(history).to_have_count(0)
+                assert page.evaluate('info.at(-1)') == 'sensor.outdoor_pm25'
+                disclosure.click()
+                expect(popup).to_be_visible()
+                page.locator('.card-heading h2').click()
+                expect(popup).to_have_count(0)
+                expect(page.locator('details.hem-outside-info123')).not_to_have_attribute('open', '')
+                page.evaluate('refreshHiddenValue061b3(15.3)')
+                settle(page)
+                expect(popup).to_have_count(0)
+                expect(page.locator('details.hem-outside-info123')).not_to_have_attribute('open', '')
                 warning = page.locator(f'[data-wx-open103="{WARNING}"]')
+                expect(warning).to_be_visible()
                 assert "full details" in warning.get_attribute("title")
-                warning.click()
+                disclosure.click()
+                expect(popup).to_be_visible()
+                popup.locator(f'[data-outside-warning123="{WARNING}"]').click()
+                expect(popup).to_have_count(0)
                 dialog = page.locator(".hem-wx-dialog103")
                 expect(dialog).to_be_visible()
                 assert "full details" in dialog.inner_text()

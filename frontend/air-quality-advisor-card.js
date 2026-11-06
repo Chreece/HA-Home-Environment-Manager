@@ -1665,8 +1665,7 @@
             <span class="hem-outside-metric-label123">${escape(this._metricName(item.metric))}</span> <b>${item.available ? escape(this._format(item.value)) : '-'}</b>
             <small>${escape(item.unit)}</small></span>`).join('')}
         </div>` : `<div class="out-empty">${escape(this._t('noOutdoor'))}</div>`}
-        ${blockers.length ? `<div class="outside-alerts">${blockers.slice(0,5).map((item) => this._outsideBlocker(item)).join('')}
-          ${blockers.length > 5 ? `<span>+${blockers.length - 5}</span>` : ''}</div>` : ''}
+        ${blockers.length ? `<div class="outside-alerts">${blockers.map((item) => this._outsideBlocker(item)).join('')}</div>` : ''}
         ${warnings.length && !blockers.some((b) => b.code === 'active_warning' || b.code === 'unavailable_warning')
           ? `<div class="outside-alerts">${warnings.map((warning) => `<span class="reason">${escape(warning.name)} · ${escape(warning.active === true ? this._t('warningActive') : this._t('warningUnknown'))}</span>`).join('')}</div>` : ''}
       </section>`;
@@ -4397,12 +4396,63 @@
         if(block.matches('.out-metrics,.outside-alerts,.out-empty'))second.appendChild(block);
       }
       if(second.childElementCount)outside.appendChild(second);
-      for(const reason of outside.querySelectorAll('.reason,.out-chip')) {
+      for(const reason of outside.querySelectorAll('.reason,.out-chip,.out-empty')) {
         const full=reason.textContent?.trim();
         if(full) {reason.setAttribute('title',full);reason.setAttribute('aria-label',full);}
       }
       const named=outside.querySelector('.outside-title');
       if(named)named.setAttribute('title',named.textContent?.trim()||'');
+      const readings=[...second.querySelectorAll('.out-chip')];
+      const blockers=[...second.querySelectorAll('.outside-alerts>.reason')];
+      const warnings=[...second.querySelectorAll('.hem-wx-chip103')];
+      outside.setAttribute('data-outside-count123',String(Math.min(3,
+        Math.max(readings.length,blockers.length,warnings.length))));
+      if([readings,blockers,warnings].some(items=>items.length>1)){
+        // A crowded compact row needs an explicit destination for its extra
+        // readings, not a clipped number. Reuse the owned information portal;
+        // distinct row/action classes keep hidden copies out of inline queries.
+        const rows=[];
+        const addText=text=>{if(text)rows.push('<div class="hem-outside-info-row123">'+escape(text)+'</div>');};
+        addText(named?.textContent?.trim());
+        addText(outside.querySelector('.weather-line')?.getAttribute('aria-label'));
+        for(const reading of readings){
+          const label=reading.querySelector('.hem-outside-metric-label123')?.textContent?.trim()||'';
+          const value=[reading.querySelector('b')?.textContent?.trim(),
+            reading.querySelector('small')?.textContent?.trim()].filter(Boolean).join(' ');
+          const id=reading.getAttribute('data-hem-source105');
+          const tag=id?'button':'div';
+          rows.push('<'+tag+' class="hem-outside-info-row123"'+
+            (id?' type="button" data-outside-source123="'+escape(id)+'"':'')+
+            '><span>'+escape(label)+'</span> <strong class="hem-outside-info-value123">'+
+            escape(value)+'</strong></'+tag+'>');
+        }
+        for(const blocker of blockers){
+          const value=blocker.querySelector('.hem-outside-blocker-value123')?.textContent?.trim();
+          const label=blocker.querySelector('.hem-outside-blocker-label123')?.textContent?.trim();
+          const text=value?String(label||'').replace(/\s+·$/,''):
+            blocker.getAttribute('title')||blocker.textContent?.trim()||'';
+          rows.push('<div class="hem-outside-info-row123" data-outside-info-blocker123="'+
+            escape(blocker.getAttribute('data-outside-blocker123')||'')+'"><span>'+escape(text)+
+            '</span>'+(value?' <strong class="hem-outside-info-value123">'+escape(value)+'</strong>':'')+'</div>');
+        }
+        for(const warning of warnings){
+          rows.push('<button type="button" class="hem-outside-info-row123" data-outside-warning123="'+
+            escape(warning.getAttribute('data-wx-open103'))+'"><span>'+
+            escape(warning.getAttribute('title')||warning.textContent?.trim()||'')+'</span>'+this._icon('mdi:information-outline')+'</button>');
+        }
+        for(const help of second.querySelectorAll('.hem-outside-help66'))addText(help.textContent?.trim());
+        const info=document.createElement('details');
+        info.className='hem-context76 hem-outside-info123';
+        info.setAttribute('data-detail-id','outside-info');
+        info.open=this._detailsExpanded66?.has('outside-info')===true;
+        const label=this._t('outside')+' · '+this._l65('information');
+        const status=outside.querySelector('.outdoor-status');
+        info.innerHTML='<summary title="'+escape(label)+'" aria-label="'+escape(label)+'">'+
+          (status?.querySelector('ha-icon')?.outerHTML||this._icon('mdi:information-outline'))+
+          '</summary><div class="hem-context-body76">'+
+          '<div class="hem-outside-info-content123">'+rows.join('')+'</div></div>';
+        status?.appendChild(info);
+      }
     }
     for(const container of card.querySelectorAll('.managed-controller')) {
       if(container.querySelector(':scope > details.hem-device-fold87')) continue;
@@ -5257,10 +5307,12 @@
     if(this._weatherClickInit103)return;
     this._weatherClickInit103=true;
     this.shadowRoot.addEventListener('click',event=>{
-      const open=event.target?.closest?.('button[data-wx-open103]');
+      const open=event.target?.closest?.('button[data-wx-open103],button[data-outside-warning123]');
       if(open){
         event.preventDefault();event.stopImmediatePropagation();
-        this._openWeather103(open.getAttribute('data-wx-open103'),open);
+        const more=open.getAttribute('data-outside-warning123');
+        if(more)this._closeInfo87(true);
+        this._openWeather103(open.getAttribute('data-wx-open103')||more,open);
         return;
       }
       const close=event.target?.closest?.('button[data-wx-close103]');
@@ -5696,11 +5748,13 @@
         if(this._averageDialog105?.entity122)this._loadEntityTrend122(this._averageDialog105);
         return;
       }
-      const source=event.target?.closest?.('[data-hem-source105]');
+      const source=event.target?.closest?.('[data-hem-source105],[data-outside-source123]');
       if(source){
         event.preventDefault();event.stopImmediatePropagation();
-        const id=source.getAttribute('data-hem-source105');
+        const more=source.getAttribute('data-outside-source123');
+        const id=source.getAttribute('data-hem-source105')||more;
         if(this._nativeAllowed105(id)){
+          if(more)this._closeInfo87(true);
           if(id.startsWith('sensor.'))this._openEntityTrend122(id);
           else this.dispatchEvent(new CustomEvent('hass-more-info',{
               detail:{entityId:id},bubbles:true,composed:true,
@@ -7593,14 +7647,21 @@
         max-width:14ch;min-width:0;overflow:hidden;text-overflow:ellipsis}
       .weather-line>strong,.weather-line>.hem-weather-extras123{flex:0 0 auto}
       .hem-weather-extras123 ha-icon{flex:0 0 auto}
-      .hem-outside-details87 .out-metrics{flex:0 0 auto}
-      .hem-outside-details87 .outside-alerts{flex:1 1 auto;width:auto}
+      .hem-outside-details87 .out-metrics{flex:0 1 auto;
+        min-width:min-content;max-width:none}
+      .hem-outside-details87 .out-metrics>.out-chip{
+        display:inline-grid;grid-template-columns:minmax(0,1fr) max-content max-content;
+        min-width:min-content;gap:3px;box-sizing:border-box}
+      .hem-outside-details87 .out-chip b,.hem-outside-details87 .out-chip small{margin:0}
+      .hem-outside-details87 .outside-alerts{
+        flex:1 1 auto;width:auto;min-width:min-content}
       .hem-outside-details87 .outside-alerts:has(>.hem-wx-chip103){
-        flex:0 1 auto;min-width:44px}
+        flex:0 1 auto;min-width:min-content}
       .hem-outside-details87 .outside-alerts>.hem-wx-chip103{
-        flex:0 1 auto!important}
-      .hem-outside-details87 .hem-outside-blocker123{
-        display:flex;gap:3px;padding-inline:4px;box-sizing:border-box}
+        flex:0 1 auto!important;min-width:48px!important}
+      .hem-outside-details87 .outside-alerts>.hem-outside-blocker123{
+        display:grid;grid-template-columns:13px minmax(0,1fr) max-content;
+        flex:1 1 auto;min-width:min-content;gap:3px;padding-inline:4px;box-sizing:border-box}
       .hem-outside-blocker123>ha-icon{flex:0 0 13px;width:13px}
       .hem-outside-blocker-label123,.hem-outside-metric-label123{
         min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;
@@ -7609,6 +7670,33 @@
       .hem-outside-details87 .out-chip small{flex:0 0 auto;white-space:nowrap}
       .hem-outside-details87 .out-empty{min-width:0;overflow:hidden;
         text-overflow:ellipsis}
+      /* Keep an honest limit on inline content even in a wide dashboard.
+       * The existing status icon becomes a disclosure only when rows hide. */
+      .hem-outside-details87 .out-metrics>.out-chip:nth-child(n+3),
+      .hem-outside-details87 .outside-alerts>.reason~.reason~.reason,
+      .hem-outside-details87 .outside-alerts>.hem-wx-chip103:nth-child(n+3){display:none}
+      .outside[data-outside-count123="3"]{
+        --hem-outside-more123:block;--hem-outside-status123:none}
+      .outdoor-status:has(>.hem-outside-info123){flex:0 0 21px;min-width:21px}
+      .outdoor-status>.hem-outside-info123{display:var(--hem-outside-more123,none);margin:0}
+      .outdoor-status>ha-icon{display:var(--hem-outside-status123,inline-flex)}
+      .hem-outside-info123>summary{display:flex;align-items:center;justify-content:center;
+        width:21px;height:25px;padding:0;border:1px solid currentColor;
+        border-radius:5px;box-sizing:border-box;list-style:none;cursor:pointer}
+      .hem-outside-info123>summary::-webkit-details-marker{display:none}
+      .hem-outside-info123>summary:focus-visible{
+        outline:2px solid var(--aqa-blue);outline-offset:2px}
+      .hem-outside-info-content123{display:grid;gap:6px;min-width:0}
+      .hem-outside-info-row123{display:flex;align-items:center;flex-wrap:wrap;
+        gap:4px 8px;min-width:0;max-width:100%;box-sizing:border-box;
+        border:0;border-bottom:1px solid var(--aqa-edge);padding:5px 0;
+        background:transparent;color:inherit;font:inherit;text-align:start;
+        white-space:normal;overflow-wrap:anywhere}
+      .hem-outside-info-row123>span{min-width:0;flex:1 1 120px}
+      .hem-outside-info-value123{flex:0 0 auto;max-width:100%;white-space:normal}
+      button.hem-outside-info-row123{cursor:pointer;color:var(--aqa-blue)}
+      button.hem-outside-info-row123:focus-visible{outline:2px solid var(--aqa-blue)}
+      .hem-outside-info-row123>ha-icon{flex:0 0 16px;--mdc-icon-size:16px}
       .hem-overview-title87>b,.hem-overview-stat87>small{
         min-width:0;overflow:hidden;text-overflow:ellipsis}
       .hem-overview-title87>ha-icon,.hem-overview-title87>strong,
@@ -7619,12 +7707,16 @@
         .hem-overview-stat87 small{display:none}
         .weather-line>.hem-weather-condition123{display:none}
         .outside-title{max-width:none}
+        .hem-outside-details87 .out-metrics>.out-chip:nth-child(n+2),
+        .hem-outside-details87 .outside-alerts>.reason~.reason,
+        .hem-outside-details87 .outside-alerts>.hem-wx-chip103:nth-child(n+2){display:none}
+        .outside[data-outside-count123="2"]{
+          --hem-outside-more123:block;--hem-outside-status123:none}
       }
       @container hem-card123 (max-width:380px){
         .outdoor-text{gap:4px}
         .hem-outside-details87{gap:3px}
-        .hem-outside-details87 .outside-alerts:has(>.hem-outside-blocker123:nth-child(2))
-          .hem-outside-blocker123>ha-icon{display:none}
+        .hem-outside-details87 button.hem-wx-chip103>.hem-wx-chip-text103{display:none}
       }
     </style>`;
   };
