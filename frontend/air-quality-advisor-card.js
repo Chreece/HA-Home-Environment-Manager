@@ -6956,6 +6956,10 @@
       font-size:12px;line-height:1.5;overflow-wrap:anywhere}
     .hem-room-issue-detail114 ul{padding-inline-start:18px;margin:5px 0}
     .hem-room-issue-detail114 li+li{margin-top:4px}
+    .hem-room-issue-detail114 .hem-outside-blocker123{
+      min-width:0;max-width:100%;box-sizing:border-box}
+    .hem-room-issue-detail114 .hem-outside-blocker-label123{
+      white-space:normal;overflow:visible;text-overflow:clip}
     .hem-mold-measurement115 p{margin:0;line-height:1.45;color:var(--aqa-muted)}
     .hem-mold-measurement115 [data-mold-value117]{color:var(--aqa-muted)}
     .hem-mold-measurement115[data-mold-tone117="ready"] [data-mold-value117]{color:var(--aqa-green)}
