@@ -50,7 +50,8 @@ module("homeassistant.core", callback=lambda cb: cb)
 module("homeassistant.components", __path__=[])
 module("homeassistant.components.switch", SwitchEntity=type("SwitchEntity", (), {}))
 module("homeassistant.helpers", __path__=[])
-module("homeassistant.helpers.dispatcher", async_dispatcher_connect=None)
+module("homeassistant.helpers.dispatcher", async_dispatcher_connect=lambda hass, signal, cb:
+       (setattr(hass, "policy_change", cb), lambda: None)[1])
 module("homeassistant.helpers.entity", EntityCategory=NS(CONFIG="config"))
 module("homeassistant.helpers.entity_registry", async_get=lambda hass: hass.registry)
 module("homeassistant.helpers.event", async_track_state_change_event=lambda h,ids,cb:

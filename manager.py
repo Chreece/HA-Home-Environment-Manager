@@ -484,6 +484,15 @@ class AirQualityManager:
                     settings.get("window_efficiency_notify") is True
                     if isinstance(settings,dict) else False
                 )
+                alternative_enabled = getattr(
+                    getattr(self, "window_open_wait", None),
+                    "has_enabled_alternative", None,
+                )
+                if callable(alternative_enabled):
+                    substitute["notify_enabled"] = (
+                        substitute["notify_enabled"]
+                        or alternative_enabled(monitored.area_id, substitute)
+                    )
                 state["window_efficiency"]=substitute
                 # Previously the DRY/FAN_ONLY advisor existed only in tests:
                 # attach its real live plan to the dashboard for heat-pump,
@@ -1241,6 +1250,10 @@ class AirQualityManager:
                         if rec.area_id == area_id
                         and rec.action_signature == action_key
                         and rec.reason_signature == reason_key), None)
+        should_announce = getattr(getattr(self, "window_open_wait", None),
+                                  "should_announce", None)
+        if request is not None and callable(should_announce) and not should_announce(request):
+            return
         delay = (0 if action == "close" or getattr(request,"wait_seconds",0) > 0
                  else ANNOUNCE_OPEN_STABLE_SECONDS)
         self._pending_unsubs[area_id] = async_call_later(
@@ -1259,6 +1272,15 @@ class AirQualityManager:
             or self._active_actions.get(area_id) != (action_key, reason_key)
             or area_id in self._repeat_unsubs
         ):
+            return
+        request = next((rec for rec in
+                        (*self.plan.recommendations,*self.plan.climate_recommendations)
+                        if rec.area_id == area_id
+                        and rec.action_signature == action_key
+                        and rec.reason_signature == reason_key), None)
+        should_announce = getattr(getattr(self, "window_open_wait", None),
+                                  "should_announce", None)
+        if request is not None and callable(should_announce) and not should_announce(request):
             return
         self._repeat_unsubs[area_id] = async_call_later(
             self.hass, minutes * 60,
@@ -1289,6 +1311,10 @@ class AirQualityManager:
             None,
         )
         if rec is None:
+            return
+        should_announce = getattr(getattr(self, "window_open_wait", None),
+                                  "should_announce", None)
+        if callable(should_announce) and not should_announce(rec):
             return
         if area_id in self._sending_actions:
             return
@@ -1351,13 +1377,24 @@ class AirQualityManager:
         finally:
             self._sending_actions.pop(area_id,None)
             current = self._active_actions.get(area_id)
-            if self._active and current is not None and current != (action_key,reason_key):
+            current_request = next((item for item in
+                                    (*self.plan.recommendations,*self.plan.climate_recommendations)
+                                    if item.area_id == area_id),None)
+            pending_device = bool(
+                current_request is not None
+                and getattr(current_request, "wait_devices", ())
+                and self.plan.environment.get(area_id, {}).get(
+                    "window_open_wait", {}).get("status") == "window_request_pending"
+            )
+            if (self._active and current is not None
+                    and (current != (action_key,reason_key) or pending_device)):
                 # A sensor/caution change during a slow handoff must not lose
-                # its new notice or create overlapping room submissions.
-                rec = next((item for item in
-                            (*self.plan.recommendations,*self.plan.climate_recommendations)
-                            if item.area_id == area_id),None)
+                # its new notice or create overlapping room submissions. The
+                # same measured cause can also gain another waiting device;
+                # its request was not part of the completed handoff's ACK.
+                rec = current_request
                 if rec is not None:
+                    self._cancel_repeat(area_id)
                     self._cancel_pending(area_id)
                     self._queue_automatic(area_id,*current,action=rec.action)
             else:
@@ -1471,6 +1508,11 @@ class AirQualityManager:
             if (area := entity_area(self.hass, entity_id)) is None or area == area_id
         ]
 
+    async def async_announce_device_nonresponse(self, spec: Any, pending: dict) -> None:
+        """One warning for a controller-journaled unconfirmed command episode."""
+        from .device_faults import async_announce_nonresponse
+        await async_announce_nonresponse(self, spec, pending)
+
     async def async_announce(
         self, *, language: str | None = None, channels: str = "both",
         areas: list[str] | None = None,
@@ -1505,15 +1547,21 @@ class AirQualityManager:
             if current is None:
                 continue
             rec = current
+            should_announce = getattr(waiter, "should_announce", None)
+            if channels == "auto" and callable(should_announce) and not should_announce(rec):
+                continue
             if waiter is not None:
                 waiter.begin_submission(rec)
             title, message = announcement(rec, localized)
             prefer_hub = bool(config.get(CONF_HUB, False))
-            # Keep each outside caution and the bounded response instruction
-            # intact. A short AI rewrite cannot guarantee either survives.
+            # Send the complete factual request to Hub with the explicit HEM
+            # AI choice. Hub owns rewriting and its original-text fallback.
+            # Local short rewriting remains inappropriate for a long caution
+            # list or a response deadline and is skipped on that direct path.
             guarded_request = bool(getattr(rec,"cautions",()) or
-                                   getattr(rec,"wait_seconds",0))
-            use_ai = ai_effectively_enabled(config) and not guarded_request
+                                   getattr(rec,"wait_seconds",0) or
+                                   getattr(rec,"wait_devices",()))
+            use_ai = ai_effectively_enabled(config)
             agent = str(config.get(CONF_AI_AGENT, DEFAULT_AGENT) or DEFAULT_AGENT)
 
             # Hub performs its own optional AI rewrite. An explicit boolean
@@ -1562,7 +1610,7 @@ class AirQualityManager:
             system_available = bool(
                 self.hass.services.has_service("persistent_notification", "create")
             )
-            if use_ai and (can_notify or can_speak or (prefer_hub and system_available)):
+            if use_ai and not guarded_request and (can_notify or can_speak or (prefer_hub and system_available)):
                 message = await async_rewrite_announcement(
                     self.hass, rec, message, localized, agent,
                 )

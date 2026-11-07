@@ -3810,6 +3810,14 @@
             "name": "مساعدة"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "الإعلانات · {channel}انتظار فتح النوافذ (دقيقة)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "النوم · {channel}عندما يكون الجميع نائمين",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "الإعلانات · {channel}طلب فتح النوافذ",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"

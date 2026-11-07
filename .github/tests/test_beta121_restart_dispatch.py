@@ -195,7 +195,9 @@ class RestartDispatchTests(unittest.IsolatedAsyncioTestCase):
                         current.after_persist = None
                         current.manager.plan["away"] = "unknown"
                 r.after_persist = after_save
-                await r.evaluate(30)
+                await r.evaluate(60)
+                self.assertIsNone(r.after_persist, "Exercise the durable retry reservation")
+                self.assertEqual(r.manager.plan["away"], "unknown")
                 self.assertEqual(len(calls(r)), 1)
                 self.assertEqual(r.record["pending"], original)
                 self.assertFalse(r.record.get("paused"))
@@ -236,8 +238,10 @@ class RestartDispatchTests(unittest.IsolatedAsyncioTestCase):
                         r.after_persist = after_save
                     else:
                         r._commands = OnLock(unknown)
-                    r.now += 30.
+                    r.now += 60.
                     await r._retry_pending(r.spec, r.record["pending"], r.now)
+                    self.assertEqual(r.manager.plan["away"], "unknown",
+                                     "Exercise the requested retry boundary")
                     self.assertEqual(len(calls(r)), 1)
                     self.assertEqual(r.record["pending"], original)
                     self.assertFalse(r.record.get("paused"))
@@ -272,7 +276,7 @@ class RestartDispatchTests(unittest.IsolatedAsyncioTestCase):
                 cap = model.capabilities(r.manager, r.spec)
                 await r._power(r.spec, cap, "off", automatic=True, shutdown=True)
                 r.manager.plan["away"] = "away"
-                await r.evaluate(30)
+                await r.evaluate(60)
                 self.assertEqual(calls(r), [("set_hvac_mode", {"hvac_mode": "off"})] * 2)
                 self.assertFalse(r.record.get("paused"))
                 self.assertNotIn("automatic_continue_requested", r.record)

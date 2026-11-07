@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from math import ceil, isfinite
 
 from .logic import Reason, Recommendation
@@ -11,7 +12,7 @@ from .recommendation_text import (
     CLIMATE_WINDOW_TEXT,
     ROOM_VENTILATION_TEXT as EXTRA_ROOM_VENTILATION_TEXT,
 )
-from .window_open_text import WINDOW_OPEN_TEXT, WEATHER_CAUTION_CODES
+from .window_open_text import WINDOW_OPEN_TEXT, WEATHER_CAUTION_CODES, ROOM_WINDOW_NAMES
 
 
 TEXT = {
@@ -154,13 +155,20 @@ def _extra_messages(entry: dict) -> dict[str, str]:
 
 
 TEXT.update({tag: _extra_messages(locale) for tag, locale in EXTRA_LOCALES.items()})
+# These older patterns added a window noun around a contact-name placeholder.
+# Opening now uses a translated generic noun, not any selected contact name.
+TEXT["tr"]["open"] = "{area} içindeki {windows} açın: {reasons}. Dış koşullar havalandırma için uygun."
+TEXT["hu"]["open"] = "Nyisd ki {windows} itt: {area}. Ok: {reasons}. A kinti körülmények megfelelőek."
+TEXT["fa"]["open"] = "{windows} را در {area} باز کنید: {reasons}. شرایط بیرون برای تهویه مناسب است."
+TEXT["ko"]["open"] = "{area}의 {windows}을 여세요. 이유: {reasons}. 실외 환경이 환기에 적합합니다."
 for _language, _templates in CLIMATE_WINDOW_TEXT.items():
     TEXT[_language].update(_templates)
 for _language, _templates in WINDOW_OPEN_TEXT.items():
     TEXT[_language].update(zip(WEATHER_CAUTION_CODES, _templates["weather"]))
     TEXT[_language]["weather_heat_loss"] = _templates["heat_loss"]
     TEXT[_language]["outside_conditions_not_verified"] = _templates["unverified"]
-    for _code in ("outside_more_moisture", "aqi_scale_unconfigured", "outside_pollen"):
+    for _code in ("outside_more_moisture", "aqi_scale_unconfigured", "outside_pollen",
+                  "climate_window_humidify", "climate_window_filtration"):
         TEXT[_language][_code] = _templates[_code]
     TEXT[_language]["inside_passive_cooling"] = TEXT[_language]["climate_window_cool"]
 
@@ -254,13 +262,44 @@ def explain(reason: Reason, language: str) -> str:
 
 def _with_window_wait(rec: Recommendation, message: str, language: str) -> str:
     """Describe a bounded opportunity without claiming that output stopped."""
+    if rec.action != "open":
+        return message
+    translated = WINDOW_OPEN_TEXT[language_code(language)]
+    device_lines = []
+    seen = set()
+    waiting_devices = getattr(rec, "wait_devices", ()) or ()
+    for device in waiting_devices:
+        if not isinstance(device, Mapping):
+            continue
+        remaining = device.get("remaining_seconds")
+        name = device.get("friendly_name")
+        entity = device.get("entity_id")
+        if (not isinstance(name, str) or not name.strip()
+                or isinstance(remaining, bool) or not isinstance(remaining, (int, float))
+                or not isfinite(remaining) or not 0 < remaining <= 30 * 60):
+            continue
+        key = (entity, name, remaining)
+        if key in seen:
+            continue
+        seen.add(key)
+        minutes = ceil(remaining / 60)
+        template = (translated.get("device_wait_one", translated["device_wait"])
+                    if minutes == 1 else translated["device_wait"])
+        device_lines.append(template.format(
+            device=name, area=rec.area_name, minutes=minutes,
+        ))
+    if device_lines:
+        return " ".join((message, *device_lines))
+    if waiting_devices:
+        return message
+    # Retain the legacy room-level wording only when no per-device deadline
+    # was supplied. Native device waits always list the exact eligible device.
     seconds = getattr(rec, "wait_seconds", 0)
-    if (rec.action != "open" or isinstance(seconds, bool)
+    if (isinstance(seconds, bool)
             or not isinstance(seconds, (int, float)) or not isfinite(seconds)
             or not 0 < seconds <= 30 * 60):
         return message
     minutes = ceil(seconds / 60)
-    translated = WINDOW_OPEN_TEXT[language_code(language)]
     suffix = translated.get("wait_one", translated["wait"]).format(minutes=minutes) if minutes == 1 else (
         translated["wait"].format(minutes=minutes)
     )
@@ -268,6 +307,9 @@ def _with_window_wait(rec: Recommendation, message: str, language: str) -> str:
 
 
 def announcement(rec: Recommendation, language: str) -> tuple[str, str]:
+    generic_windows = ROOM_WINDOW_NAMES[language_code(language)]
+    windows = (", ".join(w.name for w in rec.windows if w.opened is True)
+               or generic_windows) if rec.action == "close" else generic_windows
     cautions = getattr(rec, "cautions", ())
     if (rec.reasons and rec.reasons[0].code in ROOM_VENTILATION_CODES
             and not (rec.action == "open" and cautions)):
@@ -277,22 +319,22 @@ def announcement(rec: Recommendation, language: str) -> tuple[str, str]:
         if code.startswith("air_refresh_"):
             title = translated["refresh_title"]
             content = translated["wake" if code=="air_refresh_wake" else "return"]
-            return title, _with_window_wait(
-                rec, content.format(area=rec.area_name), language,
-            )
+            message = content.format(area=rec.area_name)
+            if len(rec.reasons) > 1:
+                message += " " + "; ".join(explain(reason, language) for reason in rec.reasons[1:]) + "."
+            return title, _with_window_wait(rec, message, language)
         kind = "heat" if code=="window_heat_loss" else "cool"
-        windows = ", ".join(w.name for w in rec.windows)
-        return (
-            translated[kind+"_title"],
-            translated[kind].format(
-                windows=windows, area=rec.area_name,
-                value=rec.reasons[0].value,
-            ),
+        message = translated[kind].format(
+            windows=windows, area=rec.area_name,
+            value=rec.reasons[0].value,
         )
+        if len(rec.reasons) > 1:
+            message += " " + "; ".join(explain(reason, language) for reason in rec.reasons[1:]) + "."
+        return translated[kind+"_title"], message
     t = TEXT[language_code(language)]
-    windows = ", ".join(window.name for window in rec.windows)
-    # A few causes are sufficient for TTS; all causes remain in sensor attributes.
-    reasons = "; ".join(explain(reason, language) for reason in rec.reasons[:3])
+    # Every requested action explains its actual measured causes, including
+    # a fourth pollutant or an additional weather reason that affects safety.
+    reasons = "; ".join(explain(reason, language) for reason in rec.reasons)
     title = t[f"title_{rec.action}"]
     if rec.action=="open" and any(
         item.code.startswith("climate_window_") for item in rec.reasons

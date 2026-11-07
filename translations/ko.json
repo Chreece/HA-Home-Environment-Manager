@@ -3810,6 +3810,14 @@
             "name": "도움말"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "알림 · {channel}창문 열기 대기 시간(분)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "수면 · {channel}모두가 자고 있을 때",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "알림 · {channel}창문 열기 요청",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"

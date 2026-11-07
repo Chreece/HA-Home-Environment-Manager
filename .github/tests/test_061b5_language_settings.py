@@ -395,7 +395,10 @@ class SpokenRecommendationLanguageTests(unittest.TestCase):
                         self.assertEqual(title, messages.TEXT[tag]["title_climate_window"])
                         self.assertIn(messages.TEXT[tag][code].format(value="DELTA_VALUE"), body)
                     if not code.startswith("air_refresh_"):
-                        self.assertIn("WINDOW_NAME", body)
+                        if rec.action == "close":
+                            self.assertIn("WINDOW_NAME", body)
+                        else:
+                            self.assertNotIn("WINDOW_NAME", body)
                         self.assertIn("DELTA_VALUE", body)
 
 

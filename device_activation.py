@@ -2,39 +2,64 @@
 
 Choosing Automatic, PID or Manual is explicit consent for this exact native
 controller to regulate setpoints/speed and to turn its supported native mode
-on/off as needed. Raw relay commissioning is never inferred. Input/identity changes invalidate consent until reselected.
+on/off as needed. Raw relay commissioning is never inferred. Physical identity changes invalidate consent until reselected.
 """
 from __future__ import annotations
 from .config_data import mutable_copy
 
 
 def authority_context(manager, spec):
+    """Bind consent to the physical controller, independently of room readings.
+
+    Room sensor revisions, their order, and policy preferences are rechecked
+    by the live control gates. They do not replace the native device that the
+    user selected, so they must not silently revoke that selection.
+    """
     from homeassistant.helpers import entity_registry as er
-    from . import equipment_model as model
     registry = er.async_get(manager.hass)
-    room = model.room_config(manager, spec)
-    source_map = manager.settings.get("room_sources", {}).get(spec.area_id)
-    pins = {}
-    for entity in spec.source_entities:
-        dev = model.device_config(manager, spec, entity)
-        pins[entity] = {key: [room.get(key), dev.get(key)] for key in (
-            "temperature_entity", "humidity_entity", "co2_entity", "pm25_entity")}
-        pins[entity]["selection_generation"] = dev.get("selection_generation", 0)
-        pins[entity]["legacy_permission"] = [dev.get("auto_control"), dev.get("hardware_confirmed"), dev.get("method")]
-    return mutable_copy({"area": spec.area_id, "physical_device": spec.source_device_id,
-        "sources": [[entity, getattr(registry.async_get(entity), "id", None),
-                     getattr(registry.async_get(entity), "unique_id", None)] for entity in spec.source_entities],
-        "inputs": {key: source_map.get(key, []) for key in ("windows", "temperature", "humidity", "air_quality")}
-                   if source_map is not None else None,
-        "source_revision": room.get("source_revision", 0),
-        "excluded": manager.settings.get("excluded_indoor_entities", {}).get(spec.area_id, []),
-        "pins": pins})
+    return mutable_copy({
+        "version": 2, "area": spec.area_id,
+        "physical_device": spec.source_device_id,
+        "sources": sorted([
+            [entity, getattr(registry.async_get(entity), "id", None),
+             getattr(registry.async_get(entity), "unique_id", None)]
+            for entity in spec.source_entities
+        ]),
+    })
+
+
+def authorization_matches(saved, current):
+    """Accept an existing grant only for exactly the same physical identities.
+
+    The original grant also captured mutable measurement/policy metadata.
+    Upgrading that shape is safe only when all its endpoint identities still
+    match. Missing, moved, replaced or added physical endpoints never inherit
+    consent merely because a profile still says Automatic or PID.
+    """
+    if not isinstance(saved, dict) or not isinstance(current, dict):
+        return False
+    if saved.get("version", 1) not in (1, 2):
+        return False
+    sources = saved.get("sources")
+    if (not isinstance(sources, list) or not sources
+            or any(not isinstance(source, (list, tuple)) or len(source) != 3
+                   or not isinstance(source[0], str)
+                   or not any(isinstance(value, str) and value for value in source[1:])
+                   for source in sources)):
+        return False
+    return bool(
+        saved.get("area") == current.get("area")
+        and saved.get("physical_device") == current.get("physical_device")
+        and sorted([list(source) for source in sources]) == current.get("sources")
+    )
 
 
 def authorized(manager, spec):
     from . import equipment_model as model
-    value = model.settings(manager, spec).get("_native_authorization")
-    return isinstance(value, dict) and value == authority_context(manager, spec)
+    return authorization_matches(
+        model.settings(manager, spec).get("_native_authorization"),
+        authority_context(manager, spec),
+    )
 
 
 def effective_device(manager, spec, entity, *, cap=None):
@@ -62,7 +87,16 @@ def effective_device(manager, spec, entity, *, cap=None):
     for key in ("presence_requirement", "sleep_behavior", "fan_purpose", "sensor_verified"):
         if key in cfg and cfg[key] is not None and cfg[key] != "auto":
             result[key] = cfg[key]
-    if not result.get("fan_purpose") or result["fan_purpose"] == "auto":
+    if result.get("fan_purpose") not in ("extraction", "filtration"):
+        # An exact room assignment is stronger evidence than sensor-based
+        # inference. Rooms commonly measure both CO2 and particles; that
+        # must not erase their configured purifier or extraction role.
+        room = model.room_config(manager, spec)
+        if room.get("extraction_fan_entity") == entity:
+            result["fan_purpose"] = "extraction"
+        elif room.get("purifier_fan_entity") == entity:
+            result["fan_purpose"] = "filtration"
+    if result.get("fan_purpose") not in ("extraction", "filtration"):
         from .room_sources import selected
         from .discovery import supported_metric
         ids = selected(manager.settings, spec.area_id, "air_quality")

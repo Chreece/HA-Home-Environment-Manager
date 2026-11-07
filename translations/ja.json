@@ -3810,6 +3810,14 @@
             "name": "ヘルプ"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "通知 · {channel}窓を開けるまでの待機（分）",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "睡眠 · {channel}全員が睡眠中のとき",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "通知 · {channel}窓を開けるよう案内",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"

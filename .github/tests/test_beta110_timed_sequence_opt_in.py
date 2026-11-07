@@ -62,7 +62,10 @@ class OptInTests(unittest.IsolatedAsyncioTestCase):
                         self.assertEqual(calls(r), [mode_on, target, OFF])
                         self.assertNotIn("native_setpoint_stop", r.record)
                         self.assertIn(PRIMARY, r.record["power"], "OFF dispatch is not an ACK")
-                        self.assertFalse(r.timer_loop.handles, "No optional deadline when disabled")
+                        active_deadlines = [handle.deadline for handle in r.timer_loop.handles
+                                            if not handle.cancelled() and not handle.fired]
+                        self.assertEqual(active_deadlines, [r.now + 60],
+                                         "Only the ordinary minute retry; no optional 30-second grace")
 
     async def test_soft_manual_range_and_humidity_send_without_optional_startup_grace(self):
         for service, data in (("set_temperature", {"temperature": 20.}),
@@ -219,7 +222,9 @@ class OptInTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(r.record["pending"]["attempts"], 1)
                 r.record["pending"]["retry_context"]["settings"].pop(KEY, None)
                 choose(r, False)
-                await r.evaluate(30)
+                await r.evaluate(59.999)
+                self.assertEqual(calls(r), [original], "Retry must wait one full minute")
+                await r.evaluate(.001)
                 self.assertEqual(calls(r), [original, original])
                 self.assertEqual(r.record["pending"]["attempts"], 2)
                 self.assertFalse(r.record.get("paused"))
@@ -235,7 +240,7 @@ class OptInTests(unittest.IsolatedAsyncioTestCase):
         initial = deepcopy(r.record["pending"])
         # HA emits a genuine OFF->ON while the original target remains
         # unconfirmed; the final snapshot has the same mode/old setpoint.
-        r.now += 25
+        r.now += 55
         r.availability_event("off")
         r.availability_event("heat")
 

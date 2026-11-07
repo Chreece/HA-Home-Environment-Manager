@@ -3810,6 +3810,14 @@
             "name": "Trợ giúp"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Thông báo · {channel}Thời gian chờ mở (phút)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Ngủ · {channel}Khi mọi người đều đang ngủ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Thông báo · {channel}Yêu cầu mở cửa sổ",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"

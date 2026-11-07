@@ -3810,6 +3810,14 @@
             "name": "Nápověda"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Oznámení · {channel}Čekání na otevření (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Spánek · {channel}Když všichni spí",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Oznámení · {channel}Požádat o otevření oken",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"

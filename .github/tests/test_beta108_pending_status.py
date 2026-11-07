@@ -130,7 +130,7 @@ class PendingStatusTests(unittest.IsolatedAsyncioTestCase):
         for method in ("automatic", "pid"):
             with self.subTest(method=method):
                 runtime = await self.dispatched_target(method=method, age=121)
-                runtime.record["paused"] = "native_retry_authority_or_state_changed"
+                runtime.record["paused"] = "physical_source_identity_changed"
                 result = self.read_without_side_effects(runtime)
                 self.assert_target_feedback(result)
                 self.assertEqual(result["decision"], "first_check")
@@ -147,7 +147,7 @@ class PendingStatusTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(runtime.record, before)
                 self.assertEqual(runtime.calls, calls)
                 self.assertEqual(runtime.statuses[-1], (
-                    "paused", {"reason": "native_retry_authority_or_state_changed"},
+                    "paused", {"reason": "physical_source_identity_changed"},
                 ))
 
     async def test_retained_target_keeps_its_count_and_explicit_recovery_button(self):

@@ -3810,6 +3810,14 @@
             "name": "Справка"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Объявления · {channel}Ожидание открытия (мин)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Справка"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Сон · {channel}Когда все спят",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Справка"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Объявления · {channel}Попросить открыть окна",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"

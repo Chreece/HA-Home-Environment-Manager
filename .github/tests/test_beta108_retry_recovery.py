@@ -1,4 +1,4 @@
-"""Retain exhausted target budgets while ordinary shutdown remains reachable.
+"""Retry automatic targets while preserving old journals and guarded shutdown.
 
 The Beta106 fixture supplies native HA state/service/registry transport and
 policy inputs. This suite additionally runs the production automatic recovery
@@ -105,11 +105,9 @@ for method in RECOVERY_METHODS:
     setattr(RecoveryRuntime, method, getattr(production, method))
 
 
-class ExhaustedTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
-    async def exhausted(self, method="pid", mode="heat"):
+class AutomaticTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
+    async def dispatched(self, method="pid", mode="heat"):
         runtime = RecoveryRuntime(method, mode)
-        # Keep a continuously requested ON episode in the budget tests. PWM
-        # OFF and stop-policy obligations are covered in the shutdown suite.
         runtime.manager.settings["kp"] = 100.0
         runtime.own_running()
         await runtime.evaluate()
@@ -119,50 +117,31 @@ class ExhaustedTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
             "data": {"temperature": runtime.requested_target},
             "target": {"entity_id": PRIMARY},
         }])
-        for attempt in (2, 3, 4):
-            await runtime.evaluate(30)
-            self.assertEqual(pending["attempts"], attempt)
-            self.assertIs(runtime.record["pending"], pending)
-        await runtime.evaluate(30)
-        self.assertEqual(len(runtime.calls), 4)
-        self.assertEqual(runtime.record["paused"], "physical_acknowledgement_missing")
         self.assertEqual(pending["phase"], "commanded")
-        self.assertEqual(runtime.state.attributes["temperature"], runtime.original_target)
         self.assertFalse(production.matches(runtime.state, pending["expected"]))
         return runtime, pending
 
-    async def retire(self, runtime, pending):
-        original = deepcopy(pending)
-        owned_since = runtime.record["power"][PRIMARY]["since"]
-        await runtime.evaluate()
-        self.assertIs(runtime.record["pending"], pending)
-        information = runtime.resume_information(SPEC) or {}
-        if information.get("decision") == "settling":
-            remaining = information["remaining_seconds"]
-            # The fourth/reconnect attempt needs its own full 120-second
-            # settle period; time since the original attempt is insufficient.
-            await runtime.evaluate(remaining - 1)
-            self.assertIs(runtime.record["pending"], pending)
-            self.assertNotIn("pending_resume_probe", runtime.record)
-            await runtime.evaluate(1)
-        self.assertIn("pending_resume_probe", runtime.record)
-        await runtime.evaluate(60)
-        self.assertIsNone(runtime.record["pending"])
-        self.assertIsNone(runtime.record["paused"])
-        self.assertIn("unconfirmed_native_target", runtime.record)
-        ledger = runtime.record["unconfirmed_native_target"]
-        self.assertEqual(ledger, original)
-        self.assertEqual(runtime.record["last_resume_reconciliation"]["method"],
-                         "stable_native_state")
-        self.assertEqual(runtime.record["power"][PRIMARY]["since"], owned_since)
-        self.assertFalse(runtime.statuses[-1][1]["physical_output_confirmed"])
-        self.assertNotIn("automatic_continue_requested", runtime.record)
-        return ledger
+    async def legacy_journal(self, method="pid", mode="heat", *, retired=False):
+        """Restore the shape that an earlier release persisted after attempt4.
 
-    async def reconciled(self, method="pid", mode="heat"):
-        runtime, pending = await self.exhausted(method, mode)
-        ledger = await self.retire(runtime, pending)
-        return runtime, ledger
+        The real first dispatch establishes source identity, capabilities,
+        expected feedback and settings. Only the historical clock/count and
+        pause/retired location are seeded at the persistence boundary; current
+        production behavior is never made to exhaust its new minute policy.
+        """
+        runtime, pending = await self.dispatched(method, mode)
+        runtime.now += 120
+        pending.update(attempts=4, last_attempt_at=pending["when"] + 90)
+        pending.pop("retry_policy", None)
+        runtime.calls.clear()
+        if retired:
+            runtime.record["unconfirmed_native_target"] = deepcopy(pending)
+            runtime.record["pending"] = None
+            runtime.record["paused"] = None
+        else:
+            runtime.record["paused"] = "physical_acknowledgement_missing"
+        await runtime._save()
+        return runtime, deepcopy(pending)
 
     def rehydrate(self, original):
         runtime = RecoveryRuntime(original.manager.settings["control_mode"],
@@ -176,60 +155,86 @@ class ExhaustedTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
         runtime._native_settled_for[(SPEC.identifier, PRIMARY)] = runtime.now - 30
         return runtime
 
-    async def test_unchanged_feedback_cannot_reset_retired_four_attempt_budget(self):
+    async def test_unchanged_feedback_retries_each_minute_without_resetting_history(self):
         for method in ("pid", "automatic"):
             for mode in ("heat", "cool"):
                 with self.subTest(method=method, mode=mode):
-                    runtime, ledger = await self.reconciled(method, mode)
-                    original_ledger = deepcopy(ledger)
-                    recovery_tasks = runtime.created_recovery_tasks
+                    runtime, pending = await self.dispatched(method, mode)
+                    original_call = deepcopy(runtime.calls[0])
+                    when = pending["when"]
                     owned_since = runtime.record["power"][PRIMARY]["since"]
-                    for delta in (0, 5, 25, 60, 60, 120, 300, 900):
-                        await runtime.evaluate(delta)
-                    self.assertEqual(len(runtime.calls), 4, runtime.calls)
-                    self.assertIsNone(runtime.record["pending"])
-                    self.assertIsNone(runtime.record["paused"])
-                    self.assertEqual(runtime.record["unconfirmed_native_target"], original_ledger)
-                    self.assertEqual(runtime.state.attributes["temperature"], runtime.original_target)
-                    self.assertFalse(production.matches(runtime.state, ledger["expected"]))
-                    self.assertNotIn("pending_resume_probe", runtime.record)
-                    self.assertEqual(runtime.created_recovery_tasks, recovery_tasks)
+                    for attempt in range(2, 9):
+                        await runtime.evaluate(59.999)
+                        self.assertEqual(len(runtime.calls), attempt - 1)
+                        await runtime.evaluate(.001)
+                        self.assertEqual(len(runtime.calls), attempt)
+                        self.assertEqual(pending["attempts"], attempt)
+                        self.assertEqual(pending["when"], when)
+                        self.assertIs(runtime.record["pending"], pending)
+                        self.assertFalse(runtime.record.get("paused"))
+                        self.assertEqual(runtime.manager.settings["control_mode"], method)
+                    self.assertEqual(runtime.calls, [original_call] * 8)
                     self.assertEqual(runtime.record["power"][PRIMARY]["since"], owned_since)
-                    self.assertEqual(runtime.statuses[-1][0], "awaiting_physical_acknowledgement")
-                    self.assertEqual(runtime.statuses[-1][1]["command_attempts"], 4)
-                    self.assertFalse(runtime.statuses[-1][1]["native_output_confirmed"])
+                    self.assertNotIn("unconfirmed_native_target", runtime.record)
+                    self.assertNotIn("pending_resume_probe", runtime.record)
+                    self.assertEqual(runtime.state.attributes["temperature"], runtime.original_target)
+                    self.assertFalse(production.matches(runtime.state, pending["expected"]))
 
-    async def test_late_native_target_ack_clears_budget_without_replay_or_dwell_reset(self):
+    async def test_legacy_pending_and_retired_targets_migrate_with_original_history(self):
+        for method in ("pid", "automatic"):
+            for retired in (False, True):
+                with self.subTest(method=method, retired=retired):
+                    runtime, original = await self.legacy_journal(method, retired=retired)
+                    await runtime.evaluate()
+                    self.assertEqual(runtime.calls, [], "The last historical attempt was only30 seconds ago")
+                    pending = runtime.record["pending"]
+                    self.assertIsInstance(pending, dict)
+                    self.assertEqual(pending["attempts"], 4)
+                    self.assertEqual(pending["when"], original["when"])
+                    self.assertEqual(pending["retry_policy"], "automatic_minute")
+                    self.assertFalse(runtime.record.get("paused"))
+                    await runtime.evaluate(29.999)
+                    self.assertEqual(runtime.calls, [])
+                    await runtime.evaluate(.001)
+                    self.assertEqual(len(runtime.calls), 1)
+                    self.assertEqual(pending["attempts"], 5)
+                    self.assertEqual(pending["when"], original["when"])
+                    self.assertNotIn("unconfirmed_native_target", runtime.record)
+                    self.assertEqual(runtime.calls[-1]["data"], original["data"])
+                    await runtime.evaluate(60)
+                    self.assertEqual(pending["attempts"], 6)
+                    self.assertEqual(len(runtime.calls), 2)
+
+    async def test_late_target_ack_stops_retries_without_replay_or_dwell_reset(self):
         for method in ("pid", "automatic"):
             for mode in ("heat", "cool"):
                 with self.subTest(method=method, mode=mode):
-                    runtime, ledger = await self.reconciled(method, mode)
+                    runtime, pending = await self.dispatched(method, mode)
                     owned_since = runtime.record["power"][PRIMARY]["since"]
                     measured = runtime.state.attributes["current_temperature"]
-                    await runtime.evaluate(180)
-                    self.assertEqual(len(runtime.calls), 4)
+                    for _ in range(4):
+                        await runtime.evaluate(60)
+                    self.assertEqual(pending["attempts"], 5)
+                    count = len(runtime.calls)
                     runtime.report(temperature=runtime.requested_target)
-                    self.assertTrue(production.matches(runtime.state, ledger["expected"]))
+                    self.assertTrue(production.matches(runtime.state, pending["expected"]))
                     await runtime.evaluate()
-                    self.assertNotIn("unconfirmed_native_target", runtime.record)
                     self.assertIsNone(runtime.record["pending"])
-                    self.assertIsNone(runtime.record["paused"])
+                    self.assertNotIn("unconfirmed_native_target", runtime.record)
+                    self.assertFalse(runtime.record.get("paused"))
                     self.assertEqual(runtime.record["power"][PRIMARY]["since"], owned_since)
                     self.assertEqual(runtime.state.attributes["current_temperature"], measured)
                     self.assertNotEqual(measured, runtime.requested_target)
-                    self.assertEqual(len(runtime.calls), 4)
-                    await runtime.evaluate(1)
-                    self.assertEqual(len(runtime.calls), 4)
+                    await runtime.evaluate(60)
+                    self.assertEqual(len(runtime.calls), count)
 
-    async def test_only_two_real_reconnects_can_extend_original_target_budget(self):
+    async def test_reconnects_keep_minute_spacing_settling_and_original_attempts(self):
         for method in ("pid", "automatic"):
             for mode in ("heat", "cool"):
                 with self.subTest(method=method, mode=mode):
-                    runtime, ledger = await self.reconciled(method, mode)
-                    original_call = deepcopy(runtime.calls[0])
-                    original_when = ledger["when"]
-                    last_used_epoch = None
-                    for reconnect in (1, 2, 3):
+                    runtime, pending = await self.dispatched(method, mode)
+                    original_when, original_call = pending["when"], deepcopy(runtime.calls[0])
+                    for attempt in range(2, 5):
                         before_calls = len(runtime.calls)
                         runtime.now += 1
                         runtime.availability_event("unavailable")
@@ -237,70 +242,59 @@ class ExhaustedTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
                         self.assertEqual(len(runtime.calls), before_calls)
                         runtime.now += 5
                         runtime.availability_event(mode)
-                        epoch = runtime._native_reconnect_epoch[PRIMARY]
-                        self.assertGreater(epoch, runtime.record["unconfirmed_native_target"]["last_attempt_at"])
-                        await runtime.evaluate()
-                        await runtime.evaluate(29)
+                        await runtime.evaluate(29.999)
                         self.assertEqual(len(runtime.calls), before_calls,
-                                         "Native reconnection must settle before any retry")
-                        await runtime.evaluate(1)
-                        expected_calls = 4 + min(reconnect, 2)
-                        self.assertEqual(len(runtime.calls), expected_calls)
-                        if reconnect <= 2:
-                            pending = runtime.record["pending"]
-                            self.assertEqual(pending["attempts"], expected_calls)
-                            self.assertEqual(pending["when"], original_when)
-                            self.assertEqual(pending["reconnect_retry_uses"], reconnect)
-                            self.assertEqual(runtime.record["unconfirmed_native_target"]["attempts"], expected_calls)
-                            last_used_epoch = epoch
-                            await runtime.evaluate(30)
-                            self.assertEqual(runtime.record["paused"], "physical_acknowledgement_missing")
-                            await self.retire(runtime, pending)
-                        budget = runtime.record["unconfirmed_native_target"]
-                        self.assertEqual(budget["attempts"], expected_calls)
-                        self.assertEqual(budget["reconnect_retry_uses"], min(reconnect, 2))
-                        self.assertEqual(budget["reconnect_retry_epoch_used"], last_used_epoch)
-                        self.assertEqual(budget["when"], original_when)
-                        for delta in (0, 30, 60, 180):
-                            await runtime.evaluate(delta)
-                            self.assertEqual(len(runtime.calls), expected_calls,
-                                             "One reconnect does not create repeated retry grants")
-                            self.assertIsNone(runtime.record["pending"])
-                        self.assertFalse(production.matches(runtime.state, budget["expected"]))
-                    self.assertEqual(runtime.calls, [original_call] * 6)
+                                         "Native reconnect must settle before another attempt")
+                        await runtime.evaluate(.001)
+                        self.assertEqual(len(runtime.calls), before_calls,
+                                         "A reconnect cannot shorten the60-second command interval")
+                        await runtime.evaluate(23.999)
+                        self.assertEqual(len(runtime.calls), before_calls)
+                        await runtime.evaluate(.001)
+                        self.assertEqual(len(runtime.calls), attempt)
+                        self.assertEqual(pending["attempts"], attempt)
+                        self.assertEqual(pending["when"], original_when)
+                        self.assertIs(runtime.record["pending"], pending)
+                        self.assertEqual(runtime.calls[-1], original_call)
+                    await runtime.evaluate(60)
+                    self.assertEqual(pending["attempts"], 5, "No two-reconnect cap in Automatic")
+                    self.assertFalse(runtime.record.get("paused"))
+                    self.assertFalse(production.matches(runtime.state, pending["expected"]))
 
     async def test_reconnect_revalidates_settings_before_identical_target_dispatch(self):
-        runtime, ledger = await self.reconciled()
+        runtime, pending = await self.dispatched()
+        original = deepcopy(pending)
         runtime.now += 1
         runtime.availability_event("unavailable")
         runtime.now += 5
         runtime.availability_event("heat")
         runtime.manager.settings["kp"] -= 1.0
-        await runtime.evaluate(30)
-        self.assertEqual(len(runtime.calls), 4)
-        self.assertIsNone(runtime.record["pending"])
-        self.assertEqual(runtime.record["unconfirmed_native_target"], ledger)
-        self.assertFalse(production.matches(runtime.state, ledger["expected"]))
+        await runtime.evaluate(60)
+        self.assertEqual(len(runtime.calls), 1)
+        self.assertEqual(runtime.record["pending"], original)
+        self.assertFalse(production.matches(runtime.state, pending["expected"]))
+        self.assertEqual(runtime.manager.settings["control_mode"], "pid")
 
-    async def test_explicit_continue_button_clears_budget_without_service_until_next_tick(self):
+    async def test_explicit_continue_clears_legacy_budget_without_service_until_next_tick(self):
         for method in ("pid", "automatic"):
             for mode in ("heat", "cool"):
                 with self.subTest(method=method, mode=mode):
-                    runtime, _ = await self.reconciled(method, mode)
+                    runtime, _ = await self.legacy_journal(method, mode, retired=True)
                     owned_since = runtime.record["power"][PRIMARY]["since"]
                     scheduled = runtime.scheduled_evaluations
                     self.assertTrue(await runtime.async_continue_automatic(SPEC))
                     self.assertNotIn("unconfirmed_native_target", runtime.record)
                     self.assertEqual(runtime.record["power"][PRIMARY]["since"], owned_since)
-                    self.assertEqual(len(runtime.calls), 4, "The actual button verifier sends no service")
+                    self.assertEqual(runtime.calls, [], "The actual button verifier sends no service")
                     self.assertGreater(runtime.scheduled_evaluations, scheduled)
                     await runtime.evaluate()
-                    self.assertEqual(len(runtime.calls), 5)
+                    self.assertEqual(len(runtime.calls), 1)
                     self.assertEqual(runtime.calls[-1]["data"], {"temperature": runtime.requested_target})
                     self.assertEqual(runtime.record["pending"]["attempts"], 1)
 
-    async def test_explicit_two_checks_keep_existing_user_reconciliation(self):
-        runtime, pending = await self.exhausted()
+    async def test_explicit_two_checks_keep_physical_reconciliation_without_device_command(self):
+        runtime, _ = await self.legacy_journal()
+        pending = runtime.record["pending"]
         with self.assertRaises(HomeAssistantError):
             await runtime.async_resume(SPEC)
         self.assertNotIn("pending_resume_probe", runtime.record)
@@ -316,88 +310,123 @@ class ExhaustedTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(runtime.record["pending"])
         self.assertNotIn("unconfirmed_native_target", runtime.record)
         self.assertEqual(runtime.record["last_resume_reconciliation"]["method"], "two_physical_checks")
-        self.assertEqual(len(runtime.calls), 4)
+        self.assertEqual(runtime.calls, [])
 
-    async def test_persisted_budget_survives_automatic_rehydration_until_target_or_off_ack(self):
+    async def test_restart_keeps_pending_history_until_target_ack(self):
         for method in ("pid", "automatic"):
-            for ending in ("target_ack", "off_ack"):
-                with self.subTest(method=method, ending=ending):
-                    original, ledger = await self.reconciled(method)
-                    runtime = self.rehydrate(original)
-                    self.assertIsNone(runtime.record["pending"])
-                    await runtime.async_resume(SPEC, automatic=True)
-                    self.assertEqual(runtime.record["unconfirmed_native_target"], ledger)
-                    await runtime.evaluate()
-                    self.assertEqual(runtime.calls, [], "Restart must not create a fresh target budget")
-                    self.assertEqual(runtime.record["unconfirmed_native_target"]["attempts"], 4)
-                    if ending == "target_ack":
-                        runtime.report(temperature=runtime.requested_target)
-                        await runtime.evaluate()
-                        self.assertEqual(runtime.calls, [])
-                    else:
-                        runtime.measurement = 23.0
-                        await runtime.evaluate()
-                        self.assertEqual(runtime.calls[-1]["data"], {"temperature": runtime.original_target})
-                        self.assertEqual(len(runtime.calls), 1)
-                        await runtime.evaluate(30)
-                        self.assertEqual(runtime.calls[-1]["data"], {"hvac_mode": "off"})
-                        self.assertEqual(len(runtime.calls), 2)
-                        self.assertIn("unconfirmed_native_target", runtime.record,
-                                      "A successful OFF service is not physical OFF feedback")
-                        runtime.report(mode="off")
-                        await runtime.evaluate()
-                        self.assertNotIn(PRIMARY, runtime.record["power"])
-                    self.assertIsNone(runtime.record["pending"])
-                    self.assertNotIn("unconfirmed_native_target", runtime.record)
+            with self.subTest(method=method):
+                original, pending = await self.dispatched(method)
+                await original.evaluate(60)
+                await original.evaluate(60)
+                expected = deepcopy(pending)
+                runtime = self.rehydrate(original)
+                await runtime.evaluate()
+                self.assertEqual(len(runtime.calls), 1)
+                self.assertEqual(runtime.record["pending"]["attempts"], 4)
+                self.assertEqual(runtime.record["pending"]["when"], expected["when"])
+                self.assertEqual(runtime.calls[0]["data"], expected["data"])
+                self.assertFalse(production.matches(runtime.state, expected["expected"]))
+                runtime.report(temperature=runtime.requested_target)
+                await runtime.evaluate()
+                self.assertIsNone(runtime.record["pending"])
+                self.assertNotIn("unconfirmed_native_target", runtime.record)
+                self.assertEqual(len(runtime.calls), 1)
 
-    async def test_interrupted_reconnect_intent_cannot_lose_its_reserved_budget(self):
-        runtime, _ = await self.reconciled()
-        original_service = runtime.service_call
-        async def uncertain_service(*args, **kwargs):
-            await original_service(*args, **kwargs)
-            raise TimeoutError("Simulated uncertain native completion")
-        runtime.hass.services.async_call = uncertain_service
-        runtime.now += 1
-        runtime.availability_event("unavailable")
-        runtime.now += 5
-        runtime.availability_event("heat")
+    async def test_retired_legacy_target_still_allows_guarded_stop_and_requires_physical_off(self):
+        runtime, original = await self.legacy_journal(retired=True)
+        runtime.measurement = 23.0
+        await runtime.evaluate()
+        self.assertEqual(runtime.calls, [], "Old failed targets cannot bypass physical minimum ON")
+        self.assertEqual(runtime.statuses[-1][0], "minimum_on_hold")
+        deadline = runtime.statuses[-1][1]["minimum_on_until"]
+        await runtime.evaluate(deadline - runtime.now - .001)
+        self.assertEqual(runtime.calls, [])
+        await runtime.evaluate(.001)
+        self.assertEqual(runtime.calls[-1]["data"], {"temperature": runtime.original_target})
+        self.assertEqual(len(runtime.calls), 1)
         await runtime.evaluate(30)
-        self.assertEqual(len(runtime.calls), 5)
-        self.assertEqual(runtime.record["pending"]["phase"], "intent")
-        self.assertEqual(runtime.record["unconfirmed_native_target"]["attempts"], 5)
+        self.assertEqual(runtime.calls[-1]["data"], {"hvac_mode": "off"})
+        self.assertEqual(len(runtime.calls), 2)
+        self.assertIn("unconfirmed_native_target", runtime.record,
+                      "OFF dispatch cannot acknowledge the old target or physical OFF")
+        self.assertEqual(runtime.record["unconfirmed_native_target"], original)
+        self.assertIn(PRIMARY, runtime.record["power"])
+        runtime.report(mode="off")
+        await runtime.evaluate()
+        self.assertNotIn(PRIMARY, runtime.record["power"])
+        self.assertIsNone(runtime.record["pending"])
+        self.assertNotIn("unconfirmed_native_target", runtime.record)
+
+    async def test_cancelled_retry_preserves_reserved_attempt_and_needs_restart_verification(self):
+        runtime, pending = await self.dispatched()
+        service = runtime.service_call
+
+        async def cancelled(*args, **kwargs):
+            await service(*args, **kwargs)
+            raise asyncio.CancelledError("Interrupted after dispatch; completion is unknown")
+
+        runtime.hass.services.async_call = cancelled
+        with self.assertRaises(asyncio.CancelledError):
+            await runtime.evaluate(60)
+        self.assertEqual(len(runtime.calls), 2)
+        self.assertEqual(pending["phase"], "retry_intent")
+        self.assertEqual(pending["attempts"], 2)
+        self.assertNotIn("retry_state_verified_at", pending)
+        self.assertFalse(production.matches(runtime.state, pending["expected"]))
         recovered = self.rehydrate(runtime)
         recovered.record["automatic_continue_requested"] = {
             "at": recovered.now, "method": "pid", "origin": "automatic_restart_reconciliation",
         }
-        pending = recovered.record["pending"]
-        await self.retire(recovered, pending)
-        self.assertEqual(recovered.record["unconfirmed_native_target"]["attempts"], 5)
-        self.assertEqual(recovered.record["unconfirmed_native_target"]["reconnect_retry_uses"], 1)
         await recovered.evaluate()
-        self.assertEqual(recovered.calls, [])
+        self.assertEqual(recovered.calls, [], "Restart alone cannot replay an interrupted intent")
+        outstanding = recovered.record.get("pending") or recovered.record.get("unconfirmed_native_target")
+        self.assertEqual(outstanding["attempts"], 2)
+        self.assertEqual(outstanding["when"], pending["when"])
+        self.assertFalse(production.matches(recovered.state, outstanding["expected"]))
 
-    async def test_pre_dispatch_abort_preserves_the_old_reconnect_budget(self):
-        runtime, ledger = await self.reconciled()
-        old_budget = deepcopy(ledger)
+    async def test_service_timeout_is_a_failed_attempt_and_retry_history_survives_restart(self):
+        runtime, pending = await self.dispatched()
+        service = runtime.service_call
+
+        async def timeout(*args, **kwargs):
+            await service(*args, **kwargs)
+            raise TimeoutError("Native command completion was not confirmed")
+
+        runtime.hass.services.async_call = timeout
+        await runtime.evaluate(60)
+        self.assertEqual(len(runtime.calls), 2)
+        self.assertEqual(pending["attempts"], 2)
+        self.assertEqual(pending["phase"], "commanded")
+        self.assertFalse(runtime.record.get("paused"))
+        self.assertFalse(production.matches(runtime.state, pending["expected"]))
+        recovered = self.rehydrate(runtime)
+        await recovered.evaluate()
+        self.assertEqual(len(recovered.calls), 1)
+        self.assertEqual(recovered.record["pending"]["attempts"], 3)
+        self.assertEqual(recovered.record["pending"]["when"], pending["when"])
+        self.assertFalse(production.matches(recovered.state, pending["expected"]))
+
+    async def test_pre_dispatch_settings_change_does_not_consume_reserved_retry(self):
+        runtime, pending = await self.dispatched()
+        original = deepcopy(pending)
         original_save = runtime._save
         changed = False
-        async def change_during_intent_save():
+
+        async def change_during_retry_intent():
             nonlocal changed
             await original_save()
-            pending = runtime.record.get("pending")
-            if not changed and pending and pending.get("phase") == "intent" and pending["attempts"] == 5:
+            active = runtime.record.get("pending")
+            if not changed and active and active.get("phase") == "retry_intent" and active["attempts"] == 2:
                 changed = True
                 runtime.manager.settings["kp"] -= 1.0
-        runtime._save = change_during_intent_save
-        runtime.now += 1
-        runtime.availability_event("unavailable")
-        runtime.now += 5
-        runtime.availability_event("heat")
-        await runtime.evaluate(30)
-        self.assertTrue(changed)
-        self.assertEqual(len(runtime.calls), 4)
-        self.assertIsNone(runtime.record["pending"])
-        self.assertEqual(runtime.record["unconfirmed_native_target"], old_budget)
+
+        runtime._save = change_during_retry_intent
+        await runtime.evaluate(60)
+        self.assertTrue(changed, "The actual durable retry boundary must be reached")
+        self.assertEqual(len(runtime.calls), 1)
+        self.assertEqual(runtime.record["pending"], original)
+        self.assertFalse(production.matches(runtime.state, pending["expected"]))
+        self.assertEqual(runtime.manager.settings["control_mode"], "pid")
 
 
 if __name__ == "__main__":

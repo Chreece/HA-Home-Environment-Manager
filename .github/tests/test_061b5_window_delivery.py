@@ -38,7 +38,7 @@ class SubmissionProbe:
 
 
 class WindowDeliveryTests(unittest.IsolatedAsyncioTestCase):
-    async def test_needed_open_uses_warning_and_keeps_all_cautions_without_ai_loss(self):
+    async def test_needed_open_uses_warning_and_forwards_ai_with_all_source_cautions(self):
         manager = fixture("el")
         manager.settings.update({const.CONF_HUB: True,"ai_rewrite": True})
         manager.hass.hub_installed = True
@@ -53,7 +53,8 @@ class WindowDeliveryTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(outcome,{"submitted":1,"errors":[]})
         payload = manager.hass.services.calls[0].data
         self.assertEqual(payload["level"],"warning")
-        self.assertIs(payload["use_ai"],False)
+        self.assertIs(payload["use_ai"],True)
+        self.assertEqual(payload["ai_mode"],"rewrite")
         for value in ("3 °C","38 km/h","42 µg/m³","5"):
             self.assertIn(value,payload["text"])
         self.assertEqual(manager.window_open_wait.accepted,[rec])

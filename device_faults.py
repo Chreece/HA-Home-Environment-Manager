@@ -258,6 +258,93 @@ def _notification_text(spec: Any, report: dict, area_name: str,
     return title, "\n".join(rows)[:2800]
 
 
+def _requested_operation(pending: Mapping, state: Any, language: str,
+                         hass: Any) -> str:
+    """Describe the actual native command without exposing its service ID."""
+    from .device_command_text import OPERATION_LABELS
+    labels = OPERATION_LABELS[resolve_language(language)]
+    context = pending.get("retry_context")
+    context = context if isinstance(context, Mapping) else {}
+    data = pending.get("data")
+    data = data if isinstance(data, Mapping) else {}
+    expected = pending.get("expected")
+    expected = expected if isinstance(expected, Mapping) else {}
+    service = pending.get("service")
+    mode = data.get("hvac_mode") if service == "set_hvac_mode" else context.get("mode")
+    mode = mode if isinstance(mode, str) else "automatic"
+    if service == "turn_off" or expected.get("state") == "off":
+        operation = labels["off"]
+    elif service == "turn_on":
+        operation = labels["on"]
+        if mode in labels and mode not in ("automatic", "on", "off"):
+            operation += " · " + labels[mode]
+    elif service in ("set_percentage", "set_fan_mode"):
+        operation = labels["fan_only"]
+    else:
+        operation = labels.get(mode, _text(mode, 80)) or labels["automatic"]
+
+    values = []
+    attrs = getattr(state, "attributes", {})
+    unit = attrs.get("temperature_unit") if isinstance(attrs, Mapping) else None
+    if unit not in ("°C", "°F", "K"):
+        unit = getattr(getattr(getattr(hass, "config", None), "units", None),
+                       "temperature_unit", None)
+    for key in ("temperature", "target_temp_low", "target_temp_high", "humidity", "percentage", "value"):
+        value = _text(data.get(key), 48)
+        if not value:
+            continue
+        if key in ("humidity", "percentage"):
+            value += "%"
+        elif key in ("temperature", "target_temp_low", "target_temp_high") and unit in ("°C", "°F", "K"):
+            value += " " + unit
+        values.append(value)
+    for key in ("fan_mode", "preset_mode", "mode"):
+        value = _text(data.get(key), 80)
+        if value and value != mode:
+            values.append(labels.get(value, value))
+    return " · ".join((operation, *values))
+
+
+async def async_announce_nonresponse(manager: Any, spec: Any, pending: dict) -> None:
+    """Announce one already-journaled unconfirmed command, never operate it.
+
+    The controller freezes the attempt count and marks this command episode
+    before scheduling this callback. Revalidate ownership and live preferences
+    after that scheduling boundary; a superseded command cannot speak later.
+    """
+    if not isinstance(pending, dict):
+        return
+    cfg = model.settings(manager, spec)
+    runtime = getattr(manager, "equipment", None)
+    record = getattr(runtime, "_record", lambda _spec: {})(spec)
+    attempts = pending.get("nonresponse_attempts", pending.get("attempts"))
+    if (pending.get("retry_policy") != "automatic_minute"
+            or pending.get("nonresponse_notified") is not True
+            or type(attempts) is not int or attempts < 3
+            or cfg.get("announce_device_errors", True) is not True
+            or cfg.get("control_mode") not in ("automatic", "pid")
+            or record.get("pending") is not pending or record.get("paused")
+            or not getattr(runtime, "_active", False)
+            or not getattr(runtime, "_ready", False)
+            or pending.get("entity") not in spec.source_entities):
+        return
+    from homeassistant.helpers import area_registry as ar
+    from .device_command_text import NONRESPONSE_TEXT
+    hass = manager.hass
+    area = ar.async_get(hass).async_get_area(spec.area_id)
+    area_name = _text(getattr(area, "name", None) or spec.area_id, 96)
+    state = hass.states.get(pending["entity"])
+    language = announcement_language(hass, manager.settings.get("language", "auto"))
+    name = (_text(getattr(state, "name", None), 120) or _text(spec.name, 120)
+            or FAULT_LABELS[language]["fallback_device"])
+    message = NONRESPONSE_TEXT[language].format(
+        name=name, room=area_name, attempts=attempts,
+        operation=_requested_operation(pending, state, language, hass),
+    )
+    await _deliver_device_notice(manager, spec, f"HEM · {name}", message, language,
+                                 area_name=area_name, kind="command_nonresponse")
+
+
 class NativeDeviceFaultMonitor:
     """One event-driven monitor per HEM config entry; no second fault entity."""
 
@@ -476,68 +563,79 @@ class NativeDeviceFaultMonitor:
         config = self.manager.settings
         language = announcement_language(self.hass, config.get("language", "auto"))
         title, message = _notification_text(spec, report, area_name, language)
-        from .hub_delivery import hub_available, async_submit_hub
-        if config.get(CONF_HUB) is True and hub_available(self.hass):
-            # Hub owns AI, routing, occupancy, retry and visual/TTS fallback.
-            # Its rejection is not permission for duplicate local delivery.
-            await async_submit_hub(self.hass, {
-                "title": title, "area": [area_name],
-                "level": "warning", "text": message, "use_ai": False,
-                "language": language,
-            })
-            return
-        notified = False
-        notify_targets = self.manager._targets_in_room(
-            config.get(CONF_NOTIFY_TARGETS, []), spec.area_id
+        await _deliver_device_notice(
+            self.manager, spec, title, message, language,
+            area_name=area_name, kind="native_fault",
         )
-        if (notify_targets
-                and self.hass.services.has_service("notify", "send_message")):
+
+
+async def _deliver_device_notice(manager: Any, spec: Any, title: str,
+                                 message: str, language: str, *,
+                                 area_name: str, kind: str) -> None:
+    """Use one established device-notice transport and one delivery owner."""
+    hass, config = manager.hass, manager.settings
+    from .hub_delivery import hub_available, async_submit_hub, hub_ai_options
+    if config.get(CONF_HUB) is True and hub_available(hass):
+        # Hub owns AI, routing, occupancy, retry and visual/TTS fallback.
+        # Its rejection is not permission for duplicate local delivery.
+        await async_submit_hub(hass, {
+            "title": title, "area": [area_name],
+            "level": "warning", "text": message,
+            "language": language, **hub_ai_options(config),
+        })
+        return
+    notified = False
+    notify_targets = manager._targets_in_room(
+        config.get(CONF_NOTIFY_TARGETS, []), spec.area_id
+    )
+    if (notify_targets
+            and hass.services.has_service("notify", "send_message")):
+        try:
+            await hass.services.async_call(
+                "notify", "send_message", {"title": title, "message": message},
+                target={"entity_id": notify_targets}, blocking=True,
+            )
+            notified = True
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            _LOGGER.exception("Unable to send HEM device notice to configured notifications")
+    tts_engine = config.get(CONF_TTS_ENGINE)
+    if (config.get(CONF_AUTO_TTS) is True and tts_engine
+            and hass.services.has_service("tts", "speak")):
+        targets = manager._targets_in_room(
+            config.get(CONF_MEDIA_PLAYERS, []), spec.area_id
+        )
+        if targets:
             try:
-                await self.hass.services.async_call(
-                    "notify", "send_message", {"title": title, "message": message},
-                    target={"entity_id": notify_targets}, blocking=True,
+                await hass.services.async_call(
+                    "tts", "speak",
+                    {"media_player_entity_id": targets, "message": message,
+                     "language": tts_language(hass, tts_engine,
+                                              config.get("language", "auto"),
+                                              text_language=language)},
+                    target={"entity_id": tts_engine}, blocking=True,
                 )
                 notified = True
             except asyncio.CancelledError:
                 raise
             except Exception:
-                _LOGGER.exception("Unable to send HEM native device error to configured notifications")
-        tts_engine = config.get(CONF_TTS_ENGINE)
-        if (config.get(CONF_AUTO_TTS) is True and tts_engine
-                and self.hass.services.has_service("tts", "speak")):
-            targets = self.manager._targets_in_room(
-                config.get(CONF_MEDIA_PLAYERS, []), spec.area_id
+                _LOGGER.exception("Unable to speak HEM device notice")
+    # A persistent HA notification is a single per-physical-device visual
+    # fallback when no configured native channel could deliver it.
+    if not notified and hass.services.has_service(
+            "persistent_notification", "create"):
+        digest = hashlib.sha256(
+            f"{manager.entry.entry_id}:{spec.source_device_id or spec.identifier}".encode()
+        ).hexdigest()[:24]
+        try:
+            await hass.services.async_call(
+                "persistent_notification", "create", {
+                    "notification_id": f"hem_{kind}_{digest}",
+                    "title": title, "message": message,
+                }, blocking=True,
             )
-            if targets:
-                try:
-                    await self.hass.services.async_call(
-                        "tts", "speak",
-                        {"media_player_entity_id": targets, "message": message,
-                         "language": tts_language(self.hass, tts_engine,
-                                                  config.get("language", "auto"),
-                                                  text_language=language)},
-                        target={"entity_id": tts_engine}, blocking=True,
-                    )
-                    notified = True
-                except asyncio.CancelledError:
-                    raise
-                except Exception:
-                    _LOGGER.exception("Unable to speak HEM native device error")
-        # A persistent HA notification is a single per-physical-device visual
-        # fallback when no configured native channel could deliver it.
-        if not notified and self.hass.services.has_service(
-                "persistent_notification", "create"):
-            digest = hashlib.sha256(
-                f"{self.manager.entry.entry_id}:{spec.source_device_id or spec.identifier}".encode()
-            ).hexdigest()[:24]
-            try:
-                await self.hass.services.async_call(
-                    "persistent_notification", "create", {
-                        "notification_id": f"hem_native_fault_{digest}",
-                        "title": title, "message": message,
-                    }, blocking=True,
-                )
-            except asyncio.CancelledError:
-                raise
-            except Exception:
-                _LOGGER.exception("Unable to show HEM physical device fault in Home Assistant")
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            _LOGGER.exception("Unable to show HEM device notice in Home Assistant")

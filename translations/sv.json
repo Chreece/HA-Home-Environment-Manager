@@ -3810,6 +3810,14 @@
             "name": "Hjälp"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Meddelanden · {channel}Väntetid för öppning (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Sömn · {channel}När alla sover",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Meddelanden · {channel}Be om att öppna fönster",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjälp"

@@ -73,6 +73,12 @@ def _equipment_numbers(manager, spec, registry) -> tuple["EquipmentNumber", ...]
     keys: list[str] = []
     for key in (*equipment.NUMBER_FIELDS, *equipment.FAN_LIMIT_FIELDS, *equipment.PID_MODEL_FIELDS,
                 *equipment.PID_FAN_CAPACITY_FIELDS):
+        if key == "window_open_timeout_minutes":
+            from .equipment_feature_registration import window_alternative_settings_supported
+            if window_alternative_settings_supported(
+                    manager, registry, spec, platform="number"):
+                keys.append(key)
+            continue
         if key in equipment.FAN_LIMIT_FIELDS:
             profiles = manager.settings.get(equipment.SETTINGS, {})
             profile = profiles.get(spec.identifier, {}) if isinstance(profiles, dict) else {}
@@ -316,6 +322,24 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
     # targets and device tuning without requiring another HA restart. Existing
     # entity IDs and unique IDs are never removed or recreated unnecessarily.
     added = {item.unique_id for item in numbers}
+    @callback
+    def _airing_preferences_changed() -> None:
+        # A fan can become a configured purifier without reporting new native
+        # capabilities. Add only its new preference, sharing the native-event
+        # deduplication set so two simultaneous updates cannot register twice.
+        from .equipment_feature_registration import window_alternative_settings_supported
+        new = {}
+        for spec in equipment.specs(manager):
+            unique_id = f"{spec.identifier}_window_open_timeout_minutes"
+            if unique_id not in added and window_alternative_settings_supported(
+                    manager, registry, spec, platform="number"):
+                new[unique_id] = EquipmentNumber(manager, spec, "window_open_timeout_minutes")
+        if new:
+            added.update(new)
+            async_add_grouped_entities(manager, async_add_entities, new.values())
+
+    entry.async_on_unload(async_dispatcher_connect(
+        hass, f"{SIGNAL_UPDATED}_{entry.entry_id}", _airing_preferences_changed))
     room_limit_numbers = {
         item.unique_id: item for item in numbers
         if isinstance(item, ConfigNumber) and item._kind == "room_equipment_limit"
@@ -701,6 +725,8 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
 
     @property
     def available(self):
+        if self._key == "window_open_timeout_minutes":
+            return self._manager.equipment._ready
         if self._key in equipment.PID_FAN_CAPACITY_FIELDS:
             cap = equipment.capabilities(self._manager, self._spec)
             return bool(self.controller_settings["control_mode"] == "pid"
@@ -715,6 +741,9 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
     @property
     def extra_state_attributes(self):
         attributes = super().extra_state_attributes
+        if self._key == "window_open_timeout_minutes":
+            return {**attributes, "window_announcement_role": "timeout",
+                    "announce_before_start": self.controller_settings.get("announce_before_start") is True}
         if self._key in equipment.FAN_LIMIT_FIELDS:
             return {**attributes, "fan_limit_scope": "device"}
         if self._key == "particle_cadr_m3h":

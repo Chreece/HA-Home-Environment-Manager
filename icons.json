@@ -10,6 +10,16 @@
           "blocked": "mdi:shield-alert-outline"
         }
       }
+    },
+    "switch": {
+      "equipment_announce_before_start": {
+        "default": "mdi:window-open-variant"
+      }
+    },
+    "number": {
+      "equipment_window_open_timeout_minutes": {
+        "default": "mdi:timer-outline"
+      }
     }
   },
   "services": {

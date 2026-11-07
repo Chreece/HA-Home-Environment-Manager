@@ -1,7 +1,7 @@
 """Pre-movement shade notices routed through existing announcement choices.
 
 A Home-level opt-in is separate from window-airing announcements. The text is
-a fixed safety statement, never AI rewritten or a request to operate covers.
+a factual movement notice, never a request for AI to operate covers.
 A queue acceptance is not proof of audible playback; caller waits a grace
 period after accepted notice and fully revalidates before any cover movement.
 
@@ -16,7 +16,7 @@ from .const import (
     CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_LANGUAGE, CONF_NOTIFY_TARGETS,
     CONF_MEDIA_PLAYERS, CONF_TTS_ENGINE, CONF_SHADE_ANNOUNCE,
 )
-from .hub_delivery import hub_available, make_hub_payload, async_submit_hub
+from .hub_delivery import hub_available, make_hub_payload, async_submit_hub, hub_ai_options
 from .languages import announcement_language
 from .tts_languages import tts_language
 from .announcement_text import SHADE_MESSAGES
@@ -78,6 +78,7 @@ async def async_announce_before_move(
             language=lang,
             use_ai=False, agent_id="default",
         )
+        payload.update(hub_ai_options(config))
         return await async_submit_hub(hass, payload)
 
     result = False

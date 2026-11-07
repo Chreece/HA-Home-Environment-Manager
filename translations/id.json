@@ -3810,6 +3810,14 @@
             "name": "Bantuan"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Pengumuman · {channel}Waktu tunggu membuka (menit)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Tidur · {channel}Saat semua orang tidur",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Pengumuman · {channel}Minta membuka jendela",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"

@@ -125,6 +125,7 @@ async def run():
     # relay available and native mode physically ON.
     direct=create_offline()
     direct.record['paused']=None
+    direct.record['native_control_confirmed']={'climate.heater':{'at':0.,'context_id':None}}
     direct.states['switch.plug']=state('on','switch')
     direct.states['climate.heater'].context=N(user_id='actual-user',parent_id=None)
     assert not await direct._reconcile(spec)

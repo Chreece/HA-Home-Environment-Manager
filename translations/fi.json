@@ -3810,6 +3810,14 @@
             "name": "Ohje"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Ilmoitukset · {channel}Avaamisen odotusaika (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Uni · {channel}Kun kaikki nukkuvat",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Ilmoitukset · {channel}Pyydä avaamaan ikkunat",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"

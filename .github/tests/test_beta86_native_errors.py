@@ -42,6 +42,10 @@ hub=ModuleType(PKG+".hub_delivery")
 hub.is_on=False
 hub.events=[]
 hub.hub_available=lambda hass:hub.is_on
+hub.hub_ai_options=lambda settings:{
+    "use_ai": bool(settings.get("ai_rewrite_announcements",False)),
+    "ai_mode": "rewrite",
+}
 async def submit(hass,payload):
     hub.events.append(payload)
     return True

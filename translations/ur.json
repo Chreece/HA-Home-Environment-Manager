@@ -3810,6 +3810,14 @@
             "name": "مدد"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "اعلانات · {channel}کھولنے کا انتظار (منٹ)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مدد"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "نیند · {channel}جب سب سو رہے ہوں",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مدد"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "اعلانات · {channel}کھڑکیاں کھولنے کی درخواست",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"

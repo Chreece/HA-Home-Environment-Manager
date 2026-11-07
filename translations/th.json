@@ -3810,6 +3810,14 @@
             "name": "ความช่วยเหลือ"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "ประกาศ · {channel}เวลารอเปิดหน้าต่าง (นาที)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ความช่วยเหลือ"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "การนอน · {channel}เมื่อทุกคนกำลังหลับ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ความช่วยเหลือ"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "ประกาศ · {channel}ขอให้เปิดหน้าต่าง",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"

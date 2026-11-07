@@ -14,7 +14,7 @@ from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.core import callback
 from homeassistant.helpers import entity_registry as er
 
-from .const import DOMAIN
+from .const import DOMAIN, SIGNAL_UPDATED
 from . import equipment_model as equipment
 from .room_hubs import async_add_grouped_entities
 
@@ -23,6 +23,17 @@ def registered_control(registry: Any, platform: str, spec: Any, key: str) -> boo
     """Preserve unique IDs of previously supported native controller controls."""
     getter = getattr(registry, "async_get_entity_id", None)
     return bool(getter and getter(platform, DOMAIN, f"{spec.identifier}_{key}"))
+
+
+def window_alternative_settings_supported(manager: Any, registry: Any,
+                                          spec: Any, *, platform: str) -> bool:
+    """Keep a known device's airing preference editable across disconnects."""
+    key = {"switch": "announce_before_start",
+           "number": "window_open_timeout_minutes"}.get(platform)
+    if key is None:
+        raise ValueError("Only an airing switch and timeout number are supported")
+    return (equipment.window_alternative_supported(manager, spec)
+            or registered_control(registry, platform, spec, key))
 
 
 
@@ -116,6 +127,7 @@ def register_late_capabilities(
     async_add_entities: Callable[..., Any],
     original: Iterable[Any],
     candidates: Callable[[], Iterable[Any]],
+    *, policy_changes: bool = False,
 ) -> None:
     """Register newly discovered features only for exact physical source events.
 
@@ -147,11 +159,7 @@ def register_late_capabilities(
         return {key: state.attributes.get(key) for key in capability_fields}
 
     @callback
-    def native_changed(event: Any) -> None:
-        if event.data.get("entity_id") not in watched:
-            return
-        if fingerprint(event.data.get("old_state")) == fingerprint(event.data.get("new_state")):
-            return  # A numeric observation is not new hardware capability.
+    def add_new_candidates() -> None:
         missing = {}
         for candidate in candidates():
             unique_id = candidate._attr_unique_id
@@ -164,6 +172,18 @@ def register_late_capabilities(
             entry.runtime_data, async_add_entities, missing.values()
         )
 
+    @callback
+    def native_changed(event: Any) -> None:
+        if event.data.get("entity_id") not in watched:
+            return
+        if fingerprint(event.data.get("old_state")) == fingerprint(event.data.get("new_state")):
+            return  # A numeric observation is not new hardware capability.
+        add_new_candidates()
+
     entry.async_on_unload(
         async_track_state_change_event(hass, watched, native_changed)
     )
+    if policy_changes:
+        from homeassistant.helpers.dispatcher import async_dispatcher_connect
+        entry.async_on_unload(async_dispatcher_connect(
+            hass, f"{SIGNAL_UPDATED}_{entry.entry_id}", add_new_candidates))

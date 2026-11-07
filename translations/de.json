@@ -3819,6 +3819,14 @@
             "name": "Hilfe"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Ansagen · {channel}Wartezeit zum Lüften (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       }
     },
     "switch": {
@@ -3992,6 +4000,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Schlaf · {channel}Wenn alle schlafen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Ansagen · {channel}Zum Fensteröffnen auffordern",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"

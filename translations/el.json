@@ -3819,6 +3819,14 @@
             "name": "Βοήθεια"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Ανακοινώσεις · {channel}Αναμονή ανοίγματος (λεπτά)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Βοήθεια"
+          }
+        }
       }
     },
     "switch": {
@@ -3992,6 +4000,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Ύπνος · {channel}Όταν όλοι κοιμούνται",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Βοήθεια"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Ανακοινώσεις · {channel}Αίτημα ανοίγματος παραθύρων",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"

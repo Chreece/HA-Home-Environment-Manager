@@ -3810,6 +3810,14 @@
             "name": "உதவி"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "அறிவிப்புகள் · {channel}திறப்பதற்கான காத்திருப்பு (நிமிடம்)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "உறக்கம் · {channel}அனைவரும் உறங்கும்போது",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "அறிவிப்புகள் · {channel}சாளரங்களைத் திறக்கக் கோரு",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"

@@ -3810,6 +3810,14 @@
             "name": "帮助"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "播报 · {channel}等待开窗（分钟）",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "帮助"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "睡眠 · {channel}所有人都在睡觉时",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "帮助"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "播报 · {channel}提示打开窗户",
         "state_attributes": {
           "configuration_help": {
             "name": "帮助"

@@ -73,6 +73,7 @@ async def tests():
     # An anonymous firmware state change is no longer treated as a person.
     r.now=1031
     r.state=FakeState('cool',temperature=20)
+    r.record['native_control_confirmed']={'climate.native':{'at':900.,'context_id':None}}
     r.state.context=type('Context',(),{'user_id':'ha-user','parent_id':None})()
     assert not await r._reconcile(spec)
     assert r.record['paused']=='physical_manual_override'
