@@ -7934,8 +7934,7 @@
       'data-room-options-status114 role="status" aria-live="polite">'+
       escape(_roomOptionsWord114(this,'loading'))+'</p><div data-room-options-groups114></div></div>'+
       '<footer class="hem-room-options-footer114"><button type="button" '+
-      'class="hem-room-options-controls114" data-room-controls114>'+this._icon('mdi:tune-variant')+
-      escape(_roomOptionsWord114(this,'controls'))+'</button><button type="button" '+
+      
       'data-room-options-retry114 hidden>'+escape(_roomOptionsWord114(this,'retry'))+'</button>'+
       '<button type="button" data-room-options-close114>'+escape(_roomOptionsWord114(this,'close'))+
       '</button><button type="button" class="hem-room-options-save114" data-room-options-save114 disabled>'+
@@ -7981,16 +7980,6 @@
         if(field)this._roomSettingsSelection114(saved,'shades',[
           ...new Set([...(saved.draft.shades||[]),...field.options.map(option=>option.value)])]);
         return;
-      }
-      if(button.hasAttribute('data-room-controls114')){
-        const verified=_roomOptionsContext114(this,saved.area,saved.entryId,saved.owner);
-        if(!verified)return;
-        const path='/config/devices/device/'+encodeURIComponent(verified.device);
-        this._closeRoomSettings114(false);
-        if(window.history?.pushState&&window.dispatchEvent){
-          window.history.pushState(null,'',path);
-          window.dispatchEvent(new Event('location-changed'));
-        }else window.location.assign(path);
       }
     });
     node.addEventListener('change',event=>{
@@ -8987,6 +8976,324 @@
     '</style>';
   };
   /* HEM_CARD_SETTINGS126_END */
+
+
+  /* HEM_FULL_REGISTRY_SETTINGS127_START
+   * The compact controller card is not a complete HA device settings page.
+   * Discover configuration entities from the device's actual registry, then
+   * verify both the HEM entry and device for EVERY write. No name guessing.
+   */
+  const hemFull127=AirQualityAdvisorCard.prototype;
+  const HEM_FULL_WORDS127={
+    en:{title:"All HEM settings",load:"Loading HEM settings…",empty:"No HEM configuration entities found",
+      error:"Full registry unavailable; showing verified cached entities only",
+      apply:"Apply",press:"Press",unavailable:"Unavailable",ok:"Request accepted",failed:"Request failed",
+      mode:"Modes and control",pid:"PID and calibration",targets:"Targets and profiles",fan:"Fan and quiet",
+      power:"Power and safety",presence:"Presence and sleep",ventilation:"Windows and ventilation",
+      alerts:"Announcements and errors",schedule:"Schedules",other:"Other settings",
+      help:"Setting help"},
+    de:{title:"Alle HEM-Einstellungen",load:"HEM-Einstellungen werden geladen…",
+      empty:"Keine HEM-Konfigurationsentitäten gefunden",error:"Vollständiges Register nicht verfügbar; nur bestätigte Entitäten werden angezeigt",
+      apply:"Übernehmen",press:"Ausführen",unavailable:"Nicht verfügbar",ok:"Anfrage angenommen",failed:"Anfrage fehlgeschlagen",
+      mode:"Betriebsarten und Regelung",pid:"PID und Kalibrierung",targets:"Sollwerte und Profile",
+      fan:"Lüfter und Ruhemodus",power:"Stromversorgung und Sicherheit",
+      presence:"Anwesenheit und Schlaf",ventilation:"Fenster und Lüftung",alerts:"Meldungen und Fehler",
+      schedule:"Zeitpläne",other:"Weitere Einstellungen",help:"Einstellungshilfe"},
+    el:{title:"Όλες οι ρυθμίσεις HEM",load:"Φόρτωση ρυθμίσεων HEM…",
+      empty:"Δεν βρέθηκαν οντότητες ρυθμίσεων HEM",
+      error:"Μη διαθέσιμο πλήρες μητρώο· εμφανίζονται μόνο επιβεβαιωμένες οντότητες",
+      apply:"Εφαρμογή",press:"Εκτέλεση",unavailable:"Μη διαθέσιμο",ok:"Το αίτημα έγινε δεκτό",failed:"Αποτυχία αιτήματος",
+      mode:"Λειτουργίες και έλεγχος",pid:"PID και βαθμονόμηση",targets:"Στόχοι και προφίλ",
+      fan:"Ανεμιστήρας και αθόρυβη λειτουργία",power:"Ισχύς και προστασία",
+      presence:"Παρουσία και ύπνος",ventilation:"Παράθυρα και αερισμός",
+      alerts:"Ανακοινώσεις και σφάλματα",schedule:"Προγράμματα",other:"Άλλες ρυθμίσεις",
+      help:"Βοήθεια ρύθμισης"}
+  };
+  const tr127=(card,key)=>(HEM_FULL_WORDS127[card._language()]||HEM_FULL_WORDS127.en)[key]||key;
+  const DOMAINS127=new Set(["number","select","switch","button","time"]);
+  const ORDER127=["mode","targets","pid","fan","power","presence","ventilation","alerts","schedule","other"];
+  const ICONS127={mode:"mdi:tune-variant",targets:"mdi:target",pid:"mdi:chart-bell-curve",
+    fan:"mdi:fan",power:"mdi:shield-check-outline",presence:"mdi:bed-clock",
+    ventilation:"mdi:window-open-variant",alerts:"mdi:bullhorn-outline",
+    schedule:"mdi:clock-outline",other:"mdi:cog-outline"};
+  hemFull127._hemFullCategory127=function(field){
+    const meta=field.state?.attributes||{};
+    const name=(field.kind+" "+(meta.setting_key||"")+" "+(meta.settings_scope||"")).toLowerCase();
+    if(field.domain==="time"||/sleep_start|sleep_end|_schedule_/.test(name))return "schedule";
+    if(/mode_|control_mode|operating_mode|preset|method/.test(name)&&!/calibration_method/.test(name))return "mode";
+    if(/pid|calibrat|_kp$|_ki$|_kd$|gain_|capacity|adaptive/.test(name))return "pid";
+    if(/fan|quiet|speed|cadr/.test(name))return "fan";
+    if(/window|ventilat|extraction/.test(name))return "ventilation";
+    if(/presence|occup|sleep|wake|alarm|away_policy/.test(name))return "presence";
+    if(/notify|announce|tts|error/.test(name))return "alerts";
+    if(/power|battery|minimum|maximum|cooldown|hold|relay|readiness/.test(name))return "power";
+    if(/profile|target|temperature|humidity|mold|dewpoint|comfort/.test(name))return "targets";
+    return "other";
+  };
+  hemFull127._hemFullContext127=function(saved,scope){
+    if(!saved||!this.isConnected||this._hass?.user?.is_admin!==true)return null;
+    if(scope==="room"){
+      if(this._roomSettingsDialog114!==saved||saved.busy||saved.disposed||saved.finished)return null;
+      const ctx=_roomOptionsContext114(this,saved.area,saved.entryId,saved.owner);
+      return ctx&&ctx.entryId===saved.entryId&&ctx.device===saved.device?ctx:null;
+    }
+    if(this._hemControllerDialog126!==saved)return null;
+    const ctx=this._hemControllerContext126(saved.area,saved.controllerId,saved.controllerId);
+    return ctx&&ctx.entryId===saved.entryId&&ctx.device===saved.device?ctx:null;
+  };
+  hemFull127._hemFullFields127=function(saved,scope){
+    if(!this._hemFullContext127(saved,scope))return [];
+    const cache=this._hass?.entities||{},states=this._hass?.states||{};
+    const complete=Array.isArray(saved.fullRegistry127)?saved.fullRegistry127:[];
+    const all=new Map(Object.entries(cache).map(([entity_id,reg])=>[entity_id,{...reg,entity_id}]));
+    for(const record of complete){
+      const id=record?.entity_id;
+      if(typeof id!=="string")continue;
+      const recent=cache[id];
+      if(recent&&((recent.device_id&&recent.device_id!==record.device_id)||
+         (recent.config_entry_id&&record.config_entry_id&&recent.config_entry_id!==record.config_entry_id)||
+         (recent.platform&&recent.platform!=="environment_manager")))continue;
+      all.set(id,{...record,...recent,entity_id:id});
+    }
+    const prefix=saved.entryId+"_area_"+saved.area+"_";
+    const result=[];
+    for(const [id,reg] of all){
+      const domain=id.split(".")[0];
+      if(!DOMAINS127.has(domain)||reg?.device_id!==saved.device)continue;
+      if(reg.platform&&reg.platform!=="environment_manager")continue;
+      if(reg.config_entry_id&&reg.config_entry_id!==saved.entryId)continue;
+      if(reg.platform!=="environment_manager"&&reg.config_entry_id!==saved.entryId)continue;
+      if(scope==="room"&&typeof reg.unique_id==="string"&&!reg.unique_id.startsWith(prefix))continue;
+      const state=states[id]||null,attr=state?.attributes||{};
+      if(this._retiredDeviceOption9?.(state))continue;
+      const owner=saved.controller?.climate?.attributes?.controller_id;
+      if(scope==="device"&&owner&&attr.controller_id&&attr.controller_id!==owner)continue;
+      const kind=reg.unique_id||attr.setting_key||id;
+      const field={id,domain,kind,state,reg,disabled:Boolean(reg.disabled_by),
+        label:attr.friendly_name||reg.name||reg.name_by_user||reg.original_name||id};
+      field.category=this._hemFullCategory127(field);
+      result.push(field);
+    }
+    return result.sort((a,b)=>a.label.localeCompare(b.label,this._language())||a.id.localeCompare(b.id));
+  };
+  hemFull127._hemFullRow127=function(field,scope){
+    const s=field.state,a=s?.attributes||{},value=s?.state,domain=field.domain;
+    const live=!field.disabled&&s&&value!=="unavailable"&&(domain==="button"||value!=="unknown");
+    const validNumber=domain==="number"&&live&&Number.isFinite(Number(value))&&
+      Number.isFinite(Number(a.min))&&Number.isFinite(Number(a.max))&&
+      Number.isFinite(Number(a.step??1))&&Number(a.step??1)>0;
+    const options=Array.isArray(a.options)?a.options.filter(x=>typeof x==="string"):[];
+    const validSelect=domain==="select"&&live&&options.includes(value);
+    const validTime=domain==="time"&&live&&typeof value==="string"&&
+      /^\d{2}:\d{2}(?::\d{2})?$/.test(value);
+    const validSwitch=domain==="switch"&&live&&["on","off"].includes(value);
+    const enabled=domain==="number"?validNumber:domain==="select"?validSelect:
+      domain==="time"?validTime:domain==="switch"?validSwitch:live;
+    let input="";
+    if(domain==="number"){
+      input='<input type="number" data-hem-full-value127="'+escape(field.id)+'" '+
+        'value="'+(validNumber?escape(value):"")+'" '+
+        'min="'+(validNumber?escape(a.min):"0")+'" max="'+(validNumber?escape(a.max):"0")+'" '+
+        'step="'+(validNumber?escape(a.step??1):"1")+'" '+(enabled?"":"disabled")+'>'+
+        (a.unit_of_measurement?'<small>'+escape(a.unit_of_measurement)+'</small>':"");
+    }else if(domain==="select"){
+      input='<select data-hem-full-value127="'+escape(field.id)+'" '+(enabled?"":"disabled")+'>'+
+        options.map(option=>'<option value="'+escape(option)+'" '+
+        (option===value?"selected":"")+'>'+escape(option)+'</option>').join("")+'</select>';
+    }else if(domain==="time"){
+      input='<input type="time" data-hem-full-value127="'+escape(field.id)+'" '+
+        'value="'+(enabled?escape(value.slice(0,5)):"")+'" '+(enabled?"":"disabled")+'>';
+    }
+    const help=typeof a.configuration_help==="string"?a.configuration_help.trim():"";
+    return '<div class="hem-full-row127" data-hem-full-row127="'+escape(field.id)+'" '+
+      (scope==="room"?'data-hem-room-row126="'+escape(field.id)+'" ':"")+
+      'data-hem-full-scope127="'+scope+'">'+
+      '<div class="hem-full-label127"><strong title="'+escape(field.id)+'">'+escape(field.label)+'</strong>'+
+      (help?'<details class="hem-full-help127"><summary title="'+escape(tr127(this,"help"))+'">'+
+        this._icon("mdi:information-outline")+'</summary><p>'+escape(help)+'</p></details>':"")+'</div>'+
+      '<div class="hem-full-editor127">'+input+
+      '<button type="button" data-hem-full-apply127="'+escape(field.id)+'" '+
+      'data-hem-full-target127="'+scope+'" '+(enabled?"":"disabled")+'>'+
+      escape(domain==="switch"&&enabled?(this._quickState8?.(value)||value):
+        tr127(this,domain==="button"?"press":"apply"))+'</button></div>'+
+      '<small role="status" data-hem-full-status127>'+
+      (enabled?"":escape(tr127(this,"unavailable")))+'</small></div>';
+  };
+  hemFull127._hemFullHtml127=function(saved,scope){
+    const list=this._hemFullFields127(saved,scope);
+    const grouped=new Map();
+    for(const field of list){
+      if(!grouped.has(field.category))grouped.set(field.category,[]);
+      grouped.get(field.category).push(field);
+    }
+    const message=saved.fullLoading127?tr127(this,"load"):saved.fullError127?
+      tr127(this,"error"):list.length?"":tr127(this,"empty");
+    return '<section class="hem-full-list127" data-hem-full-list127="'+scope+'">'+
+      '<h3>'+escape(tr127(this,"title"))+' <small>('+list.length+')</small></h3>'+
+      (scope==="room"?'<p>'+escape(hemWord126(this,"immediate"))+'</p>':"")+
+      (message?'<p role="status">'+escape(message)+'</p>':"")+
+      ORDER127.map(category=>{
+        const fields=grouped.get(category);
+        if(!fields?.length)return "";
+        return '<details class="hem-full-category127" data-hem-full-category127="'+category+'" '+
+          (scope==="room"?'data-room-native-group126="'+category+'" ':"")+'>'+
+          '<summary>'+this._icon(ICONS127[category])+'<span>'+escape(tr127(this,category))+
+          '</span><small>'+fields.length+'</small>'+this._icon("mdi:chevron-down")+'</summary>'+
+          '<div class="hem-full-rows127">'+fields.map(f=>this._hemFullRow127(f,scope)).join("")+
+          '</div></details>';
+      }).join("")+'</section>';
+  };
+  hemFull127._hemFullRender127=function(saved,scope){
+    if(!this._hemFullContext127(saved,scope))return;
+    const base=scope==="device"?saved.node.querySelector(".hem-controller-body126"):
+      saved.node.querySelector("[data-room-options-groups114]");
+    if(!base)return;
+    if(scope==="room"){
+      // b12 used a cache-only list that could be empty. Never show duplicates.
+      for(const el of base.querySelectorAll("[data-room-native-group126]"))
+        if(!el.closest("[data-hem-full-list127]"))el.remove();
+    }
+    const old=base.querySelector('[data-hem-full-list127="'+scope+'"]');
+    const container=document.createElement("div");
+    container.innerHTML=this._hemFullHtml127(saved,scope);
+    const next=container.firstElementChild;
+    if(!next)return;
+    if(old){
+      const editor=old.querySelector("input:focus,select:focus");
+      if(editor)return;
+      const open=new Set([...old.querySelectorAll(".hem-full-category127[open]")].map(
+        el=>el.getAttribute("data-hem-full-category127")));
+      for(const el of next.querySelectorAll(".hem-full-category127")){
+        if(open.has(el.getAttribute("data-hem-full-category127")))el.open=true;
+      }
+      old.replaceWith(next);
+    }else base.insertBefore(next,base.firstChild);
+  };
+  hemFull127._hemFullLoad127=function(saved,scope){
+    if(typeof this._hass?.callWS!=="function")return;
+    saved.fullLoading127=true;this._hemFullRender127(saved,scope);
+    const connection=this._hass.connection,owner=saved.owner;
+    Promise.resolve().then(()=>this._hass.callWS({type:"config/entity_registry/list"}))
+      .then(records=>{
+        if(!this._hemFullContext127(saved,scope)||this._hass.connection!==connection||
+           saved.owner!==owner)return;
+        if(!Array.isArray(records))throw Error("Invalid entity registry");
+        saved.fullRegistry127=records;saved.fullLoading127=false;saved.fullError127=false;
+        this._hemFullRender127(saved,scope);
+      }).catch(()=>{
+        if(!this._hemFullContext127(saved,scope)||this._hass.connection!==connection)return;
+        saved.fullLoading127=false;saved.fullError127=true;
+        this._hemFullRender127(saved,scope);
+      });
+  };
+  const priorRoomRender127=hemFull127._roomNativeRender126;
+  hemFull127._roomNativeRender126=function(saved){
+    priorRoomRender127.call(this,saved);
+    this._hemFullRender127(saved,"room");
+  };
+  const priorOpenRoom127=hemFull127._openRoomSettings114;
+  hemFull127._openRoomSettings114=async function(area){
+    const result=await priorOpenRoom127.call(this,area),saved=this._roomSettingsDialog114;
+    if(!result||!saved||saved.area!==area)return result;
+    saved.node.addEventListener("click",event=>{
+      const button=event.target?.closest?.('[data-hem-full-apply127][data-hem-full-target127="room"]');
+      if(!button)return;
+      event.preventDefault();event.stopPropagation();
+      this._hemFullApply127(saved,"room",button);
+    });
+    this._hemFullLoad127(saved,"room");
+    return result;
+  };
+  const priorOpenDevice127=hemFull127._openHemControllerSettings126;
+  hemFull127._openHemControllerSettings126=function(area,controller){
+    const ok=priorOpenDevice127.call(this,area,controller),saved=this._hemControllerDialog126;
+    if(!ok||!saved)return ok;
+    saved.node.addEventListener("click",event=>{
+      const button=event.target?.closest?.('[data-hem-full-apply127][data-hem-full-target127="device"]');
+      if(!button)return;
+      event.preventDefault();event.stopPropagation();
+      this._hemFullApply127(saved,"device",button);
+    });
+    this._hemFullRender127(saved,"device");
+    this._hemFullLoad127(saved,"device");
+    return ok;
+  };
+  const priorRefreshDevice127=hemFull127._refreshHemControllerSettings126;
+  hemFull127._refreshHemControllerSettings126=function(){
+    const saved=this._hemControllerDialog126;
+    const result=priorRefreshDevice127.call(this);
+    if(saved&&this._hemControllerDialog126===saved)this._hemFullRender127(saved,"device");
+    return result;
+  };
+  hemFull127._hemFullApply127=async function(saved,scope,button){
+    if(!this._hemFullContext127(saved,scope)||!this._hass?.callService||button.disabled)return;
+    const id=button.getAttribute("data-hem-full-apply127"),row=button.closest("[data-hem-full-row127]");
+    if(!row||row.getAttribute("data-hem-full-row127")!==id||
+      row.getAttribute("data-hem-full-scope127")!==scope)return;
+    const field=this._hemFullFields127(saved,scope).find(f=>f.id===id);
+    if(!field||field.disabled||!field.state||field.state.state==="unavailable")return;
+    const attr=field.state.attributes||{},input=row.querySelector("[data-hem-full-value127]");
+    let action,data={entity_id:id};
+    if(field.domain==="number"){
+      if(!input||input.getAttribute("data-hem-full-value127")!==id||
+        !input.value.trim()||!input.checkValidity())return;
+      const value=Number(input.value),min=Number(attr.min),max=Number(attr.max);
+      if(!Number.isFinite(value)||!Number.isFinite(min)||!Number.isFinite(max)||
+         value<min||value>max)return;
+      action="set_value";data.value=value;
+    }else if(field.domain==="select"){
+      if(!input||input.getAttribute("data-hem-full-value127")!==id||
+        !Array.isArray(attr.options)||!attr.options.includes(input.value))return;
+      action="select_option";data.option=input.value;
+    }else if(field.domain==="switch"){
+      if(!["on","off"].includes(field.state.state))return;
+      action=field.state.state==="on"?"turn_off":"turn_on";
+    }else if(field.domain==="time"){
+      if(!input||input.getAttribute("data-hem-full-value127")!==id||
+         !/^\d{2}:\d{2}$/.test(input.value))return;
+      const [hh,mm]=input.value.split(":").map(Number);
+      if(hh>23||mm>59)return;
+      action="set_value";data.time=input.value+":00";
+    }else if(field.domain==="button"){
+      action="press";
+    }else return;
+    button.disabled=true;button.setAttribute("aria-busy","true");
+    try{
+      await this._hass.callService(field.domain,action,data);
+      if(row.isConnected)row.querySelector("[data-hem-full-status127]").textContent=tr127(this,"ok");
+    }catch{
+      if(row.isConnected)row.querySelector("[data-hem-full-status127]").textContent=tr127(this,"failed");
+    }finally{
+      if(row.isConnected){button.disabled=false;button.removeAttribute("aria-busy");}
+    }
+  };
+  const priorStyle127=hemFull127._styles;
+  hemFull127._styles=function(){return priorStyle127.call(this)+[
+    "<style>",
+    ".hem-full-list127{display:grid;gap:7px;margin:12px 0;min-width:0}",
+    ".hem-full-list127>h3{font-size:14px;margin:2px 0}",
+    ".hem-full-list127>h3 small,.hem-full-list127>p{color:var(--aqa-muted);font-size:11px}",
+    ".hem-full-category127{border:1px solid var(--aqa-edge);border-radius:9px;min-width:0}",
+    ".hem-full-category127>summary{display:flex;gap:7px;align-items:center;padding:9px;cursor:pointer;list-style:none}",
+    ".hem-full-category127>summary::-webkit-details-marker{display:none}",
+    ".hem-full-category127>summary span{flex:1;min-width:0;font-size:12px;font-weight:650;overflow-wrap:anywhere}",
+    ".hem-full-category127>summary ha-icon{--mdc-icon-size:17px}",
+    ".hem-full-category127>summary small{font-size:11px;color:var(--aqa-muted)}",
+    ".hem-full-rows127{display:grid;gap:7px;padding:6px}",
+    ".hem-full-row127{display:grid;gap:5px;padding:8px;border:1px solid var(--aqa-edge);border-radius:8px}",
+    ".hem-full-label127{display:flex;gap:5px;align-items:center;min-width:0}",
+    ".hem-full-label127 strong{flex:1;min-width:0;font-size:12px;overflow-wrap:anywhere}",
+    ".hem-full-editor127{display:flex;align-items:center;flex-wrap:wrap;gap:6px}",
+    ".hem-full-editor127 input,.hem-full-editor127 select{min-width:0;flex:1 1 100px;max-width:100%;box-sizing:border-box;padding:7px;background:var(--secondary-background-color,#292929);border:1px solid var(--aqa-edge);border-radius:7px;color:inherit}",
+    ".hem-full-editor127 button{border:1px solid var(--aqa-edge);padding:6px 10px;border-radius:7px;background:transparent;color:var(--aqa-blue);cursor:pointer}",
+    ".hem-full-editor127 button:disabled{opacity:.48;cursor:default}",
+    ".hem-full-row127>small{font-size:10px;color:var(--aqa-muted)}",
+    ".hem-full-help127 summary{list-style:none;cursor:pointer}",
+    ".hem-full-help127 summary::-webkit-details-marker{display:none}",
+    ".hem-full-help127 ha-icon{--mdc-icon-size:16px;color:var(--aqa-blue)}",
+    ".hem-full-help127 p{font-size:11px;line-height:1.4;overflow-wrap:anywhere;margin:5px 0}",
+    "</style>"].join("");};
+  /* HEM_FULL_REGISTRY_SETTINGS127_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);

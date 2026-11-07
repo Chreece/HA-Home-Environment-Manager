@@ -35,7 +35,7 @@ help_map=json.loads(source.split('const ARRIVAL_HELP125=',1)[1].split(';',1)[0])
 locales={p.stem for p in (INTEGRATION/'translations').glob('*.json')}
 assert locales == set(help_map),(locales-set(help_map),set(help_map)-locales)
 assert all(isinstance(v,str) and len(v.strip())>=4 for v in help_map.values())
-assert json.loads((INTEGRATION/'manifest.json').read_text('utf-8'))['version']=='0.6.1b12'
+assert json.loads((INTEGRATION/'manifest.json').read_text('utf-8'))['version']=='0.6.1b13'
 
 def verify_png(path, size):
     blob=path.read_bytes()

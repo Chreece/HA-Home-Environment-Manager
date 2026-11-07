@@ -57,9 +57,9 @@ with sync_playwright() as p:
     dialog=page.locator(".hem-room-options114")
     expect(dialog).to_be_visible()
     assert dialog.locator('[data-room-options-group114]').count()>=7
-    for category,id in (("comfort","number.hem_home_target_a"),
-                        ("climate","select.hem_pid_gain_a"),
-                        ("occupancy","switch.hem_occupancy_a")):
+    for category,id in (("targets","number.hem_home_target_a"),
+                        ("pid","select.hem_pid_gain_a"),
+                        ("presence","switch.hem_occupancy_a")):
         section=dialog.locator(f'[data-room-native-group126="{category}"]')
         expect(section).to_have_count(1)
         expect(section.locator(f'[data-hem-room-row126="{id}"]')).to_have_count(1)
@@ -67,14 +67,14 @@ with sync_playwright() as p:
     assert dialog.locator('[data-hem-room-row126="number.spoof_room"]').count()==0
     assert dialog.locator('[data-hem-room-row126="number.spoof_device"]').count()==0
     assert page.evaluate("nativeCalls.length")==0
-    comfort=dialog.locator('[data-room-native-group126="comfort"]')
+    comfort=dialog.locator('[data-room-native-group126="targets"]')
     comfort.locator("summary").click()
-    comfort.locator('[data-hem-room-value126="number.hem_home_target_a"]').fill("21.5")
-    comfort.locator('[data-hem-room-apply126="number.hem_home_target_a"]').click()
+    comfort.locator('[data-hem-full-value127="number.hem_home_target_a"]').fill("21.5")
+    comfort.locator('[data-hem-full-apply127="number.hem_home_target_a"]').click()
     page.wait_for_function("nativeCalls.length===1")
     assert page.evaluate("nativeCalls[0]")==["number","set_value",{"entity_id":"number.hem_home_target_a","value":21.5}]
-    dialog.locator('[data-room-native-group126="occupancy"] > summary').click()
-    dialog.locator('[data-hem-room-apply126="switch.hem_occupancy_a"]').click()
+    dialog.locator('[data-room-native-group126="presence"] > summary').click()
+    dialog.locator('[data-hem-full-apply127="switch.hem_occupancy_a"]').click()
     page.wait_for_function("nativeCalls.length===2")
     assert page.evaluate("nativeCalls[1]")==["switch","turn_on",{"entity_id":"switch.hem_occupancy_a"}]
     # The separate seven-field Options Flow is not submitted by a native room edit.
@@ -83,4 +83,4 @@ with sync_playwright() as p:
     expect(dialog).to_have_count(0)
     assert not errors,errors
     browser.close()
-print("PASS: b12 native room setting groups, exact-room registry and native service scoping")
+print("PASS: b13 complete room setting groups, exact-room registry and native service scoping")
