@@ -65,12 +65,15 @@ with sync_playwright() as playwright:
         window.card=document.createElement('home-environment-manager-card');
         document.body.append(card);
         card.addEventListener('hass-more-info',ev=>info.push(ev.detail.entityId));
-        card._hass={language:'el',states,entities,localize:()=>undefined,
+        card._hass={language:'el',states,entities,user:{is_admin:true},connection:{},localize:()=>undefined,
           callService:(...args)=>{calls.push(args);return Promise.resolve();}};
         card._config={entity:'sensor.hem'};
         card._renderContent(true);
+        card._configEntryId114='entry0';card._configEntryOwner114='sensor.hem';
+        card._areaDeviceIds=new Map([['room0','room-hub']]);
     }""",{'states':states,'entities':{
-        ctrl_heat:{'device_id':'hem-heater-device'},
+        'sensor.hem':{'config_entry_id':'entry0'},
+        ctrl_heat:{'device_id':'hem-heater-device','config_entry_id':'entry0'},
         source_heat:{'device_id':'physical-heater-device'},
     }})
     room=page.locator('[data-room-fold87="room0"]')
@@ -95,13 +98,19 @@ with sync_playwright() as playwright:
     assert page.evaluate('info')[-1]==ctrl_heat
     assert controller.get_attribute('open') is None
     controller.locator('button[data-open-controller-device122]').click()
-    assert page.evaluate('routes')[-1]=='/config/devices/device/hem-heater-device'
+    modal=page.locator('.hem-controller-options126')
+    assert modal.is_visible()
+    assert page.evaluate('routes.length')==0
+    assert modal.locator('[data-managed-climate93="'+ctrl_heat+'"]').count()==1
+    modal.locator('[data-close-hem-controller126]').click()
+    assert not modal.is_visible()
     assert controller.get_attribute('open') is None
     controller.locator('button[data-open-controller-device122]').evaluate(
       "(el)=>el.setAttribute('data-open-controller-device122','climate.unrelated')")
     length=page.evaluate('routes.length')
     controller.locator('button[data-open-controller-device122]').click()
     assert page.evaluate('routes.length')==length
+    assert page.locator('.hem-controller-options126').count()==0
     controller.locator(':scope > summary').evaluate('(el)=>el.click()')
     assert controller.get_attribute('open') is not None
     controller.locator('button[data-open-physical93]').click()
