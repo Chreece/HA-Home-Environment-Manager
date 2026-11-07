@@ -18,7 +18,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b11](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b11)
+**Current release:** [v0.6.1b12](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b12)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
@@ -41,6 +41,20 @@ connected to Home Assistant.
 
 You can start with monitoring and advice. Selecting an appliance during setup
 creates its controls; choose its control method when you want HEM to operate it.
+
+## Marketplace version discovery
+
+The repository's actual beta installation artifact is the `environment_manager.zip` file
+attached to each recent GitHub beta. GitHub excludes pre-releases from its regular
+"Latest" release marker, and Marketplace/HACS may show an older cached listing
+until its catalog or custom-repository data refreshes. The package manifest
+under `custom_components/environment_manager/manifest.json` is authoritative;
+do not interpret a stale "Latest" label as a change to the installed version.
+
+If Marketplace reports `custom_components/None/manifest.json`, its cached
+repository structure still points to the pre-b10 root layout. Refresh/reload
+the Marketplace repository metadata before retrying. Never delete the
+`environment_manager` integration or its configuration to clear this error.
 
 ## Installation
 

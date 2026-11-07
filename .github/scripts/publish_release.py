@@ -276,7 +276,7 @@ def publish(api, repo, sha):
     main_head(api, sha)
     draft = api.request("POST", "/releases", {
         "tag_name": tag, "target_commitish": sha, "name": tag, "body": notes,
-        "draft": True, "prerelease": True, "make_latest": "false",
+        "draft": True, "prerelease": True, "make_latest": "legacy",
     })
     release_id = draft["id"]
     api.request("POST", f"/releases/{release_id}/assets?name=" + quote(name, safe=""),
@@ -285,7 +285,7 @@ def publish(api, repo, sha):
     main_head(api, sha)
     validate_release_history(api.releases(), version)
     api.request("PATCH", f"/releases/{release_id}",
-                {"draft": False, "prerelease": True, "make_latest": "false"})
+                {"draft": False, "prerelease": True, "make_latest": "legacy"})
     asset = verified_asset(api, release_id, tag, sha, name, digest, len(data), published=True)
     downloaded = download_asset(asset, tag, name, len(data))
     require(hashlib.sha256(downloaded).hexdigest() == digest, "Published download SHA256 mismatch")

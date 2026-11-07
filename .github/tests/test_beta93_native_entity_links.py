@@ -53,15 +53,18 @@ with sync_playwright() as playwright:
       window.card=document.createElement('home-environment-manager-card');
       document.body.append(card);
       card.addEventListener('hass-more-info',event=>info.push(event.detail.entityId));
-      card._hass={language:'el',states,entities,localize:()=>undefined,
+      card._hass={language:'el',states,entities,user:{is_admin:true},connection:{},localize:()=>undefined,
         callService:(...args)=>{
           calls.push(args);
           throw Error('Test must not call any device service');
         }};
       card._config={entity:'sensor.hem'};
       card._renderContent(true);
+      card._configEntryId114='entry0';card._configEntryOwner114='sensor.hem';
+      card._areaDeviceIds=new Map([['room0','room-hub']]);
     }""",{'states':states,'entities':{
-      hem:{'device_id':'hem-controller-device'},native:{'device_id':'physical-device'},
+      'sensor.hem':{'config_entry_id':'entry0'},
+      hem:{'device_id':'hem-controller-device','config_entry_id':'entry0'},native:{'device_id':'physical-device'},
       fan:{'device_id':'physical-fan-device'},
     }})
 
@@ -79,7 +82,12 @@ with sync_playwright() as playwright:
     icon=device.locator(':scope > summary button[data-open-controller-device122]')
     assert icon.count()==1
     icon.click()
-    assert page.evaluate('routes')[-1]=='/config/devices/device/hem-controller-device'
+    modal=page.locator('.hem-controller-options126')
+    assert modal.is_visible()
+    assert page.evaluate('routes.length')==0
+    assert modal.locator('[data-managed-climate93="'+hem+'"]').count()==1
+    modal.locator('[data-close-hem-controller126]').click()
+    assert not modal.is_visible()
     assert page.evaluate('info')==[hem]
     assert device.get_attribute('open') is None
 

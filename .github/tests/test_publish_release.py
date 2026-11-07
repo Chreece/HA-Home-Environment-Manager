@@ -52,6 +52,7 @@ class FakeGitHub:
             sha = self.tags.get(unquote(path.removeprefix("/git/ref/tags/")))
             return {"object": {"type": "commit", "sha": sha}} if sha else None
         if method == "POST" and path == "/releases":
+            assert data.get("make_latest") == "legacy", data
             self.created = {**data, "id": 2, "assets": [], "published_at": None}
             self.items.append(self.created)
             return deepcopy(self.created)
@@ -70,6 +71,7 @@ class FakeGitHub:
         if method == "GET" and path == "/releases/assets/7":
             return deepcopy(self.asset)
         if method == "PATCH" and path == "/releases/2":
+            assert data.get("make_latest") == "legacy", data
             self.created.update(data, published_at="2026-11-05T01:00:00Z")
             self.published = True
             self.tags[self.created["tag_name"]] = "0" * 40 if self.wrong_tag else self.sha
