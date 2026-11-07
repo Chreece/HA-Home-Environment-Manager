@@ -68,7 +68,7 @@
         "title": "ঘোষণা (ঐচ্ছিক)",
         "description": "ঘোষণা (ঐচ্ছিক). স্বয়ংক্রিয় বিজ্ঞপ্তি · স্বয়ংক্রিয় ভয়েস ঘোষণা. Announcement Hub.",
         "data": {
-          "language": "ভাষা",
+          "language": "ঘোষণার ভাষা",
           "automatic_tts": "স্বয়ংক্রিয়",
           "automatic_notifications": "স্বয়ংক্রিয় · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "ঘোষণা (ঐচ্ছিক) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · ভাষা"
         },
         "data_description": {
-          "language": "“ভাষা” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
+          "language": "ডিফল্টভাবে Home Assistant-এর ভাষা ব্যবহার করা হয়। আপনি HEM সমর্থিত যেকোনো ঘোষণার ভাষা বেছে নিতে পারেন।",
           "automatic_tts": "ডিফল্ট: ⛔ · স্বয়ংক্রিয় · 🪟 90 s. এই বিকল্প “স্বয়ংক্রিয়” নিয়ন্ত্রণ করে। যন্ত্রে আদেশ দিতে আলাদা অনুমতি ও স্বাধীন সুরক্ষা দরকার।",
           "automatic_notifications": "ডিফল্ট: ⛔ · স্বয়ংক্রিয় · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "ডিফল্ট: 10 min · 0 = কখনো নয় · একই কারণ বজায় থাকলে · কক্ষ.",
@@ -191,7 +191,7 @@
           "media_players": "সেটিংস · উৎস · MEDIA_PLAYERS",
           "tts_engine": "সেটিংস · উৎস · TTS_ENGINE",
           "ai_conversation_agent": "AI · নির্বাচন · উৎস",
-          "language": "TTS · নির্বাচন · উৎস",
+          "language": "ঘোষণার ভাষা",
           "use_mold_indicator": "ছাঁচের সূচক · RH (%) → 70%",
           "pollen_entities": "পরাগ · উৎস · নির্বাচন",
           "use_announcement_hub": "ঘোষণা · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "নির্বাচন করুন: media_player.* · সেটিংস · উৎস · MEDIA_PLAYERS.",
           "tts_engine": "নির্বাচন করুন: tts.* · সেটিংস · উৎস · TTS_ENGINE.",
           "ai_conversation_agent": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · AI · নির্বাচন · উৎস · conversation.* / ai_task.*.",
-          "language": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · TTS · নির্বাচন · উৎস · provider capabilities.",
+          "language": "ডিফল্টভাবে Home Assistant-এর ভাষা ব্যবহার করা হয়। আপনি HEM সমর্থিত যেকোনো ঘোষণার ভাষা বেছে নিতে পারেন।",
           "use_mold_indicator": "🧱 ছাঁচের সূচক · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · পরাগ · উৎস · নির্বাচন.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "ঘোষণা (ঐচ্ছিক)",
         "description": "ঘোষণা (ঐচ্ছিক). স্বয়ংক্রিয় বিজ্ঞপ্তি · স্বয়ংক্রিয় ভয়েস ঘোষণা. Announcement Hub.",
         "data": {
-          "language": "ভাষা",
+          "language": "ঘোষণার ভাষা",
           "automatic_tts": "স্বয়ংক্রিয়",
           "automatic_notifications": "স্বয়ংক্রিয় · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "ঘোষণা (ঐচ্ছিক) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · ভাষা"
         },
         "data_description": {
-          "language": "“ভাষা” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
+          "language": "ডিফল্টভাবে Home Assistant-এর ভাষা ব্যবহার করা হয়। আপনি HEM সমর্থিত যেকোনো ঘোষণার ভাষা বেছে নিতে পারেন।",
           "automatic_tts": "ডিফল্ট: ⛔ · স্বয়ংক্রিয় · 🪟 90 s. এই বিকল্প “স্বয়ংক্রিয়” নিয়ন্ত্রণ করে। যন্ত্রে আদেশ দিতে আলাদা অনুমতি ও স্বাধীন সুরক্ষা দরকার।",
           "automatic_notifications": "ডিফল্ট: ⛔ · স্বয়ংক্রিয় · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "ডিফল্ট: 10 min · 0 = কখনো নয় · একই কারণ বজায় থাকলে · কক্ষ.",
@@ -2187,7 +2187,7 @@
           "media_players": "সেটিংস · উৎস · MEDIA_PLAYERS",
           "tts_engine": "সেটিংস · উৎস · TTS_ENGINE",
           "ai_conversation_agent": "AI · নির্বাচন · উৎস",
-          "language": "TTS · নির্বাচন · উৎস",
+          "language": "ঘোষণার ভাষা",
           "use_mold_indicator": "ছাঁচের সূচক · RH (%) → 70%",
           "pollen_entities": "পরাগ · উৎস · নির্বাচন",
           "use_announcement_hub": "ঘোষণা · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "নির্বাচন করুন: media_player.* · সেটিংস · উৎস · MEDIA_PLAYERS.",
           "tts_engine": "নির্বাচন করুন: tts.* · সেটিংস · উৎস · TTS_ENGINE.",
           "ai_conversation_agent": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · AI · নির্বাচন · উৎস · conversation.* / ai_task.*.",
-          "language": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · TTS · নির্বাচন · উৎস · provider capabilities.",
+          "language": "ডিফল্টভাবে Home Assistant-এর ভাষা ব্যবহার করা হয়। আপনি HEM সমর্থিত যেকোনো ঘোষণার ভাষা বেছে নিতে পারেন।",
           "use_mold_indicator": "🧱 ছাঁচের সূচক · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · পরাগ · উৎস · নির্বাচন.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - ডিফল্ট",
+        "auto": "Home Assistant-এর ভাষা (ডিফল্ট)",
         "en": "সেটিংস · উৎস",
         "de": "সেটিংস · উৎস",
         "el": "সেটিংস · উৎস",

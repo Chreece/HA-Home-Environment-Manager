@@ -68,7 +68,7 @@
         "title": "Ansagen (optional)",
         "description": "Der Empfehlungssensor funktioniert auch ohne Ansagen. Benachrichtigungen und Sprache sind optional. Announcement Hub übernimmt gegebenenfalls die Raumzuordnung; sonst bitte direkte Ausgaben wählen.",
         "data": {
-          "language": "Sprache",
+          "language": "Ansagesprache",
           "automatic_tts": "Neue Empfehlungen automatisch sprechen",
           "automatic_notifications": "Neue Empfehlungen automatisch melden",
           "use_announcement_hub": "Ansagen · Announcement Hub verwenden",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "Konversationsagent"
         },
         "data_description": {
-          "language": "Die automatische Auswahl verwendet die Sprache von Home Assistant. Die manuelle Aktion kann sie überschreiben.",
+          "language": "Standardmäßig wird die Home-Assistant-Sprache verwendet. Alternativ kann jede von HEM unterstützte Ansagesprache gewählt werden.",
           "automatic_tts": "Standardmäßig deaktiviert. Neue Öffnungsempfehlungen erfordern 90 Sekunden stabile Bedingungen.",
           "automatic_notifications": "Standardmäßig deaktiviert. Nicht bei jedem neuen Sensorwert erneut benachrichtigen.",
           "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
@@ -191,7 +191,7 @@
           "media_players": "Direkte TTS-Mediaplayer",
           "tts_engine": "Direkte TTS-Engine",
           "ai_conversation_agent": "AI · Auswählen · Quelle",
-          "language": "TTS · Auswählen · Quelle",
+          "language": "Ansagesprache",
           "use_mold_indicator": "Schimmelindikator statt relativer Raumluftfeuchte verwenden",
           "pollen_entities": "Pollen · Quelle · Auswählen",
           "use_announcement_hub": "Ansagen · Announcement Hub verwenden",
@@ -243,7 +243,7 @@
           "media_players": "Mediaplayer für direkte Sprachausgabe. Die Raumzuordnung bestimmt die Ziele.",
           "tts_engine": "Sprachausgabe für direkte Ansagen ohne Announcement Hub.",
           "ai_conversation_agent": "Home-Assistant-Standard, Conversation-Agent oder datenfähige Task-AI wählen. Task AI verwendet ai_task.generate_data.",
-          "language": "Sprachen stammen vom gewählten TTS-Anbieter. Regionscodes erscheinen nur bei mehreren Varianten derselben Sprache.",
+          "language": "Standardmäßig wird die Home-Assistant-Sprache verwendet. Alternativ kann jede von HEM unterstützte Ansagesprache gewählt werden.",
           "use_mold_indicator": "Die Lüftungsempfehlung berücksichtigt die geschätzte relative Feuchte an der kältesten Oberfläche statt der normalen Raumluftfeuchte. Pro Raum kalibrieren; ohne Kalibrierung wird der Wert als unbekannt angezeigt.",
           "pollen_entities": "Beim ersten Einrichten werden alle gefundenen Pollenquellen vorausgewählt. Eine später bewusst leere Auswahl bleibt leer.",
           "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
@@ -1371,7 +1371,7 @@
         "title": "Ansagen (optional)",
         "description": "Der Empfehlungssensor funktioniert auch ohne Ansagen. Benachrichtigungen und Sprache sind optional. Announcement Hub übernimmt gegebenenfalls die Raumzuordnung; sonst bitte direkte Ausgaben wählen.",
         "data": {
-          "language": "Sprache",
+          "language": "Ansagesprache",
           "automatic_tts": "Neue Empfehlungen automatisch sprechen",
           "automatic_notifications": "Neue Empfehlungen automatisch melden",
           "use_announcement_hub": "Ansagen · Announcement Hub verwenden",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "Konversationsagent"
         },
         "data_description": {
-          "language": "Die automatische Auswahl verwendet die Sprache von Home Assistant. Die manuelle Aktion kann sie überschreiben.",
+          "language": "Standardmäßig wird die Home-Assistant-Sprache verwendet. Alternativ kann jede von HEM unterstützte Ansagesprache gewählt werden.",
           "automatic_tts": "Standardmäßig deaktiviert. Neue Öffnungsempfehlungen erfordern 90 Sekunden stabile Bedingungen.",
           "automatic_notifications": "Standardmäßig deaktiviert. Nicht bei jedem neuen Sensorwert erneut benachrichtigen.",
           "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
@@ -2187,7 +2187,7 @@
           "media_players": "Direkte TTS-Mediaplayer",
           "tts_engine": "Direkte TTS-Engine",
           "ai_conversation_agent": "AI · Auswählen · Quelle",
-          "language": "TTS · Auswählen · Quelle",
+          "language": "Ansagesprache",
           "use_mold_indicator": "Schimmelindikator statt relativer Raumluftfeuchte verwenden",
           "pollen_entities": "Pollen · Quelle · Auswählen",
           "use_announcement_hub": "Ansagen · Announcement Hub verwenden",
@@ -2239,7 +2239,7 @@
           "media_players": "Mediaplayer für direkte Sprachausgabe. Die Raumzuordnung bestimmt die Ziele.",
           "tts_engine": "Sprachausgabe für direkte Ansagen ohne Announcement Hub.",
           "ai_conversation_agent": "Home-Assistant-Standard, Conversation-Agent oder datenfähige Task-AI wählen. Task AI verwendet ai_task.generate_data.",
-          "language": "Sprachen stammen vom gewählten TTS-Anbieter. Regionscodes erscheinen nur bei mehreren Varianten derselben Sprache.",
+          "language": "Standardmäßig wird die Home-Assistant-Sprache verwendet. Alternativ kann jede von HEM unterstützte Ansagesprache gewählt werden.",
           "use_mold_indicator": "Die Lüftungsempfehlung berücksichtigt die geschätzte relative Feuchte an der kältesten Oberfläche statt der normalen Raumluftfeuchte. Pro Raum kalibrieren; ohne Kalibrierung wird der Wert als unbekannt angezeigt.",
           "pollen_entities": "Beim ersten Einrichten werden alle gefundenen Pollenquellen vorausgewählt. Eine später bewusst leere Auswahl bleibt leer.",
           "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
@@ -4383,7 +4383,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant-Standard",
+        "auto": "Home-Assistant-Sprache (Standard)",
         "en": "Einstellungen · Quelle",
         "de": "Einstellungen · Quelle",
         "el": "Einstellungen · Quelle",

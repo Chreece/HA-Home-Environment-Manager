@@ -34,6 +34,8 @@ REQUIRED = (
     "climate_arbitration.py", "pid_phase.py", "pid_restart.py", "equipment_status.py",
     "equipment_battery.py", "room_ventilation.py", "messages.py", "select.py",
     "number.py", "device_controls.py", "arrival_preparation.py", "translations/el.json",
+    "languages.py", "tts_languages.py", "announcement_text.py",
+    "recommendation_text.py",
     "frontend/air-quality-advisor-card.js",
 )
 

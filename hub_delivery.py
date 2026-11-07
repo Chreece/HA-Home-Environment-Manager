@@ -62,6 +62,8 @@ def make_hub_payload(
     The shared "text" field is used whenever both channels were selected;
     single-channel calls retain channel-specific fields so one cannot
     accidentally enable the other via Hub's shared-text semantics.
+    Callers resolve HEM's automatic language against HA before this handoff
+    so Hub's own default cannot change the announcement's text or voice.
     """
     data: dict[str, Any] = {
         "title": title,

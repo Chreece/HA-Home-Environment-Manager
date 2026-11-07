@@ -68,7 +68,7 @@
         "title": "Pengumuman (opsional)",
         "description": "Pengumuman (opsional). Notifikasi otomatis · Pengumuman suara otomatis. Announcement Hub.",
         "data": {
-          "language": "Bahasa",
+          "language": "Bahasa pengumuman",
           "automatic_tts": "Otomatis",
           "automatic_notifications": "Otomatis · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Pengumuman (opsional) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Bahasa"
         },
         "data_description": {
-          "language": "Atur “Bahasa” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
+          "language": "Secara bawaan, bahasa Home Assistant digunakan. Anda dapat memilih bahasa pengumuman apa pun yang didukung HEM.",
           "automatic_tts": "Bawaan: ⛔ · Otomatis · 🪟 90 s. Opsi ini mengatur “Otomatis”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "automatic_notifications": "Opsi ini mengatur “Otomatis · AUTOMATIC_NOTIFICATIONS”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "announcement_repeat_minutes": "Bawaan: 10 min · 0 = tidak pernah · Selama penyebab yang sama berlanjut · Ruangan.",
@@ -191,7 +191,7 @@
           "media_players": "pengaturan · sumber · MEDIA_PLAYERS",
           "tts_engine": "pengaturan · sumber · TTS_ENGINE",
           "ai_conversation_agent": "AI · Pilih · sumber",
-          "language": "TTS · Pilih · sumber",
+          "language": "Bahasa pengumuman",
           "use_mold_indicator": "Indikator jamur · RH (%) → 70%",
           "pollen_entities": "Serbuk sari · sumber · Pilih",
           "use_announcement_hub": "Pengumuman · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Pilih: media_player.* · pengaturan · sumber · MEDIA_PLAYERS.",
           "tts_engine": "Pilih: tts.* · pengaturan · sumber · TTS_ENGINE.",
           "ai_conversation_agent": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · AI · Pilih · sumber · conversation.* / ai_task.*.",
-          "language": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · TTS · Pilih · sumber · provider capabilities.",
+          "language": "Secara bawaan, bahasa Home Assistant digunakan. Anda dapat memilih bahasa pengumuman apa pun yang didukung HEM.",
           "use_mold_indicator": "🧱 Indikator jamur · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Serbuk sari · sumber · Pilih.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Pengumuman (opsional)",
         "description": "Pengumuman (opsional). Notifikasi otomatis · Pengumuman suara otomatis. Announcement Hub.",
         "data": {
-          "language": "Bahasa",
+          "language": "Bahasa pengumuman",
           "automatic_tts": "Otomatis",
           "automatic_notifications": "Otomatis · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Pengumuman (opsional) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Bahasa"
         },
         "data_description": {
-          "language": "Atur “Bahasa” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan.",
+          "language": "Secara bawaan, bahasa Home Assistant digunakan. Anda dapat memilih bahasa pengumuman apa pun yang didukung HEM.",
           "automatic_tts": "Bawaan: ⛔ · Otomatis · 🪟 90 s. Opsi ini mengatur “Otomatis”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "automatic_notifications": "Opsi ini mengatur “Otomatis · AUTOMATIC_NOTIFICATIONS”. Perintah fisik memerlukan izin terpisah dan perlindungan mandiri.",
           "announcement_repeat_minutes": "Bawaan: 10 min · 0 = tidak pernah · Selama penyebab yang sama berlanjut · Ruangan.",
@@ -2187,7 +2187,7 @@
           "media_players": "pengaturan · sumber · MEDIA_PLAYERS",
           "tts_engine": "pengaturan · sumber · TTS_ENGINE",
           "ai_conversation_agent": "AI · Pilih · sumber",
-          "language": "TTS · Pilih · sumber",
+          "language": "Bahasa pengumuman",
           "use_mold_indicator": "Indikator jamur · RH (%) → 70%",
           "pollen_entities": "Serbuk sari · sumber · Pilih",
           "use_announcement_hub": "Pengumuman · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Pilih: media_player.* · pengaturan · sumber · MEDIA_PLAYERS.",
           "tts_engine": "Pilih: tts.* · pengaturan · sumber · TTS_ENGINE.",
           "ai_conversation_agent": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · AI · Pilih · sumber · conversation.* / ai_task.*.",
-          "language": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · TTS · Pilih · sumber · provider capabilities.",
+          "language": "Secara bawaan, bahasa Home Assistant digunakan. Anda dapat memilih bahasa pengumuman apa pun yang didukung HEM.",
           "use_mold_indicator": "🧱 Indikator jamur · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Pilih sumber bersama dan keluaran notifikasi. Simpan menyelesaikan penyiapan. Pengaturan operasi tetap berada pada perangkat rumah dan ruangan. · Serbuk sari · sumber · Pilih.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Bawaan",
+        "auto": "Bahasa Home Assistant (bawaan)",
         "en": "pengaturan · sumber",
         "de": "pengaturan · sumber",
         "el": "pengaturan · sumber",

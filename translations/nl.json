@@ -68,7 +68,7 @@
         "title": "Meldingen (optioneel)",
         "description": "Meldingen (optioneel). Automatische meldingen · Automatisch gesproken meldingen. Announcement Hub.",
         "data": {
-          "language": "Taal",
+          "language": "Taal van aankondigingen",
           "automatic_tts": "Automatische",
           "automatic_notifications": "Automatische · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Meldingen (optioneel) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Taal"
         },
         "data_description": {
-          "language": "Stel ‘Taal’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
+          "language": "Gebruik standaard de taal van Home Assistant, of kies een aankondigingstaal die HEM ondersteunt.",
           "automatic_tts": "Standaard: ⛔ · Automatische · 🪟 90 s.",
           "automatic_notifications": "Standaard: ⛔ · Automatische · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Standaard: 10 min · 0 = nooit · Zolang dezelfde oorzaak aanhoudt · Kamers.",
@@ -191,7 +191,7 @@
           "media_players": "instellingen · bron · MEDIA_PLAYERS",
           "tts_engine": "instellingen · bron · TTS_ENGINE",
           "ai_conversation_agent": "AI · Kiezen · bron",
-          "language": "TTS · Kiezen · bron",
+          "language": "Taal van aankondigingen",
           "use_mold_indicator": "Schimmelindicator · RH (%) → 70%",
           "pollen_entities": "Pollen · bron · Kiezen",
           "use_announcement_hub": "Meldingen · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Kies: media_player.* · instellingen · bron · MEDIA_PLAYERS.",
           "tts_engine": "Kies: tts.* · instellingen · bron · TTS_ENGINE.",
           "ai_conversation_agent": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · AI · Kiezen · bron · conversation.* / ai_task.*.",
-          "language": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · TTS · Kiezen · bron · provider capabilities.",
+          "language": "Gebruik standaard de taal van Home Assistant, of kies een aankondigingstaal die HEM ondersteunt.",
           "use_mold_indicator": "🧱 Schimmelindicator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Pollen · bron · Kiezen.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Meldingen (optioneel)",
         "description": "Meldingen (optioneel). Automatische meldingen · Automatisch gesproken meldingen. Announcement Hub.",
         "data": {
-          "language": "Taal",
+          "language": "Taal van aankondigingen",
           "automatic_tts": "Automatische",
           "automatic_notifications": "Automatische · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Meldingen (optioneel) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Taal"
         },
         "data_description": {
-          "language": "Stel ‘Taal’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
+          "language": "Gebruik standaard de taal van Home Assistant, of kies een aankondigingstaal die HEM ondersteunt.",
           "automatic_tts": "Standaard: ⛔ · Automatische · 🪟 90 s.",
           "automatic_notifications": "Standaard: ⛔ · Automatische · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Standaard: 10 min · 0 = nooit · Zolang dezelfde oorzaak aanhoudt · Kamers.",
@@ -2187,7 +2187,7 @@
           "media_players": "instellingen · bron · MEDIA_PLAYERS",
           "tts_engine": "instellingen · bron · TTS_ENGINE",
           "ai_conversation_agent": "AI · Kiezen · bron",
-          "language": "TTS · Kiezen · bron",
+          "language": "Taal van aankondigingen",
           "use_mold_indicator": "Schimmelindicator · RH (%) → 70%",
           "pollen_entities": "Pollen · bron · Kiezen",
           "use_announcement_hub": "Meldingen · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Kies: media_player.* · instellingen · bron · MEDIA_PLAYERS.",
           "tts_engine": "Kies: tts.* · instellingen · bron · TTS_ENGINE.",
           "ai_conversation_agent": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · AI · Kiezen · bron · conversation.* / ai_task.*.",
-          "language": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · TTS · Kiezen · bron · provider capabilities.",
+          "language": "Gebruik standaard de taal van Home Assistant, of kies een aankondigingstaal die HEM ondersteunt.",
           "use_mold_indicator": "🧱 Schimmelindicator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Pollen · bron · Kiezen.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Standaard",
+        "auto": "Taal van Home Assistant (standaard)",
         "en": "instellingen · bron",
         "de": "instellingen · bron",
         "el": "instellingen · bron",

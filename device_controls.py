@@ -833,12 +833,11 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                         )
                 options[key] = value
             elif key == "language":
-                from .tts_languages import supports_language
-                if not isinstance(value, str) or not supports_language(
-                    manager.hass, current.get(CONF_TTS_ENGINE), value
-                ):
-                    raise HomeAssistantError("Unsupported TTS/output language")
-                options[key] = value
+                from .languages import normalize_announcement_language
+                language = normalize_announcement_language(value)
+                if language is None:
+                    raise HomeAssistantError("Unsupported announcement language")
+                options[key] = language
             else:
                 raise HomeAssistantError("Unsupported home setting")
 

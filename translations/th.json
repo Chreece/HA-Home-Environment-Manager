@@ -68,7 +68,7 @@
         "title": "การประกาศ (ไม่บังคับ)",
         "description": "การประกาศ (ไม่บังคับ). การแจ้งเตือนอัตโนมัติ · ประกาศเสียงอัตโนมัติ. Announcement Hub.",
         "data": {
-          "language": "ภาษา",
+          "language": "ภาษาประกาศ",
           "automatic_tts": "อัตโนมัติ",
           "automatic_notifications": "อัตโนมัติ · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "การประกาศ (ไม่บังคับ) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · ภาษา"
         },
         "data_description": {
-          "language": "ภาษา: Home Assistant (ค่าเริ่มต้น).",
+          "language": "ใช้ภาษา Home Assistant เป็นค่าเริ่มต้น หรือเลือกภาษาประกาศใดก็ได้ที่ HEM รองรับ",
           "automatic_tts": "ค่าเริ่มต้น: ⛔ · อัตโนมัติ · 🪟 90 s.",
           "automatic_notifications": "ค่าเริ่มต้น: ⛔ · อัตโนมัติ · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "ค่าเริ่มต้น: 10 min · 0 = ไม่ต้องทำซ้ำ · เมื่อสาเหตุเดิมยังคงอยู่ · ห้อง.",
@@ -191,7 +191,7 @@
           "media_players": "การตั้งค่า · แหล่งข้อมูล · MEDIA_PLAYERS",
           "tts_engine": "การตั้งค่า · แหล่งข้อมูล · TTS_ENGINE",
           "ai_conversation_agent": "AI · เลือก · แหล่งข้อมูล",
-          "language": "TTS · เลือก · แหล่งข้อมูล",
+          "language": "ภาษาประกาศ",
           "use_mold_indicator": "ตัวชี้วัดเชื้อรา · RH (%) → 70%",
           "pollen_entities": "ละอองเกสร · แหล่งข้อมูล · เลือก",
           "use_announcement_hub": "ประกาศ · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "เลือก: media_player.* · การตั้งค่า · แหล่งข้อมูล · MEDIA_PLAYERS.",
           "tts_engine": "เลือก: tts.* · การตั้งค่า · แหล่งข้อมูล · TTS_ENGINE.",
           "ai_conversation_agent": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · AI · เลือก · แหล่งข้อมูล · conversation.* / ai_task.*.",
-          "language": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · TTS · เลือก · แหล่งข้อมูล · provider capabilities.",
+          "language": "ใช้ภาษา Home Assistant เป็นค่าเริ่มต้น หรือเลือกภาษาประกาศใดก็ได้ที่ HEM รองรับ",
           "use_mold_indicator": "🧱 ตัวชี้วัดเชื้อรา · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · ละอองเกสร · แหล่งข้อมูล · เลือก.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "การประกาศ (ไม่บังคับ)",
         "description": "การประกาศ (ไม่บังคับ). การแจ้งเตือนอัตโนมัติ · ประกาศเสียงอัตโนมัติ. Announcement Hub.",
         "data": {
-          "language": "ภาษา",
+          "language": "ภาษาประกาศ",
           "automatic_tts": "อัตโนมัติ",
           "automatic_notifications": "อัตโนมัติ · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "การประกาศ (ไม่บังคับ) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · ภาษา"
         },
         "data_description": {
-          "language": "ภาษา: Home Assistant (ค่าเริ่มต้น).",
+          "language": "ใช้ภาษา Home Assistant เป็นค่าเริ่มต้น หรือเลือกภาษาประกาศใดก็ได้ที่ HEM รองรับ",
           "automatic_tts": "ค่าเริ่มต้น: ⛔ · อัตโนมัติ · 🪟 90 s.",
           "automatic_notifications": "ค่าเริ่มต้น: ⛔ · อัตโนมัติ · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "ค่าเริ่มต้น: 10 min · 0 = ไม่ต้องทำซ้ำ · เมื่อสาเหตุเดิมยังคงอยู่ · ห้อง.",
@@ -2187,7 +2187,7 @@
           "media_players": "การตั้งค่า · แหล่งข้อมูล · MEDIA_PLAYERS",
           "tts_engine": "การตั้งค่า · แหล่งข้อมูล · TTS_ENGINE",
           "ai_conversation_agent": "AI · เลือก · แหล่งข้อมูล",
-          "language": "TTS · เลือก · แหล่งข้อมูล",
+          "language": "ภาษาประกาศ",
           "use_mold_indicator": "ตัวชี้วัดเชื้อรา · RH (%) → 70%",
           "pollen_entities": "ละอองเกสร · แหล่งข้อมูล · เลือก",
           "use_announcement_hub": "ประกาศ · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "เลือก: media_player.* · การตั้งค่า · แหล่งข้อมูล · MEDIA_PLAYERS.",
           "tts_engine": "เลือก: tts.* · การตั้งค่า · แหล่งข้อมูล · TTS_ENGINE.",
           "ai_conversation_agent": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · AI · เลือก · แหล่งข้อมูล · conversation.* / ai_task.*.",
-          "language": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · TTS · เลือก · แหล่งข้อมูล · provider capabilities.",
+          "language": "ใช้ภาษา Home Assistant เป็นค่าเริ่มต้น หรือเลือกภาษาประกาศใดก็ได้ที่ HEM รองรับ",
           "use_mold_indicator": "🧱 ตัวชี้วัดเชื้อรา · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · ละอองเกสร · แหล่งข้อมูล · เลือก.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - ค่าเริ่มต้น",
+        "auto": "ภาษา Home Assistant (ค่าเริ่มต้น)",
         "en": "การตั้งค่า · แหล่งข้อมูล",
         "de": "การตั้งค่า · แหล่งข้อมูล",
         "el": "การตั้งค่า · แหล่งข้อมูล",

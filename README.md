@@ -16,7 +16,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b4](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b4)
+**Current release:** [v0.6.1b5](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b5)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
@@ -107,7 +107,9 @@ Choose the shared inputs and optional features you use:
 - **Home occupancy:** people, trackers, presence sensors or explicitly selected
   people counters. You can also choose shared occupied-room and sleeping-room lists.
 - **Announcements:** direct notification destinations, media players and TTS, or
-  your configured Announcement Hub. Choose the language and optional AI agent here too.
+  your configured Announcement Hub. **Announcement language** defaults to
+  **Home Assistant language** and also offers all 38 languages supported by HEM.
+  Choose an optional AI agent here too.
 - **Mold indication and ventilation limits:** enable mold indication if you will
   calibrate it, and review the outdoor temperature, humidity, wind and pollution limits.
 
@@ -119,6 +121,13 @@ The maximum wind-speed setting limits when HEM can recommend opening windows.
 The other ventilation limits serve the same purpose for their conditions; they
 are separate from a room's heating or cooling targets. Open each setting's help
 for its purpose, units and effect.
+
+You can also change the announcement language on the HEM **Home Environment**
+device under **Announcement · Language**. The default follows Home Assistant's
+configured language when each announcement is sent. An explicit choice applies
+to announcement text, AI rewriting and the language sent to Announcement Hub or
+direct TTS. The full menu is available even without a TTS provider; spoken output
+requires the selected provider to support that language.
 
 ## Add the dashboard card
 

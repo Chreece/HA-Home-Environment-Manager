@@ -68,7 +68,7 @@
         "title": "Oznámenia (voliteľné)",
         "description": "Oznámenia (voliteľné). Automatické oznámenia · Automatické hlasové oznámenia. Announcement Hub.",
         "data": {
-          "language": "Jazyk",
+          "language": "Jazyk oznámení",
           "automatic_tts": "Automatické",
           "automatic_notifications": "Automatické · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Oznámenia (voliteľné) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Jazyk"
         },
         "data_description": {
-          "language": "Jazyk: Home Assistant (Predvolené).",
+          "language": "Predvolene sa používa jazyk Home Assistant. Môžete vybrať ľubovoľný jazyk oznámení podporovaný HEM.",
           "automatic_tts": "Predvolené: ⛔ · Automatické · 🪟 90 s.",
           "automatic_notifications": "Predvolené: ⛔ · Automatické · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Predvolené: 10 min · 0 = nikdy · Kým pretrváva rovnaká príčina · Miestnosti.",
@@ -191,7 +191,7 @@
           "media_players": "nastavenia · zdroj · MEDIA_PLAYERS",
           "tts_engine": "nastavenia · zdroj · TTS_ENGINE",
           "ai_conversation_agent": "AI · Vybrať · zdroj",
-          "language": "TTS · Vybrať · zdroj",
+          "language": "Jazyk oznámení",
           "use_mold_indicator": "Indikátor plesní · RH (%) → 70%",
           "pollen_entities": "Peľ · zdroj · Vybrať",
           "use_announcement_hub": "Oznámenia · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Vyberte: media_player.* · nastavenia · zdroj · MEDIA_PLAYERS.",
           "tts_engine": "Vyberte: tts.* · nastavenia · zdroj · TTS_ENGINE.",
           "ai_conversation_agent": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · AI · Vybrať · zdroj · conversation.* / ai_task.*.",
-          "language": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · TTS · Vybrať · zdroj · provider capabilities.",
+          "language": "Predvolene sa používa jazyk Home Assistant. Môžete vybrať ľubovoľný jazyk oznámení podporovaný HEM.",
           "use_mold_indicator": "🧱 Indikátor plesní · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Peľ · zdroj · Vybrať.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Oznámenia (voliteľné)",
         "description": "Oznámenia (voliteľné). Automatické oznámenia · Automatické hlasové oznámenia. Announcement Hub.",
         "data": {
-          "language": "Jazyk",
+          "language": "Jazyk oznámení",
           "automatic_tts": "Automatické",
           "automatic_notifications": "Automatické · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Oznámenia (voliteľné) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Jazyk"
         },
         "data_description": {
-          "language": "Jazyk: Home Assistant (Predvolené).",
+          "language": "Predvolene sa používa jazyk Home Assistant. Môžete vybrať ľubovoľný jazyk oznámení podporovaný HEM.",
           "automatic_tts": "Predvolené: ⛔ · Automatické · 🪟 90 s.",
           "automatic_notifications": "Predvolené: ⛔ · Automatické · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Predvolené: 10 min · 0 = nikdy · Kým pretrváva rovnaká príčina · Miestnosti.",
@@ -2187,7 +2187,7 @@
           "media_players": "nastavenia · zdroj · MEDIA_PLAYERS",
           "tts_engine": "nastavenia · zdroj · TTS_ENGINE",
           "ai_conversation_agent": "AI · Vybrať · zdroj",
-          "language": "TTS · Vybrať · zdroj",
+          "language": "Jazyk oznámení",
           "use_mold_indicator": "Indikátor plesní · RH (%) → 70%",
           "pollen_entities": "Peľ · zdroj · Vybrať",
           "use_announcement_hub": "Oznámenia · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Vyberte: media_player.* · nastavenia · zdroj · MEDIA_PLAYERS.",
           "tts_engine": "Vyberte: tts.* · nastavenia · zdroj · TTS_ENGINE.",
           "ai_conversation_agent": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · AI · Vybrať · zdroj · conversation.* / ai_task.*.",
-          "language": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · TTS · Vybrať · zdroj · provider capabilities.",
+          "language": "Predvolene sa používa jazyk Home Assistant. Môžete vybrať ľubovoľný jazyk oznámení podporovaný HEM.",
           "use_mold_indicator": "🧱 Indikátor plesní · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Peľ · zdroj · Vybrať.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Predvolené",
+        "auto": "Jazyk Home Assistant (predvolený)",
         "en": "nastavenia · zdroj",
         "de": "nastavenia · zdroj",
         "el": "nastavenia · zdroj",

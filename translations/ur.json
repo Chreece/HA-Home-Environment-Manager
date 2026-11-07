@@ -68,7 +68,7 @@
         "title": "اعلانات (اختیاری)",
         "description": "اعلانات (اختیاری). خودکار اطلاعات · خودکار صوتی اعلانات. Announcement Hub.",
         "data": {
-          "language": "زبان",
+          "language": "اعلانات کی زبان",
           "automatic_tts": "خودکار",
           "automatic_notifications": "خودکار · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "اعلانات (اختیاری) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · زبان"
         },
         "data_description": {
-          "language": "زبان: Home Assistant (پہلے سے طے شدہ).",
+          "language": "پہلے سے طے شدہ طور پر Home Assistant کی زبان استعمال ہوتی ہے۔ آپ HEM کی معاونت یافتہ کوئی بھی اعلانی زبان منتخب کر سکتے ہیں۔",
           "automatic_tts": "پہلے سے طے شدہ: ⛔ · خودکار · 🪟 90 s.",
           "automatic_notifications": "پہلے سے طے شدہ: ⛔ · خودکار · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "پہلے سے طے شدہ: 10 min · 0 = کبھی نہیں · جب تک وہی وجہ برقرار رہے · کمرے.",
@@ -191,7 +191,7 @@
           "media_players": "ترتیبات · ماخذ · MEDIA_PLAYERS",
           "tts_engine": "ترتیبات · ماخذ · TTS_ENGINE",
           "ai_conversation_agent": "AI · منتخب کریں · ماخذ",
-          "language": "TTS · منتخب کریں · ماخذ",
+          "language": "اعلانات کی زبان",
           "use_mold_indicator": "پھپھوندی کی نشاندہی · RH (%) → 70%",
           "pollen_entities": "زرگل · ماخذ · منتخب کریں",
           "use_announcement_hub": "اعلانات · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "منتخب کریں: media_player.* · ترتیبات · ماخذ · MEDIA_PLAYERS.",
           "tts_engine": "منتخب کریں: tts.* · ترتیبات · ماخذ · TTS_ENGINE.",
           "ai_conversation_agent": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · AI · منتخب کریں · ماخذ · conversation.* / ai_task.*.",
-          "language": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · TTS · منتخب کریں · ماخذ · provider capabilities.",
+          "language": "پہلے سے طے شدہ طور پر Home Assistant کی زبان استعمال ہوتی ہے۔ آپ HEM کی معاونت یافتہ کوئی بھی اعلانی زبان منتخب کر سکتے ہیں۔",
           "use_mold_indicator": "🧱 پھپھوندی کی نشاندہی · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · زرگل · ماخذ · منتخب کریں.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "اعلانات (اختیاری)",
         "description": "اعلانات (اختیاری). خودکار اطلاعات · خودکار صوتی اعلانات. Announcement Hub.",
         "data": {
-          "language": "زبان",
+          "language": "اعلانات کی زبان",
           "automatic_tts": "خودکار",
           "automatic_notifications": "خودکار · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "اعلانات (اختیاری) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · زبان"
         },
         "data_description": {
-          "language": "زبان: Home Assistant (پہلے سے طے شدہ).",
+          "language": "پہلے سے طے شدہ طور پر Home Assistant کی زبان استعمال ہوتی ہے۔ آپ HEM کی معاونت یافتہ کوئی بھی اعلانی زبان منتخب کر سکتے ہیں۔",
           "automatic_tts": "پہلے سے طے شدہ: ⛔ · خودکار · 🪟 90 s.",
           "automatic_notifications": "پہلے سے طے شدہ: ⛔ · خودکار · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "پہلے سے طے شدہ: 10 min · 0 = کبھی نہیں · جب تک وہی وجہ برقرار رہے · کمرے.",
@@ -2187,7 +2187,7 @@
           "media_players": "ترتیبات · ماخذ · MEDIA_PLAYERS",
           "tts_engine": "ترتیبات · ماخذ · TTS_ENGINE",
           "ai_conversation_agent": "AI · منتخب کریں · ماخذ",
-          "language": "TTS · منتخب کریں · ماخذ",
+          "language": "اعلانات کی زبان",
           "use_mold_indicator": "پھپھوندی کی نشاندہی · RH (%) → 70%",
           "pollen_entities": "زرگل · ماخذ · منتخب کریں",
           "use_announcement_hub": "اعلانات · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "منتخب کریں: media_player.* · ترتیبات · ماخذ · MEDIA_PLAYERS.",
           "tts_engine": "منتخب کریں: tts.* · ترتیبات · ماخذ · TTS_ENGINE.",
           "ai_conversation_agent": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · AI · منتخب کریں · ماخذ · conversation.* / ai_task.*.",
-          "language": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · TTS · منتخب کریں · ماخذ · provider capabilities.",
+          "language": "پہلے سے طے شدہ طور پر Home Assistant کی زبان استعمال ہوتی ہے۔ آپ HEM کی معاونت یافتہ کوئی بھی اعلانی زبان منتخب کر سکتے ہیں۔",
           "use_mold_indicator": "🧱 پھپھوندی کی نشاندہی · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · زرگل · ماخذ · منتخب کریں.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - پہلے سے طے شدہ",
+        "auto": "Home Assistant کی زبان (پہلے سے طے شدہ)",
         "en": "ترتیبات · ماخذ",
         "de": "ترتیبات · ماخذ",
         "el": "ترتیبات · ماخذ",

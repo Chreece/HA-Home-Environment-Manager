@@ -68,7 +68,7 @@
         "title": "Announcements (optional)",
         "description": "The recommendation sensor always works without announcements. Enable notifications and/or speech only if wanted. Announcement Hub, when enabled and available, handles room-aware routing. For standalone output, choose notification targets and a TTS engine with players.",
         "data": {
-          "language": "Language",
+          "language": "Announcement language",
           "automatic_tts": "Speak new recommendations automatically",
           "automatic_notifications": "Notify about new recommendations automatically",
           "use_announcement_hub": "Announcement · Use Announcement Hub",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "Conversation agent"
         },
         "data_description": {
-          "language": "Choose auto for Home Assistant’s language; the manual action can override it.",
+          "language": "Use the Home Assistant language by default, or choose any announcement language supported by HEM.",
           "automatic_tts": "Disabled by default. New open recommendations need 90 seconds of stable conditions.",
           "automatic_notifications": "Disabled by default. No repeated alerts on every sensor reading.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -191,7 +191,7 @@
           "media_players": "Direct TTS media players",
           "tts_engine": "Direct TTS engine",
           "ai_conversation_agent": "AI · Select · source",
-          "language": "TTS · Select · source",
+          "language": "Announcement language",
           "use_mold_indicator": "Use mold indication instead of raw room RH",
           "pollen_entities": "Pollen · source · Select",
           "use_announcement_hub": "Announcement · Use Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Direct audio destinations; room assignment controls targeting.",
           "tts_engine": "Direct speech provider when Announcement Hub is not used.",
           "ai_conversation_agent": "Choose Home Assistant default, a conversation agent, or a data-capable Task AI entity. Task AI selections use ai_task.generate_data.",
-          "language": "Languages come from the selected TTS provider. Region codes are shown only when that provider offers multiple variants of the same language.",
+          "language": "Use the Home Assistant language by default, or choose any announcement language supported by HEM.",
           "use_mold_indicator": "When enabled, humidity recommendations use the estimated relative humidity at each room's coldest surface instead of raw RH. Calibrate each room under the Room settings menu; an uncalibrated room remains unknown rather than safe.",
           "pollen_entities": "All discovered pollen providers are selected on first setup; later explicit empty selections stay empty.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Announcements (optional)",
         "description": "The recommendation sensor always works without announcements. Enable notifications and/or speech only if wanted. Announcement Hub, when enabled and available, handles room-aware routing. For standalone output, choose notification targets and a TTS engine with players.",
         "data": {
-          "language": "Language",
+          "language": "Announcement language",
           "automatic_tts": "Speak new recommendations automatically",
           "automatic_notifications": "Notify about new recommendations automatically",
           "use_announcement_hub": "Announcement · Use Announcement Hub",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "Conversation agent"
         },
         "data_description": {
-          "language": "Choose auto for Home Assistant’s language; the manual action can override it.",
+          "language": "Use the Home Assistant language by default, or choose any announcement language supported by HEM.",
           "automatic_tts": "Disabled by default. New open recommendations need 90 seconds of stable conditions.",
           "automatic_notifications": "Disabled by default. No repeated alerts on every sensor reading.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2187,7 +2187,7 @@
           "media_players": "Direct TTS media players",
           "tts_engine": "Direct TTS engine",
           "ai_conversation_agent": "AI · Select · source",
-          "language": "TTS · Select · source",
+          "language": "Announcement language",
           "use_mold_indicator": "Use mold indication instead of raw room RH",
           "pollen_entities": "Pollen · source · Select",
           "use_announcement_hub": "Announcement · Use Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Direct audio destinations; room assignment controls targeting.",
           "tts_engine": "Direct speech provider when Announcement Hub is not used.",
           "ai_conversation_agent": "Choose Home Assistant default, a conversation agent, or a data-capable Task AI entity. Task AI selections use ai_task.generate_data.",
-          "language": "Languages come from the selected TTS provider. Region codes are shown only when that provider offers multiple variants of the same language.",
+          "language": "Use the Home Assistant language by default, or choose any announcement language supported by HEM.",
           "use_mold_indicator": "When enabled, humidity recommendations use the estimated relative humidity at each room's coldest surface instead of raw RH. Calibrate each room under the Room settings menu; an uncalibrated room remains unknown rather than safe.",
           "pollen_entities": "All discovered pollen providers are selected on first setup; later explicit empty selections stay empty.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4383,7 +4383,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant default",
+        "auto": "Home Assistant language (default)",
         "en": "English",
         "de": "Deutsch",
         "el": "Ελληνικά",

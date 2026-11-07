@@ -68,7 +68,7 @@
         "title": "알림(선택 사항)",
         "description": "알림(선택 사항). 자동 알림 · 자동 음성 안내. Announcement Hub.",
         "data": {
-          "language": "언어",
+          "language": "알림 언어",
           "automatic_tts": "자동",
           "automatic_notifications": "자동 · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "알림(선택 사항) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · 언어"
         },
         "data_description": {
-          "language": "“언어”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
+          "language": "기본적으로 Home Assistant의 언어를 사용합니다. HEM이 지원하는 알림 언어를 선택할 수도 있습니다.",
           "automatic_tts": "이 옵션은 “자동”을 제어합니다. 물리적 명령에는 별도 승인과 독립 보호가 필요합니다.",
           "automatic_notifications": "이 옵션은 “자동 · AUTOMATIC_NOTIFICATIONS”을 제어합니다. 물리적 명령에는 별도 승인과 독립 보호가 필요합니다.",
           "announcement_repeat_minutes": "기본값: 10 min · 0 = 반복 안 함 · 같은 원인이 지속되는 동안 · 방.",
@@ -191,7 +191,7 @@
           "media_players": "설정 · 정보원 · MEDIA_PLAYERS",
           "tts_engine": "설정 · 정보원 · TTS_ENGINE",
           "ai_conversation_agent": "AI · 선택 · 정보원",
-          "language": "TTS · 선택 · 정보원",
+          "language": "알림 언어",
           "use_mold_indicator": "곰팡이 지표 · RH (%) → 70%",
           "pollen_entities": "꽃가루 · 정보원 · 선택",
           "use_announcement_hub": "알림 · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "“설정 · 정보원 · MEDIA_PLAYERS”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "tts_engine": "“설정 · 정보원 · TTS_ENGINE”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "ai_conversation_agent": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · AI · 선택 · 정보원 · conversation.* / ai_task.*.",
-          "language": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · TTS · 선택 · 정보원 · provider capabilities.",
+          "language": "기본적으로 Home Assistant의 언어를 사용합니다. HEM이 지원하는 알림 언어를 선택할 수도 있습니다.",
           "use_mold_indicator": "“곰팡이 지표 · RH (%) → 70%”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "pollen_entities": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · 꽃가루 · 정보원 · 선택.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "알림(선택 사항)",
         "description": "알림(선택 사항). 자동 알림 · 자동 음성 안내. Announcement Hub.",
         "data": {
-          "language": "언어",
+          "language": "알림 언어",
           "automatic_tts": "자동",
           "automatic_notifications": "자동 · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "알림(선택 사항) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · 언어"
         },
         "data_description": {
-          "language": "“언어”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
+          "language": "기본적으로 Home Assistant의 언어를 사용합니다. HEM이 지원하는 알림 언어를 선택할 수도 있습니다.",
           "automatic_tts": "이 옵션은 “자동”을 제어합니다. 물리적 명령에는 별도 승인과 독립 보호가 필요합니다.",
           "automatic_notifications": "이 옵션은 “자동 · AUTOMATIC_NOTIFICATIONS”을 제어합니다. 물리적 명령에는 별도 승인과 독립 보호가 필요합니다.",
           "announcement_repeat_minutes": "기본값: 10 min · 0 = 반복 안 함 · 같은 원인이 지속되는 동안 · 방.",
@@ -2187,7 +2187,7 @@
           "media_players": "설정 · 정보원 · MEDIA_PLAYERS",
           "tts_engine": "설정 · 정보원 · TTS_ENGINE",
           "ai_conversation_agent": "AI · 선택 · 정보원",
-          "language": "TTS · 선택 · 정보원",
+          "language": "알림 언어",
           "use_mold_indicator": "곰팡이 지표 · RH (%) → 70%",
           "pollen_entities": "꽃가루 · 정보원 · 선택",
           "use_announcement_hub": "알림 · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "“설정 · 정보원 · MEDIA_PLAYERS”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "tts_engine": "“설정 · 정보원 · TTS_ENGINE”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "ai_conversation_agent": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · AI · 선택 · 정보원 · conversation.* / ai_task.*.",
-          "language": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · TTS · 선택 · 정보원 · provider capabilities.",
+          "language": "기본적으로 Home Assistant의 언어를 사용합니다. HEM이 지원하는 알림 언어를 선택할 수도 있습니다.",
           "use_mold_indicator": "“곰팡이 지표 · RH (%) → 70%”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다.",
           "pollen_entities": "공유 소스와 알림 출력을 선택하세요. 저장하면 설정이 끝납니다. 운전 설정은 집과 방의 기기에 남습니다. · 꽃가루 · 정보원 · 선택.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - 기본값",
+        "auto": "Home Assistant 언어 (기본값)",
         "en": "설정 · 정보원",
         "de": "설정 · 정보원",
         "el": "설정 · 정보원",

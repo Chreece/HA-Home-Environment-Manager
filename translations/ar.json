@@ -68,7 +68,7 @@
         "title": "الإعلانات (اختياري)",
         "description": "الإعلانات (اختياري). إشعارات تلقائية · إعلانات صوتية تلقائية. Announcement Hub.",
         "data": {
-          "language": "اللغة",
+          "language": "لغة الإعلانات",
           "automatic_tts": "تلقائي",
           "automatic_notifications": "تلقائي · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "الإعلانات (اختياري) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · اللغة"
         },
         "data_description": {
-          "language": "اضبط «اللغة» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
+          "language": "تُستخدم لغة Home Assistant افتراضيًا. يمكنك اختيار أي لغة إعلانات يدعمها HEM.",
           "automatic_tts": "افتراضي: ⛔ · تلقائي · 🪟 90 s. يتحكم هذا الخيار في «تلقائي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "automatic_notifications": "يتحكم هذا الخيار في «تلقائي · AUTOMATIC_NOTIFICATIONS». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "announcement_repeat_minutes": "افتراضي: 10 min · 0 = أبدًا · ما دام السبب نفسه مستمرًا · الغرف.",
@@ -191,7 +191,7 @@
           "media_players": "الإعدادات · المصدر · MEDIA_PLAYERS",
           "tts_engine": "الإعدادات · المصدر · TTS_ENGINE",
           "ai_conversation_agent": "AI · اختيار · المصدر",
-          "language": "TTS · اختيار · المصدر",
+          "language": "لغة الإعلانات",
           "use_mold_indicator": "مؤشر العفن · RH (%) → 70%",
           "pollen_entities": "حبوب اللقاح · المصدر · اختيار",
           "use_announcement_hub": "الإعلانات · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "اختر: media_player.* · الإعدادات · المصدر · MEDIA_PLAYERS.",
           "tts_engine": "اختر: tts.* · الإعدادات · المصدر · TTS_ENGINE.",
           "ai_conversation_agent": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · AI · اختيار · المصدر · conversation.* / ai_task.*.",
-          "language": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · TTS · اختيار · المصدر · provider capabilities.",
+          "language": "تُستخدم لغة Home Assistant افتراضيًا. يمكنك اختيار أي لغة إعلانات يدعمها HEM.",
           "use_mold_indicator": "🧱 مؤشر العفن · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · حبوب اللقاح · المصدر · اختيار.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "الإعلانات (اختياري)",
         "description": "الإعلانات (اختياري). إشعارات تلقائية · إعلانات صوتية تلقائية. Announcement Hub.",
         "data": {
-          "language": "اللغة",
+          "language": "لغة الإعلانات",
           "automatic_tts": "تلقائي",
           "automatic_notifications": "تلقائي · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "الإعلانات (اختياري) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · اللغة"
         },
         "data_description": {
-          "language": "اضبط «اللغة» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
+          "language": "تُستخدم لغة Home Assistant افتراضيًا. يمكنك اختيار أي لغة إعلانات يدعمها HEM.",
           "automatic_tts": "افتراضي: ⛔ · تلقائي · 🪟 90 s. يتحكم هذا الخيار في «تلقائي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "automatic_notifications": "يتحكم هذا الخيار في «تلقائي · AUTOMATIC_NOTIFICATIONS». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "announcement_repeat_minutes": "افتراضي: 10 min · 0 = أبدًا · ما دام السبب نفسه مستمرًا · الغرف.",
@@ -2187,7 +2187,7 @@
           "media_players": "الإعدادات · المصدر · MEDIA_PLAYERS",
           "tts_engine": "الإعدادات · المصدر · TTS_ENGINE",
           "ai_conversation_agent": "AI · اختيار · المصدر",
-          "language": "TTS · اختيار · المصدر",
+          "language": "لغة الإعلانات",
           "use_mold_indicator": "مؤشر العفن · RH (%) → 70%",
           "pollen_entities": "حبوب اللقاح · المصدر · اختيار",
           "use_announcement_hub": "الإعلانات · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "اختر: media_player.* · الإعدادات · المصدر · MEDIA_PLAYERS.",
           "tts_engine": "اختر: tts.* · الإعدادات · المصدر · TTS_ENGINE.",
           "ai_conversation_agent": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · AI · اختيار · المصدر · conversation.* / ai_task.*.",
-          "language": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · TTS · اختيار · المصدر · provider capabilities.",
+          "language": "تُستخدم لغة Home Assistant افتراضيًا. يمكنك اختيار أي لغة إعلانات يدعمها HEM.",
           "use_mold_indicator": "🧱 مؤشر العفن · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · حبوب اللقاح · المصدر · اختيار.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - افتراضي",
+        "auto": "لغة Home Assistant (الافتراضية)",
         "en": "الإعدادات · المصدر",
         "de": "الإعدادات · المصدر",
         "el": "الإعدادات · المصدر",

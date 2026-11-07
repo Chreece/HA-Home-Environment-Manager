@@ -68,7 +68,7 @@
         "title": "Oznámení (volitelně)",
         "description": "Oznámení (volitelně). Automatická oznámení · Automatická hlasová oznámení. Announcement Hub.",
         "data": {
-          "language": "Jazyk",
+          "language": "Jazyk oznámení",
           "automatic_tts": "Automatické",
           "automatic_notifications": "Automatické · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Oznámení (volitelně) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Jazyk"
         },
         "data_description": {
-          "language": "Nastavte „Jazyk“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
+          "language": "Ve výchozím nastavení se používá jazyk Home Assistant. Můžete vybrat libovolný jazyk oznámení podporovaný HEM.",
           "automatic_tts": "Výchozí: ⛔ · Automatické · 🪟 90 s. Tato volba řídí „Automatické“. Fyzické příkazy vyžadují samostatný souhlas a ochrany.",
           "automatic_notifications": "Tato volba řídí „Automatické · AUTOMATIC_NOTIFICATIONS“. Fyzické příkazy vyžadují samostatný souhlas a ochrany.",
           "announcement_repeat_minutes": "Výchozí: 10 min · 0 = nikdy · Dokud trvá stejná příčina · Místnosti.",
@@ -191,7 +191,7 @@
           "media_players": "nastavení · zdroj · MEDIA_PLAYERS",
           "tts_engine": "nastavení · zdroj · TTS_ENGINE",
           "ai_conversation_agent": "AI · Vybrat · zdroj",
-          "language": "TTS · Vybrat · zdroj",
+          "language": "Jazyk oznámení",
           "use_mold_indicator": "Indikátor plísní · RH (%) → 70%",
           "pollen_entities": "Pyl · zdroj · Vybrat",
           "use_announcement_hub": "Oznámení · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Vyberte: media_player.* · nastavení · zdroj · MEDIA_PLAYERS.",
           "tts_engine": "Vyberte: tts.* · nastavení · zdroj · TTS_ENGINE.",
           "ai_conversation_agent": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · AI · Vybrat · zdroj · conversation.* / ai_task.*.",
-          "language": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · TTS · Vybrat · zdroj · provider capabilities.",
+          "language": "Ve výchozím nastavení se používá jazyk Home Assistant. Můžete vybrat libovolný jazyk oznámení podporovaný HEM.",
           "use_mold_indicator": "🧱 Indikátor plísní · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · Pyl · zdroj · Vybrat.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Oznámení (volitelně)",
         "description": "Oznámení (volitelně). Automatická oznámení · Automatická hlasová oznámení. Announcement Hub.",
         "data": {
-          "language": "Jazyk",
+          "language": "Jazyk oznámení",
           "automatic_tts": "Automatické",
           "automatic_notifications": "Automatické · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Oznámení (volitelně) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Jazyk"
         },
         "data_description": {
-          "language": "Nastavte „Jazyk“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci.",
+          "language": "Ve výchozím nastavení se používá jazyk Home Assistant. Můžete vybrat libovolný jazyk oznámení podporovaný HEM.",
           "automatic_tts": "Výchozí: ⛔ · Automatické · 🪟 90 s. Tato volba řídí „Automatické“. Fyzické příkazy vyžadují samostatný souhlas a ochrany.",
           "automatic_notifications": "Tato volba řídí „Automatické · AUTOMATIC_NOTIFICATIONS“. Fyzické příkazy vyžadují samostatný souhlas a ochrany.",
           "announcement_repeat_minutes": "Výchozí: 10 min · 0 = nikdy · Dokud trvá stejná příčina · Místnosti.",
@@ -2187,7 +2187,7 @@
           "media_players": "nastavení · zdroj · MEDIA_PLAYERS",
           "tts_engine": "nastavení · zdroj · TTS_ENGINE",
           "ai_conversation_agent": "AI · Vybrat · zdroj",
-          "language": "TTS · Vybrat · zdroj",
+          "language": "Jazyk oznámení",
           "use_mold_indicator": "Indikátor plísní · RH (%) → 70%",
           "pollen_entities": "Pyl · zdroj · Vybrat",
           "use_announcement_hub": "Oznámení · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Vyberte: media_player.* · nastavení · zdroj · MEDIA_PLAYERS.",
           "tts_engine": "Vyberte: tts.* · nastavení · zdroj · TTS_ENGINE.",
           "ai_conversation_agent": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · AI · Vybrat · zdroj · conversation.* / ai_task.*.",
-          "language": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · TTS · Vybrat · zdroj · provider capabilities.",
+          "language": "Ve výchozím nastavení se používá jazyk Home Assistant. Můžete vybrat libovolný jazyk oznámení podporovaný HEM.",
           "use_mold_indicator": "🧱 Indikátor plísní · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vyberte společné zdroje a výstupy oznámení. Uložení dokončí nastavení. Provozní nastavení zůstává na zařízeních domu a místností. · Pyl · zdroj · Vybrat.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Výchozí",
+        "auto": "Jazyk Home Assistant (výchozí)",
         "en": "nastavení · zdroj",
         "de": "nastavení · zdroj",
         "el": "nastavení · zdroj",

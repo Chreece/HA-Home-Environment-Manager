@@ -68,7 +68,7 @@
         "title": "Duyurular (isteğe bağlı)",
         "description": "Duyurular (isteğe bağlı). Otomatik bildirimler · Otomatik sesli duyurular. Announcement Hub.",
         "data": {
-          "language": "Dil",
+          "language": "Duyuru dili",
           "automatic_tts": "Otomatik",
           "automatic_notifications": "Otomatik · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Duyurular (isteğe bağlı) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Dil"
         },
         "data_description": {
-          "language": "«Dil» yalnızca seçilen oda için ayarlanır. Eksik veya uyumsuz veri işlemi engeller.",
+          "language": "Varsayılan olarak Home Assistant dili kullanılır. HEM tarafından desteklenen herhangi bir duyuru dilini seçebilirsiniz.",
           "automatic_tts": "Varsayılan: ⛔ · Otomatik · 🪟 90 s. Bu ayar «Otomatik» için geçerlidir. Fiziksel komutlar ayrı onay ve bağımsız koruma gerektirir.",
           "automatic_notifications": "Varsayılan: ⛔ · Otomatik · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Varsayılan: 10 min · 0 = asla · Aynı neden sürdükçe · Odalar.",
@@ -191,7 +191,7 @@
           "media_players": "ayarlar · kaynak · MEDIA_PLAYERS",
           "tts_engine": "ayarlar · kaynak · TTS_ENGINE",
           "ai_conversation_agent": "AI · Seç · kaynak",
-          "language": "TTS · Seç · kaynak",
+          "language": "Duyuru dili",
           "use_mold_indicator": "Küf göstergesi · RH (%) → 70%",
           "pollen_entities": "Polen · kaynak · Seç",
           "use_announcement_hub": "Duyurular · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Seçin: media_player.* · ayarlar · kaynak · MEDIA_PLAYERS.",
           "tts_engine": "Seçin: tts.* · ayarlar · kaynak · TTS_ENGINE.",
           "ai_conversation_agent": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · AI · Seç · kaynak · conversation.* / ai_task.*.",
-          "language": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · TTS · Seç · kaynak · provider capabilities.",
+          "language": "Varsayılan olarak Home Assistant dili kullanılır. HEM tarafından desteklenen herhangi bir duyuru dilini seçebilirsiniz.",
           "use_mold_indicator": "🧱 Küf göstergesi · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · Polen · kaynak · Seç.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Duyurular (isteğe bağlı)",
         "description": "Duyurular (isteğe bağlı). Otomatik bildirimler · Otomatik sesli duyurular. Announcement Hub.",
         "data": {
-          "language": "Dil",
+          "language": "Duyuru dili",
           "automatic_tts": "Otomatik",
           "automatic_notifications": "Otomatik · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Duyurular (isteğe bağlı) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Dil"
         },
         "data_description": {
-          "language": "«Dil» yalnızca seçilen oda için ayarlanır. Eksik veya uyumsuz veri işlemi engeller.",
+          "language": "Varsayılan olarak Home Assistant dili kullanılır. HEM tarafından desteklenen herhangi bir duyuru dilini seçebilirsiniz.",
           "automatic_tts": "Varsayılan: ⛔ · Otomatik · 🪟 90 s. Bu ayar «Otomatik» için geçerlidir. Fiziksel komutlar ayrı onay ve bağımsız koruma gerektirir.",
           "automatic_notifications": "Varsayılan: ⛔ · Otomatik · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Varsayılan: 10 min · 0 = asla · Aynı neden sürdükçe · Odalar.",
@@ -2187,7 +2187,7 @@
           "media_players": "ayarlar · kaynak · MEDIA_PLAYERS",
           "tts_engine": "ayarlar · kaynak · TTS_ENGINE",
           "ai_conversation_agent": "AI · Seç · kaynak",
-          "language": "TTS · Seç · kaynak",
+          "language": "Duyuru dili",
           "use_mold_indicator": "Küf göstergesi · RH (%) → 70%",
           "pollen_entities": "Polen · kaynak · Seç",
           "use_announcement_hub": "Duyurular · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Seçin: media_player.* · ayarlar · kaynak · MEDIA_PLAYERS.",
           "tts_engine": "Seçin: tts.* · ayarlar · kaynak · TTS_ENGINE.",
           "ai_conversation_agent": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · AI · Seç · kaynak · conversation.* / ai_task.*.",
-          "language": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · TTS · Seç · kaynak · provider capabilities.",
+          "language": "Varsayılan olarak Home Assistant dili kullanılır. HEM tarafından desteklenen herhangi bir duyuru dilini seçebilirsiniz.",
           "use_mold_indicator": "🧱 Küf göstergesi · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Ortak kaynakları ve bildirim çıkışlarını seçin. Kaydet kurulumu tamamlar. Çalışma ayarları ev ve oda cihazlarında kalır. · Polen · kaynak · Seç.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Varsayılan",
+        "auto": "Home Assistant dili (varsayılan)",
         "en": "ayarlar · kaynak",
         "de": "ayarlar · kaynak",
         "el": "ayarlar · kaynak",

@@ -68,7 +68,7 @@
         "title": "Thông báo (tùy chọn)",
         "description": "Thông báo (tùy chọn). Thông báo tự động · Thông báo giọng nói tự động. Announcement Hub.",
         "data": {
-          "language": "Ngôn ngữ",
+          "language": "Ngôn ngữ thông báo",
           "automatic_tts": "Tự động",
           "automatic_notifications": "Tự động · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Thông báo (tùy chọn) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Ngôn ngữ"
         },
         "data_description": {
-          "language": "Ngôn ngữ: Home Assistant (Mặc định).",
+          "language": "Mặc định sử dụng ngôn ngữ Home Assistant. Bạn có thể chọn bất kỳ ngôn ngữ thông báo nào được HEM hỗ trợ.",
           "automatic_tts": "Mặc định: ⛔ · Tự động · 🪟 90 s. Tùy chọn này điều khiển “Tự động”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "automatic_notifications": "Tùy chọn này điều khiển “Tự động · AUTOMATIC_NOTIFICATIONS”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "announcement_repeat_minutes": "Mặc định: 10 min · 0 = không bao giờ · Khi nguyên nhân vẫn còn · Phòng.",
@@ -191,7 +191,7 @@
           "media_players": "cài đặt · nguồn · MEDIA_PLAYERS",
           "tts_engine": "cài đặt · nguồn · TTS_ENGINE",
           "ai_conversation_agent": "AI · Chọn · nguồn",
-          "language": "TTS · Chọn · nguồn",
+          "language": "Ngôn ngữ thông báo",
           "use_mold_indicator": "Chỉ số nấm mốc · RH (%) → 70%",
           "pollen_entities": "Phấn hoa · nguồn · Chọn",
           "use_announcement_hub": "Thông báo · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Chọn: media_player.* · cài đặt · nguồn · MEDIA_PLAYERS.",
           "tts_engine": "Chọn: tts.* · cài đặt · nguồn · TTS_ENGINE.",
           "ai_conversation_agent": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · AI · Chọn · nguồn · conversation.* / ai_task.*.",
-          "language": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · TTS · Chọn · nguồn · provider capabilities.",
+          "language": "Mặc định sử dụng ngôn ngữ Home Assistant. Bạn có thể chọn bất kỳ ngôn ngữ thông báo nào được HEM hỗ trợ.",
           "use_mold_indicator": "🧱 Chỉ số nấm mốc · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Phấn hoa · nguồn · Chọn.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Thông báo (tùy chọn)",
         "description": "Thông báo (tùy chọn). Thông báo tự động · Thông báo giọng nói tự động. Announcement Hub.",
         "data": {
-          "language": "Ngôn ngữ",
+          "language": "Ngôn ngữ thông báo",
           "automatic_tts": "Tự động",
           "automatic_notifications": "Tự động · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Thông báo (tùy chọn) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Ngôn ngữ"
         },
         "data_description": {
-          "language": "Ngôn ngữ: Home Assistant (Mặc định).",
+          "language": "Mặc định sử dụng ngôn ngữ Home Assistant. Bạn có thể chọn bất kỳ ngôn ngữ thông báo nào được HEM hỗ trợ.",
           "automatic_tts": "Mặc định: ⛔ · Tự động · 🪟 90 s. Tùy chọn này điều khiển “Tự động”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "automatic_notifications": "Tùy chọn này điều khiển “Tự động · AUTOMATIC_NOTIFICATIONS”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "announcement_repeat_minutes": "Mặc định: 10 min · 0 = không bao giờ · Khi nguyên nhân vẫn còn · Phòng.",
@@ -2187,7 +2187,7 @@
           "media_players": "cài đặt · nguồn · MEDIA_PLAYERS",
           "tts_engine": "cài đặt · nguồn · TTS_ENGINE",
           "ai_conversation_agent": "AI · Chọn · nguồn",
-          "language": "TTS · Chọn · nguồn",
+          "language": "Ngôn ngữ thông báo",
           "use_mold_indicator": "Chỉ số nấm mốc · RH (%) → 70%",
           "pollen_entities": "Phấn hoa · nguồn · Chọn",
           "use_announcement_hub": "Thông báo · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Chọn: media_player.* · cài đặt · nguồn · MEDIA_PLAYERS.",
           "tts_engine": "Chọn: tts.* · cài đặt · nguồn · TTS_ENGINE.",
           "ai_conversation_agent": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · AI · Chọn · nguồn · conversation.* / ai_task.*.",
-          "language": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · TTS · Chọn · nguồn · provider capabilities.",
+          "language": "Mặc định sử dụng ngôn ngữ Home Assistant. Bạn có thể chọn bất kỳ ngôn ngữ thông báo nào được HEM hỗ trợ.",
           "use_mold_indicator": "🧱 Chỉ số nấm mốc · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Phấn hoa · nguồn · Chọn.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Mặc định",
+        "auto": "Ngôn ngữ Home Assistant (mặc định)",
         "en": "cài đặt · nguồn",
         "de": "cài đặt · nguồn",
         "el": "cài đặt · nguồn",

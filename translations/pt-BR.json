@@ -68,7 +68,7 @@
         "title": "Avisos (opcional)",
         "description": "Avisos (opcional). Notificações automáticas · Avisos de voz automáticos. Announcement Hub.",
         "data": {
-          "language": "Idioma",
+          "language": "Idioma dos anúncios",
           "automatic_tts": "Automático",
           "automatic_notifications": "Automático · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Avisos (opcional) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Idioma"
         },
         "data_description": {
-          "language": "Configure «Idioma» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
+          "language": "Por padrão, é usado o idioma do Home Assistant. Você pode escolher qualquer idioma de anúncios compatível com o HEM.",
           "automatic_tts": "Padrão: ⛔ · Automático · 🪟 90 s. Esta opção controla «Automático». Comandos físicos exigem autorização específica e proteções independentes.",
           "automatic_notifications": "Padrão: ⛔ · Automático · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Padrão: 10 min · 0 = nunca · Enquanto a mesma causa persistir · Cômodos.",
@@ -191,7 +191,7 @@
           "media_players": "configurações · fonte · MEDIA_PLAYERS",
           "tts_engine": "configurações · fonte · TTS_ENGINE",
           "ai_conversation_agent": "AI · Selecionar · fonte",
-          "language": "TTS · Selecionar · fonte",
+          "language": "Idioma dos anúncios",
           "use_mold_indicator": "Indicador de mofo · RH (%) → 70%",
           "pollen_entities": "Pólen · fonte · Selecionar",
           "use_announcement_hub": "Anúncios · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Selecione: media_player.* · configurações · fonte · MEDIA_PLAYERS.",
           "tts_engine": "Selecione: tts.* · configurações · fonte · TTS_ENGINE.",
           "ai_conversation_agent": "Selecione fontes compartilhadas e saídas de notificação. Salvar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e dos ambientes. · AI · Selecionar · fonte · conversation.* / ai_task.*.",
-          "language": "Selecione fontes compartilhadas e saídas de notificação. Salvar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e dos ambientes. · TTS · Selecionar · fonte · provider capabilities.",
+          "language": "Por padrão, é usado o idioma do Home Assistant. Você pode escolher qualquer idioma de anúncios compatível com o HEM.",
           "use_mold_indicator": "🧱 Indicador de mofo · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selecione fontes compartilhadas e saídas de notificação. Salvar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e dos ambientes. · Pólen · fonte · Selecionar.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Avisos (opcional)",
         "description": "Avisos (opcional). Notificações automáticas · Avisos de voz automáticos. Announcement Hub.",
         "data": {
-          "language": "Idioma",
+          "language": "Idioma dos anúncios",
           "automatic_tts": "Automático",
           "automatic_notifications": "Automático · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Avisos (opcional) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Idioma"
         },
         "data_description": {
-          "language": "Configure «Idioma» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação.",
+          "language": "Por padrão, é usado o idioma do Home Assistant. Você pode escolher qualquer idioma de anúncios compatível com o HEM.",
           "automatic_tts": "Padrão: ⛔ · Automático · 🪟 90 s. Esta opção controla «Automático». Comandos físicos exigem autorização específica e proteções independentes.",
           "automatic_notifications": "Padrão: ⛔ · Automático · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Padrão: 10 min · 0 = nunca · Enquanto a mesma causa persistir · Cômodos.",
@@ -2187,7 +2187,7 @@
           "media_players": "configurações · fonte · MEDIA_PLAYERS",
           "tts_engine": "configurações · fonte · TTS_ENGINE",
           "ai_conversation_agent": "AI · Selecionar · fonte",
-          "language": "TTS · Selecionar · fonte",
+          "language": "Idioma dos anúncios",
           "use_mold_indicator": "Indicador de mofo · RH (%) → 70%",
           "pollen_entities": "Pólen · fonte · Selecionar",
           "use_announcement_hub": "Anúncios · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Selecione: media_player.* · configurações · fonte · MEDIA_PLAYERS.",
           "tts_engine": "Selecione: tts.* · configurações · fonte · TTS_ENGINE.",
           "ai_conversation_agent": "Selecione fontes compartilhadas e saídas de notificação. Salvar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e dos ambientes. · AI · Selecionar · fonte · conversation.* / ai_task.*.",
-          "language": "Selecione fontes compartilhadas e saídas de notificação. Salvar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e dos ambientes. · TTS · Selecionar · fonte · provider capabilities.",
+          "language": "Por padrão, é usado o idioma do Home Assistant. Você pode escolher qualquer idioma de anúncios compatível com o HEM.",
           "use_mold_indicator": "🧱 Indicador de mofo · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selecione fontes compartilhadas e saídas de notificação. Salvar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e dos ambientes. · Pólen · fonte · Selecionar.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Padrão",
+        "auto": "Idioma do Home Assistant (padrão)",
         "en": "configurações · fonte",
         "de": "configurações · fonte",
         "el": "configurações · fonte",

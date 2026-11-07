@@ -49,12 +49,9 @@ limits={
 pkg=types.ModuleType('beta79_general');pkg.__path__=[]
 languages=types.ModuleType('beta79_general.languages')
 languages.SUPPORTED_LANGUAGE_TAGS=('en','el')
-languages.resolve_language=lambda x:x
+languages.normalize_announcement_language=lambda x:x if x in ('auto','en','el') else None
 ai=types.ModuleType('beta79_general.ai_rewrite')
 ai.DEFAULT_AGENT='none'
-tts=types.ModuleType('beta79_general.tts_languages')
-tts.language_options=lambda hass,x:[{'value':'auto','label':'Auto'}]
-tts.preferred_language=lambda hass,engine,choice:'auto'
 hub=types.ModuleType('beta79_general.hub_delivery')
 hub.hub_installed=lambda hass:False
 discovery=types.ModuleType('beta79_general.discovery')
@@ -65,7 +62,7 @@ pressure=next(n for n in ast.parse((ROOT/'discovery.py').read_text()).body
 exec(compile(ast.Module([pressure],type_ignores=[]),'discovery.py','exec'),discovery.__dict__)
 sys.modules.update({
  'beta79_general':pkg,'beta79_general.languages':languages,
- 'beta79_general.ai_rewrite':ai,'beta79_general.tts_languages':tts,
+ 'beta79_general.ai_rewrite':ai,
  'beta79_general.hub_delivery':hub,
  'beta79_general.discovery':discovery,
 })

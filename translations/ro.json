@@ -68,7 +68,7 @@
         "title": "Anunțuri (opțional)",
         "description": "Anunțuri (opțional). Notificări automate · Anunțuri vocale automate. Announcement Hub.",
         "data": {
-          "language": "Limbă",
+          "language": "Limba anunțurilor",
           "automatic_tts": "Automat",
           "automatic_notifications": "Automat · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Anunțuri (opțional) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Limbă"
         },
         "data_description": {
-          "language": "Configurați „Limbă” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
+          "language": "Implicit se folosește limba Home Assistant. Poți alege orice limbă pentru anunțuri acceptată de HEM.",
           "automatic_tts": "Implicit: ⛔ · Automat · 🪟 90 s. Această opțiune controlează „Automat”. Comenzile fizice cer acord separat și protecții independente.",
           "automatic_notifications": "Această opțiune controlează „Automat · AUTOMATIC_NOTIFICATIONS”. Comenzile fizice cer acord separat și protecții independente.",
           "announcement_repeat_minutes": "Implicit: 10 min · 0 = niciodată · Cât timp persistă aceeași cauză · Camere.",
@@ -191,7 +191,7 @@
           "media_players": "setări · sursă · MEDIA_PLAYERS",
           "tts_engine": "setări · sursă · TTS_ENGINE",
           "ai_conversation_agent": "AI · Selectați · sursă",
-          "language": "TTS · Selectați · sursă",
+          "language": "Limba anunțurilor",
           "use_mold_indicator": "Indicator de mucegai · RH (%) → 70%",
           "pollen_entities": "Polen · sursă · Selectați",
           "use_announcement_hub": "Anunțuri · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Alegeți: media_player.* · setări · sursă · MEDIA_PLAYERS.",
           "tts_engine": "Alegeți: tts.* · setări · sursă · TTS_ENGINE.",
           "ai_conversation_agent": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · AI · Selectați · sursă · conversation.* / ai_task.*.",
-          "language": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · TTS · Selectați · sursă · provider capabilities.",
+          "language": "Implicit se folosește limba Home Assistant. Poți alege orice limbă pentru anunțuri acceptată de HEM.",
           "use_mold_indicator": "🧱 Indicator de mucegai · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · Polen · sursă · Selectați.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Anunțuri (opțional)",
         "description": "Anunțuri (opțional). Notificări automate · Anunțuri vocale automate. Announcement Hub.",
         "data": {
-          "language": "Limbă",
+          "language": "Limba anunțurilor",
           "automatic_tts": "Automat",
           "automatic_notifications": "Automat · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Anunțuri (opțional) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Limbă"
         },
         "data_description": {
-          "language": "Configurați „Limbă” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
+          "language": "Implicit se folosește limba Home Assistant. Poți alege orice limbă pentru anunțuri acceptată de HEM.",
           "automatic_tts": "Implicit: ⛔ · Automat · 🪟 90 s. Această opțiune controlează „Automat”. Comenzile fizice cer acord separat și protecții independente.",
           "automatic_notifications": "Această opțiune controlează „Automat · AUTOMATIC_NOTIFICATIONS”. Comenzile fizice cer acord separat și protecții independente.",
           "announcement_repeat_minutes": "Implicit: 10 min · 0 = niciodată · Cât timp persistă aceeași cauză · Camere.",
@@ -2187,7 +2187,7 @@
           "media_players": "setări · sursă · MEDIA_PLAYERS",
           "tts_engine": "setări · sursă · TTS_ENGINE",
           "ai_conversation_agent": "AI · Selectați · sursă",
-          "language": "TTS · Selectați · sursă",
+          "language": "Limba anunțurilor",
           "use_mold_indicator": "Indicator de mucegai · RH (%) → 70%",
           "pollen_entities": "Polen · sursă · Selectați",
           "use_announcement_hub": "Anunțuri · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Alegeți: media_player.* · setări · sursă · MEDIA_PLAYERS.",
           "tts_engine": "Alegeți: tts.* · setări · sursă · TTS_ENGINE.",
           "ai_conversation_agent": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · AI · Selectați · sursă · conversation.* / ai_task.*.",
-          "language": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · TTS · Selectați · sursă · provider capabilities.",
+          "language": "Implicit se folosește limba Home Assistant. Poți alege orice limbă pentru anunțuri acceptată de HEM.",
           "use_mold_indicator": "🧱 Indicator de mucegai · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · Polen · sursă · Selectați.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Implicit",
+        "auto": "Limba Home Assistant (implicită)",
         "en": "setări · sursă",
         "de": "setări · sursă",
         "el": "setări · sursă",

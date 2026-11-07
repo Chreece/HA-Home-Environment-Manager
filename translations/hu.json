@@ -68,7 +68,7 @@
         "title": "Értesítések (opcionális)",
         "description": "Értesítések (opcionális). Automatikus értesítések · Automatikus hangos értesítések. Announcement Hub.",
         "data": {
-          "language": "Nyelv",
+          "language": "Értesítések nyelve",
           "automatic_tts": "Automatikus",
           "automatic_notifications": "Automatikus · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Értesítések (opcionális) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Nyelv"
         },
         "data_description": {
-          "language": "Nyelv: Home Assistant (Alapértelmezett).",
+          "language": "Alapértelmezés szerint a Home Assistant nyelve érvényes. A HEM által támogatott bármely értesítési nyelv kiválasztható.",
           "automatic_tts": "Alapértelmezett: ⛔ · Automatikus · 🪟 90 s.",
           "automatic_notifications": "Alapértelmezett: ⛔ · Automatikus · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Alapértelmezett: 10 min · 0 = soha · Amíg ugyanaz az ok fennáll · Helyiségek.",
@@ -191,7 +191,7 @@
           "media_players": "beállítások · forrás · MEDIA_PLAYERS",
           "tts_engine": "beállítások · forrás · TTS_ENGINE",
           "ai_conversation_agent": "AI · Választás · forrás",
-          "language": "TTS · Választás · forrás",
+          "language": "Értesítések nyelve",
           "use_mold_indicator": "Penészesedési mutató · RH (%) → 70%",
           "pollen_entities": "Pollen · forrás · Választás",
           "use_announcement_hub": "Értesítések · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Válassz: media_player.* · beállítások · forrás · MEDIA_PLAYERS.",
           "tts_engine": "Válassz: tts.* · beállítások · forrás · TTS_ENGINE.",
           "ai_conversation_agent": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · AI · Választás · forrás · conversation.* / ai_task.*.",
-          "language": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · TTS · Választás · forrás · provider capabilities.",
+          "language": "Alapértelmezés szerint a Home Assistant nyelve érvényes. A HEM által támogatott bármely értesítési nyelv kiválasztható.",
           "use_mold_indicator": "🧱 Penészesedési mutató · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Pollen · forrás · Választás.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Értesítések (opcionális)",
         "description": "Értesítések (opcionális). Automatikus értesítések · Automatikus hangos értesítések. Announcement Hub.",
         "data": {
-          "language": "Nyelv",
+          "language": "Értesítések nyelve",
           "automatic_tts": "Automatikus",
           "automatic_notifications": "Automatikus · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Értesítések (opcionális) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Nyelv"
         },
         "data_description": {
-          "language": "Nyelv: Home Assistant (Alapértelmezett).",
+          "language": "Alapértelmezés szerint a Home Assistant nyelve érvényes. A HEM által támogatott bármely értesítési nyelv kiválasztható.",
           "automatic_tts": "Alapértelmezett: ⛔ · Automatikus · 🪟 90 s.",
           "automatic_notifications": "Alapértelmezett: ⛔ · Automatikus · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Alapértelmezett: 10 min · 0 = soha · Amíg ugyanaz az ok fennáll · Helyiségek.",
@@ -2187,7 +2187,7 @@
           "media_players": "beállítások · forrás · MEDIA_PLAYERS",
           "tts_engine": "beállítások · forrás · TTS_ENGINE",
           "ai_conversation_agent": "AI · Választás · forrás",
-          "language": "TTS · Választás · forrás",
+          "language": "Értesítések nyelve",
           "use_mold_indicator": "Penészesedési mutató · RH (%) → 70%",
           "pollen_entities": "Pollen · forrás · Választás",
           "use_announcement_hub": "Értesítések · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Válassz: media_player.* · beállítások · forrás · MEDIA_PLAYERS.",
           "tts_engine": "Válassz: tts.* · beállítások · forrás · TTS_ENGINE.",
           "ai_conversation_agent": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · AI · Választás · forrás · conversation.* / ai_task.*.",
-          "language": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · TTS · Választás · forrás · provider capabilities.",
+          "language": "Alapértelmezés szerint a Home Assistant nyelve érvényes. A HEM által támogatott bármely értesítési nyelv kiválasztható.",
           "use_mold_indicator": "🧱 Penészesedési mutató · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Pollen · forrás · Választás.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Alapértelmezett",
+        "auto": "Home Assistant nyelve (alapértelmezett)",
         "en": "beállítások · forrás",
         "de": "beállítások · forrás",
         "el": "beállítások · forrás",

@@ -68,7 +68,7 @@
         "title": "Оповещения (необязательно)",
         "description": "Оповещения (необязательно). Автоматические уведомления · Автоматические голосовые оповещения. Announcement Hub.",
         "data": {
-          "language": "Язык",
+          "language": "Язык объявлений",
           "automatic_tts": "Автоматическое",
           "automatic_notifications": "Автоматическое · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Оповещения (необязательно) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Язык"
         },
         "data_description": {
-          "language": "Язык: Home Assistant (По умолчанию).",
+          "language": "По умолчанию используется язык Home Assistant. Можно выбрать любой язык объявлений, поддерживаемый HEM.",
           "automatic_tts": "По умолчанию: ⛔ · Автоматическое · 🪟 90 s.",
           "automatic_notifications": "По умолчанию: ⛔ · Автоматическое · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "По умолчанию: 10 min · 0 = никогда · Пока сохраняется та же причина · Комнаты.",
@@ -191,7 +191,7 @@
           "media_players": "настройки · источник · MEDIA_PLAYERS",
           "tts_engine": "настройки · источник · TTS_ENGINE",
           "ai_conversation_agent": "AI · Выбрать · источник",
-          "language": "TTS · Выбрать · источник",
+          "language": "Язык объявлений",
           "use_mold_indicator": "Индикатор плесени · RH (%) → 70%",
           "pollen_entities": "Пыльца · источник · Выбрать",
           "use_announcement_hub": "Объявления · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Выберите: media_player.* · настройки · источник · MEDIA_PLAYERS.",
           "tts_engine": "Выберите: tts.* · настройки · источник · TTS_ENGINE.",
           "ai_conversation_agent": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · AI · Выбрать · источник · conversation.* / ai_task.*.",
-          "language": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · TTS · Выбрать · источник · provider capabilities.",
+          "language": "По умолчанию используется язык Home Assistant. Можно выбрать любой язык объявлений, поддерживаемый HEM.",
           "use_mold_indicator": "🧱 Индикатор плесени · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · Пыльца · источник · Выбрать.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Оповещения (необязательно)",
         "description": "Оповещения (необязательно). Автоматические уведомления · Автоматические голосовые оповещения. Announcement Hub.",
         "data": {
-          "language": "Язык",
+          "language": "Язык объявлений",
           "automatic_tts": "Автоматическое",
           "automatic_notifications": "Автоматическое · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Оповещения (необязательно) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Язык"
         },
         "data_description": {
-          "language": "Язык: Home Assistant (По умолчанию).",
+          "language": "По умолчанию используется язык Home Assistant. Можно выбрать любой язык объявлений, поддерживаемый HEM.",
           "automatic_tts": "По умолчанию: ⛔ · Автоматическое · 🪟 90 s.",
           "automatic_notifications": "По умолчанию: ⛔ · Автоматическое · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "По умолчанию: 10 min · 0 = никогда · Пока сохраняется та же причина · Комнаты.",
@@ -2187,7 +2187,7 @@
           "media_players": "настройки · источник · MEDIA_PLAYERS",
           "tts_engine": "настройки · источник · TTS_ENGINE",
           "ai_conversation_agent": "AI · Выбрать · источник",
-          "language": "TTS · Выбрать · источник",
+          "language": "Язык объявлений",
           "use_mold_indicator": "Индикатор плесени · RH (%) → 70%",
           "pollen_entities": "Пыльца · источник · Выбрать",
           "use_announcement_hub": "Объявления · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Выберите: media_player.* · настройки · источник · MEDIA_PLAYERS.",
           "tts_engine": "Выберите: tts.* · настройки · источник · TTS_ENGINE.",
           "ai_conversation_agent": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · AI · Выбрать · источник · conversation.* / ai_task.*.",
-          "language": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · TTS · Выбрать · источник · provider capabilities.",
+          "language": "По умолчанию используется язык Home Assistant. Можно выбрать любой язык объявлений, поддерживаемый HEM.",
           "use_mold_indicator": "🧱 Индикатор плесени · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · Пыльца · источник · Выбрать.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - По умолчанию",
+        "auto": "Язык Home Assistant (по умолчанию)",
         "en": "настройки · источник",
         "de": "настройки · источник",
         "el": "настройки · источник",

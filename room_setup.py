@@ -362,7 +362,7 @@ class RoomSetupMixin:
         return result
 
     async def async_step_setup_general(self, user_input=None):
-        from .languages import SUPPORTED_LANGUAGE_TAGS, resolve_language
+        from .languages import SUPPORTED_LANGUAGE_TAGS, normalize_announcement_language
         from .ai_rewrite import DEFAULT_AGENT
         if self._setup_index < len(self._setup_order):
             return await self.async_step_setup_room_sources()
@@ -385,7 +385,8 @@ class RoomSetupMixin:
             CONF_MEDIA_PLAYERS: self._values.get(CONF_MEDIA_PLAYERS, []),
             CONF_TTS_ENGINE: self._values.get(CONF_TTS_ENGINE) or "none",
             CONF_AI_AGENT: self._values.get(CONF_AI_AGENT) or DEFAULT_AGENT,
-            CONF_LANGUAGE: str(self._values.get(CONF_LANGUAGE, "auto")).lower(),
+            CONF_LANGUAGE: (normalize_announcement_language(
+                self._values.get(CONF_LANGUAGE, "auto")) or "auto").lower(),
             CONF_USE_MOLD: self._values.get(CONF_USE_MOLD, False),
             CONF_AWAY_WINDOWS_ALERT: self._values.get(CONF_AWAY_WINDOWS_ALERT, False),
             CONF_AWAY_WINDOWS_PERSONS: self._values.get(CONF_AWAY_WINDOWS_PERSONS, []),
@@ -420,19 +421,21 @@ class RoomSetupMixin:
             # draft; keep every other selection for the normal validation.
             value[CONF_OUTDOOR] = [entity for entity in value[CONF_OUTDOOR]
                                    if not is_pressure_sensor(self.hass, entity)]
-        from .tts_languages import language_options, preferred_language
-        language_choices = language_options(self.hass, None if value[CONF_TTS_ENGINE] == "none" else value[CONF_TTS_ENGINE])
-        language_values = {item["value"] for item in language_choices}
-        value[CONF_LANGUAGE] = preferred_language(
-            self.hass, None if value[CONF_TTS_ENGINE] == "none" else value[CONF_TTS_ENGINE],
-            value[CONF_LANGUAGE])
+        # Announcement text supports every HEM locale, independently of the
+        # selected TTS provider. Lowercase keys use HA's translated selector;
+        # new choices use canonical tags while existing provider-region tags
+        # remain intact when the announcement-language choice is unchanged.
+        language_choices = ["auto", *(tag.lower() for tag in SUPPORTED_LANGUAGE_TAGS)]
+        language = normalize_announcement_language(value[CONF_LANGUAGE])
+        if language is not None:
+            value[CONF_LANGUAGE] = language.lower()
         if user_input is not None:
             for key, items in options.items():
                 allowed = {i["value"] if isinstance(i, dict) else i for i in items}
                 vals = value[key] if key in multi else [value[key]]
                 if (not isinstance(vals, list) or any(not isinstance(v, str) or v not in allowed for v in vals)):
                     errors[key] = "invalid_room_source"
-            if value[CONF_LANGUAGE] not in language_values:
+            if language is None:
                 errors[CONF_LANGUAGE] = "invalid_room_source"
             if ((value["general_wake_alarm_entity"] == "none") !=
                     (value["general_wake_lead_minutes_entity"] == "none")):
@@ -516,7 +519,12 @@ class RoomSetupMixin:
                 self._values[CONF_AI_AGENT] = value[CONF_AI_AGENT]
                 from .hub_delivery import hub_installed
                 self._values[CONF_HUB] = bool(value.get(CONF_HUB, False) and hub_installed(self.hass))
-                self._values[CONF_LANGUAGE] = "auto" if value[CONF_LANGUAGE] == "auto" else resolve_language(value[CONF_LANGUAGE])
+                previous_language = self._values.get(CONF_LANGUAGE)
+                self._values[CONF_LANGUAGE] = (
+                    previous_language if language != "auto"
+                    and normalize_announcement_language(previous_language) == language
+                    else language
+                )
                 self._values[CONF_USE_MOLD] = value[CONF_USE_MOLD]
                 self._values[CONF_AWAY_WINDOWS_ALERT] = value[CONF_AWAY_WINDOWS_ALERT]
                 from .hub_delivery import hub_installed
@@ -615,7 +623,8 @@ class RoomSetupMixin:
                 min=0, max=100, step=0.1,
                 mode=selector.NumberSelectorMode.BOX))
         fields[field("pollen_avoid_ventilation", value["pollen_avoid_ventilation"])] = selector.BooleanSelector()
-        fields[field(CONF_LANGUAGE, value[CONF_LANGUAGE])] = select(language_choices)
+        fields[field(CONF_LANGUAGE, value[CONF_LANGUAGE])] = select(
+            language_choices, translation_key="output_language")
         from .hub_delivery import hub_installed
         if hub_installed(self.hass):
             fields[field(CONF_HUB, value.get(CONF_HUB, False))] = selector.BooleanSelector()

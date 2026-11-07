@@ -68,7 +68,7 @@
         "title": "घोषणाएँ (वैकल्पिक)",
         "description": "घोषणाएँ (वैकल्पिक). स्वचालित सूचनाएँ · स्वचालित ध्वनि घोषणाएँ. Announcement Hub.",
         "data": {
-          "language": "भाषा",
+          "language": "घोषणाओं की भाषा",
           "automatic_tts": "स्वचालित",
           "automatic_notifications": "स्वचालित · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "घोषणाएँ (वैकल्पिक) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · भाषा"
         },
         "data_description": {
-          "language": "“भाषा” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
+          "language": "डिफ़ॉल्ट रूप से Home Assistant की भाषा का उपयोग होता है। आप HEM द्वारा समर्थित कोई भी घोषणा भाषा चुन सकते हैं।",
           "automatic_tts": "डिफ़ॉल्ट: ⛔ · स्वचालित · 🪟 90 s. यह विकल्प “स्वचालित” नियंत्रित करता है। उपकरण आदेशों के लिए अलग अनुमति और सुरक्षा आवश्यक है।",
           "automatic_notifications": "यह विकल्प “स्वचालित · AUTOMATIC_NOTIFICATIONS” नियंत्रित करता है। उपकरण आदेशों के लिए अलग अनुमति और सुरक्षा आवश्यक है।",
           "announcement_repeat_minutes": "डिफ़ॉल्ट: 10 min · 0 = कभी नहीं · जब तक वही कारण बना रहे · कमरे.",
@@ -191,7 +191,7 @@
           "media_players": "सेटिंग · स्रोत · MEDIA_PLAYERS",
           "tts_engine": "सेटिंग · स्रोत · TTS_ENGINE",
           "ai_conversation_agent": "AI · चुनें · स्रोत",
-          "language": "TTS · चुनें · स्रोत",
+          "language": "घोषणाओं की भाषा",
           "use_mold_indicator": "फफूंद संकेतक · RH (%) → 70%",
           "pollen_entities": "पराग · स्रोत · चुनें",
           "use_announcement_hub": "घोषणाएँ · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "चुनें: media_player.* · सेटिंग · स्रोत · MEDIA_PLAYERS.",
           "tts_engine": "चुनें: tts.* · सेटिंग · स्रोत · TTS_ENGINE.",
           "ai_conversation_agent": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · AI · चुनें · स्रोत · conversation.* / ai_task.*.",
-          "language": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · TTS · चुनें · स्रोत · provider capabilities.",
+          "language": "डिफ़ॉल्ट रूप से Home Assistant की भाषा का उपयोग होता है। आप HEM द्वारा समर्थित कोई भी घोषणा भाषा चुन सकते हैं।",
           "use_mold_indicator": "🧱 फफूंद संकेतक · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · पराग · स्रोत · चुनें.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "घोषणाएँ (वैकल्पिक)",
         "description": "घोषणाएँ (वैकल्पिक). स्वचालित सूचनाएँ · स्वचालित ध्वनि घोषणाएँ. Announcement Hub.",
         "data": {
-          "language": "भाषा",
+          "language": "घोषणाओं की भाषा",
           "automatic_tts": "स्वचालित",
           "automatic_notifications": "स्वचालित · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "घोषणाएँ (वैकल्पिक) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · भाषा"
         },
         "data_description": {
-          "language": "“भाषा” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।",
+          "language": "डिफ़ॉल्ट रूप से Home Assistant की भाषा का उपयोग होता है। आप HEM द्वारा समर्थित कोई भी घोषणा भाषा चुन सकते हैं।",
           "automatic_tts": "डिफ़ॉल्ट: ⛔ · स्वचालित · 🪟 90 s. यह विकल्प “स्वचालित” नियंत्रित करता है। उपकरण आदेशों के लिए अलग अनुमति और सुरक्षा आवश्यक है।",
           "automatic_notifications": "यह विकल्प “स्वचालित · AUTOMATIC_NOTIFICATIONS” नियंत्रित करता है। उपकरण आदेशों के लिए अलग अनुमति और सुरक्षा आवश्यक है।",
           "announcement_repeat_minutes": "डिफ़ॉल्ट: 10 min · 0 = कभी नहीं · जब तक वही कारण बना रहे · कमरे.",
@@ -2187,7 +2187,7 @@
           "media_players": "सेटिंग · स्रोत · MEDIA_PLAYERS",
           "tts_engine": "सेटिंग · स्रोत · TTS_ENGINE",
           "ai_conversation_agent": "AI · चुनें · स्रोत",
-          "language": "TTS · चुनें · स्रोत",
+          "language": "घोषणाओं की भाषा",
           "use_mold_indicator": "फफूंद संकेतक · RH (%) → 70%",
           "pollen_entities": "पराग · स्रोत · चुनें",
           "use_announcement_hub": "घोषणाएँ · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "चुनें: media_player.* · सेटिंग · स्रोत · MEDIA_PLAYERS.",
           "tts_engine": "चुनें: tts.* · सेटिंग · स्रोत · TTS_ENGINE.",
           "ai_conversation_agent": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · AI · चुनें · स्रोत · conversation.* / ai_task.*.",
-          "language": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · TTS · चुनें · स्रोत · provider capabilities.",
+          "language": "डिफ़ॉल्ट रूप से Home Assistant की भाषा का उपयोग होता है। आप HEM द्वारा समर्थित कोई भी घोषणा भाषा चुन सकते हैं।",
           "use_mold_indicator": "🧱 फफूंद संकेतक · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "साझा स्रोत और सूचना आउटपुट चुनें। सहेजना सेटअप पूरा करता है। संचालन सेटिंग घर और कमरे के उपकरणों पर रहती हैं। · पराग · स्रोत · चुनें.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - डिफ़ॉल्ट",
+        "auto": "Home Assistant की भाषा (डिफ़ॉल्ट)",
         "en": "सेटिंग · स्रोत",
         "de": "सेटिंग · स्रोत",
         "el": "सेटिंग · स्रोत",

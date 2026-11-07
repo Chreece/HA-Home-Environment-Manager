@@ -68,7 +68,7 @@
         "title": "اعلان‌ها (اختیاری)",
         "description": "اعلان‌ها (اختیاری). اعلان‌های خودکار · اعلان‌های صوتی خودکار. Announcement Hub.",
         "data": {
-          "language": "زبان",
+          "language": "زبان اعلان‌ها",
           "automatic_tts": "خودکار",
           "automatic_notifications": "خودکار · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "اعلان‌ها (اختیاری) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · زبان"
         },
         "data_description": {
-          "language": "«زبان» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
+          "language": "به‌طور پیش‌فرض از زبان Home Assistant استفاده می‌شود. می‌توانید هر زبان اعلانی را که HEM پشتیبانی می‌کند انتخاب کنید.",
           "automatic_tts": "پیش‌فرض: ⛔ · خودکار · 🪟 90 s. این گزینه «خودکار» را کنترل می‌کند. فرمان دستگاه نیازمند مجوز جداگانه و حفاظت مستقل است.",
           "automatic_notifications": "این گزینه «خودکار · AUTOMATIC_NOTIFICATIONS» را کنترل می‌کند. فرمان دستگاه نیازمند مجوز جداگانه و حفاظت مستقل است.",
           "announcement_repeat_minutes": "پیش‌فرض: 10 min · 0 = هرگز · تا زمانی که همان علت ادامه دارد · اتاق‌ها.",
@@ -191,7 +191,7 @@
           "media_players": "تنظیمات · منبع · MEDIA_PLAYERS",
           "tts_engine": "تنظیمات · منبع · TTS_ENGINE",
           "ai_conversation_agent": "AI · انتخاب · منبع",
-          "language": "TTS · انتخاب · منبع",
+          "language": "زبان اعلان‌ها",
           "use_mold_indicator": "شاخص کپک · RH (%) → 70%",
           "pollen_entities": "گرده · منبع · انتخاب",
           "use_announcement_hub": "اعلان‌ها · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "انتخاب کنید: media_player.* · تنظیمات · منبع · MEDIA_PLAYERS.",
           "tts_engine": "انتخاب کنید: tts.* · تنظیمات · منبع · TTS_ENGINE.",
           "ai_conversation_agent": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · AI · انتخاب · منبع · conversation.* / ai_task.*.",
-          "language": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · TTS · انتخاب · منبع · provider capabilities.",
+          "language": "به‌طور پیش‌فرض از زبان Home Assistant استفاده می‌شود. می‌توانید هر زبان اعلانی را که HEM پشتیبانی می‌کند انتخاب کنید.",
           "use_mold_indicator": "«شاخص کپک · RH (%) → 70%» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "pollen_entities": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · گرده · منبع · انتخاب.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "اعلان‌ها (اختیاری)",
         "description": "اعلان‌ها (اختیاری). اعلان‌های خودکار · اعلان‌های صوتی خودکار. Announcement Hub.",
         "data": {
-          "language": "زبان",
+          "language": "زبان اعلان‌ها",
           "automatic_tts": "خودکار",
           "automatic_notifications": "خودکار · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "اعلان‌ها (اختیاری) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · زبان"
         },
         "data_description": {
-          "language": "«زبان» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
+          "language": "به‌طور پیش‌فرض از زبان Home Assistant استفاده می‌شود. می‌توانید هر زبان اعلانی را که HEM پشتیبانی می‌کند انتخاب کنید.",
           "automatic_tts": "پیش‌فرض: ⛔ · خودکار · 🪟 90 s. این گزینه «خودکار» را کنترل می‌کند. فرمان دستگاه نیازمند مجوز جداگانه و حفاظت مستقل است.",
           "automatic_notifications": "این گزینه «خودکار · AUTOMATIC_NOTIFICATIONS» را کنترل می‌کند. فرمان دستگاه نیازمند مجوز جداگانه و حفاظت مستقل است.",
           "announcement_repeat_minutes": "پیش‌فرض: 10 min · 0 = هرگز · تا زمانی که همان علت ادامه دارد · اتاق‌ها.",
@@ -2187,7 +2187,7 @@
           "media_players": "تنظیمات · منبع · MEDIA_PLAYERS",
           "tts_engine": "تنظیمات · منبع · TTS_ENGINE",
           "ai_conversation_agent": "AI · انتخاب · منبع",
-          "language": "TTS · انتخاب · منبع",
+          "language": "زبان اعلان‌ها",
           "use_mold_indicator": "شاخص کپک · RH (%) → 70%",
           "pollen_entities": "گرده · منبع · انتخاب",
           "use_announcement_hub": "اعلان‌ها · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "انتخاب کنید: media_player.* · تنظیمات · منبع · MEDIA_PLAYERS.",
           "tts_engine": "انتخاب کنید: tts.* · تنظیمات · منبع · TTS_ENGINE.",
           "ai_conversation_agent": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · AI · انتخاب · منبع · conversation.* / ai_task.*.",
-          "language": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · TTS · انتخاب · منبع · provider capabilities.",
+          "language": "به‌طور پیش‌فرض از زبان Home Assistant استفاده می‌شود. می‌توانید هر زبان اعلانی را که HEM پشتیبانی می‌کند انتخاب کنید.",
           "use_mold_indicator": "«شاخص کپک · RH (%) → 70%» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "pollen_entities": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · گرده · منبع · انتخاب.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - پیش‌فرض",
+        "auto": "زبان Home Assistant (پیش‌فرض)",
         "en": "تنظیمات · منبع",
         "de": "تنظیمات · منبع",
         "el": "تنظیمات · منبع",

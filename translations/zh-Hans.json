@@ -68,7 +68,7 @@
         "title": "播报（可选）",
         "description": "播报（可选）. 自动通知 · 自动语音播报. Announcement Hub.",
         "data": {
-          "language": "语言",
+          "language": "播报语言",
           "automatic_tts": "自动",
           "automatic_notifications": "自动 · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "播报（可选） · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · 语言"
         },
         "data_description": {
-          "language": "只为所选房间配置“语言”。缺失或无效数据会阻止相关操作。",
+          "language": "默认使用 Home Assistant 的语言，也可以选择 HEM 支持的任意播报语言。",
           "automatic_tts": "该选项控制“自动”。实际设备命令必须单独授权并具有独立保护。",
           "automatic_notifications": "该选项控制“自动 · AUTOMATIC_NOTIFICATIONS”。实际设备命令必须单独授权并具有独立保护。",
           "announcement_repeat_minutes": "默认: 10 min · 0 = 从不 · 仅在同一原因持续时 · 房间.",
@@ -191,7 +191,7 @@
           "media_players": "设置 · 来源 · MEDIA_PLAYERS",
           "tts_engine": "设置 · 来源 · TTS_ENGINE",
           "ai_conversation_agent": "AI · 选择 · 来源",
-          "language": "TTS · 选择 · 来源",
+          "language": "播报语言",
           "use_mold_indicator": "霉菌指标 · RH (%) → 70%",
           "pollen_entities": "花粉 · 来源 · 选择",
           "use_announcement_hub": "播报 · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "只为所选房间配置“设置 · 来源 · MEDIA_PLAYERS”。缺失或无效数据会阻止相关操作。",
           "tts_engine": "只为所选房间配置“设置 · 来源 · TTS_ENGINE”。缺失或无效数据会阻止相关操作。",
           "ai_conversation_agent": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · AI · 选择 · 来源 · conversation.* / ai_task.*.",
-          "language": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · TTS · 选择 · 来源 · provider capabilities.",
+          "language": "默认使用 Home Assistant 的语言，也可以选择 HEM 支持的任意播报语言。",
           "use_mold_indicator": "只为所选房间配置“霉菌指标 · RH (%) → 70%”。缺失或无效数据会阻止相关操作。",
           "pollen_entities": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 花粉 · 来源 · 选择.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "播报（可选）",
         "description": "播报（可选）. 自动通知 · 自动语音播报. Announcement Hub.",
         "data": {
-          "language": "语言",
+          "language": "播报语言",
           "automatic_tts": "自动",
           "automatic_notifications": "自动 · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "播报（可选） · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · 语言"
         },
         "data_description": {
-          "language": "只为所选房间配置“语言”。缺失或无效数据会阻止相关操作。",
+          "language": "默认使用 Home Assistant 的语言，也可以选择 HEM 支持的任意播报语言。",
           "automatic_tts": "该选项控制“自动”。实际设备命令必须单独授权并具有独立保护。",
           "automatic_notifications": "该选项控制“自动 · AUTOMATIC_NOTIFICATIONS”。实际设备命令必须单独授权并具有独立保护。",
           "announcement_repeat_minutes": "默认: 10 min · 0 = 从不 · 仅在同一原因持续时 · 房间.",
@@ -2187,7 +2187,7 @@
           "media_players": "设置 · 来源 · MEDIA_PLAYERS",
           "tts_engine": "设置 · 来源 · TTS_ENGINE",
           "ai_conversation_agent": "AI · 选择 · 来源",
-          "language": "TTS · 选择 · 来源",
+          "language": "播报语言",
           "use_mold_indicator": "霉菌指标 · RH (%) → 70%",
           "pollen_entities": "花粉 · 来源 · 选择",
           "use_announcement_hub": "播报 · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "只为所选房间配置“设置 · 来源 · MEDIA_PLAYERS”。缺失或无效数据会阻止相关操作。",
           "tts_engine": "只为所选房间配置“设置 · 来源 · TTS_ENGINE”。缺失或无效数据会阻止相关操作。",
           "ai_conversation_agent": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · AI · 选择 · 来源 · conversation.* / ai_task.*.",
-          "language": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · TTS · 选择 · 来源 · provider capabilities.",
+          "language": "默认使用 Home Assistant 的语言，也可以选择 HEM 支持的任意播报语言。",
           "use_mold_indicator": "只为所选房间配置“霉菌指标 · RH (%) → 70%”。缺失或无效数据会阻止相关操作。",
           "pollen_entities": "选择共享输入源和通知输出。保存即完成设置。运行参数保留在家庭和房间设备上。 · 花粉 · 来源 · 选择.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - 默认",
+        "auto": "Home Assistant 语言（默认）",
         "en": "设置 · 来源",
         "de": "设置 · 来源",
         "el": "设置 · 来源",

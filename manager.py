@@ -56,7 +56,9 @@ from .building_physics import moisture_potential
 from .environment_extended import global_pollen, global_aqi
 from .logic import Reading, Reason, Recommendation
 from .logic import Plan, evaluate
-from .messages import announcement, language_code
+from .messages import announcement
+from .languages import announcement_language
+from .tts_languages import tts_language
 from .away_windows import AwayWindowAlert, watched_entities
 from .presence_continuity import PresenceContinuity
 from .arrival_preparation import ArrivalPreparation, room_eligible
@@ -134,10 +136,8 @@ class AirQualityManager:
         return hub_available(self.hass)
 
     def get_language(self, language: str | None) -> str:
-        selected = language or self.settings.get(CONF_LANGUAGE, "auto")
-        if selected == "auto":
-            selected = self.hass.config.language
-        return language_code(selected)
+        selected = self.settings.get(CONF_LANGUAGE, "auto") if language is None else language
+        return announcement_language(self.hass, selected)
 
     @callback
     def _capture(self) -> Plan:
@@ -1446,7 +1446,7 @@ class AirQualityManager:
             return {"submitted": 0, "reason": "No actionable window recommendations"}
 
         localized = self.get_language(language)
-        requested_language = language or config.get(CONF_LANGUAGE, "auto")
+        requested_language = config.get(CONF_LANGUAGE, "auto") if language is None else language
         sent = 0
         errors: list[str] = []
         for rec in all_notices:
@@ -1462,7 +1462,7 @@ class AirQualityManager:
             if prefer_hub:
                 hub_payload = make_hub_payload(
                     rec, title, message, speech=speech, visual=visual,
-                    language=requested_language, use_ai=use_ai, agent_id=agent,
+                    language=localized, use_ai=use_ai, agent_id=agent,
                 )
                 if hub_available(self.hass):
                     # Hub is the delivery authority while running, including
@@ -1518,35 +1518,14 @@ class AirQualityManager:
                     errors.append(str(ex))
 
             if can_speak:
-                data: dict[str, Any] = {
-                    "media_player_entity_id": tts_players, "message": message
-                }
-                if requested_language != "auto":
-                    state = self.hass.states.get(tts_engine)
-                    supported = (
-                        state.attributes.get("supported_languages", []) if state else []
-                    )
-                    if isinstance(supported, list) and supported:
-                        canonical = lambda value: str(value).replace("_", "-").casefold()
-                        base = canonical(localized).split("-", 1)[0]
-                        exact = next(
-                            (s for s in supported if canonical(s) == canonical(requested_language)),
-                            None,
-                        )
-                        compatible = next(
-                            (s for s in supported if canonical(s).split("-", 1)[0] == base),
-                            None,
-                        )
-                        if exact or compatible:
-                            data["language"] = exact or compatible
-                        else:
-                            _LOGGER.warning(
-                                "TTS engine %s does not advertise language %s",
-                                tts_engine, requested_language,
-                            )
-                    else:
-                        data["language"] = requested_language
                 try:
+                    data: dict[str, Any] = {
+                        "media_player_entity_id": tts_players, "message": message,
+                        "language": tts_language(
+                            self.hass, tts_engine, requested_language,
+                            text_language=localized,
+                        ),
+                    }
                     await self.hass.services.async_call(
                         "tts", "speak", data,
                         target={"entity_id": tts_engine}, blocking=True,

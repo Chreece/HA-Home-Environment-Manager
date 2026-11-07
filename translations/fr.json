@@ -68,7 +68,7 @@
         "title": "Annonces (facultatif)",
         "description": "Le capteur fonctionne sans annonces. Activez la voix ou les notifications uniquement si nécessaire. Announcement Hub peut gérer les destinations par pièce.",
         "data": {
-          "language": "Langue",
+          "language": "Langue des annonces",
           "automatic_tts": "Annoncer automatiquement les nouvelles recommandations",
           "automatic_notifications": "Notifier automatiquement les nouvelles recommandations",
           "use_announcement_hub": "Annonces · Announcement Hub",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "Agent conversationnel"
         },
         "data_description": {
-          "language": "Le mode automatique utilise la langue de Home Assistant. L'action manuelle peut choisir une autre langue.",
+          "language": "Utilisez la langue de Home Assistant par défaut, ou choisissez une langue d’annonce prise en charge par HEM.",
           "automatic_tts": "Désactivé par défaut. Une nouvelle recommandation d'ouverture nécessite 90 secondes de conditions stables.",
           "automatic_notifications": "Désactivé par défaut. Ne pas renvoyer une notification à chaque mesure du capteur.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -191,7 +191,7 @@
           "media_players": "Lecteurs média TTS directs",
           "tts_engine": "Moteur TTS direct",
           "ai_conversation_agent": "AI · Choisir · source",
-          "language": "TTS · Choisir · source",
+          "language": "Langue des annonces",
           "use_mold_indicator": "Utiliser l’indicateur de moisissure au lieu de l’humidité relative",
           "pollen_entities": "Pollen · source · Choisir",
           "use_announcement_hub": "Annonces · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Lecteurs pour les annonces vocales directes. L'affectation aux pièces détermine les destinataires.",
           "tts_engine": "Moteur de synthèse vocale pour les annonces directes sans Announcement Hub.",
           "ai_conversation_agent": "Choisissez la valeur par défaut, un agent conversationnel ou une entité Task AI compatible données. Task AI utilise ai_task.generate_data.",
-          "language": "Les langues proviennent du fournisseur TTS choisi. Le code régional n'apparaît que s'il existe plusieurs variantes d'une même langue.",
+          "language": "Utilisez la langue de Home Assistant par défaut, ou choisissez une langue d’annonce prise en charge par HEM.",
           "use_mold_indicator": "Les conseils d’aération reposent sur l’humidité estimée près de la surface la plus froide plutôt que sur l’humidité ambiante. Calibrez chaque pièce ; sinon l’indicateur reste indisponible.",
           "pollen_entities": "Au premier réglage, toutes les sources de pollen trouvées sont présélectionnées. Un choix vide explicite ultérieur reste vide.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Annonces (facultatif)",
         "description": "Le capteur fonctionne sans annonces. Activez la voix ou les notifications uniquement si nécessaire. Announcement Hub peut gérer les destinations par pièce.",
         "data": {
-          "language": "Langue",
+          "language": "Langue des annonces",
           "automatic_tts": "Annoncer automatiquement les nouvelles recommandations",
           "automatic_notifications": "Notifier automatiquement les nouvelles recommandations",
           "use_announcement_hub": "Annonces · Announcement Hub",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "Agent conversationnel"
         },
         "data_description": {
-          "language": "Le mode automatique utilise la langue de Home Assistant. L'action manuelle peut choisir une autre langue.",
+          "language": "Utilisez la langue de Home Assistant par défaut, ou choisissez une langue d’annonce prise en charge par HEM.",
           "automatic_tts": "Désactivé par défaut. Une nouvelle recommandation d'ouverture nécessite 90 secondes de conditions stables.",
           "automatic_notifications": "Désactivé par défaut. Ne pas renvoyer une notification à chaque mesure du capteur.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2187,7 +2187,7 @@
           "media_players": "Lecteurs média TTS directs",
           "tts_engine": "Moteur TTS direct",
           "ai_conversation_agent": "AI · Choisir · source",
-          "language": "TTS · Choisir · source",
+          "language": "Langue des annonces",
           "use_mold_indicator": "Utiliser l’indicateur de moisissure au lieu de l’humidité relative",
           "pollen_entities": "Pollen · source · Choisir",
           "use_announcement_hub": "Annonces · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Lecteurs pour les annonces vocales directes. L'affectation aux pièces détermine les destinataires.",
           "tts_engine": "Moteur de synthèse vocale pour les annonces directes sans Announcement Hub.",
           "ai_conversation_agent": "Choisissez la valeur par défaut, un agent conversationnel ou une entité Task AI compatible données. Task AI utilise ai_task.generate_data.",
-          "language": "Les langues proviennent du fournisseur TTS choisi. Le code régional n'apparaît que s'il existe plusieurs variantes d'une même langue.",
+          "language": "Utilisez la langue de Home Assistant par défaut, ou choisissez une langue d’annonce prise en charge par HEM.",
           "use_mold_indicator": "Les conseils d’aération reposent sur l’humidité estimée près de la surface la plus froide plutôt que sur l’humidité ambiante. Calibrez chaque pièce ; sinon l’indicateur reste indisponible.",
           "pollen_entities": "Au premier réglage, toutes les sources de pollen trouvées sont présélectionnées. Un choix vide explicite ultérieur reste vide.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Valeur par défaut de Home Assistant",
+        "auto": "Langue de Home Assistant (par défaut)",
         "en": "paramètres · source",
         "de": "paramètres · source",
         "el": "paramètres · source",

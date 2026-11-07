@@ -68,7 +68,7 @@
         "title": "Annunci (facoltativi)",
         "description": "Annunci (facoltativi). Notifiche automatiche · Annunci vocali automatici. Announcement Hub.",
         "data": {
-          "language": "Lingua",
+          "language": "Lingua degli annunci",
           "automatic_tts": "Automatico",
           "automatic_notifications": "Automatico · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Annunci (facoltativi) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Lingua"
         },
         "data_description": {
-          "language": "Lingua: Home Assistant (Predefinito).",
+          "language": "Per impostazione predefinita viene usata la lingua di Home Assistant. Puoi scegliere qualsiasi lingua per gli annunci supportata da HEM.",
           "automatic_tts": "Predefinito: ⛔ · Automatico · 🪟 90 s.",
           "automatic_notifications": "Predefinito: ⛔ · Automatico · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Predefinito: 10 min · 0 = mai · Finché la stessa causa persiste · Stanze.",
@@ -191,7 +191,7 @@
           "media_players": "impostazioni · fonte · MEDIA_PLAYERS",
           "tts_engine": "impostazioni · fonte · TTS_ENGINE",
           "ai_conversation_agent": "AI · Seleziona · fonte",
-          "language": "TTS · Seleziona · fonte",
+          "language": "Lingua degli annunci",
           "use_mold_indicator": "Indicatore muffa · RH (%) → 70%",
           "pollen_entities": "Polline · fonte · Seleziona",
           "use_announcement_hub": "Annunci · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Seleziona: media_player.* · impostazioni · fonte · MEDIA_PLAYERS.",
           "tts_engine": "Seleziona: tts.* · impostazioni · fonte · TTS_ENGINE.",
           "ai_conversation_agent": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · AI · Seleziona · fonte · conversation.* / ai_task.*.",
-          "language": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · TTS · Seleziona · fonte · provider capabilities.",
+          "language": "Per impostazione predefinita viene usata la lingua di Home Assistant. Puoi scegliere qualsiasi lingua per gli annunci supportata da HEM.",
           "use_mold_indicator": "🧱 Indicatore muffa · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Polline · fonte · Seleziona.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Annunci (facoltativi)",
         "description": "Annunci (facoltativi). Notifiche automatiche · Annunci vocali automatici. Announcement Hub.",
         "data": {
-          "language": "Lingua",
+          "language": "Lingua degli annunci",
           "automatic_tts": "Automatico",
           "automatic_notifications": "Automatico · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Annunci (facoltativi) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Lingua"
         },
         "data_description": {
-          "language": "Lingua: Home Assistant (Predefinito).",
+          "language": "Per impostazione predefinita viene usata la lingua di Home Assistant. Puoi scegliere qualsiasi lingua per gli annunci supportata da HEM.",
           "automatic_tts": "Predefinito: ⛔ · Automatico · 🪟 90 s.",
           "automatic_notifications": "Predefinito: ⛔ · Automatico · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Predefinito: 10 min · 0 = mai · Finché la stessa causa persiste · Stanze.",
@@ -2187,7 +2187,7 @@
           "media_players": "impostazioni · fonte · MEDIA_PLAYERS",
           "tts_engine": "impostazioni · fonte · TTS_ENGINE",
           "ai_conversation_agent": "AI · Seleziona · fonte",
-          "language": "TTS · Seleziona · fonte",
+          "language": "Lingua degli annunci",
           "use_mold_indicator": "Indicatore muffa · RH (%) → 70%",
           "pollen_entities": "Polline · fonte · Seleziona",
           "use_announcement_hub": "Annunci · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Seleziona: media_player.* · impostazioni · fonte · MEDIA_PLAYERS.",
           "tts_engine": "Seleziona: tts.* · impostazioni · fonte · TTS_ENGINE.",
           "ai_conversation_agent": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · AI · Seleziona · fonte · conversation.* / ai_task.*.",
-          "language": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · TTS · Seleziona · fonte · provider capabilities.",
+          "language": "Per impostazione predefinita viene usata la lingua di Home Assistant. Puoi scegliere qualsiasi lingua per gli annunci supportata da HEM.",
           "use_mold_indicator": "🧱 Indicatore muffa · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Seleziona fonti condivise e uscite di notifica. Salva completa la configurazione. Le impostazioni operative restano sui dispositivi della casa e delle stanze. · Polline · fonte · Seleziona.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Predefinito",
+        "auto": "Lingua di Home Assistant (predefinita)",
         "en": "impostazioni · fonte",
         "de": "impostazioni · fonte",
         "el": "impostazioni · fonte",

@@ -68,7 +68,7 @@
         "title": "Meddelelser (valgfrit)",
         "description": "Meddelelser (valgfrit). Automatiske notifikationer · Automatiske talemeddelelser. Announcement Hub.",
         "data": {
-          "language": "Sprog",
+          "language": "Sprog for meddelelser",
           "automatic_tts": "Automatisk",
           "automatic_notifications": "Automatisk · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Meddelelser (valgfrit) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Sprog"
         },
         "data_description": {
-          "language": "Indstil »Sprog« kun for valgt rum. Ugyldige data blokerer handlingen.",
+          "language": "Som standard bruges sproget i Home Assistant. Du kan vælge ethvert meddelelsessprog, som HEM understøtter.",
           "automatic_tts": "Standard: ⛔ · Automatisk · 🪟 90 s. Denne indstilling styrer »Automatisk«. Fysiske kommandoer kræver særskilt samtykke og sikring.",
           "automatic_notifications": "Standard: ⛔ · Automatisk · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Standard: 10 min · 0 = aldrig · Så længe samme årsag fortsætter · Rum.",
@@ -191,7 +191,7 @@
           "media_players": "indstillinger · kilde · MEDIA_PLAYERS",
           "tts_engine": "indstillinger · kilde · TTS_ENGINE",
           "ai_conversation_agent": "AI · Vælg · kilde",
-          "language": "TTS · Vælg · kilde",
+          "language": "Sprog for meddelelser",
           "use_mold_indicator": "Skimmelindikator · RH (%) → 70%",
           "pollen_entities": "Pollen · kilde · Vælg",
           "use_announcement_hub": "Meddelelser · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Vælg: media_player.* · indstillinger · kilde · MEDIA_PLAYERS.",
           "tts_engine": "Vælg: tts.* · indstillinger · kilde · TTS_ENGINE.",
           "ai_conversation_agent": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · AI · Vælg · kilde · conversation.* / ai_task.*.",
-          "language": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · TTS · Vælg · kilde · provider capabilities.",
+          "language": "Som standard bruges sproget i Home Assistant. Du kan vælge ethvert meddelelsessprog, som HEM understøtter.",
           "use_mold_indicator": "🧱 Skimmelindikator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Pollen · kilde · Vælg.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Meddelelser (valgfrit)",
         "description": "Meddelelser (valgfrit). Automatiske notifikationer · Automatiske talemeddelelser. Announcement Hub.",
         "data": {
-          "language": "Sprog",
+          "language": "Sprog for meddelelser",
           "automatic_tts": "Automatisk",
           "automatic_notifications": "Automatisk · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Meddelelser (valgfrit) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Sprog"
         },
         "data_description": {
-          "language": "Indstil »Sprog« kun for valgt rum. Ugyldige data blokerer handlingen.",
+          "language": "Som standard bruges sproget i Home Assistant. Du kan vælge ethvert meddelelsessprog, som HEM understøtter.",
           "automatic_tts": "Standard: ⛔ · Automatisk · 🪟 90 s. Denne indstilling styrer »Automatisk«. Fysiske kommandoer kræver særskilt samtykke og sikring.",
           "automatic_notifications": "Standard: ⛔ · Automatisk · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Standard: 10 min · 0 = aldrig · Så længe samme årsag fortsætter · Rum.",
@@ -2187,7 +2187,7 @@
           "media_players": "indstillinger · kilde · MEDIA_PLAYERS",
           "tts_engine": "indstillinger · kilde · TTS_ENGINE",
           "ai_conversation_agent": "AI · Vælg · kilde",
-          "language": "TTS · Vælg · kilde",
+          "language": "Sprog for meddelelser",
           "use_mold_indicator": "Skimmelindikator · RH (%) → 70%",
           "pollen_entities": "Pollen · kilde · Vælg",
           "use_announcement_hub": "Meddelelser · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Vælg: media_player.* · indstillinger · kilde · MEDIA_PLAYERS.",
           "tts_engine": "Vælg: tts.* · indstillinger · kilde · TTS_ENGINE.",
           "ai_conversation_agent": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · AI · Vælg · kilde · conversation.* / ai_task.*.",
-          "language": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · TTS · Vælg · kilde · provider capabilities.",
+          "language": "Som standard bruges sproget i Home Assistant. Du kan vælge ethvert meddelelsessprog, som HEM understøtter.",
           "use_mold_indicator": "🧱 Skimmelindikator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vælg fælles kilder og notifikationsudgange. Gem afslutter opsætningen. Driftsindstillinger forbliver på husets og rummenes enheder. · Pollen · kilde · Vælg.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Standard",
+        "auto": "Home Assistant-sprog (standard)",
         "en": "indstillinger · kilde",
         "de": "indstillinger · kilde",
         "el": "indstillinger · kilde",

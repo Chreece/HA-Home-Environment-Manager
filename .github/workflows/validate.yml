@@ -98,6 +98,10 @@ jobs:
           python -I .github/tests/test_061b2_info_bubbles.py --logic-only
       - name: Timed arrival preparation, live authority and restart continuity
         run: python -I .github/tests/test_061b4_arrival_preparation.py
+      - name: Announcement language menu, Home Assistant default and consistent delivery
+        run: |
+          python -I .github/tests/test_061b5_language_settings.py
+          python -I .github/tests/test_061b5_announcement_delivery.py
       - name: PID target cutoff, original retry budgets and live native shutdown
         run: |
           python -I .github/tests/test_beta111_pid_cutoff_math.py
@@ -347,6 +351,8 @@ jobs:
                         'equipment_status.py','equipment_battery.py',
                         'room_ventilation.py','messages.py',
                         'select.py','number.py','device_controls.py','arrival_preparation.py',
+                        'languages.py','tts_languages.py','announcement_text.py',
+                        'recommendation_text.py',
                         'translations/el.json','frontend/air-quality-advisor-card.js'):
                   assert root+f in z.namelist(),f
               assert all(f.startswith(root) for f in z.namelist())

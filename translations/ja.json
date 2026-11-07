@@ -68,7 +68,7 @@
         "title": "通知（任意）",
         "description": "通知（任意）. 自動通知 · 自動音声通知. Announcement Hub.",
         "data": {
-          "language": "言語",
+          "language": "アナウンスの言語",
           "automatic_tts": "自動",
           "automatic_notifications": "自動 · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "通知（任意） · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · 言語"
         },
         "data_description": {
-          "language": "「言語」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
+          "language": "既定では Home Assistant の言語を使用します。HEM が対応するアナウンス言語を選択することもできます。",
           "automatic_tts": "この項目は「自動」を設定します。機器への指示には個別の許可と独立した保護が必要です。",
           "automatic_notifications": "この項目は「自動 · AUTOMATIC_NOTIFICATIONS」を設定します。機器への指示には個別の許可と独立した保護が必要です。",
           "announcement_repeat_minutes": "既定: 10 min · 0 = 繰り返さない · 同じ原因が続く間 · 部屋.",
@@ -191,7 +191,7 @@
           "media_players": "設定 · 情報源 · MEDIA_PLAYERS",
           "tts_engine": "設定 · 情報源 · TTS_ENGINE",
           "ai_conversation_agent": "AI · 選択 · 情報源",
-          "language": "TTS · 選択 · 情報源",
+          "language": "アナウンスの言語",
           "use_mold_indicator": "カビ指標 · RH (%) → 70%",
           "pollen_entities": "花粉 · 情報源 · 選択",
           "use_announcement_hub": "通知 · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "「設定 · 情報源 · MEDIA_PLAYERS」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "tts_engine": "「設定 · 情報源 · TTS_ENGINE」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "ai_conversation_agent": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · AI · 選択 · 情報源 · conversation.* / ai_task.*.",
-          "language": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · TTS · 選択 · 情報源 · provider capabilities.",
+          "language": "既定では Home Assistant の言語を使用します。HEM が対応するアナウンス言語を選択することもできます。",
           "use_mold_indicator": "「カビ指標 · RH (%) → 70%」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "pollen_entities": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 花粉 · 情報源 · 選択.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "通知（任意）",
         "description": "通知（任意）. 自動通知 · 自動音声通知. Announcement Hub.",
         "data": {
-          "language": "言語",
+          "language": "アナウンスの言語",
           "automatic_tts": "自動",
           "automatic_notifications": "自動 · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "通知（任意） · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · 言語"
         },
         "data_description": {
-          "language": "「言語」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
+          "language": "既定では Home Assistant の言語を使用します。HEM が対応するアナウンス言語を選択することもできます。",
           "automatic_tts": "この項目は「自動」を設定します。機器への指示には個別の許可と独立した保護が必要です。",
           "automatic_notifications": "この項目は「自動 · AUTOMATIC_NOTIFICATIONS」を設定します。機器への指示には個別の許可と独立した保護が必要です。",
           "announcement_repeat_minutes": "既定: 10 min · 0 = 繰り返さない · 同じ原因が続く間 · 部屋.",
@@ -2187,7 +2187,7 @@
           "media_players": "設定 · 情報源 · MEDIA_PLAYERS",
           "tts_engine": "設定 · 情報源 · TTS_ENGINE",
           "ai_conversation_agent": "AI · 選択 · 情報源",
-          "language": "TTS · 選択 · 情報源",
+          "language": "アナウンスの言語",
           "use_mold_indicator": "カビ指標 · RH (%) → 70%",
           "pollen_entities": "花粉 · 情報源 · 選択",
           "use_announcement_hub": "通知 · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "「設定 · 情報源 · MEDIA_PLAYERS」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "tts_engine": "「設定 · 情報源 · TTS_ENGINE」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "ai_conversation_agent": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · AI · 選択 · 情報源 · conversation.* / ai_task.*.",
-          "language": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · TTS · 選択 · 情報源 · provider capabilities.",
+          "language": "既定では Home Assistant の言語を使用します。HEM が対応するアナウンス言語を選択することもできます。",
           "use_mold_indicator": "「カビ指標 · RH (%) → 70%」は選択した部屋だけに設定します。無効なデータでは操作を行いません。",
           "pollen_entities": "共通の入力源と通知出力を選択します。保存すると設定が完了します。運転設定は家と部屋のデバイスに残ります。 · 花粉 · 情報源 · 選択.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - 既定",
+        "auto": "Home Assistant の言語（既定）",
         "en": "設定 · 情報源",
         "de": "設定 · 情報源",
         "el": "設定 · 情報源",

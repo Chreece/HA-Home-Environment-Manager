@@ -17,44 +17,15 @@ from .const import (
     CONF_MEDIA_PLAYERS, CONF_TTS_ENGINE, CONF_SHADE_ANNOUNCE,
 )
 from .hub_delivery import hub_available, make_hub_payload, async_submit_hub
+from .languages import announcement_language
+from .tts_languages import tts_language
+from .announcement_text import SHADE_MESSAGES
 
-MESSAGES = {
-    "en": {
-        "title": "Window shading",
-        "close": "The window shades in {room} will close shortly to reduce solar heating.",
-        "open": "The window shades in {room} will open shortly because shading is no longer needed.",
-    },
-    "el": {
-        "title": "Σκίαση παραθύρων",
-        "close": "Τα σκίαστρα στο {room} θα κλείσουν σύντομα για να μειώσουν τη ζέστη από τον ήλιο.",
-        "open": "Τα σκίαστρα στο {room} θα ανοίξουν σύντομα επειδή δεν χρειάζεται πλέον σκίαση.",
-    },
-    "de": {
-        "title": "Fensterbeschattung",
-        "close": "Die Fensterrollos in {room} werden gleich geschlossen, um die Sonneneinstrahlung zu verringern.",
-        "open": "Die Fensterrollos in {room} werden gleich geöffnet, da die Beschattung nicht mehr benötigt wird.",
-    },
-    "fr": {
-        "title": "Protection solaire",
-        "close": "Les stores de {room} vont bientôt se fermer pour réduire la chaleur solaire.",
-        "open": "Les stores de {room} vont bientôt s'ouvrir car la protection solaire n'est plus nécessaire.",
-    },
-    "es": {
-        "title": "Protección solar",
-        "close": "Las persianas de {room} se cerrarán pronto para reducir el calor del sol.",
-        "open": "Las persianas de {room} se abrirán pronto porque ya no hace falta protección solar.",
-    },
-}
+MESSAGES = SHADE_MESSAGES
 
 
 def _language(manager: Any) -> str:
-    configured = manager.settings.get(CONF_LANGUAGE, "auto")
-    if callable(getattr(manager, "get_language", None)):
-        configured = manager.get_language(None)
-    elif configured == "auto":
-        configured = getattr(getattr(manager.hass, "config", None), "language", "en")
-    locale = str(configured).replace("_", "-").lower().split("-")[0]
-    return locale if locale in MESSAGES else "en"
+    return announcement_language(manager.hass, manager.settings.get(CONF_LANGUAGE, "auto"))
 
 
 def _targets(manager: Any, entities: Any, room: str) -> list[str]:
@@ -90,19 +61,7 @@ async def async_announce_before_move(
         # A per-cover permission must not announce that ALL room covers will move.
         source = manager.hass.states.get(entity_id)
         name = getattr(source, "name", None) or entity_id
-        prefix = {
-            "en": ("Closing {cover} in {room} shortly to reduce solar heat.",
-                   "Opening {cover} in {room} shortly; shading is no longer needed."),
-            "de": ("{cover} in {room} wird gleich geschlossen, um Sonneneinstrahlung zu reduzieren.",
-                   "{cover} in {room} wird gleich geöffnet; die Beschattung ist nicht mehr nötig."),
-            "el": ("Το σκίαστρο {cover} στο {room} θα κλείσει σύντομα για περιορισμό της ηλιακής θερμότητας.",
-                   "Το σκίαστρο {cover} στο {room} θα ανοίξει σύντομα· δεν χρειάζεται πλέον σκίαση."),
-            "fr": ("Fermeture imminente de {cover} dans {room} pour limiter la chaleur du soleil.",
-                   "Ouverture imminente de {cover} dans {room} : la protection solaire n'est plus nécessaire."),
-            "es": ("La persiana {cover} de {room} se cerrará pronto para reducir el calor solar.",
-                   "La persiana {cover} de {room} se abrirá pronto; ya no hace falta sombra."),
-        }[lang]
-        message = prefix[0 if action == "close" else 1].format(
+        message = MESSAGES[lang][f"{action}_cover"].format(
             room=area_record.name, cover=name,
         )
     speech = bool(config.get(CONF_AUTO_TTS))
@@ -116,7 +75,7 @@ async def async_announce_before_move(
         notice = SimpleNamespace(area_name=area_record.name, action=action)
         payload = make_hub_payload(
             notice, title, message, speech=speech, visual=visual,
-            language=str(config.get(CONF_LANGUAGE, "auto")),
+            language=lang,
             use_ai=False, agent_id="default",
         )
         return await async_submit_hub(hass, payload)
@@ -139,7 +98,9 @@ async def async_announce_before_move(
             try:
                 await hass.services.async_call(
                     "tts", "speak",
-                    {"media_player_entity_id": players, "message": message},
+                    {"media_player_entity_id": players, "message": message,
+                     "language": tts_language(hass, engine, config.get(CONF_LANGUAGE, "auto"),
+                                              text_language=lang)},
                     target={"entity_id": engine}, blocking=True,
                 )
                 result = True

@@ -22,6 +22,8 @@ from .discovery import entity_area, is_window
 from .hub_delivery import hub_installed, hub_available, async_submit_hub, async_system_notification
 from .occupancy_policy import _bool_presence, home_presence
 from .room_sources import native, selected
+from .languages import announcement_language, resolve_language
+from .announcement_text import AWAY_WINDOW_MESSAGES
 
 _LOGGER = logging.getLogger(__name__)
 RETRY_SECONDS = 300
@@ -41,14 +43,7 @@ DELIVERY_CHANNELS = {
 }
 DEFAULT_DELIVERY = ("mobile_notification",)
 
-MESSAGES = {
-    "en": ("Windows left open", "Everyone has left home, but these windows are still open: {windows}. Please close them."),
-    "el": ("Ανοιχτά παράθυρα ενώ λείπουν όλοι", "Όλοι έχουν φύγει από το σπίτι, αλλά τα παρακάτω παράθυρα παραμένουν ανοιχτά: {windows}. Παρακαλώ κλείστε τα."),
-    "de": ("Offene Fenster bei Abwesenheit", "Alle haben das Haus verlassen, aber diese Fenster sind noch offen: {windows}. Bitte schließt sie."),
-    "fr": ("Fenêtres ouvertes en votre absence", "Tout le monde a quitté la maison, mais ces fenêtres sont encore ouvertes : {windows}. Veuillez les fermer."),
-    "es": ("Ventanas abiertas fuera de casa", "Todos han salido de casa, pero estas ventanas siguen abiertas: {windows}. Por favor, ciérralas."),
-    "it": ("Finestre aperte quando non c'è nessuno", "Tutti sono usciti, ma queste finestre sono ancora aperte: {windows}. Per favore chiudetele."),
-}
+MESSAGES = AWAY_WINDOW_MESSAGES
 
 
 def configured_recipients(hass: Any, settings: Mapping[str, Any]) -> tuple[list[str], list[str]]:
@@ -164,8 +159,7 @@ def watched_entities(hass: Any, settings: Mapping[str, Any]) -> set[str]:
 
 
 def compose_message(language: str, windows: tuple[tuple[str, str], ...]) -> tuple[str, str]:
-    lang = str(language or "en").replace("_", "-").split("-", 1)[0].casefold()
-    title, template = MESSAGES.get(lang, MESSAGES["en"])
+    title, template = MESSAGES[resolve_language(language)]
     labels = [label for _, label in windows]
     visible = "; ".join(labels[:20])
     if len(labels) > 20:
@@ -177,7 +171,7 @@ async def deliver_notice(manager: Any, windows: tuple[tuple[str, str], ...]) -> 
     """Dispatch only user-authorized person slots, never fall back to speakers."""
     hass = manager.hass
     settings = manager.settings
-    language = manager.get_language(None) if callable(getattr(manager, "get_language", None)) else settings.get(CONF_LANGUAGE, "en")
+    language = announcement_language(hass, settings.get(CONF_LANGUAGE, "auto"))
     title, text = compose_message(language, windows)
     if hub_installed(hass):
         people, choices = configured_recipients(hass, settings)
@@ -204,7 +198,7 @@ async def deliver_notice(manager: Any, windows: tuple[tuple[str, str], ...]) -> 
                 "target_person": people, "person_destination": [slot],
                 "service": services, "occupied_only": False,
                 "companion_tts": speech,
-                "use_ai": False,
+                "language": language, "use_ai": False,
             }
             if visual:
                 payload["text_notify"] = text

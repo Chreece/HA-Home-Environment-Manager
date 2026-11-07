@@ -68,7 +68,7 @@
         "title": "Съобщения (по избор)",
         "description": "Съобщения (по избор). Автоматични известия · Автоматични гласови съобщения. Announcement Hub.",
         "data": {
-          "language": "Език",
+          "language": "Език на съобщенията",
           "automatic_tts": "Автоматично",
           "automatic_notifications": "Автоматично · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Съобщения (по избор) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Език"
         },
         "data_description": {
-          "language": "Език: Home Assistant (По подразбиране).",
+          "language": "По подразбиране се използва езикът на Home Assistant. Можете да изберете всеки език за съобщения, поддържан от HEM.",
           "automatic_tts": "По подразбиране: ⛔ · Автоматично · 🪟 90 s.",
           "automatic_notifications": "По подразбиране: ⛔ · Автоматично · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "По подразбиране: 10 min · 0 = никога · Докато причината продължава · Стаи.",
@@ -191,7 +191,7 @@
           "media_players": "настройки · източник · MEDIA_PLAYERS",
           "tts_engine": "настройки · източник · TTS_ENGINE",
           "ai_conversation_agent": "AI · Избор · източник",
-          "language": "TTS · Избор · източник",
+          "language": "Език на съобщенията",
           "use_mold_indicator": "Индикатор за мухъл · RH (%) → 70%",
           "pollen_entities": "Полени · източник · Избор",
           "use_announcement_hub": "Известия · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Изберете: media_player.* · настройки · източник · MEDIA_PLAYERS.",
           "tts_engine": "Изберете: tts.* · настройки · източник · TTS_ENGINE.",
           "ai_conversation_agent": "Изберете общи източници и изходи за известия. Записването завършва настройката. Работните настройки остават на устройствата на дома и стаите. · AI · Избор · източник · conversation.* / ai_task.*.",
-          "language": "Изберете общи източници и изходи за известия. Записването завършва настройката. Работните настройки остават на устройствата на дома и стаите. · TTS · Избор · източник · provider capabilities.",
+          "language": "По подразбиране се използва езикът на Home Assistant. Можете да изберете всеки език за съобщения, поддържан от HEM.",
           "use_mold_indicator": "🧱 Индикатор за мухъл · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Изберете общи източници и изходи за известия. Записването завършва настройката. Работните настройки остават на устройствата на дома и стаите. · Полени · източник · Избор.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Съобщения (по избор)",
         "description": "Съобщения (по избор). Автоматични известия · Автоматични гласови съобщения. Announcement Hub.",
         "data": {
-          "language": "Език",
+          "language": "Език на съобщенията",
           "automatic_tts": "Автоматично",
           "automatic_notifications": "Автоматично · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Съобщения (по избор) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Език"
         },
         "data_description": {
-          "language": "Език: Home Assistant (По подразбиране).",
+          "language": "По подразбиране се използва езикът на Home Assistant. Можете да изберете всеки език за съобщения, поддържан от HEM.",
           "automatic_tts": "По подразбиране: ⛔ · Автоматично · 🪟 90 s.",
           "automatic_notifications": "По подразбиране: ⛔ · Автоматично · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "По подразбиране: 10 min · 0 = никога · Докато причината продължава · Стаи.",
@@ -2187,7 +2187,7 @@
           "media_players": "настройки · източник · MEDIA_PLAYERS",
           "tts_engine": "настройки · източник · TTS_ENGINE",
           "ai_conversation_agent": "AI · Избор · източник",
-          "language": "TTS · Избор · източник",
+          "language": "Език на съобщенията",
           "use_mold_indicator": "Индикатор за мухъл · RH (%) → 70%",
           "pollen_entities": "Полени · източник · Избор",
           "use_announcement_hub": "Известия · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Изберете: media_player.* · настройки · източник · MEDIA_PLAYERS.",
           "tts_engine": "Изберете: tts.* · настройки · източник · TTS_ENGINE.",
           "ai_conversation_agent": "Изберете общи източници и изходи за известия. Записването завършва настройката. Работните настройки остават на устройствата на дома и стаите. · AI · Избор · източник · conversation.* / ai_task.*.",
-          "language": "Изберете общи източници и изходи за известия. Записването завършва настройката. Работните настройки остават на устройствата на дома и стаите. · TTS · Избор · източник · provider capabilities.",
+          "language": "По подразбиране се използва езикът на Home Assistant. Можете да изберете всеки език за съобщения, поддържан от HEM.",
           "use_mold_indicator": "🧱 Индикатор за мухъл · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Изберете общи източници и изходи за известия. Записването завършва настройката. Работните настройки остават на устройствата на дома и стаите. · Полени · източник · Избор.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - По подразбиране",
+        "auto": "Език на Home Assistant (по подразбиране)",
         "en": "настройки · източник",
         "de": "настройки · източник",
         "el": "настройки · източник",

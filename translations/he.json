@@ -68,7 +68,7 @@
         "title": "הודעות (אופציונלי)",
         "description": "הודעות (אופציונלי). התראות אוטומטיות · הודעות קוליות אוטומטיות. Announcement Hub.",
         "data": {
-          "language": "שפה",
+          "language": "שפת ההודעות",
           "automatic_tts": "אוטומטי",
           "automatic_notifications": "אוטומטי · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "הודעות (אופציונלי) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · שפה"
         },
         "data_description": {
-          "language": "הגדר „שפה” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
+          "language": "כברירת מחדל נעשה שימוש בשפת Home Assistant. ניתן לבחור כל שפת הודעות שנתמכת ב־HEM.",
           "automatic_tts": "ברירת מחדל: ⛔ · אוטומטי · 🪟 90 s. האפשרות שולטת ב־„אוטומטי”. פקודות למכשיר דורשות אישור נפרד והגנות עצמאיות.",
           "automatic_notifications": "האפשרות שולטת ב־„אוטומטי · AUTOMATIC_NOTIFICATIONS”. פקודות למכשיר דורשות אישור נפרד והגנות עצמאיות.",
           "announcement_repeat_minutes": "ברירת מחדל: 10 min · 0 = לעולם לא · כל עוד אותה סיבה נמשכת · חדרים.",
@@ -191,7 +191,7 @@
           "media_players": "הגדרות · מקור · MEDIA_PLAYERS",
           "tts_engine": "הגדרות · מקור · TTS_ENGINE",
           "ai_conversation_agent": "AI · בחר · מקור",
-          "language": "TTS · בחר · מקור",
+          "language": "שפת ההודעות",
           "use_mold_indicator": "מדד עובש · RH (%) → 70%",
           "pollen_entities": "אבקנים · מקור · בחר",
           "use_announcement_hub": "הודעות · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "בחרו: media_player.* · הגדרות · מקור · MEDIA_PLAYERS.",
           "tts_engine": "בחרו: tts.* · הגדרות · מקור · TTS_ENGINE.",
           "ai_conversation_agent": "בחר מקורות משותפים ופלטי התראות. שמירה מסיימת את ההגדרה. הגדרות התפעול נשארות במכשירי הבית והחדרים. · AI · בחר · מקור · conversation.* / ai_task.*.",
-          "language": "בחר מקורות משותפים ופלטי התראות. שמירה מסיימת את ההגדרה. הגדרות התפעול נשארות במכשירי הבית והחדרים. · TTS · בחר · מקור · provider capabilities.",
+          "language": "כברירת מחדל נעשה שימוש בשפת Home Assistant. ניתן לבחור כל שפת הודעות שנתמכת ב־HEM.",
           "use_mold_indicator": "הגדר „מדד עובש · RH (%) → 70%” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
           "pollen_entities": "בחר מקורות משותפים ופלטי התראות. שמירה מסיימת את ההגדרה. הגדרות התפעול נשארות במכשירי הבית והחדרים. · אבקנים · מקור · בחר.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "הודעות (אופציונלי)",
         "description": "הודעות (אופציונלי). התראות אוטומטיות · הודעות קוליות אוטומטיות. Announcement Hub.",
         "data": {
-          "language": "שפה",
+          "language": "שפת ההודעות",
           "automatic_tts": "אוטומטי",
           "automatic_notifications": "אוטומטי · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "הודעות (אופציונלי) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · שפה"
         },
         "data_description": {
-          "language": "הגדר „שפה” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
+          "language": "כברירת מחדל נעשה שימוש בשפת Home Assistant. ניתן לבחור כל שפת הודעות שנתמכת ב־HEM.",
           "automatic_tts": "ברירת מחדל: ⛔ · אוטומטי · 🪟 90 s. האפשרות שולטת ב־„אוטומטי”. פקודות למכשיר דורשות אישור נפרד והגנות עצמאיות.",
           "automatic_notifications": "האפשרות שולטת ב־„אוטומטי · AUTOMATIC_NOTIFICATIONS”. פקודות למכשיר דורשות אישור נפרד והגנות עצמאיות.",
           "announcement_repeat_minutes": "ברירת מחדל: 10 min · 0 = לעולם לא · כל עוד אותה סיבה נמשכת · חדרים.",
@@ -2187,7 +2187,7 @@
           "media_players": "הגדרות · מקור · MEDIA_PLAYERS",
           "tts_engine": "הגדרות · מקור · TTS_ENGINE",
           "ai_conversation_agent": "AI · בחר · מקור",
-          "language": "TTS · בחר · מקור",
+          "language": "שפת ההודעות",
           "use_mold_indicator": "מדד עובש · RH (%) → 70%",
           "pollen_entities": "אבקנים · מקור · בחר",
           "use_announcement_hub": "הודעות · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "בחרו: media_player.* · הגדרות · מקור · MEDIA_PLAYERS.",
           "tts_engine": "בחרו: tts.* · הגדרות · מקור · TTS_ENGINE.",
           "ai_conversation_agent": "בחר מקורות משותפים ופלטי התראות. שמירה מסיימת את ההגדרה. הגדרות התפעול נשארות במכשירי הבית והחדרים. · AI · בחר · מקור · conversation.* / ai_task.*.",
-          "language": "בחר מקורות משותפים ופלטי התראות. שמירה מסיימת את ההגדרה. הגדרות התפעול נשארות במכשירי הבית והחדרים. · TTS · בחר · מקור · provider capabilities.",
+          "language": "כברירת מחדל נעשה שימוש בשפת Home Assistant. ניתן לבחור כל שפת הודעות שנתמכת ב־HEM.",
           "use_mold_indicator": "הגדר „מדד עובש · RH (%) → 70%” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה.",
           "pollen_entities": "בחר מקורות משותפים ופלטי התראות. שמירה מסיימת את ההגדרה. הגדרות התפעול נשארות במכשירי הבית והחדרים. · אבקנים · מקור · בחר.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - ברירת מחדל",
+        "auto": "שפת Home Assistant (ברירת מחדל)",
         "en": "הגדרות · מקור",
         "de": "הגדרות · מקור",
         "el": "הגדרות · מקור",

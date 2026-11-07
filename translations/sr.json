@@ -68,7 +68,7 @@
         "title": "Обавештења (опционо)",
         "description": "Обавештења (опционо). Аутоматска обавештења · Аутоматска говорна обавештења. Announcement Hub.",
         "data": {
-          "language": "Језик",
+          "language": "Језик обавештења",
           "automatic_tts": "Automatsko",
           "automatic_notifications": "Automatsko · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Обавештења (опционо) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Језик"
         },
         "data_description": {
-          "language": "Језик: Home Assistant (Подразумевано).",
+          "language": "Подразумевано се користи језик Home Assistant-а. Можете изабрати било који језик обавештења који HEM подржава.",
           "automatic_tts": "Подразумевано: ⛔ · Automatsko · 🪟 90 s.",
           "automatic_notifications": "Подразумевано: ⛔ · Automatsko · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Подразумевано: 10 min · 0 = никада · Док исти узрок траје · Собе.",
@@ -191,7 +191,7 @@
           "media_players": "podešavanja · izvor · MEDIA_PLAYERS",
           "tts_engine": "podešavanja · izvor · TTS_ENGINE",
           "ai_conversation_agent": "AI · Izaberi · izvor",
-          "language": "TTS · Izaberi · izvor",
+          "language": "Језик обавештења",
           "use_mold_indicator": "Индикатор буђи · RH (%) → 70%",
           "pollen_entities": "Polen · izvor · Izaberi",
           "use_announcement_hub": "Обавештења · Announcement Hub",
@@ -243,7 +243,7 @@
           "media_players": "Изаберите: media_player.* · podešavanja · izvor · MEDIA_PLAYERS.",
           "tts_engine": "Изаберите: tts.* · podešavanja · izvor · TTS_ENGINE.",
           "ai_conversation_agent": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · AI · Izaberi · izvor · conversation.* / ai_task.*.",
-          "language": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · TTS · Izaberi · izvor · provider capabilities.",
+          "language": "Подразумевано се користи језик Home Assistant-а. Можете изабрати било који језик обавештења који HEM подржава.",
           "use_mold_indicator": "🧱 Индикатор буђи · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Polen · izvor · Izaberi.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -1371,7 +1371,7 @@
         "title": "Обавештења (опционо)",
         "description": "Обавештења (опционо). Аутоматска обавештења · Аутоматска говорна обавештења. Announcement Hub.",
         "data": {
-          "language": "Језик",
+          "language": "Језик обавештења",
           "automatic_tts": "Automatsko",
           "automatic_notifications": "Automatsko · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Обавештења (опционо) · 0-1440 min",
@@ -1383,7 +1383,7 @@
           "ai_conversation_agent": "AI · Језик"
         },
         "data_description": {
-          "language": "Језик: Home Assistant (Подразумевано).",
+          "language": "Подразумевано се користи језик Home Assistant-а. Можете изабрати било који језик обавештења који HEM подржава.",
           "automatic_tts": "Подразумевано: ⛔ · Automatsko · 🪟 90 s.",
           "automatic_notifications": "Подразумевано: ⛔ · Automatsko · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Подразумевано: 10 min · 0 = никада · Док исти узрок траје · Собе.",
@@ -2187,7 +2187,7 @@
           "media_players": "podešavanja · izvor · MEDIA_PLAYERS",
           "tts_engine": "podešavanja · izvor · TTS_ENGINE",
           "ai_conversation_agent": "AI · Izaberi · izvor",
-          "language": "TTS · Izaberi · izvor",
+          "language": "Језик обавештења",
           "use_mold_indicator": "Индикатор буђи · RH (%) → 70%",
           "pollen_entities": "Polen · izvor · Izaberi",
           "use_announcement_hub": "Обавештења · Announcement Hub",
@@ -2239,7 +2239,7 @@
           "media_players": "Изаберите: media_player.* · podešavanja · izvor · MEDIA_PLAYERS.",
           "tts_engine": "Изаберите: tts.* · podešavanja · izvor · TTS_ENGINE.",
           "ai_conversation_agent": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · AI · Izaberi · izvor · conversation.* / ai_task.*.",
-          "language": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · TTS · Izaberi · izvor · provider capabilities.",
+          "language": "Подразумевано се користи језик Home Assistant-а. Можете изабрати било који језик обавештења који HEM подржава.",
           "use_mold_indicator": "🧱 Индикатор буђи · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Polen · izvor · Izaberi.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -4361,7 +4361,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Подразумевано",
+        "auto": "Језик Home Assistant-а (подразумевани)",
         "en": "podešavanja · izvor",
         "de": "podešavanja · izvor",
         "el": "podešavanja · izvor",

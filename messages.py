@@ -5,6 +5,10 @@ from __future__ import annotations
 from .logic import Reason, Recommendation
 from .languages import EXTRA_LOCALES, resolve_language
 from .mold_text import MOLD_NAMES
+from .recommendation_text import (
+    CLIMATE_WINDOW_TEXT,
+    ROOM_VENTILATION_TEXT as EXTRA_ROOM_VENTILATION_TEXT,
+)
 
 
 TEXT = {
@@ -147,6 +151,8 @@ def _extra_messages(entry: dict) -> dict[str, str]:
 
 
 TEXT.update({tag: _extra_messages(locale) for tag, locale in EXTRA_LOCALES.items()})
+for _language, _templates in CLIMATE_WINDOW_TEXT.items():
+    TEXT[_language].update(_templates)
 
 
 ROOM_VENTILATION_TEXT = {
@@ -184,6 +190,7 @@ ROOM_VENTILATION_TEXT = {
         "reason_cool": "Άνοδος θερμοκρασίας προς τον στόχο ψύξης ({value})",
     },
 }
+ROOM_VENTILATION_TEXT.update(EXTRA_ROOM_VENTILATION_TEXT)
 ROOM_VENTILATION_CODES = frozenset((
     "air_refresh_wake", "air_refresh_return",
     "window_heat_loss", "window_cooling_loss",
