@@ -162,7 +162,8 @@ runtime_ns = {
 # delegates physical dispatch. Its real progress check must run in tick.
 sys.modules["test_beta70.equipment_model"] = model
 pkg.equipment_model = model
-for helper in ("pid_math", "equipment_setpoint_sequence", "equipment_pid_safety"):
+for helper in ("pid_math", "equipment_setpoint_sequence", "equipment_pid_safety",
+               "equipment_native_target"):
     helper_spec = importlib.util.spec_from_file_location(
         f"test_beta70.{helper}", ROOT / f"{helper}.py")
     helper_module = importlib.util.module_from_spec(helper_spec)

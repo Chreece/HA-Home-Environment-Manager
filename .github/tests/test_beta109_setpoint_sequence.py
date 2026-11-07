@@ -194,7 +194,7 @@ class SetpointSequenceTests(unittest.IsolatedAsyncioTestCase):
                     self.assertIsNone(runtime.record["pending"])
                     self.assertEqual(len(runtime.calls), 2)
 
-    async def test_manual_soft_range_and_humidity_setpoints_share_startup_guard(self):
+    async def test_legacy_flag_does_not_time_manual_soft_range_or_humidity_writes(self):
         cases = (
             ("manual", "set_temperature", {"temperature": 22.0}),
             ("pid", "set_temperature", {"temperature": 22.0}),
@@ -211,14 +211,13 @@ class SetpointSequenceTests(unittest.IsolatedAsyncioTestCase):
                 cap = model.capabilities(runtime.manager, SPEC)
                 await runtime._observe_native_running(SPEC, cap, runtime.state)
                 self.assertFalse(runtime.record["power"])
-                self.assertFalse(await runtime.command(service, data, automatic=method != "manual"))
-                self.assertEqual(runtime.calls, [])
-                runtime.now += 29.999
-                self.assertFalse(await runtime.command(service, data, automatic=method != "manual"))
-                runtime.now += 0.001
+                self.assertTrue(runtime.manager.settings["timed_setpoint_sequence"])
                 self.assertTrue(await runtime.command(service, data, automatic=method != "manual"))
                 self.assertEqual(runtime.calls[-1]["data"], data)
-                self.assertEqual(runtime.call_times[-1] - runtime.state.last_changed.timestamp(), 30.0)
+                self.assertEqual(runtime.call_times[-1] - runtime.state.last_changed.timestamp(), 0.0)
+                self.assertEqual(len(runtime.calls), 1)
+                self.assertFalse(runtime.record["power"])
+                self.assertFalse(runtime.record.get("native_setpoint_stop"))
 
     async def test_all_binary_stop_entrypoints_prepare_then_wait_then_off(self):
         for method in ("pid", "automatic"):
@@ -395,6 +394,24 @@ class SetpointSequenceTests(unittest.IsolatedAsyncioTestCase):
                 self.assertIn(PRIMARY, runtime.record["power"])
                 if blocker == "manual":
                     self.assertEqual(runtime.record["paused"], "physical_manual_override")
+
+    async def test_committed_stop_distinguishes_missing_source_from_stability_wait(self):
+        for settle,reason in ((None,"native_source_unavailable"),(12.5,"native_restore_settling")):
+            with self.subTest(settle=settle):
+                runtime=SequenceRuntime()
+                runtime.running_extreme()
+                runtime.open_window()
+                await runtime.evaluate()
+                self.assert_reverse_target(runtime)
+                # The selected native source gate distinguishes an absent
+                # accessory from a known endpoint still in its settling hold.
+                runtime._native_settle_remaining=lambda spec:settle
+                before=deepcopy(runtime.record)
+                await runtime.evaluate(30)
+                self.assertEqual(runtime.statuses[-1][1]["reason"],reason)
+                self.assertEqual(runtime.statuses[-1][1]["reconnect_settle_remaining_seconds"],settle)
+                self.assertEqual(runtime.record,before)
+                self.assertEqual(len(runtime.calls),1,"Readiness cannot dispatch or acknowledge OFF")
 
     async def test_persisted_stop_resumes_its_original_deadline_without_repeating_target(self):
         for elapsed in (10.0, 40.0):

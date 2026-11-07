@@ -28,6 +28,7 @@ LEDGER = "unconfirmed_native_target"
 production.configured_sources = lambda settings, area: (PRIMARY,)
 fixture["registry"].async_get = lambda hass: N(async_get=lambda entity: N(
     platform="native_fixture", device_id=hass.fixture.registered_device_id,
+    id="registry-" + entity, unique_id="native-" + entity,
 ) if entity == PRIMARY else None)
 fixture["extract"](fixture["RUNTIME"],
                    ("_identity_ok", "_current_spec", "_retired"), production.__dict__)
@@ -50,7 +51,9 @@ class ShutdownRuntime(base["RecoveryRuntime"]):
 
 
 class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
-    async def unconfirmed(self, *, method="pid", mode="heat", owned_age=1200):
+    # This fixture exercises continuing Automatic target journals. PID cutoff
+    # and its separate bounded target ledger retain their own dedicated gates.
+    async def unconfirmed(self, *, method="automatic", mode="heat", owned_age=1200):
         runtime = ShutdownRuntime(method, mode)
         runtime.manager.settings["kp"] = 100.0
         runtime.own_running(age=owned_age)
@@ -114,7 +117,7 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
         self.assert_off_command(runtime, original)
 
     async def test_each_required_stop_dispatches_off_and_waits_for_its_ack(self):
-        for method in ("automatic", "pid"):
+        for method in ("automatic",):
             for mode in ("heat", "cool"):
                 for stop in ("window", "sleep", "idle", "maximum_on"):
                     with self.subTest(method=method, mode=mode, stop=stop):
@@ -134,7 +137,7 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
                         self.assertEqual(len(runtime.calls), 6)
 
     async def test_withdrawn_stop_preserves_target_history_and_resumes_same_minute_episode(self):
-        for method in ("automatic", "pid"):
+        for method in ("automatic",):
             for change_at in ("archive_save", "preparation_intent"):
                 with self.subTest(method=method, change_at=change_at):
                     runtime, original = await self.unconfirmed(method=method)

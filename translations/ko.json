@@ -2629,6 +2629,7 @@
           "native_ac_drying_already_active": "Native AC drying already active",
           "native_already_off": "Physical HVAC device is already off",
           "native_defrost_protection": "Device is defrosting; changing output is blocked",
+          "native_device_stabilizing": "기기 사용 가능 · 안정성 확인 중",
           "native_fan_preset_active": "Native fan preset active",
           "native_humidity_device_unavailable": "Native humidity device unavailable",
           "native_mode_commanded": "Operating mode command sent",
@@ -3796,7 +3797,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "재택 상태 · 귀가 준비 제한 시간 (분)",
+        "name": "집 - 준비 - 최대 시간",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"
@@ -3999,6 +4000,14 @@
       },
       "equipment_announce_before_start": {
         "name": "알림 · {channel}창문 열기 요청",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
+      },
+      "equipment_native_full_output": {
+        "name": "제어 · {channel}최대 출력 설정값",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"

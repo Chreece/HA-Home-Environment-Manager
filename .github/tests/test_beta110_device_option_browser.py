@@ -43,7 +43,8 @@ def states_for_test():
         if i < 2:
             states[SWITCH + str(i)] = {"state": "on" if i else "off", "attributes": {
                 "area_id": "room0", "source_device_id": f"hardware{i}",
-                "source_entity_ids": [physical], "timed_setpoint_role": "policy"}}
+                "source_entity_ids": [physical], "timed_setpoint_role": "policy",
+                "timed_setpoint_supported": True}}
     states["sensor.hem"] = {"state": "ready", "attributes": {"dashboard": data}}
     return states
 

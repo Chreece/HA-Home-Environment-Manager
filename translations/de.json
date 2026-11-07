@@ -2629,6 +2629,7 @@
           "native_ac_drying_already_active": "Native AC drying already active",
           "native_already_off": "Physischer Thermostat ist bereits aus",
           "native_defrost_protection": "Gerät taut ab; Ausgangsänderung gesperrt",
+          "native_device_stabilizing": "Gerät verfügbar · Stabilität wird geprüft",
           "native_fan_preset_active": "Native fan preset active",
           "native_humidity_device_unavailable": "Native humidity device unavailable",
           "native_mode_commanded": "Betriebsartwechsel an Gerät gesendet",
@@ -3805,7 +3806,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "Anwesenheit zu Hause · Dauer der Ankunftsvorbereitung (min)",
+        "name": "Zuhause - Vorbereiten - Maximale Dauer",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
@@ -4008,6 +4009,14 @@
       },
       "equipment_announce_before_start": {
         "name": "Ansagen · {channel}Zum Fensteröffnen auffordern",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "equipment_native_full_output": {
+        "name": "Steuerung · {channel}Sollwert für volle Leistung",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"

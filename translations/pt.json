@@ -2629,6 +2629,7 @@
           "native_ac_drying_already_active": "Native AC drying already active",
           "native_already_off": "Physical HVAC device is already off",
           "native_defrost_protection": "Device is defrosting; changing output is blocked",
+          "native_device_stabilizing": "Dispositivo disponível · A verificar a estabilidade",
           "native_fan_preset_active": "Native fan preset active",
           "native_humidity_device_unavailable": "Native humidity device unavailable",
           "native_mode_commanded": "Operating mode command sent",
@@ -3796,7 +3797,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "Presença em casa · Duração da preparação da chegada (min)",
+        "name": "Casa - Preparação - Tempo máximo",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"
@@ -3999,6 +4000,14 @@
       },
       "equipment_announce_before_start": {
         "name": "Anúncios · {channel}Pedir para abrir as janelas",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajuda"
+          }
+        }
+      },
+      "equipment_native_full_output": {
+        "name": "Controlo · {channel}Valor alvo de potência máxima",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"

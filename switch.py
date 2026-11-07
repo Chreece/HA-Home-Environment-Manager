@@ -42,7 +42,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     from . import equipment_model as equipment
     from homeassistant.helpers import entity_registry as er
     from .equipment_feature_registration import (
-        quiet_keys, register_late_capabilities, timed_setpoint_supported,
+        quiet_keys, register_late_capabilities, timed_setpoint_supported, native_full_output_supported,
         window_alternative_settings_supported,
     )
     registry = er.async_get(hass)
@@ -57,6 +57,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
             EquipmentTimedSetpointSwitch(manager, spec)
             for spec in equipment.specs(manager)
             if timed_setpoint_supported(manager, registry, spec)
+        ] + [
+            EquipmentNativeFullOutputSwitch(manager, spec)
+            for spec in equipment.specs(manager)
+            if native_full_output_supported(manager, registry, spec)
         ] + [
             EquipmentWindowAnnouncementSwitch(manager, spec)
             for spec in equipment.specs(manager)
@@ -192,6 +196,20 @@ from .equipment_entity import EquipmentEntity
 from . import equipment_model as equipment
 
 
+def _device_option_metadata(entity):
+    """Identify shared device policies without parsing a translated entity ID."""
+    if getattr(entity, "_operating_mode", None):
+        return {}  # Scoped controls already expose their own setting metadata.
+    from .equipment_name_catalog import localized_equipment_name
+    locale = entity._manager.settings.get("language", "auto")
+    if locale == "auto":
+        locale = getattr(getattr(entity._manager.hass, "config", None), "language", "en")
+    full = localized_equipment_name(entity._key, locale)
+    label = full.partition(" · ")[2] or full.rstrip(" ·")
+    return {"setting_key": entity._key, "setting_label": label,
+            "equipment_option_role": "policy"}
+
+
 class EquipmentQuietSwitch(EquipmentEntity, SwitchEntity):
     _attr_entity_category = EntityCategory.CONFIG
     _attr_icon = "mdi:fan-speed-1"
@@ -218,6 +236,10 @@ class EquipmentQuietSwitch(EquipmentEntity, SwitchEntity):
     @property
     def is_on(self):
         return self.controller_settings.get(self._key) is True
+
+    @property
+    def extra_state_attributes(self):
+        return {**super().extra_state_attributes, **_device_option_metadata(self)}
 
     async def async_turn_on(self, **kwargs):
         await self._async_update_controller_settings({self._key: True})
@@ -252,6 +274,7 @@ class EquipmentErrorAnnouncementSwitch(EquipmentEntity, SwitchEntity):
     def extra_state_attributes(self):
         return {
             **super().extra_state_attributes,
+            **_device_option_metadata(self),
             "device_fault_role": "announce",
             # Read-only summary of the *original* physical HA fault entity.
             # No additional native/HEM error sensor is registered.
@@ -275,8 +298,13 @@ class EquipmentTimedSetpointSwitch(EquipmentEntity, SwitchEntity):
 
     @property
     def available(self):
-        # Config stays writable across a native disconnect or pending ACK.
-        return self._manager.equipment._ready
+        from .equipment_setpoint_sequence import control_supported
+        return bool(self._manager.equipment._ready
+                    and control_supported(self._manager, self._spec, cached=True))
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self._watch_native_updates()
 
     @property
     def is_on(self):
@@ -284,13 +312,57 @@ class EquipmentTimedSetpointSwitch(EquipmentEntity, SwitchEntity):
 
     @property
     def extra_state_attributes(self):
-        return {**super().extra_state_attributes, "timed_setpoint_role": "policy"}
+        from .equipment_setpoint_sequence import control_supported, SETPOINT_GRACE_SECONDS
+        return {**super().extra_state_attributes, **_device_option_metadata(self),
+                "timed_setpoint_role": "policy",
+                "timed_setpoint_supported": control_supported(self._manager, self._spec, cached=True),
+                "timed_setpoint_transition_seconds": SETPOINT_GRACE_SECONDS}
 
     async def async_turn_on(self, **kwargs):
+        from .equipment_setpoint_sequence import control_supported
+        if not control_supported(self._manager, self._spec, cached=True):
+            from homeassistant.exceptions import HomeAssistantError
+            raise HomeAssistantError("Timed setpoints require authorized Automatic/PID heating or cooling with native ON/OFF control")
         await self._manager.equipment.async_update(self._spec, {"timed_setpoint_sequence": True})
 
     async def async_turn_off(self, **kwargs):
         await self._manager.equipment.async_update(self._spec, {"timed_setpoint_sequence": False})
+
+
+class EquipmentNativeFullOutputSwitch(EquipmentEntity, SwitchEntity):
+    """Choose the optional native full-demand target without operating power."""
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_icon = "mdi:target-variant"
+
+    def __init__(self, manager, spec):
+        self._equipment_init(manager, spec, "native_full_output")
+
+    @property
+    def available(self):
+        from .equipment_native_target import control_supported
+        return bool(self._manager.equipment._ready
+                    and control_supported(self._manager, self._spec, cached=True))
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self._watch_native_updates()
+
+    @property
+    def is_on(self):
+        return self.controller_settings.get("native_full_output", True) is True
+
+    @property
+    def extra_state_attributes(self):
+        from .equipment_native_target import control_supported
+        return {**super().extra_state_attributes, **_device_option_metadata(self),
+                "native_full_output_role": "policy",
+                "native_full_output_supported": control_supported(self._manager, self._spec, cached=True)}
+
+    async def async_turn_on(self, **kwargs):
+        await self._manager.equipment.async_update(self._spec, {"native_full_output": True})
+
+    async def async_turn_off(self, **kwargs):
+        await self._manager.equipment.async_update(self._spec, {"native_full_output": False})
 
 
 class EquipmentHouseholdSleepSwitch(EquipmentEntity, SwitchEntity):
@@ -308,6 +380,10 @@ class EquipmentHouseholdSleepSwitch(EquipmentEntity, SwitchEntity):
     @property
     def is_on(self):
         return self.controller_settings.get(self._key) is True
+
+    @property
+    def extra_state_attributes(self):
+        return {**super().extra_state_attributes, **_device_option_metadata(self)}
 
     async def async_turn_on(self, **kwargs):
         await self._manager.equipment.async_update(self._spec, {self._key: True})
@@ -334,7 +410,8 @@ class EquipmentWindowAnnouncementSwitch(EquipmentEntity, SwitchEntity):
 
     @property
     def extra_state_attributes(self):
-        return {**super().extra_state_attributes, "window_announcement_role": "policy"}
+        return {**super().extra_state_attributes, **_device_option_metadata(self),
+                "window_announcement_role": "policy"}
 
     async def async_turn_on(self, **kwargs):
         await self._manager.equipment.async_update(self._spec, {self._key: True})
@@ -361,7 +438,8 @@ class EquipmentWindowPauseSwitch(EquipmentEntity, SwitchEntity):
 
     @property
     def extra_state_attributes(self):
-        return {**super().extra_state_attributes, "window_pause_role": "policy",
+        return {**super().extra_state_attributes, **_device_option_metadata(self),
+                "window_pause_role": "policy",
                 "window_resume_delay_seconds": 60}
 
     async def async_turn_on(self, **kwargs):

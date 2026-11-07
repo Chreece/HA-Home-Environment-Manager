@@ -292,7 +292,8 @@ class OptInTests(unittest.IsolatedAsyncioTestCase):
             stack.enter_context(patch.object(model, "settings",
                 lambda manager, spec: manager.settings["equipment_controllers"][spec.identifier]))
             stack.enter_context(patch.object(fixture["registry"], "async_get",
-                lambda hass: N(async_get=lambda entity: N(platform="native", device_id=devices[entity]))))
+                lambda hass: N(async_get=lambda entity: N(platform="native", device_id=devices[entity],
+                    id="registry-" + entity, unique_id="native-" + entity))))
             async def target(spec):
                 return await r._native_target(spec, model.capabilities(r.manager, spec),
                     "heat", {"heat": 21., "cool": 26.}, None, True)

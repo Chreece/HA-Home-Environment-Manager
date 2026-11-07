@@ -15,7 +15,7 @@ from dataclasses import dataclass, asdict
 import math
 from typing import Any, Mapping
 
-from .pid_output_allocator import ordered_fan_stages
+from .pid_output_allocator import ordered_fan_stages, quiet_discrete_fan_speed
 
 STAGE_FIELDS = tuple(f"pid_capacity_stage_{i}" for i in range(1, 5))
 PERCENT_POINT_FIELDS = tuple(
@@ -171,7 +171,7 @@ def allocate(
             return None
         max_index = len(stages)-1
         if quiet:
-            cap = quiet_mode or ("low" if "low" in stages else None)
+            cap = quiet_discrete_fan_speed(stages[-1], modes=stages, quiet_mode=quiet_mode)
             if cap not in stages:
                 return None
             max_index = min(max_index, stages.index(cap))

@@ -28,7 +28,7 @@ allocator = fixture["load_pure"]("pid_output_allocator", "pid_output_allocator.p
 for name in ("fan_speed_for_pid", "ordered_fan_stages", "percentage_output_requested"):
     setattr(production, name, getattr(allocator, name))
 fixture["extract"](fixture["RUNTIME"], ("_status",), production.__dict__)
-status_scope = {"equipment": model}
+status_scope = {"equipment": model, "__package__": fixture["PACKAGE"]}
 fixture["extract"](ROOT / "equipment_status.py", ("extra_state_attributes",), status_scope)
 
 
@@ -144,13 +144,21 @@ def endpoint(kind="heat", **kwargs):
         stack.enter_context(patch.object(production, "entity_area", lambda _, entity:
             runtime.spec.area_id if entity == runtime.primary else None))
         stack.enter_context(patch.object(fixture["registry"], "async_get", lambda hass:
-            N(async_get=lambda entity: N(platform="native_fixture", device_id=runtime.registered_device_id)
+            N(async_get=lambda entity: N(platform="native_fixture", device_id=runtime.registered_device_id,
+                                        id="registry-" + entity, unique_id="native-" + entity)
               if entity == runtime.primary else None)))
         yield runtime
 
 
 def calls(runtime):
     return [(c["service"], c["data"]) for c in runtime.calls]
+
+
+def target_journal(runtime):
+    """Full-demand PID targets now retain evidence in their durable budget."""
+    budget = runtime.record.get("native_target_attempt_budget")
+    return (budget.get("journal") if isinstance(budget, dict) and budget.get("journal")
+            else runtime.record.get("unconfirmed_native_target"))
 
 
 def off(runtime):
@@ -407,7 +415,7 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(calls(r), [(initial["service"], initial["data"]), off(r)], r.statuses)
                 self.assertEqual(r.record["pending"]["expected"],
                                  {"state": "off"}, "A new OFF journal must be distinct from target ACK")
-                ledger = r.record.get("unconfirmed_native_target")
+                ledger = target_journal(r)
                 self.assertIsInstance(ledger, dict)
                 for field in ("entity", "service", "data", "expected", "when", "attempts", "last_attempt_at"):
                     self.assertEqual(ledger[field], initial[field], field)
@@ -476,7 +484,7 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_returning_demand_continues_original_budget_before_minimum_on_finishes(self):
         for kind in ("heat", "cool"):
-            for attempts in (1, 2, 3, 4):
+            for attempts in (1, 2, 3):
                 with self.subTest(kind=kind, attempts=attempts), endpoint(kind) as r:
                     r.own(age=100., extreme=False)
                     r.seed_residual()
@@ -490,12 +498,18 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
                     await r.evaluate(1.)
                     self.assertEqual(len(r.calls), attempts, "Physical minimum ON remains in force")
                     self.assertIsNone(r.record.get("pending"))
-                    self.assertEqual(r.record["unconfirmed_native_target"]["attempts"], attempts)
+                    self.assertEqual(target_journal(r)["attempts"], attempts)
                     self.assert_no_residual(r)
                     r.measurement = r.goal + (-1. if r.increasing else 1.)
                     await r.evaluate(58.)
                     self.assertEqual(len(r.calls), attempts, "Returning demand cannot shorten the minute")
                     await r.evaluate(1.)
+                    if attempts == 3:
+                        self.assertEqual(len(r.calls), 3, "Returning demand cannot renew the exhausted target budget")
+                        self.assertIsNone(r.record["pending"])
+                        self.assertEqual(r.record["native_target_attempt_budget"]["state"], "unconfirmed")
+                        self.assertFalse(r.record.get("paused"))
+                        continue
                     self.assertEqual(len(r.calls), attempts + 1, r.statuses)
                     pending = r.record["pending"]
                     self.assertEqual(pending["attempts"], attempts + 1)
@@ -538,7 +552,7 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
                     self.assertEqual(len(r.calls), 1)
 
                     def native_report_during_save(controller):
-                        if (controller.record.get("unconfirmed_native_target")
+                        if (target_journal(controller)
                                 and controller.record.get("pending") is None):
                             controller.after_persist = None
                             if feedback == "genuine_off_on":
@@ -629,16 +643,16 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
             r.own(age=100., extreme=False)
             r.seed_residual()
             await r.evaluate()
-            for _ in range(3):
+            for _ in range(2):
                 await r.evaluate(60.)
-            self.assertEqual(len(r.calls), 4)
+            self.assertEqual(len(r.calls), 3)
             first = deepcopy(r.record["pending"])
             r.measurement = r.goal
             await r.evaluate(1.)
             self.assertIsNone(r.record.get("pending"))
-            self.assertEqual(len(r.calls), 4, "Minimum ON still prevents physical OFF")
-            previous = deepcopy(r.record["unconfirmed_native_target"])
-            self.assertEqual(previous["attempts"], 4)
+            self.assertEqual(len(r.calls), 3, "Minimum ON still prevents physical OFF")
+            previous = deepcopy(target_journal(r))
+            self.assertEqual(previous["attempts"], 3)
             self.assertEqual(previous["when"], first["when"])
             self.assertEqual(previous["data"], {"temperature": 30.})
             # Native capability metadata may change independently. The next
@@ -649,15 +663,16 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
             newest = deepcopy(r.record["pending"])
             self.assertEqual(newest["data"], {"temperature": 32.})
             self.assertEqual(newest["attempts"], 1)
-            self.assertEqual(r.record["unconfirmed_native_target"], previous)
+            self.assertEqual(r.record["previous_native_target_attempt_budget"]["journal"], previous)
             r.measurement = r.goal
-            await r.evaluate(318.999)
-            self.assertEqual(len(r.calls), 5, "Both target journals must preserve physical minimum ON")
+            owned = r.record["power"][r.primary]
+            await r.evaluate(owned["since"] + owned["min_on"] - r.now - .001)
+            self.assertEqual(len(r.calls), 4, "Both target journals must preserve physical minimum ON")
             await r.evaluate(.001)
             self.assertEqual(calls(r)[-1], off(r), r.statuses)
-            self.assertEqual(len(r.calls), 6)
-            self.assertEqual(r.record.get("previous_unconfirmed_native_target"), previous)
-            retained = r.record.get("unconfirmed_native_target")
+            self.assertEqual(len(r.calls), 5)
+            self.assertEqual(r.record["previous_native_target_attempt_budget"]["journal"], previous)
+            retained = target_journal(r)
             self.assertIsInstance(retained, dict)
             for field in ("entity", "service", "data", "expected", "when", "attempts", "last_attempt_at"):
                 self.assertEqual(retained[field], newest[field], field)

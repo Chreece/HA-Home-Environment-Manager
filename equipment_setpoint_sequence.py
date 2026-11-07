@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import math
+from collections.abc import Mapping
 from copy import deepcopy
 
 from .pid_math import finite
@@ -25,6 +26,112 @@ def enabled(settings) -> bool:
     return settings.get(OPTION) is True
 
 
+def _native_supported(cap, attributes, mode=None) -> bool:
+    """Require the real thermal setpoint and OFF capability, without defaults."""
+    from . import equipment_model as model
+    if (cap is None or cap.domain != "climate"
+            or cap.primary.partition(".")[0] != "climate"
+            or not getattr(cap, "native_temperature_target", cap.temperature)
+            or "off" not in cap.modes or not set(cap.modes) & {"heat", "cool"}
+            or mode is not None and (mode not in ("heat", "cool") or mode not in cap.modes)
+            or not isinstance(attributes, Mapping)):
+        return False
+    try:
+        flags = int(attributes.get("supported_features", 0))
+    except (TypeError, ValueError, OverflowError):
+        return False
+    low = finite(attributes.get("min_temp"), -30, 140)
+    high = finite(attributes.get("max_temp"), -29, 150)
+    return bool(flags & model.TEMP and low is not None and high is not None and low < high)
+
+
+def _configuration_evidence(manager, spec):
+    """Use live evidence or the model's exact-identity cache for editors only."""
+    from . import equipment_model as model
+    cap = model.mode_capabilities(manager, spec)
+    if cap is None or cap.primary not in spec.source_entities:
+        return None, {}
+    state = manager.hass.states.get(cap.primary)
+    if model.sources_available(manager, spec):
+        return cap, state.attributes if state is not None else {}
+    record = getattr(getattr(manager, "equipment", None), "records", {}).get(spec.identifier, {})
+    baseline = record.get("baseline", {}).get(cap.primary) if isinstance(record, dict) else None
+    attributes = baseline.get("attributes", {}) if isinstance(baseline, dict) else {}
+    return cap, attributes
+
+
+def configuration_supported(manager, spec) -> bool:
+    """Register a capable device's editor before its control method is enabled."""
+    cap, attributes = _configuration_evidence(manager, spec)
+    return _native_supported(cap, attributes)
+
+
+def _direction(manager, spec, cfg, cap, state):
+    mode = cfg.get("operating_mode")
+    if mode is not None:
+        return mode
+    requested = cfg.get("requested_mode")
+    if requested not in (None, "off"):
+        return requested
+    choose = getattr(getattr(manager, "equipment", None), "active_control_mode", None)
+    if callable(choose):
+        mode = choose(spec)
+        if mode is not None:
+            return mode
+    if state is not None and state.state not in ("off", "unknown", "unavailable"):
+        return state.state
+    modes = set(cap.modes) - {"off"}
+    return next(iter(modes)) if len(modes) == 1 else None
+
+
+def control_supported(manager, spec, *, cached=False) -> bool:
+    """Offer the preference only for authorized automatic binary HEAT/COOL."""
+    from . import equipment_model as model
+    cfg = model.settings(manager, spec)
+    if cfg.get("control_mode") not in ("automatic", "pid") or cfg.get("native_full_output", True) is not True:
+        return False
+    if cached:
+        cap, attributes = _configuration_evidence(manager, spec)
+    else:
+        cap = model.capabilities(manager, spec)
+        state = manager.hass.states.get(cap.primary) if cap is not None else None
+        attributes = state.attributes if state is not None else {}
+        if not model.sources_available(manager, spec):
+            return False
+    if cap is None or cap.primary not in spec.source_entities:
+        return False
+    state = manager.hass.states.get(cap.primary)
+    mode = _direction(manager, spec, cfg, cap, state)
+    return bool(mode in ("heat", "cool") and _native_supported(cap, attributes, mode)
+                and model.permission(manager, spec, cap)[1])
+
+
+def enabled_for(runtime, spec, cap, state=None, *, stopping=False) -> bool:
+    """A saved flag never grants power or extends timing to unsupported outputs.
+
+    A previously owned thermal output can finish its guarded shutdown after
+    an explicit Off request or retirement. This exception cannot authorize
+    another ON, and the existing shutdown checks still guard every dispatch.
+    """
+    from . import equipment_model as model
+    cfg = model.settings(runtime.manager, spec)
+    if (not enabled(cfg) or cfg.get("native_full_output", True) is not True
+            or cap is None or cap.primary not in spec.source_entities):
+        return False
+    state = state if state is not None else runtime.hass.states.get(cap.primary)
+    if state is None or state.state not in ("heat", "cool"):
+        return False
+    if not _native_supported(cap, state.attributes, state.state):
+        return False
+    if stopping and isinstance(runtime._record(spec).get("power", {}).get(cap.primary), dict):
+        return True
+    if cfg.get("control_mode") not in ("automatic", "pid"):
+        return False
+    mode = _direction(runtime.manager, spec, cfg, cap, state)
+    return bool(mode in ("heat", "cool") and _native_supported(cap, state.attributes, mode)
+                and model.permission(runtime.manager, spec, cap)[1])
+
+
 def retry_settings_match(saved, current) -> bool:
     """Recheck independent preferences live; original command authority must match.
 
@@ -38,7 +145,7 @@ def retry_settings_match(saved, current) -> bool:
     # profile, and timing checks. They confer no control authority. Profiles
     # saved before these switches were introduced remain usable.
     independent = {
-        OPTION, "sleep_when_everyone_asleep", "pause_on_window_open",
+        OPTION, "native_full_output", "sleep_when_everyone_asleep", "pause_on_window_open",
         "announce_before_start", "window_open_timeout_minutes",
     }
     previous = {k: v for k, v in saved.items() if k not in independent}
@@ -112,7 +219,7 @@ def pending_shutdown_reason(runtime, spec, cap, pending):
         since = finite(owned.get("since"), 0, runtime.clock())
         minimum = finite(owned.get("min_on"), 0, 1e13)
         maximum = finite(owned.get("max_on"), 0, 1e13)
-        lead = SETPOINT_GRACE_SECONDS if enabled(cfg) and supports_stop(cap, state) else 0
+        lead = SETPOINT_GRACE_SECONDS if enabled_for(runtime, spec, cap, state, stopping=True) else 0
         if (None not in (since, minimum, maximum)
                 and runtime.clock() - since >= max(minimum, maximum - lead)):
             return "maximum_on"
@@ -241,6 +348,8 @@ async def prepare_automatic_retry(runtime, spec) -> None:
     Resume when the same saved automatic command remains authorized.
     """
     from . import equipment_model as model
+    from .equipment_native_target import adopt_pending
+    await adopt_pending(runtime, spec)
     record = runtime._record(spec)
     pending = record.get("pending")
     cfg = model.settings(runtime.manager, spec)
@@ -405,6 +514,8 @@ async def native_dispatch_failed(runtime, spec, pending) -> None:
     # A cancelled raw intent is deliberately left for restart verification.
     pending["phase"] = "commanded"
     pending["service_error"] = "native_command_failed_or_uncertain"
+    from .equipment_native_target import record_dispatch
+    record_dispatch(runtime, spec, pending)
     await runtime._save()
     runtime._status(spec, "awaiting_physical_acknowledgement",
                     reason="native_command_failed_or_uncertain",
@@ -465,17 +576,15 @@ def _wait(runtime, spec, status, deadline, **details):
     wake_at(runtime, spec, deadline)
 
 
-async def startup_ready(runtime, spec, cap, state) -> bool:
-    """Wait once per observed native ON, for every native setpoint path.
+async def startup_ready(runtime, spec, cap, state, *, stopping=False) -> bool:
+    """Wait once per observed native ON of an opted-in binary thermal output.
 
     A commanded ON gets its durable timestamp only when the native mode ACKs.
-    Existing, already-running soft-control devices use observed ON history.
     Repeated target changes and an HA restart do not restart a completed grace.
     """
     if state is None or state.state in ("off", "unknown", "unavailable"):
         return False
-    from . import equipment_model as model
-    if not enabled(model.settings(runtime.manager, spec)):
+    if not enabled_for(runtime, spec, cap, state, stopping=stopping):
         return True
     record, now = runtime._record(spec), runtime.clock()
     owned = record.get("power", {}).get(cap.primary)
@@ -516,11 +625,8 @@ async def startup_ready(runtime, spec, cap, state) -> bool:
 
 def supports_stop(cap, state) -> bool:
     """Only thermostatic binary HEAT/COOL has an opposite temperature limit."""
-    return bool(
-        cap.domain == "climate" and getattr(cap, "native_temperature_target", cap.temperature)
-        and "off" in cap.modes
-        and state is not None and state.state in ("heat", "cool")
-    )
+    return bool(state is not None and state.state in ("heat", "cool")
+                and _native_supported(cap, state.attributes, state.state))
 
 
 def _opposite(state):
@@ -590,7 +696,7 @@ def target_authorized(runtime, spec, cap, entity, data, expected) -> bool:
     record = runtime._record(spec)
     sequence = record.get("native_setpoint_stop")
     state = runtime.hass.states.get(entity)
-    if not (enabled(model.settings(runtime.manager, spec))
+    if not (enabled_for(runtime, spec, cap, state, stopping=True)
             and _valid(sequence, record, spec) and sequence["phase"] == "preparing"
             and not sequence.get("invalidated_on_epoch")
             and entity == cap.primary == sequence["entity"]
@@ -651,7 +757,7 @@ async def begin_stop(runtime, spec, cap, *, automatic, shutdown, policy_stop):
     if record.get("native_setpoint_stop"):
         await progress_stop(runtime, spec)
         return False
-    if not enabled(model.settings(runtime.manager, spec)):
+    if not enabled_for(runtime, spec, cap, stopping=True):
         return False
     state = runtime.hass.states.get(cap.primary)
     value = _opposite(state)
@@ -659,7 +765,7 @@ async def begin_stop(runtime, spec, cap, *, automatic, shutdown, policy_stop):
         runtime._status(spec, "native_setpoint_shutdown_blocked",
                         reason="physical_capabilities_unavailable")
         return False
-    if not await startup_ready(runtime, spec, cap, state):
+    if not await startup_ready(runtime, spec, cap, state, stopping=True):
         return False
     if record.get("pending") or record.get("paused"):
         return False
@@ -740,7 +846,8 @@ async def progress_stop(runtime, spec) -> bool:
     settle_fn = getattr(runtime, "_native_settle_remaining", None)
     settle = settle_fn(spec) if callable(settle_fn) else 0
     if settle is None or settle > 0:
-        runtime._status(spec, "waiting_for_physical_device", reason="native_restore_settling",
+        runtime._status(spec, "waiting_for_physical_device",
+                        reason="native_restore_settling" if settle is not None else "native_source_unavailable",
                         reconnect_settle_remaining_seconds=settle)
         if settle:
             wake_at(runtime, spec, now + settle)

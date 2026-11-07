@@ -2629,6 +2629,7 @@
           "native_ac_drying_already_active": "Native AC drying already active",
           "native_already_off": "Physical HVAC device is already off",
           "native_defrost_protection": "Device is defrosting; changing output is blocked",
+          "native_device_stabilizing": "裝置可用 · 正在檢查穩定性",
           "native_fan_preset_active": "Native fan preset active",
           "native_humidity_device_unavailable": "Native humidity device unavailable",
           "native_mode_commanded": "Operating mode command sent",
@@ -3796,7 +3797,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "在家狀態 · 回家準備時限（分鐘）",
+        "name": "家中 - 準備 - 最長時間",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"
@@ -3999,6 +4000,14 @@
       },
       "equipment_announce_before_start": {
         "name": "播報 · {channel}提示打開窗戶",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
+      },
+      "equipment_native_full_output": {
+        "name": "控制 · {channel}滿功率設定值",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"

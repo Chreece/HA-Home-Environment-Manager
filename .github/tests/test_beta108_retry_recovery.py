@@ -155,8 +155,10 @@ class AutomaticTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
         runtime._native_settled_for[(SPEC.identifier, PRIMARY)] = runtime.now - 30
         return runtime
 
+    # Ongoing retries beyond three are Automatic policy. Binary PID full-output
+    # exhaustion/restart/pulse persistence is covered by test_061b8_native_target_budget.
     async def test_unchanged_feedback_retries_each_minute_without_resetting_history(self):
-        for method in ("pid", "automatic"):
+        for method in ("automatic",):
             for mode in ("heat", "cool"):
                 with self.subTest(method=method, mode=mode):
                     runtime, pending = await self.dispatched(method, mode)
@@ -181,7 +183,7 @@ class AutomaticTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
                     self.assertFalse(production.matches(runtime.state, pending["expected"]))
 
     async def test_legacy_pending_and_retired_targets_migrate_with_original_history(self):
-        for method in ("pid", "automatic"):
+        for method in ("automatic",):
             for retired in (False, True):
                 with self.subTest(method=method, retired=retired):
                     runtime, original = await self.legacy_journal(method, retired=retired)
@@ -206,7 +208,7 @@ class AutomaticTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
                     self.assertEqual(len(runtime.calls), 2)
 
     async def test_late_target_ack_stops_retries_without_replay_or_dwell_reset(self):
-        for method in ("pid", "automatic"):
+        for method in ("automatic",):
             for mode in ("heat", "cool"):
                 with self.subTest(method=method, mode=mode):
                     runtime, pending = await self.dispatched(method, mode)
@@ -229,7 +231,7 @@ class AutomaticTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
                     self.assertEqual(len(runtime.calls), count)
 
     async def test_reconnects_keep_minute_spacing_settling_and_original_attempts(self):
-        for method in ("pid", "automatic"):
+        for method in ("automatic",):
             for mode in ("heat", "cool"):
                 with self.subTest(method=method, mode=mode):
                     runtime, pending = await self.dispatched(method, mode)
@@ -276,7 +278,7 @@ class AutomaticTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(runtime.manager.settings["control_mode"], "pid")
 
     async def test_explicit_continue_clears_legacy_budget_without_service_until_next_tick(self):
-        for method in ("pid", "automatic"):
+        for method in ("automatic",):
             for mode in ("heat", "cool"):
                 with self.subTest(method=method, mode=mode):
                     runtime, _ = await self.legacy_journal(method, mode, retired=True)
@@ -313,7 +315,7 @@ class AutomaticTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(runtime.calls, [])
 
     async def test_restart_keeps_pending_history_until_target_ack(self):
-        for method in ("pid", "automatic"):
+        for method in ("automatic",):
             with self.subTest(method=method):
                 original, pending = await self.dispatched(method)
                 await original.evaluate(60)

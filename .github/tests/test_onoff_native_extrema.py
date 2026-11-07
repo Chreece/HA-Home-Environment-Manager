@@ -121,6 +121,8 @@ def live_permission(hass, area, room, plan, device):
 activation = module(f"{PACKAGE}.device_activation")
 activation.authorized = lambda manager, spec: manager.soft_grant
 activation.effective_device = lambda manager, spec, entity, *, cap=None: manager.device
+activation.mutable_copy = deepcopy
+extract(ROOT / "device_activation.py", ("authority_context", "authorization_matches"), activation.__dict__)
 occupancy = module(f"{PACKAGE}.occupancy_policy")
 occupancy.live_device_permission = live_permission
 windows = module(f"{PACKAGE}.equipment_window")
@@ -142,6 +144,7 @@ helpers = sys.modules.setdefault("homeassistant.helpers", ModuleType("homeassist
 registry = ModuleType("homeassistant.helpers.entity_registry")
 registry.async_get = lambda hass: N(async_get=lambda entity: N(
     platform="native_fixture", device_id=SPEC.source_device_id,
+    id="registry-" + entity, unique_id="native-" + entity,
 ) if entity == PRIMARY else None)
 helpers.entity_registry = registry
 sys.modules[registry.__name__] = registry
@@ -168,6 +171,7 @@ extract(RUNTIME, (*METHODS, "output_off", "snapshot", "matches", "_manual_output
     "SETTABLE_OUTPUT_ATTRIBUTES", "MONITORED",
 ))
 load_pure("equipment_setpoint_sequence", "equipment_setpoint_sequence.py")
+load_pure("equipment_native_target", "equipment_native_target.py")
 
 
 class NativeRuntime:
@@ -342,7 +346,9 @@ class OnOffNativeExtremaTests(unittest.IsolatedAsyncioTestCase):
                             self.assertEqual(len(runtime.calls), 2, "ACKed extremum needs no repeated command")
 
     async def test_delayed_target_ack_retries_the_same_native_payload(self):
-        runtime = NativeRuntime(absent=("temperature_unit", "target_temp_step"))
+        # Automatic retains its existing ongoing retry policy. PID's three
+        # total full-output requests are covered by the dedicated b8 gate.
+        runtime = NativeRuntime(method="automatic", absent=("temperature_unit", "target_temp_step"))
         runtime.own_running()
         await runtime.tick(SPEC)
         self.assertEqual(len(runtime.calls), 1, runtime.statuses)

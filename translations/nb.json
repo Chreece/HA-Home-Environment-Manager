@@ -2629,6 +2629,7 @@
           "native_ac_drying_already_active": "Native AC drying already active",
           "native_already_off": "Physical HVAC device is already off",
           "native_defrost_protection": "Device is defrosting; changing output is blocked",
+          "native_device_stabilizing": "Enheten er tilgjengelig · Kontrollerer stabilitet",
           "native_fan_preset_active": "Native fan preset active",
           "native_humidity_device_unavailable": "Native humidity device unavailable",
           "native_mode_commanded": "Operating mode command sent",
@@ -3796,7 +3797,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "Tilstedeværelse hjemme · Tidsgrense for forberedelse til hjemkomst (min)",
+        "name": "Hjem - Forberedelse - Maksimal tid",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"
@@ -3999,6 +4000,14 @@
       },
       "equipment_announce_before_start": {
         "name": "Meldinger · {channel}Be om å åpne vinduer",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjelp"
+          }
+        }
+      },
+      "equipment_native_full_output": {
+        "name": "Styring · {channel}Settpunkt for full effekt",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"

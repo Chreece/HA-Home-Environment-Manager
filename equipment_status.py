@@ -49,6 +49,8 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
+        from .pid_math import finite
+        from .equipment_native_target import diagnostics as native_target_diagnostics
         runtime = self._manager.equipment
         cfg = self.controller_settings
         observed = runtime.statuses.get(self._spec.identifier, {})
@@ -62,6 +64,22 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             )
             for entity_id in self._spec.source_entities
         }
+        native_cap = equipment.capabilities(self._manager, self._spec)
+        primary = native_cap.primary if native_cap else (
+            record.get("capabilities", {}).get("primary")
+            if isinstance(record.get("capabilities"), dict) else None
+        )
+        primary = primary if primary in self._spec.source_entities else None
+        now = runtime.clock()
+        readiness_until = finite(observed.get("readiness_until"), 0, 1e13)
+        next_window_at = finite(observed.get("pid_pwm_next_window_at"), 0, 1e13)
+        try:
+            limits = (equipment.timing(self._manager, self._spec, native_cap)
+                      if native_cap is not None else None)
+        except (ValueError, TypeError, OverflowError):
+            # Invalid persisted timing must remain diagnosable. Reading
+            # status neither repairs it nor supplies a made-up safe limit.
+            limits = None
         # HA may request a diagnostic state during partial setup, or an
         # external status consumer may expose only states.get (not async_all).
         # A read-only status must never crash setup or fabricate a room plan.
@@ -89,10 +107,11 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         pid_signature = pid_signature if isinstance(pid_signature, tuple) else ()
         pid_anchor = pid_state[2] if pid_state else None
         cycle = cfg.get("cycle_seconds")
+        phase_cycle = finite(observed.get("pid_pwm_effective_cycle_seconds"), .001, 86400) or cycle
         if (isinstance(pid_anchor, (float, int))
-                and isinstance(cycle, (float, int)) and cycle > 0
+                and isinstance(phase_cycle, (float, int)) and phase_cycle > 0
                 and 0 <= runtime.clock() - pid_anchor):
-            pid_phase = round((runtime.clock() - pid_anchor) % cycle, 1)
+            pid_phase = round((runtime.clock() - pid_anchor) % phase_cycle, 1)
         else:
             pid_phase = None
         pid_wake = getattr(runtime, "_profile_wake", {}).get(self._spec.identifier)
@@ -110,24 +129,16 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         # Read-only timing diagnostics, O(1) in the cached physical record.
         # Do NOT read every device/recorder or schedule hardware commands.
         dwell = None
-        now = runtime.clock()
         on_elapsed = off_elapsed = on_remaining = off_remaining = None
         cooldown_remaining = None
         waiter = getattr(self._manager, "window_open_wait", None)
         wait_status = {"status": "window_wait_inactive", "remaining_seconds": 0}
-        if waiter is not None:
-            wait_cap = equipment.capabilities(self._manager, self._spec)
-            primary = wait_cap.primary if wait_cap else (
-                record.get("capabilities", {}).get("primary")
-                if isinstance(record.get("capabilities"), dict) else None)
-            if primary in self._spec.source_entities:
-                wait_status = waiter.status(self._spec.area_id, primary)
+        if waiter is not None and primary is not None:
+            wait_status = waiter.status(self._spec.area_id, primary)
         if isinstance(supply_id, str) and supply_id:
             from .equipment_power_switch import (
                 device_supply_dwell, supply_off_since,
             )
-            from .pid_math import finite
-            native_cap = equipment.capabilities(self._manager, self._spec)
             dwell = device_supply_dwell(runtime, self._spec, cfg, native_cap)
             if supply is not None and dwell is not None:
                 if supply.state == "on" and upstream.get("owned"):
@@ -165,6 +176,18 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "source_entity_ids": list(self._spec.source_entities),
             "status_code": observed.get("status"),
             "status_reason_code": observed.get("reason"),
+            "native_target_attempt_budget": native_target_diagnostics(runtime, self._spec),
+            "readiness_until": readiness_until,
+            "readiness_remaining_seconds": (
+                round(max(0, readiness_until - now)) if readiness_until is not None
+                else observed.get("readiness_remaining_seconds")
+            ),
+            "readiness_source_entity_ids": observed.get("readiness_source_entity_ids") or [],
+            "unavailable_source_entity_ids": observed.get("unavailable_source_entity_ids") or [],
+            "native_primary_entity_id": primary,
+            "native_primary_state": physical.get(primary) if primary else None,
+            "native_operating_limits": dict(zip(("min_on_seconds", "min_off_seconds", "max_on_seconds"), limits))
+                if limits is not None else None,
             "native_minimum_on_remaining_seconds": observed.get("minimum_on_remaining_seconds"),
             "native_minimum_on_until": observed.get("minimum_on_until"),
             "native_minimum_off_remaining_seconds": observed.get("minimum_off_remaining_seconds"),
@@ -206,13 +229,20 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "pid_control_target": observed.get("pid_control_target"),
             "pid_control_measurement": observed.get("pid_control_measurement"),
             "pid_control_metric": observed.get("pid_control_metric"),
+            "pid_control_parameters": {
+                key: cfg.get(key) for key in ("kp", "ki", "kd", "sample_seconds", "cycle_seconds")
+            } if cfg.get("control_mode") == "pid" else None,
             "pid_pwm_state": observed.get("pid_pwm_state"),
             "pid_pwm_effective_cycle_seconds": observed.get(
                 "pid_pwm_effective_cycle_seconds"
             ),
             "pid_pwm_next_window_seconds": observed.get(
-                "pid_pwm_next_window_seconds"
-            ),
+                "pid_pwm_next_window_seconds") if next_window_at is None
+                else round(max(0, next_window_at - now), 1),
+            "pid_pwm_next_window_at": next_window_at,
+            "pid_pwm_wait_reason": observed.get("pid_pwm_wait_reason"),
+            "pid_pwm_last_confirmed_on_at": observed.get("pid_pwm_last_confirmed_on_at"),
+            "pid_pwm_last_confirmed_off_at": observed.get("pid_pwm_last_confirmed_off_at"),
             "pid_effective_profile": pid_signature[3] if len(pid_signature) >= 4 else None,
             "pid_pwm_phase_seconds": pid_phase,
             "pid_pwm_cycle_seconds": cycle if cfg.get("control_mode") == "pid" else None,

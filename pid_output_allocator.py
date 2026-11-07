@@ -39,6 +39,45 @@ def ordered_fan_stages(modes: Iterable[str]) -> tuple[str, ...]:
     return ()
 
 
+def quiet_discrete_fan_speed(
+    speed: str, *, modes: Iterable[str], quiet_mode: str | None = None,
+) -> str | None:
+    """Apply the current quiet ceiling using only advertised native names.
+
+    Preserve a quieter selected stage. Native labels keep their original
+    case; Low/LOW/low describe the same order. An automatic/native preset
+    is not an output-capacity measurement or an invented intermediate stage.
+    """
+    choices = tuple(mode for mode in modes if isinstance(mode, str))
+    stages = ordered_fan_stages(choices)
+    limit = quiet_mode if quiet_mode in choices else None
+    if limit is None and isinstance(quiet_mode, str):
+        # Restore a saved choice after native integrations change only the
+        # label's capitalization. Ambiguous aliases are not authority to pick
+        # either advertised mode.
+        equivalent = tuple(dict.fromkeys(
+            mode for mode in choices if mode.casefold() == quiet_mode.casefold()
+        ))
+        if len(equivalent) == 1:
+            limit = equivalent[0]
+    if quiet_mode is None:
+        if stages:
+            limit = stages[0]
+        else:
+            known = [mode for mode in choices if mode.casefold() in _ORDER]
+            limit = min(known, key=lambda mode: _ORDER[mode.casefold()]) if known else None
+    if limit is None:
+        return None
+    if speed in stages and limit in stages:
+        return stages[min(stages.index(speed), stages.index(limit))]
+    # A device may advertise an automatic preset beside explicit Low/High.
+    # Those two named speeds can still be compared without ordering Auto.
+    if (isinstance(speed, str) and speed in choices
+            and speed.casefold() in _ORDER and limit.casefold() in _ORDER):
+        return speed if _ORDER[speed.casefold()] <= _ORDER[limit.casefold()] else limit
+    return limit
+
+
 def fan_speed_for_pid(
     demand: float,
     *,
@@ -72,10 +111,7 @@ def fan_speed_for_pid(
     index = max(0,min(len(stages)-1,
                       math.ceil(min(100., demand)*len(stages)/100)-1))
     if quiet:
-        cap = quiet_mode or ("low" if "low" in stages else None)
-        if cap not in stages:
-            return None
-        index = min(index, stages.index(cap))
+        return quiet_discrete_fan_speed(stages[index], modes=stages, quiet_mode=quiet_mode)
     return stages[index]
 
 

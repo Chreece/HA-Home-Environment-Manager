@@ -2629,6 +2629,7 @@
           "native_ac_drying_already_active": "Native AC drying already active",
           "native_already_off": "Ο φυσικός θερμοστάτης είναι ήδη κλειστός",
           "native_defrost_protection": "Η συσκευή κάνει απόψυξη· οι αλλαγές εμποδίζονται",
+          "native_device_stabilizing": "Συσκευή διαθέσιμη · Έλεγχος σταθερότητας",
           "native_fan_preset_active": "Native fan preset active",
           "native_humidity_device_unavailable": "Native humidity device unavailable",
           "native_mode_commanded": "Η εντολή αλλαγής λειτουργίας στάλθηκε",
@@ -3805,7 +3806,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "Σπίτι - Παρουσία · Διάρκεια προετοιμασίας άφιξης (λεπτά)",
+        "name": "Σπίτι - Προετοιμασία - Μέγιστος χρόνος",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"
@@ -4008,6 +4009,14 @@
       },
       "equipment_announce_before_start": {
         "name": "Ανακοινώσεις · {channel}Αίτημα ανοίγματος παραθύρων",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Βοήθεια"
+          }
+        }
+      },
+      "equipment_native_full_output": {
+        "name": "Έλεγχος · {channel}Στόχος πλήρους απόδοσης",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"

@@ -57,17 +57,24 @@ def run():
         def toggle(i):
             return page.locator(f'[data-window-announce-switch="switch.airing_{i}"]')
         def timeout(i):
-            return page.locator(f'[data-window-wait-input="number.airing_{i}"]')
+            return page.locator(f'.hem-floating-info87 [data-window-wait-input="number.airing_{i}"]')
         def save(i):
-            return page.locator(f'[data-save-window-wait="number.airing_{i}"]')
+            return page.locator(f'.hem-floating-info87 [data-save-window-wait="number.airing_{i}"]')
+        def open_help(i):
+            page.keyboard.press('Escape')
+            page.locator(f'[data-detail-id="device-option:switch.airing_{i}"] > summary').click()
+            page.locator('.hem-floating-info87').wait_for(state='visible')
         assert page.locator('[data-window-announce-switch]').count() == 2
-        assert timeout(0).count() == 0 and timeout(1).input_value() == "12"
+        assert page.locator('[data-window-wait-input="number.airing_0"]').count() == 0
+        open_help(1)
+        assert timeout(1).input_value() == "12"
+        page.keyboard.press('Escape')
         for language in ("en", "el", "de"):
             page.evaluate("([s,l])=>refresh6(s,l)", [states, language])
-            assert LABELS[language][0] in toggle(0).inner_text()
+            assert LABELS[language][0] == toggle(0).get_attribute('aria-label')
             for width in (390, 320):
                 page.set_viewport_size({"width": width, "height": 1000})
-                for box in page.locator('.hem-window-settings6').all():
+                for box in page.locator('.hem-device-quick-row8').all():
                     bounds = box.evaluate("e=>({width:e.clientWidth,scroll:e.scrollWidth,left:e.getBoundingClientRect().left,right:e.getBoundingClientRect().right})")
                     assert bounds["scroll"] <= bounds["width"] + 1, (language, bounds)
                     assert bounds["left"] >= -1 and bounds["right"] <= width + 1, (language, bounds)
@@ -80,6 +87,7 @@ def run():
         updated = deepcopy(states)
         updated["switch.airing_0"]["state"] = "on"
         page.evaluate("s=>refresh6(s)", updated)
+        open_help(0)
         timeout(0).fill("31")
         save(0).click()
         assert page.evaluate("calls.length") == 1
@@ -87,20 +95,23 @@ def run():
         save(0).click()
         page.wait_for_function("calls.length===2")
         assert page.evaluate("calls[1]") == ["number", "set_value", {"entity_id": "number.airing_0", "value": 0}]
+        open_help(1)
         timeout(1).fill("7")
         save(1).click()
         page.wait_for_function("calls.length===3")
         assert page.evaluate("calls[2]") == ["number", "set_value", {"entity_id": "number.airing_1", "value": 7}]
         # Forging another device's data attribute must not send any service.
-        save(0).evaluate("e=>{e.dataset.saveWindowWait='number.airing_1';e.click();}")
+        save(1).evaluate("e=>{e.dataset.saveWindowWait='number.airing_0';e.click();}")
         assert page.evaluate("calls.length") == 3
         updated["climate.physical_0_0"]["state"] = "unavailable"
         updated["climate.managed_0_0"]["state"] = "unavailable"
         page.evaluate("s=>refresh6(s)", updated)
+        open_help(0)
         assert toggle(0).is_enabled() and timeout(0).is_enabled()
         updated["switch.airing_0"]["state"] = "off"
         page.evaluate("s=>refresh6(s)", updated)
-        assert timeout(0).count() == 0 and timeout(1).count() == 1
+        assert timeout(0).count() == 0
+        assert page.locator('[data-detail-id="device-option:switch.airing_1"] [data-window-wait-input]').count() == 1
         updated["switch.duplicate"] = deepcopy(updated["switch.airing_0"])
         page.evaluate("s=>refresh6(s)", updated)
         assert toggle(0).count() == 0 and toggle(1).count() == 1

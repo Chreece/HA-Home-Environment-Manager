@@ -123,10 +123,19 @@ class InterruptedRetryTests(unittest.IsolatedAsyncioTestCase):
                 runtime, pending = await self.interrupted(method=method)
                 first, last = pending["when"], pending["last_attempt_at"]
                 await self.settle_restart(runtime)
-                budget = runtime.record["unconfirmed_native_target"]
+                if method == "pid":
+                    ledger = runtime.record["native_target_attempt_budget"]
+                    budget = ledger["journal"]
+                    self.assertEqual(ledger["state"], "deferred")
+                    self.assertEqual(ledger["reconciliation"], "stable_native_state")
+                    self.assertGreaterEqual(ledger["reconciled_at"], last)
+                    self.assertEqual(budget["phase"], "retry_intent")
+                    self.assertNotIn("unconfirmed_native_target", runtime.record)
+                else:
+                    budget = runtime.record["unconfirmed_native_target"]
+                    self.assertGreaterEqual(budget["retry_state_verified_at"], last)
                 self.assertEqual((budget["attempts"], budget["when"], budget["last_attempt_at"]),
                                  (2, first, last))
-                self.assertGreaterEqual(budget["retry_state_verified_at"], last)
                 runtime.hass.services.async_call = runtime.service_call
                 await runtime.evaluate()
                 self.assertEqual(len(runtime.calls), 2, "Original startup warmup still applies")
@@ -136,6 +145,17 @@ class InterruptedRetryTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(runtime.record["pending"]["when"], first)
                 self.assertNotIn("retry_state_verified_at", runtime.record["pending"])
                 await runtime.evaluate(60)
+                if method == "pid":
+                    self.assertEqual(len(runtime.calls), 3, "Reconciliation cannot renew the PID target budget")
+                    self.assertIsNone(runtime.record["pending"])
+                    self.assertEqual(runtime.record["native_target_attempt_budget"]["attempts"], 3)
+                    self.assertEqual(runtime.record["native_target_attempt_budget"]["state"], "unconfirmed")
+                    self.assertEqual(runtime.record["native_target_attempt_budget"]["when"], first)
+                    for _ in range(4):
+                        await runtime.evaluate(60)
+                    self.assertEqual(len(runtime.calls), 3)
+                    self.assertFalse(runtime.record.get("paused"))
+                    continue
                 self.assertEqual(len(runtime.calls), 4)
                 for attempt in (5, 6, 7, 8):
                     await runtime.evaluate(59)
@@ -147,7 +167,9 @@ class InterruptedRetryTests(unittest.IsolatedAsyncioTestCase):
                     self.assertFalse(runtime.record.get("paused"))
 
     async def test_interrupted_fourth_attempt_preserves_count_across_reconnect(self):
-        runtime, pending = await self.interrupted(attempt=4)
+        # Continuing target retries beyond three belong to Automatic. PID's
+        # interrupted third attempt stays bounded by the separate budget.
+        runtime, pending = await self.interrupted(attempt=4, method="automatic")
         first = pending["when"]
         await self.settle_restart(runtime)
         self.assertEqual(runtime.record["unconfirmed_native_target"]["attempts"], 4)
@@ -189,7 +211,7 @@ class InterruptedRetryTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(expected["attempts"], 2)
 
     async def test_repeated_retry_interruptions_do_not_reset_counts_or_reuse_verified_marker(self):
-        runtime, pending = await self.interrupted()
+        runtime, pending = await self.interrupted(method="automatic")
         first = pending["when"]
         for expected_attempt in (3, 4):
             await self.settle_restart(runtime)
@@ -226,7 +248,10 @@ class InterruptedRetryTests(unittest.IsolatedAsyncioTestCase):
                 runtime, _ = await self.interrupted()
                 await self.settle_restart(runtime)
                 if change == "settings":
-                    runtime.manager.settings["kp"] -= 1
+                    # Change the current authority to send this optional
+                    # target. A PID gain edit does not change the same native
+                    # endpoint or renew its remaining verified attempt budget.
+                    runtime.manager.settings["native_full_output"] = False
                 elif change == "manual":
                     runtime.manager.settings["control_mode"] = "manual"
                 else:

@@ -8,6 +8,7 @@ from __future__ import annotations
 import ast
 import asyncio
 import importlib.util
+from copy import deepcopy
 from dataclasses import asdict, dataclass
 import math
 from pathlib import Path
@@ -132,6 +133,7 @@ def extract():
         "asyncio": asyncio, "finite": finite, "model": Model,
         "snapshot": snapshot, "matches": matches,
         "_manual_output_changes": changes, "asdict": asdict,
+        "deepcopy": deepcopy,
         "entity_area": lambda hass, entity: "kitchen",
         "foreign_owner_hold": lambda hass, entry, entity: None,
         "NATIVE_COMMAND_MAX_ATTEMPTS": 4,
@@ -191,13 +193,30 @@ pkg.equipment_model = Model
 runtime_module = ModuleType("hem_beta88_fixture.equipment_runtime")
 runtime_module.__dict__.update(NS)
 sys.modules[runtime_module.__name__] = runtime_module
-for helper in ("pid_math", "equipment_setpoint_sequence", "equipment_pid_safety"):
+for helper in ("pid_math", "equipment_setpoint_sequence", "equipment_pid_safety", "equipment_native_target"):
     helper_spec = importlib.util.spec_from_file_location(
         f"hem_beta88_fixture.{helper}", ROOT / f"{helper}.py")
     helper_module = importlib.util.module_from_spec(helper_spec)
     sys.modules[helper_spec.name] = helper_module
     helper_spec.loader.exec_module(helper_module)
+activation = ModuleType("hem_beta88_fixture.device_activation")
+activation.mutable_copy = deepcopy
+identity_tree = ast.parse((ROOT / "device_activation.py").read_text())
+identity_functions = [node for node in identity_tree.body if isinstance(node, ast.FunctionDef)
+                      and node.name in ("authority_context", "authorization_matches")]
+assert len(identity_functions) == 2
+exec(compile(ast.Module(body=identity_functions, type_ignores=[]),
+             "device_activation.py", "exec"), activation.__dict__)
+sys.modules[activation.__name__] = activation
+ha = sys.modules.setdefault("homeassistant", ModuleType("homeassistant"))
+helpers = sys.modules.setdefault("homeassistant.helpers", ModuleType("homeassistant.helpers"))
+registry = sys.modules.setdefault("homeassistant.helpers.entity_registry",
+                                  ModuleType("homeassistant.helpers.entity_registry"))
+registry.async_get = lambda hass: hass.registry
+helpers.entity_registry = registry
+ha.helpers = helpers
 SPEC = SimpleNamespace(identifier="controller", area_id="kitchen",
+                       source_device_id="fixture-heater",
                        source_entities=("climate.heater",))
 
 
@@ -244,6 +263,10 @@ class SimRuntime:
             entry=SimpleNamespace(entry_id="test"),
         )
         self.hass = SimpleNamespace(
+            registry=SimpleNamespace(async_get=lambda entity: SimpleNamespace(
+                id="registry-" + entity, unique_id="native-" + entity,
+                device_id=SPEC.source_device_id, platform="native",
+            ) if entity in SPEC.source_entities else None),
             states=SimpleNamespace(get=lambda entity: self.state),
             services=SimpleNamespace(
                 has_service=lambda domain, action: True,

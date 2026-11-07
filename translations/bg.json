@@ -2629,6 +2629,7 @@
           "native_ac_drying_already_active": "Native AC drying already active",
           "native_already_off": "Physical HVAC device is already off",
           "native_defrost_protection": "Device is defrosting; changing output is blocked",
+          "native_device_stabilizing": "Устройството е достъпно · Проверка на стабилността",
           "native_fan_preset_active": "Native fan preset active",
           "native_humidity_device_unavailable": "Native humidity device unavailable",
           "native_mode_commanded": "Operating mode command sent",
@@ -3796,7 +3797,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "Присъствие у дома · Време за подготовка за пристигане (мин)",
+        "name": "Дом - Подготовка - Максимално време",
         "state_attributes": {
           "configuration_help": {
             "name": "Помощ"
@@ -3999,6 +4000,14 @@
       },
       "equipment_announce_before_start": {
         "name": "Известия · {channel}Поискай отваряне на прозорците",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помощ"
+          }
+        }
+      },
+      "equipment_native_full_output": {
+        "name": "Управление · {channel}Задание за пълна мощност",
         "state_attributes": {
           "configuration_help": {
             "name": "Помощ"

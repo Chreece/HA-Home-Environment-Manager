@@ -21,6 +21,11 @@ function makePopup(){
   const listeners=new Map();
   const popup={isConnected:false,shown:false,removed:false,style:{},classList:{add(){}},
     setAttribute(){},
+    contains(node){
+      for(let current=node;current;current=current.parentNode||current.parentElement)
+        if(current===this)return true;
+      return false;
+    },
     addEventListener(type,handler){
       if(!listeners.has(type))listeners.set(type,[]);
       listeners.get(type).push(handler);

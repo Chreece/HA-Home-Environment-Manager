@@ -7,9 +7,11 @@ and identity-race regressions before the new power-supply cases.
 from __future__ import annotations
 import ast
 import asyncio
+import importlib.util
 import runpy
+import sys
 from pathlib import Path
-from types import SimpleNamespace as N
+from types import ModuleType, SimpleNamespace as N
 
 ROOT=Path(__file__).resolve().parents[2]
 base=runpy.run_path(str(ROOT/'.github/tests/test_beta72_resume_running.py'))
@@ -24,6 +26,7 @@ klass=next(node for node in tree.body if isinstance(node,ast.ClassDef)
 fn=next(node for node in klass.body if isinstance(node,ast.AsyncFunctionDef)
         and node.name=='_reconcile')
 namespace={
+    **base['ns'],
     'model':base['Model'],
     'snapshot':base['snapshot'],
     'matches':base['matches'],
@@ -32,6 +35,19 @@ namespace={
 }
 exec(compile(ast.Module(body=[fn],type_ignores=[]),
              'equipment_runtime.py','exec'),namespace)
+# Reconciliation imports the production target/sequencing helpers using this
+# runtime's package. Export the same simulated model and actual runtime globals.
+package=base['pkg']
+sys.modules[package.__name__+'.equipment_model']=base['Model']
+package.equipment_model=base['Model']
+runtime_module=ModuleType(namespace['__name__'])
+runtime_module.__dict__.update(namespace)
+sys.modules[runtime_module.__name__]=runtime_module
+helper_spec=importlib.util.spec_from_file_location(
+    package.__name__+'.equipment_setpoint_sequence', ROOT/'equipment_setpoint_sequence.py')
+sequence_module=importlib.util.module_from_spec(helper_spec)
+sys.modules[helper_spec.name]=sequence_module
+helper_spec.loader.exec_module(sequence_module)
 Runtime._reconcile=namespace['_reconcile']
 
 async def pause(self,spec,reason):

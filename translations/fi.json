@@ -2629,6 +2629,7 @@
           "native_ac_drying_already_active": "Native AC drying already active",
           "native_already_off": "Physical HVAC device is already off",
           "native_defrost_protection": "Device is defrosting; changing output is blocked",
+          "native_device_stabilizing": "Laite käytettävissä · Vakauden tarkistus",
           "native_fan_preset_active": "Native fan preset active",
           "native_humidity_device_unavailable": "Native humidity device unavailable",
           "native_mode_commanded": "Operating mode command sent",
@@ -3796,7 +3797,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "Kotonaolo · Kotiintulon valmistelun aikaraja (min)",
+        "name": "Koti - Valmistelu - Enimmäisaika",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"
@@ -3999,6 +4000,14 @@
       },
       "equipment_announce_before_start": {
         "name": "Ilmoitukset · {channel}Pyydä avaamaan ikkunat",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "equipment_native_full_output": {
+        "name": "Ohjaus · {channel}Täyden tehon asetusarvo",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"
