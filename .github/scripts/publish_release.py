@@ -23,7 +23,8 @@ from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 REPOSITORY = "Chreece/HA-Home-Environment-Manager"
 WORKFLOW = "Validate Home Environment Manager"
-PREFIX = "custom_components/environment_manager/"
+SOURCE = "custom_components/environment_manager/"
+PREFIX = ""  # Marketplace ZIP is extracted directly into the integration folder.
 VERSION = re.compile(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:b(0|[1-9]\d*))?")
 REQUIRED = (
     "__init__.py", "device_faults.py", "equipment_resume.py", "pid_review.py",
@@ -96,6 +97,8 @@ def included(name):
 def inspect_zip(data, version):
     with ZipFile(BytesIO(data)) as archive:
         names = archive.namelist()
+        require(all(not n.startswith(SOURCE) for n in names),
+                "Marketplace ZIP must put integration files at archive root")
         require(len(names) == len(set(names)), "Duplicate archive paths")
         require(all(name.startswith(PREFIX) and included(name[len(PREFIX):])
                     and ".." not in PurePosixPath(name).parts for name in names),
@@ -117,6 +120,9 @@ def package(repo, sha, version):
             metadata, raw_name = entry.split(b"\t", 1)
             mode, kind, oid = metadata.decode("ascii").split()
             name = raw_name.decode("utf-8")
+            if not name.startswith(SOURCE):
+                continue
+            name = name[len(SOURCE):]
             if not included(name):
                 continue
             require(kind == "blob" and mode in ("100644", "100755"),
@@ -249,7 +255,7 @@ def download_asset(asset, tag, name, size):
 
 
 def publish(api, repo, sha):
-    manifest = json.loads(git(repo, "show", sha + ":manifest.json"))
+    manifest = json.loads(git(repo, "show", sha + ":" + SOURCE + "manifest.json"))
     version = manifest.get("version")
     key = version_key(version)
     require(manifest.get("domain") == "environment_manager", "Unexpected integration domain")
@@ -266,7 +272,7 @@ def publish(api, repo, sha):
     require(tag_commit(api, tag) in (None, sha), "Existing tag points to a different commit")
     data = package(repo, sha, version)
     digest = hashlib.sha256(data).hexdigest()
-    name = "HA-Home-Environment-Manager-" + tag + ".zip"
+    name = "environment_manager.zip"
     main_head(api, sha)
     draft = api.request("POST", "/releases", {
         "tag_name": tag, "target_commitish": sha, "name": tag, "body": notes,

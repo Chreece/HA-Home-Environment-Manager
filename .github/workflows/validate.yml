@@ -29,21 +29,38 @@ jobs:
         run: |
           set -euo pipefail
           python -I -m compileall -q .
-          node --check frontend/air-quality-advisor-card.js
+          node --check custom_components/environment_manager/frontend/air-quality-advisor-card.js
           python -I - <<'PYCODE'
           import json
           import re
           from pathlib import Path
 
-          manifest = json.loads(Path('manifest.json').read_text(encoding='utf-8'))
+          integration = Path('custom_components/environment_manager')
+          manifest = json.loads((integration / 'manifest.json').read_text(encoding='utf-8'))
+          hacs = json.loads(Path('hacs.json').read_text(encoding='utf-8'))
+          assert integration.is_dir() and (integration / '__init__.py').is_file()
+          assert not Path('manifest.json').exists() and not Path('__init__.py').exists()
+          assert not hacs.get('content_in_root', False)
+          assert hacs.get('zip_release') is True and hacs.get('filename') == 'environment_manager.zip'
           assert manifest['domain'] == 'environment_manager'
           assert re.fullmatch(r'[0-9][0-9A-Za-z.+-]*', manifest['version'])
           for path in Path('.').rglob('*.json'):
               json.loads(path.read_text(encoding='utf-8'))
-          assert len(list(Path('translations').glob('*.json'))) == 38
+          assert len(list(integration.joinpath('translations').glob('*.json'))) == 38
           print('PASS: canonical manifest, JSON and translations', manifest['version'])
           PYCODE
           git diff --check
+      - name: Prepare legacy unit test source paths (CI only, never packaged)
+        run: |
+          python - <<'PYCODE'
+          from pathlib import Path
+          source = Path("custom_components/environment_manager")
+          for entry in source.iterdir():
+              original = Path(entry.name)
+              if original.exists() or original.is_symlink():
+                  raise RuntimeError(f"Unexpected root integration path: {original}")
+              original.symlink_to(entry, target_is_directory=entry.is_dir())
+          PYCODE
       - name: Validate beta publication guards and canonical ZIP
         run: python -I .github/tests/test_publish_release.py
       - name: Independent mode profiles, native controls and calibrated mold demand
