@@ -7934,8 +7934,7 @@
       'data-room-options-status114 role="status" aria-live="polite">'+
       escape(_roomOptionsWord114(this,'loading'))+'</p><div data-room-options-groups114></div></div>'+
       '<footer class="hem-room-options-footer114"><button type="button" '+
-      'class="hem-room-options-controls114" data-room-controls114>'+this._icon('mdi:tune-variant')+
-      escape(_roomOptionsWord114(this,'controls'))+'</button><button type="button" '+
+      
       'data-room-options-retry114 hidden>'+escape(_roomOptionsWord114(this,'retry'))+'</button>'+
       '<button type="button" data-room-options-close114>'+escape(_roomOptionsWord114(this,'close'))+
       '</button><button type="button" class="hem-room-options-save114" data-room-options-save114 disabled>'+
@@ -7981,16 +7980,6 @@
         if(field)this._roomSettingsSelection114(saved,'shades',[
           ...new Set([...(saved.draft.shades||[]),...field.options.map(option=>option.value)])]);
         return;
-      }
-      if(button.hasAttribute('data-room-controls114')){
-        const verified=_roomOptionsContext114(this,saved.area,saved.entryId,saved.owner);
-        if(!verified)return;
-        const path='/config/devices/device/'+encodeURIComponent(verified.device);
-        this._closeRoomSettings114(false);
-        if(window.history?.pushState&&window.dispatchEvent){
-          window.history.pushState(null,'',path);
-          window.dispatchEvent(new Event('location-changed'));
-        }else window.location.assign(path);
       }
     });
     node.addEventListener('change',event=>{
