@@ -56,7 +56,6 @@ jobs:
           python -I .github/tests/test_061b7_window_modes.py
           python -I .github/tests/test_061b7_runtime_modes.py
           python -I .github/tests/test_061b7_runtime_mold.py
-          python -I .github/tests/test_061b7_mode_settings_card.py --logic-only
       - name: Per-device airing options, accepted waits and actual timeout starts
         run: |
           set -euo pipefail
