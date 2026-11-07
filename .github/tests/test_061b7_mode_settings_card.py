@@ -326,7 +326,26 @@ def run():
             assert LABELS[language]["parameters"] in panel(0, "heat").locator('.hem-mode-parameters7>summary').inner_text()
             cycle_label = panel(0, "heat").locator('.hem-mode-number7 label').filter(
                 has=number("number.cycle_0_heat")).locator(':scope > span')
-            assert cycle_label.inner_text() == LABELS[language]["cycle_seconds"] + " (s)"
+            label_evidence = cycle_label.evaluate("""element => {
+              const style = getComputedStyle(element);
+              return {inner_text: element.innerText, text_content: element.textContent,
+                outer_html: element.outerHTML, display: style.display,
+                white_space: style.whiteSpace, text_transform: style.textTransform};
+            }""")
+            label_evidence.update(locale=language, viewport=page.viewport_size,
+                expected=LABELS[language]["cycle_seconds"] + " (s)")
+            print("HEM_061B7_CYCLE_LABEL=" + json.dumps(label_evidence, ensure_ascii=False), flush=True)
+            if shots:
+                # Capture before the assertion so a browser-only mismatch
+                # leaves useful evidence in the CI artifact, not an empty folder.
+                (shots / f"061b7-label-{language}.json").write_text(
+                    json.dumps(label_evidence, ensure_ascii=False, indent=2), encoding="utf-8")
+                try:
+                    panel(0, "heat").screenshot(
+                        path=str(shots / f"061b7-label-{language}.png"), animations="disabled")
+                except Exception as error:
+                    print(f"HEM_061B7_LABEL_SCREENSHOT_FAILED={error!r}", flush=True)
+            assert cycle_label.inner_text() == LABELS[language]["cycle_seconds"] + " (s)", label_evidence
             for width in (390, 320):
                 page.set_viewport_size({"width": width, "height": 1000})
                 for box in page.locator('.hem-operating-mode7,.hem-mode-number7,.hem-mode-heading7').all():
