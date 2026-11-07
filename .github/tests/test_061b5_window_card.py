@@ -14,6 +14,8 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 BOUNDS = runpy.run_path(str(ROOT / ".github/tests/test_061b3_text_boundaries.py"))
+SETUP = BOUNDS["SETUP"].replace(
+    "localize:()=>undefined", "localize:key=>data.labels[key.split('.').at(-1)]")
 
 
 def fixture(language):
@@ -47,6 +49,7 @@ def run():
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(executable_path=executable, headless=True,
             args=["--no-sandbox", "--disable-dev-shm-usage"])
+        page, language = None, "setup"
         try:
             for language in ("en", "el", "de"):
                 page = browser.new_page(viewport={"width": 375, "height": 1000})
@@ -61,10 +64,7 @@ def run():
                 page.evaluate(icons)
                 page.add_script_tag(path=str(ROOT / "frontend/air-quality-advisor-card.js"))
                 data = fixture(language)
-                page.evaluate(BOUNDS["SETUP"], data)
-                page.evaluate("""labels => {
-                  card.hass={...card._hass,localize:key=>labels[key.split('.').at(-1)]};
-                }""", data["labels"])
+                page.evaluate(SETUP, data)
                 BOUNDS["settle"](page)
                 outside_title = page.locator(".outside-title")
                 expect(outside_title).not_to_contain_text(page.evaluate("card._t('badOutside')"))
@@ -89,10 +89,21 @@ def run():
                     page.screenshot(path=str(shots / f"061b5-window-advice-{language}.png"), full_page=True)
                 button.click()
                 expect(panel).to_have_count(0)
+                fallback = page.evaluate("""() => {
+                  card.hass={...card._hass,localize:()=>undefined};
+                  return ['window_request_pending','window_open_wait'].map(
+                    code=>card._controllerStatusLabel(code));
+                }""")
+                assert fallback == [data["labels"][code] for code in
+                                    ("window_request_pending", "window_open_wait")], fallback
                 assert page.evaluate("calls") == [], "Advice navigation must never operate equipment"
                 assert not errors, errors
                 page.close()
                 print(f"PASS: {language} conditional cautions, localized wait and mobile advice navigation")
+        except Exception:
+            if page and not page.is_closed() and shots:
+                page.screenshot(path=str(shots / f"061b5-window-advice-failure-{language}.png"), full_page=True)
+            raise
         finally:
             browser.close()
     print("HEM_061B5_WINDOW_ADVICE_CARD=PASS")
