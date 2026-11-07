@@ -1980,7 +1980,7 @@ class EquipmentRuntime:
                 power = soft and new.get("control_mode") in ("automatic", "pid", "manual", "off") and "off" in cap.modes
             on, off, maximum = model.timing(self.manager, spec, cap, config=new)
             if cap.domain != "fan" and maximum > 28800:
-                raise HomeAssistantError("Maximum continuous runtime for this device cannot exceed 28800 seconds")
+                raise HomeAssistantError("Maximum continuous runtime for this device cannot exceed 480 minutes")
             if "requested_mode" in changes and new["requested_mode"] is not None:
                 state = self.hass.states.get(cap.primary)
                 requested = new["requested_mode"]

@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Betrieb · {channel}Mindestlaufzeit des Geräts (s)",
+        "name": "Betrieb · {channel}Mindestlaufzeit des Geräts (Min.)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
@@ -3646,7 +3646,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Betrieb · {channel}Mindeststillstandszeit des Geräts (s)",
+        "name": "Betrieb · {channel}Mindeststillstandszeit des Geräts (Min.)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
@@ -3654,7 +3654,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Leistung · {channel}Maximale Einschaltdauer (s)",
+        "name": "Leistung · {channel}Maximale Einschaltdauer (Min.)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"

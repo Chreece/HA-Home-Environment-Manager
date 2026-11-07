@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Operation · {channel}Minimum device ON time (s)",
+        "name": "Operation · {channel}Minimum device ON time (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
@@ -3646,7 +3646,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Operation · {channel}Minimum device OFF time (s)",
+        "name": "Operation · {channel}Minimum device OFF time (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
@@ -3654,7 +3654,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Power · {channel}Maximum ON time (s)",
+        "name": "Power · {channel}Maximum ON time (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"

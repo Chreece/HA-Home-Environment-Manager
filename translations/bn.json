@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "চালনা · {channel}যন্ত্র চালু থাকার ন্যূনতম সময় (s)",
+        "name": "চালনা · {channel}যন্ত্র চালু থাকার ন্যূনতম সময় (মিনিট)",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "চালনা · {channel}যন্ত্র বন্ধ থাকার ন্যূনতম সময় (s)",
+        "name": "চালনা · {channel}যন্ত্র বন্ধ থাকার ন্যূনতম সময় (মিনিট)",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "শক্তি · {channel}max ON (s)",
+        "name": "শক্তি · {channel}max ON (মিনিট)",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"

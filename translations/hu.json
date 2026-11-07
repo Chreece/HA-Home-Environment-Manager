@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Működés · {channel}Az eszköz minimális működési ideje (s)",
+        "name": "Működés · {channel}Az eszköz minimális működési ideje (perc)",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Működés · {channel}Az eszköz minimális kikapcsolt ideje (s)",
+        "name": "Működés · {channel}Az eszköz minimális kikapcsolt ideje (perc)",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Teljesítmény · {channel}max ON (s)",
+        "name": "Teljesítmény · {channel}max ON (perc)",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"

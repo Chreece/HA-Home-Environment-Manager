@@ -122,6 +122,54 @@ class OptionLabelTests(unittest.TestCase):
             self.assertIn(expected, text)
         self.assertNotIn("also apply this device's sleep behavior, Sleep targets", text)
 
+    def test_native_operating_duration_names_use_minutes_in_all38_languages(self):
+        timing_keys = ("min_on_seconds", "min_off_seconds", "max_on_seconds")
+        minute_units = {
+            "min", "λεπτά", "Min.", "perc", "мин", "хв", "dk", "دقيقة", "דקות",
+            "دقیقه", "मिनट", "মিনিট", "நிமிடம்", "منٹ", "menit", "分", "분",
+            "นาที", "phút", "分钟", "分鐘",
+        }
+        self.assertEqual(name("min_on_seconds", "en"), "Operation · Minimum device ON time (min)")
+        self.assertEqual(name("min_off_seconds", "en"), "Operation · Minimum device OFF time (min)")
+        self.assertEqual(name("max_on_seconds", "en"), "Power · Maximum ON time (min)")
+        for path in [ROOT / "strings.json", *sorted((ROOT / "translations").glob("*.json"))]:
+            locale = "en" if path.name == "strings.json" else path.stem
+            entries = json.loads(path.read_text())["entity"]["number"]
+            for key in timing_keys:
+                with self.subTest(locale=locale, key=key):
+                    translated = entries["equipment_" + key]["name"]
+                    self.assertEqual(translated, NAMES["EQUIPMENT_TRANSLATED_NAMES"][locale][key])
+                    unit = translated.rsplit(" (", 1)[-1].removesuffix(")")
+                    self.assertIn(unit, minute_units)
+                    if locale == "el":
+                        self.assertEqual(unit, "λεπτά")
+                    if locale == "de":
+                        self.assertEqual(unit, "Min.")
+        for key in ("sample_seconds", "cycle_seconds", "power_switch_cooldown_seconds"):
+            self.assertTrue(name(key, "en").endswith(("(s)", "(seconds)")), key)
+
+    def test_minute_help_preserves_fractional_minima_and_physical_safeguards(self):
+        for key in ("min_on_seconds", "min_off_seconds", "max_on_seconds"):
+            for locale, minutes, seconds in (("en", "minutes", "seconds"),
+                                             ("el", "λεπτά", "δευτερόλεπτα"),
+                                             ("de", "Minuten", "Sekunden")):
+                with self.subTest(key=key, locale=locale):
+                    text = help_text(key, locale)
+                    self.assertIn(minutes, text)
+                    self.assertNotIn(seconds, text)
+        for key in ("min_on_seconds", "min_off_seconds"):
+            text = help_text(key)
+            self.assertIn("Fractional minutes are allowed", text)
+            self.assertIn("0.5 for half a minute", text)
+            self.assertIn("waits for command confirmation", text)
+            self.assertIn("does not change the external power-switch timing", text)
+        self.assertIn("Set 0 to disable", help_text("min_on_seconds"))
+        self.assertIn("current cycle completes first", help_text("min_on_seconds"))
+        self.assertIn("0 disables", help_text("min_off_seconds"))
+        self.assertIn("observed OFF time", help_text("min_off_seconds"))
+        self.assertIn("must exceed the minimum ON time", help_text("max_on_seconds"))
+        self.assertIn("defrost protection", help_text("max_on_seconds"))
+
     def test_retired_timing_option_has_no_current_name_help_or_translation(self):
         self.assertNotIn("timed_setpoint_sequence", HELP["HELP"])
         self.assertNotIn("_TIMED_SETPOINT_LABELS", NAMES)

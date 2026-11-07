@@ -702,6 +702,9 @@ from . import equipment_model as equipment
 class EquipmentNumber(EquipmentEntity, NumberEntity):
     _attr_entity_category = EntityCategory.CONFIG
     _attr_mode = NumberMode.BOX
+    # Only these shared physical controls use minutes at the HA entity edge.
+    # Their stable keys, persisted values, and runtime contracts remain seconds.
+    _MINUTE_FIELDS = frozenset(("min_on_seconds", "min_off_seconds", "max_on_seconds"))
 
     def __init__(self, manager, spec, key, *, operating_mode=None):
         self._equipment_init(manager, spec, key, operating_mode=operating_mode)
@@ -738,6 +741,11 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
             self._attr_native_step = fan_bounds[2]
         if key == "max_on_seconds" and cap and cap.domain != "fan":
             self._attr_native_max_value = 28800
+        if key in self._MINUTE_FIELDS:
+            self._attr_native_min_value /= 60.0
+            self._attr_native_max_value /= 60.0
+            self._attr_native_step /= 60.0
+            self._attr_native_unit_of_measurement = "min"
 
     @property
     def available(self):
@@ -810,7 +818,17 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
         if self._key in equipment.FAN_LIMIT_FIELDS:
             cap = equipment.fan_limit_capability(self._manager, self._spec)
             return equipment.device_fan_limits(self._manager, self._spec, cap)[self._key]
-        return self.controller_settings[self._key]
+        value = self.controller_settings[self._key]
+        if self._key in self._MINUTE_FIELDS:
+            import math
+            if isinstance(value, bool):
+                return None
+            try:
+                seconds = float(value)
+            except (TypeError, ValueError, OverflowError):
+                return None
+            return seconds / 60.0 if math.isfinite(seconds) else None
+        return value
 
     async def async_set_native_value(self, value):
         if getattr(self, "_operating_mode", None):
@@ -823,6 +841,31 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
                 table[profile] = {**table.get(profile, {}), field: value}
                 await self._async_update_controller_settings({"profile_targets": table})
                 return
+        if self._key in self._MINUTE_FIELDS:
+            import math
+            if isinstance(value, bool):
+                raise ValueError("Enter a duration in minutes")
+            try:
+                minutes = float(value)
+            except (TypeError, ValueError, OverflowError) as error:
+                raise ValueError("Enter a duration in minutes") from error
+            if not (math.isfinite(minutes)
+                    and self._attr_native_min_value <= minutes <= self._attr_native_max_value):
+                raise ValueError("Duration is outside this device's supported minute range")
+            seconds = minutes * 60.0
+            # Preserve an unchanged saved duration exactly, including a legacy
+            # fractional second. Otherwise remove only floating-point noise at
+            # an integer-second boundary; never quantize to whole minutes.
+            previous = self.controller_settings.get(self._key)
+            try:
+                stored = float(previous) if not isinstance(previous, bool) else float("nan")
+            except (TypeError, ValueError, OverflowError):
+                stored = float("nan")
+            if math.isfinite(stored) and minutes == stored / 60.0:
+                seconds = stored
+            elif abs(seconds - round(seconds)) <= 2 * math.ulp(seconds):
+                seconds = float(round(seconds))
+            value = seconds
         await self._async_update_controller_settings({self._key: value})
 
     async def async_added_to_hass(self):

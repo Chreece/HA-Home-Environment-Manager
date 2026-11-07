@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Werking · {channel}Minimale AAN-tijd van het apparaat (s)",
+        "name": "Werking · {channel}Minimale AAN-tijd van het apparaat (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Werking · {channel}Minimale UIT-tijd van het apparaat (s)",
+        "name": "Werking · {channel}Minimale UIT-tijd van het apparaat (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Vermogen · {channel}max ON (s)",
+        "name": "Vermogen · {channel}max ON (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"

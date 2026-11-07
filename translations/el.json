@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Λειτουργία · {channel}Ελάχιστος χρόνος λειτουργίας συσκευής (s)",
+        "name": "Λειτουργία · {channel}Ελάχιστος χρόνος λειτουργίας συσκευής (λεπτά)",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"
@@ -3646,7 +3646,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Λειτουργία · {channel}Ελάχιστος χρόνος εκτός λειτουργίας συσκευής (s)",
+        "name": "Λειτουργία · {channel}Ελάχιστος χρόνος εκτός λειτουργίας συσκευής (λεπτά)",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"
@@ -3654,7 +3654,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Ισχύς · {channel}Μέγιστος χρόνος συνεχούς λειτουργίας (δευτ.)",
+        "name": "Ισχύς · {channel}Μέγιστος χρόνος συνεχούς λειτουργίας (λεπτά)",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"

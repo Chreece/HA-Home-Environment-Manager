@@ -124,8 +124,10 @@ jobs:
           python -I .github/tests/test_beta122_card_details.py --logic-only
       - name: Explicit device operating holds and translated numeric controls
         run: |
+          set -euo pipefail
           python -I .github/tests/test_061b1_operating_timing.py
           python -I .github/tests/test_061b1_operating_timing_ui.py
+          python -I .github/tests/test_061b9_timing_minutes.py
       - name: Presence choice meanings and automatic timing constraints
         run: |
           python -I .github/tests/test_061b2_presence_labels.py

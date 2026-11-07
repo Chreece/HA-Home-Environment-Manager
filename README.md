@@ -418,15 +418,27 @@ is still away, using their existing permission for native ON/OFF control. It
 preserves the actual presence readings and the stored choices.
 See [Prepare for arrival](#prepare-for-arrival) for its scope and timeout.
 
-### Minimum device ON and OFF times
+### Device operating times
 
-Each controller has **Operation · Minimum device ON time (s)** and
-**Operation · Minimum device OFF time (s)**. These govern how long HEM keeps
+Each controller has **Operation · Minimum device ON time (min)** and
+**Operation · Minimum device OFF time (min)**. These govern how long HEM keeps
 the device operating or stopped before requesting the opposite state. For a
 radiator valve, this is its controlled heating operation.
 
-Both settings accept **0 seconds**, which disables that forced operating
-hold, and can be adjusted in one-second increments. Choose any required
+Both settings accept **0 minutes**, which disables that forced operating
+hold, and fractional minutes retain the existing one-second resolution.
+For example, **0.5 min** means 30 seconds and **10 min** means 600 seconds.
+**Power · Maximum ON time (min)** also displays and accepts minutes, with a
+one-minute step and the same supported duration limits as before. These
+physical operating limits are shared across the device's operating modes.
+
+Saved durations and entity identities are preserved on upgrade. Existing
+settings are converted for display, so 600 stored seconds appears as 10
+minutes. Home Assistant number edits and `number.set_value` calls for these
+three entities now take minutes. PID measurement/PWM intervals and the
+separate supply-switch cooldown retain their own units.
+
+Choose any required
 minimum interval from the appliance manufacturer's guidance; compressor
 equipment and radiator valves need different operating policies. Aqara's
 [E1 guidance](https://www.aqara.com/eu/product/radiator-thermostat-e1/faq/)

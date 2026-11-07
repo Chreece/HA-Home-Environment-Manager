@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Drift · {channel}Mindste driftstid for enheden (s)",
+        "name": "Drift · {channel}Mindste driftstid for enheden (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjælp"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Drift · {channel}Mindste tid med enheden slukket (s)",
+        "name": "Drift · {channel}Mindste tid med enheden slukket (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjælp"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Effekt · {channel}max ON (s)",
+        "name": "Effekt · {channel}max ON (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjælp"

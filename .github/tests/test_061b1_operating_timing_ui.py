@@ -17,7 +17,8 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parents[2]
-FIELDS = ("min_on_seconds", "min_off_seconds")
+FIELDS = ("min_on_seconds", "min_off_seconds", "max_on_seconds")
+MINIMA = FIELDS[:2]
 NAMES = runpy.run_path(str(ROOT / "equipment_name_catalog.py"))
 HELP = runpy.run_path(str(ROOT / "equipment_help.py"))
 DOMAIN = next(ast.literal_eval(node.value)
@@ -115,18 +116,18 @@ def _fixture(domain="climate", language="en"):
 
 
 class OperatingTimingUi(unittest.TestCase):
-    def test_zero_and_one_second_bounds_for_native_device_and_restore(self):
+    def test_minute_bounds_preserve_one_second_minimum_resolution(self):
         # An available TRV, fan, humidifier, and not-yet-restored native device
         # must expose the same editable minimum without a hidden 600s floor.
         for domain in ("climate", "fan", "humidifier", None):
-            for key, maximum in zip(FIELDS, (7200, 14400)):
+            for key, maximum in zip(MINIMA, (120, 240)):
                 with self.subTest(domain=domain, field=key):
                     manager, spec = _fixture(domain)
                     number = EquipmentNumber(manager, spec, key)
                     self.assertEqual(number._attr_native_min_value, 0)
                     self.assertEqual(number._attr_native_max_value, maximum)
-                    self.assertEqual(number._attr_native_step, 1)
-                    self.assertEqual(number._attr_native_unit_of_measurement, "s")
+                    self.assertEqual(number._attr_native_step, 1 / 60)
+                    self.assertEqual(number._attr_native_unit_of_measurement, "min")
                     self.assertEqual(number._attr_mode, "box")
 
     def test_existing_identity_and_physical_device_association(self):
@@ -140,18 +141,22 @@ class OperatingTimingUi(unittest.TestCase):
                     ("environment_manager", spec.physical_identifier)
                 })
                 self.assertFalse(number._attr_has_entity_name)
-                self.assertIn("Living radiator · Minimum device", number._attr_name)
+                self.assertIn("Living radiator · ", number._attr_name)
+                self.assertIn("min", number._attr_name)
 
-    def test_zero_and_short_values_are_read_and_saved_without_coercion(self):
+    def test_zero_and_fractional_minutes_round_trip_saved_seconds(self):
         manager, spec = _fixture()
-        for key in FIELDS:
+        for key in MINIMA:
             number = EquipmentNumber(manager, spec, key)
-            # Zero is a deliberate configured value, not missing/default data.
-            for value in (0, 1, 37, 120, 600):
-                with self.subTest(field=key, seconds=value):
-                    asyncio.run(number.async_set_native_value(value))
-                    self.assertEqual(manager.saved[-1], (spec, {key: value}))
-                    self.assertEqual(number.native_value, value)
+            # Zero is a deliberate configured value; 0.5 minute remains 30s.
+            for seconds in (0, 1, 37, 120, 600):
+                with self.subTest(field=key, seconds=seconds):
+                    asyncio.run(number.async_set_native_value(seconds / 60))
+                    self.assertEqual(manager.saved[-1], (spec, {key: seconds}))
+                    self.assertEqual(number.native_value, seconds / 60)
+            asyncio.run(number.async_set_native_value(0.5))
+            self.assertEqual(manager.saved[-1], (spec, {key: 30.0}))
+            self.assertEqual(number.native_value, 0.5)
 
     def test_other_timing_metadata_remains_distinct(self):
         manager, spec = _fixture()
@@ -159,7 +164,6 @@ class OperatingTimingUi(unittest.TestCase):
             "sample_seconds": (120, 3600, 30),
             "cycle_seconds": (600, 86400, 60),
             "power_switch_cooldown_seconds": (60, 86400, 60),
-            "max_on_seconds": (900, 28800, 60),
         }
         for key, bounds in expected.items():
             with self.subTest(field=key):
@@ -181,27 +185,28 @@ class OperatingTimingUi(unittest.TestCase):
                     label = data["entity"]["number"][f"equipment_{key}"]["name"]
                     self.assertEqual(label, names[path.stem][key])
                     self.assertEqual(label.count("{channel}"), 1)
-                    self.assertTrue(label.endswith(" (s)"), label)
+                    self.assertIn("(", label)
+                    self.assertFalse(label.endswith(" (s)"), label)
                     self.assertEqual(translate(key, path.stem, "Valve · "),
                                      label.replace("{channel}", "Valve · "))
             self.assertNotEqual(names[path.stem][FIELDS[0]], names[path.stem][FIELDS[1]])
         english = json.loads((ROOT / "strings.json").read_text())
-        for key, label in zip(FIELDS, ("Minimum device ON time", "Minimum device OFF time")):
-            expected = f"Operation · {{channel}}{label} (s)"
+        for key, label in zip(MINIMA, ("Minimum device ON time", "Minimum device OFF time")):
+            expected = f"Operation · {{channel}}{label} (min)"
             self.assertEqual(names["en"][key], expected)
             self.assertEqual(english["entity"]["number"][f"equipment_{key}"]["name"], expected)
 
     def test_help_explains_zero_device_operation_and_manufacturer_choice(self):
         help_for = HELP["equipment_configuration_help"]
-        for locale, seconds, confirmation, manufacturer in (
-            ("en", "seconds", "command confirmation", "manufacturer"),
-            ("el", "δευτερόλεπτα", "επιβεβαίωση εντολών", "κατασκευαστή"),
-            ("de", "Sekunden", "Befehlsbestätigung", "Herstellerangaben"),
+        for locale, minutes, confirmation, manufacturer in (
+            ("en", "minutes", "command confirmation", "manufacturer"),
+            ("el", "λεπτά", "επιβεβαίωση εντολών", "κατασκευαστή"),
+            ("de", "Minuten", "Befehlsbestätigung", "Herstellerangaben"),
         ):
-            for key in FIELDS:
+            for key in MINIMA:
                 with self.subTest(locale=locale, field=key):
                     help_text = help_for(key, locale)
-                    for required in ("0", seconds, confirmation, manufacturer):
+                    for required in ("0", minutes, confirmation, manufacturer):
                         self.assertIn(required, help_text)
             self.assertNotEqual(help_for(FIELDS[0], locale), help_for(FIELDS[1], locale))
         self.assertIn("remain operating", help_for(FIELDS[0], "en"))

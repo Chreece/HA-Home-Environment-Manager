@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "การทำงาน · {channel}เวลาทำงานขั้นต่ำของอุปกรณ์ (s)",
+        "name": "การทำงาน · {channel}เวลาทำงานขั้นต่ำของอุปกรณ์ (นาที)",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "การทำงาน · {channel}เวลาหยุดทำงานขั้นต่ำของอุปกรณ์ (s)",
+        "name": "การทำงาน · {channel}เวลาหยุดทำงานขั้นต่ำของอุปกรณ์ (นาที)",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "พลังงาน · {channel}max ON (s)",
+        "name": "พลังงาน · {channel}max ON (นาที)",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"

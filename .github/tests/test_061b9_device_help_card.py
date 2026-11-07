@@ -308,16 +308,31 @@ def browser_checks():
             close_help()
             assert maximum.evaluate('e=>e===e.getRootNode().activeElement')
             maximum.tap()
+            pop = page.locator('.hem-floating-info87')
+            detail = option('native_full_output').locator(':scope > details')
+            # The native disclosure's toggle event creates the portal on a
+            # later task. Test an actually open bubble before clicking outside;
+            # a zero count before that task is not evidence of dismissal.
+            expect(pop).to_be_visible()
+            expect(detail).to_have_js_property('open', True)
             page.mouse.click(1, 1)
-            expect(page.locator('.hem-floating-info87')).to_have_count(0)
+            expect(pop).to_have_count(0)
+            expect(detail).to_have_js_property('open', False)
             # A narrower current mode scope must replace the open title/help;
             # withdrawing support must close it and remove the stale action.
             maximum.tap()
+            expect(pop).to_be_visible()
+            expect(detail).to_have_js_property('open', True)
             a = states['switch.renamed_native_full_output']['attributes']
+            expect(pop.locator('.hem-help-heading9')).to_have_text(a['setting_label'])
             a.update(native_full_output_modes=['cool'], setting_label=NAME(['cool'], 'de'),
                      configuration_help=HELP('native_full_output', 'de', modes=['cool']))
             page.evaluate('([s,l])=>refresh9(s,l)', [states, 'de'])
-            expect(page.locator('.hem-floating-info87 .hem-help-heading9')).to_have_text(a['setting_label'])
+            expect(pop.locator('.hem-help-heading9')).to_have_text(a['setting_label'])
+            expect(detail).to_have_js_property('open', True)
+            assert pop.locator('.hem-help-text116').all_text_contents() == a['configuration_help'].split('\n\n')
+            if shots:
+                page.screenshot(path=str(shots / '061b9-device-help-de-390-live-scope.png'), full_page=False)
             a['native_full_output_supported'] = False
             page.evaluate('([s,l])=>refresh9(s,l)', [states, 'de'])
             expect(option('native_full_output')).to_have_count(0)

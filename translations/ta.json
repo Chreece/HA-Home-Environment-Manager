@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "இயக்கம் · {channel}சாதனம் இயங்க வேண்டிய குறைந்தபட்ச நேரம் (s)",
+        "name": "இயக்கம் · {channel}சாதனம் இயங்க வேண்டிய குறைந்தபட்ச நேரம் (நிமிடம்)",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "இயக்கம் · {channel}சாதனம் அணைந்திருக்க வேண்டிய குறைந்தபட்ச நேரம் (s)",
+        "name": "இயக்கம் · {channel}சாதனம் அணைந்திருக்க வேண்டிய குறைந்தபட்ச நேரம் (நிமிடம்)",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "சக்தி · {channel}max ON (s)",
+        "name": "சக்தி · {channel}max ON (நிமிடம்)",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"

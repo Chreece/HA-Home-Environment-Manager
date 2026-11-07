@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "動作 · {channel}機器の最小運転時間 (s)",
+        "name": "動作 · {channel}機器の最小運転時間 (分)",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "動作 · {channel}機器の最小停止時間 (s)",
+        "name": "動作 · {channel}機器の最小停止時間 (分)",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "電力 · {channel}max ON (s)",
+        "name": "電力 · {channel}max ON (分)",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
