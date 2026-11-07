@@ -9130,6 +9130,7 @@
       tr127(this,"error"):list.length?"":tr127(this,"empty");
     return '<section class="hem-full-list127" data-hem-full-list127="'+scope+'">'+
       '<h3>'+escape(tr127(this,"title"))+' <small>('+list.length+')</small></h3>'+
+      (scope==="room"?'<p>'+escape(hemWord126(this,"immediate"))+'</p>':"")+
       (message?'<p role="status">'+escape(message)+'</p>':"")+
       ORDER127.map(category=>{
         const fields=grouped.get(category);
@@ -9166,7 +9167,7 @@
         if(open.has(el.getAttribute("data-hem-full-category127")))el.open=true;
       }
       old.replaceWith(next);
-    }else base.appendChild(next);
+    }else base.insertBefore(next,base.firstChild);
   };
   hemFull127._hemFullLoad127=function(saved,scope){
     if(typeof this._hass?.callWS!=="function")return;
