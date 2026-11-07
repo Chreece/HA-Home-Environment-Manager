@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Avisos · Anunciar errores del dispositivo · {channel}",
+        "name": "Avisos · {channel}Anunciar errores del dispositivo",
         "state_attributes": {
           "configuration_help": {
             "name": "Ayuda"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Sueño · {channel}Cuando todos duermen",
+        "name": "Sueño · {channel}Mantener el dispositivo apagado cuando todos duerman",
         "state_attributes": {
           "configuration_help": {
             "name": "Ayuda"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Control · {channel}Consigna de máxima potencia",
+        "name": "Control · {channel}Objetivo máximo según el modo",
         "state_attributes": {
           "configuration_help": {
             "name": "Ayuda"

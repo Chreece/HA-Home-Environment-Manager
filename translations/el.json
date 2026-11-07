@@ -3992,7 +3992,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Ανακοινώσεις · {channel}Σφάλματα συσκευής",
+        "name": "Ανακοινώσεις · {channel}Ανακοίνωση σφαλμάτων συσκευής",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"
@@ -4000,7 +4000,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Ύπνος · {channel}Όταν όλοι κοιμούνται",
+        "name": "Ύπνος · {channel}Διατήρηση συσκευής κλειστής όταν όλοι κοιμούνται",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"
@@ -4016,7 +4016,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Έλεγχος · {channel}Στόχος πλήρους απόδοσης",
+        "name": "Έλεγχος · {channel}Μέγιστος στόχος ανά λειτουργία",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"

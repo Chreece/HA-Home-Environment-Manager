@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Ilmoitukset · Ilmoita laitteen virheistä · {channel}",
+        "name": "Ilmoitukset · {channel}Ilmoita laitteen virheistä",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Uni · {channel}Kun kaikki nukkuvat",
+        "name": "Uni · {channel}Pidä laite pois päältä, kun kaikki nukkuvat",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Ohjaus · {channel}Täyden tehon asetusarvo",
+        "name": "Ohjaus · {channel}Enimmäistavoite toimintatilan mukaan",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"

@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "알림 · 기기 오류 알림 · {channel}",
+        "name": "알림 · {channel}기기 오류 알림",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "수면 · {channel}모두가 자고 있을 때",
+        "name": "수면 · {channel}모두가 잠들면 기기를 꺼진 상태로 유지",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "제어 · {channel}최대 출력 설정값",
+        "name": "제어 · {channel}모드별 최대 목표값",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"

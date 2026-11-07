@@ -104,6 +104,11 @@ jobs:
           python -I .github/tests/test_beta120_wake_alarm.py
           python -I .github/tests/test_beta120_device_sleep.py
           python -I .github/tests/test_beta120_general_wake.py
+      - name: Explicit device option labels, supported modes and household OFF
+        run: |
+          python -I .github/tests/test_061b9_option_labels.py
+          python -I .github/tests/test_061b9_option_metadata.py
+          python -I .github/tests/test_061b9_household_off.py
       - name: Away profile authority and restored restart measurements
         run: |
           set -euo pipefail
@@ -137,14 +142,16 @@ jobs:
           python -I .github/tests/test_beta111_pid_cutoff_math.py
           python -I .github/tests/test_beta111_pid_supply_cutoff.py
           python -I .github/tests/test_beta111_pid_target_cutoff.py
-      - name: Per-device option defaults, persistence and command behavior
+      - name: Per-device defaults, persistence and retired timer cleanup
         run: |
           python -I .github/tests/test_beta110_device_setting.py
           python -I .github/tests/test_beta110_timed_sequence_opt_in.py
-      - name: Beta109 timed startup and committed shutdown through real actuator paths
+      - name: Native target retirement and interrupted shutdown through real actuator paths
         run: |
           python -I .github/tests/test_beta109_setpoint_sequence.py
           python -I .github/tests/test_beta109_setpoint_grace_browser.py --status-only
+          python -I .github/tests/test_061b9_timed_removal.py
+          python -I .github/tests/test_061b9_retired_feedback.py
       - name: Beta108 like-for-like setpoint feedback and read-only pending status
         run: |
           python -I .github/tests/test_beta108_setpoint_feedback.py
@@ -283,6 +290,10 @@ jobs:
           python -I .github/tests/test_061b8_dehumidifier_fan.py
       - name: Install runner-only Home Assistant and browser test packages
         run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+      - name: Informative device help, exact mode labels and retired option exclusion
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b9_device_help_card.py
       - name: Compact device options, readiness timing and mobile help
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui

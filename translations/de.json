@@ -3992,7 +3992,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Ansagen · {channel}Gerätefehler",
+        "name": "Ansagen · {channel}Gerätefehler melden",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
@@ -4000,7 +4000,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Schlaf · {channel}Wenn alle schlafen",
+        "name": "Schlaf · {channel}Gerät ausgeschaltet lassen, wenn alle schlafen",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
@@ -4016,7 +4016,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Steuerung · {channel}Sollwert für volle Leistung",
+        "name": "Steuerung · {channel}Maximaler Sollwert je Betriebsart",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"

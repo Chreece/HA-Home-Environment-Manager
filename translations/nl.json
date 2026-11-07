@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Meldingen · Apparaatfouten melden · {channel}",
+        "name": "Meldingen · {channel}Apparaatfouten melden",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Slaap · {channel}Wanneer iedereen slaapt",
+        "name": "Slaap · {channel}Houd het apparaat uit als iedereen slaapt",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Regeling · {channel}Instelpunt voor vol vermogen",
+        "name": "Regeling · {channel}Maximale doelwaarde per modus",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"

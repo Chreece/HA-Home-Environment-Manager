@@ -10,13 +10,13 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[2]
 PREVIOUS = runpy.run_path(str(ROOT / ".github/tests/test_beta108_setpoint_feedback_browser.py"))
 CARD = ROOT / "frontend/air-quality-advisor-card.js"
-SWITCH = "switch.timed_zone_"
+SWITCH = "switch.native_full_output_"
 CONTROLLER = "climate.managed_0_"
-LABELS = {"en": "Timed setpoints (30 s)", "el": "Χρονισμός στόχων (30 s)",
-          "de": "Zeitgesteuerte Sollwerte (30 s)"}
+NAME = runpy.run_path(str(ROOT / "equipment_name_catalog.py"))["native_full_output_label"]
+HELP = runpy.run_path(str(ROOT / "equipment_help.py"))["equipment_configuration_help"]
 
 
-def states_for_test():
+def states_for_test(language="en"):
     base = PREVIOUS["fixture_definitions"]()
     states = {}
     data = deepcopy(base["data"])
@@ -43,8 +43,11 @@ def states_for_test():
         if i < 2:
             states[SWITCH + str(i)] = {"state": "on" if i else "off", "attributes": {
                 "area_id": "room0", "source_device_id": f"hardware{i}",
-                "source_entity_ids": [physical], "timed_setpoint_role": "policy",
-                "timed_setpoint_supported": True}}
+                "source_entity_ids": [physical], "equipment_option_role": "policy",
+                "setting_key": "native_full_output", "native_full_output_role": "policy",
+                "native_full_output_supported": True, "native_full_output_modes": [native_mode],
+                "setting_label": NAME([native_mode], language),
+                "configuration_help": HELP("native_full_output", language, modes=[native_mode])}}
     states["sensor.hem"] = {"state": "ready", "attributes": {"dashboard": data}}
     return states
 
@@ -79,19 +82,21 @@ def run():
             card._renderContent(true);
           };refresh110(states);
         }""", states)
-        options = page.locator('[data-timed-setpoint-switch]')
+        options = page.locator('[data-device-quick-switch8]')
         assert options.count() == 2
-        assert page.locator('summary [data-timed-setpoint-switch]').count() == 0
+        assert page.locator('summary [data-device-quick-switch8]').count() == 0
         def option(i):
-            return page.locator(f'[data-device-fold87="{CONTROLLER}{i}"] [data-timed-setpoint-switch]')
-        for locale, name in LABELS.items():
-            page.evaluate("([s,l])=>refresh110(s,l)", [states, locale])
+            return page.locator(f'[data-device-fold87="{CONTROLLER}{i}"] [data-device-quick-switch8]')
+        for locale in ("en", "el", "de"):
+            localized = states_for_test(locale)
+            page.evaluate("([s,l])=>refresh110(s,l)", [localized, locale])
             for i, on in ((0, "false"), (1, "true")):
                 control = option(i)
                 assert control.count() == 1 and control.is_visible(), (locale, i)
                 assert control.get_attribute("aria-checked") == on
-                assert control.get_attribute("data-timed-setpoint-switch") == SWITCH + str(i)
-                assert name in control.inner_text() or name in (control.get_attribute("aria-label") or ""), (locale, name, control.inner_text())
+                assert control.get_attribute("data-device-quick-switch8") == SWITCH + str(i)
+                name = NAME(["cool" if i == 1 else "heat"], locale)
+                assert control.get_attribute("aria-label") == name, (locale, name, control.get_attribute("aria-label"))
             if shots:
                 page.locator(f'[data-device-fold87="{CONTROLLER}0"]').screenshot(
                     path=str(Path(shots) / f"device-option-{locale}.png"), animations="disabled")
@@ -112,7 +117,7 @@ def run():
         assert option(0).get_attribute("aria-checked") == "true"
         assert option(1).get_attribute("aria-checked") == "false"
         # Revalidate identity at click time rather than trusting a data attribute.
-        option(0).evaluate("(e,id)=>{e.dataset.timedSetpointSwitch=id;e.click();}", SWITCH+"1")
+        option(0).evaluate("(e,id)=>{e.dataset.deviceQuickSwitch8=id;e.click();}", SWITCH+"1")
         assert page.evaluate("calls.length") == 2
         updated[SWITCH+"0"]["state"] = "unavailable"
         page.evaluate("s=>refresh110(s)", updated)

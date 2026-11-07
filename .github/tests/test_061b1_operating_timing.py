@@ -63,7 +63,7 @@ class SettingsManager:
             "areas": ["room"], "climate_rooms": {"room": area},
             model.SETTINGS: {SPEC.identifier: {
                 "control_mode": "pid", "requested_mode": "heat", "preset": "none",
-                "timed_setpoint_sequence": False, **(profile or {}),
+                **(profile or {}),
             }},
         })
         self.plan = {"away": "home", "occupancy": "occupied", "window_safe": True}
@@ -84,8 +84,11 @@ class TimingRuntime(base["NativeRuntime"]):
         self.hass.config_entries = N(async_update_entry=self.update_entry)
 
     @staticmethod
-    def update_entry(entry, *, options):
-        entry.options = deepcopy(options)
+    def update_entry(entry, *, data=None, options=None):
+        if data is not None:
+            entry.data = deepcopy(data)
+        if options is not None:
+            entry.options = deepcopy(options)
 
     @property
     def cfg(self):

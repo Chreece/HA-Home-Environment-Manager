@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Oznámenia · Oznamovať chyby zariadenia · {channel}",
+        "name": "Oznámenia · {channel}Oznamovať chyby zariadenia",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Spánok · {channel}Keď všetci spia",
+        "name": "Spánok · {channel}Ponechať zariadenie vypnuté, keď všetci spia",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Ovládanie · {channel}Žiadaná hodnota pre plný výkon",
+        "name": "Ovládanie · {channel}Maximálna cieľová hodnota podľa režimu",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"

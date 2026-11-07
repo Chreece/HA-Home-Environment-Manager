@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Meddelelser · Annoncer enhedsfejl · {channel}",
+        "name": "Meddelelser · {channel}Annoncer enhedsfejl",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjælp"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Søvn · {channel}Når alle sover",
+        "name": "Søvn · {channel}Hold enheden slukket, når alle sover",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjælp"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Styring · {channel}Setpunkt for fuld effekt",
+        "name": "Styring · {channel}Maksimal målværdi efter tilstand",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjælp"

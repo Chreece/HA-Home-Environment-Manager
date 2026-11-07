@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "הודעות · הודעה על שגיאות מכשיר · {channel}",
+        "name": "הודעות · {channel}הודעה על שגיאות מכשיר",
         "state_attributes": {
           "configuration_help": {
             "name": "עזרה"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "שינה · {channel}כשכולם ישנים",
+        "name": "שינה · {channel}השארת המכשיר כבוי כשכולם ישנים",
         "state_attributes": {
           "configuration_help": {
             "name": "עזרה"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "בקרה · {channel}נקודת יעד להספק מלא",
+        "name": "בקרה · {channel}יעד מרבי לפי מצב",
         "state_attributes": {
           "configuration_help": {
             "name": "עזרה"

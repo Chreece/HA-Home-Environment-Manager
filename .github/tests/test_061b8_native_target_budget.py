@@ -385,27 +385,40 @@ class NativeTargetBudgetTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(r.target_calls()),1,'Read-only recovery does not fabricate or replay a call')
         self.close(r)
 
-    async def test_full_output_disable_preserves_already_committed_timed_off(self):
+    async def test_full_output_disable_preserves_a_pre_upgrade_committed_off(self):
         r=appliance('heat',timed_setpoint_sequence=True)
         await r.evaluate()
         r.report(mode='heat')
         await r.evaluate()
-        self.assertEqual(r.target_calls(),[])
-        await r.evaluate(30)
         self.assertEqual(r.target_calls()[-1]['data'],{'temperature':35.})
+        full_target=deepcopy(r.record['pending'])
         r.report(temperature=35.)
         await r.evaluate()
-        r.sensor('sensor.room_temperature',21.,'temperature','°C')
-        await r.evaluate(90)
-        self.assertTrue(r.record['pending']['stop_target'])
-        self.assertEqual(r.target_calls()[-1]['data'],{'temperature':5.})
-        committed=deepcopy(r.record['native_setpoint_stop'])
+        r.now += 120
+        owned=r.record['power'][r.cap.primary]
+        # This exact old journal is a migration input, never a new b9 dispatch.
+        committed={
+            'version':1,'entity':r.cap.primary,'source_device_id':r.spec.source_device_id,
+            'area':r.spec.area_id,'mode':'heat','temperature':5.,'phase':'waiting',
+            'requested_at':r.now,'sent_at':r.now,'off_not_before':r.now+30.,
+            'owned':True,'owned_since':owned['since'],
+        }
+        old=deepcopy(full_target)
+        old.update(data={'temperature':5.},expected={'attributes':{'temperature':5.}},
+                   stop_target=True,stop_finish=False,stop_sequence_at=r.now,
+                   attempts=1,when=r.now,last_attempt_at=r.now)
+        old.pop(native_target.MARKER,None)
+        old.pop(native_target.FULL_MARKER,None)
+        old['retry_context'].update(mode='off',automatic=False,shutdown=True,profile=None)
+        r.record['pending']=old
+        r.record['native_setpoint_stop']=committed
         await r.async_update(r.spec,{'native_full_output':False})
         self.assertEqual(r.record['native_setpoint_stop'],committed)
-        await r.evaluate(30)
+        await r.evaluate()
         self.assertEqual(r.calls[-1]['data'],{'hvac_mode':'off'})
         self.assertTrue(r.record['pending']['power'])
-        self.assertEqual(len(r.target_calls()),2,'No new full-output or reverse-target write')
+        self.assertEqual(len(r.target_calls()),1,'No reverse-target or fresh full-output write')
+        self.assertEqual(r.record['native_setpoint_stop']['target_journal'],old)
         r.report(mode='off')
         await r.evaluate()
         self.assertFalse(r.record['power'])

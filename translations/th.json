@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "ประกาศ · แจ้งเตือนข้อผิดพลาดของอุปกรณ์ · {channel}",
+        "name": "ประกาศ · {channel}แจ้งเตือนข้อผิดพลาดของอุปกรณ์",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "การนอน · {channel}เมื่อทุกคนกำลังหลับ",
+        "name": "การนอน · {channel}ให้อุปกรณ์ปิดอยู่เมื่อทุกคนหลับ",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "การควบคุม · {channel}ค่าเป้าหมายกำลังเต็ม",
+        "name": "การควบคุม · {channel}ค่าเป้าหมายสูงสุดตามโหมด",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"

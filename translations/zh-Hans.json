@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "播报 · 通报设备错误 · {channel}",
+        "name": "播报 · {channel}通报设备错误",
         "state_attributes": {
           "configuration_help": {
             "name": "帮助"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "睡眠 · {channel}所有人都在睡觉时",
+        "name": "睡眠 · {channel}所有人睡着时保持设备关闭",
         "state_attributes": {
           "configuration_help": {
             "name": "帮助"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "控制 · {channel}满功率设定值",
+        "name": "控制 · {channel}按模式设置最大目标值",
         "state_attributes": {
           "configuration_help": {
             "name": "帮助"

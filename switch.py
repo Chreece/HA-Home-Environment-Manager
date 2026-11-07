@@ -42,10 +42,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
     from . import equipment_model as equipment
     from homeassistant.helpers import entity_registry as er
     from .equipment_feature_registration import (
-        quiet_keys, register_late_capabilities, timed_setpoint_supported, native_full_output_supported,
+        quiet_keys, register_late_capabilities, remove_legacy_timed_controls, native_full_output_supported,
         window_alternative_settings_supported,
     )
     registry = er.async_get(hass)
+    remove_legacy_timed_controls(hass, entry)
 
     def native_feature_switches():
         from .equipment_mode_entities import scoped_fields
@@ -53,10 +54,6 @@ async def async_setup_entry(hass, entry, async_add_entities):
             EquipmentQuietSwitch(manager, spec, key)
             for spec in equipment.specs(manager)
             for key in quiet_keys(manager, registry, spec, platform="switch")
-        ] + [
-            EquipmentTimedSetpointSwitch(manager, spec)
-            for spec in equipment.specs(manager)
-            if timed_setpoint_supported(manager, registry, spec)
         ] + [
             EquipmentNativeFullOutputSwitch(manager, spec)
             for spec in equipment.specs(manager)
@@ -204,6 +201,14 @@ def _device_option_metadata(entity):
     locale = entity._manager.settings.get("language", "auto")
     if locale == "auto":
         locale = getattr(getattr(entity._manager.hass, "config", None), "language", "en")
+    if entity._key == "native_full_output":
+        from .equipment_native_target import configuration_modes
+        from .equipment_name_catalog import native_full_output_label
+        modes = configuration_modes(entity._manager, entity._spec)
+        return {"setting_key": entity._key,
+                "setting_label": native_full_output_label(modes, locale),
+                "native_full_output_modes": list(modes),
+                "equipment_option_role": "policy"}
     full = localized_equipment_name(entity._key, locale)
     label = full.partition(" · ")[2] or full.rstrip(" ·")
     return {"setting_key": entity._key, "setting_label": label,
@@ -286,47 +291,6 @@ class EquipmentErrorAnnouncementSwitch(EquipmentEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs):
         await self._manager.faults.async_set_announcements(self._spec, False)
-
-
-class EquipmentTimedSetpointSwitch(EquipmentEntity, SwitchEntity):
-    """Opt this controller into native setpoint timing; never command its device."""
-    _attr_entity_category = EntityCategory.CONFIG
-    _attr_icon = "mdi:timer-outline"
-
-    def __init__(self, manager, spec):
-        self._equipment_init(manager, spec, "timed_setpoint_sequence")
-
-    @property
-    def available(self):
-        from .equipment_setpoint_sequence import control_supported
-        return bool(self._manager.equipment._ready
-                    and control_supported(self._manager, self._spec, cached=True))
-
-    async def async_added_to_hass(self):
-        await super().async_added_to_hass()
-        self._watch_native_updates()
-
-    @property
-    def is_on(self):
-        return self.controller_settings.get("timed_setpoint_sequence") is True
-
-    @property
-    def extra_state_attributes(self):
-        from .equipment_setpoint_sequence import control_supported, SETPOINT_GRACE_SECONDS
-        return {**super().extra_state_attributes, **_device_option_metadata(self),
-                "timed_setpoint_role": "policy",
-                "timed_setpoint_supported": control_supported(self._manager, self._spec, cached=True),
-                "timed_setpoint_transition_seconds": SETPOINT_GRACE_SECONDS}
-
-    async def async_turn_on(self, **kwargs):
-        from .equipment_setpoint_sequence import control_supported
-        if not control_supported(self._manager, self._spec, cached=True):
-            from homeassistant.exceptions import HomeAssistantError
-            raise HomeAssistantError("Timed setpoints require authorized Automatic/PID heating or cooling with native ON/OFF control")
-        await self._manager.equipment.async_update(self._spec, {"timed_setpoint_sequence": True})
-
-    async def async_turn_off(self, **kwargs):
-        await self._manager.equipment.async_update(self._spec, {"timed_setpoint_sequence": False})
 
 
 class EquipmentNativeFullOutputSwitch(EquipmentEntity, SwitchEntity):

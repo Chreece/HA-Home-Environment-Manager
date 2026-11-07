@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Duyurular · Cihaz hatalarını duyur · {channel}",
+        "name": "Duyurular · {channel}Cihaz hatalarını duyur",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Uyku · {channel}Herkes uyurken",
+        "name": "Uyku · {channel}Herkes uyurken cihazı kapalı tut",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Kontrol · {channel}Tam güç ayar noktası",
+        "name": "Kontrol · {channel}Moda göre en yüksek hedef",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"

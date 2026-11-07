@@ -104,7 +104,7 @@ package.equipment_model=ExtendedModel
 runtime_module=ModuleType('beta73_fixture.equipment_runtime')
 runtime_module.__dict__.update(namespace)
 sys.modules[runtime_module.__name__]=runtime_module
-for helper in ('pid_math','equipment_setpoint_sequence','equipment_pid_safety',
+for helper in ('config_data','pid_math','equipment_setpoint_sequence','equipment_pid_safety',
                'equipment_native_target'):
     helper_spec=importlib.util.spec_from_file_location(
         f'beta73_fixture.{helper}',ROOT/f'{helper}.py')
@@ -247,20 +247,11 @@ async def run():
     assert await r._power(
         spec,r.manager.cap,'off',automatic=False,shutdown=True
     )
-    assert r.actual_commands[-1][0]=='set_temperature'
-    assert r.actual_commands[-1][1]=={'temperature':5.}
-    assert r.record['power']['climate.heater']['since']==NOW-750
-    assert r.record['pending']['expected']=={'attributes':{'temperature':5.}}
-    r.now=NOW+29.999
-    assert await sequence.progress_stop(r,spec)
-    assert len(r.actual_commands)==1
-    r.now=NOW+30.
-    assert await sequence.progress_stop(r,spec)
     assert r.actual_commands[-1][0]=='set_hvac_mode'
     assert r.actual_commands[-1][1]=={'hvac_mode':'off'}
-    assert len(r.actual_commands)==2
+    assert len(r.actual_commands)==1
     assert r.record['power']['climate.heater']['since']==NOW-750
-    assert r.record['native_setpoint_stop']['target_confirmed'] is False
+    assert 'native_setpoint_stop' not in r.record
     assert r.record['pending']['expected']=={'state':'off'}
 
     # A persisted OFF observation can be stale after an acknowledged
@@ -394,7 +385,7 @@ async def run():
     assert 'if not await self._verify_restart_power(spec)' in src
     assert 'await self._observe_native_running(spec, cap, state)' in src
     assert 'native_power_observations' in src
-    print('PASS Beta73: persisted heat runtime survives fake HA restart timestamp; reverse target then 30s eligible OFF without false ACK; real short minimum-ON remains held; verified automatic ownership; no power commands during verification; uncertainty fail-closed; durable real OFF->ON transition; no repeated Store writes')
+    print('PASS Beta73: persisted heat runtime survives fake HA restart timestamp; direct eligible OFF without false ACK; real short minimum-ON remains held; verified automatic ownership; no power commands during verification; uncertainty fail-closed; durable real OFF->ON transition; no repeated Store writes')
 
 
 asyncio.run(run())

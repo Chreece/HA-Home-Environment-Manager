@@ -538,6 +538,7 @@ def controlled_sleep_presence(
 
 def device_permission(device: Mapping, room_status: str, home_status: str,
                       sleeping: bool | None, *,
+                      household_sleeping: bool = False,
                       preparing_arrival: bool = False) -> tuple[str, str]:
     """Prioritize explicit sleep pause over occupancy-triggered power OFF.
 
@@ -546,6 +547,14 @@ def device_permission(device: Mapping, room_status: str, home_status: str,
     """
     if device.get("auto_control") is not True:
         return "held", "device_auto_control_disabled"
+    # This device-wide preference promises OFF while everybody is asleep,
+    # independently of its room's Normal / Sleep targets policy. Only fresh,
+    # positive household evidence may activate it; a sleeping local room or
+    # an unknown/empty home cannot stand in for all occupants being asleep.
+    if (device.get("sleep_when_everyone_asleep") is True
+            and household_sleeping is True and sleeping is True
+            and home_status != "away"):
+        return "held", "sleep_room_control_paused"
     sleep = device.get("sleep_behavior", "normal")
     if sleep == "pause":
         if sleeping is True:
@@ -609,7 +618,7 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
     """
     global_settings = plan.get("global_presence")
     area_ids = plan.get("known_presence_areas")
-    def permission(room, home, sleeping):
+    def permission(room, home, sleeping, sleep_evidence):
         from .arrival_preparation import live_preparation, room_eligible
         preparing, problem = live_preparation(
             hass, plan, home,
@@ -619,6 +628,8 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
         if problem:
             return "held", problem
         return device_permission(device, room, home, sleeping,
+                                 household_sleeping=(sleeping is True and
+                                     sleep_evidence == "all_occupied_rooms_sleeping"),
                                  preparing_arrival=preparing and device.get(
                                      "_arrival_preparation_presence_override") is True)
     if isinstance(global_settings, Mapping) and global_settings:
@@ -633,13 +644,13 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
         zone = getattr(getattr(hass, "config", None), "time_zone", None) or "UTC"
         now = _time()
         local_sleeping, local_reason = scheduled_sleep(room_config, now, zone)
-        sleeping, _ = controlled_sleep_presence(
+        sleeping, sleep_evidence = controlled_sleep_presence(
             hass, area, global_settings, known or {area},
             home_status=home, local_sleeping=local_sleeping,
             local_reason=local_reason, room_status=room,
             inherit_household=device.get("sleep_when_everyone_asleep") is True, now=now,
         )
-        return permission(room,home,sleeping)
+        return permission(room,home,sleeping,sleep_evidence)
     home=plan.get("away","unknown")
     trackers=room_config.get("away_entities",plan.get("tracker_entities"))
     if isinstance(trackers,list) and trackers:
@@ -656,9 +667,9 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
     zone = getattr(getattr(hass, "config", None), "time_zone", None) or "UTC"
     now = _time()
     local_sleeping, local_reason = scheduled_sleep(room_config, now, zone)
-    sleeping, _ = controlled_sleep_presence(
+    sleeping, sleep_evidence = controlled_sleep_presence(
         hass, area, {}, {area}, home_status=home,
         local_sleeping=local_sleeping, local_reason=local_reason, room_status=room,
         inherit_household=device.get("sleep_when_everyone_asleep") is True, now=now,
     )
-    return permission(room,home,sleeping)
+    return permission(room,home,sleeping,sleep_evidence)

@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Anunțuri · Anunță erorile dispozitivului · {channel}",
+        "name": "Anunțuri · {channel}Anunță erorile dispozitivului",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Somn · {channel}Când toată lumea doarme",
+        "name": "Somn · {channel}Menține dispozitivul oprit când toți dorm",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Control · {channel}Valoare țintă pentru putere maximă",
+        "name": "Control · {channel}Valoare țintă maximă după mod",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"

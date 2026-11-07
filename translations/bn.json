@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "ঘোষণা · ডিভাইসের ত্রুটির ঘোষণা · {channel}",
+        "name": "ঘোষণা · {channel}ডিভাইসের ত্রুটি ঘোষণা করুন",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "ঘুম · {channel}সবাই যখন ঘুমাচ্ছেন",
+        "name": "ঘুম · {channel}সবাই ঘুমালে ডিভাইস বন্ধ রাখুন",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "নিয়ন্ত্রণ · {channel}পূর্ণ ক্ষমতার লক্ষ্য মান",
+        "name": "নিয়ন্ত্রণ · {channel}মোড অনুযায়ী সর্বোচ্চ লক্ষ্য",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"

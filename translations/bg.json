@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Известия · Известяване за грешки на устройството · {channel}",
+        "name": "Известия · {channel}Известяване за грешки на устройството",
         "state_attributes": {
           "configuration_help": {
             "name": "Помощ"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Сън · {channel}Когато всички спят",
+        "name": "Сън · {channel}Дръжте устройството изключено, когато всички спят",
         "state_attributes": {
           "configuration_help": {
             "name": "Помощ"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Управление · {channel}Задание за пълна мощност",
+        "name": "Управление · {channel}Максимална зададена стойност по режим",
         "state_attributes": {
           "configuration_help": {
             "name": "Помощ"

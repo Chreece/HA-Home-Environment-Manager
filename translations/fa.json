@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "اعلان‌ها · اعلام خطاهای دستگاه · {channel}",
+        "name": "اعلان‌ها · {channel}اعلام خطاهای دستگاه",
         "state_attributes": {
           "configuration_help": {
             "name": "راهنما"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "خواب · {channel}وقتی همه خواب هستند",
+        "name": "خواب · {channel}خاموش نگه‌داشتن دستگاه وقتی همه خواب‌اند",
         "state_attributes": {
           "configuration_help": {
             "name": "راهنما"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "کنترل · {channel}نقطهٔ تنظیم توان کامل",
+        "name": "کنترل · {channel}بیشترین مقدار هدف بر اساس حالت",
         "state_attributes": {
           "configuration_help": {
             "name": "راهنما"

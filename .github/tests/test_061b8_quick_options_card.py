@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CARD = ROOT / "frontend/air-quality-advisor-card.js"
 BASE = runpy.run_path(str(ROOT / ".github/tests/test_061b7_mode_settings_card.py"))
 NAME = BASE["EQUIPMENT_NAME"]
+MAXIMUM_NAME = runpy.run_path(str(ROOT / "equipment_name_catalog.py"))["native_full_output_label"]
 HELP = runpy.run_path(str(ROOT / "equipment_help.py"))["equipment_configuration_help"]
 NOW = 1800000000.
 STATES = {"en": {"on": "On", "off": "Off"},
@@ -76,28 +77,30 @@ def fixture(language="en"):
     roles = {"pause_on_window_open": {"window_pause_role": "policy"},
              "announce_device_errors": {"device_fault_role": "announce", "native_error": {"status": "ok"}},
              "announce_before_start": {"window_announcement_role": "policy"},
-             "native_full_output": {"native_full_output_role": "policy", "native_full_output_supported": True},
-             "timed_setpoint_sequence": {"timed_setpoint_role": "policy", "timed_setpoint_supported": True}}
+             "native_full_output": {"native_full_output_role": "policy", "native_full_output_supported": True}}
     ids = {"pause_on_window_open": "switch.window_", "announce_device_errors": "switch.errors_",
-           "announce_before_start": "switch.airing_", "timed_setpoint_sequence": "switch.timed_zone_"}
+           "announce_before_start": "switch.airing_"}
     states.pop("switch.shared_window", None)
     for device in (0, 1, 2):
         source = fan if device == 2 else f"climate.physical_0_{device}"
         keys = ["pause_on_window_open", "announce_device_errors", "sleep_when_everyone_asleep"]
         keys += ["sensor_verified"] if device == 2 else [
-            "announce_before_start", "timed_setpoint_sequence", "native_full_output", "quiet_sleep", "quiet_occupied"]
+            "announce_before_start", "native_full_output", "quiet_sleep", "quiet_occupied"]
         for key in keys:
+            modes = ["heat", "cool"] if device < 2 else []
             full = NAME(key, language)
-            label = full.partition(" · ")[2] or full.rstrip(" ·")
+            label = (MAXIMUM_NAME(modes, language) if key == "native_full_output"
+                     else full.partition(" · ")[2] or full.rstrip(" ·"))
             entity = ids.get(key, f"switch.{key}_") + str(device)
             states[entity] = {"state": "on" if key in ("pause_on_window_open", "announce_device_errors", "quiet_sleep", "native_full_output") else "off",
                 "attributes": {"area_id": "room0", "source_device_id": f"hardware{device}",
                     "source_entity_ids": [source], "equipment_option_role": "policy",
                     "setting_key": key, "setting_label": label,
-                    "configuration_help": HELP(key, language), **roles.get(key, {})}}
+                    "configuration_help": HELP(key, language, modes=modes), **roles.get(key, {}),
+                    **({"native_full_output_modes": modes} if key == "native_full_output" else {})}}
         if device < 2:
             states[f"number.airing_{device}"]["attributes"]["configuration_help"] = HELP("window_open_wait_minutes", language)
-    # The unsupported flag stays registered, but does not create a timer option.
+    # A legacy timed entity may survive an upgrade, but never creates a control.
     states["switch.unsupported_timer"] = {"state": "on", "attributes": {
         **states["switch.sensor_verified_2"]["attributes"],
         "setting_key": "timed_setpoint_sequence", "timed_setpoint_role": "policy",
@@ -137,9 +140,11 @@ def target_fixture(language="en", service="set_humidity"):
     if humidity:
         native["attributes"].update(min_humidity=30, max_humidity=90, current_humidity=52)
         native["attributes"].pop("temperature", None)
-        states["switch.timed_zone_0"]["attributes"]["timed_setpoint_supported"] = False
     else:
         native["attributes"]["temperature_unit"] = "°C"
+    states["switch.native_full_output_0"]["attributes"].update(
+        native_full_output_modes=[mode], setting_label=MAXIMUM_NAME([mode], language),
+        configuration_help=HELP("native_full_output", language, modes=[mode]))
     managed = states["climate.managed_0_0"]
     managed["state"] = mode
     managed["attributes"].update(control_mode="pid", selected_operating_mode=mode,
@@ -190,11 +195,11 @@ function control(card,device,key,forged={}){
     ...(option?.attribute?{[option.attribute]:option.id}:{}),...forged};
   return {disabled:false,getAttribute:name=>attrs[name]??null};
 }
-test('all shared options form one row; scoped flags and unsupported timer never duplicate',()=>{
+test('all shared options form one row; scoped flags and retired timing never duplicate',()=>{
   const card=setup(),items=entries(card),room=card._hass.states['sensor.hem'].attributes.dashboard.rooms[0];
-  assert.deepEqual(plain(items.map(entry=>card._deviceQuickOptions8(entry).length)),[6,8,4]);
+  assert.deepEqual(plain(items.map(entry=>card._deviceQuickOptions8(entry).length)),[5,7,4]);
   assert.deepEqual(plain(card._deviceQuickOptions8(items[0]).map(item=>item.key)),[
-    'pause_on_window_open','announce_device_errors','announce_before_start','timed_setpoint_sequence','sleep_when_everyone_asleep','native_full_output']);
+    'pause_on_window_open','announce_device_errors','announce_before_start','native_full_output','sleep_when_everyone_asleep']);
   assert.ok(card._deviceQuickOptions8(items[2]).some(item=>item.key==='sensor_verified'));
   assert.ok(!card._deviceQuickOptions8(items[2]).some(item=>item.key==='native_full_output'));
   const html=card._controllerPanel(room);
@@ -202,7 +207,7 @@ test('all shared options form one row; scoped flags and unsupported timer never 
   for(const attribute of ['data-window-policy-switch','data-device-error-announce'])
     assert.equal((html.match(new RegExp(attribute+'=','g'))||[]).length,3);
   assert.equal((html.match(/data-window-announce-switch=/g)||[]).length,2);
-  assert.equal((html.match(/data-timed-setpoint-switch=/g)||[]).length,2);
+  assert.equal((html.match(/data-timed-setpoint-switch=/g)||[]).length,0);
   assert.ok(!html.includes('class="hem-window-policy66"'));
   assert.ok(!html.includes('class="hem-device-error-toggle"'));
   assert.ok(html.includes('data-mode-setting-entity="switch.mode_quiet_sleep"'));
@@ -230,26 +235,25 @@ test('every shared control calls only its exact configuration switch',async()=>{
     await card._submitDeviceQuick8(control(card,device,option.key));
     assert.deepEqual(plain(card.calls.at(-1)),['switch',option.state.state==='on'?'turn_off':'turn_on',{entity_id:option.id}]);
   }
-  assert.equal(card.calls.length,18);
+  assert.equal(card.calls.length,16);
   assert.ok(card.calls.every(([domain])=>domain==='switch'));
 });
 test('forged device/key/entity, source replacement, duplicates and stale applicability fail closed',async()=>{
-  const card=setup(),key='timed_setpoint_sequence';
+  const card=setup(),key='native_full_output';
   for(const forged of [
     {'data-managed-controller':'climate.managed_0_1'},
-    {'data-device-quick-switch8':'switch.timed_zone_1','data-timed-setpoint-switch':'switch.timed_zone_1'},
+    {'data-device-quick-switch8':'switch.native_full_output_1'},
     {'data-device-quick-key8':'announce_before_start'},
-    {'data-timed-setpoint-switch':'switch.timed_zone_1'},
   ])await card._submitDeviceQuick8(control(card,0,key,forged));
   const saved=control(card,0,key),states=clone(card._hass.states),before=card._controllerSignature();
-  states['switch.timed_zone_0'].attributes.timed_setpoint_supported=false;refresh(card,states);
+  states['switch.native_full_output_0'].attributes.native_full_output_supported=false;refresh(card,states);
   assert.notEqual(card._controllerSignature(),before);
   await card._submitDeviceQuick8(saved);
   assert.ok(!card._deviceQuickOptions8(entries(card)[0]).some(item=>item.key===key));
-  states['switch.timed_zone_0'].attributes.timed_setpoint_supported=true;
-  states['switch.timed_zone_0'].attributes.source_device_id='replacement';refresh(card,states);
+  states['switch.native_full_output_0'].attributes.native_full_output_supported=true;
+  states['switch.native_full_output_0'].attributes.source_device_id='replacement';refresh(card,states);
   await card._submitDeviceQuick8(saved);
-  assert.equal(entries(card)[0].timedSetpointId,null);
+  assert.ok(!card._deviceQuickOptions8(entries(card)[0]).some(item=>item.key===key));
   states['switch.duplicate']=clone(states['switch.sleep_when_everyone_asleep_0']);refresh(card,states);
   assert.ok(!card._deviceQuickOptions8(entries(card)[0]).some(item=>item.key==='sleep_when_everyone_asleep'));
   states['switch.duplicate_window']=clone(states['switch.window_0']);refresh(card,states);
@@ -263,11 +267,10 @@ test('full-output preference requires current native support and cannot fall thr
   assert.ok(option.help.includes('ON') && option.help.includes('OFF'));
   const before=card._controllerSignature();
   states['switch.native_full_output_0'].attributes.native_full_output_supported=false;
-  states['switch.timed_zone_0'].attributes.timed_setpoint_supported=false;
   refresh(card,states);assert.notEqual(card._controllerSignature(),before);
   await card._submitDeviceQuick8(saved);assert.equal(card.calls.length,0);
   assert.ok(!card._deviceQuickOptions8(entries(card)[0]).some(item=>
-    ['native_full_output','timed_setpoint_sequence'].includes(item.key)));
+    item.key==='native_full_output'));
   states['switch.native_full_output_0'].attributes.native_full_output_supported=true;
   states['switch.native_full_output_0'].state='off';refresh(card,states);
   await card._submitDeviceQuick8(control(card,0,'native_full_output'));
@@ -449,7 +452,7 @@ def browser_checks():
                 return page.locator('.hem-floating-info87')
 
             def assert_geometry(language, width):
-                for index, expected_count in ((0, 6), (1, 8), (2, 4)):
+                for index, expected_count in ((0, 5), (1, 7), (2, 4)):
                     expect(row(index)).to_have_count(1)
                     expect(row(index).locator('.hem-device-quick-option8')).to_have_count(expected_count)
                     geometry = row(index).evaluate("""element=>{
@@ -490,15 +493,16 @@ def browser_checks():
                         for index in (0, 1):
                             device(index).screenshot(path=str(shots / f"061b8-quick-options-{language}-{width}-device{index}.png"), animations="disabled")
                     for key in ('pause_on_window_open', 'announce_device_errors', 'announce_before_start',
-                                'timed_setpoint_sequence', 'sleep_when_everyone_asleep', 'native_full_output'):
+                                'sleep_when_everyone_asleep', 'native_full_output'):
                         pop = open_help(0, key)
                         entity = state(0, key).get_attribute('data-device-quick-switch8')
                         expected = states[entity]['attributes']['configuration_help']
-                        assert expected in pop.inner_text(), (language, key, pop.inner_text())
+                        paragraphs = pop.locator('.hem-help-text116').all_text_contents()
+                        assert expected.split('\n\n') == paragraphs[:len(expected.split('\n\n'))], (language, key, paragraphs)
                         bounds = pop.evaluate("e=>({left:e.getBoundingClientRect().left,right:e.getBoundingClientRect().right,client:e.clientWidth,scroll:e.scrollWidth})")
                         assert bounds['left'] >= 0 and bounds['right'] <= width and bounds['scroll'] <= bounds['client'] + 1, (language, width, key, bounds)
                         assert page.evaluate('calls.length') == 0
-                        if shots and key == 'timed_setpoint_sequence':
+                        if shots and key == 'native_full_output':
                             page.screenshot(path=str(shots / f"061b8-quick-help-{language}-{width}.png"), full_page=False)
                         # Second click is a close, including a live state refresh.
                         page.evaluate("([s,l])=>refresh8(s,l)", [states, language])
@@ -525,7 +529,7 @@ def browser_checks():
             expect(page.locator('.hem-floating-info87')).to_have_count(0)
             assert page.evaluate('calls.length') == 0
 
-            # All 18 states are real independent toggles. No native climate/fan
+            # All 16 states are real independent toggles. No native climate/fan
             # service and no neighbouring controller's flag can be addressed.
             expected_calls = []
             for index in (0, 1, 2):
@@ -558,16 +562,16 @@ def browser_checks():
             assert help_icon(0, 'announce_before_start').evaluate('e=>e===e.getRootNode().activeElement')
             assert page.evaluate('card._focusedEditor===null'), 'Dismissed help cannot retain an editor lock'
 
-            forged = state(0, 'timed_setpoint_sequence')
-            forged.evaluate("e=>{e.dataset.deviceQuickSwitch8='switch.timed_zone_1';e.dataset.timedSetpointSwitch='switch.timed_zone_1';e.click();}")
+            forged = state(0, 'native_full_output')
+            forged.evaluate("e=>{e.dataset.deviceQuickSwitch8='switch.native_full_output_1';e.click();}")
             assert page.evaluate('calls.length') == len(expected_calls)
             page.evaluate("s=>refresh8(s)", states)
-            open_help(0, 'timed_setpoint_sequence')
-            states['switch.timed_zone_0']['attributes']['timed_setpoint_supported'] = False
+            open_help(0, 'native_full_output')
+            states['switch.native_full_output_0']['attributes']['native_full_output_supported'] = False
             page.evaluate("s=>refresh8(s)", states)
-            expect(chip(0, 'timed_setpoint_sequence')).to_have_count(0)
+            expect(chip(0, 'native_full_output')).to_have_count(0)
             expect(page.locator('.hem-floating-info87')).to_have_count(0)
-            assert state(1, 'timed_setpoint_sequence').is_enabled()
+            assert state(1, 'native_full_output').is_enabled()
             states['switch.errors_0']['state'] = 'unavailable'
             page.evaluate("s=>refresh8(s)", states)
             assert state(0, 'announce_device_errors').is_disabled()
@@ -575,9 +579,10 @@ def browser_checks():
             open_help(0, 'announce_device_errors')
             close_help()
 
-            # Current capability metadata controls both target options. An
-            # unsupported retained full-output switch cannot send a write.
-            states['switch.native_full_output_0']['attributes']['native_full_output_supported'] = False
+            # A retained support flag without any qualified native modes is
+            # also insufficient to show the maximum-target control.
+            states['switch.native_full_output_0']['attributes'].update(
+                native_full_output_supported=True, native_full_output_modes=[])
             page.evaluate("s=>refresh8(s)", states)
             expect(chip(0, 'native_full_output')).to_have_count(0)
             assert state(1, 'native_full_output').is_enabled()

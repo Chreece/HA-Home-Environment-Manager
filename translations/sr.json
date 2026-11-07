@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Обавештења · Пријављуј грешке уређаја · {channel}",
+        "name": "Обавештења · {channel}Пријављуј грешке уређаја",
         "state_attributes": {
           "configuration_help": {
             "name": "Помоћ"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Спавање · {channel}Када сви спавају",
+        "name": "Спавање · {channel}Држи уређај искљученим када сви спавају",
         "state_attributes": {
           "configuration_help": {
             "name": "Помоћ"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Контрола · {channel}Задата вредност за пуну снагу",
+        "name": "Контрола · {channel}Максимална циљна вредност по режиму",
         "state_attributes": {
           "configuration_help": {
             "name": "Помоћ"

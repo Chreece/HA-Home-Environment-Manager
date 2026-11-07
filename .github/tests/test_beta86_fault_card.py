@@ -87,7 +87,7 @@ with sync_playwright() as p:
         assert value in error.inner_text(),(value,error.inner_text())
     assert "sensor.other_device_error" not in error.inner_text()
     announcement=page.locator('[data-device-error-announce]')
-    assert_announcement(page, "Announce errors", "on")
+    assert_announcement(page, "Announce device errors", "on")
     assert page.evaluate("calls.length")==0
     source=page.locator('[data-open-native-error="sensor.comfee_error_code"]')
     source.click()
@@ -118,7 +118,7 @@ with sync_playwright() as p:
        card._hass={...card._hass,states:copy};draw();
     }""")
     assert page.locator('.hem-device-error').count()==0
-    assert_announcement(page, "Announce errors", "off")
+    assert_announcement(page, "Announce device errors", "off")
     page.locator('[data-device-error-announce]').click()
     page.wait_for_timeout(50)
     assert page.evaluate("calls")[-1]==[
@@ -141,9 +141,9 @@ with sync_playwright() as p:
     assert "Unavailable" in page.locator('.hem-device-error').inner_text()
 
     for locale,label in [
-        ("el","Αναγγελία σφαλμάτων"),
-        ("de","Fehler ansagen"),
-        ("en","Announce errors"),
+        ("el","Ανακοίνωση σφαλμάτων συσκευής"),
+        ("de","Gerätefehler melden"),
+        ("en","Announce device errors"),
     ]:
         for state in ("on", "off"):
             page.evaluate("""({locale,state})=>{

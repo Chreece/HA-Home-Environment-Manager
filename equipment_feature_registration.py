@@ -60,16 +60,19 @@ def pid_calibration_supported(manager: Any, registry: Any, spec: Any,
                     for entity in spec.source_entities))
 
 
-def timed_setpoint_supported(manager: Any, registry: Any, spec: Any) -> bool:
-    """Register real thermal capability independently of current applicability.
-
-    Existing/Manual -> Automatic/PID can make the same entity usable on the
-    next controller update. A retained registry entry is identity continuity,
-    never evidence of capability or power permission; availability checks both.
-    """
-    from .equipment_setpoint_sequence import configuration_supported
-    return (configuration_supported(manager, spec)
-            or registered_control(registry, "switch", spec, "timed_setpoint_sequence"))
+def remove_legacy_timed_controls(hass: Any, entry: Any) -> None:
+    """Remove only this entry's retired timed-target switches from HA."""
+    registry = er.async_get(hass)
+    entries_for_entry = getattr(er, "async_entries_for_config_entry", None)
+    remove = getattr(registry, "async_remove", None)
+    if not callable(entries_for_entry) or not callable(remove):
+        return
+    for item in tuple(entries_for_entry(registry, entry.entry_id)):
+        if (getattr(item, "platform", None) == DOMAIN
+                and str(getattr(item, "entity_id", "")).startswith("switch.")
+                and str(getattr(item, "unique_id", "")).endswith("_timed_setpoint_sequence")
+                and getattr(item, "config_entry_id", None) == entry.entry_id):
+            remove(item.entity_id)
 
 
 def native_full_output_supported(manager: Any, registry: Any, spec: Any) -> bool:

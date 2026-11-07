@@ -233,22 +233,22 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
                 await r.evaluate(.001)
                 self.assertEqual(calls(r), [off(r)], r.statuses)
 
-    async def test_opted_in_stop_still_prepares_opposite_target_then_waits_30_seconds(self):
+    async def test_old_timing_preference_cannot_delay_a_satisfied_target_stop(self):
         for kind in ("heat", "cool"):
             with self.subTest(kind=kind), endpoint(kind, timed=True) as r:
                 r.own()
                 r.seed_residual()
                 r.measurement = r.goal
                 await r.evaluate()
-                reverse = ("set_temperature", {"temperature": 5. if r.increasing else 30.})
-                self.assertEqual(calls(r), [reverse], r.statuses)
+                self.assertEqual(calls(r), [off(r)], r.statuses)
                 self.assert_no_residual(r)
-                self.assertIn("native_setpoint_stop", r.record)
+                self.assertNotIn("native_setpoint_stop", r.record)
+                self.assertEqual(r.record["pending"]["expected"], {"state": "off"})
                 await r.evaluate(29.999)
-                self.assertEqual(calls(r), [reverse])
+                self.assertEqual(calls(r), [off(r)])
                 await r.evaluate(.001)
-                self.assertEqual(calls(r), [reverse, off(r)], r.statuses)
-                self.assertEqual(r.call_times[-1] - r.call_times[0], 30.)
+                self.assertEqual(calls(r), [off(r)], r.statuses)
+                self.assertIn(r.primary, r.record["power"], "Only native OFF feedback ends ownership")
 
     async def test_lowered_heat_or_raised_cool_target_cancels_existing_cycle(self):
         for kind in ("heat", "cool"):

@@ -1,48 +1,51 @@
-"""Timed native setpoints around a binary heating/cooling power cycle.
+"""Native command retry safety and migration of retired timed-target journals.
 
-The native mode remains the power acknowledgement. A temperature write never
-proves that an appliance is OFF. A committed stop owns only the right to finish
-that same OFF; it cannot adopt a running device or authorize another ON.
+No new timed sequence or reverse target can be created. A saved shutdown may
+only finish its already authorized OFF, with current identity and dwell checks.
+The shared helpers retain ordinary ACK, retry, and native-command evidence.
 """
 from __future__ import annotations
 
 import asyncio
-import math
 from collections.abc import Mapping
 from copy import deepcopy
 
 from .pid_math import finite
 
-SETPOINT_GRACE_SECONDS = 30.0
-OPTION = "timed_setpoint_sequence"
+LEGACY_OPTION = "timed_setpoint_sequence"
 _RECOVERABLE_PAUSES = frozenset((
     None, "restart_reconciliation_required", "physical_acknowledgement_missing",
     "native_command_failed_or_uncertain", "native_retry_intent_uncertain",
 ))
 
 
-def enabled(settings) -> bool:
-    """Old profiles and non-boolean values never opt a device in."""
-    return settings.get(OPTION) is True
-
-
-def _native_supported(cap, attributes, mode=None) -> bool:
-    """Require the real thermal setpoint and OFF capability, without defaults."""
+def remove_legacy_settings(manager) -> bool:
+    """Delete the retired preference, including saved inactive mode profiles."""
     from . import equipment_model as model
-    if (cap is None or cap.domain != "climate"
-            or cap.primary.partition(".")[0] != "climate"
-            or not getattr(cap, "native_temperature_target", cap.temperature)
-            or "off" not in cap.modes or not set(cap.modes) & {"heat", "cool"}
-            or mode is not None and (mode not in ("heat", "cool") or mode not in cap.modes)
-            or not isinstance(attributes, Mapping)):
-        return False
-    try:
-        flags = int(attributes.get("supported_features", 0))
-    except (TypeError, ValueError, OverflowError):
-        return False
-    low = finite(attributes.get("min_temp"), -30, 140)
-    high = finite(attributes.get("max_temp"), -29, 150)
-    return bool(flags & model.TEMP and low is not None and high is not None and low < high)
+    from .config_data import mutable_copy
+    updates = {}
+    for name in ("data", "options"):
+        original = getattr(manager.entry, name, {})
+        if not isinstance(original, Mapping):
+            continue
+        copied = mutable_copy(original)
+        profiles = copied.get(model.SETTINGS)
+        if not isinstance(profiles, dict):
+            continue
+        for profile in profiles.values():
+            if not isinstance(profile, dict):
+                continue
+            profile.pop(LEGACY_OPTION, None)
+            modes = profile.get("mode_settings")
+            if isinstance(modes, dict):
+                for mode in modes.values():
+                    if isinstance(mode, dict):
+                        mode.pop(LEGACY_OPTION, None)
+        if copied != original:
+            updates[name] = copied
+    if updates:
+        manager.hass.config_entries.async_update_entry(manager.entry, **updates)
+    return bool(updates)
 
 
 def _configuration_evidence(manager, spec):
@@ -58,12 +61,6 @@ def _configuration_evidence(manager, spec):
     baseline = record.get("baseline", {}).get(cap.primary) if isinstance(record, dict) else None
     attributes = baseline.get("attributes", {}) if isinstance(baseline, dict) else {}
     return cap, attributes
-
-
-def configuration_supported(manager, spec) -> bool:
-    """Register a capable device's editor before its control method is enabled."""
-    cap, attributes = _configuration_evidence(manager, spec)
-    return _native_supported(cap, attributes)
 
 
 def _direction(manager, spec, cfg, cap, state):
@@ -84,54 +81,6 @@ def _direction(manager, spec, cfg, cap, state):
     return next(iter(modes)) if len(modes) == 1 else None
 
 
-def control_supported(manager, spec, *, cached=False) -> bool:
-    """Offer the preference only for authorized automatic binary HEAT/COOL."""
-    from . import equipment_model as model
-    cfg = model.settings(manager, spec)
-    if cfg.get("control_mode") not in ("automatic", "pid") or cfg.get("native_full_output", True) is not True:
-        return False
-    if cached:
-        cap, attributes = _configuration_evidence(manager, spec)
-    else:
-        cap = model.capabilities(manager, spec)
-        state = manager.hass.states.get(cap.primary) if cap is not None else None
-        attributes = state.attributes if state is not None else {}
-        if not model.sources_available(manager, spec):
-            return False
-    if cap is None or cap.primary not in spec.source_entities:
-        return False
-    state = manager.hass.states.get(cap.primary)
-    mode = _direction(manager, spec, cfg, cap, state)
-    return bool(mode in ("heat", "cool") and _native_supported(cap, attributes, mode)
-                and model.permission(manager, spec, cap)[1])
-
-
-def enabled_for(runtime, spec, cap, state=None, *, stopping=False) -> bool:
-    """A saved flag never grants power or extends timing to unsupported outputs.
-
-    A previously owned thermal output can finish its guarded shutdown after
-    an explicit Off request or retirement. This exception cannot authorize
-    another ON, and the existing shutdown checks still guard every dispatch.
-    """
-    from . import equipment_model as model
-    cfg = model.settings(runtime.manager, spec)
-    if (not enabled(cfg) or cfg.get("native_full_output", True) is not True
-            or cap is None or cap.primary not in spec.source_entities):
-        return False
-    state = state if state is not None else runtime.hass.states.get(cap.primary)
-    if state is None or state.state not in ("heat", "cool"):
-        return False
-    if not _native_supported(cap, state.attributes, state.state):
-        return False
-    if stopping and isinstance(runtime._record(spec).get("power", {}).get(cap.primary), dict):
-        return True
-    if cfg.get("control_mode") not in ("automatic", "pid"):
-        return False
-    mode = _direction(runtime.manager, spec, cfg, cap, state)
-    return bool(mode in ("heat", "cool") and _native_supported(cap, state.attributes, mode)
-                and model.permission(runtime.manager, spec, cap)[1])
-
-
 def retry_settings_match(saved, current) -> bool:
     """Recheck independent preferences live; original command authority must match.
 
@@ -145,7 +94,7 @@ def retry_settings_match(saved, current) -> bool:
     # profile, and timing checks. They confer no control authority. Profiles
     # saved before these switches were introduced remain usable.
     independent = {
-        OPTION, "native_full_output", "sleep_when_everyone_asleep", "pause_on_window_open",
+        "timed_setpoint_sequence", "native_full_output", "sleep_when_everyone_asleep", "pause_on_window_open",
         "announce_before_start", "window_open_timeout_minutes",
     }
     previous = {k: v for k, v in saved.items() if k not in independent}
@@ -215,13 +164,11 @@ def pending_shutdown_reason(runtime, spec, cap, pending):
         if runtime._stop_policy_verified(spec, cap, reason):
             return reason
     if isinstance(owned, dict):
-        state = runtime.hass.states.get(cap.primary)
         since = finite(owned.get("since"), 0, runtime.clock())
         minimum = finite(owned.get("min_on"), 0, 1e13)
         maximum = finite(owned.get("max_on"), 0, 1e13)
-        lead = SETPOINT_GRACE_SECONDS if enabled_for(runtime, spec, cap, state, stopping=True) else 0
         if (None not in (since, minimum, maximum)
-                and runtime.clock() - since >= max(minimum, maximum - lead)):
+                and runtime.clock() - since >= max(minimum, maximum)):
             return "maximum_on"
     return None
 
@@ -525,7 +472,6 @@ async def native_dispatch_failed(runtime, spec, pending) -> None:
     wake_at(runtime, spec, pending["last_attempt_at"] + 60)
 
 
-
 def wake_at(runtime, spec, deadline: float) -> None:
     """Schedule an ordinary locked evaluation, never an actuator callback."""
     if not callable(getattr(runtime, "schedule", None)):
@@ -566,77 +512,6 @@ def cancel_wakeups(runtime) -> None:
     getattr(runtime, "_setpoint_rerun", set()).clear()
 
 
-def _wait(runtime, spec, status, deadline, **details):
-    runtime._status(
-        spec, status,
-        setpoint_wait_remaining_seconds=math.ceil(max(0, deadline - runtime.clock())),
-        setpoint_wait_until=deadline,
-        **details,
-    )
-    wake_at(runtime, spec, deadline)
-
-
-async def startup_ready(runtime, spec, cap, state, *, stopping=False) -> bool:
-    """Wait once per observed native ON of an opted-in binary thermal output.
-
-    A commanded ON gets its durable timestamp only when the native mode ACKs.
-    Repeated target changes and an HA restart do not restart a completed grace.
-    """
-    if state is None or state.state in ("off", "unknown", "unavailable"):
-        return False
-    if not enabled_for(runtime, spec, cap, state, stopping=stopping):
-        return True
-    record, now = runtime._record(spec), runtime.clock()
-    owned = record.get("power", {}).get(cap.primary)
-    observed = record.get("native_power_observations", {}).get(cap.primary)
-    stamps = []
-    edge = finite(getattr(runtime, "_native_on_epoch", {}).get(cap.primary), 0, now)
-    if edge is not None:
-        stamps.append(edge)
-    if isinstance(owned, dict):
-        stamp = finite(owned.get("since"), 0, now)
-        if stamp is not None:
-            stamps.append(stamp)
-    if isinstance(observed, dict) and observed.get("state") == "on":
-        stamp = finite(observed.get("since"), 0, now)
-        if stamp is not None:
-            stamps.append(stamp)
-    if not stamps:
-        try:
-            stamp = finite(state.last_changed.timestamp(), 0, now)
-        except (AttributeError, TypeError, ValueError, OverflowError):
-            stamp = None
-        if stamp is None:
-            history = record.setdefault("setpoint_startup_observations", {})
-            previous = history.get(cap.primary)
-            stamp = finite(previous, 0, now)
-            if stamp is None:
-                stamp = now
-                history[cap.primary] = stamp
-                await runtime._save()
-        stamps.append(stamp)
-    deadline = max(stamps) + SETPOINT_GRACE_SECONDS
-    if now < deadline:
-        _wait(runtime, spec, "native_setpoint_startup_grace", deadline,
-              native_mode=state.state)
-        return False
-    return True
-
-
-def supports_stop(cap, state) -> bool:
-    """Only thermostatic binary HEAT/COOL has an opposite temperature limit."""
-    return bool(state is not None and state.state in ("heat", "cool")
-                and _native_supported(cap, state.attributes, state.state))
-
-
-def _opposite(state):
-    low = finite(state.attributes.get("min_temp"), -30, 140)
-    high = finite(state.attributes.get("max_temp"), -29, 150)
-    if low is None or high is None or low >= high:
-        return None
-    return low if state.state == "heat" else high
-
-
 def _valid(sequence, record, spec) -> bool:
     return bool(
         isinstance(sequence, dict) and sequence.get("version") == 1
@@ -664,6 +539,7 @@ def _associated(pending, sequence, *, target=False):
         and pending.get("stop_sequence_at") == sequence["requested_at"]
         and (
             pending.get("stop_target") is True
+            and pending.get("power") is not True
             and pending.get("service") == "set_temperature"
             and pending.get("data") == {"temperature": sequence["temperature"]}
             and pending.get("expected") == {
@@ -690,36 +566,8 @@ def _supply_ready(runtime, spec):
                 and not relay.get("pending") and not relay.get("paused"))
 
 
-def target_authorized(runtime, spec, cap, entity, data, expected) -> bool:
-    """Validate the only non-OFF payload permitted by stop preparation."""
-    from . import equipment_model as model
-    record = runtime._record(spec)
-    sequence = record.get("native_setpoint_stop")
-    state = runtime.hass.states.get(entity)
-    if not (enabled_for(runtime, spec, cap, state, stopping=True)
-            and _valid(sequence, record, spec) and sequence["phase"] == "preparing"
-            and not sequence.get("invalidated_on_epoch")
-            and entity == cap.primary == sequence["entity"]
-            and supports_stop(cap, state) and state.state == sequence["mode"]
-            and model.features(state) & model.TEMP
-            and _opposite(state) == sequence["temperature"]
-            and data == {"temperature": sequence["temperature"]}
-            and expected == {"attributes": data}
-            and _supply_ready(runtime, spec)):
-        return False
-    owned = record.get("power", {}).get(entity)
-    if sequence["owned"]:
-        edge = finite(getattr(runtime, "_native_on_epoch", {}).get(entity), 0, runtime.clock())
-        return bool(isinstance(owned, dict)
-                    and owned.get("since") == sequence["owned_since"]
-                    and (edge is None or edge <= sequence["owned_since"])
-                    and runtime._shutdown_allowed(spec, entity, {"state": "off"}))
-    return bool(runtime._current_spec(spec)
-                and model.permission(runtime.manager, spec, cap)[1])
-
-
 def finish_authorized(runtime, spec, cap, entity) -> bool:
-    """A committed leg can finish OFF even if its original demand changes."""
+    """An old committed leg can finish OFF; no new sequence can use this path."""
     from . import equipment_model as model
     record, now = runtime._record(spec), runtime.clock()
     sequence = record.get("native_setpoint_stop")
@@ -729,7 +577,6 @@ def finish_authorized(runtime, spec, cap, entity) -> bool:
             and sequence["phase"] in ("off_ready", "off_pending")
             and entity == cap.primary == sequence["entity"]
             and state is not None and state.state == sequence["mode"]
-            and finite(sequence.get("off_not_before"), 0, now) is not None
             and _supply_ready(runtime, spec)):
         return False
     owned = record.get("power", {}).get(entity)
@@ -740,97 +587,66 @@ def finish_authorized(runtime, spec, cap, entity) -> bool:
                     and (edge is None or edge <= sequence["owned_since"])
                     and runtime._shutdown_allowed(spec, entity, {"state": "off"}))
     return bool(runtime._current_spec(spec)
-                and model.permission(runtime.manager, spec, cap)[1])
+                and model.permission(runtime.manager, spec, cap)[1]
+                and _unowned_stop_remaining(runtime, spec, cap, state) == 0)
 
 
-def mark_target_sent(runtime, spec, when):
-    sequence = runtime._record(spec)["native_setpoint_stop"]
-    sequence.update(phase="waiting", sent_at=when,
-                    off_not_before=when + SETPOINT_GRACE_SECONDS)
-    wake_at(runtime, spec, sequence["off_not_before"])
-
-
-async def begin_stop(runtime, spec, cap, *, automatic, shutdown, policy_stop):
-    """Called only after _power has verified the physical minimum-ON dwell."""
+def _unowned_stop_remaining(runtime, spec, cap, state):
+    """A legacy unowned stop retains the ordinary observed minimum ON time."""
     from . import equipment_model as model
-    record = runtime._record(spec)
-    if record.get("native_setpoint_stop"):
-        await progress_stop(runtime, spec)
-        return False
-    if not enabled_for(runtime, spec, cap, stopping=True):
-        return False
-    state = runtime.hass.states.get(cap.primary)
-    value = _opposite(state)
-    if value is None or not model.features(state) & model.TEMP:
-        runtime._status(spec, "native_setpoint_shutdown_blocked",
-                        reason="physical_capabilities_unavailable")
-        return False
-    if not await startup_ready(runtime, spec, cap, state, stopping=True):
-        return False
-    if record.get("pending") or record.get("paused"):
-        return False
-    owned = record.get("power", {}).get(cap.primary)
-    sequence = {
-        "version": 1, "entity": cap.primary,
-        "source_device_id": record.get("source_device_id"), "area": record["area"],
-        "mode": state.state, "temperature": value, "phase": "preparing",
-        "requested_at": runtime.clock(), "owned": isinstance(owned, dict),
-        "owned_since": owned.get("since") if isinstance(owned, dict) else None,
-    }
-    record["native_setpoint_stop"] = sequence
-    # Send even if the last HA report already equals this endpoint: the user
-    # requested a fresh shutdown target before the distinct 30-second OFF leg.
-    sent = await runtime._send(
-        spec, cap, cap.primary, "set_temperature", {"temperature": value},
-        {"attributes": {"temperature": value}}, mode="off", automatic=automatic,
-        shutdown=shutdown, policy_stop=policy_stop, stop_target=True,
-    )
-    if sent:
-        _wait(runtime, spec, "native_setpoint_shutdown_grace", sequence["off_not_before"],
-              requested_temperature=value, native_mode=sequence["mode"])
-    elif not record.get("pending") and not record.get("paused"):
-        # A proven pre-dispatch abort committed no stop. A changed stop policy
-        # remains free to cancel before the reverse command was dispatched.
-        record.pop("native_setpoint_stop", None)
-        await runtime._save()
-    return sent
+    now = runtime.clock()
+    minimum, _off, _maximum = model.timing(runtime.manager, spec, cap)
+    try:
+        stamp = finite(state.last_changed.timestamp(), 0, now)
+    except (AttributeError, TypeError, ValueError, OverflowError):
+        stamp = None
+    if stamp is None:
+        stamp = runtime._record(spec).setdefault("on_seen", {}).setdefault(cap.primary, now)
+    edge = finite(getattr(runtime, "_native_on_epoch", {}).get(cap.primary), 0, now)
+    if edge is not None:
+        stamp = max(stamp, edge)
+    return max(0, minimum - (now - stamp))
 
 
 async def progress_stop(runtime, spec) -> bool:
-    """Finish a saved stop before ordinary target, restart or supply control."""
+    """Drain a pre-removal shutdown directly through ordinary guarded OFF.
+
+    A retired temperature intent is archived exactly as it was, including an
+    interrupted dispatch. It never becomes a power acknowledgement. A saved
+    OFF command keeps its original phase, attempts and retry deadline.
+    """
     from . import equipment_model as model
-    from .equipment_runtime import (
-        _manual_output_changes, entity_area, foreign_owner_hold, matches, snapshot,
-        native_retry_decision, NATIVE_COMMAND_MAX_ATTEMPTS,
-        NATIVE_RECONNECT_EXTRA_ATTEMPTS, NATIVE_RECONNECT_SETTLE_SECONDS,
-    )
+    from .equipment_runtime import entity_area, foreign_owner_hold, matches, snapshot
     record, now = runtime._record(spec), runtime.clock()
     sequence = record.get("native_setpoint_stop")
+    pending = record.get("pending")
     if sequence is None:
+        # An orphaned legacy reverse target cannot grant an OFF or another
+        # target attempt. Preserve its uncertainty outside the command slot.
+        if (isinstance(pending, dict) and pending.get("stop_target") is True
+                and pending.get("power") is not True
+                and pending.get("service") == "set_temperature"):
+            record["retired_native_setpoint_target"] = deepcopy(pending)
+            record["pending"] = None
+            await runtime._save()
         return False
 
     def blocked(reason):
-        runtime._status(spec, "native_setpoint_shutdown_blocked", reason=reason)
+        runtime._status(spec, "awaiting_evaluation", reason=reason)
         return True
 
     if not _valid(sequence, record, spec):
         return blocked("invalid_shutdown_sequence")
     entity = sequence["entity"]
     edge = finite(getattr(runtime, "_native_on_epoch", {}).get(entity), 0, now)
-    if (sequence["owned"] and edge is not None
-            and edge > sequence["owned_since"]
-            and edge != sequence.get("invalidated_on_epoch")):
-        # Persist the event before ANY early hold (including reconnect or
-        # identity holds). Losing this process must not revive the old OFF
-        # authorization against a genuinely newer physical ON episode.
-        sequence["invalidated_on_epoch"] = edge
-        owned = record.get("power", {}).get(entity)
-        if isinstance(owned, dict):
-            owned["since"] = max(owned["since"], edge)
-        record.setdefault("native_power_observations", {})[entity] = {
-            "state": "on", "since": edge,
-        }
-        await runtime._save()
+    if sequence["owned"] and edge is not None and edge > sequence["owned_since"]:
+        if sequence.get("invalidated_on_epoch") != edge:
+            sequence["invalidated_on_epoch"] = edge
+            owned = record.get("power", {}).get(entity)
+            if isinstance(owned, dict):
+                owned["since"] = max(owned["since"], edge)
+            record.setdefault("native_power_observations", {})[entity] = {"state": "on", "since": edge}
+            await runtime._save()
     if (not runtime._identity_ok(spec)
             or entity_area(runtime.hass, entity) != sequence["area"]
             or foreign_owner_hold(runtime.hass, runtime.manager.entry.entry_id, entity)):
@@ -846,51 +662,46 @@ async def progress_stop(runtime, spec) -> bool:
     settle_fn = getattr(runtime, "_native_settle_remaining", None)
     settle = settle_fn(spec) if callable(settle_fn) else 0
     if settle is None or settle > 0:
-        runtime._status(spec, "waiting_for_physical_device",
-                        reason="native_restore_settling" if settle is not None else "native_source_unavailable",
-                        reconnect_settle_remaining_seconds=settle)
+        runtime._status(
+            spec, "native_device_stabilizing" if settle is not None else "waiting_for_physical_device",
+            reason="native_restore_settling" if settle is not None else "native_source_unavailable",
+            reconnect_settle_remaining_seconds=settle,
+        )
         if settle:
             wake_at(runtime, spec, now + settle)
         return True
-    pending = record.get("pending")
     target_pending = _associated(pending, sequence, target=True)
     off_pending = _associated(pending, sequence)
     if pending and not (target_pending or off_pending):
         return blocked("other_endpoint_acknowledgement_pending")
     if (sequence["phase"] == "preparing" and pending is None
-            and not record.get("paused") and "off_not_before" not in sequence):
-        # _send has durably proved its pre-dispatch abort. A restart between
-        # that save and begin_stop's cleanup must not invent a committed leg.
+            and "off_not_before" not in sequence and "sent_at" not in sequence):
+        sequence["retired_without_dispatch"] = True
+        record["last_native_setpoint_stop"] = deepcopy(sequence)
         record.pop("native_setpoint_stop", None)
         await runtime._save()
         return False
-    baseline = record.get("baseline", {}).get(entity)
-    current = snapshot(state)
-    expected = {"attributes": {"temperature": sequence["temperature"]}}
-    confirmed = matches(state, expected)
-    changes = _manual_output_changes(baseline, current) if baseline is not None else ()
-    if confirmed:
-        changes = tuple(key for key in changes if key != "temperature")
-    if off_pending and state.state == "off":
-        changes = tuple(key for key in changes if key != "state")
-    ignored = ({"temperature"} if confirmed else set()) | (
-        {"state"} if off_pending and state.state == "off" else set()
-    )
-    if changes and native_human_changed(runtime, spec, entity, state, ignore=ignored):
+    target_ack = matches(state, {"attributes": {"temperature": sequence["temperature"]}})
+    ignored = ({"temperature"} if target_ack else set()) | (
+        {"state"} if off_pending and state.state == "off" else set())
+    if native_human_changed(runtime, spec, entity, state, ignore=ignored):
         await runtime._pause(spec, "physical_manual_override")
         return True
+    if target_pending:
+        sequence["target_journal"] = deepcopy(pending)
+        sequence["target_confirmed"] = target_ack
+        sequence["timing_removed_at"] = now
+        record["pending"] = None
+        pending = None
+        await runtime._save()
     if state.state == "off":
-        # A real native OFF can arrive together with the temperature ACK.
-        # It ends ownership even though the preceding command was not power.
         record.get("power", {}).pop(entity, None)
         record.setdefault("off_at", {})[entity] = now
-        record.setdefault("baseline", {})[entity] = current
-        record.setdefault("setpoint_startup_observations", {}).pop(entity, None)
-        record.pop("unconfirmed_native_target", None)
-        if target_pending or off_pending:
+        record.setdefault("baseline", {})[entity] = snapshot(state)
+        if off_pending:
+            sequence["off_journal"] = deepcopy(pending)
             record["pending"] = None
-        sequence.update(completed_at=now, native_off_confirmed=True,
-                        target_confirmed=bool(sequence.get("target_confirmed") or confirmed))
+        sequence.update(completed_at=now, native_off_confirmed=True)
         record["last_native_setpoint_stop"] = deepcopy(sequence)
         record.pop("native_setpoint_stop", None)
         record.pop("paused", None)
@@ -899,9 +710,7 @@ async def progress_stop(runtime, spec) -> bool:
         await runtime._save()
         runtime._status(spec, "off", native_off_confirmed=True)
         return True
-    if sequence.get("invalidated_on_epoch"):
-        return blocked("native_mode_changed_during_shutdown")
-    if state.state != sequence["mode"]:
+    if sequence.get("invalidated_on_epoch") or state.state != sequence["mode"]:
         return blocked("native_mode_changed_during_shutdown")
     if state.attributes.get("hvac_action") == "defrosting":
         runtime._status(spec, "native_defrost_protection")
@@ -914,112 +723,45 @@ async def progress_stop(runtime, spec) -> bool:
             return blocked("physical_capabilities_unavailable")
     owned = record.get("power", {}).get(entity)
     if sequence["owned"]:
-        edge = finite(getattr(runtime, "_native_on_epoch", {}).get(entity), 0, now)
-        if not (isinstance(owned, dict) and owned.get("since") == sequence["owned_since"]
-                and (edge is None or edge <= sequence["owned_since"])
-                and runtime._shutdown_allowed(spec, entity, {"state": "off"})):
+        if (not isinstance(owned, dict) or owned.get("since") != sequence["owned_since"]
+                or not runtime._shutdown_allowed(spec, entity, {"state": "off"})):
+            if isinstance(owned, dict) and owned.get("since") == sequence["owned_since"]:
+                due = owned["since"] + owned["min_on"]
+                if due > now:
+                    runtime._status(spec, "minimum_on_hold", minimum_on_until=due,
+                                    minimum_on_remaining_seconds=round(due - now))
+                    wake_at(runtime, spec, due)
+                    return True
             return blocked("owned_shutdown_identity_or_dwell_hold")
-    elif not (runtime._current_spec(spec)
-              and model.permission(runtime.manager, spec, cap)[1]):
+    elif not (runtime._current_spec(spec) and model.permission(runtime.manager, spec, cap)[1]):
         return blocked("power_control_not_commissioned")
-    if sequence["phase"] == "preparing":
-        if not target_pending:
-            # No matching durable command can establish a committed phase.
-            return blocked("shutdown_command_evidence_missing")
-        sent = finite(pending.get("last_attempt_at"), 0, now)
-        if pending.get("phase") == "commanded" and sent is not None:
-            sequence.update(phase="waiting", sent_at=sent,
-                            off_not_before=sent + SETPOINT_GRACE_SECONDS)
-        else:
-            # An interrupted intent is not an ACK. Keep that exact journal,
-            # then allow only OFF after one conservative verified 30s wait.
-            sequence.update(phase="uncertain", recovered_at=now,
-                            off_not_before=now + SETPOINT_GRACE_SECONDS)
-        await runtime._save()
-    deadline = finite(sequence.get("off_not_before"), 0, 1e13)
-    if deadline is None or deadline > now + SETPOINT_GRACE_SECONDS:
-        return blocked("invalid_shutdown_deadline")
+    else:
+        remaining = _unowned_stop_remaining(runtime, spec, cap, state)
+        if remaining > 0:
+            runtime._status(spec, "minimum_on_hold", minimum_on_until=now + remaining,
+                            minimum_on_remaining_seconds=round(remaining))
+            wake_at(runtime, spec, now + remaining)
+            return True
     if off_pending:
-        # The saved committed OFF survives HA restart and a changed room
-        # policy. Keep the original retry budget; every dispatch still uses
-        # _send's durable intent and exact owned-shutdown rechecks.
-        attempts = pending.get("attempts")
-        first = finite(pending.get("when"), 0, now)
-        used = pending.get("reconnect_retry_uses", 0)
-        if (type(attempts) is not int or attempts < 1
-                or (not automatic_retry(pending) and attempts >
-                    NATIVE_COMMAND_MAX_ATTEMPTS + NATIVE_RECONNECT_EXTRA_ATTEMPTS)
-                or first is None or type(used) is not int
-                or not 0 <= used <= NATIVE_RECONNECT_EXTRA_ATTEMPTS):
-            return blocked("invalid_shutdown_retry_history")
-        decision = native_retry_decision(pending, now, state)
-        if automatic_retry(pending) and decision != "uncertain":
-            # Keep the same episode object for minute retries, ACKs and the
-            # one-time nonresponse notice. The common retry path rechecks
-            # ownership, identity, current state and every dispatch boundary.
-            await runtime._retry_pending(spec, pending, now)
-            return True
-        if decision == "waiting":
-            runtime._status(spec, "awaiting_physical_acknowledgement",
-                            command_attempts=attempts, native_output_confirmed=False)
-            return True
-        if decision == "uncertain":
-            recovery_due = finite(sequence.get("off_recovery_not_before"), 0, 1e13)
-            if recovery_due is None:
-                recovery_due = now + SETPOINT_GRACE_SECONDS
-                sequence["off_recovery_not_before"] = recovery_due
-                await runtime._save()
-            if now < recovery_due:
-                _wait(runtime, spec, "native_setpoint_shutdown_preparing", recovery_due,
-                      reason="native_command_failed_or_uncertain")
-                return True
-        if not automatic_retry(pending) and attempts >= NATIVE_COMMAND_MAX_ATTEMPTS:
-            epoch = finite(getattr(runtime, "_native_reconnect_epoch", {}).get(entity), 0, now)
-            last = finite(pending.get("last_attempt_at", pending.get("when")), 0, now)
-            if not (attempts < NATIVE_COMMAND_MAX_ATTEMPTS + NATIVE_RECONNECT_EXTRA_ATTEMPTS
-                    and used < NATIVE_RECONNECT_EXTRA_ATTEMPTS
-                    and epoch is not None and last is not None and epoch > last
-                    and epoch != pending.get("reconnect_retry_epoch_used")
-                    and now - epoch >= NATIVE_RECONNECT_SETTLE_SECONDS):
-                return blocked("physical_acknowledgement_missing")
-            pending = deepcopy(pending)
-            pending["reconnect_retry_uses"] = used + 1
-            pending["reconnect_retry_epoch_used"] = epoch
-        sequence["off_retry_budget"] = deepcopy(pending)
-        sequence.pop("off_recovery_not_before", None)
-        record["pending"] = None
-        sequence["phase"] = "off_ready"
+        # Keep an interrupted power intent uncertain and a dispatched OFF on
+        # its real retry schedule. No replacement journal or fresh budget.
+        await runtime._retry_pending(spec, pending, now)
+        return True
     if record.get("paused") in _RECOVERABLE_PAUSES:
         record.pop("paused", None)
         record.pop("automatic_continue_requested", None)
         record.pop("restart_power_verification", None)
-    if confirmed and not sequence.get("target_confirmed"):
-        sequence["target_confirmed"] = True
+    sequence["phase"] = "off_ready"
+    if target_ack:
+        baseline = record.get("baseline", {}).get(entity)
         if isinstance(baseline, dict) and isinstance(baseline.get("attributes"), dict):
             baseline["attributes"]["temperature"] = state.attributes["temperature"]
-        if target_pending:
-            sequence["target_journal"] = deepcopy(pending)
-            record["pending"] = None
-            target_pending = False
-        await runtime._save()
-    if now < deadline:
-        _wait(runtime, spec, "native_setpoint_shutdown_grace", deadline,
-              requested_temperature=sequence["temperature"], native_mode=sequence["mode"],
-              native_target_confirmed=bool(sequence.get("target_confirmed")))
-        return True
-    if target_pending:
-        # The original target remains explicitly unconfirmed. Transfer only
-        # this stop leg into evidence; _send persists the ensuing OFF intent.
-        sequence["target_journal"] = deepcopy(pending)
-        sequence["target_confirmed"] = False
-        record["pending"] = None
-    sequence["phase"] = "off_ready"
+    await runtime._save()
     sent = await runtime._send(
         spec, cap, entity, "set_hvac_mode", {"hvac_mode": "off"}, {"state": "off"},
-        power=True, mode="off", automatic=False, shutdown=sequence["owned"],
-        stop_finish=True,
+        power=True, mode="off", automatic=False, shutdown=sequence["owned"], stop_finish=True,
     )
     if sent:
         sequence["phase"] = "off_pending"
-    await runtime._save()
+        await runtime._save()
     return True

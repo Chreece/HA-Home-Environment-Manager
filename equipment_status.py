@@ -192,8 +192,6 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "native_minimum_on_until": observed.get("minimum_on_until"),
             "native_minimum_off_remaining_seconds": observed.get("minimum_off_remaining_seconds"),
             "native_minimum_off_until": observed.get("minimum_off_until"),
-            "setpoint_wait_remaining_seconds": observed.get("setpoint_wait_remaining_seconds"),
-            "setpoint_wait_until": observed.get("setpoint_wait_until"),
             "window_open_wait": wait_status,
             "window_open_wait_remaining_seconds": observed.get("window_open_wait_remaining_seconds"),
             "window_open_wait_until": observed.get("window_open_wait_until"),

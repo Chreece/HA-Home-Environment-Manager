@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "اعلانات · ڈیوائس کی خرابیوں کا اعلان کریں · {channel}",
+        "name": "اعلانات · {channel}ڈیوائس کی خرابیوں کا اعلان کریں",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "نیند · {channel}جب سب سو رہے ہوں",
+        "name": "نیند · {channel}جب سب سو رہے ہوں تو ڈیوائس بند رکھیں",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "کنٹرول · {channel}مکمل طاقت کی ہدف قدر",
+        "name": "کنٹرول · {channel}موڈ کے مطابق زیادہ سے زیادہ ہدف",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"

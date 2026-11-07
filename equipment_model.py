@@ -75,7 +75,6 @@ DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None
             "sleep_when_everyone_asleep": False,
             "pause_on_window_open": True,
             "announce_before_start": False,
-            "timed_setpoint_sequence": False,
             "native_full_output": True,
             # New native fault announcements are independently enabled by
             # default per selected controller; no synthetic error sensor.
@@ -144,10 +143,10 @@ def base_settings(manager: Any, spec: ManagedDevice) -> dict:
     raw = raw_settings(manager, spec)
     result = {**deepcopy(DEFAULTS), **{
         key: value for key, value in raw.items()
-        if key not in MODE_METADATA_KEYS and key != "operating_mode"
+        if key not in MODE_METADATA_KEYS and key not in (
+            "operating_mode", "timed_setpoint_sequence")
     }}
     # Missing settings and legacy strings/numbers never opt a device in.
-    result["timed_setpoint_sequence"] = raw.get("timed_setpoint_sequence") is True
     result["native_full_output"] = raw.get("native_full_output", True) is True
     result["sleep_when_everyone_asleep"] = raw.get("sleep_when_everyone_asleep") is True
     result["announce_before_start"] = raw.get("announce_before_start") is True

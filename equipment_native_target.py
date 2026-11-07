@@ -78,10 +78,21 @@ def _direction(manager, spec, cfg, cap, state):
     return "auto" if cap.domain == "humidifier" and mode == "humidify" else mode
 
 
-def configuration_supported(manager, spec) -> bool:
+def configuration_modes(manager, spec) -> tuple[str, ...]:
+    """Canonical directions with a proven native full-output target endpoint."""
     from .equipment_setpoint_sequence import _configuration_evidence
     cap, attributes = _configuration_evidence(manager, spec)
-    return bool(cap and any(full_request(cap, attributes, mode) is not None for mode in cap.modes))
+    if cap is None:
+        return ()
+    supported = {
+        "humidify" if cap.domain == "humidifier" and cap.humidifying else mode
+        for mode in cap.modes if full_request(cap, attributes, mode) is not None
+    }
+    return tuple(mode for mode in ("heat", "cool", "dry", "humidify") if mode in supported)
+
+
+def configuration_supported(manager, spec) -> bool:
+    return bool(configuration_modes(manager, spec))
 
 
 def control_supported(manager, spec, *, cached=False) -> bool:

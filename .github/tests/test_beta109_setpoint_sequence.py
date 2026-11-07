@@ -74,6 +74,7 @@ class SequenceRuntime(base["ShutdownRuntime"]):
     def __init__(self, method="pid", mode="heat"):
         super().__init__(method, mode)
         self._native_session_observations = {}
+        self._native_on_epoch = {}
         self._tasks = {}
         self._setpoint_rerun = set()
         self.timer_loop = ClockLoop(self)
@@ -133,619 +134,189 @@ class SequenceRuntime(base["ShutdownRuntime"]):
         self.hass.config_entries = N(async_update_entry=update_entry)
 
 
+def seed_legacy_stop(runtime, *, phase="commanded", off_pending=False, age=900.0):
+    """Persist the exact pre-b9 shape; no current runtime creates this record."""
+    runtime.running_extreme(age)
+    owned = runtime.record["power"][PRIMARY]
+    at = runtime.now
+    sequence_data = {
+        "version": 1, "entity": PRIMARY, "source_device_id": SPEC.source_device_id,
+        "area": SPEC.area_id, "mode": runtime.state.state,
+        "temperature": runtime.original_target, "phase": "off_pending" if off_pending else "waiting",
+        "requested_at": at, "owned": True, "owned_since": owned["since"],
+        "sent_at": at, "off_not_before": at + 30.0,
+    }
+    data = {"hvac_mode": "off"} if off_pending else {"temperature": runtime.original_target}
+    journal = {
+        "entity": PRIMARY, "service": "set_hvac_mode" if off_pending else "set_temperature",
+        "data": data, "expected": {"state": "off"} if off_pending else {"attributes": data},
+        "power": off_pending, "output_on": not off_pending, "phase": phase,
+        "when": at, "last_attempt_at": at, "attempts": 2,
+        "min_on": owned["min_on"], "max_on": owned["max_on"],
+        "stop_target": not off_pending, "stop_finish": off_pending,
+        "stop_sequence_at": at, "retry_policy": "automatic_minute",
+        "retry_context": {
+            "settings": deepcopy(model.settings(runtime.manager, SPEC)), "profile": None,
+            "automatic": False, "mode": "off", "shutdown": True,
+            "policy_stop": None, "upstream_owned": None,
+        },
+    }
+    runtime.record["native_setpoint_stop"] = sequence_data
+    runtime.record["pending"] = journal
+    return deepcopy(journal)
+
+
 class SetpointSequenceTests(unittest.IsolatedAsyncioTestCase):
-    def rehydrate_stop(self, original, elapsed=0.0):
-        runtime = SequenceRuntime(original.manager.settings["control_mode"],
-                                  original.manager.settings["requested_mode"])
-        runtime.record = deepcopy(original.persisted[-1])
-        runtime.records = {SPEC.identifier: runtime.record}
-        runtime.manager.settings = deepcopy(original.manager.settings)
-        runtime.state = deepcopy(original.state)
-        runtime.now = original.now + elapsed
-        runtime._native_ready_since[PRIMARY] = runtime.now - 30
-        runtime._native_settled_for[(SPEC.identifier, PRIMARY)] = runtime.now - 30
-        runtime.record["paused"] = "restart_reconciliation_required"
-        runtime.record["automatic_continue_requested"] = {"method": "pid", "at": runtime.now}
-        return runtime
-
-    def assert_reverse_target(self, runtime, count=1):
-        self.assertEqual(len(runtime.calls), count, runtime.calls)
-        self.assertEqual(runtime.calls[-1], {
-            "domain": "climate", "service": "set_temperature",
-            "data": {"temperature": runtime.original_target},
-            "target": {"entity_id": PRIMARY},
-        })
-        self.assertIn("native_setpoint_stop", runtime.record)
-        self.assertIn(PRIMARY, runtime.record["power"])
-        self.assertEqual(runtime.service_journals[-1]["pending"]["phase"], "intent")
-
-    def assert_off_request(self, runtime, count=2):
-        self.assertEqual(len(runtime.calls), count, runtime.calls)
-        self.assertEqual(runtime.calls[-1]["service"], "set_hvac_mode")
-        self.assertEqual(runtime.calls[-1]["data"], {"hvac_mode": "off"})
-        self.assertEqual(runtime.record["pending"]["expected"], {"state": "off"})
-        self.assertIn(PRIMARY, runtime.record["power"], "Sending OFF is not native OFF feedback")
-
-    async def test_binary_start_waits_30_seconds_after_native_on_ack(self):
+    async def test_binary_start_target_is_immediate_after_native_on_ack(self):
         for method in ("pid", "automatic"):
             for mode in ("heat", "cool"):
                 with self.subTest(method=method, mode=mode):
-                    runtime = SequenceRuntime(method, mode)
-                    runtime.manager.settings["kp"] = 100.0
-                    await runtime.evaluate()
-                    self.assertEqual(runtime.calls[-1]["data"], {"hvac_mode": mode})
-                    self.assertFalse(runtime.record["power"])
-                    await runtime.evaluate(5)
-                    self.assertEqual(len(runtime.calls), 1)
-                    runtime.report(mode=mode)
-                    ack_at = runtime.now
-                    await runtime.evaluate()
-                    self.assertEqual(len(runtime.calls), 1, "Mode ACK must not send the setpoint immediately")
-                    self.assertEqual(runtime.record["power"][PRIMARY]["since"], ack_at)
-                    self.assertEqual(runtime.statuses[-1][0], "native_setpoint_startup_grace")
-                    await runtime.evaluate(29.999)
-                    self.assertEqual(len(runtime.calls), 1)
-                    await runtime.evaluate(0.001)
-                    self.assertEqual(len(runtime.calls), 2)
-                    self.assertEqual(runtime.calls[-1]["data"], {"temperature": runtime.requested_target})
-                    self.assertGreaterEqual(runtime.call_times[-1] - ack_at, 30)
-                    runtime.report(temperature=runtime.requested_target)
-                    await runtime.evaluate(1)
-                    self.assertIsNone(runtime.record["pending"])
-                    self.assertEqual(len(runtime.calls), 2)
+                    r = SequenceRuntime(method, mode)
+                    r.manager.settings["kp"] = 100.0
+                    r.manager.settings["timed_setpoint_sequence"] = True
+                    await r.evaluate()
+                    self.assertEqual(r.calls[-1]["data"], {"hvac_mode": mode})
+                    self.assertFalse(r.record["power"])
+                    await r.evaluate(5)
+                    self.assertEqual(len(r.calls), 1)
+                    r.report(mode=mode)
+                    ack_at = r.now
+                    await r.evaluate()
+                    self.assertEqual(len(r.calls), 2)
+                    self.assertEqual(r.calls[-1]["data"], {"temperature": r.requested_target})
+                    self.assertEqual(r.call_times[-1], ack_at)
+                    self.assertEqual(r.record["power"][PRIMARY]["since"], ack_at)
+                    r.report(temperature=r.requested_target)
+                    await r.evaluate()
+                    self.assertIsNone(r.record["pending"])
 
-    async def test_legacy_flag_does_not_time_manual_soft_range_or_humidity_writes(self):
-        cases = (
-            ("manual", "set_temperature", {"temperature": 22.0}),
-            ("pid", "set_temperature", {"temperature": 22.0}),
-            ("automatic", "set_temperature", {"target_temp_low": 18.0, "target_temp_high": 25.0}),
-            ("manual", "set_humidity", {"humidity": 45.0}),
-        )
-        for method, service, data in cases:
-            with self.subTest(method=method, service=service, data=data):
-                runtime = SequenceRuntime(method)
-                runtime.manager.power_grant = False
-                runtime.state.attributes.update(supported_features=7, humidity=60.0,
-                                                target_temp_low=17.0, target_temp_high=26.0)
-                runtime.report(mode="heat")
-                cap = model.capabilities(runtime.manager, SPEC)
-                await runtime._observe_native_running(SPEC, cap, runtime.state)
-                self.assertFalse(runtime.record["power"])
-                self.assertTrue(runtime.manager.settings["timed_setpoint_sequence"])
-                self.assertTrue(await runtime.command(service, data, automatic=method != "manual"))
-                self.assertEqual(runtime.calls[-1]["data"], data)
-                self.assertEqual(runtime.call_times[-1] - runtime.state.last_changed.timestamp(), 0.0)
-                self.assertEqual(len(runtime.calls), 1)
-                self.assertFalse(runtime.record["power"])
-                self.assertFalse(runtime.record.get("native_setpoint_stop"))
-
-    async def test_all_binary_stop_entrypoints_prepare_then_wait_then_off(self):
+    async def test_all_shutdown_entrypoints_use_guarded_direct_off(self):
         for method in ("pid", "automatic"):
             for mode in ("heat", "cool"):
                 for stop in ("idle", "window", "sleep", "explicit_off", "retired"):
                     with self.subTest(method=method, mode=mode, stop=stop):
-                        runtime = SequenceRuntime(method, mode)
-                        runtime.running_extreme()
+                        r = SequenceRuntime(method, mode)
+                        r.running_extreme()
                         if stop == "idle":
-                            runtime.measurement = 23.0
+                            r.measurement = 23.0 if mode == "heat" else 24.0
                         elif stop == "window":
-                            runtime.open_window()
+                            r.open_window()
                         elif stop == "sleep":
-                            runtime.sleeping = True
-                            runtime.manager.device["sleep_behavior"] = "pause"
+                            r.sleeping = True
+                            r.manager.device["sleep_behavior"] = "pause"
                         elif stop == "explicit_off":
-                            runtime.manager.settings.update(control_mode="off", requested_mode="off")
-                        else:
-                            runtime._current_spec = lambda spec: False
-                        await runtime.evaluate()
-                        self.assert_reverse_target(runtime)
-                        sent_at = runtime.call_times[-1]
-                        await runtime.evaluate(29.999)
-                        self.assertEqual(len(runtime.calls), 1)
-                        # No reverse-target ACK is supplied. The timer still
-                        # finishes this committed OFF without fabricating ACK.
-                        await runtime.evaluate(0.001)
-                        self.assert_off_request(runtime)
-                        self.assertGreaterEqual(runtime.call_times[-1] - sent_at, 30)
-                        self.assertFalse(runtime.record["native_setpoint_stop"]["target_confirmed"])
-                        runtime.report(mode="off")
-                        await runtime.evaluate(1)
-                        self.assertNotIn(PRIMARY, runtime.record["power"])
-                        self.assertIsNone(runtime.record["pending"])
-                        self.assertNotIn("native_setpoint_stop", runtime.record)
-                        self.assertEqual(runtime.record["off_at"][PRIMARY], runtime.now)
+                            r.manager.settings["control_mode"] = "off"
+                        elif stop == "retired":
+                            r._current_spec = lambda spec: False
+                        await r.evaluate()
+                        self.assertEqual(len(r.calls), 1, r.statuses)
+                        self.assertEqual(r.calls[-1]["data"], {"hvac_mode": "off"})
+                        self.assertTrue(r.record["pending"]["power"])
+                        self.assertNotIn("native_setpoint_stop", r.record)
+                        self.assertIn(PRIMARY, r.record["power"])
+                        r.report(mode="off")
+                        await r.evaluate()
+                        self.assertNotIn(PRIMARY, r.record["power"])
 
-    async def test_minimum_on_precedes_preparation_and_maximum_on_prepares_early(self):
-        for mode in ("heat", "cool"):
-            with self.subTest(mode=mode, timing="minimum_on"):
-                runtime = SequenceRuntime("pid", mode)
-                runtime.running_extreme(age=100)
-                runtime.measurement = 23.0
-                await runtime.evaluate()
-                self.assertEqual(runtime.calls, [])
-                await runtime.evaluate(499.999)
-                self.assertEqual(runtime.calls, [])
-                await runtime.evaluate(0.001)
-                self.assert_reverse_target(runtime)
-                await runtime.evaluate(30)
-                self.assert_off_request(runtime)
-            with self.subTest(mode=mode, timing="maximum_on"):
-                runtime = SequenceRuntime("automatic", mode)
-                runtime.running_extreme(age=7169.0)
-                await runtime.evaluate()
-                self.assertEqual(runtime.calls, [])
-                await runtime.evaluate(1)
-                self.assert_reverse_target(runtime)
-                await runtime.evaluate(30)
-                self.assert_off_request(runtime)
-                self.assertEqual(runtime.call_times[-1] - runtime.record["power"][PRIMARY]["since"], 7200)
+    async def test_minimum_on_and_maximum_on_have_no_target_timing_offsets(self):
+        r = SequenceRuntime("automatic")
+        r.running_extreme(age=599.999)
+        r.open_window()
+        await r.evaluate()
+        self.assertFalse(r.calls)
+        self.assertEqual(r.statuses[-1][0], "minimum_on_hold")
+        await r.evaluate(.001)
+        self.assertEqual(r.calls[-1]["data"], {"hvac_mode": "off"})
+        r = SequenceRuntime("automatic", "cool")
+        r.running_extreme(age=7169)
+        await r.evaluate()
+        await r.evaluate(1)
+        await r.evaluate(29.999)
+        self.assertFalse(r.calls)
+        await r.evaluate(.001)
+        self.assertEqual(r.calls[-1]["data"], {"hvac_mode": "off"})
+        self.assertEqual(r.now - r.record["power"][PRIMARY]["since"], 7200)
 
-    async def test_pwm_off_leg_uses_reverse_bound_and_complete_wait(self):
-        for mode in ("heat", "cool"):
-            with self.subTest(mode=mode):
-                runtime = SequenceRuntime("pid", mode)
-                runtime.running_extreme()
-                cfg = runtime.manager.settings
-                goal = runtime.manager.targets[mode]
-                signature, _, _ = phase.phase_decision(
-                    None, metric="temperature", target=goal, increasing=mode == "heat", profile="comfort",
-                    mode=mode, preset="none", kp=cfg["kp"], ki=cfg["ki"], kd=cfg["kd"],
-                    cycle_s=3600.0, min_on_s=600.0, min_off_s=600.0, measured=runtime.measurement,
-                )
-                memory = model.PIDMemory(measured=runtime.measurement, stamp=runtime.now, demand=24.0)
-                runtime._memory[SPEC.identifier] = signature, memory, runtime.now - 1500
-                await runtime.evaluate()
-                self.assert_reverse_target(runtime)
-                await runtime.evaluate(30)
-                self.assert_off_request(runtime)
+    async def test_soft_manual_range_and_humidity_targets_have_no_start_delay(self):
+        for service, data in (("set_temperature", {"temperature": 22.}),
+                              ("set_temperature", {"target_temp_low": 18., "target_temp_high": 25.}),
+                              ("set_humidity", {"humidity": 45.})):
+            with self.subTest(service=service, data=data):
+                r = SequenceRuntime("manual")
+                r.manager.power_grant = False
+                r.state.attributes.update(supported_features=7, humidity=60.,
+                                          target_temp_low=17., target_temp_high=26.)
+                r.report(mode="heat")
+                self.assertTrue(await r.command(service, data))
+                self.assertEqual(r.call_times[-1], r.state.last_changed.timestamp())
+                self.assertFalse(r.record["power"])
 
-    async def test_equal_reverse_target_is_still_sent_and_ack_never_claims_off(self):
-        for mode in ("heat", "cool"):
-            for simultaneous_off in (False, True):
-                with self.subTest(mode=mode, simultaneous_off=simultaneous_off):
-                    runtime = SequenceRuntime("automatic", mode)
-                    runtime.running_extreme()
-                    runtime.report(temperature=runtime.original_target)
-                    runtime.record["baseline"][PRIMARY] = production.snapshot(runtime.state)
-                    runtime.open_window()
-                    await runtime.evaluate()
-                    self.assert_reverse_target(runtime)
-                    runtime.report(mode="off" if simultaneous_off else mode,
-                                   temperature=runtime.original_target)
-                    await runtime.evaluate(10)
-                    if simultaneous_off:
-                        self.assertNotIn(PRIMARY, runtime.record["power"])
-                        self.assertIsNone(runtime.record["pending"])
-                        self.assertNotIn("native_setpoint_stop", runtime.record)
-                        self.assertEqual(runtime.record["off_at"][PRIMARY], runtime.now)
-                        self.assertEqual(len(runtime.calls), 1, "Native OFF needs no duplicate OFF service")
-                    else:
-                        self.assertIn(PRIMARY, runtime.record["power"])
-                        self.assertIsNone(runtime.record["pending"])
-                        await runtime.evaluate(20)
-                        self.assert_off_request(runtime)
+    async def test_direct_off_keeps_uncertain_service_and_minute_retry_history(self):
+        r = SequenceRuntime("automatic")
+        r.running_extreme()
+        r.open_window()
+        original = r.service_call
+        async def timeout(*args, **kwargs):
+            await original(*args, **kwargs)
+            raise TimeoutError("native did not acknowledge")
+        r.hass.services.async_call = timeout
+        await r.evaluate()
+        first = deepcopy(r.record["pending"])
+        self.assertEqual(first["phase"], "commanded")
+        self.assertEqual(first["service_error"], "native_command_failed_or_uncertain")
+        self.assertFalse(r.record.get("paused"))
+        await r.evaluate(59.999)
+        self.assertEqual(len(r.calls), 1)
+        await r.evaluate(.001)
+        self.assertEqual(len(r.calls), 2)
+        self.assertEqual(r.record["pending"]["attempts"], 2)
+        self.assertEqual(r.record["pending"]["when"], first["when"])
+        self.assertIn(PRIMARY, r.record["power"])
 
-    async def test_wait_uses_successful_dispatch_time_not_request_time_or_ack_time(self):
-        runtime = SequenceRuntime()
-        runtime.running_extreme()
-        runtime.open_window()
-        runtime.service_delay = 4.0
-        began = runtime.now
-        await runtime.evaluate()
-        self.assert_reverse_target(runtime)
-        self.assertEqual(runtime.now, began + 4)
-        runtime.service_delay = 0
-        runtime.report(temperature=runtime.original_target)
-        await runtime.evaluate(26)
-        self.assertEqual(runtime.now, began + 30)
-        self.assertEqual(len(runtime.calls), 1)
-        await runtime.evaluate(4)
-        self.assert_off_request(runtime)
-        self.assertEqual(runtime.call_times[-1], began + 34)
-
-    async def test_committed_stop_survives_renewed_demand_but_unsent_stop_can_cancel(self):
-        for committed in (False, True):
-            with self.subTest(committed=committed):
-                runtime = SequenceRuntime()
-                runtime.running_extreme()
-                runtime.open_window()
-                if not committed:
-                    def withdraw(controller):
-                        pending = controller.record.get("pending") or {}
-                        if pending.get("stop_target") and pending.get("phase") == "intent":
+    async def test_unsent_off_rechecks_window_and_source_after_persistence(self):
+        for change in ("window", "source"):
+            with self.subTest(change=change):
+                r = SequenceRuntime("automatic")
+                r.running_extreme()
+                r.open_window()
+                def changed(controller):
+                    if (controller.record.get("pending") or {}).get("phase") == "intent":
+                        controller.after_persist = None
+                        if change == "window":
                             controller.close_window()
-                            controller.after_persist = None
-                    runtime.after_persist = withdraw
-                await runtime.evaluate()
-                runtime.close_window()
-                if committed:
-                    self.assert_reverse_target(runtime)
-                    await runtime.evaluate(30)
-                    self.assert_off_request(runtime)
-                    self.assertEqual([call["data"] for call in runtime.calls],
-                                     [{"temperature": 5.0}, {"hvac_mode": "off"}])
-                else:
-                    self.assertIsNone(runtime.after_persist)
-                    self.assertEqual(runtime.calls, [])
-                    self.assertNotIn("native_setpoint_stop", runtime.record)
-                    await runtime.evaluate(60)
-                    self.assertEqual(runtime.calls, [])
+                        else:
+                            controller.registered_device_id = "replacement"
+                r.after_persist = changed
+                await r.evaluate()
+                self.assertFalse(r.calls)
+                self.assertIsNone(r.record.get("pending"))
+                self.assertIn(PRIMARY, r.record["power"])
 
-    async def test_committed_stop_rechecks_identity_owner_defrost_and_manual_override(self):
-        for blocker in ("identity", "foreign", "defrost", "manual"):
-            with self.subTest(blocker=blocker):
-                runtime = SequenceRuntime()
-                runtime.running_extreme()
-                runtime.open_window()
-                await runtime.evaluate()
-                self.assert_reverse_target(runtime)
-                if blocker == "identity":
-                    runtime.registered_device_id = "replacement_device"
-                elif blocker == "foreign":
-                    runtime.foreign_owner = "different_controller"
-                elif blocker == "defrost":
-                    runtime.state.attributes["hvac_action"] = "defrosting"
-                else:
-                    runtime.enable_config_writes()
-                    runtime.state.context = N(user_id="explicit_ha_user", parent_id=None)
-                    runtime.report(mode="cool", temperature=12.0)
-                await runtime.evaluate(30)
-                self.assertEqual(len(runtime.calls), 1)
-                self.assertIn(PRIMARY, runtime.record["power"])
-                if blocker == "manual":
-                    self.assertEqual(runtime.record["paused"], "physical_manual_override")
-
-    async def test_committed_stop_distinguishes_missing_source_from_stability_wait(self):
-        for settle,reason in ((None,"native_source_unavailable"),(12.5,"native_restore_settling")):
-            with self.subTest(settle=settle):
-                runtime=SequenceRuntime()
-                runtime.running_extreme()
-                runtime.open_window()
-                await runtime.evaluate()
-                self.assert_reverse_target(runtime)
-                # The selected native source gate distinguishes an absent
-                # accessory from a known endpoint still in its settling hold.
-                runtime._native_settle_remaining=lambda spec:settle
-                before=deepcopy(runtime.record)
-                await runtime.evaluate(30)
-                self.assertEqual(runtime.statuses[-1][1]["reason"],reason)
-                self.assertEqual(runtime.statuses[-1][1]["reconnect_settle_remaining_seconds"],settle)
-                self.assertEqual(runtime.record,before)
-                self.assertEqual(len(runtime.calls),1,"Readiness cannot dispatch or acknowledge OFF")
-
-    async def test_persisted_stop_resumes_its_original_deadline_without_repeating_target(self):
-        for elapsed in (10.0, 40.0):
-            with self.subTest(elapsed=elapsed):
-                original = SequenceRuntime()
-                original.running_extreme()
-                original.open_window()
-                await original.evaluate()
-                self.assert_reverse_target(original)
-                saved = deepcopy(original.persisted[-1])
-                runtime = SequenceRuntime()
-                runtime.record = saved
-                runtime.records = {SPEC.identifier: runtime.record}
-                runtime.manager.settings = deepcopy(original.manager.settings)
-                runtime.state = deepcopy(original.state)
-                runtime.now = original.now + elapsed
-                runtime._native_ready_since[PRIMARY] = runtime.now - 30
-                runtime._native_settled_for[(SPEC.identifier, PRIMARY)] = runtime.now - 30
-                runtime.record["paused"] = "restart_reconciliation_required"
-                runtime.record["automatic_continue_requested"] = {"method": "pid", "at": runtime.now}
-                runtime.close_window()  # The already-dispatched stop remains committed.
-                await runtime.evaluate()
-                if elapsed < 30:
-                    self.assertEqual(runtime.calls, [])
-                    await runtime.evaluate(30 - elapsed)
-                self.assert_off_request(runtime, count=1)
-                self.assertEqual(runtime.call_times[-1], original.now + max(elapsed, 30))
-                self.assertEqual(runtime.record["native_setpoint_stop"]["sent_at"], original.now)
-
-    async def test_restart_after_off_dispatch_retries_off_with_original_attempt_history(self):
-        original = SequenceRuntime()
-        original.running_extreme()
-        original.open_window()
-        await original.evaluate()
-        await original.evaluate(30)
-        self.assert_off_request(original)
-        when = original.record["pending"]["when"]
-        runtime = self.rehydrate_stop(original, elapsed=40)
-        await runtime.evaluate()
-        self.assertEqual(runtime.calls, [], "Restart does not shorten the original minute retry")
-        await runtime.evaluate(19.999)
-        self.assertEqual(runtime.calls, [])
-        await runtime.evaluate(.001)
-        self.assert_off_request(runtime, count=1)
-        self.assertEqual(runtime.record["pending"]["attempts"], 2)
-        self.assertEqual(runtime.record["pending"]["when"], when)
-        self.assertEqual(runtime.service_journals[-1]["pending"]["attempts"], 2,
-                         "Reserve the retry count durably before the physical call")
-        self.assertEqual(runtime.service_journals[-1]["pending"]["phase"], "retry_intent")
-        runtime.report(mode="off")
-        await runtime.evaluate()
-        self.assertNotIn(PRIMARY, runtime.record["power"])
-        self.assertNotIn("native_setpoint_stop", runtime.record)
-
-    async def test_cancelled_off_intent_waits_once_then_retries_without_inventing_ack(self):
-        original = SequenceRuntime()
-        original.running_extreme()
-        original.open_window()
-        await original.evaluate()
-        normal_service = original.service_call
-        async def uncertain_off(domain, service, data, **kwargs):
-            await normal_service(domain, service, data, **kwargs)
-            if service == "set_hvac_mode" and data == {"hvac_mode": "off"}:
-                raise asyncio.CancelledError("Simulated interrupted OFF completion")
-        original.hass.services.async_call = uncertain_off
-        with self.assertRaises(asyncio.CancelledError):
-            await original.evaluate(30)
-        self.assertEqual(original.record["pending"]["phase"], "intent")
-        runtime = self.rehydrate_stop(original, elapsed=100)
-        old_intent = deepcopy(runtime.record["pending"])
-        await runtime.evaluate()
-        self.assertEqual(runtime.calls, [])
-        self.assertEqual(runtime.record["pending"], old_intent)
-        await runtime.evaluate(29.999)
-        self.assertEqual(runtime.calls, [])
-        await runtime.evaluate(0.001)
-        self.assert_off_request(runtime, count=1)
-        self.assertEqual(runtime.record["pending"]["attempts"], 2)
-        self.assertEqual(runtime.record["pending"]["when"], old_intent["when"])
-        self.assertEqual(runtime.service_journals[-1]["pending"]["phase"], "intent")
-        self.assertEqual(runtime.service_journals[-1]["pending"]["attempts"], 2)
-        self.assertNotEqual(runtime.state.state, "off")
-
-    async def test_timed_off_service_timeout_keeps_automatic_and_retries_after_one_minute(self):
-        runtime = SequenceRuntime()
-        runtime.running_extreme()
-        runtime.open_window()
-        await runtime.evaluate()
-        normal_service = runtime.service_call
-
-        async def timeout_off(domain, service, data, **kwargs):
-            await normal_service(domain, service, data, **kwargs)
-            if service == "set_hvac_mode" and data == {"hvac_mode": "off"}:
-                raise TimeoutError("Native OFF was attempted but transport did not confirm")
-
-        runtime.hass.services.async_call = timeout_off
-        await runtime.evaluate(30)
-        original = deepcopy(runtime.record["pending"])
-        self.assertEqual(original["phase"], "commanded")
-        self.assertEqual(original["attempts"], 1)
-        self.assertFalse(runtime.record.get("paused"))
-        self.assertIn(PRIMARY, runtime.record["power"], "A timeout cannot prove physical OFF")
-        await runtime.evaluate(59.999)
-        self.assertEqual(len(runtime.calls), 2)
-        await runtime.evaluate(.001)
-        self.assert_off_request(runtime, count=3)
-        self.assertEqual(runtime.record["pending"]["attempts"], 2)
-        self.assertEqual(runtime.record["pending"]["when"], original["when"])
-        self.assertEqual(runtime.record["pending"]["phase"], "commanded")
-        self.assertFalse(runtime.record.get("paused"))
-        self.assertEqual(runtime.manager.settings["control_mode"], "pid")
-        self.assertNotEqual(runtime.state.state, "off")
-
-    async def test_committed_off_retries_continue_each_minute_and_preserve_reconnect_guards(self):
-        runtime = SequenceRuntime()
-        notices = []
-
-        async def announce(spec, pending):
-            notices.append(deepcopy(pending))
-
-        runtime.manager.async_announce_device_nonresponse = announce
-        runtime.running_extreme()
-        runtime.open_window()
-        await runtime.evaluate()
-        await runtime.evaluate(30)
-        when = runtime.record["pending"]["when"]
-        attempts = 1
-        for attempt in range(2, 8):
-            await runtime.evaluate(59.999)
-            self.assertEqual(runtime.record["pending"]["attempts"], attempt - 1)
-            self.assertEqual(len(runtime.calls), attempt, "No premature OFF retry")
-            await runtime.evaluate(.001)
-            self.assertEqual(runtime.record["pending"]["attempts"], attempt)
-            self.assertEqual(runtime.calls[-1]["data"], {"hvac_mode": "off"})
-            self.assertEqual(runtime.record["pending"]["when"], when)
-            self.assertEqual(runtime.call_times[-1] - runtime.call_times[-2], 60)
-            self.assertIn(PRIMARY, runtime.record["power"], "Repeated dispatch is not OFF evidence")
-            self.assertFalse(runtime.record.get("paused"))
-            attempts = attempt
-        for reconnect in (1, 2, 3):
-            runtime.now += 1
-            runtime.availability_event("unavailable")
-            await runtime.evaluate()
-            runtime.now += 5
-            runtime.availability_event("heat")
-            previous_calls = len(runtime.calls)
-            await runtime.evaluate(29.999)
-            self.assertEqual(len(runtime.calls), previous_calls)
-            await runtime.evaluate(0.001)
-            self.assertEqual(len(runtime.calls), previous_calls,
-                             "Settled reconnect still cannot shorten the minute retry")
-            await runtime.evaluate(23.999)
-            self.assertEqual(len(runtime.calls), previous_calls)
-            await runtime.evaluate(.001)
-            self.assertEqual(len(runtime.calls), previous_calls,
-                             "A newly reported ON must retain its physical minimum-ON dwell")
-            self.assertEqual(runtime.statuses[-1][0], "minimum_on_hold")
-            deadline = (runtime.state.last_changed.timestamp()
-                        + runtime.manager.settings["min_on_seconds"])
-            self.assertEqual(runtime.statuses[-1][1]["minimum_on_until"], deadline)
-            await runtime.evaluate(deadline - runtime.now - .001)
-            self.assertEqual(len(runtime.calls), previous_calls)
-            await runtime.evaluate(.001)
-            attempts += 1
-            self.assertEqual(runtime.record["pending"]["attempts"], attempts)
-            self.assertEqual(runtime.record["pending"]["when"], when)
-            self.assertEqual(len(runtime.calls), 1 + attempts)
-        self.assertEqual(sum(call["service"] == "set_temperature" for call in runtime.calls), 1)
-        self.assertEqual(sum(call["service"] == "set_hvac_mode" for call in runtime.calls), attempts)
-        self.assertEqual(len(notices), 1, "One notification for this same failed OFF command episode")
-        self.assertEqual(notices[0]["nonresponse_attempts"], 3)
-        self.assertEqual(notices[0]["when"], when)
-        self.assertEqual(notices[0]["data"], {"hvac_mode": "off"})
-
-    async def test_explicit_resume_rebases_owned_dwell_without_stranding_committed_stop(self):
-        runtime = SequenceRuntime()
-        runtime.running_extreme()
-        runtime.open_window()
-        await runtime.evaluate()
-        await runtime.evaluate(30)
-        runtime.now += 120
-        error_type = base["base"]["HomeAssistantError"]
-        with self.assertRaises(error_type):
-            await runtime.async_resume(SPEC)
-        runtime.now += 60
-        await runtime.async_resume(SPEC)
-        self.assertEqual(runtime.record["power"][PRIMARY]["since"], runtime.now)
-        self.assertIn("native_setpoint_stop", runtime.record)
-        await runtime.evaluate()
-        self.assertEqual(len(runtime.calls), 2)
-        await runtime.evaluate(599.999)
-        self.assertEqual(len(runtime.calls), 2)
-        await runtime.evaluate(0.001)
-        self.assert_off_request(runtime, count=3)
-
-    async def test_explicit_resume_after_manual_mode_change_retires_old_stop_without_command(self):
-        runtime = SequenceRuntime()
-        runtime.running_extreme()
-        runtime.enable_config_writes()
-        runtime.open_window()
-        await runtime.evaluate()
-        self.assert_reverse_target(runtime)
-        runtime.state.context = N(user_id="explicit_ha_user", parent_id=None)
-        runtime.report(mode="cool", temperature=12.0)
-        await runtime.evaluate(1)
-        self.assertEqual(runtime.record["paused"], "physical_manual_override")
-        self.assertEqual(runtime.manager.settings["control_mode"], "manual")
-        runtime.now += 119
-        with self.assertRaises(base["base"]["HomeAssistantError"]):
-            await runtime.async_resume(SPEC)
-        runtime.now += 60
-        await runtime.async_resume(SPEC)
-        self.assertNotIn("native_setpoint_stop", runtime.record)
-        self.assertIsNone(runtime.record["pending"])
-        self.assertIsNone(runtime.record["paused"])
-        self.assertEqual(runtime.manager.settings["control_mode"], "pid")
-        self.assertEqual(runtime.state.state, "cool")
-        self.assertEqual(runtime.state.attributes["temperature"], 12.0)
-        self.assertEqual(len(runtime.calls), 1, "Explicit verification itself cannot send a new actuator command")
-
-    async def test_coalesced_off_on_during_target_persistence_cannot_skip_new_start_grace(self):
-        for retry in (False, True):
-            with self.subTest(retry=retry):
-                runtime = SequenceRuntime()
-                runtime.manager.settings["kp"] = 100.0
-                runtime.running_extreme()
-                runtime.report(temperature=runtime.original_target)
-                runtime.record["baseline"][PRIMARY] = production.snapshot(runtime.state)
-                before = production.snapshot(runtime.state)
-                if retry:
-                    await runtime.evaluate()
-                    self.assertEqual(len(runtime.calls), 1)
-                edge_at = []
-                def coalesce(controller):
-                    pending = controller.record.get("pending") or {}
-                    phase_name = "retry_intent" if retry else "intent"
-                    if pending.get("service") == "set_temperature" and pending.get("phase") == phase_name:
-                        controller.after_persist = None
-                        edge_at.append(controller.now)
-                        controller.availability_event("off")
-                        controller.availability_event("heat")
-                runtime.after_persist = coalesce
-                await runtime.evaluate(60 if retry else 0)
-                self.assertIsNone(runtime.after_persist)
-                self.assertEqual(production.snapshot(runtime.state), before,
-                                 "The final snapshot alone cannot reveal this real OFF/ON transition")
-                self.assertEqual(len(runtime.calls), 1 if retry else 0)
-                self.assertIn(PRIMARY, getattr(runtime, "_native_on_epoch", {}))
-                self.assertEqual(runtime._native_on_epoch[PRIMARY], edge_at[0])
-                if retry:
-                    self.assertEqual(runtime.record["pending"]["attempts"], 1)
-                else:
-                    await runtime.evaluate(29.999)
-                    self.assertEqual(runtime.calls, [])
-                    await runtime.evaluate(0.001)
-                    self.assertEqual(len(runtime.calls), 1)
-                    self.assertGreaterEqual(runtime.call_times[-1] - edge_at[0], 30)
-
-    async def test_coalesced_off_on_during_stop_persistence_cannot_turn_new_episode_off(self):
-        for final_leg in (False, True):
-            with self.subTest(final_leg=final_leg):
-                runtime = SequenceRuntime()
-                runtime.running_extreme()
-                runtime.open_window()
-                if final_leg:
-                    await runtime.evaluate()
-                    self.assert_reverse_target(runtime)
-                before = production.snapshot(runtime.state)
-                def coalesce(controller):
-                    pending = controller.record.get("pending") or {}
-                    marker = "stop_finish" if final_leg else "stop_target"
-                    if pending.get(marker) and pending.get("phase") == "intent":
-                        controller.after_persist = None
-                        controller.availability_event("off")
-                        controller.availability_event("heat")
-                runtime.after_persist = coalesce
-                await runtime.evaluate(30 if final_leg else 0)
-                self.assertIsNone(runtime.after_persist)
-                self.assertEqual(production.snapshot(runtime.state), before)
-                self.assertEqual(len(runtime.calls), 1 if final_leg else 0)
-                self.assertFalse(any(call["data"] == {"hvac_mode": "off"} for call in runtime.calls))
-                await runtime.evaluate(30)
-                self.assertEqual(len(runtime.calls), 1 if final_leg else 0,
-                                 "The new ON episode still requires its own minimum-ON dwell")
-
-    async def test_invalidated_stop_survives_cold_rehydration_and_needs_explicit_reconciliation(self):
-        original = SequenceRuntime()
-        original.running_extreme()
-        original.open_window()
-        await original.evaluate()
-        def coalesce(controller):
-            pending = controller.record.get("pending") or {}
-            if pending.get("stop_finish") and pending.get("phase") == "intent":
+    async def test_new_on_epoch_during_stop_persistence_aborts_old_owned_off(self):
+        r = SequenceRuntime("automatic")
+        r.running_extreme()
+        r.open_window()
+        def changed(controller):
+            if (controller.record.get("pending") or {}).get("phase") == "intent":
                 controller.after_persist = None
-                controller.availability_event("off")
-                controller.availability_event("heat")
-        original.after_persist = coalesce
-        await original.evaluate(30)
-        self.assertIsNone(original.after_persist)
-        edge = original._native_on_epoch[PRIMARY]
-        await original.evaluate()
-        self.assertEqual(original.record["native_setpoint_stop"]["invalidated_on_epoch"], edge)
-        self.assertEqual(original.record["power"][PRIMARY]["since"], edge)
-        self.assertEqual(original.record["native_power_observations"][PRIMARY]["since"], edge)
-        runtime = self.rehydrate_stop(original, elapsed=120)
-        self.assertFalse(getattr(runtime, "_native_on_epoch", {}), "Only the durable journal survives")
-        await runtime.evaluate()
-        self.assertEqual(runtime.calls, [], "No stale OFF during the new minimum-ON interval")
-        await runtime.evaluate(600)
-        self.assertEqual(runtime.calls, [], "Elapsed dwell does not revive a stop from an earlier ON episode")
-        self.assertEqual(runtime.record["native_setpoint_stop"]["invalidated_on_epoch"], edge)
+                controller._native_on_epoch[PRIMARY] = controller.now
+        r.after_persist = changed
+        await r.evaluate()
+        self.assertFalse(r.calls)
+        self.assertIn(PRIMARY, r.record["power"])
 
-    async def test_deadline_callback_only_schedules_and_busy_run_retains_the_wakeup(self):
-        runtime = SequenceRuntime()
-        runtime.manager.settings["kp"] = 100.0
-        await runtime.evaluate()
-        runtime.report(mode="heat")
-        await runtime.evaluate()
-        self.assertEqual(len(runtime.calls), 1)
-        self.assertTrue(runtime.timer_loop.handles)
-        runtime.now += 30
-        runtime._tasks[SPEC.identifier] = asyncio.current_task()
-        runtime.timer_loop.fire_due()
-        self.assertEqual(len(runtime.calls), 1, "The timer cannot dispatch directly")
-        self.assertIn(SPEC.identifier, runtime._setpoint_rerun)
-        token = CURRENT_LOOP.set(runtime.timer_loop)
-        try:
-            await runtime._run(SPEC)
-        finally:
-            CURRENT_LOOP.reset(token)
-        self.assertEqual(len(runtime.calls), 2)
-        self.assertNotIn(SPEC.identifier, runtime._setpoint_rerun)
-        self.assertGreater(runtime.scheduled_evaluations, 0)
-        self.assertNotEqual(runtime.record.get("paused"), "controller_exception")
+    async def test_retry_deadline_only_requests_locked_evaluation(self):
+        r = SequenceRuntime()
+        r.running_extreme()
+        r.open_window()
+        await r.evaluate()
+        self.assertEqual(len(r.calls), 1)
+        r.now += 60
+        r.timer_loop.fire_due()
+        self.assertEqual(len(r.calls), 1, "Timer callback never dispatches")
+        self.assertGreater(r.scheduled_evaluations, 0)
+        sequence.cancel_wakeups(r)
+        self.assertFalse(r._setpoint_wakeups)
 
 
 if __name__ == "__main__":

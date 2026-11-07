@@ -131,7 +131,7 @@ class DeviceSleep(unittest.TestCase):
                          "sleep_room_control_paused")
         self.assertEqual(policy.live_device_permission(self.hass,"living",room,facts,
                          {**dev, "sleep_behavior":"sleep_targets", "presence_requirement":"occupied"})[1],
-                         "room_not_occupied")
+                         "sleep_room_control_paused")
         self.assertEqual(policy.live_device_permission(self.hass,"living",room,facts,
                          {**dev,"auto_control":False})[0], "held")
         rt = N(manager=self.manager,hass=self.hass,clock=lambda:self.now)

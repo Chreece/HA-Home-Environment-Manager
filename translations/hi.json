@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "घोषणाएँ · डिवाइस त्रुटियों की सूचना · {channel}",
+        "name": "घोषणाएँ · {channel}डिवाइस त्रुटियों की सूचना",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "नींद · {channel}जब सभी सो रहे हों",
+        "name": "नींद · {channel}जब सभी सो रहे हों तो डिवाइस बंद रखें",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "नियंत्रण · {channel}पूर्ण क्षमता का लक्ष्य मान",
+        "name": "नियंत्रण · {channel}मोड के अनुसार अधिकतम लक्ष्य",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"

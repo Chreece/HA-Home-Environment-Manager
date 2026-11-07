@@ -11,7 +11,9 @@ ROOT = Path(__file__).resolve().parents[2]
 CARD = ROOT / "frontend/air-quality-advisor-card.js"
 SCRIPT = r"""
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const {getEventListeners}=require('node:events');
 const registered=new Map(),toggleHandlers=[],folds=[],createdPopups=[];
+let popupNaturalHeight=180;
 const shadow={
   addEventListener(type,handler){if(type==='toggle')toggleHandlers.push(handler);},
   querySelectorAll(selector){return selector==='[data-room-fold87]'?folds:[];},
@@ -21,6 +23,7 @@ function makePopup(){
   const listeners=new Map();
   const popup={isConnected:false,shown:false,removed:false,style:{},classList:{add(){}},
     setAttribute(){},
+    getBoundingClientRect(){return {height:Math.min(popupNaturalHeight,parseFloat(this.style.maxHeight))};},
     contains(node){
       for(let current=node;current;current=current.parentNode||current.parentElement)
         if(current===this)return true;
@@ -44,7 +47,14 @@ function makePopup(){
 }
 // A real HTMLElement's ownerDocument is an EventTarget. Object.create below
 // bypasses that native constructor, so provide the document explicitly.
-const ownerDocument=Object.assign(new EventTarget(),{
+// Node's EventTarget accepts boolean capture on add but needs an options
+// object for removal. Normalize it to preserve browser listener semantics.
+class DocumentTarget extends EventTarget {
+  removeEventListener(type,handler,options){
+    return super.removeEventListener(type,handler,typeof options==='boolean'?{capture:options}:options);
+  }
+}
+const ownerDocument=Object.assign(new DocumentTarget(),{
   createElement:makePopup,documentElement:{clientWidth:500},
 });
 const context={HTMLElement:class{},window:{customCards:[],innerHeight:800},
@@ -59,7 +69,7 @@ Object.assign(card,{ownerDocument,shadowRoot:shadow,addEventListener(){}});
 // handler through all later installation wrappers. Never reimplement it here.
 card._installFolds87();
 assert.ok(toggleHandlers.length>0);
-function makeDetail(area,id){
+function makeDetail(area,id,rect={right:200,bottom:80,top:40}){
   const fold={localName:'details',open:true,parentElement:null,
     getAttribute:name=>name==='data-room-fold87'?area:null,
     querySelector:()=>null,querySelectorAll:()=>[detail]};
@@ -69,7 +79,7 @@ function makeDetail(area,id){
     getAttribute:name=>name==='data-detail-id'?id:null,
     closest:()=>fold,
     querySelector:selector=>selector===':scope > summary'
-      ?{getAttribute:()=>id,getBoundingClientRect:()=>({right:200,bottom:80,top:40})}
+      ?{getAttribute:()=>id,getBoundingClientRect:()=>rect}
       :{innerHTML:'Content for '+id}};
   folds.push(fold);return detail;
 }
@@ -188,6 +198,23 @@ assert.equal(current.open,false);
 assert.equal(card._floatingInfo87,null);
 assert.equal(fallback.removed,true);
 assert.equal(viewOpen(),false);
+// Rich help must fit on one side of its trigger, including near the viewport
+// bottom. The old 220px reservation could position a 330px popup over the icon.
+context.window.innerHeight=1000;ownerDocument.documentElement.clientWidth=320;
+for(const natural of [90,330,900])for(const [top,bottom] of [[20,46],[480,506],[850,876],[950,976]]){
+  popupNaturalHeight=natural;
+  const detail=makeDetail('geometry','long-help-'+natural+'-'+top,{right:304,top,bottom});
+  card._openInfo87(detail);
+  const pop=card._floatingInfo87,placedTop=parseFloat(pop.style.top),height=pop.getBoundingClientRect().height;
+  const left=parseFloat(pop.style.left),width=parseFloat(pop.style.width);
+  assert.ok(placedTop>=12 && placedTop+height<=988,{natural,top,bottom,placedTop,height});
+  assert.ok(placedTop+height<=top-8 || placedTop>=bottom+8,
+    'Help overlaps its own second-click trigger: '+JSON.stringify({natural,top,bottom,placedTop,height}));
+  assert.ok(left>=12 && left+width<=308);
+  card._closeInfo87(true);
+  assert.equal(getEventListeners(ownerDocument,'click').length,0,'Popup leaked its outside-click listener');
+  assert.equal(getEventListeners(ownerDocument,'keydown').length,0,'Popup leaked its Escape listener');
+}
 console.log('BETA115_POPUP_OWNERSHIP_QUEUED_CLOSE_AND_VISIBLE_CONTROLLER_STATE=PASS');
 console.log('BETA115_POPUP_ESCAPE_OPEN_EVENT_RACE_AND_SETTINGS_GUARD=PASS');
 """
