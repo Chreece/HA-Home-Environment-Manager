@@ -3810,6 +3810,14 @@
             "name": "Yardım"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Duyurular · {channel}Açılma bekleme süresi (dk)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Yardım"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Uyku · {channel}Herkes uyurken",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Yardım"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Duyurular · {channel}Pencerelerin açılmasını iste",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"

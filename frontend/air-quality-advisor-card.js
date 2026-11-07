@@ -609,7 +609,7 @@
       // or leave it; replacing shadowRoot.innerHTML while it is open closes
       // the browser's picker and discards any unfinished manual edit.
       this.shadowRoot.addEventListener('focusin', (event) => {
-        const editor = event.target.closest?.('[data-climate-method],[data-climate-input],[data-pid-calibration-method],[data-pid-model-input],[data-pid-capacity-select],[data-pid-capacity-input]');
+        const editor = event.target.closest?.('[data-climate-method],[data-climate-input],[data-pid-calibration-method],[data-pid-model-input],[data-pid-capacity-select],[data-pid-capacity-input],[data-window-wait-input]');
         if (!editor) return;
         this._focusedEditor = editor;
         if (this._editRenderTimer !== null) {
@@ -618,7 +618,7 @@
         }
       });
       this.shadowRoot.addEventListener('pointerdown', (event) => {
-        const editor = event.target.closest?.('[data-climate-method],[data-climate-input],[data-pid-calibration-method],[data-pid-model-input],[data-pid-capacity-select],[data-pid-capacity-input]');
+        const editor = event.target.closest?.('[data-climate-method],[data-climate-input],[data-pid-calibration-method],[data-pid-model-input],[data-pid-capacity-select],[data-pid-capacity-input],[data-window-wait-input]');
         if (editor) this._focusedEditor = editor;
       });
       this.shadowRoot.addEventListener('focusout', (event) => {
@@ -667,6 +667,42 @@
           Promise.resolve(this._hass.callService('switch',service,{
             entity_id:entityId,
           })).catch((error)=>console.warn('Home Environment Manager shade toggle failed',error));
+          return;
+        }
+        const airing = event.target.closest?.('[data-window-announce-switch]');
+        if (airing && this._hass?.callService) {
+          event.preventDefault();
+          const area=airing.getAttribute('data-controller-area');
+          const id=airing.getAttribute('data-window-announce-switch');
+          const ctrl=airing.getAttribute('data-managed-controller');
+          const entry=this._managedControllers(area).find(item=>
+            item.entityId===ctrl && item.windowAnnounceId===id);
+          if (airing.disabled || !entry || !['on','off'].includes(entry.windowAnnounce?.state)) return;
+          airing.disabled=true;
+          Promise.resolve(this._hass.callService('switch',
+            entry.windowAnnounce.state==='on'?'turn_off':'turn_on',{entity_id:id}))
+            .catch(error=>console.warn('HEM window announcement setting failed',error))
+            .finally(()=>{airing.disabled=!['on','off'].includes(this._hass?.states?.[id]?.state);});
+          return;
+        }
+        const airingSave = event.target.closest?.('[data-save-window-wait]');
+        if (airingSave && this._hass?.callService) {
+          event.preventDefault();
+          const area=airingSave.getAttribute('data-controller-area');
+          const id=airingSave.getAttribute('data-save-window-wait');
+          const ctrl=airingSave.getAttribute('data-managed-controller');
+          const entry=this._managedControllers(area).find(item=>
+            item.entityId===ctrl && item.windowWaitId===id);
+          const input=airingSave.closest('.hem-window-timeout6')?.querySelector('[data-window-wait-input]');
+          if (airingSave.disabled || !entry || entry.windowAnnounce?.state!=='on'
+              || !input || ['unknown','unavailable'].includes(entry.windowWait?.state)) return;
+          if (!input.checkValidity()) { input.reportValidity(); return; }
+          const value=Number(input.value);
+          if (!input.value.trim() || !Number.isInteger(value) || value<0 || value>30) return;
+          airingSave.disabled=true;
+          Promise.resolve(this._hass.callService('number','set_value',{entity_id:id,value}))
+            .catch(error=>console.warn('HEM window waiting time setting failed',error))
+            .finally(()=>{airingSave.disabled=false;});
           return;
         }
         const timing = event.target.closest?.('[data-timed-setpoint-switch]');
@@ -1294,6 +1330,12 @@
       const timedSetpointSwitches=states.filter(([id,item])=>
         id.startsWith('switch.') && item?.attributes?.area_id===area &&
         item.attributes.timed_setpoint_role==='policy');
+      const windowAnnouncementSwitches=states.filter(([id,item])=>
+        id.startsWith('switch.') && item?.attributes?.area_id===area &&
+        item.attributes.window_announcement_role==='policy');
+      const windowWaitingNumbers=states.filter(([id,item])=>
+        id.startsWith('number.') && item?.attributes?.area_id===area &&
+        item.attributes.window_announcement_role==='timeout');
       const errorAnnouncementSwitches=states.filter(([id,item])=>
         id.startsWith('switch.') && item?.attributes?.area_id===area &&
         item.attributes.device_fault_role==='announce');
@@ -1341,6 +1383,13 @@
           item.attributes.source_device_id===climate.attributes.source_device_id);
         const [timedSetpointId,timedSetpoint]=timingSettings.length===1
           ? timingSettings[0] : [null,null];
+        const matchWindow=(items)=>{
+          const matches=items.filter(([,item])=>signature(item)===signature(climate) &&
+            item.attributes.source_device_id===climate.attributes.source_device_id);
+          return matches.length===1?matches[0]:[null,null];
+        };
+        const [windowAnnounceId,windowAnnounce]=matchWindow(windowAnnouncementSwitches);
+        const [windowWaitId,windowWait]=matchWindow(windowWaitingNumbers);
         const faultSettings=errorAnnouncementSwitches.filter(([,item])=>
           signature(item)===signature(climate));
         const [errorAnnounceId,errorAnnounce]=faultSettings.length===1
@@ -1377,12 +1426,42 @@
         const [fanPurposeId,fanPurpose]=purposes.length===1?purposes[0]:[null,null];
         return {entityId,climate,methodId,method,resumeButtonId,resumeButton,
                 errorAnnounceId,errorAnnounce,timedSetpointId,timedSetpoint,
+                windowAnnounceId,windowAnnounce,windowWaitId,windowWait,
                 calibrationSelectId,calibrationSelect,calibrationButtonId,calibrationButton,
                 calibrationNumbers,reviewApproveId,reviewApprove,
                 reviewDiscardId,reviewDiscard,capacityModeId,capacityMode,capacityDirectionId,
                 capacityDirection,capacityButtonId,capacityButton,capacityNumbers,
                 fanPurposeId,fanPurpose};
       }).sort((a,b)=>a.entityId.localeCompare(b.entityId));
+    }
+
+    _windowAnnouncementControls6(entry,area,saveLabel) {
+      if (!entry.windowAnnounceId) return '';
+      const labels={"en":["Ask to open windows","Window opening wait (min)"],"el":["Αίτημα ανοίγματος παραθύρων","Αναμονή ανοίγματος (λεπτά)"],"de":["Zum Fensteröffnen auffordern","Wartezeit zum Lüften (min)"],"fr":["Demander d’ouvrir les fenêtres","Attente d’ouverture (min)"],"es":["Pedir que se abran las ventanas","Espera de apertura (min)"],"it":["Chiedi di aprire le finestre","Attesa apertura (min)"],"nl":["Vragen om ramen te openen","Wachttijd voor openen (min)"],"pt":["Pedir para abrir as janelas","Espera pela abertura (min)"],"pt-BR":["Pedir para abrir as janelas","Espera pela abertura (min)"],"pl":["Poproś o otwarcie okien","Czas oczekiwania na otwarcie (min)"],"cs":["Požádat o otevření oken","Čekání na otevření (min)"],"sk":["Požiadať o otvorenie okien","Čakanie na otvorenie (min)"],"sv":["Be om att öppna fönster","Väntetid för öppning (min)"],"nb":["Be om å åpne vinduer","Ventetid for åpning (min)"],"da":["Bed om at åbne vinduer","Ventetid på åbning (min)"],"fi":["Pyydä avaamaan ikkunat","Avaamisen odotusaika (min)"],"hu":["Ablaknyitás kérése","Várakozás ablaknyitásra (perc)"],"ro":["Solicită deschiderea ferestrelor","Așteptare pentru deschidere (min)"],"bg":["Поискай отваряне на прозорците","Изчакване за отваряне (мин)"],"hr":["Zatraži otvaranje prozora","Čekanje otvaranja (min)"],"sr":["Затражи отварање прозора","Чекање отварања (мин)"],"ru":["Попросить открыть окна","Ожидание открытия (мин)"],"uk":["Попросити відкрити вікна","Очікування відкриття (хв)"],"tr":["Pencerelerin açılmasını iste","Açılma bekleme süresi (dk)"],"ar":["طلب فتح النوافذ","انتظار فتح النوافذ (دقيقة)"],"he":["בקשה לפתוח חלונות","המתנה לפתיחת חלונות (דקות)"],"fa":["درخواست باز کردن پنجره‌ها","انتظار برای باز کردن (دقیقه)"],"hi":["खिड़कियाँ खोलने का अनुरोध","खोलने की प्रतीक्षा (मिनट)"],"bn":["জানালা খোলার অনুরোধ","খোলার জন্য অপেক্ষা (মিনিট)"],"ta":["சாளரங்களைத் திறக்கக் கோரு","திறப்பதற்கான காத்திருப்பு (நிமிடம்)"],"ur":["کھڑکیاں کھولنے کی درخواست","کھولنے کا انتظار (منٹ)"],"id":["Minta membuka jendela","Waktu tunggu membuka (menit)"],"ja":["窓を開けるよう案内","窓を開けるまでの待機（分）"],"ko":["창문 열기 요청","창문 열기 대기 시간(분)"],"th":["ขอให้เปิดหน้าต่าง","เวลารอเปิดหน้าต่าง (นาที)"],"vi":["Yêu cầu mở cửa sổ","Thời gian chờ mở (phút)"],"zh-Hans":["提示打开窗户","等待开窗（分钟）"],"zh-Hant":["提示打開窗戶","等待開窗（分鐘）"]};
+      const names=labels[this._language()] || labels.en;
+      const enabled=entry.windowAnnounce?.state==='on';
+      const ready=['on','off'].includes(entry.windowAnnounce?.state);
+      const toggle='<div class="hem-device-error-toggle"><button type="button" role="switch" '+
+        'data-window-announce-switch="'+escape(entry.windowAnnounceId)+'" '+
+        'data-controller-area="'+escape(area)+'" data-managed-controller="'+escape(entry.entityId)+'" '+
+        (ready?'':'disabled ')+'aria-checked="'+enabled+'" aria-label="'+escape(names[0])+'">'+
+        this._icon('mdi:window-open-variant')+'<span>'+escape(names[0])+'</span><b>'+
+        escape(this._controllerStatusLabel(entry.windowAnnounce?.state))+'</b></button></div>';
+      let timeout='';
+      if (enabled && entry.windowWaitId) {
+        const value=Number(entry.windowWait?.state);
+        const available=Number.isFinite(value) && !['unknown','unavailable',''].includes(entry.windowWait?.state);
+        const field='<div class="hem-window-timeout6"><label><span>'+escape(names[1])+'</span>'+
+          '<input type="number" data-window-wait-input="'+escape(entry.windowWaitId)+'" '+
+          'aria-label="'+escape(names[1])+'" min="0" max="30" step="1" required '+
+          'value="'+(available?escape(value):'')+'" '+(available?'':'disabled')+'></label>'+
+          '<button type="button" data-save-window-wait="'+escape(entry.windowWaitId)+'" '+
+          'data-controller-area="'+escape(area)+'" data-managed-controller="'+escape(entry.entityId)+'" '+
+          (available?'':'disabled')+'>'+escape(saveLabel)+'</button></div>';
+        timeout=this._configurationHelp116(field,entry.windowWaitId,entry.windowWait,names[1]);
+      }
+      return '<div class="hem-window-settings6">'+
+        this._configurationHelp116(toggle,entry.windowAnnounceId,entry.windowAnnounce,names[0])+timeout+'</div>';
     }
 
     _controllerSignature() {
@@ -1392,13 +1471,15 @@
         .filter(([id, state]) =>
           (id.startsWith('select.') || id.startsWith('climate.') || (id.startsWith('sensor.') && state?.attributes?.status_code) ||
            (id.startsWith('switch.') && (state?.attributes?.device_fault_role==='announce' ||
-             state?.attributes?.timed_setpoint_role==='policy')) ||
+             state?.attributes?.timed_setpoint_role==='policy' ||
+             state?.attributes?.window_announcement_role==='policy')) ||
            (id.startsWith('button.') && (
              state?.attributes?.pid_calibration_role || state?.attributes?.pid_fan_capacity_role ||
              state?.attributes?.pid_review_role ||
              state?.attributes?.controller_resume_role)) ||
            (id.startsWith('number.') && (
-             state?.attributes?.pid_calibration_field || state?.attributes?.pid_fan_capacity_field))) &&
+             state?.attributes?.pid_calibration_field || state?.attributes?.pid_fan_capacity_field ||
+             state?.attributes?.window_announcement_role==='timeout'))) &&
           Array.isArray(state?.attributes?.source_entity_ids) &&
           typeof state.attributes.area_id==='string')
         .map(([id,state])=>[
@@ -1412,6 +1493,7 @@
           state.attributes.pid_calibration_role,
           state.attributes.device_fault_role,
           state.attributes.timed_setpoint_role,
+          state.attributes.window_announcement_role,
           state.attributes.source_device_id,
           state.attributes.native_error,
           state.attributes.pid_review_role,
@@ -1899,6 +1981,7 @@
             '" aria-description="'+escape(timingText[1])+'" title="'+escape(timingText[1])+'">'+
             this._icon('mdi:timer-outline')+'<span>'+escape(timingText[0])+'</span><b>'+
             escape(this._controllerStatusLabel(timingState))+'</b></button></div>' : '';
+        const airingControls=this._windowAnnouncementControls6(entry,room.area_id,l.save);
         const deviceFault=entry.errorAnnounce?.attributes?.native_error;
         const errorLabels={
           en:['Announce errors','Physical device error','Severity','Code','Details',
@@ -2158,6 +2241,7 @@
           this._configurationHelp116(alertSwitch,entry.errorAnnounceId,entry.errorAnnounce,errorLabels[0])+
           recoveryPanel+this._configurationHelp116(resumeControl,entry.resumeButtonId,entry.resumeButton,continueLabel)+
           this._configurationHelp116(method,entry.methodId,entry.method,l.method)+
+          airingControls+
           this._configurationHelp116(timedSwitch,entry.timedSetpointId,entry.timedSetpoint,timingText[0])+editors.join('')+
           this._calibrationDetails65(entry,control==='pid' ?
             this._configurationHelp116(calibrationMethod,entry.calibrationSelectId,entry.calibrationSelect,pidLabels[0])+
@@ -2753,6 +2837,13 @@
       .hem-device-error .climate-entity-link{margin-top:5px;text-decoration:underline;max-width:100%;
         overflow-wrap:anywhere}
       .hem-device-error-toggle{margin:6px 0}
+      .hem-window-settings6{min-width:0;max-width:100%;margin:5px 0}
+      .hem-window-settings6 .hem-device-error-toggle button{width:100%;min-width:0;text-align:start}
+      .hem-window-settings6 .hem-device-error-toggle button span{min-width:0;overflow-wrap:anywhere;white-space:normal}
+      .hem-window-timeout6{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:end;min-width:0}
+      .hem-window-timeout6 label{min-width:0;display:grid;gap:4px;overflow-wrap:anywhere}
+      .hem-window-timeout6 input{box-sizing:border-box;width:100%;min-width:0;max-width:100%;padding:7px;border:1px solid var(--aqa-edge);border-radius:6px;background:var(--card-background-color);color:var(--primary-text-color)}
+      .hem-window-timeout6 button{padding:7px;border:1px solid var(--aqa-edge);border-radius:6px;background:var(--card-background-color);color:var(--primary-text-color)}
       .hem-device-error-toggle button{border:1px solid var(--aqa-edge);border-radius:8px;
         background:var(--aqa-surface);color:var(--aqa-text);padding:6px 10px;
         font-size:11px;display:flex;align-items:center;gap:8px;cursor:pointer}

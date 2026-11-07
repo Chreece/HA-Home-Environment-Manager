@@ -3819,6 +3819,14 @@
             "name": "Help"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Announcement · {channel}Window opening wait (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
       }
     },
     "switch": {
@@ -3992,6 +4000,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Sleep · {channel}When everyone is sleeping",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Announcement · {channel}Ask to open windows",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"

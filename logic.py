@@ -68,6 +68,9 @@ class Recommendation:
     # air mechanically. Keep adverse/unknown outside conditions explicit.
     cautions: tuple[Reason, ...] = ()
     wait_seconds: int = 0
+    # Each native device owns its own finite response deadline. The room is
+    # only the delivery group; a slower device cannot extend another's wait.
+    wait_devices: tuple[dict[str, Any], ...] = ()
 
     @property
     def action_signature(self) -> str:

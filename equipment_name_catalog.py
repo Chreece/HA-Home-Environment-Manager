@@ -1927,6 +1927,23 @@ for _locale, _name in _HOUSEHOLD_SLEEP_NAMES.items():
     EQUIPMENT_TRANSLATED_NAMES[_locale]["sleep_when_everyone_asleep"] = _name
 
 
+# Catalog validation scripts also load this data file without importing HA.
+if __package__:
+    from .window_option_catalog import WINDOW_OPTION_LABELS
+else:
+    from pathlib import Path
+    from runpy import run_path
+    WINDOW_OPTION_LABELS = run_path(str(Path(__file__).with_name("window_option_catalog.py")))["WINDOW_OPTION_LABELS"]
+
+for _locale, _labels in WINDOW_OPTION_LABELS.items():
+    _names = EQUIPMENT_TRANSLATED_NAMES[_locale]
+    _group = _names["announce_device_errors"].partition(" · ")[0]
+    for _key, _label in zip(
+        ("announce_before_start", "window_open_timeout_minutes"), _labels,
+    ):
+        _names[_key] = _group + " · {channel}" + _label
+
+
 def _pid_parameter_label(key: str) -> str | None:
     if key in _PID_PARAMETER_LABELS:
         return _PID_PARAMETER_LABELS[key]

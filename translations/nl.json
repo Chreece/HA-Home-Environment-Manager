@@ -3810,6 +3810,14 @@
             "name": "Hulp"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Meldingen · {channel}Wachttijd voor openen (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Slaap · {channel}Wanneer iedereen slaapt",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Meldingen · {channel}Vragen om ramen te openen",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"

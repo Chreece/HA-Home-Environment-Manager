@@ -297,7 +297,7 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
                     r.state.attributes[key] = value  # Actual source feedback, never a service side effect.
                 self.assertFalse(r.manager.power_grant)
 
-    async def test_unboosted_correction_keeps_its_ack_and_bounded_retry_lifecycle(self):
+    async def test_unboosted_correction_keeps_its_ack_and_minute_retry_lifecycle(self):
         for kind in ("heat", "cool", "dry", "humidify", "dehumidify"):
             with self.subTest(kind=kind), endpoint(kind) as r:
                 r.manager.power_grant = False
@@ -313,10 +313,14 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
                 original = deepcopy(r.record["pending"])
                 command = (original["service"], original["data"])
                 self.assertEqual(original["data"], {key: r.goal})
-                for attempt in (2, 3, 4):
-                    await r.evaluate(30.)
+                for attempt in (2, 3, 4, 5):
+                    await r.evaluate(59.)
+                    self.assertEqual(calls(r), [command] * (attempt - 1),
+                                     "A target correction cannot shorten the retry minute")
+                    await r.evaluate(1.)
                     self.assertEqual(calls(r), [command] * attempt, r.statuses)
                     self.assertEqual(r.record["pending"]["attempts"], attempt)
+                    self.assertEqual(r.record["pending"]["when"], original["when"])
                     self.assertNotIn("unconfirmed_native_target", r.record,
                                      "A reducing correction must not be retired as obsolete active output")
                     self.assertFalse(r.record["power"])
@@ -324,7 +328,7 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
                 r.state.attributes[key] = r.goal
                 await r.evaluate(1.)
                 self.assertIsNone(r.record["pending"])
-                self.assertEqual(len(r.calls), 4)
+                self.assertEqual(len(r.calls), 5)
                 self.assert_no_residual(r)
 
     async def cross_at_yield(self, runtime, stage, *, pending_phase="intent"):
@@ -478,7 +482,7 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
                     r.seed_residual()
                     await r.evaluate()
                     for _ in range(1, attempts):
-                        await r.evaluate(30.)
+                        await r.evaluate(60.)
                     original = deepcopy(r.record["pending"])
                     self.assertEqual(original["attempts"], attempts)
                     self.assertEqual(len(r.calls), attempts)
@@ -489,21 +493,16 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
                     self.assertEqual(r.record["unconfirmed_native_target"]["attempts"], attempts)
                     self.assert_no_residual(r)
                     r.measurement = r.goal + (-1. if r.increasing else 1.)
-                    await r.evaluate(29.)
-                    if attempts < 4:
-                        self.assertEqual(len(r.calls), attempts + 1, r.statuses)
-                        pending = r.record["pending"]
-                        self.assertEqual(pending["attempts"], attempts + 1)
-                        self.assertEqual(pending["when"], original["when"])
-                        self.assertEqual(pending["data"], original["data"])
-                        self.assertEqual(pending["expected"], original["expected"])
-                        self.assertNotIn("unconfirmed_native_target", r.record)
-                    else:
-                        for _ in range(3):
-                            await r.evaluate(30.)
-                            self.assertEqual(len(r.calls), 4,
-                                             "A target crossing cannot grant a fifth attempt without a real reconnect")
-                        self.assertEqual(r.record["unconfirmed_native_target"]["attempts"], 4)
+                    await r.evaluate(58.)
+                    self.assertEqual(len(r.calls), attempts, "Returning demand cannot shorten the minute")
+                    await r.evaluate(1.)
+                    self.assertEqual(len(r.calls), attempts + 1, r.statuses)
+                    pending = r.record["pending"]
+                    self.assertEqual(pending["attempts"], attempts + 1)
+                    self.assertEqual(pending["when"], original["when"])
+                    self.assertEqual(pending["data"], original["data"])
+                    self.assertEqual(pending["expected"], original["expected"])
+                    self.assertNotIn("unconfirmed_native_target", r.record)
                     self.assertFalse(r.record.get("paused"))
 
     async def test_pending_fan_boost_cannot_hold_an_owned_heater_on_after_target_reached(self):
@@ -627,38 +626,34 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
     async def test_two_distinct_unconfirmed_targets_preserve_both_budgets_and_allow_off(self):
         with endpoint("heat") as r:
             r.manager.settings["kp"] = 100.
-            r.own(age=900., extreme=False)
+            r.own(age=100., extreme=False)
             r.seed_residual()
             await r.evaluate()
             for _ in range(3):
-                await r.evaluate(30.)
-            await r.evaluate(30.)
-            self.assertEqual(r.record.get("paused"), "physical_acknowledgement_missing")
-            interrupted = deepcopy(r.record["pending"])
-            await r.evaluate()
-            # Each retry must settle for 120 seconds from its own dispatch.
-            # The old first-attempt age cannot start the two-check proof.
-            await r.evaluate(interrupted["last_attempt_at"] + 120. - r.now - 1.)
-            self.assertEqual(r.record["pending"], interrupted)
-            self.assertNotIn("pending_resume_probe", r.record)
+                await r.evaluate(60.)
             self.assertEqual(len(r.calls), 4)
+            first = deepcopy(r.record["pending"])
+            r.measurement = r.goal
             await r.evaluate(1.)
-            self.assertIn("pending_resume_probe", r.record)
-            await r.evaluate(60.)
             self.assertIsNone(r.record.get("pending"))
+            self.assertEqual(len(r.calls), 4, "Minimum ON still prevents physical OFF")
             previous = deepcopy(r.record["unconfirmed_native_target"])
             self.assertEqual(previous["attempts"], 4)
+            self.assertEqual(previous["when"], first["when"])
             self.assertEqual(previous["data"], {"temperature": 30.})
             # Native capability metadata may change independently. The next
             # exact endpoint is a different target and retains its own journal.
             r.state.attributes["max_temp"] = 32.
+            r.measurement = r.goal - 1.
             await r.evaluate()
             newest = deepcopy(r.record["pending"])
             self.assertEqual(newest["data"], {"temperature": 32.})
             self.assertEqual(newest["attempts"], 1)
             self.assertEqual(r.record["unconfirmed_native_target"], previous)
             r.measurement = r.goal
-            await r.evaluate(1.)
+            await r.evaluate(318.999)
+            self.assertEqual(len(r.calls), 5, "Both target journals must preserve physical minimum ON")
+            await r.evaluate(.001)
             self.assertEqual(calls(r)[-1], off(r), r.statuses)
             self.assertEqual(len(r.calls), 6)
             self.assertEqual(r.record.get("previous_unconfirmed_native_target"), previous)
@@ -679,7 +674,7 @@ class PIDTargetCutoffTests(unittest.IsolatedAsyncioTestCase):
                     await r.evaluate()
                     initial = deepcopy(r.record["pending"])
                     self.assertEqual(len(r.calls), 1)
-                    r.now += 30.
+                    r.now += 60.
                     await self.cross_at_yield(r, stage, pending_phase="retry_intent")
                     await r.evaluate()
                     self.assertEqual(calls(r), [(initial["service"], initial["data"]), off(r)], r.statuses)

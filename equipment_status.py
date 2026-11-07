@@ -113,6 +113,15 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         now = runtime.clock()
         on_elapsed = off_elapsed = on_remaining = off_remaining = None
         cooldown_remaining = None
+        waiter = getattr(self._manager, "window_open_wait", None)
+        wait_status = {"status": "window_wait_inactive", "remaining_seconds": 0}
+        if waiter is not None:
+            wait_cap = equipment.capabilities(self._manager, self._spec)
+            primary = wait_cap.primary if wait_cap else (
+                record.get("capabilities", {}).get("primary")
+                if isinstance(record.get("capabilities"), dict) else None)
+            if primary in self._spec.source_entities:
+                wait_status = waiter.status(self._spec.area_id, primary)
         if isinstance(supply_id, str) and supply_id:
             from .equipment_power_switch import (
                 device_supply_dwell, supply_off_since,
@@ -160,11 +169,7 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "native_minimum_off_until": observed.get("minimum_off_until"),
             "setpoint_wait_remaining_seconds": observed.get("setpoint_wait_remaining_seconds"),
             "setpoint_wait_until": observed.get("setpoint_wait_until"),
-            "window_open_wait": (
-                waiter.status(self._spec.area_id)
-                if (waiter := getattr(self._manager, "window_open_wait", None)) is not None
-                else {"status": "window_wait_inactive", "remaining_seconds": 0}
-            ),
+            "window_open_wait": wait_status,
             "window_open_wait_remaining_seconds": observed.get("window_open_wait_remaining_seconds"),
             "window_open_wait_until": observed.get("window_open_wait_until"),
             "requested_temperature": observed.get("requested_temperature"),
@@ -352,6 +357,8 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "upstream_minimum_off_remaining_seconds": off_remaining,
             "upstream_idle_cooldown_remaining_seconds": cooldown_remaining,
             "window_pause_enabled": cfg.get("pause_on_window_open", True),
+            "announce_before_start": cfg.get("announce_before_start") is True,
+            "window_open_timeout_minutes": cfg.get("window_open_timeout_minutes", 5),
             "window_policy": dict(getattr(runtime, "_window_policy_cache", {}).get(
                 self._spec.identifier, {})),
             "sleep_pause_requested": (

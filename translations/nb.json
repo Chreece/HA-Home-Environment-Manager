@@ -3810,6 +3810,14 @@
             "name": "Hjelp"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Meldinger · {channel}Ventetid for åpning (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjelp"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Søvn · {channel}Når alle sover",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjelp"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Meldinger · {channel}Be om å åpne vinduer",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"

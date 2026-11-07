@@ -11,10 +11,28 @@ import asyncio
 import logging
 from typing import Any
 
+from .ai_rewrite import DEFAULT_AGENT, ai_effectively_enabled
+from .const import CONF_AI_AGENT
+
 _LOGGER = logging.getLogger(__name__)
 HUB_DOMAIN = "announcement_hub"
 HUB_ACTION = "announcement_hub"
 HUB_RESPONSE_TIMEOUT = 120  # Safety bound for Hub acknowledgement, not an AI limit.
+
+
+def hub_ai_options(settings: Any) -> dict[str, Any]:
+    """Keep HEM's AI opt-in authoritative for every Hub announcement.
+
+    Send source facts in rewrite mode. Hub owns the rewrite, its provider
+    fallback and delivery; HEM must not rewrite the same message first.
+    An explicit False also overrides a Hub-wide enabled default.
+    """
+    enabled = ai_effectively_enabled(settings)
+    options: dict[str, Any] = {"use_ai": enabled, "ai_mode": "rewrite"}
+    agent = str(settings.get(CONF_AI_AGENT, DEFAULT_AGENT) or DEFAULT_AGENT)
+    if enabled and agent != DEFAULT_AGENT:
+        options["ai_agent"] = agent
+    return options
 
 
 def _hub_entries(hass: Any) -> list[Any]:
@@ -80,6 +98,7 @@ def make_hub_payload(
                           for reason in recommendation.reasons)
                   else "warning"),
         "use_ai": bool(use_ai),
+        "ai_mode": "rewrite",
     }
     if speech and visual:
         data["text"] = message
@@ -98,8 +117,9 @@ async def async_submit_hub(hass: Any, payload: dict[str, Any]) -> bool:
     """Report whether Hub actually queued the submitted message.
 
     Hub's accepted=True is authoritative; do not inspect its routes or AI
-    result. Hub currently rewrites before acknowledgement, so allow time for
-    a slow conversation agent. A rejection returns False but must NEVER make
+    result. Current Hub versions persist the original before asynchronous AI;
+    the response timeout also supports older versions rewriting before ACK.
+    A rejection returns False but must NEVER make
     Advisor produce an additional native notification while Hub is live.
     """
     if not hub_available(hass):

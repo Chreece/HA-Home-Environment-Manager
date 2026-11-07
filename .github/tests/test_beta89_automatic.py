@@ -172,6 +172,7 @@ class TestAutomatic(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn(SPEC.identifier,r._restart_baseline_pending)
         self.assertEqual(r.record['baseline']['climate.native']['state'],'heat')
         self.assertEqual(Model.settings(r.manager,SPEC)['control_mode'],'automatic')
+        r.record['native_control_confirmed']={'climate.native':{'at':900.,'context_id':None}}
         # A later real native mode change, unlike the first HA restore,
         # must still stop the supervisor and switch only that device to Manual.
         r.state=FakeState('cool',temperature=21)
@@ -190,6 +191,7 @@ class TestAutomatic(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn('paused',r.record)
         self.assertEqual(r.record['baseline']['climate.native']['attributes']['percentage'],-16)
         self.assertEqual(r.status[-1][1]['verified_user_intervention'],False)
+        r.record['native_control_confirmed']={'climate.native':{'at':900.,'context_id':None}}
         # HA user edits are still recognized as real manual intervention.
         r.state=FakeState('off',percentage=25)
         r.state.context=Obj(user_id='direct-ha-user',parent_id=None)

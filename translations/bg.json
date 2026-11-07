@@ -3810,6 +3810,14 @@
             "name": "Помощ"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Известия · {channel}Изчакване за отваряне (мин)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помощ"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Сън · {channel}Когато всички спят",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помощ"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Известия · {channel}Поискай отваряне на прозорците",
         "state_attributes": {
           "configuration_help": {
             "name": "Помощ"

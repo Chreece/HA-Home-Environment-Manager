@@ -3810,6 +3810,14 @@
             "name": "सहायता"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "घोषणाएँ · {channel}खोलने की प्रतीक्षा (मिनट)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "सहायता"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "नींद · {channel}जब सभी सो रहे हों",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "सहायता"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "घोषणाएँ · {channel}खिड़कियाँ खोलने का अनुरोध",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"

@@ -3810,6 +3810,14 @@
             "name": "Súgó"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Értesítések · {channel}Várakozás ablaknyitásra (perc)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Alvás · {channel}Amikor mindenki alszik",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Értesítések · {channel}Ablaknyitás kérése",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"

@@ -90,12 +90,12 @@ class WindowSpeechTests(unittest.TestCase):
                 title, body = messages.announcement(notice, language)
                 self.assertTrue(title)
                 self.assertIn(notice.area_name, body)
-                self.assertIn("Badfenster", body)
+                self.assertNotIn("Badfenster", body)
                 self.assertIn("2.5 g/kg", body)
                 for warning in warnings:
                     self.assertIn(messages.explain(warning, language), body)
                 expected = text.WINDOW_OPEN_TEXT[language]["conditional_open"].format(
-                    area=notice.area_name, windows="Badfenster",
+                    area=notice.area_name, windows=text.ROOM_WINDOW_NAMES[language],
                     reasons=messages.explain(notice.reasons[0], language),
                     cautions="; ".join(messages.explain(warning, language) for warning in warnings),
                 )

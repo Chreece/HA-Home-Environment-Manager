@@ -3810,6 +3810,14 @@
             "name": "راهنما"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "اعلان‌ها · {channel}انتظار برای باز کردن (دقیقه)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "راهنما"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "خواب · {channel}وقتی همه خواب هستند",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "راهنما"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "اعلان‌ها · {channel}درخواست باز کردن پنجره‌ها",
         "state_attributes": {
           "configuration_help": {
             "name": "راهنما"

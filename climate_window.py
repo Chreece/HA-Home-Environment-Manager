@@ -71,11 +71,11 @@ def _running_effects(hass: Any, area: str, config: dict) -> list[tuple[str, str]
 
 
 def _supported_effect(hass: Any, area: str, settings: dict,
-                      entity: Any, effect: Any) -> bool:
+                      entity: Any, effect: Any, *, fan_purpose: Any = None) -> bool:
     """Revalidate a selected pending endpoint against live local capabilities."""
     from .discovery import entity_area
 
-    if (not isinstance(entity, str) or effect not in ("heat", "cool", "dry")
+    if (not isinstance(entity, str) or effect not in ("heat", "cool", "dry", "humidify", "filtration")
             or entity_area(hass, entity) != area):
         return False
     selected = settings.get("selected_devices")
@@ -86,13 +86,34 @@ def _supported_effect(hass: Any, area: str, settings: dict,
             or observed.attributes.get("hvac_action") == "defrosting"):
         return False
     domain = entity.partition(".")[0]
+    if effect == "filtration":
+        profiles = settings.get("device_settings", {})
+        profile = profiles.get(entity, {}) if isinstance(profiles, dict) else {}
+        purpose = fan_purpose
+        if purpose not in ("extraction", "filtration"):
+            purpose = profile.get("fan_purpose") if isinstance(profile, dict) else None
+        if purpose not in ("extraction", "filtration"):
+            if settings.get("extraction_fan_entity") == entity:
+                purpose = "extraction"
+            elif settings.get("purifier_fan_entity") == entity:
+                purpose = "filtration"
+        if purpose != "filtration":
+            return False
+        # A declared indoor particle-filter role is required. FAN_ONLY by
+        # itself does not prove that the equipment removes any pollutant.
+        return bool(domain == "fan" and observed.state in ("on", "off") or
+                    domain == "climate" and observed.state in ("off", "fan_only")
+                    and set(observed.attributes.get("hvac_modes", ())) == {"off", "fan_only"})
     if domain == "climate":
+        if effect == "humidify":
+            return False
         caps = classify_hvac(observed.attributes, observed.state)
         return bool(caps.get("status") == "ready"
                     and caps.get({"heat": "heating", "cool": "cooling", "dry": "drying"}[effect]))
     if domain == "humidifier":
-        return bool(effect == "dry" and observed.state in ("on", "off")
-                    and observed.attributes.get("device_class") == "dehumidifier")
+        expected = "dehumidifier" if effect == "dry" else "humidifier" if effect == "humidify" else None
+        return bool(expected and observed.state in ("on", "off")
+                    and observed.attributes.get("device_class") == expected)
     if domain in ("switch", "input_boolean", "number", "input_number"):
         # A direct actuator has no intrinsic HVAC mode. Its real configured
         # heating/cooling role is required, even for advisory substitution.
@@ -134,22 +155,31 @@ def _pending_effects(hass: Any, area: str, settings: dict, plan: dict,
     humidity = humidity if isinstance(humidity, dict) else {}
     moisture = equipment.get("moisture", {})
     moisture = moisture if isinstance(moisture, dict) else {}
-    if (humidity.get("status") == "advisory" and humidity.get("action") == "dry"
-            and moisture.get("status") == "selected" and moisture.get("action") == "dry"):
-        candidates.append({"entity_id": moisture.get("entity_id"), "effect": "dry",
+    if (humidity.get("status") == "advisory" and humidity.get("action") in ("dry", "humidify")
+            and moisture.get("status") == "selected" and moisture.get("action") == humidity.get("action")):
+        effect = humidity["action"]
+        candidates.append({"entity_id": moisture.get("entity_id"), "effect": effect,
                            "temperature_c": temperature,
                            "humidity_percent": humidity.get("measured_rh"),
-                           "target_humidity": settings.get("humidity_high_rh", 60)})
+                           "target_humidity": settings.get(
+                               "humidity_low_rh" if effect == "humidify" else "humidity_high_rh",
+                               40 if effect == "humidify" else 60)})
     result = []
     seen = set()
     for item in candidates:
         entity, effect = item.get("entity_id"), item.get("effect")
-        if not _supported_effect(hass, area, settings, entity, effect):
+        if not _supported_effect(hass, area, settings, entity, effect,
+                                 fan_purpose=item.get("fan_purpose")):
             continue
-        if effect == "dry":
+        if effect in ("dry", "humidify"):
             measured = _number(item.get("humidity_percent"), 0, 100)
             target = _number(item.get("target_humidity"), 20, 80)
-            needed = measured is not None and target is not None and measured > target
+            needed = measured is not None and target is not None and (
+                measured < target if effect == "humidify" else measured > target)
+        elif effect == "filtration":
+            measured = _number(item.get("pm25_ug_m3"), 0, 2000)
+            target = _number(item.get("target_pm25"), 0, 2000)
+            needed = measured is not None and target is not None and measured > target + 2
         else:
             measured = _number(item.get("temperature_c"), -10, 50)
             target = _number(item.get("target_c"), 5, 40)
@@ -267,30 +297,59 @@ def window_substitution(
         code = "climate_window_heat"
         evidence = {"temperature_difference_c": round(difference, 1),
                     "indoor_temperature_c": indoor_c, "outdoor_temperature_c": outdoor_c}
+    elif effect == "filtration":
+        # Unlike CO2, measured outdoor particles can exceed indoor levels.
+        # Only the same pollutant and normalized unit prove this alternative.
+        outside_values = [value for reading in outdoor if reading.metric == "pm25"
+                          and (value := _number(reading.value, 0, 2000)) is not None]
+        inside_values = [value for item in pending
+                         if (value := _number(item.get("pm25_ug_m3"), 0, 2000)) is not None]
+        targets = [value for item in pending
+                   if (value := _number(item.get("target_pm25"), 0, 2000)) is not None]
+        if not outside_values or not inside_values or not targets:
+            return {**base, "status": "measured_outdoor_particle_benefit_not_verified"}
+        outside_pm25 = sum(outside_values) / len(outside_values)
+        advantage = min(inside_values) - outside_pm25
+        if advantage < 2 or outside_pm25 > min(targets) - 2:
+            return {**base, "status": "outside_particles_not_low_enough"}
+        code = "climate_window_filtration"
+        evidence = {"pm25_advantage_ug_m3": round(advantage, 1),
+                    "indoor_pm25_ug_m3": round(min(inside_values), 1),
+                    "outdoor_pm25_ug_m3": round(outside_pm25, 1)}
     else:
+        humidifying = effect == "humidify"
         humidity = plan.get("humidity_management", {})
         if (not pending and (not isinstance(humidity, dict) or
                 humidity.get("status") != "advisory" or
-                humidity.get("action") != "dry")):
-            return {**base, "status": "no_verified_drying_demand"}
+                humidity.get("action") != effect)):
+            return {**base, "status": "no_verified_humidifying_demand" if humidifying
+                    else "no_verified_drying_demand"}
         if indoor_c is None:
             return {**base, "status": "indoor_temperature_missing_for_moisture"}
         moisture = science.get("moisture", {}) if isinstance(science, dict) else {}
-        if not isinstance(moisture, dict) or moisture.get("status") != "drying":
-            return {**base, "status": "measured_outdoor_drying_not_verified"}
-        advantage = _number(moisture.get("drying_potential_g_kg"), 0, 30)
+        if not isinstance(moisture, dict) or moisture.get("status") != (
+            "humidifying" if humidifying else "drying"
+        ):
+            return {**base, "status": "measured_outdoor_humidifying_not_verified" if humidifying
+                    else "measured_outdoor_drying_not_verified"}
+        delta = _number(moisture.get("drying_potential_g_kg"), -30, 30)
+        advantage = -delta if humidifying and delta is not None else delta
         targets = [value for item in pending
                    if (value := _number(item.get("target_humidity"), 20, 80)) is not None]
-        target_rh = min(targets) if targets else _number(settings.get("humidity_high_rh", 60), 30, 80)
+        target_rh = (max(targets) if humidifying else min(targets)) if targets else _number(
+            settings.get("humidity_low_rh" if humidifying else "humidity_high_rh",
+                         40 if humidifying else 60), 20, 80)
         projected = _number(moisture.get("outside_air_rh_when_warmed_percent"), 0, 100)
         # Prefer shorter airing if outside air would create a large heating
         # burden. Do not equate a window to dehumidifier performance.
         if (advantage is None or advantage < 1.5 or target_rh is None
-                or projected is None or projected > target_rh - 2):
-            return {**base, "status": "drying_effect_insufficient"}
+                or projected is None or (projected < target_rh + 2 if humidifying
+                                         else projected > target_rh - 2)):
+            return {**base, "status": "humidifying_effect_insufficient" if humidifying
+                    else "drying_effect_insufficient"}
         if indoor_c - outdoor_c > 12:
             cautions.append(Reason("weather_heat_loss", value=f"{indoor_c-outdoor_c:g} °C"))
-        code = "climate_window_dry"
+        code = "climate_window_" + effect
         evidence = {"humidity_ratio_advantage_g_kg": round(advantage, 1),
                     "outside_rh_when_warmed_percent": round(projected, 1),
                     "indoor_temperature_c": indoor_c, "outdoor_temperature_c": outdoor_c}
@@ -328,9 +387,12 @@ def window_reason(opportunity: dict):
         # advisory formatter valid for every opportunity the physics accepts.
         value = _number(data.get("temperature_difference_c"), 0, 100)
         unit = "°C"
-    elif effect == "dry":
+    elif effect in ("dry", "humidify"):
         value = _number(data.get("humidity_ratio_advantage_g_kg"), 0, 30)
         unit = "g/kg"
+    elif effect == "filtration":
+        value = _number(data.get("pm25_advantage_ug_m3"), 0, 2000)
+        unit = "µg/m³"
     else:
         raise ValueError("Unsupported window opportunity")
     if value is None:

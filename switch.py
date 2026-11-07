@@ -43,6 +43,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     from homeassistant.helpers import entity_registry as er
     from .equipment_feature_registration import (
         quiet_keys, register_late_capabilities, timed_setpoint_supported,
+        window_alternative_settings_supported,
     )
     registry = er.async_get(hass)
 
@@ -55,6 +56,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
             EquipmentTimedSetpointSwitch(manager, spec)
             for spec in equipment.specs(manager)
             if timed_setpoint_supported(manager, registry, spec)
+        ] + [
+            EquipmentWindowAnnouncementSwitch(manager, spec)
+            for spec in equipment.specs(manager)
+            if window_alternative_settings_supported(
+                manager, registry, spec, platform="switch")
         ]
 
     entities.extend(native_feature_switches())
@@ -81,6 +87,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     async_add_grouped_entities(entry.runtime_data, async_add_entities, entities)
     register_late_capabilities(
         hass, entry, async_add_entities, entities, native_feature_switches,
+        policy_changes=True,
     )
 
 
@@ -293,6 +300,33 @@ class EquipmentHouseholdSleepSwitch(EquipmentEntity, SwitchEntity):
     @property
     def is_on(self):
         return self.controller_settings.get(self._key) is True
+
+    async def async_turn_on(self, **kwargs):
+        await self._manager.equipment.async_update(self._spec, {self._key: True})
+
+    async def async_turn_off(self, **kwargs):
+        await self._manager.equipment.async_update(self._spec, {self._key: False})
+
+
+class EquipmentWindowAnnouncementSwitch(EquipmentEntity, SwitchEntity):
+    """Opt this device into a bounded airing request before automatic start."""
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_icon = "mdi:window-open-variant"
+
+    def __init__(self, manager, spec):
+        self._equipment_init(manager, spec, "announce_before_start")
+
+    @property
+    def available(self):
+        return self._manager.equipment._ready
+
+    @property
+    def is_on(self):
+        return self.controller_settings.get(self._key) is True
+
+    @property
+    def extra_state_attributes(self):
+        return {**super().extra_state_attributes, "window_announcement_role": "policy"}
 
     async def async_turn_on(self, **kwargs):
         await self._manager.equipment.async_update(self._spec, {self._key: True})

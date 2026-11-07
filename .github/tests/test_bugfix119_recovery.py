@@ -81,21 +81,22 @@ class InterruptedRetryTests(unittest.IsolatedAsyncioTestCase):
             runtime.own_running()
         await runtime.evaluate()
         for _ in range(2, attempt):
-            await runtime.evaluate(30)
+            await runtime.evaluate(60)
 
         original_call = runtime.service_call
 
         async def timeout_after_dispatch(*args, **kwargs):
             await original_call(*args, **kwargs)
-            raise TimeoutError("Native retry completion is unknown")
+            raise asyncio.CancelledError("Native retry interrupted before completion")
 
         runtime.hass.services.async_call = timeout_after_dispatch
-        await runtime.evaluate(30)
+        with self.assertRaises(asyncio.CancelledError):
+            await runtime.evaluate(60)
         pending = runtime.record["pending"]
         self.assertEqual(pending["phase"], "retry_intent")
         self.assertEqual(pending["attempts"], attempt)
         self.assertEqual(len(runtime.calls), attempt)
-        self.assertEqual(runtime.record["paused"], "native_command_failed_or_uncertain")
+        self.assertFalse(runtime.record.get("paused"))
         return runtime, pending
 
     async def settle_restart(self, runtime):
@@ -106,7 +107,7 @@ class InterruptedRetryTests(unittest.IsolatedAsyncioTestCase):
         await runtime.evaluate()
         await runtime.evaluate(60)
         await runtime.evaluate(60)
-        await runtime.evaluate(30)
+        await runtime.evaluate(60)
         self.assertIn("pending_resume_probe", runtime.record)
         self.assertEqual(len(runtime.calls), before)
         await runtime.evaluate(59)
@@ -116,7 +117,7 @@ class InterruptedRetryTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(runtime.record["paused"])
         self.assertEqual(len(runtime.calls), before, "State verification sends no service")
 
-    async def test_partial_retry_survives_restart_and_uses_only_remaining_attempts(self):
+    async def test_partial_retry_survives_restart_and_preserves_continuous_attempt_history(self):
         for method in ("pid", "automatic"):
             with self.subTest(method=method):
                 runtime, pending = await self.interrupted(method=method)
@@ -134,37 +135,38 @@ class InterruptedRetryTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(runtime.record["pending"]["attempts"], 3)
                 self.assertEqual(runtime.record["pending"]["when"], first)
                 self.assertNotIn("retry_state_verified_at", runtime.record["pending"])
-                await runtime.evaluate(30)
-                self.assertEqual(len(runtime.calls), 4)
-                await runtime.evaluate(30)
-                await runtime.evaluate()
                 await runtime.evaluate(60)
-                for delta in (0, 30, 120, 300):
-                    await runtime.evaluate(delta)
-                self.assertEqual(len(runtime.calls), 4, "Verified state cannot start a new budget")
-                self.assertEqual(runtime.record["unconfirmed_native_target"]["attempts"], 4)
+                self.assertEqual(len(runtime.calls), 4)
+                for attempt in (5, 6, 7, 8):
+                    await runtime.evaluate(59)
+                    self.assertEqual(len(runtime.calls), attempt - 1)
+                    await runtime.evaluate(1)
+                    self.assertEqual(len(runtime.calls), attempt)
+                    self.assertEqual(runtime.record["pending"]["attempts"], attempt)
+                    self.assertEqual(runtime.record["pending"]["when"], first)
+                    self.assertFalse(runtime.record.get("paused"))
 
-    async def test_exhausted_interrupted_retry_keeps_count_and_reconnect_credit(self):
+    async def test_interrupted_fourth_attempt_preserves_count_across_reconnect(self):
         runtime, pending = await self.interrupted(attempt=4)
         first = pending["when"]
         await self.settle_restart(runtime)
-        for delta in (0, 30, 120):
-            await runtime.evaluate(delta)
-        self.assertEqual(len(runtime.calls), 4)
         self.assertEqual(runtime.record["unconfirmed_native_target"]["attempts"], 4)
         runtime.hass.services.async_call = runtime.service_call
+        await runtime.evaluate(90)
+        self.assertEqual(len(runtime.calls), 5)
         runtime.availability_event("unavailable")
-        await runtime.evaluate()
+        await runtime.evaluate(60)
+        self.assertEqual(len(runtime.calls), 5, "Unavailable checks do not consume attempts")
         runtime.now += 1
         runtime.availability_event("heat")
         await runtime.evaluate()
+        self.assertEqual(len(runtime.calls), 5, "Native restore settling still applies")
         await runtime.evaluate(60)
-        self.assertEqual(len(runtime.calls), 5)
-        self.assertEqual(runtime.record["pending"]["attempts"], 5)
+        self.assertEqual(len(runtime.calls), 6)
+        self.assertEqual(runtime.record["pending"]["attempts"], 6)
         self.assertEqual(runtime.record["pending"]["when"], first)
-        self.assertEqual(runtime.record["pending"]["reconnect_retry_uses"], 1)
         await runtime.evaluate()
-        self.assertEqual(len(runtime.calls), 5)
+        self.assertEqual(len(runtime.calls), 6)
 
     async def test_latest_retry_time_requires_settling_and_fresh_matching_feedback(self):
         runtime, pending = await self.interrupted()
@@ -186,17 +188,20 @@ class InterruptedRetryTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(runtime.calls), 2)
         self.assertEqual(expected["attempts"], 2)
 
-    async def test_repeated_retry_timeouts_do_not_reset_counts_or_reuse_verified_marker(self):
+    async def test_repeated_retry_interruptions_do_not_reset_counts_or_reuse_verified_marker(self):
         runtime, pending = await self.interrupted()
         first = pending["when"]
         for expected_attempt in (3, 4):
             await self.settle_restart(runtime)
-            await runtime.evaluate(90)
+            with self.assertRaises(asyncio.CancelledError):
+                await runtime.evaluate(90)
             self.assertEqual(len(runtime.calls), expected_attempt)
             self.assertEqual(runtime.record["pending"]["attempts"], expected_attempt)
             self.assertEqual(runtime.record["pending"]["when"], first)
             self.assertNotIn("retry_state_verified_at", runtime.record["pending"])
         await self.settle_restart(runtime)
+        runtime.hass.services.async_call = runtime.service_call
+        runtime.window.update(blocked=True, stop_requested=True, status="window_open_pause")
         for delta in (0, 60, 300):
             await runtime.evaluate(delta)
         active_targets = [call for call in runtime.calls

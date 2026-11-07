@@ -141,6 +141,7 @@ class Manager:
             "room_sources": {"room": {"windows": ["binary_sensor.window"]}},
             "equipment_controllers": {SPEC.identifier: {
                 "control_mode": "pid", "requested_mode": "dry", "pause_on_window_open": True,
+                "announce_before_start": True, "window_open_timeout_minutes": 5,
                 "power_switch_entity": None, "power_switch_cooldown_seconds": 600,
                 "min_on_seconds": 600, "min_off_seconds": 600,
             }},
@@ -273,10 +274,12 @@ class WaitingTests(unittest.TestCase):
         old = m.plan.recommendations[0]
         m.window_open_wait.begin_submission(old)
         m.original = replace(m.original, recommendations=())
+        m.measurements["humidity"] = 59.
         m._recalculate()
         m.advance(wait.RESOLVED_SECONDS)
         m._recalculate()
         m.original = replace(m.original, recommendations=(old,))
+        m.measurements["humidity"] = 68.
         m._recalculate()
         current = m.plan.recommendations[0]
         m.window_open_wait.begin_submission(current)
@@ -292,10 +295,10 @@ class WaitingTests(unittest.TestCase):
 
     def test_disabled_no_demand_manual_filter_and_running_do_not_wait(self):
         changes = (
-            lambda m: m.settings.update({const.CONF_WINDOW_OPEN_TIMEOUT_MINUTES: 0}),
+            lambda m: m.cfg.update(window_open_timeout_minutes=0),
             lambda m: m.settings.update({const.CONF_AUTO_TTS: False}),
             lambda m: m.cfg.update(control_mode="manual"),
-            lambda m: m.cfg.update(pause_on_window_open=False),
+            lambda m: m.cfg.update(announce_before_start=False),
             lambda m: m.measurements.update(humidity=59.),
             lambda m: m.measurements.update(humidity=None),
             lambda m: m.set_state("climate.dry", "dry", {"hvac_action": "drying"}),
@@ -344,10 +347,12 @@ class WaitingTests(unittest.TestCase):
         m.advance(60)
         self.assertIsNone(m.gate())
         m.original = replace(m.original, recommendations=())
+        m.measurements["humidity"] = 59.
         m._recalculate()
         m.advance(wait.RESOLVED_SECONDS)
         m._recalculate()
         m.original = replace(m.original, recommendations=(source,))
+        m.measurements["humidity"] = 68.
         m._recalculate()
         self.assertEqual(m.gate(), "window_request_pending")
 
@@ -366,7 +371,7 @@ class WaitingTests(unittest.TestCase):
             elif variant == "selection":
                 m.settings["room_sources"]["room"]["windows"] = []
             else:
-                m.settings[const.CONF_WINDOW_OPEN_TIMEOUT_MINUTES] = 0
+                m.cfg["window_open_timeout_minutes"] = 0
             m._recalculate()
             self.assertFalse(m.window_open_wait.status("room")["active"], variant)
             self.assertIsNone(wait.managed_start_hold(m.equipment, SPEC, Cap(), m.cfg, "dry"), variant)
@@ -454,6 +459,8 @@ class DispatchTests(unittest.IsolatedAsyncioTestCase):
         m.settings["climate_rooms"]["room"].update(allow_actuation=True, climate_entity="climate.dry")
         m.original.environment["room"]["climate_plan"].update(
             temperature_c=18., temperature_target_c=20., mode="heat")
+        m.original = replace(m.original, recommendations=(replace(
+            m.original.recommendations[0], reasons=(logic.Reason("climate_window_heat"),)),))
         m.set_state("climate.dry", "heat", {"hvac_action": "idle"})
         m._recalculate()
         self.assertEqual(wait.legacy_start_hold(m.hass, "entry", "room", "climate.dry", "thermal")["status"],

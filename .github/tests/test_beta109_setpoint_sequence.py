@@ -31,7 +31,10 @@ production._LOGGER = N(exception=lambda *args, **kwargs: None)
 CURRENT_LOOP = ContextVar("hem_sequence_timer_loop", default=None)
 # Only the sequence's timer factory is isolated. Production async service
 # timeouts/tasks and every state-machine decision still use their real code.
-sequence.asyncio = N(get_running_loop=lambda: CURRENT_LOOP.get() or asyncio.get_running_loop())
+sequence.asyncio = N(
+    get_running_loop=lambda: CURRENT_LOOP.get() or asyncio.get_running_loop(),
+    create_task=asyncio.create_task,
+)
 
 
 class TimerHandle:
@@ -431,18 +434,22 @@ class SetpointSequenceTests(unittest.IsolatedAsyncioTestCase):
         when = original.record["pending"]["when"]
         runtime = self.rehydrate_stop(original, elapsed=40)
         await runtime.evaluate()
+        self.assertEqual(runtime.calls, [], "Restart does not shorten the original minute retry")
+        await runtime.evaluate(19.999)
+        self.assertEqual(runtime.calls, [])
+        await runtime.evaluate(.001)
         self.assert_off_request(runtime, count=1)
         self.assertEqual(runtime.record["pending"]["attempts"], 2)
         self.assertEqual(runtime.record["pending"]["when"], when)
         self.assertEqual(runtime.service_journals[-1]["pending"]["attempts"], 2,
                          "Reserve the retry count durably before the physical call")
-        self.assertEqual(runtime.service_journals[-1]["pending"]["phase"], "intent")
+        self.assertEqual(runtime.service_journals[-1]["pending"]["phase"], "retry_intent")
         runtime.report(mode="off")
         await runtime.evaluate()
         self.assertNotIn(PRIMARY, runtime.record["power"])
         self.assertNotIn("native_setpoint_stop", runtime.record)
 
-    async def test_uncertain_off_intent_waits_once_then_retries_without_inventing_ack(self):
+    async def test_cancelled_off_intent_waits_once_then_retries_without_inventing_ack(self):
         original = SequenceRuntime()
         original.running_extreme()
         original.open_window()
@@ -451,9 +458,10 @@ class SetpointSequenceTests(unittest.IsolatedAsyncioTestCase):
         async def uncertain_off(domain, service, data, **kwargs):
             await normal_service(domain, service, data, **kwargs)
             if service == "set_hvac_mode" and data == {"hvac_mode": "off"}:
-                raise TimeoutError("Simulated uncertain OFF completion")
+                raise asyncio.CancelledError("Simulated interrupted OFF completion")
         original.hass.services.async_call = uncertain_off
-        await original.evaluate(30)
+        with self.assertRaises(asyncio.CancelledError):
+            await original.evaluate(30)
         self.assertEqual(original.record["pending"]["phase"], "intent")
         runtime = self.rehydrate_stop(original, elapsed=100)
         old_intent = deepcopy(runtime.record["pending"])
@@ -470,21 +478,62 @@ class SetpointSequenceTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(runtime.service_journals[-1]["pending"]["attempts"], 2)
         self.assertNotEqual(runtime.state.state, "off")
 
-    async def test_committed_off_retries_keep_four_attempts_plus_two_real_reconnects(self):
+    async def test_timed_off_service_timeout_keeps_automatic_and_retries_after_one_minute(self):
         runtime = SequenceRuntime()
+        runtime.running_extreme()
+        runtime.open_window()
+        await runtime.evaluate()
+        normal_service = runtime.service_call
+
+        async def timeout_off(domain, service, data, **kwargs):
+            await normal_service(domain, service, data, **kwargs)
+            if service == "set_hvac_mode" and data == {"hvac_mode": "off"}:
+                raise TimeoutError("Native OFF was attempted but transport did not confirm")
+
+        runtime.hass.services.async_call = timeout_off
+        await runtime.evaluate(30)
+        original = deepcopy(runtime.record["pending"])
+        self.assertEqual(original["phase"], "commanded")
+        self.assertEqual(original["attempts"], 1)
+        self.assertFalse(runtime.record.get("paused"))
+        self.assertIn(PRIMARY, runtime.record["power"], "A timeout cannot prove physical OFF")
+        await runtime.evaluate(59.999)
+        self.assertEqual(len(runtime.calls), 2)
+        await runtime.evaluate(.001)
+        self.assert_off_request(runtime, count=3)
+        self.assertEqual(runtime.record["pending"]["attempts"], 2)
+        self.assertEqual(runtime.record["pending"]["when"], original["when"])
+        self.assertEqual(runtime.record["pending"]["phase"], "commanded")
+        self.assertFalse(runtime.record.get("paused"))
+        self.assertEqual(runtime.manager.settings["control_mode"], "pid")
+        self.assertNotEqual(runtime.state.state, "off")
+
+    async def test_committed_off_retries_continue_each_minute_and_preserve_reconnect_guards(self):
+        runtime = SequenceRuntime()
+        notices = []
+
+        async def announce(spec, pending):
+            notices.append(deepcopy(pending))
+
+        runtime.manager.async_announce_device_nonresponse = announce
         runtime.running_extreme()
         runtime.open_window()
         await runtime.evaluate()
         await runtime.evaluate(30)
         when = runtime.record["pending"]["when"]
-        for attempt in (2, 3, 4):
-            await runtime.evaluate(30)
+        attempts = 1
+        for attempt in range(2, 8):
+            await runtime.evaluate(59.999)
+            self.assertEqual(runtime.record["pending"]["attempts"], attempt - 1)
+            self.assertEqual(len(runtime.calls), attempt, "No premature OFF retry")
+            await runtime.evaluate(.001)
             self.assertEqual(runtime.record["pending"]["attempts"], attempt)
             self.assertEqual(runtime.calls[-1]["data"], {"hvac_mode": "off"})
-        for delta in (30, 60, 180):
-            await runtime.evaluate(delta)
-            self.assertEqual(len(runtime.calls), 5, "Preparation plus four OFF attempts")
-            self.assertEqual(runtime.record["pending"]["attempts"], 4)
+            self.assertEqual(runtime.record["pending"]["when"], when)
+            self.assertEqual(runtime.call_times[-1] - runtime.call_times[-2], 60)
+            self.assertIn(PRIMARY, runtime.record["power"], "Repeated dispatch is not OFF evidence")
+            self.assertFalse(runtime.record.get("paused"))
+            attempts = attempt
         for reconnect in (1, 2, 3):
             runtime.now += 1
             runtime.availability_event("unavailable")
@@ -495,15 +544,30 @@ class SetpointSequenceTests(unittest.IsolatedAsyncioTestCase):
             await runtime.evaluate(29.999)
             self.assertEqual(len(runtime.calls), previous_calls)
             await runtime.evaluate(0.001)
-            attempts = 4 + min(reconnect, 2)
+            self.assertEqual(len(runtime.calls), previous_calls,
+                             "Settled reconnect still cannot shorten the minute retry")
+            await runtime.evaluate(23.999)
+            self.assertEqual(len(runtime.calls), previous_calls)
+            await runtime.evaluate(.001)
+            self.assertEqual(len(runtime.calls), previous_calls,
+                             "A newly reported ON must retain its physical minimum-ON dwell")
+            self.assertEqual(runtime.statuses[-1][0], "minimum_on_hold")
+            deadline = (runtime.state.last_changed.timestamp()
+                        + runtime.manager.settings["min_on_seconds"])
+            self.assertEqual(runtime.statuses[-1][1]["minimum_on_until"], deadline)
+            await runtime.evaluate(deadline - runtime.now - .001)
+            self.assertEqual(len(runtime.calls), previous_calls)
+            await runtime.evaluate(.001)
+            attempts += 1
             self.assertEqual(runtime.record["pending"]["attempts"], attempts)
             self.assertEqual(runtime.record["pending"]["when"], when)
             self.assertEqual(len(runtime.calls), 1 + attempts)
-            for delta in (30, 120):
-                await runtime.evaluate(delta)
-                self.assertEqual(len(runtime.calls), 1 + attempts)
         self.assertEqual(sum(call["service"] == "set_temperature" for call in runtime.calls), 1)
-        self.assertEqual(sum(call["service"] == "set_hvac_mode" for call in runtime.calls), 6)
+        self.assertEqual(sum(call["service"] == "set_hvac_mode" for call in runtime.calls), attempts)
+        self.assertEqual(len(notices), 1, "One notification for this same failed OFF command episode")
+        self.assertEqual(notices[0]["nonresponse_attempts"], 3)
+        self.assertEqual(notices[0]["when"], when)
+        self.assertEqual(notices[0]["data"], {"hvac_mode": "off"})
 
     async def test_explicit_resume_rebases_owned_dwell_without_stranding_committed_stop(self):
         runtime = SequenceRuntime()
@@ -573,7 +637,7 @@ class SetpointSequenceTests(unittest.IsolatedAsyncioTestCase):
                         controller.availability_event("off")
                         controller.availability_event("heat")
                 runtime.after_persist = coalesce
-                await runtime.evaluate(30 if retry else 0)
+                await runtime.evaluate(60 if retry else 0)
                 self.assertIsNone(runtime.after_persist)
                 self.assertEqual(production.snapshot(runtime.state), before,
                                  "The final snapshot alone cannot reveal this real OFF/ON transition")

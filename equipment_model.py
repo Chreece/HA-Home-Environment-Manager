@@ -41,6 +41,7 @@ NUMBER_FIELDS = {
     # Manufacturer-rated *particle* CADR for a purifier, not fan airflow
     # or CO2 ventilation. Zero denotes unknown/unconfigured, never measured 0.
     "particle_cadr_m3h": (0.0, 100000.0, 1.0, "m³/h", 0.0),
+    "window_open_timeout_minutes": (0.0, 30.0, 1.0, "min", 5.0),
 }
 QUIET_FLAGS = ("quiet_sleep", "quiet_occupied")
 from .pid_calibration import METHODS as _CLASSIC_PID_CALIBRATION_METHODS, MODEL_FIELDS as PID_MODEL_FIELDS
@@ -69,6 +70,7 @@ DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None
             "quiet_sleep": False, "quiet_occupied": False,
             "sleep_when_everyone_asleep": False,
             "pause_on_window_open": True,
+            "announce_before_start": False,
             "timed_setpoint_sequence": False,
             # New native fault announcements are independently enabled by
             # default per selected controller; no synthetic error sensor.
@@ -129,6 +131,13 @@ def settings(manager: Any, spec: ManagedDevice) -> dict:
     # Missing settings and legacy strings/numbers never opt a device in.
     result["timed_setpoint_sequence"] = raw.get("timed_setpoint_sequence") is True
     result["sleep_when_everyone_asleep"] = raw.get("sleep_when_everyone_asleep") is True
+    result["announce_before_start"] = raw.get("announce_before_start") is True
+    wait = raw.get("window_open_timeout_minutes", 5.0)
+    result["window_open_timeout_minutes"] = (
+        finite(wait, 0, 30) if not isinstance(wait, bool) else None
+    )
+    if result["window_open_timeout_minutes"] is None:
+        result["window_open_timeout_minutes"] = 5.0
     # Beta84 resolves the previous overlapping passive/calculator selectors
     # into exactly one persisted gain authority. Legacy settings are read
     # conservatively: an explicit classical tune always wins.
@@ -153,6 +162,58 @@ def settings(manager: Any, spec: ManagedDevice) -> dict:
     if "kp" not in raw and all(e.startswith("fan.") for e in spec.source_entities):
         result["kp"], result["ki"] = 0.05, 0.001
     return result
+
+
+def window_alternative_supported(manager: Any, spec: ManagedDevice,
+                                 cap: Capabilities | None = None) -> bool:
+    """Offer an airing preference only on indoor remediation equipment.
+
+    This is capability discovery, never authority to operate equipment. An
+    extractor replaces room air and is not an alternative to opening windows.
+    Existing verified capabilities keep configuration visible while offline.
+    """
+    cap = cap if cap is not None else capabilities(manager, spec)
+    if cap is None:
+        record = getattr(getattr(manager, "equipment", None), "records", {}).get(
+            spec.identifier, {})
+        if (record.get("area") == spec.area_id
+                and record.get("source_device_id") == spec.source_device_id
+                and tuple(record.get("sources", ())) == spec.source_entities):
+            try:
+                saved = Capabilities(**record["capabilities"])
+                if saved.primary in spec.source_entities:
+                    cap = saved
+            except (KeyError, TypeError, ValueError):
+                pass
+    if cap is None:
+        return False
+    modes = set(cap.modes)
+    if cap.domain == "humidifier" or modes & {"heat", "cool", "heat_cool", "auto", "dry"}:
+        return True
+    if cap.domain == "fan" or modes == {"off", "fan_only"}:
+        cfg = settings(manager, spec)
+        role = cfg.get("fan_purpose")
+        if role not in ("extraction", "filtration"):
+            role = device_config(manager, spec, cap.primary).get("fan_purpose")
+        if role not in ("extraction", "filtration"):
+            room = room_config(manager, spec)
+            if room.get("extraction_fan_entity") == cap.primary:
+                role = "extraction"
+            elif room.get("purifier_fan_entity") == cap.primary:
+                role = "filtration"
+        if role not in ("extraction", "filtration"):
+            from .room_sources import selected
+            sources = selected(manager.settings, spec.area_id, "air_quality")
+            metrics = set()
+            if sources:
+                from .discovery import supported_metric
+                metrics = {supported_metric(manager.hass, state, outdoor=False)
+                           for entity in sources
+                           if (state := manager.hass.states.get(entity)) is not None}
+            if ("co2" in metrics) != ("pm25" in metrics):
+                role = "extraction" if "co2" in metrics else "filtration"
+        return role == "filtration"
+    return False
 
 
 @dataclass(frozen=True, slots=True)

@@ -37,11 +37,338 @@ def retry_settings_match(saved, current) -> bool:
     # Both independent preferences are enforced again by the live policy,
     # profile, and timing checks. They confer no control authority. Profiles
     # saved before these switches were introduced remain usable.
-    independent = {OPTION, "sleep_when_everyone_asleep"}
-    return saved == current or (
-        {k: v for k, v in saved.items() if k not in independent}
-        == {k: v for k, v in current.items() if k not in independent}
+    independent = {
+        OPTION, "sleep_when_everyone_asleep", "pause_on_window_open",
+        "announce_before_start", "window_open_timeout_minutes",
+    }
+    previous = {k: v for k, v in saved.items() if k not in independent}
+    latest = {k: v for k, v in current.items() if k not in independent}
+    if previous.get("_native_authorization") != latest.get("_native_authorization"):
+        from .device_activation import authorization_matches
+        if not authorization_matches(previous.get("_native_authorization"),
+                                     latest.get("_native_authorization")):
+            return False
+        # A migration to physical-only consent is not a new control method
+        # or a changed endpoint. Every other command setting must still match.
+        previous["_native_authorization"] = latest["_native_authorization"]
+    return previous == latest
+
+
+def automatic_retry(pending) -> bool:
+    """The minute retry policy belongs only to an explicitly selected method."""
+    return isinstance(pending, dict) and pending.get("retry_policy") == "automatic_minute"
+
+
+def native_human_changed(runtime, spec, entity, state, *, ignore=()) -> bool:
+    """Require a new human action after verified HEM control of this output."""
+    from .equipment_runtime import _manual_output_changes, snapshot
+    record = runtime._record(spec)
+    baseline, observed = record.get("baseline", {}).get(entity), snapshot(state)
+    if baseline is None or observed is None:
+        return False
+    changes = set(_manual_output_changes(baseline, observed)) - set(ignore)
+    confirmed = record.get("native_control_confirmed", {}).get(entity)
+    owned = record.get("power", {}).get(entity)
+    controlled_at = finite(confirmed.get("at"), 0, runtime.clock()) if isinstance(confirmed, dict) else None
+    if controlled_at is None and isinstance(owned, dict):
+        controlled_at = finite(owned.get("since"), 0, runtime.clock())
+    context = getattr(state, "context", None)
+    human = bool(
+        getattr(context, "user_id", None) and not getattr(context, "parent_id", None)
+        or str(state.attributes.get("change_origin") or
+               state.attributes.get("operation_source") or "").lower()
+           in ("physical_button", "manual_button", "local_user")
     )
+    if (not changes or controlled_at is None or not human
+            or isinstance(confirmed, dict) and confirmed.get("context_id")
+            and confirmed["context_id"] == getattr(context, "id", None)):
+        return False
+    try:
+        updated = finite(getattr(state, "last_updated", state.last_changed).timestamp(), 0, runtime.clock())
+    except (AttributeError, TypeError, ValueError, OverflowError):
+        updated = None
+    return updated is None or updated > controlled_at
+
+
+def pending_shutdown_reason(runtime, spec, cap, pending):
+    """Independently prove that an active request must yield to native OFF."""
+    from . import equipment_model as model
+    from .equipment_pid_safety import stopping_command
+    cfg = model.settings(runtime.manager, spec)
+    context = pending.get("retry_context")
+    if (cfg.get("control_mode") not in ("automatic", "pid")
+            or not isinstance(context, dict) or context.get("mode") == "off"
+            or pending.get("stop_target") or pending.get("stop_finish")
+            or stopping_command(pending.get("service"), pending.get("data", {}))):
+        return None
+    owned = runtime._record(spec).get("power", {}).get(cap.primary)
+    if not (isinstance(owned, dict) or model.permission(runtime.manager, spec, cap)[1]):
+        return None
+    for reason in ("sleep", "window", "idle"):
+        if runtime._stop_policy_verified(spec, cap, reason):
+            return reason
+    if isinstance(owned, dict):
+        state = runtime.hass.states.get(cap.primary)
+        since = finite(owned.get("since"), 0, runtime.clock())
+        minimum = finite(owned.get("min_on"), 0, 1e13)
+        maximum = finite(owned.get("max_on"), 0, 1e13)
+        lead = SETPOINT_GRACE_SECONDS if enabled(cfg) and supports_stop(cap, state) else 0
+        if (None not in (since, minimum, maximum)
+                and runtime.clock() - since >= max(minimum, maximum - lead)):
+            return "maximum_on"
+    return None
+
+
+async def suppress_pending_for_shutdown(runtime, spec, pending) -> bool:
+    """Preserve an unacknowledged target while independently permitted OFF runs.
+
+    No native ON is acknowledged here. Unconfirmed ON and interrupted intents
+    stay under physical verification; the ordinary OFF path retains its full
+    current ownership, minimum runtime, defrost and endpoint checks.
+    """
+    from . import equipment_model as model
+    from .equipment_runtime import entity_area, foreign_owner_hold
+    record = runtime._record(spec)
+    cfg = model.settings(runtime.manager, spec)
+    context = pending.get("retry_context")
+    cap = model.capabilities(runtime.manager, spec)
+    entity = pending.get("entity")
+    if (record.get("pending") is not pending or pending.get("phase") != "commanded"
+            or not isinstance(context, dict) or cap is None
+            or entity not in spec.source_entities
+            or not runtime._current_spec(spec) or not runtime._identity_ok(spec)
+            or not retry_settings_match(context.get("settings"), cfg)
+            or entity_area(runtime.hass, entity) != spec.area_id
+            or foreign_owner_hold(runtime.hass, runtime.manager.entry.entry_id, entity)):
+        return False
+    native = runtime.hass.states.get(entity)
+    if native is None or native.state in ("unknown", "unavailable"):
+        return False
+    reason = pending_shutdown_reason(runtime, spec, cap, pending)
+    if reason is None:
+        return False
+    if native_human_changed(runtime, spec, entity, native):
+        await runtime._pause(spec, "physical_manual_override")
+        return True
+    owned_modulation = (
+        cap.domain in ("number", "input_number")
+        and pending.get("service") == "set_value" and entity == cap.primary
+        and isinstance(record.get("power", {}).get(entity), dict)
+        and finite(native.state, .000001, 100) is not None
+        and finite(pending.get("data", {}).get("value"), .000001, 100) is not None
+    )
+    if owned_modulation or (not pending.get("power") and pending.get("service") in (
+            "set_temperature", "set_humidity", "set_fan_mode", "set_preset_mode",
+            "set_percentage", "set_swing_mode", "set_swing_horizontal_mode")):
+        retained = record.get("unconfirmed_native_target")
+        if retained is not None and not isinstance(retained, dict):
+            return False
+        if retained is not None and any(retained.get(key) != pending.get(key)
+                for key in ("entity", "service", "data", "expected")):
+            record["previous_unconfirmed_native_target"] = deepcopy(retained)
+        retained = deepcopy(pending)
+        retained["superseded_for_shutdown"] = reason
+        record["unconfirmed_native_target"] = retained
+        record["pending"] = None
+        for name in ("_memory", "_fan_allocations", "_profile_wake"):
+            cache = getattr(runtime, name, None)
+            if isinstance(cache, dict):
+                cache.pop(spec.identifier, None)
+        record.pop("pid_checkpoint", None)
+        await runtime._save()
+        return True
+    if pending.get("power") and pending.get("output_on") is True:
+        if not isinstance(record.get("automatic_continue_requested"), dict):
+            record["automatic_continue_requested"] = {
+                "at": runtime.clock(), "method": cfg["control_mode"],
+                "awaiting_physical_verification": True, "obsolete_native_command": True,
+            }
+            await runtime._save()
+        runtime._status(spec, "awaiting_physical_acknowledgement",
+                        reason="automatic_recovery_requested")
+        return True
+    return False
+
+
+async def prepare_automatic_retry(runtime, spec) -> None:
+    """Migrate a known dispatch without acknowledging it or adopting its power.
+
+    Raw interrupted intents still go through the existing restart verifier.
+    Failed or delayed service feedback from a known dispatch must not require
+    Resume when the same saved automatic command remains authorized.
+    """
+    from . import equipment_model as model
+    record = runtime._record(spec)
+    pending = record.get("pending")
+    cfg = model.settings(runtime.manager, spec)
+    if (not isinstance(pending, dict) or cfg.get("control_mode") not in ("automatic", "pid")
+            or record.get("restart_power_verification")
+            or not runtime._current_spec(spec) or not runtime._identity_ok(spec)):
+        return
+    context = pending.get("retry_context")
+    last = finite(pending.get("last_attempt_at"), 0, runtime.clock())
+    first = finite(pending.get("when"), 0, runtime.clock())
+    verified = finite(pending.get("retry_state_verified_at"), 0, runtime.clock())
+    known_dispatch = pending.get("phase") == "commanded" or (
+        pending.get("phase") == "retry_intent" and verified is not None
+        and last is not None and verified >= last
+    )
+    if (not known_dispatch or first is None or last is None or last < first
+            or type(pending.get("attempts")) is not int or pending["attempts"] < 1
+            or not isinstance(context, dict)
+            or not retry_settings_match(context.get("settings"), cfg)
+            or pending.get("entity") not in spec.source_entities):
+        return
+    recoverable = {
+        None, "physical_acknowledgement_missing", "native_command_failed_or_uncertain",
+        "native_retry_intent_uncertain", "native_retry_policy_changed",
+        "native_retry_demand_changed", "native_retry_authority_or_state_changed",
+        "restart_reconciliation_required",
+    }
+    if record.get("paused") not in recoverable:
+        return
+    changed = not automatic_retry(pending) or record.get("paused") is not None
+    pending["retry_policy"] = "automatic_minute"
+    record.pop("paused", None)
+    # An explicit selection can save a continuation request while a prior
+    # command is in flight. Matching saved settings prove this is still that
+    # same requested command; the normal retry gates revalidate it every time.
+    relay = record.get("upstream", {})
+    request = record.get("automatic_continue_requested")
+    same_profile = (context.get("automatic") is not True or
+                    context.get("profile") == model.profile_name(
+                        cfg, model.plan_for(runtime.manager, spec)))
+    if (changed and same_profile and not (isinstance(request, dict) and
+                             request.get("obsolete_native_command") is True)
+            and (not isinstance(relay, dict) or
+                 not (relay.get("pending") or relay.get("paused")))):
+        changed = record.pop("automatic_continue_requested", None) is not None or changed
+    if changed:
+        await runtime._save()
+
+
+async def announce_native_nonresponse(runtime, spec, pending) -> None:
+    """Notify once per command episode after three full feedback intervals."""
+    callback = getattr(runtime.manager, "async_announce_device_nonresponse", None)
+    if not automatic_retry(pending) or not callable(callback):
+        return
+    attempts = pending.get("attempts")
+    last = finite(pending.get("last_attempt_at"), 0, runtime.clock())
+    if (pending.get("nonresponse_notified") is True
+            or type(attempts) is not int or attempts < 3
+            or last is None or runtime.clock() - last < 60
+            or runtime._record(spec).get("pending") is not pending):
+        return
+    pending["nonresponse_notified"] = True
+    pending["nonresponse_attempts"] = attempts
+    pending["nonresponse_at"] = runtime.clock()
+    await runtime._save()
+
+    async def deliver():
+        from .equipment_runtime import matches
+        record = runtime._record(spec)
+        state = runtime.hass.states.get(pending.get("entity"))
+        from . import equipment_model as model
+        cfg = model.settings(runtime.manager, spec)
+        context = pending.get("retry_context", {})
+        from .equipment_pid_safety import stopping_command
+        stopping = stopping_command(pending.get("service"), pending.get("data", {}))
+        cap = model.capabilities(runtime.manager, spec)
+        committed_stop = bool(pending.get("stop_finish") and cap is not None
+                              and finish_authorized(runtime, spec, cap, pending.get("entity")))
+        if (record.get("pending") is not pending or record.get("paused")
+                or not runtime._active or not runtime._ready
+                or cfg.get("control_mode") not in ("automatic", "pid")
+                or (not committed_stop and not retry_settings_match(context.get("settings"), cfg))
+                or not runtime._current_spec(spec) or not runtime._identity_ok(spec)
+                or (not committed_stop and context.get("policy_stop") is not None
+                    and (cap is None or not runtime._stop_policy_verified(spec, cap, context["policy_stop"])))
+                or (context.get("automatic") is True and not stopping and not committed_stop
+                    and context.get("profile") != model.profile_name(cfg, model.plan_for(runtime.manager, spec)))
+                or matches(state, pending.get("expected", {}))):
+            return
+        try:
+            await callback(spec, pending)
+        except Exception:
+            # Notification failure cannot pause control or cause a burst of
+            # repeated speech on each ordinary controller evaluation.
+            import logging
+            logging.getLogger(__name__).exception("Native command notification failed")
+
+    create = getattr(runtime.hass, "async_create_task", asyncio.create_task)
+    task = create(deliver())
+    tasks = getattr(runtime.manager, "_tasks", None)
+    if isinstance(tasks, set):
+        tasks.add(task)
+        task.add_done_callback(tasks.discard)
+
+
+def native_retry_dwell(runtime, spec, cap, pending, state):
+    """A repeated mode command must respect newly observed power transitions."""
+    if not automatic_retry(pending) or pending.get("power") is not True:
+        return None
+    from . import equipment_model as model
+    from .equipment_runtime import matches, output_off
+    expected = pending.get("expected", {})
+    if matches(state, expected):
+        return None
+    record, now = runtime._record(spec), runtime.clock()
+    minimum_on, minimum_off, _maximum = model.timing(runtime.manager, spec, cap)
+    owned = record.get("power", {}).get(pending.get("entity"))
+    if isinstance(owned, dict):
+        minimum_on = max(minimum_on, owned.get("min_on", minimum_on))
+    try:
+        changed = finite(state.last_changed.timestamp(), 0, now)
+    except (AttributeError, TypeError, ValueError, OverflowError):
+        changed = None
+    if output_off(state):
+        # Replaying ON cannot shorten a newly observed OFF interval. A
+        # native attribute-only refresh does not change last_changed.
+        recorded = finite(record.get("off_at", {}).get(pending.get("entity")), 0, now)
+        stamp = max(value for value in (changed, recorded) if value is not None) if (
+            changed is not None or recorded is not None) else now
+        remaining = minimum_off - (now - stamp)
+        if remaining > 0:
+            return {"status": "minimum_off_hold", "minimum_off_remaining_seconds": round(remaining),
+                    "minimum_off_until": stamp + minimum_off}
+    else:
+        if expected.get("state") not in ("off", "0", "0.0"):
+            if (cap.domain == "climate" and expected.get("state") != state.state):
+                # A partial response in another running climate mode must
+                # first be observed through the normal recovery verifier.
+                # Normal control can then stop it and respect both dwells;
+                # the original ON is never replayed as a direct reversal.
+                return {"status": "awaiting_evaluation",
+                        "reason": "native_power_mode_unsupported",
+                        "reconcile_native_mode": True}
+            return None
+        since = finite(owned.get("since"), 0, now) if isinstance(owned, dict) else None
+        stamp = max(value for value in (changed, since) if value is not None) if (
+            changed is not None or since is not None) else now
+        remaining = minimum_on - (now - stamp)
+        if remaining > 0:
+            return {"status": "minimum_on_hold", "minimum_on_remaining_seconds": round(remaining),
+                    "minimum_on_until": stamp + minimum_on}
+    return None
+
+
+async def native_dispatch_failed(runtime, spec, pending) -> None:
+    """A raised service call is a failed attempt, never a physical ACK."""
+    if not automatic_retry(pending):
+        await runtime._pause(spec, "native_command_failed_or_uncertain")
+        return
+    # This helper is called only after the HA service call was attempted.
+    # A cancelled raw intent is deliberately left for restart verification.
+    pending["phase"] = "commanded"
+    pending["service_error"] = "native_command_failed_or_uncertain"
+    await runtime._save()
+    runtime._status(spec, "awaiting_physical_acknowledgement",
+                    reason="native_command_failed_or_uncertain",
+                    command_attempts=pending["attempts"],
+                    native_output_confirmed=False,
+                    next_retry_at=pending["last_attempt_at"] + 60)
+    wake_at(runtime, spec, pending["last_attempt_at"] + 60)
+
 
 
 def wake_at(runtime, spec, deadline: float) -> None:
@@ -394,14 +721,10 @@ async def progress_stop(runtime, spec) -> bool:
         changes = tuple(key for key in changes if key != "temperature")
     if off_pending and state.state == "off":
         changes = tuple(key for key in changes if key != "state")
-    context = getattr(state, "context", None)
-    direct_user = bool(getattr(context, "user_id", None)
-                       and not getattr(context, "parent_id", None))
-    physical_user = str(state.attributes.get("change_origin")
-                        or state.attributes.get("operation_source") or "").lower() in (
-                            "physical_button", "manual_button", "local_user",
-                        )
-    if changes and (direct_user or physical_user):
+    ignored = ({"temperature"} if confirmed else set()) | (
+        {"state"} if off_pending and state.state == "off" else set()
+    )
+    if changes and native_human_changed(runtime, spec, entity, state, ignore=ignored):
         await runtime._pause(spec, "physical_manual_override")
         return True
     if state.state == "off":
@@ -471,12 +794,19 @@ async def progress_stop(runtime, spec) -> bool:
         attempts = pending.get("attempts")
         first = finite(pending.get("when"), 0, now)
         used = pending.get("reconnect_retry_uses", 0)
-        if (type(attempts) is not int or not 1 <= attempts <= (
-                NATIVE_COMMAND_MAX_ATTEMPTS + NATIVE_RECONNECT_EXTRA_ATTEMPTS)
+        if (type(attempts) is not int or attempts < 1
+                or (not automatic_retry(pending) and attempts >
+                    NATIVE_COMMAND_MAX_ATTEMPTS + NATIVE_RECONNECT_EXTRA_ATTEMPTS)
                 or first is None or type(used) is not int
                 or not 0 <= used <= NATIVE_RECONNECT_EXTRA_ATTEMPTS):
             return blocked("invalid_shutdown_retry_history")
         decision = native_retry_decision(pending, now, state)
+        if automatic_retry(pending) and decision != "uncertain":
+            # Keep the same episode object for minute retries, ACKs and the
+            # one-time nonresponse notice. The common retry path rechecks
+            # ownership, identity, current state and every dispatch boundary.
+            await runtime._retry_pending(spec, pending, now)
+            return True
         if decision == "waiting":
             runtime._status(spec, "awaiting_physical_acknowledgement",
                             command_attempts=attempts, native_output_confirmed=False)
@@ -491,7 +821,7 @@ async def progress_stop(runtime, spec) -> bool:
                 _wait(runtime, spec, "native_setpoint_shutdown_preparing", recovery_due,
                       reason="native_command_failed_or_uncertain")
                 return True
-        if attempts >= NATIVE_COMMAND_MAX_ATTEMPTS:
+        if not automatic_retry(pending) and attempts >= NATIVE_COMMAND_MAX_ATTEMPTS:
             epoch = finite(getattr(runtime, "_native_reconnect_epoch", {}).get(entity), 0, now)
             last = finite(pending.get("last_attempt_at", pending.get("when")), 0, now)
             if not (attempts < NATIVE_COMMAND_MAX_ATTEMPTS + NATIVE_RECONNECT_EXTRA_ATTEMPTS

@@ -3810,6 +3810,14 @@
             "name": "Ajutor"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Anunțuri · {channel}Așteptare pentru deschidere (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajutor"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Somn · {channel}Când toată lumea doarme",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajutor"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Anunțuri · {channel}Solicită deschiderea ferestrelor",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"

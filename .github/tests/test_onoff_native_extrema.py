@@ -348,7 +348,7 @@ class OnOffNativeExtremaTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(runtime.calls), 1, runtime.statuses)
         original = deepcopy(runtime.calls[-1])
         for attempt in (2, 3, 4):
-            runtime.now += 30
+            runtime.now += 60
             await runtime.tick(SPEC)
             self.assertEqual(runtime.calls[-1], original)
             self.assertEqual(runtime.record["pending"]["attempts"], attempt)

@@ -3810,6 +3810,14 @@
             "name": "সাহায্য"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "ঘোষণা · {channel}খোলার জন্য অপেক্ষা (মিনিট)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "সাহায্য"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "ঘুম · {channel}সবাই যখন ঘুমাচ্ছেন",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "সাহায্য"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "ঘোষণা · {channel}জানালা খোলার অনুরোধ",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"

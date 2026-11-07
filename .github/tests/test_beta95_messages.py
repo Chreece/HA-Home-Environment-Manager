@@ -22,7 +22,7 @@ for lang in ('en','de','el','fr'):
         value='20.7 °C / 20.0 °C' if code=='window_heat_loss' else '24.3 °C / 25.0 °C'
         rec=N(area_name='Badezimmer',
               action='open' if code.startswith('air_refresh') else 'close',
-              windows=(N(name='Bathroom Window'),),
+              windows=(N(name='Bathroom Window', opened=code.startswith('window_')),),
               reasons=(N(code=code,value=value,label=''),))
         title,body=announce(rec,lang)
         assert title and body and 'Badezimmer' in body,(lang,code,title,body)

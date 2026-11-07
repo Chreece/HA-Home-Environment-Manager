@@ -16,7 +16,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b5](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b5)
+**Current release:** [v0.6.1b6](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b6)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
@@ -133,13 +133,22 @@ requires the selected provider to support that language.
 
 ### Give window airing a chance before automatic devices start
 
-**Window opening timeout** in General settings, also available on the Home
-Environment device, defaults to **5 minutes** and accepts **0–30 minutes**.
-Set **0** to disable this start delay while retaining ventilation advice.
+Each eligible device controller has **Ask to open windows**, which defaults to
+**off**, and its own **Window opening wait (min)**, which defaults to **5 minutes**
+and accepts **0–30 minutes**. These appear beside the device's control settings
+in the card and as native Home Assistant entities. Turn the option on only for
+devices where you want an airing request before automatic operation. With the
+option off, the device follows normal demand without this added delay. A wait
+of **0** also removes the added delay. The shared **Window opening timeout** in
+General remains available for existing room-controller paths.
 
 When opening a real, closed room window could help, HEM requests it through the
-enabled automatic announcement channels. If an eligible Automatic/PID device
-would otherwise start, HEM briefly defers that new start while submitting the
+enabled automatic announcement channels. Opening requests name the room and
+explain the reason; they do not list the contact sensors. Closing requests name
+the room and the friendly names of the windows that are actually open, together
+with the reason for closing them. When an opted-in Automatic/PID device would
+otherwise start for a problem that airing can also reduce, the request names
+that device and its response time. HEM briefly defers that new start while submitting the
 request. Submission is bounded to 130 seconds; a rejected or failed delivery
 releases it immediately. Once a direct output succeeds or Announcement Hub
 accepts the job, the configured response timer starts. Hub acceptance confirms
@@ -147,11 +156,15 @@ queueing, not that someone has heard the message.
 
 If the window stays closed until the timer expires, normal device control
 resumes if demand still exists. Repeated announcements and changing sensor
-numbers do not extend the deadline. Opening the window hands control to the
+numbers do not extend the deadline. Each device has its own deadline, and an
+unanswered request is consumed for that demand episode instead of restarting
+the wait at every reminder. Opening the window hands control to the
 device's existing window policy; closing it retains the normal stabilization
-and minimum operating-time checks. This feature applies only to eligible
-automatic starts with window protection enabled. Running equipment, manual
-commands, OFF commands and particle filtration retain their own behavior.
+and minimum operating-time checks. This option is independent of the device's
+**Window protection** setting. Running equipment, manual commands and OFF
+commands retain their own behavior. Humidifiers, dehumidifiers, thermal devices
+and particle-filtering air purifiers can participate when measurements support
+the same benefit from airing; an extraction fan is not an indoor alternative.
 
 The bounded response wait requires someone home and an awake room, verified contacts in that
 room and an enabled announcement channel. Outdoor warnings remain in the
@@ -159,8 +172,10 @@ message; airing that would demonstrably worsen the relevant humidity or
 pollutant measurement is not suggested for that purpose. Actionable opening
 requests use Announcement Hub's **warning** level, so a warning-level TTS
 threshold can include them. Optional wake/return timing reminders remain
-informational. Caution and timeout messages retain their complete factual
-wording instead of passing through a shortening AI rewrite.
+informational. HEM sends the complete reasons, cautions and response times to
+the delivery destination. When AI announcements and Announcement Hub are both
+enabled, HEM requests the Hub's AI rewrite and lets the Hub own that delivery.
+Direct HEM delivery retains complete caution and timeout wording.
 
 ## Add the dashboard card
 
@@ -237,8 +252,8 @@ Everyday operating settings are grouped on the integration's devices:
 
 Setting names use prefixes such as **Announcement**, **Ventilation**, **Sleep**
 and **PID** so related controls stay together. Help explains what each setting
-changes. Removing a monitored room revokes its automatic controls; changing a
-device or its feedback sources can require choosing its control method again.
+changes. Removing a monitored room revokes its automatic controls; replacing or
+moving a physical device can require choosing its control method again.
 
 ## Enable device control
 
@@ -262,7 +277,20 @@ native appliance through its supported controls. If HEM asks you to turn an
 already running appliance off first, do so and wait for its reported state
 before taking control.
 
-A manual change on the appliance can pause automatic control. Use
+The authorization is bound to the physical device and its registered control
+endpoints in that room. Changing room feedback sensors or reordering the same
+sources does not invalidate a selected method. Existing grants are recognized
+only when those physical identities still match.
+
+An unacknowledged command does not change **Automatic** or **PID** to Manual.
+While demand and authority remain valid, HEM retries the requested native
+command every **60 seconds**. After **three unsuccessful dispatch attempts** it
+announces that the device is not responding to HEM, while continuing to retry.
+Unavailable checks do not count as dispatch attempts. Device availability,
+window policy and minimum operating times still constrain each attempt.
+
+A confirmed manual change on the appliance after HEM has successfully
+controlled it can pause automatic control. Use
 **Control · Continue Automatic** when you want HEM to resume. Window state,
 availability, presence policies and minimum ON/OFF times still apply; the reason
 display explains ordinary waiting periods.
@@ -618,7 +646,7 @@ steps to reproduce. Remove personal details from logs and screenshots.
 
 Install published betas from the
 [Releases page](https://github.com/Chreece/HA-Home-Environment-Manager/releases).
-Read the [current release notes](.github/releases/v0.6.1b3.md) for recent changes.
+Read the [current release notes](.github/releases/v0.6.1b6.md) for recent changes.
 
 | Branch | Purpose |
 | --- | --- |

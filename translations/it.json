@@ -3810,6 +3810,14 @@
             "name": "Aiuto"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Annunci · {channel}Attesa apertura (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Sonno · {channel}Quando tutti dormono",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Annunci · {channel}Chiedi di aprire le finestre",
         "state_attributes": {
           "configuration_help": {
             "name": "Aiuto"

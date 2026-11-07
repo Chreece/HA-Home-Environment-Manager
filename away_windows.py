@@ -19,7 +19,7 @@ from .const import (
     CONF_AWAY_WINDOWS_PERSONS, CONF_AWAY_WINDOWS_DELIVERY, DOMAIN,
 )
 from .discovery import entity_area, is_window
-from .hub_delivery import hub_installed, hub_available, async_submit_hub, async_system_notification
+from .hub_delivery import hub_installed, hub_available, async_submit_hub, async_system_notification, hub_ai_options
 from .occupancy_policy import _bool_presence, home_presence
 from .room_sources import native, selected
 from .languages import announcement_language, resolve_language
@@ -198,7 +198,7 @@ async def deliver_notice(manager: Any, windows: tuple[tuple[str, str], ...]) -> 
                 "target_person": people, "person_destination": [slot],
                 "service": services, "occupied_only": False,
                 "companion_tts": speech,
-                "language": language, "use_ai": False,
+                "language": language, **hub_ai_options(settings),
             }
             if visual:
                 payload["text_notify"] = text

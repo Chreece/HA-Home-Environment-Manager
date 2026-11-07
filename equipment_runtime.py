@@ -71,14 +71,16 @@ def native_retry_decision(pending: dict, now: float, state=None) -> str:
                 or type(verified) not in (int, float) or last is None
                 or finite(verified, last, now) is None):
             return "uncertain"
+    minute_retry = pending.get("retry_policy") == "automatic_minute"
     extension = pending.get("reconnect_retry_grant") is True
     used = pending.get("reconnect_retry_uses", 0)
     if (type(attempts) is not int
-            or not 1 <= attempts <= NATIVE_COMMAND_MAX_ATTEMPTS + NATIVE_RECONNECT_EXTRA_ATTEMPTS
+            or attempts < 1
+            or (not minute_retry and attempts > NATIVE_COMMAND_MAX_ATTEMPTS + NATIVE_RECONNECT_EXTRA_ATTEMPTS)
             or type(used) is not int or not 0 <= used <= NATIVE_RECONNECT_EXTRA_ATTEMPTS
             or first is None or last is None or last < first):
         return "uncertain"
-    if now - last < NATIVE_COMMAND_RETRY_SECONDS:
+    if now - last < (60 if minute_retry else NATIVE_COMMAND_RETRY_SECONDS):
         return "waiting"
     # The native integration can accept OFF while its HA state still reads
     # HEAT/COOL for a short while. Avoid unnecessary duplicate OFF calls when
@@ -106,7 +108,7 @@ def native_retry_decision(pending: dict, now: float, state=None) -> str:
                 break
         if not reported:
             return "waiting"
-    return ("exhausted" if attempts >= NATIVE_COMMAND_MAX_ATTEMPTS
+    return ("exhausted" if not minute_retry and attempts >= NATIVE_COMMAND_MAX_ATTEMPTS
             and not extension else "retry")
 # Changes in passive device metadata are not evidence of a manual override.
 # Only physical mode/power and user-adjustable targets, speed and swing qualify.
@@ -1116,6 +1118,40 @@ class EquipmentRuntime:
         passive_review: str | None = None,
     ) -> None:
         """Validate all requested edits atomically; no hidden hardware permission."""
+        window_preferences = {
+            "pause_on_window_open", "announce_before_start", "window_open_timeout_minutes",
+        }
+        if set(changes) & window_preferences:
+            if set(changes) - window_preferences:
+                raise HomeAssistantError("Change window preferences separately from device controls")
+            for key, value in changes.items():
+                if key in ("pause_on_window_open", "announce_before_start"):
+                    if type(value) is not bool:
+                        raise HomeAssistantError("Window preference must be a boolean")
+                elif type(value) not in (int, float) or finite(value, 0, 30) is None:
+                    raise HomeAssistantError("Window opening timeout must be from 0 to 30 minutes")
+            lock = getattr(self.manager, "_device_settings_write_lock", None)
+            if lock is None:
+                lock = self.manager._device_settings_write_lock = asyncio.Lock()
+            async with lock:
+                if not self._ready or not self._current_spec(spec):
+                    raise HomeAssistantError("Controller storage or source identity is unavailable")
+                options = deepcopy(self.manager.entry.options)
+                profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+                profiles = profiles if isinstance(profiles, dict) else {}
+                previous = profiles.get(spec.identifier)
+                profiles[spec.identifier] = {
+                    **(previous if isinstance(previous, dict) else {}), **changes,
+                }
+                options[model.SETTINGS] = profiles
+                self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
+            # Preference writes never wait for the physical command lock or
+            # acknowledge, clear, or extend the current command/window journal.
+            getattr(self, "_window_policy_cache", {}).pop(spec.identifier, None)
+            self._presentation_updates.request(spec.identifier)
+            if getattr(self.manager, "_active", False):
+                self.manager._recalculate(initial=True)
+            return
         if "fan_min_percentage" in changes or "fan_max_percentage" in changes:
             # Fan bounds are independent configuration, never a fan command
             # or permission to acknowledge/adopt an outstanding output.
@@ -1269,39 +1305,6 @@ class EquipmentRuntime:
                 ):
                     record.pop("queued_power_switch", None)
                     await self._save()
-            if set(changes) == {"pause_on_window_open"}:
-                value = changes["pause_on_window_open"]
-                if type(value) is not bool:
-                    raise HomeAssistantError("Window pause must be a boolean")
-                lock = getattr(self.manager, "_device_settings_write_lock", None)
-                if lock is None:
-                    lock = self.manager._device_settings_write_lock = asyncio.Lock()
-                async with lock:
-                    if not self._current_spec(spec):
-                        raise HomeAssistantError("Controller sources changed during configuration")
-                    options = deepcopy(self.manager.entry.options)
-                    profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
-                    profiles = profiles if isinstance(profiles, dict) else {}
-                    prior = profiles.get(spec.identifier, {})
-                    profiles[spec.identifier] = {
-                        **(prior if isinstance(prior, dict) else {}),
-                        "pause_on_window_open": value,
-                    }
-                    options[model.SETTINGS] = profiles
-                    self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
-                # Do not clear manual override or uncertain hardware latches.
-                if deferred_supply is not None:
-                    self._record(spec)["queued_power_switch"] = deferred_supply
-                    await self._save()
-                getattr(self, "_window_policy_cache", {}).pop(spec.identifier, None)
-                self._status(spec, "settings_updated", settings_saved=True,
-                             queued_power_switch=(
-                                 deferred_supply.get("requested")
-                                 if isinstance(deferred_supply, dict) else None
-                             ))
-                if getattr(self.manager, "_active", False):
-                    self.manager._recalculate(initial=True)
-                return
             cap = model.capabilities(self.manager, spec)
             if cap is None:
                 # An intentionally unpowered native appliance has no live
@@ -1557,7 +1560,13 @@ class EquipmentRuntime:
                 soft = True
                 power = "off" in cap.modes
             elif "_native_authorization" in new:
-                soft = new["_native_authorization"] == authority_context(self.manager, spec)
+                from . import device_activation
+                current_authority = authority_context(self.manager, spec)
+                compare = getattr(device_activation, "authorization_matches", None)
+                soft = (compare(new["_native_authorization"], current_authority)
+                        if callable(compare) else new["_native_authorization"] == current_authority)
+                if soft:
+                    new["_native_authorization"] = current_authority
                 power = soft and new.get("control_mode") in ("automatic", "pid", "manual", "off") and "off" in cap.modes
             on, off, maximum = model.timing(self.manager, spec, cap, config=new)
             if cap.domain != "fan" and maximum > 28800:
@@ -3110,7 +3119,61 @@ class EquipmentRuntime:
             # ACK matching remains allowed immediately. Sending another
             # command, however, must respect full reconnect settling.
             if matches(state, pending["expected"]):
-                record["baseline"][pending["entity"]] = snapshot(state)
+                entity = pending["entity"]
+                observed = snapshot(state)
+                previous = record.get("baseline", {}).get(entity)
+                changed = set(_manual_output_changes(previous, observed)) if (
+                    isinstance(previous, dict) and isinstance(observed, dict)) else set()
+                # Only the requested fields belong to this ACK. A direct,
+                # newer user change to another control must not disappear
+                # when a previously controlled device reports our mode.
+                expected_fields = pending["expected"].get("attributes", {})
+                changed.difference_update(expected_fields if isinstance(expected_fields, dict) else ())
+                if "state" in pending["expected"]:
+                    changed.discard("state")
+                    if isinstance(previous, dict) and isinstance(observed, dict):
+                        # _manual_output_changes prioritizes a mode edge.
+                        # Once that edge is our ACK, inspect concurrent
+                        # attribute edits independently before rebasing it.
+                        changed.update(_manual_output_changes(
+                            {**previous, "state": observed.get("state")}, observed,
+                        ))
+                        changed.difference_update(expected_fields if isinstance(expected_fields, dict) else ())
+                confirmed = record.get("native_control_confirmed", {}).get(entity)
+                owned = record.get("power", {}).get(entity)
+                controlled_at = finite(confirmed.get("at"), 0, now) if isinstance(confirmed, dict) else None
+                if controlled_at is None and isinstance(owned, dict):
+                    controlled_at = finite(owned.get("since"), 0, now)
+                context = getattr(state, "context", None)
+                explicit_human = bool(
+                    (getattr(context, "user_id", None) and not getattr(context, "parent_id", None))
+                    or str(state.attributes.get("change_origin") or
+                           state.attributes.get("operation_source") or "").lower()
+                       in ("physical_button", "manual_button", "local_user")
+                )
+                try:
+                    updated = finite(getattr(state, "last_updated", state.last_changed).timestamp(), 0, now)
+                except (AttributeError, TypeError, ValueError, OverflowError):
+                    updated = None
+                stale_context = bool(
+                    isinstance(confirmed, dict) and confirmed.get("context_id")
+                    and confirmed["context_id"] == getattr(context, "id", None)
+                )
+                if (changed and controlled_at is not None and explicit_human
+                        and not stale_context and (updated is None or updated > controlled_at)):
+                    record["manual_override_evidence"] = {
+                        "kind": ("ha_user" if getattr(context, "user_id", None)
+                                 and not getattr(context, "parent_id", None)
+                                 else "native_explicit_button"),
+                        "changed_controls": sorted(changed), "at": now,
+                    }
+                    await self._pause(spec, "physical_manual_override")
+                    return False
+                record["baseline"][entity] = observed
+                context_id = getattr(getattr(state, "context", None), "id", None)
+                record.setdefault("native_control_confirmed", {})[pending["entity"]] = {
+                    "at": now, "context_id": context_id,
+                }
                 record["pending"] = None
                 previous_target = record.get("unconfirmed_native_target")
                 if (isinstance(previous_target, dict)
@@ -3132,7 +3195,9 @@ class EquipmentRuntime:
                 await self._save()
             elif pending.get("retry_context") is not None:
                 from .equipment_pid_safety import suppress_obsolete_pending
-                if await suppress_obsolete_pending(self, spec, pending):
+                from .equipment_setpoint_sequence import suppress_pending_for_shutdown
+                if (await suppress_obsolete_pending(self, spec, pending)
+                        or await suppress_pending_for_shutdown(self, spec, pending)):
                     if record.get("pending") is not None:
                         return False
                     # A preserved, superseded setpoint must not block the
@@ -3290,7 +3355,22 @@ class EquipmentRuntime:
                     physical_button = native_origin in (
                         "physical_button", "manual_button", "local_user",
                     )
-                    if direct_ha_user or physical_button:
+                    confirmed = record.get("native_control_confirmed", {}).get(entity)
+                    owned = record.get("power", {}).get(entity)
+                    controlled_at = (confirmed.get("at") if isinstance(confirmed, dict)
+                                     else owned.get("since") if isinstance(owned, dict) else None)
+                    changed_at = getattr(native_state, "last_updated", None) or getattr(native_state, "last_changed", None)
+                    try:
+                        changed_at = changed_at.timestamp() if changed_at is not None else None
+                    except (AttributeError, TypeError, ValueError, OverflowError):
+                        changed_at = None
+                    after_control = (
+                        isinstance(controlled_at, (int, float)) and 0 <= controlled_at <= now
+                        and (changed_at is None or controlled_at < changed_at <= now)
+                        and not (isinstance(confirmed, dict) and confirmed.get("context_id")
+                                 and confirmed["context_id"] == getattr(context, "id", None))
+                    )
+                    if after_control and (direct_ha_user or physical_button):
                         record["manual_override_evidence"] = {
                             "kind": "ha_user" if direct_ha_user
                                     else "native_explicit_button",
@@ -3351,6 +3431,39 @@ class EquipmentRuntime:
         attempts = pending.get("attempts", 0)
         entity = pending.get("entity")
         state = self.hass.states.get(entity) if isinstance(entity, str) else None
+        minute_retry = pending.get("retry_policy") == "automatic_minute"
+        record = self._record(spec)
+
+        def human_changed(current):
+            baseline = record.get("baseline", {}).get(entity)
+            observed = snapshot(current)
+            if baseline is None or observed is None or not _manual_output_changes(baseline, observed):
+                return False
+            confirmed = record.get("native_control_confirmed", {}).get(entity)
+            owned = record.get("power", {}).get(entity)
+            controlled_at = (confirmed.get("at") if isinstance(confirmed, dict)
+                             else owned.get("since") if isinstance(owned, dict) else None)
+            context = getattr(current, "context", None)
+            direct = bool(getattr(context, "user_id", None) and not getattr(context, "parent_id", None))
+            origin = str(current.attributes.get("change_origin")
+                         or current.attributes.get("operation_source") or "").lower()
+            stamp = getattr(current, "last_updated", None) or getattr(current, "last_changed", None)
+            try:
+                stamp = stamp.timestamp() if stamp is not None else None
+            except (AttributeError, TypeError, ValueError, OverflowError):
+                stamp = None
+            return bool(
+                (direct or origin in ("physical_button", "manual_button", "local_user"))
+                and isinstance(controlled_at, (int, float)) and 0 <= controlled_at <= self.clock()
+                and (stamp is None or controlled_at < stamp <= self.clock())
+                and not (isinstance(confirmed, dict) and confirmed.get("context_id")
+                         and confirmed["context_id"] == getattr(context, "id", None))
+            )
+
+        if minute_retry and human_changed(state):
+            record["manual_override_evidence"] = {"kind": "verified_native_user_change", "at": now}
+            await self._pause(spec, "physical_manual_override")
+            return
         decision = native_retry_decision(pending, now, state)
         if state is None or state.state in ("unavailable", "unknown"):
             # Offline waiting never consumes attempts or permanently pauses
@@ -3386,7 +3499,9 @@ class EquipmentRuntime:
                 # not a new retry attempt or a permanent manual pause.
                 self._status(spec, why, command_attempts=attempts)
                 return
-        if await suppress_obsolete_pending(self, spec, pending):
+        from .equipment_setpoint_sequence import suppress_pending_for_shutdown
+        if (await suppress_obsolete_pending(self, spec, pending)
+                or await suppress_pending_for_shutdown(self, spec, pending)):
             return
         from .equipment_setpoint_sequence import enabled, retry_settings_match, startup_ready
         setpoint = pending.get("service") in ("set_temperature", "set_humidity")
@@ -3422,7 +3537,10 @@ class EquipmentRuntime:
             self._status(spec, "awaiting_physical_acknowledgement",
                          command_attempts=attempts,
                          command_retries_completed=max(0, attempts - 1),
-                         native_output_confirmed=False)
+                         native_output_confirmed=False,
+                         next_retry_at=(pending.get("last_attempt_at", now) + 60
+                                        if minute_retry else None),
+                         command_nonresponse_notified=pending.get("nonresponse_notified") is True)
             return
         if decision == "exhausted":
             await self._pause(spec, "physical_acknowledgement_missing")
@@ -3445,15 +3563,18 @@ class EquipmentRuntime:
         supply_state = self.hass.states.get(supply) if supply else None
         before = record.get("baseline", {}).get(entity)
         observed = snapshot(state)
+        from .equipment_setpoint_sequence import finish_authorized
+        committed_stop = bool(pending.get("stop_finish") is True
+                              and finish_authorized(self, spec, cap, entity))
         if (
             not isinstance(context, dict)
             or record.get("pending") is not pending
             or not self._current_spec(spec)
             or not self._identity_ok(spec)
             or asdict(cap) != record.get("capabilities")
-            or not retry_settings_match(context.get("settings"), cfg)
+            or (not committed_stop and not retry_settings_match(context.get("settings"), cfg))
             or before is None or observed is None
-            or _manual_output_changes(before, observed)
+            or (not minute_retry and _manual_output_changes(before, observed))
             or (supply and (
                 supply_state is None or supply_state.state != "on"
                 or relay.get("paused") or relay.get("pending")
@@ -3485,8 +3606,8 @@ class EquipmentRuntime:
                     (automatic and context.get("mode") != "off" and
                      current_plan.get("sleeping") is True and
                      self._stop_policy_verified(spec, cap, "sleep")) or
-                    (context.get("policy_stop") == "sleep" and
-                     not self._stop_policy_verified(spec, cap, "sleep")))
+                    (context.get("policy_stop") is not None and
+                     not self._stop_policy_verified(spec, cap, context["policy_stop"])))
 
         if changed_automatic_policy(cfg, plan):
             # A Home/Away, alarm or household change is not a manual intervention. The
@@ -3495,6 +3616,7 @@ class EquipmentRuntime:
             record["automatic_continue_requested"] = {
                 "at": now, "method": cfg["control_mode"],
                 "awaiting_physical_verification": True,
+                "obsolete_native_command": True,
             }
             self._status(spec, "awaiting_physical_acknowledgement",
                          reason="automatic_recovery_requested")
@@ -3528,7 +3650,11 @@ class EquipmentRuntime:
                     window_stop=pending.get("power") and mode == "off"))
                 or (pending.get("power") and not shutdown
                     and not model.permission(self.manager, spec, cap)[1])):
-            await self._pause(spec, "native_retry_policy_changed")
+            if minute_retry:
+                self._status(spec, "awaiting_evaluation", reason="native_retry_policy_changed",
+                             command_attempts=attempts, automatic_selected=True)
+            else:
+                await self._pause(spec, "native_retry_policy_changed")
             return
         if active_command:
             from .equipment_power_switch import approved_demand
@@ -3545,8 +3671,27 @@ class EquipmentRuntime:
                     self._status(spec, "within_target_band" if current_target["needed"] is False
                                  else "control_measurement_missing_or_stale")
                     return
-                await self._pause(spec, "native_retry_demand_changed")
+                if minute_retry:
+                    self._status(spec, "awaiting_evaluation", reason="native_retry_demand_changed",
+                                 command_attempts=attempts, automatic_selected=True)
+                else:
+                    await self._pause(spec, "native_retry_demand_changed")
                 return
+        if minute_retry:
+            from .equipment_setpoint_sequence import native_retry_dwell
+            if hold := native_retry_dwell(self, spec, cap, pending, state):
+                if hold.pop("reconcile_native_mode", False):
+                    record["automatic_continue_requested"] = {
+                        "at": now, "method": cfg["control_mode"],
+                        "awaiting_physical_verification": True,
+                        "obsolete_native_command": True,
+                    }
+                    await self._save()
+                self._status(spec, hold.pop("status"), command_attempts=attempts, **hold)
+                return
+        if minute_retry:
+            from .equipment_setpoint_sequence import announce_native_nonresponse
+            await announce_native_nonresponse(self, spec, pending)
         domain = entity.partition(".")[0]
         service = pending.get("service")
         if (not isinstance(service, str)
@@ -3588,12 +3733,15 @@ class EquipmentRuntime:
             if (record.get("pending") is not pending
                     or not self._active or not self._ready
                     or record.get("paused") or not self._current_spec(spec)
-                    or not retry_settings_match(context["settings"], latest)
+                    or (not committed_stop and not retry_settings_match(context["settings"], latest))
                     or refreshed is None
                     or asdict(refreshed) != record.get("capabilities")
-                    or _manual_output_changes(before, snapshot(current))
+                    or _manual_output_changes(observed if minute_retry else before, snapshot(current))
+                    or (minute_retry and human_changed(current))
                     or foreign_owner_hold(
                         self.hass, self.manager.entry.entry_id, entity)):
+                return False
+            if committed_stop and not finish_authorized(self, spec, refreshed, entity):
                 return False
             if supply:
                 relay_now = record.get("upstream", {})
@@ -3621,6 +3769,11 @@ class EquipmentRuntime:
                 self.manager, spec, refreshed
             )[1]:
                 return False
+            if minute_retry:
+                from .equipment_setpoint_sequence import native_retry_dwell, pending_shutdown_reason
+                if (native_retry_dwell(self, spec, refreshed, pending, current)
+                        or pending_shutdown_reason(self, spec, refreshed, pending)):
+                    return False
             if active_command:
                 from .equipment_power_switch import approved_demand
                 return command_allowed(
@@ -3631,6 +3784,7 @@ class EquipmentRuntime:
                        or approved_demand(self, spec, latest, refreshed) is True)
             return True
 
+        dispatched = False
         try:
             async with self._commands:
                 if (setpoint and enabled(model.settings(self.manager, spec))
@@ -3672,8 +3826,23 @@ class EquipmentRuntime:
                         self._status(spec, "control_measurement_missing_or_stale")
                         return
                     if not matches(self.hass.states.get(entity), pending["expected"]):
-                        await self._pause(spec, "native_retry_authority_or_state_changed")
+                        if minute_retry and human_changed(self.hass.states.get(entity)):
+                            await self._pause(spec, "physical_manual_override")
+                        elif minute_retry:
+                            self._status(spec, "awaiting_evaluation",
+                                         reason="native_retry_authority_or_state_changed",
+                                         command_attempts=pending["attempts"])
+                        else:
+                            await self._pause(spec, "native_retry_authority_or_state_changed")
                     return
+                pending["last_attempt_at"] = self.clock()
+                await self._save()
+                if not still_safe():
+                    pending.clear()
+                    pending.update(previous_attempt)
+                    await self._save()
+                    return
+                dispatched = True
                 await asyncio.wait_for(
                     self.hass.services.async_call(
                         domain, service, pending["data"],
@@ -3681,7 +3850,11 @@ class EquipmentRuntime:
                     ), timeout=20,
                 )
             pending["phase"] = "commanded"
+            pending.pop("service_error", None)
             await self._save()
+            if minute_retry:
+                from .equipment_setpoint_sequence import wake_at
+                wake_at(self, spec, pending["last_attempt_at"] + 60)
             self._status(spec, "awaiting_physical_acknowledgement",
                          command_attempts=pending["attempts"],
                          command_retries_completed=pending["attempts"] - 1,
@@ -3690,7 +3863,11 @@ class EquipmentRuntime:
             raise
         except Exception:
             if self._ready:
-                await self._pause(spec, "native_command_failed_or_uncertain")
+                if dispatched:
+                    from .equipment_setpoint_sequence import native_dispatch_failed
+                    await native_dispatch_failed(self, spec, pending)
+                else:
+                    await self._pause(spec, "native_command_failed_or_uncertain")
 
     async def _send(self, spec: model.ManagedDevice, cap: model.Capabilities, entity: str,
                     service: str, data: dict, expected: dict, *, power: bool = False,
@@ -3804,16 +3981,21 @@ class EquipmentRuntime:
             and finite(target_budget["retry_state_verified_at"], last, self.clock()) is not None
         )
         if (same_target and (
-                target_budget.get("pid_target_satisfied") is True
-                and target_budget.get("phase") == "commanded" or verified_retry)
+                target_budget.get("phase") == "commanded"
+                and (target_budget.get("pid_target_satisfied") is True
+                     or cfg.get("control_mode") in ("automatic", "pid")) or verified_retry)
                 and type(target_budget.get("attempts")) is int
-                and 1 <= target_budget["attempts"] < NATIVE_COMMAND_MAX_ATTEMPTS
+                and 1 <= target_budget["attempts"]
+                and (cfg.get("control_mode") in ("automatic", "pid")
+                     or target_budget["attempts"] < NATIVE_COMMAND_MAX_ATTEMPTS)
                 and isinstance(target_budget.get("retry_context"), dict)
                 and retry_settings_match(target_budget["retry_context"].get("settings"), cfg)):
             # Demand returned before physical OFF, or an interrupted retry
             # was reconciled against stable current state. Continue the SAME
             # command's remaining budget; neither event grants attempt one.
             resumed = deepcopy(target_budget)
+            if cfg.get("control_mode") in ("automatic", "pid"):
+                resumed["retry_policy"] = "automatic_minute"
             resumed.pop("pid_target_satisfied", None)
             record["pending"] = resumed
             record.pop("unconfirmed_native_target", None)
@@ -3886,6 +4068,8 @@ class EquipmentRuntime:
                        "shutdown": shutdown, "policy_stop": policy_stop,
                        "upstream_owned": record.get("upstream", {}).get("owned"),
                    }}
+        if cfg.get("control_mode") in ("automatic", "pid"):
+            pending["retry_policy"] = "automatic_minute"
         if stop_target or stop_finish:
             pending.update(
                 stop_target=stop_target, stop_finish=stop_finish,
@@ -3898,6 +4082,9 @@ class EquipmentRuntime:
                     reconnect_retry_uses=retry.get("reconnect_retry_uses", 0),
                     reconnect_retry_epoch_used=retry.get("reconnect_retry_epoch_used"),
                 )
+                for key in ("nonresponse_notified", "nonresponse_attempts", "nonresponse_at"):
+                    if key in retry:
+                        pending[key] = retry[key]
         if budget_retry:
             pending.update(
                 when=previous_budget["when"],
@@ -3978,19 +4165,27 @@ class EquipmentRuntime:
 
         if not current():
             return await abort()
+        dispatched = False
         try:
             async with self._commands:
                 if not current():
                     return await abort()
+                pending["last_attempt_at"] = self.clock()
+                await self._save()
+                if not current():
+                    return await abort()
+                dispatched = True
                 await asyncio.wait_for(self.hass.services.async_call(domain, service, data,
                     target={"entity_id": entity}, blocking=True), timeout=20)
             pending["phase"] = "commanded"
-            pending["last_attempt_at"] = self.clock()
             if stop_target:
-                mark_target_sent(self, spec, pending["last_attempt_at"])
+                mark_target_sent(self, spec, self.clock())
             if budget_retry and record.get("unconfirmed_native_target") is reserved_budget:
                 reserved_budget.update(deepcopy(pending))
             await self._save()
+            if pending.get("retry_policy") == "automatic_minute":
+                from .equipment_setpoint_sequence import wake_at
+                wake_at(self, spec, pending["last_attempt_at"] + 60)
             self._status(spec, "command_sent", entity_id=entity, service=service,
                          command_attempts=pending["attempts"])
             return True
@@ -3998,7 +4193,11 @@ class EquipmentRuntime:
             raise  # Persisted intent is deliberately retained.
         except Exception:
             if self._ready:
-                await self._pause(spec, "native_command_failed_or_uncertain")
+                if dispatched:
+                    from .equipment_setpoint_sequence import native_dispatch_failed
+                    await native_dispatch_failed(self, spec, pending)
+                else:
+                    await self._pause(spec, "native_command_failed_or_uncertain")
             return False
 
     async def _power(self, spec: model.ManagedDevice, cap: model.Capabilities,
@@ -4812,7 +5011,8 @@ class EquipmentRuntime:
                 ).get("control_mode") in ("automatic", "pid"),
             )
             return
-        from .equipment_setpoint_sequence import progress_stop
+        from .equipment_setpoint_sequence import prepare_automatic_retry, progress_stop
+        await prepare_automatic_retry(self, spec)
         if await progress_stop(self, spec):
             return
         if record.get("queued_power_switch"):
@@ -5056,7 +5256,7 @@ class EquipmentRuntime:
                 self._fan_allocations.pop(spec.identifier, None)
                 if record.pop("pid_checkpoint", None) is not None:
                     await self._save()
-                waiting = self.manager.window_open_wait.status(spec.area_id)
+                waiting = self.manager.window_open_wait.status(spec.area_id, cap.primary)
                 self._status(spec, why,
                              window_open_wait_remaining_seconds=waiting["remaining_seconds"],
                              window_open_wait_until=waiting.get("expires_at"))
@@ -5073,7 +5273,7 @@ class EquipmentRuntime:
             from .device_activation import effective_device
             dev = effective_device(self.manager, spec, cap.primary)
             room = model.room_config(self.manager, spec)
-            extraction = dev.get("fan_purpose") == "extraction" or room.get("extraction_fan_entity") == cap.primary
+            extraction = dev.get("fan_purpose") == "extraction"
             metric = "co2" if extraction else "pm25"
             goal = plan.get("air_actions", {}).get("thresholds", {}).get(
                 "co2_operational_ppm" if extraction else "pm25_short_term_action_ug_m3")

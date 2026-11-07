@@ -3810,6 +3810,14 @@
             "name": "Довідка"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Оголошення · {channel}Очікування відкриття (хв)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Сон · {channel}Коли всі сплять",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Оголошення · {channel}Попросити відкрити вікна",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"

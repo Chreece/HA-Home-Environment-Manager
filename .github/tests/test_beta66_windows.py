@@ -181,9 +181,13 @@ async def main():
 
  # Offline configuration must not clear unrelated manual-override latches.
  c=prior['Controller']();old_spec=prior['spec'];c.record['paused']='physical_manual_override'
+ presentation_updates=[]
+ c._presentation_updates=NS(request=presentation_updates.append)
  await prior['async_update'](c,old_spec,{'pause_on_window_open':False})
  assert c.manager.settings[prior['Model'].SETTINGS][old_spec.identifier]['pause_on_window_open'] is False
  assert c.record['paused']=='physical_manual_override'
+ assert presentation_updates==[old_spec.identifier]
+ assert not c.service_calls
  try: await prior['async_update'](c,old_spec,{'pause_on_window_open':'true'})
  except prior['HomeAssistantError']: pass
  else: raise AssertionError('must reject string booleans')

@@ -3810,6 +3810,14 @@
             "name": "Pomoć"
           }
         }
+      },
+      "equipment_window_open_timeout_minutes": {
+        "name": "Obavijesti · {channel}Čekanje otvaranja (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
       }
     },
     "switch": {
@@ -3983,6 +3991,14 @@
       },
       "equipment_sleep_when_everyone_asleep": {
         "name": "Spavanje · {channel}Kad svi spavaju",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
+      },
+      "equipment_announce_before_start": {
+        "name": "Obavijesti · {channel}Zatraži otvaranje prozora",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"

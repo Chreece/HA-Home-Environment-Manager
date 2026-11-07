@@ -2,7 +2,7 @@
 
 Run the production command/recovery lifecycle against the native HA transport
 fixture. Stable feedback may release command serialization, but the separate
-failed-target journal must preserve its retry budget through policy changes.
+failed-target journal must preserve its command history through policy changes.
 The tests assert actual OFF dispatch, not merely absence of another target.
 """
 from __future__ import annotations
@@ -50,17 +50,17 @@ class ShutdownRuntime(base["RecoveryRuntime"]):
 
 
 class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
-    async def exhausted(self, *, method="pid", mode="heat", owned_age=1200):
+    async def unconfirmed(self, *, method="pid", mode="heat", owned_age=1200):
         runtime = ShutdownRuntime(method, mode)
+        runtime.manager.settings["kp"] = 100.0
         runtime.own_running(age=owned_age)
         await runtime.evaluate()
         for attempt in (2, 3, 4):
-            await runtime.evaluate(30)
+            await runtime.evaluate(60)
             self.assertEqual(runtime.record["pending"]["attempts"], attempt)
-        await runtime.evaluate(30)
         self.assertEqual(len(runtime.calls), 4)
         self.assertTrue(all(call["service"] == "set_temperature" for call in runtime.calls))
-        self.assertEqual(runtime.record["paused"], "physical_acknowledgement_missing")
+        self.assertFalse(runtime.record.get("paused"))
         self.assertFalse(production.matches(runtime.state, runtime.record["pending"]["expected"]))
         return runtime, deepcopy(runtime.record["pending"])
 
@@ -82,38 +82,15 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
             owned = runtime.record["power"][PRIMARY]
             runtime.now = owned["since"] + owned["max_on"] + 1
 
-    def assert_ledger(self, runtime, original):
-        self.assertEqual(runtime.record.get(LEDGER), original)
-        self.assertEqual(runtime.record[LEDGER]["attempts"], 4)
+    def assert_history(self, runtime, original, *, archived=True):
+        retained = runtime.record.get(LEDGER)
+        if not archived and retained is None:
+            retained = runtime.record.get("pending")
+        self.assertIsInstance(retained, dict, "The unconfirmed original command must remain accounted for")
+        for key, value in original.items():
+            self.assertEqual(retained.get(key), value, key)
+        self.assertEqual(retained["attempts"], 4)
         self.assertFalse(production.matches(runtime.state, original["expected"]))
-
-    async def reconcile_target(self, runtime, original):
-        owned_since = runtime.record["power"][PRIMARY]["since"]
-        await self.begin_verification(runtime)
-        self.assertIsNotNone(runtime.record["pending"])
-        await runtime.evaluate(60)
-        self.assertIsNone(runtime.record["pending"])
-        self.assertIsNone(runtime.record["paused"])
-        self.assert_ledger(runtime, original)
-        self.assertEqual(runtime.record["power"][PRIMARY]["since"], owned_since)
-        self.assertEqual(len(runtime.calls), 4, "State reconciliation is not a device command")
-        self.assertNotEqual(runtime.record["last_resume_reconciliation"]["method"], "fresh_native_ack")
-
-    async def begin_verification(self, runtime):
-        await runtime.evaluate()
-        information = runtime.resume_information(SPEC) or {}
-        if information.get("decision") == "settling":
-            # Each retry starts its own physical settling window; a stop
-            # policy does not turn older first-attempt age into fresh proof.
-            await runtime.evaluate(information["remaining_seconds"] - 1)
-            self.assertNotIn("pending_resume_probe", runtime.record)
-            await runtime.evaluate(1)
-        self.assertIn("pending_resume_probe", runtime.record)
-
-    async def drain_recovery_tasks(self, runtime):
-        while runtime.queued_tasks:
-            tasks, runtime.queued_tasks = runtime.queued_tasks, []
-            await asyncio.gather(*tasks)
 
     def assert_off_command(self, runtime, original):
         self.assertEqual(len(runtime.calls), 6, runtime.calls)
@@ -123,17 +100,17 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
         })
         self.assertEqual(runtime.record["pending"]["expected"], {"state": "off"})
         self.assertEqual(runtime.record["pending"]["phase"], "commanded")
-        self.assert_ledger(runtime, original)
+        self.assert_history(runtime, original)
         self.assertIn(PRIMARY, runtime.record["power"], "Service completion does not prove OFF")
 
     async def finish_prepared_stop(self, runtime, original):
-        # Beta109 adds a distinct reducing-target leg. It is allowed even
-        # while the failed ON target keeps its original exhausted budget.
         self.assertEqual(len(runtime.calls), 5)
         self.assertEqual(runtime.calls[-1]["data"], {"temperature": runtime.original_target})
-        self.assert_ledger(runtime, original)
+        self.assert_history(runtime, original)
         self.assertIn("native_setpoint_stop", runtime.record)
-        await runtime.evaluate(30)
+        await runtime.evaluate(29.999)
+        self.assertEqual(len(runtime.calls), 5, "The optional reducing-target grace remains intact")
+        await runtime.evaluate(.001)
         self.assert_off_command(runtime, original)
 
     async def test_each_required_stop_dispatches_off_and_waits_for_its_ack(self):
@@ -141,13 +118,12 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
             for mode in ("heat", "cool"):
                 for stop in ("window", "sleep", "idle", "maximum_on"):
                     with self.subTest(method=method, mode=mode, stop=stop):
-                        runtime, original = await self.exhausted(method=method, mode=mode)
+                        runtime, original = await self.unconfirmed(method=method, mode=mode)
                         self.require_stop(runtime, stop)
                         cap = fixture["model"].capabilities(runtime.manager, SPEC)
                         if stop != "maximum_on":
                             self.assertTrue(runtime._stop_policy_verified(SPEC, cap, stop))
                         self.assertTrue(runtime._shutdown_allowed(SPEC, PRIMARY, {"state": "off"}))
-                        await self.reconcile_target(runtime, original)
                         await runtime.evaluate()
                         await self.finish_prepared_stop(runtime, original)
                         runtime.report(mode="off")
@@ -157,77 +133,68 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
                         self.assertNotIn(LEDGER, runtime.record)
                         self.assertEqual(len(runtime.calls), 6)
 
-    async def test_withdrawn_stop_cannot_reset_the_failed_target_budget(self):
+    async def test_withdrawn_stop_preserves_target_history_and_resumes_same_minute_episode(self):
         for method in ("automatic", "pid"):
-            for mode in ("heat", "cool"):
-                for change_at in ("before_resume_task", "after_resume"):
-                    with self.subTest(method=method, mode=mode, change_at=change_at):
-                        runtime, original = await self.exhausted(method=method, mode=mode)
-                        self.open_window(runtime)
-                        await self.begin_verification(runtime)
-                        runtime.now += 60
-                        if change_at == "before_resume_task":
-                            await runtime.tick(SPEC)
-                            self.assertTrue(runtime.queued_tasks)
-                            self.close_window(runtime)
-                            await self.drain_recovery_tasks(runtime)
-                        else:
-                            await runtime.evaluate()
-                            self.close_window(runtime)
-                        self.assertIsNone(runtime.record["pending"])
-                        self.assert_ledger(runtime, original)
-                        cap = fixture["model"].capabilities(runtime.manager, SPEC)
-                        self.assertIs(fixture["supply"].approved_demand(
-                            runtime, SPEC, runtime.manager.settings, cap,
-                        ), True)
-                        for delta in (1, 30, 60):
-                            await runtime.evaluate(delta)
-                            self.assertEqual(len(runtime.calls), 4, runtime.calls)
-                            self.assertIsNone(runtime.record["pending"])
-                            self.assert_ledger(runtime, original)
+            for change_at in ("archive_save", "preparation_intent"):
+                with self.subTest(method=method, change_at=change_at):
+                    runtime, original = await self.unconfirmed(method=method)
+                    self.open_window(runtime)
 
-    async def test_stop_withdrawn_during_preparation_persistence_preserves_failed_target(self):
-        runtime, original = await self.exhausted()
+                    def withdraw_after_persist(controller):
+                        pending = controller.record.get("pending") or {}
+                        archived = controller.record.get(LEDGER)
+                        at_boundary = (
+                            isinstance(archived, dict) and archived.get("when") == original["when"]
+                            and not controller.record.get("native_setpoint_stop")
+                            if change_at == "archive_save" else
+                            pending.get("stop_target") and pending.get("phase") == "intent"
+                        )
+                        if at_boundary:
+                            controller.after_persist = None
+                            self.close_window(controller)
+
+                    runtime.after_persist = withdraw_after_persist
+                    await runtime.evaluate()
+                    self.assertIsNone(runtime.after_persist, "The real durable stop boundary must be reached")
+                    self.assertEqual(len(runtime.calls), 4, "Withdrawn stop must not send its stale preparation")
+                    self.assertNotIn("native_setpoint_stop", runtime.record)
+                    self.assert_history(runtime, original, archived=False)
+                    await runtime.evaluate(59.999)
+                    self.assertEqual(len(runtime.calls), 4, "Retiring a target cannot reset its retry interval")
+                    await runtime.evaluate(.001)
+                    self.assertEqual(len(runtime.calls), 5)
+                    self.assertEqual(runtime.calls[-1]["data"], original["data"])
+                    self.assertEqual(runtime.record["pending"]["attempts"], 5)
+                    self.assertEqual(runtime.record["pending"]["when"], original["when"])
+                    self.assertFalse(runtime.record.get("paused"))
+
+    async def test_committed_preparation_finishes_off_after_window_closes_without_losing_target(self):
+        runtime, original = await self.unconfirmed()
         self.open_window(runtime)
-        await self.reconcile_target(runtime, original)
-
-        def withdraw_after_intent(controller):
-            pending = controller.record.get("pending") or {}
-            if pending.get("stop_target") and pending.get("phase") == "intent":
-                self.close_window(controller)
-                controller.after_persist = None
-
-        runtime.after_persist = withdraw_after_intent
         await runtime.evaluate()
-        self.assertIsNone(runtime.after_persist, "The test must reach durable preparation intent")
-        self.assertEqual(len(runtime.calls), 4, "The fresh stop recheck must prevent stale preparation")
-        self.assertIsNone(runtime.record["pending"])
-        self.assert_ledger(runtime, original)
-        await runtime.evaluate(1)
-        self.assertEqual(len(runtime.calls), 4, "Aborting preparation must not replenish the target budget")
-        self.assert_ledger(runtime, original)
+        self.assertEqual(len(runtime.calls), 5)
+        self.assert_history(runtime, original)
+        self.close_window(runtime)
+        await self.finish_prepared_stop(runtime, original)
+        self.assertEqual(runtime.record["pending"]["expected"], {"state": "off"})
 
-    async def test_reconciliation_preserves_minimum_on_before_off(self):
-        runtime, original = await self.exhausted(owned_age=100)
+    async def test_pending_target_does_not_shortcut_minimum_on_before_off(self):
+        runtime, original = await self.unconfirmed(owned_age=100)
         self.open_window(runtime)
-        await self.reconcile_target(runtime, original)
         owned = runtime.record["power"][PRIMARY]
         self.assertLess(runtime.now - owned["since"], owned["min_on"])
         await runtime.evaluate()
         self.assertEqual(len(runtime.calls), 4)
         self.assertEqual(runtime.statuses[-1][0], "minimum_on_hold")
-        runtime.now = owned["since"] + owned["min_on"] - 1
+        runtime.now = owned["since"] + owned["min_on"] - .001
         await runtime.evaluate()
         self.assertEqual(len(runtime.calls), 4)
-        self.assert_ledger(runtime, original)
-        await runtime.evaluate(1)
+        self.assert_history(runtime, original, archived=False)
+        await runtime.evaluate(.001)
         await self.finish_prepared_stop(runtime, original)
 
     async def test_late_target_ack_does_not_hide_an_explicit_user_mode_change(self):
-        runtime, original = await self.exhausted()
-        await self.reconcile_target(runtime, original)
-        # Let the production manual-override handler write the selected
-        # method through the fixture's HA configuration-entry boundary.
+        runtime, original = await self.unconfirmed()
         model = fixture["model"]
         model.SETTINGS = "equipment_controllers"
         runtime.manager.entry.options = {}
@@ -238,10 +205,11 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
 
         runtime.hass.config_entries = N(async_update_entry=update_entry)
         owned_since = runtime.record["power"][PRIMARY]["since"]
-        runtime.state.context = N(user_id="explicit_ha_user", parent_id=None)
+        runtime.now += 1
+        runtime.state.context = N(user_id="explicit_ha_user", parent_id=None, id="new-user-action")
         runtime.report(mode="cool", temperature=runtime.requested_target)
-        await runtime.evaluate(1)
-        self.assertNotIn(LEDGER, runtime.record, "The target itself was acknowledged")
+        self.assertTrue(production.matches(runtime.state, original["expected"]))
+        await runtime.evaluate()
         self.assertEqual(runtime.record["paused"], "physical_manual_override")
         self.assertEqual(runtime.manager.settings["control_mode"], "manual")
         self.assertEqual(runtime.record["manual_override_evidence"]["kind"], "ha_user")
@@ -252,9 +220,8 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
     async def test_foreign_owner_and_changed_identity_block_off(self):
         for guard in ("foreign_owner", "changed_identity"):
             with self.subTest(guard=guard):
-                runtime, original = await self.exhausted()
+                runtime, original = await self.unconfirmed()
                 self.open_window(runtime)
-                await self.reconcile_target(runtime, original)
                 if guard == "foreign_owner":
                     runtime.foreign_owner = "different_controller"
                 else:
@@ -262,15 +229,16 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
                     self.assertFalse(runtime._identity_ok(SPEC))
                 await runtime.evaluate()
                 self.assertEqual(len(runtime.calls), 4)
-                self.assert_ledger(runtime, original)
+                self.assert_history(runtime, original, archived=False)
                 self.assertIn(PRIMARY, runtime.record["power"])
 
     async def test_off_dispatch_rechecks_owner_and_identity_after_persistence(self):
         for guard in ("foreign_owner", "changed_identity"):
             with self.subTest(guard=guard):
-                runtime, original = await self.exhausted()
+                runtime, original = await self.unconfirmed()
                 self.open_window(runtime)
-                await self.reconcile_target(runtime, original)
+                await runtime.evaluate()
+                self.assertEqual(runtime.calls[-1]["data"], {"temperature": runtime.original_target})
 
                 def change_after_intent(controller):
                     pending = controller.record.get("pending") or {}
@@ -282,27 +250,26 @@ class TargetShutdownTests(unittest.IsolatedAsyncioTestCase):
                         controller.after_persist = None
 
                 runtime.after_persist = change_after_intent
-                await runtime.evaluate()
-                self.assertEqual(runtime.calls[-1]["data"], {"temperature": runtime.original_target})
                 await runtime.evaluate(30)
                 self.assertIsNone(runtime.after_persist, "The test must reach durable OFF intent")
                 self.assertEqual(len(runtime.calls), 5, "Only the preparation was dispatched")
                 self.assertIsNone(runtime.record["pending"])
-                self.assert_ledger(runtime, original)
+                self.assert_history(runtime, original)
+                self.assertIn(PRIMARY, runtime.record["power"])
 
-    async def test_revoked_grant_keeps_existing_resume_restriction_and_failed_budget(self):
-        runtime, original = await self.exhausted()
+    async def test_revoked_grant_blocks_explicit_resume_but_owned_protective_off_remains_authorized(self):
+        runtime, original = await self.unconfirmed()
         runtime.manager.power_grant = False
         self.assertTrue(runtime._shutdown_allowed(SPEC, PRIMARY, {"state": "off"}))
-        # Existing explicit Resume requires a power grant even for an owned
-        # active output. This patch must not invent one or drop its journal.
-        for delta in (0, 90, 60):
-            await runtime.evaluate(delta)
-            self.assertEqual(len(runtime.calls), 4)
-            self.assertEqual(runtime.record["pending"], original)
-            self.assertNotIn(LEDGER, runtime.record)
-            self.assertIn(PRIMARY, runtime.record["power"])
-        self.assertIn("Physical power control is not authorized", runtime.statuses[-1][1]["last_verification_issue"])
+        with self.assertRaises(base["HomeAssistantError"]):
+            await runtime.async_resume(SPEC)
+        self.assertEqual(len(runtime.calls), 4, "No explicit Resume may invent a physical power grant")
+        self.assertEqual(runtime.record["pending"], original)
+        self.open_window(runtime)
+        await runtime.evaluate()
+        await self.finish_prepared_stop(runtime, original)
+        self.assertEqual(runtime.record["pending"]["data"], {"hvac_mode": "off"})
+        self.assertIn(PRIMARY, runtime.record["power"])
 
 
 if __name__ == "__main__":
