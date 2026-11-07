@@ -124,9 +124,13 @@ def run_browser_checks(previous, base, helper):
         page = browser.new_page(viewport={"width": 590, "height": 1100})
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
-        page.set_content('<style>*{box-sizing:border-box}body{margin:0;background:#111;color:#ddd;font:14px Arial}'
+        # The shared renderer mounts and replaces each card inside this frame.
+        # Keep the fixture connected so lifecycle and real DOM checks execute.
+        page.set_content('<!doctype html><html><head><style>*{box-sizing:border-box}body{margin:0;background:#111;color:#ddd;font:14px Arial}'
                          ':root{--primary-text-color:#eee;--secondary-text-color:#aaa;--primary-color:#03a9f4;'
-                         '--card-background-color:#202020;--secondary-background-color:#292929;--divider-color:#444}</style>')
+                         '--card-background-color:#202020;--secondary-background-color:#292929;--divider-color:#444}'
+                         '#card-frame{width:100%;max-width:100%}'
+                         '</style></head><body><main id="card-frame"></main></body></html>')
         page.evaluate("now=>{Date.now=()=>now*1000}", previous.NOW)
         page.evaluate(previous.icon_fixture())
         page.add_script_tag(path=str(CARD))
