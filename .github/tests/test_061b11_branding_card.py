@@ -35,16 +35,9 @@ with sync_playwright() as p:
         expect(action).to_be_enabled()
         assert not action.inner_text().strip(),(lang,'arrival label must not be visible')
         assert action.get_attribute('aria-label')
-        help_button=page.locator('.hem-arrival-help125 > summary')
-        expect(help_button).to_be_visible()
-        assert needle in help_button.get_attribute('aria-label')
-        help_button.click()
-        popup=page.locator('.hem-floating-info87')
-        expect(popup).to_be_visible()
-        assert needle in popup.inner_text()
-        assert page.evaluate('calls.length')==0
-        heading.click()
-        expect(popup).to_have_count(0)
+        assert page.locator('.hem-arrival-help125').count()==0
+        assert needle in action.get_attribute('title')
+        assert needle in action.get_attribute('aria-label')
         assert page.evaluate('calls.length')==0
         for width in (320,375,665):
             page.set_viewport_size({'width':width,'height':950})
@@ -63,4 +56,4 @@ with sync_playwright() as p:
         assert not errors,errors
         page.close()
     browser.close()
-print('PASS: HEM b11 header and purpose bubble for el/de/en in Chromium, three sizes, no help actuation')
+print('PASS: HEM b12 HEM header, icon-only arrival and localized tooltip in Chromium')

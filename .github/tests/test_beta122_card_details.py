@@ -144,9 +144,8 @@ test('device page clicks use separate current registry identities without foldin
     const event=click(card,{...common,['data-open-'+kind+'-device122']:id});
     assert.ok(event.prevented&&event.stopped);
   }
-  assert.equal(JSON.stringify(routes),JSON.stringify(['/config/devices/device/physical-heater-device',
-    '/config/devices/device/hem-controller-device']));
-  assert.equal(locations.length,2);assert.equal(card.events.length,0);assert.equal(card.calls.length,0);
+  assert.deepEqual(JSON.parse(JSON.stringify(routes)),['/config/devices/device/physical-heater-device']);
+  assert.equal(locations.length,1);assert.equal(card.events.length,0);assert.equal(card.calls.length,0);
   assert.equal(card._devicesExpanded87.size,0);
 });
 test('names still open their exact native and HEM entities',()=>{
@@ -167,8 +166,9 @@ test('missing or changed registry and forged source links never fall back to phy
   const previous=card._controllerSignature();
   card._hass.entities[controller]={device_id:'replacement/hem'};
   assert.notEqual(card._controllerSignature(),previous);
-  assert.equal(card._openDevicePage122('living',controller,controller,'controller'),true);
-  assert.equal(routes.at(-1),'/config/devices/device/replacement%2Fhem');
+  // A controller gear must not navigate to its device page or fall back to a physical device.
+  assert.equal(card._openDevicePage122('living',controller,controller,'controller'),false);
+  assert.equal(routes.length,0);
   card._hass.states[controller].attributes.physical_primary_entity_id='climate.unrelated';
   assert.equal(card._openDevicePage122('living',controller,physical,'physical'),false);
 });
@@ -273,9 +273,15 @@ def browser_checks(data):
           window.card=document.createElement('home-environment-manager-card');document.body.append(card);
           card.addEventListener('hass-more-info',event=>info.push(event.detail.entityId));
           card._config={entity:'sensor.hem'};
-          card._hass={language:'en',states:data.states,entities:data.entities,
+          const entities={...data.entities,
+            'sensor.hem':{config_entry_id:'entry0'},
+            [data.controller]:{...data.entities[data.controller],config_entry_id:'entry0'}};
+          card._hass={language:'en',states:data.states,entities,user:{is_admin:true},connection:{},
             localize:()=>undefined,callService:(...args)=>{calls.push(args);return Promise.resolve();}};
           card._renderContent(true);
+          card._configEntryId114='entry0';
+          card._configEntryOwner114='sensor.hem';
+          card._areaDeviceIds=new Map([['living','room-hub']]);
         }""", data)
         room = page.locator('[data-room-fold87="living"]')
         assert room.get_attribute("open") is None
@@ -283,7 +289,13 @@ def browser_checks(data):
         controller = room.locator('[data-device-fold87="climate.hem_heater"]')
         assert controller.get_attribute("open") is None
         controller.locator('[data-open-controller-device122]').click()
-        assert page.evaluate("routes.at(-1)") == "/config/devices/device/hem-controller-device"
+        dialog=page.locator('.hem-controller-options126')
+        expect(dialog).to_be_visible()
+        assert page.evaluate("routes.length")==0, "Controller gear must not navigate"
+        assert dialog.locator('[data-managed-climate93="'+data["controller"]+'"]').count()==1
+        assert page.evaluate("calls.length")==0
+        dialog.locator('[data-close-hem-controller126]').click()
+        expect(dialog).to_have_count(0)
         assert controller.get_attribute("open") is None
         controller.locator('[data-open-controller89]').click()
         assert page.evaluate("info.at(-1)") == data["controller"]

@@ -26,14 +26,16 @@ assert 'class="hem-brand-title125"' in source
 assert '>HEM</h2>' in source
 assert 'hem-arrival-action124' in source
 assert 'hem-arrival-label124' not in source
-assert 'data-detail-id="hem-arrival-help125"' in source
+assert 'data-detail-id="hem-arrival-help125"' not in source
+assert 'help.purpose' in source
+assert 'HEM_CARD_SETTINGS126_START' in source
 assert 'mdi:information-outline' in source
 assert '_arrivalAction124(button)' in source
 help_map=json.loads(source.split('const ARRIVAL_HELP125=',1)[1].split(';',1)[0])
 locales={p.stem for p in (INTEGRATION/'translations').glob('*.json')}
 assert locales == set(help_map),(locales-set(help_map),set(help_map)-locales)
 assert all(isinstance(v,str) and len(v.strip())>=4 for v in help_map.values())
-assert json.loads((INTEGRATION/'manifest.json').read_text('utf-8'))['version']=='0.6.1b11'
+assert json.loads((INTEGRATION/'manifest.json').read_text('utf-8'))['version']=='0.6.1b12'
 
 def verify_png(path, size):
     blob=path.read_bytes()
