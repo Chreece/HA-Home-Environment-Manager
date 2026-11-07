@@ -272,11 +272,10 @@ jobs:
           python -I .github/tests/test_beta67_aqi.py
           python -I .github/tests/test_beta68_scheduler.py
           python -I .github/tests/test_beta68_metadata.py
-      - name: Device readiness, exact PID deadlines and compact option logic
+      - name: Device readiness and exact PID deadlines
         run: |
           set -euo pipefail
           python -I .github/tests/test_061b8_readiness.py
-          python -I .github/tests/test_061b8_quick_options_card.py --logic-only
       - name: Bounded optional native targets and quiet dehumidifier stages
         run: |
           set -euo pipefail
@@ -287,7 +286,7 @@ jobs:
       - name: Compact device options, readiness timing and mobile help
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
-        run: python -I .github/tests/test_061b8_quick_options_card.py --browser-only
+        run: python -I .github/tests/test_061b8_quick_options_card.py
       - name: Independent mode panels, mold indication and scoped mobile controls
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
