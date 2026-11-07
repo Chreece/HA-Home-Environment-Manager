@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Rozhodovací práh pro „Venku · °C (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
           "max_outdoor_temp": "Rozhodovací práh pro „Venku · °C (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
           "max_outdoor_humidity": "Rozhodovací práh pro „Venku · RH (%) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Rozhodovací práh pro „Indikátor plísní · ≥ 70%“. Ovlivňuje doporučení, není lékařským limitem."
         }
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Přítomnost doma · Maximální stáří údajů sledování/počtu osob (min)",
           "general_home_policy": "Přítomnost doma",
           "general_wake_alarm_entity": "Spánek · Příští budík",
-          "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem"
+          "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem",
+          "window_open_timeout_minutes": "Čekání na otevření okna (min)"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "Věkové omezení platí pro hlášení sledovačů a číselné počty osob. Seznamy místností a binární přítomnostní stavy při nezměněné hodnotě nevyprší. Nedostupné, obnovené nebo neplatné zdroje zůstávají neznámé. Nejde o délku spánku.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Vyberte entitu času nebo časového razítka příštího budíku a také entitu s minutami předstihu. HEM ukončí automatický spánek s tímto předstihem a obnoví běžné cíle. Samotný čas používá časové pásmo Home Assistant. Nepřítomnost, ruční ovládání a ochrany zařízení mají nadále přednost.",
-          "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů."
+          "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů.",
+          "window_open_timeout_minutes": "Čekání po přijetí žádosti o větrání, než budou při trvající potřebě povolena nová automatická/PID spuštění. 0–30 minut, výchozí 5; 0 čekání vypne. Ochrana při otevřeném okně a minimální provozní časy zařízení zůstávají v platnosti."
         }
       },
       "reconfigure": {
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Rozhodovací práh pro „Venku · °C (≥)“. Ovlivňuje doporučení, není lékařským limitem.",
           "max_outdoor_temp": "Rozhodovací práh pro „Venku · °C (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
           "max_outdoor_humidity": "Rozhodovací práh pro „Venku · RH (%) (≤)“. Ovlivňuje doporučení, není lékařským limitem.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Rozhodovací práh pro „Indikátor plísní · ≥ 70%“. Ovlivňuje doporučení, není lékařským limitem."
         }
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Přítomnost doma · Maximální stáří údajů sledování/počtu osob (min)",
           "general_home_policy": "Přítomnost doma",
           "general_wake_alarm_entity": "Spánek · Příští budík",
-          "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem"
+          "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem",
+          "window_open_timeout_minutes": "Čekání na otevření okna (min)"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "Věkové omezení platí pro hlášení sledovačů a číselné počty osob. Seznamy místností a binární přítomnostní stavy při nezměněné hodnotě nevyprší. Nedostupné, obnovené nebo neplatné zdroje zůstávají neznámé. Nejde o délku spánku.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Vyberte entitu času nebo časového razítka příštího budíku a také entitu s minutami předstihu. HEM ukončí automatický spánek s tímto předstihem a obnoví běžné cíle. Samotný čas používá časové pásmo Home Assistant. Nepřítomnost, ruční ovládání a ochrany zařízení mají nadále přednost.",
-          "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů."
+          "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů.",
+          "window_open_timeout_minutes": "Čekání po přijetí žádosti o větrání, než budou při trvající potřebě povolena nová automatická/PID spuštění. 0–30 minut, výchozí 5; 0 čekání vypne. Ochrana při otevřeném okně a minimální provozní časy zařízení zůstávají v platnosti."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Úspora energie",
           "window_open_pause": "Pozastaveno kvůli otevřenému oknu",
           "window_close_warmup": "Čekání po zavření oken",
-          "window_state_unknown": "Čekání na stav oken"
+          "window_state_unknown": "Čekání na stav oken",
+          "window_open_wait": "Čeká se, až otevřete okno",
+          "window_request_pending": "Odesílá se žádost o otevření okna"
         }
       }
     },
@@ -3791,6 +3797,14 @@
       },
       "arrival_preparation_timeout": {
         "name": "Přítomnost doma · Doba přípravy na příchod (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Větrání · Čekání na otevření okna (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"

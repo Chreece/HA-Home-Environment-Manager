@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Umbral de decisión para «Temperatura exterior mínima (°C)». Afecta las recomendaciones, no es un límite médico.",
           "max_outdoor_temp": "Umbral de decisión para «Temperatura exterior máxima (°C)». Afecta las recomendaciones, no es un límite médico.",
           "max_outdoor_humidity": "Umbral de decisión para «Humedad exterior máxima (%)». Afecta las recomendaciones, no es un límite médico.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Umbral de decisión para «Umbral de moho para ventilar (humedad superficial estimada, %)». Afecta las recomendaciones, no es un límite médico."
         }
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Presencia en casa · Antigüedad máxima de rastreadores/recuentos (min)",
           "general_home_policy": "Presencia en casa",
           "general_wake_alarm_entity": "Sueño · Próxima alarma",
-          "general_wake_lead_minutes_entity": "Sueño · Minutos antes de la alarma"
+          "general_wake_lead_minutes_entity": "Sueño · Minutos antes de la alarma",
+          "window_open_timeout_minutes": "Espera para abrir ventanas (min)"
         },
         "data_description": {
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "El límite de antigüedad se aplica a informes de rastreadores y recuentos numéricos de personas. Las listas de habitaciones y los estados binarios de presencia no caducan sin cambios. Las fuentes no disponibles, restauradas o inválidas siguen siendo desconocidas. No es una duración de sueño.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Selecciona una entidad de hora o fecha y hora para la próxima alarma, y otra para los minutos de antelación. HEM sale del sueño automático con esa antelación y recupera los objetivos normales. Las horas sin fecha usan la zona horaria de Home Assistant. Ausencia, control manual y protecciones mantienen su prioridad.",
-          "general_wake_lead_minutes_entity": "Selecciona una entidad numérica con minutos no negativos, con unidad min o sin unidad. Una alarma a las 07:00 y un valor de 30 terminan el sueño automático a las 06:30; 0 significa al sonar. Para desactivar, borra ambas fuentes."
+          "general_wake_lead_minutes_entity": "Selecciona una entidad numérica con minutos no negativos, con unidad min o sin unidad. Una alarma a las 07:00 y un valor de 30 terminan el sueño automático a las 06:30; 0 significa al sonar. Para desactivar, borra ambas fuentes.",
+          "window_open_timeout_minutes": "Espera tras aceptar una solicitud de ventilación antes de permitir nuevos arranques automáticos/PID si aún son necesarios. 0–30 minutos, 5 por defecto; 0 desactiva la espera. Se mantienen las protecciones por ventanas abiertas y los tiempos mínimos de los equipos."
         }
       },
       "reconfigure": {
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Umbral de decisión para «Temperatura exterior mínima (°C)». Afecta las recomendaciones, no es un límite médico.",
           "max_outdoor_temp": "Umbral de decisión para «Temperatura exterior máxima (°C)». Afecta las recomendaciones, no es un límite médico.",
           "max_outdoor_humidity": "Umbral de decisión para «Humedad exterior máxima (%)». Afecta las recomendaciones, no es un límite médico.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Umbral de decisión para «Umbral de moho para ventilar (humedad superficial estimada, %)». Afecta las recomendaciones, no es un límite médico."
         }
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Presencia en casa · Antigüedad máxima de rastreadores/recuentos (min)",
           "general_home_policy": "Presencia en casa",
           "general_wake_alarm_entity": "Sueño · Próxima alarma",
-          "general_wake_lead_minutes_entity": "Sueño · Minutos antes de la alarma"
+          "general_wake_lead_minutes_entity": "Sueño · Minutos antes de la alarma",
+          "window_open_timeout_minutes": "Espera para abrir ventanas (min)"
         },
         "data_description": {
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "El límite de antigüedad se aplica a informes de rastreadores y recuentos numéricos de personas. Las listas de habitaciones y los estados binarios de presencia no caducan sin cambios. Las fuentes no disponibles, restauradas o inválidas siguen siendo desconocidas. No es una duración de sueño.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Selecciona una entidad de hora o fecha y hora para la próxima alarma, y otra para los minutos de antelación. HEM sale del sueño automático con esa antelación y recupera los objetivos normales. Las horas sin fecha usan la zona horaria de Home Assistant. Ausencia, control manual y protecciones mantienen su prioridad.",
-          "general_wake_lead_minutes_entity": "Selecciona una entidad numérica con minutos no negativos, con unidad min o sin unidad. Una alarma a las 07:00 y un valor de 30 terminan el sueño automático a las 06:30; 0 significa al sonar. Para desactivar, borra ambas fuentes."
+          "general_wake_lead_minutes_entity": "Selecciona una entidad numérica con minutos no negativos, con unidad min o sin unidad. Una alarma a las 07:00 y un valor de 30 terminan el sueño automático a las 06:30; 0 significa al sonar. Para desactivar, borra ambas fuentes.",
+          "window_open_timeout_minutes": "Espera tras aceptar una solicitud de ventilación antes de permitir nuevos arranques automáticos/PID si aún son necesarios. 0–30 minutos, 5 por defecto; 0 desactiva la espera. Se mantienen las protecciones por ventanas abiertas y los tiempos mínimos de los equipos."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Ahorro de energía",
           "window_open_pause": "Pausa por ventana abierta",
           "window_close_warmup": "Espera tras cerrar las ventanas",
-          "window_state_unknown": "Esperando el estado de las ventanas"
+          "window_state_unknown": "Esperando el estado de las ventanas",
+          "window_open_wait": "Esperando a que abras la ventana",
+          "window_request_pending": "Enviando una solicitud para abrir la ventana"
         }
       }
     },
@@ -3791,6 +3797,14 @@
       },
       "arrival_preparation_timeout": {
         "name": "Presencia en casa · Duración de la preparación de llegada (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ayuda"
+          }
+        }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Ventilación · Espera para abrir ventanas (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ayuda"

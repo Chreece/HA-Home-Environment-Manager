@@ -86,7 +86,9 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
     incomplete_air = any(not item["available"] for item in air_readings)
     opened = [item for item in room.windows if item.opened is True]
     incomplete_windows = not room.windows or any(item.opened is None for item in room.windows)
-    recommended = next((rec for rec in plan.recommendations if rec.area_id == room.area_id), None)
+    recommended = next((rec for rec in
+                        (*plan.recommendations,*plan.climate_recommendations)
+                        if rec.area_id == room.area_id), None)
 
     # Urgent closure always needs attention, even if indoor sensors are missing.
     # Indoor values over a threshold remain important while already ventilating
@@ -168,6 +170,8 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
         "available_count": sum(item["available"] for item in readings),
         "ventilating": bool(opened) and plan.outdoor_safe,
         "reasons": [_reason(reason) for reason in recommended.reasons] if recommended else [],
+        "cautions": [_reason(reason) for reason in recommended.cautions] if recommended else [],
+        "window_open_wait": plan.environment.get(room.area_id,{}).get("window_open_wait",{}),
     }
 
 
@@ -209,6 +213,8 @@ def dashboard_snapshot(plan: Plan, limits: dict[str, float]) -> dict[str, Any]:
         "climate_only_count":len(extra),
         "outdoor": {
             "status": outside_status,
+            "conditional_open": any(rec.action == "open" and rec.cautions
+                                    for rec in (*plan.recommendations,*plan.climate_recommendations)),
             "pollen": plan.environment.get("__outside__", {}).get("pollen", {"status":"not_configured"}),
             "safe_to_ventilate": plan.outdoor_safe,
             "data_complete": not missing_conditions,

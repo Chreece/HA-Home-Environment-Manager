@@ -18,6 +18,8 @@ from .const import (
     CONF_OCCUPANCY_GLOBAL, CONF_ENVIRONMENT_GLOBAL, CONF_USE_MOLD,
     CONF_AWAY_WINDOWS_ALERT, CONF_AWAY_WINDOWS_PERSONS, CONF_AWAY_WINDOWS_DELIVERY,
     CONF_THRESHOLDS, DEFAULT_THRESHOLDS,
+    CONF_WINDOW_OPEN_TIMEOUT_MINUTES, DEFAULT_WINDOW_OPEN_TIMEOUT_MINUTES,
+    MAX_WINDOW_OPEN_TIMEOUT_MINUTES,
 )
 from . import room_sources as sources
 
@@ -387,6 +389,8 @@ class RoomSetupMixin:
             CONF_AI_AGENT: self._values.get(CONF_AI_AGENT) or DEFAULT_AGENT,
             CONF_LANGUAGE: (normalize_announcement_language(
                 self._values.get(CONF_LANGUAGE, "auto")) or "auto").lower(),
+            CONF_WINDOW_OPEN_TIMEOUT_MINUTES: self._values.get(
+                CONF_WINDOW_OPEN_TIMEOUT_MINUTES, DEFAULT_WINDOW_OPEN_TIMEOUT_MINUTES),
             CONF_USE_MOLD: self._values.get(CONF_USE_MOLD, False),
             CONF_AWAY_WINDOWS_ALERT: self._values.get(CONF_AWAY_WINDOWS_ALERT, False),
             CONF_AWAY_WINDOWS_PERSONS: self._values.get(CONF_AWAY_WINDOWS_PERSONS, []),
@@ -437,6 +441,15 @@ class RoomSetupMixin:
                     errors[key] = "invalid_room_source"
             if language is None:
                 errors[CONF_LANGUAGE] = "invalid_room_source"
+            raw_window_timeout = value[CONF_WINDOW_OPEN_TIMEOUT_MINUTES]
+            try:
+                window_timeout = float(raw_window_timeout)
+            except (TypeError, ValueError, OverflowError):
+                window_timeout = float("nan")
+            if (isinstance(raw_window_timeout, bool) or not math.isfinite(window_timeout)
+                    or not window_timeout.is_integer()
+                    or not 0 <= window_timeout <= MAX_WINDOW_OPEN_TIMEOUT_MINUTES):
+                errors[CONF_WINDOW_OPEN_TIMEOUT_MINUTES] = "invalid_room_source"
             if ((value["general_wake_alarm_entity"] == "none") !=
                     (value["general_wake_lead_minutes_entity"] == "none")):
                 errors["general_wake_lead_minutes_entity"] = "wake_sources_pair"
@@ -525,6 +538,7 @@ class RoomSetupMixin:
                     and normalize_announcement_language(previous_language) == language
                     else language
                 )
+                self._values[CONF_WINDOW_OPEN_TIMEOUT_MINUTES] = int(window_timeout)
                 self._values[CONF_USE_MOLD] = value[CONF_USE_MOLD]
                 self._values[CONF_AWAY_WINDOWS_ALERT] = value[CONF_AWAY_WINDOWS_ALERT]
                 from .hub_delivery import hub_installed
@@ -623,6 +637,10 @@ class RoomSetupMixin:
                 min=0, max=100, step=0.1,
                 mode=selector.NumberSelectorMode.BOX))
         fields[field("pollen_avoid_ventilation", value["pollen_avoid_ventilation"])] = selector.BooleanSelector()
+        fields[field(CONF_WINDOW_OPEN_TIMEOUT_MINUTES, value[CONF_WINDOW_OPEN_TIMEOUT_MINUTES])] = (
+            selector.NumberSelector(selector.NumberSelectorConfig(
+                min=0, max=MAX_WINDOW_OPEN_TIMEOUT_MINUTES, step=1,
+                unit_of_measurement="min", mode=selector.NumberSelectorMode.BOX)))
         fields[field(CONF_LANGUAGE, value[CONF_LANGUAGE])] = select(
             language_choices, translation_key="output_language")
         from .hub_delivery import hub_installed

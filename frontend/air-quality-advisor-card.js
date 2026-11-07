@@ -1632,7 +1632,8 @@
       if (this._config.show_outside === false) return '';
       const status = ['safe','partial','unsafe','unknown'].includes(outdoor.status) ? outdoor.status : 'unknown';
       const main = status === 'safe' ? this._t('goodOutside') : status === 'partial' ?
-        this._t('partialOutside') : status === 'unsafe' ? this._t('badOutside') : this._t('missingOutside');
+        this._t('partialOutside') : status === 'unsafe' ?
+        (outdoor.conditional_open ? this._t('attention')+' · '+this._t('outside') : this._t('badOutside')) : this._t('missingOutside');
       const wx = safeArray(outdoor.weather).find((item) => item.condition) || safeArray(outdoor.weather)[0];
       const condition = wx?.condition ? this._weatherName(wx.condition) : this._t('missing');
       const icon = wx?.condition ? (ICON[wx.condition] || 'mdi:weather-cloudy') : 'mdi:weather-cloudy-alert';
@@ -4078,6 +4079,13 @@
     if(room.action==='close')
       alerts.push(this._roomAlert114(room,'advice','mdi:window-closed-variant',
         this._t('closeAdvice'),'warn'));
+    if(room.action==='open'){
+      const request=room.window_open_wait || room.environment?.window_open_wait || {};
+      const waiting=['window_request_pending','window_open_wait'].includes(request.status);
+      alerts.push(this._roomAlert114(room,'advice',waiting?'mdi:timer-sand':'mdi:window-open-variant',
+        waiting?this._controllerStatusLabel(request.status):this._t('openAdvice'),
+        safeArray(room.cautions).length?'warn':'good'));
+    }
     const faultCount=devices.filter(e=>
       ['warning','error','critical'].includes(e.errorAnnounce?.attributes?.native_error?.status)
     ).length;
@@ -6711,6 +6719,17 @@
         add([reason.label,reason.value].filter(Boolean).join(' · '));
     } else if(kind==='windows'||kind==='advice'){
       if(kind==='advice'&&room.action==='close')add(this._t('closeAdvice'));
+      if(kind==='advice'&&room.action==='open'){
+        add(this._t('openAdvice'));
+        for(const caution of safeArray(room.cautions))
+          rows.push('<li>'+this._outsideBlocker(caution)+'</li>');
+        const request=room.window_open_wait || room.environment?.window_open_wait || {};
+        if(['window_request_pending','window_open_wait'].includes(request.status)){
+          const seconds=Math.max(0,Math.ceil(Number(request.expires_at)-Date.now()/1000));
+          add(this._controllerStatusLabel(request.status)+
+            (Number.isFinite(seconds)?' · '+Math.ceil(seconds/60)+' min':''));
+        }
+      }
       for(const win of safeArray(room.windows)){
         const state=win.opened===true?'windowOpen':win.opened===false?'windowClosed':'windowUnknown';
         add((win.name||this._t('windows'))+' · '+this._t(state),win.entity_id);
@@ -6744,7 +6763,10 @@
     this._roomsExpanded87 ||= new Set();this._roomsExpanded87.add(area);
     this._expanded.add(area);
     this._roomIssues114 ||= new Map();
-    if(['missing','occupancy'].includes(kind))this._roomIssues114.set(area,kind);
+    const request=room.window_open_wait || room.environment?.window_open_wait || {};
+    const conditionalAdvice=kind==='advice' && (safeArray(room.cautions).length>0 ||
+      ['window_request_pending','window_open_wait'].includes(request.status));
+    if(['missing','occupancy'].includes(kind)||conditionalAdvice)this._roomIssues114.set(area,kind);
     else this._roomIssues114.delete(area);
     const devices=this._managedControllers(area);
     const affected=devices.filter(e=>kind==='faults'
@@ -6765,7 +6787,7 @@
       .find(el=>el.getAttribute('data-room-fold87')===area);
     if(!fold)return;
     let target;
-    if(['missing','occupancy'].includes(kind))target=fold.querySelector('.hem-room-issue-detail114');
+    if(['missing','occupancy'].includes(kind)||conditionalAdvice)target=fold.querySelector('.hem-room-issue-detail114');
     else if(kind==='ventilation')target=fold.querySelector('.hem-room-ventilation95');
     else if(kind==='windows')target=fold.querySelector('.window-section');
     else if(kind==='advice')target=fold.querySelector('.advice')||fold.querySelector('.window-section');

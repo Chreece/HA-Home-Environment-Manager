@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Порог решения для «Снаружи · °C (≥)». Влияет на рекомендации, но не является медицинской нормой.",
           "max_outdoor_temp": "Порог решения для «Снаружи · °C (≤)». Влияет на рекомендации, но не является медицинской нормой.",
           "max_outdoor_humidity": "Порог решения для «Снаружи · RH (%) (≤)». Влияет на рекомендации, но не является медицинской нормой.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Порог решения для «Индикатор плесени · ≥ 70%». Влияет на рекомендации, но не является медицинской нормой."
         }
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Присутствие дома · Максимальный возраст данных трекеров/счётчиков (мин)",
           "general_home_policy": "Присутствие дома",
           "general_wake_alarm_entity": "Сон · Следующий будильник",
-          "general_wake_lead_minutes_entity": "Сон · Минуты до будильника"
+          "general_wake_lead_minutes_entity": "Сон · Минуты до будильника",
+          "window_open_timeout_minutes": "Ожидание открытия окна (мин)"
         },
         "data_description": {
           "weather_entities": "Выберите: Погода и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "Ограничение возраста относится к отчётам трекеров и числовым счётчикам людей. Списки комнат и бинарные состояния присутствия не устаревают, пока не меняются. Недоступные, восстановленные или некорректные источники остаются неизвестными. Это не длительность сна.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Выберите сущность времени или даты и времени следующего будильника, а также сущность минут упреждения. HEM завершит автоматический сон на это число минут раньше и вернётся к обычным целям. Время без даты использует часовой пояс Home Assistant. Отсутствие, ручное управление и защиты сохраняют приоритет.",
-          "general_wake_lead_minutes_entity": "Выберите числовую сущность с неотрицательным количеством минут, с единицей min или без единицы. Будильник на 07:00 и значение 30 завершают автоматический сон в 06:30; 0 означает момент звонка. Для отключения очистите оба источника."
+          "general_wake_lead_minutes_entity": "Выберите числовую сущность с неотрицательным количеством минут, с единицей min или без единицы. Будильник на 07:00 и значение 30 завершают автоматический сон в 06:30; 0 означает момент звонка. Для отключения очистите оба источника.",
+          "window_open_timeout_minutes": "Ожидание после принятия запроса на проветривание перед новыми автоматическими/PID-запусками при сохраняющейся необходимости. 0–30 минут, по умолчанию 5; 0 отключает ожидание. Защита при открытом окне и минимальные интервалы работы устройств сохраняются."
         }
       },
       "reconfigure": {
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Порог решения для «Снаружи · °C (≥)». Влияет на рекомендации, но не является медицинской нормой.",
           "max_outdoor_temp": "Порог решения для «Снаружи · °C (≤)». Влияет на рекомендации, но не является медицинской нормой.",
           "max_outdoor_humidity": "Порог решения для «Снаружи · RH (%) (≤)». Влияет на рекомендации, но не является медицинской нормой.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Порог решения для «Индикатор плесени · ≥ 70%». Влияет на рекомендации, но не является медицинской нормой."
         }
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Присутствие дома · Максимальный возраст данных трекеров/счётчиков (мин)",
           "general_home_policy": "Присутствие дома",
           "general_wake_alarm_entity": "Сон · Следующий будильник",
-          "general_wake_lead_minutes_entity": "Сон · Минуты до будильника"
+          "general_wake_lead_minutes_entity": "Сон · Минуты до будильника",
+          "window_open_timeout_minutes": "Ожидание открытия окна (мин)"
         },
         "data_description": {
           "weather_entities": "Выберите: Погода и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "Ограничение возраста относится к отчётам трекеров и числовым счётчикам людей. Списки комнат и бинарные состояния присутствия не устаревают, пока не меняются. Недоступные, восстановленные или некорректные источники остаются неизвестными. Это не длительность сна.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Выберите сущность времени или даты и времени следующего будильника, а также сущность минут упреждения. HEM завершит автоматический сон на это число минут раньше и вернётся к обычным целям. Время без даты использует часовой пояс Home Assistant. Отсутствие, ручное управление и защиты сохраняют приоритет.",
-          "general_wake_lead_minutes_entity": "Выберите числовую сущность с неотрицательным количеством минут, с единицей min или без единицы. Будильник на 07:00 и значение 30 завершают автоматический сон в 06:30; 0 означает момент звонка. Для отключения очистите оба источника."
+          "general_wake_lead_minutes_entity": "Выберите числовую сущность с неотрицательным количеством минут, с единицей min или без единицы. Будильник на 07:00 и значение 30 завершают автоматический сон в 06:30; 0 означает момент звонка. Для отключения очистите оба источника.",
+          "window_open_timeout_minutes": "Ожидание после принятия запроса на проветривание перед новыми автоматическими/PID-запусками при сохраняющейся необходимости. 0–30 минут, по умолчанию 5; 0 отключает ожидание. Защита при открытом окне и минимальные интервалы работы устройств сохраняются."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Энергосбережение",
           "window_open_pause": "Пауза из-за открытого окна",
           "window_close_warmup": "Ожидание после закрытия окон",
-          "window_state_unknown": "Ожидание состояния окон"
+          "window_state_unknown": "Ожидание состояния окон",
+          "window_open_wait": "Ожидание, пока вы откроете окно",
+          "window_request_pending": "Отправка просьбы открыть окно"
         }
       }
     },
@@ -3791,6 +3797,14 @@
       },
       "arrival_preparation_timeout": {
         "name": "Присутствие дома · Время подготовки к возвращению (мин)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Справка"
+          }
+        }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Проветривание · Ожидание открытия окна (мин)",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"

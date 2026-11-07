@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from math import ceil, isfinite
+
 from .logic import Reason, Recommendation
 from .languages import EXTRA_LOCALES, resolve_language
 from .mold_text import MOLD_NAMES
@@ -9,6 +11,7 @@ from .recommendation_text import (
     CLIMATE_WINDOW_TEXT,
     ROOM_VENTILATION_TEXT as EXTRA_ROOM_VENTILATION_TEXT,
 )
+from .window_open_text import WINDOW_OPEN_TEXT, WEATHER_CAUTION_CODES
 
 
 TEXT = {
@@ -26,9 +29,9 @@ TEXT = {
         "weather_condition": "weather conditions: {value}",
         "inside_passive_cooling": "outdoor air could cool the room ({value} cooler)",
         "title_climate_window": "Window airing may reduce mechanical conditioning",
-        "climate_window_cool": "cooling equipment is operating, but outside air is {value} cooler; briefly opening a window could reduce mechanical cooling",
-        "climate_window_heat": "heating equipment is operating, but outside air is {value} warmer and can approach the heating target; briefly opening a window could help",
-        "climate_window_dry": "drying equipment is operating, but outdoor air carries {value} less water vapour per kilogram of dry air; briefly opening a window could reduce humidity",
+        "climate_window_cool": "outside air is {value} cooler; briefly opening a window could reduce mechanical cooling",
+        "climate_window_heat": "outside air is {value} warmer and can approach the heating target; briefly opening a window could help",
+        "climate_window_dry": "outdoor air carries {value} less water vapour per kilogram of dry air; briefly opening a window could reduce humidity",
         "weather_cold": "low outside temperature ({value})",
         "weather_hot": "high outside temperature ({value})",
         "weather_humid": "very humid outside ({value})",
@@ -50,9 +53,9 @@ TEXT = {
         "weather_condition": "Wetterbedingungen: {value}",
         "inside_passive_cooling": "Außenluft könnte den Raum kühlen ({value} kühler)",
         "title_climate_window": "Fensterlüftung könnte die Klimatisierung entlasten",
-        "climate_window_cool": "die Kühlung läuft, aber die Außenluft ist {value} kühler; kurzes Fensterlüften könnte die Kühlung entlasten",
-        "climate_window_heat": "die Heizung läuft, aber die Außenluft ist {value} wärmer und kann dem Heizsollwert nahekommen; kurzes Lüften könnte helfen",
-        "climate_window_dry": "die Entfeuchtung läuft, aber die Außenluft enthält {value} weniger Wasserdampf je Kilogramm trockener Luft; kurzes Lüften könnte Feuchtigkeit abführen",
+        "climate_window_cool": "die Außenluft ist {value} kühler; kurzes Fensterlüften könnte die Kühlung entlasten",
+        "climate_window_heat": "die Außenluft ist {value} wärmer und kann dem Heizsollwert nahekommen; kurzes Lüften könnte helfen",
+        "climate_window_dry": "die Außenluft enthält {value} weniger Wasserdampf je Kilogramm trockener Luft; kurzes Lüften könnte Feuchtigkeit abführen",
         "weather_cold": "niedrige Außentemperatur ({value})",
         "weather_hot": "hohe Außentemperatur ({value})",
         "weather_humid": "hohe Luftfeuchte draußen ({value})",
@@ -74,9 +77,9 @@ TEXT = {
         "weather_condition": "καιρικές συνθήκες: {value}",
         "inside_passive_cooling": "ο εξωτερικός αέρας μπορεί να δροσίσει ({value} ψυχρότερος)",
         "title_climate_window": "Το άνοιγμα παραθύρου μπορεί να μειώσει τη χρήση κλιματισμού",
-        "climate_window_cool": "λειτουργεί ψύξη, αλλά ο εξωτερικός αέρας είναι {value} ψυχρότερος· ο σύντομος αερισμός μπορεί να βοηθήσει",
-        "climate_window_heat": "λειτουργεί θέρμανση, αλλά ο εξωτερικός αέρας είναι {value} θερμότερος και πλησιάζει τον επιθυμητό στόχο· ο σύντομος αερισμός μπορεί να βοηθήσει",
-        "climate_window_dry": "λειτουργεί αφύγρανση, αλλά ο εξωτερικός αέρας έχει {value} λιγότερους υδρατμούς ανά κιλό ξηρού αέρα· ο σύντομος αερισμός μπορεί να απομακρύνει υγρασία",
+        "climate_window_cool": "ο εξωτερικός αέρας είναι {value} ψυχρότερος· ο σύντομος αερισμός μπορεί να βοηθήσει",
+        "climate_window_heat": "ο εξωτερικός αέρας είναι {value} θερμότερος και πλησιάζει τον επιθυμητό στόχο· ο σύντομος αερισμός μπορεί να βοηθήσει",
+        "climate_window_dry": "ο εξωτερικός αέρας έχει {value} λιγότερους υδρατμούς ανά κιλό ξηρού αέρα· ο σύντομος αερισμός μπορεί να απομακρύνει υγρασία",
         "weather_cold": "χαμηλή εξωτερική θερμοκρασία ({value})",
         "weather_hot": "υψηλή εξωτερική θερμοκρασία ({value})",
         "weather_humid": "υψηλή εξωτερική υγρασία ({value})",
@@ -153,6 +156,13 @@ def _extra_messages(entry: dict) -> dict[str, str]:
 TEXT.update({tag: _extra_messages(locale) for tag, locale in EXTRA_LOCALES.items()})
 for _language, _templates in CLIMATE_WINDOW_TEXT.items():
     TEXT[_language].update(_templates)
+for _language, _templates in WINDOW_OPEN_TEXT.items():
+    TEXT[_language].update(zip(WEATHER_CAUTION_CODES, _templates["weather"]))
+    TEXT[_language]["weather_heat_loss"] = _templates["heat_loss"]
+    TEXT[_language]["outside_conditions_not_verified"] = _templates["unverified"]
+    for _code in ("outside_more_moisture", "aqi_scale_unconfigured", "outside_pollen"):
+        TEXT[_language][_code] = _templates[_code]
+    TEXT[_language]["inside_passive_cooling"] = TEXT[_language]["climate_window_cool"]
 
 
 ROOM_VENTILATION_TEXT = {
@@ -242,15 +252,34 @@ def explain(reason: Reason, language: str) -> str:
     return template.format(name=reason.label, value=reason.value)
 
 
+def _with_window_wait(rec: Recommendation, message: str, language: str) -> str:
+    """Describe a bounded opportunity without claiming that output stopped."""
+    seconds = getattr(rec, "wait_seconds", 0)
+    if (rec.action != "open" or isinstance(seconds, bool)
+            or not isinstance(seconds, (int, float)) or not isfinite(seconds)
+            or not 0 < seconds <= 30 * 60):
+        return message
+    minutes = ceil(seconds / 60)
+    translated = WINDOW_OPEN_TEXT[language_code(language)]
+    suffix = translated.get("wait_one", translated["wait"]).format(minutes=minutes) if minutes == 1 else (
+        translated["wait"].format(minutes=minutes)
+    )
+    return f"{message} {suffix}"
+
+
 def announcement(rec: Recommendation, language: str) -> tuple[str, str]:
-    if rec.reasons and rec.reasons[0].code in ROOM_VENTILATION_CODES:
+    cautions = getattr(rec, "cautions", ())
+    if (rec.reasons and rec.reasons[0].code in ROOM_VENTILATION_CODES
+            and not (rec.action == "open" and cautions)):
         code = rec.reasons[0].code
         translated = ROOM_VENTILATION_TEXT.get(language_code(language),
                                                 ROOM_VENTILATION_TEXT["en"])
         if code.startswith("air_refresh_"):
             title = translated["refresh_title"]
             content = translated["wake" if code=="air_refresh_wake" else "return"]
-            return title,content.format(area=rec.area_name)
+            return title, _with_window_wait(
+                rec, content.format(area=rec.area_name), language,
+            )
         kind = "heat" if code=="window_heat_loss" else "cool"
         windows = ", ".join(w.name for w in rec.windows)
         return (
@@ -269,4 +298,15 @@ def announcement(rec: Recommendation, language: str) -> tuple[str, str]:
         item.code.startswith("climate_window_") for item in rec.reasons
     ):
         title = t.get("title_climate_window", TEXT["en"]["title_climate_window"])
-    return title, t[rec.action].format(windows=windows, area=rec.area_name, reasons=reasons)
+    if rec.action == "open" and cautions:
+        # Never truncate the outdoor caution list or retain the ordinary
+        # OPEN template's claim that outside conditions are suitable.
+        message = WINDOW_OPEN_TEXT[language_code(language)]["conditional_open"].format(
+            windows=windows, area=rec.area_name, reasons=reasons,
+            cautions="; ".join(explain(reason, language) for reason in cautions),
+        )
+    else:
+        message = t[rec.action].format(
+            windows=windows, area=rec.area_name, reasons=reasons,
+        )
+    return title, _with_window_wait(rec, message, language)

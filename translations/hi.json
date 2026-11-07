@@ -139,7 +139,7 @@
           "min_outdoor_temp": "“बाहर · °C (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
           "max_outdoor_temp": "“बाहर · °C (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
           "max_outdoor_humidity": "“बाहर · RH (%) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "“फफूंद संकेतक · ≥ 70%” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।"
         }
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "घर में उपस्थिति · ट्रैकर/लोगों की गिनती के डेटा की अधिकतम आयु (मिनट)",
           "general_home_policy": "घर में उपस्थिति",
           "general_wake_alarm_entity": "नींद · अगला अलार्म",
-          "general_wake_lead_minutes_entity": "नींद · अलार्म से पहले के मिनट"
+          "general_wake_lead_minutes_entity": "नींद · अलार्म से पहले के मिनट",
+          "window_open_timeout_minutes": "खिड़की खोलने का प्रतीक्षा समय (मिनट)"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "डेटा की आयु सीमा ट्रैकर रिपोर्ट और लोगों की संख्यात्मक गिनती पर लागू होती है। कमरे की सूचियाँ और बाइनरी उपस्थिति अवस्थाएँ अपरिवर्तित रहने पर समाप्त नहीं होतीं। अनुपलब्ध, बहाल या अमान्य स्रोत अज्ञात रहते हैं। यह नींद की अवधि नहीं है।",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "अगले अलार्म के समय या दिनांक-समय की एंटिटी और पहले के मिनटों की एंटिटी चुनें। HEM इतने मिनट पहले स्वचालित नींद मोड छोड़कर सामान्य लक्ष्यों पर लौटता है। केवल समय वाली एंटिटी Home Assistant का समय क्षेत्र उपयोग करती है। अनुपस्थिति, मैन्युअल नियंत्रण और डिवाइस सुरक्षा की प्राथमिकता बनी रहती है।",
-          "general_wake_lead_minutes_entity": "मिनटों में शून्य या धनात्मक मान वाली संख्यात्मक एंटिटी चुनें; इकाई min या कोई इकाई नहीं। 07:00 का अलार्म और 30 का मान स्वचालित नींद 06:30 पर समाप्त करते हैं; 0 का अर्थ अलार्म बजने का समय है। बंद करने के लिए दोनों स्रोत हटाएँ।"
+          "general_wake_lead_minutes_entity": "मिनटों में शून्य या धनात्मक मान वाली संख्यात्मक एंटिटी चुनें; इकाई min या कोई इकाई नहीं। 07:00 का अलार्म और 30 का मान स्वचालित नींद 06:30 पर समाप्त करते हैं; 0 का अर्थ अलार्म बजने का समय है। बंद करने के लिए दोनों स्रोत हटाएँ।",
+          "window_open_timeout_minutes": "हवा आने देने का अनुरोध स्वीकार होने के बाद, आवश्यकता होने पर नए स्वचालित/PID आरंभ की अनुमति देने से पहले प्रतीक्षा। 0–30 मिनट, डिफ़ॉल्ट 5; 0 प्रतीक्षा बंद करता है। खुली खिड़की की सुरक्षा और उपकरण के न्यूनतम समय लागू रहते हैं।"
         }
       },
       "reconfigure": {
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "“बाहर · °C (≥)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
           "max_outdoor_temp": "“बाहर · °C (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
           "max_outdoor_humidity": "“बाहर · RH (%) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "“फफूंद संकेतक · ≥ 70%” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।"
         }
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "घर में उपस्थिति · ट्रैकर/लोगों की गिनती के डेटा की अधिकतम आयु (मिनट)",
           "general_home_policy": "घर में उपस्थिति",
           "general_wake_alarm_entity": "नींद · अगला अलार्म",
-          "general_wake_lead_minutes_entity": "नींद · अलार्म से पहले के मिनट"
+          "general_wake_lead_minutes_entity": "नींद · अलार्म से पहले के मिनट",
+          "window_open_timeout_minutes": "खिड़की खोलने का प्रतीक्षा समय (मिनट)"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "डेटा की आयु सीमा ट्रैकर रिपोर्ट और लोगों की संख्यात्मक गिनती पर लागू होती है। कमरे की सूचियाँ और बाइनरी उपस्थिति अवस्थाएँ अपरिवर्तित रहने पर समाप्त नहीं होतीं। अनुपलब्ध, बहाल या अमान्य स्रोत अज्ञात रहते हैं। यह नींद की अवधि नहीं है।",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "अगले अलार्म के समय या दिनांक-समय की एंटिटी और पहले के मिनटों की एंटिटी चुनें। HEM इतने मिनट पहले स्वचालित नींद मोड छोड़कर सामान्य लक्ष्यों पर लौटता है। केवल समय वाली एंटिटी Home Assistant का समय क्षेत्र उपयोग करती है। अनुपस्थिति, मैन्युअल नियंत्रण और डिवाइस सुरक्षा की प्राथमिकता बनी रहती है।",
-          "general_wake_lead_minutes_entity": "मिनटों में शून्य या धनात्मक मान वाली संख्यात्मक एंटिटी चुनें; इकाई min या कोई इकाई नहीं। 07:00 का अलार्म और 30 का मान स्वचालित नींद 06:30 पर समाप्त करते हैं; 0 का अर्थ अलार्म बजने का समय है। बंद करने के लिए दोनों स्रोत हटाएँ।"
+          "general_wake_lead_minutes_entity": "मिनटों में शून्य या धनात्मक मान वाली संख्यात्मक एंटिटी चुनें; इकाई min या कोई इकाई नहीं। 07:00 का अलार्म और 30 का मान स्वचालित नींद 06:30 पर समाप्त करते हैं; 0 का अर्थ अलार्म बजने का समय है। बंद करने के लिए दोनों स्रोत हटाएँ।",
+          "window_open_timeout_minutes": "हवा आने देने का अनुरोध स्वीकार होने के बाद, आवश्यकता होने पर नए स्वचालित/PID आरंभ की अनुमति देने से पहले प्रतीक्षा। 0–30 मिनट, डिफ़ॉल्ट 5; 0 प्रतीक्षा बंद करता है। खुली खिड़की की सुरक्षा और उपकरण के न्यूनतम समय लागू रहते हैं।"
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "ऊर्जा बचत",
           "window_open_pause": "खुली खिड़की के कारण रुका हुआ",
           "window_close_warmup": "खिड़कियाँ बंद होने के बाद प्रतीक्षा",
-          "window_state_unknown": "खिड़कियों की स्थिति की प्रतीक्षा"
+          "window_state_unknown": "खिड़कियों की स्थिति की प्रतीक्षा",
+          "window_open_wait": "आपके खिड़की खोलने की प्रतीक्षा में",
+          "window_request_pending": "खिड़की खोलने का अनुरोध भेजा जा रहा है"
         }
       }
     },
@@ -3791,6 +3797,14 @@
       },
       "arrival_preparation_timeout": {
         "name": "घर में उपस्थिति · आगमन की तैयारी की समय सीमा (मिनट)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "सहायता"
+          }
+        }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "वेंटिलेशन · खिड़की खोलने का प्रतीक्षा समय (मिनट)",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"

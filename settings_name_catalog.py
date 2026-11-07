@@ -5572,6 +5572,16 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
              'cancel_arrival_preparation': '在家狀態 · 取消回家準備',
              'arrival_preparation_timeout': '在家狀態 · 回家準備時限（分鐘）'}}
 
+from .window_open_text import WINDOW_OPEN_TEXT
+
+_WINDOW_TIMEOUT_KEY = "global_setting_window_open_timeout_minutes"
+SETTING_GROUPS[_WINDOW_TIMEOUT_KEY] = "ventilation"
+for _locale, _text in WINDOW_OPEN_TEXT.items():
+    SETTING_NAMES[_locale][_WINDOW_TIMEOUT_KEY] = (
+        f"{GROUP_LABELS[_locale]['ventilation']} · {_text['label']}"
+    )
+
+
 def setting_locale(locale: str) -> str:
     tag = str(locale or "en").replace("_", "-").casefold()
     exact = next((key for key in SETTING_NAMES if key.casefold() == tag), None)

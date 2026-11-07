@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Beslisdrempel voor ‘Buiten · °C (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
           "max_outdoor_temp": "Beslisdrempel voor ‘Buiten · °C (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
           "max_outdoor_humidity": "Beslisdrempel voor ‘Buiten · RH (%) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Beslisdrempel voor ‘Schimmelindicator · ≥ 70%’. Deze stuurt adviezen aan, maar is geen medische grenswaarde."
         }
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Aanwezigheid thuis · Maximale ouderdom van tracker-/telgegevens (min)",
           "general_home_policy": "Aanwezigheid thuis",
           "general_wake_alarm_entity": "Slaap · Volgende wekker",
-          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker"
+          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker",
+          "window_open_timeout_minutes": "Wachttijd voor raam openen (min)"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "De ouderdomsgrens geldt voor trackerberichten en numerieke personentellingen. Kamerlijsten en binaire aanwezigheidsstatussen verlopen niet zolang ze ongewijzigd zijn. Onbeschikbare, herstelde of ongeldige bronnen blijven onbekend. Dit is geen slaapduur.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Kies een tijd- of tijdstempelentiteit voor de volgende wekker en een entiteit voor de minuten. HEM beëindigt automatische slaap zoveel minuten eerder en hervat de normale doelen. Tijden zonder datum gebruiken de Home Assistant-tijdzone. Afwezigheid, handmatige bediening en beveiligingen houden voorrang.",
-          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen."
+          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen.",
+          "window_open_timeout_minutes": "Wachttijd nadat een verzoek tot luchten is geaccepteerd, voordat nieuwe automatische/PID-starts zo nodig weer mogen. 0–30 minuten, standaard 5; 0 schakelt het wachten uit. Beveiligingen voor open ramen en minimale bedrijfstijden blijven gelden."
         }
       },
       "reconfigure": {
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Beslisdrempel voor ‘Buiten · °C (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
           "max_outdoor_temp": "Beslisdrempel voor ‘Buiten · °C (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
           "max_outdoor_humidity": "Beslisdrempel voor ‘Buiten · RH (%) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Beslisdrempel voor ‘Schimmelindicator · ≥ 70%’. Deze stuurt adviezen aan, maar is geen medische grenswaarde."
         }
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Aanwezigheid thuis · Maximale ouderdom van tracker-/telgegevens (min)",
           "general_home_policy": "Aanwezigheid thuis",
           "general_wake_alarm_entity": "Slaap · Volgende wekker",
-          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker"
+          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker",
+          "window_open_timeout_minutes": "Wachttijd voor raam openen (min)"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "De ouderdomsgrens geldt voor trackerberichten en numerieke personentellingen. Kamerlijsten en binaire aanwezigheidsstatussen verlopen niet zolang ze ongewijzigd zijn. Onbeschikbare, herstelde of ongeldige bronnen blijven onbekend. Dit is geen slaapduur.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Kies een tijd- of tijdstempelentiteit voor de volgende wekker en een entiteit voor de minuten. HEM beëindigt automatische slaap zoveel minuten eerder en hervat de normale doelen. Tijden zonder datum gebruiken de Home Assistant-tijdzone. Afwezigheid, handmatige bediening en beveiligingen houden voorrang.",
-          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen."
+          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen.",
+          "window_open_timeout_minutes": "Wachttijd nadat een verzoek tot luchten is geaccepteerd, voordat nieuwe automatische/PID-starts zo nodig weer mogen. 0–30 minuten, standaard 5; 0 schakelt het wachten uit. Beveiligingen voor open ramen en minimale bedrijfstijden blijven gelden."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Energiebesparing",
           "window_open_pause": "Gepauzeerd wegens open raam",
           "window_close_warmup": "Wachten na sluiten van ramen",
-          "window_state_unknown": "Wachten op raamstatus"
+          "window_state_unknown": "Wachten op raamstatus",
+          "window_open_wait": "Wacht tot je het raam opent",
+          "window_request_pending": "Verzoek om het raam te openen wordt verstuurd"
         }
       }
     },
@@ -3791,6 +3797,14 @@
       },
       "arrival_preparation_timeout": {
         "name": "Aanwezigheid thuis · Duur van voorbereiding op thuiskomst (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Ventilatie · Wachttijd voor raam openen (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"

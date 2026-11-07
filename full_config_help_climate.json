@@ -252,8 +252,8 @@
     "el": "Ξεχωριστή άδεια αλλαγής στόχου υγρασίας σε ήδη ενεργό υγραντήρα. Δεν ενεργοποιεί τροφοδοσία και σέβεται χειροκίνητες αλλαγές."
   },
   "climate_equipment.climate_window_efficiency_notify": {
-    "en": "Notify only when measured safe outdoor air could genuinely replace part of active heating/cooling/drying. Advisory only: never opens windows or shuts equipment off.",
-    "el": "Ενημέρωση μόνο όταν μετρούμενος ασφαλής εξωτερικός αέρας μπορεί πραγματικά να βοηθήσει θέρμανση/ψύξη/στέγνωμα. Μόνο συμβουλή, χωρίς άνοιγμα παραθύρων ή κλείσιμο HVAC."
+    "en": "Suggest opening a closed window when measured outdoor-air benefit can help current heating, cooling or drying demand, including before a device starts. Detected outside concerns are included as cautions. Windows are opened by the user; running devices are not stopped for the request. The configured window-opening timeout may defer new qualifying automatic starts.",
+    "el": "Προτείνει άνοιγμα κλειστού παραθύρου όταν μετρημένο όφελος του εξωτερικού αέρα μπορεί να βοηθήσει την τρέχουσα ανάγκη θέρμανσης, ψύξης ή αφύγρανσης, ακόμη και πριν ξεκινήσει συσκευή. Οι δυσμενείς εξωτερικές συνθήκες αναφέρονται ως προφυλάξεις. Το παράθυρο ανοίγει ο χρήστης· το αίτημα δεν σταματά συσκευές που λειτουργούν. Η ρυθμισμένη αναμονή μπορεί να καθυστερήσει νέες κατάλληλες αυτόματες εκκινήσεις."
   },
   "climate_equipment.climate_dry_fan_mode_auto": {
     "en": "Experimental opt-in for supported native DRY/FAN_ONLY transitions. Requires exact-device commissioning, mode dwell and independent compressor protections.",

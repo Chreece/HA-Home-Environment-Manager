@@ -3016,6 +3016,10 @@ class EquipmentRuntime:
                 allowed, reason = live_device_permission(self.hass, spec.area_id, room, plan, device)
                 if allowed != "eligible":
                     return reason
+            if getattr(self.manager, "window_open_wait", None) is not None:
+                from .window_open_wait import managed_start_hold
+                if waiting := managed_start_hold(self, spec, cap, cfg, mode):
+                    return waiting["status"]
             if cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}:
                 dev = effective_device(self.manager, spec, cap.primary)
                 purpose = dev.get("fan_purpose") or ("extraction" if room.get("extraction_fan_entity") == cap.primary else None)
@@ -3504,6 +3508,16 @@ class EquipmentRuntime:
             pending.get("stop_target") or pending.get("stop_finish")
             or stopping_command(pending.get("service"), pending.get("data", {}))
         )
+        if (active_command and not shutdown
+                and getattr(self.manager, "window_open_wait", None) is not None):
+            from .window_open_wait import managed_start_hold
+            if waiting := managed_start_hold(self, spec, cap, cfg, mode):
+                # A bounded airing choice is an automatic scheduling hold,
+                # never evidence of a manual device change or a pause latch.
+                self._status(spec, waiting["status"],
+                             window_open_wait_remaining_seconds=waiting["remaining_seconds"],
+                             window_open_wait_until=waiting["expires_at"])
+                return
         if (not isinstance(mode, str)
                 or (policy_stop is not None
                     and not self._stop_policy_verified(spec, cap, policy_stop))
@@ -5035,7 +5049,19 @@ class EquipmentRuntime:
         if mode is None:
             mode = state.state if cap.domain == "climate" else next((v for v in cap.modes if v != "off"), "off")
         if why := self._gate(spec, cap, cfg, plan, mode, automatic=auto):
-            self._status(spec, why)
+            if why in ("window_request_pending", "window_open_wait"):
+                # Deferred output is not delivered PID effort. Discard the
+                # old integral/phase instead of integrating an idle plant.
+                self._memory.pop(spec.identifier, None)
+                self._fan_allocations.pop(spec.identifier, None)
+                if record.pop("pid_checkpoint", None) is not None:
+                    await self._save()
+                waiting = self.manager.window_open_wait.status(spec.area_id)
+                self._status(spec, why,
+                             window_open_wait_remaining_seconds=waiting["remaining_seconds"],
+                             window_open_wait_until=waiting.get("expires_at"))
+            else:
+                self._status(spec, why)
             if owned and state.state != "off":
                 await self._power(spec, cap, "off", automatic=auto, shutdown=True)
             return

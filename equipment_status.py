@@ -160,6 +160,13 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "native_minimum_off_until": observed.get("minimum_off_until"),
             "setpoint_wait_remaining_seconds": observed.get("setpoint_wait_remaining_seconds"),
             "setpoint_wait_until": observed.get("setpoint_wait_until"),
+            "window_open_wait": (
+                waiter.status(self._spec.area_id)
+                if (waiter := getattr(self._manager, "window_open_wait", None)) is not None
+                else {"status": "window_wait_inactive", "remaining_seconds": 0}
+            ),
+            "window_open_wait_remaining_seconds": observed.get("window_open_wait_remaining_seconds"),
+            "window_open_wait_until": observed.get("window_open_wait_until"),
             "requested_temperature": observed.get("requested_temperature"),
             "native_mode": observed.get("native_mode"),
             "native_target_confirmed": observed.get("native_target_confirmed"),

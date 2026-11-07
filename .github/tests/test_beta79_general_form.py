@@ -36,6 +36,8 @@ configkeys={
 'CONF_AWAY_WINDOWS_DELIVERY':'away_windows_delivery_channels',
 'CONF_HUB':'use_announcement_hub','CONF_OCCUPANCY_GLOBAL':'occupancy_global',
 'CONF_ENVIRONMENT_GLOBAL':'environment_global','CONF_THRESHOLDS':'thresholds',
+'CONF_WINDOW_OPEN_TIMEOUT_MINUTES':'window_open_timeout_minutes',
+'DEFAULT_WINDOW_OPEN_TIMEOUT_MINUTES':5,'MAX_WINDOW_OPEN_TIMEOUT_MINUTES':30,
 }
 limits={
 'outdoor_aqi':50.,'outdoor_co2':800.,'outdoor_pm25':15.,'outdoor_pm10':45.,

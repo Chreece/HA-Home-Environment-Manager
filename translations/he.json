@@ -139,7 +139,7 @@
           "min_outdoor_temp": "זהו סף החלטה עבור „בחוץ · °C (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
           "max_outdoor_temp": "זהו סף החלטה עבור „בחוץ · °C (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
           "max_outdoor_humidity": "זהו סף החלטה עבור „בחוץ · RH (%) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "זהו סף החלטה עבור „מדד עובש · ≥ 70%”. הוא משפיע על המלצות ואינו גבול רפואי."
         }
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "נוכחות בבית · גיל מרבי לנתוני מעקב/ספירת אנשים (דקות)",
           "general_home_policy": "נוכחות בבית",
           "general_wake_alarm_entity": "שינה · השעון המעורר הבא",
-          "general_wake_lead_minutes_entity": "שינה · דקות לפני השעון המעורר"
+          "general_wake_lead_minutes_entity": "שינה · דקות לפני השעון המעורר",
+          "window_open_timeout_minutes": "המתנה לפתיחת חלון (דקות)"
         },
         "data_description": {
           "weather_entities": "בחרו: מזג אוויר ואזהרות · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "מגבלת הגיל חלה על דיווחי מעקב וספירות מספריות של אנשים. רשימות חדרים ומצבי נוכחות בינאריים אינם פגים כל עוד לא השתנו. מקורות לא זמינים, משוחזרים או לא תקינים נשארים לא ידועים. זה אינו משך השינה.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "בחרו ישות שעה או תאריך ושעה לשעון המעורר הבא, וגם ישות למספר הדקות. HEM יוצא משינה אוטומטית מספר דקות זה לפני הצלצול וחוזר ליעדים הרגילים. שעה ללא תאריך משתמשת באזור הזמן של Home Assistant. היעדרות, שליטה ידנית והגנות המכשיר ממשיכות לקבל עדיפות.",
-          "general_wake_lead_minutes_entity": "בחרו ישות מספרית עם מספר דקות לא שלילי, ביחידות min או ללא יחידה. שעון ב-07:00 וערך 30 מסיימים שינה אוטומטית ב-06:30; 0 פירושו בזמן הצלצול. להשבתה נקו את שני המקורות."
+          "general_wake_lead_minutes_entity": "בחרו ישות מספרית עם מספר דקות לא שלילי, ביחידות min או ללא יחידה. שעון ב-07:00 וערך 30 מסיימים שינה אוטומטית ב-06:30; 0 פירושו בזמן הצלצול. להשבתה נקו את שני המקורות.",
+          "window_open_timeout_minutes": "המתנה לאחר קבלת בקשת אוורור, לפני מתן אפשרות להפעלות אוטומטיות/PID חדשות אם הן עדיין נחוצות. 0–30 דקות, ברירת מחדל 5; 0 מבטל את ההמתנה. הגנות חלון פתוח וזמני המינימום של המכשירים ממשיכים לחול."
         }
       },
       "reconfigure": {
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "זהו סף החלטה עבור „בחוץ · °C (≥)”. הוא משפיע על המלצות ואינו גבול רפואי.",
           "max_outdoor_temp": "זהו סף החלטה עבור „בחוץ · °C (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
           "max_outdoor_humidity": "זהו סף החלטה עבור „בחוץ · RH (%) (≤)”. הוא משפיע על המלצות ואינו גבול רפואי.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "זהו סף החלטה עבור „מדד עובש · ≥ 70%”. הוא משפיע על המלצות ואינו גבול רפואי."
         }
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "נוכחות בבית · גיל מרבי לנתוני מעקב/ספירת אנשים (דקות)",
           "general_home_policy": "נוכחות בבית",
           "general_wake_alarm_entity": "שינה · השעון המעורר הבא",
-          "general_wake_lead_minutes_entity": "שינה · דקות לפני השעון המעורר"
+          "general_wake_lead_minutes_entity": "שינה · דקות לפני השעון המעורר",
+          "window_open_timeout_minutes": "המתנה לפתיחת חלון (דקות)"
         },
         "data_description": {
           "weather_entities": "בחרו: מזג אוויר ואזהרות · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "מגבלת הגיל חלה על דיווחי מעקב וספירות מספריות של אנשים. רשימות חדרים ומצבי נוכחות בינאריים אינם פגים כל עוד לא השתנו. מקורות לא זמינים, משוחזרים או לא תקינים נשארים לא ידועים. זה אינו משך השינה.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "בחרו ישות שעה או תאריך ושעה לשעון המעורר הבא, וגם ישות למספר הדקות. HEM יוצא משינה אוטומטית מספר דקות זה לפני הצלצול וחוזר ליעדים הרגילים. שעה ללא תאריך משתמשת באזור הזמן של Home Assistant. היעדרות, שליטה ידנית והגנות המכשיר ממשיכות לקבל עדיפות.",
-          "general_wake_lead_minutes_entity": "בחרו ישות מספרית עם מספר דקות לא שלילי, ביחידות min או ללא יחידה. שעון ב-07:00 וערך 30 מסיימים שינה אוטומטית ב-06:30; 0 פירושו בזמן הצלצול. להשבתה נקו את שני המקורות."
+          "general_wake_lead_minutes_entity": "בחרו ישות מספרית עם מספר דקות לא שלילי, ביחידות min או ללא יחידה. שעון ב-07:00 וערך 30 מסיימים שינה אוטומטית ב-06:30; 0 פירושו בזמן הצלצול. להשבתה נקו את שני המקורות.",
+          "window_open_timeout_minutes": "המתנה לאחר קבלת בקשת אוורור, לפני מתן אפשרות להפעלות אוטומטיות/PID חדשות אם הן עדיין נחוצות. 0–30 דקות, ברירת מחדל 5; 0 מבטל את ההמתנה. הגנות חלון פתוח וזמני המינימום של המכשירים ממשיכים לחול."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "חיסכון באנרגיה",
           "window_open_pause": "הושהה עקב חלון פתוח",
           "window_close_warmup": "המתנה לאחר סגירת החלונות",
-          "window_state_unknown": "ממתין למצב החלונות"
+          "window_state_unknown": "ממתין למצב החלונות",
+          "window_open_wait": "ממתין לפתיחת החלון על ידך",
+          "window_request_pending": "שולח בקשה לפתיחת החלון"
         }
       }
     },
@@ -3791,6 +3797,14 @@
       },
       "arrival_preparation_timeout": {
         "name": "נוכחות בבית · משך ההכנה להגעה (דקות)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "עזרה"
+          }
+        }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "אוורור · המתנה לפתיחת חלון (דקות)",
         "state_attributes": {
           "configuration_help": {
             "name": "עזרה"

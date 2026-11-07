@@ -4,9 +4,10 @@ A window can sometimes provide sensible cooling, limited warming or moisture
 removal. This is a conditional *opportunity*, NOT a guaranteed equivalent
 energy saving, room temperature forecast, or power-control command.
 
-No external service calls. Outdoor AQ/weather and indoor measurements must be
-qualified, a matching actual HVAC/dehumidifier mode must be active, and a real
-closed window must exist in the selected Home Assistant area.
+No external service calls. Physical benefit requires measured indoor/outdoor
+conditions and a matching supported device with active or pending demand. A
+real closed window must exist in the selected Home Assistant area. Outside
+concerns qualify the manual request; they never authorize mechanical intake.
 """
 from __future__ import annotations
 
@@ -14,6 +15,8 @@ from math import isfinite
 from typing import Any
 
 from .climate_coordination import device_inventory
+from .climate_equipment import classify_hvac
+from .logic import Reason, _numeric_weather_mean
 
 
 AIR_POLLUTANTS = frozenset(("aqi", "pm25", "pm10", "no2", "o3", "so2"))
@@ -67,10 +70,104 @@ def _running_effects(hass: Any, area: str, config: dict) -> list[tuple[str, str]
     return [(entity, effect) for entity, effect in active.items()]
 
 
+def _supported_effect(hass: Any, area: str, settings: dict,
+                      entity: Any, effect: Any) -> bool:
+    """Revalidate a selected pending endpoint against live local capabilities."""
+    from .discovery import entity_area
+
+    if (not isinstance(entity, str) or effect not in ("heat", "cool", "dry")
+            or entity_area(hass, entity) != area):
+        return False
+    selected = settings.get("selected_devices")
+    if isinstance(selected, list) and entity not in selected:
+        return False
+    observed = hass.states.get(entity)
+    if (observed is None or observed.state in ("unknown", "unavailable")
+            or observed.attributes.get("hvac_action") == "defrosting"):
+        return False
+    domain = entity.partition(".")[0]
+    if domain == "climate":
+        caps = classify_hvac(observed.attributes, observed.state)
+        return bool(caps.get("status") == "ready"
+                    and caps.get({"heat": "heating", "cool": "cooling", "dry": "drying"}[effect]))
+    if domain == "humidifier":
+        return bool(effect == "dry" and observed.state in ("on", "off")
+                    and observed.attributes.get("device_class") == "dehumidifier")
+    if domain in ("switch", "input_boolean", "number", "input_number"):
+        # A direct actuator has no intrinsic HVAC mode. Its real configured
+        # heating/cooling role is required, even for advisory substitution.
+        if effect not in ("heat", "cool") or settings.get(effect + "_actuator") != entity:
+            return False
+        return (observed.state in ("on", "off") if domain in ("switch", "input_boolean")
+                else _number(observed.state, 0, 100) is not None)
+    return False
+
+
+def _pending_effects(hass: Any, area: str, settings: dict, plan: dict,
+                     pending_demands: tuple | list) -> list[dict]:
+    """Accept measured demand, never a requested mode alone or stored PID effort.
+
+    Managed callers supply only their selected, authorized automatic/PID
+    controllers. Legacy room planning provides its selected equipment intent.
+    Both paths recheck real area/capability and the current measurement versus
+    the effective target here; this function does not grant device control.
+    """
+    candidates = [item for item in pending_demands if isinstance(item, dict)]
+    equipment = plan.get("equipment_plan", {})
+    equipment = equipment if isinstance(equipment, dict) else {}
+    thermal = equipment.get("thermal", {})
+    thermal = thermal if isinstance(thermal, dict) else {}
+    temperature = _number(plan.get("temperature_c"), -10, 50)
+    if plan.get("status") == "ready" and thermal.get("status") == "selected":
+        effect = thermal.get("mode")
+        target = plan.get("temperature_target_c")
+        if effect == "heat_cool" and temperature is not None:
+            low = _number(plan.get("low_target_c"), 5, 36)
+            high = _number(plan.get("high_target_c"), 6, 40)
+            if low is not None and temperature < low:
+                effect, target = "heat", low
+            elif high is not None and temperature > high:
+                effect, target = "cool", high
+        candidates.append({"entity_id": thermal.get("entity_id"), "effect": effect,
+                           "temperature_c": temperature, "target_c": target})
+    humidity = plan.get("humidity_management", {})
+    humidity = humidity if isinstance(humidity, dict) else {}
+    moisture = equipment.get("moisture", {})
+    moisture = moisture if isinstance(moisture, dict) else {}
+    if (humidity.get("status") == "advisory" and humidity.get("action") == "dry"
+            and moisture.get("status") == "selected" and moisture.get("action") == "dry"):
+        candidates.append({"entity_id": moisture.get("entity_id"), "effect": "dry",
+                           "temperature_c": temperature,
+                           "humidity_percent": humidity.get("measured_rh"),
+                           "target_humidity": settings.get("humidity_high_rh", 60)})
+    result = []
+    seen = set()
+    for item in candidates:
+        entity, effect = item.get("entity_id"), item.get("effect")
+        if not _supported_effect(hass, area, settings, entity, effect):
+            continue
+        if effect == "dry":
+            measured = _number(item.get("humidity_percent"), 0, 100)
+            target = _number(item.get("target_humidity"), 20, 80)
+            needed = measured is not None and target is not None and measured > target
+        else:
+            measured = _number(item.get("temperature_c"), -10, 50)
+            target = _number(item.get("target_c"), 5, 40)
+            needed = (measured is not None and target is not None
+                      and (measured < target if effect == "heat" else measured > target))
+        identity = (entity, effect)
+        if needed and identity not in seen:
+            seen.add(identity)
+            result.append(item)
+    return result
+
+
 def window_substitution(
     hass: Any, room: Any, settings: dict, plan: dict, science: dict,
     weather: tuple, outdoor: tuple, *,
     outside_safe: bool | None,
+    outside_reasons: tuple[Reason, ...] = (),
+    pending_demands: tuple | list = (),
 ) -> dict:
     """Choose a single well-supported window alternative, never operate it."""
     base = {"automatic_control": False, "type": "window_efficiency_advice"}
@@ -83,37 +180,69 @@ def window_substitution(
         return {**base, "status": "window_state_unknown"}
     if any(w.opened is True for w in windows):
         return {**base, "status": "window_already_open"}
-    if outside_safe is not True:
-        return {**base, "status": "outside_conditions_not_safe"}
-    # An empty or stale AQ sensor is not proof that outdoor air is harmless.
+    from .discovery import entity_area, is_window
+    for window in windows:
+        if entity_area(hass, window.entity_id) != room.area_id:
+            return {**base, "status": "window_wrong_room"}
+        observed = hass.states.get(window.entity_id)
+        if observed is None or not is_window(hass, observed) or observed.state not in ("on", "off"):
+            return {**base, "status": "window_state_unknown"}
+        if observed.state == "on":
+            return {**base, "status": "window_already_open"}
+    cautions = [item for item in outside_reasons if isinstance(item, Reason)]
+    if outside_safe is not True and not cautions:
+        cautions.append(Reason("outside_conditions_not_verified"))
+    # An empty or stale AQ sensor is not proof that outdoor air is harmless;
+    # disclose the uncertainty without hiding a measured thermal/moisture need.
     measured = [r for r in outdoor if r.metric in AIR_POLLUTANTS]
-    if not measured or any(r.value is None for r in measured):
-        return {**base, "status": "outdoor_pollutants_not_verified"}
-    if any(r.metric == "aqi" and (r.details or {}).get("aqi", {}).get("status") != "ready"
-           for r in measured):
-        return {**base, "status": "outdoor_aqi_scale_unverified"}
-    if len(weather) != 1:
-        return {**base, "status": "weather_source_missing_or_ambiguous"}
-    outdoor_c = _number(getattr(weather[0], "temperature_c", None), -40, 55)
+    if not measured:
+        cautions.append(Reason("no_outdoor_data"))
+    for reading in measured:
+        if reading.value is None:
+            cautions.append(Reason("unavailable_outdoor", reading.name))
+        elif reading.metric == "aqi" and (reading.details or {}).get("aqi", {}).get("status") != "ready":
+            cautions.append(Reason("aqi_scale_unconfigured", reading.name))
+    outdoor_c = _numeric_weather_mean(weather, "temperature_c", -40, 55)
     if outdoor_c is None:
         return {**base, "status": "outdoor_temperature_unknown"}
-    if plan.get("away") == "away" or plan.get("occupancy") == "unoccupied":
+    # Someone at home can air an empty bathroom or bedroom; exact-room
+    # occupancy is not a requirement. Known Away/sleep still suppresses it.
+    if plan.get("away") == "away":
         return {**base, "status": "nobody_available_to_open_window"}
+    if plan.get("sleeping") is True or plan.get("sleep_schedule_active") is True:
+        return {**base, "status": "sleep_room_control_paused"}
 
-    effects = _running_effects(hass, room.area_id, settings)
+    active = [(entity, effect) for entity, effect in _running_effects(hass, room.area_id, settings)
+              if _supported_effect(hass, room.area_id, settings, entity, effect)]
+    pending = _pending_effects(hass, room.area_id, settings, plan, pending_demands)
+    effects = list(dict.fromkeys((*active, *((item["entity_id"], item["effect"]) for item in pending))))
     kinds = {kind for _, kind in effects}
     if not effects:
-        return {**base, "status": "no_active_verified_equipment"}
+        return {**base, "status": "no_verified_equipment_demand"}
     if len(kinds) != 1:
         return {**base, "status": "multiple_mechanical_needs"}
     effect = next(iter(kinds))
     device = effects[0][0]
     indoor_c = _number(plan.get("temperature_c"), -10, 50)
+    if indoor_c is None:
+        indoor_c = next((value for item in pending
+                         if (value := _number(item.get("temperature_c"), -10, 50)) is not None), None)
     evidence: dict[str, Any] = {}
     code = ""
     if effect == "cool":
         if indoor_c is None:
             return {**base, "status": "indoor_temperature_missing"}
+        # An active compressor can outlive its measured demand (for example
+        # during a minimum-ON hold). Do not ask the user to overcool a room
+        # already at its known target. Per-device pending targets take
+        # precedence over the legacy room target and were checked above.
+        known_target = _number(
+            plan.get("high_target_c") if plan.get("mode") == "heat_cool"
+            else plan.get("temperature_target_c") if plan.get("mode") == "cool" else None,
+            5, 40,
+        )
+        if not pending and known_target is not None and indoor_c <= known_target:
+            return {**base, "status": "no_verified_cooling_demand"}
         difference = indoor_c - outdoor_c
         if difference < 2:
             return {**base, "status": "insufficient_free_cooling"}
@@ -126,7 +255,13 @@ def window_substitution(
         difference = outdoor_c - indoor_c
         # The outside air must be able to reach the desired indoor heating
         # target; merely being slightly warmer would overpromise substitution.
-        desired = _number(plan.get("temperature_target_c"), 5, 36)
+        targets = [value for item in pending
+                   if (value := _number(item.get("target_c"), 5, 36)) is not None]
+        desired = max(targets) if targets else _number(
+            plan.get("low_target_c") if plan.get("mode") == "heat_cool"
+            else plan.get("temperature_target_c"), 5, 36)
+        if not pending and desired is not None and indoor_c >= desired:
+            return {**base, "status": "no_verified_heating_demand"}
         if desired is None or difference < 2 or outdoor_c < desired - 0.25:
             return {**base, "status": "insufficient_free_warming"}
         code = "climate_window_heat"
@@ -134,9 +269,9 @@ def window_substitution(
                     "indoor_temperature_c": indoor_c, "outdoor_temperature_c": outdoor_c}
     else:
         humidity = plan.get("humidity_management", {})
-        if (not isinstance(humidity, dict) or
+        if (not pending and (not isinstance(humidity, dict) or
                 humidity.get("status") != "advisory" or
-                humidity.get("action") != "dry"):
+                humidity.get("action") != "dry")):
             return {**base, "status": "no_verified_drying_demand"}
         if indoor_c is None:
             return {**base, "status": "indoor_temperature_missing_for_moisture"}
@@ -144,7 +279,9 @@ def window_substitution(
         if not isinstance(moisture, dict) or moisture.get("status") != "drying":
             return {**base, "status": "measured_outdoor_drying_not_verified"}
         advantage = _number(moisture.get("drying_potential_g_kg"), 0, 30)
-        target_rh = _number(settings.get("humidity_high_rh", 60), 30, 80)
+        targets = [value for item in pending
+                   if (value := _number(item.get("target_humidity"), 20, 80)) is not None]
+        target_rh = min(targets) if targets else _number(settings.get("humidity_high_rh", 60), 30, 80)
         projected = _number(moisture.get("outside_air_rh_when_warmed_percent"), 0, 100)
         # Prefer shorter airing if outside air would create a large heating
         # burden. Do not equate a window to dehumidifier performance.
@@ -152,15 +289,32 @@ def window_substitution(
                 or projected is None or projected > target_rh - 2):
             return {**base, "status": "drying_effect_insufficient"}
         if indoor_c - outdoor_c > 12:
-            return {**base, "status": "excessive_heat_loss_for_drying"}
+            cautions.append(Reason("weather_heat_loss", value=f"{indoor_c-outdoor_c:g} °C"))
         code = "climate_window_dry"
         evidence = {"humidity_ratio_advantage_g_kg": round(advantage, 1),
                     "outside_rh_when_warmed_percent": round(projected, 1),
                     "indoor_temperature_c": indoor_c, "outdoor_temperature_c": outdoor_c}
     return {**base, "status": "opportunity", "code": code,
             "effect": effect, "active_device": device, "evidence": evidence,
+            "devices": tuple(entity for entity, _ in effects),
+            "pending_demand": bool(pending),
+            "cautions": [{"code": item.code, "label": item.label, "value": item.value}
+                         for item in dict.fromkeys(cautions)],
+            "outside_safe": outside_safe is True,
             "reason": "measured_outdoor_air_may_reduce_mechanical_conditioning",
             "note": "Opening a window is a manual, conditional opportunity; do not automatically turn off HVAC equipment."}
+
+
+def window_cautions(opportunity: dict) -> tuple[Reason, ...]:
+    """Convert the JSON-safe dashboard evidence back to announcement reasons."""
+    result = []
+    for item in opportunity.get("cautions", ()):
+        if not isinstance(item, dict) or not isinstance(item.get("code"), str):
+            continue
+        reason = Reason(item["code"], str(item.get("label") or ""), str(item.get("value") or ""))
+        if reason not in result:
+            result.append(reason)
+    return tuple(result)
 
 
 def window_reason(opportunity: dict):
@@ -170,7 +324,9 @@ def window_reason(opportunity: dict):
     effect = opportunity.get("effect")
     data = opportunity.get("evidence", {})
     if effect in ("heat", "cool"):
-        value = _number(data.get("temperature_difference_c"), 0, 50)
+        # Valid indoor/outdoor inputs can differ by more than 50 °C. Keep the
+        # advisory formatter valid for every opportunity the physics accepts.
+        value = _number(data.get("temperature_difference_c"), 0, 100)
         unit = "°C"
     elif effect == "dry":
         value = _number(data.get("humidity_ratio_advantage_g_kg"), 0, 30)

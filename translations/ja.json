@@ -139,7 +139,7 @@
           "min_outdoor_temp": "「屋外 · °C (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
           "max_outdoor_temp": "「屋外 · °C (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
           "max_outdoor_humidity": "「屋外 · RH (%) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "「カビ指標 · ≥ 70%」の判断しきい値です。推奨に使い、医療上の基準ではありません。"
         }
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "在宅状況 · 追跡・人数データの最大経過時間（分）",
           "general_home_policy": "在宅状況",
           "general_wake_alarm_entity": "睡眠 · 次のアラーム",
-          "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか"
+          "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか",
+          "window_open_timeout_minutes": "窓を開けるまでの待機時間（分）"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "経過時間の制限は追跡レポートや数値の人数データに適用されます。部屋リストとバイナリの在室状態は、変化がなくても期限切れになりません。利用不可・復元済み・無効の情報源は不明のままです。睡眠時間の設定ではありません。",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "次のアラームの時刻または日時エンティティと、解除までの分数を持つエンティティを選択します。HEM は指定した分数だけ早く自動睡眠モードを終了し、通常の目標値に戻します。日付のない時刻には Home Assistant のタイムゾーンを使います。不在、手動制御、機器の保護機能は引き続き優先されます。",
-          "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。"
+          "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。",
+          "window_open_timeout_minutes": "換気の依頼が受け付けられた後、必要に応じて新たな自動/PID起動を許可するまでの待機時間です。0～30分、既定は5分。0で待機を無効にします。窓開放時の保護と機器の最小運転・停止時間は引き続き適用されます。"
         }
       },
       "reconfigure": {
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "「屋外 · °C (≥)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
           "max_outdoor_temp": "「屋外 · °C (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
           "max_outdoor_humidity": "「屋外 · RH (%) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "「カビ指標 · ≥ 70%」の判断しきい値です。推奨に使い、医療上の基準ではありません。"
         }
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "在宅状況 · 追跡・人数データの最大経過時間（分）",
           "general_home_policy": "在宅状況",
           "general_wake_alarm_entity": "睡眠 · 次のアラーム",
-          "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか"
+          "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか",
+          "window_open_timeout_minutes": "窓を開けるまでの待機時間（分）"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "経過時間の制限は追跡レポートや数値の人数データに適用されます。部屋リストとバイナリの在室状態は、変化がなくても期限切れになりません。利用不可・復元済み・無効の情報源は不明のままです。睡眠時間の設定ではありません。",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "次のアラームの時刻または日時エンティティと、解除までの分数を持つエンティティを選択します。HEM は指定した分数だけ早く自動睡眠モードを終了し、通常の目標値に戻します。日付のない時刻には Home Assistant のタイムゾーンを使います。不在、手動制御、機器の保護機能は引き続き優先されます。",
-          "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。"
+          "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。",
+          "window_open_timeout_minutes": "換気の依頼が受け付けられた後、必要に応じて新たな自動/PID起動を許可するまでの待機時間です。0～30分、既定は5分。0で待機を無効にします。窓開放時の保護と機器の最小運転・停止時間は引き続き適用されます。"
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "省エネ",
           "window_open_pause": "窓が開いているため一時停止",
           "window_close_warmup": "窓を閉じた後の待機中",
-          "window_state_unknown": "窓の状態を確認中"
+          "window_state_unknown": "窓の状態を確認中",
+          "window_open_wait": "窓が開けられるのを待っています",
+          "window_request_pending": "窓を開ける依頼を送信中"
         }
       }
     },
@@ -3791,6 +3797,14 @@
       },
       "arrival_preparation_timeout": {
         "name": "在宅状況 · 帰宅準備の制限時間（分）",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "換気 · 窓を開けるまでの待機時間（分）",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"

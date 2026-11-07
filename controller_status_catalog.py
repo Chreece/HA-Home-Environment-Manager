@@ -7,6 +7,8 @@ Include status codes from both managed and legacy room controllers, plus shades.
 """
 
 CONTROLLER_STATUS_CODES = frozenset((
+    "window_open_wait",
+    "window_request_pending",
     "above_horizon",
     "active_compressor_wait_for_idle",
     "active_device_preset",
@@ -423,6 +425,7 @@ CONTROLLER_STATUS_CODES = frozenset((
 # Other room/shade codes remain in CONTROLLER_STATUS_CODES for translated cards.
 # Limiting options avoids bloating every Home Assistant recorder state event.
 EQUIPMENT_SENSOR_STATUSES = frozenset((
+    "window_open_wait", "window_request_pending",
     "window_open_pause", "window_close_warmup", "window_state_unknown",
     "air_quality_decision_expired",
     "authority_or_evidence_changed_before_dispatch",

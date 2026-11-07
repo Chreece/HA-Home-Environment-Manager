@@ -19,6 +19,7 @@ from .const import (
     CONF_MEDIA_PLAYERS, CONF_HUB, CONF_AI_REWRITE, CONF_SHADE_ANNOUNCE, CONF_AWAY_WINDOWS_ALERT,
     CONF_AI_AGENT, CONF_REPEAT_MINUTES,
     DEFAULT_THRESHOLDS, MAX_REPEAT_MINUTES,
+    CONF_WINDOW_OPEN_TIMEOUT_MINUTES, MAX_WINDOW_OPEN_TIMEOUT_MINUTES,
 )
 from .pid_math import DEFAULT_PID, validate_settings
 from .climate_strategy import DEFAULT_PROFILE_TARGETS, profile_humidity_target, profiles
@@ -783,6 +784,11 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                 number = _finite(value, (0.0, float(MAX_REPEAT_MINUTES)))
                 if not number.is_integer():
                     raise HomeAssistantError("Announcement interval must be whole minutes")
+                options[key] = int(number)
+            elif key == CONF_WINDOW_OPEN_TIMEOUT_MINUTES:
+                number = _finite(value, (0.0, float(MAX_WINDOW_OPEN_TIMEOUT_MINUTES)))
+                if not number.is_integer():
+                    raise HomeAssistantError("Window opening timeout must be whole minutes")
                 options[key] = int(number)
             elif key in (CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE,
                               CONF_SHADE_ANNOUNCE, CONF_AWAY_WINDOWS_ALERT):

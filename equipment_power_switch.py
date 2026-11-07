@@ -643,6 +643,12 @@ def approved_demand(runtime: Any, spec: Any, cfg: dict,
         return None
     targets = model.targets(runtime.manager, spec, cap, cfg, plan)
     observed = runtime.measurements(spec, cap)
+    if getattr(runtime.manager, "window_open_wait", None) is not None:
+        from .window_open_wait import managed_start_hold
+        if managed_start_hold(runtime, spec, cap, cfg, supply=True):
+            # A pending/user-response wait may delay a new supply ON. It is
+            # never evidence that an already running appliance is idle/OFF.
+            return None
     return output_required(
         cap, targets, observed, method=method,
         requested_mode=cfg.get("requested_mode"),
@@ -1142,6 +1148,18 @@ async def before_tick(runtime: Any, spec: Any) -> bool:
                             window_resume_remaining_seconds=window["remaining_seconds"])
             return True  # No supply wake during OPEN/UNKNOWN/post-close hold.
     cap = verified_capabilities(runtime, spec)
+    if (observed.state == "off" and cap is not None
+            and getattr(runtime.manager, "window_open_wait", None) is not None):
+        from .window_open_wait import managed_start_hold
+        if waiting := managed_start_hold(runtime, spec, cap, cfg, supply=True):
+            runtime._pid_offline_previews.pop(spec.identifier, None)
+            getattr(runtime, "_memory", {}).pop(spec.identifier, None)
+            if record.pop("pid_checkpoint", None) is not None:
+                await runtime._save()
+            runtime._status(spec, waiting["status"],
+                            window_open_wait_remaining_seconds=waiting["remaining_seconds"],
+                            window_open_wait_until=waiting["expires_at"])
+            return True
     if cap is None:
         if observed.state != "off":
             if relay.get("idle_since") is not None:

@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Próg decyzji dla „Na zewnątrz · °C (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
           "max_outdoor_temp": "Próg decyzji dla „Na zewnątrz · °C (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
           "max_outdoor_humidity": "Próg decyzji dla „Na zewnątrz · RH (%) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Próg decyzji dla „Wskaźnik pleśni · ≥ 70%”. Wpływa na zalecenia, lecz nie jest normą medyczną."
         }
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Obecność w domu · Maksymalny wiek danych śledzenia/liczby osób (min)",
           "general_home_policy": "Obecność w domu",
           "general_wake_alarm_entity": "Sen · Następny budzik",
-          "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem"
+          "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem",
+          "window_open_timeout_minutes": "Oczekiwanie na otwarcie okna (min)"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "Limit wieku dotyczy raportów śledzenia i liczbowych danych o liczbie osób. Listy pokoi i binarne stany obecności nie tracą ważności, gdy się nie zmieniają. Niedostępne, przywrócone lub błędne źródła pozostają nieznane. To nie jest długość snu.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Wybierz encję godziny lub daty i godziny następnego budzika oraz encję minut wyprzedzenia. HEM kończy automatyczny sen o tyle minut wcześniej i przywraca zwykłe cele. Godziny bez daty używają strefy Home Assistant. Nieobecność, sterowanie ręczne i zabezpieczenia zachowują pierwszeństwo.",
-          "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła."
+          "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła.",
+          "window_open_timeout_minutes": "Czas oczekiwania po przyjęciu prośby o wietrzenie przed ponownym zezwoleniem na automatyczne uruchomienia/PID, jeśli są potrzebne. 0–30 minut, domyślnie 5; 0 wyłącza oczekiwanie. Ochrona przy otwartym oknie i minimalne czasy pracy urządzeń nadal obowiązują."
         }
       },
       "reconfigure": {
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Próg decyzji dla „Na zewnątrz · °C (≥)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
           "max_outdoor_temp": "Próg decyzji dla „Na zewnątrz · °C (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
           "max_outdoor_humidity": "Próg decyzji dla „Na zewnątrz · RH (%) (≤)”. Wpływa na zalecenia, lecz nie jest normą medyczną.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Próg decyzji dla „Wskaźnik pleśni · ≥ 70%”. Wpływa na zalecenia, lecz nie jest normą medyczną."
         }
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Obecność w domu · Maksymalny wiek danych śledzenia/liczby osób (min)",
           "general_home_policy": "Obecność w domu",
           "general_wake_alarm_entity": "Sen · Następny budzik",
-          "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem"
+          "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem",
+          "window_open_timeout_minutes": "Oczekiwanie na otwarcie okna (min)"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "Limit wieku dotyczy raportów śledzenia i liczbowych danych o liczbie osób. Listy pokoi i binarne stany obecności nie tracą ważności, gdy się nie zmieniają. Niedostępne, przywrócone lub błędne źródła pozostają nieznane. To nie jest długość snu.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Wybierz encję godziny lub daty i godziny następnego budzika oraz encję minut wyprzedzenia. HEM kończy automatyczny sen o tyle minut wcześniej i przywraca zwykłe cele. Godziny bez daty używają strefy Home Assistant. Nieobecność, sterowanie ręczne i zabezpieczenia zachowują pierwszeństwo.",
-          "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła."
+          "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła.",
+          "window_open_timeout_minutes": "Czas oczekiwania po przyjęciu prośby o wietrzenie przed ponownym zezwoleniem na automatyczne uruchomienia/PID, jeśli są potrzebne. 0–30 minut, domyślnie 5; 0 wyłącza oczekiwanie. Ochrona przy otwartym oknie i minimalne czasy pracy urządzeń nadal obowiązują."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Oszczędzanie energii",
           "window_open_pause": "Wstrzymano z powodu otwartego okna",
           "window_close_warmup": "Oczekiwanie po zamknięciu okien",
-          "window_state_unknown": "Oczekiwanie na stan okien"
+          "window_state_unknown": "Oczekiwanie na stan okien",
+          "window_open_wait": "Oczekiwanie na otwarcie okna przez użytkownika",
+          "window_request_pending": "Wysyłanie prośby o otwarcie okna"
         }
       }
     },
@@ -3791,6 +3797,14 @@
       },
       "arrival_preparation_timeout": {
         "name": "Obecność w domu · Czas przygotowania na powrót (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Wentylacja · Oczekiwanie na otwarcie okna (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"

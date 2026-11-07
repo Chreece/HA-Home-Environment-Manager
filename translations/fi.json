@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Päätösraja kohdalle ”Ulkona · °C (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "max_outdoor_temp": "Päätösraja kohdalle ”Ulkona · °C (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "max_outdoor_humidity": "Päätösraja kohdalle ”Ulkona · RH (%) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Päätösraja kohdalle ”Homeindikaattori · ≥ 70%”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja."
         }
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Kotonaolo · Seuranta- ja henkilömäärätietojen enimmäisikä (min)",
           "general_home_policy": "Kotonaolo",
           "general_wake_alarm_entity": "Uni · Seuraava herätys",
-          "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä"
+          "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä",
+          "window_open_timeout_minutes": "Ikkunan avaamisen odotusaika (min)"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "Ikäraja koskee seurantalaitteiden raportteja ja numeerisia henkilömäärätietoja. Huonelistat ja binääriset huoneläsnäolotilat eivät vanhene muuttumattomina. Puuttuvat, palautetut tai virheelliset lähteet ovat tuntemattomia. Tämä ei ole unen kesto.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Valitse seuraavan herätyksen aika- tai aikaleimaentiteetti sekä minuuttien entiteetti. HEM lopettaa automaattisen unitilan näin monta minuuttia ennen herätystä ja palauttaa normaalit tavoitteet. Pelkkä kellonaika käyttää Home Assistantin aikavyöhykettä. Poissaolo, käsiohjaus ja laitesuojaukset ovat edelleen etusijalla.",
-          "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten."
+          "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten.",
+          "window_open_timeout_minutes": "Odotusaika tuuletuspyynnön hyväksymisen jälkeen ennen uusia automaattisia/PID-käynnistyksiä, jos niitä edelleen tarvitaan. 0–30 minuuttia, oletus 5; 0 poistaa odotuksen. Avoimen ikkunan suojaukset ja laitteiden vähimmäisajat säilyvät."
         }
       },
       "reconfigure": {
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Päätösraja kohdalle ”Ulkona · °C (≥)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "max_outdoor_temp": "Päätösraja kohdalle ”Ulkona · °C (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
           "max_outdoor_humidity": "Päätösraja kohdalle ”Ulkona · RH (%) (≤)”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Päätösraja kohdalle ”Homeindikaattori · ≥ 70%”. Vaikuttaa suosituksiin, ei ole lääketieteellinen raja."
         }
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Kotonaolo · Seuranta- ja henkilömäärätietojen enimmäisikä (min)",
           "general_home_policy": "Kotonaolo",
           "general_wake_alarm_entity": "Uni · Seuraava herätys",
-          "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä"
+          "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä",
+          "window_open_timeout_minutes": "Ikkunan avaamisen odotusaika (min)"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "Ikäraja koskee seurantalaitteiden raportteja ja numeerisia henkilömäärätietoja. Huonelistat ja binääriset huoneläsnäolotilat eivät vanhene muuttumattomina. Puuttuvat, palautetut tai virheelliset lähteet ovat tuntemattomia. Tämä ei ole unen kesto.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Valitse seuraavan herätyksen aika- tai aikaleimaentiteetti sekä minuuttien entiteetti. HEM lopettaa automaattisen unitilan näin monta minuuttia ennen herätystä ja palauttaa normaalit tavoitteet. Pelkkä kellonaika käyttää Home Assistantin aikavyöhykettä. Poissaolo, käsiohjaus ja laitesuojaukset ovat edelleen etusijalla.",
-          "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten."
+          "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten.",
+          "window_open_timeout_minutes": "Odotusaika tuuletuspyynnön hyväksymisen jälkeen ennen uusia automaattisia/PID-käynnistyksiä, jos niitä edelleen tarvitaan. 0–30 minuuttia, oletus 5; 0 poistaa odotuksen. Avoimen ikkunan suojaukset ja laitteiden vähimmäisajat säilyvät."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Energiansäästö",
           "window_open_pause": "Tauko avoimen ikkunan vuoksi",
           "window_close_warmup": "Odotus ikkunoiden sulkemisen jälkeen",
-          "window_state_unknown": "Odotetaan ikkunoiden tilatietoa"
+          "window_state_unknown": "Odotetaan ikkunoiden tilatietoa",
+          "window_open_wait": "Odotetaan, että avaat ikkunan",
+          "window_request_pending": "Lähetetään pyyntö avata ikkuna"
         }
       }
     },
@@ -3791,6 +3797,14 @@
       },
       "arrival_preparation_timeout": {
         "name": "Kotonaolo · Kotiintulon valmistelun aikaraja (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Ilmanvaihto · Ikkunan avaamisen odotusaika (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"
