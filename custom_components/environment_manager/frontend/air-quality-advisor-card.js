@@ -8448,8 +8448,6 @@
     if(!source)return '';
     const words=this._arrivalWords124(),control=source.controls[source.action];
     const available=control.valid&&(source.active||source.canStart);
-    const label=source.active?(source.expired?words.ending:
-      source.homeStatus==='unknown'?words.paused:words.preparing):words.prepare;
     const actionName=source.active?words.cancel:words.prepare;
     const reason=!control.owned?words.unavailable:source.expired?words.expired:
       source.active&&source.homeStatus==='unknown'?words.suspended:
@@ -8472,11 +8470,6 @@
       ' aria-label="'+escape(actionTitle)+'" title="'+escape(actionTitle)+'"'+
       (source.pending?' aria-busy="true"':'')+(!available||source.pending?' disabled':'')+'>'+
       this._icon(source.active?'mdi:close':'mdi:home-clock-outline')+'</button>'+
-      '<details class="hem-context76 hem-arrival-help125" data-detail-id="hem-arrival-help125">'+
-      '<summary aria-label="'+escape(help.purpose)+'" title="'+escape(help.purpose)+'">'+
-      this._icon('mdi:information-outline')+'</summary>'+
-      '<div class="hem-context-body76"><strong>'+escape(help.purpose)+'</strong>'+
-      '<p>'+escape(help.details)+'</p></div></details>'+
       '<button type="button" class="hem-arrival-duration124" data-arrival-action124="timeout"'+
       ' data-arrival-owner124="'+escape(source.owner)+'" data-arrival-entity124="'+escape(source.controls.timeout.id||'')+'"'+
       ' aria-label="'+escape(source.controls.timeout.valid?durationTitle:words.unavailable)+'"'+
@@ -8594,6 +8587,395 @@
     </style>`;
   };
   /* HEM_ARRIVAL_PREPARATION124_END */
+
+
+  /* HEM_CARD_SETTINGS126_START
+   * The card uses the same exact HA/HEM identities as the existing room
+   * selection dialog. No device pages are opened by the controller gear.
+   * Every native write is scoped to its existing room hub and config entry.
+   */
+  const hemProto126=AirQualityAdvisorCard.prototype;
+  const HEM_WORDS126={
+    en:{settings:"HEM device settings",close:"Close",unavailable:"Settings unavailable",
+      room:"Room device settings",immediate:"HEM settings below apply immediately. Source selections above use Save.",
+      apply:"Apply",saved:"Setting applied",failed:"Could not confirm the change",
+      comfort:"Comfort targets",humidity:"Humidity and mold",air:"Air quality and environment",
+      climate:"Climate and PID",shade:"Shading",occupancy:"Occupancy and sleep",other:"Other settings",
+      controller:"Controller",mode:"Operating mode",status:"Current status",source:"Physical device",
+      demand:"Demand",target:"Target",feedback:"Device reports",windows:"Window policy",
+      power:"Power supply",fault:"Device error"},
+    de:{settings:"HEM-Geräteeinstellungen",close:"Schließen",unavailable:"Einstellungen nicht verfügbar",
+      room:"Einstellungen des Raumgeräts",immediate:"HEM-Einstellungen unten werden sofort übernommen. Für die Sensorauswahl oben Speichern wählen.",
+      apply:"Übernehmen",saved:"Einstellung übernommen",failed:"Änderung konnte nicht bestätigt werden",
+      comfort:"Komfortziele",humidity:"Feuchte und Schimmel",air:"Luftqualität und Raumklima",
+      climate:"Klima und PID",shade:"Beschattung",occupancy:"Anwesenheit und Schlaf",other:"Weitere Einstellungen",
+      controller:"Regler",mode:"Betriebsmodus",status:"Aktueller Status",source:"Physisches Gerät",
+      demand:"Bedarf",target:"Sollwert",feedback:"Gerät meldet",windows:"Fensterrichtlinie",
+      power:"Stromversorgung",fault:"Gerätefehler"},
+    el:{settings:"Ρυθμίσεις συσκευής HEM",close:"Κλείσιμο",unavailable:"Μη διαθέσιμες ρυθμίσεις",
+      room:"Ρυθμίσεις συσκευής χώρου",immediate:"Οι παρακάτω ρυθμίσεις HEM εφαρμόζονται αμέσως. Οι επιλογές αισθητήρων πιο πάνω αποθηκεύονται με «Αποθήκευση».",
+      apply:"Εφαρμογή",saved:"Η ρύθμιση εφαρμόστηκε",failed:"Δεν επιβεβαιώθηκε η αλλαγή",
+      comfort:"Στόχοι άνεσης",humidity:"Υγρασία και μούχλα",air:"Ποιότητα αέρα και περιβάλλον",
+      climate:"Κλιματισμός και PID",shade:"Σκίαση",occupancy:"Παρουσία και ύπνος",other:"Άλλες ρυθμίσεις",
+      controller:"Ελεγκτής",mode:"Λειτουργία",status:"Τρέχουσα κατάσταση",source:"Φυσική συσκευή",
+      demand:"Ζήτηση",target:"Στόχος",feedback:"Ένδειξη συσκευής",windows:"Πολιτική παραθύρων",
+      power:"Τροφοδοσία",fault:"Σφάλμα συσκευής"}
+  };
+  const hemWord126=(card,key)=>(HEM_WORDS126[card._language()]||HEM_WORDS126.en)[key]||key;
+  hemProto126._deviceInfoScoped126=function(entry){
+    if(!entry?.entityId)return "";
+    const a=entry.climate?.attributes||{},s=entry.statusInfo?.state?.attributes||{};
+    const presentation=this._controllerPresentation7(entry);
+    const declared=a.physical_primary_entity_id;
+    const allowed=safeArray(a.source_entity_ids);
+    const actual=typeof declared==="string"&&allowed.includes(declared)?declared:
+      allowed.length===1?allowed[0]:null;
+    const native=actual?this._hass?.states?.[actual]:null;
+    const rows=[];
+    const row=(key,value)=>{
+      if(value===null||value===undefined||value==="")return;
+      rows.push('<div class="hem-device-info-row126"><b>'+escape(hemWord126(this,key))+
+        '</b><span>'+escape(value)+'</span></div>');
+    };
+    row("controller",a.friendly_name||entry.entityId);
+    row("mode",a.selected_operating_mode||a.requested_hvac_mode||
+      entry.method?.state||a.control_mode);
+    row("status",this._controllerStatusLabel(presentation.status));
+    if(actual){
+      row("source",native?.attributes?.friendly_name||actual);
+      row("feedback",native?this._controllerStatusLabel(native.state):
+        this._controllerStatusLabel("unavailable"));
+    }
+    if(Number.isFinite(s.demand_percent))
+      row("demand",this._format(s.demand_percent,1)+"%");
+    if(Number.isFinite(s.pid_control_target))
+      row("target",this._format(s.pid_control_target));
+    const wait=s.window_policy||{};
+    if(wait.status)row("windows",this._controllerStatusLabel(wait.status));
+    const supply=s.upstream_power_switch||a.upstream_power_switch;
+    if(typeof supply==="string"&&supply)
+      row("power",this._hass?.states?.[supply]?.attributes?.friendly_name||supply);
+    const fault=entry.errorAnnounce?.attributes?.native_error;
+    if(fault&&["warning","error","critical"].includes(fault.status))
+      row("fault",[fault.code,fault.description].filter(Boolean).join(" · "));
+    const evidence=safeArray(presentation.evidence).filter(value=>typeof value==="string");
+    return '<section class="hem-device-info126" data-hem-device-info126="'+
+      escape(entry.entityId)+'">'+rows.join("")+
+      evidence.map(value=>'<div>'+escape(value)+'</div>').join("")+'</section>';
+  };
+  const oldDeviceSummary126=hemProto126._deviceSummary65;
+  hemProto126._deviceSummary65=function(entry){
+    const previous=this._hemDeviceInfoScope126;
+    this._hemDeviceInfoScope126=entry;
+    try{return oldDeviceSummary126.call(this,entry);}
+    finally{this._hemDeviceInfoScope126=previous;}
+  };
+  const oldInfo126=hemProto126._info76;
+  hemProto126._info76=function(key,label,details){
+    const entry=this._hemDeviceInfoScope126;
+    if(entry&&key==="device-info:"+entry.entityId)
+      details=this._deviceInfoScoped126(entry);
+    return oldInfo126.call(this,key,label,details);
+  };
+  hemProto126._hemControllerContext126=function(area,controllerId,expected){
+    if(!this.isConnected||this._hass?.user?.is_admin!==true||
+       typeof area!=="string"||typeof controllerId!=="string")return null;
+    const owner=this._state()[0],entryId=this._configEntryId114;
+    if(!owner||!entryId||this._configEntryOwner114!==owner)return null;
+    const ownerEntry=this._hass?.entities?.[owner]?.config_entry_id;
+    if(ownerEntry&&ownerEntry!==entryId)return null;
+    const room=safeArray(this._dashboard105()?.rooms).find(value=>value?.area_id===area);
+    if(!room||!this._areaDeviceIds?.get(area))return null;
+    const controller=this._managedControllers(area).find(item=>item.entityId===controllerId);
+    if(!controller||controller.entityId!==expected)return null;
+    const registry=this._hass?.entities?.[controllerId],device=this._entityDeviceId122(controllerId);
+    if(!device||(registry?.config_entry_id&&registry.config_entry_id!==entryId))return null;
+    return {area,controllerId,owner,entryId,device,connection:this._hass.connection,room,controller};
+  };
+  hemProto126._hemControllerPanel126=function(ctx){
+    const wrapper=document.createElement("template");
+    wrapper.innerHTML=this._controllerPanel(ctx.room);
+    const target=[...wrapper.content.querySelectorAll("section[data-managed-climate93]")].find(
+      item=>item.getAttribute("data-managed-climate93")===ctx.controllerId &&
+        item.getAttribute("data-controller-area")===ctx.area);
+    return target?target.outerHTML:null;
+  };
+  hemProto126._closeHemControllerSettings126=function(restoreFocus=true){
+    const saved=this._hemControllerDialog126;
+    if(!saved)return;
+    this._hemControllerDialog126=null;
+    try{if(saved.node.open)saved.node.close();}catch{}
+    saved.node.remove();
+    if(restoreFocus&&saved.returnFocus?.isConnected)
+      saved.returnFocus.focus?.({preventScroll:true});
+  };
+  hemProto126._openHemControllerSettings126=function(area,controllerId){
+    const ctx=this._hemControllerContext126(area,controllerId,controllerId);
+    if(!ctx)return false;
+    const html=this._hemControllerPanel126(ctx);
+    if(!html)return false;
+    this._closeHemControllerSettings126(false);
+    this._closeRoomSettings114?.(false);
+    this._closeInfo87?.();
+    const node=document.createElement("dialog");
+    node.className="hem-controller-options126";
+    node.dir=RTL_LANGUAGES.has(this._language())?"rtl":"ltr";
+    const title=ctx.controller.climate?.attributes?.friendly_name||controllerId;
+    node.innerHTML='<header class="hem-controller-head126"><div><small>'+
+      escape(hemWord126(this,"settings"))+'</small><h2>'+escape(title)+'</h2></div>'+
+      '<button type="button" data-close-hem-controller126 aria-label="'+
+      escape(hemWord126(this,"close"))+'">'+this._icon("mdi:close")+'</button></header>'+
+      '<div class="hem-controller-body126">'+html+'</div>';
+    const saved={...ctx,node,returnFocus:this.shadowRoot.activeElement};
+    this._hemControllerDialog126=saved;
+    node.addEventListener("click",event=>{
+      if(!event.target?.closest?.("[data-close-hem-controller126]"))return;
+      event.preventDefault();event.stopPropagation();
+      this._closeHemControllerSettings126();
+    });
+    node.addEventListener("cancel",event=>{
+      event.preventDefault();this._closeHemControllerSettings126();
+    });
+    node.addEventListener("close",()=>{
+      if(this._hemControllerDialog126===saved)this._closeHemControllerSettings126();
+    });
+    this.shadowRoot.appendChild(node);
+    try{node.showModal();}catch{node.setAttribute("open","");}
+    node.querySelector("[data-close-hem-controller126]").focus({preventScroll:true});
+    return true;
+  };
+  const oldPage126=hemProto126._openDevicePage122;
+  hemProto126._openDevicePage122=function(area,controllerId,entityId,kind){
+    if(kind==="controller"){
+      if(entityId!==controllerId)return false;
+      return this._openHemControllerSettings126(area,controllerId);
+    }
+    return oldPage126.call(this,area,controllerId,entityId,kind);
+  };
+  const oldPageButton126=hemProto126._devicePageButton122;
+  hemProto126._devicePageButton122=function(kind,area,controllerId,entityId,icon,name){
+    const html=oldPageButton126.call(this,kind,area,controllerId,entityId,icon,name);
+    if(kind!=="controller")return html;
+    const label=hemWord126(this,"settings")+" · "+name;
+    return html.replace(/title="[^"]*"/,'title="'+escape(label)+'"')
+      .replace(/aria-label="[^"]*"/,'aria-label="'+escape(label)+'"');
+  };
+  hemProto126._refreshHemControllerSettings126=function(){
+    const saved=this._hemControllerDialog126;
+    if(!saved)return;
+    const current=this._hemControllerContext126(saved.area,saved.controllerId,saved.controllerId);
+    if(!current||current.owner!==saved.owner||current.entryId!==saved.entryId||
+       current.device!==saved.device||current.connection!==saved.connection){
+      this._closeHemControllerSettings126(false);return;
+    }
+    if(saved.node.matches(":focus-within"))return;
+    const html=this._hemControllerPanel126(current);
+    if(!html){this._closeHemControllerSettings126(false);return;}
+    const body=saved.node.querySelector(".hem-controller-body126");
+    if(body&&body.innerHTML!==html)body.innerHTML=html;
+  };
+  const oldRenderSettings126=hemProto126._renderContent;
+  hemProto126._renderContent=function(force=false){
+    const result=oldRenderSettings126.call(this,force);
+    this._refreshHemControllerSettings126?.();
+    return result;
+  };
+  const oldDisconnectSettings126=hemProto126.disconnectedCallback;
+  hemProto126.disconnectedCallback=function(){
+    this._closeHemControllerSettings126(false);
+    return oldDisconnectSettings126.call(this);
+  };
+  // The other seven accordion groups are still the exact HA Options flow.
+  // Additional groups are configuration entities of this room hub alone.
+  hemProto126._nativeRoomEntities126=function(saved){
+    if(!_roomOptionsActive114(this,saved))return [];
+    const prefix=saved.entryId+"_area_"+saved.area+"_";
+    const states=this._hass?.states||{},registry=this._hass?.entities||{};
+    const result=[];
+    for(const [id,reg] of Object.entries(registry)){
+      const domain=id.split(".")[0];
+      if(!["number","select","switch"].includes(domain)||
+         reg?.device_id!==saved.device||reg?.config_entry_id!==saved.entryId||
+         reg?.platform!=="environment_manager"||
+         typeof reg?.unique_id!=="string"||!reg.unique_id.startsWith(prefix)||
+         !states[id])continue;
+      const state=states[id],kind=reg.unique_id.slice(prefix.length);
+      const category=kind.startsWith("climate_profile_")?"comfort":
+        /(?:humidity|mold|rh|dew)/i.test(kind)?"humidity":
+        kind.startsWith("area_environment_")?"air":
+        /(?:pid|climate_operating|direct_tuning|room_equipment_limit)/.test(kind)?"climate":
+        /(?:shade|cover|blind)/.test(kind)?"shade":
+        /(?:occupancy|presence|sleep|wake|alarm)/.test(kind)?"occupancy":"other";
+      const label=state.attributes?.friendly_name||reg.name||reg.original_name||id;
+      result.push({id,domain,kind,category,label,state});
+    }
+    return result.sort((a,b)=>a.label.localeCompare(b.label,this._language()));
+  };
+  hemProto126._roomNativeRender126=function(saved){
+    if(!_roomOptionsActive114(this,saved)||!saved.fields)return;
+    const groupRoot=saved.node.querySelector("[data-room-options-groups114]");
+    if(!groupRoot)return;
+    for(const old of groupRoot.querySelectorAll("[data-room-native-group126]"))old.remove();
+    const entries=this._nativeRoomEntities126(saved),groups=new Map();
+    for(const entry of entries){
+      if(!groups.has(entry.category))groups.set(entry.category,[]);
+      groups.get(entry.category).push(entry);
+    }
+    const types=["comfort","humidity","air","climate","shade","occupancy","other"];
+    for(const category of types){
+      const fields=groups.get(category);
+      if(!fields?.length)continue;
+      const node=document.createElement("details");
+      node.className="hem-room-options-group114 hem-room-native-group126";
+      node.setAttribute("data-room-native-group126",category);
+      node.setAttribute("data-room-options-group114","hem-native:"+category);
+      const title=hemWord126(this,category);
+      node.innerHTML='<summary>'+this._icon(({comfort:"mdi:home-thermometer",humidity:"mdi:water-percent",
+        air:"mdi:air-filter",climate:"mdi:thermostat",shade:"mdi:blinds",
+        occupancy:"mdi:account-check-outline",other:"mdi:tune-variant"})[category])+
+        '<span class="hem-room-options-label114"><strong>HEM · '+escape(title)+
+        '</strong><small>'+escape(hemWord126(this,"room"))+'</small></span>'+
+        '<span class="hem-room-options-count114">'+fields.length+'</span>'+
+        this._icon("mdi:chevron-down")+'</summary>'+
+        '<div class="hem-room-native-body126">'+
+        '<p>'+escape(hemWord126(this,"immediate"))+'</p>'+
+        fields.map(field=>{
+          const state=field.state,attr=state.attributes||{},value=state.state;
+          const available=value!=="unknown"&&value!=="unavailable";
+          const validNumber=Number.isFinite(Number(value))&&
+            Number.isFinite(Number(attr.min))&&Number.isFinite(Number(attr.max));
+          const options=Array.isArray(attr.options)?attr.options.filter(x=>typeof x==="string"):[];
+          let editor="";
+          if(field.domain==="number"){
+            editor='<input type="number" data-hem-room-value126="'+escape(field.id)+'" '+
+              'value="'+escape(available&&validNumber?value:"")+'" '+
+              'min="'+escape(attr.min??0)+'" max="'+escape(attr.max??0)+'" '+
+              'step="'+escape(attr.step??1)+'" '+
+              ((!available||!validNumber)?"disabled":"")+'>'+
+              '<button type="button" data-hem-room-apply126="'+escape(field.id)+'" '+
+              ((!available||!validNumber)?"disabled":"")+'>'+
+              escape(hemWord126(this,"apply"))+'</button>';
+          }else if(field.domain==="select"){
+            editor='<select data-hem-room-value126="'+escape(field.id)+'" '+
+              ((!available||!options.length)?"disabled":"")+'>'+
+              options.map(option=>'<option value="'+escape(option)+'" '+
+                (option===value?"selected":"")+'>'+escape(option)+'</option>').join("")+'</select>'+
+              '<button type="button" data-hem-room-apply126="'+escape(field.id)+'" '+
+              ((!available||!options.includes(value))?"disabled":"")+'>'+
+              escape(hemWord126(this,"apply"))+'</button>';
+          }else if(field.domain==="switch"){
+            editor='<button type="button" role="switch" data-hem-room-apply126="'+
+              escape(field.id)+'" aria-checked="'+(value==="on")+'" '+
+              ((!["on","off"].includes(value))?"disabled":"")+'>'+
+              escape(this._quickState8?.(value)||value)+'</button>';
+          }
+          return '<div class="hem-room-native-row126" data-hem-room-row126="'+
+            escape(field.id)+'"><label>'+escape(field.label)+'</label>'+
+            '<div class="hem-room-native-editor126">'+editor+'</div>'+
+            '<small role="status" data-hem-room-status126></small></div>';
+        }).join("")+'</div>';
+      groupRoot.appendChild(node);
+    }
+  };
+  hemProto126._roomNativeApply126=async function(saved,button){
+    if(!_roomOptionsActive114(this,saved)||saved.busy||saved.finished||saved.failed||
+       !this._hass?.callService)return;
+    const id=button.getAttribute("data-hem-room-apply126");
+    const field=this._nativeRoomEntities126(saved).find(item=>item.id===id);
+    const row=button.closest('[data-hem-room-row126="'+id+'"]');
+    if(!field||!row||row.getAttribute("data-hem-room-row126")!==id||button.disabled)return;
+    const state=field.state,attrs=state.attributes||{},value=state.state;
+    const input=row.querySelector("[data-hem-room-value126]");
+    let service,data={entity_id:id};
+    if(field.domain==="number"){
+      if(!input||input.getAttribute("data-hem-room-value126")!==id||
+         !input.value.trim()||!input.checkValidity())return;
+      const candidate=Number(input.value),min=Number(attrs.min),max=Number(attrs.max);
+      if(!Number.isFinite(candidate)||!Number.isFinite(min)||!Number.isFinite(max)||
+         candidate<min||candidate>max)return;
+      service="set_value";data.value=candidate;
+    }else if(field.domain==="select"){
+      if(!input||input.getAttribute("data-hem-room-value126")!==id||
+         !Array.isArray(attrs.options)||!attrs.options.includes(input.value))return;
+      service="select_option";data.option=input.value;
+    }else if(field.domain==="switch"){
+      if(!["on","off"].includes(value))return;
+      service=value==="on"?"turn_off":"turn_on";
+    }else return;
+    button.disabled=true;button.setAttribute("aria-busy","true");
+    try{
+      await this._hass.callService(field.domain,service,data);
+      if(_roomOptionsActive114(this,saved))
+        row.querySelector("[data-hem-room-status126]").textContent=
+          hemWord126(this,"saved");
+    }catch{
+      if(_roomOptionsActive114(this,saved))
+        row.querySelector("[data-hem-room-status126]").textContent=
+          hemWord126(this,"failed");
+    }finally{
+      if(_roomOptionsActive114(this,saved)){
+        button.disabled=false;button.removeAttribute("aria-busy");
+      }
+    }
+  };
+  const originalRoomForm126=hemProto126._renderRoomSettingsForm114;
+  hemProto126._renderRoomSettingsForm114=function(saved,form,keepDraft=false){
+    const result=originalRoomForm126.call(this,saved,form,keepDraft);
+    this._roomNativeRender126(saved);
+    return result;
+  };
+  const originalOpenRoom126=hemProto126._openRoomSettings114;
+  hemProto126._openRoomSettings114=async function(area){
+    const previous=this._hemControllerDialog126;
+    if(previous)this._closeHemControllerSettings126(false);
+    const result=await originalOpenRoom126.call(this,area);
+    const saved=this._roomSettingsDialog114;
+    if(!saved||saved.nativeListener126)return result;
+    saved.nativeListener126=true;
+    saved.node.addEventListener("click",event=>{
+      const button=event.target?.closest?.("button[data-hem-room-apply126]");
+      if(!button)return;
+      event.preventDefault();event.stopPropagation();
+      this._roomNativeApply126(saved,button);
+    });
+    return result;
+  };
+  const originalSettingsStyles126=hemProto126._styles;
+  hemProto126._styles=function(){return originalSettingsStyles126.call(this)+
+    '<style>'+
+    '.hem-device-info126{display:grid;gap:6px}'+
+    '.hem-device-info-row126{display:grid;grid-template-columns:100px minmax(0,1fr);gap:7px}'+
+    '.hem-device-info-row126 span{overflow-wrap:anywhere}'+
+    '.hem-controller-options126{position:fixed;inset:0;margin:auto;box-sizing:border-box;'+
+    'width:min(94vw,690px);max-width:94vw;max-height:87vh;border-radius:16px;'+
+    'padding:0;border:1px solid var(--aqa-edge);background:var(--card-background-color,#222);'+
+    'color:var(--primary-text-color,#eee);box-shadow:0 18px 45px #0009;overflow:auto}'+
+    '.hem-controller-options126::backdrop{background:#0009}'+
+    '.hem-controller-head126{position:sticky;top:0;z-index:3;display:flex;align-items:center;'+
+    'justify-content:space-between;gap:12px;padding:12px 16px;background:var(--card-background-color,#222);'+
+    'border-bottom:1px solid var(--aqa-edge)}'+
+    '.hem-controller-head126 small{display:block;color:var(--aqa-muted)}'+
+    '.hem-controller-head126 h2{font-size:17px;margin:4px 0;overflow-wrap:anywhere}'+
+    '.hem-controller-head126 button{flex:0 0 34px;height:34px;border:1px solid var(--aqa-edge);'+
+    'background:transparent;color:inherit;border-radius:9px;cursor:pointer}'+
+    '.hem-controller-body126{padding:13px;min-width:0;box-sizing:border-box}'+
+    '.hem-controller-body126 .managed-controller{width:100%;max-width:100%;box-sizing:border-box}'+
+    '.hem-room-native-body126{padding:8px;display:grid;gap:8px}'+
+    '.hem-room-native-body126>p{margin:3px 4px 6px;font-size:11px;line-height:1.5;color:var(--aqa-muted)}'+
+    '.hem-room-native-row126{min-width:0;display:grid;gap:5px;padding:8px;'+
+    'border:1px solid var(--aqa-edge);border-radius:9px}'+
+    '.hem-room-native-row126>label{font-size:12px;font-weight:650;overflow-wrap:anywhere}'+
+    '.hem-room-native-editor126{display:flex;gap:6px;align-items:center;flex-wrap:wrap}'+
+    '.hem-room-native-editor126 input,.hem-room-native-editor126 select{min-width:70px;max-width:100%;'+
+    'flex:1 1 100px;border:1px solid var(--aqa-edge);border-radius:6px;padding:6px;'+
+    'background:var(--secondary-background-color,#292929);color:inherit}'+
+    '.hem-room-native-editor126 button{border:1px solid var(--aqa-edge);border-radius:7px;'+
+    'background:transparent;padding:6px 9px;color:inherit;cursor:pointer}'+
+    '.hem-room-native-editor126 button:disabled{opacity:.45;cursor:default}'+
+    '.hem-room-native-row126>[role=status]{color:var(--aqa-green);min-height:0}'+
+    '</style>';
+  };
+  /* HEM_CARD_SETTINGS126_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
