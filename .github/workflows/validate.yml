@@ -337,6 +337,8 @@ jobs:
         run: python -I .github/tests/test_061b4_arrival_card.py
       - name: HEM logo, icon-only arrival action and info bubble
         run: python -I .github/tests/test_061b11_branding_card.py
+      - name: B12 room hub settings and exact native service ownership
+        run: python -I .github/tests/test_061b12_device_room_settings.py
       - name: Responsive outdoor and room text boundaries
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
