@@ -2959,8 +2959,7 @@
         String(a.name).localeCompare(String(b.name), this._hass.language) ||
         String(a.area_id).localeCompare(String(b.area_id)));
       const nextHtml91 = `${this._styles()}<ha-card class="shell" dir="${RTL_LANGUAGES.has(lang) ? 'rtl' : 'ltr'}">
-        <header class="card-heading"><div><div class="overline">HOME ASSISTANT</div>
-        <h2 title="${escape(this._config.title || this._t('title'))}">${escape(this._config.title || this._t('title'))}</h2><span>${escape(this._t('subtitle'))}</span></div>
+        <header class="card-heading"><div class="hem-brand-title125"><span class="hem-brand-mark125" aria-hidden="true">${this._hemMark125()}</span><div class="hem-brand-copy125"><div class="overline">HOME ASSISTANT</div><h2 title="${escape(this._config.title || this._t("title"))}" aria-label="${escape(this._config.title || this._t("title"))}">HEM</h2><span>${escape(this._t("subtitle"))}</span></div></div>
         <div class="header-actions">${this._arrivalHeader124()}<button class="edit-device" type="button" data-edit-home
           aria-label="${escape(this._deviceEditLabel(true))}" title="${escape(this._deviceEditLabel(true))}"
           ${this._homeDeviceId ? '' : 'disabled'}>${this._icon('mdi:cog-outline')}</button>
@@ -8315,6 +8314,43 @@
   };
   /* HEM_TEXT_BOUNDARIES123_END */
 
+  /* HEM_BRANDING125_START */
+  const ARRIVAL_HELP125={"ar":"تهيئة بيئة المنزل قبل الوصول","bg":"Подгответе домашната среда преди пристигане","bn":"পৌঁছানোর আগে বাড়ির পরিবেশ প্রস্তুত করুন","cs":"Připravit domácí prostředí před příjezdem","da":"Klargør hjemmets indeklima før ankomst","de":"Wohnumgebung vor der Ankunft vorbereiten","el":"Προετοιμασία του περιβάλλοντος του σπιτιού πριν από την άφιξη","en":"Prepare the home environment before arrival","es":"Preparar el ambiente del hogar antes de llegar","fa":"آماده‌سازی محیط خانه پیش از رسیدن","fi":"Valmistele kodin olosuhteet ennen saapumista","fr":"Préparer l’environnement de la maison avant l’arrivée","he":"הכנת סביבת הבית לפני ההגעה","hi":"आने से पहले घर का वातावरण तैयार करें","hr":"Pripremi uvjete u domu prije dolaska","hu":"Készítse elő az otthoni környezetet érkezés előtt","id":"Siapkan kondisi rumah sebelum tiba","it":"Prepara l’ambiente domestico prima dell’arrivo","ja":"帰宅前に室内環境を整える","ko":"도착 전에 집안 환경 준비하기","nb":"Klargjør inneklimaet før ankomst","nl":"Bereid het binnenklimaat voor aankomst voor","pl":"Przygotuj warunki w domu przed przyjazdem","pt-BR":"Preparar o ambiente da casa antes da chegada","pt":"Preparar o ambiente da casa antes da chegada","ro":"Pregătește mediul din locuință înainte de sosire","ru":"Подготовить домашний микроклимат перед прибытием","sk":"Pripraviť domáce prostredie pred príchodom","sr":"Припреми услове у дому пре доласка","sv":"Förbered hemmiljön före ankomst","ta":"வீட்டிற்கு வருவதற்கு முன் சூழலைத் தயாரிக்கவும்","th":"เตรียมสภาพแวดล้อมในบ้านก่อนเดินทางมาถึง","tr":"Eve gelmeden önce ev ortamını hazırlayın","uk":"Підготувати домашній мікроклімат до прибуття","ur":"آمد سے پہلے گھر کا ماحول تیار کریں","vi":"Chuẩn bị môi trường trong nhà trước khi về","zh-Hans":"抵达前准备好家居环境","zh-Hant":"抵達前準備好居家環境"};
+  const ARRIVAL_DETAIL125={"en":"While everyone is away, eligible automatic devices temporarily use Home targets. Preparation stops on arrival, cancellation or timeout, with device safety rules preserved.","de":"Solange alle abwesend sind, verwenden geeignete automatische Geräte vorübergehend die Zuhause-Ziele. Bei Ankunft, Abbruch oder Zeitablauf endet die Vorbereitung; alle Geräteschutzregeln gelten weiter.","el":"Όταν όλοι απουσιάζουν, οι κατάλληλες αυτόματες συσκευές χρησιμοποιούν προσωρινά τους στόχους «Στο σπίτι». Η προετοιμασία λήγει με την άφιξη, την ακύρωση ή τον χρόνο αναμονής, ενώ οι κανόνες προστασίας παραμένουν ενεργοί."};
+  const brandingProto125=AirQualityAdvisorCard.prototype;
+  brandingProto125._hemMark125=function(){return "<svg viewBox=\"0 0 128 128\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\" focusable=\"false\"><defs><linearGradient id=\"hem-brand125-bg\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop stop-color=\"#0e7395\"/><stop offset=\"1\" stop-color=\"#072c52\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"120\" height=\"120\" rx=\"26\" fill=\"url(#hem-brand125-bg)\"/><path d=\"M25 58 64 25l39 33M32 57v45h64V57\" fill=\"none\" stroke=\"#e9fcff\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"43\" y=\"61\" width=\"32\" height=\"40\" rx=\"2\" fill=\"none\" stroke=\"#e9fcff\" stroke-width=\"5\"/><path d=\"M59 62v38M44 81h30\" fill=\"none\" stroke=\"#e9fcff\" stroke-width=\"4\"/><path d=\"M71 69q20 12 41-2M71 84q20 12 41-2M71 98q20 10 41-2\" fill=\"none\" stroke=\"#4ae0d8\" stroke-width=\"5\" stroke-linecap=\"round\"/></svg>";};
+  brandingProto125._arrivalHelp125=function(){
+    const lang=this._language();
+    return {purpose:ARRIVAL_HELP125[lang]||ARRIVAL_HELP125.en,
+      details:ARRIVAL_DETAIL125[lang]||ARRIVAL_DETAIL125.en};
+  };
+  const priorStyles125=brandingProto125._styles;
+  brandingProto125._styles=function(){return priorStyles125.call(this)+`<style>
+    .card-heading>.hem-brand-title125{display:flex;align-items:center;gap:7px;min-width:0;flex:1 1 auto}
+    .card-heading .hem-brand-copy125{min-width:0;flex:1 1 auto}
+    .card-heading>.hem-brand-title125>.hem-brand-mark125{display:inline-grid;place-items:center;
+      width:32px;height:32px;flex:0 0 32px;line-height:0;border-radius:8px;overflow:hidden}
+    .hem-brand-mark125 svg{display:block;width:32px;height:32px}
+    .card-heading h2{font-size:18px;white-space:nowrap}
+    .hem-arrival124>.hem-arrival-action124{display:inline-grid;place-items:center;
+      width:32px;min-width:32px;max-width:32px;height:32px;min-height:32px;padding:5px}
+    .hem-arrival-help125{display:inline-block;position:relative;flex:0 0 17px;
+      width:17px;height:26px;min-width:17px;min-height:26px}
+    .hem-arrival-help125>summary{width:17px;height:26px;display:grid;place-items:center;
+      color:var(--aqa-muted);cursor:pointer;list-style:none;line-height:0}
+    .hem-arrival-help125>summary::-webkit-details-marker{display:none}
+    .hem-arrival-help125>summary ha-icon{--mdc-icon-size:15px;width:15px;height:15px}
+    .hem-arrival-help125>summary:focus-visible{outline:2px solid var(--aqa-blue);border-radius:5px}
+    .hem-arrival-help125[open]>summary{color:var(--aqa-blue)}
+    .hem-arrival-help125 .hem-context-body76 strong{display:block;margin-bottom:7px}
+    .hem-arrival-help125 .hem-context-body76 p{margin:0}
+    @container hem-card123 (max-width:380px){
+      .card-heading{gap:4px}.card-heading>.hem-brand-title125{gap:5px}
+      .header-actions{gap:3px}
+    }
+  </style>`;};
+  /* HEM_BRANDING125_END */
+
   /* HEM_ARRIVAL_PREPARATION124_START
    * These are native integration controls for the selected dashboard's home.
    * Never guess an entity ID, adopt another entry, or write presence facts.
@@ -8426,7 +8462,8 @@
     const durationName=source.controls.timeout.state?.attributes?.friendly_name || words.duration;
     const durationTitle=(source.active?words.remaining+': '+duration+'. ':'')+
       durationName+': '+configured+'. '+words.edit;
-    const actionTitle=actionName+'. '+(source.pending?words.requesting:reason);
+    const help=this._arrivalHelp125();
+    const actionTitle=actionName+'. '+(source.pending?words.requesting:reason)+'. '+help.purpose;
     return '<div class="hem-arrival124'+(source.active?' is-active':'')+'"'+
       ' data-arrival-status124="'+(source.expired?'expired':source.active?
         (source.homeStatus==='unknown'?'paused':'active'):source.homeStatus==='away'?'away':'unavailable')+'">'+
@@ -8434,8 +8471,12 @@
       ' data-arrival-owner124="'+escape(source.owner)+'" data-arrival-entity124="'+escape(control.id||'')+'"'+
       ' aria-label="'+escape(actionTitle)+'" title="'+escape(actionTitle)+'"'+
       (source.pending?' aria-busy="true"':'')+(!available||source.pending?' disabled':'')+'>'+
-      this._icon(source.active?'mdi:close':'mdi:home-clock-outline')+
-      '<span class="hem-arrival-label124">'+escape(label)+'</span></button>'+
+      this._icon(source.active?'mdi:close':'mdi:home-clock-outline')+'</button>'+
+      '<details class="hem-context76 hem-arrival-help125" data-detail-id="hem-arrival-help125">'+
+      '<summary aria-label="'+escape(help.purpose)+'" title="'+escape(help.purpose)+'">'+
+      this._icon('mdi:information-outline')+'</summary>'+
+      '<div class="hem-context-body76"><strong>'+escape(help.purpose)+'</strong>'+
+      '<p>'+escape(help.details)+'</p></div></details>'+
       '<button type="button" class="hem-arrival-duration124" data-arrival-action124="timeout"'+
       ' data-arrival-owner124="'+escape(source.owner)+'" data-arrival-entity124="'+escape(source.controls.timeout.id||'')+'"'+
       ' aria-label="'+escape(source.controls.timeout.valid?durationTitle:words.unavailable)+'"'+
@@ -8544,12 +8585,10 @@
       .hem-arrival124>button:focus-visible{outline:2px solid var(--aqa-blue);outline-offset:2px}
       .hem-arrival124>button>ha-icon{width:16px;height:16px;--mdc-icon-size:16px;flex:0 0 16px}
       .hem-arrival124.is-active>.hem-arrival-action124{background:color-mix(in srgb,var(--aqa-blue) 12%,transparent)}
-      .hem-arrival-label124{min-width:0;max-width:18ch;overflow:hidden;text-overflow:ellipsis}
       .hem-arrival-minutes124{flex:0 0 auto;font-variant-numeric:tabular-nums}
       .hem-arrival-error124{min-width:0;max-width:100%;padding:8px;border:1px solid var(--aqa-edge);
         border-radius:8px;color:var(--error-color,#db4437);font-size:12px;overflow-wrap:anywhere}
       @container hem-card123 (max-width:480px){
-        .hem-arrival-label124{display:none}
         .hem-arrival124>.hem-arrival-action124{width:32px;padding:5px}
       }
     </style>`;

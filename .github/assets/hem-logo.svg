@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="160" viewBox="0 0 700 160" role="img" aria-labelledby="title desc">
+<title id="title">HEM — Home Environment Manager</title><desc id="desc">Home environment mark beside the HEM name.</desc>
+<defs>
+  <linearGradient id="hem-tile" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0e7395"/><stop offset="1" stop-color="#072c52"/></linearGradient>
+  <linearGradient id="hem-banner-back" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#08192d"/><stop offset=".56" stop-color="#0a3044"/><stop offset="1" stop-color="#07505c"/></linearGradient>
+  <radialGradient id="hem-glow"><stop stop-color="#1ad9c8" stop-opacity=".26"/><stop offset="1" stop-color="#1ad9c8" stop-opacity="0"/></radialGradient>
+  <symbol id="hem-mark" viewBox="0 0 128 128">
+    <rect x="4" y="4" width="120" height="120" rx="26" fill="url(#hem-tile)"/>
+    <rect x="6" y="6" width="116" height="116" rx="24" fill="none" stroke="#70e5e6" stroke-opacity=".33" stroke-width="2"/>
+    <path d="M25 58 64 25l39 33M32 57v45h64V57" fill="none" stroke="#e9fcff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="43" y="61" width="32" height="40" rx="2" fill="none" stroke="#e9fcff" stroke-width="5"/>
+    <path d="M59 62v38M44 81h30" fill="none" stroke="#e9fcff" stroke-width="4"/>
+    <path d="M71 69q20 12 41-2M71 84q20 12 41-2M71 98q20 10 41-2" fill="none" stroke="#4ae0d8" stroke-width="5" stroke-linecap="round"/>
+  </symbol>
+</defs><use href="#hem-mark" x="14" y="16" width="128" height="128"/>
+<g font-family="DejaVu Sans,Arial,sans-serif"><text x="171" y="95" fill="#0b3d60" font-size="84" font-weight="800" letter-spacing="2">HEM</text>
+<text x="174" y="126" fill="#32748a" font-size="20" font-weight="650" letter-spacing="1.4">HOME ENVIRONMENT MANAGER</text></g>
+</svg>

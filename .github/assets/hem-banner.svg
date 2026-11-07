@@ -1,52 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="hem-banner-title hem-banner-description">
-  <title id="hem-banner-title">Home Environment Manager</title>
-  <desc id="hem-banner-description">A Home Assistant integration for air quality, comfort, ventilation and climate control. A window with flowing air and a house outline appears beside the project name on a deep navy background.</desc>
-  <defs>
-    <linearGradient id="hem-background" x1="0" y1="0" x2="1200" y2="320" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#071c2c"/>
-      <stop offset="1" stop-color="#102d40"/>
-    </linearGradient>
-    <radialGradient id="hem-glow" cx="158" cy="160" r="270" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#1ea6b5" stop-opacity=".17"/>
-      <stop offset="1" stop-color="#1ea6b5" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="hem-mark-background" x1="60" y1="64" x2="252" y2="256" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#144459"/>
-      <stop offset="1" stop-color="#0b3447"/>
-    </linearGradient>
-    <linearGradient id="hem-air" x1="162" y1="182" x2="230" y2="182" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#c9fbff"/>
-      <stop offset="1" stop-color="#52d9d4"/>
-    </linearGradient>
-    <clipPath id="hem-banner-bounds">
-      <rect width="1200" height="320" rx="24"/>
-    </clipPath>
-  </defs>
-  <g clip-path="url(#hem-banner-bounds)" aria-hidden="true">
-    <rect width="1200" height="320" fill="url(#hem-background)"/>
-    <rect width="1200" height="320" fill="url(#hem-glow)"/>
-    <g fill="none" stroke="#54d3d4" stroke-width="1.5" opacity=".1">
-      <path d="M762 320c104-86 194-95 288-59s151 28 210-34"/>
-      <path d="M826 334c90-80 163-91 245-59s142 23 199-32"/>
-      <path d="M894 346c76-73 132-88 202-59s132 18 188-32"/>
-    </g>
-    <rect x=".75" y=".75" width="1198.5" height="318.5" rx="23.25" fill="none" stroke="#527c8a" stroke-opacity=".3" stroke-width="1.5"/>
-    <rect x="60" y="64" width="192" height="192" rx="42" fill="url(#hem-mark-background)" stroke="#387c89" stroke-opacity=".65"/>
-    <circle cx="204" cy="110" r="42" fill="#41cbd3" opacity=".12"/>
-    <path d="m92 156 64-54 64 54v69a6 6 0 0 1-6 6H98a6 6 0 0 1-6-6Z" fill="none" stroke="#68cbd4" stroke-opacity=".5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-    <g fill="none" stroke="#e7fbff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="108" y="150" width="64" height="76" rx="6"/>
-      <path d="M140 152v72m-30-37h60"/>
-    </g>
-    <g fill="none" stroke="url(#hem-air)" stroke-width="5" stroke-linecap="round">
-      <path d="M164 173c20 11 43 10 62-3"/>
-      <path d="M164 194c22 11 44 9 66-5"/>
-      <path d="M164 215c20 11 42 10 62-2"/>
-    </g>
-    <path d="M288 108h42" fill="none" stroke="#54d9d6" stroke-width="3" stroke-linecap="round"/>
-  </g>
-  <g font-family="DejaVu Sans, Arial, sans-serif">
-    <text x="286" y="164" fill="#effaff" font-size="52" font-weight="700" letter-spacing="-.8">Home Environment Manager</text>
-    <text x="288" y="211" fill="#a9cfd9" font-size="24">Air quality · Comfort · Ventilation · Climate control</text>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="332" viewBox="0 0 1200 332" role="img" aria-labelledby="title desc">
+<title id="title">HEM — Home Environment Manager</title>
+<desc id="desc">The HEM home and airflow mark with ventilation guidance, room temperature, humidity and air-quality readings, reflecting the actual Home Assistant card.</desc>
+<defs>
+  <linearGradient id="hem-tile" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0e7395"/><stop offset="1" stop-color="#072c52"/></linearGradient>
+  <linearGradient id="hem-banner-back" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#08192d"/><stop offset=".56" stop-color="#0a3044"/><stop offset="1" stop-color="#07505c"/></linearGradient>
+  <radialGradient id="hem-glow"><stop stop-color="#1ad9c8" stop-opacity=".26"/><stop offset="1" stop-color="#1ad9c8" stop-opacity="0"/></radialGradient>
+  <symbol id="hem-mark" viewBox="0 0 128 128">
+    <rect x="4" y="4" width="120" height="120" rx="26" fill="url(#hem-tile)"/>
+    <rect x="6" y="6" width="116" height="116" rx="24" fill="none" stroke="#70e5e6" stroke-opacity=".33" stroke-width="2"/>
+    <path d="M25 58 64 25l39 33M32 57v45h64V57" fill="none" stroke="#e9fcff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="43" y="61" width="32" height="40" rx="2" fill="none" stroke="#e9fcff" stroke-width="5"/>
+    <path d="M59 62v38M44 81h30" fill="none" stroke="#e9fcff" stroke-width="4"/>
+    <path d="M71 69q20 12 41-2M71 84q20 12 41-2M71 98q20 10 41-2" fill="none" stroke="#4ae0d8" stroke-width="5" stroke-linecap="round"/>
+  </symbol>
+</defs>
+<defs><clipPath id="clip"><rect width="1200" height="332" rx="24"/></clipPath></defs>
+<g clip-path="url(#clip)" font-family="DejaVu Sans,Arial,sans-serif">
+ <rect width="1200" height="332" fill="url(#hem-banner-back)"/>
+ <ellipse cx="820" cy="110" rx="420" ry="300" fill="url(#hem-glow)"/>
+ <path d="M0 285Q240 215 500 280T1200 248" fill="none" stroke="#32dcda" stroke-width="3" opacity=".22"/>
+ <path d="M0 318Q280 249 575 300T1200 271" fill="none" stroke="#0b9ac1" stroke-width="25" opacity=".1"/>
+ <rect x="22" y="22" width="1156" height="288" rx="20" fill="none" stroke="#77dbeb" stroke-opacity=".19"/>
+ <use href="#hem-mark" x="54" y="75" width="171" height="171"/>
+ <text x="262" y="148" fill="#f3fcff" font-size="86" font-weight="800" letter-spacing="3">HEM</text>
+ <text x="267" y="192" fill="#c0e4ee" font-size="27" font-weight="650">Home Environment Manager</text>
+ <text x="267" y="226" fill="#81b2bf" font-size="18">A smarter home, room by room</text>
+ <rect x="708" y="61" width="440" height="209" rx="18" fill="#061928" fill-opacity=".82" stroke="#55d7dd" stroke-opacity=".24"/>
+ <rect x="725" y="78" width="405" height="53" rx="11" fill="#0c3e40" stroke="#37c7b5" stroke-opacity=".48"/>
+ <circle cx="747" cy="104" r="10" fill="#23c7a6" fill-opacity=".2"/>
+ <path d="m742 104 4 4 7-8" fill="none" stroke="#3cddba" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+ <text x="772" y="111" fill="#e1fbf7" font-size="19" font-weight="700">Ventilation ready</text>
+ <text x="733" y="158" fill="#a9d2dd" font-size="15">Living room</text>
+ <g font-size="20" font-weight="700">
+  <rect x="725" y="171" width="122" height="48" rx="9" fill="#122f40" stroke="#315466"/>
+  <rect x="858" y="171" width="122" height="48" rx="9" fill="#122f40" stroke="#315466"/>
+  <rect x="991" y="171" width="139" height="48" rx="9" fill="#122f40" stroke="#315466"/>
+  <text x="734" y="202" fill="#f0fdff">20.5°C</text><text x="868" y="202" fill="#f0fdff">48% RH</text><text x="1003" y="202" fill="#f0fdff">AQI 13</text>
+ </g>
+ <text x="731" y="250" fill="#79b2c1" font-size="14">Temperature · Humidity · Mold · Air quality</text>
+</g>
 </svg>

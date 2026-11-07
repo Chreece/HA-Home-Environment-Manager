@@ -7,7 +7,9 @@
   </a>
 </p>
 
-# Home Environment Manager
+# HEM — Home Environment Manager
+
+<p align="center"><img src=".github/assets/hem-logo.svg" alt="HEM — Home Environment Manager" width="480"></p>
 
 **Understand each room. Know when to ventilate. Control the devices you choose.**
 
@@ -16,7 +18,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b10](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b10)
+**Current release:** [v0.6.1b11](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b11)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
