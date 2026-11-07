@@ -46,6 +46,17 @@ jobs:
           git diff --check
       - name: Validate beta publication guards and canonical ZIP
         run: python -I .github/tests/test_publish_release.py
+      - name: Independent mode profiles, native controls and calibrated mold demand
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_061b7_mode_settings.py
+          python -I .github/tests/test_061b7_mode_entities.py
+          python -I .github/tests/test_061b7_mold_demand.py
+          python -I .github/tests/test_061b7_mold_announcement.py
+          python -I .github/tests/test_061b7_window_modes.py
+          python -I .github/tests/test_061b7_runtime_modes.py
+          python -I .github/tests/test_061b7_runtime_mold.py
+          python -I .github/tests/test_061b7_mode_settings_card.py --logic-only
       - name: Per-device airing options, accepted waits and actual timeout starts
         run: |
           set -euo pipefail
@@ -263,6 +274,10 @@ jobs:
           python -I .github/tests/test_beta68_metadata.py
       - name: Install runner-only Home Assistant and browser test packages
         run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+      - name: Independent mode panels, mold indication and scoped mobile controls
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b7_mode_settings_card.py
       - name: Per-device window options, exact controller ownership and mobile labels
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
@@ -381,6 +396,8 @@ jobs:
                         'languages.py','tts_languages.py','announcement_text.py',
                         'recommendation_text.py','window_open_wait.py','window_open_text.py','window_option_catalog.py',
                         'device_command_text.py',
+                        'equipment_mode_settings.py','equipment_mode_entities.py','operating_mode_catalog.py',
+                        'mold_control_demand.py',
                         'translations/el.json','frontend/air-quality-advisor-card.js'):
                   assert root+f in z.namelist(),f
               assert all(f.startswith(root) for f in z.namelist())

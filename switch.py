@@ -48,6 +48,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     registry = er.async_get(hass)
 
     def native_feature_switches():
+        from .equipment_mode_entities import scoped_fields
         return [
             EquipmentQuietSwitch(manager, spec, key)
             for spec in equipment.specs(manager)
@@ -61,6 +62,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
             for spec in equipment.specs(manager)
             if window_alternative_settings_supported(
                 manager, registry, spec, platform="switch")
+        ] + [
+            EquipmentQuietSwitch(manager, spec, key, operating_mode=mode)
+            for spec in equipment.specs(manager)
+            for mode, key in scoped_fields(manager, spec, "switch")
         ]
 
     entities.extend(native_feature_switches())
@@ -191,12 +196,15 @@ class EquipmentQuietSwitch(EquipmentEntity, SwitchEntity):
     _attr_entity_category = EntityCategory.CONFIG
     _attr_icon = "mdi:fan-speed-1"
 
-    def __init__(self, manager, spec, key):
-        self._equipment_init(manager, spec, key)
+    def __init__(self, manager, spec, key, *, operating_mode=None):
+        self._equipment_init(manager, spec, key, operating_mode=operating_mode)
         self._attr_icon = {"sensor_verified": "mdi:check-decagram-outline"}.get(key, "mdi:fan-speed-1")
 
     @property
     def available(self):
+        if getattr(self, "_operating_mode", None):
+            descriptor = equipment.mode_descriptor(self._manager, self._spec, self._operating_mode)
+            return bool(descriptor and self._key in descriptor.get("switch_fields", ()))
         if self._key in equipment.QUIET_FLAGS:
             cap = equipment.capabilities(self._manager, self._spec)
             return bool(cap and cap.fan_modes)
@@ -212,10 +220,10 @@ class EquipmentQuietSwitch(EquipmentEntity, SwitchEntity):
         return self.controller_settings.get(self._key) is True
 
     async def async_turn_on(self, **kwargs):
-        await self._manager.equipment.async_update(self._spec, {self._key: True})
+        await self._async_update_controller_settings({self._key: True})
 
     async def async_turn_off(self, **kwargs):
-        await self._manager.equipment.async_update(self._spec, {self._key: False})
+        await self._async_update_controller_settings({self._key: False})
 
 
 class EquipmentErrorAnnouncementSwitch(EquipmentEntity, SwitchEntity):

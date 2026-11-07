@@ -190,6 +190,49 @@ async def suppress_pending_for_shutdown(runtime, spec, pending) -> bool:
     return False
 
 
+async def align_legacy_mode_context(runtime, spec, pending, cfg) -> None:
+    """Bind a pre-mode journal only to its unchanged, verified direction.
+
+    Opting into an inactive profile must not revoke a valid existing command.
+    Projection uses the same pure migration as the model; every effective
+    gain, target, method, shared policy and physical grant must still match.
+    """
+    from . import equipment_model as model
+    context = pending.get("retry_context") if isinstance(pending, dict) else None
+    saved = context.get("settings") if isinstance(context, dict) else None
+    mode = cfg.get("operating_mode")
+    if (not mode or not isinstance(saved, dict) or saved.get("operating_mode") not in (None, mode)
+            or not hasattr(model, "mode_descriptor") or not runtime._current_spec(spec)
+            or not runtime._identity_ok(spec)):
+        return
+    descriptor = model.mode_descriptor(runtime.manager, spec, mode)
+    if descriptor is None:
+        return
+    native_mode = descriptor["native_mode"]
+    if (context.get("mode") not in (native_mode, "off")
+            or saved.get("requested_mode") not in (None, native_mode)
+            or context.get("mode") == "off" and saved.get("requested_mode") is None):
+        return
+    from .equipment_mode_settings import resolve_settings
+    projected = (deepcopy(saved) if saved.get("operating_mode") == mode else
+                 resolve_settings(saved, saved, mode, native_mode=native_mode,
+                                  target_keys=descriptor["target_keys"]))
+    # Resolve the same legacy calibration selector as settings_for_mode.
+    from .pid_review import selected_method, legacy_mode
+    projected["pid_calibration_method"] = selected_method(projected)
+    projected["pid_adaptation_mode"] = legacy_mode(projected["pid_calibration_method"])
+    if projected.get("_native_authorization") is None and cfg.get("_native_authorization") is not None:
+        from .device_activation import authorization_matches
+        proof = runtime._record(spec).get("capabilities_authority")
+        if authorization_matches(proof, cfg["_native_authorization"]):
+            # An explicit grant for another profile is the very same endpoint
+            # already verified for this command, not replacement hardware.
+            projected["_native_authorization"] = deepcopy(cfg["_native_authorization"])
+    if projected != saved and retry_settings_match(projected, cfg):
+        context["settings"] = projected
+        await runtime._save()
+
+
 async def prepare_automatic_retry(runtime, spec) -> None:
     """Migrate a known dispatch without acknowledging it or adopting its power.
 
@@ -205,6 +248,7 @@ async def prepare_automatic_retry(runtime, spec) -> None:
             or record.get("restart_power_verification")
             or not runtime._current_spec(spec) or not runtime._identity_ok(spec)):
         return
+    await align_legacy_mode_context(runtime, spec, pending, cfg)
     context = pending.get("retry_context")
     last = finite(pending.get("last_attempt_at"), 0, runtime.clock())
     first = finite(pending.get("when"), 0, runtime.clock())
@@ -473,7 +517,8 @@ async def startup_ready(runtime, spec, cap, state) -> bool:
 def supports_stop(cap, state) -> bool:
     """Only thermostatic binary HEAT/COOL has an opposite temperature limit."""
     return bool(
-        cap.domain == "climate" and cap.temperature and "off" in cap.modes
+        cap.domain == "climate" and getattr(cap, "native_temperature_target", cap.temperature)
+        and "off" in cap.modes
         and state is not None and state.state in ("heat", "cool")
     )
 

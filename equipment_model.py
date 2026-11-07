@@ -52,6 +52,10 @@ from .pid_fan_capacity import (
     CAPACITY_METHODS as PID_FAN_CAPACITY_METHODS,
     CALIBRATION_DIRECTIONS as PID_FAN_DIRECTIONS,
 )
+from .equipment_mode_settings import (
+    MODE_FIELDS, MODE_KEYS, MODE_METADATA_KEYS, PROFILE_NAMES,
+    has_mode_settings, persist_changes, resolve_settings,
+)
 POWER_FIELDS = ("min_on_seconds", "min_off_seconds", "max_on_seconds",
                 "power_switch_cooldown_seconds")
 LIMIT_FIELDS = (
@@ -108,6 +112,10 @@ class Capabilities:
     temp_step: float = 0.5
     min_humidity: float = 20.0
     max_humidity: float = 80.0
+    # Control of the environmental metric is distinct from a native setpoint
+    # service.  For example DRY can lower humidity without SET_HUMIDITY.
+    native_temperature_target: bool = False
+    native_humidity_target: bool = False
 
 
 def room_config(manager: Any, spec: ManagedDevice) -> dict:
@@ -123,11 +131,20 @@ def device_config(manager: Any, spec: ManagedDevice, entity: str | None = None) 
     return profile if isinstance(profile, dict) else {}
 
 
-def settings(manager: Any, spec: ManagedDevice) -> dict:
+def raw_settings(manager: Any, spec: ManagedDevice) -> dict:
+    """Copy of persisted physical settings, including every operating profile."""
     profiles = manager.settings.get(SETTINGS, {})
     raw = profiles.get(spec.identifier, {}) if isinstance(profiles, dict) else {}
-    raw = raw if isinstance(raw, dict) else {}
-    result = {**DEFAULTS, **raw}
+    return deepcopy(raw) if isinstance(raw, dict) else {}
+
+
+def base_settings(manager: Any, spec: ManagedDevice) -> dict:
+    """Legacy effective defaults, without transient or inactive mode metadata."""
+    raw = raw_settings(manager, spec)
+    result = {**deepcopy(DEFAULTS), **{
+        key: value for key, value in raw.items()
+        if key not in MODE_METADATA_KEYS and key != "operating_mode"
+    }}
     # Missing settings and legacy strings/numbers never opt a device in.
     result["timed_setpoint_sequence"] = raw.get("timed_setpoint_sequence") is True
     result["sleep_when_everyone_asleep"] = raw.get("sleep_when_everyone_asleep") is True
@@ -162,6 +179,52 @@ def settings(manager: Any, spec: ManagedDevice) -> dict:
     if "kp" not in raw and all(e.startswith("fan.") for e in spec.source_entities):
         result["kp"], result["ki"] = 0.05, 0.001
     return result
+
+
+def settings_for_mode(manager: Any, spec: ManagedDevice, mode: str) -> dict:
+    """Resolve a genuine operating profile without selecting or activating it."""
+    descriptor = mode_descriptor(manager, spec, mode)
+    if descriptor is None:
+        raise ValueError("unsupported_operating_mode")
+    result = resolve_settings(base_settings(manager, spec), raw_settings(manager, spec), mode,
+                              native_mode=descriptor["native_mode"],
+                              target_keys=descriptor["target_keys"])
+    if result.get("control_mode") not in descriptor["control_modes"]:
+        # A shared legacy PID choice is not permission to invent PID for a
+        # native AUTO/HEAT_COOL policy. Keep persisted bytes for its genuine
+        # directional modes, while this unsupported effective profile yields
+        # ownership to Existing until a supported method is selected.
+        result["control_mode"] = "existing"
+        result["control_mode_reason"] = "unsupported_for_operating_mode"
+    # Preserve the single calibration authority when a mode overrides only the
+    # current selector; never revive an obsolete passive-selector preference.
+    raw = raw_settings(manager, spec)
+    scoped = raw.get("mode_settings", {}).get(mode, {}) if has_mode_settings(raw) else {}
+    explicit_method = scoped.get("pid_calibration_method") if isinstance(scoped, dict) else None
+    result["pid_calibration_method"] = (explicit_method if explicit_method in PID_CALIBRATION_METHODS
+                                        else selected_method(result))
+    result["pid_adaptation_mode"] = legacy_mode(result["pid_calibration_method"])
+    return result
+
+
+def settings(manager: Any, spec: ManagedDevice) -> dict:
+    """The one active actuator profile; reading old installations stays inert.
+
+    The runtime hook must read base_settings rather than this function.  It
+    owns logical direction selection independently from a transient native
+    OFF state.  Before that direction is resolved, legacy settings let the
+    ordinary demand planner choose it without an invented physical mode.
+    """
+    raw = raw_settings(manager, spec)
+    if has_mode_settings(raw):
+        choose = getattr(getattr(manager, "equipment", None), "active_control_mode", None)
+        mode = choose(spec) if callable(choose) else None
+        if mode in operating_modes(manager, spec):
+            result = settings_for_mode(manager, spec, mode)
+            if raw.get("requested_mode") == "off":
+                result["requested_mode"] = "off"
+            return result
+    return base_settings(manager, spec)
 
 
 def window_alternative_supported(manager: Any, spec: ManagedDevice,
@@ -342,7 +405,137 @@ def capabilities(manager: Any, spec: ManagedDevice) -> Capabilities | None:
         min_temp=lo, max_temp=hi, temp_step=temp_step,
         min_humidity=finite(attrs.get("min_humidity", 20), 0, 100) or 20,
         max_humidity=finite(attrs.get("max_humidity", 80), 1, 100) or 80,
+        native_temperature_target=domain == "climate" and thermal_mode and bool(supported & TEMP),
+        native_humidity_target=domain == "humidifier" or domain == "climate" and bool(supported & HUMIDITY),
     )
+
+
+def mode_capabilities(manager: Any, spec: ManagedDevice) -> Capabilities | None:
+    """Live or exact-identity cached capabilities for configuration UI only.
+
+    Runtime actuation continues to require capabilities() and live readiness.
+    A withdrawn live capability or a changed source/room/device never inherits
+    stale controls from a previous physical endpoint.
+    """
+    cap = capabilities(manager, spec)
+    live = sources_available(manager, spec)
+    if cap is not None and live:
+        return cap
+    configured = set(configured_sources(manager.settings, spec.area_id))
+    if (not spec.source_entities or not set(spec.source_entities) <= configured
+            or live):
+        return None
+    record = getattr(getattr(manager, "equipment", None), "records", {}).get(spec.identifier, {})
+    if not isinstance(record, dict) or not (
+            record.get("area") == spec.area_id
+            and record.get("source_device_id") == spec.source_device_id
+            and tuple(record.get("sources", ())) == spec.source_entities):
+        return None
+    from .device_activation import authority_context, authorization_matches
+    authorities = tuple(saved for saved in (
+            record.get("capabilities_authority"),
+            raw_settings(manager, spec).get("_native_authorization"))
+        if isinstance(saved, dict) and isinstance(saved.get("sources"), list)
+        and saved["sources"])
+    if not authorities:
+        return None
+    try:
+        current_identity = authority_context(manager, spec)
+    except (AttributeError, ImportError, KeyError, TypeError, ValueError):
+        # Registry restoration is not proof of physical identity. Keep the
+        # editor absent until the selected endpoint can be verified again.
+        return None
+    if not any(authorization_matches(saved, current_identity) for saved in authorities):
+        return None
+    if cap is not None:
+        return cap
+    try:
+        saved = Capabilities(**record["capabilities"])
+        if (saved.primary not in spec.source_entities
+                or saved.domain != saved.primary.partition(".")[0]
+                or saved.fan_entity is not None and saved.fan_entity not in spec.source_entities
+                or not isinstance(saved.modes, (tuple, list))
+                or not saved.modes or not set(saved.modes) <= HVAC_MODES):
+            return None
+        return saved
+    except (KeyError, TypeError, ValueError, OverflowError):
+        return None
+
+
+def operating_modes(manager: Any, spec: ManagedDevice) -> tuple[str, ...]:
+    """One configuration panel per genuinely supported environmental mode."""
+    cap = mode_capabilities(manager, spec)
+    if cap is None:
+        return ()
+    if cap.domain == "humidifier":
+        return ("humidify",) if cap.humidifying else ("dry",)
+    return tuple(mode for mode in MODE_KEYS if mode != "humidify" and mode in cap.modes)
+
+
+def mode_descriptor(manager: Any, spec: ManagedDevice, mode: str) -> dict | None:
+    """Parameter eligibility and physical mapping, without actuation authority."""
+    cap = mode_capabilities(manager, spec)
+    if cap is None:
+        return None
+    supported = (("humidify",) if cap.humidifying else ("dry",)) if cap.domain == "humidifier" else tuple(
+        key for key in MODE_KEYS if key != "humidify" and key in cap.modes)
+    if mode not in supported:
+        return None
+    native_mode = "auto" if mode == "humidify" else mode
+    thermal = mode in ("heat", "cool", "auto", "heat_cool")
+    humidity = mode in ("dry", "humidify")
+    target_keys = ((mode,) if mode in ("heat", "cool") else
+                   ("heat", "cool") if thermal else ("humidity",) if humidity else ())
+    pid = (mode in ("heat", "cool") and (cap.temperature or cap.temperature_range)
+           or humidity or mode == "fan_only")
+    control = ("existing", "automatic", "manual", "off") + (("pid",) if pid else ())
+    numbers = ["kp", "ki", "kd", "sample_seconds", "cycle_seconds", *PID_MODEL_FIELDS] if pid else []
+    selects = ["control_mode", "preset"]
+    switches = []
+    if pid:
+        selects.append("pid_calibration_method")
+    if cap.fan_modes:
+        selects.append("fan_mode")
+        switches.extend(QUIET_FLAGS)
+        if cap.fan_percentage:
+            numbers.append("quiet_percentage")
+        else:
+            selects.append("quiet_fan_mode")
+        if (pid and cap.domain in ("climate", "humidifier")
+                and native_mode in PID_FAN_DIRECTIONS):
+            from .pid_fan_capacity import ordered_fan_stages, PERCENT_POINT_FIELDS, STAGE_FIELDS
+            stages = ordered_fan_stages(cap.fan_modes)
+            if cap.fan_percentage:
+                numbers.extend(key for pair in PERCENT_POINT_FIELDS for key in pair)
+                selects.append("pid_fan_capacity_mode")
+            elif 2 <= len(stages) <= 5:
+                numbers.extend(STAGE_FIELDS[:len(stages)-1])
+                selects.append("pid_fan_capacity_mode")
+    if cap.swing_modes:
+        selects.append("swing_mode")
+    if cap.swing_horizontal_modes:
+        selects.append("swing_horizontal_mode")
+    return {
+        "key": mode, "native_mode": native_mode,
+        "metric": "temperature" if thermal else "humidity" if humidity else "air_quality",
+        "increasing": True if mode in ("heat", "humidify") else
+                      False if mode in ("cool", "dry", "fan_only") else None,
+        "temperature": thermal, "humidity": humidity, "target_keys": target_keys,
+        "native_target": bool(cap.native_temperature_target or
+                              mode in ("auto", "heat_cool") and cap.temperature_range) if thermal
+                         else bool(cap.native_humidity_target) if humidity else False,
+        "pid_supported": bool(pid), "control_modes": control,
+        "fan": bool(cap.fan_modes), "fan_modes": tuple(cap.fan_modes),
+        "fan_percentage": cap.fan_percentage,
+        "swing": bool(cap.swing_modes), "swing_horizontal": bool(cap.swing_horizontal_modes),
+        "number_fields": tuple(numbers), "select_fields": tuple(selects),
+        "switch_fields": tuple(switches),
+    }
+
+
+def mode_control_modes(manager: Any, spec: ManagedDevice, mode: str) -> tuple[str, ...]:
+    descriptor = mode_descriptor(manager, spec, mode)
+    return descriptor["control_modes"] if descriptor is not None else ()
 
 
 def sources_available(manager: Any, spec: ManagedDevice) -> bool:
@@ -914,7 +1107,7 @@ def profile_name(config: dict, plan: dict) -> str:
 
 
 def targets(manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict,
-            plan: dict) -> dict[str, float]:
+            plan: dict, *, mold_protection: bool = True) -> dict[str, float]:
     room = room_config(manager, spec)
     profile = profile_name(config, plan)
     limits = device_limits(manager, spec, cap)
@@ -972,10 +1165,17 @@ def targets(manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict,
             if comfort.get("status") in ("humidity_aware_estimate","pmv_estimate"):
                 result["heat"],result["cool"]=comfort["heat_c"],comfort["cool_c"]
 
-    if profile == "manual":
-        override=config.get("profile_targets",{}).get("manual",{})
+    scoped_mode = config.get("operating_mode")
+    if profile == "manual" or scoped_mode in MODE_KEYS:
+        table = config.get("profile_targets", {})
+        override = table.get(profile, {}) if isinstance(table, dict) else {}
         if isinstance(override,dict):
-            result.update({k:v for k,v in override.items() if k in result})
+            allowed = ((scoped_mode,) if scoped_mode in ("heat", "cool") else
+                       ("humidity",) if scoped_mode in ("dry", "humidify") else
+                       ("heat", "cool") if scoped_mode in ("auto", "heat_cool") else
+                       () if scoped_mode == "fan_only" else tuple(result))
+            result.update({k:v for k,v in override.items() if k in allowed
+                           and finite(v, -math.inf, math.inf) is not None})
 
     result["heat"]=max(limits["temperature_min_limit"],
                        min(limits["temperature_max_limit"],float(result["heat"])))
@@ -983,7 +1183,60 @@ def targets(manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict,
                        min(limits["temperature_max_limit"],float(result["cool"])))
     result["humidity"]=max(limits["humidity_min_limit"],
                            min(limits["humidity_max_limit"],float(result["humidity"])))
+    if mold_protection and cap.humidity and config.get("control_mode") in ("automatic", "pid"):
+        result["humidity"] = _humidity_demand(
+            manager, spec, cap, config, result["humidity"], limits,
+        )["effective_humidity_target"]
     return result
+
+
+def _humidity_demand(manager: Any, spec: ManagedDevice, cap: Capabilities,
+                     config: dict, requested: float, limits: dict) -> dict:
+    from .mold_control_demand import room_mold_demand
+    evidence = room_mold_demand(manager, spec.area_id) if cap.humidity else {
+        "status": "not_supported", "mold_protection_required": False,
+    }
+    result = {**evidence, "requested_humidity_target": requested,
+              "effective_humidity_target": requested, "mold_target_active": False}
+    required = finite(evidence.get("mold_required_humidity_target"), 0.000001, 100)
+    if required is None or config.get("control_mode") not in ("automatic", "pid"):
+        return result
+    # Existing native humidity writes use integral percentage points. Round
+    # the derived limit downward so a native target cannot round back above
+    # the configured surface limit. A DRY mode with no native RH setpoint can
+    # regulate against the full-precision room feedback target instead.
+    quantized = (float(math.floor(required)) if cap.native_humidity_target
+                 or cap.domain == "humidifier" else required)
+    lower, upper = limits["humidity_min_limit"], limits["humidity_max_limit"]
+    bounded = max(lower, min(upper, quantized))
+    effective = min(requested, bounded)
+    limited = bounded > required
+    result.update(effective_humidity_target=effective,
+                  mold_target_active=effective < requested,
+                  mold_target_limited=limited,
+                  mold_target_limit_reason="humidity_minimum_limit" if limited else None)
+    # Retain this calibrated upper bound below the threshold as well, so a
+    # humidifier cannot immediately recreate the same surface-RH problem.
+    if effective < requested:
+        result["target_provenance"] = "calibrated_surface_rh_limit"
+    if limited and evidence.get("mold_protection_required") is True:
+        result["status"] = ("mold_target_blocked_by_limits"
+                            if evidence.get("indoor_humidity", 0) <= bounded
+                            else "mold_target_limited")
+    return result
+
+
+def humidity_demand(manager: Any, spec: ManagedDevice, cap: Capabilities,
+                    config: dict, plan: dict) -> dict:
+    """Requested/effective RH targets and current calibrated mold provenance.
+
+    Saved target editors use targets(..., mold_protection=False). Runtime and
+    its physical facade use the default effective target. This read-only
+    diagnostic does not alter saved comfort values or operating permissions.
+    """
+    requested = targets(manager, spec, cap, config, plan, mold_protection=False)["humidity"]
+    return _humidity_demand(manager, spec, cap, config, requested,
+                            device_limits(manager, spec, cap))
 
 
 @dataclass(frozen=True, slots=True)

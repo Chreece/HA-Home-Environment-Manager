@@ -26,6 +26,7 @@ fixture["extract"](fixture["RUNTIME"], ("_resume_pid_checkpoint", "_checkpoint_p
                    production.__dict__)
 # Run the real profile and target resolver, including native/room limits.
 target_scope = dict(model.__dict__)
+fixture["extract"](ROOT / "equipment_mode_settings.py", (), target_scope, constants=("MODE_KEYS",))
 fixture["extract"](ROOT / "climate_strategy.py", ("profile_humidity_target",),
                    target_scope, constants=("DEFAULT_PROFILE_TARGETS",))
 fixture["extract"](ROOT / "equipment_model.py", ("targets",), target_scope)

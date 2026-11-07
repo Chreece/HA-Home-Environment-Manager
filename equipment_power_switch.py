@@ -386,7 +386,7 @@ def output_required(cap: Any, targets: Mapping, measurements: Mapping,
     def reading(metric: str, low: float, high: float) -> float | None:
         return finite(measurements.get(metric), low, high)
 
-    if cap.domain == "fan" or modes == {"off", "fan_only"}:
+    if cap.domain == "fan" or requested_mode == "fan_only" or modes == {"off", "fan_only"}:
         purpose = fan_purpose
         if purpose == "extraction":
             if plan.get("air_actions", {}).get("outdoor_air_verified") is not True:
@@ -404,6 +404,8 @@ def output_required(cap: Any, targets: Mapping, measurements: Mapping,
             return None
         if value is None or target is None:
             return None
+        if method == "pid":
+            return value > target
         return value > target + margin if value > target + margin else (
             False if value <= target - margin else None
         )
@@ -444,7 +446,17 @@ def output_required(cap: Any, targets: Mapping, measurements: Mapping,
                 # boundary: it is idle at every value >= its heat target.
                 return value < heat if heat is not None else None
             return value > cool if cool is not None else None
-        if value is None or heat is None or cool is None or cool-heat < 1:
+        if value is None:
+            return None
+        if heat_allowed and not cool_allowed:
+            if heat is None:
+                return None
+            return True if value < heat - .3 else False if value > heat + .3 else None
+        if cool_allowed and not heat_allowed:
+            if cool is None:
+                return None
+            return True if value > cool + .3 else False if value < cool - .3 else None
+        if heat is None or cool is None or cool-heat < 1:
             return None
         if heat_allowed and value < heat - .3:
             return True
@@ -641,6 +653,15 @@ def approved_demand(runtime: Any, spec: Any, cfg: dict,
     # device from a plan that explicitly says window-safe is unverified.
     if "pause_on_window_open" not in cfg and plan.get("window_safe") is not True:
         return None
+    if (method in ("automatic", "pid") and getattr(cap, "humidifying", False)
+            and runtime.manager.settings.get("use_mold_indicator") is True
+            and model.humidity_demand(runtime.manager, spec, cap, cfg, plan).get(
+                "mold_protection_required") is True):
+        # A fresh calibrated surface-RH excess is verified absence of a
+        # humidification demand, never permission to wake the opposing load.
+        # Existing native-OFF, dwell and supply ownership checks still own
+        # every subsequent relay decision.
+        return False
     targets = model.targets(runtime.manager, spec, cap, cfg, plan)
     observed = runtime.measurements(spec, cap)
     if getattr(runtime.manager, "window_open_wait", None) is not None:

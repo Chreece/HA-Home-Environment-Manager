@@ -322,10 +322,25 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
     def extra_state_attributes(self):
         cap = self._caps
         cfg = self.controller_settings
+        from .operating_mode_catalog import operating_mode_ui_labels
+        locale = self._manager.settings.get("language", "auto")
+        if locale == "auto":
+            locale = getattr(getattr(self._manager.hass, "config", None), "language", "en")
         plan = model.plan_for(self._manager, self._spec)
         active = model.profile_name(cfg, plan)
         follows_presence = cfg["control_mode"] in ("automatic", "pid") and cfg["preset"] == "none"
+        selected_mode = cfg.get("operating_mode")
+        choose_mode = getattr(self._manager.equipment, "active_control_mode", None)
+        if selected_mode is None and callable(choose_mode):
+            selected_mode = choose_mode(self._spec)
+        if cfg.get("requested_mode") == "off":
+            selected_mode = None
         return {**super().extra_state_attributes, "control_mode": cfg["control_mode"],
+                "supported_operating_modes": list(model.operating_modes(self._manager, self._spec)),
+                "selected_operating_mode": selected_mode,
+                "operating_mode_ui_labels": operating_mode_ui_labels(locale),
+                "humidity_demand": model.humidity_demand(self._manager, self._spec, cap, cfg, plan)
+                    if cap is not None and cap.humidity else {},
                 "requested_hvac_mode": cfg["requested_mode"],
                 "active_profile": active,
                 "preset_override": cfg["preset"],
@@ -354,15 +369,9 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
         mode = str(hvac_mode)
         if mode not in [str(v) for v in self.hvac_modes]:
             raise HomeAssistantError("Unsupported physical HVAC mode")
-        algorithm = self.controller_settings["control_mode"]
-        # Commands to HEM's own climate facade are controller *requests*.
-        # They must not silently demote the selected Automatic/PID algorithm.
-        # Only a change on the real native physical entity is treated as an
-        # external manual override (see EquipmentRuntime._reconcile).
-        changes = {"requested_mode": mode}
-        if algorithm not in ("automatic", "pid"):
-            changes["control_mode"] = "off" if mode == "off" else "manual"
-        await self._manager.equipment.async_update(self._spec, changes)
+        # Each direction retains its own method. The runtime switches the
+        # single physical owner after reconciling any previous command/dwell.
+        await self._manager.equipment.async_request_mode(self._spec, mode)
 
     async def async_turn_off(self):
         await self.async_set_hvac_mode(HVACMode.OFF)

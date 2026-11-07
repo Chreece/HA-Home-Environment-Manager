@@ -66,8 +66,8 @@ def _number_class():
                        if isinstance(node, ast.ClassDef)
                        and node.name == "EquipmentEntity")
     entity_node.body = [node for node in entity_node.body
-                        if isinstance(node, ast.FunctionDef)
-                        and node.name in ("_equipment_init", "controller_settings")]
+                        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                        and node.name in ("_equipment_init", "controller_settings", "_async_update_controller_settings")]
     namespace = {
         "model": model, "equipment": model, "DOMAIN": DOMAIN,
         "localized_equipment_name": NAMES["localized_equipment_name"],

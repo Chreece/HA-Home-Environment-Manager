@@ -1552,15 +1552,19 @@ class AirQualityManager:
                 continue
             if waiter is not None:
                 waiter.begin_submission(rec)
-            title, message = announcement(rec, localized)
+            delivery_rec = rec
+            announcement_request = getattr(waiter, "announcement_request", None)
+            if channels == "auto" and callable(announcement_request):
+                delivery_rec = announcement_request(rec)
+            title, message = announcement(delivery_rec, localized)
             prefer_hub = bool(config.get(CONF_HUB, False))
             # Send the complete factual request to Hub with the explicit HEM
             # AI choice. Hub owns rewriting and its original-text fallback.
             # Local short rewriting remains inappropriate for a long caution
             # list or a response deadline and is skipped on that direct path.
-            guarded_request = bool(getattr(rec,"cautions",()) or
-                                   getattr(rec,"wait_seconds",0) or
-                                   getattr(rec,"wait_devices",()))
+            guarded_request = bool(getattr(delivery_rec,"cautions",()) or
+                                   getattr(delivery_rec,"wait_seconds",0) or
+                                   getattr(delivery_rec,"wait_devices",()))
             use_ai = ai_effectively_enabled(config)
             agent = str(config.get(CONF_AI_AGENT, DEFAULT_AGENT) or DEFAULT_AGENT)
 
@@ -1568,7 +1572,7 @@ class AirQualityManager:
             # makes this single setting authoritative over Hub defaults.
             if prefer_hub:
                 hub_payload = make_hub_payload(
-                    rec, title, message, speech=speech, visual=visual,
+                    delivery_rec, title, message, speech=speech, visual=visual,
                     language=localized, use_ai=use_ai, agent_id=agent,
                 )
                 if hub_available(self.hass):
@@ -1612,7 +1616,7 @@ class AirQualityManager:
             )
             if use_ai and not guarded_request and (can_notify or can_speak or (prefer_hub and system_available)):
                 message = await async_rewrite_announcement(
-                    self.hass, rec, message, localized, agent,
+                    self.hass, delivery_rec, message, localized, agent,
                 )
 
             dispatched = False

@@ -160,6 +160,8 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
                     ))
         return {
             "area_id": self._spec.area_id,
+            "controller_id": self._spec.identifier,
+            "source_device_id": self._spec.source_device_id,
             "source_entity_ids": list(self._spec.source_entities),
             "status_code": observed.get("status"),
             "status_reason_code": observed.get("reason"),
@@ -196,6 +198,10 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
                 "sleep_room_evidence_unknown" else None),
             "last_evaluated_mode": observed.get("mode"),
             "demand_percent": observed.get("demand_percent"),
+            "demand_reason": observed.get("demand_reason"),
+            "demand_reason_label": observed.get("demand_reason_label"),
+            "humidity_demand": observed.get("humidity_demand", {}),
+            "selected_operating_mode": cfg.get("operating_mode"),
             "pid_target_reached": observed.get("pid_target_reached"),
             "pid_control_target": observed.get("pid_control_target"),
             "pid_control_measurement": observed.get("pid_control_measurement"),

@@ -66,7 +66,14 @@ Missing feedback has needed=None, which cannot authorize active output.
                       or model.automatic_profile_reason(cfg, plan)) else (
         value < target if increasing else value > target
     )
-    if method == "automatic" and needed is not None:
+    mold_inhibit = bool(
+        cap.domain == "humidifier" and cap.humidifying
+        and hasattr(model, "humidity_demand")
+        and model.humidity_demand(runtime.manager, spec, cap, cfg, plan).get("mold_protection_required") is True
+    )
+    if mold_inhibit:
+        needed = False
+    if method == "automatic" and needed is not None and not mold_inhibit:
         # Match tick's hysteresis at the LAST dispatch boundary. An OFF
         # device needs a full start gap; running output may remain inside
         # the opposite edge. Cached tick measurements cannot authorize ON.

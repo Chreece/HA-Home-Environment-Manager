@@ -16,7 +16,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b6](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b6)
+**Current release:** [v0.6.1b7](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b7)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
@@ -142,6 +142,16 @@ option off, the device follows normal demand without this added delay. A wait
 of **0** also removes the added delay. The shared **Window opening timeout** in
 General remains available for existing room-controller paths.
 
+The general mold, humidity and particle announcements respect this preference
+too. When an authorized, available automatic device can handle that problem
+with its airing option off, HEM does not ask you to open a window for the same
+problem and adds no window-response wait. Other reasons still appear: a
+particle purifier does not remove CO₂. An unavailable, unauthorized or paused
+device, or one with an invalid configured supply, does not silence advice or
+create a promise that it will start.
+If another device in the same room has airing enabled, it does not add a
+redundant request or wait for a problem already covered by that ready device.
+
 When opening a real, closed room window could help, HEM requests it through the
 enabled automatic announcement channels. Opening requests name the room and
 explain the reason; they do not list the contact sensors. Closing requests name
@@ -262,7 +272,8 @@ moving a physical device can require choosing its control method again.
    integration's device list.
 3. Review its feedback sensors, targets, presence/sleep behavior and supported
    limits. For fans, check the intended purpose and minimum/maximum speed.
-4. Choose **Control · Method**.
+4. Choose the method in each supported operating-mode panel, such as
+   **Heating**, **Cooling**, **Drying**, **Humidifying** or **Fan**.
 
 | Method | What it does |
 | --- | --- |
@@ -294,6 +305,38 @@ controlled it can pause automatic control. Use
 **Control · Continue Automatic** when you want HEM to resume. Window state,
 availability, presence policies and minimum ON/OFF times still apply; the reason
 display explains ordinary waiting periods.
+
+### Independent operating modes
+
+Each supported mode has its own method dropdown and **Parameters** section.
+Heating can use PID while Cooling uses Automatic and Drying uses a separately
+tuned PID. Gains, measurement/cycle timing, calibration, profile targets and
+supported fan/swing/quiet settings belong to their mode. Editing an inactive
+mode does not restart the active mode's cycle or change its pending command.
+The device keeps one physical controller; window, presence, power supply and
+minimum ON/OFF protections remain shared.
+
+The native **Auto** and **Heat/Cool** modes retain their supported automatic
+and manual choices. PID belongs to an explicit direction: use the separate
+Heat and Cool panels when the appliance advertises those modes. Fan PID needs
+qualified feedback for its configured extraction or filtration purpose.
+
+Resume, a change to the active control settings, a real policy pause or loss
+of valid feedback invalidates the old PID integral and cycle checkpoint. When
+operation becomes eligible again, HEM calculates a fresh cycle. Normal PWM
+OFF periods and minimum-OFF waits keep their current phase. These resets never
+erase physical run/rest history, an unconfirmed native command or a genuine
+manual override.
+
+When Automatic/PID has permission to control native ON/OFF operation, HEM uses
+the appliance's reported target maximum during heating or humidifying and its
+reported minimum during cooling or drying. This keeps the appliance's internal
+thermostat or humidistat from ending HEM's requested ON period early when its
+local sensor differs from the selected room sensor. The room target still
+controls when HEM requests OFF, with the configured operating minimums and
+confirmed feedback. Devices authorized only for setpoint changes keep their
+bounded target adjustments; Dry modes without a native humidity setter use
+their supported mode control.
 
 ### Room-presence choices
 
@@ -352,6 +395,12 @@ Review heating, cooling and humidity targets for **Comfort**, **Home**, **Away**
 **Sleep** and **Eco**. Presence, sleep context and an explicit preset influence
 the active profile.
 
+Each mode's target numbers initially follow the room's profile. An explicit
+mode target overrides only that mode and profile, including a separate Manual
+target. The card and native configuration numbers retain the requested value;
+the controller also reports an effective humidity target when calibrated mold
+protection needs a lower value.
+
 | Profile | Default humidity target when no target is saved |
 | --- | --- |
 | Comfort, Home, Away, Sleep | **65%** |
@@ -366,7 +415,8 @@ off by default; consult its device help before enabling it.
 
 ### Optional PID calibration
 
-First select **PID** under **Control · Method** on that appliance's controller.
+First select **PID** in the relevant operating-mode panel on the appliance's
+controller, then open that mode's **Parameters**.
 
 For a first adaptive setup, **PID · Calibration → Adaptive · Suggest & approve**
 learns from normal operation. Review the proposed gains and confidence, then
@@ -379,6 +429,8 @@ For a measured model, choose **IMC / λ** or **Cohen-Coon**, enter the measured
 process gain, time constant, dead time and λ where applicable, then use
 **PID · Apply · Calibration** with the native output off and its state confirmed.
 This calculates gains from your inputs; it does not run a live measurement test.
+Calibration inputs, applied gains and reviews stay with the observed mode;
+heating evidence cannot be applied as a drying calibration.
 
 ## Presence and sleep
 
@@ -563,6 +615,21 @@ further automatic ownership until you explicitly re-enable it.
 Mold indication estimates humidity at the coldest surface using a calibrated
 temperature relationship. It does not detect mold growth or spores.
 
+For an authorized Automatic/PID humidity controller, valid calibration also
+sets the upper room-humidity target needed to respect the configured surface
+humidity limit. A room can therefore need dehumidification even when its room
+humidity is below its usual comfort target. HEM derives this target from the
+same current temperatures and calibration as the indication, keeps your saved
+comfort target, and reports both values. Missing or stale evidence does not
+create mold-based device demand. Native and room minimum limits still apply;
+diagnostics identify a mold target that those limits cannot reach.
+
+Mold-based control requires selected indoor temperature and humidity reports
+no older than **10 minutes**, or the configured maximum age if that is shorter.
+Outdoor weather follows its configured maximum age. The monitoring display can
+retain an estimate under its longer monitoring age; that displayed number alone
+does not authorize a device command without current control inputs.
+
 1. Enable **Use mold indication instead of raw room RH** in General settings.
 2. Select room temperature and humidity sensors, plus weather sources providing
    usable outdoor temperature.
@@ -646,7 +713,7 @@ steps to reproduce. Remove personal details from logs and screenshots.
 
 Install published betas from the
 [Releases page](https://github.com/Chreece/HA-Home-Environment-Manager/releases).
-Read the [current release notes](.github/releases/v0.6.1b6.md) for recent changes.
+Read the [current release notes](.github/releases/v0.6.1b7.md) for recent changes.
 
 | Branch | Purpose |
 | --- | --- |

@@ -155,7 +155,12 @@ def _equipment_numbers(manager, spec, registry) -> tuple["EquipmentNumber", ...]
                 ):
                     continue
         keys.append(key)
-    return tuple(EquipmentNumber(manager, spec, key) for key in keys)
+    from .equipment_mode_entities import scoped_fields
+    return (
+        *(EquipmentNumber(manager, spec, key) for key in keys),
+        *(EquipmentNumber(manager, spec, key, operating_mode=mode)
+          for mode, key in scoped_fields(manager, spec, "number")),
+    )
 
 
 async def async_setup_entry(hass, entry, async_add_entities) -> None:
@@ -698,10 +703,21 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
     _attr_entity_category = EntityCategory.CONFIG
     _attr_mode = NumberMode.BOX
 
-    def __init__(self, manager, spec, key):
-        self._equipment_init(manager, spec, key)
-        cap = equipment.capabilities(manager, spec)
-        if key in equipment.FAN_LIMIT_FIELDS:
+    def __init__(self, manager, spec, key, *, operating_mode=None):
+        self._equipment_init(manager, spec, key, operating_mode=operating_mode)
+        cap = (equipment.mode_capabilities(manager, spec) if operating_mode
+               else equipment.capabilities(manager, spec))
+        target = None
+        if operating_mode:
+            from .equipment_mode_entities import target_field
+            target = target_field(key)
+        if target and cap is not None:
+            limits = equipment.device_limits(manager, spec, cap)
+            if target[1] == "humidity":
+                bounds = (limits["humidity_min_limit"], limits["humidity_max_limit"], 1.0, "%")
+            else:
+                bounds = (limits["temperature_min_limit"], limits["temperature_max_limit"], cap.temp_step, "°C")
+        elif key in equipment.FAN_LIMIT_FIELDS:
             bounds = equipment.fan_limit_edit_bounds(manager, spec)
         elif key in equipment.PID_FAN_CAPACITY_FIELDS:
             bounds = equipment.PID_FAN_CAPACITY_FIELDS[key]
@@ -725,6 +741,19 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
 
     @property
     def available(self):
+        if getattr(self, "_operating_mode", None):
+            from .equipment_mode_entities import target_field
+            descriptor = equipment.mode_descriptor(self._manager, self._spec, self._operating_mode)
+            if descriptor is None:
+                return False
+            target = target_field(self._key)
+            if target:
+                return target[1] in descriptor.get("target_keys", ())
+            if self._key not in descriptor.get("number_fields", ()):
+                return False
+            if self._key in equipment.PID_MODEL_FIELDS or self._key in equipment.PID_FAN_CAPACITY_FIELDS:
+                return self.controller_settings["control_mode"] == "pid"
+            return True
         if self._key == "window_open_timeout_minutes":
             return self._manager.equipment._ready
         if self._key in equipment.PID_FAN_CAPACITY_FIELDS:
@@ -763,21 +792,61 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
 
     @property
     def native_value(self):
+        if getattr(self, "_operating_mode", None):
+            if equipment.mode_descriptor(self._manager, self._spec, self._operating_mode) is None:
+                return None
+            from .equipment_mode_entities import target_field
+            target = target_field(self._key)
+            if target:
+                cap = equipment.mode_capabilities(self._manager, self._spec)
+                if cap is None:
+                    return None
+                profile, field = target
+                cfg = {**self.controller_settings,
+                       "control_mode": "manual" if profile == "manual" else "automatic",
+                       "preset": "none" if profile == "manual" else profile}
+                return equipment.targets(self._manager, self._spec, cap, cfg, {},
+                                         mold_protection=False).get(field)
         if self._key in equipment.FAN_LIMIT_FIELDS:
             cap = equipment.fan_limit_capability(self._manager, self._spec)
             return equipment.device_fan_limits(self._manager, self._spec, cap)[self._key]
         return self.controller_settings[self._key]
 
     async def async_set_native_value(self, value):
-        await self._manager.equipment.async_update(self._spec, {self._key: value})
+        if getattr(self, "_operating_mode", None):
+            from .equipment_mode_entities import target_field
+            target = target_field(self._key)
+            if target:
+                from copy import deepcopy
+                profile, field = target
+                table = deepcopy(self.controller_settings.get("profile_targets", {}))
+                table[profile] = {**table.get(profile, {}), field: value}
+                await self._async_update_controller_settings({"profile_targets": table})
+                return
+        await self._async_update_controller_settings({self._key: value})
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
-        if self._key in equipment.FAN_LIMIT_FIELDS:
+        if self._key in equipment.FAN_LIMIT_FIELDS or getattr(self, "_operating_mode", None):
             self._watch_native_updates()
+
+    def _sync_mode_target_bounds(self):
+        if not getattr(self, "_operating_mode", None):
+            return
+        from .equipment_mode_entities import target_field
+        target = target_field(self._key)
+        cap = equipment.mode_capabilities(self._manager, self._spec) if target else None
+        if cap is None:
+            return
+        limits = equipment.device_limits(self._manager, self._spec, cap)
+        prefix = "humidity" if target[1] == "humidity" else "temperature"
+        self._attr_native_min_value = limits[prefix + "_min_limit"]
+        self._attr_native_max_value = limits[prefix + "_max_limit"]
+        self._attr_native_step = 1.0 if prefix == "humidity" else cap.temp_step
 
     @callback
     def _equipment_update(self):
+        self._sync_mode_target_bounds()
         if self._key in equipment.FAN_LIMIT_FIELDS:
             bounds = equipment.fan_limit_edit_bounds(self._manager, self._spec)
             self._attr_native_min_value, self._attr_native_max_value = bounds[:2]

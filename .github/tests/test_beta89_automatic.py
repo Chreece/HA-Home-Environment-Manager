@@ -28,6 +28,7 @@ class Model:
     @staticmethod
     def settings(manager, spec):
         return manager.settings[Model.SETTINGS][spec.identifier]
+    raw_settings = settings
     @staticmethod
     def capabilities(manager,spec):
         return manager.cap
@@ -48,6 +49,9 @@ def compile_fn(node, namespace):
 
 async_set_mode=compile_fn(extract('climate.py','async_set_hvac_mode','ManagedClimate'),{
     'HomeAssistantError':HomeAssistantError
+})
+request_mode=compile_fn(extract('equipment_runtime.py','async_request_mode','EquipmentRuntime'),{
+    'HomeAssistantError':HomeAssistantError, 'model':Model,
 })
 
 button_ns={}
@@ -132,25 +136,26 @@ class FakeController:
 
 class TestAutomatic(unittest.IsolatedAsyncioTestCase):
     async def test_hem_facade_never_demotes_automatic_or_pid(self):
-        for mode,physical in (('automatic','cool'),('pid','off')):
+        for mode,physical,expected in (
+                ('automatic','cool',{'requested_mode':'cool'}),
+                ('pid','off',{'requested_mode':'off'}),
+                ('manual','off',{'requested_mode':'off','control_mode':'off'})):
             with self.subTest(mode=mode,physical=physical):
                 seen=[]
                 async def update(spec,data):seen.append(data)
+                manager=Obj(settings={Model.SETTINGS:{SPEC.identifier:{'control_mode':mode}}},
+                            cap=Obj(modes=('off','heat','cool')))
+                runtime=Obj(manager=manager,async_update=update)
+                runtime.async_request_mode=lambda spec,value:request_mode(runtime,spec,value)
+                manager.equipment=runtime
                 obj=Obj(
                     controller_settings={'control_mode':mode},
                     hvac_modes=['off','heat','cool'],
-                    _manager=Obj(equipment=Obj(async_update=update)),
+                    _manager=manager,
                     _spec=SPEC,
                 )
                 await async_set_mode(obj,physical)
-                self.assertEqual(seen,[{'requested_mode':physical}])
-        seen=[]
-        async def update(spec,data):seen.append(data)
-        obj=Obj(controller_settings={'control_mode':'manual'},
-                hvac_modes=['off','heat','cool'],
-                _manager=Obj(equipment=Obj(async_update=update)),_spec=SPEC)
-        await async_set_mode(obj,'off')
-        self.assertEqual(seen,[{'requested_mode':'off','control_mode':'off'}])
+                self.assertEqual(seen,[expected])
 
     async def test_only_real_native_intervention_demotes_to_manual(self):
         r=FakeController()

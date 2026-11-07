@@ -28,6 +28,16 @@ async def async_setup_entry(hass, entry, async_add_entities):
     def native_calibration_buttons():
         result = []
         for spec in equipment.specs(manager):
+            from .equipment_mode_entities import scoped_fields
+            for mode, key in scoped_fields(manager, spec, "button"):
+                if key == "pid_apply_calibration":
+                    result.append(EquipmentCalibrationButton(manager, spec, operating_mode=mode))
+                elif key == "pid_apply_fan_capacity":
+                    result.append(EquipmentFanCapacityButton(manager, spec, operating_mode=mode))
+                else:
+                    result.append(EquipmentPIDReviewButton(
+                        manager, spec, key.removeprefix("pid_review_"), operating_mode=mode,
+                    ))
             if pid_calibration_supported(manager, registry, spec, platform="button"):
                 result.append(EquipmentCalibrationButton(manager, spec))
                 result.extend(
@@ -224,8 +234,8 @@ class EquipmentCalibrationButton(EquipmentEntity, ButtonEntity):
     _attr_entity_category = EntityCategory.CONFIG
     _attr_icon = "mdi:calculator-variant-outline"
 
-    def __init__(self, manager, spec):
-        self._equipment_init(manager, spec, "pid_apply_calibration")
+    def __init__(self, manager, spec, *, operating_mode=None):
+        self._equipment_init(manager, spec, "pid_apply_calibration", operating_mode=operating_mode)
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
@@ -235,10 +245,13 @@ class EquipmentCalibrationButton(EquipmentEntity, ButtonEntity):
     def available(self):
         cfg = self.controller_settings
         from . import equipment_model as equipment
+        methods = (equipment.mode_control_modes(self._manager, self._spec, self._operating_mode)
+                   if getattr(self, "_operating_mode", None)
+                   else equipment.control_modes(self._manager, self._spec))
         return (cfg["control_mode"] == "pid"
                 and cfg["pid_calibration_method"] in ("imc_lambda","cohen_coon")
                 and equipment.capabilities(self._manager, self._spec) is not None
-                and "pid" in equipment.control_modes(self._manager, self._spec))
+                and "pid" in methods)
 
     @property
     def extra_state_attributes(self):
@@ -274,7 +287,12 @@ class EquipmentCalibrationButton(EquipmentEntity, ButtonEntity):
         return result
 
     async def async_press(self):
-        await self._manager.equipment.async_apply_pid_calibration(self._spec)
+        if getattr(self, "_operating_mode", None):
+            await self._manager.equipment.async_apply_pid_calibration(
+                self._spec, operating_mode=self._operating_mode,
+            )
+        else:
+            await self._manager.equipment.async_apply_pid_calibration(self._spec)
 
 
 class EquipmentPIDReviewButton(EquipmentEntity, ButtonEntity):
@@ -287,24 +305,32 @@ class EquipmentPIDReviewButton(EquipmentEntity, ButtonEntity):
 
     _attr_entity_category = EntityCategory.CONFIG
 
-    def __init__(self, manager, spec, action):
+    def __init__(self, manager, spec, action, *, operating_mode=None):
         self._action = action
-        self._equipment_init(manager, spec, f"pid_review_{action}")
+        self._equipment_init(manager, spec, f"pid_review_{action}", operating_mode=operating_mode)
         self._attr_icon = "mdi:check-circle-outline" if action == "approve" else "mdi:close-circle-outline"
+
+    def _review(self):
+        from . import equipment_model as equipment
+        record = self._manager.equipment.records.get(self._spec.identifier, {})
+        review = record.get("pid_passive_review")
+        mode = getattr(self, "_operating_mode", None)
+        if mode and ("pid" not in equipment.mode_control_modes(self._manager, self._spec, mode)
+                     or not isinstance(review, dict) or review.get("operating_mode") != mode):
+            return None
+        return review
 
     @property
     def available(self):
         from .pid_review import is_pending
-        record = self._manager.equipment.records.get(self._spec.identifier, {})
         return (self.controller_settings["control_mode"] == "pid"
                 and self.controller_settings["pid_calibration_method"] == "adaptive_suggest"
-                and is_pending(record.get("pid_passive_review")))
+                and is_pending(self._review()))
 
     @property
     def extra_state_attributes(self):
         from .pid_review import is_pending
-        record = self._manager.equipment.records.get(self._spec.identifier, {})
-        review = record.get("pid_passive_review")
+        review = self._review()
         return {**super().extra_state_attributes,
                 "pid_review_role": self._action,
                 "pending": is_pending(review),
@@ -314,8 +340,10 @@ class EquipmentPIDReviewButton(EquipmentEntity, ButtonEntity):
 
     async def async_press(self):
         from homeassistant.exceptions import HomeAssistantError
+        kwargs = ({"operating_mode": self._operating_mode}
+                  if getattr(self, "_operating_mode", None) else {})
         if not await self._manager.equipment.async_review_pid(
-            self._spec, self._action,
+            self._spec, self._action, **kwargs,
         ):
             raise HomeAssistantError(
                 "PID recommendation is no longer pending or cannot be safely applied"
@@ -328,8 +356,8 @@ class EquipmentFanCapacityButton(EquipmentEntity, ButtonEntity):
     _attr_entity_category = EntityCategory.CONFIG
     _attr_icon = "mdi:chart-bell-curve"
 
-    def __init__(self, manager, spec):
-        self._equipment_init(manager, spec, "pid_apply_fan_capacity")
+    def __init__(self, manager, spec, *, operating_mode=None):
+        self._equipment_init(manager, spec, "pid_apply_fan_capacity", operating_mode=operating_mode)
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
@@ -339,6 +367,11 @@ class EquipmentFanCapacityButton(EquipmentEntity, ButtonEntity):
     def available(self):
         from . import equipment_model as equipment
         cap = equipment.capabilities(self._manager, self._spec)
+        mode = getattr(self, "_operating_mode", None)
+        if mode:
+            descriptor = equipment.mode_descriptor(self._manager, self._spec, mode)
+            if not descriptor or "pid_fan_capacity_mode" not in descriptor.get("select_fields", ()):
+                return False
         return bool(cap and cap.fan_modes and cap.domain in ("climate", "humidifier")
                     and self.controller_settings["control_mode"] == "pid")
 
@@ -374,4 +407,9 @@ class EquipmentFanCapacityButton(EquipmentEntity, ButtonEntity):
         return attributes
 
     async def async_press(self):
-        await self._manager.equipment.async_apply_fan_capacity(self._spec)
+        if getattr(self, "_operating_mode", None):
+            await self._manager.equipment.async_apply_fan_capacity(
+                self._spec, operating_mode=self._operating_mode,
+            )
+        else:
+            await self._manager.equipment.async_apply_fan_capacity(self._spec)

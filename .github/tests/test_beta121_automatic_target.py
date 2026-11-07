@@ -51,7 +51,7 @@ def running_target(runtime, *, at_goal=False):
             if at_goal else runtime.goal
         )
     else:
-        attrs["humidity"] = runtime.goal if at_goal else (
+        attrs["humidity"] = attrs["max_humidity" if runtime.increasing else "min_humidity"] if at_goal else (
             runtime.goal - 15. if runtime.increasing else runtime.goal + 15.
         )
     runtime.own(extreme=False)
@@ -232,8 +232,14 @@ class AutomaticTargetTests(unittest.IsolatedAsyncioTestCase):
                     target = r.state.attributes["max_temp" if r.increasing else "min_temp"]
                 else:
                     key, service = "humidity", "set_humidity"
-                    target = r.goal - 10. if r.increasing else r.goal + 10.
+                    # Power-controlled humidity uses the real native endpoint
+                    # during ON, while the room goal owns hysteresis and OFF.
+                    target = r.state.attributes["max_humidity" if r.increasing else "min_humidity"]
                 self.assertEqual(calls(r), [(service, {key: target})], r.statuses)
+                self.assertEqual(r.manager.targets[target_key(r)], r.goal)
+                self.assertNotEqual(r.state.attributes[key], target,
+                                    "A service result cannot fabricate native target feedback")
+                self.assertEqual(r.record['pending']['expected'], {'attributes': {key: target}})
 
     async def test_soft_only_automatic_may_reduce_an_old_native_boost(self):
         for kind in KINDS:
