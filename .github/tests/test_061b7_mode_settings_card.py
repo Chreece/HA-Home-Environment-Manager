@@ -276,8 +276,6 @@ def run():
           card._config={entity:'sensor.hem'};
           card._roomsExpanded87=new Set(['room0']);
           card._devicesExpanded87=new Set([0,1,2].map(i=>'climate.managed_0_'+i));
-          card._detailsExpanded66=new Set(['mode-settings:climate.managed_0_0:heat',
-            'mode-settings:climate.managed_0_0:cool','mode-settings:climate.managed_0_1:heat']);
           window.refresh7=(states,language='en')=>{
             card._hass={...card._hass,states:structuredClone(states),language}; card._renderContent(true);
           };refresh7(states);
@@ -297,6 +295,18 @@ def run():
 
         def count():
             return page.evaluate("calls.length")
+
+        parameter_panels = ((0, "heat"), (0, "cool"), (1, "heat"), (1, "cool"))
+
+        def parameters(device, mode):
+            return panel(device, mode).locator('details.hem-mode-parameters7')
+
+        def assert_parameters_open(context):
+            for device, mode in parameter_panels:
+                assert parameters(device, mode).evaluate("element => element.open"), (
+                    context, device, mode, "User-opened Parameters must survive the refresh")
+                assert number(f"number.gain_{device}_{mode}").is_visible(), (
+                    context, device, mode, "An expanded mode must expose its own parameters")
 
         assert page.locator('.hem-operating-mode7').count() == 8
         assert page.locator('[data-climate-method]').count() == 1, "Only the legacy third device keeps a global method"
@@ -320,8 +330,19 @@ def run():
         assert mold.locator(':scope > .metric-limit').first.inner_text() == "Limit 70 %"
         assert page.locator('.hem-room-glance87 .hem-room-air-chip89').first.locator('.hem-room-metric-value107').inner_text() == "80"
 
+        # The first render installs the disclosure state. Exercise the same
+        # summary clicks as a user instead of seeding a private pre-render Set,
+        # which interaction setup correctly initializes to its empty default.
+        for device, mode in parameter_panels:
+            details = parameters(device, mode)
+            assert not details.evaluate("element => element.open"), (device, mode)
+            details.locator(':scope > summary').click()
+        assert_parameters_open("initial user clicks")
+        assert count() == 0, "Opening configuration panels must not call a device service"
+
         for language in ("en", "el", "de"):
             page.evaluate("([s,l])=>refresh7(s,l)", [fixture(language), language])
+            assert_parameters_open(f"{language} locale refresh")
             assert LABELS[language]["heat"] in panel(0, "heat").locator('h4').inner_text()
             assert LABELS[language]["parameters"] in panel(0, "heat").locator('.hem-mode-parameters7>summary').inner_text()
             cycle_label = panel(0, "heat").locator('.hem-mode-number7 label').filter(
@@ -345,6 +366,7 @@ def run():
                         path=str(shots / f"061b7-label-{language}.png"), animations="disabled")
                 except Exception as error:
                     print(f"HEM_061B7_LABEL_SCREENSHOT_FAILED={error!r}", flush=True)
+            assert cycle_label.is_visible(), label_evidence
             assert cycle_label.inner_text() == LABELS[language]["cycle_seconds"] + " (s)", label_evidence
             for width in (390, 320):
                 page.set_viewport_size({"width": width, "height": 1000})
@@ -359,6 +381,7 @@ def run():
 
         states = fixture()
         page.evaluate("s=>refresh7(s)", states)
+        assert_parameters_open("return to English before scoped service checks")
         method(0, "heat").select_option("manual")
         assert page.evaluate("calls") == [["select", "select_option", {"entity_id": "select.user_renamed_method", "option": "manual"}]]
         method(0, "cool").select_option("pid")
@@ -400,6 +423,7 @@ def run():
         updated["number.gain_0_heat"]["state"] = "3.4"
         page.evaluate("s=>{card.hass={...card._hass,states:s}}", updated)
         page.evaluate("()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))")
+        assert_parameters_open("live Home Assistant update with an unfinished edit")
         assert number("number.gain_0_heat").input_value() == "8.5"
         assert number("number.gain_0_heat").evaluate("e=>e===editBefore7 && e===e.getRootNode().activeElement")
         action("number.gain_0_heat").click()
