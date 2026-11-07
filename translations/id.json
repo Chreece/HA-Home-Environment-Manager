@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Pengoperasian · {channel}Waktu minimum perangkat menyala (s)",
+        "name": "Pengoperasian · {channel}Waktu minimum perangkat menyala (menit)",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Pengoperasian · {channel}Waktu minimum perangkat mati (s)",
+        "name": "Pengoperasian · {channel}Waktu minimum perangkat mati (menit)",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Daya · {channel}max ON (s)",
+        "name": "Daya · {channel}max ON (menit)",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Pengumuman · Umumkan kesalahan perangkat · {channel}",
+        "name": "Pengumuman · {channel}Umumkan kesalahan perangkat",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Tidur · {channel}Saat semua orang tidur",
+        "name": "Tidur · {channel}Biarkan perangkat mati saat semua orang tidur",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Kontrol · {channel}Titik setel daya penuh",
+        "name": "Kontrol · {channel}Target maksimum menurut mode",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"

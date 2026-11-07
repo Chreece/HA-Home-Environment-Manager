@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Hoạt động · {channel}Thời gian thiết bị bật tối thiểu (s)",
+        "name": "Hoạt động · {channel}Thời gian thiết bị bật tối thiểu (phút)",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Hoạt động · {channel}Thời gian thiết bị tắt tối thiểu (s)",
+        "name": "Hoạt động · {channel}Thời gian thiết bị tắt tối thiểu (phút)",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Công suất · {channel}max ON (s)",
+        "name": "Công suất · {channel}max ON (phút)",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Thông báo · Thông báo lỗi thiết bị · {channel}",
+        "name": "Thông báo · {channel}Thông báo lỗi thiết bị",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Ngủ · {channel}Khi mọi người đều đang ngủ",
+        "name": "Ngủ · {channel}Giữ thiết bị tắt khi mọi người đều ngủ",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Điều khiển · {channel}Giá trị đặt công suất tối đa",
+        "name": "Điều khiển · {channel}Mục tiêu tối đa theo chế độ",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"

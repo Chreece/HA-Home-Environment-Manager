@@ -40,26 +40,142 @@ HELP = {
         "Unbekannte Raumbelegung pausiert die beiden eingeschränkten Optionen. Bei bestätigter Abwesenheit im gesamten Zuhause gelten alle Räume als leer.\n"
         "Wenn die Bedingung nicht mehr zutrifft, fordert HEM für einen von ihm gesteuerten Ausgang nach dessen Mindestlaufzeit Aus an; Befehlsbestätigung und Geräteschutz bleiben wirksam. Bedarf, Schlaf- und Fensterregeln gelten weiterhin.",
     ),
-    "sleep_behavior": (
-        "Normal continues HEM control; Pause requests this device off during Sleep, respecting minimum runtime and native protections; Sleep targets requests the Sleep target set. Sleep comes from this room or, when enabled on this device, from everyone sleeping. Automatic profile selection can also select Sleep under Normal. The configured wake alarm ends automatic Sleep early. Away and explicit presets retain their priority.",
-        "Η κανονική λειτουργία συνεχίζει τον έλεγχο HEM. Η Παύση ζητά κλείσιμο κατά τον ύπνο, με τήρηση ελάχιστου χρόνου και προστασιών συσκευής. Οι Στόχοι ύπνου ζητούν το αντίστοιχο προφίλ. Ο Ύπνος προκύπτει από το δωμάτιο ή, αν ενεργοποιηθεί στη συσκευή, όταν όλοι κοιμούνται. Η αυτόματη επιλογή μπορεί να επιλέξει Ύπνο και στην κανονική λειτουργία. Το ρυθμισμένο ξυπνητήρι τερματίζει νωρίτερα τον αυτόματο Ύπνο. Η Απουσία και τα ρητά προφίλ διατηρούν την προτεραιότητά τους.",
-        "Normal setzt die HEM-Steuerung fort; Pause fordert im Schlafmodus Aus an und beachtet Mindestlaufzeit und Geräteschutz; Schlaf-Sollwerte fordert das Schlafprofil an. Schlaf folgt dem eigenen Raum oder, bei aktivierter Geräteoption, dem Schlaf aller Bewohner. Auch bei Normal kann die automatische Profilwahl Schlaf wählen. Der konfigurierte Wecker beendet den automatischen Schlafmodus früher. Abwesenheit und ausdrücklich gewählte Profile behalten Vorrang.",
-    ),
-    "sleep_when_everyone_asleep": (
-        "Off by default. In Automatic or PID, also apply this device's sleep behavior, Sleep targets and enabled quiet-sleep setting when at least one room is occupied and every occupied room is in the selected sleeping-room list, including rooms without HEM devices. An empty home does not mean everyone is sleeping; unknown evidence does not confirm it. This does not mark this device's room occupied or bypass its presence requirement. The configured wake alarm ends this automatic Sleep early so normal control can resume. Away, manual control, explicit presets and device protections retain their priority.",
-        "Ανενεργό από προεπιλογή. Στο Αυτόματα ή PID, εφαρμόζει και σε αυτή τη συσκευή τη συμπεριφορά ύπνου, τους στόχους Ύπνου και την ενεργή αθόρυβη ρύθμιση ύπνου, όταν υπάρχει τουλάχιστον ένα κατειλημμένο δωμάτιο και όλα τα κατειλημμένα δωμάτια περιλαμβάνονται στη λίστα ύπνου, ακόμη και δωμάτια χωρίς συσκευές HEM. Άδειο σπίτι δεν σημαίνει ότι όλοι κοιμούνται· άγνωστα δεδομένα δεν το επιβεβαιώνουν. Δεν δηλώνει παρουσία στο δωμάτιο της συσκευής ούτε παρακάμπτει το κριτήριο παρουσίας της. Το ρυθμισμένο ξυπνητήρι τερματίζει νωρίτερα τον αυτόματο Ύπνο για επαναφορά του κανονικού ελέγχου. Η Απουσία, ο χειροκίνητος έλεγχος, τα ρητά προφίλ και οι προστασίες διατηρούν την προτεραιότητά τους.",
-        "Standardmäßig aus. Bei Automatik oder PID gelten Schlafverhalten, Schlaf-Sollwerte und aktivierte leise Schlafeinstellung dieses Geräts auch dann, wenn mindestens ein Raum belegt ist und alle belegten Räume in der gewählten Schlafraumliste stehen, einschließlich Räumen ohne HEM-Geräte. Ein leeres Zuhause bedeutet nicht, dass alle schlafen; unbekannte Daten bestätigen dies nicht. Die Option macht den eigenen Raum nicht belegt und umgeht keine Anwesenheitsvoraussetzung. Der konfigurierte Wecker beendet diesen automatischen Schlafmodus früher, damit die normale Regelung fortgesetzt wird. Abwesenheit, manuelle Steuerung, ausdrückliche Profile und Geräteschutz behalten Vorrang.",
-    ),
-    "quiet_sleep": (
-        "Use this device's configured quiet fan setting while its room is sleeping, or when its enabled everyone-sleeping option applies. The configured wake alarm ends automatic quiet-sleep behavior early. This changes the fan setting; the active target profile and separate sleep/presence policies remain in effect.",
-        "Χρησιμοποιεί την επιλεγμένη αθόρυβη ρύθμιση ανεμιστήρα όταν το δωμάτιο είναι σε ύπνο ή ισχύει η ενεργή επιλογή της συσκευής «Όταν όλοι κοιμούνται». Το ρυθμισμένο ξυπνητήρι τερματίζει νωρίτερα την αυτόματη αθόρυβη λειτουργία ύπνου. Αλλάζει τη ρύθμιση ανεμιστήρα· το ενεργό προφίλ στόχων και οι ξεχωριστοί κανόνες ύπνου και παρουσίας εξακολουθούν να ισχύουν.",
-        "Verwendet die konfigurierte leise Lüftereinstellung, solange der Raum schläft oder die aktivierte Option für den Schlaf aller Bewohner gilt. Der konfigurierte Wecker beendet die automatische leise Schlafeinstellung früher. Geändert wird die Lüftereinstellung; aktives Sollwertprofil und separate Schlaf-/Anwesenheitsregeln bleiben wirksam.",
-    ),
-    "quiet_occupied": (
-        "Use this device's configured quiet fan setting while the room is occupied. Automatic demand remains subject to the device's normal operating rules and available quiet output.",
-        "Χρησιμοποιεί την επιλεγμένη αθόρυβη ρύθμιση ανεμιστήρα όταν το δωμάτιο είναι κατειλημμένο. Η ζήτηση εξακολουθεί να ακολουθεί τους κανόνες λειτουργίας και τη διαθέσιμη απόδοση στην αθόρυβη ρύθμιση.",
-        "Verwendet die konfigurierte leise Lüftereinstellung bei belegtem Raum. Die automatische Anforderung bleibt durch Betriebsregeln und verfügbare leise Leistung begrenzt.",
-    ),
+    'sleep_behavior': ("Normal continues HEM control; Pause requests this device off during its room's Sleep condition, "
+     'respecting minimum runtime and native protections; Sleep targets selects the Sleep target set. Automatic '
+     'profile selection can also select Sleep under Normal. The configured wake alarm ends automatic Sleep '
+     'early.\n'
+     '\n'
+     'The separate Keep device off when all asleep switch adds a household OFF rule for Automatic/PID. Normal '
+     "or Sleep targets here does not cancel that rule. With the household option off, the room's own sleep "
+     'behavior remains active.',
+     'Η κανονική λειτουργία συνεχίζει τον έλεγχο HEM. Η Παύση ζητά κλείσιμο κατά τη συνθήκη Ύπνου του '
+     'δωματίου, με τήρηση ελάχιστου χρόνου και φυσικών προστασιών. Οι Στόχοι ύπνου επιλέγουν το αντίστοιχο '
+     'προφίλ. Η αυτόματη επιλογή μπορεί να επιλέξει Ύπνο και στην κανονική λειτουργία. Το ρυθμισμένο ξυπνητήρι '
+     'τερματίζει νωρίτερα τον αυτόματο Ύπνο.\n'
+     '\n'
+     'Ο ξεχωριστός διακόπτης διατήρησης της συσκευής κλειστής όταν όλοι κοιμούνται προσθέτει κανόνα OFF για '
+     'όλο το σπίτι στο Αυτόματα/PID. Η Κανονική λειτουργία ή οι Στόχοι ύπνου εδώ δεν ακυρώνουν αυτόν τον '
+     'κανόνα. Με την επιλογή όλου του σπιτιού κλειστή, η συμπεριφορά ύπνου του ίδιου του δωματίου παραμένει '
+     'ενεργή.',
+     'Normal setzt die HEM-Regelung fort; Pause fordert während der Schlafbedingung des eigenen Raums Aus an '
+     'und beachtet Mindestlaufzeit und Geräteschutz; Schlaf-Sollwerte wählt das Schlafprofil. Auch bei Normal '
+     'kann die automatische Profilwahl Schlaf wählen. Der konfigurierte Wecker beendet den automatischen '
+     'Schlafmodus früher.\n'
+     '\n'
+     'Der separate Schalter zum Ausschalten des Geräts, wenn alle schlafen, ergänzt eine '
+     'Haushalts-Abschaltregel für Automatik/PID. Normal oder Schlaf-Sollwerte hier hebt diese Regel nicht auf. '
+     'Bei deaktivierter Haushaltsoption bleibt das Schlafverhalten des eigenen Raums aktiv.'),
+    'sleep_when_everyone_asleep': ('On: in Automatic or PID, keep this device off when household evidence confirms that at least one room is '
+     'occupied and every occupied room is in the selected sleeping-room list, including rooms without HEM '
+     'devices. If HEM is already running this device, request OFF after its minimum ON time and other stop '
+     'protections permit it; require actual OFF feedback and prevent a new start while the condition holds.\n'
+     '\n'
+     'This household OFF rule also applies with an explicit Home or Comfort preset. An empty home, confirmed '
+     'Away or unknown occupancy/sleep evidence does not mean everyone is asleep. The configured wake-alarm '
+     'lead releases this household hold so normal control can resume if demand and the remaining rules allow '
+     'it.\n'
+     '\n'
+     "Off (default): remove only this device's extra household sleep hold. Its own room's sleep behavior, "
+     'presence rules, quiet limits and physical protections remain independently configured. This setting does '
+     'not mark its room occupied or grant permission to start.',
+     'Ενεργό: στο Αυτόματα ή PID, κρατά αυτή τη συσκευή κλειστή όταν τα δεδομένα σπιτιού επιβεβαιώνουν ότι '
+     'υπάρχει τουλάχιστον ένα κατειλημμένο δωμάτιο και ότι όλα τα κατειλημμένα δωμάτια βρίσκονται στην '
+     'επιλεγμένη λίστα ύπνου, μαζί με δωμάτια χωρίς συσκευές HEM. Αν το HEM λειτουργεί ήδη τη συσκευή, ζητά '
+     'OFF μόλις το επιτρέψουν ο ελάχιστος χρόνος ON και οι προστασίες διακοπής· απαιτεί πραγματική ένδειξη OFF '
+     'και αποτρέπει νέα εκκίνηση όσο ισχύει η συνθήκη.\n'
+     '\n'
+     'Ο κανόνας κλεισίματος ισχύει και με ρητά επιλεγμένο προφίλ Σπίτι ή Άνεση. Άδειο σπίτι, επιβεβαιωμένη '
+     'Απουσία ή άγνωστα δεδομένα παρουσίας/ύπνου δεν σημαίνουν ότι όλοι κοιμούνται. Η ρυθμισμένη προετοιμασία '
+     'πριν από το ξυπνητήρι αίρει αυτή την παύση ώστε να συνεχιστεί ο κανονικός έλεγχος, αν το επιτρέπουν η '
+     'ζήτηση και οι υπόλοιποι κανόνες.\n'
+     '\n'
+     'Ανενεργό (προεπιλογή): αφαιρεί μόνο την πρόσθετη παύση αυτής της συσκευής λόγω ύπνου όλου του σπιτιού. Η '
+     'συμπεριφορά ύπνου του δικού της δωματίου, οι κανόνες παρουσίας, τα όρια ησυχίας και οι φυσικές '
+     'προστασίες παραμένουν ανεξάρτητες ρυθμίσεις. Δεν δηλώνει παρουσία στο δωμάτιο ούτε δίνει άδεια '
+     'εκκίνησης.',
+     'Eingeschaltet: Bei Automatik oder PID bleibt dieses Gerät aus, wenn die Hausdaten bestätigen, dass '
+     'mindestens ein Raum belegt ist und alle belegten Räume in der ausgewählten Schlafraumliste stehen, '
+     'einschließlich Räumen ohne HEM-Geräte. Läuft das Gerät bereits unter HEM, wird Aus angefordert, sobald '
+     'Mindestlaufzeit und Abschaltschutz es erlauben; die tatsächliche Aus-Rückmeldung bleibt erforderlich und '
+     'ein Neustart wird solange verhindert.\n'
+     '\n'
+     'Diese Haushalts-Abschaltregel gilt auch bei ausdrücklich gewähltem Zuhause- oder Komfortprofil. Ein '
+     'leeres Zuhause, bestätigte Abwesenheit oder unbekannte Anwesenheits-/Schlafdaten bedeuten nicht, dass '
+     'alle schlafen. Der konfigurierte Wecker-Vorlauf hebt diese Haushaltspause auf, damit die normale '
+     'Regelung bei Bedarf und erfüllten übrigen Bedingungen fortgesetzt wird.\n'
+     '\n'
+     'Ausgeschaltet (Standard): Nur die zusätzliche Haushaltsschlaf-Pause dieses Geräts entfällt. '
+     'Schlafverhalten des eigenen Raums, Anwesenheitsregeln, Ruhegrenzen und Geräteschutz bleiben separat '
+     'eingestellt. Die Option erklärt den Raum nicht als belegt und erteilt keine Startfreigabe.'),
+    'quiet_sleep': ("On: apply this device's configured quiet fan mode or percentage limit while its applicable sleep "
+     'condition is active. For advertised Low/Medium/High stages, quiet is a speed ceiling: HEM lowers a '
+     'higher stage and keeps an already lower normal stage. The configured wake alarm can end automatic '
+     'quiet-sleep behavior early.\n'
+     '\n'
+     'Off (default): sleep alone no longer applies this fan limit. An enabled occupied-room quiet rule can '
+     'still limit speed. With this switch on and uncertain sleep evidence, HEM conservatively retains the '
+     'quiet ceiling until the evidence is known.\n'
+     '\n'
+     "This changes fan speed, not the room target or the device's ON/OFF timing. Presence, window "
+     'protection and the separate keep-off-when-all-asleep rule still apply. Only native fan controls '
+     'advertised by this device are used.',
+     'Ενεργό: εφαρμόζει την επιλεγμένη αθόρυβη λειτουργία ή το όριο ποσοστού ανεμιστήρα όταν ισχύει η συνθήκη '
+     'ύπνου της συσκευής. Στις διαθέσιμες βαθμίδες Χαμηλή/Μεσαία/Υψηλή, η ησυχία είναι ανώτατο όριο: το HEM '
+     'μειώνει μια υψηλότερη βαθμίδα και διατηρεί μια ήδη χαμηλότερη κανονική βαθμίδα. Το ρυθμισμένο ξυπνητήρι '
+     'μπορεί να τερματίσει νωρίτερα την αυτόματη αθόρυβη λειτουργία ύπνου.\n'
+     '\n'
+     'Ανενεργό (προεπιλογή): ο ύπνος από μόνος του δεν εφαρμόζει αυτό το όριο. Η ενεργή αθόρυβη ρύθμιση με '
+     'παρουσία μπορεί ακόμη να περιορίζει την ταχύτητα. Όταν ο διακόπτης είναι ενεργός και τα δεδομένα ύπνου '
+     'αβέβαια, το HEM διατηρεί συντηρητικά το αθόρυβο όριο ώσπου να επιβεβαιωθούν.\n'
+     '\n'
+     'Αλλάζει την ταχύτητα ανεμιστήρα, όχι τον στόχο δωματίου ή τους χρόνους ON/OFF της συσκευής. Παρουσία, '
+     'προστασία παραθύρων και ο ξεχωριστός κανόνας κλεισίματος όταν όλοι κοιμούνται εξακολουθούν να ισχύουν. '
+     'Χρησιμοποιούνται μόνο χειρισμοί ανεμιστήρα που δηλώνει η συσκευή.',
+     'Eingeschaltet: Bei der geltenden Schlafbedingung werden die konfigurierte leise Lüfterstufe oder '
+     'Prozentgrenze angewendet. Bei angebotenen Stufen Niedrig/Mittel/Hoch ist die Ruhevorgabe eine '
+     'Obergrenze: HEM senkt eine höhere Stufe und behält eine bereits niedrigere normale Stufe bei. Der '
+     'konfigurierte Wecker kann die automatische leise Schlafeinstellung früher beenden.\n'
+     '\n'
+     'Ausgeschaltet (Standard): Schlaf allein aktiviert diese Lüftergrenze nicht mehr. Die aktivierte '
+     'Ruheregel bei Raumbelegung kann die Drehzahl weiterhin begrenzen. Ist dieser Schalter eingeschaltet und '
+     'die Schlafinformation unsicher, hält HEM vorsorglich die Ruhegrenze ein, bis die Information bekannt '
+     'ist.\n'
+     '\n'
+     'Geändert wird die Lüfterdrehzahl, weder der Raumsollwert noch die Ein/Aus-Zeit des Geräts. '
+     'Anwesenheit, Fensterschutz und die separate Abschaltregel beim Schlaf aller Bewohner gelten weiterhin. '
+     'Verwendet werden nur die vom Gerät angebotenen nativen Lüfterfunktionen.'),
+    'quiet_occupied': ("On: apply this device's configured quiet fan mode or percentage ceiling while its own room is occupied. "
+     'For discrete native fan stages, the quiet choice caps the normal requested stage; it does not raise a '
+     'lower stage merely to reach the quiet limit. Unknown presence evidence conservatively keeps the quiet '
+     'ceiling when this option is enabled.\n'
+     '\n'
+     'Off (default): room occupancy alone no longer applies this fan limit. The separate quiet-sleep option '
+     'can still limit the fan. Normal fan demand and mode settings determine the remaining speed choice.\n'
+     '\n'
+     "This affects only this device's available native fan controls. Room targets, device ON/OFF timing, "
+     'permission to run and physical protections remain independent.',
+     'Ενεργό: εφαρμόζει την επιλεγμένη αθόρυβη λειτουργία ή το ανώτατο ποσοστό ανεμιστήρα όταν το δικό της '
+     'δωμάτιο έχει παρουσία. Στις διακριτές βαθμίδες, η αθόρυβη επιλογή περιορίζει την κανονικά ζητούμενη '
+     'ταχύτητα· δεν αυξάνει μια χαμηλότερη βαθμίδα μόνο για να φτάσει το όριο. Με ενεργή την επιλογή, άγνωστη '
+     'παρουσία διατηρεί συντηρητικά το αθόρυβο όριο.\n'
+     '\n'
+     'Ανενεργό (προεπιλογή): η παρουσία στο δωμάτιο από μόνη της δεν εφαρμόζει αυτό το όριο. Η ξεχωριστή '
+     'αθόρυβη επιλογή ύπνου μπορεί ακόμη να περιορίζει τον ανεμιστήρα. Η κανονική ζήτηση και οι ρυθμίσεις '
+     'λειτουργίας καθορίζουν την υπόλοιπη επιλογή ταχύτητας.\n'
+     '\n'
+     'Αφορά μόνο τους διαθέσιμους πραγματικούς χειρισμούς ανεμιστήρα αυτής της συσκευής. Οι στόχοι δωματίου, '
+     'οι χρόνοι ON/OFF της συσκευής, η άδεια λειτουργίας και οι φυσικές προστασίες παραμένουν ανεξάρτητα.',
+     'Eingeschaltet: Im belegten eigenen Raum gelten die konfigurierte leise Lüfterstufe oder '
+     'Prozentobergrenze dieses Geräts. Bei diskreten nativen Stufen begrenzt die Ruhevorgabe die normal '
+     'angeforderte Stufe; eine niedrigere Stufe wird nicht eigens auf die Ruhegrenze angehoben. Bei '
+     'unbekannter Raumbelegung bleibt die Ruhegrenze vorsorglich wirksam, solange diese Option aktiviert ist.\n'
+     '\n'
+     'Ausgeschaltet (Standard): Raumbelegung allein aktiviert diese Lüftergrenze nicht mehr. Die separate '
+     'leise Schlafeinstellung kann den Lüfter weiterhin begrenzen. Normaler Bedarf und Moduseinstellungen '
+     'bestimmen ansonsten die Drehzahl.\n'
+     '\n'
+     'Betrifft nur die verfügbaren nativen Lüfterfunktionen dieses Geräts. Raumsollwerte, Ein/Aus-Zeiten des '
+     'Geräts, Betriebsfreigabe und Geräteschutz bleiben unabhängig davon.'),
     "quiet_fan_mode": (
         "Choose the device's native fan mode to use when an enabled quiet condition applies, such as sleeping or an occupied room.",
         "Επίλεξε την πραγματική λειτουργία ανεμιστήρα της συσκευής για τις ενεργοποιημένες συνθήκες ησυχίας, όπως ύπνος ή παρουσία στο δωμάτιο.",
@@ -85,52 +201,218 @@ HELP = {
         "Η απαγωγή ακολουθεί το CO₂ για ανανέωση αέρα, ενώ η φίλτρανση ακολουθεί τα PM2.5 για απομάκρυνση σωματιδίων. Το Αυτόματα χρησιμοποιεί αποθηκευμένο ρόλο ή τον συμπεραίνει από αποκλειστικά CO₂ ή PM2.5 πηγές. Επίλεξε ρητά τον ρόλο όταν οι πηγές δεν τον προσδιορίζουν.",
         "Abluft erneuert Raumluft anhand des CO₂-Bedarfs; Filterung entfernt Partikel anhand von PM2.5. Automatisch verwendet eine gespeicherte Rolle oder leitet sie aus ausschließlich CO₂- bzw. PM2.5-Quellen ab. Bei uneindeutigen Quellen ist eine ausdrückliche Auswahl nötig.",
     ),
-    "sensor_verified": (
-        "Confirm that the selected PM2.5 measurement is suitable for automatic particle filtration. Verification on the room's PM2.5 source can also satisfy this requirement. This switch does not calibrate the sensor.",
-        "Επιβεβαιώνει ότι η επιλεγμένη μέτρηση PM2.5 είναι κατάλληλη για αυτόματη φίλτρανση σωματιδίων. Η επιβεβαίωση της πηγής PM2.5 του δωματίου καλύπτει επίσης αυτή την απαίτηση. Ο διακόπτης δεν βαθμονομεί τον αισθητήρα.",
-        "Bestätigt die Eignung der ausgewählten PM2.5-Messung für automatische Partikelfilterung. Auch die Bestätigung der PM2.5-Quelle des Raums erfüllt diese Voraussetzung. Der Schalter kalibriert den Sensor nicht.",
-    ),
+    'sensor_verified': ("On: confirm that this device's selected PM2.5 measurement is suitable for automatic particle filtration. "
+     "HEM still requires current valid readings and the device's normal control and power permissions.\n"
+     '\n'
+     "Off (default): remove this device-level confirmation. A separate confirmation on the room's PM2.5 source "
+     'may still satisfy the requirement; otherwise automatic filtration remains blocked until the source is '
+     'verified.\n'
+     '\n'
+     'This is source verification for particle filtration, not a measurement or calibration. It does not make '
+     "a particle filter a remedy for CO₂, VOCs or other gases and does not change another device's "
+     'verification.',
+     'Ενεργό: επιβεβαιώνει ότι η επιλεγμένη μέτρηση PM2.5 είναι κατάλληλη για την αυτόματη φίλτρανση '
+     'σωματιδίων αυτής της συσκευής. Το HEM εξακολουθεί να απαιτεί πρόσφατες έγκυρες μετρήσεις και τις '
+     'κανονικές άδειες ελέγχου και ισχύος.\n'
+     '\n'
+     'Ανενεργό (προεπιλογή): αφαιρεί αυτή την επιβεβαίωση σε επίπεδο συσκευής. Ξεχωριστή επιβεβαίωση της πηγής '
+     'PM2.5 του δωματίου μπορεί ακόμη να καλύπτει την απαίτηση· διαφορετικά η αυτόματη φίλτρανση μένει σε '
+     'αναμονή μέχρι να επιβεβαιωθεί η πηγή.\n'
+     '\n'
+     'Είναι επιβεβαίωση πηγής για σωματίδια, όχι μέτρηση ή βαθμονόμηση. Δεν μετατρέπει ένα φίλτρο σωματιδίων '
+     'σε λύση για CO₂, VOC ή άλλα αέρια και δεν αλλάζει την επιβεβαίωση άλλης συσκευής.',
+     'Eingeschaltet: Bestätigt, dass die ausgewählte PM2.5-Messung dieses Geräts für automatische '
+     'Partikelfilterung geeignet ist. HEM benötigt weiterhin aktuelle gültige Messwerte sowie die normalen '
+     'Regelungs- und Schaltfreigaben.\n'
+     '\n'
+     'Ausgeschaltet (Standard): Diese Bestätigung auf Geräteebene entfällt. Eine separate Bestätigung der '
+     'PM2.5-Quelle des Raums kann die Voraussetzung weiterhin erfüllen; andernfalls bleibt die automatische '
+     'Filterung bis zur Quellenbestätigung gesperrt.\n'
+     '\n'
+     'Dies bestätigt eine Quelle für Partikelfilterung und ist keine Messung oder Kalibrierung. Ein '
+     'Partikelfilter wird dadurch nicht zur Abhilfe für CO₂, VOC oder andere Gase; die Bestätigung anderer '
+     'Geräte bleibt unverändert.'),
     "particle_cadr_m3h": (
         "Enter the purifier's rated clean-air delivery for particles at the relevant fan speed, in m³/h. HEM combines it with room volume for filtration estimates. Zero means unconfigured; CADR does not measure fresh-air ventilation or CO₂ removal.",
         "Δώσε την ονομαστική παροχή καθαρού αέρα για σωματίδια στη σχετική ταχύτητα, σε m³/h. Συνδυάζεται με τον όγκο δωματίου για εκτιμήσεις φίλτρανσης. Το μηδέν σημαίνει μη ρυθμισμένο· το CADR δεν μετρά αερισμό ή απομάκρυνση CO₂.",
         "Tragen Sie die angegebene Partikel-Reinluftleistung bei der betreffenden Lüfterstufe in m³/h ein. HEM nutzt sie mit dem Raumvolumen für Filterungsabschätzungen. Null bedeutet unkonfiguriert; CADR beschreibt weder Frischluft noch CO₂-Abfuhr.",
     ),
-    "pause_on_window_open": (
-        "Pause this device's automatic output when a configured window in its own room is open or its state cannot be verified. Automatic evaluation resumes after that room's windows close and the existing recovery delay completes.",
-        "Παύει την αυτόματη λειτουργία όταν επιλεγμένο παράθυρο του ίδιου δωματίου είναι ανοιχτό ή δεν επιβεβαιώνεται η κατάστασή του. Η αυτόματη αξιολόγηση συνεχίζεται όταν κλείσουν τα παράθυρα και ολοκληρωθεί η καθυστέρηση επαναφοράς.",
-        "Pausiert die automatische Ausgabe, wenn ein konfiguriertes Fenster im eigenen Raum offen oder nicht verifizierbar ist. Nach dem Schließen und der bestehenden Wiederanlaufzeit wird automatisch neu bewertet.",
-    ),
-    "announce_before_start": (
-        "Off by default. When useful airing can reduce this device's current demand, announce the room, reason, device name and its waiting time before starting. The countdown starts after accepted delivery. If the windows stay closed, normal demand-based operation resumes when this device's timeout expires. Disabled means no airing request or added wait for this device. Existing window protection, operating minimums and other device rules still apply.",
-        "Ανενεργό από προεπιλογή. Όταν ο αερισμός μπορεί να μειώσει την τρέχουσα ανάγκη, ανακοινώνει το δωμάτιο, την αιτία, το όνομα της συσκευής και τον χρόνο αναμονής πριν την εκκίνηση. Η αντίστροφη μέτρηση αρχίζει μετά την αποδοχή της ανακοίνωσης. Αν τα παράθυρα παραμείνουν κλειστά, η κανονική λειτουργία βάσει ζήτησης συνεχίζεται στη λήξη του χρόνου της συσκευής. Ανενεργό σημαίνει χωρίς αίτημα αερισμού ή πρόσθετη αναμονή γι’ αυτή τη συσκευή. Οι προστασίες παραθύρων και οι ελάχιστοι χρόνοι λειτουργίας εξακολουθούν να ισχύουν.",
-        "Standardmäßig aus. Wenn Lüften den aktuellen Bedarf dieses Geräts verringern kann, werden Raum, Grund, Gerätename und Wartezeit vor dem Start angesagt. Die Frist beginnt nach Annahme der Ansage. Bleiben die Fenster geschlossen, wird nach Ablauf der Gerätefrist bedarfsgerecht weitergeregelt. Deaktiviert gibt es für dieses Gerät keine Lüftungsaufforderung oder zusätzliche Wartezeit. Fensterschutz, Mindestlaufzeiten und andere Gerätevorgaben gelten weiter.",
-    ),
+    'pause_on_window_open': ("On (default): when a selected window in this device's own room is confirmed open, HEM requests a guarded "
+     "stop and prevents an automatic restart. It respects the device's minimum ON time and requires native OFF "
+     'feedback. Missing or unknown window evidence holds new starts; it is not treated as a confirmed '
+     'opening.\n'
+     '\n'
+     "After the room's windows close, automatic evaluation resumes once they have remained verified closed for "
+     'one minute and the other operating conditions permit it. Windows in another room do not trigger this '
+     "device's window policy.\n"
+     '\n'
+     "Off: remove this device's window-open pause and closure delay. Its normal demand, presence, sleep and "
+     'physical protections still apply. The separate opening-request option controls whether to ask for airing '
+     'before a start.',
+     'Ενεργό (προεπιλογή): όταν επιβεβαιωθεί ότι άνοιξε επιλεγμένο παράθυρο του ίδιου δωματίου, το HEM ζητά '
+     'ασφαλή διακοπή και αποτρέπει την αυτόματη επανεκκίνηση. Τηρεί τον ελάχιστο χρόνο ON της συσκευής και '
+     'απαιτεί πραγματική ένδειξη OFF. Ελλιπή ή άγνωστα δεδομένα παραθύρων κρατούν σε αναμονή νέες εκκινήσεις· '
+     'δεν θεωρούνται επιβεβαιωμένο άνοιγμα.\n'
+     '\n'
+     'Μετά το κλείσιμο των παραθύρων, η αυτόματη αξιολόγηση συνεχίζεται όταν παραμείνουν επιβεβαιωμένα κλειστά '
+     'για ένα λεπτό και το επιτρέψουν οι υπόλοιπες συνθήκες. Παράθυρα άλλου δωματίου δεν ενεργοποιούν αυτή την '
+     'προστασία.\n'
+     '\n'
+     'Ανενεργό: αφαιρεί την παύση λόγω παραθύρου και την αναμονή μετά το κλείσιμο για αυτή τη συσκευή. Η '
+     'ζήτηση, η παρουσία, ο ύπνος και οι φυσικές προστασίες εξακολουθούν να ισχύουν. Η ξεχωριστή επιλογή '
+     'αιτήματος ανοίγματος ελέγχει αν θα ζητηθεί αερισμός πριν από εκκίνηση.',
+     'Eingeschaltet (Standard): Wird ein ausgewähltes Fenster im eigenen Raum als offen bestätigt, fordert HEM '
+     'ein geschütztes Abschalten an und verhindert einen automatischen Neustart. Mindestlaufzeit und native '
+     'Aus-Rückmeldung bleiben erforderlich. Fehlende oder unbekannte Fensterdaten halten neue Starts zurück '
+     'und gelten nicht als bestätigte Öffnung.\n'
+     '\n'
+     'Nach dem Schließen wird automatisch neu bewertet, sobald alle betreffenden Fenster eine Minute '
+     'durchgehend als geschlossen bestätigt sind und die übrigen Betriebsbedingungen erfüllt sind. Fenster '
+     'anderer Räume lösen diese Gerätefunktion nicht aus.\n'
+     '\n'
+     'Ausgeschaltet: Fensterpause und Wiederanlaufverzögerung für dieses Gerät entfallen. Bedarf, Anwesenheit, '
+     'Schlafregeln und Geräteschutz bleiben wirksam. Die separate Lüftungsaufforderung bestimmt, ob vor einem '
+     'Start zum Öffnen aufgefordert wird.'),
+    'announce_before_start': ('On: before this device starts automatically, HEM may ask for useful airing when verified room and '
+     'outdoor conditions show that it can reduce the current need. The announcement names the room, reason, '
+     "device and this device's waiting time. Its countdown starts only after accepted delivery.\n"
+     '\n'
+     "If the windows remain closed, the added wait ends at this device's timeout and normal control continues "
+     "when demand and protections permit. If a window opens, the device's separate window-protection setting "
+     'determines its window hold.\n'
+     '\n'
+     'Off (default): this device adds no opening request or airing wait. When it is an eligible remedy for the '
+     'current cause, HEM also omits that covered cause from automatic opening announcements. A dehumidifier '
+     'can cover humidity or mold; it cannot remove an unrelated CO₂ reason. Another waiting device does not '
+     'recreate an opening request for the same covered cause.\n'
+     '\n'
+     "Applies only to this device's qualified automatic start. Turning this on does not authorize power, "
+     "guarantee immediate operation or change another device's preference.",
+     'Ενεργό: πριν από αυτόματη εκκίνηση, το HEM μπορεί να ζητήσει χρήσιμο αερισμό όταν επιβεβαιωμένα δεδομένα '
+     'δωματίου και εξωτερικού χώρου δείχνουν ότι μειώνει την τρέχουσα ανάγκη. Η ανακοίνωση αναφέρει δωμάτιο, '
+     'αιτία, συσκευή και τον χρόνο αναμονής της. Η αντίστροφη μέτρηση αρχίζει μόνο μετά την αποδοχή της '
+     'ανακοίνωσης.\n'
+     '\n'
+     'Αν τα παράθυρα μείνουν κλειστά, η πρόσθετη αναμονή λήγει στον χρόνο της συσκευής και ο κανονικός έλεγχος '
+     'συνεχίζεται όταν το επιτρέπουν η ζήτηση και οι προστασίες. Αν ανοίξει παράθυρο, η ξεχωριστή προστασία '
+     'παραθύρων της συσκευής καθορίζει την παύση της.\n'
+     '\n'
+     'Ανενεργό (προεπιλογή): η συσκευή δεν προσθέτει αίτημα ανοίγματος ή αναμονή αερισμού. Όταν αποτελεί '
+     'επιτρεπόμενη λύση για την τρέχουσα αιτία, το HEM αφαιρεί και αυτή την καλυμμένη αιτία από τις αυτόματες '
+     'ανακοινώσεις ανοίγματος. Ένας αφυγραντήρας μπορεί να καλύπτει υγρασία ή μούχλα, αλλά όχι μια ανεξάρτητη '
+     'ανάγκη λόγω CO₂. Άλλη συσκευή που περιμένει δεν επαναφέρει αίτημα για την ίδια καλυμμένη αιτία.\n'
+     '\n'
+     'Αφορά μόνο την κατάλληλη αυτόματη εκκίνηση αυτής της συσκευής. Δεν δίνει άδεια ισχύος, δεν εγγυάται '
+     'άμεση λειτουργία και δεν αλλάζει τις επιλογές άλλων συσκευών.',
+     'Eingeschaltet: Vor dem automatischen Start dieses Geräts kann HEM zum Lüften auffordern, wenn bestätigte '
+     'Raum- und Außenbedingungen eine Verringerung des aktuellen Bedarfs erwarten lassen. Genannt werden Raum, '
+     'Grund, Gerät und dessen Wartezeit. Die Frist beginnt erst nach angenommener Zustellung.\n'
+     '\n'
+     'Bleiben die Fenster geschlossen, endet die zusätzliche Wartezeit mit dem Geräte-Timeout; die normale '
+     'Regelung läuft weiter, sobald Bedarf und Schutzbedingungen es erlauben. Bei geöffnetem Fenster bestimmt '
+     'der separate Fensterschutz dieses Geräts die Pause.\n'
+     '\n'
+     'Ausgeschaltet (Standard): Dieses Gerät erzeugt keine Öffnungsaufforderung und keine Lüftungswartezeit. '
+     'Kann es die aktuelle Ursache zulässig beheben, entfernt HEM diese abgedeckte Ursache auch aus '
+     'automatischen Öffnungsansagen. Ein Entfeuchter kann Feuchtigkeit oder Schimmelbedarf abdecken, aber '
+     'keinen unabhängigen CO₂-Grund. Ein weiteres wartendes Gerät erzeugt für dieselbe abgedeckte Ursache '
+     'keine neue Aufforderung.\n'
+     '\n'
+     'Gilt nur für den zulässigen automatischen Start dieses Geräts. Die Option erteilt keine Schaltfreigabe, '
+     'garantiert keinen sofortigen Betrieb und ändert keine Einstellung anderer Geräte.'),
     "window_open_timeout_minutes": (
         "This device's waiting time after an accepted opening request, in minutes (0–30, default 5). Used only when its opening announcement is enabled. Zero adds no delay. Other devices have their own deadlines, and repeated announcements never restart this countdown. Turning the announcement off releases an existing wait; changing the time does not extend an active deadline.",
         "Χρόνος αναμονής αυτής της συσκευής μετά την αποδοχή αιτήματος ανοίγματος, σε λεπτά (0–30, προεπιλογή 5). Ισχύει μόνο όταν είναι ενεργή η ανακοίνωσή της. Το μηδέν δεν προσθέτει καθυστέρηση. Κάθε συσκευή έχει δική της προθεσμία και οι επαναλήψεις δεν επανεκκινούν τη μέτρηση. Η απενεργοποίηση της ανακοίνωσης λήγει την αναμονή· η αλλαγή χρόνου δεν παρατείνει ενεργή προθεσμία.",
         "Wartezeit dieses Geräts nach Annahme einer Aufforderung zum Fensteröffnen, in Minuten (0–30, Standard 5). Gilt nur bei aktivierter Geräteansage. Null fügt keine Verzögerung hinzu. Andere Geräte haben eigene Fristen; Wiederholungen starten die Frist nicht neu. Ausschalten der Ansage beendet eine laufende Wartezeit; eine Zeitänderung verlängert keine aktive Frist.",
     ),
-    "announce_device_errors": (
-        "Announce new faults reported by this physical device's existing Home Assistant error entities or attributes. The announcement includes the reported fault details and uses HEM's configured announcement delivery.",
-        "Ανακοινώνει νέα σφάλματα από τις υπάρχουσες οντότητες ή ιδιότητες σφαλμάτων της πραγματικής συσκευής. Περιλαμβάνει τις λεπτομέρειες του σφάλματος και χρησιμοποιεί τη ρυθμισμένη αποστολή ανακοινώσεων του HEM.",
-        "Meldet neue Fehler aus den bestehenden Fehlerentitäten oder Attributen des physischen Geräts. Die Meldung enthält die Fehlerdetails und nutzt die konfigurierte HEM-Ausgabe.",
-    ),
-    "native_full_output": (
-        "For authorized Automatic/PID ON/OFF control. When on, request the physical device's reported maximum temperature for heating or maximum humidity for humidifying, and its reported minimum temperature for cooling or minimum humidity for dehumidifying. HEM's room target still determines demand and operating time. When off, leave the native setpoint unchanged and continue controlling operation from HEM's target. Fan speeds follow the mode settings and room quiet rules.\n"
-        "For PID control, an unconfirmed full-output target receives at most three actual attempts while the device is available. If it still does not match, stop retrying that request and continue automatic ON/OFF control, keeping the reported target and diagnostic result visible. Power commands still require native feedback. Disabling this option also disables new timed-setpoint transitions; an already committed shutdown can finish safely.",
-        "Για εγκεκριμένο έλεγχο ON/OFF με Αυτόματα/PID. Όταν είναι ανοικτή, ζητά τη μέγιστη θερμοκρασία που δηλώνει η πραγματική συσκευή για θέρμανση ή τη μέγιστη υγρασία για ύγρανση, και την ελάχιστη θερμοκρασία για ψύξη ή την ελάχιστη υγρασία για αφύγρανση. Ο στόχος δωματίου του HEM εξακολουθεί να καθορίζει τη ζήτηση και τον χρόνο λειτουργίας. Όταν είναι κλειστή, αφήνει τον στόχο της συσκευής αμετάβλητο και συνεχίζει τον έλεγχο λειτουργίας με βάση τον στόχο του HEM. Οι ταχύτητες ανεμιστήρα ακολουθούν τις ρυθμίσεις λειτουργίας και τους κανόνες ησυχίας του δωματίου.\n"
-        "Στον έλεγχο PID, ένας μη επιβεβαιωμένος στόχος πλήρους απόδοσης δοκιμάζεται το πολύ τρεις φορές όταν η συσκευή είναι διαθέσιμη. Αν εξακολουθεί να διαφέρει, σταματούν οι επαναλήψεις του ίδιου αιτήματος και συνεχίζεται ο αυτόματος έλεγχος ON/OFF, με ορατό τον πραγματικό στόχο και το διαγνωστικό αποτέλεσμα. Οι εντολές ισχύος εξακολουθούν να απαιτούν επιβεβαίωση από τη συσκευή. Η απενεργοποίηση αυτής της επιλογής απενεργοποιεί και νέες μεταβάσεις χρονισμού στόχων· μια ήδη δεσμευμένη απενεργοποίηση μπορεί να ολοκληρωθεί με ασφάλεια.",
-        "Für freigegebene Ein/Aus-Regelung mit Automatik/PID. Eingeschaltet wird die vom Gerät gemeldete Höchsttemperatur beim Heizen bzw. höchste Luftfeuchtigkeit beim Befeuchten angefordert, beim Kühlen die Mindesttemperatur und beim Entfeuchten die niedrigste Luftfeuchtigkeit. HEMs Raumsollwert bestimmt weiterhin Bedarf und Laufzeit. Ausgeschaltet bleibt der native Sollwert unverändert; HEM regelt den Betrieb weiterhin nach seinem Sollwert. Lüfterstufen folgen den Moduseinstellungen und den Ruheeinstellungen des Raums.\n"
-        "Bei PID erhält ein unbestätigter Sollwert für volle Leistung höchstens drei tatsächliche Versuche, während das Gerät verfügbar ist. Bleibt die Rückmeldung abweichend, endet die Wiederholung dieses Auftrags und die automatische Ein/Aus-Regelung läuft weiter; gemeldeter Sollwert und Diagnose bleiben sichtbar. Schaltbefehle benötigen weiterhin die native Rückmeldung. Ausschalten dieser Option deaktiviert auch neue zeitgesteuerte Sollwertübergänge; eine bereits begonnene Abschaltung kann sicher abgeschlossen werden.",
-    ),
-    "timed_setpoint_sequence": (
-        "For authorized Automatic/PID ON/OFF heating and cooling. During the authorized ON period, HEM requests full output using the physical device's reported maximum temperature in Heat or minimum temperature in Cool; the room target still determines demand. The separate Full-output setpoint option must be enabled; this timing option controls only the transitions.\n"
-        "When on: wait 30 seconds after confirmed native ON before applying that setpoint. Before OFF, after minimum ON time and device protections permit a stop, send the opposite limit (minimum in Heat, maximum in Cool), then wait 30 seconds after sending it before requesting native OFF. The 30 seconds apply to these transitions; running time follows demand and operating limits. When off: omit these added waits and the opposite shutdown setpoint. Only native OFF feedback confirms that the device has stopped.",
-        "Για εγκεκριμένο έλεγχο ON/OFF θέρμανσης και ψύξης με Αυτόματα/PID. Κατά το εγκεκριμένο διάστημα ON, το HEM ζητά πλήρη απόδοση με τη μέγιστη θερμοκρασία που δηλώνει η πραγματική συσκευή στη Θέρμανση ή την ελάχιστη στην Ψύξη· ο στόχος δωματίου εξακολουθεί να καθορίζει τη ζήτηση. Πρέπει να είναι ανοικτή η ξεχωριστή επιλογή Στόχος πλήρους απόδοσης· η επιλογή χρονισμού ελέγχει μόνο τις μεταβάσεις.\n"
-        "Με την επιλογή ανοικτή: περιμένει 30 δευτερόλεπτα μετά την επιβεβαιωμένη ενεργοποίηση της συσκευής πριν εφαρμόσει αυτόν τον στόχο. Πριν από το OFF, αφού το επιτρέψουν ο ελάχιστος χρόνος ON και οι προστασίες, στέλνει το αντίθετο όριο (ελάχιστο στη Θέρμανση, μέγιστο στην Ψύξη) και περιμένει 30 δευτερόλεπτα από την αποστολή πριν ζητήσει OFF. Τα 30 δευτερόλεπτα αφορούν αυτές τις μεταβάσεις· η διάρκεια λειτουργίας ακολουθεί τη ζήτηση και τα όρια λειτουργίας. Με την επιλογή κλειστή, παραλείπει αυτές τις πρόσθετες αναμονές και τον αντίθετο στόχο κλεισίματος. Μόνο η πραγματική ένδειξη OFF επιβεβαιώνει τη διακοπή.",
-        "Für freigegebene Ein/Aus-Regelung von Heizen und Kühlen mit Automatik/PID. Während der freigegebenen Einschaltphase fordert HEM volle Leistung an: beim Heizen mit der vom Gerät gemeldeten Höchsttemperatur, beim Kühlen mit dessen Mindesttemperatur. Der Raumsollwert bestimmt weiterhin den Bedarf. Die separate Option Sollwert für volle Leistung muss eingeschaltet sein; diese Zeitsteuerung betrifft nur die Übergänge.\n"
-        "Eingeschaltet: Nach bestätigtem nativem Ein 30 Sekunden warten, bevor dieser Sollwert gesetzt wird. Vor Aus, sobald Mindestlaufzeit und Geräteschutz einen Stopp erlauben, das entgegengesetzte Limit senden (Minimum beim Heizen, Maximum beim Kühlen); 30 Sekunden nach dem Senden natives Aus anfordern. Die 30 Sekunden gelten für diese Übergänge; die Laufzeit folgt Bedarf und Betriebsgrenzen. Ausgeschaltet entfallen diese zusätzlichen Wartezeiten und der entgegengesetzte Abschalt-Sollwert. Erst die native Aus-Rückmeldung bestätigt den Stillstand.",
-    ),
+    'announce_device_errors': ('On (default): allow HEM to announce new faults and eligible command-nonresponse notices for this '
+     "physical device through its configured announcement channels. Fault details come from the device's "
+     'existing Home Assistant error entities or attributes; command notices describe actual unconfirmed '
+     'requests.\n'
+     '\n'
+     'Off: silence these announcements for this device. Its reported errors, actual state and command '
+     'diagnostics remain visible. Other devices keep their own announcement preferences.\n'
+     '\n'
+     'This is a notification preference. It does not change the control method, operate the device, clear a '
+     'fault or acknowledge a pending command. Delivery also requires the relevant HEM announcement channel to '
+     'be enabled.',
+     'Ενεργό (προεπιλογή): επιτρέπει στο HEM να ανακοινώνει νέα σφάλματα και τις προβλεπόμενες ειδοποιήσεις μη '
+     'απόκρισης εντολών για αυτή την πραγματική συσκευή, από τα ρυθμισμένα κανάλια ανακοινώσεων. Οι '
+     'λεπτομέρειες σφάλματος προέρχονται από τις υπάρχουσες οντότητες ή ιδιότητες της συσκευής στο Home '
+     'Assistant· οι ειδοποιήσεις εντολών περιγράφουν πραγματικά αιτήματα που δεν επιβεβαιώθηκαν.\n'
+     '\n'
+     'Ανενεργό: σταματά αυτές τις ανακοινώσεις μόνο για αυτή τη συσκευή. Τα δηλωμένα σφάλματα, η πραγματική '
+     'κατάσταση και τα διαγνωστικά εντολών παραμένουν ορατά. Οι άλλες συσκευές διατηρούν τη δική τους '
+     'επιλογή.\n'
+     '\n'
+     'Είναι προτίμηση ειδοποιήσεων. Δεν αλλάζει τη μέθοδο ελέγχου, δεν ενεργοποιεί τη συσκευή, δεν διαγράφει '
+     'σφάλματα και δεν επιβεβαιώνει εκκρεμείς εντολές. Η αποστολή απαιτεί επίσης ενεργό το αντίστοιχο κανάλι '
+     'ανακοινώσεων του HEM.',
+     'Eingeschaltet (Standard): HEM darf neue Fehler und vorgesehene Hinweise auf unbestätigte Befehle dieses '
+     'physischen Geräts über die konfigurierten Ausgabekanäle melden. Fehlerdetails stammen aus den '
+     'vorhandenen Home-Assistant-Fehlerentitäten oder Attributen des Geräts; Befehlshinweise beschreiben '
+     'tatsächlich unbestätigte Anforderungen.\n'
+     '\n'
+     'Ausgeschaltet: diese Meldungen für dieses Gerät unterdrücken. Gemeldete Fehler, tatsächlicher '
+     'Gerätezustand und Befehlsdiagnosen bleiben sichtbar. Andere Geräte behalten ihre eigenen '
+     'Meldeeinstellungen.\n'
+     '\n'
+     'Diese Option betrifft Benachrichtigungen. Sie ändert weder die Regelungsart noch den Gerätezustand, '
+     'löscht keine Fehler und bestätigt keine ausstehenden Befehle. Für die Zustellung muss auch der '
+     'entsprechende HEM-Ausgabekanal aktiviert sein.'),
+    'native_full_output': ('On (default): during a confirmed ON period, HEM requests the native target that asks for maximum output '
+     "in the active supported mode. This option is for this device's authorized Automatic/PID ON/OFF control. "
+     'HEM uses only limits actually reported by the device.\n'
+     '\n'
+     "Off: leave the device's native target unchanged. HEM's room target still determines demand and ON/OFF "
+     'timing. This preference does not change the room target or force continuous running. Available fan-speed '
+     'controls continue to follow their mode settings and quiet limits.\n'
+     '\n'
+     'With PID, the same full-demand target gets at most three total dispatch attempts, including the first, '
+     'while the device is available. Each attempt has one minute for feedback. If the third remains '
+     'unconfirmed after that interval, HEM stops retrying that target and continues guarded ON/OFF control. '
+     'The attempt count survives ordinary cycles and restarts; offline checks do not spend attempts.\n'
+     '\n'
+     'Requested and actually reported targets remain separately visible, with the unconfirmed result when '
+     'applicable. Native ON/OFF commands still require real device feedback and obey operating limits. '
+     'Automatic retains its existing retry policy; the three-attempt limit is for PID.',
+     'Ενεργό (προεπιλογή): κατά το επιβεβαιωμένο διάστημα ON, το HEM ζητά τον πραγματικό στόχο που αντιστοιχεί '
+     'στη μέγιστη απόδοση της ενεργής υποστηριζόμενης λειτουργίας. Η επιλογή αφορά τον εγκεκριμένο έλεγχο '
+     'ON/OFF αυτής της συσκευής με Αυτόματα/PID. Χρησιμοποιούνται μόνο όρια που δηλώνει η ίδια η συσκευή.\n'
+     '\n'
+     'Ανενεργό: αφήνει αμετάβλητο τον στόχο της συσκευής. Ο στόχος δωματίου του HEM συνεχίζει να καθορίζει τη '
+     'ζήτηση και τους χρόνους ON/OFF. Η επιλογή δεν αλλάζει τον στόχο δωματίου ούτε επιβάλλει συνεχή '
+     'λειτουργία. Οι διαθέσιμες ταχύτητες ανεμιστήρα ακολουθούν τις ρυθμίσεις λειτουργίας και τα όρια ησυχίας '
+     'τους.\n'
+     '\n'
+     'Στο PID, ο ίδιος στόχος μέγιστης απόδοσης έχει έως τρεις συνολικές απόπειρες αποστολής, μαζί με την '
+     'πρώτη, όσο η συσκευή είναι διαθέσιμη. Κάθε απόπειρα έχει ένα λεπτό για επιβεβαίωση. Αν και η τρίτη '
+     'παραμείνει ανεπιβεβαίωτη μετά από αυτό το διάστημα, το HEM σταματά τις επαναλήψεις του ίδιου στόχου και '
+     'συνεχίζει τον προστατευμένο έλεγχο ON/OFF. Το πλήθος διατηρείται στους κανονικούς κύκλους και στις '
+     'επανεκκινήσεις· οι έλεγχοι μη διαθεσιμότητας δεν καταναλώνουν απόπειρες.\n'
+     '\n'
+     'Ο ζητούμενος και ο πραγματικά δηλωμένος στόχος εμφανίζονται χωριστά, μαζί με το ανεπιβεβαίωτο αποτέλεσμα '
+     'όπου ισχύει. Οι εντολές ON/OFF απαιτούν πραγματική ανάδραση και τηρούν τα όρια λειτουργίας. Η μέθοδος '
+     'Αυτόματα διατηρεί την υπάρχουσα πολιτική επανάληψης· το όριο τριών αποπειρών αφορά το PID.',
+     'Eingeschaltet (Standard): Während einer bestätigten Einschaltphase fordert HEM den nativen Sollwert für '
+     'maximale Leistung in der aktiven unterstützten Betriebsart an. Die Option gilt für die freigegebene '
+     'Ein/Aus-Regelung dieses Geräts mit Automatik/PID. Verwendet werden ausschließlich vom Gerät tatsächlich '
+     'gemeldete Grenzen.\n'
+     '\n'
+     'Ausgeschaltet: Den nativen Gerätesollwert unverändert lassen. HEMs Raumsollwert bestimmt weiterhin '
+     'Bedarf und Ein/Aus-Zeiten. Die Option ändert weder den Raumsollwert noch erzwingt sie Dauerbetrieb. '
+     'Verfügbare Lüfterstufen folgen weiterhin ihren Moduseinstellungen und Ruhegrenzen.\n'
+     '\n'
+     'Bei PID gibt es für denselben Sollwert für volle Leistung insgesamt höchstens drei Sendeversuche '
+     'einschließlich des ersten, solange das Gerät verfügbar ist. Nach jedem Versuch bleibt eine Minute für '
+     'die Rückmeldung. Bleibt auch der dritte danach unbestätigt, endet die Wiederholung dieses Sollwerts und '
+     'die geschützte Ein/Aus-Regelung läuft weiter. Der Zähler bleibt über normale Betriebszyklen und '
+     'Neustarts erhalten; Offline-Prüfungen verbrauchen keine Versuche.\n'
+     '\n'
+     'Angeforderter und tatsächlich gemeldeter Sollwert bleiben getrennt sichtbar, gegebenenfalls mit dem '
+     'unbestätigten Ergebnis. Ein/Aus-Befehle benötigen weiterhin echte Geräterückmeldung und beachten '
+     'Betriebsgrenzen. Automatik behält ihre bisherige Wiederholungsregel; die Begrenzung auf drei Versuche '
+     'gilt für PID.'),
     "kp": (
         "PID proportional response: determines how strongly output demand reacts to the current difference from the target. Higher values produce a stronger immediate response.",
         "Αναλογική απόκριση PID: καθορίζει πόσο έντονα αντιδρά η ζήτηση στην τρέχουσα απόκλιση από τον στόχο. Μεγαλύτερη τιμή δίνει εντονότερη άμεση απόκριση.",
@@ -157,19 +439,19 @@ HELP = {
         "Zeitfenster zur Umsetzung des PID-Bedarfs in Ein-/Aus-Zeit. Bei 50% wird ungefähr die Hälfte des Fensters angefordert; Mindestzeiten und Zyklusverlängerung bei geringer Last bleiben wirksam.",
     ),
     "min_on_seconds": (
-        "Minimum seconds the device must remain operating after confirmed ON before HEM may stop it. Set 0 to disable this forced hold for future operating cycles, for example on a radiator valve that needs no minimum run time. An ON minimum already recorded for the current cycle completes first. HEM still uses observed device transitions and waits for command confirmation; this does not change the external power-switch timing. Choose any required compressor interval from the device manufacturer's guidance.",
-        "Ελάχιστα δευτερόλεπτα που πρέπει να λειτουργεί η συσκευή μετά την επιβεβαιωμένη ενεργοποίηση, πριν το HEM ζητήσει διακοπή. Όρισε 0 για να αφαιρέσεις αυτή την υποχρεωτική διάρκεια στους επόμενους κύκλους, για παράδειγμα σε βαλβίδα καλοριφέρ χωρίς απαίτηση ελάχιστου χρόνου. Ο ελάχιστος χρόνος που έχει ήδη καταγραφεί για τον τρέχοντα κύκλο ολοκληρώνεται πρώτα. Το HEM εξακολουθεί να χρησιμοποιεί τις παρατηρημένες αλλαγές κατάστασης και να περιμένει επιβεβαίωση εντολών· ο χρονισμός του εξωτερικού διακόπτη τροφοδοσίας δεν αλλάζει. Για συσκευές με συμπιεστή επίλεξε το απαιτούμενο διάστημα σύμφωνα με τον κατασκευαστή.",
-        "Mindestlaufzeit des Geräts in Sekunden nach bestätigtem Ein, bevor HEM es stoppen darf. Mit 0 deaktivierst du diese erzwungene Laufzeit für künftige Betriebszyklen, etwa bei einem Heizkörperventil ohne erforderliche Mindestlaufzeit. Eine bereits für den aktuellen Zyklus gespeicherte Mindestlaufzeit wird zuerst abgeschlossen. HEM verwendet weiterhin beobachtete Zustandswechsel und wartet auf die Befehlsbestätigung; die Zeitvorgaben des externen Versorgungsschalters ändern sich nicht. Wähle ein erforderliches Kompressorintervall nach den Herstellerangaben.",
+        "Minimum time in minutes the device must remain operating after confirmed ON before HEM may stop it. Fractional minutes are allowed, for example 0.5 for half a minute. Set 0 to disable this forced hold for future operating cycles, for example on a radiator valve that needs no minimum run time. An ON minimum already recorded for the current cycle completes first. HEM still uses observed device transitions and waits for command confirmation; this does not change the external power-switch timing. Choose any required compressor interval from the device manufacturer's guidance.",
+        "Ελάχιστος χρόνος σε λεπτά που πρέπει να λειτουργεί η συσκευή μετά την επιβεβαιωμένη ενεργοποίηση, πριν το HEM ζητήσει διακοπή. Επιτρέπονται δεκαδικά λεπτά, για παράδειγμα 0,5 για μισό λεπτό. Όρισε 0 για να αφαιρέσεις αυτή την υποχρεωτική διάρκεια στους επόμενους κύκλους, για παράδειγμα σε βαλβίδα καλοριφέρ χωρίς απαίτηση ελάχιστου χρόνου. Ο ελάχιστος χρόνος που έχει ήδη καταγραφεί για τον τρέχοντα κύκλο ολοκληρώνεται πρώτα. Το HEM εξακολουθεί να χρησιμοποιεί τις παρατηρημένες αλλαγές κατάστασης και να περιμένει επιβεβαίωση εντολών· ο χρονισμός του εξωτερικού διακόπτη τροφοδοσίας δεν αλλάζει. Για συσκευές με συμπιεστή επίλεξε το απαιτούμενο διάστημα σύμφωνα με τον κατασκευαστή.",
+        "Mindestlaufzeit des Geräts in Minuten nach bestätigtem Ein, bevor HEM es stoppen darf. Dezimalwerte sind erlaubt, zum Beispiel 0,5 für eine halbe Minute. Mit 0 deaktivierst du diese erzwungene Laufzeit für künftige Betriebszyklen, etwa bei einem Heizkörperventil ohne erforderliche Mindestlaufzeit. Eine bereits für den aktuellen Zyklus gespeicherte Mindestlaufzeit wird zuerst abgeschlossen. HEM verwendet weiterhin beobachtete Zustandswechsel und wartet auf die Befehlsbestätigung; die Zeitvorgaben des externen Versorgungsschalters ändern sich nicht. Wähle ein erforderliches Kompressorintervall nach den Herstellerangaben.",
     ),
     "min_off_seconds": (
-        "Minimum seconds the device must remain stopped after confirmed OFF before HEM may start it again. 0 disables this forced operating hold, which can suit a radiator valve that needs no minimum rest time. HEM keeps the observed OFF time and still waits for command confirmation; this does not change the external power-switch timing. Choose any required compressor restart interval from the device manufacturer's guidance.",
-        "Ελάχιστα δευτερόλεπτα που πρέπει να παραμείνει εκτός λειτουργίας η συσκευή μετά την επιβεβαιωμένη διακοπή, πριν το HEM την εκκινήσει ξανά. Το 0 απενεργοποιεί αυτή την υποχρεωτική αναμονή και μπορεί να ταιριάζει σε βαλβίδα καλοριφέρ χωρίς απαίτηση ελάχιστου χρόνου διακοπής. Το HEM διατηρεί τον παρατηρημένο χρόνο διακοπής και εξακολουθεί να περιμένει επιβεβαίωση εντολών· ο χρονισμός του εξωτερικού διακόπτη τροφοδοσίας δεν αλλάζει. Για συμπιεστή επίλεξε το διάστημα επανεκκίνησης που ορίζει ο κατασκευαστής.",
-        "Mindeststillstandszeit des Geräts in Sekunden nach bestätigtem Aus, bevor HEM es erneut starten darf. 0 deaktiviert diese erzwungene Wartezeit und kann für ein Heizkörperventil ohne erforderliche Ruhezeit passen. HEM behält den beobachteten Ausschaltzeitpunkt bei und wartet weiterhin auf die Befehlsbestätigung; die Zeitvorgaben des externen Versorgungsschalters ändern sich nicht. Wähle ein erforderliches Kompressor-Wiederanlaufintervall nach den Herstellerangaben.",
+        "Minimum time in minutes the device must remain stopped after confirmed OFF before HEM may start it again. Fractional minutes are allowed, for example 0.5 for half a minute. 0 disables this forced operating hold, which can suit a radiator valve that needs no minimum rest time. HEM keeps the observed OFF time and still waits for command confirmation; this does not change the external power-switch timing. Choose any required compressor restart interval from the device manufacturer's guidance.",
+        "Ελάχιστος χρόνος σε λεπτά που πρέπει να παραμείνει εκτός λειτουργίας η συσκευή μετά την επιβεβαιωμένη διακοπή, πριν το HEM την εκκινήσει ξανά. Επιτρέπονται δεκαδικά λεπτά, για παράδειγμα 0,5 για μισό λεπτό. Το 0 απενεργοποιεί αυτή την υποχρεωτική αναμονή και μπορεί να ταιριάζει σε βαλβίδα καλοριφέρ χωρίς απαίτηση ελάχιστου χρόνου διακοπής. Το HEM διατηρεί τον παρατηρημένο χρόνο διακοπής και εξακολουθεί να περιμένει επιβεβαίωση εντολών· ο χρονισμός του εξωτερικού διακόπτη τροφοδοσίας δεν αλλάζει. Για συμπιεστή επίλεξε το διάστημα επανεκκίνησης που ορίζει ο κατασκευαστής.",
+        "Mindeststillstandszeit des Geräts in Minuten nach bestätigtem Aus, bevor HEM es erneut starten darf. Dezimalwerte sind erlaubt, zum Beispiel 0,5 für eine halbe Minute. 0 deaktiviert diese erzwungene Wartezeit und kann für ein Heizkörperventil ohne erforderliche Ruhezeit passen. HEM behält den beobachteten Ausschaltzeitpunkt bei und wartet weiterhin auf die Befehlsbestätigung; die Zeitvorgaben des externen Versorgungsschalters ändern sich nicht. Wähle ein erforderliches Kompressor-Wiederanlaufintervall nach den Herstellerangaben.",
     ),
     "max_on_seconds": (
-        "Maximum continuous running period for an output started under HEM's supervision. Reaching it requests a stop through the normal verified shutdown sequence; device feedback, minimum runtime and defrost protection can delay completion.",
-        "Μέγιστη συνεχής διάρκεια εξόδου που ξεκίνησε υπό τον έλεγχο HEM. Στο όριο ζητείται διακοπή μέσω της κανονικής επιβεβαιωμένης διαδικασίας· η ανάδραση, ο ελάχιστος χρόνος και η απόψυξη μπορούν να καθυστερήσουν την ολοκλήρωση.",
-        "Maximale durchgehende Laufzeit eines unter HEM gestarteten Ausgangs. Danach wird ein Stopp über die normale bestätigte Abschaltfolge angefordert; Rückmeldung, Mindestlaufzeit und Abtauschutz können den Abschluss verzögern.",
+        "Maximum continuous running period in minutes for an output started under HEM's supervision. It must exceed the minimum ON time. Reaching it requests a stop through the normal verified shutdown sequence; device feedback, minimum runtime and defrost protection can delay completion. This limits the device's native operation, not the external supply-switch cooldown.",
+        "Μέγιστη συνεχής διάρκεια σε λεπτά για έξοδο που ξεκίνησε υπό τον έλεγχο HEM. Πρέπει να υπερβαίνει τον ελάχιστο χρόνο λειτουργίας. Στο όριο ζητείται διακοπή μέσω της κανονικής επιβεβαιωμένης διαδικασίας· η ανάδραση, ο ελάχιστος χρόνος και η απόψυξη μπορούν να καθυστερήσουν την ολοκλήρωση. Αφορά την πραγματική λειτουργία της συσκευής, όχι την αναμονή απενεργοποίησης του εξωτερικού διακόπτη τροφοδοσίας.",
+        "Maximale durchgehende Laufzeit in Minuten eines unter HEM gestarteten Ausgangs. Sie muss die Mindestlaufzeit überschreiten. Am Grenzwert wird ein Stopp über die normale bestätigte Abschaltfolge angefordert; Rückmeldung, Mindestlaufzeit und Abtauschutz können den Abschluss verzögern. Begrenzt wird der native Gerätebetrieb, nicht die Nachlaufzeit des externen Versorgungsschalters.",
     ),
     "power_switch_cooldown_seconds": (
         "Continuous confirmed idle time required before HEM turns off this device's selected supply switch. Activity or uncertain device feedback prevents the supply from being switched off.",
@@ -273,8 +555,55 @@ for _kind, _count in (("stage", 4), ("speed", 3), ("output", 3)):
         )
 
 
-def equipment_configuration_help(key: str, locale: str = "en") -> str:
-    """Return one setting's purpose with a deterministic language fallback."""
+_NATIVE_MODE_TARGET_HELP = {
+    "heat": (
+        "{mode}: request the highest temperature actually reported as supported by this device.",
+        "{mode}: ζητά τη μέγιστη θερμοκρασία που δηλώνει ότι υποστηρίζει η συσκευή.",
+        "{mode}: die höchste vom Gerät tatsächlich als unterstützt gemeldete Temperatur anfordern.",
+    ),
+    "cool": (
+        "{mode}: request the lowest temperature actually reported as supported by this device.",
+        "{mode}: ζητά την ελάχιστη θερμοκρασία που δηλώνει ότι υποστηρίζει η συσκευή.",
+        "{mode}: die niedrigste vom Gerät tatsächlich als unterstützt gemeldete Temperatur anfordern.",
+    ),
+    "dry": (
+        "{mode}: request the lowest relative-humidity target actually reported as supported by this device.",
+        "{mode}: ζητά τον ελάχιστο στόχο σχετικής υγρασίας που δηλώνει ότι υποστηρίζει η συσκευή.",
+        "{mode}: den niedrigsten vom Gerät tatsächlich als unterstützt gemeldeten Sollwert der relativen Luftfeuchtigkeit anfordern.",
+    ),
+    "humidify": (
+        "{mode}: request the highest relative-humidity target actually reported as supported by this device.",
+        "{mode}: ζητά τον μέγιστο στόχο σχετικής υγρασίας που δηλώνει ότι υποστηρίζει η συσκευή.",
+        "{mode}: den höchsten vom Gerät tatsächlich als unterstützt gemeldeten Sollwert der relativen Luftfeuchtigkeit anfordern.",
+    ),
+}
+
+
+def equipment_configuration_help(key: str, locale: str = "en", *, modes=None) -> str:
+    """Describe one setting, using only supplied device modes when applicable."""
     language = str(locale or "en").replace("_", "-").casefold().split("-")[0]
     index = {"el": 1, "de": 2}.get(language, 0)
-    return HELP.get(key, HELP["climate"])[index]
+    description = HELP.get(key, HELP["climate"])[index]
+    if key != "native_full_output" or modes is None:
+        return description
+    if __package__:
+        from .equipment_name_catalog import _native_target_modes
+        from .operating_mode_catalog import operating_mode_label
+    else:
+        # Standalone catalog tests have no package or Home Assistant imports.
+        from pathlib import Path
+        from runpy import run_path
+        catalog = run_path(str(Path(__file__).with_name("equipment_name_catalog.py")))
+        _native_target_modes = catalog["_native_target_modes"]
+        operating_mode_label = catalog["operating_mode_label"]
+    applicable = _native_target_modes(modes)
+    if not applicable:
+        return (
+            "This device currently has no verified operating mode that supports this optional native target.",
+            "Η συσκευή δεν έχει αυτή τη στιγμή επιβεβαιωμένη λειτουργία που να υποστηρίζει αυτόν τον προαιρετικό στόχο.",
+            "Für dieses Gerät ist derzeit keine Betriebsart bestätigt, die diesen optionalen nativen Sollwert unterstützt.",
+        )[index]
+    paragraphs = description.split("\n\n")
+    paragraphs[1:1] = [_NATIVE_MODE_TARGET_HELP[mode][index].format(
+        mode=operating_mode_label(mode, locale)) for mode in applicable]
+    return "\n\n".join(paragraphs)

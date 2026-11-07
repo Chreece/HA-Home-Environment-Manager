@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "চালনা · {channel}যন্ত্র চালু থাকার ন্যূনতম সময় (s)",
+        "name": "চালনা · {channel}যন্ত্র চালু থাকার ন্যূনতম সময় (মিনিট)",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "চালনা · {channel}যন্ত্র বন্ধ থাকার ন্যূনতম সময় (s)",
+        "name": "চালনা · {channel}যন্ত্র বন্ধ থাকার ন্যূনতম সময় (মিনিট)",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "শক্তি · {channel}max ON (s)",
+        "name": "শক্তি · {channel}max ON (মিনিট)",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "ঘোষণা · ডিভাইসের ত্রুটির ঘোষণা · {channel}",
+        "name": "ঘোষণা · {channel}ডিভাইসের ত্রুটি ঘোষণা করুন",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "ঘুম · {channel}সবাই যখন ঘুমাচ্ছেন",
+        "name": "ঘুম · {channel}সবাই ঘুমালে ডিভাইস বন্ধ রাখুন",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "নিয়ন্ত্রণ · {channel}পূর্ণ ক্ষমতার লক্ষ্য মান",
+        "name": "নিয়ন্ত্রণ · {channel}মোড অনুযায়ী সর্বোচ্চ লক্ষ্য",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"

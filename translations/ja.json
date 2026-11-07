@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "動作 · {channel}機器の最小運転時間 (s)",
+        "name": "動作 · {channel}機器の最小運転時間 (分)",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "動作 · {channel}機器の最小停止時間 (s)",
+        "name": "動作 · {channel}機器の最小停止時間 (分)",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "電力 · {channel}max ON (s)",
+        "name": "電力 · {channel}max ON (分)",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "通知 · デバイスのエラーを通知 · {channel}",
+        "name": "通知 · {channel}デバイスのエラーを通知",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "睡眠 · {channel}全員が睡眠中のとき",
+        "name": "睡眠 · {channel}全員が眠っている間はデバイスを停止",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "制御 · {channel}最大出力の設定値",
+        "name": "制御 · {channel}運転モード別の最大目標値",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"

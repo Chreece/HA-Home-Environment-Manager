@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Működés · {channel}Az eszköz minimális működési ideje (s)",
+        "name": "Működés · {channel}Az eszköz minimális működési ideje (perc)",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Működés · {channel}Az eszköz minimális kikapcsolt ideje (s)",
+        "name": "Működés · {channel}Az eszköz minimális kikapcsolt ideje (perc)",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Teljesítmény · {channel}max ON (s)",
+        "name": "Teljesítmény · {channel}max ON (perc)",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Értesítések · Eszközhibák bejelentése · {channel}",
+        "name": "Értesítések · {channel}Eszközhibák bejelentése",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Alvás · {channel}Amikor mindenki alszik",
+        "name": "Alvás · {channel}Az eszköz maradjon kikapcsolva, amikor mindenki alszik",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Vezérlés · {channel}Teljes teljesítmény alapjele",
+        "name": "Vezérlés · {channel}Maximális célérték üzemmódonként",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"

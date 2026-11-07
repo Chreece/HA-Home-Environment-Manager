@@ -344,11 +344,9 @@ class AutomaticTargetRecoveryTests(unittest.IsolatedAsyncioTestCase):
         await runtime.evaluate(deadline - runtime.now - .001)
         self.assertEqual(runtime.calls, [])
         await runtime.evaluate(.001)
-        self.assertEqual(runtime.calls[-1]["data"], {"temperature": runtime.original_target})
-        self.assertEqual(len(runtime.calls), 1)
-        await runtime.evaluate(30)
         self.assertEqual(runtime.calls[-1]["data"], {"hvac_mode": "off"})
-        self.assertEqual(len(runtime.calls), 2)
+        self.assertEqual(len(runtime.calls), 1)
+        self.assertNotIn("native_setpoint_stop", runtime.record)
         self.assertIn("unconfirmed_native_target", runtime.record,
                       "OFF dispatch cannot acknowledge the old target or physical OFF")
         self.assertEqual(runtime.record["unconfirmed_native_target"], original)

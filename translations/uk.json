@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Робота · {channel}Мінімальний час роботи пристрою (s)",
+        "name": "Робота · {channel}Мінімальний час роботи пристрою (хв)",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Робота · {channel}Мінімальний час простою пристрою (s)",
+        "name": "Робота · {channel}Мінімальний час простою пристрою (хв)",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Потужність · {channel}max ON (s)",
+        "name": "Потужність · {channel}max ON (хв)",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Оголошення · Сповіщати про помилки пристрою · {channel}",
+        "name": "Оголошення · {channel}Сповіщати про помилки пристрою",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Сон · {channel}Коли всі сплять",
+        "name": "Сон · {channel}Тримати пристрій вимкненим, коли всі сплять",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Керування · {channel}Задане значення повної потужності",
+        "name": "Керування · {channel}Максимальне задане значення за режимом",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"

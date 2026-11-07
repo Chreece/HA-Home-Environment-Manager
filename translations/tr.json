@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Çalışma · {channel}Cihazın asgari çalışma süresi (s)",
+        "name": "Çalışma · {channel}Cihazın asgari çalışma süresi (dk)",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Çalışma · {channel}Cihazın asgari kapalı kalma süresi (s)",
+        "name": "Çalışma · {channel}Cihazın asgari kapalı kalma süresi (dk)",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Güç · {channel}max ON (s)",
+        "name": "Güç · {channel}max ON (dk)",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Duyurular · Cihaz hatalarını duyur · {channel}",
+        "name": "Duyurular · {channel}Cihaz hatalarını duyur",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Uyku · {channel}Herkes uyurken",
+        "name": "Uyku · {channel}Herkes uyurken cihazı kapalı tut",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Kontrol · {channel}Tam güç ayar noktası",
+        "name": "Kontrol · {channel}Moda göre en yüksek hedef",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"

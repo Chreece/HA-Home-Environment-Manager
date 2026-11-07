@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "இயக்கம் · {channel}சாதனம் இயங்க வேண்டிய குறைந்தபட்ச நேரம் (s)",
+        "name": "இயக்கம் · {channel}சாதனம் இயங்க வேண்டிய குறைந்தபட்ச நேரம் (நிமிடம்)",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "இயக்கம் · {channel}சாதனம் அணைந்திருக்க வேண்டிய குறைந்தபட்ச நேரம் (s)",
+        "name": "இயக்கம் · {channel}சாதனம் அணைந்திருக்க வேண்டிய குறைந்தபட்ச நேரம் (நிமிடம்)",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "சக்தி · {channel}max ON (s)",
+        "name": "சக்தி · {channel}max ON (நிமிடம்)",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "அறிவிப்புகள் · சாதனப் பிழைகளை அறிவி · {channel}",
+        "name": "அறிவிப்புகள் · {channel}சாதனப் பிழைகளை அறிவி",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "உறக்கம் · {channel}அனைவரும் உறங்கும்போது",
+        "name": "உறக்கம் · {channel}அனைவரும் உறங்கும்போது சாதனத்தை அணைத்தே வைத்திரு",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "கட்டுப்பாடு · {channel}முழுத் திறனுக்கான இலக்கு மதிப்பு",
+        "name": "கட்டுப்பாடு · {channel}பயன்முறைக்கேற்ற அதிகபட்ச இலக்கு",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"

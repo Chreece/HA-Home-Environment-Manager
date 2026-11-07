@@ -16,7 +16,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b8](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b8)
+**Current release:** [v0.6.1b9](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b9)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
@@ -271,6 +271,14 @@ that exact option. Window protection, device-error announcements, opening
 requests and supported optional behaviors share this row. Mode methods and
 their parameters stay inside their individual mode panels.
 
+The help explains the effect of both On and Off and which conditions apply to
+that device. **Announce device errors** controls error delivery; fault detection
+and device protection remain active when announcements are disabled.
+**Maximum target by mode** lists only the device's supported native target
+modes, such as **(Heating, Cooling)** or **(Dehumidifying)**, using translated
+mode names. **Keep device off when all asleep** explicitly pauses an opted-in
+automatic device while the household sleep condition is confirmed.
+
 ## Enable device control
 
 1. Select the appliance in the room's **Devices** group and save.
@@ -361,7 +369,7 @@ followed by fresh demand, feedback and operating-protection checks; it is not
 a promise that the physical device will start at that instant.
 
 For a supported appliance with Automatic/PID permission to control native
-ON/OFF operation, its **Full-output setpoint** option determines whether HEM
+ON/OFF operation, its **Maximum target by mode** option determines whether HEM
 writes a native target during the ON period. Enabled by default, it requests
 the appliance's reported maximum during heating or humidifying and its
 reported minimum during cooling or drying. This keeps the appliance's internal
@@ -377,7 +385,7 @@ mode control.
 Appliances advertising fan modes such as **low**, **medium** and **high** also
 have staged fan control. HEM selects from their available stages and applies
 the active occupied/sleep quiet limit to the final speed command. A pending
-optional full-output setpoint does not prevent a required quiet fan reduction.
+optional native target does not prevent a required quiet fan reduction.
 Fan-stage control and compressor ON/OFF timing remain separate; advertised fan
 speeds alone do not establish proportional compressor control.
 
@@ -410,15 +418,27 @@ is still away, using their existing permission for native ON/OFF control. It
 preserves the actual presence readings and the stored choices.
 See [Prepare for arrival](#prepare-for-arrival) for its scope and timeout.
 
-### Minimum device ON and OFF times
+### Device operating times
 
-Each controller has **Operation · Minimum device ON time (s)** and
-**Operation · Minimum device OFF time (s)**. These govern how long HEM keeps
+Each controller has **Operation · Minimum device ON time (min)** and
+**Operation · Minimum device OFF time (min)**. These govern how long HEM keeps
 the device operating or stopped before requesting the opposite state. For a
 radiator valve, this is its controlled heating operation.
 
-Both settings accept **0 seconds**, which disables that forced operating
-hold, and can be adjusted in one-second increments. Choose any required
+Both settings accept **0 minutes**, which disables that forced operating
+hold, and fractional minutes retain the existing one-second resolution.
+For example, **0.5 min** means 30 seconds and **10 min** means 600 seconds.
+**Power · Maximum ON time (min)** also displays and accepts minutes, with a
+one-minute step and the same supported duration limits as before. These
+physical operating limits are shared across the device's operating modes.
+
+Saved durations and entity identities are preserved on upgrade. Existing
+settings are converted for display, so 600 stored seconds appears as 10
+minutes. Home Assistant number edits and `number.set_value` calls for these
+three entities now take minutes. PID measurement/PWM intervals and the
+separate supply-switch cooldown retain their own units.
+
+Choose any required
 minimum interval from the appliance manufacturer's guidance; compressor
 equipment and radiator valves need different operating policies. Aqara's
 [E1 guidance](https://www.aqara.com/eu/product/radiator-thermostat-e1/faq/)
@@ -453,16 +473,10 @@ Your saved targets remain in effect. These are HEM's starting control values;
 adjust them to your room and supported appliance range.
 
 Advanced ISO 7730 comfort inputs are optional. Ordinary temperature/humidity
-control does not require them. **Timed setpoints (30 s)** is also optional and
-off by default. It is offered only for supported Automatic/PID ON/OFF heating
-and cooling with permission to control native power and **Full-output
-setpoint** enabled. Enabling it waits
-30 seconds after confirmed native ON before setting the full-demand target:
-the native maximum for heating or minimum for cooling. When stopping is
-permitted, it writes the opposite target, waits 30 seconds after that command,
-then requests OFF. The 30 seconds are transition delays; HEM's demand and
-operating protections determine the full ON period. Native OFF feedback is
-still required to confirm shutdown.
+control does not require them. When a maximum native target is enabled, HEM
+requests it after confirmed native ON. When stopping is permitted, HEM requests
+OFF directly. Demand, minimum operating times and device protections determine
+the ON period, and native OFF feedback confirms shutdown.
 
 ### Optional PID calibration
 
@@ -626,11 +640,11 @@ This feature releases **automatic** Sleep. An explicitly selected Sleep preset,
 Manual control, Away behavior, window checks and device protection delays keep
 their normal priority.
 
-### Let other devices sleep when everybody is sleeping
+### Keep selected devices off when everybody is sleeping
 
-Each HEM device controller has **Sleep · When everyone is sleeping**, disabled
-by default. Enable it for devices that should follow household sleep, such as
-a living-room purifier while everybody is sleeping in bedrooms.
+Each HEM device controller has **Sleep · Keep device off when all asleep**,
+disabled by default. Enable it for a device that should stop while everybody
+is sleeping, such as a living-room purifier while occupants sleep in bedrooms.
 
 HEM applies this option when **at least one room is occupied and every occupied
 room is also in the shared sleeping-room list**. It checks occupied rooms
@@ -639,8 +653,13 @@ occupied-room list does not mean everybody is sleeping, and an occupied room
 outside the sleeping-room list ends household Sleep.
 
 This option applies separately to each device in **Automatic** or **PID**
-control. The device follows its configured Sleep behavior, targets and quiet
-settings. The alarm wake-up feature releases this inherited Sleep too.
+control. It requests OFF even if that device's separate room sleep behavior is
+Normal or Sleep targets, while retaining minimum ON time, native confirmation,
+manual override and device protection checks. It does not mark its own room as
+occupied. Unknown evidence and a verified empty home do not prove that everyone
+is asleep. Turning the option off, a confirmed awake occupant, or the configured
+alarm preparation time releases this household hold. The device's own room
+sleep and presence rules still apply, and Manual control retains its authority.
 
 ## Optional solar shading
 
@@ -765,7 +784,7 @@ steps to reproduce. Remove personal details from logs and screenshots.
 
 Install published betas from the
 [Releases page](https://github.com/Chreece/HA-Home-Environment-Manager/releases).
-Read the [current release notes](.github/releases/v0.6.1b8.md) for recent changes.
+Read the [current release notes](.github/releases/v0.6.1b9.md) for recent changes.
 
 | Branch | Purpose |
 | --- | --- |

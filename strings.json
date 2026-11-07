@@ -3638,7 +3638,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Operation · {channel}Minimum device ON time (s)",
+        "name": "Operation · {channel}Minimum device ON time (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
@@ -3646,7 +3646,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Operation · {channel}Minimum device OFF time (s)",
+        "name": "Operation · {channel}Minimum device OFF time (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
@@ -3654,7 +3654,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Power · {channel}Maximum ON time (s)",
+        "name": "Power · {channel}Maximum ON time (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
@@ -3984,7 +3984,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Announcement · {channel}Device errors",
+        "name": "Announcement · {channel}Announce device errors",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
@@ -3992,7 +3992,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Sleep · {channel}When everyone is sleeping",
+        "name": "Sleep · {channel}Keep device off when all asleep",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
@@ -4008,7 +4008,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Control · {channel}Full-output setpoint",
+        "name": "Control · {channel}Maximum target by mode",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"

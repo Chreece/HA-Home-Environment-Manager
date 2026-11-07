@@ -30,9 +30,13 @@ def fixture():
     common = {key: states['select.method_cooler']['attributes'][key]
               for key in ('area_id', 'source_device_id', 'source_entity_ids')}
     extra = {
-        'switch.cooler_timing': {'state': 'off', 'attributes': {
-            **common, 'timed_setpoint_role': 'policy', 'timed_setpoint_supported': True, 'configuration_help':
-            'Wait 30 seconds after ON before sending a target. <img src=x onerror="unsafe()">'}},
+        'switch.cooler_maximum': {'state': 'off', 'attributes': {
+            **common, 'equipment_option_role': 'policy', 'setting_key': 'native_full_output',
+            'native_full_output_supported': True, 'native_full_output_modes': ['cool'],
+            'setting_label': 'Maximum target by mode (Cooling)', 'configuration_help':
+            'ON: request this device’s minimum cooling temperature.\n\n'
+            'OFF: leave its native target unchanged.\n- HEM still decides when to run.\n'
+            '<img src=x onerror="unsafe()">'}},
         'select.cooler_calibration': {'state': 'imc_lambda', 'attributes': {
             **common, 'pid_calibration_role': 'method', 'options': ['manual', 'imc_lambda'],
             'configuration_help': 'Choose how PID gains are calculated from the measured device and room response.'}},
@@ -64,15 +68,16 @@ card._windowSwitchPending66=new Set();card._calibrationExpanded65=new Set();
 card._expanded=new Set();card._areaDeviceIds=new Map();card._config={entity:'sensor.hem'};
 const room=input['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id==='cool');
 const html=card._controllerPanel(room);
-const ids=['select.method_cooler','switch.cooler_timing','select.cooler_calibration','number.cooler_gain','button.cooler_calibrate'];
+const ids=['select.method_cooler','switch.cooler_maximum','select.cooler_calibration','number.cooler_gain','button.cooler_calibrate'];
 for(const id of ids){
- const prefix=id==='switch.cooler_timing'?'device-option:':'setting-help:';
+ const prefix=id==='switch.cooler_maximum'?'device-option:':'setting-help:';
  assert.ok(html.includes('data-detail-id="'+prefix+id+'"'),id+' help missing');
- assert.ok(html.includes(input[id].attributes.configuration_help.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')),id+' wrong help');
+ for(const paragraph of input[id].attributes.configuration_help.split(/\n\s*\n/))
+   assert.ok(html.includes('<p class="hem-help-text116">'+paragraph.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')+'</p>'),id+' wrong help');
 }
 assert.ok(!html.includes('<img src=x'),'help HTML executed');
 assert.ok(html.includes('data-climate-method="select.method_cooler"'));
-assert.ok(html.includes('data-timed-setpoint-switch="switch.cooler_timing"'));
+assert.ok(html.includes('data-device-quick-switch8="switch.cooler_maximum"'));
 assert.ok(html.includes('aria-checked="false"'));
 assert.ok(html.includes('data-pid-model-input="pid_process_gain"'));
 assert.ok(html.includes('data-save-pid-model="number.cooler_gain"'));
@@ -126,12 +131,12 @@ with sync_playwright() as playwright:
     # Native dismissal hides synchronously; its queued toggle removes the node.
     body.wait_for(state='detached')
     assert body.count() == 0, 'Escape did not close setting help'
-    timing = row.locator('[data-detail-id="device-option:switch.cooler_timing"]')
-    timing.locator(':scope > summary').click()
+    maximum = row.locator('[data-detail-id="device-option:switch.cooler_maximum"]')
+    maximum.locator(':scope > summary').click()
     body.wait_for(state='visible')
     assert body.locator('img').count() == 0, 'help content became HTML'
     assert '<img src=x' in body.text_content()
-    assert row.locator('[data-timed-setpoint-switch="switch.cooler_timing"]').get_attribute('aria-checked') == 'false'
+    assert row.locator('[data-device-quick-switch8="switch.cooler_maximum"]').get_attribute('aria-checked') == 'false'
     assert page.evaluate('calls') == [], 'opening help mutated a setting'
     assert not errors, errors
     browser.close()

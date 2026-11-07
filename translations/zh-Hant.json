@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "運作 · {channel}裝置最短運作時間 (s)",
+        "name": "運作 · {channel}裝置最短運作時間 (分鐘)",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "運作 · {channel}裝置最短停機時間 (s)",
+        "name": "運作 · {channel}裝置最短停機時間 (分鐘)",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "功率 · {channel}max ON (s)",
+        "name": "功率 · {channel}max ON (分鐘)",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "播報 · 通報裝置錯誤 · {channel}",
+        "name": "播報 · {channel}通報裝置錯誤",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "睡眠 · {channel}所有人都在睡覺時",
+        "name": "睡眠 · {channel}所有人睡著時保持裝置關閉",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "控制 · {channel}滿功率設定值",
+        "name": "控制 · {channel}依模式設定最大目標值",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"

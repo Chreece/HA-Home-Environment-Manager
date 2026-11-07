@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Drift · {channel}Minste driftstid for enheten (s)",
+        "name": "Drift · {channel}Minste driftstid for enheten (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Drift · {channel}Minste tid enheten skal være av (s)",
+        "name": "Drift · {channel}Minste tid enheten skal være av (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Effekt · {channel}max ON (s)",
+        "name": "Effekt · {channel}max ON (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Meldinger · Varsle om enhetsfeil · {channel}",
+        "name": "Meldinger · {channel}Varsle om enhetsfeil",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Søvn · {channel}Når alle sover",
+        "name": "Søvn · {channel}Hold enheten avslått når alle sover",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Styring · {channel}Settpunkt for full effekt",
+        "name": "Styring · {channel}Maksimal målverdi per modus",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"

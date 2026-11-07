@@ -1,4 +1,4 @@
-"""Per-device timed setpoint preferences against the real model, switch and writer.
+"""Per-device native target preferences and removed timing controls against the real model, switch and writer.
 
 Only HA entity/registry storage, notifications and native state are simulated.
 The test manager intentionally has no physical service interface.
@@ -10,6 +10,7 @@ import asyncio
 import importlib
 import sys
 import unittest
+from unittest.mock import patch
 from copy import deepcopy
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -128,43 +129,45 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
         return record
 
     def switch(self, device):
-        return platform.EquipmentTimedSetpointSwitch(self.manager, device)
+        return platform.EquipmentNativeFullOutputSwitch(self.manager, device)
 
-    async def test_default_invalid_off_then_write_only_chosen_device(self):
+    async def test_default_enabled_invalid_disabled_and_edit_only_chosen_device(self):
         a,b=self.switch(self.a),self.switch(self.b)
         profiles=self.manager.entry.options[model.SETTINGS]
-        self.assertFalse(model.DEFAULTS["timed_setpoint_sequence"])
-        self.assertFalse(a.is_on)
+        self.assertTrue(model.DEFAULTS["native_full_output"])
+        self.assertTrue(a.is_on and b.is_on)
         for invalid in (None,1,"true",[],{}):
-            profiles[self.a.identifier]["timed_setpoint_sequence"]=invalid
+            profiles[self.a.identifier]["native_full_output"]=invalid
             self.assertFalse(a.is_on)
+        profiles[self.a.identifier].pop("native_full_output")
         self.cache(self.a)
         self.cache(self.b)
         baseline=deepcopy(self.manager.entry.options)
         holds=deepcopy(self.holds)
-        self.states.clear()  # Both native appliances offline.
+        self.states.clear()
         rt=self.manager.equipment
         rt._tasks[self.a.identifier]=NS(done=lambda: False)
         self.assertTrue(a.available)
-        await a.async_turn_on()
-        baseline[model.SETTINGS][self.a.identifier]["timed_setpoint_sequence"]=True
-        self.assertEqual(self.manager.entry.options, baseline)
-        self.assertTrue(self.switch(self.a).is_on)  # Reconstruction from stored profile.
-        self.assertFalse(b.is_on)
-        self.assertEqual(rt._setpoint_rerun,{self.a.identifier})
         await a.async_turn_off()
-        self.assertFalse(a.is_on)
+        baseline[model.SETTINGS][self.a.identifier]["native_full_output"]=False
+        self.assertEqual(self.manager.entry.options,baseline)
+        self.assertFalse(self.switch(self.a).is_on)
+        self.assertTrue(b.is_on)
+        self.assertEqual(rt._setpoint_rerun,{self.a.identifier})
+        await a.async_turn_on()
+        self.assertTrue(a.is_on)
         self.assertEqual(self.holds,holds)
         self.assertEqual(self.signals,[self.a.identifier,self.a.identifier])
-        self.assertEqual(a.extra_state_attributes["timed_setpoint_role"], "policy")
-        self.assertEqual(a._attr_device_info["identifiers"], {("environment_manager",self.a.identifier)})
-        self.assertIn("Χρονισμός στόχων",a._attr_name)
+        self.assertEqual(a.extra_state_attributes["native_full_output_role"],"policy")
+        self.assertEqual(a._attr_device_info["identifiers"],{("environment_manager",self.a.identifier)})
+        self.assertEqual(a.extra_state_attributes["setting_label"],
+                         names.native_full_output_label(("heat",),"el"))
 
     async def test_bad_value_mixed_authority_and_stale_identity_rejected(self):
         m=self.manager
         before=deepcopy(m.entry.options)
-        for payload in ({"timed_setpoint_sequence":"false"},
-                        {"timed_setpoint_sequence":True,"control_mode":"automatic"}):
+        for payload in ({"native_full_output":"false"},
+                        {"native_full_output":True,"control_mode":"automatic"}):
             with self.assertRaises(ValueError):
                 await m.equipment.async_update(self.a,payload)
         m._device_settings_write_lock = asyncio.Lock()
@@ -183,7 +186,7 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
         self.states[b.source_entities[0]].attributes={"hvac_modes":["dry","off"],"supported_features":0}
         added=[]
         await platform.async_setup_entry(m.hass,m.entry,added.extend)
-        controls=lambda:[e._spec for e in added if isinstance(e, platform.EquipmentTimedSetpointSwitch)]
+        controls=lambda:[e._spec for e in added if isinstance(e, platform.EquipmentNativeFullOutputSwitch)]
         self.assertEqual(controls(),[a])
         old=self.states[b.source_entities[0]]
         self.states[b.source_entities[0]]=NS(state="cool",attributes={
@@ -194,14 +197,15 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
         m.hass.capability_change(event)
         self.assertEqual(controls(),[a,b])
         self.states.clear()
-        self.assertFalse(features.timed_setpoint_supported(m,m.hass.registry,a))
-        self.native_ids.add(a.identifier+"_timed_setpoint_sequence")
-        self.assertTrue(features.timed_setpoint_supported(m,m.hass.registry,a))
-        self.assertFalse(features.timed_setpoint_supported(m,m.hass.registry,b))
+        self.assertFalse(features.native_full_output_supported(m,m.hass.registry,a))
+        self.native_ids.add(a.identifier+"_native_full_output")
+        self.assertTrue(features.native_full_output_supported(m,m.hass.registry,a))
+        self.assertFalse(features.native_full_output_supported(m,m.hass.registry,b))
 
     async def test_independent_preference_survives_concurrent_full_profile_save(self):
         m=self.manager
         rt=m.equipment
+        m.entry.options[model.SETTINGS][self.a.identifier]["native_full_output"]=False
         self.cache(self.a)
         self.states.clear()
         rt._record=lambda spec: self.holds[spec.identifier]
@@ -219,7 +223,7 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(device_lock.locked())
         await asyncio.gather(enabling,cooldown)
         cfg=model.settings(m,self.a)
-        self.assertTrue(cfg["timed_setpoint_sequence"])
+        self.assertTrue(cfg["native_full_output"])
         self.assertEqual(cfg["power_switch_cooldown_seconds"],180)
         self.assertEqual(cfg["control_mode"],"automatic")
 
@@ -240,16 +244,16 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
                 if name.startswith(("switch.","number.","input_number.")):
                     m.entry.data["climate_rooms"]={"room":{"heat_actuator":name}}
                 spec=Device(name,"room",name,"physical_"+name,(name,))
-                self.assertEqual(features.timed_setpoint_supported(m,m.hass.registry,spec),expected)
+                self.assertEqual(features.native_full_output_supported(m,m.hass.registry,spec),expected)
 
     def test_cached_capability_bound_to_original_offline_device(self):
         m=self.manager
         rec=self.cache(self.a)
         self.states.clear()
-        self.assertTrue(features.timed_setpoint_supported(m,m.hass.registry,self.a))
+        self.assertTrue(features.native_full_output_supported(m,m.hass.registry,self.a))
         self.assertTrue(self.switch(self.a).available)
         rec["source_device_id"]="different"
-        self.assertFalse(features.timed_setpoint_supported(m,m.hass.registry,self.a))
+        self.assertFalse(features.native_full_output_supported(m,m.hass.registry,self.a))
         self.assertFalse(self.switch(self.a).available)
 
     async def test_registered_inactive_control_becomes_usable_without_reload(self):
@@ -259,10 +263,10 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
         raw["control_mode"]="existing"
         added=[]
         await platform.async_setup_entry(m.hass,m.entry,added.extend)
-        control=next(e for e in added if isinstance(e,platform.EquipmentTimedSetpointSwitch)
+        control=next(e for e in added if isinstance(e,platform.EquipmentNativeFullOutputSwitch)
                      and e._spec==self.a)
         self.assertFalse(control.available)
-        self.assertFalse(control.extra_state_attributes["timed_setpoint_supported"])
+        self.assertFalse(control.extra_state_attributes["native_full_output_supported"])
         for method in ("manual","automatic","pid"):
             raw["control_mode"]=method
             self.assertFalse(control.available,"A method alone must not grant native power")
@@ -270,10 +274,10 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
         for method in ("automatic","pid"):
             raw["control_mode"]=method
             self.assertTrue(control.available)
-            self.assertTrue(control.extra_state_attributes["timed_setpoint_supported"])
+            self.assertTrue(control.extra_state_attributes["native_full_output_supported"])
         raw["control_mode"]="manual"
         self.assertFalse(control.available)
-        self.assertEqual(sum(isinstance(e,platform.EquipmentTimedSetpointSwitch)
+        self.assertEqual(sum(isinstance(e,platform.EquipmentNativeFullOutputSwitch)
                              and e._spec==self.a for e in added),1)
 
     def test_effective_mode_and_method_change_eligibility_immediately(self):
@@ -292,7 +296,7 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
             with self.subTest(mode=mode):
                 raw["requested_mode"]=mode
                 self.assertEqual(control.available,expected)
-                self.assertEqual(control.extra_state_attributes["timed_setpoint_supported"],expected)
+                self.assertEqual(control.extra_state_attributes["native_full_output_supported"],expected)
         raw["requested_mode"]="heat"
         raw["mode_settings"]["heat"]["control_mode"]="manual"
         self.assertFalse(control.available)
@@ -318,7 +322,7 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
         for attrs in invalid:
             with self.subTest(attributes=attrs):
                 native.attributes=attrs
-                self.assertFalse(sequence.configuration_supported(m,self.a))
+                self.assertFalse(native_target.configuration_supported(m,self.a))
                 self.assertFalse(self.switch(self.a).available,
                                  "Old capability cache must not override withdrawn live support")
         native.attributes=valid
@@ -330,7 +334,7 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
         self.states.clear()
         control=self.switch(self.a)
         self.assertTrue(control.available)
-        self.assertFalse(sequence.control_supported(m,self.a),"Offline cache is editor evidence only")
+        self.assertFalse(native_target.control_supported(m,self.a),"Offline cache is editor evidence only")
         original=self.registry_entries["climate.a"].unique_id
         self.registry_entries["climate.a"].unique_id="replacement_native"
         self.assertFalse(control.available)
@@ -340,13 +344,13 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
         rec["baseline"]["climate.a"]["attributes"]["min_temp"]=low
         self.assertTrue(control.available)
         m.entry.options[model.SETTINGS][self.a.identifier].pop("_native_authorization")
-        self.assertTrue(sequence.configuration_supported(m,self.a))
+        self.assertTrue(native_target.configuration_supported(m,self.a))
         self.assertFalse(control.available,"Capability history cannot restore a revoked power grant")
 
     async def test_unsupported_legacy_flag_is_preserved_but_cannot_be_enabled(self):
         m=self.manager
         raw=m.entry.options[model.SETTINGS][self.a.identifier]
-        raw.update(control_mode="manual",timed_setpoint_sequence=True)
+        raw.update(control_mode="manual",native_full_output=True)
         control=self.switch(self.a)
         self.assertTrue(control.is_on)
         self.assertFalse(control.available)
@@ -354,7 +358,7 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(ValueError):
             await control.async_turn_on()
         with self.assertRaises(ValueError):
-            await m.equipment.async_update(self.a,{"timed_setpoint_sequence":True})
+            await m.equipment.async_update(self.a,{"native_full_output":True})
         self.assertEqual(m.entry.options,before)
         await control.async_turn_off()
         self.assertFalse(control.is_on)
@@ -380,8 +384,7 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
             (platform.EquipmentQuietSwitch(m,self.a,"quiet_sleep"),"quiet_sleep"),
             (platform.EquipmentQuietSwitch(m,self.a,"quiet_occupied"),"quiet_occupied"),
             (platform.EquipmentErrorAnnouncementSwitch(m,self.a),"announce_device_errors"),
-            (self.switch(self.a),"timed_setpoint_sequence"),
-            (platform.EquipmentNativeFullOutputSwitch(m,self.a),"native_full_output"),
+            (self.switch(self.a),"native_full_output"),
             (platform.EquipmentHouseholdSleepSwitch(m,self.a),"sleep_when_everyone_asleep"),
             (platform.EquipmentWindowAnnouncementSwitch(m,self.a),"announce_before_start"),
             (platform.EquipmentWindowPauseSwitch(m,self.a),"pause_on_window_open"),
@@ -395,7 +398,8 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
                 self.assertTrue(attrs["configuration_help"])
                 self.assertEqual(attrs["source_entity_ids"],["climate.a"])
         timed=self.switch(self.a).extra_state_attributes
-        self.assertEqual(timed["timed_setpoint_transition_seconds"],30)
+        self.assertEqual(timed["native_full_output_modes"],["heat"])
+        self.assertNotIn("timed_setpoint_transition_seconds",timed)
         self.states["climate.a"].attributes.update(supported_features=model.TEMP|model.FAN,
                                                    fan_modes=["low","high"])
         scoped=platform.EquipmentQuietSwitch(m,self.a,"quiet_sleep",operating_mode="heat")
@@ -403,35 +407,44 @@ class SettingTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(scoped.extra_state_attributes["operating_mode"],"heat")
         self.assertNotIn("equipment_option_role",scoped.extra_state_attributes)
 
-    async def test_full_output_is_shared_per_device_and_disables_new_timed_use(self):
+    async def test_removed_timing_is_ignored_and_cannot_be_enabled_again(self):
         m=self.manager
-        a=platform.EquipmentNativeFullOutputSwitch(m,self.a)
-        b=platform.EquipmentNativeFullOutputSwitch(m,self.b)
         raw=m.entry.options[model.SETTINGS][self.a.identifier]
-        raw['timed_setpoint_sequence']=True
-        self.assertTrue(a.is_on and a.available and b.is_on)
-        self.assertTrue(self.switch(self.a).available)
-        before=deepcopy(self.holds)
-        await a.async_turn_off()
-        self.assertFalse(a.is_on)
-        self.assertTrue(b.is_on)
-        self.assertTrue(a.available,'The supported preference remains editable while disabled')
-        self.assertTrue(self.switch(self.a).is_on,'Preserve the saved timed preference')
-        self.assertFalse(self.switch(self.a).available,'Full-output OFF makes new timed writes inapplicable')
-        self.assertEqual(self.holds,before,'Preference writes cannot acknowledge native commands')
-        self.cache(self.a)
-        self.states.pop('climate.a')
-        await a.async_turn_on()
-        self.assertTrue(a.is_on and self.switch(self.a).available)
-        self.assertTrue(a.extra_state_attributes['native_full_output_supported'])
-        self.assertEqual(a.extra_state_attributes['setting_key'],'native_full_output')
-        raw=m.entry.options[model.SETTINGS][self.a.identifier]
-        raw['control_mode']='manual'
-        self.assertFalse(a.available)
-        with self.assertRaises(ValueError):
-            await a.async_turn_on()
-        await a.async_turn_off()
-        self.assertEqual(model.settings(m,self.a)['control_mode'],'manual')
+        raw["timed_setpoint_sequence"]=True
+        before=deepcopy(m.entry.options)
+        self.assertNotIn("timed_setpoint_sequence",model.DEFAULTS)
+        self.assertNotIn("timed_setpoint_sequence",model.settings(m,self.a))
+        self.assertFalse(hasattr(platform,"EquipmentTimedSetpointSwitch"))
+        self.assertFalse(hasattr(features,"timed_setpoint_supported"))
+        for value in (True,False,"true"):
+            with self.assertRaises(ValueError):
+                await m.equipment.async_update(self.a,{"timed_setpoint_sequence":value})
+        self.assertEqual(m.entry.options,before)
+        self.assertEqual(self.signals,[])
+
+    async def test_setup_removes_only_this_entrys_retired_switch_and_never_recreates_it(self):
+        m=self.manager
+        rows=[
+            NS(entity_id="switch.renamed_old_option",platform="environment_manager",
+               config_entry_id="test",unique_id="deleted_device_timed_setpoint_sequence"),
+            NS(entity_id="switch.foreign_entry",platform="environment_manager",
+               config_entry_id="other",unique_id="device_timed_setpoint_sequence"),
+            NS(entity_id="switch.other_integration",platform="manufacturer",
+               config_entry_id="test",unique_id="device_timed_setpoint_sequence"),
+            NS(entity_id="switch.current_target",platform="environment_manager",
+               config_entry_id="test",unique_id="thermostat_a_native_full_output"),
+            NS(entity_id="sensor.unrelated",platform="environment_manager",
+               config_entry_id="test",unique_id="device_timed_setpoint_sequence"),
+        ]
+        removed=[]
+        m.hass.registry.async_remove=lambda entity: removed.append(entity)
+        with patch.object(features.er,"async_entries_for_config_entry",
+                          lambda registry,entry_id: list(rows),create=True):
+            added=[]
+            await platform.async_setup_entry(m.hass,m.entry,added.extend)
+        self.assertEqual(removed,["switch.renamed_old_option"])
+        self.assertTrue(any(isinstance(e,platform.EquipmentNativeFullOutputSwitch) for e in added))
+        self.assertFalse(any(e._attr_unique_id.endswith("_timed_setpoint_sequence") for e in added))
 
     async def test_full_output_registration_and_live_direction_capability_gates(self):
         m=self.manager

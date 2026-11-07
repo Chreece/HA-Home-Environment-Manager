@@ -687,6 +687,10 @@ class EquipmentRuntime:
                         or owned["max_on"] <= owned["min_on"]):
                         raise ValueError("Invalid power recovery history")
             self._ready = True
+            from .equipment_setpoint_sequence import remove_legacy_settings
+            remove_legacy_settings(self.manager)
+            for record in self.records.values():
+                record.pop("setpoint_startup_observations", None)
             # Discard stale pre-restart physical attribute baselines only
             # after fresh native source verification and absent pending
             # commands. Never erase an explicit physical manual override.
@@ -1482,6 +1486,8 @@ class EquipmentRuntime:
         operating_mode: str | None = None,
     ) -> None:
         """Validate edits to one operating profile or shared physical settings."""
+        if "timed_setpoint_sequence" in changes:
+            raise HomeAssistantError("The timed target setting has been removed")
         if operating_mode is None and hasattr(model, "MODE_FIELDS") and set(changes) & model.MODE_FIELDS:
             operating_mode = model.settings(self.manager, spec).get("operating_mode")
         descriptor = None
@@ -1579,12 +1585,11 @@ class EquipmentRuntime:
             if getattr(self.manager, "_active", False):
                 self.manager._recalculate(initial=True)
             return
-        if ("timed_setpoint_sequence" in changes or "native_full_output" in changes
-                or "sleep_when_everyone_asleep" in changes):
+        if "native_full_output" in changes or "sleep_when_everyone_asleep" in changes:
             # These are independent device preferences. A pending service,
             # ACK or recovery hold must not block editing or be acknowledged
             # by the edit. Serialize only the options write, not hardware.
-            key = next(key for key in ("sleep_when_everyone_asleep", "timed_setpoint_sequence", "native_full_output")
+            key = next(key for key in ("sleep_when_everyone_asleep", "native_full_output")
                        if key in changes)
             if set(changes) != {key} or type(changes[key]) is not bool:
                 raise HomeAssistantError("Change this device preference separately using ON or OFF")
@@ -1594,14 +1599,10 @@ class EquipmentRuntime:
             async with lock:
                 if not self._ready or not self._current_spec(spec):
                     raise HomeAssistantError("Controller storage or source identity is unavailable")
-                if key == "timed_setpoint_sequence" and changes[key] is True:
-                    from .equipment_setpoint_sequence import control_supported
-                    if not control_supported(self.manager, spec, cached=True):
-                        raise HomeAssistantError("Timed setpoints require authorized Automatic or PID heating/cooling control")
                 if key == "native_full_output" and changes[key] is True:
                     from .equipment_native_target import control_supported
                     if not control_supported(self.manager, spec, cached=True):
-                        raise HomeAssistantError("Full-output setpoints require authorized native ON/OFF control")
+                        raise HomeAssistantError("Maximum target by mode requires authorized native ON/OFF control")
                 options = deepcopy(self.manager.entry.options)
                 profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
                 profiles = profiles if isinstance(profiles, dict) else {}
@@ -1627,8 +1628,6 @@ class EquipmentRuntime:
                     if rerun is None:
                         rerun = self._setpoint_rerun = set()
                     rerun.add(spec.identifier)
-                elif self.statuses.get(spec.identifier, {}).get("status") == "native_setpoint_startup_grace":
-                    self._tasks[spec.identifier] = self.hass.async_create_task(self._run(spec))
             return
         edit_lock = asyncio.Lock() if operating_mode is not None else self._lock(spec.identifier)
         async with edit_lock:
@@ -1751,9 +1750,6 @@ class EquipmentRuntime:
                     existing = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
                     existing = existing if isinstance(existing, dict) else {}
                     # Independent switches may have changed while we waited.
-                    adjusted["timed_setpoint_sequence"] = model.settings(
-                        self.manager, spec
-                    ).get("timed_setpoint_sequence") is True
                     adjusted["sleep_when_everyone_asleep"] = model.settings(self.manager, spec).get("sleep_when_everyone_asleep") is True
                     adjusted["native_full_output"] = model.settings(self.manager, spec).get("native_full_output", True) is True
                     latest_profile = existing.get(spec.identifier)
@@ -1984,7 +1980,7 @@ class EquipmentRuntime:
                 power = soft and new.get("control_mode") in ("automatic", "pid", "manual", "off") and "off" in cap.modes
             on, off, maximum = model.timing(self.manager, spec, cap, config=new)
             if cap.domain != "fan" and maximum > 28800:
-                raise HomeAssistantError("Maximum continuous runtime for this device cannot exceed 28800 seconds")
+                raise HomeAssistantError("Maximum continuous runtime for this device cannot exceed 480 minutes")
             if "requested_mode" in changes and new["requested_mode"] is not None:
                 state = self.hass.states.get(cap.primary)
                 requested = new["requested_mode"]
@@ -2068,9 +2064,6 @@ class EquipmentRuntime:
                 options = deepcopy(self.manager.entry.options)
                 saved = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
                 saved = saved if isinstance(saved, dict) else {}
-                new["timed_setpoint_sequence"] = model.settings(
-                    self.manager, spec
-                ).get("timed_setpoint_sequence") is True
                 new["sleep_when_everyone_asleep"] = model.settings(self.manager, spec).get("sleep_when_everyone_asleep") is True
                 new["native_full_output"] = model.settings(self.manager, spec).get("native_full_output", True) is True
                 latest_profile = saved.get(spec.identifier)
@@ -3069,8 +3062,7 @@ class EquipmentRuntime:
                         sequence.pop("off_retry_budget", None)
                         sequence["explicit_retry_at"] = now
                     elif sequence.get("phase") == "preparing":
-                        sequence.update(phase="uncertain", recovered_at=now,
-                                        off_not_before=now + 30.0)
+                        sequence.update(phase="off_ready", recovered_at=now)
             target_budget = record.get("unconfirmed_native_target")
             if not automatic:
                 # A successful explicit Check/Continue is fresh user consent
@@ -3443,7 +3435,8 @@ class EquipmentRuntime:
         if kind == "sleep":
             from .device_activation import effective_device
             dev = effective_device(self.manager, spec, cap.primary)
-            if dev.get("sleep_behavior") != "pause":
+            if (dev.get("sleep_behavior") != "pause"
+                    and dev.get("sleep_when_everyone_asleep") is not True):
                 return False
             _decision, reason = live_device_permission(
                 self.hass, spec.area_id, room, plan, dev,
@@ -3992,6 +3985,10 @@ class EquipmentRuntime:
         # A retained legacy target can be restored directly into this path
         # after tick's initial migration pass. Apply the same bounded PID
         # accounting before it can make another physical service call.
+        if pending.get("stop_target") is True:
+            from .equipment_setpoint_sequence import progress_stop
+            await progress_stop(self, spec)
+            return
         from .equipment_native_target import adopt_pending
         await adopt_pending(self, spec)
         attempts = pending.get("attempts", 0)
@@ -4072,11 +4069,7 @@ class EquipmentRuntime:
         if (await suppress_obsolete_pending(self, spec, pending)
                 or await suppress_pending_for_shutdown(self, spec, pending)):
             return
-        from .equipment_setpoint_sequence import enabled_for, retry_settings_match, startup_ready
-        setpoint = pending.get("service") in ("set_temperature", "set_humidity")
-        if setpoint and enabled_for(self, spec, cap, state, stopping=pending.get("stop_target") is True):
-            if not await startup_ready(self, spec, cap, state, stopping=pending.get("stop_target") is True):
-                return
+        from .equipment_setpoint_sequence import retry_settings_match
         if decision == "exhausted":
             epoch = getattr(self, "_native_reconnect_epoch", {}).get(entity)
             previous = pending.get("reconnect_retry_epoch_used")
@@ -4373,19 +4366,6 @@ class EquipmentRuntime:
         dispatched = False
         try:
             async with self._commands:
-                if (setpoint and enabled_for(self, spec, cap, self.hass.states.get(entity),
-                                              stopping=pending.get("stop_target") is True)
-                        and not await startup_ready(self, spec, cap, self.hass.states.get(entity),
-                                                    stopping=pending.get("stop_target") is True)):
-                    # Timing can be enabled during persistence or while the
-                    # command semaphore is busy. No retry has run: preserve
-                    # even an unused reconnect credit and wait for eligibility.
-                    pending.clear()
-                    pending.update(previous_attempt)
-                    if previous_target_budget is not None:
-                        record[native_target.BUDGET] = deepcopy(previous_target_budget)
-                    await self._save()
-                    return
                 if not still_safe():
                     # No second call occurred; leave the original command
                     # pending for a future ACK, but never retry stale intent.
@@ -4475,14 +4455,14 @@ class EquipmentRuntime:
                     service: str, data: dict, expected: dict, *, power: bool = False,
                     mode: str | None = None, automatic: bool = True,
                     shutdown: bool = False, policy_stop: str | None = None,
-                    stop_target: bool = False, stop_finish: bool = False,
+                    stop_finish: bool = False,
                     full_output_target: bool = False) -> bool:
         """Durable intent, exact target, live rechecks after *every* yield."""
         record = self._record(spec)
         if record.get("pending") or record.get("paused"):
             return False
-        if record.get("native_setpoint_stop") and not (stop_target or stop_finish):
-            self._status(spec, "native_setpoint_shutdown_blocked",
+        if record.get("native_setpoint_stop") and not stop_finish:
+            self._status(spec, "awaiting_evaluation",
                          reason="shutdown_sequence_in_progress")
             return False
         primary = self.hass.states.get(cap.primary)
@@ -4491,56 +4471,41 @@ class EquipmentRuntime:
         cfg = model.settings(self.manager, spec)
         plan = model.plan_for(self.manager, spec)
         action_mode = mode or primary.state
-        from .equipment_setpoint_sequence import (
-            enabled_for, finish_authorized, mark_target_sent, retry_settings_match,
-            startup_ready, supports_stop, target_authorized,
-        )
-        plain_binary_off = (power and not stop_finish and action_mode == "off"
-                            and supports_stop(cap, primary))
+        from .equipment_setpoint_sequence import finish_authorized, retry_settings_match
         from . import equipment_native_target as native_target
         target_context = (native_target.request_context(self, spec, cap, action_mode, service, data, pid_only=False)
-                          if full_output_target and not (power or stop_target or stop_finish) else None)
+                          if full_output_target and not (power or stop_finish) else None)
         budget_context = target_context if cfg.get("control_mode") == "pid" else None
         if full_output_target and (target_context is None
                                    or not native_target.enabled(cfg)
                                    or budget_context and not native_target.may_attempt(self, spec, budget_context)):
             return False
-        if plain_binary_off and enabled_for(self, spec, cap, primary, stopping=True):
-            # Re-evaluate through _power to start the newly opted-in stop.
-            self._status(spec, "authority_or_evidence_changed_before_dispatch")
-            return False
-        if service in ("set_temperature", "set_humidity"):
-            if not await startup_ready(self, spec, cap, primary, stopping=stop_target):
-                return False
-        if stop_target and (
-            service != "set_temperature" or power or action_mode != "off"
-            or not target_authorized(self, spec, cap, entity, data, expected)
+        if service in ("set_temperature", "set_humidity") and primary.state in (
+            "off", "unknown", "unavailable"
         ):
-            self._status(spec, "native_setpoint_shutdown_blocked",
-                         reason="shutdown_target_authority_changed")
             return False
         if stop_finish and (
             service != "set_hvac_mode" or not power or action_mode != "off"
             or data != {"hvac_mode": "off"} or expected != {"state": "off"}
             or not finish_authorized(self, spec, cap, entity)
         ):
-            self._status(spec, "native_setpoint_shutdown_blocked",
+            self._status(spec, "awaiting_evaluation",
                          reason="shutdown_finish_authority_changed")
             return False
         if policy_stop is not None:
             if (policy_stop not in ("sleep", "idle", "window", "target")
-                    or not (power or stop_target) or action_mode != "off"
+                    or not power or action_mode != "off"
                     or not self._stop_policy_verified(spec, cap, policy_stop)):
                 self._status(spec, "authority_or_evidence_changed_before_dispatch")
                 return False
         if shutdown:
             if not self._shutdown_allowed(
-                spec, entity, {"state": "off"} if stop_target else expected
+                spec, entity, expected
             ):
                 self._status(spec, "owned_shutdown_identity_or_dwell_hold")
                 return False
         elif why := self._gate(spec, cap, cfg, plan, action_mode, automatic=automatic,
-                              window_stop=(power or stop_target) and action_mode == "off"):
+                              window_stop=power and action_mode == "off"):
             self._status(spec, why)
             return False
         from .equipment_pid_safety import (
@@ -4548,13 +4513,12 @@ class EquipmentRuntime:
         )
         if not command_allowed(
             self, spec, cap, service, data, mode=action_mode,
-            automatic=automatic, power=power, stop_target=stop_target,
+            automatic=automatic, power=power,
         ):
             current_target = condition(self, spec, cap, action_mode, include_automatic=True)
             await remember_cutoff(self, spec, condition(self, spec, cap, action_mode))
             why = command_profile_reason(
                 self, spec, cap, service, data, mode=action_mode, automatic=automatic,
-                stop_target=stop_target,
             )
             self._status(spec, why or ("within_target_band" if current_target
                          and current_target["needed"] is False
@@ -4572,8 +4536,7 @@ class EquipmentRuntime:
         reserved_budget = None
         reconnect_epoch = None
         same_target = (
-            not stop_target
-            and isinstance(target_budget, dict)
+            isinstance(target_budget, dict)
             and (not power or target_budget.get("pid_target_satisfied") is True)
             and (service == "set_temperature"
                  or target_budget.get("pid_target_satisfied") is True)
@@ -4598,7 +4561,7 @@ class EquipmentRuntime:
             record.pop("unconfirmed_native_target", None)
             same_target, target_budget = False, None
             await self._save()
-        invalid_budget = (service == "set_temperature" and not power and not stop_target
+        invalid_budget = (service == "set_temperature" and not power
                           and target_budget is not None
                           and not isinstance(target_budget, dict))
         verified_retry = bool(
@@ -4702,9 +4665,9 @@ class EquipmentRuntime:
         target_reservation = native_target.reserve(self, spec, pending, budget_context) if budget_context else None
         if budget_context and target_reservation is None:
             return False
-        if stop_target or stop_finish:
+        if stop_finish:
             pending.update(
-                stop_target=stop_target, stop_finish=stop_finish,
+                stop_finish=True,
                 stop_sequence_at=record["native_setpoint_stop"]["requested_at"],
             )
             retry = record["native_setpoint_stop"].get("off_retry_budget")
@@ -4754,23 +4717,15 @@ class EquipmentRuntime:
             if (policy_stop is not None
                     and not self._stop_policy_verified(spec, cap, policy_stop)):
                 return False
-            if plain_binary_off and enabled_for(self, spec, cap, self.hass.states.get(entity), stopping=True):
-                # Owned shutdown normally survives settings changes, but an
-                # undispatched direct OFF must now use the selected sequence.
-                return False
-            if stop_target and not target_authorized(
-                self, spec, cap, entity, data, expected
-            ):
-                return False
             if stop_finish and not finish_authorized(self, spec, cap, entity):
                 return False
             if shutdown:
                 return self._shutdown_allowed(
-                    spec, entity, {"state": "off"} if stop_target else expected
+                    spec, entity, expected
                 )
             if not command_allowed(
                 self, spec, cap, service, data, mode=action_mode,
-                automatic=automatic, power=power, stop_target=stop_target,
+                automatic=automatic, power=power,
             ):
                 return False
             latest = model.settings(self.manager, spec)
@@ -4780,7 +4735,7 @@ class EquipmentRuntime:
                 and (not automatic or self.measurements(spec, cap) == before_feedback)
                 and self._quiet_context(spec, latest, latest_plan) == before_quiet
                 and not self._gate(spec, cap, latest, latest_plan, action_mode, automatic=automatic,
-                                   window_stop=(power or stop_target) and action_mode == "off"))
+                                   window_stop=power and action_mode == "off"))
 
         async def abort() -> bool:
             self._invalidated.add(spec.identifier)
@@ -4794,7 +4749,6 @@ class EquipmentRuntime:
                 await remember_cutoff(self, spec, condition(self, spec, cap, action_mode))
             why = command_profile_reason(
                 self, spec, cap, service, data, mode=action_mode, automatic=automatic,
-                stop_target=stop_target,
             )
             self._status(spec, why or "authority_or_evidence_changed_before_dispatch")
             return False
@@ -4815,8 +4769,6 @@ class EquipmentRuntime:
                     target={"entity_id": entity}, blocking=True), timeout=20)
             pending["phase"] = "commanded"
             native_target.record_dispatch(self, spec, pending)
-            if stop_target:
-                mark_target_sent(self, spec, self.clock())
             if budget_retry and record.get("unconfirmed_native_target") is reserved_budget:
                 reserved_budget.update(deepcopy(pending))
             await self._save()
@@ -4948,13 +4900,6 @@ class EquipmentRuntime:
                 if callable(schedule_pwm) and model.settings(self.manager, spec).get("control_mode") == "pid":
                     schedule_pwm(spec, stamp + off_min if 0 <= now-stamp else None)
                 return False
-        if desired == "off":
-            from .equipment_setpoint_sequence import begin_stop, enabled_for
-            if enabled_for(self, spec, cap, state, stopping=True):
-                return await begin_stop(
-                    self, spec, cap, automatic=automatic, shutdown=shutdown,
-                    policy_stop=policy_stop,
-                )
         if proportional:
             attrs = state.attributes
             if attrs.get("unit_of_measurement") != "%" or attrs.get("min") != 0 or attrs.get("max") != 100:
@@ -4972,12 +4917,8 @@ class EquipmentRuntime:
                              mode: str, targets: dict, demand: float | None, automatic: bool) -> bool | None:
         """Return True if sent, False if skipped, None for a blocked binary target."""
         state = self.hass.states.get(cap.primary)
-        if state is None or state.state == "off":
+        if state is None or state.state in ("off", "unknown", "unavailable"):
             return False
-        if cap.domain in ("climate", "humidifier"):
-            from .equipment_setpoint_sequence import startup_ready
-            if not await startup_ready(self, spec, cap, state):
-                return None
         config = model.settings(self.manager, spec)
         from . import equipment_native_target as native_target
         limits = model.device_limits(self.manager, spec, cap)
@@ -6081,12 +6022,7 @@ class EquipmentRuntime:
         if owned and not power:
             await self._power(spec, cap, "off", automatic=auto, shutdown=True)
             return
-        from .equipment_setpoint_sequence import SETPOINT_GRACE_SECONDS, enabled_for
-        shutdown_lead = (SETPOINT_GRACE_SECONDS if owned
-                         and enabled_for(self, spec, cap, state, stopping=True) else 0)
-        if owned and self.clock()-owned["since"] >= max(
-            owned["min_on"], owned["max_on"] - shutdown_lead
-        ):
+        if owned and self.clock()-owned["since"] >= owned["max_on"]:
             await self._power(spec, cap, "off", automatic=auto, shutdown=True)
             return
         if cfg["control_mode"] == "existing":

@@ -193,7 +193,7 @@ class EquipmentResumeButton(EquipmentEntity, ButtonEntity):
                               or (record.get("native_setpoint_stop")
                                   and getattr(runtime, "statuses", {}).get(
                                       self._spec.identifier, {}
-                                  ).get("status") == "native_setpoint_shutdown_blocked"))
+                                  ).get("status") == "awaiting_evaluation"))
         return bool(getattr(runtime, "_ready", False)
                     and runtime._current_spec(self._spec)
                     and (needs_recovery

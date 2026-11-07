@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "عمل · {channel}آلے کے چلنے کا کم از کم وقت (s)",
+        "name": "عمل · {channel}آلے کے چلنے کا کم از کم وقت (منٹ)",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "عمل · {channel}آلے کے بند رہنے کا کم از کم وقت (s)",
+        "name": "عمل · {channel}آلے کے بند رہنے کا کم از کم وقت (منٹ)",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "بجلی · {channel}max ON (s)",
+        "name": "بجلی · {channel}max ON (منٹ)",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "اعلانات · ڈیوائس کی خرابیوں کا اعلان کریں · {channel}",
+        "name": "اعلانات · {channel}ڈیوائس کی خرابیوں کا اعلان کریں",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "نیند · {channel}جب سب سو رہے ہوں",
+        "name": "نیند · {channel}جب سب سو رہے ہوں تو ڈیوائس بند رکھیں",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "کنٹرول · {channel}مکمل طاقت کی ہدف قدر",
+        "name": "کنٹرول · {channel}موڈ کے مطابق زیادہ سے زیادہ ہدف",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"

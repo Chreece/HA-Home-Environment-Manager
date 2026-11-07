@@ -150,14 +150,10 @@ async def evaluate():
     active.now=NOW+600
     assert await active._power(
         spec,active.manager.cap,'off',automatic=False,shutdown=True)
-    assert active.actual_commands[-1][0:2]==('set_temperature',{'temperature':5.})
-    assert active.record['power']['climate.heater']['since']==NOW
-    active.now=NOW+629.999
-    assert await b['sequence'].progress_stop(active,spec)
-    assert len(active.actual_commands)==1
-    active.now=NOW+630.
-    assert await b['sequence'].progress_stop(active,spec)
     assert active.actual_commands[-1][0:2]==('set_hvac_mode',{'hvac_mode':'off'})
+    assert len(active.actual_commands)==1
+    assert active.now==NOW+600
+    assert 'native_setpoint_stop' not in active.record
     assert active.record['pending']['expected']=={'state':'off'}
     assert active.record['power']['climate.heater']['since']==NOW
 

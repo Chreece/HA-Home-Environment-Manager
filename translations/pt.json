@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Funcionamento · {channel}Tempo mínimo de funcionamento do dispositivo (s)",
+        "name": "Funcionamento · {channel}Tempo mínimo de funcionamento do dispositivo (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Funcionamento · {channel}Tempo mínimo de paragem do dispositivo (s)",
+        "name": "Funcionamento · {channel}Tempo mínimo de paragem do dispositivo (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Potência · {channel}max ON (s)",
+        "name": "Potência · {channel}max ON (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Anúncios · Anunciar erros do dispositivo · {channel}",
+        "name": "Anúncios · {channel}Anunciar erros do dispositivo",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Sono · {channel}Quando todos estão a dormir",
+        "name": "Sono · {channel}Manter o dispositivo desligado quando todos dormem",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Controlo · {channel}Valor alvo de potência máxima",
+        "name": "Controlo · {channel}Valor alvo máximo por modo",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"

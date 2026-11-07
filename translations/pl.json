@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Praca · {channel}Minimalny czas pracy urządzenia (s)",
+        "name": "Praca · {channel}Minimalny czas pracy urządzenia (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Praca · {channel}Minimalny czas postoju urządzenia (s)",
+        "name": "Praca · {channel}Minimalny czas postoju urządzenia (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Moc · {channel}max ON (s)",
+        "name": "Moc · {channel}max ON (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Powiadomienia · Powiadamiaj o błędach urządzenia · {channel}",
+        "name": "Powiadomienia · {channel}Powiadamiaj o błędach urządzenia",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Sen · {channel}Gdy wszyscy śpią",
+        "name": "Sen · {channel}Utrzymuj urządzenie wyłączone, gdy wszyscy śpią",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Sterowanie · {channel}Wartość zadana pełnej mocy",
+        "name": "Sterowanie · {channel}Maksymalna wartość docelowa według trybu",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"

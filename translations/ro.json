@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Funcționare · {channel}Durata minimă de funcționare a dispozitivului (s)",
+        "name": "Funcționare · {channel}Durata minimă de funcționare a dispozitivului (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Funcționare · {channel}Durata minimă de oprire a dispozitivului (s)",
+        "name": "Funcționare · {channel}Durata minimă de oprire a dispozitivului (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Putere · {channel}max ON (s)",
+        "name": "Putere · {channel}max ON (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Anunțuri · Anunță erorile dispozitivului · {channel}",
+        "name": "Anunțuri · {channel}Anunță erorile dispozitivului",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Somn · {channel}Când toată lumea doarme",
+        "name": "Somn · {channel}Menține dispozitivul oprit când toți dorm",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Control · {channel}Valoare țintă pentru putere maximă",
+        "name": "Control · {channel}Valoare țintă maximă după mod",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"

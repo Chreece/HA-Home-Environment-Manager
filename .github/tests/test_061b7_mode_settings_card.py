@@ -47,6 +47,12 @@ def fixture(language="en"):
         states[f"climate.physical_0_{device}"]["attributes"].update(
             hvac_modes=["off", *modes], fan_modes=["low", "medium", "high"],
             fan_mode="low", supported_features=9)
+        # These native endpoints expose single-temperature targets, not RH.
+        target_modes = [mode for mode in modes if mode in ("heat", "cool")]
+        states[f"switch.native_full_output_{device}"]["attributes"].update(
+            native_full_output_modes=target_modes,
+            setting_label=BASE["BASE"]["NAME"](target_modes, language),
+            configuration_help=BASE["BASE"]["HELP"]("native_full_output", language, modes=target_modes))
         for mode in modes:
             provenance = {"area_id": "room0", "source_device_id": f"hardware{device}",
                           "source_entity_ids": [f"climate.physical_0_{device}"],
@@ -140,10 +146,11 @@ test('supported modes use metadata, own parameters, native options and one physi
   assert.equal((html.match(/data-climate-method=/g)||[]).length,1);
   assert.equal((html.match(/data-pid-calibration-method=/g)||[]).length,0);
   assert.equal((html.match(/data-window-announce-switch=/g)||[]).length,2);
-  assert.equal((html.match(/data-timed-setpoint-switch=/g)||[]).length,2);
-  assert.ok(html.includes('data-timed-setpoint-switch="switch.timed_zone_0"'));
+  assert.equal((html.match(/data-device-quick-key8="native_full_output"/g)||[]).length,2);
+  assert.ok(!html.includes('data-timed-setpoint-switch'));
+  assert.ok(html.includes('data-device-quick-switch8="switch.native_full_output_0"'));
   assert.ok(html.includes('data-window-policy-switch="switch.shared_window"'));
-  assert.ok(!entries[0].operatingModes.some(mode=>mode.parameters.some(field=>field.key==='timed_setpoint_sequence')));
+  assert.ok(!entries[0].operatingModes.some(mode=>mode.parameters.some(field=>field.key==='native_full_output')));
   assert.ok(html.includes('data-mode-setting-input="number.cycle_0_heat"'));
   assert.ok(html.includes('data-mode-setting-input="number.away_target"'));
   assert.ok(!html.includes('data-operating-mode="defrost"'));
@@ -313,9 +320,10 @@ def run():
         assert page.locator('[data-pid-calibration-method]').count() == 0
         assert page.locator('[data-window-announce-switch]').count() == 2
         assert page.locator('[data-window-policy-switch="switch.shared_window"]').count() == 1
-        assert page.locator('[data-timed-setpoint-switch]').count() == 2
-        assert page.locator('[data-timed-setpoint-switch="switch.timed_zone_0"]').is_visible()
-        assert page.locator('.hem-operating-mode7 [data-timed-setpoint-switch],.hem-operating-mode7 [data-window-policy-switch]').count() == 0
+        assert page.locator('[data-device-quick-key8="native_full_output"]').count() == 2
+        assert page.locator('[data-timed-setpoint-switch]').count() == 0
+        assert page.locator('[data-device-quick-switch8="switch.native_full_output_0"]').is_visible()
+        assert page.locator('.hem-operating-mode7 [data-device-quick-key8="native_full_output"],.hem-operating-mode7 [data-window-policy-switch]').count() == 0
         assert panel(0, "defrost").count() == 0
         assert page.locator('[data-mode-setting-input="number.wrong_device"]').count() == 0
         assert method(0, "auto").locator('option[value="pid"]').count() == 0

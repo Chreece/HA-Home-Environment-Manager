@@ -274,18 +274,20 @@ class MetadataTests(unittest.TestCase):
         # Source-derived keys include every equipment entity initialized with a
         # literal key plus number/select catalog definitions in the model.
         keys = {"control_mode", "resume", "climate", "pause_on_window_open",
-                "announce_device_errors", "sensor_verified", "honor_timed_setpoint",
+                "announce_device_errors", "sensor_verified", "native_full_output",
+                "announce_before_start", "sleep_when_everyone_asleep",
                 "quiet_sleep", "quiet_occupied", "quiet_percentage", "quiet_fan_mode",
                 "power_switch_entity", "power_switch_cooldown_seconds", "particle_cadr_m3h",
                 "pid_apply_calibration", "pid_apply_fan_capacity", "pid_review_approve",
                 "pid_review_discard", "presence_requirement", "sleep_behavior", "fan_purpose"}
-        # Timed-setpoint's exact key is taken from its source, avoiding an alias.
+        # Derive current literal switch keys without naming a retired control.
         tree = ast.parse((ROOT / "switch.py").read_text())
-        cls = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == "EquipmentTimedSetpointSwitch")
-        keys.discard("honor_timed_setpoint")
-        for node in ast.walk(cls):
-            if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "_equipment_init":
-                keys.add(ast.literal_eval(node.args[-1]))
+        for cls in (n for n in tree.body if isinstance(n, ast.ClassDef) and n.name.startswith("Equipment")):
+            for node in ast.walk(cls):
+                if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                        and node.func.attr == "_equipment_init" and node.args
+                        and isinstance(node.args[-1], ast.Constant) and isinstance(node.args[-1].value, str)):
+                    keys.add(node.args[-1].value)
         for key in keys:
             self.assertIn(key, equipment_help.HELP)
             for locale in ("en", "el", "de"):

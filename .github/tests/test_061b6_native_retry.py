@@ -282,7 +282,7 @@ class RetryTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn('temperature', runtime.record['manual_override_evidence']['changed_controls'])
         self.assertEqual(len(runtime.calls), 1)
 
-    async def test_timed_stop_ignores_reused_human_context_but_honors_new_action(self):
+    async def test_direct_stop_ignores_reused_human_context_but_honors_new_action(self):
         runtime = self.runtime()
         runtime.manager.settings['timed_setpoint_sequence'] = True
         runtime.own_running(age=700)
@@ -294,10 +294,10 @@ class RetryTests(unittest.IsolatedAsyncioTestCase):
         }
         runtime.measurement = runtime.manager.targets['heat']
         await self.step(runtime)
-        self.assertEqual(runtime.calls[-1]['service'], 'set_temperature')
-        requested = runtime.calls[-1]['data']['temperature']
+        self.assertEqual(runtime.calls[-1]['service'], 'set_hvac_mode')
+        self.assertEqual(runtime.calls[-1]['data'], {'hvac_mode': 'off'})
+        self.assertNotIn('native_setpoint_stop', runtime.record)
         runtime.now += 1
-        runtime.report(temperature=requested)
         runtime.state.attributes['fan_mode'] = 'high'
         runtime.state.last_updated = datetime.fromtimestamp(runtime.now, timezone.utc)
         await self.step(runtime)
@@ -318,12 +318,11 @@ class RetryTests(unittest.IsolatedAsyncioTestCase):
                 runtime.manager.settings['timed_setpoint_sequence'] = timed
                 runtime.own_running(age=7200)
                 await self.step(runtime)
-                if timed:
-                    self.assertEqual(runtime.calls[-1]['service'], 'set_temperature')
-                    await self.step(runtime, 30)
+                self.assertEqual(len(runtime.calls), 1)
+                self.assertNotIn('native_setpoint_stop', runtime.record)
                 self.assertEqual(runtime.calls[-1]['data'], {'hvac_mode': 'off'})
                 initial = runtime.record['pending']
-                self.assertEqual(initial['retry_context']['automatic'], not timed)
+                self.assertTrue(initial['retry_context']['automatic'])
                 runtime.manager.plan.update(away=True, occupancy='unoccupied')
                 for _ in range(3):
                     await self.step(runtime, 60)

@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Rad · {channel}Minimalno vrijeme rada uređaja (s)",
+        "name": "Rad · {channel}Minimalno vrijeme rada uređaja (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Rad · {channel}Minimalno vrijeme mirovanja uređaja (s)",
+        "name": "Rad · {channel}Minimalno vrijeme mirovanja uređaja (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Snaga · {channel}max ON (s)",
+        "name": "Snaga · {channel}max ON (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Obavijesti · Najavi pogreške uređaja · {channel}",
+        "name": "Obavijesti · {channel}Najavi pogreške uređaja",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Spavanje · {channel}Kad svi spavaju",
+        "name": "Spavanje · {channel}Drži uređaj isključenim dok svi spavaju",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Upravljanje · {channel}Zadana vrijednost za punu snagu",
+        "name": "Upravljanje · {channel}Najviša ciljna vrijednost po načinu rada",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"

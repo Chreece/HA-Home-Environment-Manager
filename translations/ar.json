@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "التشغيل · {channel}الحد الأدنى لوقت تشغيل الجهاز (s)",
+        "name": "التشغيل · {channel}الحد الأدنى لوقت تشغيل الجهاز (دقيقة)",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "التشغيل · {channel}الحد الأدنى لوقت توقف الجهاز (s)",
+        "name": "التشغيل · {channel}الحد الأدنى لوقت توقف الجهاز (دقيقة)",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "الطاقة · {channel}max ON (s)",
+        "name": "الطاقة · {channel}max ON (دقيقة)",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "الإعلانات · إعلان أخطاء الجهاز · {channel}",
+        "name": "الإعلانات · {channel}إعلان أخطاء الجهاز",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "النوم · {channel}عندما يكون الجميع نائمين",
+        "name": "النوم · {channel}إبقاء الجهاز متوقفًا عندما يكون الجميع نائمين",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "التحكم · {channel}القيمة المستهدفة للقدرة الكاملة",
+        "name": "التحكم · {channel}القيمة المستهدفة القصوى حسب الوضع",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"

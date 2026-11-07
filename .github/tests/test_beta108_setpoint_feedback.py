@@ -75,9 +75,8 @@ class SetpointLifecycleTests(unittest.IsolatedAsyncioTestCase):
                     runtime.now += 5
                     runtime.report(mode=mode)
                     await runtime.tick(SPEC)
-                    self.assertEqual(len(runtime.calls), 1, "No setpoint during the native ON startup grace")
-                    runtime.now += 30
-                    await runtime.tick(SPEC)
+                    self.assertEqual(len(runtime.calls), 2,
+                                     "Confirmed native ON permits the target without the retired timing delay")
                     self.assertEqual(runtime.calls[-1], {
                         "domain": "climate", "service": "set_temperature",
                         "data": {"temperature": requested},

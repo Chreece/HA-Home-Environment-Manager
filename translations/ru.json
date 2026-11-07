@@ -3637,7 +3637,7 @@
         }
       },
       "equipment_min_on_seconds": {
-        "name": "Работа · {channel}Минимальное время работы устройства (s)",
+        "name": "Работа · {channel}Минимальное время работы устройства (мин)",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"
@@ -3645,7 +3645,7 @@
         }
       },
       "equipment_min_off_seconds": {
-        "name": "Работа · {channel}Минимальное время простоя устройства (s)",
+        "name": "Работа · {channel}Минимальное время простоя устройства (мин)",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"
@@ -3653,7 +3653,7 @@
         }
       },
       "equipment_max_on_seconds": {
-        "name": "Мощность · {channel}max ON (s)",
+        "name": "Мощность · {channel}max ON (мин)",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"
@@ -3983,7 +3983,7 @@
         }
       },
       "equipment_announce_device_errors": {
-        "name": "Объявления · Сообщать об ошибках устройства · {channel}",
+        "name": "Объявления · {channel}Сообщать об ошибках устройства",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"
@@ -3991,7 +3991,7 @@
         }
       },
       "equipment_sleep_when_everyone_asleep": {
-        "name": "Сон · {channel}Когда все спят",
+        "name": "Сон · {channel}Держать устройство выключенным, когда все спят",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"
@@ -4007,7 +4007,7 @@
         }
       },
       "equipment_native_full_output": {
-        "name": "Управление · {channel}Уставка полной мощности",
+        "name": "Управление · {channel}Максимальная уставка по режиму",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"

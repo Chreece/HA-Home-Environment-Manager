@@ -60,6 +60,21 @@ class EquipmentEntity:
             self._attr_name = f"{label} · {channel}{setting_label(key, locale)}"
 
     @property
+    def name(self):
+        if getattr(self, "_key", None) != "native_full_output":
+            return getattr(self, "_attr_name", None)
+        # Re-evaluate capability-backed names when the native device reports
+        # its modes after startup. The controller identity and any user-set
+        # registry name remain unchanged.
+        from .equipment_native_target import configuration_modes
+        from .equipment_name_catalog import native_full_output_label
+        locale = getattr(getattr(self._manager.hass, "config", None), "language", "en")
+        channel = getattr(self, "_attr_translation_placeholders", {}).get("channel", "")
+        group = localized_equipment_name("control_mode", locale).partition(" · ")[0]
+        label = native_full_output_label(configuration_modes(self._manager, self._spec), locale)
+        return f"{group} · {channel}{label}"
+
+    @property
     def controller_settings(self):
         if getattr(self, "_operating_mode", None):
             if model.mode_descriptor(self._manager, self._spec, self._operating_mode) is None:
@@ -82,14 +97,22 @@ class EquipmentEntity:
         locale = self._manager.settings.get("language", "auto")
         if locale == "auto":
             locale = getattr(getattr(self._manager.hass, "config", None), "language", "en")
+        key = getattr(self, "_key", "control_status")
+        if key == "native_full_output":
+            from .equipment_native_target import configuration_modes
+            modes = configuration_modes(self._manager, self._spec)
+            help_text = equipment_configuration_help(key, locale, modes=modes)
+        else:
+            modes = None
+            help_text = equipment_configuration_help(key, locale)
         attributes = {"area_id": self._spec.area_id,
                 "controller_id": self._spec.identifier,
                 "source_device_id": self._spec.source_device_id,
                 "source_entity_ids": list(self._spec.source_entities),
                 "controller_status": self._manager.equipment.statuses.get(self._spec.identifier, {}),
-                "configuration_help": equipment_configuration_help(
-                    getattr(self, "_key", "control_status"), locale
-                )}
+                "configuration_help": help_text}
+        if modes is not None:
+            attributes["native_full_output_modes"] = list(modes)
         mode = getattr(self, "_operating_mode", None)
         if mode:
             from .equipment_mode_entities import scoped_metadata, scoped_help
