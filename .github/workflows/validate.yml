@@ -409,40 +409,43 @@ jobs:
       - name: Package and inspect canonical HACS integration
         run: |
           python -I - <<'PY'
-          import json,subprocess
+          import hashlib
+          import importlib.util
+          import json
           from pathlib import Path
-          from zipfile import ZipFile,ZIP_DEFLATED
-          version=json.loads(Path('manifest.json').read_text(encoding='utf-8'))['version']
-          p=Path('dist')/f'HA-Home-Environment-Manager-v{version}.zip'
-          p.parent.mkdir(exist_ok=True)
-          names=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
-          with ZipFile(p,'w',ZIP_DEFLATED,compresslevel=8) as z:
-              for name in sorted(filter(None,names)):
-                  if name.startswith(('.github/','tests/','dist/')) or name=='hacs.json' or '__pycache__' in name or name.endswith(('.pyc','.pyo')):
-                      continue
-                  q=Path(name)
-                  if q.is_file():z.write(q,'custom_components/environment_manager/'+name)
-          with ZipFile(p) as z:
-              assert z.testzip() is None
-              root='custom_components/environment_manager/'
-              m=json.loads(z.read(root+'manifest.json'))
-              assert m['domain']=='environment_manager' and m['version']==version
-              for f in ('__init__.py','device_faults.py','equipment_resume.py','pid_review.py','equipment_power_switch.py',
-                        'pid_passive.py','pid_calibration.py',
-                        'equipment_runtime.py','equipment_setpoint_sequence.py','equipment_native_target.py','equipment_pid_safety.py','advanced_comfort.py','shade_cooling.py','switch.py',
-                        'button.py','climate.py','equipment_name_catalog.py',
-                        'equipment_labels.json','equipment_window.py',
-                        'climate_arbitration.py','pid_phase.py','pid_restart.py',
-                        'equipment_status.py','equipment_battery.py',
-                        'room_ventilation.py','messages.py',
-                        'select.py','number.py','device_controls.py','arrival_preparation.py',
-                        'languages.py','tts_languages.py','announcement_text.py',
-                        'recommendation_text.py','window_open_wait.py','window_open_text.py','window_option_catalog.py',
-                        'device_command_text.py',
-                        'equipment_mode_settings.py','equipment_mode_entities.py','operating_mode_catalog.py',
-                        'mold_control_demand.py',
-                        'translations/el.json','frontend/air-quality-advisor-card.js'):
-                  assert root+f in z.namelist(),f
-              assert all(f.startswith(root) for f in z.namelist())
-          print('PASS: canonical integration ZIP',version,p.stat().st_size)
+          import subprocess
+          from zipfile import ZipFile
+
+          script = Path('.github/scripts/publish_release.py')
+          spec = importlib.util.spec_from_file_location('hem_release_publisher', script)
+          publisher = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(publisher)
+
+          source = Path('custom_components/environment_manager')
+          manifest = json.loads((source / 'manifest.json').read_text(encoding='utf-8'))
+          hacs = json.loads(Path('hacs.json').read_text(encoding='utf-8'))
+          assert manifest['domain'] == 'environment_manager'
+          assert hacs['zip_release'] is True and hacs['filename'] == 'environment_manager.zip'
+          assert not hacs.get('content_in_root', False)
+          assert not Path('manifest.json').is_file()
+          version = manifest['version']
+          sha = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode().strip()
+
+          data = publisher.package(Path('.'), sha, version)
+          names = publisher.inspect_zip(data, version)
+          assert 'manifest.json' in names and '__init__.py' in names
+          assert 'translations/el.json' in names
+          assert 'frontend/air-quality-advisor-card.js' in names
+          assert all(not name.startswith(publisher.SOURCE) for name in names)
+          assert all(name.startswith(('translations/', 'frontend/', 'brand/'))
+                     or '/' not in name for name in names)
+
+          output = Path('dist') / hacs['filename']
+          output.parent.mkdir(exist_ok=True)
+          output.write_bytes(data)
+          with ZipFile(output) as archive:
+              assert archive.testzip() is None
+              assert json.loads(archive.read('manifest.json')) == manifest
+          print('PASS: Marketplace/HACS release ZIP', version, len(names),
+                len(data), hashlib.sha256(data).hexdigest())
           PY
