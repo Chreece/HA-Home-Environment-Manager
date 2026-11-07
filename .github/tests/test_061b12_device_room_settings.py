@@ -67,13 +67,13 @@ with sync_playwright() as p:
     assert dialog.locator('[data-hem-room-row126="number.spoof_room"]').count()==0
     assert dialog.locator('[data-hem-room-row126="number.spoof_device"]').count()==0
     assert page.evaluate("nativeCalls.length")==0
-    comfort=dialog.locator('[data-room-native-group126="comfort"]')
+    comfort=dialog.locator('[data-room-native-group126="targets"]')
     comfort.locator("summary").click()
     comfort.locator('[data-hem-full-value127="number.hem_home_target_a"]').fill("21.5")
     comfort.locator('[data-hem-full-apply127="number.hem_home_target_a"]').click()
     page.wait_for_function("nativeCalls.length===1")
     assert page.evaluate("nativeCalls[0]")==["number","set_value",{"entity_id":"number.hem_home_target_a","value":21.5}]
-    dialog.locator('[data-room-native-group126="occupancy"] > summary').click()
+    dialog.locator('[data-room-native-group126="presence"] > summary').click()
     dialog.locator('[data-hem-full-apply127="switch.hem_occupancy_a"]').click()
     page.wait_for_function("nativeCalls.length===2")
     assert page.evaluate("nativeCalls[1]")==["switch","turn_on",{"entity_id":"switch.hem_occupancy_a"}]
