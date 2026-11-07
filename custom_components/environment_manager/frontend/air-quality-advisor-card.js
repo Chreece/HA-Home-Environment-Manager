@@ -8648,6 +8648,10 @@
     row("mode",a.selected_operating_mode||a.requested_hvac_mode||
       entry.method?.state||a.control_mode);
     row("status",this._controllerStatusLabel(presentation.status));
+    if(presentation.reason){
+      rows.push('<div class="hem-device-info-row126"><b>'+escape(this._l65("reason"))+
+        '</b><span>'+escape(this._controllerStatusLabel(presentation.reason))+'</span></div>');
+    }
     if(actual){
       row("source",native?.attributes?.friendly_name||actual);
       row("feedback",native?this._controllerStatusLabel(native.state):
