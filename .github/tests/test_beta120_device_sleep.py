@@ -39,7 +39,7 @@ status_method = next(n for cls in status_tree.body if isinstance(cls, ast.ClassD
                      and cls.name == "ControllerStatusSensor" for n in cls.body
                      if isinstance(n, ast.FunctionDef) and n.name == "extra_state_attributes")
 status_method.decorator_list = []
-status_scope = {"equipment": model}
+status_scope = {"equipment": model, "__package__": package}
 exec(compile(ast.Module(body=[ast.parse("from __future__ import annotations").body[0],
                              status_method], type_ignores=[]),
              str(ROOT / "equipment_status.py"), "exec"), status_scope)
@@ -251,6 +251,7 @@ class PreferenceAndRetry(unittest.IsolatedAsyncioTestCase):
         case = writer["SettingTests"]()
         case.setUp()
         m, rt = case.manager, case.manager.equipment
+        m.entry.options[model.SETTINGS][case.a.identifier]["control_mode"] = "existing"
         case.states.clear()
         # HA exposes read-only entry.options; the save must make a mutable
         # isolated copy, and another controller's authorization must survive.

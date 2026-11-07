@@ -44,11 +44,13 @@ def assert_announcement(page, label, state):
     assert control.get_attribute("aria-checked") == str(state == "on").lower()
     assert control.get_attribute("aria-label") == label
     assert control.get_attribute("title") == label
-    # Its purpose stays localized and accessible; the compact visible control
-    # consists only of the bell and the existing ON/OFF state indicator.
-    assert control.inner_text().strip() == state.upper()
-    assert control.locator("ha-icon").count() == 1
-    assert control.locator("ha-icon").get_attribute("icon") == (
+    # The purpose icon opens help; the adjacent localized state alone toggles.
+    expected = page.evaluate("s=>card._quickState8(s)", state)
+    assert control.inner_text().strip() == expected
+    assert control.locator("ha-icon").count() == 0
+    icon = page.locator('[data-detail-id="device-option:switch.hem_device_error_alerts"] > summary ha-icon')
+    assert icon.count() == 1
+    assert icon.get_attribute("icon") == (
         "mdi:bell-ring-outline" if state == "on" else "mdi:bell-off-outline")
 
 

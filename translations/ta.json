@@ -2629,6 +2629,7 @@
           "native_ac_drying_already_active": "Native AC drying already active",
           "native_already_off": "Physical HVAC device is already off",
           "native_defrost_protection": "Device is defrosting; changing output is blocked",
+          "native_device_stabilizing": "சாதனம் கிடைக்கிறது · நிலைத்தன்மை சரிபார்க்கப்படுகிறது",
           "native_fan_preset_active": "Native fan preset active",
           "native_humidity_device_unavailable": "Native humidity device unavailable",
           "native_mode_commanded": "Operating mode command sent",
@@ -3796,7 +3797,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "வீட்டில் இருப்பு · வருகை தயாரிப்புக்கான காலவரம்பு (நிமிடம்)",
+        "name": "வீடு - தயாரிப்பு - அதிகபட்ச நேரம்",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
@@ -3999,6 +4000,14 @@
       },
       "equipment_announce_before_start": {
         "name": "அறிவிப்புகள் · {channel}சாளரங்களைத் திறக்கக் கோரு",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
+      },
+      "equipment_native_full_output": {
+        "name": "கட்டுப்பாடு · {channel}முழுத் திறனுக்கான இலக்கு மதிப்பு",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"

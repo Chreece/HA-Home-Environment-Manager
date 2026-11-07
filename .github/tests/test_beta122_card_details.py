@@ -176,9 +176,12 @@ test('announce control displays icon and state while retaining accessible purpos
   const {card,room}=make(),html=card._controllerPanel(room);
   const button=html.match(/<button[^>]*data-device-error-announce[^>]*>[\s\S]*?<\/button>/)[0];
   assert.ok(button.includes('aria-label="Announce errors"')&&button.includes('title="Announce errors"'));
-  assert.ok(button.includes('aria-checked="true"'));assert.ok(button.includes('mdi:bell-ring-outline'));
+  assert.ok(button.includes('aria-checked="true"'));
+  assert.ok(html.includes('data-detail-id="device-option:switch.hem_announce"'));
+  assert.ok(html.includes('mdi:bell-ring-outline'));
+  assert.ok(!button.includes('ha-icon'),'Purpose icon opens help independently of the state toggle');
   const body=button.slice(button.indexOf('>')+1,button.lastIndexOf('</button>'));
-  assert.ok(body.includes('<b>ON</b>'));assert.ok(!body.includes('Announce errors'));
+  assert.ok(body.includes('<b>On</b>'));assert.ok(!body.includes('Announce errors'));
   click(card,{'data-controller-area':'living','data-device-error-announce':'switch.hem_announce'});
   assert.equal(JSON.stringify(card.calls),JSON.stringify([['switch','turn_off',{entity_id:'switch.hem_announce'}]]));
 });
@@ -295,7 +298,8 @@ def browser_checks(data):
         assert page.evaluate("info.at(-1)") == data["physical"]
         assert page.evaluate("calls.length") == 0
         announce = controller.locator('[data-device-error-announce]')
-        assert announce.inner_text().strip() == "ON"
+        assert announce.inner_text().strip() == "On"
+        assert controller.locator('[data-detail-id="device-option:switch.hem_announce"] > summary ha-icon').count() == 1
         assert announce.get_attribute("aria-label") == "Announce errors"
         assert announce.get_attribute("title") == "Announce errors"
         announce.click()

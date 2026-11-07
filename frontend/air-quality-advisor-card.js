@@ -606,6 +606,7 @@
       this._lastRenderError = null;
       this._hasValidRender = false;
       this._modeSettingsPending7 = new Set();
+      this._quickOptionsPending8 = new Set();
       // A focused native select/input belongs to the user until they commit
       // or leave it; replacing shadowRoot.innerHTML while it is open closes
       // the browser's picker and discards any unfinished manual edit.
@@ -630,6 +631,12 @@
         this._flushDeferredRenderSoon();
       });
       this.shadowRoot.addEventListener('click', (event) => {
+        const quickOption = event.target.closest?.('[data-device-quick-switch8]');
+        if (quickOption) {
+          event.preventDefault();
+          this._submitDeviceQuick8(quickOption);
+          return;
+        }
         const modeSetting = event.target.closest?.('[data-mode-setting-action]');
         if (modeSetting) {
           event.preventDefault();
@@ -1360,6 +1367,11 @@
       const errorAnnouncementSwitches=sharedStates.filter(([id,item])=>
         id.startsWith('switch.') && item?.attributes?.area_id===area &&
         item.attributes.device_fault_role==='announce');
+      const deviceFlagSwitches=sharedStates.filter(([id,item])=>
+        id.startsWith('switch.') && item?.attributes?.area_id===area &&
+        item.attributes.equipment_option_role==='policy' &&
+        typeof item.attributes.setting_key==='string' && item.attributes.setting_key &&
+        Array.isArray(item.attributes.source_entity_ids) && item.attributes.source_entity_ids.length>0);
       const nativeResumeButtons=sharedStates.filter(([id,item])=>
         id.startsWith('button.') && item?.attributes?.area_id===area &&
         ['check_and_continue','continue_automatic'].includes(
@@ -1437,7 +1449,8 @@
         const [windowAnnounceId,windowAnnounce]=matchWindow(windowAnnouncementSwitches);
         const [windowWaitId,windowWait]=matchWindow(windowWaitingNumbers);
         const faultSettings=errorAnnouncementSwitches.filter(([,item])=>
-          signature(item)===signature(climate));
+          signature(item)===signature(climate) &&
+          item.attributes.source_device_id===climate.attributes.source_device_id);
         const [errorAnnounceId,errorAnnounce]=faultSettings.length===1
           ? faultSettings[0] : [null,null];
         const nativeResumes=nativeResumeButtons.filter(([,item])=>
@@ -1470,6 +1483,14 @@
           signature(item)===signature(climate) &&
           item.attributes.source_device_id===climate.attributes.source_device_id);
         const [fanPurposeId,fanPurpose]=purposes.length===1?purposes[0]:[null,null];
+        const flags=new Map();
+        for(const [id,state] of deviceFlagSwitches) {
+          if(signature(state)!==signature(climate) ||
+              state.attributes.source_device_id!==climate.attributes.source_device_id) continue;
+          const key=state.attributes.setting_key;
+          flags.set(key,flags.has(key)?null:{id,state,key});
+        }
+        const deviceFlags=[...flags.values()].filter(Boolean);
         return {entityId,climate,methodId,method,resumeButtonId,resumeButton,operatingModes,
                 errorAnnounceId,errorAnnounce,timedSetpointId,timedSetpoint,
                 windowAnnounceId,windowAnnounce,windowWaitId,windowWait,
@@ -1477,7 +1498,7 @@
                 calibrationNumbers,reviewApproveId,reviewApprove,
                 reviewDiscardId,reviewDiscard,capacityModeId,capacityMode,capacityDirectionId,
                 capacityDirection,capacityButtonId,capacityButton,capacityNumbers,
-                fanPurposeId,fanPurpose};
+                fanPurposeId,fanPurpose,deviceFlags};
       }).sort((a,b)=>a.entityId.localeCompare(b.entityId));
     }
 
@@ -1486,13 +1507,6 @@
       const labels={"en":["Ask to open windows","Window opening wait (min)"],"el":["Αίτημα ανοίγματος παραθύρων","Αναμονή ανοίγματος (λεπτά)"],"de":["Zum Fensteröffnen auffordern","Wartezeit zum Lüften (min)"],"fr":["Demander d’ouvrir les fenêtres","Attente d’ouverture (min)"],"es":["Pedir que se abran las ventanas","Espera de apertura (min)"],"it":["Chiedi di aprire le finestre","Attesa apertura (min)"],"nl":["Vragen om ramen te openen","Wachttijd voor openen (min)"],"pt":["Pedir para abrir as janelas","Espera pela abertura (min)"],"pt-BR":["Pedir para abrir as janelas","Espera pela abertura (min)"],"pl":["Poproś o otwarcie okien","Czas oczekiwania na otwarcie (min)"],"cs":["Požádat o otevření oken","Čekání na otevření (min)"],"sk":["Požiadať o otvorenie okien","Čakanie na otvorenie (min)"],"sv":["Be om att öppna fönster","Väntetid för öppning (min)"],"nb":["Be om å åpne vinduer","Ventetid for åpning (min)"],"da":["Bed om at åbne vinduer","Ventetid på åbning (min)"],"fi":["Pyydä avaamaan ikkunat","Avaamisen odotusaika (min)"],"hu":["Ablaknyitás kérése","Várakozás ablaknyitásra (perc)"],"ro":["Solicită deschiderea ferestrelor","Așteptare pentru deschidere (min)"],"bg":["Поискай отваряне на прозорците","Изчакване за отваряне (мин)"],"hr":["Zatraži otvaranje prozora","Čekanje otvaranja (min)"],"sr":["Затражи отварање прозора","Чекање отварања (мин)"],"ru":["Попросить открыть окна","Ожидание открытия (мин)"],"uk":["Попросити відкрити вікна","Очікування відкриття (хв)"],"tr":["Pencerelerin açılmasını iste","Açılma bekleme süresi (dk)"],"ar":["طلب فتح النوافذ","انتظار فتح النوافذ (دقيقة)"],"he":["בקשה לפתוח חלונות","המתנה לפתיחת חלונות (דקות)"],"fa":["درخواست باز کردن پنجره‌ها","انتظار برای باز کردن (دقیقه)"],"hi":["खिड़कियाँ खोलने का अनुरोध","खोलने की प्रतीक्षा (मिनट)"],"bn":["জানালা খোলার অনুরোধ","খোলার জন্য অপেক্ষা (মিনিট)"],"ta":["சாளரங்களைத் திறக்கக் கோரு","திறப்பதற்கான காத்திருப்பு (நிமிடம்)"],"ur":["کھڑکیاں کھولنے کی درخواست","کھولنے کا انتظار (منٹ)"],"id":["Minta membuka jendela","Waktu tunggu membuka (menit)"],"ja":["窓を開けるよう案内","窓を開けるまでの待機（分）"],"ko":["창문 열기 요청","창문 열기 대기 시간(분)"],"th":["ขอให้เปิดหน้าต่าง","เวลารอเปิดหน้าต่าง (นาที)"],"vi":["Yêu cầu mở cửa sổ","Thời gian chờ mở (phút)"],"zh-Hans":["提示打开窗户","等待开窗（分钟）"],"zh-Hant":["提示打開窗戶","等待開窗（分鐘）"]};
       const names=labels[this._language()] || labels.en;
       const enabled=entry.windowAnnounce?.state==='on';
-      const ready=['on','off'].includes(entry.windowAnnounce?.state);
-      const toggle='<div class="hem-device-error-toggle"><button type="button" role="switch" '+
-        'data-window-announce-switch="'+escape(entry.windowAnnounceId)+'" '+
-        'data-controller-area="'+escape(area)+'" data-managed-controller="'+escape(entry.entityId)+'" '+
-        (ready?'':'disabled ')+'aria-checked="'+enabled+'" aria-label="'+escape(names[0])+'">'+
-        this._icon('mdi:window-open-variant')+'<span>'+escape(names[0])+'</span><b>'+
-        escape(this._controllerStatusLabel(entry.windowAnnounce?.state))+'</b></button></div>';
       let timeout='';
       if (enabled && entry.windowWaitId) {
         const value=Number(entry.windowWait?.state);
@@ -1504,10 +1518,156 @@
           '<button type="button" data-save-window-wait="'+escape(entry.windowWaitId)+'" '+
           'data-controller-area="'+escape(area)+'" data-managed-controller="'+escape(entry.entityId)+'" '+
           (available?'':'disabled')+'>'+escape(saveLabel)+'</button></div>';
-        timeout=this._configurationHelp116(field,entry.windowWaitId,entry.windowWait,names[1]);
+        const help=entry.windowWait?.attributes?.configuration_help;
+        timeout=field+(typeof help==='string' && help.trim()
+          ? '<p class="hem-help-text116">'+escape(help.trim())+'</p>' : '');
       }
-      return '<div class="hem-window-settings6">'+
-        this._configurationHelp116(toggle,entry.windowAnnounceId,entry.windowAnnounce,names[0])+timeout+'</div>';
+      return timeout?'<div class="hem-window-settings6">'+timeout+'</div>':'';
+    }
+
+    _quickState8(state) {
+      // Boolean preferences need a short, localized value in the one-row
+      // toolbar. Their full purpose is named independently on both actions.
+      const words={
+        en:['On','Off'],el:['Ναι','Όχι'],de:['An','Aus'],fr:['Oui','Non'],
+        es:['Sí','No'],it:['Sì','No'],nl:['Aan','Uit'],pt:['Sim','Não'],
+        'pt-br':['Sim','Não'],pl:['Tak','Nie'],cs:['Ano','Ne'],sk:['Áno','Nie'],
+        sv:['På','Av'],nb:['På','Av'],da:['Til','Fra'],fi:['Kyllä','Ei'],
+        hu:['Be','Ki'],ro:['Da','Nu'],bg:['Да','Не'],hr:['Da','Ne'],sr:['Да','Не'],
+        ru:['Вкл','Выкл'],uk:['Так','Ні'],tr:['Açık','Kapalı'],ar:['نعم','لا'],
+        he:['כן','לא'],fa:['بله','خیر'],hi:['हाँ','नहीं'],bn:['হ্যাঁ','না'],
+        ta:['ஆம்','இல்லை'],ur:['ہاں','نہیں'],id:['Ya','Tidak'],ja:['オン','オフ'],
+        ko:['켬','끔'],th:['เปิด','ปิด'],vi:['Bật','Tắt'],
+        'zh-hans':['开','关'],'zh-hant':['開','關'],
+      }[this._language()] || [this._l65('on'),this._l65('off')];
+      return state==='on'?words[0]:state==='off'?words[1]:'—';
+    }
+
+    _deviceQuickOptions8(entry) {
+      const copy={
+        en:{error:'Announce errors',airing:'Ask to open windows',timing:'Timed setpoints (30 s)',
+          errorHelp:'Announce faults reported by this device through the configured notification destinations. Turning this off silences announcements; the reported fault remains visible.',
+          airingHelp:'When outdoor conditions allow useful ventilation, ask someone to open the windows before this device starts automatically. The waiting time limits how long it waits for a window to open.',
+          timingHelp:'For an authorized on/off heating or cooling device: wait 30 seconds after ON before sending its full-demand native temperature limit. Before OFF, send the opposite limit and wait 30 seconds. The room target stays unchanged.'},
+        el:{error:'Αναγγελία σφαλμάτων',airing:'Αίτημα ανοίγματος παραθύρων',timing:'Χρονισμός στόχων (30 s)',
+          errorHelp:'Αναγγέλλει σφάλματα που αναφέρει αυτή η συσκευή στους ρυθμισμένους προορισμούς ειδοποιήσεων. Η απενεργοποίηση σταματά τις αναγγελίες· το σφάλμα παραμένει ορατό.',
+          airingHelp:'Όταν οι εξωτερικές συνθήκες επιτρέπουν χρήσιμο αερισμό, ζητά να ανοίξει κάποιος τα παράθυρα πριν ξεκινήσει αυτόματα αυτή η συσκευή. Ο χρόνος αναμονής ορίζει πόσο θα περιμένει να ανοίξει παράθυρο.',
+          timingHelp:'Για εξουσιοδοτημένη συσκευή θέρμανσης ή ψύξης on/off: περιμένει 30 δευτερόλεπτα μετά την ενεργοποίηση πριν στείλει το όριο θερμοκρασίας πλήρους ισχύος. Πριν την απενεργοποίηση στέλνει το αντίθετο όριο και περιμένει 30 δευτερόλεπτα. Ο στόχος δωματίου δεν αλλάζει.'},
+        de:{error:'Fehler ansagen',airing:'Zum Fensteröffnen auffordern',timing:'Zeitgesteuerte Sollwerte (30 s)',
+          errorHelp:'Meldet von diesem Gerät gemeldete Fehler über die eingerichteten Benachrichtigungsziele. Ausschalten unterdrückt die Ansagen; der gemeldete Fehler bleibt sichtbar.',
+          airingHelp:'Wenn die Außenbedingungen sinnvolles Lüften erlauben, vor dem automatischen Start dieses Geräts zum Fensteröffnen auffordern. Die Wartezeit begrenzt, wie lange auf ein geöffnetes Fenster gewartet wird.',
+          timingHelp:'Für ein freigegebenes Ein/Aus-Heiz- oder Kühlgerät: Nach dem Einschalten 30 Sekunden warten, dann den nativen Temperaturgrenzwert für volle Leistung senden. Vor dem Ausschalten den entgegengesetzten Grenzwert senden und 30 Sekunden warten. Der Raumsollwert bleibt unverändert.'},
+      };
+      const text=copy[this._language()] || copy.en, options=[];
+      const add=(key,id,state,icon,label,help,attribute)=>{
+        if(!id || !state) return;
+        const supplied=state.attributes || {};
+        options.push({key,id,state,icon,attribute,
+          label:typeof supplied.setting_label==='string' && supplied.setting_label.trim()
+            ? supplied.setting_label.trim():label,
+          help:typeof supplied.configuration_help==='string' && supplied.configuration_help.trim()
+            ? supplied.configuration_help.trim():help});
+      };
+      const window=entry.windowPolicyInfo;
+      add('pause_on_window_open',window?.id,window?.state,'mdi:window-closed-variant',
+        this._l66('windowSwitch'),this._l66('windowHelp'),'data-window-policy-switch');
+      add('announce_device_errors',entry.errorAnnounceId,entry.errorAnnounce,
+        entry.errorAnnounce?.state==='on'?'mdi:bell-ring-outline':'mdi:bell-off-outline',
+        text.error,text.errorHelp,'data-device-error-announce');
+      add('announce_before_start',entry.windowAnnounceId,entry.windowAnnounce,
+        'mdi:window-open-variant',text.airing,text.airingHelp,'data-window-announce-switch');
+      if(entry.timedSetpoint?.attributes?.timed_setpoint_supported===true)
+        add('timed_setpoint_sequence',entry.timedSetpointId,entry.timedSetpoint,
+          'mdi:timer-outline',text.timing,text.timingHelp,'data-timed-setpoint-switch');
+      const known=new Set(['pause_on_window_open','announce_device_errors',
+        'announce_before_start','timed_setpoint_sequence']);
+      const scoped=new Set((entry.operatingModes || []).flatMap(panel=>
+        panel.parameters.map(field=>field.key)));
+      for(const field of entry.deviceFlags || []) {
+        if(known.has(field.key) || scoped.has(field.key)) continue;
+        const attrs=field.state.attributes || {};
+        if(field.key==='native_full_output' && attrs.native_full_output_supported!==true) continue;
+        const label=attrs.setting_label || attrs.friendly_name;
+        if(typeof label!=='string' || !label.trim()) continue;
+        const icon={sleep_when_everyone_asleep:'mdi:bed-clock',
+          sensor_verified:'mdi:check-decagram-outline',quiet_sleep:'mdi:fan-speed-1',
+          quiet_occupied:'mdi:account-voice-off',native_full_output:'mdi:target-variant'}[field.key] || 'mdi:tune-variant';
+        add(field.key,field.id,field.state,icon,label,attrs.configuration_help || '');
+      }
+      return options;
+    }
+
+    async _submitDeviceQuick8(button) {
+      if(button.disabled || !this._hass?.callService) return;
+      const area=button.getAttribute('data-controller-area');
+      const controller=button.getAttribute('data-managed-controller');
+      const id=button.getAttribute('data-device-quick-switch8');
+      const key=button.getAttribute('data-device-quick-key8');
+      const entry=this._managedControllers(area).find(item=>item.entityId===controller);
+      const option=entry && this._deviceQuickOptions8(entry).find(item=>item.id===id && item.key===key);
+      if(!option || !['on','off'].includes(option.state.state) ||
+          this._quickOptionsPending8?.has(id) ||
+          option.attribute && button.getAttribute(option.attribute)!==id) return;
+      this._quickOptionsPending8 ||= new Set();
+      this._quickOptionsPending8.add(id);
+      button.disabled=true;
+      this._climateEditError=null;
+      try {
+        await this._hass.callService('switch',option.state.state==='on'?'turn_off':'turn_on',{entity_id:id});
+      } catch(error) {
+        this._climateEditError=this._climateLabels65().editFailed;
+        console.warn('HEM device option failed',error);
+      } finally {
+        this._quickOptionsPending8.delete(id);
+        const current=this._managedControllers(area).find(item=>item.entityId===controller);
+        const latest=current && this._deviceQuickOptions8(current).find(item=>item.id===id && item.key===key);
+        button.disabled=!latest || !['on','off'].includes(latest.state.state);
+        if(this._hasValidRender)this._render(true);
+      }
+    }
+
+    _deviceQuickRow8(entry,area) {
+      const options=this._deviceQuickOptions8(entry);
+      if(!options.length) return '';
+      const label={en:'Device options',el:'Επιλογές συσκευής',de:'Geräteoptionen'}[this._language()] || this._l65('devices');
+      return '<div class="hem-device-quick-row8" role="group" aria-label="'+escape(label)+'" '+
+        'data-quick-controller8="'+escape(entry.entityId)+'" data-quick-count8="'+options.length+'" '+
+        'style="--hem-quick-columns8:'+options.length+'">'+
+        options.map(option=>{
+          const {key,id,state,icon,label,help,attribute}=option;
+          const ready=['on','off'].includes(state.state), on=state.state==='on';
+          const pending=this._quickOptionsPending8?.has(id)===true;
+          const detailKey='device-option:'+id;
+          const opened=this._detailsExpanded66?.has(detailKey)===true;
+          let body='<strong>'+escape(label)+'</strong><p class="hem-help-text116">'+escape(help)+'</p>';
+          if(key==='announce_before_start')
+            body+=this._windowAnnouncementControls6(entry,area,this._climateLabels65().save);
+          if(key==='pause_on_window_open') {
+            const window=entry.statusInfo?.state?.attributes?.window_policy || {};
+            if(window.status && window.blocked===true) {
+              body+='<p class="hem-window-hold66">'+escape(this._controllerStatusLabel(window.status))+'</p>';
+              const contacts=[...new Set([...safeArray(window.open_contacts),...safeArray(window.unknown_contacts)])];
+              body+=contacts.map(entity=>'<p class="hem-window-source90">'+
+                escape(this._hass?.states?.[entity]?.attributes?.friendly_name || entity)+': '+
+                escape(window.contact_states?.[entity] || this._hass?.states?.[entity]?.state || this._t('missing'))+'</p>').join('');
+            }
+          }
+          return '<div class="hem-device-quick-option8" data-quick-option8="'+escape(key)+'" '+
+            'data-option-state8="'+escape(ready?state.state:'unavailable')+'">'+
+            '<details class="hem-context76 hem-device-quick-help8" data-detail-id="'+escape(detailKey)+'" '+
+            (opened?'open':'')+'><summary aria-label="'+escape(label+' · '+this._l65('information'))+'" '+
+            'title="'+escape(label)+'">'+this._icon(icon)+'</summary>'+
+            '<div class="hem-context-body76">'+body+'</div></details>'+
+            '<button type="button" role="switch" class="hem-device-quick-state8" '+
+            'data-device-quick-switch8="'+escape(id)+'" data-device-quick-key8="'+escape(key)+'" '+
+            (attribute?attribute+'="'+escape(id)+'" ':'')+
+            'data-controller-area="'+escape(area)+'" data-managed-controller="'+escape(entry.entityId)+'" '+
+            (key==='pause_on_window_open'?'data-window-controller="'+escape(entry.entityId)+'" ':'')+
+            'aria-checked="'+on+'" aria-label="'+escape(label)+'" title="'+escape(label)+'" '+
+            (!ready || pending?'disabled ':'')+(pending?'aria-busy="true" ':'')+
+            (!ready?'aria-description="'+escape(this._t('missing'))+'" ':'')+'><b>'+
+            escape(this._quickState8(state.state))+'</b></button></div>';
+        }).join('')+'</div>';
     }
 
     _modeSettingContext7(element) {
@@ -1687,7 +1847,8 @@
            id.startsWith('select.') || id.startsWith('climate.') || (id.startsWith('sensor.') && state?.attributes?.status_code) ||
            (id.startsWith('switch.') && (state?.attributes?.device_fault_role==='announce' ||
              state?.attributes?.timed_setpoint_role==='policy' ||
-             state?.attributes?.window_announcement_role==='policy')) ||
+             state?.attributes?.window_announcement_role==='policy' ||
+             state?.attributes?.equipment_option_role==='policy')) ||
            (id.startsWith('button.') && (
              state?.attributes?.pid_calibration_role || state?.attributes?.pid_fan_capacity_role ||
              state?.attributes?.pid_review_role ||
@@ -1708,12 +1869,15 @@
           state.attributes.pid_calibration_role,
           state.attributes.device_fault_role,
           state.attributes.timed_setpoint_role,
+          state.attributes.timed_setpoint_supported,state.attributes.equipment_option_role,
+          state.attributes.native_full_output_supported,
           state.attributes.window_announcement_role,
           state.attributes.source_device_id,
           state.attributes.native_error,
           state.attributes.pid_review_role,
           state.attributes.controller_resume_role,
           state.attributes.native_resume_recovery,
+          state.attributes.native_target_attempt_budget,
           state.attributes.automatic_recovery_requested,
           state.attributes.recovery_detail,
           state.attributes.queued_power_switch_pending,
@@ -1740,6 +1904,13 @@
           state.attributes.operating_mode_ui_labels,
           state.attributes.humidity_demand,state.attributes.mold_demand,
           state.attributes.demand_reason,state.attributes.demand_reason_label,
+          state.attributes.readiness_until,state.attributes.readiness_remaining_seconds,
+          state.attributes.readiness_source_entity_ids,state.attributes.unavailable_source_entity_ids,
+          state.attributes.pid_pwm_state,state.attributes.pid_pwm_next_window_at,
+          state.attributes.pid_pwm_next_window_seconds,state.attributes.pid_pwm_wait_reason,
+          state.attributes.pid_pwm_effective_cycle_seconds,state.attributes.native_operating_limits,
+          state.attributes.pid_pwm_last_confirmed_on_at,state.attributes.pid_pwm_last_confirmed_off_at,
+          state.attributes.pid_control_target,state.attributes.pid_control_measurement,
           this._hass?.entities?.[id]?.device_id,
         ]);
       // Activity color must update when a native device changes without a
@@ -2187,26 +2358,7 @@
           de:['Adaptiv · Vorschlag bestätigen','Adaptiv · Automatisch','Übernehmen','Verwerfen','Vorgeschlagene PID-Anpassung'],
           el:['Προσαρμοστικό · Πρόταση για έγκριση','Προσαρμοστικό · Αυτόματο','Έγκριση','Απόρριψη','Προτεινόμενη ρύθμιση PID'],
         }[this._language()] || ['Adaptive · Suggest & approve','Adaptive · Automatic','Approve','Discard','Proposed PID adjustment'];
-        const timingLabels={
-          en:['Timed setpoints (30 s)','Wait 30 seconds after ON before sending a setpoint. Before switching off on/off heating or cooling, send the opposite temperature limit and wait 30 seconds.'],
-          de:['Zeitgesteuerte Sollwerte (30 s)','Nach dem Einschalten 30 Sekunden bis zum Setzen des Sollwerts warten. Vor dem Ausschalten einer Ein/Aus-Heizung oder -Kühlung den entgegengesetzten Temperaturgrenzwert senden und 30 Sekunden warten.'],
-          el:['Χρονισμός στόχων (30 s)','Μετά την ενεργοποίηση, αναμονή 30 δευτερολέπτων πριν σταλεί ο στόχος. Πριν την απενεργοποίηση θέρμανσης ή ψύξης on/off, αποστολή του αντίθετου ορίου θερμοκρασίας και αναμονή 30 δευτερολέπτων.'],
-        };
-        const timingText=timingLabels[this._language()] || [
-          entry.timedSetpoint?.attributes?.friendly_name || timingLabels.en[0],timingLabels.en[1]];
-        const timingState=entry.timedSetpoint?.state;
-        const timingPerMode=entry.operatingModes?.some(panel=>
-          panel.parameters.some(field=>field.key==='timed_setpoint_sequence'));
-        const timedSwitch=entry.timedSetpointId && !timingPerMode
-          ? '<div class="hem-device-error-toggle"><button type="button" role="switch" '+
-            'data-timed-setpoint-switch="'+escape(entry.timedSetpointId)+'" '+
-            'data-controller-area="'+escape(room.area_id)+'" data-managed-controller="'+escape(entry.entityId)+'" '+
-            (['on','off'].includes(timingState)?'':'disabled ')+
-            'aria-checked="'+(timingState==='on')+'" aria-label="'+escape(timingText[0])+
-            '" aria-description="'+escape(timingText[1])+'" title="'+escape(timingText[1])+'">'+
-            this._icon('mdi:timer-outline')+'<span>'+escape(timingText[0])+'</span><b>'+
-            escape(this._controllerStatusLabel(timingState))+'</b></button></div>' : '';
-        const airingControls=this._windowAnnouncementControls6(entry,room.area_id,l.save);
+        const quickOptions=this._deviceQuickRow8(entry,room.area_id);
         const modeControls=this._operatingModeControls7(entry,room.area_id);
         const deviceFault=entry.errorAnnounce?.attributes?.native_error;
         const errorLabels={
@@ -2218,16 +2370,6 @@
               'Άνοιγμα αρχικής οντότητας σφάλματος στο HA','Μη διαθέσιμη πηγή σφάλματος'],
         }[this._language()] || ['Announce errors','Physical device error','Severity','Code','Details',
           'Open original HA error entity','Unavailable error source'];
-        const alertSwitch=entry.errorAnnounceId && entry.errorAnnounce &&
-            ['on','off'].includes(entry.errorAnnounce.state)
-          ? '<div class="hem-device-error-toggle"><button type="button" role="switch" '+
-            'data-device-error-announce="'+escape(entry.errorAnnounceId)+'" '+
-            'data-controller-area="'+escape(room.area_id)+'" '+
-            'aria-checked="'+(entry.errorAnnounce.state==='on')+'" '+
-            'aria-label="'+escape(errorLabels[0])+'" title="'+escape(errorLabels[0])+'">'+
-            this._icon(entry.errorAnnounce.state==='on'?'mdi:bell-ring-outline':'mdi:bell-off-outline')+
-            '<b>'+(entry.errorAnnounce.state==='on'?'ON':'OFF')+'</b></button></div>'
-          : '';
         const faultStatus=deviceFault?.status;
         const faultActive=['warning','error','critical'].includes(faultStatus);
         const sourceError=typeof deviceFault?.source_entity_id==='string'
@@ -2256,8 +2398,11 @@
                 'title="'+escape(errorLabels[5])+'">'+
                 this._icon('mdi:open-in-new')+' '+escape(sourceError)+'</button>'
               : '')+'</section>' : '';
-        const recovery=entry.statusInfo?.state?.attributes?.native_resume_recovery ||
-          entry.resumeButton?.attributes?.native_resume_recovery;
+        const statusAttributes=entry.statusInfo?.state?.attributes || {};
+        // An explicit null is the status sensor's authoritative clearance.
+        // A slower button update must not revive an exhausted target wait.
+        const recovery=Object.prototype.hasOwnProperty.call(statusAttributes,'native_resume_recovery')
+          ? statusAttributes.native_resume_recovery:entry.resumeButton?.attributes?.native_resume_recovery;
         const recoverLabels={
           en:['HEM is verifying an earlier device command','Requested','Device reports',
               'Your settings are saved. HEM checks the physical feedback automatically and applies the new preference when safe. No repeated button presses are needed.','Confirming'],
@@ -2464,11 +2609,9 @@
           'data-controller-area="'+escape(room.area_id)+'">'+
           nativeHeader+
           this._deviceSummary65(entry)+faultPanel+
-          this._configurationHelp116(alertSwitch,entry.errorAnnounceId,entry.errorAnnounce,errorLabels[0])+
+          quickOptions+
           recoveryPanel+this._configurationHelp116(resumeControl,entry.resumeButtonId,entry.resumeButton,continueLabel)+
           this._configurationHelp116(method,entry.methodId,entry.method,l.method)+
-          airingControls+
-          this._configurationHelp116(timedSwitch,entry.timedSetpointId,entry.timedSetpoint,timingText[0])+
           modeControls+editors.join('')+
           this._calibrationDetails65(entry,!hasModeSettings && control==='pid' ?
             this._configurationHelp116(calibrationMethod,entry.calibrationSelectId,entry.calibrationSelect,pidLabels[0])+
@@ -3264,6 +3407,11 @@
     // Exact machine codes remain available in the explicit diagnostics section.
     if (typeof native==='string' && native.trim() && !native.startsWith('component.') &&
         native!==key && (lang==='en' || native!==english)) return native;
+    if(key==='native_device_stabilizing') return {
+      en:'Device available · Checking stability',
+      el:'Συσκευή διαθέσιμη · Έλεγχος σταθερότητας',
+      de:'Gerät verfügbar · Stabilität wird geprüft',
+    }[lang] || 'Device available · Checking stability';
     if (setpoint109) return (CONTROLLER_STATUS_FALLBACK[lang] || CONTROLLER_STATUS_FALLBACK.en)[key];
     if (value && (lang==='en' || value!==english)) return value;
     if (key==='sleep_room_control_paused') return t.sleep;
@@ -3272,6 +3420,52 @@
     if (/calibration|capacity|stage/.test(key) && /required|invalid|incomplete|missing|unmeasured/.test(key)) return t.inputs;
     if (/waiting|hold|pending|warmup/.test(key)) return t.waiting;
     return t.unknown;
+  };
+  proto65._nativeTargetNotice8 = function(entry) {
+    const a=entry.climate?.attributes || {};
+    const budget=entry.statusInfo?.state?.attributes?.native_target_attempt_budget;
+    const sources=safeArray(a.source_entity_ids), declared=a.physical_primary_entity_id;
+    const primary=typeof declared==='string' && sources.includes(declared)?declared:
+      sources.length===1?sources[0]:null;
+    const key=budget?.service==='set_humidity'?'humidity':
+      budget?.service==='set_temperature'?'temperature':null;
+    const numeric=value=>typeof value==='number' && Number.isFinite(value);
+    if(!budget || budget.role!=='binary_pid_full_demand' || !key ||
+        !primary || budget.entity_id!==primary || budget.state!=='unconfirmed' ||
+        budget.exhausted!==true || budget.nonblocking!==true ||
+        !Number.isInteger(budget.attempts) || !Number.isInteger(budget.attempt_limit) ||
+        budget.attempt_limit<1 || budget.attempts<budget.attempt_limit ||
+        !numeric(budget.requested?.[key])) return null;
+    const words={
+      en:{label:'Target unconfirmed',heading:'Native target not confirmed',requested:'Requested',
+        reported:'Device reports',lastReported:'Last reported',attempts:'Recorded attempts',limit:'Limit',
+        help:'Further attempts for this target have stopped. The unconfirmed target does not block automatic ON/OFF control; room demand, timing limits and safety checks still apply.'},
+      el:{label:'Στόχος ανεπιβεβαίωτος',heading:'Ο στόχος της συσκευής δεν επιβεβαιώθηκε',requested:'Ζητήθηκε',
+        reported:'Η συσκευή αναφέρει',lastReported:'Τελευταία αναφορά',attempts:'Καταγεγραμμένες προσπάθειες',limit:'Όριο',
+        help:'Οι προσπάθειες για αυτόν τον στόχο σταμάτησαν. Ο ανεπιβεβαίωτος στόχος δεν εμποδίζει τον αυτόματο έλεγχο ON/OFF· εξακολουθούν να ισχύουν η ζήτηση του δωματίου, τα χρονικά όρια και οι έλεγχοι ασφαλείας.'},
+      de:{label:'Sollwert unbestätigt',heading:'Gerätesollwert nicht bestätigt',requested:'Angefordert',
+        reported:'Gerät meldet',lastReported:'Zuletzt gemeldet',attempts:'Erfasste Versuche',limit:'Grenze',
+        help:'Weitere Versuche für diesen Sollwert wurden beendet. Der unbestätigte Sollwert blockiert die automatische Ein/Aus-Regelung nicht; Raumbedarf, Zeitgrenzen und Sicherheitsprüfungen gelten weiterhin.'},
+    };
+    const text=words[this._language()] || words.en;
+    const native=this._hass?.states?.[primary], attrs=native?.attributes || {};
+    const live=!!native && !['unknown','unavailable'].includes(native.state);
+    const unit=key==='humidity'?'%':
+      [attrs.temperature_unit,budget.temperature_unit,this._hass?.config?.unit_system?.temperature]
+        .find(value=>['°C','°F','K'].includes(value));
+    const format=value=>numeric(value)?this._format(value)+(unit?(unit==='%'?'':' ')+unit:''):
+      this._t('missing');
+    // A newer native state wins over the diagnostic snapshot. A requested
+    // endpoint is never substituted for what the appliance actually reports.
+    const reported=live?attrs[key]:budget.reported?.[key];
+    const metric=key==='humidity'?this._t('humidity'):
+      (CARD65[this._language()] || CARD65.en).words.temperature;
+    return {entity:primary,label:text.label,heading:text.heading,help:text.help,evidence:[
+      (attrs.friendly_name || primary)+' · '+metric,
+      text.requested+': '+format(budget.requested[key])+' · '+
+        (live?text.reported:text.lastReported)+': '+format(reported),
+      text.attempts+': '+this._format(budget.attempts,0)+' · '+text.limit+': '+this._format(budget.attempt_limit,0),
+    ]};
   };
   proto65._setpointPhase109 = function(entry) {
     const a=entry.climate?.attributes || {}, d=entry.statusInfo?.state?.attributes || {};
@@ -3365,6 +3559,91 @@
         [...entry.climate.attributes.source_entity_ids].sort()])) || null,
     }));
   };
+  proto65._controllerTiming8 = function(entry,status) {
+    const a=entry.climate?.attributes || {}, d=entry.statusInfo?.state?.attributes || {};
+    const c=a.controller_status || {}, get=key=>d[key]??c[key];
+    const numeric=value=>typeof value==='number' && Number.isFinite(value);
+    const text={
+      en:{startup:'Home Assistant startup checks are still in progress.',
+        stable:'The device is available. HEM is waiting for its native state to remain stable before automatic control resumes.',
+        missing:'Unavailable source',checking:'Checking source',
+        pidRest:'PID · Next eligible window',pidDue:'PID · Evaluation due',
+        pidSmall:'PID · Demand below minimum safe pulse',pidZero:'PID · No output demand',
+        next:'Next eligible pulse',rest:'A previous ON pulse was confirmed. HEM is preserving the following OFF interval.',
+        safe:'The next evaluation checks current demand, device feedback and minimum ON/OFF times again.',
+        small:'The current demand cannot fit a complete minimum-ON pulse within the permitted cycle. No next pulse is scheduled for this demand.',
+        off:'Last confirmed OFF',target:'HEM target',measurement:'Control measurement',demand:'PID demand',
+        cycle:'PWM period',minimumOn:'Minimum ON',minimumOff:'Minimum OFF'},
+      el:{startup:'Οι έλεγχοι εκκίνησης του Home Assistant συνεχίζονται.',
+        stable:'Η συσκευή είναι διαθέσιμη. Το HEM περιμένει να παραμείνει σταθερή η κατάστασή της πριν συνεχιστεί ο αυτόματος έλεγχος.',
+        missing:'Μη διαθέσιμη πηγή',checking:'Έλεγχος πηγής',
+        pidRest:'PID · Επόμενο επιτρεπτό διάστημα',pidDue:'PID · Εκκρεμεί αξιολόγηση',
+        pidSmall:'PID · Ζήτηση κάτω από τον ελάχιστο ασφαλή παλμό',pidZero:'PID · Χωρίς ζήτηση εξόδου',
+        next:'Επόμενος επιτρεπτός παλμός',rest:'Επιβεβαιώθηκε προηγούμενος παλμός λειτουργίας. Το HEM τηρεί το επόμενο διάστημα παύσης.',
+        safe:'Στην επόμενη αξιολόγηση ελέγχονται ξανά η τρέχουσα ζήτηση, η κατάσταση της συσκευής και οι ελάχιστοι χρόνοι λειτουργίας και παύσης.',
+        small:'Η τρέχουσα ζήτηση δεν επιτρέπει πλήρη παλμό ελάχιστης λειτουργίας μέσα στον επιτρεπόμενο κύκλο. Δεν έχει προγραμματιστεί επόμενος παλμός για αυτή τη ζήτηση.',
+        off:'Τελευταία επιβεβαιωμένη παύση',target:'Στόχος HEM',measurement:'Μέτρηση ελέγχου',demand:'Ζήτηση PID',
+        cycle:'Περίοδος PWM',minimumOn:'Ελάχιστη λειτουργία',minimumOff:'Ελάχιστη παύση'},
+      de:{startup:'Die Startprüfungen von Home Assistant laufen noch.',
+        stable:'Das Gerät ist verfügbar. HEM wartet auf einen stabilen nativen Zustand, bevor die automatische Regelung fortgesetzt wird.',
+        missing:'Nicht verfügbare Quelle',checking:'Geprüfte Quelle',
+        pidRest:'PID · Nächstes zulässiges Zeitfenster',pidDue:'PID · Auswertung fällig',
+        pidSmall:'PID · Bedarf unter dem sicheren Mindestimpuls',pidZero:'PID · Kein Ausgangsbedarf',
+        next:'Nächster zulässiger Impuls',rest:'Ein vorheriger Einschaltimpuls wurde bestätigt. HEM hält die anschließende Ausschaltpause ein.',
+        safe:'Bei der nächsten Auswertung werden aktueller Bedarf, Geräterückmeldung und Mindestlauf- und Stillstandszeiten erneut geprüft.',
+        small:'Der aktuelle Bedarf reicht innerhalb des zulässigen Zyklus nicht für einen vollständigen Mindestimpuls. Für diesen Bedarf ist kein nächster Impuls geplant.',
+        off:'Zuletzt bestätigtes Ausschalten',target:'HEM-Sollwert',measurement:'Regelmesswert',demand:'PID-Bedarf',
+        cycle:'PWM-Periode',minimumOn:'Mindestlaufzeit',minimumOff:'Mindeststillstandszeit'},
+    }[this._language()] || null;
+    if(!text) return null;
+    const countdown=(until,remaining)=>numeric(until)&&until>0?Math.max(0,Math.ceil(until-Date.now()/1000)):
+      numeric(remaining)&&remaining>=0?Math.ceil(remaining):null;
+    const duration=seconds=>seconds>=60
+      ? this._format(Math.floor(seconds/60),0)+' min'+(seconds%60?' '+this._format(seconds%60,0)+' s':'')
+      : this._format(seconds,0)+' s';
+    if(['startup_warmup','native_device_stabilizing','waiting_for_physical_device'].includes(status)) {
+      const seconds=countdown(get('readiness_until'),get('readiness_remaining_seconds'));
+      const evidence=status==='startup_warmup'?[text.startup]:status==='native_device_stabilizing'?[text.stable]:[];
+      const known=new Set([...safeArray(a.source_entity_ids),get('upstream_power_switch')].filter(Boolean));
+      const missing=safeArray(get('unavailable_source_entity_ids')).filter(id=>known.has(id));
+      const checking=safeArray(get('readiness_source_entity_ids')).filter(id=>known.has(id) && !missing.includes(id));
+      for(const [ids,label] of [[missing,text.missing],[checking,text.checking]]) {
+        for(const id of ids) {
+          const native=this._hass?.states?.[id];
+          evidence.push(label+': '+(native?.attributes?.friendly_name || id)+' · '+
+            this._controllerStatusLabel(native?.state || 'unavailable'));
+        }
+      }
+      return {label:(seconds===null?'':duration(seconds)+' · ')+this._controllerStatusLabel(status),
+        evidence,waiting:status!=='waiting_for_physical_device'};
+    }
+    if(status!=='pid_output_inactive') return null;
+    const phase=get('pid_pwm_state');
+    if(!['off_window','demand_below_minimum_safe_pulse','zero_demand'].includes(phase)) return null;
+    const evidence=[];
+    if(numeric(get('demand_percent')))evidence.push(text.demand+': '+this._format(get('demand_percent'),1)+'%');
+    const metric=get('pid_control_metric'),unit={temperature:' °C',humidity:'%',co2:' ppm',pm25:' µg/m³'}[metric] || '';
+    if(numeric(get('pid_control_target')))evidence.push(text.target+': '+this._format(get('pid_control_target'))+unit);
+    if(numeric(get('pid_control_measurement')))evidence.push(text.measurement+': '+this._format(get('pid_control_measurement'))+unit);
+    if(numeric(get('pid_pwm_effective_cycle_seconds')))
+      evidence.push(text.cycle+': '+duration(Math.ceil(get('pid_pwm_effective_cycle_seconds'))));
+    const limits=get('native_operating_limits') || {};
+    for(const [key,label] of [['min_on_seconds',text.minimumOn],['min_off_seconds',text.minimumOff]])
+      if(numeric(limits[key]) && limits[key]>=0)evidence.push(label+': '+duration(Math.ceil(limits[key])));
+    if(phase==='demand_below_minimum_safe_pulse')
+      return {label:text.pidSmall,evidence:[...evidence,text.small],waiting:true};
+    if(phase==='zero_demand')return {label:text.pidZero,evidence,waiting:true};
+    const seconds=countdown(get('pid_pwm_next_window_at'),get('pid_pwm_next_window_seconds'));
+    if(get('pid_pwm_wait_reason')==='completed_pulse_rest')evidence.push(text.rest);
+    if(seconds!==null)evidence.push(text.next+': '+duration(seconds));
+    const stopped=get('pid_pwm_last_confirmed_off_at');
+    if(numeric(stopped) && stopped>0 && stopped<=Date.now()/1000)
+      evidence.push(text.off+': '+new Date(stopped*1000).toLocaleTimeString(this._language(),{
+        hour:'2-digit',minute:'2-digit',second:'2-digit'}));
+    evidence.push(text.safe);
+    return {label:(seconds===null?'':duration(seconds)+' · ')+(seconds===0?text.pidDue:text.pidRest),
+      evidence,waiting:true};
+  };
   proto65._controllerPresentation7 = function(entry) {
     const a=entry.climate?.attributes || {}, d=entry.statusInfo?.state?.attributes || {};
     const c=a.controller_status || {};
@@ -3391,7 +3670,7 @@
         status='physical_device_unavailable';
       else if (status==='within_target_band') status='mold_above_limit';
     }
-    const label=status==='mold_above_limit' && demand ? demand : this._controllerStatusLabel(status);
+    let label=status==='mold_above_limit' && demand ? demand : this._controllerStatusLabel(status);
     const reportedReason=d.status_reason_code || c.reason;
     const statusReason=qualified && status!=='within_target_band' &&
       reportedReason==='within_target_band'?null:reportedReason;
@@ -3404,7 +3683,9 @@
         evidence.push('HEM · '+this._l65('target')+' · '+this._t('humidity')+': '+
           this._format(mold.effective_humidity_target)+'%');
     }
-    return {status,label,demand,evidence,qualified,reason:statusReason};
+    const timing=this._controllerTiming8(entry,status);
+    if(timing){label=timing.label;evidence.push(...timing.evidence);}
+    return {status,label,demand,evidence,qualified,reason:statusReason,waiting:timing?.waiting===true};
   };
   proto65._deviceSummary65 = function(entry) {
     const a=entry.climate.attributes || {}, d=entry.statusInfo?.state?.attributes || {};
@@ -3555,6 +3836,7 @@
       }
       const button=e.target.closest?.('[data-window-policy-switch]');
       if(!button || !this._hass?.callService) return;
+      if(button.getAttribute('data-device-quick-switch8')) return;
       e.preventDefault();e.stopPropagation();
       const area=button.dataset.controllerArea;
       const device=button.dataset.windowController;
@@ -3598,12 +3880,13 @@
         const a=state?.attributes;
         if(!id.startsWith('switch.') || a?.window_pause_role!=='policy' ||
            typeof a.area_id!=='string' || !Array.isArray(a.source_entity_ids) || !a.source_entity_ids.length) continue;
-        const key=JSON.stringify([a.area_id,[...a.source_entity_ids].sort()]);
+        const key=JSON.stringify([a.area_id,a.source_device_id??null,[...a.source_entity_ids].sort()]);
         this._windowIndex66.set(key,this._windowIndex66.has(key)?null:{id,state});
       }
     }
     return originalManaged66.call(this,area).map(entry=>({...entry,
       windowPolicyInfo:this._windowIndex66.get(JSON.stringify([area,
+        entry.climate.attributes.source_device_id??null,
         [...entry.climate.attributes.source_entity_ids].sort()])) || null,
     }));
   };
@@ -3613,7 +3896,8 @@
     return originalSignature66.call(this)+JSON.stringify(Object.entries(this._hass?.states || {})
       .filter(([id,s])=>s?.attributes?.window_pause_role==='policy' ||
         (id.startsWith('sensor.') && s?.attributes?.window_policy))
-      .map(([id,s])=>[id,s.state,s.attributes.window_policy,s.attributes.source_entity_ids]));
+      .map(([id,s])=>[id,s.state,s.attributes.window_policy,s.attributes.source_entity_ids,
+        s.attributes.source_device_id,s.attributes.configuration_help,s.attributes.setting_label]));
   };
   proto66._detail66=function(key,title,content,cls='hem-diagnostics') {
     const opened=this._detailsExpanded66?.has(key)===true;
@@ -3645,40 +3929,7 @@
     const raw=[id,...sources,supply].filter(Boolean).map(escape).join('<br>');
     diagnostics='<dl class="hem-diagnostic-data66">'+diagnostics+'</dl>'+
       this._detail66('raw:'+id,this._l66('rawDetails'),'<code>'+raw+'</code>','hem-technical66');
-    const info=entry.windowPolicyInfo, w=d.window_policy || {};
-    let toggle='';
-    if(info) {
-      const on=info.state.state==='on';
-      const disabled=!['on','off'].includes(info.state.state) || this._windowSwitchPending66.has(info.id);
-      toggle='<div class="hem-window-policy66"><button type="button" role="switch" aria-checked="'+on+
-        '" aria-label="'+escape(this._l66('windowSwitch'))+'" title="'+escape(this._l66('windowHelp'))+
-        '" data-window-policy-switch="'+escape(info.id)+'" data-window-controller="'+escape(id)+
-        '" data-controller-area="'+escape(a.area_id)+'" '+(disabled?'disabled':'')+'>'+
-        this._icon('mdi:window-open-variant')+'<span>'+escape(this._l66('windowSwitch'))+'</span><b>'+
-        escape(this._controllerStatusLabel(info.state.state))+'</b></button><small>'+escape(this._l66('windowHelp'))+'</small>';
-      if(on && w.blocked) {
-        const remain=typeof w.closed_since==='number' && typeof w.resume_delay_seconds==='number'
-          ? Math.max(0,w.resume_delay_seconds-(Date.now()/1000-w.closed_since)):w.remaining_seconds;
-        // The switch enables protection; it does not mean a window IS OPEN.
-        // Report open versus unavailable contact evidence distinctly, with
-        // the exact configured sensor to help diagnose stale/moved contacts.
-        const affected=safeArray(w.open_contacts).concat(safeArray(w.unknown_contacts));
-        const sourceNote=affected.slice(0,3).map(entity=>{
-          const physical=this._hass?.states?.[entity];
-          const reported=w.contact_states?.[entity] ||
-            physical?.state || 'unknown';
-          return String(entity)+' ('+String(reported)+')';
-        }).join(' · ');
-        toggle+='<small class="hem-window-hold66" '+
-          (sourceNote?'title="'+escape(sourceNote)+'" ':'')+'>'+
-          escape(this._controllerStatusLabel(w.status))+
-          (typeof remain==='number' && remain>0?' · '+escape(this._format(remain,0))+' s':'')+'</small>'+
-          (sourceNote?'<small class="hem-window-source90" title="'+escape(sourceNote)+'">'+
-            escape(sourceNote)+'</small>':'');
-      }
-      toggle+='</div>';
-    }
-    return base+toggle+this._detail66('diagnostics:'+id,this._l65('details'),diagnostics);
+    return base+this._detail66('diagnostics:'+id,this._l65('details'),diagnostics);
   };
   proto66._roomHumidity66=function(room) {
     const p=room?.environment?.climate_plan || {};
@@ -3871,10 +4122,14 @@
       until>0 && until>Date.now()/1000;
     const untilLabel=held?' · '+Math.ceil((until-Date.now()/1000)/60)+' min':'';
     const label=transition109?.label || presentation.label+untilLabel;
-    const tone=transition109?'neutral':/(paused|hold|unavailable|unknown|failed|error|blocked|inactive|missing|mold_above_limit)/.test(
+    const tone=transition109 || presentation.waiting?'neutral':/(paused|hold|unavailable|unknown|failed|error|blocked|inactive|missing|mold_above_limit)/.test(
       String(state))?'warn':/^(controlling|ready|within_target_band|manual)$/.test(
       String(state))?'good':'neutral';
     const info=[];
+    const targetNotice=this._nativeTargetNotice8(entry);
+    if(targetNotice) info.push('<div data-native-target-evidence8="'+escape(targetNotice.entity)+'">'+
+      '<strong>'+escape(targetNotice.heading)+'</strong>'+targetNotice.evidence.map(value=>
+        '<div>'+escape(value)+'</div>').join('')+'<p>'+escape(targetNotice.help)+'</p></div>');
     const reason=presentation.reason;
     if (reason && reason!==state)
       info.push('<div>'+escape(t.reason)+': '+escape(this._controllerStatusLabel(reason))+'</div>');
@@ -3902,16 +4157,15 @@
       label,tone
     );
     let chips='<div class="hem-device-state76" role="status">'+badge;
+    if(targetNotice) chips+=badge76('mdi:target-variant',targetNotice.label,'neutral',
+      [targetNotice.heading,...targetNotice.evidence,targetNotice.help].join(' · '))
+      .replace('<span ','<span data-native-target-notice8="'+escape(targetNotice.entity)+'" ');
     if (supplyId) {
       const text=this._controllerStatusLabel(supply?.state || d.upstream_power_state || 'unavailable');
       chips+=badge76('mdi:power-plug-outline',t.supply,'neutral',t.supply+': '+text);
     }
     if (d.sleep_pause_requested===true)
       chips+=badge76('mdi:power-sleep',t.sleep,'warn');
-    if (toggle)
-      chips+=badge76('mdi:window-open-variant',
-        windowState.blocked===true?this._l66('windowOpen'):this._l66('windowSwitch'),
-        windowState.blocked===true?'warn':'neutral');
     chips+=this._info76('device-info:'+id,t.information,
       info.length?info.join(''):'<div>'+escape(label)+'</div>');
     chips+='</div>';
@@ -3987,6 +4241,28 @@
     .hem-setting-control116>.hem-context76{margin:0}
     .hem-setting-control116>.hem-context76 .hem-context-body76 p{margin:6px 0 0}
     .hem-help-text116{white-space:pre-line}
+    .hem-device-quick-row8{display:grid;grid-template-columns:repeat(var(--hem-quick-columns8),minmax(0,1fr));
+      gap:4px;width:100%;max-width:calc(var(--hem-quick-columns8) * 60px);min-width:0;
+      align-items:stretch;margin:8px 0;box-sizing:border-box}
+    .hem-device-quick-option8{display:grid;grid-template-rows:26px 26px;min-width:0;
+      box-sizing:border-box;border:1px solid var(--aqa-edge);border-radius:8px;
+      background:var(--aqa-surface);color:var(--aqa-text)}
+    .hem-device-quick-option8>.hem-device-quick-help8{display:block;min-width:0;width:100%;margin:0}
+    .hem-device-quick-option8>.hem-device-quick-help8>summary{box-sizing:border-box;display:grid;
+      place-items:center;min-width:24px;width:100%;height:26px;padding:0;border:0;
+      border-radius:7px 7px 0 0;background:transparent;color:var(--aqa-muted)}
+    .hem-device-quick-option8>.hem-device-quick-help8>summary ha-icon{--mdc-icon-size:18px;width:18px;height:18px}
+    .hem-device-quick-option8>.hem-device-quick-state8{box-sizing:border-box;display:grid;place-items:center;
+      min-width:24px;max-width:100%;width:100%;height:26px;margin:0;padding:0 2px;border:0;
+      border-radius:0 0 7px 7px;cursor:pointer;background:transparent;color:var(--aqa-muted);
+      font-family:inherit;font-size:10px;line-height:1.2;white-space:nowrap}
+    .hem-device-quick-state8>b{font:inherit;font-weight:700}
+    .hem-device-quick-option8[data-option-state8="on"]>.hem-device-quick-state8{color:var(--aqa-green)}
+    .hem-device-quick-state8:disabled{cursor:default;opacity:.55}
+    .hem-device-quick-option8>.hem-device-quick-help8>summary:hover,
+    .hem-device-quick-option8>.hem-device-quick-state8:not(:disabled):hover{background:color-mix(in srgb,var(--aqa-blue),transparent 90%)}
+    .hem-device-quick-option8>.hem-device-quick-help8>summary:focus-visible,
+    .hem-device-quick-option8>.hem-device-quick-state8:focus-visible{outline:2px solid var(--aqa-blue);outline-offset:-2px}
     .hem-context76>summary{cursor:pointer;list-style:none;display:grid;place-items:center;
       width:27px;height:27px;border-radius:8px;border:1px solid var(--aqa-edge);
       color:var(--primary-color,var(--aqa-blue));background:var(--aqa-surface)}
@@ -4677,6 +4953,12 @@
     },true);
     this._closeInfo87 = (dismiss=false)=> {
       const pop=this._floatingInfo87;
+      const restoreFocus=dismiss && pop?.contains(this.shadowRoot.activeElement);
+      const trigger=restoreFocus?pop?._hemInfoSource87?.querySelector(':scope > summary'):null;
+      if(pop?.contains(this._focusedEditor)) {
+        this._focusedEditor=null;
+        this._flushDeferredRenderSoon();
+      }
       if(dismiss)pop?._hemInfoCloseSource87?.();
       this._floatingInfo87=null;
       pop?._hemInfoCleanup87?.();
@@ -4686,6 +4968,7 @@
       // Disconnect callbacks run after the shadow tree leaves the document.
       // Remove its portal there too, so reconnect cannot retain an orphan.
       pop?.remove();
+      if(trigger?.isConnected)trigger.focus({preventScroll:true});
     };
     this._openInfo87 = detail=> {
       if(!detail?.isConnected || !detail.open || this._roomSettingsDialog114) return;
@@ -8146,7 +8429,7 @@
    */
   const ARRIVAL_TEXT124={
     en:{prepare:'Prepare for arrival',preparing:'Preparing',cancel:'Cancel arrival preparation',
-      paused:'Paused',ending:'Finishing',minute:'min',duration:'Preparation timeout',
+      paused:'Paused',ending:'Finishing',minute:'min',duration:'Home - Prepare - Max Time',
       remaining:'Time remaining',edit:'Edit the timeout for the next preparation.',
       away:'Temporarily use Home settings while everyone is away.',
       home:'Preparation is available when everyone is confirmed away.',
@@ -8158,7 +8441,7 @@
       reasonPreparing:'Home settings for arrival preparation',
       reasonChanged:'Arrival preparation changed; recalculating device control'},
     de:{prepare:'Ankunft vorbereiten',preparing:'Vorbereitung',cancel:'Ankunftsvorbereitung abbrechen',
-      paused:'Pausiert',ending:'Wird beendet',minute:'Min.',duration:'Dauer der Ankunftsvorbereitung',
+      paused:'Pausiert',ending:'Wird beendet',minute:'Min.',duration:'Zuhause - Vorbereiten - Maximale Dauer',
       remaining:'Verbleibende Zeit',edit:'Dauer für die nächste Vorbereitung ändern.',
       away:'Vorübergehend die Einstellungen für Zuhause verwenden, während alle abwesend sind.',
       home:'Die Vorbereitung ist verfügbar, wenn alle sicher abwesend sind.',
@@ -8170,7 +8453,7 @@
       reasonPreparing:'Einstellungen für Zuhause zur Ankunftsvorbereitung',
       reasonChanged:'Ankunftsvorbereitung geändert; Gerätesteuerung wird neu berechnet'},
     el:{prepare:'Προετοιμασία άφιξης',preparing:'Προετοιμασία',cancel:'Ακύρωση προετοιμασίας άφιξης',
-      paused:'Σε παύση',ending:'Ολοκλήρωση',minute:'λεπ.',duration:'Χρονικό όριο προετοιμασίας',
+      paused:'Σε παύση',ending:'Ολοκλήρωση',minute:'λεπ.',duration:'Σπίτι - Προετοιμασία - Μέγιστος χρόνος',
       remaining:'Χρόνος που απομένει',edit:'Αλλαγή του χρονικού ορίου για την επόμενη προετοιμασία.',
       away:'Προσωρινή χρήση των ρυθμίσεων Στο σπίτι ενώ όλοι απουσιάζουν.',
       home:'Η προετοιμασία είναι διαθέσιμη όταν έχει επιβεβαιωθεί ότι όλοι απουσιάζουν.',
@@ -8248,8 +8531,9 @@
     const minutes=source.active&&source.remaining!==null?Math.ceil(source.remaining/60):source.timeout;
     const duration=minutes===null?'—':this._format(minutes)+' '+words.minute;
     const configured=source.timeout===null?'—':this._format(source.timeout)+' '+words.minute;
+    const durationName=source.controls.timeout.state?.attributes?.friendly_name || words.duration;
     const durationTitle=(source.active?words.remaining+': '+duration+'. ':'')+
-      words.duration+': '+configured+'. '+words.edit;
+      durationName+': '+configured+'. '+words.edit;
     const actionTitle=actionName+'. '+(source.pending?words.requesting:reason);
     return '<div class="hem-arrival124'+(source.active?' is-active':'')+'"'+
       ' data-arrival-status124="'+(source.expired?'expired':source.active?

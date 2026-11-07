@@ -1944,6 +1944,53 @@ for _locale, _labels in WINDOW_OPTION_LABELS.items():
         _names[_key] = _group + " · {channel}" + _label
 
 
+_NATIVE_FULL_OUTPUT_LABELS = {
+    "en": "Full-output setpoint",
+    "el": "Στόχος πλήρους απόδοσης",
+    "de": "Sollwert für volle Leistung",
+    "fr": "Consigne à pleine puissance",
+    "es": "Consigna de máxima potencia",
+    "it": "Valore obiettivo a piena potenza",
+    "nl": "Instelpunt voor vol vermogen",
+    "pt": "Valor alvo de potência máxima",
+    "pt-BR": "Valor alvo de potência máxima",
+    "pl": "Wartość zadana pełnej mocy",
+    "cs": "Žádaná hodnota pro plný výkon",
+    "sk": "Žiadaná hodnota pre plný výkon",
+    "sv": "Börvärde för full effekt",
+    "nb": "Settpunkt for full effekt",
+    "da": "Setpunkt for fuld effekt",
+    "fi": "Täyden tehon asetusarvo",
+    "hu": "Teljes teljesítmény alapjele",
+    "ro": "Valoare țintă pentru putere maximă",
+    "bg": "Задание за пълна мощност",
+    "hr": "Zadana vrijednost za punu snagu",
+    "sr": "Задата вредност за пуну снагу",
+    "ru": "Уставка полной мощности",
+    "uk": "Задане значення повної потужності",
+    "tr": "Tam güç ayar noktası",
+    "ar": "القيمة المستهدفة للقدرة الكاملة",
+    "he": "נקודת יעד להספק מלא",
+    "fa": "نقطهٔ تنظیم توان کامل",
+    "hi": "पूर्ण क्षमता का लक्ष्य मान",
+    "bn": "পূর্ণ ক্ষমতার লক্ষ্য মান",
+    "ta": "முழுத் திறனுக்கான இலக்கு மதிப்பு",
+    "ur": "مکمل طاقت کی ہدف قدر",
+    "id": "Titik setel daya penuh",
+    "ja": "最大出力の設定値",
+    "ko": "최대 출력 설정값",
+    "th": "ค่าเป้าหมายกำลังเต็ม",
+    "vi": "Giá trị đặt công suất tối đa",
+    "zh-Hans": "满功率设定值",
+    "zh-Hant": "滿功率設定值",
+}
+for _locale, _label in _NATIVE_FULL_OUTPUT_LABELS.items():
+    _names = EQUIPMENT_TRANSLATED_NAMES[_locale]
+    _names["native_full_output"] = (
+        _names["control_mode"].partition(" · ")[0] + " · {channel}" + _label
+    )
+
+
 def _pid_parameter_label(key: str) -> str | None:
     if key in _PID_PARAMETER_LABELS:
         return _PID_PARAMETER_LABELS[key]

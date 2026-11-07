@@ -68,14 +68,26 @@ def changes(before,after):
     keys=('temperature','humidity','fan_mode','percentage','preset_mode')
     return tuple(k for k in keys if k in before['attributes'] and k in after['attributes']
                  and before['attributes'][k]!=after['attributes'][k])
-reconcile=compile_fn(extract('equipment_runtime.py','_reconcile','EquipmentRuntime'),{
+prefix='beta89_runtime'
+pkg=ModuleType(prefix);pkg.__path__=[str(ROOT)]
+sys.modules[prefix]=pkg
+model_module=ModuleType(prefix+'.equipment_model')
+for name in ('SETTINGS','settings','raw_settings','capabilities','control_modes'):
+    setattr(model_module,name,getattr(Model,name))
+sys.modules[model_module.__name__]=model_module
+runtime_module=ModuleType(prefix+'.equipment_runtime')
+runtime_module.__package__=prefix
+runtime_module.__dict__.update({
     'model':Model,'snapshot':sn,'matches':lambda state,expected:
         state is not None and all((state.state==v if k=='state' else True)
             for k,v in expected.items()),
     '_manual_output_changes':changes
 })
-prefix='beta89_runtime'
-pkg=ModuleType(prefix);pkg.__path__=[]
+sys.modules[runtime_module.__name__]=runtime_module
+# Real relative helper imports use this isolated production namespace. The
+# fixture still supplies only its existing HA/policy boundary objects.
+reconcile=compile_fn(extract('equipment_runtime.py','_reconcile','EquipmentRuntime'),
+                     runtime_module.__dict__)
 auth=ModuleType(prefix+'.device_activation')
 auth.authority_context=lambda manager,spec: {'area':spec.area_id,
     'sources':list(spec.source_entities)}

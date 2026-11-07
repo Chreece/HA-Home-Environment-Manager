@@ -2629,6 +2629,7 @@
           "native_ac_drying_already_active": "Native AC drying already active",
           "native_already_off": "Physical HVAC device is already off",
           "native_defrost_protection": "Device is defrosting; changing output is blocked",
+          "native_device_stabilizing": "Thiết bị khả dụng · Đang kiểm tra độ ổn định",
           "native_fan_preset_active": "Native fan preset active",
           "native_humidity_device_unavailable": "Native humidity device unavailable",
           "native_mode_commanded": "Operating mode command sent",
@@ -3796,7 +3797,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "Có mặt ở nhà · Thời hạn chuẩn bị đón về nhà (phút)",
+        "name": "Nhà - Chuẩn bị - Thời gian tối đa",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"
@@ -3999,6 +4000,14 @@
       },
       "equipment_announce_before_start": {
         "name": "Thông báo · {channel}Yêu cầu mở cửa sổ",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
+      },
+      "equipment_native_full_output": {
+        "name": "Điều khiển · {channel}Giá trị đặt công suất tối đa",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"

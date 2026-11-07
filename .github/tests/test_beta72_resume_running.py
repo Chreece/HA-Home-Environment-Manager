@@ -93,13 +93,17 @@ activation.authorized=lambda manager,spec: manager.native_permission
 sys.modules[pkg.__name__]=pkg
 sys.modules[power_mod.__name__]=power_mod
 sys.modules[activation.__name__]=activation
-# Resume imports this real pure helper only when a persisted command exists.
-helper_spec=importlib.util.spec_from_file_location(
-    "beta72_fixture.equipment_resume", BASE/"equipment_resume.py"
-)
-helper_module=importlib.util.module_from_spec(helper_spec)
-sys.modules[helper_spec.name]=helper_module
-helper_spec.loader.exec_module(helper_module)
+# Resume reconciles persisted commands through the real pure helpers. Keep
+# their module imports available inside this isolated fake-HA package.
+for helper in ("pid_math", "equipment_resume", "equipment_native_target"):
+    helper_spec=importlib.util.spec_from_file_location(
+        f"beta72_fixture.{helper}", BASE/f"{helper}.py"
+    )
+    helper_module=importlib.util.module_from_spec(helper_spec)
+    sys.modules[helper_spec.name]=helper_module
+    helper_spec.loader.exec_module(helper_module)
+# Older suites import this named export for the production recovery wording.
+helper_module=sys.modules["beta72_fixture.equipment_resume"]
 
 src=ast.parse((BASE/"equipment_runtime.py").read_text(encoding="utf-8"))
 klass=next(x for x in src.body if isinstance(x,ast.ClassDef) and x.name=="EquipmentRuntime")

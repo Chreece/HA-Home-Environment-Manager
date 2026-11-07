@@ -31,7 +31,7 @@ def fixture():
               for key in ('area_id', 'source_device_id', 'source_entity_ids')}
     extra = {
         'switch.cooler_timing': {'state': 'off', 'attributes': {
-            **common, 'timed_setpoint_role': 'policy', 'configuration_help':
+            **common, 'timed_setpoint_role': 'policy', 'timed_setpoint_supported': True, 'configuration_help':
             'Wait 30 seconds after ON before sending a target. <img src=x onerror="unsafe()">'}},
         'select.cooler_calibration': {'state': 'imc_lambda', 'attributes': {
             **common, 'pid_calibration_role': 'method', 'options': ['manual', 'imc_lambda'],
@@ -66,7 +66,8 @@ const room=input['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id==='c
 const html=card._controllerPanel(room);
 const ids=['select.method_cooler','switch.cooler_timing','select.cooler_calibration','number.cooler_gain','button.cooler_calibrate'];
 for(const id of ids){
- assert.ok(html.includes('data-detail-id="setting-help:'+id+'"'),id+' help missing');
+ const prefix=id==='switch.cooler_timing'?'device-option:':'setting-help:';
+ assert.ok(html.includes('data-detail-id="'+prefix+id+'"'),id+' help missing');
  assert.ok(html.includes(input[id].attributes.configuration_help.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')),id+' wrong help');
 }
 assert.ok(!html.includes('<img src=x'),'help HTML executed');
@@ -125,7 +126,7 @@ with sync_playwright() as playwright:
     # Native dismissal hides synchronously; its queued toggle removes the node.
     body.wait_for(state='detached')
     assert body.count() == 0, 'Escape did not close setting help'
-    timing = row.locator('[data-detail-id="setting-help:switch.cooler_timing"]')
+    timing = row.locator('[data-detail-id="device-option:switch.cooler_timing"]')
     timing.locator(':scope > summary').click()
     body.wait_for(state='visible')
     assert body.locator('img').count() == 0, 'help content became HTML'

@@ -2629,6 +2629,7 @@
           "native_ac_drying_already_active": "Native AC drying already active",
           "native_already_off": "Physical HVAC device is already off",
           "native_defrost_protection": "Device is defrosting; changing output is blocked",
+          "native_device_stabilizing": "デバイス利用可能 · 安定性を確認中",
           "native_fan_preset_active": "Native fan preset active",
           "native_humidity_device_unavailable": "Native humidity device unavailable",
           "native_mode_commanded": "Operating mode command sent",
@@ -3796,7 +3797,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "在宅状況 · 帰宅準備の制限時間（分）",
+        "name": "自宅 - 準備 - 最大時間",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
@@ -3999,6 +4000,14 @@
       },
       "equipment_announce_before_start": {
         "name": "通知 · {channel}窓を開けるよう案内",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
+      },
+      "equipment_native_full_output": {
+        "name": "制御 · {channel}最大出力の設定値",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"

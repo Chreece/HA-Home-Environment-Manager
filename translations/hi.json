@@ -2629,6 +2629,7 @@
           "native_ac_drying_already_active": "Native AC drying already active",
           "native_already_off": "Physical HVAC device is already off",
           "native_defrost_protection": "Device is defrosting; changing output is blocked",
+          "native_device_stabilizing": "डिवाइस उपलब्ध है · स्थिरता की जाँच",
           "native_fan_preset_active": "Native fan preset active",
           "native_humidity_device_unavailable": "Native humidity device unavailable",
           "native_mode_commanded": "Operating mode command sent",
@@ -3796,7 +3797,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "घर में उपस्थिति · आगमन की तैयारी की समय सीमा (मिनट)",
+        "name": "घर - तैयारी - अधिकतम समय",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"
@@ -3999,6 +4000,14 @@
       },
       "equipment_announce_before_start": {
         "name": "घोषणाएँ · {channel}खिड़कियाँ खोलने का अनुरोध",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "सहायता"
+          }
+        }
+      },
+      "equipment_native_full_output": {
+        "name": "नियंत्रण · {channel}पूर्ण क्षमता का लक्ष्य मान",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"

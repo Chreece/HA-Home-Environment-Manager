@@ -193,14 +193,22 @@ def sampled_binary_pwm_plan(
                    and math.isfinite(stopped_elapsed) and 0 <= stopped_elapsed <= elapsed)
         if stopped:
             next_start = max(next_start, stopped_elapsed + effective - duration)
-        wanted = next_start <= elapsed
+        # Sensor subtraction can put an exact boundary a fraction of a
+        # nanosecond ahead (e.g. 4.9% after 21-20.6). Absolute timers round
+        # that to now; do not discard an otherwise due mathematical pulse.
+        # The actuator still checks real minimum ON/OFF with no tolerance.
+        wanted = next_start <= elapsed or math.isclose(
+            next_start, elapsed, rel_tol=0., abs_tol=1e-9,
+        )
         remaining = None if wanted else next_start - elapsed
     else:
         # An already-running pulse cannot wrap through a missed OFF boundary
         # into another ON window. Its original minimum/maximum physical run
         # remains enforced by the actuator independently.
         on_elapsed = elapsed - served_elapsed if served else elapsed
-        wanted = on_elapsed < duration
+        wanted = on_elapsed < duration and not math.isclose(
+            on_elapsed, duration, rel_tol=0., abs_tol=1e-9,
+        )
         remaining = max(0., duration - on_elapsed) if wanted else None
     return {
         **info, "state": "on_window" if wanted else "off_window",

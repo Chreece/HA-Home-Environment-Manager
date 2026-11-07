@@ -16,7 +16,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b7](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b7)
+**Current release:** [v0.6.1b8](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b8)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
@@ -265,6 +265,12 @@ and **PID** so related controls stay together. Help explains what each setting
 changes. Removing a monitored room revokes its automatic controls; replacing or
 moving a physical device can require choosing its control method again.
 
+Each controller's shared quick options appear in one compact row. Select an
+option's **icon** to read its explanation, or its adjacent **state** to change
+that exact option. Window protection, device-error announcements, opening
+requests and supported optional behaviors share this row. Mode methods and
+their parameters stay inside their individual mode panels.
+
 ## Enable device control
 
 1. Select the appliance in the room's **Devices** group and save.
@@ -294,11 +300,20 @@ sources does not invalidate a selected method. Existing grants are recognized
 only when those physical identities still match.
 
 An unacknowledged command does not change **Automatic** or **PID** to Manual.
-While demand and authority remain valid, HEM retries the requested native
-command every **60 seconds**. After **three unsuccessful dispatch attempts** it
-announces that the device is not responding to HEM, while continuing to retry.
+While demand and authority remain valid, HEM retries unconfirmed native power
+and mode commands every **60 seconds**. After **three unsuccessful dispatch
+attempts** it announces that the device is not responding to HEM, while
+continuing to retry.
 Unavailable checks do not count as dispatch attempts. Device availability,
 window policy and minimum operating times still constrain each attempt.
+
+Full-demand native setpoints for **PID ON/OFF control** are best effort. HEM
+makes at most **three actual dispatch attempts** for the same request. If the
+device still reports a different target, HEM records the unconfirmed result,
+stops retrying that target and continues its automatic ON/OFF control. This
+allows devices whose continuous mode ignores a temperature or humidity
+setpoint to remain under PID control. The displayed native target remains
+the device's reported value; native ON/OFF commands still require feedback.
 
 A confirmed manual change on the appliance after HEM has successfully
 controlled it can pause automatic control. Use
@@ -338,15 +353,33 @@ measurement, demand and next scheduled window for diagnosis.
 These timings use confirmed native state; delayed appliance feedback can
 affect the duty actually delivered.
 
-When Automatic/PID has permission to control native ON/OFF operation, HEM uses
-the appliance's reported target maximum during heating or humidifying and its
+Device status distinguishes a missing physical source from Home Assistant
+startup and an available device's stability checks. Diagnostics include the
+selected source, readiness deadline, effective cycle and operating minimums,
+last confirmed ON/OFF times, and the **next eligible window**. Eligibility is
+followed by fresh demand, feedback and operating-protection checks; it is not
+a promise that the physical device will start at that instant.
+
+For a supported appliance with Automatic/PID permission to control native
+ON/OFF operation, its **Full-output setpoint** option determines whether HEM
+writes a native target during the ON period. Enabled by default, it requests
+the appliance's reported maximum during heating or humidifying and its
 reported minimum during cooling or drying. This keeps the appliance's internal
 thermostat or humidistat from ending HEM's requested ON period early when its
-local sensor differs from the selected room sensor. The room target still
-controls when HEM requests OFF, with the configured operating minimums and
-confirmed feedback. Devices authorized only for setpoint changes keep their
-bounded target adjustments; Dry modes without a native humidity setter use
-their supported mode control.
+local sensor differs from the selected room sensor. Turn the option off to
+leave the native setpoint unchanged, including devices whose continuous mode
+ignores target changes. HEM's room target still determines demand and when to
+request OFF, with the configured operating minimums and confirmed feedback.
+Devices authorized only for setpoint changes keep their bounded target
+adjustments; Dry modes without a native humidity setter use their supported
+mode control.
+
+Appliances advertising fan modes such as **low**, **medium** and **high** also
+have staged fan control. HEM selects from their available stages and applies
+the active occupied/sleep quiet limit to the final speed command. A pending
+optional full-output setpoint does not prevent a required quiet fan reduction.
+Fan-stage control and compressor ON/OFF timing remain separate; advertised fan
+speeds alone do not establish proportional compressor control.
 
 ### Room-presence choices
 
@@ -421,7 +454,15 @@ adjust them to your room and supported appliance range.
 
 Advanced ISO 7730 comfort inputs are optional. Ordinary temperature/humidity
 control does not require them. **Timed setpoints (30 s)** is also optional and
-off by default; consult its device help before enabling it.
+off by default. It is offered only for supported Automatic/PID ON/OFF heating
+and cooling with permission to control native power and **Full-output
+setpoint** enabled. Enabling it waits
+30 seconds after confirmed native ON before setting the full-demand target:
+the native maximum for heating or minimum for cooling. When stopping is
+permitted, it writes the opposite target, waits 30 seconds after that command,
+then requests OFF. The 30 seconds are transition delays; HEM's demand and
+operating protections determine the full ON period. Native OFF feedback is
+still required to confirm shutdown.
 
 ### Optional PID calibration
 
@@ -476,7 +517,7 @@ room's configured **Home** targets for eligible automatic controllers so heating
 cooling and humidity control can begin before you get home. Devices still run
 according to measured demand; the action does not turn every appliance on.
 
-Set **Arrival preparation timeout (min)** on the Home Environment device, or
+Set **Home - Prepare - Max Time** on the Home Environment device, or
 open that setting from the duration control in the card. The default is
 **60 minutes**; the allowed range is **1–1440 minutes**. Changing the setting
 affects the next press and leaves a running deadline unchanged.
@@ -724,7 +765,7 @@ steps to reproduce. Remove personal details from logs and screenshots.
 
 Install published betas from the
 [Releases page](https://github.com/Chreece/HA-Home-Environment-Manager/releases).
-Read the [current release notes](.github/releases/v0.6.1b7.md) for recent changes.
+Read the [current release notes](.github/releases/v0.6.1b8.md) for recent changes.
 
 | Branch | Purpose |
 | --- | --- |

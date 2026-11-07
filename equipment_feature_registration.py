@@ -61,38 +61,21 @@ def pid_calibration_supported(manager: Any, registry: Any, spec: Any,
 
 
 def timed_setpoint_supported(manager: Any, registry: Any, spec: Any) -> bool:
-    """Expose timing only on a controller with an actual native setpoint."""
-    cap = equipment.capabilities(manager, spec)
-    state = manager.hass.states.get(cap.primary) if cap else None
-    available = state is not None and state.state not in ("unknown", "unavailable")
-    flags = equipment.features(state)
-    if not available:
-        if registered_control(registry, "switch", spec, "timed_setpoint_sequence"):
-            return True
-        # On the first upgrade the native appliance may be disconnected.
-        # Reuse capabilities previously verified for precisely these sources.
-        record = getattr(manager.equipment, "records", {}).get(spec.identifier, {})
-        if (record.get("area") == spec.area_id
-                and record.get("source_device_id") == spec.source_device_id
-                and tuple(record.get("sources", ())) == spec.source_entities):
-            try:
-                saved = equipment.Capabilities(**record["capabilities"])
-                if saved.primary in spec.source_entities:
-                    attrs = record.get("baseline", {}).get(saved.primary) or {}
-                    flags = int(attrs.get("attributes", {}).get("supported_features", 0))
-                    cap = saved
-            except (KeyError, TypeError, ValueError, OverflowError):
-                pass
-    if cap is None:
-        return False
-    return bool(
-        cap.domain == "humidifier" and cap.humidity
-        or cap.domain == "climate" and (
-            (cap.temperature and flags & equipment.TEMP)
-            or (cap.temperature_range and "heat_cool" in cap.modes and flags & equipment.RANGE)
-            or (cap.humidity and flags & equipment.HUMIDITY)
-        )
-    )
+    """Register real thermal capability independently of current applicability.
+
+    Existing/Manual -> Automatic/PID can make the same entity usable on the
+    next controller update. A retained registry entry is identity continuity,
+    never evidence of capability or power permission; availability checks both.
+    """
+    from .equipment_setpoint_sequence import configuration_supported
+    return (configuration_supported(manager, spec)
+            or registered_control(registry, "switch", spec, "timed_setpoint_sequence"))
+
+
+def native_full_output_supported(manager: Any, registry: Any, spec: Any) -> bool:
+    from .equipment_native_target import configuration_supported
+    return (configuration_supported(manager, spec)
+            or registered_control(registry, "switch", spec, "native_full_output"))
 
 
 def quiet_keys(manager: Any, registry: Any, spec: Any,

@@ -272,8 +272,22 @@ jobs:
           python -I .github/tests/test_beta67_aqi.py
           python -I .github/tests/test_beta68_scheduler.py
           python -I .github/tests/test_beta68_metadata.py
+      - name: Device readiness, exact PID deadlines and compact option logic
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_061b8_readiness.py
+          python -I .github/tests/test_061b8_quick_options_card.py --logic-only
+      - name: Bounded optional native targets and quiet dehumidifier stages
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_061b8_native_target_budget.py
+          python -I .github/tests/test_061b8_dehumidifier_fan.py
       - name: Install runner-only Home Assistant and browser test packages
         run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+      - name: Compact device options, readiness timing and mobile help
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b8_quick_options_card.py --browser-only
       - name: Independent mode panels, mold indication and scoped mobile controls
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
@@ -386,7 +400,7 @@ jobs:
               assert m['domain']=='environment_manager' and m['version']==version
               for f in ('__init__.py','device_faults.py','equipment_resume.py','pid_review.py','equipment_power_switch.py',
                         'pid_passive.py','pid_calibration.py',
-                        'equipment_runtime.py','equipment_setpoint_sequence.py','equipment_pid_safety.py','advanced_comfort.py','shade_cooling.py','switch.py',
+                        'equipment_runtime.py','equipment_setpoint_sequence.py','equipment_native_target.py','equipment_pid_safety.py','advanced_comfort.py','shade_cooling.py','switch.py',
                         'button.py','climate.py','equipment_name_catalog.py',
                         'equipment_labels.json','equipment_window.py',
                         'climate_arbitration.py','pid_phase.py','pid_restart.py',

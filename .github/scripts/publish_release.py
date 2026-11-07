@@ -28,7 +28,7 @@ VERSION = re.compile(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:b(0|[1-9]\d*))
 REQUIRED = (
     "__init__.py", "device_faults.py", "equipment_resume.py", "pid_review.py",
     "equipment_power_switch.py", "pid_passive.py", "pid_calibration.py",
-    "equipment_runtime.py", "equipment_setpoint_sequence.py", "equipment_pid_safety.py",
+    "equipment_runtime.py", "equipment_setpoint_sequence.py", "equipment_native_target.py", "equipment_pid_safety.py",
     "advanced_comfort.py", "shade_cooling.py", "switch.py", "button.py", "climate.py",
     "equipment_name_catalog.py", "equipment_labels.json", "equipment_window.py",
     "climate_arbitration.py", "pid_phase.py", "pid_restart.py", "equipment_status.py",
