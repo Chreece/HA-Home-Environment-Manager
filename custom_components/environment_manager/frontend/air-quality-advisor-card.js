@@ -8632,6 +8632,13 @@
       allowed.length===1?allowed[0]:null;
     const native=actual?this._hass?.states?.[actual]:null;
     const rows=[];
+    const nativeTarget=this._nativeTargetNotice8(entry);
+    if(nativeTarget){
+      rows.push('<div data-native-target-evidence8="'+escape(nativeTarget.entity)+'">'+
+        '<strong>'+escape(nativeTarget.heading)+'</strong>'+
+        safeArray(nativeTarget.evidence).map(value=>'<div>'+escape(value)+'</div>').join('')+
+        '<p>'+escape(nativeTarget.help)+'</p></div>');
+    }
     const row=(key,value)=>{
       if(value===null||value===undefined||value==="")return;
       rows.push('<div class="hem-device-info-row126"><b>'+escape(hemWord126(this,key))+
