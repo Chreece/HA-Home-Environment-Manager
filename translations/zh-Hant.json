@@ -68,7 +68,7 @@
         "title": "播報（選用）",
         "description": "播報（選用）. 自動通知 · 自動語音播報. Announcement Hub.",
         "data": {
-          "language": "語言",
+          "language": "播報語言",
           "automatic_tts": "自動",
           "automatic_notifications": "自動 · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "播報（選用） · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · 語言"
         },
         "data_description": {
-          "language": "僅為選定房間設定「語言」。資料無效或缺失將停止操作。",
+          "language": "預設使用 Home Assistant 的語言，也可以選擇 HEM 支援的任何播報語言。",
           "automatic_tts": "此選項控制「自動」。實際裝置指令需個別授權並有獨立保護。",
           "automatic_notifications": "此選項控制「自動 · AUTOMATIC_NOTIFICATIONS」。實際裝置指令需個別授權並有獨立保護。",
           "announcement_repeat_minutes": "預設: 10 min · 0 = 永不 · 僅在相同原因持續時 · 房間.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "「室外 · °C (≥)」的決策門檻影響建議，但不是醫療限值。",
           "max_outdoor_temp": "「室外 · °C (≤)」的決策門檻影響建議，但不是醫療限值。",
           "max_outdoor_humidity": "「室外 · RH (%) (≤)」的決策門檻影響建議，但不是醫療限值。",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "「黴菌指標 · ≥ 70%」的決策門檻影響建議，但不是醫療限值。"
         }
@@ -191,7 +191,7 @@
           "media_players": "設定 · 來源 · MEDIA_PLAYERS",
           "tts_engine": "設定 · 來源 · TTS_ENGINE",
           "ai_conversation_agent": "AI · 選擇 · 來源",
-          "language": "TTS · 選擇 · 來源",
+          "language": "播報語言",
           "use_mold_indicator": "黴菌指標 · RH (%) → 70%",
           "pollen_entities": "花粉 · 來源 · 選擇",
           "use_announcement_hub": "播報 · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "在家狀態 · 追蹤/人數資料的最大有效時間（分鐘）",
           "general_home_policy": "在家狀態",
           "general_wake_alarm_entity": "睡眠 · 下次鬧鐘",
-          "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數"
+          "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數",
+          "window_open_timeout_minutes": "等候開窗時間（分鐘）"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "僅為選定房間設定「設定 · 來源 · MEDIA_PLAYERS」。資料無效或缺失將停止操作。",
           "tts_engine": "僅為選定房間設定「設定 · 來源 · TTS_ENGINE」。資料無效或缺失將停止操作。",
           "ai_conversation_agent": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · AI · 選擇 · 來源 · conversation.* / ai_task.*.",
-          "language": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · TTS · 選擇 · 來源 · provider capabilities.",
+          "language": "預設使用 Home Assistant 的語言，也可以選擇 HEM 支援的任何播報語言。",
           "use_mold_indicator": "僅為選定房間設定「黴菌指標 · RH (%) → 70%」。資料無效或缺失將停止操作。",
           "pollen_entities": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 花粉 · 來源 · 選擇.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "有效時間限制適用於追蹤報告和數字人數。房間清單及二元存在狀態在未變化時不會過期。無法使用、已還原或無效的來源仍為未知。這不是睡眠時間。",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "選擇下次鬧鐘的時間或日期時間實體，以及提前分鐘數實體。HEM 會提前這些分鐘結束自動睡眠模式，恢復一般目標值。只有時間的值使用 Home Assistant 的時區。離家、手動控制和裝置保護仍保持優先順序。",
-          "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。"
+          "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。",
+          "window_open_timeout_minutes": "開窗請求被接受後，等候一段時間，再依需要允許新的自動/PID啟動。範圍0–30分鐘，預設5；0表示不等候。開窗保護和裝置最短運作／停機時間仍然有效。"
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "播報（選用）",
         "description": "播報（選用）. 自動通知 · 自動語音播報. Announcement Hub.",
         "data": {
-          "language": "語言",
+          "language": "播報語言",
           "automatic_tts": "自動",
           "automatic_notifications": "自動 · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "播報（選用） · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · 語言"
         },
         "data_description": {
-          "language": "僅為選定房間設定「語言」。資料無效或缺失將停止操作。",
+          "language": "預設使用 Home Assistant 的語言，也可以選擇 HEM 支援的任何播報語言。",
           "automatic_tts": "此選項控制「自動」。實際裝置指令需個別授權並有獨立保護。",
           "automatic_notifications": "此選項控制「自動 · AUTOMATIC_NOTIFICATIONS」。實際裝置指令需個別授權並有獨立保護。",
           "announcement_repeat_minutes": "預設: 10 min · 0 = 永不 · 僅在相同原因持續時 · 房間.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "「室外 · °C (≥)」的決策門檻影響建議，但不是醫療限值。",
           "max_outdoor_temp": "「室外 · °C (≤)」的決策門檻影響建議，但不是醫療限值。",
           "max_outdoor_humidity": "「室外 · RH (%) (≤)」的決策門檻影響建議，但不是醫療限值。",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "「黴菌指標 · ≥ 70%」的決策門檻影響建議，但不是醫療限值。"
         }
@@ -2187,7 +2189,7 @@
           "media_players": "設定 · 來源 · MEDIA_PLAYERS",
           "tts_engine": "設定 · 來源 · TTS_ENGINE",
           "ai_conversation_agent": "AI · 選擇 · 來源",
-          "language": "TTS · 選擇 · 來源",
+          "language": "播報語言",
           "use_mold_indicator": "黴菌指標 · RH (%) → 70%",
           "pollen_entities": "花粉 · 來源 · 選擇",
           "use_announcement_hub": "播報 · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "在家狀態 · 追蹤/人數資料的最大有效時間（分鐘）",
           "general_home_policy": "在家狀態",
           "general_wake_alarm_entity": "睡眠 · 下次鬧鐘",
-          "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數"
+          "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數",
+          "window_open_timeout_minutes": "等候開窗時間（分鐘）"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "僅為選定房間設定「設定 · 來源 · MEDIA_PLAYERS」。資料無效或缺失將停止操作。",
           "tts_engine": "僅為選定房間設定「設定 · 來源 · TTS_ENGINE」。資料無效或缺失將停止操作。",
           "ai_conversation_agent": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · AI · 選擇 · 來源 · conversation.* / ai_task.*.",
-          "language": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · TTS · 選擇 · 來源 · provider capabilities.",
+          "language": "預設使用 Home Assistant 的語言，也可以選擇 HEM 支援的任何播報語言。",
           "use_mold_indicator": "僅為選定房間設定「黴菌指標 · RH (%) → 70%」。資料無效或缺失將停止操作。",
           "pollen_entities": "選擇共用輸入源和通知輸出。儲存即完成設定。運作參數保留在家庭和房間裝置上。 · 花粉 · 來源 · 選擇.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "有效時間限制適用於追蹤報告和數字人數。房間清單及二元存在狀態在未變化時不會過期。無法使用、已還原或無效的來源仍為未知。這不是睡眠時間。",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "選擇下次鬧鐘的時間或日期時間實體，以及提前分鐘數實體。HEM 會提前這些分鐘結束自動睡眠模式，恢復一般目標值。只有時間的值使用 Home Assistant 的時區。離家、手動控制和裝置保護仍保持優先順序。",
-          "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。"
+          "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。",
+          "window_open_timeout_minutes": "開窗請求被接受後，等候一段時間，再依需要允許新的自動/PID啟動。範圍0–30分鐘，預設5；0表示不等候。開窗保護和裝置最短運作／停機時間仍然有效。"
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "節能",
           "window_open_pause": "因窗戶開啟而暫停",
           "window_close_warmup": "關窗後等待中",
-          "window_state_unknown": "等待窗戶狀態"
+          "window_state_unknown": "等待窗戶狀態",
+          "window_open_wait": "正在等你打開窗戶",
+          "window_request_pending": "正在傳送開窗請求"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "說明"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "通風 · 等候開窗時間（分鐘）",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - 預設",
+        "auto": "Home Assistant 語言（預設）",
         "en": "設定 · 來源",
         "de": "設定 · 來源",
         "el": "設定 · 來源",

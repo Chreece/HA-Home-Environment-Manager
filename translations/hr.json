@@ -68,7 +68,7 @@
         "title": "Obavijesti (neobavezno)",
         "description": "Obavijesti (neobavezno). Automatske obavijesti · Automatske glasovne obavijesti. Announcement Hub.",
         "data": {
-          "language": "Jezik",
+          "language": "Jezik obavijesti",
           "automatic_tts": "Automatsko",
           "automatic_notifications": "Automatsko · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Obavijesti (neobavezno) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Jezik"
         },
         "data_description": {
-          "language": "Postavite „Jezik” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
+          "language": "Zadano se koristi jezik Home Assistanta. Možete odabrati bilo koji jezik obavijesti koji HEM podržava.",
           "automatic_tts": "Zadano: ⛔ · Automatsko · 🪟 90 s. Ova opcija upravlja „Automatsko”. Fizičke naredbe traže zasebno odobrenje i zaštitu.",
           "automatic_notifications": "Ova opcija upravlja „Automatsko · AUTOMATIC_NOTIFICATIONS”. Fizičke naredbe traže zasebno odobrenje i zaštitu.",
           "announcement_repeat_minutes": "Zadano: 10 min · 0 = nikad · Dok traje isti uzrok · Prostorije.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Prag odluke za „Vani · °C (≥)”. Utječe na preporuke, nije medicinska granica.",
           "max_outdoor_temp": "Prag odluke za „Vani · °C (≤)”. Utječe na preporuke, nije medicinska granica.",
           "max_outdoor_humidity": "Prag odluke za „Vani · RH (%) (≤)”. Utječe na preporuke, nije medicinska granica.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Prag odluke za „Pokazatelj plijesni · ≥ 70%”. Utječe na preporuke, nije medicinska granica."
         }
@@ -191,7 +191,7 @@
           "media_players": "postavke · izvor · MEDIA_PLAYERS",
           "tts_engine": "postavke · izvor · TTS_ENGINE",
           "ai_conversation_agent": "AI · Odaberi · izvor",
-          "language": "TTS · Odaberi · izvor",
+          "language": "Jezik obavijesti",
           "use_mold_indicator": "Pokazatelj plijesni · RH (%) → 70%",
           "pollen_entities": "Pelud · izvor · Odaberi",
           "use_announcement_hub": "Obavijesti · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Prisutnost kod kuće · Najveća starost podataka praćenja/broja osoba (min)",
           "general_home_policy": "Prisutnost kod kuće",
           "general_wake_alarm_entity": "Spavanje · Sljedeći alarm",
-          "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma"
+          "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma",
+          "window_open_timeout_minutes": "Čekanje na otvaranje prozora (min)"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "Odaberite: media_player.* · postavke · izvor · MEDIA_PLAYERS.",
           "tts_engine": "Odaberite: tts.* · postavke · izvor · TTS_ENGINE.",
           "ai_conversation_agent": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · AI · Odaberi · izvor · conversation.* / ai_task.*.",
-          "language": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · TTS · Odaberi · izvor · provider capabilities.",
+          "language": "Zadano se koristi jezik Home Assistanta. Možete odabrati bilo koji jezik obavijesti koji HEM podržava.",
           "use_mold_indicator": "🧱 Pokazatelj plijesni · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · Pelud · izvor · Odaberi.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "Ograničenje starosti odnosi se na izvješća praćenja i brojčani broj osoba. Popisi soba i binarna stanja prisutnosti ne istječu dok se ne promijene. Nedostupni, obnovljeni ili nevaljani izvori ostaju nepoznati. To nije trajanje spavanja.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Odaberite entitet vremena ili datuma i vremena sljedećeg alarma te entitet za minute. HEM završava automatsko spavanje toliko minuta ranije i vraća uobičajene ciljeve. Vrijeme bez datuma koristi vremensku zonu Home Assistanta. Odsutnost, ručno upravljanje i zaštite zadržavaju prednost.",
-          "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora."
+          "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora.",
+          "window_open_timeout_minutes": "Čekanje nakon prihvaćanja zahtjeva za prozračivanje prije dopuštanja novih automatskih/PID pokretanja ako su potrebna. 0–30 minuta, zadano 5; 0 isključuje čekanje. Zaštite pri otvorenom prozoru i minimalna vremena rada uređaja i dalje vrijede."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "Obavijesti (neobavezno)",
         "description": "Obavijesti (neobavezno). Automatske obavijesti · Automatske glasovne obavijesti. Announcement Hub.",
         "data": {
-          "language": "Jezik",
+          "language": "Jezik obavijesti",
           "automatic_tts": "Automatsko",
           "automatic_notifications": "Automatsko · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Obavijesti (neobavezno) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · Jezik"
         },
         "data_description": {
-          "language": "Postavite „Jezik” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju.",
+          "language": "Zadano se koristi jezik Home Assistanta. Možete odabrati bilo koji jezik obavijesti koji HEM podržava.",
           "automatic_tts": "Zadano: ⛔ · Automatsko · 🪟 90 s. Ova opcija upravlja „Automatsko”. Fizičke naredbe traže zasebno odobrenje i zaštitu.",
           "automatic_notifications": "Ova opcija upravlja „Automatsko · AUTOMATIC_NOTIFICATIONS”. Fizičke naredbe traže zasebno odobrenje i zaštitu.",
           "announcement_repeat_minutes": "Zadano: 10 min · 0 = nikad · Dok traje isti uzrok · Prostorije.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Prag odluke za „Vani · °C (≥)”. Utječe na preporuke, nije medicinska granica.",
           "max_outdoor_temp": "Prag odluke za „Vani · °C (≤)”. Utječe na preporuke, nije medicinska granica.",
           "max_outdoor_humidity": "Prag odluke za „Vani · RH (%) (≤)”. Utječe na preporuke, nije medicinska granica.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Prag odluke za „Pokazatelj plijesni · ≥ 70%”. Utječe na preporuke, nije medicinska granica."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "postavke · izvor · MEDIA_PLAYERS",
           "tts_engine": "postavke · izvor · TTS_ENGINE",
           "ai_conversation_agent": "AI · Odaberi · izvor",
-          "language": "TTS · Odaberi · izvor",
+          "language": "Jezik obavijesti",
           "use_mold_indicator": "Pokazatelj plijesni · RH (%) → 70%",
           "pollen_entities": "Pelud · izvor · Odaberi",
           "use_announcement_hub": "Obavijesti · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Prisutnost kod kuće · Najveća starost podataka praćenja/broja osoba (min)",
           "general_home_policy": "Prisutnost kod kuće",
           "general_wake_alarm_entity": "Spavanje · Sljedeći alarm",
-          "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma"
+          "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma",
+          "window_open_timeout_minutes": "Čekanje na otvaranje prozora (min)"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "Odaberite: media_player.* · postavke · izvor · MEDIA_PLAYERS.",
           "tts_engine": "Odaberite: tts.* · postavke · izvor · TTS_ENGINE.",
           "ai_conversation_agent": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · AI · Odaberi · izvor · conversation.* / ai_task.*.",
-          "language": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · TTS · Odaberi · izvor · provider capabilities.",
+          "language": "Zadano se koristi jezik Home Assistanta. Možete odabrati bilo koji jezik obavijesti koji HEM podržava.",
           "use_mold_indicator": "🧱 Pokazatelj plijesni · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Odaberite zajedničke izvore i izlaze obavijesti. Spremanje završava postavljanje. Radne postavke ostaju na uređajima doma i soba. · Pelud · izvor · Odaberi.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "Ograničenje starosti odnosi se na izvješća praćenja i brojčani broj osoba. Popisi soba i binarna stanja prisutnosti ne istječu dok se ne promijene. Nedostupni, obnovljeni ili nevaljani izvori ostaju nepoznati. To nije trajanje spavanja.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Odaberite entitet vremena ili datuma i vremena sljedećeg alarma te entitet za minute. HEM završava automatsko spavanje toliko minuta ranije i vraća uobičajene ciljeve. Vrijeme bez datuma koristi vremensku zonu Home Assistanta. Odsutnost, ručno upravljanje i zaštite zadržavaju prednost.",
-          "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora."
+          "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora.",
+          "window_open_timeout_minutes": "Čekanje nakon prihvaćanja zahtjeva za prozračivanje prije dopuštanja novih automatskih/PID pokretanja ako su potrebna. 0–30 minuta, zadano 5; 0 isključuje čekanje. Zaštite pri otvorenom prozoru i minimalna vremena rada uređaja i dalje vrijede."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Ušteda energije",
           "window_open_pause": "Pauza zbog otvorenog prozora",
           "window_close_warmup": "Čekanje nakon zatvaranja prozora",
-          "window_state_unknown": "Čekanje na stanje prozora"
+          "window_state_unknown": "Čekanje na stanje prozora",
+          "window_open_wait": "Čeka se da otvorite prozor",
+          "window_request_pending": "Šalje se zahtjev za otvaranje prozora"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "Pomoć"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Ventilacija · Čekanje na otvaranje prozora (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Zadano",
+        "auto": "Jezik Home Assistanta (zadano)",
         "en": "postavke · izvor",
         "de": "postavke · izvor",
         "el": "postavke · izvor",

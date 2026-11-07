@@ -68,7 +68,7 @@
         "title": "ঘোষণা (ঐচ্ছিক)",
         "description": "ঘোষণা (ঐচ্ছিক). স্বয়ংক্রিয় বিজ্ঞপ্তি · স্বয়ংক্রিয় ভয়েস ঘোষণা. Announcement Hub.",
         "data": {
-          "language": "ভাষা",
+          "language": "ঘোষণার ভাষা",
           "automatic_tts": "স্বয়ংক্রিয়",
           "automatic_notifications": "স্বয়ংক্রিয় · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "ঘোষণা (ঐচ্ছিক) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · ভাষা"
         },
         "data_description": {
-          "language": "“ভাষা” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
+          "language": "ডিফল্টভাবে Home Assistant-এর ভাষা ব্যবহার করা হয়। আপনি HEM সমর্থিত যেকোনো ঘোষণার ভাষা বেছে নিতে পারেন।",
           "automatic_tts": "ডিফল্ট: ⛔ · স্বয়ংক্রিয় · 🪟 90 s. এই বিকল্প “স্বয়ংক্রিয়” নিয়ন্ত্রণ করে। যন্ত্রে আদেশ দিতে আলাদা অনুমতি ও স্বাধীন সুরক্ষা দরকার।",
           "automatic_notifications": "ডিফল্ট: ⛔ · স্বয়ংক্রিয় · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "ডিফল্ট: 10 min · 0 = কখনো নয় · একই কারণ বজায় থাকলে · কক্ষ.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "“বাইরে · °C (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
           "max_outdoor_temp": "“বাইরে · °C (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
           "max_outdoor_humidity": "“বাইরে · RH (%) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "“ছাঁচের সূচক · ≥ 70%” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।"
         }
@@ -191,7 +191,7 @@
           "media_players": "সেটিংস · উৎস · MEDIA_PLAYERS",
           "tts_engine": "সেটিংস · উৎস · TTS_ENGINE",
           "ai_conversation_agent": "AI · নির্বাচন · উৎস",
-          "language": "TTS · নির্বাচন · উৎস",
+          "language": "ঘোষণার ভাষা",
           "use_mold_indicator": "ছাঁচের সূচক · RH (%) → 70%",
           "pollen_entities": "পরাগ · উৎস · নির্বাচন",
           "use_announcement_hub": "ঘোষণা · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "বাড়িতে উপস্থিতি · ট্র্যাকার/লোকসংখ্যার তথ্যের সর্বোচ্চ বয়স (মিনিট)",
           "general_home_policy": "বাড়িতে উপস্থিতি",
           "general_wake_alarm_entity": "ঘুম · পরবর্তী অ্যালার্ম",
-          "general_wake_lead_minutes_entity": "ঘুম · অ্যালার্মের কত মিনিট আগে"
+          "general_wake_lead_minutes_entity": "ঘুম · অ্যালার্মের কত মিনিট আগে",
+          "window_open_timeout_minutes": "জানালা খোলার অপেক্ষার সময় (মিনিট)"
         },
         "data_description": {
           "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "নির্বাচন করুন: media_player.* · সেটিংস · উৎস · MEDIA_PLAYERS.",
           "tts_engine": "নির্বাচন করুন: tts.* · সেটিংস · উৎস · TTS_ENGINE.",
           "ai_conversation_agent": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · AI · নির্বাচন · উৎস · conversation.* / ai_task.*.",
-          "language": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · TTS · নির্বাচন · উৎস · provider capabilities.",
+          "language": "ডিফল্টভাবে Home Assistant-এর ভাষা ব্যবহার করা হয়। আপনি HEM সমর্থিত যেকোনো ঘোষণার ভাষা বেছে নিতে পারেন।",
           "use_mold_indicator": "🧱 ছাঁচের সূচক · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · পরাগ · উৎস · নির্বাচন.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "তথ্যের বয়সসীমা ট্র্যাকার ও সংখ্যাসূচক লোকগণনার ক্ষেত্রে প্রযোজ্য। ঘরের তালিকা ও বাইনারি উপস্থিতির অবস্থা অপরিবর্তিত থাকলে মেয়াদোত্তীর্ণ হয় না। অনুপলব্ধ, পুনরুদ্ধার করা বা অবৈধ উৎস অজানা থাকে। এটি ঘুমের সময়কাল নয়।",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "পরবর্তী অ্যালার্মের সময় বা তারিখ-সময় সত্তা এবং মিনিটের সত্তা বেছে নিন। স্বাভাবিক লক্ষ্যগুলো ফিরিয়ে আনতে HEM নির্দিষ্ট মিনিট আগে স্বয়ংক্রিয় ঘুম মোড ছাড়ে। শুধু সময় থাকলে Home Assistant-এর সময় অঞ্চল ব্যবহৃত হয়। অনুপস্থিতি, ম্যানুয়াল নিয়ন্ত্রণ ও ডিভাইসের সুরক্ষার অগ্রাধিকার বজায় থাকে।",
-          "general_wake_lead_minutes_entity": "মিনিটে অঋণাত্মক মানের সংখ্যাসূচক সত্তা বেছে নিন; একক min অথবা এককবিহীন। 07:00 অ্যালার্ম ও 30 হলে 06:30-এ স্বয়ংক্রিয় ঘুম শেষ হয়; 0 মানে অ্যালার্ম বাজার সময়। বন্ধ করতে দুটি উৎসই সরান।"
+          "general_wake_lead_minutes_entity": "মিনিটে অঋণাত্মক মানের সংখ্যাসূচক সত্তা বেছে নিন; একক min অথবা এককবিহীন। 07:00 অ্যালার্ম ও 30 হলে 06:30-এ স্বয়ংক্রিয় ঘুম শেষ হয়; 0 মানে অ্যালার্ম বাজার সময়। বন্ধ করতে দুটি উৎসই সরান।",
+          "window_open_timeout_minutes": "বাতাস চলাচলের অনুরোধ গৃহীত হওয়ার পর, প্রয়োজন থাকলে নতুন স্বয়ংক্রিয়/PID চালুর অনুমতির আগে অপেক্ষা। ০–৩০ মিনিট, ডিফল্ট ৫; ০ অপেক্ষা বন্ধ করে। খোলা জানালার সুরক্ষা ও যন্ত্রের ন্যূনতম সময় কার্যকর থাকে।"
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "ঘোষণা (ঐচ্ছিক)",
         "description": "ঘোষণা (ঐচ্ছিক). স্বয়ংক্রিয় বিজ্ঞপ্তি · স্বয়ংক্রিয় ভয়েস ঘোষণা. Announcement Hub.",
         "data": {
-          "language": "ভাষা",
+          "language": "ঘোষণার ভাষা",
           "automatic_tts": "স্বয়ংক্রিয়",
           "automatic_notifications": "স্বয়ংক্রিয় · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "ঘোষণা (ঐচ্ছিক) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · ভাষা"
         },
         "data_description": {
-          "language": "“ভাষা” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।",
+          "language": "ডিফল্টভাবে Home Assistant-এর ভাষা ব্যবহার করা হয়। আপনি HEM সমর্থিত যেকোনো ঘোষণার ভাষা বেছে নিতে পারেন।",
           "automatic_tts": "ডিফল্ট: ⛔ · স্বয়ংক্রিয় · 🪟 90 s. এই বিকল্প “স্বয়ংক্রিয়” নিয়ন্ত্রণ করে। যন্ত্রে আদেশ দিতে আলাদা অনুমতি ও স্বাধীন সুরক্ষা দরকার।",
           "automatic_notifications": "ডিফল্ট: ⛔ · স্বয়ংক্রিয় · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "ডিফল্ট: 10 min · 0 = কখনো নয় · একই কারণ বজায় থাকলে · কক্ষ.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "“বাইরে · °C (≥)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
           "max_outdoor_temp": "“বাইরে · °C (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
           "max_outdoor_humidity": "“বাইরে · RH (%) (≤)” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "“ছাঁচের সূচক · ≥ 70%” এর সিদ্ধান্তসীমা পরামর্শে প্রভাব ফেলে; এটি চিকিৎসাগত সীমা নয়।"
         }
@@ -2187,7 +2189,7 @@
           "media_players": "সেটিংস · উৎস · MEDIA_PLAYERS",
           "tts_engine": "সেটিংস · উৎস · TTS_ENGINE",
           "ai_conversation_agent": "AI · নির্বাচন · উৎস",
-          "language": "TTS · নির্বাচন · উৎস",
+          "language": "ঘোষণার ভাষা",
           "use_mold_indicator": "ছাঁচের সূচক · RH (%) → 70%",
           "pollen_entities": "পরাগ · উৎস · নির্বাচন",
           "use_announcement_hub": "ঘোষণা · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "বাড়িতে উপস্থিতি · ট্র্যাকার/লোকসংখ্যার তথ্যের সর্বোচ্চ বয়স (মিনিট)",
           "general_home_policy": "বাড়িতে উপস্থিতি",
           "general_wake_alarm_entity": "ঘুম · পরবর্তী অ্যালার্ম",
-          "general_wake_lead_minutes_entity": "ঘুম · অ্যালার্মের কত মিনিট আগে"
+          "general_wake_lead_minutes_entity": "ঘুম · অ্যালার্মের কত মিনিট আগে",
+          "window_open_timeout_minutes": "জানালা খোলার অপেক্ষার সময় (মিনিট)"
         },
         "data_description": {
           "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "নির্বাচন করুন: media_player.* · সেটিংস · উৎস · MEDIA_PLAYERS.",
           "tts_engine": "নির্বাচন করুন: tts.* · সেটিংস · উৎস · TTS_ENGINE.",
           "ai_conversation_agent": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · AI · নির্বাচন · উৎস · conversation.* / ai_task.*.",
-          "language": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · TTS · নির্বাচন · উৎস · provider capabilities.",
+          "language": "ডিফল্টভাবে Home Assistant-এর ভাষা ব্যবহার করা হয়। আপনি HEM সমর্থিত যেকোনো ঘোষণার ভাষা বেছে নিতে পারেন।",
           "use_mold_indicator": "🧱 ছাঁচের সূচক · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "যৌথ উৎস ও বিজ্ঞপ্তির আউটপুট বেছে নিন। সংরক্ষণ করলে সেটআপ শেষ হয়। চালনার সেটিং বাড়ি ও ঘরের ডিভাইসে থাকে। · পরাগ · উৎস · নির্বাচন.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "তথ্যের বয়সসীমা ট্র্যাকার ও সংখ্যাসূচক লোকগণনার ক্ষেত্রে প্রযোজ্য। ঘরের তালিকা ও বাইনারি উপস্থিতির অবস্থা অপরিবর্তিত থাকলে মেয়াদোত্তীর্ণ হয় না। অনুপলব্ধ, পুনরুদ্ধার করা বা অবৈধ উৎস অজানা থাকে। এটি ঘুমের সময়কাল নয়।",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "পরবর্তী অ্যালার্মের সময় বা তারিখ-সময় সত্তা এবং মিনিটের সত্তা বেছে নিন। স্বাভাবিক লক্ষ্যগুলো ফিরিয়ে আনতে HEM নির্দিষ্ট মিনিট আগে স্বয়ংক্রিয় ঘুম মোড ছাড়ে। শুধু সময় থাকলে Home Assistant-এর সময় অঞ্চল ব্যবহৃত হয়। অনুপস্থিতি, ম্যানুয়াল নিয়ন্ত্রণ ও ডিভাইসের সুরক্ষার অগ্রাধিকার বজায় থাকে।",
-          "general_wake_lead_minutes_entity": "মিনিটে অঋণাত্মক মানের সংখ্যাসূচক সত্তা বেছে নিন; একক min অথবা এককবিহীন। 07:00 অ্যালার্ম ও 30 হলে 06:30-এ স্বয়ংক্রিয় ঘুম শেষ হয়; 0 মানে অ্যালার্ম বাজার সময়। বন্ধ করতে দুটি উৎসই সরান।"
+          "general_wake_lead_minutes_entity": "মিনিটে অঋণাত্মক মানের সংখ্যাসূচক সত্তা বেছে নিন; একক min অথবা এককবিহীন। 07:00 অ্যালার্ম ও 30 হলে 06:30-এ স্বয়ংক্রিয় ঘুম শেষ হয়; 0 মানে অ্যালার্ম বাজার সময়। বন্ধ করতে দুটি উৎসই সরান।",
+          "window_open_timeout_minutes": "বাতাস চলাচলের অনুরোধ গৃহীত হওয়ার পর, প্রয়োজন থাকলে নতুন স্বয়ংক্রিয়/PID চালুর অনুমতির আগে অপেক্ষা। ০–৩০ মিনিট, ডিফল্ট ৫; ০ অপেক্ষা বন্ধ করে। খোলা জানালার সুরক্ষা ও যন্ত্রের ন্যূনতম সময় কার্যকর থাকে।"
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "শক্তি সাশ্রয়",
           "window_open_pause": "খোলা জানালার কারণে বিরতি",
           "window_close_warmup": "জানালা বন্ধ হওয়ার পর অপেক্ষা",
-          "window_state_unknown": "জানালার অবস্থার জন্য অপেক্ষা"
+          "window_state_unknown": "জানালার অবস্থার জন্য অপেক্ষা",
+          "window_open_wait": "আপনার জানালা খোলার অপেক্ষায়",
+          "window_request_pending": "জানালা খোলার অনুরোধ পাঠানো হচ্ছে"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "সাহায্য"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "বায়ু চলাচল · জানালা খোলার অপেক্ষার সময় (মিনিট)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "সাহায্য"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - ডিফল্ট",
+        "auto": "Home Assistant-এর ভাষা (ডিফল্ট)",
         "en": "সেটিংস · উৎস",
         "de": "সেটিংস · উৎস",
         "el": "সেটিংস · উৎস",

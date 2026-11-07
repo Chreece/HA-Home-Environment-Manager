@@ -64,6 +64,10 @@ class Recommendation:
     area_name: str
     windows: tuple[Window, ...]
     reasons: tuple[Reason, ...]
+    # A manual airing opportunity is distinct from permission to draw outdoor
+    # air mechanically. Keep adverse/unknown outside conditions explicit.
+    cautions: tuple[Reason, ...] = ()
+    wait_seconds: int = 0
 
     @property
     def action_signature(self) -> str:
@@ -86,7 +90,12 @@ class Recommendation:
              reason.value if reason.code == "weather_condition" else ""]
             for reason in self.reasons
         )
-        return json.dumps([self.action_signature, reasons], ensure_ascii=False,
+        cautions = sorted(
+            [reason.code, reason.label,
+             reason.value if reason.code == "weather_condition" else ""]
+            for reason in self.cautions
+        )
+        return json.dumps([self.action_signature, reasons, cautions], ensure_ascii=False,
                           separators=(",", ":"))
 
 
@@ -179,6 +188,38 @@ def _numeric_weather_mean(weather: tuple[Weather, ...], attribute: str,
     return sum(values) / len(values) if values else None
 
 
+def _outdoor_not_lower(indoor: Reading, outdoor: tuple[Reading, ...]) -> bool:
+    """Reject a claimed pollutant benefit contradicted by comparable evidence.
+
+    Temperature and RH are deliberately excluded: their moisture effect needs
+    the humidity-ratio calculation. AQI values only compare on the same
+    explicitly verified scale; a numerical index from a different provider
+    scale must never be treated as a concentration.
+    """
+    if indoor.metric not in (
+        "co2", "pm25", "pm10", "voc", "voc_parts", "no2", "o3", "so2", "hcho", "aqi"
+    ):
+        return False
+    if (not isinstance(indoor.value, (float, int)) or isinstance(indoor.value, bool)
+            or not math.isfinite(indoor.value)):
+        return False
+    candidates = [item for item in outdoor if item.metric == indoor.metric
+                  and isinstance(item.value, (float, int)) and not isinstance(item.value, bool)
+                  and math.isfinite(item.value) and item.value >= 0]
+    if indoor.metric == "aqi":
+        inside_scale = (indoor.details or {}).get("aqi", {})
+        if inside_scale.get("status") != "ready" or not inside_scale.get("scale"):
+            return False
+        # A custom cutoff is not a standardized index, even if both sources
+        # happen to use the same word for their independently chosen scales.
+        if inside_scale["scale"] == "custom":
+            return False
+        candidates = [item for item in candidates
+                      if (item.details or {}).get("aqi", {}).get("status") == "ready"
+                      and (item.details or {}).get("aqi", {}).get("scale") == inside_scale["scale"]]
+    return any(item.value >= indoor.value for item in candidates)
+
+
 def evaluate(
     outdoor: tuple[Reading, ...],
     weather: tuple[Weather, ...],
@@ -188,7 +229,7 @@ def evaluate(
     environment: dict[str, dict[str, Any]] | None = None,
     extra_outside: tuple[Reason, ...] = (),
 ) -> Plan:
-    """Block on known outdoor hazards; report missing AQ data separately."""
+    """Keep machine safety separate from conditional manual airing advice."""
     thresholds = {**DEFAULT_THRESHOLDS, **(limits or {})}
     environmental = environment or {}
     outside: list[Reason] = list(extra_outside)
@@ -204,7 +245,8 @@ def evaluate(
         item.entity_id for item in outdoor
         if item.value is None and item.metric != "aqi"
     )
-    for reading in _averaged_readings(outdoor):
+    averaged_outdoor = _averaged_readings(outdoor)
+    for reading in averaged_outdoor:
         if reading.metric == "aqi" and reading.value is not None:
             classification = (reading.details or {}).get("aqi", {})
             if classification.get("status") != "ready":
@@ -252,6 +294,26 @@ def evaluate(
             outside.append(Reason("active_warning", warning.name))
 
     outdoor_safe = not outside
+    # Unknown selected sensors are not hazards or proof of safe outdoor air.
+    # They remain non-blocking diagnostics, but a spoken opening request must
+    # not silently present incomplete outside data as verified suitable.
+    opening_cautions = list(outside)
+    for item in outdoor:
+        if item.entity_id in unavailable_outdoor and not any(
+            reason.label == item.name and reason.code in (
+                "aqi_scale_unconfigured", "unavailable_outdoor"
+            ) for reason in opening_cautions
+        ):
+            opening_cautions.append(Reason("unavailable_outdoor", item.name))
+    # A manual request already explains these conditions as reasons for care.
+    # Do not countermand it immediately when the user opens a window and the
+    # measured indoor benefit persists. Severe weather, pollution, active
+    # alerts and unknown outdoor evidence keep their immediate close rule.
+    soft_outside_only = bool(outside) and all(
+        reason.code in ("weather_cold", "weather_hot", "weather_humid")
+        or reason.code == "weather_condition" and reason.value in ("rainy", "fog")
+        for reason in outside
+    )
     recommendations: list[Recommendation] = []
     diagnostics: list[tuple[str, str]] = []
     for room in rooms:
@@ -264,8 +326,8 @@ def evaluate(
         if unknown:
             diagnostics.append((room.name, "unknown_window_state"))
 
-        # Input diagnostics must be visible even during rain, storms or
-        # unavailable outdoor conditions, when opening is deliberately blocked.
+        # Input diagnostics remain visible while outside concerns are assessed,
+        # including during rain, storms or unavailable outdoor conditions.
         for item in room.readings:
             if item.metric != "mold" or item.value is not None:
                 continue
@@ -277,15 +339,18 @@ def evaluate(
                 ):
                     diagnostics.append((room.name, f"mold_{missing}_unavailable"))
 
-        if not outdoor_safe:
-            if opened:
-                recommendations.append(
-                    Recommendation("close", room.area_id, room.name, opened, tuple(outside))
-                )
+        if not outdoor_safe and opened and (not soft_outside_only or unknown):
+            # Hard hazards and unverified contacts still close an exposed room
+            # immediately. No second window in that room is requested open.
+            recommendations.append(
+                Recommendation("close", room.area_id, room.name, opened, tuple(outside))
+            )
             continue
 
         indoor_reasons: list[Reason] = []
-        moisture_status = environmental.get(room.area_id, {}).get("moisture", {}).get("status")
+        room_environment = environmental.get(room.area_id, {})
+        moisture = room_environment.get("moisture", {})
+        moisture_status = moisture.get("status")
         for reading in _averaged_readings(room.readings):
             limit = thresholds.get(f"indoor_{reading.metric}")
             if reading.value is None or limit is None:
@@ -293,38 +358,87 @@ def evaluate(
             if reading.value >= limit:
                 # Never recommend moisture-only airing when measured outdoor
                 # vapor mass is clearly higher, even if outdoor RH looks benign.
-                # CO2, PM and mold are evaluated independently; without
+                # CO2 and PM are evaluated independently; without
                 # paired, valid temperature/RH data legacy rules still apply.
-                if reading.metric == "humidity" and moisture_status == "humidifying":
-                    diagnostics.append((room.name, "outdoor_more_humid_than_indoor"))
+                if reading.metric in ("humidity", "mold") and moisture_status in ("humidifying", "neutral"):
+                    diagnostics.append((room.name, "outdoor_more_humid_than_indoor"
+                                        if moisture_status == "humidifying" else "outdoor_no_drying_advantage"))
+                    continue
+                if _outdoor_not_lower(reading, averaged_outdoor):
+                    diagnostics.append((room.name, f"outdoor_{reading.metric}_not_lower_than_indoor"))
                     continue
                 indoor_reasons.append(_reading_reason("inside", reading))
 
         international = environmental.get(room.area_id, {}).get("international", {})
         hcho = international.get("formaldehyde_30min", {})
         if hcho.get("status") == "ready" and hcho.get("above_who_100ug_m3"):
-            indoor_reasons.append(Reason("inside_formaldehyde", "Formaldehyde (30-min mean)",
-                                         f'{hcho["mean"]:g} µg/m³'))
-        cooling = environmental.get(room.area_id, {}).get("passive_cooling", {})
-        if cooling.get("status") == "cooling_opportunity" and not indoor_reasons:
+            formaldehyde = Reading("", "Formaldehyde (30-min mean)", "hcho", hcho.get("mean"))
+            if _outdoor_not_lower(formaldehyde, averaged_outdoor):
+                diagnostics.append((room.name, "outdoor_hcho_not_lower_than_indoor"))
+            else:
+                indoor_reasons.append(Reason("inside_formaldehyde", formaldehyde.name,
+                                             f'{hcho["mean"]:g} µg/m³'))
+        cooling = room_environment.get("passive_cooling", {})
+        comfort = room_environment.get("thermal_comfort", {})
+        delta = cooling.get("cooling_delta_c")
+        # The science module retains its strict outdoor machine-safety gate.
+        # Its measured overheating/delta can still support a manual request
+        # qualified by the actual outside concerns.
+        cooling_needed = cooling.get("status") == "cooling_opportunity" or (
+            cooling.get("status") == "outdoors_blocked"
+            and comfort.get("status") == "above_band"
+            and isinstance(delta, (float, int)) and not isinstance(delta, bool)
+            and math.isfinite(delta) and delta >= 2
+        )
+        if cooling_needed and not indoor_reasons:
             indoor_reasons.append(Reason("inside_passive_cooling", "Cooling opportunity",
                                          f'{cooling["cooling_delta_c"]:g} °C'))
         climate_plan = environmental.get(room.area_id, {}).get("climate_plan", {})
         option = climate_plan.get("window_efficiency", {}) if isinstance(climate_plan,dict) else {}
         if (option.get("status") == "opportunity"
                 and option.get("notify_enabled") is True
-                and closed and not opened):
+                and closed and not opened and not unknown):
             from .climate_window import window_reason
             # Existing pollutant or mold warnings keep first priority; the
             # mechanical alternative is still visible within the TTS limit.
             position = 1 if indoor_reasons else 0
             indoor_reasons.insert(position, window_reason(option))
+        if not outdoor_safe and opened:
+            # Only soft cautions reach here. Let an already-open window serve
+            # the continuing measured need; once it resolves, request closure.
+            # The separate room temperature/energy monitor can still issue an
+            # earlier CLOSE near a heating/cooling target. No device guard or
+            # user-response timeout is changed by this advisory exception.
+            if not indoor_reasons:
+                recommendations.append(
+                    Recommendation("close", room.area_id, room.name, opened, tuple(outside))
+                )
+            continue
         if not any(reading.value is not None and reading.metric != "illuminance"
                    for reading in room.readings) and not indoor_reasons:
             diagnostics.append((room.name, "no_indoor_data"))
-        elif indoor_reasons and closed and not opened:
+        elif indoor_reasons and closed and not opened and not unknown:
+            cautions = list(opening_cautions)
+            # Airing for another verified need (for example CO2) can still
+            # worsen moisture. Describe that room-specific trade-off rather
+            # than quietly dropping the humidity request without explanation.
+            if moisture_status == "humidifying":
+                advantage = moisture.get("drying_potential_g_kg")
+                value = (f"{abs(advantage):g} g/kg" if isinstance(advantage, (float, int))
+                         and not isinstance(advantage, bool) and math.isfinite(advantage) else "")
+                cautions.append(Reason("outside_more_moisture", value=value))
+            # Keep the general evaluator independent of Home Assistant;
+            # climate opportunities carry JSON-safe caution dictionaries.
+            for raw_caution in option.get("cautions", ()):
+                if not isinstance(raw_caution, dict) or not isinstance(raw_caution.get("code"), str):
+                    continue
+                caution = Reason(raw_caution["code"], str(raw_caution.get("label") or ""),
+                                 str(raw_caution.get("value") or ""))
+                if caution not in cautions:
+                    cautions.append(caution)
             recommendations.append(
-                Recommendation("open", room.area_id, room.name, closed, tuple(indoor_reasons))
+                Recommendation("open", room.area_id, room.name, closed,
+                               tuple(indoor_reasons), tuple(cautions))
             )
 
     has_open = any(rec.action == "open" for rec in recommendations)

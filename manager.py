@@ -47,7 +47,7 @@ from .climate_air_actions import air_treatment_plan
 from .climate_hvac_modes import native_air_mode_advice
 from .climate_air_mode_native import NativeAirModeControl
 from .climate_commissioning import report as climate_commissioning_report
-from .climate_window import window_substitution, window_reason
+from .climate_window import window_substitution, window_reason, window_cautions
 from .climate_fan_native import RunningFanSpeedControl
 from .climate_fan_power import FanPowerControl
 from .equipment_runtime import EquipmentRuntime
@@ -56,11 +56,14 @@ from .building_physics import moisture_potential
 from .environment_extended import global_pollen, global_aqi
 from .logic import Reading, Reason, Recommendation
 from .logic import Plan, evaluate
-from .messages import announcement, language_code
+from .messages import announcement
+from .languages import announcement_language
+from .tts_languages import tts_language
 from .away_windows import AwayWindowAlert, watched_entities
 from .presence_continuity import PresenceContinuity
 from .arrival_preparation import ArrivalPreparation, room_eligible
 from .room_ventilation import RoomVentilationMonitor, has_indoor_air_sensor, thermal_targets
+from .window_open_wait import WindowOpeningWait, pending_demands
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -82,6 +85,7 @@ class AirQualityManager:
         self._active_actions: dict[str, tuple[str, str]] = {}
         self._pending_unsubs: dict[str, Any] = {}
         self._repeat_unsubs: dict[str, Any] = {}
+        self._sending_actions: dict[str, tuple[str, str]] = {}
         self._last_sent: dict[str, float] = {}
         self._active = False
         self._tasks: set[asyncio.Task[Any]] = set()
@@ -91,6 +95,7 @@ class AirQualityManager:
         self.presence_continuity = PresenceContinuity(self.hass, self.entry.entry_id)
         self.arrival_preparation = ArrivalPreparation(self)
         self.ventilation = RoomVentilationMonitor()
+        self.window_open_wait = WindowOpeningWait(self)
         self.equipment = EquipmentRuntime(self)
         from .device_faults import NativeDeviceFaultMonitor
         self.faults = NativeDeviceFaultMonitor(self)
@@ -134,10 +139,8 @@ class AirQualityManager:
         return hub_available(self.hass)
 
     def get_language(self, language: str | None) -> str:
-        selected = language or self.settings.get(CONF_LANGUAGE, "auto")
-        if selected == "auto":
-            selected = self.hass.config.language
-        return language_code(selected)
+        selected = self.settings.get(CONF_LANGUAGE, "auto") if language is None else language
+        return announcement_language(self.hass, selected)
 
     @callback
     def _capture(self) -> Plan:
@@ -471,9 +474,11 @@ class AirQualityManager:
                 substitute=window_substitution(
                     self.hass, raw_for_climate[monitored.area_id],
                     settings, state,
-                    environment.get(monitored.area_id,{}),
+                    {**environment.get(monitored.area_id,{}), "moisture": moist},
                     current_weather, outdoor_readings,
                     outside_safe=base_plan.outdoor_safe,
+                    outside_reasons=base_plan.outside_reasons,
+                    pending_demands=pending_demands(self,monitored.area_id,state),
                 )
                 substitute["notify_enabled"]=(
                     settings.get("window_efficiency_notify") is True
@@ -622,21 +627,21 @@ class AirQualityManager:
                     isinstance(room_climate_configs.get(room.area_id),dict) and
                     room_climate_configs[room.area_id].get("enabled") is True)
         extra_notices=[]
-        if base_plan.outdoor_safe is True:
-            for room in extra:
-                report=environment.get(room.area_id,{}).get("climate_plan",{})
-                option=report.get("window_efficiency",{})
-                if (option.get("status") != "opportunity" or
-                        option.get("notify_enabled") is not True):
-                    continue
-                # No synthetic window; this includes only true HA window
-                # contacts in the explicitly selected climate room.
-                closed=tuple(w for w in room.windows if w.opened is False)
-                if not closed or len(closed)!=len(room.windows):
-                    continue
-                extra_notices.append(Recommendation(
-                    "open",room.area_id,room.name,closed,(window_reason(option),),
-                ))
+        for room in extra:
+            report=environment.get(room.area_id,{}).get("climate_plan",{})
+            option=report.get("window_efficiency",{})
+            if (option.get("status") != "opportunity" or
+                    option.get("notify_enabled") is not True):
+                continue
+            # Manual, conditional airing may help even in poor weather.
+            # Keep the outdoor safety flag intact for mechanical ventilation.
+            closed=tuple(w for w in room.windows if w.opened is False)
+            if not closed or len(closed)!=len(room.windows):
+                continue
+            extra_notices.append(Recommendation(
+                "open",room.area_id,room.name,closed,(window_reason(option),),
+                cautions=window_cautions(option),
+            ))
         # Per-room time-based ventilation is NOT an air-quality measurement.
         # Use the same verified room-presence, sleep and physical temperature
         # evidence as the native climate controller, without acquiring any
@@ -1149,7 +1154,7 @@ class AirQualityManager:
             self._source_refresh_handle = None
         if not self._active:
             return
-        new_plan = self._capture()
+        new_plan = self.window_open_wait.prepare(self._capture())
         previous_plan = self.plan
         # Always keep the newest evidence and schedule the physical drivers;
         # only publish state when sensor observations or decisions changed.
@@ -1203,22 +1208,27 @@ class AirQualityManager:
             if old_keys is None or old_keys[0] != new_keys[0]:
                 self._cancel_pending(area_id)
                 self._cancel_repeat(area_id)
-                if not initial or rec.action == "close":
-                    # Urgent close is immediate; opening needs 90 seconds
-                    # of stable conditions (same as before).
-                    self._queue_automatic(area_id, *new_keys, action=rec.action)
-                else:
-                    # A pre-existing open recommendation at HA startup should
-                    # not announce immediately, but it can remind later.
-                    self._schedule_repeat(area_id, *new_keys)
+                # Startup still needs its first actionable request when the
+                # user has disabled repeat reminders. Ordinary opening advice
+                # keeps its stability delay; a bounded pre-start opportunity
+                # must be requested before the relevant device can start.
+                self._queue_automatic(area_id, *new_keys, action=rec.action)
             elif old_keys[1] != new_keys[1]:
-                # A different cause must persist for a *new* full interval.
+                # A changed cause or outside caution gets its own stable
+                # first announcement even when repeat reminders are disabled.
                 self._cancel_repeat(area_id)
-                if area_id in self._pending_unsubs:
-                    self._cancel_pending(area_id)
-                    self._queue_automatic(area_id, *new_keys, action=rec.action)
-                else:
-                    self._schedule_repeat(area_id, *new_keys)
+                self._cancel_pending(area_id)
+                self._queue_automatic(area_id, *new_keys, action=rec.action)
+            elif (getattr(rec,"wait_seconds",0) > 0
+                  and new_plan.environment.get(area_id,{}).get(
+                      "window_open_wait",{}).get("status") == "window_request_pending"
+                  and area_id not in self._pending_unsubs
+                  and area_id not in self._sending_actions):
+                # An existing indoor-air request can acquire a relevant idle
+                # device later. Submit this newly bounded start opportunity
+                # even though the underlying pollutant reason is unchanged.
+                self._cancel_repeat(area_id)
+                self._queue_automatic(area_id,*new_keys,action=rec.action)
 
     @callback
     def _queue_automatic(
@@ -1226,7 +1236,13 @@ class AirQualityManager:
     ) -> None:
         if not self._automatic_channels_enabled():
             return
-        delay = 0 if action == "close" else ANNOUNCE_OPEN_STABLE_SECONDS
+        request = next((rec for rec in
+                        (*self.plan.recommendations,*self.plan.climate_recommendations)
+                        if rec.area_id == area_id
+                        and rec.action_signature == action_key
+                        and rec.reason_signature == reason_key), None)
+        delay = (0 if action == "close" or getattr(request,"wait_seconds",0) > 0
+                 else ANNOUNCE_OPEN_STABLE_SECONDS)
         self._pending_unsubs[area_id] = async_call_later(
             self.hass, delay,
             callback(lambda _now: self._execute_automatic(area_id, action_key, reason_key)),
@@ -1274,8 +1290,11 @@ class AirQualityManager:
         )
         if rec is None:
             return
+        if area_id in self._sending_actions:
+            return
         if (
             not repeat and rec.action == "open"
+            and not getattr(rec,"wait_seconds",0)
             and monotonic() - self._last_sent.get(action_key, float("-inf"))
             < ANNOUNCE_COOLDOWN_SECONDS
         ):
@@ -1283,6 +1302,7 @@ class AirQualityManager:
             # Timed reminders deliberately bypass it (10 < 15 minutes).
             self._schedule_repeat(area_id, action_key, reason_key)
             return
+        self._sending_actions[area_id] = (action_key,reason_key)
         task = self.hass.async_create_task(
             self._send_automatic(area_id, action_key, reason_key)
         )
@@ -1318,11 +1338,30 @@ class AirQualityManager:
         except asyncio.CancelledError:
             raise
         except Exception:
+            waiter = getattr(self,"window_open_wait",None)
+            if waiter is not None:
+                rec = next((item for item in
+                            (*self.plan.recommendations,*self.plan.climate_recommendations)
+                            if item.area_id == area_id
+                            and item.action_signature == action_key
+                            and item.reason_signature == reason_key),None)
+                if rec is not None:
+                    waiter.submission_failed(rec)
             _LOGGER.exception("Air quality announcement failed for room %s", area_id)
         finally:
-            # No overlapping sends, and no delayed reminders for resolved or
-            # changed causes. Failed outputs are retried at most once/interval.
-            self._schedule_repeat(area_id, action_key, reason_key)
+            self._sending_actions.pop(area_id,None)
+            current = self._active_actions.get(area_id)
+            if self._active and current is not None and current != (action_key,reason_key):
+                # A sensor/caution change during a slow handoff must not lose
+                # its new notice or create overlapping room submissions.
+                rec = next((item for item in
+                            (*self.plan.recommendations,*self.plan.climate_recommendations)
+                            if item.area_id == area_id),None)
+                if rec is not None:
+                    self._cancel_pending(area_id)
+                    self._queue_automatic(area_id,*current,action=rec.action)
+            else:
+                self._schedule_repeat(area_id,action_key,reason_key)
 
     @callback
     def _cancel_pending(self, area_id: str | None = None) -> None:
@@ -1368,6 +1407,7 @@ class AirQualityManager:
             self._source_refresh_handle = None
         self.away_windows.stop()
         self.ventilation.clear()
+        self.window_open_wait.stop()
         controllers = (
             ("fault_monitor",self.faults),
             ("equipment",self.equipment),
@@ -1436,6 +1476,8 @@ class AirQualityManager:
         areas: list[str] | None = None,
     ) -> dict[str, Any]:
         """Deliver current recommendations, never operate motorized windows."""
+        import asyncio
+
         config = self.settings
         speech = (channels in ("tts", "both")) if channels != "auto" else bool(config.get(CONF_AUTO_TTS))
         visual = (channels in ("notification", "both")) if channels != "auto" else bool(config.get(CONF_AUTO_NOTIFY))
@@ -1446,15 +1488,32 @@ class AirQualityManager:
             return {"submitted": 0, "reason": "No actionable window recommendations"}
 
         localized = self.get_language(language)
-        requested_language = language or config.get(CONF_LANGUAGE, "auto")
+        requested_language = config.get(CONF_LANGUAGE, "auto") if language is None else language
         sent = 0
         errors: list[str] = []
+        waiter = getattr(self,"window_open_wait",None)
         for rec in all_notices:
             if areas is not None and rec.area_id not in areas:
                 continue
+            # Other rooms may have changed during the preceding room's
+            # awaited delivery. Use only the still-current request and values.
+            current = next((item for item in
+                            (*self.plan.recommendations,*self.plan.climate_recommendations)
+                            if item.area_id == rec.area_id
+                            and item.action_signature == rec.action_signature
+                            and item.reason_signature == rec.reason_signature),None)
+            if current is None:
+                continue
+            rec = current
+            if waiter is not None:
+                waiter.begin_submission(rec)
             title, message = announcement(rec, localized)
             prefer_hub = bool(config.get(CONF_HUB, False))
-            use_ai = ai_effectively_enabled(config)
+            # Keep each outside caution and the bounded response instruction
+            # intact. A short AI rewrite cannot guarantee either survives.
+            guarded_request = bool(getattr(rec,"cautions",()) or
+                                   getattr(rec,"wait_seconds",0))
+            use_ai = ai_effectively_enabled(config) and not guarded_request
             agent = str(config.get(CONF_AI_AGENT, DEFAULT_AGENT) or DEFAULT_AGENT)
 
             # Hub performs its own optional AI rewrite. An explicit boolean
@@ -1462,7 +1521,7 @@ class AirQualityManager:
             if prefer_hub:
                 hub_payload = make_hub_payload(
                     rec, title, message, speech=speech, visual=visual,
-                    language=requested_language, use_ai=use_ai, agent_id=agent,
+                    language=localized, use_ai=use_ai, agent_id=agent,
                 )
                 if hub_available(self.hass):
                     # Hub is the delivery authority while running, including
@@ -1470,7 +1529,11 @@ class AirQualityManager:
                     # duplicate or unwanted HA notifications in these cases.
                     if await async_submit_hub(self.hass, hub_payload):
                         sent += 1
+                        if waiter is not None:
+                            waiter.submitted(rec)
                     else:
+                        if waiter is not None:
+                            waiter.submission_failed(rec)
                         errors.append(
                             f"Announcement Hub did not queue the announcement for "
                             f"{rec.area_name}; routing and recovery belong to Hub"
@@ -1507,10 +1570,10 @@ class AirQualityManager:
             dispatched = False
             if can_notify:
                 try:
-                    await self.hass.services.async_call(
+                    await asyncio.wait_for(self.hass.services.async_call(
                         "notify", "send_message", {"message": message, "title": title},
                         target={"entity_id": notify_targets}, blocking=True,
-                    )
+                    ), timeout=30)
                     sent += 1
                     dispatched = True
                 except Exception as ex:
@@ -1518,39 +1581,18 @@ class AirQualityManager:
                     errors.append(str(ex))
 
             if can_speak:
-                data: dict[str, Any] = {
-                    "media_player_entity_id": tts_players, "message": message
-                }
-                if requested_language != "auto":
-                    state = self.hass.states.get(tts_engine)
-                    supported = (
-                        state.attributes.get("supported_languages", []) if state else []
-                    )
-                    if isinstance(supported, list) and supported:
-                        canonical = lambda value: str(value).replace("_", "-").casefold()
-                        base = canonical(localized).split("-", 1)[0]
-                        exact = next(
-                            (s for s in supported if canonical(s) == canonical(requested_language)),
-                            None,
-                        )
-                        compatible = next(
-                            (s for s in supported if canonical(s).split("-", 1)[0] == base),
-                            None,
-                        )
-                        if exact or compatible:
-                            data["language"] = exact or compatible
-                        else:
-                            _LOGGER.warning(
-                                "TTS engine %s does not advertise language %s",
-                                tts_engine, requested_language,
-                            )
-                    else:
-                        data["language"] = requested_language
                 try:
-                    await self.hass.services.async_call(
+                    data: dict[str, Any] = {
+                        "media_player_entity_id": tts_players, "message": message,
+                        "language": tts_language(
+                            self.hass, tts_engine, requested_language,
+                            text_language=localized,
+                        ),
+                    }
+                    await asyncio.wait_for(self.hass.services.async_call(
                         "tts", "speak", data,
                         target={"entity_id": tts_engine}, blocking=True,
-                    )
+                    ), timeout=30)
                     sent += 1
                     dispatched = True
                 except Exception as ex:
@@ -1565,7 +1607,11 @@ class AirQualityManager:
                     sent += 1
                     dispatched = True
             if not dispatched:
+                if waiter is not None:
+                    waiter.submission_failed(rec)
                 errors.append(
                     f"No available Home Assistant fallback output for {rec.area_name}"
                 )
+            elif waiter is not None:
+                waiter.submitted(rec)
         return {"submitted": sent, "errors": errors}

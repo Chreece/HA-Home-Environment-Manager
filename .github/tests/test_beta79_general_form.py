@@ -36,6 +36,8 @@ configkeys={
 'CONF_AWAY_WINDOWS_DELIVERY':'away_windows_delivery_channels',
 'CONF_HUB':'use_announcement_hub','CONF_OCCUPANCY_GLOBAL':'occupancy_global',
 'CONF_ENVIRONMENT_GLOBAL':'environment_global','CONF_THRESHOLDS':'thresholds',
+'CONF_WINDOW_OPEN_TIMEOUT_MINUTES':'window_open_timeout_minutes',
+'DEFAULT_WINDOW_OPEN_TIMEOUT_MINUTES':5,'MAX_WINDOW_OPEN_TIMEOUT_MINUTES':30,
 }
 limits={
 'outdoor_aqi':50.,'outdoor_co2':800.,'outdoor_pm25':15.,'outdoor_pm10':45.,
@@ -49,12 +51,9 @@ limits={
 pkg=types.ModuleType('beta79_general');pkg.__path__=[]
 languages=types.ModuleType('beta79_general.languages')
 languages.SUPPORTED_LANGUAGE_TAGS=('en','el')
-languages.resolve_language=lambda x:x
+languages.normalize_announcement_language=lambda x:x if x in ('auto','en','el') else None
 ai=types.ModuleType('beta79_general.ai_rewrite')
 ai.DEFAULT_AGENT='none'
-tts=types.ModuleType('beta79_general.tts_languages')
-tts.language_options=lambda hass,x:[{'value':'auto','label':'Auto'}]
-tts.preferred_language=lambda hass,engine,choice:'auto'
 hub=types.ModuleType('beta79_general.hub_delivery')
 hub.hub_installed=lambda hass:False
 discovery=types.ModuleType('beta79_general.discovery')
@@ -65,7 +64,7 @@ pressure=next(n for n in ast.parse((ROOT/'discovery.py').read_text()).body
 exec(compile(ast.Module([pressure],type_ignores=[]),'discovery.py','exec'),discovery.__dict__)
 sys.modules.update({
  'beta79_general':pkg,'beta79_general.languages':languages,
- 'beta79_general.ai_rewrite':ai,'beta79_general.tts_languages':tts,
+ 'beta79_general.ai_rewrite':ai,
  'beta79_general.hub_delivery':hub,
  'beta79_general.discovery':discovery,
 })

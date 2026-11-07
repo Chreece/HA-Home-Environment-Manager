@@ -68,7 +68,7 @@
         "title": "การประกาศ (ไม่บังคับ)",
         "description": "การประกาศ (ไม่บังคับ). การแจ้งเตือนอัตโนมัติ · ประกาศเสียงอัตโนมัติ. Announcement Hub.",
         "data": {
-          "language": "ภาษา",
+          "language": "ภาษาประกาศ",
           "automatic_tts": "อัตโนมัติ",
           "automatic_notifications": "อัตโนมัติ · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "การประกาศ (ไม่บังคับ) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · ภาษา"
         },
         "data_description": {
-          "language": "ภาษา: Home Assistant (ค่าเริ่มต้น).",
+          "language": "ใช้ภาษา Home Assistant เป็นค่าเริ่มต้น หรือเลือกภาษาประกาศใดก็ได้ที่ HEM รองรับ",
           "automatic_tts": "ค่าเริ่มต้น: ⛔ · อัตโนมัติ · 🪟 90 s.",
           "automatic_notifications": "ค่าเริ่มต้น: ⛔ · อัตโนมัติ · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "ค่าเริ่มต้น: 10 min · 0 = ไม่ต้องทำซ้ำ · เมื่อสาเหตุเดิมยังคงอยู่ · ห้อง.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · °C (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
           "max_outdoor_temp": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · °C (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
           "max_outdoor_humidity": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · RH (%) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "ค่าเกณฑ์ตัดสินใจสำหรับ “ตัวชี้วัดเชื้อรา · ≥ 70%” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์"
         }
@@ -191,7 +191,7 @@
           "media_players": "การตั้งค่า · แหล่งข้อมูล · MEDIA_PLAYERS",
           "tts_engine": "การตั้งค่า · แหล่งข้อมูล · TTS_ENGINE",
           "ai_conversation_agent": "AI · เลือก · แหล่งข้อมูล",
-          "language": "TTS · เลือก · แหล่งข้อมูล",
+          "language": "ภาษาประกาศ",
           "use_mold_indicator": "ตัวชี้วัดเชื้อรา · RH (%) → 70%",
           "pollen_entities": "ละอองเกสร · แหล่งข้อมูล · เลือก",
           "use_announcement_hub": "ประกาศ · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "การอยู่บ้าน · อายุสูงสุดของข้อมูลติดตาม/จำนวนคน (นาที)",
           "general_home_policy": "การอยู่บ้าน",
           "general_wake_alarm_entity": "การนอน · นาฬิกาปลุกครั้งถัดไป",
-          "general_wake_lead_minutes_entity": "การนอน · จำนวนนาทีก่อนนาฬิกาปลุก"
+          "general_wake_lead_minutes_entity": "การนอน · จำนวนนาทีก่อนนาฬิกาปลุก",
+          "window_open_timeout_minutes": "เวลารอเปิดหน้าต่าง (นาที)"
         },
         "data_description": {
           "weather_entities": "เลือก: สภาพอากาศและคำเตือน · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "เลือก: media_player.* · การตั้งค่า · แหล่งข้อมูล · MEDIA_PLAYERS.",
           "tts_engine": "เลือก: tts.* · การตั้งค่า · แหล่งข้อมูล · TTS_ENGINE.",
           "ai_conversation_agent": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · AI · เลือก · แหล่งข้อมูล · conversation.* / ai_task.*.",
-          "language": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · TTS · เลือก · แหล่งข้อมูล · provider capabilities.",
+          "language": "ใช้ภาษา Home Assistant เป็นค่าเริ่มต้น หรือเลือกภาษาประกาศใดก็ได้ที่ HEM รองรับ",
           "use_mold_indicator": "🧱 ตัวชี้วัดเชื้อรา · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · ละอองเกสร · แหล่งข้อมูล · เลือก.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "ขีดจำกัดอายุข้อมูลใช้กับรายงานการติดตามและจำนวนคนแบบตัวเลข รายการห้องและสถานะตรวจคนแบบไบนารีจะไม่หมดอายุหากไม่เปลี่ยน แหล่งข้อมูลที่ไม่พร้อมใช้งาน ถูกกู้คืน หรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ ค่านี้ไม่ใช่ระยะเวลานอน",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "เลือกเอนทิตีเวลาหรือวันที่และเวลาของนาฬิกาปลุกครั้งถัดไป พร้อมเอนทิตีจำนวนนาทีล่วงหน้า HEM จะออกจากโหมดนอนอัตโนมัติล่วงหน้าตามเวลานั้นและกลับไปใช้ค่าเป้าหมายปกติ เวลาที่ไม่มีวันที่จะใช้เขตเวลาของ Home Assistant การไม่อยู่บ้าน การควบคุมด้วยตนเอง และระบบป้องกันยังมีลำดับความสำคัญเดิม",
-          "general_wake_lead_minutes_entity": "เลือกเอนทิตีตัวเลขที่มีค่านาทีตั้งแต่ 0 ขึ้นไป หน่วย min หรือไม่มีหน่วย หากตั้งปลุก 07:00 และค่า 30 โหมดนอนอัตโนมัติจะสิ้นสุด 06:30 ค่า 0 หมายถึงเมื่อปลุกดัง หากต้องการปิด ให้ล้างทั้งสองแหล่งข้อมูล"
+          "general_wake_lead_minutes_entity": "เลือกเอนทิตีตัวเลขที่มีค่านาทีตั้งแต่ 0 ขึ้นไป หน่วย min หรือไม่มีหน่วย หากตั้งปลุก 07:00 และค่า 30 โหมดนอนอัตโนมัติจะสิ้นสุด 06:30 ค่า 0 หมายถึงเมื่อปลุกดัง หากต้องการปิด ให้ล้างทั้งสองแหล่งข้อมูล",
+          "window_open_timeout_minutes": "เวลารอหลังจากรับคำขอระบายอากาศ ก่อนอนุญาตให้เริ่มทำงานอัตโนมัติ/PID ครั้งใหม่หากยังจำเป็น 0–30 นาที ค่าเริ่มต้น 5; 0 ปิดการรอ การป้องกันเมื่อหน้าต่างเปิดและเวลาขั้นต่ำของอุปกรณ์ยังคงมีผล"
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "การประกาศ (ไม่บังคับ)",
         "description": "การประกาศ (ไม่บังคับ). การแจ้งเตือนอัตโนมัติ · ประกาศเสียงอัตโนมัติ. Announcement Hub.",
         "data": {
-          "language": "ภาษา",
+          "language": "ภาษาประกาศ",
           "automatic_tts": "อัตโนมัติ",
           "automatic_notifications": "อัตโนมัติ · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "การประกาศ (ไม่บังคับ) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · ภาษา"
         },
         "data_description": {
-          "language": "ภาษา: Home Assistant (ค่าเริ่มต้น).",
+          "language": "ใช้ภาษา Home Assistant เป็นค่าเริ่มต้น หรือเลือกภาษาประกาศใดก็ได้ที่ HEM รองรับ",
           "automatic_tts": "ค่าเริ่มต้น: ⛔ · อัตโนมัติ · 🪟 90 s.",
           "automatic_notifications": "ค่าเริ่มต้น: ⛔ · อัตโนมัติ · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "ค่าเริ่มต้น: 10 min · 0 = ไม่ต้องทำซ้ำ · เมื่อสาเหตุเดิมยังคงอยู่ · ห้อง.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · °C (≥)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
           "max_outdoor_temp": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · °C (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
           "max_outdoor_humidity": "ค่าเกณฑ์ตัดสินใจสำหรับ “ภายนอก · RH (%) (≤)” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "ค่าเกณฑ์ตัดสินใจสำหรับ “ตัวชี้วัดเชื้อรา · ≥ 70%” มีผลต่อคำแนะนำ ไม่ใช่ขีดจำกัดทางการแพทย์"
         }
@@ -2187,7 +2189,7 @@
           "media_players": "การตั้งค่า · แหล่งข้อมูล · MEDIA_PLAYERS",
           "tts_engine": "การตั้งค่า · แหล่งข้อมูล · TTS_ENGINE",
           "ai_conversation_agent": "AI · เลือก · แหล่งข้อมูล",
-          "language": "TTS · เลือก · แหล่งข้อมูล",
+          "language": "ภาษาประกาศ",
           "use_mold_indicator": "ตัวชี้วัดเชื้อรา · RH (%) → 70%",
           "pollen_entities": "ละอองเกสร · แหล่งข้อมูล · เลือก",
           "use_announcement_hub": "ประกาศ · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "การอยู่บ้าน · อายุสูงสุดของข้อมูลติดตาม/จำนวนคน (นาที)",
           "general_home_policy": "การอยู่บ้าน",
           "general_wake_alarm_entity": "การนอน · นาฬิกาปลุกครั้งถัดไป",
-          "general_wake_lead_minutes_entity": "การนอน · จำนวนนาทีก่อนนาฬิกาปลุก"
+          "general_wake_lead_minutes_entity": "การนอน · จำนวนนาทีก่อนนาฬิกาปลุก",
+          "window_open_timeout_minutes": "เวลารอเปิดหน้าต่าง (นาที)"
         },
         "data_description": {
           "weather_entities": "เลือก: สภาพอากาศและคำเตือน · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "เลือก: media_player.* · การตั้งค่า · แหล่งข้อมูล · MEDIA_PLAYERS.",
           "tts_engine": "เลือก: tts.* · การตั้งค่า · แหล่งข้อมูล · TTS_ENGINE.",
           "ai_conversation_agent": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · AI · เลือก · แหล่งข้อมูล · conversation.* / ai_task.*.",
-          "language": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · TTS · เลือก · แหล่งข้อมูล · provider capabilities.",
+          "language": "ใช้ภาษา Home Assistant เป็นค่าเริ่มต้น หรือเลือกภาษาประกาศใดก็ได้ที่ HEM รองรับ",
           "use_mold_indicator": "🧱 ตัวชี้วัดเชื้อรา · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "เลือกแหล่งข้อมูลร่วมและเอาต์พุตการแจ้งเตือน บันทึกเพื่อจบการตั้งค่า การตั้งค่าการทำงานยังอยู่บนอุปกรณ์ของบ้านและห้อง · ละอองเกสร · แหล่งข้อมูล · เลือก.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "ขีดจำกัดอายุข้อมูลใช้กับรายงานการติดตามและจำนวนคนแบบตัวเลข รายการห้องและสถานะตรวจคนแบบไบนารีจะไม่หมดอายุหากไม่เปลี่ยน แหล่งข้อมูลที่ไม่พร้อมใช้งาน ถูกกู้คืน หรือไม่ถูกต้องยังเป็นสถานะไม่ทราบ ค่านี้ไม่ใช่ระยะเวลานอน",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "เลือกเอนทิตีเวลาหรือวันที่และเวลาของนาฬิกาปลุกครั้งถัดไป พร้อมเอนทิตีจำนวนนาทีล่วงหน้า HEM จะออกจากโหมดนอนอัตโนมัติล่วงหน้าตามเวลานั้นและกลับไปใช้ค่าเป้าหมายปกติ เวลาที่ไม่มีวันที่จะใช้เขตเวลาของ Home Assistant การไม่อยู่บ้าน การควบคุมด้วยตนเอง และระบบป้องกันยังมีลำดับความสำคัญเดิม",
-          "general_wake_lead_minutes_entity": "เลือกเอนทิตีตัวเลขที่มีค่านาทีตั้งแต่ 0 ขึ้นไป หน่วย min หรือไม่มีหน่วย หากตั้งปลุก 07:00 และค่า 30 โหมดนอนอัตโนมัติจะสิ้นสุด 06:30 ค่า 0 หมายถึงเมื่อปลุกดัง หากต้องการปิด ให้ล้างทั้งสองแหล่งข้อมูล"
+          "general_wake_lead_minutes_entity": "เลือกเอนทิตีตัวเลขที่มีค่านาทีตั้งแต่ 0 ขึ้นไป หน่วย min หรือไม่มีหน่วย หากตั้งปลุก 07:00 และค่า 30 โหมดนอนอัตโนมัติจะสิ้นสุด 06:30 ค่า 0 หมายถึงเมื่อปลุกดัง หากต้องการปิด ให้ล้างทั้งสองแหล่งข้อมูล",
+          "window_open_timeout_minutes": "เวลารอหลังจากรับคำขอระบายอากาศ ก่อนอนุญาตให้เริ่มทำงานอัตโนมัติ/PID ครั้งใหม่หากยังจำเป็น 0–30 นาที ค่าเริ่มต้น 5; 0 ปิดการรอ การป้องกันเมื่อหน้าต่างเปิดและเวลาขั้นต่ำของอุปกรณ์ยังคงมีผล"
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "ประหยัดพลังงาน",
           "window_open_pause": "หยุดชั่วคราวเพราะหน้าต่างเปิด",
           "window_close_warmup": "รอหลังจากปิดหน้าต่าง",
-          "window_state_unknown": "รอสถานะหน้าต่าง"
+          "window_state_unknown": "รอสถานะหน้าต่าง",
+          "window_open_wait": "กำลังรอให้คุณเปิดหน้าต่าง",
+          "window_request_pending": "กำลังส่งคำขอให้เปิดหน้าต่าง"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "ความช่วยเหลือ"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "การระบายอากาศ · เวลารอเปิดหน้าต่าง (นาที)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ความช่วยเหลือ"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - ค่าเริ่มต้น",
+        "auto": "ภาษา Home Assistant (ค่าเริ่มต้น)",
         "en": "การตั้งค่า · แหล่งข้อมูล",
         "de": "การตั้งค่า · แหล่งข้อมูล",
         "el": "การตั้งค่า · แหล่งข้อมูล",

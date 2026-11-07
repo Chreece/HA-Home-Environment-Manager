@@ -68,7 +68,7 @@
         "title": "Oznámenia (voliteľné)",
         "description": "Oznámenia (voliteľné). Automatické oznámenia · Automatické hlasové oznámenia. Announcement Hub.",
         "data": {
-          "language": "Jazyk",
+          "language": "Jazyk oznámení",
           "automatic_tts": "Automatické",
           "automatic_notifications": "Automatické · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Oznámenia (voliteľné) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Jazyk"
         },
         "data_description": {
-          "language": "Jazyk: Home Assistant (Predvolené).",
+          "language": "Predvolene sa používa jazyk Home Assistant. Môžete vybrať ľubovoľný jazyk oznámení podporovaný HEM.",
           "automatic_tts": "Predvolené: ⛔ · Automatické · 🪟 90 s.",
           "automatic_notifications": "Predvolené: ⛔ · Automatické · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Predvolené: 10 min · 0 = nikdy · Kým pretrváva rovnaká príčina · Miestnosti.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Rozhodovací prah pre „Vonku · °C (≥)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "max_outdoor_temp": "Rozhodovací prah pre „Vonku · °C (≤)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "max_outdoor_humidity": "Rozhodovací prah pre „Vonku · RH (%) (≤)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Rozhodovací prah pre „Indikátor plesní · ≥ 70%“. Ovplyvňuje odporúčania, nie je medicínskym limitom."
         }
@@ -191,7 +191,7 @@
           "media_players": "nastavenia · zdroj · MEDIA_PLAYERS",
           "tts_engine": "nastavenia · zdroj · TTS_ENGINE",
           "ai_conversation_agent": "AI · Vybrať · zdroj",
-          "language": "TTS · Vybrať · zdroj",
+          "language": "Jazyk oznámení",
           "use_mold_indicator": "Indikátor plesní · RH (%) → 70%",
           "pollen_entities": "Peľ · zdroj · Vybrať",
           "use_announcement_hub": "Oznámenia · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Prítomnosť doma · Maximálny vek údajov sledovania/počtu osôb (min)",
           "general_home_policy": "Prítomnosť doma",
           "general_wake_alarm_entity": "Spánok · Nasledujúci budík",
-          "general_wake_lead_minutes_entity": "Spánok · Minúty pred budíkom"
+          "general_wake_lead_minutes_entity": "Spánok · Minúty pred budíkom",
+          "window_open_timeout_minutes": "Čakanie na otvorenie okna (min)"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasie a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "Vyberte: media_player.* · nastavenia · zdroj · MEDIA_PLAYERS.",
           "tts_engine": "Vyberte: tts.* · nastavenia · zdroj · TTS_ENGINE.",
           "ai_conversation_agent": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · AI · Vybrať · zdroj · conversation.* / ai_task.*.",
-          "language": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · TTS · Vybrať · zdroj · provider capabilities.",
+          "language": "Predvolene sa používa jazyk Home Assistant. Môžete vybrať ľubovoľný jazyk oznámení podporovaný HEM.",
           "use_mold_indicator": "🧱 Indikátor plesní · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Peľ · zdroj · Vybrať.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "Vekový limit platí pre hlásenia sledovačov a číselné počty osôb. Zoznamy miestností a binárne stavy prítomnosti nevypršia, kým sa nezmenia. Nedostupné, obnovené alebo neplatné zdroje ostávajú neznáme. Toto nie je dĺžka spánku.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Vyberte entitu času alebo dátumu a času nasledujúceho budíka aj entitu minút predstihu. HEM ukončí automatický spánok s týmto predstihom a obnoví bežné ciele. Čas bez dátumu používa časové pásmo Home Assistant. Neprítomnosť, ručné ovládanie a ochrany zostávajú prioritné.",
-          "general_wake_lead_minutes_entity": "Vyberte číselnú entitu s nezáporným počtom minút, s jednotkou min alebo bez jednotky. Budík o 07:00 a hodnota 30 ukončia automatický spánok o 06:30; 0 znamená pri zazvonení. Funkciu vypnete vymazaním oboch zdrojov."
+          "general_wake_lead_minutes_entity": "Vyberte číselnú entitu s nezáporným počtom minút, s jednotkou min alebo bez jednotky. Budík o 07:00 a hodnota 30 ukončia automatický spánok o 06:30; 0 znamená pri zazvonení. Funkciu vypnete vymazaním oboch zdrojov.",
+          "window_open_timeout_minutes": "Čakanie po prijatí žiadosti o vetranie pred povolením nových automatických/PID spustení, ak sú stále potrebné. 0–30 minút, predvolene 5; 0 čakanie vypne. Ochrana pri otvorenom okne a minimálne prevádzkové časy zariadení zostávajú v platnosti."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "Oznámenia (voliteľné)",
         "description": "Oznámenia (voliteľné). Automatické oznámenia · Automatické hlasové oznámenia. Announcement Hub.",
         "data": {
-          "language": "Jazyk",
+          "language": "Jazyk oznámení",
           "automatic_tts": "Automatické",
           "automatic_notifications": "Automatické · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Oznámenia (voliteľné) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · Jazyk"
         },
         "data_description": {
-          "language": "Jazyk: Home Assistant (Predvolené).",
+          "language": "Predvolene sa používa jazyk Home Assistant. Môžete vybrať ľubovoľný jazyk oznámení podporovaný HEM.",
           "automatic_tts": "Predvolené: ⛔ · Automatické · 🪟 90 s.",
           "automatic_notifications": "Predvolené: ⛔ · Automatické · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Predvolené: 10 min · 0 = nikdy · Kým pretrváva rovnaká príčina · Miestnosti.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Rozhodovací prah pre „Vonku · °C (≥)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "max_outdoor_temp": "Rozhodovací prah pre „Vonku · °C (≤)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
           "max_outdoor_humidity": "Rozhodovací prah pre „Vonku · RH (%) (≤)“. Ovplyvňuje odporúčania, nie je medicínskym limitom.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Rozhodovací prah pre „Indikátor plesní · ≥ 70%“. Ovplyvňuje odporúčania, nie je medicínskym limitom."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "nastavenia · zdroj · MEDIA_PLAYERS",
           "tts_engine": "nastavenia · zdroj · TTS_ENGINE",
           "ai_conversation_agent": "AI · Vybrať · zdroj",
-          "language": "TTS · Vybrať · zdroj",
+          "language": "Jazyk oznámení",
           "use_mold_indicator": "Indikátor plesní · RH (%) → 70%",
           "pollen_entities": "Peľ · zdroj · Vybrať",
           "use_announcement_hub": "Oznámenia · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Prítomnosť doma · Maximálny vek údajov sledovania/počtu osôb (min)",
           "general_home_policy": "Prítomnosť doma",
           "general_wake_alarm_entity": "Spánok · Nasledujúci budík",
-          "general_wake_lead_minutes_entity": "Spánok · Minúty pred budíkom"
+          "general_wake_lead_minutes_entity": "Spánok · Minúty pred budíkom",
+          "window_open_timeout_minutes": "Čakanie na otvorenie okna (min)"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasie a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "Vyberte: media_player.* · nastavenia · zdroj · MEDIA_PLAYERS.",
           "tts_engine": "Vyberte: tts.* · nastavenia · zdroj · TTS_ENGINE.",
           "ai_conversation_agent": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · AI · Vybrať · zdroj · conversation.* / ai_task.*.",
-          "language": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · TTS · Vybrať · zdroj · provider capabilities.",
+          "language": "Predvolene sa používa jazyk Home Assistant. Môžete vybrať ľubovoľný jazyk oznámení podporovaný HEM.",
           "use_mold_indicator": "🧱 Indikátor plesní · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Vyberte spoločné zdroje a výstupy oznámení. Uloženie dokončí nastavenie. Prevádzkové nastavenia zostávajú na zariadeniach domu a miestností. · Peľ · zdroj · Vybrať.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "Vekový limit platí pre hlásenia sledovačov a číselné počty osôb. Zoznamy miestností a binárne stavy prítomnosti nevypršia, kým sa nezmenia. Nedostupné, obnovené alebo neplatné zdroje ostávajú neznáme. Toto nie je dĺžka spánku.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Vyberte entitu času alebo dátumu a času nasledujúceho budíka aj entitu minút predstihu. HEM ukončí automatický spánok s týmto predstihom a obnoví bežné ciele. Čas bez dátumu používa časové pásmo Home Assistant. Neprítomnosť, ručné ovládanie a ochrany zostávajú prioritné.",
-          "general_wake_lead_minutes_entity": "Vyberte číselnú entitu s nezáporným počtom minút, s jednotkou min alebo bez jednotky. Budík o 07:00 a hodnota 30 ukončia automatický spánok o 06:30; 0 znamená pri zazvonení. Funkciu vypnete vymazaním oboch zdrojov."
+          "general_wake_lead_minutes_entity": "Vyberte číselnú entitu s nezáporným počtom minút, s jednotkou min alebo bez jednotky. Budík o 07:00 a hodnota 30 ukončia automatický spánok o 06:30; 0 znamená pri zazvonení. Funkciu vypnete vymazaním oboch zdrojov.",
+          "window_open_timeout_minutes": "Čakanie po prijatí žiadosti o vetranie pred povolením nových automatických/PID spustení, ak sú stále potrebné. 0–30 minút, predvolene 5; 0 čakanie vypne. Ochrana pri otvorenom okne a minimálne prevádzkové časy zariadení zostávajú v platnosti."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Úspora energie",
           "window_open_pause": "Pozastavené pre otvorené okno",
           "window_close_warmup": "Čakanie po zatvorení okien",
-          "window_state_unknown": "Čakanie na stav okien"
+          "window_state_unknown": "Čakanie na stav okien",
+          "window_open_wait": "Čaká sa, kým otvoríte okno",
+          "window_request_pending": "Odosiela sa žiadosť o otvorenie okna"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "Pomoc"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Vetranie · Čakanie na otvorenie okna (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Predvolené",
+        "auto": "Jazyk Home Assistant (predvolený)",
         "en": "nastavenia · zdroj",
         "de": "nastavenia · zdroj",
         "el": "nastavenia · zdroj",

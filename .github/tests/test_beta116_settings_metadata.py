@@ -224,7 +224,7 @@ class MetadataTests(unittest.TestCase):
             self.assertIn(key, metadata.SETTING_HELP)
         self.assertEqual(set(metadata.SETTING_HELP), set(names.SETTING_GROUPS))
         for key, entry in metadata.SETTING_HELP.items():
-            self.assertEqual(set(entry), {"en", "el", "de"}, key)
+            self.assertTrue({"en", "el", "de"} <= set(entry) <= set(names.SETTING_NAMES), key)
             self.assertTrue(all(len(text) > 60 for text in entry.values()), key)
             self.assertEqual(metadata.configuration_help(key, "unsupported"), entry["en"])
 

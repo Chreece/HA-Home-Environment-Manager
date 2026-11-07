@@ -80,6 +80,11 @@ class AirQualityRecommendation(SensorEntity):
                     {"code": reason.code, "entity": reason.label, "value": reason.value}
                     for reason in rec.reasons
                 ],
+                "cautions": [
+                    {"code": reason.code, "entity": reason.label, "value": reason.value}
+                    for reason in rec.cautions
+                ],
+                "window_open_wait_seconds": rec.wait_seconds,
                 "message": message,
             })
         details = {

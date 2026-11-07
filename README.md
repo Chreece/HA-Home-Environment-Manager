@@ -16,7 +16,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b4](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b4)
+**Current release:** [v0.6.1b5](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b5)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
@@ -107,7 +107,9 @@ Choose the shared inputs and optional features you use:
 - **Home occupancy:** people, trackers, presence sensors or explicitly selected
   people counters. You can also choose shared occupied-room and sleeping-room lists.
 - **Announcements:** direct notification destinations, media players and TTS, or
-  your configured Announcement Hub. Choose the language and optional AI agent here too.
+  your configured Announcement Hub. **Announcement language** defaults to
+  **Home Assistant language** and also offers all 38 languages supported by HEM.
+  Choose an optional AI agent here too.
 - **Mold indication and ventilation limits:** enable mold indication if you will
   calibrate it, and review the outdoor temperature, humidity, wind and pollution limits.
 
@@ -115,10 +117,50 @@ After saving, review **Ventilation · AQI scale** on the HEM Home device for eac
 AQI source. Select the provider's actual scale, or configure a custom scale and
 limit. A number without a known scale cannot be compared meaningfully.
 
-The maximum wind-speed setting limits when HEM can recommend opening windows.
-The other ventilation limits serve the same purpose for their conditions; they
-are separate from a room's heating or cooling targets. Open each setting's help
-for its purpose, units and effect.
+Ventilation limits identify outside conditions that need caution and continue
+to protect automatic use of outside air. A measured indoor need can still
+produce a conditional request to air the room briefly, naming the detected
+cold, heat, humidity, wind, weather alerts or pollution. Missing outside data
+is described as uncertain. HEM does not describe these conditions as suitable.
+These limits are separate from a room's heating or cooling targets.
+
+You can also change the announcement language on the HEM **Home Environment**
+device under **Announcement · Language**. The default follows Home Assistant's
+configured language when each announcement is sent. An explicit choice applies
+to announcement text, AI rewriting and the language sent to Announcement Hub or
+direct TTS. The full menu is available even without a TTS provider; spoken output
+requires the selected provider to support that language.
+
+### Give window airing a chance before automatic devices start
+
+**Window opening timeout** in General settings, also available on the Home
+Environment device, defaults to **5 minutes** and accepts **0–30 minutes**.
+Set **0** to disable this start delay while retaining ventilation advice.
+
+When opening a real, closed room window could help, HEM requests it through the
+enabled automatic announcement channels. If an eligible Automatic/PID device
+would otherwise start, HEM briefly defers that new start while submitting the
+request. Submission is bounded to 130 seconds; a rejected or failed delivery
+releases it immediately. Once a direct output succeeds or Announcement Hub
+accepts the job, the configured response timer starts. Hub acceptance confirms
+queueing, not that someone has heard the message.
+
+If the window stays closed until the timer expires, normal device control
+resumes if demand still exists. Repeated announcements and changing sensor
+numbers do not extend the deadline. Opening the window hands control to the
+device's existing window policy; closing it retains the normal stabilization
+and minimum operating-time checks. This feature applies only to eligible
+automatic starts with window protection enabled. Running equipment, manual
+commands, OFF commands and particle filtration retain their own behavior.
+
+The bounded response wait requires someone home and an awake room, verified contacts in that
+room and an enabled announcement channel. Outdoor warnings remain in the
+message; airing that would demonstrably worsen the relevant humidity or
+pollutant measurement is not suggested for that purpose. Actionable opening
+requests use Announcement Hub's **warning** level, so a warning-level TTS
+threshold can include them. Optional wake/return timing reminders remain
+informational. Caution and timeout messages retain their complete factual
+wording instead of passing through a shortening AI rewrite.
 
 ## Add the dashboard card
 
@@ -172,10 +214,12 @@ Entity IDs can differ with your language, naming and renames. The older
 - For a waiting controller, read its **Reason** and **Diagnostics** before
   changing settings.
 
-Opening advice needs usable weather and configured outdoor air-quality data.
-Active weather warnings, confirmed outdoor pollution and unsuitable conditions
-can block it. Missing or stale readings appear as incomplete data; check the
-displayed reason to see what is affecting the decision.
+Opening advice compares indoor needs with the available outdoor evidence.
+Useful manual airing can still be suggested with detected weather or pollution
+cautions and explicit uncertainty about missing or stale outside readings.
+HEM does not claim a moisture or pollutant benefit contradicted by comparable
+outside measurements. Read the room's reasons and diagnostics for the basis
+of the recommendation.
 
 ## Where to change settings
 
@@ -562,6 +606,8 @@ recommended.
 | A cover does not move | Check its opt-in, associated closed window, weather/sun, temperature/lux conditions and manual-override status |
 | The card is missing after an update | Confirm HEM loaded, restart after installation, refresh the browser, and select the actual Window recommendations sensor |
 | Announcements are silent | Check the speech/notification switches, Hub routing or direct destinations, room assignments and whether actionable recommendations exist |
+| “Requesting window opening” | A bounded announcement submission is in progress; a failed submission releases the automatic start |
+| “Waiting for you to open the window” | The opening request was accepted; the device can resume after the configured timeout if its window stays closed |
 
 For a reproducible problem, open an
 [issue](https://github.com/Chreece/HA-Home-Environment-Manager/issues) with your

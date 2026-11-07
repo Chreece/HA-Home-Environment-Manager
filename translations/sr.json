@@ -68,7 +68,7 @@
         "title": "Обавештења (опционо)",
         "description": "Обавештења (опционо). Аутоматска обавештења · Аутоматска говорна обавештења. Announcement Hub.",
         "data": {
-          "language": "Језик",
+          "language": "Језик обавештења",
           "automatic_tts": "Automatsko",
           "automatic_notifications": "Automatsko · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Обавештења (опционо) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Језик"
         },
         "data_description": {
-          "language": "Језик: Home Assistant (Подразумевано).",
+          "language": "Подразумевано се користи језик Home Assistant-а. Можете изабрати било који језик обавештења који HEM подржава.",
           "automatic_tts": "Подразумевано: ⛔ · Automatsko · 🪟 90 s.",
           "automatic_notifications": "Подразумевано: ⛔ · Automatsko · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Подразумевано: 10 min · 0 = никада · Док исти узрок траје · Собе.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Prag odluke za „Напољу · °C (≥)”. Utiče na preporuke, nije medicinska granica.",
           "max_outdoor_temp": "Prag odluke za „Напољу · °C (≤)”. Utiče na preporuke, nije medicinska granica.",
           "max_outdoor_humidity": "Prag odluke za „Напољу · RH (%) (≤)”. Utiče na preporuke, nije medicinska granica.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Prag odluke za „Индикатор буђи · ≥ 70%”. Utiče na preporuke, nije medicinska granica."
         }
@@ -191,7 +191,7 @@
           "media_players": "podešavanja · izvor · MEDIA_PLAYERS",
           "tts_engine": "podešavanja · izvor · TTS_ENGINE",
           "ai_conversation_agent": "AI · Izaberi · izvor",
-          "language": "TTS · Izaberi · izvor",
+          "language": "Језик обавештења",
           "use_mold_indicator": "Индикатор буђи · RH (%) → 70%",
           "pollen_entities": "Polen · izvor · Izaberi",
           "use_announcement_hub": "Обавештења · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Присуство код куће · Највећа старост података праћења/броја особа (мин)",
           "general_home_policy": "Присуство код куће",
           "general_wake_alarm_entity": "Спавање · Следећи аларм",
-          "general_wake_lead_minutes_entity": "Спавање · Минута пре аларма"
+          "general_wake_lead_minutes_entity": "Спавање · Минута пре аларма",
+          "window_open_timeout_minutes": "Чекање на отварање прозора (мин)"
         },
         "data_description": {
           "weather_entities": "Изаберите: Време и упозорења · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "Изаберите: media_player.* · podešavanja · izvor · MEDIA_PLAYERS.",
           "tts_engine": "Изаберите: tts.* · podešavanja · izvor · TTS_ENGINE.",
           "ai_conversation_agent": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · AI · Izaberi · izvor · conversation.* / ai_task.*.",
-          "language": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · TTS · Izaberi · izvor · provider capabilities.",
+          "language": "Подразумевано се користи језик Home Assistant-а. Можете изабрати било који језик обавештења који HEM подржава.",
           "use_mold_indicator": "🧱 Индикатор буђи · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Polen · izvor · Izaberi.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "Ограничење старости важи за извештаје праћења и бројчане податке о броју особа. Спискови соба и бинарна стања присуства не истичу док су непромењени. Недоступни, враћени или неисправни извори остају непознати. Ово није трајање спавања.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Изаберите ентитет времена или датума и времена следећег аларма и ентитет минута унапред. HEM завршава аутоматско спавање толико минута раније и враћа уобичајене циљеве. Време без датума користи временску зону Home Assistant-а. Одсуство, ручно управљање и заштите задржавају предност.",
-          "general_wake_lead_minutes_entity": "Изаберите бројчани ентитет са ненегативним бројем минута, јединицом min или без јединице. Аларм у 07:00 и вредност 30 завршавају аутоматско спавање у 06:30; 0 значи при звоњењу. За искључивање уклоните оба извора."
+          "general_wake_lead_minutes_entity": "Изаберите бројчани ентитет са ненегативним бројем минута, јединицом min или без јединице. Аларм у 07:00 и вредност 30 завршавају аутоматско спавање у 06:30; 0 значи при звоњењу. За искључивање уклоните оба извора.",
+          "window_open_timeout_minutes": "Чекање после прихватања захтева за проветравање пре дозвољавања нових аутоматских/PID покретања ако су потребна. 0–30 минута, подразумевано 5; 0 искључује чекање. Заштите при отвореном прозору и минимална времена рада уређаја и даље важе."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "Обавештења (опционо)",
         "description": "Обавештења (опционо). Аутоматска обавештења · Аутоматска говорна обавештења. Announcement Hub.",
         "data": {
-          "language": "Језик",
+          "language": "Језик обавештења",
           "automatic_tts": "Automatsko",
           "automatic_notifications": "Automatsko · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Обавештења (опционо) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · Језик"
         },
         "data_description": {
-          "language": "Језик: Home Assistant (Подразумевано).",
+          "language": "Подразумевано се користи језик Home Assistant-а. Можете изабрати било који језик обавештења који HEM подржава.",
           "automatic_tts": "Подразумевано: ⛔ · Automatsko · 🪟 90 s.",
           "automatic_notifications": "Подразумевано: ⛔ · Automatsko · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Подразумевано: 10 min · 0 = никада · Док исти узрок траје · Собе.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Prag odluke za „Напољу · °C (≥)”. Utiče na preporuke, nije medicinska granica.",
           "max_outdoor_temp": "Prag odluke za „Напољу · °C (≤)”. Utiče na preporuke, nije medicinska granica.",
           "max_outdoor_humidity": "Prag odluke za „Напољу · RH (%) (≤)”. Utiče na preporuke, nije medicinska granica.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Prag odluke za „Индикатор буђи · ≥ 70%”. Utiče na preporuke, nije medicinska granica."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "podešavanja · izvor · MEDIA_PLAYERS",
           "tts_engine": "podešavanja · izvor · TTS_ENGINE",
           "ai_conversation_agent": "AI · Izaberi · izvor",
-          "language": "TTS · Izaberi · izvor",
+          "language": "Језик обавештења",
           "use_mold_indicator": "Индикатор буђи · RH (%) → 70%",
           "pollen_entities": "Polen · izvor · Izaberi",
           "use_announcement_hub": "Обавештења · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Присуство код куће · Највећа старост података праћења/броја особа (мин)",
           "general_home_policy": "Присуство код куће",
           "general_wake_alarm_entity": "Спавање · Следећи аларм",
-          "general_wake_lead_minutes_entity": "Спавање · Минута пре аларма"
+          "general_wake_lead_minutes_entity": "Спавање · Минута пре аларма",
+          "window_open_timeout_minutes": "Чекање на отварање прозора (мин)"
         },
         "data_description": {
           "weather_entities": "Изаберите: Време и упозорења · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "Изаберите: media_player.* · podešavanja · izvor · MEDIA_PLAYERS.",
           "tts_engine": "Изаберите: tts.* · podešavanja · izvor · TTS_ENGINE.",
           "ai_conversation_agent": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · AI · Izaberi · izvor · conversation.* / ai_task.*.",
-          "language": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · TTS · Izaberi · izvor · provider capabilities.",
+          "language": "Подразумевано се користи језик Home Assistant-а. Можете изабрати било који језик обавештења који HEM подржава.",
           "use_mold_indicator": "🧱 Индикатор буђи · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Изаберите заједничке изворе и излазе обавештења. Чување завршава подешавање. Радна подешавања остају на уређајима дома и соба. · Polen · izvor · Izaberi.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "Ограничење старости важи за извештаје праћења и бројчане податке о броју особа. Спискови соба и бинарна стања присуства не истичу док су непромењени. Недоступни, враћени или неисправни извори остају непознати. Ово није трајање спавања.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Изаберите ентитет времена или датума и времена следећег аларма и ентитет минута унапред. HEM завршава аутоматско спавање толико минута раније и враћа уобичајене циљеве. Време без датума користи временску зону Home Assistant-а. Одсуство, ручно управљање и заштите задржавају предност.",
-          "general_wake_lead_minutes_entity": "Изаберите бројчани ентитет са ненегативним бројем минута, јединицом min или без јединице. Аларм у 07:00 и вредност 30 завршавају аутоматско спавање у 06:30; 0 значи при звоњењу. За искључивање уклоните оба извора."
+          "general_wake_lead_minutes_entity": "Изаберите бројчани ентитет са ненегативним бројем минута, јединицом min или без јединице. Аларм у 07:00 и вредност 30 завршавају аутоматско спавање у 06:30; 0 значи при звоњењу. За искључивање уклоните оба извора.",
+          "window_open_timeout_minutes": "Чекање после прихватања захтева за проветравање пре дозвољавања нових аутоматских/PID покретања ако су потребна. 0–30 минута, подразумевано 5; 0 искључује чекање. Заштите при отвореном прозору и минимална времена рада уређаја и даље важе."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Уштеда енергије",
           "window_open_pause": "Пауза због отвореног прозора",
           "window_close_warmup": "Чекање после затварања прозора",
-          "window_state_unknown": "Чекање на стање прозора"
+          "window_state_unknown": "Чекање на стање прозора",
+          "window_open_wait": "Чека се да отворите прозор",
+          "window_request_pending": "Шаље се захтев за отварање прозора"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "Помоћ"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Вентилација · Чекање на отварање прозора (мин)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Подразумевано",
+        "auto": "Језик Home Assistant-а (подразумевани)",
         "en": "podešavanja · izvor",
         "de": "podešavanja · izvor",
         "el": "podešavanja · izvor",

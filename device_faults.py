@@ -25,6 +25,9 @@ from .const import (
     CONF_MEDIA_PLAYERS, CONF_AUTO_TTS,
 )
 from . import equipment_model as model
+from .languages import announcement_language, resolve_language
+from .tts_languages import tts_language
+from .announcement_text import FAULT_LABELS
 
 _LOGGER = logging.getLogger(__name__)
 _FAULT_END = re.compile(
@@ -233,23 +236,25 @@ def _signature(report: dict) -> tuple:
     ))
 
 
-def _notification_text(spec: Any, report: dict, area_name: str) -> tuple[str, str]:
-    name = _text(spec.name, 96) or "Physical device"
-    title = f"Device error · {name}"
+def _notification_text(spec: Any, report: dict, area_name: str,
+                       language: str = "en") -> tuple[str, str]:
+    labels = FAULT_LABELS[resolve_language(language)]
+    name = _text(spec.name, 96) or labels["fallback_device"]
+    title = labels["title"].format(name=name)
     rows = [
-        f"Device: {name}",
-        f"Room: {_text(area_name, 96)}",
+        f"{labels['device']}: {name}",
+        f"{labels['room']}: {_text(area_name, 96)}",
     ]
     for fault in report.get("faults", ())[:4]:
         rows += [
-            f"Source: {fault['source_entity_id']}",
-            f"Severity: {fault['severity']}",
-            f"Error: {fault['code'] or 'fault detected'}",
+            f"{labels['source']}: {fault['source_entity_id']}",
+            f"{labels['severity']}: {fault['severity']}",
+            f"{labels['error']}: {fault['code'] or labels['fallback_error']}",
         ]
         if fault["description"]:
-            rows.append(f"Details: {fault['description']}")
+            rows.append(f"{labels['details']}: {fault['description']}")
         rows.extend(f"{key}: {value}" for key, value in fault["info"].items())
-    rows.append("Inspect the original physical device in Home Assistant.")
+    rows.append(labels["inspect"])
     return title, "\n".join(rows)[:2800]
 
 
@@ -468,8 +473,9 @@ class NativeDeviceFaultMonitor:
         from homeassistant.helpers import area_registry as ar
         area = ar.async_get(self.hass).async_get_area(spec.area_id)
         area_name = (getattr(area, "name", None) or spec.area_id)
-        title, message = _notification_text(spec, report, area_name)
         config = self.manager.settings
+        language = announcement_language(self.hass, config.get("language", "auto"))
+        title, message = _notification_text(spec, report, area_name, language)
         from .hub_delivery import hub_available, async_submit_hub
         if config.get(CONF_HUB) is True and hub_available(self.hass):
             # Hub owns AI, routing, occupancy, retry and visual/TTS fallback.
@@ -477,6 +483,7 @@ class NativeDeviceFaultMonitor:
             await async_submit_hub(self.hass, {
                 "title": title, "area": [area_name],
                 "level": "warning", "text": message, "use_ai": False,
+                "language": language,
             })
             return
         notified = False
@@ -505,7 +512,10 @@ class NativeDeviceFaultMonitor:
                 try:
                     await self.hass.services.async_call(
                         "tts", "speak",
-                        {"media_player_entity_id": targets, "message": message},
+                        {"media_player_entity_id": targets, "message": message,
+                         "language": tts_language(self.hass, tts_engine,
+                                                  config.get("language", "auto"),
+                                                  text_language=language)},
                         target={"entity_id": tts_engine}, blocking=True,
                     )
                     notified = True

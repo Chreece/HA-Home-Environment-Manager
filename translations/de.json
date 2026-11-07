@@ -68,7 +68,7 @@
         "title": "Ansagen (optional)",
         "description": "Der Empfehlungssensor funktioniert auch ohne Ansagen. Benachrichtigungen und Sprache sind optional. Announcement Hub übernimmt gegebenenfalls die Raumzuordnung; sonst bitte direkte Ausgaben wählen.",
         "data": {
-          "language": "Sprache",
+          "language": "Ansagesprache",
           "automatic_tts": "Neue Empfehlungen automatisch sprechen",
           "automatic_notifications": "Neue Empfehlungen automatisch melden",
           "use_announcement_hub": "Ansagen · Announcement Hub verwenden",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "Konversationsagent"
         },
         "data_description": {
-          "language": "Die automatische Auswahl verwendet die Sprache von Home Assistant. Die manuelle Aktion kann sie überschreiben.",
+          "language": "Standardmäßig wird die Home-Assistant-Sprache verwendet. Alternativ kann jede von HEM unterstützte Ansagesprache gewählt werden.",
           "automatic_tts": "Standardmäßig deaktiviert. Neue Öffnungsempfehlungen erfordern 90 Sekunden stabile Bedingungen.",
           "automatic_notifications": "Standardmäßig deaktiviert. Nicht bei jedem neuen Sensorwert erneut benachrichtigen.",
           "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Dies ist ein Entscheidungswert für „Minimale Außentemperatur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "max_outdoor_temp": "Dies ist ein Entscheidungswert für „Maximale Außentemperatur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "max_outdoor_humidity": "Dies ist ein Entscheidungswert für „Maximale Außenluftfeuchte (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "max_wind_kmh": "Höchste Außenwindgeschwindigkeit für Lüftungsempfehlungen in km/h. Meldet die ausgewählte Wetterquelle stärkeren Wind, verhindert HEM Öffnungsempfehlungen und kann das Schließen offener Fenster empfehlen. Dies ist keine Ventilatordrehzahl.",
+          "max_wind_kmh": "Höchste Außenwindgeschwindigkeit für Lüftungsprüfungen in km/h. Meldet die gewählte Wetterquelle stärkeren Wind, nennt HEM dies in sinnvollen bedingten Öffnungshinweisen, sperrt automatische Außenluftnutzung und kann das Schließen offener Fenster empfehlen. Dies ist keine Ventilatordrehzahl.",
           "max_age_minutes": "Höchstalter der verwendeten Umweltmesswerte in Minuten, einschließlich Außen-/Wetterdaten und Raummessungen. Ältere Werte gelten als veraltet und belegen weder sichere Lüftung noch gültige Temperaturen für die Schimmelkalibrierung.",
           "indoor_mold": "Dies ist ein Entscheidungswert für „Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert."
         }
@@ -191,7 +191,7 @@
           "media_players": "Direkte TTS-Mediaplayer",
           "tts_engine": "Direkte TTS-Engine",
           "ai_conversation_agent": "AI · Auswählen · Quelle",
-          "language": "TTS · Auswählen · Quelle",
+          "language": "Ansagesprache",
           "use_mold_indicator": "Schimmelindikator statt relativer Raumluftfeuchte verwenden",
           "pollen_entities": "Pollen · Quelle · Auswählen",
           "use_announcement_hub": "Ansagen · Announcement Hub verwenden",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Anwesenheit zu Hause · Höchstalter von Tracker-/Zählwerten (min)",
           "general_home_policy": "Anwesenheit zu Hause",
           "general_wake_alarm_entity": "Schlaf · Nächster Wecker",
-          "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker"
+          "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker",
+          "window_open_timeout_minutes": "Wartezeit zum Fensteröffnen (min)"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -243,7 +244,7 @@
           "media_players": "Mediaplayer für direkte Sprachausgabe. Die Raumzuordnung bestimmt die Ziele.",
           "tts_engine": "Sprachausgabe für direkte Ansagen ohne Announcement Hub.",
           "ai_conversation_agent": "Home-Assistant-Standard, Conversation-Agent oder datenfähige Task-AI wählen. Task AI verwendet ai_task.generate_data.",
-          "language": "Sprachen stammen vom gewählten TTS-Anbieter. Regionscodes erscheinen nur bei mehreren Varianten derselben Sprache.",
+          "language": "Standardmäßig wird die Home-Assistant-Sprache verwendet. Alternativ kann jede von HEM unterstützte Ansagesprache gewählt werden.",
           "use_mold_indicator": "Die Lüftungsempfehlung berücksichtigt die geschätzte relative Feuchte an der kältesten Oberfläche statt der normalen Raumluftfeuchte. Pro Raum kalibrieren; ohne Kalibrierung wird der Wert als unbekannt angezeigt.",
           "pollen_entities": "Beim ersten Einrichten werden alle gefundenen Pollenquellen vorausgewählt. Eine später bewusst leere Auswahl bleibt leer.",
           "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "Höchstalter der Meldungen direkter Anwesenheits-Tracker und numerischer Personenzählungen. Standard: 240 Minuten. Unveränderte Belegungs-/Schlaflisten und binäre Raumanwesenheitszustände bleiben gültig. Nicht verfügbare, wiederhergestellte oder ungültige ausgewählte Quellen bleiben unbekannt. Dies ist keine Schlafdauer.",
           "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
           "general_wake_alarm_entity": "Wählen Sie den nächsten Wecker aus einer Zeit- oder Zeitstempel-Entität, etwa dem Handywecker oder einem input_datetime-Helfer. Wählen Sie darunter auch die Entität für den Vorlauf in Minuten. HEM beendet den automatischen Schlafmodus um diese Zeit vor dem Wecker und verwendet wieder die normalen Sollwerte. Reine Uhrzeiten verwenden die Home-Assistant-Zeitzone; datierte Werte bezeichnen einen einzelnen Wecker. Abwesenheit, ausdrücklich gewählte Profile, manuelle Steuerung und Geräteschutz behalten Vorrang.",
-          "general_wake_lead_minutes_entity": "Wählen Sie einen numerischen sensor, number oder input_number mit den Minuten vor dem Wecker. Zulässig sind min oder keine Einheit und ein endlicher Wert ab 0. Bei 07:00 und 30 Minuten endet der automatische Schlafmodus um 06:30; 0 bedeutet beim Klingeln. Beide Quellen auswählen oder zum Deaktivieren beide leeren. Die normale Regelung beginnt entsprechend früher; das Erreichen des Sollwerts bis zum Wecker wird nicht garantiert."
+          "general_wake_lead_minutes_entity": "Wählen Sie einen numerischen sensor, number oder input_number mit den Minuten vor dem Wecker. Zulässig sind min oder keine Einheit und ein endlicher Wert ab 0. Bei 07:00 und 30 Minuten endet der automatische Schlafmodus um 06:30; 0 bedeutet beim Klingeln. Beide Quellen auswählen oder zum Deaktivieren beide leeren. Die normale Regelung beginnt entsprechend früher; das Erreichen des Sollwerts bis zum Wecker wird nicht garantiert.",
+          "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "Ansagen (optional)",
         "description": "Der Empfehlungssensor funktioniert auch ohne Ansagen. Benachrichtigungen und Sprache sind optional. Announcement Hub übernimmt gegebenenfalls die Raumzuordnung; sonst bitte direkte Ausgaben wählen.",
         "data": {
-          "language": "Sprache",
+          "language": "Ansagesprache",
           "automatic_tts": "Neue Empfehlungen automatisch sprechen",
           "automatic_notifications": "Neue Empfehlungen automatisch melden",
           "use_announcement_hub": "Ansagen · Announcement Hub verwenden",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "Konversationsagent"
         },
         "data_description": {
-          "language": "Die automatische Auswahl verwendet die Sprache von Home Assistant. Die manuelle Aktion kann sie überschreiben.",
+          "language": "Standardmäßig wird die Home-Assistant-Sprache verwendet. Alternativ kann jede von HEM unterstützte Ansagesprache gewählt werden.",
           "automatic_tts": "Standardmäßig deaktiviert. Neue Öffnungsempfehlungen erfordern 90 Sekunden stabile Bedingungen.",
           "automatic_notifications": "Standardmäßig deaktiviert. Nicht bei jedem neuen Sensorwert erneut benachrichtigen.",
           "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Dies ist ein Entscheidungswert für „Minimale Außentemperatur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "max_outdoor_temp": "Dies ist ein Entscheidungswert für „Maximale Außentemperatur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "max_outdoor_humidity": "Dies ist ein Entscheidungswert für „Maximale Außenluftfeuchte (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "max_wind_kmh": "Höchste Außenwindgeschwindigkeit für Lüftungsempfehlungen in km/h. Meldet die ausgewählte Wetterquelle stärkeren Wind, verhindert HEM Öffnungsempfehlungen und kann das Schließen offener Fenster empfehlen. Dies ist keine Ventilatordrehzahl.",
+          "max_wind_kmh": "Höchste Außenwindgeschwindigkeit für Lüftungsprüfungen in km/h. Meldet die gewählte Wetterquelle stärkeren Wind, nennt HEM dies in sinnvollen bedingten Öffnungshinweisen, sperrt automatische Außenluftnutzung und kann das Schließen offener Fenster empfehlen. Dies ist keine Ventilatordrehzahl.",
           "max_age_minutes": "Höchstalter der verwendeten Umweltmesswerte in Minuten, einschließlich Außen-/Wetterdaten und Raummessungen. Ältere Werte gelten als veraltet und belegen weder sichere Lüftung noch gültige Temperaturen für die Schimmelkalibrierung.",
           "indoor_mold": "Dies ist ein Entscheidungswert für „Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "Direkte TTS-Mediaplayer",
           "tts_engine": "Direkte TTS-Engine",
           "ai_conversation_agent": "AI · Auswählen · Quelle",
-          "language": "TTS · Auswählen · Quelle",
+          "language": "Ansagesprache",
           "use_mold_indicator": "Schimmelindikator statt relativer Raumluftfeuchte verwenden",
           "pollen_entities": "Pollen · Quelle · Auswählen",
           "use_announcement_hub": "Ansagen · Announcement Hub verwenden",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Anwesenheit zu Hause · Höchstalter von Tracker-/Zählwerten (min)",
           "general_home_policy": "Anwesenheit zu Hause",
           "general_wake_alarm_entity": "Schlaf · Nächster Wecker",
-          "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker"
+          "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker",
+          "window_open_timeout_minutes": "Wartezeit zum Fensteröffnen (min)"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -2239,7 +2242,7 @@
           "media_players": "Mediaplayer für direkte Sprachausgabe. Die Raumzuordnung bestimmt die Ziele.",
           "tts_engine": "Sprachausgabe für direkte Ansagen ohne Announcement Hub.",
           "ai_conversation_agent": "Home-Assistant-Standard, Conversation-Agent oder datenfähige Task-AI wählen. Task AI verwendet ai_task.generate_data.",
-          "language": "Sprachen stammen vom gewählten TTS-Anbieter. Regionscodes erscheinen nur bei mehreren Varianten derselben Sprache.",
+          "language": "Standardmäßig wird die Home-Assistant-Sprache verwendet. Alternativ kann jede von HEM unterstützte Ansagesprache gewählt werden.",
           "use_mold_indicator": "Die Lüftungsempfehlung berücksichtigt die geschätzte relative Feuchte an der kältesten Oberfläche statt der normalen Raumluftfeuchte. Pro Raum kalibrieren; ohne Kalibrierung wird der Wert als unbekannt angezeigt.",
           "pollen_entities": "Beim ersten Einrichten werden alle gefundenen Pollenquellen vorausgewählt. Eine später bewusst leere Auswahl bleibt leer.",
           "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "Höchstalter der Meldungen direkter Anwesenheits-Tracker und numerischer Personenzählungen. Standard: 240 Minuten. Unveränderte Belegungs-/Schlaflisten und binäre Raumanwesenheitszustände bleiben gültig. Nicht verfügbare, wiederhergestellte oder ungültige ausgewählte Quellen bleiben unbekannt. Dies ist keine Schlafdauer.",
           "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
           "general_wake_alarm_entity": "Wählen Sie den nächsten Wecker aus einer Zeit- oder Zeitstempel-Entität, etwa dem Handywecker oder einem input_datetime-Helfer. Wählen Sie darunter auch die Entität für den Vorlauf in Minuten. HEM beendet den automatischen Schlafmodus um diese Zeit vor dem Wecker und verwendet wieder die normalen Sollwerte. Reine Uhrzeiten verwenden die Home-Assistant-Zeitzone; datierte Werte bezeichnen einen einzelnen Wecker. Abwesenheit, ausdrücklich gewählte Profile, manuelle Steuerung und Geräteschutz behalten Vorrang.",
-          "general_wake_lead_minutes_entity": "Wählen Sie einen numerischen sensor, number oder input_number mit den Minuten vor dem Wecker. Zulässig sind min oder keine Einheit und ein endlicher Wert ab 0. Bei 07:00 und 30 Minuten endet der automatische Schlafmodus um 06:30; 0 bedeutet beim Klingeln. Beide Quellen auswählen oder zum Deaktivieren beide leeren. Die normale Regelung beginnt entsprechend früher; das Erreichen des Sollwerts bis zum Wecker wird nicht garantiert."
+          "general_wake_lead_minutes_entity": "Wählen Sie einen numerischen sensor, number oder input_number mit den Minuten vor dem Wecker. Zulässig sind min oder keine Einheit und ein endlicher Wert ab 0. Bei 07:00 und 30 Minuten endet der automatische Schlafmodus um 06:30; 0 bedeutet beim Klingeln. Beide Quellen auswählen oder zum Deaktivieren beide leeren. Die normale Regelung beginnt entsprechend früher; das Erreichen des Sollwerts bis zum Wecker wird nicht garantiert.",
+          "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin."
         }
       },
       "room_occupancy": {
@@ -2865,7 +2869,9 @@
           "eco": "Energiesparen",
           "window_open_pause": "Wegen offenem Fenster pausiert",
           "window_close_warmup": "Wartezeit nach Fensterschließung",
-          "window_state_unknown": "Warten auf Fensterstatus"
+          "window_state_unknown": "Warten auf Fensterstatus",
+          "window_open_wait": "Wartet darauf, dass du das Fenster öffnest",
+          "window_request_pending": "Aufforderung zum Fensteröffnen wird gesendet"
         }
       }
     },
@@ -3805,6 +3811,14 @@
             "name": "Hilfe"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Lüftung · Wartezeit zum Fensteröffnen (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       }
     },
     "switch": {
@@ -4383,7 +4397,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant-Standard",
+        "auto": "Home-Assistant-Sprache (Standard)",
         "en": "Einstellungen · Quelle",
         "de": "Einstellungen · Quelle",
         "el": "Einstellungen · Quelle",

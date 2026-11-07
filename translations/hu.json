@@ -68,7 +68,7 @@
         "title": "Értesítések (opcionális)",
         "description": "Értesítések (opcionális). Automatikus értesítések · Automatikus hangos értesítések. Announcement Hub.",
         "data": {
-          "language": "Nyelv",
+          "language": "Értesítések nyelve",
           "automatic_tts": "Automatikus",
           "automatic_notifications": "Automatikus · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Értesítések (opcionális) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Nyelv"
         },
         "data_description": {
-          "language": "Nyelv: Home Assistant (Alapértelmezett).",
+          "language": "Alapértelmezés szerint a Home Assistant nyelve érvényes. A HEM által támogatott bármely értesítési nyelv kiválasztható.",
           "automatic_tts": "Alapértelmezett: ⛔ · Automatikus · 🪟 90 s.",
           "automatic_notifications": "Alapértelmezett: ⛔ · Automatikus · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Alapértelmezett: 10 min · 0 = soha · Amíg ugyanaz az ok fennáll · Helyiségek.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "„Kint · °C (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
           "max_outdoor_temp": "„Kint · °C (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
           "max_outdoor_humidity": "„Kint · RH (%) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "„Penészesedési mutató · ≥ 70%” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték."
         }
@@ -191,7 +191,7 @@
           "media_players": "beállítások · forrás · MEDIA_PLAYERS",
           "tts_engine": "beállítások · forrás · TTS_ENGINE",
           "ai_conversation_agent": "AI · Választás · forrás",
-          "language": "TTS · Választás · forrás",
+          "language": "Értesítések nyelve",
           "use_mold_indicator": "Penészesedési mutató · RH (%) → 70%",
           "pollen_entities": "Pollen · forrás · Választás",
           "use_announcement_hub": "Értesítések · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Otthoni jelenlét · Követési/létszámadatok legnagyobb kora (perc)",
           "general_home_policy": "Otthoni jelenlét",
           "general_wake_alarm_entity": "Alvás · Következő ébresztő",
-          "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt"
+          "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt",
+          "window_open_timeout_minutes": "Várakozás ablaknyitásra (perc)"
         },
         "data_description": {
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "Válassz: media_player.* · beállítások · forrás · MEDIA_PLAYERS.",
           "tts_engine": "Válassz: tts.* · beállítások · forrás · TTS_ENGINE.",
           "ai_conversation_agent": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · AI · Választás · forrás · conversation.* / ai_task.*.",
-          "language": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · TTS · Választás · forrás · provider capabilities.",
+          "language": "Alapértelmezés szerint a Home Assistant nyelve érvényes. A HEM által támogatott bármely értesítési nyelv kiválasztható.",
           "use_mold_indicator": "🧱 Penészesedési mutató · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Pollen · forrás · Választás.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "A korhatár a követési jelentésekre és a numerikus létszámadatokra vonatkozik. A helyiséglisták és bináris jelenlétállapotok változatlanul nem évülnek el. Az elérhetetlen, visszaállított vagy hibás források ismeretlenek maradnak. Ez nem az alvás időtartama.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Válassza ki a következő ébresztő idő- vagy időbélyeg-entitását és a perceket megadó entitást. A HEM ennyi perccel korábban kilép az automatikus alvásból, és visszatér a normál célértékekhez. A dátum nélküli idő a Home Assistant időzónáját használja. A távollét, a kézi vezérlés és a védelmek elsőbbsége megmarad.",
-          "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást."
+          "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást.",
+          "window_open_timeout_minutes": "Várakozás a szellőztetési kérés elfogadása után, mielőtt szükség esetén új automatikus/PID-indítások engedélyezhetők. 0–30 perc, alapérték 5; 0 kikapcsolja a várakozást. A nyitott ablak és a minimális működési idők védelmei továbbra is érvényesek."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "Értesítések (opcionális)",
         "description": "Értesítések (opcionális). Automatikus értesítések · Automatikus hangos értesítések. Announcement Hub.",
         "data": {
-          "language": "Nyelv",
+          "language": "Értesítések nyelve",
           "automatic_tts": "Automatikus",
           "automatic_notifications": "Automatikus · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Értesítések (opcionális) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · Nyelv"
         },
         "data_description": {
-          "language": "Nyelv: Home Assistant (Alapértelmezett).",
+          "language": "Alapértelmezés szerint a Home Assistant nyelve érvényes. A HEM által támogatott bármely értesítési nyelv kiválasztható.",
           "automatic_tts": "Alapértelmezett: ⛔ · Automatikus · 🪟 90 s.",
           "automatic_notifications": "Alapértelmezett: ⛔ · Automatikus · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Alapértelmezett: 10 min · 0 = soha · Amíg ugyanaz az ok fennáll · Helyiségek.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "„Kint · °C (≥)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
           "max_outdoor_temp": "„Kint · °C (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
           "max_outdoor_humidity": "„Kint · RH (%) (≤)” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "„Penészesedési mutató · ≥ 70%” döntési küszöbe. Az ajánlásokat befolyásolja, nem orvosi határérték."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "beállítások · forrás · MEDIA_PLAYERS",
           "tts_engine": "beállítások · forrás · TTS_ENGINE",
           "ai_conversation_agent": "AI · Választás · forrás",
-          "language": "TTS · Választás · forrás",
+          "language": "Értesítések nyelve",
           "use_mold_indicator": "Penészesedési mutató · RH (%) → 70%",
           "pollen_entities": "Pollen · forrás · Választás",
           "use_announcement_hub": "Értesítések · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Otthoni jelenlét · Követési/létszámadatok legnagyobb kora (perc)",
           "general_home_policy": "Otthoni jelenlét",
           "general_wake_alarm_entity": "Alvás · Következő ébresztő",
-          "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt"
+          "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt",
+          "window_open_timeout_minutes": "Várakozás ablaknyitásra (perc)"
         },
         "data_description": {
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "Válassz: media_player.* · beállítások · forrás · MEDIA_PLAYERS.",
           "tts_engine": "Válassz: tts.* · beállítások · forrás · TTS_ENGINE.",
           "ai_conversation_agent": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · AI · Választás · forrás · conversation.* / ai_task.*.",
-          "language": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · TTS · Választás · forrás · provider capabilities.",
+          "language": "Alapértelmezés szerint a Home Assistant nyelve érvényes. A HEM által támogatott bármely értesítési nyelv kiválasztható.",
           "use_mold_indicator": "🧱 Penészesedési mutató · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Válassz közös forrásokat és értesítési kimeneteket. A mentés befejezi a beállítást. Az üzemi beállítások a ház és a helyiségek eszközein maradnak. · Pollen · forrás · Választás.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "A korhatár a követési jelentésekre és a numerikus létszámadatokra vonatkozik. A helyiséglisták és bináris jelenlétállapotok változatlanul nem évülnek el. Az elérhetetlen, visszaállított vagy hibás források ismeretlenek maradnak. Ez nem az alvás időtartama.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Válassza ki a következő ébresztő idő- vagy időbélyeg-entitását és a perceket megadó entitást. A HEM ennyi perccel korábban kilép az automatikus alvásból, és visszatér a normál célértékekhez. A dátum nélküli idő a Home Assistant időzónáját használja. A távollét, a kézi vezérlés és a védelmek elsőbbsége megmarad.",
-          "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást."
+          "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást.",
+          "window_open_timeout_minutes": "Várakozás a szellőztetési kérés elfogadása után, mielőtt szükség esetén új automatikus/PID-indítások engedélyezhetők. 0–30 perc, alapérték 5; 0 kikapcsolja a várakozást. A nyitott ablak és a minimális működési idők védelmei továbbra is érvényesek."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Energiatakarékosság",
           "window_open_pause": "Szünet nyitott ablak miatt",
           "window_close_warmup": "Várakozás az ablakok bezárása után",
-          "window_state_unknown": "Várakozás az ablakok állapotára"
+          "window_state_unknown": "Várakozás az ablakok állapotára",
+          "window_open_wait": "Arra vár, hogy kinyisd az ablakot",
+          "window_request_pending": "Ablaknyitási kérés küldése"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "Súgó"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Szellőztetés · Várakozás ablaknyitásra (perc)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Alapértelmezett",
+        "auto": "Home Assistant nyelve (alapértelmezett)",
         "en": "beállítások · forrás",
         "de": "beállítások · forrás",
         "el": "beállítások · forrás",

@@ -1,31 +1,56 @@
-"""Provider-aware TTS language labels and validation."""
+"""Announcement choices and separate, compatible TTS provider language tags."""
 from __future__ import annotations
 
-from collections import Counter
 from typing import Any
 
-from .languages import NATIVE_NAMES, SUPPORTED_LANGUAGE_TAGS, resolve_language
+from .languages import (
+    LANGUAGE_OPTIONS, announcement_language, normalize_announcement_language,
+)
 
-_REGION_LABELS = {"GB": "UK", "US": "US"}
+_AUTO_LABELS = {
+    'en': 'Home Assistant language (default)',
+    'de': 'Home-Assistant-Sprache (Standard)',
+    'el': 'Γλώσσα Home Assistant (προεπιλογή)',
+    'fr': 'Langue de Home Assistant (par défaut)',
+    'es': 'Idioma de Home Assistant (predeterminado)',
+    'it': 'Lingua di Home Assistant (predefinita)',
+    'nl': 'Taal van Home Assistant (standaard)',
+    'pt': 'Idioma do Home Assistant (predefinido)',
+    'pt-BR': 'Idioma do Home Assistant (padrão)',
+    'pl': 'Język Home Assistant (domyślny)',
+    'ru': 'Язык Home Assistant (по умолчанию)',
+    'uk': 'Мова Home Assistant (типово)',
+    'tr': 'Home Assistant dili (varsayılan)',
+    'cs': 'Jazyk Home Assistant (výchozí)',
+    'sk': 'Jazyk Home Assistant (predvolený)',
+    'hu': 'Home Assistant nyelve (alapértelmezett)',
+    'ro': 'Limba Home Assistant (implicită)',
+    'bg': 'Език на Home Assistant (по подразбиране)',
+    'hr': 'Jezik Home Assistanta (zadano)',
+    'sr': 'Језик Home Assistant-а (подразумевани)',
+    'sv': 'Home Assistant-språk (standard)',
+    'nb': 'Home Assistant-språk (standard)',
+    'da': 'Home Assistant-sprog (standard)',
+    'fi': 'Home Assistantin kieli (oletus)',
+    'id': 'Bahasa Home Assistant (bawaan)',
+    'vi': 'Ngôn ngữ Home Assistant (mặc định)',
+    'th': 'ภาษา Home Assistant (ค่าเริ่มต้น)',
+    'hi': 'Home Assistant की भाषा (डिफ़ॉल्ट)',
+    'zh-Hans': 'Home Assistant 语言（默认）',
+    'zh-Hant': 'Home Assistant 語言（預設）',
+    'ja': 'Home Assistant の言語（既定）',
+    'ko': 'Home Assistant 언어 (기본값)',
+    'ar': 'لغة Home Assistant (الافتراضية)',
+    'he': 'שפת Home Assistant (ברירת מחדל)',
+    'fa': 'زبان Home Assistant (پیش\u200cفرض)',
+    'bn': 'Home Assistant-এর ভাষা (ডিফল্ট)',
+    'ur': 'Home Assistant کی زبان (پہلے سے طے شدہ)',
+    'ta': 'Home Assistant மொழி (இயல்புநிலை)',
+}
 
 
 def _canonical(value: Any) -> str:
-    return str(value or "").strip().replace("_", "-")
-
-
-def _supported_base(value: Any) -> str | None:
-    text = _canonical(value).casefold()
-    folded = {tag.casefold(): tag for tag in SUPPORTED_LANGUAGE_TAGS}
-    if text in folded:
-        return folded[text]
-    if text.startswith("zh"):
-        return "zh-Hant" if any(token in text for token in ("hant", "-tw", "-hk", "-mo")) else "zh-Hans"
-    if text.startswith("pt-"):
-        return "pt-BR" if text == "pt-br" else "pt"
-    root = text.split("-", 1)[0]
-    if root == "no":
-        root = "nb"
-    return folded.get(root)
+    return str(value or "").strip().replace("_", "-").casefold()
 
 
 def _provider_entity(hass: Any, entity_id: str | None):
@@ -44,7 +69,7 @@ def _provider_entity(hass: Any, entity_id: str | None):
 
 
 def provider_languages(hass: Any, entity_id: str | None) -> tuple[tuple[str, ...], str | None]:
-    """Read actual TTS entity capabilities, with state attributes only as fallback."""
+    """Read entity capabilities; keep exact provider spellings for service calls."""
     entity = _provider_entity(hass, entity_id)
     languages = None
     default = None
@@ -65,52 +90,65 @@ def provider_languages(hass: Any, entity_id: str | None) -> tuple[tuple[str, ...
             languages = list(raw)
         default = default or attrs.get("default_language")
     cleaned = tuple(dict.fromkeys(
-        tag for item in (languages or ()) if (tag := _canonical(item))
+        item for item in (languages or ()) if isinstance(item, str) and item.strip()
     ))
-    return cleaned, (_canonical(default) or None)
+    return cleaned, (default if isinstance(default, str) and default.strip() else None)
 
 
-def language_options(hass: Any, entity_id: str | None) -> list[dict[str, str]]:
-    """Human language names; show a region only when the provider has variants."""
-    supported, _ = provider_languages(hass, entity_id)
-    tags = supported or tuple(SUPPORTED_LANGUAGE_TAGS)
-    resolved = [(tag, base) for tag in tags if (base := _supported_base(tag)) is not None]
-    counts = Counter(base for _, base in resolved)
-    options = [{"value": "auto", "label": "Automatic (Home Assistant)"}]
-    seen: set[str] = {"auto"}
-    for tag, base in resolved:
-        if tag.casefold() in seen:
-            continue
-        seen.add(tag.casefold())
-        name = NATIVE_NAMES.get(base, base)
-        if counts[base] > 1:
-            parts = _canonical(tag).split("-")
-            suffix = parts[-1].upper() if len(parts) > 1 else ""
-            if suffix:
-                suffix = _REGION_LABELS.get(suffix, suffix)
-                name = f"{name} ({suffix})"
-        options.append({"value": tag, "label": name})
-    return options
+def announcement_language_options(hass: Any) -> list[dict[str, str]]:
+    """All HEM languages; provider capabilities never restrict text choices."""
+    ui_language = announcement_language(hass)
+    return [
+        {"value": "auto", "label": _AUTO_LABELS.get(ui_language, _AUTO_LABELS["en"])},
+        *(dict(option) for option in LANGUAGE_OPTIONS),
+    ]
+
+
+def language_options(hass: Any, entity_id: str | None = None) -> list[dict[str, str]]:
+    """Compatibility API for the shared announcement-language setting."""
+    return announcement_language_options(hass)
 
 
 def preferred_language(hass: Any, entity_id: str | None, saved: str | None) -> str:
-    options = language_options(hass, entity_id)
-    allowed = [item["value"] for item in options]
-    wanted = _canonical(saved or "auto")
-    if wanted == "auto" or wanted in allowed:
-        return wanted
-    base = _supported_base(wanted)
-    compatible = next((value for value in allowed if value != "auto"
-                       and _supported_base(value) == base), None)
-    if compatible:
-        return compatible
-    _, default = provider_languages(hass, entity_id)
-    if default in allowed:
-        return default
-    return "auto"
+    """Show the saved announcement choice without substituting a provider default."""
+    return normalize_announcement_language(saved) or "auto"
 
 
 def supports_language(hass: Any, entity_id: str | None, value: str) -> bool:
-    if value == "auto":
-        return True
-    return value in {item["value"] for item in language_options(hass, entity_id)}
+    """Validate supported announcement languages, including old provider tags."""
+    return normalize_announcement_language(value) is not None
+
+
+def tts_language(hass: Any, entity_id: str | None, selected: str | None = "auto", *,
+                 text_language: str | None = None) -> str:
+    """Use a provider tag for this language, never another language's default.
+
+    Preserve an exact legacy regional selection where possible, then match
+    translated locale meanings. Portuguese variants and Chinese scripts are
+    distinct. If capabilities offer no match, send the resolved language
+    explicitly so the provider can reject it through existing delivery error
+    handling instead of silently speaking with an unrelated default voice.
+    A caller that already built text keeps that locale if HA changes while
+    an AI rewrite or another delivery channel is awaiting a response.
+    """
+    requested = selected
+    if requested is None or str(requested).strip().casefold() == "auto":
+        requested = getattr(getattr(hass, "config", None), "language", "en")
+    wanted = text_language or announcement_language(hass, selected)
+    supported, default = provider_languages(hass, entity_id)
+    exact = next((tag for tag in supported if _canonical(tag) == _canonical(requested)
+                  and normalize_announcement_language(tag) == wanted), None)
+    if exact is not None:
+        return exact
+    # Prefer the provider's base tag to an arbitrary regional variant.
+    exact = next((tag for tag in supported if _canonical(tag) == _canonical(wanted)), None)
+    if exact is not None:
+        return exact
+    # A default regional voice is useful only within the chosen language.
+    compatible_default = next((tag for tag in supported
+                               if _canonical(tag) == _canonical(default)
+                               and normalize_announcement_language(tag) == wanted), None)
+    if compatible_default is not None:
+        return compatible_default
+    return next((tag for tag in supported
+                 if normalize_announcement_language(tag) == wanted), wanted)

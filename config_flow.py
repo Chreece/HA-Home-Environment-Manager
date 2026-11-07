@@ -13,7 +13,7 @@ from homeassistant.config_entries import ConfigFlowResult, OptionsFlowWithReload
 from homeassistant.core import callback
 from homeassistant.helpers import selector
 
-from .languages import SUPPORTED_LANGUAGE_TAGS, resolve_language
+from .languages import SUPPORTED_LANGUAGE_TAGS, normalize_announcement_language
 
 from .ai_rewrite import DEFAULT_AGENT, conversation_agent_choices
 from .hub_delivery import hub_installed
@@ -502,6 +502,7 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
         if user_input is not None:
             selected = dict(self._values)
             selected.update(user_input)
+            language = normalize_announcement_language(selected.get(CONF_LANGUAGE, "auto"))
             hub = hub_present and bool(selected.get(CONF_HUB, False))
             raw_repeat = selected.get(CONF_REPEAT_MINUTES, DEFAULT_REPEAT_MINUTES)
             try:
@@ -512,6 +513,8 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
                     or minutes != int(minutes)
                     or not 0 <= minutes <= MAX_REPEAT_MINUTES):
                 errors = {"base": "invalid_repeat_minutes"}
+            elif language is None:
+                errors = {CONF_LANGUAGE: "invalid_room_source"}
             elif (selected.get(CONF_AUTO_NOTIFY) and not hub
                 and not selected.get(CONF_NOTIFY_TARGETS)
                 and not self.hass.services.has_service("persistent_notification", "create")):
@@ -527,14 +530,15 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
             ):
                 errors = {"base": "invalid_ai_agent"}
             else:
+                previous_language = self._values.get(CONF_LANGUAGE)
                 self._values.update(user_input)
                 if CONF_LANGUAGE in user_input:
-                    # The translated selector keys must be lowercase for
-                    # Hassfest; restore the canonical BCP47 value on save.
-                    locale = str(user_input[CONF_LANGUAGE]).strip()
+                    # An unchanged menu choice retains old provider-region
+                    # spelling so unrelated edits do not change its voice.
                     self._values[CONF_LANGUAGE] = (
-                        "auto" if locale.lower() == "auto"
-                        else resolve_language(locale)
+                        previous_language if language != "auto"
+                        and normalize_announcement_language(previous_language) == language
+                        else language
                     )
                 self._values[CONF_REPEAT_MINUTES] = int(minutes)
                 self._values.setdefault(CONF_HUB, False)
@@ -550,7 +554,8 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
         fields: dict[Any, Any] = {
             _marker(
                 CONF_LANGUAGE,
-                str(self._values.get(CONF_LANGUAGE) or "auto").lower(),
+                (normalize_announcement_language(
+                    self._values.get(CONF_LANGUAGE, "auto")) or "auto").lower(),
                 required=True,
             ):
                 selector.SelectSelector(selector.SelectSelectorConfig(
@@ -600,10 +605,10 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
                 player_options
             )
         if getattr(self, "_menu_mode", False):
-            # Settings now have interactive entities on the Home device.
-            # The delivery page is solely for provider/target selection.
+            # Keep language with announcement provider/target selection;
+            # the remaining settings have Home device controls.
             on_device = {
-                CONF_LANGUAGE, CONF_AUTO_NOTIFY, CONF_AUTO_TTS,
+                CONF_AUTO_NOTIFY, CONF_AUTO_TTS,
                 CONF_REPEAT_MINUTES, CONF_AI_REWRITE, CONF_HUB,
             }
             fields = {

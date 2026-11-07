@@ -68,7 +68,7 @@
         "title": "Anúncios (opcional)",
         "description": "Anúncios (opcional). Notificações automáticas · Avisos de voz automáticos. Announcement Hub.",
         "data": {
-          "language": "Idioma",
+          "language": "Idioma dos anúncios",
           "automatic_tts": "Automático",
           "automatic_notifications": "Automático · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Anúncios (opcional) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Idioma"
         },
         "data_description": {
-          "language": "Idioma: Home Assistant (Predefinido).",
+          "language": "Por predefinição, é usado o idioma do Home Assistant. Pode escolher qualquer idioma de anúncios suportado pelo HEM.",
           "automatic_tts": "Predefinido: ⛔ · Automático · 🪟 90 s.",
           "automatic_notifications": "Predefinido: ⛔ · Automático · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Predefinido: 10 min · 0 = nunca · Enquanto a mesma causa persistir · Divisões.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Limiar de decisão para «Exterior · °C (≥)». Afeta recomendações, não constitui limite médico.",
           "max_outdoor_temp": "Limiar de decisão para «Exterior · °C (≤)». Afeta recomendações, não constitui limite médico.",
           "max_outdoor_humidity": "Limiar de decisão para «Exterior · RH (%) (≤)». Afeta recomendações, não constitui limite médico.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Limiar de decisão para «Indicador de bolor · ≥ 70%». Afeta recomendações, não constitui limite médico."
         }
@@ -191,7 +191,7 @@
           "media_players": "definições · fonte · MEDIA_PLAYERS",
           "tts_engine": "definições · fonte · TTS_ENGINE",
           "ai_conversation_agent": "AI · Selecionar · fonte",
-          "language": "TTS · Selecionar · fonte",
+          "language": "Idioma dos anúncios",
           "use_mold_indicator": "Indicador de bolor · RH (%) → 70%",
           "pollen_entities": "Pólen · fonte · Selecionar",
           "use_announcement_hub": "Anúncios · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Presença em casa · Idade máxima dos dados de localização/contagem (min)",
           "general_home_policy": "Presença em casa",
           "general_wake_alarm_entity": "Sono · Próximo despertador",
-          "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador"
+          "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador",
+          "window_open_timeout_minutes": "Espera pela abertura da janela (min)"
         },
         "data_description": {
           "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "Selecione: media_player.* · definições · fonte · MEDIA_PLAYERS.",
           "tts_engine": "Selecione: tts.* · definições · fonte · TTS_ENGINE.",
           "ai_conversation_agent": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · AI · Selecionar · fonte · conversation.* / ai_task.*.",
-          "language": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · TTS · Selecionar · fonte · provider capabilities.",
+          "language": "Por predefinição, é usado o idioma do Home Assistant. Pode escolher qualquer idioma de anúncios suportado pelo HEM.",
           "use_mold_indicator": "🧱 Indicador de bolor · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Pólen · fonte · Selecionar.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "O limite de idade aplica-se a relatórios de localização e contagens numéricas de pessoas. Listas de divisões e estados binários de presença não expiram sem alterações. Fontes indisponíveis, restauradas ou inválidas continuam desconhecidas. Isto não é uma duração de sono.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Selecione uma entidade de hora ou data e hora para o próximo despertador e uma entidade para os minutos de antecedência. O HEM termina o sono automático com essa antecedência e retoma os objetivos normais. Horas sem data usam o fuso do Home Assistant. Ausência, controlo manual e proteções mantêm a prioridade.",
-          "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 terminam o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes."
+          "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 terminam o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes.",
+          "window_open_timeout_minutes": "Espera após a aceitação de um pedido de arejamento antes de permitir novos arranques automáticos/PID se ainda forem necessários. 0–30 minutos, predefinição 5; 0 desativa a espera. As proteções de janela aberta e os tempos mínimos dos aparelhos mantêm-se."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "Anúncios (opcional)",
         "description": "Anúncios (opcional). Notificações automáticas · Avisos de voz automáticos. Announcement Hub.",
         "data": {
-          "language": "Idioma",
+          "language": "Idioma dos anúncios",
           "automatic_tts": "Automático",
           "automatic_notifications": "Automático · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Anúncios (opcional) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · Idioma"
         },
         "data_description": {
-          "language": "Idioma: Home Assistant (Predefinido).",
+          "language": "Por predefinição, é usado o idioma do Home Assistant. Pode escolher qualquer idioma de anúncios suportado pelo HEM.",
           "automatic_tts": "Predefinido: ⛔ · Automático · 🪟 90 s.",
           "automatic_notifications": "Predefinido: ⛔ · Automático · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Predefinido: 10 min · 0 = nunca · Enquanto a mesma causa persistir · Divisões.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Limiar de decisão para «Exterior · °C (≥)». Afeta recomendações, não constitui limite médico.",
           "max_outdoor_temp": "Limiar de decisão para «Exterior · °C (≤)». Afeta recomendações, não constitui limite médico.",
           "max_outdoor_humidity": "Limiar de decisão para «Exterior · RH (%) (≤)». Afeta recomendações, não constitui limite médico.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Limiar de decisão para «Indicador de bolor · ≥ 70%». Afeta recomendações, não constitui limite médico."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "definições · fonte · MEDIA_PLAYERS",
           "tts_engine": "definições · fonte · TTS_ENGINE",
           "ai_conversation_agent": "AI · Selecionar · fonte",
-          "language": "TTS · Selecionar · fonte",
+          "language": "Idioma dos anúncios",
           "use_mold_indicator": "Indicador de bolor · RH (%) → 70%",
           "pollen_entities": "Pólen · fonte · Selecionar",
           "use_announcement_hub": "Anúncios · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Presença em casa · Idade máxima dos dados de localização/contagem (min)",
           "general_home_policy": "Presença em casa",
           "general_wake_alarm_entity": "Sono · Próximo despertador",
-          "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador"
+          "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador",
+          "window_open_timeout_minutes": "Espera pela abertura da janela (min)"
         },
         "data_description": {
           "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "Selecione: media_player.* · definições · fonte · MEDIA_PLAYERS.",
           "tts_engine": "Selecione: tts.* · definições · fonte · TTS_ENGINE.",
           "ai_conversation_agent": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · AI · Selecionar · fonte · conversation.* / ai_task.*.",
-          "language": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · TTS · Selecionar · fonte · provider capabilities.",
+          "language": "Por predefinição, é usado o idioma do Home Assistant. Pode escolher qualquer idioma de anúncios suportado pelo HEM.",
           "use_mold_indicator": "🧱 Indicador de bolor · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selecione fontes partilhadas e saídas de notificação. Guardar conclui a configuração. Os parâmetros de operação ficam nos dispositivos da casa e das divisões. · Pólen · fonte · Selecionar.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "O limite de idade aplica-se a relatórios de localização e contagens numéricas de pessoas. Listas de divisões e estados binários de presença não expiram sem alterações. Fontes indisponíveis, restauradas ou inválidas continuam desconhecidas. Isto não é uma duração de sono.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Selecione uma entidade de hora ou data e hora para o próximo despertador e uma entidade para os minutos de antecedência. O HEM termina o sono automático com essa antecedência e retoma os objetivos normais. Horas sem data usam o fuso do Home Assistant. Ausência, controlo manual e proteções mantêm a prioridade.",
-          "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 terminam o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes."
+          "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 terminam o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes.",
+          "window_open_timeout_minutes": "Espera após a aceitação de um pedido de arejamento antes de permitir novos arranques automáticos/PID se ainda forem necessários. 0–30 minutos, predefinição 5; 0 desativa a espera. As proteções de janela aberta e os tempos mínimos dos aparelhos mantêm-se."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Poupança de energia",
           "window_open_pause": "Pausa por janela aberta",
           "window_close_warmup": "Espera após fechar as janelas",
-          "window_state_unknown": "A aguardar o estado das janelas"
+          "window_state_unknown": "A aguardar o estado das janelas",
+          "window_open_wait": "À espera que abra a janela",
+          "window_request_pending": "A enviar um pedido para abrir a janela"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "Ajuda"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Ventilação · Espera pela abertura da janela (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajuda"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Predefinido",
+        "auto": "Idioma do Home Assistant (predefinido)",
         "en": "definições · fonte",
         "de": "definições · fonte",
         "el": "definições · fonte",

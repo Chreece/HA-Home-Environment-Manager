@@ -68,7 +68,7 @@
         "title": "Thông báo (tùy chọn)",
         "description": "Thông báo (tùy chọn). Thông báo tự động · Thông báo giọng nói tự động. Announcement Hub.",
         "data": {
-          "language": "Ngôn ngữ",
+          "language": "Ngôn ngữ thông báo",
           "automatic_tts": "Tự động",
           "automatic_notifications": "Tự động · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Thông báo (tùy chọn) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Ngôn ngữ"
         },
         "data_description": {
-          "language": "Ngôn ngữ: Home Assistant (Mặc định).",
+          "language": "Mặc định sử dụng ngôn ngữ Home Assistant. Bạn có thể chọn bất kỳ ngôn ngữ thông báo nào được HEM hỗ trợ.",
           "automatic_tts": "Mặc định: ⛔ · Tự động · 🪟 90 s. Tùy chọn này điều khiển “Tự động”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "automatic_notifications": "Tùy chọn này điều khiển “Tự động · AUTOMATIC_NOTIFICATIONS”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "announcement_repeat_minutes": "Mặc định: 10 min · 0 = không bao giờ · Khi nguyên nhân vẫn còn · Phòng.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Ngưỡng quyết định cho “Ngoài trời · °C (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "max_outdoor_temp": "Ngưỡng quyết định cho “Ngoài trời · °C (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "max_outdoor_humidity": "Ngưỡng quyết định cho “Ngoài trời · RH (%) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Ngưỡng quyết định cho “Chỉ số nấm mốc · ≥ 70%”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế."
         }
@@ -191,7 +191,7 @@
           "media_players": "cài đặt · nguồn · MEDIA_PLAYERS",
           "tts_engine": "cài đặt · nguồn · TTS_ENGINE",
           "ai_conversation_agent": "AI · Chọn · nguồn",
-          "language": "TTS · Chọn · nguồn",
+          "language": "Ngôn ngữ thông báo",
           "use_mold_indicator": "Chỉ số nấm mốc · RH (%) → 70%",
           "pollen_entities": "Phấn hoa · nguồn · Chọn",
           "use_announcement_hub": "Thông báo · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Có mặt ở nhà · Tuổi tối đa của dữ liệu theo dõi/số người (phút)",
           "general_home_policy": "Có mặt ở nhà",
           "general_wake_alarm_entity": "Ngủ · Báo thức tiếp theo",
-          "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức"
+          "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức",
+          "window_open_timeout_minutes": "Thời gian chờ mở cửa sổ (phút)"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "Chọn: media_player.* · cài đặt · nguồn · MEDIA_PLAYERS.",
           "tts_engine": "Chọn: tts.* · cài đặt · nguồn · TTS_ENGINE.",
           "ai_conversation_agent": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · AI · Chọn · nguồn · conversation.* / ai_task.*.",
-          "language": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · TTS · Chọn · nguồn · provider capabilities.",
+          "language": "Mặc định sử dụng ngôn ngữ Home Assistant. Bạn có thể chọn bất kỳ ngôn ngữ thông báo nào được HEM hỗ trợ.",
           "use_mold_indicator": "🧱 Chỉ số nấm mốc · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Phấn hoa · nguồn · Chọn.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "Giới hạn tuổi áp dụng cho báo cáo theo dõi và dữ liệu đếm người dạng số. Danh sách phòng và trạng thái hiện diện nhị phân không hết hạn khi không đổi. Nguồn không khả dụng, được khôi phục hoặc không hợp lệ vẫn là chưa rõ. Đây không phải thời lượng ngủ.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Chọn thực thể giờ hoặc ngày giờ của báo thức tiếp theo và thực thể số phút sớm hơn. HEM kết thúc chế độ ngủ tự động sớm hơn số phút đó để tiếp tục các mục tiêu thông thường. Giờ không có ngày dùng múi giờ Home Assistant. Vắng nhà, điều khiển thủ công và bảo vệ thiết bị vẫn được ưu tiên.",
-          "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn."
+          "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn.",
+          "window_open_timeout_minutes": "Chờ sau khi yêu cầu thông gió được chấp nhận trước khi cho phép khởi động tự động/PID mới nếu vẫn cần. 0–30 phút, mặc định 5; 0 tắt thời gian chờ. Bảo vệ khi cửa sổ mở và thời gian tối thiểu của thiết bị vẫn áp dụng."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "Thông báo (tùy chọn)",
         "description": "Thông báo (tùy chọn). Thông báo tự động · Thông báo giọng nói tự động. Announcement Hub.",
         "data": {
-          "language": "Ngôn ngữ",
+          "language": "Ngôn ngữ thông báo",
           "automatic_tts": "Tự động",
           "automatic_notifications": "Tự động · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Thông báo (tùy chọn) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · Ngôn ngữ"
         },
         "data_description": {
-          "language": "Ngôn ngữ: Home Assistant (Mặc định).",
+          "language": "Mặc định sử dụng ngôn ngữ Home Assistant. Bạn có thể chọn bất kỳ ngôn ngữ thông báo nào được HEM hỗ trợ.",
           "automatic_tts": "Mặc định: ⛔ · Tự động · 🪟 90 s. Tùy chọn này điều khiển “Tự động”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "automatic_notifications": "Tùy chọn này điều khiển “Tự động · AUTOMATIC_NOTIFICATIONS”. Lệnh vật lý cần đồng ý riêng và bảo vệ độc lập.",
           "announcement_repeat_minutes": "Mặc định: 10 min · 0 = không bao giờ · Khi nguyên nhân vẫn còn · Phòng.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Ngưỡng quyết định cho “Ngoài trời · °C (≥)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "max_outdoor_temp": "Ngưỡng quyết định cho “Ngoài trời · °C (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "max_outdoor_humidity": "Ngưỡng quyết định cho “Ngoài trời · RH (%) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Ngưỡng quyết định cho “Chỉ số nấm mốc · ≥ 70%”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "cài đặt · nguồn · MEDIA_PLAYERS",
           "tts_engine": "cài đặt · nguồn · TTS_ENGINE",
           "ai_conversation_agent": "AI · Chọn · nguồn",
-          "language": "TTS · Chọn · nguồn",
+          "language": "Ngôn ngữ thông báo",
           "use_mold_indicator": "Chỉ số nấm mốc · RH (%) → 70%",
           "pollen_entities": "Phấn hoa · nguồn · Chọn",
           "use_announcement_hub": "Thông báo · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Có mặt ở nhà · Tuổi tối đa của dữ liệu theo dõi/số người (phút)",
           "general_home_policy": "Có mặt ở nhà",
           "general_wake_alarm_entity": "Ngủ · Báo thức tiếp theo",
-          "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức"
+          "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức",
+          "window_open_timeout_minutes": "Thời gian chờ mở cửa sổ (phút)"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "Chọn: media_player.* · cài đặt · nguồn · MEDIA_PLAYERS.",
           "tts_engine": "Chọn: tts.* · cài đặt · nguồn · TTS_ENGINE.",
           "ai_conversation_agent": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · AI · Chọn · nguồn · conversation.* / ai_task.*.",
-          "language": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · TTS · Chọn · nguồn · provider capabilities.",
+          "language": "Mặc định sử dụng ngôn ngữ Home Assistant. Bạn có thể chọn bất kỳ ngôn ngữ thông báo nào được HEM hỗ trợ.",
           "use_mold_indicator": "🧱 Chỉ số nấm mốc · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Chọn nguồn chung và đầu ra thông báo. Lưu hoàn tất thiết lập. Cài đặt vận hành nằm trên thiết bị của nhà và phòng. · Phấn hoa · nguồn · Chọn.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "Giới hạn tuổi áp dụng cho báo cáo theo dõi và dữ liệu đếm người dạng số. Danh sách phòng và trạng thái hiện diện nhị phân không hết hạn khi không đổi. Nguồn không khả dụng, được khôi phục hoặc không hợp lệ vẫn là chưa rõ. Đây không phải thời lượng ngủ.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Chọn thực thể giờ hoặc ngày giờ của báo thức tiếp theo và thực thể số phút sớm hơn. HEM kết thúc chế độ ngủ tự động sớm hơn số phút đó để tiếp tục các mục tiêu thông thường. Giờ không có ngày dùng múi giờ Home Assistant. Vắng nhà, điều khiển thủ công và bảo vệ thiết bị vẫn được ưu tiên.",
-          "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn."
+          "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn.",
+          "window_open_timeout_minutes": "Chờ sau khi yêu cầu thông gió được chấp nhận trước khi cho phép khởi động tự động/PID mới nếu vẫn cần. 0–30 phút, mặc định 5; 0 tắt thời gian chờ. Bảo vệ khi cửa sổ mở và thời gian tối thiểu của thiết bị vẫn áp dụng."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Tiết kiệm năng lượng",
           "window_open_pause": "Tạm dừng vì cửa sổ mở",
           "window_close_warmup": "Chờ sau khi đóng cửa sổ",
-          "window_state_unknown": "Đang chờ trạng thái cửa sổ"
+          "window_state_unknown": "Đang chờ trạng thái cửa sổ",
+          "window_open_wait": "Đang chờ bạn mở cửa sổ",
+          "window_request_pending": "Đang gửi yêu cầu mở cửa sổ"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "Trợ giúp"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Thông gió · Thời gian chờ mở cửa sổ (phút)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Trợ giúp"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Mặc định",
+        "auto": "Ngôn ngữ Home Assistant (mặc định)",
         "en": "cài đặt · nguồn",
         "de": "cài đặt · nguồn",
         "el": "cài đặt · nguồn",

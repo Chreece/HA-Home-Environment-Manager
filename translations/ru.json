@@ -68,7 +68,7 @@
         "title": "Оповещения (необязательно)",
         "description": "Оповещения (необязательно). Автоматические уведомления · Автоматические голосовые оповещения. Announcement Hub.",
         "data": {
-          "language": "Язык",
+          "language": "Язык объявлений",
           "automatic_tts": "Автоматическое",
           "automatic_notifications": "Автоматическое · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Оповещения (необязательно) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Язык"
         },
         "data_description": {
-          "language": "Язык: Home Assistant (По умолчанию).",
+          "language": "По умолчанию используется язык Home Assistant. Можно выбрать любой язык объявлений, поддерживаемый HEM.",
           "automatic_tts": "По умолчанию: ⛔ · Автоматическое · 🪟 90 s.",
           "automatic_notifications": "По умолчанию: ⛔ · Автоматическое · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "По умолчанию: 10 min · 0 = никогда · Пока сохраняется та же причина · Комнаты.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Порог решения для «Снаружи · °C (≥)». Влияет на рекомендации, но не является медицинской нормой.",
           "max_outdoor_temp": "Порог решения для «Снаружи · °C (≤)». Влияет на рекомендации, но не является медицинской нормой.",
           "max_outdoor_humidity": "Порог решения для «Снаружи · RH (%) (≤)». Влияет на рекомендации, но не является медицинской нормой.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Порог решения для «Индикатор плесени · ≥ 70%». Влияет на рекомендации, но не является медицинской нормой."
         }
@@ -191,7 +191,7 @@
           "media_players": "настройки · источник · MEDIA_PLAYERS",
           "tts_engine": "настройки · источник · TTS_ENGINE",
           "ai_conversation_agent": "AI · Выбрать · источник",
-          "language": "TTS · Выбрать · источник",
+          "language": "Язык объявлений",
           "use_mold_indicator": "Индикатор плесени · RH (%) → 70%",
           "pollen_entities": "Пыльца · источник · Выбрать",
           "use_announcement_hub": "Объявления · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Присутствие дома · Максимальный возраст данных трекеров/счётчиков (мин)",
           "general_home_policy": "Присутствие дома",
           "general_wake_alarm_entity": "Сон · Следующий будильник",
-          "general_wake_lead_minutes_entity": "Сон · Минуты до будильника"
+          "general_wake_lead_minutes_entity": "Сон · Минуты до будильника",
+          "window_open_timeout_minutes": "Ожидание открытия окна (мин)"
         },
         "data_description": {
           "weather_entities": "Выберите: Погода и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "Выберите: media_player.* · настройки · источник · MEDIA_PLAYERS.",
           "tts_engine": "Выберите: tts.* · настройки · источник · TTS_ENGINE.",
           "ai_conversation_agent": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · AI · Выбрать · источник · conversation.* / ai_task.*.",
-          "language": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · TTS · Выбрать · источник · provider capabilities.",
+          "language": "По умолчанию используется язык Home Assistant. Можно выбрать любой язык объявлений, поддерживаемый HEM.",
           "use_mold_indicator": "🧱 Индикатор плесени · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · Пыльца · источник · Выбрать.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "Ограничение возраста относится к отчётам трекеров и числовым счётчикам людей. Списки комнат и бинарные состояния присутствия не устаревают, пока не меняются. Недоступные, восстановленные или некорректные источники остаются неизвестными. Это не длительность сна.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Выберите сущность времени или даты и времени следующего будильника, а также сущность минут упреждения. HEM завершит автоматический сон на это число минут раньше и вернётся к обычным целям. Время без даты использует часовой пояс Home Assistant. Отсутствие, ручное управление и защиты сохраняют приоритет.",
-          "general_wake_lead_minutes_entity": "Выберите числовую сущность с неотрицательным количеством минут, с единицей min или без единицы. Будильник на 07:00 и значение 30 завершают автоматический сон в 06:30; 0 означает момент звонка. Для отключения очистите оба источника."
+          "general_wake_lead_minutes_entity": "Выберите числовую сущность с неотрицательным количеством минут, с единицей min или без единицы. Будильник на 07:00 и значение 30 завершают автоматический сон в 06:30; 0 означает момент звонка. Для отключения очистите оба источника.",
+          "window_open_timeout_minutes": "Ожидание после принятия запроса на проветривание перед новыми автоматическими/PID-запусками при сохраняющейся необходимости. 0–30 минут, по умолчанию 5; 0 отключает ожидание. Защита при открытом окне и минимальные интервалы работы устройств сохраняются."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "Оповещения (необязательно)",
         "description": "Оповещения (необязательно). Автоматические уведомления · Автоматические голосовые оповещения. Announcement Hub.",
         "data": {
-          "language": "Язык",
+          "language": "Язык объявлений",
           "automatic_tts": "Автоматическое",
           "automatic_notifications": "Автоматическое · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Оповещения (необязательно) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · Язык"
         },
         "data_description": {
-          "language": "Язык: Home Assistant (По умолчанию).",
+          "language": "По умолчанию используется язык Home Assistant. Можно выбрать любой язык объявлений, поддерживаемый HEM.",
           "automatic_tts": "По умолчанию: ⛔ · Автоматическое · 🪟 90 s.",
           "automatic_notifications": "По умолчанию: ⛔ · Автоматическое · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "По умолчанию: 10 min · 0 = никогда · Пока сохраняется та же причина · Комнаты.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Порог решения для «Снаружи · °C (≥)». Влияет на рекомендации, но не является медицинской нормой.",
           "max_outdoor_temp": "Порог решения для «Снаружи · °C (≤)». Влияет на рекомендации, но не является медицинской нормой.",
           "max_outdoor_humidity": "Порог решения для «Снаружи · RH (%) (≤)». Влияет на рекомендации, но не является медицинской нормой.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Порог решения для «Индикатор плесени · ≥ 70%». Влияет на рекомендации, но не является медицинской нормой."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "настройки · источник · MEDIA_PLAYERS",
           "tts_engine": "настройки · источник · TTS_ENGINE",
           "ai_conversation_agent": "AI · Выбрать · источник",
-          "language": "TTS · Выбрать · источник",
+          "language": "Язык объявлений",
           "use_mold_indicator": "Индикатор плесени · RH (%) → 70%",
           "pollen_entities": "Пыльца · источник · Выбрать",
           "use_announcement_hub": "Объявления · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Присутствие дома · Максимальный возраст данных трекеров/счётчиков (мин)",
           "general_home_policy": "Присутствие дома",
           "general_wake_alarm_entity": "Сон · Следующий будильник",
-          "general_wake_lead_minutes_entity": "Сон · Минуты до будильника"
+          "general_wake_lead_minutes_entity": "Сон · Минуты до будильника",
+          "window_open_timeout_minutes": "Ожидание открытия окна (мин)"
         },
         "data_description": {
           "weather_entities": "Выберите: Погода и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "Выберите: media_player.* · настройки · источник · MEDIA_PLAYERS.",
           "tts_engine": "Выберите: tts.* · настройки · источник · TTS_ENGINE.",
           "ai_conversation_agent": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · AI · Выбрать · источник · conversation.* / ai_task.*.",
-          "language": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · TTS · Выбрать · источник · provider capabilities.",
+          "language": "По умолчанию используется язык Home Assistant. Можно выбрать любой язык объявлений, поддерживаемый HEM.",
           "use_mold_indicator": "🧱 Индикатор плесени · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Выберите общие источники и выходы уведомлений. Сохранение завершает настройку. Рабочие параметры остаются на устройствах дома и комнат. · Пыльца · источник · Выбрать.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "Ограничение возраста относится к отчётам трекеров и числовым счётчикам людей. Списки комнат и бинарные состояния присутствия не устаревают, пока не меняются. Недоступные, восстановленные или некорректные источники остаются неизвестными. Это не длительность сна.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Выберите сущность времени или даты и времени следующего будильника, а также сущность минут упреждения. HEM завершит автоматический сон на это число минут раньше и вернётся к обычным целям. Время без даты использует часовой пояс Home Assistant. Отсутствие, ручное управление и защиты сохраняют приоритет.",
-          "general_wake_lead_minutes_entity": "Выберите числовую сущность с неотрицательным количеством минут, с единицей min или без единицы. Будильник на 07:00 и значение 30 завершают автоматический сон в 06:30; 0 означает момент звонка. Для отключения очистите оба источника."
+          "general_wake_lead_minutes_entity": "Выберите числовую сущность с неотрицательным количеством минут, с единицей min или без единицы. Будильник на 07:00 и значение 30 завершают автоматический сон в 06:30; 0 означает момент звонка. Для отключения очистите оба источника.",
+          "window_open_timeout_minutes": "Ожидание после принятия запроса на проветривание перед новыми автоматическими/PID-запусками при сохраняющейся необходимости. 0–30 минут, по умолчанию 5; 0 отключает ожидание. Защита при открытом окне и минимальные интервалы работы устройств сохраняются."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Энергосбережение",
           "window_open_pause": "Пауза из-за открытого окна",
           "window_close_warmup": "Ожидание после закрытия окон",
-          "window_state_unknown": "Ожидание состояния окон"
+          "window_state_unknown": "Ожидание состояния окон",
+          "window_open_wait": "Ожидание, пока вы откроете окно",
+          "window_request_pending": "Отправка просьбы открыть окно"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "Справка"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Проветривание · Ожидание открытия окна (мин)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Справка"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - По умолчанию",
+        "auto": "Язык Home Assistant (по умолчанию)",
         "en": "настройки · источник",
         "de": "настройки · источник",
         "el": "настройки · источник",

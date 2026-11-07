@@ -19,6 +19,7 @@ from .const import (
     CONF_MEDIA_PLAYERS, CONF_HUB, CONF_AI_REWRITE, CONF_SHADE_ANNOUNCE, CONF_AWAY_WINDOWS_ALERT,
     CONF_AI_AGENT, CONF_REPEAT_MINUTES,
     DEFAULT_THRESHOLDS, MAX_REPEAT_MINUTES,
+    CONF_WINDOW_OPEN_TIMEOUT_MINUTES, MAX_WINDOW_OPEN_TIMEOUT_MINUTES,
 )
 from .pid_math import DEFAULT_PID, validate_settings
 from .climate_strategy import DEFAULT_PROFILE_TARGETS, profile_humidity_target, profiles
@@ -784,6 +785,11 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                 if not number.is_integer():
                     raise HomeAssistantError("Announcement interval must be whole minutes")
                 options[key] = int(number)
+            elif key == CONF_WINDOW_OPEN_TIMEOUT_MINUTES:
+                number = _finite(value, (0.0, float(MAX_WINDOW_OPEN_TIMEOUT_MINUTES)))
+                if not number.is_integer():
+                    raise HomeAssistantError("Window opening timeout must be whole minutes")
+                options[key] = int(number)
             elif key in (CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE,
                               CONF_SHADE_ANNOUNCE, CONF_AWAY_WINDOWS_ALERT):
                 if type(value) is not bool:
@@ -833,12 +839,11 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                         )
                 options[key] = value
             elif key == "language":
-                from .tts_languages import supports_language
-                if not isinstance(value, str) or not supports_language(
-                    manager.hass, current.get(CONF_TTS_ENGINE), value
-                ):
-                    raise HomeAssistantError("Unsupported TTS/output language")
-                options[key] = value
+                from .languages import normalize_announcement_language
+                language = normalize_announcement_language(value)
+                if language is None:
+                    raise HomeAssistantError("Unsupported announcement language")
+                options[key] = language
             else:
                 raise HomeAssistantError("Unsupported home setting")
 

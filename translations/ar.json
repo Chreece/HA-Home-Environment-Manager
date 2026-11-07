@@ -68,7 +68,7 @@
         "title": "الإعلانات (اختياري)",
         "description": "الإعلانات (اختياري). إشعارات تلقائية · إعلانات صوتية تلقائية. Announcement Hub.",
         "data": {
-          "language": "اللغة",
+          "language": "لغة الإعلانات",
           "automatic_tts": "تلقائي",
           "automatic_notifications": "تلقائي · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "الإعلانات (اختياري) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · اللغة"
         },
         "data_description": {
-          "language": "اضبط «اللغة» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
+          "language": "تُستخدم لغة Home Assistant افتراضيًا. يمكنك اختيار أي لغة إعلانات يدعمها HEM.",
           "automatic_tts": "افتراضي: ⛔ · تلقائي · 🪟 90 s. يتحكم هذا الخيار في «تلقائي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "automatic_notifications": "يتحكم هذا الخيار في «تلقائي · AUTOMATIC_NOTIFICATIONS». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "announcement_repeat_minutes": "افتراضي: 10 min · 0 = أبدًا · ما دام السبب نفسه مستمرًا · الغرف.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "هذه عتبة القرار لـ «الخارج · °C (≥)». تؤثر في التوصيات وليست حدًا طبيًا.",
           "max_outdoor_temp": "هذه عتبة القرار لـ «الخارج · °C (≤)». تؤثر في التوصيات وليست حدًا طبيًا.",
           "max_outdoor_humidity": "هذه عتبة القرار لـ «الخارج · RH (%) (≤)». تؤثر في التوصيات وليست حدًا طبيًا.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "هذه عتبة القرار لـ «مؤشر العفن · ≥ 70%». تؤثر في التوصيات وليست حدًا طبيًا."
         }
@@ -191,7 +191,7 @@
           "media_players": "الإعدادات · المصدر · MEDIA_PLAYERS",
           "tts_engine": "الإعدادات · المصدر · TTS_ENGINE",
           "ai_conversation_agent": "AI · اختيار · المصدر",
-          "language": "TTS · اختيار · المصدر",
+          "language": "لغة الإعلانات",
           "use_mold_indicator": "مؤشر العفن · RH (%) → 70%",
           "pollen_entities": "حبوب اللقاح · المصدر · اختيار",
           "use_announcement_hub": "الإعلانات · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "التواجد في المنزل · أقصى عمر لقراءة المتتبّع أو عدد الأشخاص (دقيقة)",
           "general_home_policy": "التواجد في المنزل",
           "general_wake_alarm_entity": "النوم · المنبّه التالي",
-          "general_wake_lead_minutes_entity": "النوم · الدقائق قبل المنبّه"
+          "general_wake_lead_minutes_entity": "النوم · الدقائق قبل المنبّه",
+          "window_open_timeout_minutes": "مهلة انتظار فتح النافذة (دقيقة)"
         },
         "data_description": {
           "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "اختر: media_player.* · الإعدادات · المصدر · MEDIA_PLAYERS.",
           "tts_engine": "اختر: tts.* · الإعدادات · المصدر · TTS_ENGINE.",
           "ai_conversation_agent": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · AI · اختيار · المصدر · conversation.* / ai_task.*.",
-          "language": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · TTS · اختيار · المصدر · provider capabilities.",
+          "language": "تُستخدم لغة Home Assistant افتراضيًا. يمكنك اختيار أي لغة إعلانات يدعمها HEM.",
           "use_mold_indicator": "🧱 مؤشر العفن · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · حبوب اللقاح · المصدر · اختيار.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "حد عمر التقارير يخص المتتبّعات وعدادات الأشخاص الرقمية. قوائم الغرف وحالات حضور الغرفة الثنائية لا تنتهي صلاحيتها ما دامت لم تتغير. المصادر غير المتاحة أو المستعادة أو غير الصالحة تبقى مجهولة. هذه ليست مدة النوم.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "اختر كيان وقت أو طابع زمني للمنبّه التالي، واختر أيضًا كيان الدقائق. ينهي HEM وضع النوم التلقائي قبل المنبّه بالمدة المحددة لاستئناف الأهداف العادية. الوقت دون تاريخ يستخدم المنطقة الزمنية في Home Assistant. تبقى أولوية الغياب والتحكم اليدوي وحماية الأجهزة سارية.",
-          "general_wake_lead_minutes_entity": "اختر كيانًا رقميًا بقيمة غير سالبة بالدقائق، بوحدة min أو دون وحدة. منبّه 07:00 مع قيمة 30 ينهي النوم التلقائي عند 06:30؛ القيمة 0 تعني وقت الرنين. لتعطيل الميزة، امسح المصدرين."
+          "general_wake_lead_minutes_entity": "اختر كيانًا رقميًا بقيمة غير سالبة بالدقائق، بوحدة min أو دون وحدة. منبّه 07:00 مع قيمة 30 ينهي النوم التلقائي عند 06:30؛ القيمة 0 تعني وقت الرنين. لتعطيل الميزة، امسح المصدرين.",
+          "window_open_timeout_minutes": "انتظار بعد قبول طلب التهوية قبل السماح بعمليات تشغيل تلقائي/PID جديدة إذا ظلت مطلوبة. من 0 إلى 30 دقيقة، والافتراضي 5؛ القيمة 0 تلغي الانتظار. تظل حماية النافذة المفتوحة والحدود الزمنية الدنيا للأجهزة سارية."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "الإعلانات (اختياري)",
         "description": "الإعلانات (اختياري). إشعارات تلقائية · إعلانات صوتية تلقائية. Announcement Hub.",
         "data": {
-          "language": "اللغة",
+          "language": "لغة الإعلانات",
           "automatic_tts": "تلقائي",
           "automatic_notifications": "تلقائي · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "الإعلانات (اختياري) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · اللغة"
         },
         "data_description": {
-          "language": "اضبط «اللغة» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء.",
+          "language": "تُستخدم لغة Home Assistant افتراضيًا. يمكنك اختيار أي لغة إعلانات يدعمها HEM.",
           "automatic_tts": "افتراضي: ⛔ · تلقائي · 🪟 90 s. يتحكم هذا الخيار في «تلقائي». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "automatic_notifications": "يتحكم هذا الخيار في «تلقائي · AUTOMATIC_NOTIFICATIONS». أوامر الأجهزة تتطلب موافقة مستقلة ووسائل حماية.",
           "announcement_repeat_minutes": "افتراضي: 10 min · 0 = أبدًا · ما دام السبب نفسه مستمرًا · الغرف.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "هذه عتبة القرار لـ «الخارج · °C (≥)». تؤثر في التوصيات وليست حدًا طبيًا.",
           "max_outdoor_temp": "هذه عتبة القرار لـ «الخارج · °C (≤)». تؤثر في التوصيات وليست حدًا طبيًا.",
           "max_outdoor_humidity": "هذه عتبة القرار لـ «الخارج · RH (%) (≤)». تؤثر في التوصيات وليست حدًا طبيًا.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "هذه عتبة القرار لـ «مؤشر العفن · ≥ 70%». تؤثر في التوصيات وليست حدًا طبيًا."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "الإعدادات · المصدر · MEDIA_PLAYERS",
           "tts_engine": "الإعدادات · المصدر · TTS_ENGINE",
           "ai_conversation_agent": "AI · اختيار · المصدر",
-          "language": "TTS · اختيار · المصدر",
+          "language": "لغة الإعلانات",
           "use_mold_indicator": "مؤشر العفن · RH (%) → 70%",
           "pollen_entities": "حبوب اللقاح · المصدر · اختيار",
           "use_announcement_hub": "الإعلانات · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "التواجد في المنزل · أقصى عمر لقراءة المتتبّع أو عدد الأشخاص (دقيقة)",
           "general_home_policy": "التواجد في المنزل",
           "general_wake_alarm_entity": "النوم · المنبّه التالي",
-          "general_wake_lead_minutes_entity": "النوم · الدقائق قبل المنبّه"
+          "general_wake_lead_minutes_entity": "النوم · الدقائق قبل المنبّه",
+          "window_open_timeout_minutes": "مهلة انتظار فتح النافذة (دقيقة)"
         },
         "data_description": {
           "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "اختر: media_player.* · الإعدادات · المصدر · MEDIA_PLAYERS.",
           "tts_engine": "اختر: tts.* · الإعدادات · المصدر · TTS_ENGINE.",
           "ai_conversation_agent": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · AI · اختيار · المصدر · conversation.* / ai_task.*.",
-          "language": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · TTS · اختيار · المصدر · provider capabilities.",
+          "language": "تُستخدم لغة Home Assistant افتراضيًا. يمكنك اختيار أي لغة إعلانات يدعمها HEM.",
           "use_mold_indicator": "🧱 مؤشر العفن · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "اختر المصادر المشتركة ومخرجات الإشعارات. الحفظ ينهي الإعداد. تبقى إعدادات التشغيل على أجهزة المنزل والغرف. · حبوب اللقاح · المصدر · اختيار.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "حد عمر التقارير يخص المتتبّعات وعدادات الأشخاص الرقمية. قوائم الغرف وحالات حضور الغرفة الثنائية لا تنتهي صلاحيتها ما دامت لم تتغير. المصادر غير المتاحة أو المستعادة أو غير الصالحة تبقى مجهولة. هذه ليست مدة النوم.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "اختر كيان وقت أو طابع زمني للمنبّه التالي، واختر أيضًا كيان الدقائق. ينهي HEM وضع النوم التلقائي قبل المنبّه بالمدة المحددة لاستئناف الأهداف العادية. الوقت دون تاريخ يستخدم المنطقة الزمنية في Home Assistant. تبقى أولوية الغياب والتحكم اليدوي وحماية الأجهزة سارية.",
-          "general_wake_lead_minutes_entity": "اختر كيانًا رقميًا بقيمة غير سالبة بالدقائق، بوحدة min أو دون وحدة. منبّه 07:00 مع قيمة 30 ينهي النوم التلقائي عند 06:30؛ القيمة 0 تعني وقت الرنين. لتعطيل الميزة، امسح المصدرين."
+          "general_wake_lead_minutes_entity": "اختر كيانًا رقميًا بقيمة غير سالبة بالدقائق، بوحدة min أو دون وحدة. منبّه 07:00 مع قيمة 30 ينهي النوم التلقائي عند 06:30؛ القيمة 0 تعني وقت الرنين. لتعطيل الميزة، امسح المصدرين.",
+          "window_open_timeout_minutes": "انتظار بعد قبول طلب التهوية قبل السماح بعمليات تشغيل تلقائي/PID جديدة إذا ظلت مطلوبة. من 0 إلى 30 دقيقة، والافتراضي 5؛ القيمة 0 تلغي الانتظار. تظل حماية النافذة المفتوحة والحدود الزمنية الدنيا للأجهزة سارية."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "توفير الطاقة",
           "window_open_pause": "متوقف مؤقتًا بسبب نافذة مفتوحة",
           "window_close_warmup": "انتظار بعد إغلاق النوافذ",
-          "window_state_unknown": "انتظار حالة النوافذ"
+          "window_state_unknown": "انتظار حالة النوافذ",
+          "window_open_wait": "بانتظار أن تفتح النافذة",
+          "window_request_pending": "جارٍ إرسال طلب لفتح النافذة"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "مساعدة"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "التهوية · مهلة انتظار فتح النافذة (دقيقة)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - افتراضي",
+        "auto": "لغة Home Assistant (الافتراضية)",
         "en": "الإعدادات · المصدر",
         "de": "الإعدادات · المصدر",
         "el": "الإعدادات · المصدر",

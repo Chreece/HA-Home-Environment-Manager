@@ -68,7 +68,7 @@
         "title": "Meddelanden (valfritt)",
         "description": "Meddelanden (valfritt). Automatiska aviseringar · Automatiska röstmeddelanden. Announcement Hub.",
         "data": {
-          "language": "Språk",
+          "language": "Språk för meddelanden",
           "automatic_tts": "Automatisk",
           "automatic_notifications": "Automatisk · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Meddelanden (valfritt) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Språk"
         },
         "data_description": {
-          "language": "Ställ in ”Språk” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
+          "language": "Som standard används språket i Home Assistant. Du kan välja valfritt meddelandespråk som HEM stöder.",
           "automatic_tts": "Standard: ⛔ · Automatisk · 🪟 90 s. Detta alternativ styr ”Automatisk”. Fysiska kommandon kräver separat godkännande och skydd.",
           "automatic_notifications": "Standard: ⛔ · Automatisk · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Standard: 10 min · 0 = aldrig · Så länge samma orsak kvarstår · Rum.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Beslutströskel för ”Utomhus · °C (≥)”. Den styr råd, men är ingen medicinsk gräns.",
           "max_outdoor_temp": "Beslutströskel för ”Utomhus · °C (≤)”. Den styr råd, men är ingen medicinsk gräns.",
           "max_outdoor_humidity": "Beslutströskel för ”Utomhus · RH (%) (≤)”. Den styr råd, men är ingen medicinsk gräns.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Beslutströskel för ”Mögelindikator · ≥ 70%”. Den styr råd, men är ingen medicinsk gräns."
         }
@@ -191,7 +191,7 @@
           "media_players": "inställningar · källa · MEDIA_PLAYERS",
           "tts_engine": "inställningar · källa · TTS_ENGINE",
           "ai_conversation_agent": "AI · Välj · källa",
-          "language": "TTS · Välj · källa",
+          "language": "Språk för meddelanden",
           "use_mold_indicator": "Mögelindikator · RH (%) → 70%",
           "pollen_entities": "Pollen · källa · Välj",
           "use_announcement_hub": "Meddelanden · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Närvaro hemma · Högsta ålder på spårnings-/personantalsdata (min)",
           "general_home_policy": "Närvaro hemma",
           "general_wake_alarm_entity": "Sömn · Nästa alarm",
-          "general_wake_lead_minutes_entity": "Sömn · Minuter före alarmet"
+          "general_wake_lead_minutes_entity": "Sömn · Minuter före alarmet",
+          "window_open_timeout_minutes": "Väntetid för fönsteröppning (min)"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "Välj: media_player.* · inställningar · källa · MEDIA_PLAYERS.",
           "tts_engine": "Välj: tts.* · inställningar · källa · TTS_ENGINE.",
           "ai_conversation_agent": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · AI · Välj · källa · conversation.* / ai_task.*.",
-          "language": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · TTS · Välj · källa · provider capabilities.",
+          "language": "Som standard används språket i Home Assistant. Du kan välja valfritt meddelandespråk som HEM stöder.",
           "use_mold_indicator": "🧱 Mögelindikator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Pollen · källa · Välj.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "Åldersgränsen gäller spårningsrapporter och numeriska personantal. Rumslistor och binära närvarotillstånd går inte ut när de är oförändrade. Otillgängliga, återställda eller ogiltiga källor är okända. Detta är inte sömnens längd.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Välj en tids- eller tidsstämpelentitet för nästa alarm och en entitet för minuterna. HEM avslutar automatisk sömn så många minuter före alarmet och återgår till normala mål. Klockslag utan datum använder Home Assistants tidszon. Frånvaro, manuell styrning och enhetsskydd har fortsatt företräde.",
-          "general_wake_lead_minutes_entity": "Välj en numerisk entitet med ett icke-negativt antal minuter, med enheten min eller utan enhet. Alarm 07:00 och värdet 30 avslutar automatisk sömn 06:30; 0 betyder när alarmet ringer. Rensa båda källorna för att inaktivera."
+          "general_wake_lead_minutes_entity": "Välj en numerisk entitet med ett icke-negativt antal minuter, med enheten min eller utan enhet. Alarm 07:00 och värdet 30 avslutar automatisk sömn 06:30; 0 betyder när alarmet ringer. Rensa båda källorna för att inaktivera.",
+          "window_open_timeout_minutes": "Väntan efter att en vädringsbegäran har accepterats innan nya automatiska/PID-starter tillåts vid kvarstående behov. 0–30 minuter, standard 5; 0 stänger av väntan. Skydd för öppna fönster och apparaternas minimitider gäller fortfarande."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "Meddelanden (valfritt)",
         "description": "Meddelanden (valfritt). Automatiska aviseringar · Automatiska röstmeddelanden. Announcement Hub.",
         "data": {
-          "language": "Språk",
+          "language": "Språk för meddelanden",
           "automatic_tts": "Automatisk",
           "automatic_notifications": "Automatisk · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Meddelanden (valfritt) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · Språk"
         },
         "data_description": {
-          "language": "Ställ in ”Språk” endast för valt rum. Ogiltiga värden stoppar åtgärden.",
+          "language": "Som standard används språket i Home Assistant. Du kan välja valfritt meddelandespråk som HEM stöder.",
           "automatic_tts": "Standard: ⛔ · Automatisk · 🪟 90 s. Detta alternativ styr ”Automatisk”. Fysiska kommandon kräver separat godkännande och skydd.",
           "automatic_notifications": "Standard: ⛔ · Automatisk · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Standard: 10 min · 0 = aldrig · Så länge samma orsak kvarstår · Rum.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Beslutströskel för ”Utomhus · °C (≥)”. Den styr råd, men är ingen medicinsk gräns.",
           "max_outdoor_temp": "Beslutströskel för ”Utomhus · °C (≤)”. Den styr råd, men är ingen medicinsk gräns.",
           "max_outdoor_humidity": "Beslutströskel för ”Utomhus · RH (%) (≤)”. Den styr råd, men är ingen medicinsk gräns.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Beslutströskel för ”Mögelindikator · ≥ 70%”. Den styr råd, men är ingen medicinsk gräns."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "inställningar · källa · MEDIA_PLAYERS",
           "tts_engine": "inställningar · källa · TTS_ENGINE",
           "ai_conversation_agent": "AI · Välj · källa",
-          "language": "TTS · Välj · källa",
+          "language": "Språk för meddelanden",
           "use_mold_indicator": "Mögelindikator · RH (%) → 70%",
           "pollen_entities": "Pollen · källa · Välj",
           "use_announcement_hub": "Meddelanden · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Närvaro hemma · Högsta ålder på spårnings-/personantalsdata (min)",
           "general_home_policy": "Närvaro hemma",
           "general_wake_alarm_entity": "Sömn · Nästa alarm",
-          "general_wake_lead_minutes_entity": "Sömn · Minuter före alarmet"
+          "general_wake_lead_minutes_entity": "Sömn · Minuter före alarmet",
+          "window_open_timeout_minutes": "Väntetid för fönsteröppning (min)"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "Välj: media_player.* · inställningar · källa · MEDIA_PLAYERS.",
           "tts_engine": "Välj: tts.* · inställningar · källa · TTS_ENGINE.",
           "ai_conversation_agent": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · AI · Välj · källa · conversation.* / ai_task.*.",
-          "language": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · TTS · Välj · källa · provider capabilities.",
+          "language": "Som standard används språket i Home Assistant. Du kan välja valfritt meddelandespråk som HEM stöder.",
           "use_mold_indicator": "🧱 Mögelindikator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Välj gemensamma källor och aviseringsutgångar. Spara slutför inställningen. Driftinställningarna finns kvar på husets och rummens enheter. · Pollen · källa · Välj.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "Åldersgränsen gäller spårningsrapporter och numeriska personantal. Rumslistor och binära närvarotillstånd går inte ut när de är oförändrade. Otillgängliga, återställda eller ogiltiga källor är okända. Detta är inte sömnens längd.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Välj en tids- eller tidsstämpelentitet för nästa alarm och en entitet för minuterna. HEM avslutar automatisk sömn så många minuter före alarmet och återgår till normala mål. Klockslag utan datum använder Home Assistants tidszon. Frånvaro, manuell styrning och enhetsskydd har fortsatt företräde.",
-          "general_wake_lead_minutes_entity": "Välj en numerisk entitet med ett icke-negativt antal minuter, med enheten min eller utan enhet. Alarm 07:00 och värdet 30 avslutar automatisk sömn 06:30; 0 betyder när alarmet ringer. Rensa båda källorna för att inaktivera."
+          "general_wake_lead_minutes_entity": "Välj en numerisk entitet med ett icke-negativt antal minuter, med enheten min eller utan enhet. Alarm 07:00 och värdet 30 avslutar automatisk sömn 06:30; 0 betyder när alarmet ringer. Rensa båda källorna för att inaktivera.",
+          "window_open_timeout_minutes": "Väntan efter att en vädringsbegäran har accepterats innan nya automatiska/PID-starter tillåts vid kvarstående behov. 0–30 minuter, standard 5; 0 stänger av väntan. Skydd för öppna fönster och apparaternas minimitider gäller fortfarande."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Energisparläge",
           "window_open_pause": "Pausad på grund av öppet fönster",
           "window_close_warmup": "Väntar efter stängning av fönster",
-          "window_state_unknown": "Väntar på fönsterstatus"
+          "window_state_unknown": "Väntar på fönsterstatus",
+          "window_open_wait": "Väntar på att du öppnar fönstret",
+          "window_request_pending": "Skickar en uppmaning att öppna fönstret"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "Hjälp"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Ventilation · Väntetid för fönsteröppning (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Standard",
+        "auto": "Home Assistant-språk (standard)",
         "en": "inställningar · källa",
         "de": "inställningar · källa",
         "el": "inställningar · källa",

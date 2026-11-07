@@ -68,7 +68,7 @@
         "title": "Anunțuri (opțional)",
         "description": "Anunțuri (opțional). Notificări automate · Anunțuri vocale automate. Announcement Hub.",
         "data": {
-          "language": "Limbă",
+          "language": "Limba anunțurilor",
           "automatic_tts": "Automat",
           "automatic_notifications": "Automat · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Anunțuri (opțional) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Limbă"
         },
         "data_description": {
-          "language": "Configurați „Limbă” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
+          "language": "Implicit se folosește limba Home Assistant. Poți alege orice limbă pentru anunțuri acceptată de HEM.",
           "automatic_tts": "Implicit: ⛔ · Automat · 🪟 90 s. Această opțiune controlează „Automat”. Comenzile fizice cer acord separat și protecții independente.",
           "automatic_notifications": "Această opțiune controlează „Automat · AUTOMATIC_NOTIFICATIONS”. Comenzile fizice cer acord separat și protecții independente.",
           "announcement_repeat_minutes": "Implicit: 10 min · 0 = niciodată · Cât timp persistă aceeași cauză · Camere.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Prag de decizie pentru „Exterior · °C (≥)”. Influențează recomandările, nu este limită medicală.",
           "max_outdoor_temp": "Prag de decizie pentru „Exterior · °C (≤)”. Influențează recomandările, nu este limită medicală.",
           "max_outdoor_humidity": "Prag de decizie pentru „Exterior · RH (%) (≤)”. Influențează recomandările, nu este limită medicală.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Prag de decizie pentru „Indicator de mucegai · ≥ 70%”. Influențează recomandările, nu este limită medicală."
         }
@@ -191,7 +191,7 @@
           "media_players": "setări · sursă · MEDIA_PLAYERS",
           "tts_engine": "setări · sursă · TTS_ENGINE",
           "ai_conversation_agent": "AI · Selectați · sursă",
-          "language": "TTS · Selectați · sursă",
+          "language": "Limba anunțurilor",
           "use_mold_indicator": "Indicator de mucegai · RH (%) → 70%",
           "pollen_entities": "Polen · sursă · Selectați",
           "use_announcement_hub": "Anunțuri · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Prezență acasă · Vechimea maximă a datelor de urmărire/numărare (min)",
           "general_home_policy": "Prezență acasă",
           "general_wake_alarm_entity": "Somn · Următoarea alarmă",
-          "general_wake_lead_minutes_entity": "Somn · Minute înainte de alarmă"
+          "general_wake_lead_minutes_entity": "Somn · Minute înainte de alarmă",
+          "window_open_timeout_minutes": "Așteptare pentru deschiderea ferestrei (min)"
         },
         "data_description": {
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "Alegeți: media_player.* · setări · sursă · MEDIA_PLAYERS.",
           "tts_engine": "Alegeți: tts.* · setări · sursă · TTS_ENGINE.",
           "ai_conversation_agent": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · AI · Selectați · sursă · conversation.* / ai_task.*.",
-          "language": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · TTS · Selectați · sursă · provider capabilities.",
+          "language": "Implicit se folosește limba Home Assistant. Poți alege orice limbă pentru anunțuri acceptată de HEM.",
           "use_mold_indicator": "🧱 Indicator de mucegai · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · Polen · sursă · Selectați.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "Limita de vechime se aplică rapoartelor de urmărire și numărului numeric de persoane. Listele camerelor și stările binare de prezență nu expiră dacă nu se schimbă. Sursele indisponibile, restaurate sau invalide rămân necunoscute. Aceasta nu este durata somnului.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Selectați o entitate cu ora sau data și ora următoarei alarme și o entitate pentru minutele de avans. HEM încheie somnul automat cu acest avans și reia țintele normale. Orele fără dată folosesc fusul Home Assistant. Absența, controlul manual și protecțiile rămân prioritare.",
-          "general_wake_lead_minutes_entity": "Selectați o entitate numerică cu minute nenegative, cu unitatea min sau fără unitate. O alarmă la 07:00 și valoarea 30 încheie somnul automat la 06:30; 0 înseamnă la sonerie. Pentru dezactivare, ștergeți ambele surse."
+          "general_wake_lead_minutes_entity": "Selectați o entitate numerică cu minute nenegative, cu unitatea min sau fără unitate. O alarmă la 07:00 și valoarea 30 încheie somnul automat la 06:30; 0 înseamnă la sonerie. Pentru dezactivare, ștergeți ambele surse.",
+          "window_open_timeout_minutes": "Așteptare după acceptarea unei cereri de aerisire înainte de a permite noi porniri automate/PID, dacă mai sunt necesare. 0–30 de minute, implicit 5; 0 dezactivează așteptarea. Protecțiile pentru ferestre deschise și timpii minimi ai dispozitivelor rămân active."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "Anunțuri (opțional)",
         "description": "Anunțuri (opțional). Notificări automate · Anunțuri vocale automate. Announcement Hub.",
         "data": {
-          "language": "Limbă",
+          "language": "Limba anunțurilor",
           "automatic_tts": "Automat",
           "automatic_notifications": "Automat · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Anunțuri (opțional) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · Limbă"
         },
         "data_description": {
-          "language": "Configurați „Limbă” numai pentru camera aleasă. Datele greșite blochează acțiunea.",
+          "language": "Implicit se folosește limba Home Assistant. Poți alege orice limbă pentru anunțuri acceptată de HEM.",
           "automatic_tts": "Implicit: ⛔ · Automat · 🪟 90 s. Această opțiune controlează „Automat”. Comenzile fizice cer acord separat și protecții independente.",
           "automatic_notifications": "Această opțiune controlează „Automat · AUTOMATIC_NOTIFICATIONS”. Comenzile fizice cer acord separat și protecții independente.",
           "announcement_repeat_minutes": "Implicit: 10 min · 0 = niciodată · Cât timp persistă aceeași cauză · Camere.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Prag de decizie pentru „Exterior · °C (≥)”. Influențează recomandările, nu este limită medicală.",
           "max_outdoor_temp": "Prag de decizie pentru „Exterior · °C (≤)”. Influențează recomandările, nu este limită medicală.",
           "max_outdoor_humidity": "Prag de decizie pentru „Exterior · RH (%) (≤)”. Influențează recomandările, nu este limită medicală.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Prag de decizie pentru „Indicator de mucegai · ≥ 70%”. Influențează recomandările, nu este limită medicală."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "setări · sursă · MEDIA_PLAYERS",
           "tts_engine": "setări · sursă · TTS_ENGINE",
           "ai_conversation_agent": "AI · Selectați · sursă",
-          "language": "TTS · Selectați · sursă",
+          "language": "Limba anunțurilor",
           "use_mold_indicator": "Indicator de mucegai · RH (%) → 70%",
           "pollen_entities": "Polen · sursă · Selectați",
           "use_announcement_hub": "Anunțuri · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Prezență acasă · Vechimea maximă a datelor de urmărire/numărare (min)",
           "general_home_policy": "Prezență acasă",
           "general_wake_alarm_entity": "Somn · Următoarea alarmă",
-          "general_wake_lead_minutes_entity": "Somn · Minute înainte de alarmă"
+          "general_wake_lead_minutes_entity": "Somn · Minute înainte de alarmă",
+          "window_open_timeout_minutes": "Așteptare pentru deschiderea ferestrei (min)"
         },
         "data_description": {
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "Alegeți: media_player.* · setări · sursă · MEDIA_PLAYERS.",
           "tts_engine": "Alegeți: tts.* · setări · sursă · TTS_ENGINE.",
           "ai_conversation_agent": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · AI · Selectați · sursă · conversation.* / ai_task.*.",
-          "language": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · TTS · Selectați · sursă · provider capabilities.",
+          "language": "Implicit se folosește limba Home Assistant. Poți alege orice limbă pentru anunțuri acceptată de HEM.",
           "use_mold_indicator": "🧱 Indicator de mucegai · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selectează sursele comune și ieșirile de notificare. Salvarea încheie configurarea. Setările de funcționare rămân pe dispozitivele casei și camerelor. · Polen · sursă · Selectați.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "Limita de vechime se aplică rapoartelor de urmărire și numărului numeric de persoane. Listele camerelor și stările binare de prezență nu expiră dacă nu se schimbă. Sursele indisponibile, restaurate sau invalide rămân necunoscute. Aceasta nu este durata somnului.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Selectați o entitate cu ora sau data și ora următoarei alarme și o entitate pentru minutele de avans. HEM încheie somnul automat cu acest avans și reia țintele normale. Orele fără dată folosesc fusul Home Assistant. Absența, controlul manual și protecțiile rămân prioritare.",
-          "general_wake_lead_minutes_entity": "Selectați o entitate numerică cu minute nenegative, cu unitatea min sau fără unitate. O alarmă la 07:00 și valoarea 30 încheie somnul automat la 06:30; 0 înseamnă la sonerie. Pentru dezactivare, ștergeți ambele surse."
+          "general_wake_lead_minutes_entity": "Selectați o entitate numerică cu minute nenegative, cu unitatea min sau fără unitate. O alarmă la 07:00 și valoarea 30 încheie somnul automat la 06:30; 0 înseamnă la sonerie. Pentru dezactivare, ștergeți ambele surse.",
+          "window_open_timeout_minutes": "Așteptare după acceptarea unei cereri de aerisire înainte de a permite noi porniri automate/PID, dacă mai sunt necesare. 0–30 de minute, implicit 5; 0 dezactivează așteptarea. Protecțiile pentru ferestre deschise și timpii minimi ai dispozitivelor rămân active."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Economisire energie",
           "window_open_pause": "Pauză din cauza ferestrei deschise",
           "window_close_warmup": "Așteptare după închiderea ferestrelor",
-          "window_state_unknown": "Se așteaptă starea ferestrelor"
+          "window_state_unknown": "Se așteaptă starea ferestrelor",
+          "window_open_wait": "Se așteaptă să deschideți fereastra",
+          "window_request_pending": "Se trimite o cerere de deschidere a ferestrei"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "Ajutor"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Ventilație · Așteptare pentru deschiderea ferestrei (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajutor"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Implicit",
+        "auto": "Limba Home Assistant (implicită)",
         "en": "setări · sursă",
         "de": "setări · sursă",
         "el": "setări · sursă",

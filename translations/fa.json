@@ -68,7 +68,7 @@
         "title": "اعلان‌ها (اختیاری)",
         "description": "اعلان‌ها (اختیاری). اعلان‌های خودکار · اعلان‌های صوتی خودکار. Announcement Hub.",
         "data": {
-          "language": "زبان",
+          "language": "زبان اعلان‌ها",
           "automatic_tts": "خودکار",
           "automatic_notifications": "خودکار · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "اعلان‌ها (اختیاری) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · زبان"
         },
         "data_description": {
-          "language": "«زبان» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
+          "language": "به‌طور پیش‌فرض از زبان Home Assistant استفاده می‌شود. می‌توانید هر زبان اعلانی را که HEM پشتیبانی می‌کند انتخاب کنید.",
           "automatic_tts": "پیش‌فرض: ⛔ · خودکار · 🪟 90 s. این گزینه «خودکار» را کنترل می‌کند. فرمان دستگاه نیازمند مجوز جداگانه و حفاظت مستقل است.",
           "automatic_notifications": "این گزینه «خودکار · AUTOMATIC_NOTIFICATIONS» را کنترل می‌کند. فرمان دستگاه نیازمند مجوز جداگانه و حفاظت مستقل است.",
           "announcement_repeat_minutes": "پیش‌فرض: 10 min · 0 = هرگز · تا زمانی که همان علت ادامه دارد · اتاق‌ها.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "این آستانهٔ تصمیم برای «بیرون · °C (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
           "max_outdoor_temp": "این آستانهٔ تصمیم برای «بیرون · °C (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
           "max_outdoor_humidity": "این آستانهٔ تصمیم برای «بیرون · RH (%) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "این آستانهٔ تصمیم برای «شاخص کپک · ≥ 70%» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست."
         }
@@ -191,7 +191,7 @@
           "media_players": "تنظیمات · منبع · MEDIA_PLAYERS",
           "tts_engine": "تنظیمات · منبع · TTS_ENGINE",
           "ai_conversation_agent": "AI · انتخاب · منبع",
-          "language": "TTS · انتخاب · منبع",
+          "language": "زبان اعلان‌ها",
           "use_mold_indicator": "شاخص کپک · RH (%) → 70%",
           "pollen_entities": "گرده · منبع · انتخاب",
           "use_announcement_hub": "اعلان‌ها · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "حضور در خانه · حداکثر عمر دادهٔ ردیاب/تعداد افراد (دقیقه)",
           "general_home_policy": "حضور در خانه",
           "general_wake_alarm_entity": "خواب · زنگ بیدارباش بعدی",
-          "general_wake_lead_minutes_entity": "خواب · دقایق پیش از زنگ"
+          "general_wake_lead_minutes_entity": "خواب · دقایق پیش از زنگ",
+          "window_open_timeout_minutes": "زمان انتظار برای باز کردن پنجره (دقیقه)"
         },
         "data_description": {
           "weather_entities": "انتخاب کنید: آب‌وهوا و هشدارها · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "انتخاب کنید: media_player.* · تنظیمات · منبع · MEDIA_PLAYERS.",
           "tts_engine": "انتخاب کنید: tts.* · تنظیمات · منبع · TTS_ENGINE.",
           "ai_conversation_agent": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · AI · انتخاب · منبع · conversation.* / ai_task.*.",
-          "language": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · TTS · انتخاب · منبع · provider capabilities.",
+          "language": "به‌طور پیش‌فرض از زبان Home Assistant استفاده می‌شود. می‌توانید هر زبان اعلانی را که HEM پشتیبانی می‌کند انتخاب کنید.",
           "use_mold_indicator": "«شاخص کپک · RH (%) → 70%» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "pollen_entities": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · گرده · منبع · انتخاب.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "محدودیت عمر گزارش برای ردیاب‌ها و شمارش عددی افراد است. فهرست اتاق‌ها و وضعیت دودویی حضور اتاق تا زمانی که تغییر نکنند منقضی نمی‌شوند. منابع ناموجود، بازیابی‌شده یا نامعتبر ناشناخته می‌مانند. این مدت خواب نیست.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "موجودیت ساعت یا تاریخ‌وساعت زنگ بعدی و موجودیت دقایق پیش از زنگ را انتخاب کنید. HEM به همان تعداد دقیقه زودتر از خواب خودکار خارج می‌شود و هدف‌های معمول را از سر می‌گیرد. ساعت بدون تاریخ از منطقهٔ زمانی Home Assistant استفاده می‌کند. غیبت، کنترل دستی و حفاظت دستگاه همچنان اولویت دارند.",
-          "general_wake_lead_minutes_entity": "یک موجودیت عددی با دقیقهٔ نامنفی، با واحد min یا بدون واحد انتخاب کنید. زنگ 07:00 و مقدار 30، خواب خودکار را در 06:30 پایان می‌دهد؛ 0 یعنی هنگام زنگ. برای غیرفعال‌سازی هر دو منبع را پاک کنید."
+          "general_wake_lead_minutes_entity": "یک موجودیت عددی با دقیقهٔ نامنفی، با واحد min یا بدون واحد انتخاب کنید. زنگ 07:00 و مقدار 30، خواب خودکار را در 06:30 پایان می‌دهد؛ 0 یعنی هنگام زنگ. برای غیرفعال‌سازی هر دو منبع را پاک کنید.",
+          "window_open_timeout_minutes": "زمان انتظار پس از پذیرفته شدن درخواست تهویه، پیش از مجاز شدن شروع‌های خودکار/PID جدید در صورت نیاز. ۰ تا ۳۰ دقیقه، پیش‌فرض ۵؛ ۰ انتظار را غیرفعال می‌کند. حفاظت پنجرهٔ باز و حداقل زمان‌های دستگاه‌ها همچنان اعمال می‌شوند."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "اعلان‌ها (اختیاری)",
         "description": "اعلان‌ها (اختیاری). اعلان‌های خودکار · اعلان‌های صوتی خودکار. Announcement Hub.",
         "data": {
-          "language": "زبان",
+          "language": "زبان اعلان‌ها",
           "automatic_tts": "خودکار",
           "automatic_notifications": "خودکار · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "اعلان‌ها (اختیاری) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · زبان"
         },
         "data_description": {
-          "language": "«زبان» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
+          "language": "به‌طور پیش‌فرض از زبان Home Assistant استفاده می‌شود. می‌توانید هر زبان اعلانی را که HEM پشتیبانی می‌کند انتخاب کنید.",
           "automatic_tts": "پیش‌فرض: ⛔ · خودکار · 🪟 90 s. این گزینه «خودکار» را کنترل می‌کند. فرمان دستگاه نیازمند مجوز جداگانه و حفاظت مستقل است.",
           "automatic_notifications": "این گزینه «خودکار · AUTOMATIC_NOTIFICATIONS» را کنترل می‌کند. فرمان دستگاه نیازمند مجوز جداگانه و حفاظت مستقل است.",
           "announcement_repeat_minutes": "پیش‌فرض: 10 min · 0 = هرگز · تا زمانی که همان علت ادامه دارد · اتاق‌ها.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "این آستانهٔ تصمیم برای «بیرون · °C (≥)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
           "max_outdoor_temp": "این آستانهٔ تصمیم برای «بیرون · °C (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
           "max_outdoor_humidity": "این آستانهٔ تصمیم برای «بیرون · RH (%) (≤)» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "این آستانهٔ تصمیم برای «شاخص کپک · ≥ 70%» است؛ بر پیشنهادها اثر دارد و حد پزشکی نیست."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "تنظیمات · منبع · MEDIA_PLAYERS",
           "tts_engine": "تنظیمات · منبع · TTS_ENGINE",
           "ai_conversation_agent": "AI · انتخاب · منبع",
-          "language": "TTS · انتخاب · منبع",
+          "language": "زبان اعلان‌ها",
           "use_mold_indicator": "شاخص کپک · RH (%) → 70%",
           "pollen_entities": "گرده · منبع · انتخاب",
           "use_announcement_hub": "اعلان‌ها · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "حضور در خانه · حداکثر عمر دادهٔ ردیاب/تعداد افراد (دقیقه)",
           "general_home_policy": "حضور در خانه",
           "general_wake_alarm_entity": "خواب · زنگ بیدارباش بعدی",
-          "general_wake_lead_minutes_entity": "خواب · دقایق پیش از زنگ"
+          "general_wake_lead_minutes_entity": "خواب · دقایق پیش از زنگ",
+          "window_open_timeout_minutes": "زمان انتظار برای باز کردن پنجره (دقیقه)"
         },
         "data_description": {
           "weather_entities": "انتخاب کنید: آب‌وهوا و هشدارها · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "انتخاب کنید: media_player.* · تنظیمات · منبع · MEDIA_PLAYERS.",
           "tts_engine": "انتخاب کنید: tts.* · تنظیمات · منبع · TTS_ENGINE.",
           "ai_conversation_agent": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · AI · انتخاب · منبع · conversation.* / ai_task.*.",
-          "language": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · TTS · انتخاب · منبع · provider capabilities.",
+          "language": "به‌طور پیش‌فرض از زبان Home Assistant استفاده می‌شود. می‌توانید هر زبان اعلانی را که HEM پشتیبانی می‌کند انتخاب کنید.",
           "use_mold_indicator": "«شاخص کپک · RH (%) → 70%» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود.",
           "pollen_entities": "منابع مشترک و خروجی‌های اعلان را انتخاب کنید. ذخیره، راه‌اندازی را تمام می‌کند. تنظیمات کارکرد روی دستگاه‌های خانه و اتاق‌ها می‌مانند. · گرده · منبع · انتخاب.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "محدودیت عمر گزارش برای ردیاب‌ها و شمارش عددی افراد است. فهرست اتاق‌ها و وضعیت دودویی حضور اتاق تا زمانی که تغییر نکنند منقضی نمی‌شوند. منابع ناموجود، بازیابی‌شده یا نامعتبر ناشناخته می‌مانند. این مدت خواب نیست.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "موجودیت ساعت یا تاریخ‌وساعت زنگ بعدی و موجودیت دقایق پیش از زنگ را انتخاب کنید. HEM به همان تعداد دقیقه زودتر از خواب خودکار خارج می‌شود و هدف‌های معمول را از سر می‌گیرد. ساعت بدون تاریخ از منطقهٔ زمانی Home Assistant استفاده می‌کند. غیبت، کنترل دستی و حفاظت دستگاه همچنان اولویت دارند.",
-          "general_wake_lead_minutes_entity": "یک موجودیت عددی با دقیقهٔ نامنفی، با واحد min یا بدون واحد انتخاب کنید. زنگ 07:00 و مقدار 30، خواب خودکار را در 06:30 پایان می‌دهد؛ 0 یعنی هنگام زنگ. برای غیرفعال‌سازی هر دو منبع را پاک کنید."
+          "general_wake_lead_minutes_entity": "یک موجودیت عددی با دقیقهٔ نامنفی، با واحد min یا بدون واحد انتخاب کنید. زنگ 07:00 و مقدار 30، خواب خودکار را در 06:30 پایان می‌دهد؛ 0 یعنی هنگام زنگ. برای غیرفعال‌سازی هر دو منبع را پاک کنید.",
+          "window_open_timeout_minutes": "زمان انتظار پس از پذیرفته شدن درخواست تهویه، پیش از مجاز شدن شروع‌های خودکار/PID جدید در صورت نیاز. ۰ تا ۳۰ دقیقه، پیش‌فرض ۵؛ ۰ انتظار را غیرفعال می‌کند. حفاظت پنجرهٔ باز و حداقل زمان‌های دستگاه‌ها همچنان اعمال می‌شوند."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "صرفه‌جویی انرژی",
           "window_open_pause": "توقف به دلیل پنجره باز",
           "window_close_warmup": "انتظار پس از بسته شدن پنجره‌ها",
-          "window_state_unknown": "در انتظار وضعیت پنجره‌ها"
+          "window_state_unknown": "در انتظار وضعیت پنجره‌ها",
+          "window_open_wait": "منتظر است پنجره را باز کنید",
+          "window_request_pending": "در حال ارسال درخواست باز کردن پنجره"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "راهنما"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "تهویه · زمان انتظار برای باز کردن پنجره (دقیقه)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "راهنما"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - پیش‌فرض",
+        "auto": "زبان Home Assistant (پیش‌فرض)",
         "en": "تنظیمات · منبع",
         "de": "تنظیمات · منبع",
         "el": "تنظیمات · منبع",

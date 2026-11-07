@@ -136,7 +136,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 
 class TTSLanguageSelect(SettingsMetadata, SelectEntity):
-    """Show human language names while persisting provider-compatible BCP47 tags."""
+    """Select an announcement locale without depending on a TTS provider."""
 
     _attr_has_entity_name = False
     _attr_should_poll = False
@@ -150,8 +150,8 @@ class TTSLanguageSelect(SettingsMetadata, SelectEntity):
         self._attr_device_info = {"identifiers": {(DOMAIN, entry_id)}}
 
     def _choices(self):
-        from .tts_languages import language_options
-        return language_options(self._manager.hass, self._manager.settings.get("tts_engine"))
+        from .tts_languages import announcement_language_options
+        return announcement_language_options(self._manager.hass)
 
     @property
     def options(self):
@@ -159,18 +159,28 @@ class TTSLanguageSelect(SettingsMetadata, SelectEntity):
 
     @property
     def current_option(self):
-        from .tts_languages import preferred_language
-        value = preferred_language(
-            self._manager.hass, self._manager.settings.get("tts_engine"),
-            self._manager.settings.get("language", "auto"))
+        from .languages import normalize_announcement_language
+        value = normalize_announcement_language(
+            self._manager.settings.get("language", "auto")) or "auto"
         return next((item["label"] for item in self._choices() if item["value"] == value),
                     self.options[0] if self.options else None)
 
     async def async_select_option(self, option: str):
         match = next((item for item in self._choices() if item["label"] == option), None)
         if match is None:
-            raise ValueError("Unknown TTS language")
+            raise ValueError("Unknown announcement language")
         await update_device_setting(self._manager, "global_setting", "language", match["value"])
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(async_dispatcher_connect(
+            self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}",
+            self._update,
+        ))
+
+    @callback
+    def _update(self):
         self.async_write_ha_state()
 
 

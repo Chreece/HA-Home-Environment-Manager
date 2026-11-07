@@ -378,6 +378,18 @@ class ClimatePidCoordinator:
                 return
             prepared.append((entity, state, unit, observed_c, observed,
                              minimum, maximum, device_step))
+        manager = getattr(self.hass, "data", {}).get(DOMAIN, {}).get(self.entry_id)
+        if getattr(manager, "window_open_wait", None) is not None:
+            from .window_open_wait import legacy_start_hold
+            if waiting := next((hold for entity in entities
+                    if (hold := legacy_start_hold(self.hass, self.entry_id, area,
+                                                   entity, "thermal", settings))), None):
+                current.memory = None
+                current.last_checked = None
+                self._set_status(area, waiting["status"],
+                                 window_open_wait_remaining_seconds=waiting["remaining_seconds"],
+                                 window_open_wait_until=waiting["expires_at"])
+                return
         current.last_checked = now
         result = step(temp, settings["target_c"], now, settings["mode"],
                       settings["kp"], settings["ki"], settings["kd"],
@@ -454,6 +466,16 @@ class ClimatePidCoordinator:
                         or normalized_config(live_config) != settings):
                     self._set_status(area, "pid_settings_changed_before_write")
                     return
+                if getattr(manager, "window_open_wait", None) is not None:
+                    from .window_open_wait import legacy_start_hold
+                    if waiting := legacy_start_hold(self.hass, self.entry_id, area,
+                                                    entity, "thermal", settings):
+                        current.memory = None
+                        current.last_checked = None
+                        self._set_status(area, waiting["status"],
+                                         window_open_wait_remaining_seconds=waiting["remaining_seconds"],
+                                         window_open_wait_until=waiting["expires_at"])
+                        return
             # Each awaited service may also outlive the temperature evidence
             # used to compute the setpoint or the sensor's room ownership.
             live_temp = temperature_sensor_c(

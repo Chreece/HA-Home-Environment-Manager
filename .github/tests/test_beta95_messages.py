@@ -1,33 +1,21 @@
 """Beta95: localized notification wording, with no invented indoor air quality.
 
-Compile the production message-formatting functions against small, true
-Recommendation fixtures; all other pre-existing translations remain intact.
+Exercise the production message module against small Recommendation fixtures;
+the full locale extension is loaded along with the original three languages.
 """
 from __future__ import annotations
-import ast
+import importlib
 from pathlib import Path
-from types import SimpleNamespace as N
+import sys
+from types import ModuleType, SimpleNamespace as N
 
-source=Path(__file__).resolve().parents[2]/'messages.py'
-tree=ast.parse(source.read_text(encoding='utf-8'))
-wanted={'ROOM_VENTILATION_TEXT','ROOM_VENTILATION_CODES'}
-nodes=[node for node in tree.body if
-       isinstance(node,ast.Assign) and any(
-           isinstance(target,ast.Name) and target.id in wanted
-           for target in node.targets)
-       or isinstance(node,ast.FunctionDef) and node.name in ('announcement','explain')]
-assert len(nodes)==4
-scope={
-    'frozenset':frozenset,
-    'language_code':lambda value:value if value in ('el','de','en') else 'fr',
-    'TEXT':{'en':{'title_open':'Air','title_close':'Air'},
-            'de':{'title_open':'Luft','title_close':'Luft'},
-            'el':{'title_open':'Αέρας','title_close':'Αέρας'}},
-}
-exec(compile(ast.Module(body=nodes,type_ignores=[]),
-             str(source),'exec'),scope)
-announce=scope['announcement']
-explain=scope['explain']
+root=Path(__file__).resolve().parents[2]
+package=ModuleType('hem_beta95_messages')
+package.__path__=[str(root)]
+sys.modules[package.__name__]=package
+messages=importlib.import_module(package.__name__+'.messages')
+announce=messages.announcement
+explain=messages.explain
 for lang in ('en','de','el','fr'):
     for code in ('air_refresh_wake','air_refresh_return',
                  'window_heat_loss','window_cooling_loss'):
@@ -45,11 +33,12 @@ for lang in ('en','de','el','fr'):
         else:
             assert 'Bathroom Window' not in body
             assert any(term in body.casefold() for term in (
-                'sensor','αισθητήρα','measured','measurement','μέτρηση')), (lang,code,body)
+                'sensor','αισθητήρα','measured','measurement','μέτρηση','mesur')), (lang,code,body)
         if lang=='el':
             assert any('\u0370'<=c<='\u03ff' for c in title)
         if lang=='de':
             assert 'Fenster' in title or 'Frischluft' in title
         if lang=='fr':
-            assert title in scope['ROOM_VENTILATION_TEXT']['en'].values() or title.startswith('Close') or title=='Fresh-air reminder'
+            assert title in messages.ROOM_VENTILATION_TEXT['fr'].values()
+            assert title not in messages.ROOM_VENTILATION_TEXT['en'].values()
 print('BETA95_HUB_NOTIFICATION_WAKE_ENERGY_LOCALIZED_NO_FAKE_POLLUTANTS=PASS')

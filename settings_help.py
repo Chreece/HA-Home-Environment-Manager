@@ -343,22 +343,9 @@ SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftges
                                                            'shared occupied-room list that omits this '
                                                            'room, or verified whole-home Away, applies '
                                                            'immediately and bypasses this delay.'},
- 'area_climate_operating_window_efficiency_notify': {'de': 'Erlaubt Hinweise zum Öffnen geschlossener '
-                                                           'Fenster, wenn bestätigte Außenbedingungen '
-                                                           'aktives Heizen, Kühlen oder Entfeuchten '
-                                                           'unterstützen könnten. Reiner Hinweis; keine '
-                                                           'Fenster- oder Geräteschaltung.',
-                                                     'el': 'Επιτρέπει προτάσεις ανοίγματος κλειστού '
-                                                           'παραθύρου όταν επιβεβαιωμένες εξωτερικές '
-                                                           'συνθήκες μπορούν να βοηθήσουν αντί ενεργής '
-                                                           'θέρμανσης, ψύξης ή αφύγρανσης. Είναι '
-                                                           'συμβουλευτική ειδοποίηση· δεν κινεί παράθυρα ή '
-                                                           'συσκευές.',
-                                                     'en': 'Allows suggestions to open a closed window when '
-                                                           'verified outdoor conditions could help replace '
-                                                           'active heating, cooling or dehumidification. '
-                                                           'This is an advisory notification; it does not '
-                                                           'open the window or switch appliances.'},
+ 'area_climate_operating_window_efficiency_notify': {'de': 'Empfiehlt das Öffnen eines geschlossenen Fensters, wenn ein gemessener Nutzen der Außenluft beim aktuellen Heiz-, Kühl- oder Entfeuchtungsbedarf helfen kann, auch vor einem Gerätestart. Erkannte Außenrisiken werden genannt. Der Nutzer öffnet das Fenster; laufende Geräte werden für die Aufforderung nicht gestoppt. Die eingestellte Fensterwartezeit kann neue geeignete Automatikstarts verzögern.',
+                                                     'el': 'Προτείνει άνοιγμα κλειστού παραθύρου όταν μετρημένο όφελος του εξωτερικού αέρα μπορεί να βοηθήσει την τρέχουσα ανάγκη θέρμανσης, ψύξης ή αφύγρανσης, ακόμη και πριν ξεκινήσει συσκευή. Οι δυσμενείς εξωτερικές συνθήκες αναφέρονται ως προφυλάξεις. Το παράθυρο ανοίγει ο χρήστης· το αίτημα δεν σταματά συσκευές που λειτουργούν. Η ρυθμισμένη αναμονή μπορεί να καθυστερήσει νέες κατάλληλες αυτόματες εκκινήσεις.',
+                                                     'en': 'Suggest opening a closed window when measured outdoor-air benefit can help current heating, cooling or drying demand, including before a device starts. Detected outside concerns are included as cautions. Windows are opened by the user; running devices are not stopped for the request. The configured window-opening timeout may defer new qualifying automatic starts.'},
  'area_climate_policy_away_policy': {'de': 'Eine bestätigte Person zu Hause hält das Zuhause immer auf '
                                            'anwesend. Alle zu Hause bleibt für bestehende Konfigurationen '
                                            'erhalten und verwendet dieselbe Regel. Abwesenheit muss '
@@ -890,18 +877,9 @@ SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftges
                                           'automatic solar-shading closure is allowed. It is one eligibility '
                                           'check alongside room temperature and any enabled lux '
                                           'requirement.'},
- 'global_environment_pollen_high_from': {'de': 'Erster Wert, der auf der Pollenskala des Anbieters als hoch '
-                                               'gilt. Er dient der Einstufung und verhindert bei aktivierter '
-                                               'Vermeidung Lüftungsvorschläge. An die tatsächliche '
-                                               'Anbieterskala anpassen.',
-                                         'el': 'Πρώτη τιμή που θεωρείται υψηλή στην κλίμακα του επιλεγμένου '
-                                               'παρόχου γύρης. Ταξινομεί τη γύρη και, όταν ενεργοποιείται η '
-                                               'αποφυγή, αποκλείει προτάσεις αερισμού. Προσαρμόζεται στην '
-                                               'πραγματική κλίμακα παρόχου.',
-                                         'en': 'First value treated as high on the selected pollen provider '
-                                               'scale. Used to classify pollen and, when avoidance is '
-                                               'enabled, block window-ventilation suggestions. Set it for '
-                                               'the actual provider scale.'},
+ 'global_environment_pollen_high_from': {'de': 'Erster hoher Wert auf der Pollenskala des gewählten Anbieters. Bei aktiver Pollenvermeidung wird hohe Belastung als Außenrisiko genannt und automatische Außenluftnutzung bleibt gesperrt. Sinnvolles manuelles Lüften kann weiterhin bedingt mit Pollenwarnung vorgeschlagen werden. Die tatsächliche Anbieterskala verwenden; keine allgemeine Allergiegrenze.',
+                                         'el': 'Πρώτη τιμή υψηλής γύρης στην κλίμακα του επιλεγμένου παρόχου. Με ενεργή αποφυγή γύρης, η υψηλή γύρη αναφέρεται ως προφύλαξη και αποκλείει την αυτόματη χρήση εξωτερικού αέρα. Μπορεί ακόμη να προταθεί χρήσιμος χειροκίνητος αερισμός υπό όρους με προειδοποίηση γύρης. Χρησιμοποίησε την πραγματική κλίμακα παρόχου· δεν είναι καθολικό όριο αλλεργίας.',
+                                         'en': 'First value treated as high on the selected pollen provider scale. With pollen avoidance enabled, high pollen becomes an outdoor caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally with the pollen warning. Use the actual provider scale; this is not a universal allergy threshold.'},
  'global_environment_pollen_max_scale': {'de': 'Höchster Wert der Pollenskala des ausgewählten Anbieters zur '
                                                'Prüfung und Interpretation der Messungen. Dies definiert die '
                                                'Skala; die Schwelle für hohe Pollen wird separat gesetzt.',
@@ -1051,149 +1029,45 @@ SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftges
                                             'including selected outdoor/weather data and room measurements. '
                                             'Older readings become stale and cannot establish safe '
                                             'ventilation or valid mold-calibration temperatures.'},
- 'global_threshold_max_outdoor_humidity': {'de': 'Obergrenze der relativen Außenfeuchte bei den '
-                                                 'Lüftungsprüfungen. Höhere Werte verhindern '
-                                                 'Öffnungsempfehlungen; Trocknungshinweise vergleichen '
-                                                 'zusätzlich den Feuchtegehalt innen und außen.',
-                                           'el': 'Ανώτατη εξωτερική σχετική υγρασία για τους ελέγχους '
-                                                 'αερισμού. Τιμές πάνω από το όριο αποκλείουν πρόταση '
-                                                 'ανοίγματος· οι προτάσεις ξήρανσης συγκρίνουν επίσης το '
-                                                 'περιεχόμενο υγρασίας μέσα και έξω.',
-                                           'en': 'Outdoor relative-humidity ceiling used with the other '
-                                                 'window-ventilation checks. Readings above it block opening '
-                                                 'advice; drying recommendations also compare indoor and '
-                                                 'outdoor moisture content.'},
- 'global_threshold_max_outdoor_temp': {'de': 'Verhindert Empfehlungen zum Fensteröffnen über dieser '
-                                             'Außentemperatur, damit keine zu heiße Luft hereinkommt. Der '
-                                             'Klimagerätesollwert bleibt davon unabhängig.',
-                                       'el': 'Αποκλείει προτάσεις ανοίγματος πάνω από αυτή την εξωτερική '
-                                             'θερμοκρασία ώστε να μην εισέρχεται πολύ θερμός αέρας. Δεν '
-                                             'ορίζει τον στόχο του κλιματιστικού.',
-                                       'en': 'Blocks window-opening advice above this outdoor temperature so '
-                                             'ventilation does not bring in excessively hot air. It does not '
-                                             'set the air-conditioner target.'},
- 'global_threshold_max_wind_kmh': {'de': 'Höchste Außenwindgeschwindigkeit für Lüftungsempfehlungen in km/h. '
-                                         'Meldet die ausgewählte Wetterquelle stärkeren Wind, verhindert HEM '
-                                         'Öffnungsempfehlungen und kann das Schließen offener Fenster '
-                                         'empfehlen. Dies ist keine Ventilatordrehzahl.',
-                                   'el': 'Μέγιστη εξωτερική ταχύτητα ανέμου για προτάσεις αερισμού, σε km/h. '
-                                         'Αν τα επιλεγμένα δεδομένα καιρού δείχνουν ισχυρότερο άνεμο, '
-                                         'αποκλείεται το άνοιγμα και μπορεί να προταθεί κλείσιμο ανοιχτών '
-                                         'παραθύρων. Δεν είναι ταχύτητα ανεμιστήρα.',
-                                   'en': 'Maximum outdoor wind speed for window-ventilation advice, in km/h. '
-                                         'If the selected weather data reports stronger wind, HEM blocks '
-                                         'opening recommendations and can recommend closing open windows. '
-                                         'This is not a fan-speed setting.'},
- 'global_threshold_min_outdoor_temp': {'de': 'Verhindert Empfehlungen zum Fensteröffnen unter dieser '
-                                             'Außentemperatur, um Kaltluft und Wärmeverluste zu begrenzen. '
-                                             'Es ist eine Lüftungsgrenze, kein Heizsollwert.',
-                                       'el': 'Αποκλείει προτάσεις ανοίγματος κάτω από αυτή την εξωτερική '
-                                             'θερμοκρασία, περιορίζοντας κρύο αέρα και απώλειες θέρμανσης. '
-                                             'Είναι έλεγχος αερισμού, όχι στόχος θέρμανσης.',
-                                       'en': 'Blocks window-opening advice below this outdoor temperature to '
-                                             'limit cold-air discomfort and heating losses. It is a '
-                                             'ventilation guard, not a heating setpoint.'},
- 'global_threshold_outdoor_aqi': {'de': 'AQI-Obergrenze im Freien für Lüftungsempfehlungen. Die '
-                                        'Anbieterskala im AQI-Wähler prüfen; benutzerdefinierte '
-                                        'Quellengrenzen haben Vorrang. Ein vergleichbarer aktueller Wert '
-                                        'über der jeweiligen Grenze verhindert eine Öffnungsempfehlung.',
-                                  'el': 'Ανώτατο όριο εξωτερικού AQI για τον αερισμό. Επιβεβαίωσε την '
-                                        'κλίμακα παρόχου στον επιλογέα AQI· προσαρμοσμένα όρια ανά πηγή '
-                                        'υπερισχύουν του γενικού. Συγκρίσιμη τρέχουσα τιμή πάνω από το '
-                                        'αντίστοιχο όριο αποκλείει πρόταση ανοίγματος.',
-                                  'en': 'Outdoor AQI ceiling used for ventilation. Confirm the provider '
-                                        'scale with the AQI selector; per-source custom limits override this '
-                                        'general ceiling. A comparable current value above its applicable '
-                                        'limit blocks opening advice.'},
- 'global_threshold_outdoor_co2': {'de': 'Obergrenze für CO₂ (ppm) im Freien bei Lüftungsempfehlungen. Ein '
-                                        'aktueller Wert darüber verhindert eine Empfehlung zum '
-                                        'Fensteröffnen. Die übrigen Luftqualitäts- und Wetterprüfungen '
-                                        'müssen ebenfalls erfüllt sein.',
-                                  'el': 'Ανώτατο όριο εξωτερικού CO₂ (ppm) για συμβουλές αερισμού από '
-                                        'παράθυρα. Τρέχουσα μέτρηση πάνω από την τιμή αποκλείει πρόταση '
-                                        'ανοίγματος. Πρέπει επίσης να ικανοποιούνται οι άλλοι έλεγχοι '
-                                        'ποιότητας αέρα και καιρού.',
-                                  'en': 'Outdoor CO₂ (ppm) ceiling for window-ventilation advice. A current '
-                                        'reading above this value blocks an opening recommendation. Other '
-                                        'air-quality and weather checks must also pass.'},
- 'global_threshold_outdoor_no2': {'de': 'Obergrenze für NO₂ (µg/m³) im Freien bei Lüftungsempfehlungen. Ein '
-                                        'aktueller Wert darüber verhindert eine Empfehlung zum '
-                                        'Fensteröffnen. Die übrigen Luftqualitäts- und Wetterprüfungen '
-                                        'müssen ebenfalls erfüllt sein.',
-                                  'el': 'Ανώτατο όριο εξωτερικού NO₂ (µg/m³) για συμβουλές αερισμού από '
-                                        'παράθυρα. Τρέχουσα μέτρηση πάνω από την τιμή αποκλείει πρόταση '
-                                        'ανοίγματος. Πρέπει επίσης να ικανοποιούνται οι άλλοι έλεγχοι '
-                                        'ποιότητας αέρα και καιρού.',
-                                  'en': 'Outdoor NO₂ (µg/m³) ceiling for window-ventilation advice. A '
-                                        'current reading above this value blocks an opening recommendation. '
-                                        'Other air-quality and weather checks must also pass.'},
- 'global_threshold_outdoor_o3': {'de': 'Obergrenze für O₃ (µg/m³) im Freien bei Lüftungsempfehlungen. Ein '
-                                       'aktueller Wert darüber verhindert eine Empfehlung zum Fensteröffnen. '
-                                       'Die übrigen Luftqualitäts- und Wetterprüfungen müssen ebenfalls '
-                                       'erfüllt sein.',
-                                 'el': 'Ανώτατο όριο εξωτερικού O₃ (µg/m³) για συμβουλές αερισμού από '
-                                       'παράθυρα. Τρέχουσα μέτρηση πάνω από την τιμή αποκλείει πρόταση '
-                                       'ανοίγματος. Πρέπει επίσης να ικανοποιούνται οι άλλοι έλεγχοι '
-                                       'ποιότητας αέρα και καιρού.',
-                                 'en': 'Outdoor O₃ (µg/m³) ceiling for window-ventilation advice. A current '
-                                       'reading above this value blocks an opening recommendation. Other '
-                                       'air-quality and weather checks must also pass.'},
- 'global_threshold_outdoor_pm10': {'de': 'Obergrenze für PM10 (µg/m³) im Freien bei Lüftungsempfehlungen. '
-                                         'Ein aktueller Wert darüber verhindert eine Empfehlung zum '
-                                         'Fensteröffnen. Die übrigen Luftqualitäts- und Wetterprüfungen '
-                                         'müssen ebenfalls erfüllt sein.',
-                                   'el': 'Ανώτατο όριο εξωτερικού PM10 (µg/m³) για συμβουλές αερισμού από '
-                                         'παράθυρα. Τρέχουσα μέτρηση πάνω από την τιμή αποκλείει πρόταση '
-                                         'ανοίγματος. Πρέπει επίσης να ικανοποιούνται οι άλλοι έλεγχοι '
-                                         'ποιότητας αέρα και καιρού.',
-                                   'en': 'Outdoor PM10 (µg/m³) ceiling for window-ventilation advice. A '
-                                         'current reading above this value blocks an opening recommendation. '
-                                         'Other air-quality and weather checks must also pass.'},
- 'global_threshold_outdoor_pm25': {'de': 'Obergrenze für PM2.5 (µg/m³) im Freien bei Lüftungsempfehlungen. '
-                                         'Ein aktueller Wert darüber verhindert eine Empfehlung zum '
-                                         'Fensteröffnen. Die übrigen Luftqualitäts- und Wetterprüfungen '
-                                         'müssen ebenfalls erfüllt sein.',
-                                   'el': 'Ανώτατο όριο εξωτερικού PM2.5 (µg/m³) για συμβουλές αερισμού από '
-                                         'παράθυρα. Τρέχουσα μέτρηση πάνω από την τιμή αποκλείει πρόταση '
-                                         'ανοίγματος. Πρέπει επίσης να ικανοποιούνται οι άλλοι έλεγχοι '
-                                         'ποιότητας αέρα και καιρού.',
-                                   'en': 'Outdoor PM2.5 (µg/m³) ceiling for window-ventilation advice. A '
-                                         'current reading above this value blocks an opening recommendation. '
-                                         'Other air-quality and weather checks must also pass.'},
- 'global_threshold_outdoor_so2': {'de': 'Obergrenze für SO₂ (µg/m³) im Freien bei Lüftungsempfehlungen. Ein '
-                                        'aktueller Wert darüber verhindert eine Empfehlung zum '
-                                        'Fensteröffnen. Die übrigen Luftqualitäts- und Wetterprüfungen '
-                                        'müssen ebenfalls erfüllt sein.',
-                                  'el': 'Ανώτατο όριο εξωτερικού SO₂ (µg/m³) για συμβουλές αερισμού από '
-                                        'παράθυρα. Τρέχουσα μέτρηση πάνω από την τιμή αποκλείει πρόταση '
-                                        'ανοίγματος. Πρέπει επίσης να ικανοποιούνται οι άλλοι έλεγχοι '
-                                        'ποιότητας αέρα και καιρού.',
-                                  'en': 'Outdoor SO₂ (µg/m³) ceiling for window-ventilation advice. A '
-                                        'current reading above this value blocks an opening recommendation. '
-                                        'Other air-quality and weather checks must also pass.'},
- 'global_threshold_outdoor_voc': {'de': 'Obergrenze für VOC (µg/m³) im Freien bei Lüftungsempfehlungen. Ein '
-                                        'aktueller Wert darüber verhindert eine Empfehlung zum '
-                                        'Fensteröffnen. Die übrigen Luftqualitäts- und Wetterprüfungen '
-                                        'müssen ebenfalls erfüllt sein.',
-                                  'el': 'Ανώτατο όριο εξωτερικού VOC (µg/m³) για συμβουλές αερισμού από '
-                                        'παράθυρα. Τρέχουσα μέτρηση πάνω από την τιμή αποκλείει πρόταση '
-                                        'ανοίγματος. Πρέπει επίσης να ικανοποιούνται οι άλλοι έλεγχοι '
-                                        'ποιότητας αέρα και καιρού.',
-                                  'en': 'Outdoor VOC (µg/m³) ceiling for window-ventilation advice. A '
-                                        'current reading above this value blocks an opening recommendation. '
-                                        'Other air-quality and weather checks must also pass.'},
- 'global_threshold_outdoor_voc_parts': {'de': 'Obergrenze für VOC (ppb) im Freien bei Lüftungsempfehlungen. '
-                                              'Ein aktueller Wert darüber verhindert eine Empfehlung zum '
-                                              'Fensteröffnen. Die übrigen Luftqualitäts- und Wetterprüfungen '
-                                              'müssen ebenfalls erfüllt sein.',
-                                        'el': 'Ανώτατο όριο εξωτερικού VOC (ppb) για συμβουλές αερισμού από '
-                                              'παράθυρα. Τρέχουσα μέτρηση πάνω από την τιμή αποκλείει '
-                                              'πρόταση ανοίγματος. Πρέπει επίσης να ικανοποιούνται οι άλλοι '
-                                              'έλεγχοι ποιότητας αέρα και καιρού.',
-                                        'en': 'Outdoor VOC (ppb) ceiling for window-ventilation advice. A '
-                                              'current reading above this value blocks an opening '
-                                              'recommendation. Other air-quality and weather checks must '
-                                              'also pass.'},
+ 'global_threshold_max_outdoor_humidity': {'de': 'Obergrenze der relativen Außenfeuchte (%) für Lüftungsprüfungen. Höhere Werte werden als Außenrisiko genannt und sperren automatische Außenluftnutzung. Sinnvolles manuelles Lüften kann weiterhin bedingt empfohlen werden. Der Trocknungsnutzen vergleicht den Wassergehalt innen und außen, da relative Feuchte temperaturabhängig ist.',
+                                           'el': 'Ανώτατη εξωτερική σχετική υγρασία (%) για τους ελέγχους αερισμού. Υψηλότερες τιμές αναφέρονται ως προφύλαξη και αποκλείουν την αυτόματη χρήση εξωτερικού αέρα. Χρήσιμος χειροκίνητος αερισμός μπορεί ακόμη να προταθεί υπό όρους. Το όφελος ξήρανσης συγκρίνει το περιεχόμενο υδρατμών μέσα και έξω, επειδή η σχετική υγρασία εξαρτάται από τη θερμοκρασία.',
+                                           'en': 'Outdoor relative-humidity ceiling (%) for ventilation checks. Higher values become an outdoor caution and keep automatic outside-air use blocked. Useful manual airing may still be suggested conditionally. Drying benefit compares indoor and outdoor water-vapour content because relative humidity depends on temperature.'},
+ 'global_threshold_max_outdoor_temp': {'de': 'Über dieser Außentemperatur (°C) vor Hitze warnen und automatische Außenluftnutzung sperren. Sinnvolles manuelles Lüften für einen anderen bestätigten Bedarf kann bedingt mit Hinweis auf die heiße Außenluft empfohlen werden. Dies legt keinen Klimagerätesollwert fest.',
+                                       'el': 'Πάνω από αυτή την εξωτερική θερμοκρασία (°C), αναφέρεται προφύλαξη για ζέστη και αποκλείεται η αυτόματη χρήση εξωτερικού αέρα. Χρήσιμος χειροκίνητος αερισμός για άλλη επιβεβαιωμένη ανάγκη μπορεί να προταθεί υπό όρους με αναφορά του θερμού εξωτερικού αέρα. Δεν ορίζει τον στόχο του κλιματιστικού.',
+                                       'en': 'Above this outdoor temperature (°C), report a heat caution and keep automatic outside-air use blocked. Useful manual airing for another verified need may still be suggested conditionally, with the hot outside air disclosed. This does not set the air-conditioner target.'},
+ 'global_threshold_max_wind_kmh': {'de': 'Höchste Außenwindgeschwindigkeit für Lüftungsprüfungen in km/h. Meldet die gewählte Wetterquelle stärkeren Wind, nennt HEM dies in sinnvollen bedingten Öffnungshinweisen, sperrt automatische Außenluftnutzung und kann das Schließen offener Fenster empfehlen. Dies ist keine Ventilatordrehzahl.',
+                                   'el': 'Μέγιστη εξωτερική ταχύτητα ανέμου για ελέγχους αερισμού, σε km/h. Αν τα επιλεγμένα δεδομένα καιρού δείχνουν ισχυρότερο άνεμο, το HEM τον αναφέρει σε χρήσιμες προτάσεις ανοίγματος υπό όρους, αποκλείει την αυτόματη χρήση εξωτερικού αέρα και μπορεί να προτείνει κλείσιμο ανοιχτών παραθύρων. Δεν είναι ταχύτητα ανεμιστήρα.',
+                                   'en': 'Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.'},
+ 'global_threshold_min_outdoor_temp': {'de': 'Unter dieser Außentemperatur (°C) vor kalter Luft und Wärmeverlusten warnen und automatische Außenluftnutzung sperren. Sinnvolles kurzes manuelles Lüften kann bedingt mit diesen Hinweisen empfohlen werden. Dies ist eine Lüftungsgrenze, kein Heizsollwert.',
+                                       'el': 'Κάτω από αυτή την εξωτερική θερμοκρασία (°C), αναφέρονται προφυλάξεις για κρύο αέρα και απώλεια θερμότητας και αποκλείεται η αυτόματη χρήση εξωτερικού αέρα. Χρήσιμος σύντομος χειροκίνητος αερισμός μπορεί ακόμη να προταθεί υπό όρους με αυτές τις προφυλάξεις. Είναι όριο αερισμού, όχι στόχος θέρμανσης.',
+                                       'en': 'Below this outdoor temperature (°C), report cold-air discomfort and heating-loss cautions and keep automatic outside-air use blocked. Useful brief manual airing may still be suggested conditionally with those cautions. This is a ventilation threshold, not a heating setpoint.'},
+ 'global_threshold_outdoor_aqi': {'de': 'AQI-Obergrenze im Freien für Lüftungsprüfungen. Anbieterskala im AQI-Wähler bestätigen; individuelle Quellengrenzen haben Vorrang. Eine Überschreitung wird als Außenrisiko genannt und sperrt automatische Außenluftnutzung. Sinnvolles manuelles Lüften kann weiterhin bedingt mit Luftqualitätshinweis vorgeschlagen werden.',
+                                  'el': 'Ανώτατο όριο εξωτερικού AQI για αερισμό. Επιβεβαίωσε την κλίμακα παρόχου στον επιλογέα AQI· προσαρμοσμένα όρια ανά πηγή υπερισχύουν του γενικού. Η υπέρβαση αναφέρεται ως προφύλαξη και αποκλείει την αυτόματη χρήση εξωτερικού αέρα. Χρήσιμος χειροκίνητος αερισμός μπορεί ακόμη να προταθεί υπό όρους με τη σχετική προειδοποίηση.',
+                                  'en': 'Outdoor AQI ceiling used for ventilation. Confirm the provider scale with the AQI selector; per-source custom limits override this general ceiling. Exceeding the applicable limit is an outdoor caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with the air-quality caution included.'},
+ 'global_threshold_outdoor_co2': {'de': 'Außengrenze für CO₂ (ppm) bei Lüftungsprüfungen. Ein aktueller Wert darüber wird als Warnhinweis genannt und sperrt automatische Außenluftnutzung. Sinnvolles manuelles Lüften kann weiterhin bedingt mit den erkannten Außenrisiken empfohlen werden. Diese betriebliche Prüfung ist kein zeitbezogener Gesundheitsgrenzwert.',
+                                  'el': 'Ανώτατο όριο εξωτερικού CO₂ (ppm) για ελέγχους αερισμού. Τρέχουσα υψηλότερη μέτρηση αναφέρεται ως προφύλαξη και αποκλείει την αυτόματη χρήση εξωτερικού αέρα. Χρήσιμος χειροκίνητος αερισμός μπορεί ακόμη να προταθεί υπό όρους με αναφορά των εξωτερικών κινδύνων. Το λειτουργικό κριτήριο δεν είναι όριο χρονικά μέσης έκθεσης.',
+                                  'en': 'Outdoor CO₂ (ppm) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.'},
+ 'global_threshold_outdoor_no2': {'de': 'Außengrenze für NO₂ (µg/m³) bei Lüftungsprüfungen. Ein aktueller Wert darüber wird als Warnhinweis genannt und sperrt automatische Außenluftnutzung. Sinnvolles manuelles Lüften kann weiterhin bedingt mit den erkannten Außenrisiken empfohlen werden. Diese betriebliche Prüfung ist kein zeitbezogener Gesundheitsgrenzwert.',
+                                  'el': 'Ανώτατο όριο εξωτερικού NO₂ (µg/m³) για ελέγχους αερισμού. Τρέχουσα υψηλότερη μέτρηση αναφέρεται ως προφύλαξη και αποκλείει την αυτόματη χρήση εξωτερικού αέρα. Χρήσιμος χειροκίνητος αερισμός μπορεί ακόμη να προταθεί υπό όρους με αναφορά των εξωτερικών κινδύνων. Το λειτουργικό κριτήριο δεν είναι όριο χρονικά μέσης έκθεσης.',
+                                  'en': 'Outdoor NO₂ (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.'},
+ 'global_threshold_outdoor_o3': {'de': 'Außengrenze für O₃ (µg/m³) bei Lüftungsprüfungen. Ein aktueller Wert darüber wird als Warnhinweis genannt und sperrt automatische Außenluftnutzung. Sinnvolles manuelles Lüften kann weiterhin bedingt mit den erkannten Außenrisiken empfohlen werden. Diese betriebliche Prüfung ist kein zeitbezogener Gesundheitsgrenzwert.',
+                                 'el': 'Ανώτατο όριο εξωτερικού O₃ (µg/m³) για ελέγχους αερισμού. Τρέχουσα υψηλότερη μέτρηση αναφέρεται ως προφύλαξη και αποκλείει την αυτόματη χρήση εξωτερικού αέρα. Χρήσιμος χειροκίνητος αερισμός μπορεί ακόμη να προταθεί υπό όρους με αναφορά των εξωτερικών κινδύνων. Το λειτουργικό κριτήριο δεν είναι όριο χρονικά μέσης έκθεσης.',
+                                 'en': 'Outdoor O₃ (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.'},
+ 'global_threshold_outdoor_pm10': {'de': 'Außengrenze für PM10 (µg/m³) bei Lüftungsprüfungen. Ein aktueller Wert darüber wird als Warnhinweis genannt und sperrt automatische Außenluftnutzung. Sinnvolles manuelles Lüften kann weiterhin bedingt mit den erkannten Außenrisiken empfohlen werden. Diese betriebliche Prüfung ist kein zeitbezogener Gesundheitsgrenzwert.',
+                                   'el': 'Ανώτατο όριο εξωτερικού PM10 (µg/m³) για ελέγχους αερισμού. Τρέχουσα υψηλότερη μέτρηση αναφέρεται ως προφύλαξη και αποκλείει την αυτόματη χρήση εξωτερικού αέρα. Χρήσιμος χειροκίνητος αερισμός μπορεί ακόμη να προταθεί υπό όρους με αναφορά των εξωτερικών κινδύνων. Το λειτουργικό κριτήριο δεν είναι όριο χρονικά μέσης έκθεσης.',
+                                   'en': 'Outdoor PM10 (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.'},
+ 'global_threshold_outdoor_pm25': {'de': 'Außengrenze für PM2.5 (µg/m³) bei Lüftungsprüfungen. Ein aktueller Wert darüber wird als Warnhinweis genannt und sperrt automatische Außenluftnutzung. Sinnvolles manuelles Lüften kann weiterhin bedingt mit den erkannten Außenrisiken empfohlen werden. Diese betriebliche Prüfung ist kein zeitbezogener Gesundheitsgrenzwert.',
+                                   'el': 'Ανώτατο όριο εξωτερικού PM2.5 (µg/m³) για ελέγχους αερισμού. Τρέχουσα υψηλότερη μέτρηση αναφέρεται ως προφύλαξη και αποκλείει την αυτόματη χρήση εξωτερικού αέρα. Χρήσιμος χειροκίνητος αερισμός μπορεί ακόμη να προταθεί υπό όρους με αναφορά των εξωτερικών κινδύνων. Το λειτουργικό κριτήριο δεν είναι όριο χρονικά μέσης έκθεσης.',
+                                   'en': 'Outdoor PM2.5 (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.'},
+ 'global_threshold_outdoor_so2': {'de': 'Außengrenze für SO₂ (µg/m³) bei Lüftungsprüfungen. Ein aktueller Wert darüber wird als Warnhinweis genannt und sperrt automatische Außenluftnutzung. Sinnvolles manuelles Lüften kann weiterhin bedingt mit den erkannten Außenrisiken empfohlen werden. Diese betriebliche Prüfung ist kein zeitbezogener Gesundheitsgrenzwert.',
+                                  'el': 'Ανώτατο όριο εξωτερικού SO₂ (µg/m³) για ελέγχους αερισμού. Τρέχουσα υψηλότερη μέτρηση αναφέρεται ως προφύλαξη και αποκλείει την αυτόματη χρήση εξωτερικού αέρα. Χρήσιμος χειροκίνητος αερισμός μπορεί ακόμη να προταθεί υπό όρους με αναφορά των εξωτερικών κινδύνων. Το λειτουργικό κριτήριο δεν είναι όριο χρονικά μέσης έκθεσης.',
+                                  'en': 'Outdoor SO₂ (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.'},
+ 'global_threshold_outdoor_voc': {'de': 'Außengrenze für VOC (µg/m³) bei Lüftungsprüfungen. Ein aktueller Wert darüber wird als Warnhinweis genannt und sperrt automatische Außenluftnutzung. Sinnvolles manuelles Lüften kann weiterhin bedingt mit den erkannten Außenrisiken empfohlen werden. Diese betriebliche Prüfung ist kein zeitbezogener Gesundheitsgrenzwert.',
+                                  'el': 'Ανώτατο όριο εξωτερικού VOC (µg/m³) για ελέγχους αερισμού. Τρέχουσα υψηλότερη μέτρηση αναφέρεται ως προφύλαξη και αποκλείει την αυτόματη χρήση εξωτερικού αέρα. Χρήσιμος χειροκίνητος αερισμός μπορεί ακόμη να προταθεί υπό όρους με αναφορά των εξωτερικών κινδύνων. Το λειτουργικό κριτήριο δεν είναι όριο χρονικά μέσης έκθεσης.',
+                                  'en': 'Outdoor VOC (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.'},
+ 'global_threshold_outdoor_voc_parts': {'de': 'Außengrenze für VOC (ppb) bei Lüftungsprüfungen. Ein aktueller Wert darüber wird als Warnhinweis genannt und sperrt automatische Außenluftnutzung. Sinnvolles manuelles Lüften kann weiterhin bedingt mit den erkannten Außenrisiken empfohlen werden. Diese betriebliche Prüfung ist kein zeitbezogener Gesundheitsgrenzwert.',
+                                        'el': 'Ανώτατο όριο εξωτερικού VOC (ppb) για ελέγχους αερισμού. Τρέχουσα υψηλότερη μέτρηση αναφέρεται ως προφύλαξη και αποκλείει την αυτόματη χρήση εξωτερικού αέρα. Χρήσιμος χειροκίνητος αερισμός μπορεί ακόμη να προταθεί υπό όρους με αναφορά των εξωτερικών κινδύνων. Το λειτουργικό κριτήριο δεν είναι όριο χρονικά μέσης έκθεσης.',
+                                        'en': 'Outdoor VOC (ppb) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.'},
  'home_ai_rewrite_announcements': {'de': 'Erlaubt dem eingerichteten Konversationsagenten, Ansagen '
                                          'umzuformulieren. Empfehlung und Handlungsentscheidung bleiben bei '
                                          'HEM; der Agent ändert nur den Wortlaut.',
@@ -1256,18 +1130,9 @@ SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftges
                                  'en': 'Announces when verified home-presence evidence says everyone is away '
                                        'while selected room windows remain open. Unknown presence does not '
                                        'prove absence. This alert does not close windows.'},
- 'home_global_environment_pollen_avoid_ventilation': {'de': 'Nimmt hohe Pollenbelastung in die Bedingungen '
-                                                            'auf, die Fensterlüftungsempfehlungen '
-                                                            'verhindern. Quelle, Hochschwelle und '
-                                                            'Skalenmaximum bestimmen die Einstufung.',
-                                                      'el': 'Προσθέτει την υψηλή γύρη στις συνθήκες που '
-                                                            'αποκλείουν πρόταση αερισμού από παράθυρα. Η '
-                                                            'επιλεγμένη πηγή, το όριο υψηλής γύρης και το '
-                                                            'μέγιστο της κλίμακας καθορίζουν την ταξινόμηση.',
-                                                      'en': 'Adds high pollen to the conditions that block '
-                                                            'window-ventilation advice. The selected pollen '
-                                                            'source, high threshold and provider maximum '
-                                                            'define what counts as high.'},
+ 'home_global_environment_pollen_avoid_ventilation': {'de': 'Nimmt bestätigte hohe Pollenbelastung in die Außenwarnungen auf und sperrt solange die automatische Außenluftnutzung. Sinnvolles manuelles Lüften kann bedingt mit Pollenwarnung vorgeschlagen werden. Quelle, Hochschwelle und Anbietermaximum bestimmen die hohe Belastung; aktivieren, wenn Pollenvermeidung für Bewohner wichtig ist.',
+                                                      'el': 'Περιλαμβάνει την επιβεβαιωμένη υψηλή γύρη στις εξωτερικές προφυλάξεις και αποκλείει την αυτόματη χρήση εξωτερικού αέρα όσο επιμένει. Χρήσιμος χειροκίνητος αερισμός μπορεί ακόμη να προταθεί υπό όρους με προειδοποίηση γύρης. Η πηγή, το υψηλό όριο και το μέγιστο παρόχου ορίζουν την υψηλή γύρη· ενεργοποίησέ το όταν η αποφυγή γύρης είναι σημαντική.',
+                                                      'en': 'Include verified high pollen among outdoor cautions and keep automatic outside-air use blocked while it persists. Useful manual airing may still be suggested conditionally with the pollen warning. The selected source, high threshold and provider maximum define high pollen; enable when pollen avoidance matters to occupants.'},
  'home_global_occupancy_away_cooldown_minutes': {'de': 'Verzögerung in Minuten, bevor aus Raumdaten auf ein '
                                                        'leeres Zuhause geschlossen wird; gilt nur ohne '
                                                        'direkte Zuhause-Tracker. Bestätigte Abwesenheit '
@@ -1422,6 +1287,13 @@ SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftges
                                'Sollwertregler behalten ihre Anwesenheitsregeln.'},
  'cancel_arrival_preparation': {'en': 'End this home’s temporary arrival preparation now and recalculate from actual presence and current settings. If everyone is still away, automatic profile selection returns to Away. The device’s minimum ON/OFF times and other protections still govern physical transitions; cancel does not force all appliances off.', 'el': 'Τερματίζει τώρα την προσωρινή προετοιμασία άφιξης αυτού του σπιτιού και επανυπολογίζει βάσει πραγματικής παρουσίας και τρεχουσών ρυθμίσεων. Αν όλοι λείπουν ακόμη, η αυτόματη επιλογή επιστρέφει στην Απουσία. Οι ελάχιστοι χρόνοι ON/OFF και οι άλλες προστασίες συνεχίζουν να καθορίζουν τις μεταβάσεις· δεν απενεργοποιούνται αναγκαστικά όλες οι συσκευές.', 'de': 'Die vorübergehende Ankunftsvorbereitung dieses Zuhauses jetzt beenden und anhand der tatsächlichen Anwesenheit und aktuellen Einstellungen neu berechnen. Sind weiterhin alle abwesend, kehrt die automatische Profilwahl zu Abwesend zurück. Mindestlauf-/Mindeststillstandszeiten und andere Schutzregeln gelten weiter; Abbrechen erzwingt nicht das sofortige Ausschalten aller Geräte.'},
  'arrival_preparation_timeout': {'en': 'Maximum duration in minutes for the next Prepare for arrival press: 1–1440 minutes, default 60. Changing this setting leaves a running deadline unchanged; press Prepare again to renew with the new duration. The original expiry survives a Home Assistant restart. Arrival, cancel or expiry returns control to actual presence and current settings.', 'el': 'Μέγιστη διάρκεια σε λεπτά για το επόμενο πάτημα Προετοιμασίας άφιξης: 1–1440 λεπτά, προεπιλογή 60. Η αλλαγή δεν μεταβάλλει ενεργή προθεσμία· πάτησε ξανά Προετοιμασία για ανανέωση με τη νέα διάρκεια. Η αρχική λήξη διατηρείται μετά από επανεκκίνηση του Home Assistant. Άφιξη, ακύρωση ή λήξη επαναφέρουν τον έλεγχο στην πραγματική παρουσία και τις τρέχουσες ρυθμίσεις.', 'de': 'Maximale Dauer in Minuten für das nächste Drücken von Ankunft vorbereiten: 1–1440 Minuten, Standard 60. Eine Änderung lässt eine laufende Frist unverändert; zum Verlängern mit der neuen Dauer erneut Vorbereiten drücken. Der ursprüngliche Ablaufzeitpunkt bleibt nach einem Home-Assistant-Neustart erhalten. Heimkehr, Abbruch oder Ablauf übergeben die Steuerung an die tatsächliche Anwesenheit und aktuellen Einstellungen.'}}
+
+from .window_open_text import WINDOW_OPEN_TEXT
+
+SETTING_HELP["global_setting_window_open_timeout_minutes"] = {
+    locale: text["help"] for locale, text in WINDOW_OPEN_TEXT.items()
+}
+
 
 def configuration_help(key: str, locale: str = "en") -> str | None:
     """One current setting explanation; never the complete help catalog."""

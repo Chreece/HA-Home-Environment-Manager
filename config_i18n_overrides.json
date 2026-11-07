@@ -1,28 +1,32 @@
 {
   "en": {
-    "auto": "Home Assistant default",
+    "auto": "Home Assistant language (default)",
     "agent": "Home Assistant default",
     "menu": "Choose one section. All other settings stay unchanged.",
-    "help": {},
+    "help": {
+      "language": "Use the Home Assistant language by default, or choose any announcement language supported by HEM.",
+      "window_open_timeout_minutes": "Wait after an opening request is accepted before new automatic/PID starts resume if still needed. 0–30 minutes, default 5; 0 disables waiting. Existing open-window and device timing protections still apply."
+    },
     "thresholds": {},
     "errors": {},
     "abort": "Air Quality Advisor is already configured.",
     "menuTitle": "Choose settings to edit"
   },
   "el": {
-    "auto": "Προεπιλογή Home Assistant",
+    "auto": "Γλώσσα Home Assistant (προεπιλογή)",
     "agent": "Προεπιλεγμένος πράκτορας Home Assistant",
     "menu": "Επίλεξε μία ενότητα. Όλες οι υπόλοιπες ρυθμίσεις παραμένουν αμετάβλητες.",
     "help": {
       "outdoor_sensors": "Επίλεξε πραγματικούς εξωτερικούς αισθητήρες. Μετρήσεις πάνω από το όριο αποτρέπουν το άνοιγμα. Άγνωστες, μη διαθέσιμες ή παλιές τιμές εμφανίζονται ως ελλιπή δεδομένα.",
       "weather_entities": "Απαιτείται τουλάχιστον μία οντότητα καιρού. Βροχή, καταιγίδα, ισχυρός άνεμος και ακραίες θερμοκρασίες εμποδίζουν το άνοιγμα.",
       "weather_warnings": "Προαιρετικό. Ενεργές ή μη διαθέσιμες επιλεγμένες προειδοποιήσεις εμποδίζουν το άνοιγμα των παραθύρων.",
-      "language": "Η αυτόματη επιλογή χρησιμοποιεί τη γλώσσα του Home Assistant. Η χειροκίνητη ενέργεια μπορεί να επιλέξει άλλη γλώσσα.",
+      "language": "Χρησιμοποιείται από προεπιλογή η γλώσσα του Home Assistant. Μπορείς να επιλέξεις οποιαδήποτε γλώσσα ανακοινώσεων υποστηρίζει το HEM.",
       "automatic_tts": "Απενεργοποιημένο αρχικά. Οι νέες συστάσεις ανοίγματος απαιτούν 90 δευτερόλεπτα σταθερών συνθηκών.",
       "automatic_notifications": "Απενεργοποιημένο αρχικά. Δεν αποστέλλεται νέα ειδοποίηση σε κάθε μέτρηση αισθητήρα.",
       "notify_entities": "Άμεσες οντότητες ειδοποιήσεων όταν δεν χρησιμοποιείται το Announcement Hub.",
       "tts_engine": "Μηχανή σύνθεσης ομιλίας για απευθείας ανακοινώσεις εκτός Announcement Hub.",
-      "media_players": "Συσκευές αναπαραγωγής άμεσων ανακοινώσεων. Η αντιστοίχιση χώρου καθορίζει τους παραλήπτες."
+      "media_players": "Συσκευές αναπαραγωγής άμεσων ανακοινώσεων. Η αντιστοίχιση χώρου καθορίζει τους παραλήπτες.",
+      "window_open_timeout_minutes": "Χρόνος αναμονής μετά την αποδοχή του αιτήματος αερισμού, πριν επιτραπούν νέες αυτόματες/PID εκκινήσεις εφόσον χρειάζονται. 0–30 λεπτά, προεπιλογή 5· το 0 απενεργοποιεί την αναμονή. Οι προστασίες ανοιχτού παραθύρου και οι χρόνοι λειτουργίας συσκευών εξακολουθούν να ισχύουν."
     },
     "thresholds": {
       "outdoor_aqi": "Μέγιστος εξωτερικός AQI",
@@ -49,19 +53,20 @@
     "menuTitle": "Επιλογή ρυθμίσεων"
   },
   "de": {
-    "auto": "Home Assistant-Standard",
+    "auto": "Home-Assistant-Sprache (Standard)",
     "agent": "Home Assistant-Standardagent",
     "menu": "Wähle eine Einstellungsgruppe. Alle anderen Einstellungen bleiben unverändert.",
     "help": {
       "outdoor_sensors": "Wähle echte Außensensoren. Messwerte über den Grenzwerten verhindern das Öffnen; unbekannte, nicht verfügbare oder veraltete Werte werden als fehlende Daten angezeigt.",
       "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen.",
       "weather_warnings": "Optional. Aktive oder nicht verfügbare ausgewählte Warnungen verhindern das Öffnen der Fenster.",
-      "language": "Die automatische Auswahl verwendet die Sprache von Home Assistant. Die manuelle Aktion kann sie überschreiben.",
+      "language": "Standardmäßig wird die Home-Assistant-Sprache verwendet. Alternativ kann jede von HEM unterstützte Ansagesprache gewählt werden.",
       "automatic_tts": "Standardmäßig deaktiviert. Neue Öffnungsempfehlungen erfordern 90 Sekunden stabile Bedingungen.",
       "automatic_notifications": "Standardmäßig deaktiviert. Nicht bei jedem neuen Sensorwert erneut benachrichtigen.",
       "notify_entities": "Direkte Benachrichtigungsziele, wenn Announcement Hub nicht verwendet wird.",
       "tts_engine": "Sprachausgabe für direkte Ansagen ohne Announcement Hub.",
-      "media_players": "Mediaplayer für direkte Sprachausgabe. Die Raumzuordnung bestimmt die Ziele."
+      "media_players": "Mediaplayer für direkte Sprachausgabe. Die Raumzuordnung bestimmt die Ziele.",
+      "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin."
     },
     "thresholds": {
       "outdoor_aqi": "Maximaler Außen-AQI",
@@ -88,19 +93,20 @@
     "menuTitle": "Einstellungen auswählen"
   },
   "fr": {
-    "auto": "Valeur par défaut de Home Assistant",
+    "auto": "Langue de Home Assistant (par défaut)",
     "agent": "Agent Home Assistant par défaut",
     "menu": "Choisissez une rubrique. Les autres paramètres restent inchangés.",
     "help": {
       "outdoor_sensors": "Choisissez des capteurs réellement situés à l'extérieur. Les valeurs dépassant les seuils empêchent d'ouvrir; les mesures inconnues, indisponibles ou anciennes sont signalées comme données manquantes.",
       "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres.",
       "weather_warnings": "Facultatif. Les alertes sélectionnées actives ou indisponibles empêchent d'ouvrir les fenêtres.",
-      "language": "Le mode automatique utilise la langue de Home Assistant. L'action manuelle peut choisir une autre langue.",
+      "language": "Utilisez la langue de Home Assistant par défaut, ou choisissez une langue d’annonce prise en charge par HEM.",
       "automatic_tts": "Désactivé par défaut. Une nouvelle recommandation d'ouverture nécessite 90 secondes de conditions stables.",
       "automatic_notifications": "Désactivé par défaut. Ne pas renvoyer une notification à chaque mesure du capteur.",
       "notify_entities": "Destinations de notification directe lorsqu'Announcement Hub n'est pas utilisé.",
       "tts_engine": "Moteur de synthèse vocale pour les annonces directes sans Announcement Hub.",
-      "media_players": "Lecteurs pour les annonces vocales directes. L'affectation aux pièces détermine les destinataires."
+      "media_players": "Lecteurs pour les annonces vocales directes. L'affectation aux pièces détermine les destinataires.",
+      "window_open_timeout_minutes": "Attente après acceptation d’une demande d’aération avant d’autoriser de nouveaux démarrages automatiques/PID si nécessaire. 0–30 minutes, 5 par défaut ; 0 désactive l’attente. Les protections liées aux fenêtres ouvertes et les durées minimales des appareils restent actives."
     },
     "thresholds": {
       "outdoor_aqi": "AQI extérieur maximal",
@@ -127,19 +133,20 @@
     "menuTitle": "Choisir les paramètres à modifier"
   },
   "es": {
-    "auto": "Predeterminado de Home Assistant",
+    "auto": "Idioma de Home Assistant (predeterminado)",
     "agent": "Agente predeterminado de Home Assistant",
     "menu": "Elige una sección. El resto de ajustes permanecerá sin cambios.",
     "help": {
       "outdoor_sensors": "Elige sensores realmente situados fuera. Las lecturas superiores a los límites impiden abrir; las desconocidas, no disponibles o antiguas se muestran como datos incompletos.",
       "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir.",
       "weather_warnings": "Opcional. Las alertas seleccionadas activas o no disponibles impiden abrir las ventanas.",
-      "language": "El modo automático usa el idioma de Home Assistant. La acción manual puede elegir otro idioma.",
+      "language": "Se usa el idioma de Home Assistant de forma predeterminada. También puedes elegir cualquier idioma de anuncios compatible con HEM.",
       "automatic_tts": "Desactivado de forma predeterminada. Las nuevas recomendaciones de apertura requieren 90 segundos de condiciones estables.",
       "automatic_notifications": "Desactivado de forma predeterminada. No se envía una alerta por cada nueva medición del sensor.",
       "notify_entities": "Destinos de notificación directa cuando no se utiliza Announcement Hub.",
       "tts_engine": "Motor de voz para anuncios directos sin Announcement Hub.",
-      "media_players": "Reproductores para los anuncios de voz directos. La asignación de habitación determina los destinos."
+      "media_players": "Reproductores para los anuncios de voz directos. La asignación de habitación determina los destinos.",
+      "window_open_timeout_minutes": "Espera tras aceptar una solicitud de ventilación antes de permitir nuevos arranques automáticos/PID si aún son necesarios. 0–30 minutos, 5 por defecto; 0 desactiva la espera. Se mantienen las protecciones por ventanas abiertas y los tiempos mínimos de los equipos."
     },
     "thresholds": {
       "outdoor_aqi": "AQI exterior máximo",
@@ -166,7 +173,7 @@
     "menuTitle": "Elegir ajustes para editar"
   },
   "it": {
-    "auto": "Home Assistant - Predefinito",
+    "auto": "Lingua di Home Assistant (predefinita)",
     "agent": "Home Assistant - Agente predefinito",
     "menu": "Seleziona: Stanze / Meteo e allerte / Annunci (facoltativi) / Soglie avanzate",
     "help": {
@@ -176,7 +183,7 @@
       "outdoor_sensors": "Seleziona: Qualità dell'aria esterna · AQI, CO₂, PM2.5, PM10, VOC. Non disponibile: ⚠",
       "weather_entities": "Seleziona: Meteo e allerte · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Meteo e allerte · ⚠ (Non disponibile) → 🪟🔒",
-      "language": "Lingua: Home Assistant (Predefinito).",
+      "language": "Per impostazione predefinita viene usata la lingua di Home Assistant. Puoi scegliere qualsiasi lingua per gli annunci supportata da HEM.",
       "automatic_tts": "Predefinito: ⛔ · Annunci vocali automatici · 🪟 90 s.",
       "automatic_notifications": "Predefinito: ⛔ · Notifiche automatiche.",
       "announcement_repeat_minutes": "Predefinito: 10 min · 0 = mai · Finché la stessa causa persiste · Stanze.",
@@ -185,7 +192,8 @@
       "tts_engine": "Seleziona: tts.* · Annunci vocali automatici.",
       "media_players": "Seleziona: media_player.* · Annunci vocali automatici.",
       "ai_rewrite_announcements": "AI · Annunci (facoltativi) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Seleziona: conversation.* (Home Assistant · Predefinito)."
+      "ai_conversation_agent": "Seleziona: conversation.* (Home Assistant · Predefinito).",
+      "window_open_timeout_minutes": "Attesa dopo l’accettazione di una richiesta di aerazione prima di consentire nuovi avvii automatici/PID se ancora necessari. 0–30 minuti, predefinito 5; 0 disattiva l’attesa. Restano attive le protezioni per finestre aperte e i tempi minimi dei dispositivi."
     },
     "thresholds": {},
     "errors": {
@@ -211,7 +219,7 @@
     "menuTitle": "⚙️ Seleziona"
   },
   "nl": {
-    "auto": "Home Assistant - Standaard",
+    "auto": "Taal van Home Assistant (standaard)",
     "agent": "Home Assistant - Standaardagent",
     "menu": "Kies: Kamers / Weer en waarschuwingen / Meldingen (optioneel) / Geavanceerde grenswaarden",
     "help": {
@@ -221,7 +229,7 @@
       "outdoor_sensors": "Kies: Buitenluchtkwaliteit · AQI, CO₂, PM2.5, PM10, VOC. Niet beschikbaar: ⚠",
       "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Weer en waarschuwingen · ⚠ (Niet beschikbaar) → 🪟🔒",
-      "language": "Taal: Home Assistant (Standaard).",
+      "language": "Gebruik standaard de taal van Home Assistant, of kies een aankondigingstaal die HEM ondersteunt.",
       "automatic_tts": "Standaard: ⛔ · Automatisch gesproken meldingen · 🪟 90 s.",
       "automatic_notifications": "Standaard: ⛔ · Automatische meldingen.",
       "announcement_repeat_minutes": "Standaard: 10 min · 0 = nooit · Zolang dezelfde oorzaak aanhoudt · Kamers.",
@@ -230,7 +238,8 @@
       "tts_engine": "Kies: tts.* · Automatisch gesproken meldingen.",
       "media_players": "Kies: media_player.* · Automatisch gesproken meldingen.",
       "ai_rewrite_announcements": "AI · Meldingen (optioneel) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Kies: conversation.* (Home Assistant · Standaard)."
+      "ai_conversation_agent": "Kies: conversation.* (Home Assistant · Standaard).",
+      "window_open_timeout_minutes": "Wachttijd nadat een verzoek tot luchten is geaccepteerd, voordat nieuwe automatische/PID-starts zo nodig weer mogen. 0–30 minuten, standaard 5; 0 schakelt het wachten uit. Beveiligingen voor open ramen en minimale bedrijfstijden blijven gelden."
     },
     "thresholds": {},
     "errors": {
@@ -256,7 +265,7 @@
     "menuTitle": "⚙️ Kies"
   },
   "pt": {
-    "auto": "Home Assistant - Predefinido",
+    "auto": "Idioma do Home Assistant (predefinido)",
     "agent": "Home Assistant - Agente predefinido",
     "menu": "Selecione: Divisões / Tempo e avisos / Anúncios (opcional) / Limites avançados",
     "help": {
@@ -266,7 +275,7 @@
       "outdoor_sensors": "Selecione: Qualidade do ar exterior · AQI, CO₂, PM2.5, PM10, VOC. Indisponível: ⚠",
       "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Tempo e avisos · ⚠ (Indisponível) → 🪟🔒",
-      "language": "Idioma: Home Assistant (Predefinido).",
+      "language": "Por predefinição, é usado o idioma do Home Assistant. Pode escolher qualquer idioma de anúncios suportado pelo HEM.",
       "automatic_tts": "Predefinido: ⛔ · Avisos de voz automáticos · 🪟 90 s.",
       "automatic_notifications": "Predefinido: ⛔ · Notificações automáticas.",
       "announcement_repeat_minutes": "Predefinido: 10 min · 0 = nunca · Enquanto a mesma causa persistir · Divisões.",
@@ -275,7 +284,8 @@
       "tts_engine": "Selecione: tts.* · Avisos de voz automáticos.",
       "media_players": "Selecione: media_player.* · Avisos de voz automáticos.",
       "ai_rewrite_announcements": "AI · Anúncios (opcional) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Selecione: conversation.* (Home Assistant · Predefinido)."
+      "ai_conversation_agent": "Selecione: conversation.* (Home Assistant · Predefinido).",
+      "window_open_timeout_minutes": "Espera após a aceitação de um pedido de arejamento antes de permitir novos arranques automáticos/PID se ainda forem necessários. 0–30 minutos, predefinição 5; 0 desativa a espera. As proteções de janela aberta e os tempos mínimos dos aparelhos mantêm-se."
     },
     "thresholds": {},
     "errors": {
@@ -301,7 +311,7 @@
     "menuTitle": "⚙️ Selecione"
   },
   "pt-BR": {
-    "auto": "Home Assistant - Padrão",
+    "auto": "Idioma do Home Assistant (padrão)",
     "agent": "Home Assistant - Agente padrão",
     "menu": "Selecione: Cômodos / Clima e alertas / Avisos (opcional) / Limites avançados",
     "help": {
@@ -311,7 +321,7 @@
       "outdoor_sensors": "Selecione: Qualidade do ar externo · AQI, CO₂, PM2.5, PM10, VOC. Indisponível: ⚠",
       "weather_entities": "Selecione: Clima e alertas · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Clima e alertas · ⚠ (Indisponível) → 🪟🔒",
-      "language": "Idioma: Home Assistant (Padrão).",
+      "language": "Por padrão, é usado o idioma do Home Assistant. Você pode escolher qualquer idioma de anúncios compatível com o HEM.",
       "automatic_tts": "Padrão: ⛔ · Avisos de voz automáticos · 🪟 90 s.",
       "automatic_notifications": "Padrão: ⛔ · Notificações automáticas.",
       "announcement_repeat_minutes": "Padrão: 10 min · 0 = nunca · Enquanto a mesma causa persistir · Cômodos.",
@@ -320,7 +330,8 @@
       "tts_engine": "Selecione: tts.* · Avisos de voz automáticos.",
       "media_players": "Selecione: media_player.* · Avisos de voz automáticos.",
       "ai_rewrite_announcements": "AI · Avisos (opcional) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Selecione: conversation.* (Home Assistant · Padrão)."
+      "ai_conversation_agent": "Selecione: conversation.* (Home Assistant · Padrão).",
+      "window_open_timeout_minutes": "Espera após a aceitação de um pedido de ventilação antes de permitir novas partidas automáticas/PID se ainda forem necessárias. 0–30 minutos, padrão 5; 0 desativa a espera. As proteções de janela aberta e os tempos mínimos dos aparelhos continuam valendo."
     },
     "thresholds": {},
     "errors": {
@@ -346,7 +357,7 @@
     "menuTitle": "⚙️ Selecione"
   },
   "pl": {
-    "auto": "Home Assistant - Domyślne",
+    "auto": "Język Home Assistant (domyślny)",
     "agent": "Home Assistant - Domyślny agent",
     "menu": "Wybierz: Pomieszczenia / Pogoda i ostrzeżenia / Komunikaty (opcjonalnie) / Zaawansowane progi",
     "help": {
@@ -356,7 +367,7 @@
       "outdoor_sensors": "Wybierz: Jakość powietrza na zewnątrz · AQI, CO₂, PM2.5, PM10, VOC. Niedostępne: ⚠",
       "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Pogoda i ostrzeżenia · ⚠ (Niedostępne) → 🪟🔒",
-      "language": "Język: Home Assistant (Domyślne).",
+      "language": "Domyślnie używany jest język Home Assistant. Możesz wybrać dowolny język komunikatów obsługiwany przez HEM.",
       "automatic_tts": "Domyślne: ⛔ · Automatyczne komunikaty głosowe · 🪟 90 s.",
       "automatic_notifications": "Domyślne: ⛔ · Automatyczne powiadomienia.",
       "announcement_repeat_minutes": "Domyślne: 10 min · 0 = nigdy · Dopóki trwa ta sama przyczyna · Pomieszczenia.",
@@ -365,7 +376,8 @@
       "tts_engine": "Wybierz: tts.* · Automatyczne komunikaty głosowe.",
       "media_players": "Wybierz: media_player.* · Automatyczne komunikaty głosowe.",
       "ai_rewrite_announcements": "AI · Komunikaty (opcjonalnie) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Wybierz: conversation.* (Home Assistant · Domyślne)."
+      "ai_conversation_agent": "Wybierz: conversation.* (Home Assistant · Domyślne).",
+      "window_open_timeout_minutes": "Czas oczekiwania po przyjęciu prośby o wietrzenie przed ponownym zezwoleniem na automatyczne uruchomienia/PID, jeśli są potrzebne. 0–30 minut, domyślnie 5; 0 wyłącza oczekiwanie. Ochrona przy otwartym oknie i minimalne czasy pracy urządzeń nadal obowiązują."
     },
     "thresholds": {},
     "errors": {
@@ -391,7 +403,7 @@
     "menuTitle": "⚙️ Wybierz"
   },
   "ru": {
-    "auto": "Home Assistant - По умолчанию",
+    "auto": "Язык Home Assistant (по умолчанию)",
     "agent": "Home Assistant - Агент по умолчанию",
     "menu": "Выберите: Комнаты / Погода и предупреждения / Оповещения (необязательно) / Дополнительные пороги",
     "help": {
@@ -401,7 +413,7 @@
       "outdoor_sensors": "Выберите: Качество воздуха снаружи · AQI, CO₂, PM2.5, PM10, VOC. Недоступно: ⚠",
       "weather_entities": "Выберите: Погода и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Погода и предупреждения · ⚠ (Недоступно) → 🪟🔒",
-      "language": "Язык: Home Assistant (По умолчанию).",
+      "language": "По умолчанию используется язык Home Assistant. Можно выбрать любой язык объявлений, поддерживаемый HEM.",
       "automatic_tts": "По умолчанию: ⛔ · Автоматические голосовые оповещения · 🪟 90 s.",
       "automatic_notifications": "По умолчанию: ⛔ · Автоматические уведомления.",
       "announcement_repeat_minutes": "По умолчанию: 10 min · 0 = никогда · Пока сохраняется та же причина · Комнаты.",
@@ -410,7 +422,8 @@
       "tts_engine": "Выберите: tts.* · Автоматические голосовые оповещения.",
       "media_players": "Выберите: media_player.* · Автоматические голосовые оповещения.",
       "ai_rewrite_announcements": "AI · Оповещения (необязательно) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Выберите: conversation.* (Home Assistant · По умолчанию)."
+      "ai_conversation_agent": "Выберите: conversation.* (Home Assistant · По умолчанию).",
+      "window_open_timeout_minutes": "Ожидание после принятия запроса на проветривание перед новыми автоматическими/PID-запусками при сохраняющейся необходимости. 0–30 минут, по умолчанию 5; 0 отключает ожидание. Защита при открытом окне и минимальные интервалы работы устройств сохраняются."
     },
     "thresholds": {},
     "errors": {
@@ -436,7 +449,7 @@
     "menuTitle": "⚙️ Выберите"
   },
   "uk": {
-    "auto": "Home Assistant - Типово",
+    "auto": "Мова Home Assistant (типово)",
     "agent": "Home Assistant - Типовий агент",
     "menu": "Оберіть: Кімнати / Погода та попередження / Оголошення (необов’язково) / Додаткові пороги",
     "help": {
@@ -446,7 +459,7 @@
       "outdoor_sensors": "Оберіть: Якість повітря надворі · AQI, CO₂, PM2.5, PM10, VOC. Недоступно: ⚠",
       "weather_entities": "Оберіть: Погода та попередження · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Погода та попередження · ⚠ (Недоступно) → 🪟🔒",
-      "language": "Мова: Home Assistant (Типово).",
+      "language": "Типово використовується мова Home Assistant. Можна вибрати будь-яку мову оголошень, яку підтримує HEM.",
       "automatic_tts": "Типово: ⛔ · Автоматичні голосові оголошення · 🪟 90 s.",
       "automatic_notifications": "Типово: ⛔ · Автоматичні сповіщення.",
       "announcement_repeat_minutes": "Типово: 10 min · 0 = ніколи · Доки зберігається та сама причина · Кімнати.",
@@ -455,7 +468,8 @@
       "tts_engine": "Оберіть: tts.* · Автоматичні голосові оголошення.",
       "media_players": "Оберіть: media_player.* · Автоматичні голосові оголошення.",
       "ai_rewrite_announcements": "AI · Оголошення (необов’язково) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Оберіть: conversation.* (Home Assistant · Типово)."
+      "ai_conversation_agent": "Оберіть: conversation.* (Home Assistant · Типово).",
+      "window_open_timeout_minutes": "Очікування після прийняття запиту на провітрювання перед новими автоматичними/PID-запусками, якщо вони ще потрібні. 0–30 хвилин, типово 5; 0 вимикає очікування. Захист при відчиненому вікні та мінімальні інтервали роботи пристроїв зберігаються."
     },
     "thresholds": {},
     "errors": {
@@ -481,7 +495,7 @@
     "menuTitle": "⚙️ Оберіть"
   },
   "tr": {
-    "auto": "Home Assistant - Varsayılan",
+    "auto": "Home Assistant dili (varsayılan)",
     "agent": "Home Assistant - Varsayılan temsilci",
     "menu": "Seçin: Odalar / Hava durumu ve uyarılar / Duyurular (isteğe bağlı) / Gelişmiş eşikler",
     "help": {
@@ -491,7 +505,7 @@
       "outdoor_sensors": "Seçin: Dış hava kalitesi · AQI, CO₂, PM2.5, PM10, VOC. Kullanılamıyor: ⚠",
       "weather_entities": "Seçin: Hava durumu ve uyarılar · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Hava durumu ve uyarılar · ⚠ (Kullanılamıyor) → 🪟🔒",
-      "language": "Dil: Home Assistant (Varsayılan).",
+      "language": "Varsayılan olarak Home Assistant dili kullanılır. HEM tarafından desteklenen herhangi bir duyuru dilini seçebilirsiniz.",
       "automatic_tts": "Varsayılan: ⛔ · Otomatik sesli duyurular · 🪟 90 s.",
       "automatic_notifications": "Varsayılan: ⛔ · Otomatik bildirimler.",
       "announcement_repeat_minutes": "Varsayılan: 10 min · 0 = asla · Aynı neden sürdükçe · Odalar.",
@@ -500,7 +514,8 @@
       "tts_engine": "Seçin: tts.* · Otomatik sesli duyurular.",
       "media_players": "Seçin: media_player.* · Otomatik sesli duyurular.",
       "ai_rewrite_announcements": "AI · Duyurular (isteğe bağlı) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Seçin: conversation.* (Home Assistant · Varsayılan)."
+      "ai_conversation_agent": "Seçin: conversation.* (Home Assistant · Varsayılan).",
+      "window_open_timeout_minutes": "Havalandırma isteği kabul edildikten sonra, hâlâ gerekliyse yeni otomatik/PID başlatmalarına izin verilmeden önce beklenen süre. 0–30 dakika, varsayılan 5; 0 beklemeyi kapatır. Açık pencere korumaları ve cihazların asgari çalışma süreleri geçerliliğini korur."
     },
     "thresholds": {},
     "errors": {
@@ -526,7 +541,7 @@
     "menuTitle": "⚙️ Seçin"
   },
   "cs": {
-    "auto": "Home Assistant - Výchozí",
+    "auto": "Jazyk Home Assistant (výchozí)",
     "agent": "Home Assistant - Výchozí agent",
     "menu": "Vyberte: Místnosti / Počasí a výstrahy / Oznámení (volitelně) / Pokročilé limity",
     "help": {
@@ -536,7 +551,7 @@
       "outdoor_sensors": "Vyberte: Kvalita venkovního vzduchu · AQI, CO₂, PM2.5, PM10, VOC. Nedostupné: ⚠",
       "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Počasí a výstrahy · ⚠ (Nedostupné) → 🪟🔒",
-      "language": "Jazyk: Home Assistant (Výchozí).",
+      "language": "Ve výchozím nastavení se používá jazyk Home Assistant. Můžete vybrat libovolný jazyk oznámení podporovaný HEM.",
       "automatic_tts": "Výchozí: ⛔ · Automatická hlasová oznámení · 🪟 90 s.",
       "automatic_notifications": "Výchozí: ⛔ · Automatická oznámení.",
       "announcement_repeat_minutes": "Výchozí: 10 min · 0 = nikdy · Dokud trvá stejná příčina · Místnosti.",
@@ -545,7 +560,8 @@
       "tts_engine": "Vyberte: tts.* · Automatická hlasová oznámení.",
       "media_players": "Vyberte: media_player.* · Automatická hlasová oznámení.",
       "ai_rewrite_announcements": "AI · Oznámení (volitelně) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Vyberte: conversation.* (Home Assistant · Výchozí)."
+      "ai_conversation_agent": "Vyberte: conversation.* (Home Assistant · Výchozí).",
+      "window_open_timeout_minutes": "Čekání po přijetí žádosti o větrání, než budou při trvající potřebě povolena nová automatická/PID spuštění. 0–30 minut, výchozí 5; 0 čekání vypne. Ochrana při otevřeném okně a minimální provozní časy zařízení zůstávají v platnosti."
     },
     "thresholds": {},
     "errors": {
@@ -571,7 +587,7 @@
     "menuTitle": "⚙️ Vyberte"
   },
   "sk": {
-    "auto": "Home Assistant - Predvolené",
+    "auto": "Jazyk Home Assistant (predvolený)",
     "agent": "Home Assistant - Predvolený agent",
     "menu": "Vyberte: Miestnosti / Počasie a výstrahy / Oznámenia (voliteľné) / Pokročilé limity",
     "help": {
@@ -581,7 +597,7 @@
       "outdoor_sensors": "Vyberte: Kvalita vonkajšieho vzduchu · AQI, CO₂, PM2.5, PM10, VOC. Nedostupné: ⚠",
       "weather_entities": "Vyberte: Počasie a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Počasie a výstrahy · ⚠ (Nedostupné) → 🪟🔒",
-      "language": "Jazyk: Home Assistant (Predvolené).",
+      "language": "Predvolene sa používa jazyk Home Assistant. Môžete vybrať ľubovoľný jazyk oznámení podporovaný HEM.",
       "automatic_tts": "Predvolené: ⛔ · Automatické hlasové oznámenia · 🪟 90 s.",
       "automatic_notifications": "Predvolené: ⛔ · Automatické oznámenia.",
       "announcement_repeat_minutes": "Predvolené: 10 min · 0 = nikdy · Kým pretrváva rovnaká príčina · Miestnosti.",
@@ -590,7 +606,8 @@
       "tts_engine": "Vyberte: tts.* · Automatické hlasové oznámenia.",
       "media_players": "Vyberte: media_player.* · Automatické hlasové oznámenia.",
       "ai_rewrite_announcements": "AI · Oznámenia (voliteľné) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Vyberte: conversation.* (Home Assistant · Predvolené)."
+      "ai_conversation_agent": "Vyberte: conversation.* (Home Assistant · Predvolené).",
+      "window_open_timeout_minutes": "Čakanie po prijatí žiadosti o vetranie pred povolením nových automatických/PID spustení, ak sú stále potrebné. 0–30 minút, predvolene 5; 0 čakanie vypne. Ochrana pri otvorenom okne a minimálne prevádzkové časy zariadení zostávajú v platnosti."
     },
     "thresholds": {},
     "errors": {
@@ -616,7 +633,7 @@
     "menuTitle": "⚙️ Vyberte"
   },
   "hu": {
-    "auto": "Home Assistant - Alapértelmezett",
+    "auto": "Home Assistant nyelve (alapértelmezett)",
     "agent": "Home Assistant - Alapértelmezett ügynök",
     "menu": "Válassz: Helyiségek / Időjárás és riasztások / Értesítések (opcionális) / Speciális határértékek",
     "help": {
@@ -626,7 +643,7 @@
       "outdoor_sensors": "Válassz: Kültéri levegőminőség · AQI, CO₂, PM2.5, PM10, VOC. Nem érhető el: ⚠",
       "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Időjárás és riasztások · ⚠ (Nem érhető el) → 🪟🔒",
-      "language": "Nyelv: Home Assistant (Alapértelmezett).",
+      "language": "Alapértelmezés szerint a Home Assistant nyelve érvényes. A HEM által támogatott bármely értesítési nyelv kiválasztható.",
       "automatic_tts": "Alapértelmezett: ⛔ · Automatikus hangos értesítések · 🪟 90 s.",
       "automatic_notifications": "Alapértelmezett: ⛔ · Automatikus értesítések.",
       "announcement_repeat_minutes": "Alapértelmezett: 10 min · 0 = soha · Amíg ugyanaz az ok fennáll · Helyiségek.",
@@ -635,7 +652,8 @@
       "tts_engine": "Válassz: tts.* · Automatikus hangos értesítések.",
       "media_players": "Válassz: media_player.* · Automatikus hangos értesítések.",
       "ai_rewrite_announcements": "AI · Értesítések (opcionális) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Válassz: conversation.* (Home Assistant · Alapértelmezett)."
+      "ai_conversation_agent": "Válassz: conversation.* (Home Assistant · Alapértelmezett).",
+      "window_open_timeout_minutes": "Várakozás a szellőztetési kérés elfogadása után, mielőtt szükség esetén új automatikus/PID-indítások engedélyezhetők. 0–30 perc, alapérték 5; 0 kikapcsolja a várakozást. A nyitott ablak és a minimális működési idők védelmei továbbra is érvényesek."
     },
     "thresholds": {},
     "errors": {
@@ -661,7 +679,7 @@
     "menuTitle": "⚙️ Válassz"
   },
   "ro": {
-    "auto": "Home Assistant - Implicit",
+    "auto": "Limba Home Assistant (implicită)",
     "agent": "Home Assistant - Agent implicit",
     "menu": "Alegeți: Camere / Vreme și avertizări / Anunțuri (opțional) / Praguri avansate",
     "help": {
@@ -671,7 +689,7 @@
       "outdoor_sensors": "Alegeți: Calitatea aerului exterior · AQI, CO₂, PM2.5, PM10, VOC. Indisponibil: ⚠",
       "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Vreme și avertizări · ⚠ (Indisponibil) → 🪟🔒",
-      "language": "Limbă: Home Assistant (Implicit).",
+      "language": "Implicit se folosește limba Home Assistant. Poți alege orice limbă pentru anunțuri acceptată de HEM.",
       "automatic_tts": "Implicit: ⛔ · Anunțuri vocale automate · 🪟 90 s.",
       "automatic_notifications": "Implicit: ⛔ · Notificări automate.",
       "announcement_repeat_minutes": "Implicit: 10 min · 0 = niciodată · Cât timp persistă aceeași cauză · Camere.",
@@ -680,7 +698,8 @@
       "tts_engine": "Alegeți: tts.* · Anunțuri vocale automate.",
       "media_players": "Alegeți: media_player.* · Anunțuri vocale automate.",
       "ai_rewrite_announcements": "AI · Anunțuri (opțional) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Alegeți: conversation.* (Home Assistant · Implicit)."
+      "ai_conversation_agent": "Alegeți: conversation.* (Home Assistant · Implicit).",
+      "window_open_timeout_minutes": "Așteptare după acceptarea unei cereri de aerisire înainte de a permite noi porniri automate/PID, dacă mai sunt necesare. 0–30 de minute, implicit 5; 0 dezactivează așteptarea. Protecțiile pentru ferestre deschise și timpii minimi ai dispozitivelor rămân active."
     },
     "thresholds": {},
     "errors": {
@@ -706,7 +725,7 @@
     "menuTitle": "⚙️ Alegeți"
   },
   "bg": {
-    "auto": "Home Assistant - По подразбиране",
+    "auto": "Език на Home Assistant (по подразбиране)",
     "agent": "Home Assistant - Агент по подразбиране",
     "menu": "Изберете: Стаи / Време и предупреждения / Съобщения (по избор) / Разширени прагове",
     "help": {
@@ -716,7 +735,7 @@
       "outdoor_sensors": "Изберете: Качество на външния въздух · AQI, CO₂, PM2.5, PM10, VOC. Недостъпно: ⚠",
       "weather_entities": "Изберете: Време и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Време и предупреждения · ⚠ (Недостъпно) → 🪟🔒",
-      "language": "Език: Home Assistant (По подразбиране).",
+      "language": "По подразбиране се използва езикът на Home Assistant. Можете да изберете всеки език за съобщения, поддържан от HEM.",
       "automatic_tts": "По подразбиране: ⛔ · Автоматични гласови съобщения · 🪟 90 s.",
       "automatic_notifications": "По подразбиране: ⛔ · Автоматични известия.",
       "announcement_repeat_minutes": "По подразбиране: 10 min · 0 = никога · Докато причината продължава · Стаи.",
@@ -725,7 +744,8 @@
       "tts_engine": "Изберете: tts.* · Автоматични гласови съобщения.",
       "media_players": "Изберете: media_player.* · Автоматични гласови съобщения.",
       "ai_rewrite_announcements": "AI · Съобщения (по избор) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Изберете: conversation.* (Home Assistant · По подразбиране)."
+      "ai_conversation_agent": "Изберете: conversation.* (Home Assistant · По подразбиране).",
+      "window_open_timeout_minutes": "Изчакване след приемане на заявка за проветряване, преди да се разрешат нови автоматични/PID стартирания при нужда. 0–30 минути, по подразбиране 5; 0 изключва изчакването. Защитите при отворен прозорец и минималните времена на уредите остават активни."
     },
     "thresholds": {},
     "errors": {
@@ -751,7 +771,7 @@
     "menuTitle": "⚙️ Изберете"
   },
   "hr": {
-    "auto": "Home Assistant - Zadano",
+    "auto": "Jezik Home Assistanta (zadano)",
     "agent": "Home Assistant - Zadani agent",
     "menu": "Odaberite: Prostorije / Vrijeme i upozorenja / Obavijesti (neobavezno) / Napredni pragovi",
     "help": {
@@ -761,7 +781,7 @@
       "outdoor_sensors": "Odaberite: Kvaliteta vanjskog zraka · AQI, CO₂, PM2.5, PM10, VOC. Nedostupno: ⚠",
       "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Vrijeme i upozorenja · ⚠ (Nedostupno) → 🪟🔒",
-      "language": "Jezik: Home Assistant (Zadano).",
+      "language": "Zadano se koristi jezik Home Assistanta. Možete odabrati bilo koji jezik obavijesti koji HEM podržava.",
       "automatic_tts": "Zadano: ⛔ · Automatske glasovne obavijesti · 🪟 90 s.",
       "automatic_notifications": "Zadano: ⛔ · Automatske obavijesti.",
       "announcement_repeat_minutes": "Zadano: 10 min · 0 = nikad · Dok traje isti uzrok · Prostorije.",
@@ -770,7 +790,8 @@
       "tts_engine": "Odaberite: tts.* · Automatske glasovne obavijesti.",
       "media_players": "Odaberite: media_player.* · Automatske glasovne obavijesti.",
       "ai_rewrite_announcements": "AI · Obavijesti (neobavezno) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Odaberite: conversation.* (Home Assistant · Zadano)."
+      "ai_conversation_agent": "Odaberite: conversation.* (Home Assistant · Zadano).",
+      "window_open_timeout_minutes": "Čekanje nakon prihvaćanja zahtjeva za prozračivanje prije dopuštanja novih automatskih/PID pokretanja ako su potrebna. 0–30 minuta, zadano 5; 0 isključuje čekanje. Zaštite pri otvorenom prozoru i minimalna vremena rada uređaja i dalje vrijede."
     },
     "thresholds": {},
     "errors": {
@@ -796,7 +817,7 @@
     "menuTitle": "⚙️ Odaberite"
   },
   "sr": {
-    "auto": "Home Assistant - Подразумевано",
+    "auto": "Језик Home Assistant-а (подразумевани)",
     "agent": "Home Assistant - Подразумевани агент",
     "menu": "Изаберите: Собе / Време и упозорења / Обавештења (опционо) / Напредни прагови",
     "help": {
@@ -806,7 +827,7 @@
       "outdoor_sensors": "Изаберите: Квалитет спољног ваздуха · AQI, CO₂, PM2.5, PM10, VOC. Недоступно: ⚠",
       "weather_entities": "Изаберите: Време и упозорења · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Време и упозорења · ⚠ (Недоступно) → 🪟🔒",
-      "language": "Језик: Home Assistant (Подразумевано).",
+      "language": "Подразумевано се користи језик Home Assistant-а. Можете изабрати било који језик обавештења који HEM подржава.",
       "automatic_tts": "Подразумевано: ⛔ · Аутоматска говорна обавештења · 🪟 90 s.",
       "automatic_notifications": "Подразумевано: ⛔ · Аутоматска обавештења.",
       "announcement_repeat_minutes": "Подразумевано: 10 min · 0 = никада · Док исти узрок траје · Собе.",
@@ -815,7 +836,8 @@
       "tts_engine": "Изаберите: tts.* · Аутоматска говорна обавештења.",
       "media_players": "Изаберите: media_player.* · Аутоматска говорна обавештења.",
       "ai_rewrite_announcements": "AI · Обавештења (опционо) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Изаберите: conversation.* (Home Assistant · Подразумевано)."
+      "ai_conversation_agent": "Изаберите: conversation.* (Home Assistant · Подразумевано).",
+      "window_open_timeout_minutes": "Чекање после прихватања захтева за проветравање пре дозвољавања нових аутоматских/PID покретања ако су потребна. 0–30 минута, подразумевано 5; 0 искључује чекање. Заштите при отвореном прозору и минимална времена рада уређаја и даље важе."
     },
     "thresholds": {},
     "errors": {
@@ -841,7 +863,7 @@
     "menuTitle": "⚙️ Изаберите"
   },
   "sv": {
-    "auto": "Home Assistant - Standard",
+    "auto": "Home Assistant-språk (standard)",
     "agent": "Home Assistant - Standardagent",
     "menu": "Välj: Rum / Väder och varningar / Meddelanden (valfritt) / Avancerade gränsvärden",
     "help": {
@@ -851,7 +873,7 @@
       "outdoor_sensors": "Välj: Utomhusluftens kvalitet · AQI, CO₂, PM2.5, PM10, VOC. Inte tillgänglig: ⚠",
       "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Väder och varningar · ⚠ (Inte tillgänglig) → 🪟🔒",
-      "language": "Språk: Home Assistant (Standard).",
+      "language": "Som standard används språket i Home Assistant. Du kan välja valfritt meddelandespråk som HEM stöder.",
       "automatic_tts": "Standard: ⛔ · Automatiska röstmeddelanden · 🪟 90 s.",
       "automatic_notifications": "Standard: ⛔ · Automatiska aviseringar.",
       "announcement_repeat_minutes": "Standard: 10 min · 0 = aldrig · Så länge samma orsak kvarstår · Rum.",
@@ -860,7 +882,8 @@
       "tts_engine": "Välj: tts.* · Automatiska röstmeddelanden.",
       "media_players": "Välj: media_player.* · Automatiska röstmeddelanden.",
       "ai_rewrite_announcements": "AI · Meddelanden (valfritt) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Välj: conversation.* (Home Assistant · Standard)."
+      "ai_conversation_agent": "Välj: conversation.* (Home Assistant · Standard).",
+      "window_open_timeout_minutes": "Väntan efter att en vädringsbegäran har accepterats innan nya automatiska/PID-starter tillåts vid kvarstående behov. 0–30 minuter, standard 5; 0 stänger av väntan. Skydd för öppna fönster och apparaternas minimitider gäller fortfarande."
     },
     "thresholds": {},
     "errors": {
@@ -886,7 +909,7 @@
     "menuTitle": "⚙️ Välj"
   },
   "nb": {
-    "auto": "Home Assistant - Standard",
+    "auto": "Home Assistant-språk (standard)",
     "agent": "Home Assistant - Standardagent",
     "menu": "Velg: Rom / Vær og varsler / Kunngjøringer (valgfritt) / Avanserte grenseverdier",
     "help": {
@@ -896,7 +919,7 @@
       "outdoor_sensors": "Velg: Luftkvalitet ute · AQI, CO₂, PM2.5, PM10, VOC. Ikke tilgjengelig: ⚠",
       "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Vær og varsler · ⚠ (Ikke tilgjengelig) → 🪟🔒",
-      "language": "Språk: Home Assistant (Standard).",
+      "language": "Som standard brukes språket i Home Assistant. Du kan velge et hvilket som helst meldingsspråk som HEM støtter.",
       "automatic_tts": "Standard: ⛔ · Automatiske talemeldinger · 🪟 90 s.",
       "automatic_notifications": "Standard: ⛔ · Automatiske varsler.",
       "announcement_repeat_minutes": "Standard: 10 min · 0 = aldri · Så lenge samme årsak vedvarer · Rom.",
@@ -905,7 +928,8 @@
       "tts_engine": "Velg: tts.* · Automatiske talemeldinger.",
       "media_players": "Velg: media_player.* · Automatiske talemeldinger.",
       "ai_rewrite_announcements": "AI · Kunngjøringer (valgfritt) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Velg: conversation.* (Home Assistant · Standard)."
+      "ai_conversation_agent": "Velg: conversation.* (Home Assistant · Standard).",
+      "window_open_timeout_minutes": "Ventetid etter at en lufteforespørsel er godtatt, før nye automatiske/PID-starter tillates ved fortsatt behov. 0–30 minutter, standard 5; 0 slår av ventingen. Beskyttelse ved åpne vinduer og apparatenes minstetider gjelder fortsatt."
     },
     "thresholds": {},
     "errors": {
@@ -931,7 +955,7 @@
     "menuTitle": "⚙️ Velg"
   },
   "da": {
-    "auto": "Home Assistant - Standard",
+    "auto": "Home Assistant-sprog (standard)",
     "agent": "Home Assistant - Standardagent",
     "menu": "Vælg: Rum / Vejr og advarsler / Meddelelser (valgfrit) / Avancerede grænser",
     "help": {
@@ -941,7 +965,7 @@
       "outdoor_sensors": "Vælg: Udendørs luftkvalitet · AQI, CO₂, PM2.5, PM10, VOC. Ikke tilgængelig: ⚠",
       "weather_entities": "Vælg: Vejr og advarsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Vejr og advarsler · ⚠ (Ikke tilgængelig) → 🪟🔒",
-      "language": "Sprog: Home Assistant (Standard).",
+      "language": "Som standard bruges sproget i Home Assistant. Du kan vælge ethvert meddelelsessprog, som HEM understøtter.",
       "automatic_tts": "Standard: ⛔ · Automatiske talemeddelelser · 🪟 90 s.",
       "automatic_notifications": "Standard: ⛔ · Automatiske notifikationer.",
       "announcement_repeat_minutes": "Standard: 10 min · 0 = aldrig · Så længe samme årsag fortsætter · Rum.",
@@ -950,7 +974,8 @@
       "tts_engine": "Vælg: tts.* · Automatiske talemeddelelser.",
       "media_players": "Vælg: media_player.* · Automatiske talemeddelelser.",
       "ai_rewrite_announcements": "AI · Meddelelser (valgfrit) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Vælg: conversation.* (Home Assistant · Standard)."
+      "ai_conversation_agent": "Vælg: conversation.* (Home Assistant · Standard).",
+      "window_open_timeout_minutes": "Ventetid efter accept af en udluftningsanmodning, før nye automatiske/PID-starter tillades ved fortsat behov. 0–30 minutter, standard 5; 0 slår ventetiden fra. Beskyttelse ved åbne vinduer og apparaternes minimumstider gælder stadig."
     },
     "thresholds": {},
     "errors": {
@@ -976,7 +1001,7 @@
     "menuTitle": "⚙️ Vælg"
   },
   "fi": {
-    "auto": "Home Assistant - Oletus",
+    "auto": "Home Assistantin kieli (oletus)",
     "agent": "Home Assistant - Oletusavustaja",
     "menu": "Valitse: Huoneet / Sää ja varoitukset / Ilmoitukset (valinnainen) / Lisäraja-arvot",
     "help": {
@@ -986,7 +1011,7 @@
       "outdoor_sensors": "Valitse: Ulkoilman laatu · AQI, CO₂, PM2.5, PM10, VOC. Ei saatavilla: ⚠",
       "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Sää ja varoitukset · ⚠ (Ei saatavilla) → 🪟🔒",
-      "language": "Kieli: Home Assistant (Oletus).",
+      "language": "Oletuksena käytetään Home Assistantin kieltä. Voit valita minkä tahansa HEMin tukeman ilmoituskielen.",
       "automatic_tts": "Oletus: ⛔ · Automaattiset puheilmoitukset · 🪟 90 s.",
       "automatic_notifications": "Oletus: ⛔ · Automaattiset ilmoitukset.",
       "announcement_repeat_minutes": "Oletus: 10 min · 0 = ei koskaan · Kun sama syy jatkuu · Huoneet.",
@@ -995,7 +1020,8 @@
       "tts_engine": "Valitse: tts.* · Automaattiset puheilmoitukset.",
       "media_players": "Valitse: media_player.* · Automaattiset puheilmoitukset.",
       "ai_rewrite_announcements": "AI · Ilmoitukset (valinnainen) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Valitse: conversation.* (Home Assistant · Oletus)."
+      "ai_conversation_agent": "Valitse: conversation.* (Home Assistant · Oletus).",
+      "window_open_timeout_minutes": "Odotusaika tuuletuspyynnön hyväksymisen jälkeen ennen uusia automaattisia/PID-käynnistyksiä, jos niitä edelleen tarvitaan. 0–30 minuuttia, oletus 5; 0 poistaa odotuksen. Avoimen ikkunan suojaukset ja laitteiden vähimmäisajat säilyvät."
     },
     "thresholds": {},
     "errors": {
@@ -1021,7 +1047,7 @@
     "menuTitle": "⚙️ Valitse"
   },
   "id": {
-    "auto": "Home Assistant - Bawaan",
+    "auto": "Bahasa Home Assistant (bawaan)",
     "agent": "Home Assistant - Agen bawaan",
     "menu": "Pilih: Ruangan / Cuaca dan peringatan / Pengumuman (opsional) / Ambang batas lanjutan",
     "help": {
@@ -1031,7 +1057,7 @@
       "outdoor_sensors": "Pilih: Kualitas udara luar · AQI, CO₂, PM2.5, PM10, VOC. Tidak tersedia: ⚠",
       "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Cuaca dan peringatan · ⚠ (Tidak tersedia) → 🪟🔒",
-      "language": "Bahasa: Home Assistant (Bawaan).",
+      "language": "Secara bawaan, bahasa Home Assistant digunakan. Anda dapat memilih bahasa pengumuman apa pun yang didukung HEM.",
       "automatic_tts": "Bawaan: ⛔ · Pengumuman suara otomatis · 🪟 90 s.",
       "automatic_notifications": "Bawaan: ⛔ · Notifikasi otomatis.",
       "announcement_repeat_minutes": "Bawaan: 10 min · 0 = tidak pernah · Selama penyebab yang sama berlanjut · Ruangan.",
@@ -1040,7 +1066,8 @@
       "tts_engine": "Pilih: tts.* · Pengumuman suara otomatis.",
       "media_players": "Pilih: media_player.* · Pengumuman suara otomatis.",
       "ai_rewrite_announcements": "AI · Pengumuman (opsional) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Pilih: conversation.* (Home Assistant · Bawaan)."
+      "ai_conversation_agent": "Pilih: conversation.* (Home Assistant · Bawaan).",
+      "window_open_timeout_minutes": "Waktu tunggu setelah permintaan membuka jendela diterima sebelum penyalaan otomatis/PID baru diizinkan jika masih diperlukan. 0–30 menit, bawaan 5; 0 menonaktifkan penantian. Perlindungan jendela terbuka dan waktu minimum perangkat tetap berlaku."
     },
     "thresholds": {},
     "errors": {
@@ -1066,7 +1093,7 @@
     "menuTitle": "⚙️ Pilih"
   },
   "vi": {
-    "auto": "Home Assistant - Mặc định",
+    "auto": "Ngôn ngữ Home Assistant (mặc định)",
     "agent": "Home Assistant - Trợ lý mặc định",
     "menu": "Chọn: Phòng / Thời tiết và cảnh báo / Thông báo (tùy chọn) / Ngưỡng nâng cao",
     "help": {
@@ -1076,7 +1103,7 @@
       "outdoor_sensors": "Chọn: Chất lượng không khí ngoài trời · AQI, CO₂, PM2.5, PM10, VOC. Không khả dụng: ⚠",
       "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "Thời tiết và cảnh báo · ⚠ (Không khả dụng) → 🪟🔒",
-      "language": "Ngôn ngữ: Home Assistant (Mặc định).",
+      "language": "Mặc định sử dụng ngôn ngữ Home Assistant. Bạn có thể chọn bất kỳ ngôn ngữ thông báo nào được HEM hỗ trợ.",
       "automatic_tts": "Mặc định: ⛔ · Thông báo giọng nói tự động · 🪟 90 s.",
       "automatic_notifications": "Mặc định: ⛔ · Thông báo tự động.",
       "announcement_repeat_minutes": "Mặc định: 10 min · 0 = không bao giờ · Khi nguyên nhân vẫn còn · Phòng.",
@@ -1085,7 +1112,8 @@
       "tts_engine": "Chọn: tts.* · Thông báo giọng nói tự động.",
       "media_players": "Chọn: media_player.* · Thông báo giọng nói tự động.",
       "ai_rewrite_announcements": "AI · Thông báo (tùy chọn) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "Chọn: conversation.* (Home Assistant · Mặc định)."
+      "ai_conversation_agent": "Chọn: conversation.* (Home Assistant · Mặc định).",
+      "window_open_timeout_minutes": "Chờ sau khi yêu cầu thông gió được chấp nhận trước khi cho phép khởi động tự động/PID mới nếu vẫn cần. 0–30 phút, mặc định 5; 0 tắt thời gian chờ. Bảo vệ khi cửa sổ mở và thời gian tối thiểu của thiết bị vẫn áp dụng."
     },
     "thresholds": {},
     "errors": {
@@ -1111,7 +1139,7 @@
     "menuTitle": "⚙️ Chọn"
   },
   "th": {
-    "auto": "Home Assistant - ค่าเริ่มต้น",
+    "auto": "ภาษา Home Assistant (ค่าเริ่มต้น)",
     "agent": "Home Assistant - ตัวแทนเริ่มต้น",
     "menu": "เลือก: ห้อง / สภาพอากาศและคำเตือน / การประกาศ (ไม่บังคับ) / ค่าขีดจำกัดขั้นสูง",
     "help": {
@@ -1121,7 +1149,7 @@
       "outdoor_sensors": "เลือก: คุณภาพอากาศภายนอก · AQI, CO₂, PM2.5, PM10, VOC. ไม่พร้อมใช้งาน: ⚠",
       "weather_entities": "เลือก: สภาพอากาศและคำเตือน · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "สภาพอากาศและคำเตือน · ⚠ (ไม่พร้อมใช้งาน) → 🪟🔒",
-      "language": "ภาษา: Home Assistant (ค่าเริ่มต้น).",
+      "language": "ใช้ภาษา Home Assistant เป็นค่าเริ่มต้น หรือเลือกภาษาประกาศใดก็ได้ที่ HEM รองรับ",
       "automatic_tts": "ค่าเริ่มต้น: ⛔ · ประกาศเสียงอัตโนมัติ · 🪟 90 s.",
       "automatic_notifications": "ค่าเริ่มต้น: ⛔ · การแจ้งเตือนอัตโนมัติ.",
       "announcement_repeat_minutes": "ค่าเริ่มต้น: 10 min · 0 = ไม่ต้องทำซ้ำ · เมื่อสาเหตุเดิมยังคงอยู่ · ห้อง.",
@@ -1130,7 +1158,8 @@
       "tts_engine": "เลือก: tts.* · ประกาศเสียงอัตโนมัติ.",
       "media_players": "เลือก: media_player.* · ประกาศเสียงอัตโนมัติ.",
       "ai_rewrite_announcements": "AI · การประกาศ (ไม่บังคับ) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "เลือก: conversation.* (Home Assistant · ค่าเริ่มต้น)."
+      "ai_conversation_agent": "เลือก: conversation.* (Home Assistant · ค่าเริ่มต้น).",
+      "window_open_timeout_minutes": "เวลารอหลังจากรับคำขอระบายอากาศ ก่อนอนุญาตให้เริ่มทำงานอัตโนมัติ/PID ครั้งใหม่หากยังจำเป็น 0–30 นาที ค่าเริ่มต้น 5; 0 ปิดการรอ การป้องกันเมื่อหน้าต่างเปิดและเวลาขั้นต่ำของอุปกรณ์ยังคงมีผล"
     },
     "thresholds": {},
     "errors": {
@@ -1156,7 +1185,7 @@
     "menuTitle": "⚙️ เลือก"
   },
   "hi": {
-    "auto": "Home Assistant - डिफ़ॉल्ट",
+    "auto": "Home Assistant की भाषा (डिफ़ॉल्ट)",
     "agent": "Home Assistant - डिफ़ॉल्ट एजेंट",
     "menu": "चुनें: कमरे / मौसम और चेतावनियाँ / घोषणाएँ (वैकल्पिक) / उन्नत सीमाएँ",
     "help": {
@@ -1166,7 +1195,7 @@
       "outdoor_sensors": "चुनें: बाहरी वायु गुणवत्ता · AQI, CO₂, PM2.5, PM10, VOC. उपलब्ध नहीं: ⚠",
       "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "मौसम और चेतावनियाँ · ⚠ (उपलब्ध नहीं) → 🪟🔒",
-      "language": "भाषा: Home Assistant (डिफ़ॉल्ट).",
+      "language": "डिफ़ॉल्ट रूप से Home Assistant की भाषा का उपयोग होता है। आप HEM द्वारा समर्थित कोई भी घोषणा भाषा चुन सकते हैं।",
       "automatic_tts": "डिफ़ॉल्ट: ⛔ · स्वचालित ध्वनि घोषणाएँ · 🪟 90 s.",
       "automatic_notifications": "डिफ़ॉल्ट: ⛔ · स्वचालित सूचनाएँ.",
       "announcement_repeat_minutes": "डिफ़ॉल्ट: 10 min · 0 = कभी नहीं · जब तक वही कारण बना रहे · कमरे.",
@@ -1175,7 +1204,8 @@
       "tts_engine": "चुनें: tts.* · स्वचालित ध्वनि घोषणाएँ.",
       "media_players": "चुनें: media_player.* · स्वचालित ध्वनि घोषणाएँ.",
       "ai_rewrite_announcements": "AI · घोषणाएँ (वैकल्पिक) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "चुनें: conversation.* (Home Assistant · डिफ़ॉल्ट)."
+      "ai_conversation_agent": "चुनें: conversation.* (Home Assistant · डिफ़ॉल्ट).",
+      "window_open_timeout_minutes": "हवा आने देने का अनुरोध स्वीकार होने के बाद, आवश्यकता होने पर नए स्वचालित/PID आरंभ की अनुमति देने से पहले प्रतीक्षा। 0–30 मिनट, डिफ़ॉल्ट 5; 0 प्रतीक्षा बंद करता है। खुली खिड़की की सुरक्षा और उपकरण के न्यूनतम समय लागू रहते हैं।"
     },
     "thresholds": {},
     "errors": {
@@ -1201,7 +1231,7 @@
     "menuTitle": "⚙️ चुनें"
   },
   "zh-Hans": {
-    "auto": "Home Assistant - 默认",
+    "auto": "Home Assistant 语言（默认）",
     "agent": "Home Assistant - 默认会话代理",
     "menu": "请选择: 房间 / 天气与预警 / 播报（可选） / 高级阈值",
     "help": {
@@ -1211,7 +1241,7 @@
       "outdoor_sensors": "请选择: 室外空气质量 · AQI, CO₂, PM2.5, PM10, VOC. 不可用: ⚠",
       "weather_entities": "请选择: 天气与预警 · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "天气与预警 · ⚠ (不可用) → 🪟🔒",
-      "language": "语言: Home Assistant (默认).",
+      "language": "默认使用 Home Assistant 的语言，也可以选择 HEM 支持的任意播报语言。",
       "automatic_tts": "默认: ⛔ · 自动语音播报 · 🪟 90 s.",
       "automatic_notifications": "默认: ⛔ · 自动通知.",
       "announcement_repeat_minutes": "默认: 10 min · 0 = 从不 · 仅在同一原因持续时 · 房间.",
@@ -1220,7 +1250,8 @@
       "tts_engine": "请选择: tts.* · 自动语音播报.",
       "media_players": "请选择: media_player.* · 自动语音播报.",
       "ai_rewrite_announcements": "AI · 播报（可选） → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "请选择: conversation.* (Home Assistant · 默认)."
+      "ai_conversation_agent": "请选择: conversation.* (Home Assistant · 默认).",
+      "window_open_timeout_minutes": "开窗请求被接受后，等待一段时间，再根据需要允许新的自动/PID启动。范围0–30分钟，默认5；0表示不等待。开窗保护和设备最短运行/停机时间仍然有效。"
     },
     "thresholds": {},
     "errors": {
@@ -1246,7 +1277,7 @@
     "menuTitle": "⚙️ 请选择"
   },
   "zh-Hant": {
-    "auto": "Home Assistant - 預設",
+    "auto": "Home Assistant 語言（預設）",
     "agent": "Home Assistant - 預設對話代理",
     "menu": "請選擇: 房間 / 天氣與警報 / 播報（選用） / 進階閾值",
     "help": {
@@ -1256,7 +1287,7 @@
       "outdoor_sensors": "請選擇: 室外空氣品質 · AQI, CO₂, PM2.5, PM10, VOC. 無法使用: ⚠",
       "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "天氣與警報 · ⚠ (無法使用) → 🪟🔒",
-      "language": "語言: Home Assistant (預設).",
+      "language": "預設使用 Home Assistant 的語言，也可以選擇 HEM 支援的任何播報語言。",
       "automatic_tts": "預設: ⛔ · 自動語音播報 · 🪟 90 s.",
       "automatic_notifications": "預設: ⛔ · 自動通知.",
       "announcement_repeat_minutes": "預設: 10 min · 0 = 永不 · 僅在相同原因持續時 · 房間.",
@@ -1265,7 +1296,8 @@
       "tts_engine": "請選擇: tts.* · 自動語音播報.",
       "media_players": "請選擇: media_player.* · 自動語音播報.",
       "ai_rewrite_announcements": "AI · 播報（選用） → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "請選擇: conversation.* (Home Assistant · 預設)."
+      "ai_conversation_agent": "請選擇: conversation.* (Home Assistant · 預設).",
+      "window_open_timeout_minutes": "開窗請求被接受後，等候一段時間，再依需要允許新的自動/PID啟動。範圍0–30分鐘，預設5；0表示不等候。開窗保護和裝置最短運作／停機時間仍然有效。"
     },
     "thresholds": {},
     "errors": {
@@ -1291,7 +1323,7 @@
     "menuTitle": "⚙️ 請選擇"
   },
   "ja": {
-    "auto": "Home Assistant - 既定",
+    "auto": "Home Assistant の言語（既定）",
     "agent": "Home Assistant - 既定のエージェント",
     "menu": "選択してください: 部屋 / 天気と警報 / 通知（任意） / 詳細なしきい値",
     "help": {
@@ -1301,7 +1333,7 @@
       "outdoor_sensors": "選択してください: 屋外の空気質 · AQI, CO₂, PM2.5, PM10, VOC. 利用できません: ⚠",
       "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "天気と警報 · ⚠ (利用できません) → 🪟🔒",
-      "language": "言語: Home Assistant (既定).",
+      "language": "既定では Home Assistant の言語を使用します。HEM が対応するアナウンス言語を選択することもできます。",
       "automatic_tts": "既定: ⛔ · 自動音声通知 · 🪟 90 s.",
       "automatic_notifications": "既定: ⛔ · 自動通知.",
       "announcement_repeat_minutes": "既定: 10 min · 0 = 繰り返さない · 同じ原因が続く間 · 部屋.",
@@ -1310,7 +1342,8 @@
       "tts_engine": "選択してください: tts.* · 自動音声通知.",
       "media_players": "選択してください: media_player.* · 自動音声通知.",
       "ai_rewrite_announcements": "AI · 通知（任意） → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "選択してください: conversation.* (Home Assistant · 既定)."
+      "ai_conversation_agent": "選択してください: conversation.* (Home Assistant · 既定).",
+      "window_open_timeout_minutes": "換気の依頼が受け付けられた後、必要に応じて新たな自動/PID起動を許可するまでの待機時間です。0～30分、既定は5分。0で待機を無効にします。窓開放時の保護と機器の最小運転・停止時間は引き続き適用されます。"
     },
     "thresholds": {},
     "errors": {
@@ -1336,7 +1369,7 @@
     "menuTitle": "⚙️ 選択してください"
   },
   "ko": {
-    "auto": "Home Assistant - 기본값",
+    "auto": "Home Assistant 언어 (기본값)",
     "agent": "Home Assistant - 기본 대화 에이전트",
     "menu": "선택하세요: 방 / 날씨 및 경보 / 알림(선택 사항) / 고급 임계값",
     "help": {
@@ -1346,7 +1379,7 @@
       "outdoor_sensors": "선택하세요: 실외 공기질 · AQI, CO₂, PM2.5, PM10, VOC. 사용할 수 없음: ⚠",
       "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "날씨 및 경보 · ⚠ (사용할 수 없음) → 🪟🔒",
-      "language": "언어: Home Assistant (기본값).",
+      "language": "기본적으로 Home Assistant의 언어를 사용합니다. HEM이 지원하는 알림 언어를 선택할 수도 있습니다.",
       "automatic_tts": "기본값: ⛔ · 자동 음성 안내 · 🪟 90 s.",
       "automatic_notifications": "기본값: ⛔ · 자동 알림.",
       "announcement_repeat_minutes": "기본값: 10 min · 0 = 반복 안 함 · 같은 원인이 지속되는 동안 · 방.",
@@ -1355,7 +1388,8 @@
       "tts_engine": "선택하세요: tts.* · 자동 음성 안내.",
       "media_players": "선택하세요: media_player.* · 자동 음성 안내.",
       "ai_rewrite_announcements": "AI · 알림(선택 사항) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "선택하세요: conversation.* (Home Assistant · 기본값)."
+      "ai_conversation_agent": "선택하세요: conversation.* (Home Assistant · 기본값).",
+      "window_open_timeout_minutes": "환기 요청이 수락된 후, 필요한 경우 새로운 자동/PID 시작을 허용하기 전까지 기다리는 시간입니다. 0~30분, 기본값 5; 0은 대기를 끕니다. 창문 열림 보호와 기기의 최소 작동·정지 시간은 계속 적용됩니다."
     },
     "thresholds": {},
     "errors": {
@@ -1381,7 +1415,7 @@
     "menuTitle": "⚙️ 선택하세요"
   },
   "ar": {
-    "auto": "Home Assistant - افتراضي",
+    "auto": "لغة Home Assistant (الافتراضية)",
     "agent": "Home Assistant - الوكيل الافتراضي",
     "menu": "اختر: الغرف / الطقس والتحذيرات / الإعلانات (اختياري) / حدود متقدمة",
     "help": {
@@ -1391,7 +1425,7 @@
       "outdoor_sensors": "اختر: جودة الهواء الخارجي · AQI, CO₂, PM2.5, PM10, VOC. غير متاح: ⚠",
       "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "الطقس والتحذيرات · ⚠ (غير متاح) → 🪟🔒",
-      "language": "اللغة: Home Assistant (افتراضي).",
+      "language": "تُستخدم لغة Home Assistant افتراضيًا. يمكنك اختيار أي لغة إعلانات يدعمها HEM.",
       "automatic_tts": "افتراضي: ⛔ · إعلانات صوتية تلقائية · 🪟 90 s.",
       "automatic_notifications": "افتراضي: ⛔ · إشعارات تلقائية.",
       "announcement_repeat_minutes": "افتراضي: 10 min · 0 = أبدًا · ما دام السبب نفسه مستمرًا · الغرف.",
@@ -1400,7 +1434,8 @@
       "tts_engine": "اختر: tts.* · إعلانات صوتية تلقائية.",
       "media_players": "اختر: media_player.* · إعلانات صوتية تلقائية.",
       "ai_rewrite_announcements": "AI · الإعلانات (اختياري) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "اختر: conversation.* (Home Assistant · افتراضي)."
+      "ai_conversation_agent": "اختر: conversation.* (Home Assistant · افتراضي).",
+      "window_open_timeout_minutes": "انتظار بعد قبول طلب التهوية قبل السماح بعمليات تشغيل تلقائي/PID جديدة إذا ظلت مطلوبة. من 0 إلى 30 دقيقة، والافتراضي 5؛ القيمة 0 تلغي الانتظار. تظل حماية النافذة المفتوحة والحدود الزمنية الدنيا للأجهزة سارية."
     },
     "thresholds": {},
     "errors": {
@@ -1426,7 +1461,7 @@
     "menuTitle": "⚙️ اختر"
   },
   "he": {
-    "auto": "Home Assistant - ברירת מחדל",
+    "auto": "שפת Home Assistant (ברירת מחדל)",
     "agent": "Home Assistant - סוכן ברירת מחדל",
     "menu": "בחרו: חדרים / מזג אוויר ואזהרות / הודעות (אופציונלי) / ספי התראה מתקדמים",
     "help": {
@@ -1436,7 +1471,7 @@
       "outdoor_sensors": "בחרו: איכות האוויר בחוץ · AQI, CO₂, PM2.5, PM10, VOC. לא זמין: ⚠",
       "weather_entities": "בחרו: מזג אוויר ואזהרות · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "מזג אוויר ואזהרות · ⚠ (לא זמין) → 🪟🔒",
-      "language": "שפה: Home Assistant (ברירת מחדל).",
+      "language": "כברירת מחדל נעשה שימוש בשפת Home Assistant. ניתן לבחור כל שפת הודעות שנתמכת ב־HEM.",
       "automatic_tts": "ברירת מחדל: ⛔ · הודעות קוליות אוטומטיות · 🪟 90 s.",
       "automatic_notifications": "ברירת מחדל: ⛔ · התראות אוטומטיות.",
       "announcement_repeat_minutes": "ברירת מחדל: 10 min · 0 = לעולם לא · כל עוד אותה סיבה נמשכת · חדרים.",
@@ -1445,7 +1480,8 @@
       "tts_engine": "בחרו: tts.* · הודעות קוליות אוטומטיות.",
       "media_players": "בחרו: media_player.* · הודעות קוליות אוטומטיות.",
       "ai_rewrite_announcements": "AI · הודעות (אופציונלי) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "בחרו: conversation.* (Home Assistant · ברירת מחדל)."
+      "ai_conversation_agent": "בחרו: conversation.* (Home Assistant · ברירת מחדל).",
+      "window_open_timeout_minutes": "המתנה לאחר קבלת בקשת אוורור, לפני מתן אפשרות להפעלות אוטומטיות/PID חדשות אם הן עדיין נחוצות. 0–30 דקות, ברירת מחדל 5; 0 מבטל את ההמתנה. הגנות חלון פתוח וזמני המינימום של המכשירים ממשיכים לחול."
     },
     "thresholds": {},
     "errors": {
@@ -1471,7 +1507,7 @@
     "menuTitle": "⚙️ בחרו"
   },
   "fa": {
-    "auto": "Home Assistant - پیش‌فرض",
+    "auto": "زبان Home Assistant (پیش‌فرض)",
     "agent": "Home Assistant - عامل پیش‌فرض",
     "menu": "انتخاب کنید: اتاق‌ها / آب‌وهوا و هشدارها / اعلان‌ها (اختیاری) / آستانه‌های پیشرفته",
     "help": {
@@ -1481,7 +1517,7 @@
       "outdoor_sensors": "انتخاب کنید: کیفیت هوای بیرون · AQI, CO₂, PM2.5, PM10, VOC. در دسترس نیست: ⚠",
       "weather_entities": "انتخاب کنید: آب‌وهوا و هشدارها · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "آب‌وهوا و هشدارها · ⚠ (در دسترس نیست) → 🪟🔒",
-      "language": "زبان: Home Assistant (پیش‌فرض).",
+      "language": "به‌طور پیش‌فرض از زبان Home Assistant استفاده می‌شود. می‌توانید هر زبان اعلانی را که HEM پشتیبانی می‌کند انتخاب کنید.",
       "automatic_tts": "پیش‌فرض: ⛔ · اعلان‌های صوتی خودکار · 🪟 90 s.",
       "automatic_notifications": "پیش‌فرض: ⛔ · اعلان‌های خودکار.",
       "announcement_repeat_minutes": "پیش‌فرض: 10 min · 0 = هرگز · تا زمانی که همان علت ادامه دارد · اتاق‌ها.",
@@ -1490,7 +1526,8 @@
       "tts_engine": "انتخاب کنید: tts.* · اعلان‌های صوتی خودکار.",
       "media_players": "انتخاب کنید: media_player.* · اعلان‌های صوتی خودکار.",
       "ai_rewrite_announcements": "AI · اعلان‌ها (اختیاری) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "انتخاب کنید: conversation.* (Home Assistant · پیش‌فرض)."
+      "ai_conversation_agent": "انتخاب کنید: conversation.* (Home Assistant · پیش‌فرض).",
+      "window_open_timeout_minutes": "زمان انتظار پس از پذیرفته شدن درخواست تهویه، پیش از مجاز شدن شروع‌های خودکار/PID جدید در صورت نیاز. ۰ تا ۳۰ دقیقه، پیش‌فرض ۵؛ ۰ انتظار را غیرفعال می‌کند. حفاظت پنجرهٔ باز و حداقل زمان‌های دستگاه‌ها همچنان اعمال می‌شوند."
     },
     "thresholds": {},
     "errors": {
@@ -1516,7 +1553,7 @@
     "menuTitle": "⚙️ انتخاب کنید"
   },
   "bn": {
-    "auto": "Home Assistant - ডিফল্ট",
+    "auto": "Home Assistant-এর ভাষা (ডিফল্ট)",
     "agent": "Home Assistant - ডিফল্ট এজেন্ট",
     "menu": "নির্বাচন করুন: কক্ষ / আবহাওয়া ও সতর্কতা / ঘোষণা (ঐচ্ছিক) / উন্নত সীমা",
     "help": {
@@ -1526,7 +1563,7 @@
       "outdoor_sensors": "নির্বাচন করুন: বাইরের বায়ুর মান · AQI, CO₂, PM2.5, PM10, VOC. পাওয়া যাচ্ছে না: ⚠",
       "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "আবহাওয়া ও সতর্কতা · ⚠ (পাওয়া যাচ্ছে না) → 🪟🔒",
-      "language": "ভাষা: Home Assistant (ডিফল্ট).",
+      "language": "ডিফল্টভাবে Home Assistant-এর ভাষা ব্যবহার করা হয়। আপনি HEM সমর্থিত যেকোনো ঘোষণার ভাষা বেছে নিতে পারেন।",
       "automatic_tts": "ডিফল্ট: ⛔ · স্বয়ংক্রিয় ভয়েস ঘোষণা · 🪟 90 s.",
       "automatic_notifications": "ডিফল্ট: ⛔ · স্বয়ংক্রিয় বিজ্ঞপ্তি.",
       "announcement_repeat_minutes": "ডিফল্ট: 10 min · 0 = কখনো নয় · একই কারণ বজায় থাকলে · কক্ষ.",
@@ -1535,7 +1572,8 @@
       "tts_engine": "নির্বাচন করুন: tts.* · স্বয়ংক্রিয় ভয়েস ঘোষণা.",
       "media_players": "নির্বাচন করুন: media_player.* · স্বয়ংক্রিয় ভয়েস ঘোষণা.",
       "ai_rewrite_announcements": "AI · ঘোষণা (ঐচ্ছিক) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "নির্বাচন করুন: conversation.* (Home Assistant · ডিফল্ট)."
+      "ai_conversation_agent": "নির্বাচন করুন: conversation.* (Home Assistant · ডিফল্ট).",
+      "window_open_timeout_minutes": "বাতাস চলাচলের অনুরোধ গৃহীত হওয়ার পর, প্রয়োজন থাকলে নতুন স্বয়ংক্রিয়/PID চালুর অনুমতির আগে অপেক্ষা। ০–৩০ মিনিট, ডিফল্ট ৫; ০ অপেক্ষা বন্ধ করে। খোলা জানালার সুরক্ষা ও যন্ত্রের ন্যূনতম সময় কার্যকর থাকে।"
     },
     "thresholds": {},
     "errors": {
@@ -1561,7 +1599,7 @@
     "menuTitle": "⚙️ নির্বাচন করুন"
   },
   "ur": {
-    "auto": "Home Assistant - پہلے سے طے شدہ",
+    "auto": "Home Assistant کی زبان (پہلے سے طے شدہ)",
     "agent": "Home Assistant - پہلے سے طے شدہ ایجنٹ",
     "menu": "منتخب کریں: کمرے / موسم اور انتباہات / اعلانات (اختیاری) / اعلیٰ حدود",
     "help": {
@@ -1571,7 +1609,7 @@
       "outdoor_sensors": "منتخب کریں: بیرونی ہوا کا معیار · AQI, CO₂, PM2.5, PM10, VOC. دستیاب نہیں: ⚠",
       "weather_entities": "منتخب کریں: موسم اور انتباہات · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "موسم اور انتباہات · ⚠ (دستیاب نہیں) → 🪟🔒",
-      "language": "زبان: Home Assistant (پہلے سے طے شدہ).",
+      "language": "پہلے سے طے شدہ طور پر Home Assistant کی زبان استعمال ہوتی ہے۔ آپ HEM کی معاونت یافتہ کوئی بھی اعلانی زبان منتخب کر سکتے ہیں۔",
       "automatic_tts": "پہلے سے طے شدہ: ⛔ · خودکار صوتی اعلانات · 🪟 90 s.",
       "automatic_notifications": "پہلے سے طے شدہ: ⛔ · خودکار اطلاعات.",
       "announcement_repeat_minutes": "پہلے سے طے شدہ: 10 min · 0 = کبھی نہیں · جب تک وہی وجہ برقرار رہے · کمرے.",
@@ -1580,7 +1618,8 @@
       "tts_engine": "منتخب کریں: tts.* · خودکار صوتی اعلانات.",
       "media_players": "منتخب کریں: media_player.* · خودکار صوتی اعلانات.",
       "ai_rewrite_announcements": "AI · اعلانات (اختیاری) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "منتخب کریں: conversation.* (Home Assistant · پہلے سے طے شدہ)."
+      "ai_conversation_agent": "منتخب کریں: conversation.* (Home Assistant · پہلے سے طے شدہ).",
+      "window_open_timeout_minutes": "ہوا آنے دینے کی درخواست قبول ہونے کے بعد، ضرورت برقرار ہو تو نئے خودکار/PID آغاز کی اجازت سے پہلے انتظار۔ 0–30 منٹ، طے شدہ 5؛ 0 انتظار بند کرتا ہے۔ کھلی کھڑکی کی حفاظت اور آلات کے کم از کم اوقات برقرار رہتے ہیں۔"
     },
     "thresholds": {},
     "errors": {
@@ -1606,7 +1645,7 @@
     "menuTitle": "⚙️ منتخب کریں"
   },
   "ta": {
-    "auto": "Home Assistant - இயல்புநிலை",
+    "auto": "Home Assistant மொழி (இயல்புநிலை)",
     "agent": "Home Assistant - இயல்புநிலை முகவர்",
     "menu": "தேர்ந்தெடுக்கவும்: அறைகள் / வானிலை மற்றும் எச்சரிக்கைகள் / அறிவிப்புகள் (விருப்பம்) / மேம்பட்ட வரம்புகள்",
     "help": {
@@ -1616,7 +1655,7 @@
       "outdoor_sensors": "தேர்ந்தெடுக்கவும்: வெளிப்புறக் காற்றுத் தரம் · AQI, CO₂, PM2.5, PM10, VOC. கிடைக்கவில்லை: ⚠",
       "weather_entities": "தேர்ந்தெடுக்கவும்: வானிலை மற்றும் எச்சரிக்கைகள் · weather.* · 🌧️/⛈️/💨 → 🪟🔒",
       "weather_warnings": "வானிலை மற்றும் எச்சரிக்கைகள் · ⚠ (கிடைக்கவில்லை) → 🪟🔒",
-      "language": "மொழி: Home Assistant (இயல்புநிலை).",
+      "language": "இயல்பாக Home Assistant மொழி பயன்படுத்தப்படும். HEM ஆதரிக்கும் எந்த அறிவிப்பு மொழியையும் தேர்வு செய்யலாம்.",
       "automatic_tts": "இயல்புநிலை: ⛔ · தானியங்கி குரல் அறிவிப்புகள் · 🪟 90 s.",
       "automatic_notifications": "இயல்புநிலை: ⛔ · தானியங்கி அறிவிப்புகள்.",
       "announcement_repeat_minutes": "இயல்புநிலை: 10 min · 0 = ஒருபோதும் இல்லை · அதே காரணம் தொடரும் வரை · அறைகள்.",
@@ -1625,7 +1664,8 @@
       "tts_engine": "தேர்ந்தெடுக்கவும்: tts.* · தானியங்கி குரல் அறிவிப்புகள்.",
       "media_players": "தேர்ந்தெடுக்கவும்: media_player.* · தானியங்கி குரல் அறிவிப்புகள்.",
       "ai_rewrite_announcements": "AI · அறிவிப்புகள் (விருப்பம்) → Announcement Hub (use_ai) / Home Assistant.",
-      "ai_conversation_agent": "தேர்ந்தெடுக்கவும்: conversation.* (Home Assistant · இயல்புநிலை)."
+      "ai_conversation_agent": "தேர்ந்தெடுக்கவும்: conversation.* (Home Assistant · இயல்புநிலை).",
+      "window_open_timeout_minutes": "காற்றோட்டக் கோரிக்கை ஏற்கப்பட்ட பின், இன்னும் தேவை இருந்தால் புதிய தானியங்கி/PID தொடக்கங்களை அனுமதிக்கும் முன் காத்திருக்கும் நேரம். 0–30 நிமிடங்கள், இயல்புநிலை 5; 0 காத்திருப்பை முடக்கும். திறந்த சாளரப் பாதுகாப்புகளும் சாதனங்களின் குறைந்தபட்ச நேரங்களும் தொடர்ந்து பொருந்தும்."
     },
     "thresholds": {},
     "errors": {

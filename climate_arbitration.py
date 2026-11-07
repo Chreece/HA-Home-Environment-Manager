@@ -297,6 +297,11 @@ def new_command_gate(hass: Any, area: str, config: dict,
     from .equipment_model import legacy_hold
     if hold := legacy_hold(hass, entry_id, entity):
         return hold
+    manager = getattr(hass, "data", {}).get("environment_manager", {}).get(entry_id)
+    if getattr(manager, "window_open_wait", None) is not None:
+        from .window_open_wait import legacy_start_hold
+        if waiting := legacy_start_hold(hass, entry_id, area, entity, purpose, config):
+            return waiting["status"]
     if purpose not in CHANNELS or not isinstance(plan,dict):
         return "invalid_coordination_request"
     from .arrival_preparation import live_preparation, room_eligible

@@ -68,7 +68,7 @@
         "title": "Meldingen (optioneel)",
         "description": "Meldingen (optioneel). Automatische meldingen · Automatisch gesproken meldingen. Announcement Hub.",
         "data": {
-          "language": "Taal",
+          "language": "Taal van aankondigingen",
           "automatic_tts": "Automatische",
           "automatic_notifications": "Automatische · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Meldingen (optioneel) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · Taal"
         },
         "data_description": {
-          "language": "Stel ‘Taal’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
+          "language": "Gebruik standaard de taal van Home Assistant, of kies een aankondigingstaal die HEM ondersteunt.",
           "automatic_tts": "Standaard: ⛔ · Automatische · 🪟 90 s.",
           "automatic_notifications": "Standaard: ⛔ · Automatische · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Standaard: 10 min · 0 = nooit · Zolang dezelfde oorzaak aanhoudt · Kamers.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "Beslisdrempel voor ‘Buiten · °C (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
           "max_outdoor_temp": "Beslisdrempel voor ‘Buiten · °C (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
           "max_outdoor_humidity": "Beslisdrempel voor ‘Buiten · RH (%) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Beslisdrempel voor ‘Schimmelindicator · ≥ 70%’. Deze stuurt adviezen aan, maar is geen medische grenswaarde."
         }
@@ -191,7 +191,7 @@
           "media_players": "instellingen · bron · MEDIA_PLAYERS",
           "tts_engine": "instellingen · bron · TTS_ENGINE",
           "ai_conversation_agent": "AI · Kiezen · bron",
-          "language": "TTS · Kiezen · bron",
+          "language": "Taal van aankondigingen",
           "use_mold_indicator": "Schimmelindicator · RH (%) → 70%",
           "pollen_entities": "Pollen · bron · Kiezen",
           "use_announcement_hub": "Meldingen · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "Aanwezigheid thuis · Maximale ouderdom van tracker-/telgegevens (min)",
           "general_home_policy": "Aanwezigheid thuis",
           "general_wake_alarm_entity": "Slaap · Volgende wekker",
-          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker"
+          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker",
+          "window_open_timeout_minutes": "Wachttijd voor raam openen (min)"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "Kies: media_player.* · instellingen · bron · MEDIA_PLAYERS.",
           "tts_engine": "Kies: tts.* · instellingen · bron · TTS_ENGINE.",
           "ai_conversation_agent": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · AI · Kiezen · bron · conversation.* / ai_task.*.",
-          "language": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · TTS · Kiezen · bron · provider capabilities.",
+          "language": "Gebruik standaard de taal van Home Assistant, of kies een aankondigingstaal die HEM ondersteunt.",
           "use_mold_indicator": "🧱 Schimmelindicator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Pollen · bron · Kiezen.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "De ouderdomsgrens geldt voor trackerberichten en numerieke personentellingen. Kamerlijsten en binaire aanwezigheidsstatussen verlopen niet zolang ze ongewijzigd zijn. Onbeschikbare, herstelde of ongeldige bronnen blijven onbekend. Dit is geen slaapduur.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Kies een tijd- of tijdstempelentiteit voor de volgende wekker en een entiteit voor de minuten. HEM beëindigt automatische slaap zoveel minuten eerder en hervat de normale doelen. Tijden zonder datum gebruiken de Home Assistant-tijdzone. Afwezigheid, handmatige bediening en beveiligingen houden voorrang.",
-          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen."
+          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen.",
+          "window_open_timeout_minutes": "Wachttijd nadat een verzoek tot luchten is geaccepteerd, voordat nieuwe automatische/PID-starts zo nodig weer mogen. 0–30 minuten, standaard 5; 0 schakelt het wachten uit. Beveiligingen voor open ramen en minimale bedrijfstijden blijven gelden."
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "Meldingen (optioneel)",
         "description": "Meldingen (optioneel). Automatische meldingen · Automatisch gesproken meldingen. Announcement Hub.",
         "data": {
-          "language": "Taal",
+          "language": "Taal van aankondigingen",
           "automatic_tts": "Automatische",
           "automatic_notifications": "Automatische · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "Meldingen (optioneel) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · Taal"
         },
         "data_description": {
-          "language": "Stel ‘Taal’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie.",
+          "language": "Gebruik standaard de taal van Home Assistant, of kies een aankondigingstaal die HEM ondersteunt.",
           "automatic_tts": "Standaard: ⛔ · Automatische · 🪟 90 s.",
           "automatic_notifications": "Standaard: ⛔ · Automatische · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "Standaard: 10 min · 0 = nooit · Zolang dezelfde oorzaak aanhoudt · Kamers.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "Beslisdrempel voor ‘Buiten · °C (≥)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
           "max_outdoor_temp": "Beslisdrempel voor ‘Buiten · °C (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
           "max_outdoor_humidity": "Beslisdrempel voor ‘Buiten · RH (%) (≤)’. Deze stuurt adviezen aan, maar is geen medische grenswaarde.",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "Beslisdrempel voor ‘Schimmelindicator · ≥ 70%’. Deze stuurt adviezen aan, maar is geen medische grenswaarde."
         }
@@ -2187,7 +2189,7 @@
           "media_players": "instellingen · bron · MEDIA_PLAYERS",
           "tts_engine": "instellingen · bron · TTS_ENGINE",
           "ai_conversation_agent": "AI · Kiezen · bron",
-          "language": "TTS · Kiezen · bron",
+          "language": "Taal van aankondigingen",
           "use_mold_indicator": "Schimmelindicator · RH (%) → 70%",
           "pollen_entities": "Pollen · bron · Kiezen",
           "use_announcement_hub": "Meldingen · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "Aanwezigheid thuis · Maximale ouderdom van tracker-/telgegevens (min)",
           "general_home_policy": "Aanwezigheid thuis",
           "general_wake_alarm_entity": "Slaap · Volgende wekker",
-          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker"
+          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker",
+          "window_open_timeout_minutes": "Wachttijd voor raam openen (min)"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "Kies: media_player.* · instellingen · bron · MEDIA_PLAYERS.",
           "tts_engine": "Kies: tts.* · instellingen · bron · TTS_ENGINE.",
           "ai_conversation_agent": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · AI · Kiezen · bron · conversation.* / ai_task.*.",
-          "language": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · TTS · Kiezen · bron · provider capabilities.",
+          "language": "Gebruik standaard de taal van Home Assistant, of kies een aankondigingstaal die HEM ondersteunt.",
           "use_mold_indicator": "🧱 Schimmelindicator · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "Selecteer gedeelde bronnen en meldingsuitgangen. Opslaan voltooit de installatie. Bedrijfsinstellingen blijven op de huis- en kamerapparaten. · Pollen · bron · Kiezen.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "De ouderdomsgrens geldt voor trackerberichten en numerieke personentellingen. Kamerlijsten en binaire aanwezigheidsstatussen verlopen niet zolang ze ongewijzigd zijn. Onbeschikbare, herstelde of ongeldige bronnen blijven onbekend. Dit is geen slaapduur.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Kies een tijd- of tijdstempelentiteit voor de volgende wekker en een entiteit voor de minuten. HEM beëindigt automatische slaap zoveel minuten eerder en hervat de normale doelen. Tijden zonder datum gebruiken de Home Assistant-tijdzone. Afwezigheid, handmatige bediening en beveiligingen houden voorrang.",
-          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen."
+          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen.",
+          "window_open_timeout_minutes": "Wachttijd nadat een verzoek tot luchten is geaccepteerd, voordat nieuwe automatische/PID-starts zo nodig weer mogen. 0–30 minuten, standaard 5; 0 schakelt het wachten uit. Beveiligingen voor open ramen en minimale bedrijfstijden blijven gelden."
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "Energiebesparing",
           "window_open_pause": "Gepauzeerd wegens open raam",
           "window_close_warmup": "Wachten na sluiten van ramen",
-          "window_state_unknown": "Wachten op raamstatus"
+          "window_state_unknown": "Wachten op raamstatus",
+          "window_open_wait": "Wacht tot je het raam opent",
+          "window_request_pending": "Verzoek om het raam te openen wordt verstuurd"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "Hulp"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "Ventilatie · Wachttijd voor raam openen (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - Standaard",
+        "auto": "Taal van Home Assistant (standaard)",
         "en": "instellingen · bron",
         "de": "instellingen · bron",
         "el": "instellingen · bron",

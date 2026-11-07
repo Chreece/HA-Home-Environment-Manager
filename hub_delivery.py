@@ -62,11 +62,23 @@ def make_hub_payload(
     The shared "text" field is used whenever both channels were selected;
     single-channel calls retain channel-specific fields so one cannot
     accidentally enable the other via Hub's shared-text semantics.
+    Callers resolve HEM's automatic language against HA before this handoff
+    so Hub's own default cannot change the announcement's text or voice.
     """
     data: dict[str, Any] = {
         "title": title,
         "area": [recommendation.area_name],
-        "level": "warning" if recommendation.action == "close" else "info",
+        # Measured air-quality needs and equipment-related opening requests
+        # require user action just like closing advice. Do not silently lose
+        # their speech at Hub's warning-level TTS threshold. Timing-only
+        # wake/return nudges remain informational.
+        "level": ("info" if recommendation.action == "open"
+                  and not getattr(recommendation,"cautions",())
+                  and not getattr(recommendation,"wait_seconds",0)
+                  and bool(getattr(recommendation,"reasons",()))
+                  and all(reason.code in ("air_refresh_wake","air_refresh_return")
+                          for reason in recommendation.reasons)
+                  else "warning"),
         "use_ai": bool(use_ai),
     }
     if speech and visual:
@@ -125,7 +137,7 @@ async def async_system_notification(hass: Any, title: str, message: str, area_id
         _LOGGER.warning("No Home Assistant persistent_notification.create action for fallback")
         return False
     try:
-        await hass.services.async_call(
+        await asyncio.wait_for(hass.services.async_call(
             "persistent_notification", "create",
             {
                 "title": title,
@@ -133,7 +145,7 @@ async def async_system_notification(hass: Any, title: str, message: str, area_id
                 "notification_id": f"environment_manager_{area_id}",
             },
             blocking=True,
-        )
+        ), timeout=30)
     except asyncio.CancelledError:
         raise
     except Exception as err:

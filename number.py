@@ -11,6 +11,8 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import EntityCategory
 
 from .const import (CONF_REPEAT_MINUTES, DEFAULT_REPEAT_MINUTES,
+                    CONF_WINDOW_OPEN_TIMEOUT_MINUTES, DEFAULT_WINDOW_OPEN_TIMEOUT_MINUTES,
+                    MAX_WINDOW_OPEN_TIMEOUT_MINUTES,
                     CONF_USE_MOLD, CONF_AREAS, CONF_MOLD_ROOMS,
                     DOMAIN, SIGNAL_UPDATED)
 from .device_hierarchy import controller_device_info
@@ -158,6 +160,9 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
         ArrivalPreparationTimeoutNumber(manager),
         ConfigNumber(manager, entry.entry_id, None, "global_setting",
                      CONF_REPEAT_MINUTES, (0.0, 1440.0, 1.0, "min")),
+        ConfigNumber(manager, entry.entry_id, None, "global_setting",
+                     CONF_WINDOW_OPEN_TIMEOUT_MINUTES,
+                     (0.0, float(MAX_WINDOW_OPEN_TIMEOUT_MINUTES), 1.0, "min")),
     ]
     numbers.extend(
         ConfigNumber(manager, entry.entry_id, None, "global_threshold", key, bounds)
@@ -582,7 +587,24 @@ class ConfigNumber(SettingsMetadata, NumberEntity):
         if self._kind == "global_threshold":
             return float(self._manager.thresholds[self._key])
         if self._kind == "global_setting":
-            return float(settings.get(CONF_REPEAT_MINUTES, DEFAULT_REPEAT_MINUTES))
+            defaults = {
+                CONF_REPEAT_MINUTES: DEFAULT_REPEAT_MINUTES,
+                CONF_WINDOW_OPEN_TIMEOUT_MINUTES: DEFAULT_WINDOW_OPEN_TIMEOUT_MINUTES,
+            }
+            raw = settings.get(self._key, defaults[self._key])
+            if self._key == CONF_WINDOW_OPEN_TIMEOUT_MINUTES:
+                # Older or externally edited entries must not produce an
+                # invalid Number state or change the runtime's default.
+                import math
+                try:
+                    value = float(raw)
+                except (ValueError, TypeError, OverflowError):
+                    value = float("nan")
+                return value if (not isinstance(raw, bool) and math.isfinite(value)
+                                 and value.is_integer()
+                                 and 0 <= value <= MAX_WINDOW_OPEN_TIMEOUT_MINUTES
+                                 ) else float(DEFAULT_WINDOW_OPEN_TIMEOUT_MINUTES)
+            return float(raw)
         if self._kind == "mold_surface":
             rooms = settings.get(CONF_MOLD_ROOMS, {})
             config = rooms.get(self._area_id, {}) if isinstance(rooms, dict) else {}

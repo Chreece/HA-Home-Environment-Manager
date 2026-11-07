@@ -68,7 +68,7 @@
         "title": "اعلانات (اختیاری)",
         "description": "اعلانات (اختیاری). خودکار اطلاعات · خودکار صوتی اعلانات. Announcement Hub.",
         "data": {
-          "language": "زبان",
+          "language": "اعلانات کی زبان",
           "automatic_tts": "خودکار",
           "automatic_notifications": "خودکار · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "اعلانات (اختیاری) · 0-1440 min",
@@ -80,7 +80,7 @@
           "ai_conversation_agent": "AI · زبان"
         },
         "data_description": {
-          "language": "زبان: Home Assistant (پہلے سے طے شدہ).",
+          "language": "پہلے سے طے شدہ طور پر Home Assistant کی زبان استعمال ہوتی ہے۔ آپ HEM کی معاونت یافتہ کوئی بھی اعلانی زبان منتخب کر سکتے ہیں۔",
           "automatic_tts": "پہلے سے طے شدہ: ⛔ · خودکار · 🪟 90 s.",
           "automatic_notifications": "پہلے سے طے شدہ: ⛔ · خودکار · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "پہلے سے طے شدہ: 10 min · 0 = کبھی نہیں · جب تک وہی وجہ برقرار رہے · کمرے.",
@@ -139,7 +139,7 @@
           "min_outdoor_temp": "«باہر · °C (≥)» کے لیے فیصلہ کرنے کی حد ہے۔ یہ مشوروں پر اثر انداز ہوتی ہے، طبی حد نہیں۔",
           "max_outdoor_temp": "«باہر · °C (≤)» کے لیے فیصلہ کرنے کی حد ہے۔ یہ مشوروں پر اثر انداز ہوتی ہے، طبی حد نہیں۔",
           "max_outdoor_humidity": "«باہر · RH (%) (≤)» کے لیے فیصلہ کرنے کی حد ہے۔ یہ مشوروں پر اثر انداز ہوتی ہے، طبی حد نہیں۔",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "«پھپھوندی کی نشاندہی · ≥ 70%» کے لیے فیصلہ کرنے کی حد ہے۔ یہ مشوروں پر اثر انداز ہوتی ہے، طبی حد نہیں۔"
         }
@@ -191,7 +191,7 @@
           "media_players": "ترتیبات · ماخذ · MEDIA_PLAYERS",
           "tts_engine": "ترتیبات · ماخذ · TTS_ENGINE",
           "ai_conversation_agent": "AI · منتخب کریں · ماخذ",
-          "language": "TTS · منتخب کریں · ماخذ",
+          "language": "اعلانات کی زبان",
           "use_mold_indicator": "پھپھوندی کی نشاندہی · RH (%) → 70%",
           "pollen_entities": "زرگل · ماخذ · منتخب کریں",
           "use_announcement_hub": "اعلانات · Announcement Hub",
@@ -227,7 +227,8 @@
           "general_source_stale_minutes": "گھر میں موجودگی · ٹریکر/افراد کی گنتی کے ڈیٹا کی زیادہ سے زیادہ عمر (منٹ)",
           "general_home_policy": "گھر میں موجودگی",
           "general_wake_alarm_entity": "نیند · اگلا الارم",
-          "general_wake_lead_minutes_entity": "نیند · الارم سے پہلے کے منٹ"
+          "general_wake_lead_minutes_entity": "نیند · الارم سے پہلے کے منٹ",
+          "window_open_timeout_minutes": "کھڑکی کھولنے کے انتظار کا وقت (منٹ)"
         },
         "data_description": {
           "weather_entities": "منتخب کریں: موسم اور انتباہات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -243,7 +244,7 @@
           "media_players": "منتخب کریں: media_player.* · ترتیبات · ماخذ · MEDIA_PLAYERS.",
           "tts_engine": "منتخب کریں: tts.* · ترتیبات · ماخذ · TTS_ENGINE.",
           "ai_conversation_agent": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · AI · منتخب کریں · ماخذ · conversation.* / ai_task.*.",
-          "language": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · TTS · منتخب کریں · ماخذ · provider capabilities.",
+          "language": "پہلے سے طے شدہ طور پر Home Assistant کی زبان استعمال ہوتی ہے۔ آپ HEM کی معاونت یافتہ کوئی بھی اعلانی زبان منتخب کر سکتے ہیں۔",
           "use_mold_indicator": "🧱 پھپھوندی کی نشاندہی · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · زرگل · ماخذ · منتخب کریں.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -279,7 +280,8 @@
           "general_source_stale_minutes": "ڈیٹا کی عمر کی حد ٹریکر رپورٹوں اور افراد کی عددی گنتی پر لاگو ہوتی ہے۔ کمروں کی فہرستیں اور دو حالتی موجودگی کی قدریں بغیر تبدیلی زائد المیعاد نہیں ہوتیں۔ غیر دستیاب، بحال شدہ یا غلط ذرائع نامعلوم رہتے ہیں۔ یہ نیند کا دورانیہ نہیں ہے۔",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "اگلے الارم کے وقت یا تاریخ اور وقت کی اکائی اور پہلے کے منٹوں کی اکائی منتخب کریں۔ HEM اتنے منٹ پہلے خودکار نیند سے نکل کر معمول کے اہداف بحال کرتا ہے۔ صرف وقت والی قدر Home Assistant کا ٹائم زون استعمال کرتی ہے۔ غیر موجودگی، دستی کنٹرول اور آلے کے تحفظ کی ترجیح برقرار رہتی ہے۔",
-          "general_wake_lead_minutes_entity": "منٹوں کی غیر منفی قدر والی عددی اکائی منتخب کریں؛ یونٹ min ہو یا کوئی یونٹ نہ ہو۔ 07:00 کا الارم اور 30 کی قدر خودکار نیند 06:30 پر ختم کرتے ہیں؛ 0 کا مطلب الارم بجنے کا وقت ہے۔ بند کرنے کے لیے دونوں ذرائع صاف کریں۔"
+          "general_wake_lead_minutes_entity": "منٹوں کی غیر منفی قدر والی عددی اکائی منتخب کریں؛ یونٹ min ہو یا کوئی یونٹ نہ ہو۔ 07:00 کا الارم اور 30 کی قدر خودکار نیند 06:30 پر ختم کرتے ہیں؛ 0 کا مطلب الارم بجنے کا وقت ہے۔ بند کرنے کے لیے دونوں ذرائع صاف کریں۔",
+          "window_open_timeout_minutes": "ہوا آنے دینے کی درخواست قبول ہونے کے بعد، ضرورت برقرار ہو تو نئے خودکار/PID آغاز کی اجازت سے پہلے انتظار۔ 0–30 منٹ، طے شدہ 5؛ 0 انتظار بند کرتا ہے۔ کھلی کھڑکی کی حفاظت اور آلات کے کم از کم اوقات برقرار رہتے ہیں۔"
         }
       },
       "reconfigure": {
@@ -1371,7 +1373,7 @@
         "title": "اعلانات (اختیاری)",
         "description": "اعلانات (اختیاری). خودکار اطلاعات · خودکار صوتی اعلانات. Announcement Hub.",
         "data": {
-          "language": "زبان",
+          "language": "اعلانات کی زبان",
           "automatic_tts": "خودکار",
           "automatic_notifications": "خودکار · AUTOMATIC_NOTIFICATIONS",
           "announcement_repeat_minutes": "اعلانات (اختیاری) · 0-1440 min",
@@ -1383,7 +1385,7 @@
           "ai_conversation_agent": "AI · زبان"
         },
         "data_description": {
-          "language": "زبان: Home Assistant (پہلے سے طے شدہ).",
+          "language": "پہلے سے طے شدہ طور پر Home Assistant کی زبان استعمال ہوتی ہے۔ آپ HEM کی معاونت یافتہ کوئی بھی اعلانی زبان منتخب کر سکتے ہیں۔",
           "automatic_tts": "پہلے سے طے شدہ: ⛔ · خودکار · 🪟 90 s.",
           "automatic_notifications": "پہلے سے طے شدہ: ⛔ · خودکار · AUTOMATIC_NOTIFICATIONS.",
           "announcement_repeat_minutes": "پہلے سے طے شدہ: 10 min · 0 = کبھی نہیں · جب تک وہی وجہ برقرار رہے · کمرے.",
@@ -1442,7 +1444,7 @@
           "min_outdoor_temp": "«باہر · °C (≥)» کے لیے فیصلہ کرنے کی حد ہے۔ یہ مشوروں پر اثر انداز ہوتی ہے، طبی حد نہیں۔",
           "max_outdoor_temp": "«باہر · °C (≤)» کے لیے فیصلہ کرنے کی حد ہے۔ یہ مشوروں پر اثر انداز ہوتی ہے، طبی حد نہیں۔",
           "max_outdoor_humidity": "«باہر · RH (%) (≤)» کے لیے فیصلہ کرنے کی حد ہے۔ یہ مشوروں پر اثر انداز ہوتی ہے، طبی حد نہیں۔",
-          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation advice, in km/h. If the selected weather data reports stronger wind, HEM blocks opening recommendations and can recommend closing open windows. This is not a fan-speed setting.",
+          "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
           "indoor_mold": "«پھپھوندی کی نشاندہی · ≥ 70%» کے لیے فیصلہ کرنے کی حد ہے۔ یہ مشوروں پر اثر انداز ہوتی ہے، طبی حد نہیں۔"
         }
@@ -2187,7 +2189,7 @@
           "media_players": "ترتیبات · ماخذ · MEDIA_PLAYERS",
           "tts_engine": "ترتیبات · ماخذ · TTS_ENGINE",
           "ai_conversation_agent": "AI · منتخب کریں · ماخذ",
-          "language": "TTS · منتخب کریں · ماخذ",
+          "language": "اعلانات کی زبان",
           "use_mold_indicator": "پھپھوندی کی نشاندہی · RH (%) → 70%",
           "pollen_entities": "زرگل · ماخذ · منتخب کریں",
           "use_announcement_hub": "اعلانات · Announcement Hub",
@@ -2223,7 +2225,8 @@
           "general_source_stale_minutes": "گھر میں موجودگی · ٹریکر/افراد کی گنتی کے ڈیٹا کی زیادہ سے زیادہ عمر (منٹ)",
           "general_home_policy": "گھر میں موجودگی",
           "general_wake_alarm_entity": "نیند · اگلا الارم",
-          "general_wake_lead_minutes_entity": "نیند · الارم سے پہلے کے منٹ"
+          "general_wake_lead_minutes_entity": "نیند · الارم سے پہلے کے منٹ",
+          "window_open_timeout_minutes": "کھڑکی کھولنے کے انتظار کا وقت (منٹ)"
         },
         "data_description": {
           "weather_entities": "منتخب کریں: موسم اور انتباہات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2239,7 +2242,7 @@
           "media_players": "منتخب کریں: media_player.* · ترتیبات · ماخذ · MEDIA_PLAYERS.",
           "tts_engine": "منتخب کریں: tts.* · ترتیبات · ماخذ · TTS_ENGINE.",
           "ai_conversation_agent": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · AI · منتخب کریں · ماخذ · conversation.* / ai_task.*.",
-          "language": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · TTS · منتخب کریں · ماخذ · provider capabilities.",
+          "language": "پہلے سے طے شدہ طور پر Home Assistant کی زبان استعمال ہوتی ہے۔ آپ HEM کی معاونت یافتہ کوئی بھی اعلانی زبان منتخب کر سکتے ہیں۔",
           "use_mold_indicator": "🧱 پھپھوندی کی نشاندہی · RH (%) → ≈70% · 🌡️ 🧊",
           "pollen_entities": "مشترکہ ذرائع اور اطلاع کے آؤٹ پٹ منتخب کریں۔ محفوظ کرنے سے سیٹ اپ مکمل ہوتا ہے۔ عملی ترتیبات گھر اور کمرے کے آلات پر رہتی ہیں۔ · زرگل · ماخذ · منتخب کریں.",
           "use_announcement_hub": "Routes HEM announcements through the configured Announcement Hub integration. Configure the hub and its destinations separately. This switch chooses the delivery route; automatic notification and speech switches still govern automatic announcements.",
@@ -2275,7 +2278,8 @@
           "general_source_stale_minutes": "ڈیٹا کی عمر کی حد ٹریکر رپورٹوں اور افراد کی عددی گنتی پر لاگو ہوتی ہے۔ کمروں کی فہرستیں اور دو حالتی موجودگی کی قدریں بغیر تبدیلی زائد المیعاد نہیں ہوتیں۔ غیر دستیاب، بحال شدہ یا غلط ذرائع نامعلوم رہتے ہیں۔ یہ نیند کا دورانیہ نہیں ہے۔",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "اگلے الارم کے وقت یا تاریخ اور وقت کی اکائی اور پہلے کے منٹوں کی اکائی منتخب کریں۔ HEM اتنے منٹ پہلے خودکار نیند سے نکل کر معمول کے اہداف بحال کرتا ہے۔ صرف وقت والی قدر Home Assistant کا ٹائم زون استعمال کرتی ہے۔ غیر موجودگی، دستی کنٹرول اور آلے کے تحفظ کی ترجیح برقرار رہتی ہے۔",
-          "general_wake_lead_minutes_entity": "منٹوں کی غیر منفی قدر والی عددی اکائی منتخب کریں؛ یونٹ min ہو یا کوئی یونٹ نہ ہو۔ 07:00 کا الارم اور 30 کی قدر خودکار نیند 06:30 پر ختم کرتے ہیں؛ 0 کا مطلب الارم بجنے کا وقت ہے۔ بند کرنے کے لیے دونوں ذرائع صاف کریں۔"
+          "general_wake_lead_minutes_entity": "منٹوں کی غیر منفی قدر والی عددی اکائی منتخب کریں؛ یونٹ min ہو یا کوئی یونٹ نہ ہو۔ 07:00 کا الارم اور 30 کی قدر خودکار نیند 06:30 پر ختم کرتے ہیں؛ 0 کا مطلب الارم بجنے کا وقت ہے۔ بند کرنے کے لیے دونوں ذرائع صاف کریں۔",
+          "window_open_timeout_minutes": "ہوا آنے دینے کی درخواست قبول ہونے کے بعد، ضرورت برقرار ہو تو نئے خودکار/PID آغاز کی اجازت سے پہلے انتظار۔ 0–30 منٹ، طے شدہ 5؛ 0 انتظار بند کرتا ہے۔ کھلی کھڑکی کی حفاظت اور آلات کے کم از کم اوقات برقرار رہتے ہیں۔"
         }
       },
       "room_occupancy": {
@@ -2864,7 +2868,9 @@
           "eco": "توانائی کی بچت",
           "window_open_pause": "کھلی کھڑکی کی وجہ سے توقف",
           "window_close_warmup": "کھڑکیاں بند ہونے کے بعد انتظار",
-          "window_state_unknown": "کھڑکیوں کی حالت کا انتظار"
+          "window_state_unknown": "کھڑکیوں کی حالت کا انتظار",
+          "window_open_wait": "آپ کے کھڑکی کھولنے کا انتظار ہے",
+          "window_request_pending": "کھڑکی کھولنے کی درخواست بھیجی جا رہی ہے"
         }
       }
     },
@@ -3796,6 +3802,14 @@
             "name": "مدد"
           }
         }
+      },
+      "global_setting_window_open_timeout_minutes": {
+        "name": "ہوا کی آمدورفت · کھڑکی کھولنے کے انتظار کا وقت (منٹ)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مدد"
+          }
+        }
       }
     },
     "switch": {
@@ -4361,7 +4375,7 @@
   "selector": {
     "output_language": {
       "options": {
-        "auto": "Home Assistant - پہلے سے طے شدہ",
+        "auto": "Home Assistant کی زبان (پہلے سے طے شدہ)",
         "en": "ترتیبات · ماخذ",
         "de": "ترتیبات · ماخذ",
         "el": "ترتیبات · ماخذ",
