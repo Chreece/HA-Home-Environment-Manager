@@ -427,7 +427,9 @@ jobs:
           assert manifest['domain'] == 'environment_manager'
           assert hacs['zip_release'] is True and hacs['filename'] == 'environment_manager.zip'
           assert not hacs.get('content_in_root', False)
-          assert not Path('manifest.json').is_file()
+          # Unit tests use an untracked compatibility symlink; only tracked code ships.
+          tracked = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
+          assert 'manifest.json' not in tracked and '__init__.py' not in tracked
           version = manifest['version']
           sha = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode().strip()
 
