@@ -50,6 +50,8 @@ jobs:
           print('PASS: canonical manifest, JSON and translations', manifest['version'])
           PYCODE
           git diff --check
+      - name: Verify HEM brand assets and translated arrival help
+        run: python -I .github/tests/test_061b11_branding.py
       - name: Prepare legacy unit test source paths (CI only, never packaged)
         run: |
           python - <<'PYCODE'
@@ -333,6 +335,8 @@ jobs:
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
         run: python -I .github/tests/test_061b4_arrival_card.py
+      - name: HEM logo, icon-only arrival action and info bubble
+        run: python -I .github/tests/test_061b11_branding_card.py
       - name: Responsive outdoor and room text boundaries
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
