@@ -100,7 +100,7 @@ with sync_playwright() as playwright:
     dialog.locator('[data-hem-full-apply127="time.hem_room_sleep_start"]').click()
     page.wait_for_function("nativeCalls127.length===2")
     assert page.evaluate("nativeCalls127[1]")==["time","set_value",{"entity_id":"time.hem_room_sleep_start","time":"06:40:00"}]
-    dialog.locator('[data-hem-full-category127="other"] > summary').click()
+    dialog.locator('[data-hem-full-category127="pid"] > summary').click()
     dialog.locator('[data-hem-full-apply127="button.hem_room_calibrate"]').click()
     page.wait_for_function("nativeCalls127.length===3")
     assert page.evaluate("nativeCalls127[2]")==["button","press",{"entity_id":"button.hem_room_calibrate"}]
