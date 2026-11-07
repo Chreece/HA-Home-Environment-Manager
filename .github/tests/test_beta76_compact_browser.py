@@ -1,7 +1,7 @@
 """Beta76: compact room & device UI under real Chromium interactions."""
 import os, shutil, runpy, json
 from pathlib import Path
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
 
 ROOT=Path(__file__).resolve().parents[2]
 # Preserve the full existing Beta66 single-click, translations, window-switch,
@@ -88,11 +88,23 @@ with sync_playwright() as p:
     assert not roomInfo.evaluate('(e)=>e.open')
     assert not deviceInfo.evaluate('(e)=>e.open')
     roomInfo.locator('summary').click()
+    page.evaluate('''()=>{for(let i=0;i<12;i++)draw();}''')
+    page.wait_for_timeout(80)
+    expect(roomInfo).to_have_js_property('open',True)
+    expect(roomInfo.locator('.hem-context-body76')).to_be_visible()
+    expect(deviceInfo).to_have_js_property('open',False)
+    # This raw-render fixture uses inline help, whose visible text may cover
+    # the next information icon. Close the room bubble with its supported
+    # second click before opening device help; verify persistence separately.
+    roomInfo.locator('summary').click()
+    expect(roomInfo).to_have_js_property('open',False)
+    expect(roomInfo.locator('.hem-context-body76')).to_be_hidden()
     deviceInfo.locator('summary').click()
     page.evaluate('''()=>{for(let i=0;i<12;i++)draw();}''')
     page.wait_for_timeout(80)
-    assert page.locator('[data-detail-id="room-info:bedroom"]').evaluate('(e)=>e.open')
-    assert page.locator('[data-detail-id="device-info:climate.managed"]').evaluate('(e)=>e.open')
+    expect(roomInfo).to_have_js_property('open',False)
+    expect(deviceInfo).to_have_js_property('open',True)
+    expect(deviceInfo.locator('.hem-context-body76')).to_be_visible()
     assert 'Bedroom power supply' in deviceInfo.inner_text()
     assert page.evaluate('calls.length')==0
     assert page.locator('details.hem-diagnostics').count()==1
@@ -100,10 +112,20 @@ with sync_playwright() as p:
     assert page.locator('[data-window-policy-switch]').count()==1
 
     # Info icon remains keyboard accessible and survives a status refresh.
+    deviceInfo.locator('summary').click()
+    expect(deviceInfo).to_have_js_property('open',False)
+    expect(deviceInfo.locator('.hem-context-body76')).to_be_hidden()
     roomInfo.locator('summary').focus()
     page.keyboard.press('Enter')
     page.evaluate('draw()');page.wait_for_timeout(30)
-    assert not page.locator('[data-detail-id="room-info:bedroom"]').evaluate('(e)=>e.open')
+    expect(roomInfo).to_have_js_property('open',True)
+    expect(roomInfo.locator('.hem-context-body76')).to_be_visible()
+    roomInfo.locator('summary').focus()
+    page.keyboard.press('Enter')
+    page.evaluate('draw()');page.wait_for_timeout(30)
+    expect(roomInfo).to_have_js_property('open',False)
+    expect(roomInfo.locator('.hem-context-body76')).to_be_hidden()
+    assert page.evaluate('calls.length')==0
 
     # The existing ON/OFF switch retains its original action contract.
     page.locator('[data-window-policy-switch]').click()
