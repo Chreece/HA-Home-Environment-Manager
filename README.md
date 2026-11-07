@@ -18,7 +18,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b12](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b12)
+**Current release:** [v0.6.1b13](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b13)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
