@@ -211,7 +211,11 @@ async def remember_cutoff(runtime: Any, spec: Any, current: dict | None) -> None
         cache = getattr(runtime, name, None)
         if isinstance(cache, dict):
             cache.pop(spec.identifier, None)
+    cancel = getattr(runtime, "_cancel_pid_pwm_evaluation", None)
+    if callable(cancel):
+        cancel(spec)
     changed = record.pop("pid_checkpoint", None) is not None
+    changed = record.pop("pid_pwm_run", None) is not None or changed
     evidence = {"mode": current["mode"], "metric": current["metric"],
                 "measured": current["measured"], "target": current["target"]}
     if record.get("pid_target_cutoff") != evidence:

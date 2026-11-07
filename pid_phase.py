@@ -119,7 +119,9 @@ def safe_binary_pwm_cycle(
         multiplier = max(on_multiplier, off_multiplier)
     extended = cycle_s * multiplier
     duration = min(extended * on_fraction, extended - min_off_s)
-    if extended > maximum_s or duration <= 0 or duration < min_on_s:
+    if (extended > maximum_s or duration <= 0
+            or duration < min_on_s and not math.isclose(
+                duration, min_on_s, rel_tol=1e-12, abs_tol=1e-9)):
         return None
     return extended
 
@@ -146,9 +148,62 @@ def binary_pwm_off_phase(
         return {"state": "on_window", "effective_cycle_seconds": effective,
                 "next_window_seconds": 0.}
     phase = elapsed % effective
-    duration = min(effective * demand / 100., effective - min_off)
+    duration = max(min_on, min(effective * demand / 100., effective - min_off))
     if phase < duration and (not starting or duration-phase >= min_on):
         return {"state": "on_window", "effective_cycle_seconds": effective,
                 "next_window_seconds": 0.}
     return {"state": "off_window", "effective_cycle_seconds": effective,
             "next_window_seconds": max(0., effective - phase)}
+
+
+def sampled_binary_pwm_plan(
+    demand: float, elapsed: float, cycle: float, min_on: float, min_off: float,
+    *, starting: bool, served_elapsed: float | None, stopped_elapsed: float | None = None,
+) -> dict:
+    """Plan at most one due pulse from confirmed output, not polling phase.
+
+    A sampled controller can miss the entire nominal ON window or the small
+    part in which a full minimum-ON pulse still fits. An unserved due cycle
+    therefore retains ONE request. Physical dispatch/ACK owns its eventual
+    start; the runtime aligns the next period only to that confirmed start.
+    Missed periods never accumulate and a delivered cycle cannot be replayed.
+
+    ``served_elapsed`` is the latest confirmed pulse's logical start relative
+    to the same anchor, or conservative observed-OFF evidence in that cycle.
+    ``stopped_elapsed`` additionally preserves one complete nominal OFF rest
+    from the confirmed stop. Delayed feedback never becomes energy debt.
+    This helper never changes device ownership, an ON/OFF hold or PID gains.
+    """
+    info = binary_pwm_off_phase(demand, elapsed, cycle, min_on, min_off, starting=starting)
+    effective = info["effective_cycle_seconds"]
+    if effective is None:
+        return {**info, "wanted": False, "next_evaluation_seconds": None}
+    if demand == 100:
+        return {**info, "wanted": True, "next_evaluation_seconds": None}
+    phase = elapsed % effective
+    cycle_start = elapsed - phase
+    duration = max(min_on, min(effective * demand / 100., effective - min_off))
+    served = (not isinstance(served_elapsed, bool)
+              and isinstance(served_elapsed, (int, float))
+              and math.isfinite(served_elapsed) and 0 <= served_elapsed <= elapsed)
+    if starting:
+        next_start = cycle_start + effective if served and served_elapsed >= cycle_start else elapsed
+        stopped = (served and not isinstance(stopped_elapsed, bool)
+                   and isinstance(stopped_elapsed, (int, float))
+                   and math.isfinite(stopped_elapsed) and 0 <= stopped_elapsed <= elapsed)
+        if stopped:
+            next_start = max(next_start, stopped_elapsed + effective - duration)
+        wanted = next_start <= elapsed
+        remaining = None if wanted else next_start - elapsed
+    else:
+        # An already-running pulse cannot wrap through a missed OFF boundary
+        # into another ON window. Its original minimum/maximum physical run
+        # remains enforced by the actuator independently.
+        on_elapsed = elapsed - served_elapsed if served else elapsed
+        wanted = on_elapsed < duration
+        remaining = max(0., duration - on_elapsed) if wanted else None
+    return {
+        **info, "state": "on_window" if wanted else "off_window",
+        "next_window_seconds": 0. if wanted else remaining if starting else None,
+        "wanted": wanted, "next_evaluation_seconds": remaining,
+    }

@@ -328,6 +328,16 @@ OFF periods and minimum-OFF waits keep their current phase. These resets never
 erase physical run/rest history, an unconfirmed native command or a genuine
 manual override.
 
+Low PID demand can need a longer ON/OFF cycle to fit the appliance's minimum
+operating times. If a controller check misses the scheduled start, HEM keeps
+at most one overdue pulse and starts it when the existing physical protections
+permit. Its timing follows the confirmed device start, including the full
+following OFF period. Missed cycles do not accumulate into a burst of heating
+or cooling. Controller status exposes the effective PID target, selected
+measurement, demand and next scheduled window for diagnosis.
+These timings use confirmed native state; delayed appliance feedback can
+affect the duty actually delivered.
+
 When Automatic/PID has permission to control native ON/OFF operation, HEM uses
 the appliance's reported target maximum during heating or humidifying and its
 reported minimum during cooling or drying. This keeps the appliance's internal
@@ -695,6 +705,7 @@ recommended.
 | No opening recommendation | Read the reason, then check indoor demand, weather, outdoor air quality, AQI scale and ventilation limits |
 | Missing readings or history gaps | Check live source values, freshness and recorded samples; new history needs time to collect |
 | A selected appliance is not operating | Check Control · Method, current authorization, feedback, window/presence rules and minimum ON/OFF timing |
+| PID keeps waiting while the room is below its heating target | Check the controller's effective PID target and measurement, demand percentage, remaining minimum OFF time and next PWM window; the room overview and appliance's own sensor can show different values |
 | Control stops after a source change | Check the selected appliance and sensors, then explicitly choose the control method again |
 | PID calibration is held | Check method/model inputs, that the physical output is off, and that its reported state has been confirmed |
 | Mold controls are absent or uncalibrated | Enable mold indication, allow the reload, provide fresh room/weather readings, measure the surface and recalculate |

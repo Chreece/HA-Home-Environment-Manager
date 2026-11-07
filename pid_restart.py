@@ -110,6 +110,9 @@ def reset_logical_cycle(runtime: Any, spec: Any, reason: str) -> bool:
     from this list. Repeating an unchanged hold performs no storage write.
     """
     changed = False
+    cancel = getattr(runtime, "_cancel_pid_pwm_evaluation", None)
+    if callable(cancel):
+        cancel(spec)
     for name in ("_memory", "_profile_wake", "_fan_allocations",
                  "_pid_offline_previews", "_pid_passive_observers"):
         cache = getattr(runtime, name, None)
@@ -117,7 +120,7 @@ def reset_logical_cycle(runtime: Any, spec: Any, reason: str) -> bool:
             cache.pop(spec.identifier, None)
             changed = True
     record = runtime._record(spec)
-    for key in ("pid_checkpoint", "pid_restart_status", "pid_target_cutoff"):
+    for key in ("pid_checkpoint", "pid_restart_status", "pid_target_cutoff", "pid_pwm_run"):
         if key in record:
             record.pop(key, None)
             changed = True

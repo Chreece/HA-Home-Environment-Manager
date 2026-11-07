@@ -55,6 +55,7 @@ jobs:
           python -I .github/tests/test_061b7_mold_announcement.py
           python -I .github/tests/test_061b7_window_modes.py
           python -I .github/tests/test_061b7_runtime_modes.py
+          python -I .github/tests/test_061b7_pwm_sampling.py
           python -I .github/tests/test_061b7_runtime_mold.py
       - name: Per-device airing options, accepted waits and actual timeout starts
         run: |

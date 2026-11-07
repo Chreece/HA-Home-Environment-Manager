@@ -193,6 +193,9 @@ class EquipmentRuntime:
         # A short, bounded request to re-evaluate comfort immediately after
         # a verified profile/target rise. Never owns physical power by itself.
         self._profile_wake: dict[str, dict] = {}
+        # Logical PWM boundaries use their own timer. They must never replace
+        # an independently scheduled native ACK/retry or shutdown deadline.
+        self._pid_pwm_wakeups: dict[str, tuple[float, asyncio.TimerHandle]] = {}
         # Session-local observations distinguish a real ON transition
         # recorded by HEM from an HA-restored native State at startup.
         self._native_session_observations: dict[tuple[str, str], str] = {}
@@ -420,6 +423,132 @@ class EquipmentRuntime:
         if reset_logical_cycle(self, spec, reason):
             await self._save()
 
+    def _cancel_pid_pwm_evaluation(self, spec: model.ManagedDevice) -> None:
+        wake = getattr(self, "_pid_pwm_wakeups", {}).pop(spec.identifier, None)
+        if wake is not None:
+            wake[1].cancel()
+
+    def _schedule_pid_pwm_evaluation(self, spec: model.ManagedDevice,
+                                     deadline: float | None) -> None:
+        """Request a normal locked evaluation at one future PWM boundary."""
+        now = self.clock()
+        deadline = finite(deadline, 0, 1e13)
+        if deadline is None or deadline <= now or not self._active or not self._ready:
+            self._cancel_pid_pwm_evaluation(spec)
+            return
+        wakes = getattr(self, "_pid_pwm_wakeups", None)
+        if wakes is None:
+            wakes = self._pid_pwm_wakeups = {}
+        previous = wakes.get(spec.identifier)
+        if previous is not None and previous[0] == deadline and not previous[1].cancelled():
+            return
+        self._cancel_pid_pwm_evaluation(spec)
+
+        def due() -> None:
+            current = wakes.get(spec.identifier)
+            if current is None or current[1] is not handle:
+                return
+            wakes.pop(spec.identifier, None)
+            if not self._active or not self._ready:
+                return
+            running = getattr(self, "_tasks", {}).get(spec.identifier)
+            if running is not None and not running.done():
+                rerun = getattr(self, "_setpoint_rerun", None)
+                if rerun is None:
+                    rerun = self._setpoint_rerun = set()
+                rerun.add(spec.identifier)
+            else:
+                self.schedule()
+
+        handle = asyncio.get_running_loop().call_later(deadline - now, due)
+        wakes[spec.identifier] = (deadline, handle)
+
+    async def _sampled_pid_pwm(
+        self, spec: model.ManagedDevice, cap: model.Capabilities, cfg: dict,
+        mode: str, signature: tuple, memory: model.PIDMemory, anchor: float,
+        demand: float, min_on: float, min_off: float, *, restored: bool = False,
+    ) -> tuple[dict, float]:
+        """Bind one sampled pulse to its confirmed native start and PID phase.
+
+        An attempted ON, an initial OFF observation and a late timer cannot
+        advance the anchor or count as delivered effort. Only existing native
+        ownership supplies the confirmed ON epoch; physical history is read
+        here, never reset. Missed cycles coalesce into one due request.
+        """
+        from .pid_phase import sampled_binary_pwm_plan
+        record, now = self._record(spec), self.clock()
+        native = self.hass.states.get(cap.primary)
+        starting = output_off(native)
+        owned = record.get("power", {}).get(cap.primary)
+        since = finite(owned.get("since"), 0, now) if isinstance(owned, dict) else None
+        identity = {
+            "entity": cap.primary, "sources": list(spec.source_entities),
+            "source_device_id": spec.source_device_id, "area": spec.area_id,
+            "mode": mode,
+        }
+        marker = record.get("pid_pwm_run")
+        same_source = (isinstance(marker, dict)
+                       and all(marker.get(key) == value for key, value in identity.items()))
+        changed = False
+        if (since is not None and native is not None
+                and native.state == (mode if cap.domain == "climate" else "on")):
+            same_run = same_source and marker.get("confirmed_on_at") == since
+            if not same_run:
+                anchor = max(anchor, since)
+            observed = {
+                **identity, "confirmed_on_at": since,
+                "signature": list(signature), "anchor": anchor,
+                "served_at": max(anchor, since),
+            }
+            if marker != observed:
+                marker = record["pid_pwm_run"] = observed
+                changed = True
+            same_source = True
+        elif (starting and same_source and marker.get("signature") == list(signature)
+              and marker.get("anchor") == anchor
+              and finite(marker.get("confirmed_on_at"), 0, now) is not None):
+            stopped = finite(record.get("off_at", {}).get(cap.primary),
+                             max(anchor, marker["confirmed_on_at"]), now)
+            if stopped is not None and marker.get("stopped_at") != stopped:
+                # Keep the delivered-pulse marker at its confirmed ON.
+                # A late OFF independently starts a complete nominal rest;
+                # it does not count as a second pulse in a later cycle.
+                marker["stopped_at"] = stopped
+                changed = True
+        elif restored and marker is None and starting:
+            # Upgrade an older restored phase only when native history shows
+            # a completed ON->OFF episode. A fresh/reset controller's initial
+            # off_at/last_changed observation is never delivered-pulse proof.
+            history = record.get("native_power_observations", {}).get(cap.primary)
+            stopped = (finite(history.get("since"), anchor, now)
+                       if isinstance(history, dict) and history.get("state") == "off"
+                       else None)
+            if stopped is not None:
+                marker = record["pid_pwm_run"] = {
+                    **identity, "confirmed_on_at": None,
+                    "signature": list(signature), "anchor": anchor,
+                    "served_at": stopped, "stopped_at": stopped,
+                }
+                same_source = changed = True
+        served = (finite(marker.get("served_at"), anchor, now)
+                  if same_source and marker.get("signature") == list(signature)
+                  and marker.get("anchor") == anchor else None)
+        info = sampled_binary_pwm_plan(
+            demand, now - anchor, cfg["cycle_seconds"], min_on, min_off,
+            starting=starting, served_elapsed=served - anchor if served is not None else None,
+            stopped_elapsed=(
+                marker["stopped_at"] - anchor if served is not None
+                and finite(marker.get("stopped_at"), anchor, now) is not None else None
+            ),
+        )
+        self._memory[spec.identifier] = (signature, memory, anchor)
+        if changed:
+            await self._checkpoint_pid(spec, record, cfg, signature, memory, anchor)
+            await self._save()
+        delay = info["next_evaluation_seconds"]
+        self._schedule_pid_pwm_evaluation(spec, now + delay if delay is not None else None)
+        return info, anchor
+
     async def _sync_pid_intent(self, spec: model.ManagedDevice, cfg: dict,
                                mode: str | None = None) -> None:
         from .pid_restart import control_intent
@@ -562,6 +691,9 @@ class EquipmentRuntime:
 
     async def async_stop(self) -> None:
         self._active = False
+        for _, handle in getattr(self, "_pid_pwm_wakeups", {}).values():
+            handle.cancel()
+        getattr(self, "_pid_pwm_wakeups", {}).clear()
         from .equipment_setpoint_sequence import cancel_wakeups
         cancel_wakeups(self)
         self._presentation_updates.close()
@@ -2957,6 +3089,10 @@ class EquipmentRuntime:
             self._profile_wake.pop(spec.identifier, None)
             self._fan_allocations.pop(spec.identifier, None)
             self._pid_offline_previews.pop(spec.identifier, None)
+            cancel_pwm = getattr(self, "_cancel_pid_pwm_evaluation", None)
+            if callable(cancel_pwm):
+                cancel_pwm(spec)
+            record.pop("pid_pwm_run", None)
             record.pop("pid_checkpoint", None)
             record.pop("pid_restart_status", None)
             record.pop("pid_target_cutoff", None)
@@ -3275,6 +3411,9 @@ class EquipmentRuntime:
         inferred from an old record.
         """
         record = self._record(spec)
+        reset = getattr(self, "_reset_pid_cycle", None)
+        if callable(reset):
+            await reset(spec, "source_deselected_or_moved")
         if record.get("paused"):
             self._status(spec, "retired_requires_manual_reconciliation", reason=record["paused"])
             return
@@ -4588,6 +4727,9 @@ class EquipmentRuntime:
                     ),
                     native_state=state.state,
                 )
+                schedule_pwm = getattr(self, "_schedule_pid_pwm_evaluation", None)
+                if callable(schedule_pwm) and model.settings(self.manager, spec).get("control_mode") == "pid":
+                    schedule_pwm(spec, stamp + on_min if 0 <= now-stamp else None)
                 return False
         else:
             relay = record.get("upstream", {})
@@ -4643,6 +4785,9 @@ class EquipmentRuntime:
                     ),
                     native_state=state.state,
                 )
+                schedule_pwm = getattr(self, "_schedule_pid_pwm_evaluation", None)
+                if callable(schedule_pwm) and model.settings(self.manager, spec).get("control_mode") == "pid":
+                    schedule_pwm(spec, stamp + off_min if 0 <= now-stamp else None)
                 return False
         if desired == "off":
             from .equipment_setpoint_sequence import begin_stop, enabled, supports_stop
@@ -5676,8 +5821,15 @@ class EquipmentRuntime:
             mode = state.state if cap.domain == "climate" else next((v for v in cap.modes if v != "off"), "off")
         if why := self._gate(spec, cap, cfg, plan, mode, automatic=auto):
             reset = getattr(self, "_reset_pid_cycle", None)
-            if callable(reset):
+            if callable(reset) and why != "startup_warmup":
                 await reset(spec, why)
+            elif why == "startup_warmup":
+                # The fixed startup ON gate is not changed control intent.
+                # Preserve the verified restart checkpoint/served pulse;
+                # no PWM callback or native ON may skip this warmup below.
+                cancel_pwm = getattr(self, "_cancel_pid_pwm_evaluation", None)
+                if callable(cancel_pwm):
+                    cancel_pwm(spec)
             if why in ("window_request_pending", "window_open_wait"):
                 # Deferred output is not delivered PID effort. Discard the
                 # old integral/phase instead of integrating an idle plant.
@@ -5755,10 +5907,11 @@ class EquipmentRuntime:
                         spec, cfg, cap, plan, target, measured, record, state,
                         mode, metric, goal, soft, power,
                     )
-                from .pid_phase import phase_decision, binary_pwm_off_phase
+                from .pid_phase import phase_decision, sampled_binary_pwm_plan
                 previous, memory, anchor = self._memory.get(
                     spec.identifier, (None, None, self.clock())
                 )
+                restored_pid = False
                 if previous is None:
                     restore = getattr(self, "_resume_pid_checkpoint", None)
                     if callable(restore):
@@ -5767,6 +5920,7 @@ class EquipmentRuntime:
                         )
                         if recovered is not None:
                             previous, memory, anchor = recovered
+                            restored_pid = True
                 profile = model.profile_name(cfg, plan)
                 on_min, off_min, _ = model.timing(self.manager, spec, cap)
                 signature, rebased, priority_wake = phase_decision(
@@ -5778,6 +5932,10 @@ class EquipmentRuntime:
                 )
                 if rebased:
                     memory, anchor = None, self.clock()
+                    cancel_pwm = getattr(self, "_cancel_pid_pwm_evaluation", None)
+                    if callable(cancel_pwm):
+                        cancel_pwm(spec)
+                    record.pop("pid_pwm_run", None)
                     # A new comfort demand starts a fresh logical phase.
                     # Keep the one-time wake request until the physical output
                     # is seen ON or its bounded validity window expires. This
@@ -5865,20 +6023,19 @@ class EquipmentRuntime:
                         measured_fan_allocation.compensated_duty_percent
                         if measured_fan_allocation else demand
                     )
-                    elapsed = self.clock() - anchor
-                    pwm_info = binary_pwm_off_phase(
-                        duty_demand, elapsed, cfg["cycle_seconds"],
-                        on_min, off_min, starting=output_off(state),
-                    )
-                    # A short duty must produce a full physically safe
-                    # native ON interval rather than being skipped FOREVER.
-                    # The longer mathematical cycle never bypasses the
-                    # separately persisted real compressor ON/OFF dwell.
-                    effective_cycle = pwm_info["effective_cycle_seconds"]
-                    wanted = bool(effective_cycle is not None and model.duty_on(
-                        duty_demand, elapsed, effective_cycle,
-                        on_min, off_min, starting=output_off(state),
-                    ))
+                    sampled = getattr(self, "_sampled_pid_pwm", None)
+                    if callable(sampled) and power and cap.domain not in ("number", "input_number"):
+                        pwm_info, anchor = await sampled(
+                            spec, cap, cfg, mode, signature, memory, anchor,
+                            duty_demand, on_min, off_min,
+                            restored=restored_pid and not rebased,
+                        )
+                    else:
+                        pwm_info = sampled_binary_pwm_plan(
+                            duty_demand, self.clock() - anchor, cfg["cycle_seconds"],
+                            on_min, off_min, starting=output_off(state), served_elapsed=None,
+                        )
+                    wanted = pwm_info["wanted"]
                     recovery = self._profile_wake.get(spec.identifier)
                     if recovery:
                         still_qualified = (
@@ -6012,6 +6169,10 @@ class EquipmentRuntime:
             humidity=measured["humidity"],
             # Neutral PID scheduling diagnostics, NOT an actuator failure.
             pid_control_metric=metric if cfg["control_mode"] == "pid" else None,
+            pid_control_target=goal if cfg["control_mode"] == "pid" and metric else None,
+            pid_control_measurement=(
+                measured.get(metric) if cfg["control_mode"] == "pid" and metric else None
+            ),
             pid_pwm_state=pwm_info["state"] if pwm_info else None,
             pid_pwm_effective_cycle_seconds=(
                 pwm_info["effective_cycle_seconds"] if pwm_info else None

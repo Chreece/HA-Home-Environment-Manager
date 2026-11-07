@@ -24,6 +24,7 @@ model, production, base = f['model'], f['production'], f['base']
 SPEC, PRIMARY, PACKAGE = f['SPEC'], f['PRIMARY'], f['PACKAGE']
 METHODS = (
     'active_control_mode', '_refresh_operating_mode', '_reset_pid_cycle', '_sync_pid_intent',
+    '_cancel_pid_pwm_evaluation', '_schedule_pid_pwm_evaluation', '_sampled_pid_pwm',
     '_resume_pid_checkpoint', '_checkpoint_pid', '_status', '_pause', '_identity_ok', '_current_spec',
     '_legacy_busy', 'async_request_mode', 'async_set_targets', 'async_set_fan',
     'async_resume', '_automatic_recovery_gate', '_schedule_automatic_reconciliation',
