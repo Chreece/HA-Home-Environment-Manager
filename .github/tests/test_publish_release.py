@@ -57,7 +57,7 @@ class FakeGitHub:
             return deepcopy(self.created)
         if method == "POST" and path.startswith("/releases/2/assets?"):
             self.data = data
-            name = "HA-Home-Environment-Manager-v" + VERSION + ".zip"
+            name = "environment_manager.zip"
             self.asset = {
                 "id": 7, "name": name, "state": "uploaded", "size": len(data),
                 "digest": "sha256:" + ("0" * 64 if self.corrupt_digest else hashlib.sha256(data).hexdigest()),
@@ -82,9 +82,10 @@ class PublishReleaseTests(unittest.TestCase):
     def setUpClass(cls):
         cls.directory = tempfile.TemporaryDirectory()
         cls.repo = Path(cls.directory.name)
-        cls.files = {name: b"fixture\n" for name in publisher.REQUIRED}
+        cls.files = {publisher.SOURCE + name: b"fixture\n" for name in publisher.REQUIRED}
         cls.files.update({
-            "manifest.json": json.dumps({"domain": "environment_manager", "version": VERSION}).encode(),
+            publisher.SOURCE + "manifest.json": json.dumps({"domain": "environment_manager", "version": VERSION}).encode(),
+            "manifest.json": b'{"domain":"wrong_root_decoy","version":"0.0.1"}',
             "README.md": b"integration documentation\n",
             ".github/releases/v" + VERSION + ".md": b"Beta fixture notes\n",
             ".github/tests/ignored.py": b"excluded\n", "tests/ignored.py": b"excluded\n",
@@ -114,9 +115,11 @@ class PublishReleaseTests(unittest.TestCase):
         second = publisher.package(self.repo, self.sha, VERSION)
         self.assertEqual(first, second)
         with ZipFile(BytesIO(first)) as archive:
-            expected = {publisher.PREFIX + name for name in (*publisher.REQUIRED, "manifest.json", "README.md")}
+            expected = {publisher.PREFIX + name for name in (*publisher.REQUIRED, "manifest.json")}
             self.assertEqual(set(archive.namelist()), expected)
-            self.assertEqual(archive.read(publisher.PREFIX + "README.md"), self.files["README.md"])
+            self.assertEqual(archive.read("manifest.json"), self.files[publisher.SOURCE + "manifest.json"])
+            self.assertNotIn("README.md", archive.namelist())
+            self.assertNotIn(publisher.SOURCE + "manifest.json", archive.namelist())
         with self.assertRaises(publisher.ReleaseError):
             publisher.inspect_zip(first, "0.6.1b2")
 
@@ -189,7 +192,7 @@ class PublishReleaseTests(unittest.TestCase):
         self.assertEqual([(method, path) for method, path in api.events
                           if method not in ("GET", "DOWNLOAD")], [
             ("POST", "/releases"),
-            ("POST", f"/releases/2/assets?name=HA-Home-Environment-Manager-v{VERSION}.zip"),
+            ("POST", "/releases/2/assets?name=environment_manager.zip"),
             ("PATCH", "/releases/2"),
         ])
 

@@ -16,7 +16,7 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b9](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b9)
+**Current release:** [v0.6.1b10](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b10)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
@@ -42,12 +42,19 @@ creates its controls; choose its control method when you want HEM to operate it.
 
 ## Installation
 
-### HACS
+### Marketplace / HACS
 
-1. In HACS, add `https://github.com/Chreece/HA-Home-Environment-Manager` as a
+The repository uses the standard `custom_components/environment_manager/` source layout.
+For versioned installs, Marketplace and HACS use the checked `environment_manager.zip`
+release asset, with `manifest.json` at the archive root. Older release assets and
+tags are retained.
+
+1. In Marketplace (or legacy HACS), add `https://github.com/Chreece/HA-Home-Environment-Manager` as a
    **custom repository**, with category **Integration**.
-2. Open **Home Environment Manager**, enable **Show beta versions** in version
-   selection, and download the **current release shown above**.
+2. Open **Home Environment Manager**, enable **Pre-release / Show beta versions**
+   in the repository settings, and choose **v0.6.1b10**. Marketplace update
+   discovery can lag behind GitHub publication; open the version selector to
+   select the specific release if the update entity still shows the old beta.
 3. Restart Home Assistant.
 4. Open **Settings → Devices & services → Add integration**, then choose
    **Home Environment Manager**.
