@@ -605,11 +605,12 @@
       this._editRenderTimer = null;
       this._lastRenderError = null;
       this._hasValidRender = false;
+      this._modeSettingsPending7 = new Set();
       // A focused native select/input belongs to the user until they commit
       // or leave it; replacing shadowRoot.innerHTML while it is open closes
       // the browser's picker and discards any unfinished manual edit.
       this.shadowRoot.addEventListener('focusin', (event) => {
-        const editor = event.target.closest?.('[data-climate-method],[data-climate-input],[data-pid-calibration-method],[data-pid-model-input],[data-pid-capacity-select],[data-pid-capacity-input],[data-window-wait-input]');
+        const editor = event.target.closest?.('[data-climate-method],[data-climate-input],[data-pid-calibration-method],[data-pid-model-input],[data-pid-capacity-select],[data-pid-capacity-input],[data-window-wait-input],[data-mode-setting-select],[data-mode-setting-input]');
         if (!editor) return;
         this._focusedEditor = editor;
         if (this._editRenderTimer !== null) {
@@ -618,7 +619,7 @@
         }
       });
       this.shadowRoot.addEventListener('pointerdown', (event) => {
-        const editor = event.target.closest?.('[data-climate-method],[data-climate-input],[data-pid-calibration-method],[data-pid-model-input],[data-pid-capacity-select],[data-pid-capacity-input],[data-window-wait-input]');
+        const editor = event.target.closest?.('[data-climate-method],[data-climate-input],[data-pid-calibration-method],[data-pid-model-input],[data-pid-capacity-select],[data-pid-capacity-input],[data-window-wait-input],[data-mode-setting-select],[data-mode-setting-input]');
         if (editor) this._focusedEditor = editor;
       });
       this.shadowRoot.addEventListener('focusout', (event) => {
@@ -629,6 +630,12 @@
         this._flushDeferredRenderSoon();
       });
       this.shadowRoot.addEventListener('click', (event) => {
+        const modeSetting = event.target.closest?.('[data-mode-setting-action]');
+        if (modeSetting) {
+          event.preventDefault();
+          this._submitModeSetting7(modeSetting);
+          return;
+        }
         const edit = event.target.closest?.('[data-edit-area],[data-edit-home]');
         if (edit) {
           const area = edit.getAttribute('data-edit-area');
@@ -943,6 +950,11 @@
         this._render(true);
       });
       this.shadowRoot.addEventListener('change', (event) => {
+        const modeSelection = event.target.closest?.('[data-mode-setting-select]');
+        if (modeSelection) {
+          this._submitModeSetting7(modeSelection);
+          return;
+        }
         const capacitySelection = event.target.closest?.('[data-pid-capacity-select]');
         const pidSelection = event.target.closest?.('[data-pid-calibration-method]');
         const selector = capacitySelection || pidSelection || event.target.closest?.('[data-climate-method]');
@@ -1315,61 +1327,95 @@
       // Only match Manager-created native climate facades with provenance.
       // An unrelated physical entity must never acquire writable controls.
       const states = Object.entries(this._hass?.states || {});
+      const sharedStates = states.filter(([, item])=>
+        item?.attributes?.settings_scope!=='operating_mode');
+      const modeSettings = states.filter(([id,item])=>
+        ['select','number','switch','button'].includes(id.split('.')[0]) &&
+        item?.attributes?.area_id===area &&
+        item.attributes.settings_scope==='operating_mode' &&
+        typeof item.attributes.operating_mode==='string' &&
+        typeof item.attributes.setting_key==='string' && item.attributes.setting_key &&
+        Array.isArray(item.attributes.source_entity_ids) && item.attributes.source_entity_ids.length>0);
       const physical = states.filter(([id, item])=>
         id.startsWith('climate.') && item?.attributes?.area_id===area &&
         Array.isArray(item.attributes.source_entity_ids) &&
         item.attributes.source_entity_ids.length>0 &&
         typeof item.attributes.control_mode==='string');
-      const selectors = states.filter(([id, item])=> id.startsWith('select.') &&
+      const selectors = sharedStates.filter(([id, item])=> id.startsWith('select.') &&
         item?.attributes?.area_id===area &&
         Array.isArray(item.attributes.source_entity_ids) &&
         Array.isArray(item.attributes.options) &&
         ['automatic','manual','off'].every((mode)=>item.attributes.options.includes(mode)));
       const signature = (item) => JSON.stringify(
         safeArray(item.attributes.source_entity_ids).slice().sort());
-      const timedSetpointSwitches=states.filter(([id,item])=>
+      const timedSetpointSwitches=sharedStates.filter(([id,item])=>
         id.startsWith('switch.') && item?.attributes?.area_id===area &&
         item.attributes.timed_setpoint_role==='policy');
-      const windowAnnouncementSwitches=states.filter(([id,item])=>
+      const windowAnnouncementSwitches=sharedStates.filter(([id,item])=>
         id.startsWith('switch.') && item?.attributes?.area_id===area &&
         item.attributes.window_announcement_role==='policy');
-      const windowWaitingNumbers=states.filter(([id,item])=>
+      const windowWaitingNumbers=sharedStates.filter(([id,item])=>
         id.startsWith('number.') && item?.attributes?.area_id===area &&
         item.attributes.window_announcement_role==='timeout');
-      const errorAnnouncementSwitches=states.filter(([id,item])=>
+      const errorAnnouncementSwitches=sharedStates.filter(([id,item])=>
         id.startsWith('switch.') && item?.attributes?.area_id===area &&
         item.attributes.device_fault_role==='announce');
-      const nativeResumeButtons=states.filter(([id,item])=>
+      const nativeResumeButtons=sharedStates.filter(([id,item])=>
         id.startsWith('button.') && item?.attributes?.area_id===area &&
         ['check_and_continue','continue_automatic'].includes(
           item.attributes.controller_resume_role));
-      const calibrationSelectors=states.filter(([id,item])=>
+      const calibrationSelectors=sharedStates.filter(([id,item])=>
         id.startsWith('select.') && item?.attributes?.area_id===area &&
         ['method','single_authoritative_method'].includes(
           item.attributes.pid_calibration_role));
-      const reviewButtons=states.filter(([id,item])=>
+      const reviewButtons=sharedStates.filter(([id,item])=>
         id.startsWith('button.') && item?.attributes?.area_id===area &&
         ['approve','discard'].includes(item.attributes.pid_review_role));
-      const calibrationButtons=states.filter(([id,item])=>
+      const calibrationButtons=sharedStates.filter(([id,item])=>
         id.startsWith('button.') && item?.attributes?.area_id===area &&
         item.attributes.pid_calibration_role==='apply');
-      const calibrationInputs=states.filter(([id,item])=>
+      const calibrationInputs=sharedStates.filter(([id,item])=>
         id.startsWith('number.') && item?.attributes?.area_id===area &&
         typeof item.attributes.pid_calibration_field==='string');
-      const capacitySelectors=states.filter(([id,item])=>
+      const capacitySelectors=sharedStates.filter(([id,item])=>
         id.startsWith('select.') && item?.attributes?.area_id===area &&
         ['strategy','direction'].includes(item.attributes.pid_fan_capacity_role));
-      const capacityButtons=states.filter(([id,item])=>
+      const capacityButtons=sharedStates.filter(([id,item])=>
         id.startsWith('button.') && item?.attributes?.area_id===area &&
         item.attributes.pid_fan_capacity_role==='apply');
-      const capacityFields=states.filter(([id,item])=>
+      const capacityFields=sharedStates.filter(([id,item])=>
         id.startsWith('number.') && item?.attributes?.area_id===area &&
         typeof item.attributes.pid_fan_capacity_field==='string');
-      const fanPurposeSelectors=states.filter(([id,item])=>
+      const fanPurposeSelectors=sharedStates.filter(([id,item])=>
         id.startsWith('select.') && item?.attributes?.area_id===area &&
         Array.isArray(item.attributes.options) &&
         ['auto','extraction','filtration'].every(value=>item.attributes.options.includes(value)));
       return physical.map(([entityId, climate])=>{
+        const supportedModes=[...new Set(safeArray(climate.attributes.supported_operating_modes)
+          .filter(mode=>typeof mode==='string' && mode && mode!=='off'))];
+        const scoped=modeSettings.filter(([,item])=>
+          signature(item)===signature(climate) &&
+          item.attributes.source_device_id===climate.attributes.source_device_id &&
+          supportedModes.includes(item.attributes.operating_mode));
+        const operatingModes=scoped.length ? supportedModes.map(mode=>{
+          const fields=new Map();
+          for(const [id,state] of scoped) {
+            if(state.attributes.operating_mode!==mode) continue;
+            const key=state.attributes.setting_key;
+            // A duplicate mode/key is ambiguous even across entity domains.
+            fields.set(key,fields.has(key)?null:{id,state,key,domain:id.split('.')[0]});
+          }
+          const method=fields.get('control_mode');
+          const parameters=[...fields.values()].filter(field=>field && field.key!=='control_mode');
+          const order=['pid_calibration_method','kp','ki','kd','sample_seconds','cycle_seconds'];
+          parameters.sort((a,b)=>{
+            const rank=key=>order.includes(key)?order.indexOf(key):order.length;
+            return rank(a.key)-rank(b.key) || a.key.localeCompare(b.key);
+          });
+          const label=method?.state?.attributes?.operating_mode_label ||
+            parameters.find(field=>field.state.attributes.operating_mode_label)?.state.attributes.operating_mode_label;
+          return {mode,label,method:method?.domain==='select'?method:null,parameters};
+        }) : [];
         const matched = selectors.filter(([,item])=>signature(item)===signature(climate));
         const [methodId, method] = matched.length===1 ? matched[0] : [null,null];
         const found=calibrationSelectors.filter(([,item])=>signature(item)===signature(climate));
@@ -1424,7 +1470,7 @@
           signature(item)===signature(climate) &&
           item.attributes.source_device_id===climate.attributes.source_device_id);
         const [fanPurposeId,fanPurpose]=purposes.length===1?purposes[0]:[null,null];
-        return {entityId,climate,methodId,method,resumeButtonId,resumeButton,
+        return {entityId,climate,methodId,method,resumeButtonId,resumeButton,operatingModes,
                 errorAnnounceId,errorAnnounce,timedSetpointId,timedSetpoint,
                 windowAnnounceId,windowAnnounce,windowWaitId,windowWait,
                 calibrationSelectId,calibrationSelect,calibrationButtonId,calibrationButton,
@@ -1464,12 +1510,181 @@
         this._configurationHelp116(toggle,entry.windowAnnounceId,entry.windowAnnounce,names[0])+timeout+'</div>';
     }
 
+    _modeSettingContext7(element) {
+      const area=element.getAttribute('data-controller-area');
+      const controller=element.getAttribute('data-managed-controller');
+      const mode=element.getAttribute('data-mode-setting-mode');
+      const key=element.getAttribute('data-mode-setting-key');
+      const id=element.getAttribute('data-mode-setting-entity');
+      const entry=this._managedControllers(area).find(item=>item.entityId===controller);
+      const panel=entry?.operatingModes?.find(item=>item.mode===mode);
+      const field=key==='control_mode'?panel?.method:
+        panel?.parameters.find(item=>item.key===key);
+      return field?.id===id ? {entry,panel,field,area,controller,mode,key,id} : null;
+    }
+
+    _modeSettingAvailable7(field) {
+      const state=field?.state;
+      if (!state || typeof state.state!=='string' || state.state==='unavailable' ||
+          this._modeSettingsPending7?.has(field.id)) return false;
+      if (field.domain==='switch') return ['on','off'].includes(state.state);
+      if (field.domain==='select') return Array.isArray(state.attributes?.options) &&
+        state.attributes.options.some(option=>typeof option==='string');
+      if (field.domain==='number') {
+        const attrs=state.attributes || {};
+        return attrs.min!=null && attrs.max!=null &&
+          Number.isFinite(Number(attrs.min)) && Number.isFinite(Number(attrs.max)) &&
+          Number(attrs.min)<=Number(attrs.max);
+      }
+      // HA buttons are normally "unknown" until their first press. Their
+      // unavailable state, rather than their last-pressed timestamp, gates them.
+      return field.domain==='button';
+    }
+
+    async _submitModeSetting7(element) {
+      if (!this._hass?.callService || element.disabled) return;
+      const context=this._modeSettingContext7(element);
+      if (!context || !this._modeSettingAvailable7(context.field)) return;
+      const {field,id,mode,key}=context;
+      let service,data={entity_id:id};
+      if (field.domain==='select') {
+        if (element.getAttribute('data-mode-setting-select')!==id ||
+            !field.state.attributes.options.includes(element.value)) return;
+        service='select_option'; data.option=element.value;
+      } else {
+        if (element.getAttribute('data-mode-setting-action')!==field.domain) return;
+        if (field.domain==='number') {
+          const input=element.closest('.hem-mode-number7')?.querySelector('[data-mode-setting-input]');
+          if (!input || input.getAttribute('data-mode-setting-input')!==id ||
+              input.getAttribute('data-mode-setting-mode')!==mode ||
+              input.getAttribute('data-mode-setting-key')!==key || !input.value.trim()) return;
+          if (!input.checkValidity()) { input.reportValidity(); return; }
+          const value=Number(input.value), attrs=field.state.attributes;
+          if (!Number.isFinite(value) || value<Number(attrs.min) || value>Number(attrs.max)) return;
+          const step=Number(attrs.step), offset=(value-Number(attrs.min))/step;
+          if (Number.isFinite(step) && step>0 &&
+              Math.abs(offset-Math.round(offset))>1e-7) return;
+          service='set_value'; data.value=value;
+        } else if (field.domain==='switch') {
+          service=field.state.state==='on'?'turn_off':'turn_on';
+        } else if (field.domain==='button') service='press';
+        else return;
+      }
+      this._modeSettingsPending7.add(id);
+      element.disabled=true;
+      this._climateEditError=null;
+      if (this._focusedEditor===element) this._focusedEditor=null;
+      try {
+        await this._hass.callService(field.domain,service,data);
+      } catch (error) {
+        this._climateEditError=this._climateLabels65().editFailed;
+        console.warn('HEM operating mode setting failed',error);
+      } finally {
+        this._modeSettingsPending7.delete(id);
+        const current=this._modeSettingContext7(element);
+        element.disabled=!current || !this._modeSettingAvailable7(current.field);
+        this._render(true);
+      }
+    }
+
+    _modeOptionLabel7(field,option) {
+      const supplied=field.state.attributes.option_labels?.[option];
+      if (typeof supplied==='string' && supplied) return supplied;
+      const methods=this._climateLabels65();
+      if (field.key==='control_mode' && methods[option]) return methods[option];
+      if (field.key==='pid_calibration_method') {
+        const labels=this._pidLabels65();
+        const known={manual:labels[1],imc_lambda:labels[2],cohen_coon:labels[3]};
+        if (known[option]) return known[option];
+      }
+      const translated=this._hass?.localize?.(
+        'component.environment_manager.entity.select.equipment_'+field.key+'.state.'+option);
+      if (translated) return translated;
+      return option.replaceAll('_',' ').replace(/^./,letter=>letter.toLocaleUpperCase());
+    }
+
+    _operatingModeControls7(entry,area) {
+      if (!entry.operatingModes?.length) return '';
+      const l=this._climateLabels65();
+      const supplied=entry.climate?.attributes?.operating_mode_ui_labels || {};
+      const fallback={en:['Parameters','Selected mode'],el:['Παράμετροι','Επιλεγμένη λειτουργία'],
+        de:['Parameter','Gewählter Modus']}[this._language()] || ['Parameters','Selected mode'];
+      const parametersLabel=typeof supplied.parameters==='string'?supplied.parameters:fallback[0];
+      const selectedLabel=typeof supplied.selected==='string'?supplied.selected:fallback[1];
+      const selected=entry.climate?.attributes?.selected_operating_mode;
+      const fieldLabel=field=>field.state.attributes.setting_label ||
+        field.state.attributes.friendly_name || field.key.replaceAll('_',' ');
+      const common=(panel,field)=>'data-controller-area="'+escape(area)+'" '+
+        'data-managed-controller="'+escape(entry.entityId)+'" '+
+        'data-mode-setting-mode="'+escape(panel.mode)+'" '+
+        'data-mode-setting-key="'+escape(field.key)+'" '+
+        'data-mode-setting-entity="'+escape(field.id)+'" ';
+      const renderField=(panel,field)=>{
+        const label=fieldLabel(field), attrs=field.state.attributes;
+        const enabled=this._modeSettingAvailable7(field);
+        const disabled=enabled?'':'disabled ';
+        const metadata=common(panel,field);
+        let content='';
+        if (field.domain==='select') {
+          const options=safeArray(attrs.options).filter(option=>typeof option==='string');
+          content='<label class="managed-method-label hem-mode-select7"><span>'+escape(label)+'</span>'+
+            '<select data-mode-setting-select="'+escape(field.id)+'" '+metadata+disabled+
+            'aria-label="'+escape(panel.label+' · '+label)+'">'+
+            (!options.includes(field.state.state)?'<option value="" selected disabled>'+escape(this._t('missing'))+'</option>':'')+
+            options.map(option=>'<option value="'+escape(option)+'" '+
+              (option===field.state.state?'selected':'')+'>'+escape(this._modeOptionLabel7(field,option))+'</option>').join('')+
+            '</select></label>';
+        } else if (field.domain==='number') {
+          const raw=typeof field.state.state==='string'?field.state.state:'', value=Number(raw);
+          const unit=typeof attrs.unit_of_measurement==='string'?attrs.unit_of_measurement:'';
+          const step=Number(attrs.step), stepValue=Number.isFinite(step)&&step>0?step:'any';
+          const numberLabel=label+(unit?' ('+unit+')':'');
+          content='<div class="hem-mode-number7"><label><span>'+escape(numberLabel)+'</span>'+
+            '<input type="number" required data-mode-setting-input="'+escape(field.id)+'" '+metadata+
+            disabled+'min="'+escape(attrs.min??'')+'" max="'+escape(attrs.max??'')+'" '+
+            'step="'+escape(stepValue)+'" value="'+escape(raw.trim() && Number.isFinite(value)?value:'')+'" '+
+            'aria-label="'+escape(panel.label+' · '+numberLabel)+'"></label>'+
+            '<button type="button" data-mode-setting-action="number" '+metadata+disabled+'>'+escape(l.save)+'</button></div>';
+        } else if (field.domain==='switch') {
+          const on=field.state.state==='on';
+          content='<button type="button" class="hem-mode-toggle7" role="switch" '+
+            'data-mode-setting-action="switch" '+metadata+disabled+'aria-checked="'+on+'" '+
+            'aria-label="'+escape(panel.label+' · '+label)+'"><span>'+escape(label)+'</span><b>'+
+            escape(['on','off'].includes(field.state.state)?this._l65(field.state.state):this._t('missing'))+'</b></button>';
+        } else if (field.domain==='button') {
+          content='<button type="button" class="pid-button hem-mode-button7" '+
+            'data-mode-setting-action="button" '+metadata+disabled+
+            'aria-label="'+escape(panel.label+' · '+label)+'">'+escape(label)+'</button>';
+        }
+        return this._configurationHelp116(content,field.id,field.state,label);
+      };
+      return '<div class="hem-operating-modes7">'+entry.operatingModes.map(panel=>{
+        const modeFallback={heat:this._l65('heat'),cool:this._l65('cool'),dry:this._l65('dry'),
+          fan_only:this._l65('fan'),auto:l.automatic,heat_cool:this._l65('heat')+' / '+this._l65('cool')};
+        panel={...panel,label:panel.label || modeFallback[panel.mode] || panel.mode.replaceAll('_',' ')};
+        const icon={heat:'mdi:fire',cool:'mdi:snowflake',dry:'mdi:water-minus',
+          humidify:'mdi:water-plus',fan_only:'mdi:fan',auto:'mdi:thermostat-auto',
+          heat_cool:'mdi:thermostat-auto'}[panel.mode] || 'mdi:tune';
+        const method=panel.method?renderField(panel,panel.method):
+          '<label class="managed-method-label"><span>'+escape(l.method)+'</span><select disabled '+
+          'aria-label="'+escape(panel.label+' · '+l.method)+'"><option>'+escape(this._t('missing'))+'</option></select></label>';
+        const details=panel.parameters.length?this._detail66('mode-settings:'+entry.entityId+':'+panel.mode,
+          parametersLabel,panel.parameters.map(field=>renderField(panel,field)).join(''),'hem-mode-parameters7'):'';
+        return '<section class="hem-operating-mode7" data-operating-mode="'+escape(panel.mode)+'" '+
+          'data-mode-controller="'+escape(entry.entityId)+'"><div class="hem-mode-heading7">'+
+          '<h4>'+this._icon(icon)+escape(panel.label)+'</h4>'+
+          (selected===panel.mode?'<span class="hem-mode-selected7">'+escape(selectedLabel)+'</span>':'')+
+          '</div>'+method+details+'</section>';
+      }).join('')+'</div>';
+    }
+
     _controllerSignature() {
       // The main recommendation sensor may be unchanged while a physical
       // controller is switched to Manual/PID/Off in Home Assistant.
       const rows = Object.entries(this._hass?.states || {})
         .filter(([id, state]) =>
-          (id.startsWith('select.') || id.startsWith('climate.') || (id.startsWith('sensor.') && state?.attributes?.status_code) ||
+          (state?.attributes?.settings_scope==='operating_mode' ||
+           id.startsWith('select.') || id.startsWith('climate.') || (id.startsWith('sensor.') && state?.attributes?.status_code) ||
            (id.startsWith('switch.') && (state?.attributes?.device_fault_role==='announce' ||
              state?.attributes?.timed_setpoint_role==='policy' ||
              state?.attributes?.window_announcement_role==='policy')) ||
@@ -1518,6 +1733,13 @@
           state.attributes.physical_hvac_mode,
           state.attributes.upstream_power_switch,
           state.attributes.configuration_help,
+          state.attributes.settings_scope,state.attributes.operating_mode,state.attributes.setting_key,
+          state.attributes.operating_mode_label,state.attributes.setting_label,state.attributes.option_labels,
+          state.attributes.min,state.attributes.max,state.attributes.step,state.attributes.unit_of_measurement,
+          state.attributes.supported_operating_modes,state.attributes.selected_operating_mode,
+          state.attributes.operating_mode_ui_labels,
+          state.attributes.humidity_demand,state.attributes.mold_demand,
+          state.attributes.demand_reason,state.attributes.demand_reason_label,
           this._hass?.entities?.[id]?.device_id,
         ]);
       // Activity color must update when a native device changes without a
@@ -1619,7 +1841,7 @@
           : this._metricName(item.metric);
       const fullSource=[item.name,item.entity_id].filter(Boolean)
         .filter((value,index,arr)=>arr.indexOf(value)===index).join(' · ');
-      const available = item.available && typeof item.value === 'number';
+      const available = item.available === true && Number.isFinite(item.value);
       const limit = item.threshold;
       const hasLimit = typeof limit === 'number' && limit > 0;
       const pct = available && hasLimit ? clamp(item.value / limit * 100, 0, 100) : 0;
@@ -1924,6 +2146,7 @@
         const options=Array.isArray(selection?.attributes?.options)
           ? selection.attributes.options : [];
         const control=selection?.state || attrs.control_mode || 'existing';
+        const hasModeSettings=entry.operatingModes?.length>0;
         const name=attrs.friendly_name || entry.entityId;
         // The folded row names the HEM controller. The expanded heading
         // names the ORIGINAL physical endpoint as registered in HA.
@@ -1949,7 +2172,7 @@
           : '<span class="climate-entity-link hem-physical-title93 hem-physical-title93-unavailable" '+
             'title="'+escape(nativeEndpoint?.entityId || l.selectedDevice)+'">'+
             '<strong>'+escape(nativeName)+'</strong></span>')+'</div>';
-        const method=entry.methodId && options.length
+        const method=!hasModeSettings && entry.methodId && options.length
           ? '<label class="managed-method-label"><span>'+escape(l.method)+'</span>'+
           '<select data-climate-method="'+escape(entry.methodId)+
           '" data-controller-area="'+escape(room.area_id)+
@@ -1972,7 +2195,9 @@
         const timingText=timingLabels[this._language()] || [
           entry.timedSetpoint?.attributes?.friendly_name || timingLabels.en[0],timingLabels.en[1]];
         const timingState=entry.timedSetpoint?.state;
-        const timedSwitch=entry.timedSetpointId
+        const timingPerMode=entry.operatingModes?.some(panel=>
+          panel.parameters.some(field=>field.key==='timed_setpoint_sequence'));
+        const timedSwitch=entry.timedSetpointId && !timingPerMode
           ? '<div class="hem-device-error-toggle"><button type="button" role="switch" '+
             'data-timed-setpoint-switch="'+escape(entry.timedSetpointId)+'" '+
             'data-controller-area="'+escape(room.area_id)+'" data-managed-controller="'+escape(entry.entityId)+'" '+
@@ -1982,6 +2207,7 @@
             this._icon('mdi:timer-outline')+'<span>'+escape(timingText[0])+'</span><b>'+
             escape(this._controllerStatusLabel(timingState))+'</b></button></div>' : '';
         const airingControls=this._windowAnnouncementControls6(entry,room.area_id,l.save);
+        const modeControls=this._operatingModeControls7(entry,room.area_id);
         const deviceFault=entry.errorAnnounce?.attributes?.native_error;
         const errorLabels={
           en:['Announce errors','Physical device error','Severity','Code','Details',
@@ -2200,7 +2426,7 @@
         const features=Number(attrs.supported_features) || 0;
         const thermalModes=Array.isArray(attrs.hvac_modes) &&
           attrs.hvac_modes.some(mode=>['heat','cool','heat_cool','auto'].includes(mode));
-        const editable=available && control==='manual';
+        const editable=!hasModeSettings && available && control==='manual';
         const editors=[];
         for(const [kind,bit,label,minKey,maxKey,fallbackLow,fallbackHigh,step] of [
           ['temperature',1,l.manualTemperature,'min_temp','max_temp',5,35,0.5],
@@ -2242,8 +2468,9 @@
           recoveryPanel+this._configurationHelp116(resumeControl,entry.resumeButtonId,entry.resumeButton,continueLabel)+
           this._configurationHelp116(method,entry.methodId,entry.method,l.method)+
           airingControls+
-          this._configurationHelp116(timedSwitch,entry.timedSetpointId,entry.timedSetpoint,timingText[0])+editors.join('')+
-          this._calibrationDetails65(entry,control==='pid' ?
+          this._configurationHelp116(timedSwitch,entry.timedSetpointId,entry.timedSetpoint,timingText[0])+
+          modeControls+editors.join('')+
+          this._calibrationDetails65(entry,!hasModeSettings && control==='pid' ?
             this._configurationHelp116(calibrationMethod,entry.calibrationSelectId,entry.calibrationSelect,pidLabels[0])+
             pidInputs+this._configurationHelp116(apply,entry.calibrationButtonId,entry.calibrationButton,pidLabels[9])+
             reviewPanel+capSelectors+capacityInput+
@@ -2844,6 +3071,25 @@
       .hem-window-timeout6 label{min-width:0;display:grid;gap:4px;overflow-wrap:anywhere}
       .hem-window-timeout6 input{box-sizing:border-box;width:100%;min-width:0;max-width:100%;padding:7px;border:1px solid var(--aqa-edge);border-radius:6px;background:var(--card-background-color);color:var(--primary-text-color)}
       .hem-window-timeout6 button{padding:7px;border:1px solid var(--aqa-edge);border-radius:6px;background:var(--card-background-color);color:var(--primary-text-color)}
+      .hem-operating-modes7{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;min-width:0;margin-top:10px}
+      .hem-operating-mode7{min-width:0;max-width:100%;padding:9px;border:1px solid var(--aqa-edge);border-radius:8px}
+      .hem-mode-heading7{display:flex;align-items:center;flex-wrap:wrap;gap:5px;min-width:0}
+      .hem-mode-heading7 h4{display:flex;align-items:center;gap:5px;min-width:0;margin:0;font-size:12px;overflow-wrap:anywhere}
+      .hem-mode-heading7 ha-icon{--mdc-icon-size:16px;flex:0 0 16px}
+      .hem-mode-selected7{font-size:9px;line-height:1.35;padding:2px 5px;border-radius:6px;max-width:100%;overflow-wrap:anywhere;color:var(--primary-color,var(--aqa-blue));background:color-mix(in srgb,var(--aqa-blue),transparent 91%)}
+      .hem-mode-select7{min-width:0;max-width:100%}.hem-mode-select7 span{white-space:normal;overflow-wrap:anywhere}
+      .hem-operating-mode7 select{box-sizing:border-box;width:100%;min-width:0;max-width:100%}
+      .hem-mode-parameters7{min-width:0;margin-top:8px;border-top:1px solid var(--aqa-edge);padding-top:4px}
+      .hem-mode-parameters7>summary{cursor:pointer;font-size:11px;padding:6px 0;overflow-wrap:anywhere}
+      .hem-mode-parameters7>.hem-setting-control116{margin:7px 0}
+      .hem-mode-number7{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:end;min-width:0;margin:7px 0}
+      .hem-mode-number7 label{display:grid;gap:4px;min-width:0;font-size:10px;overflow-wrap:anywhere}
+      .hem-mode-number7 input{box-sizing:border-box;width:100%;min-width:0;max-width:100%;padding:7px;border:1px solid var(--aqa-edge);border-radius:6px;background:var(--card-background-color);color:var(--primary-text-color)}
+      .hem-mode-number7 button,.hem-mode-toggle7{max-width:100%;padding:7px;border:1px solid var(--aqa-edge);border-radius:6px;background:var(--card-background-color);color:var(--primary-text-color);cursor:pointer;font-size:11px}
+      .hem-mode-toggle7{display:flex;align-items:center;gap:7px;width:100%;margin:7px 0;text-align:start}
+      .hem-mode-toggle7 span{min-width:0;overflow-wrap:anywhere;white-space:normal}.hem-mode-toggle7 b{margin-inline-start:auto;flex:0 0 auto}
+      .hem-mode-button7{margin:7px 0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+      .hem-operating-mode7 button:disabled{cursor:default;opacity:.55}
       .hem-device-error-toggle button{border:1px solid var(--aqa-edge);border-radius:8px;
         background:var(--aqa-surface);color:var(--aqa-text);padding:6px 10px;
         font-size:11px;display:flex;align-items:center;gap:8px;cursor:pointer}
@@ -3119,6 +3365,47 @@
         [...entry.climate.attributes.source_entity_ids].sort()])) || null,
     }));
   };
+  proto65._controllerPresentation7 = function(entry) {
+    const a=entry.climate?.attributes || {}, d=entry.statusInfo?.state?.attributes || {};
+    const c=a.controller_status || {};
+    const mold=[a.humidity_demand,d.humidity_demand,c.humidity_demand,
+      d.mold_demand,c.mold_demand,a.mold_demand].find(value=>
+      value && typeof value==='object' && typeof value.mold_protection_required==='boolean');
+    const qualified=mold?.mold_protection_required===true;
+    const reason=a.demand_reason || d.demand_reason || c.demand_reason || (qualified?mold.reason:null);
+    const provided=a.demand_reason_label || d.demand_reason_label || c.demand_reason_label;
+    const demand=typeof provided==='string' && provided ? provided :
+      qualified && (!reason || reason==='mold_above_limit')
+        ? this._metricName('mold')+' · '+this._t('indoorHigh')
+        : typeof reason==='string' && reason ? this._controllerStatusLabel(reason) : null;
+    let status=d.status_code || c.status || entry.climate?.state;
+    // A current qualified demand never establishes that the physical output
+    // is available or working. Preserve concrete holds; correct only a stale
+    // reassuring badge using this controller's exact native source.
+    if (qualified && ['within_target_band','ready','controlling'].includes(status)) {
+      const sources=safeArray(a.source_entity_ids), declared=a.physical_primary_entity_id;
+      const primary=typeof declared==='string' && sources.includes(declared)?declared:
+        sources.length===1?sources[0]:null;
+      const native=primary?this._hass?.states?.[primary]:null;
+      if (primary && (!native || ['unknown','unavailable'].includes(native.state)))
+        status='physical_device_unavailable';
+      else if (status==='within_target_band') status='mold_above_limit';
+    }
+    const label=status==='mold_above_limit' && demand ? demand : this._controllerStatusLabel(status);
+    const reportedReason=d.status_reason_code || c.reason;
+    const statusReason=qualified && status!=='within_target_band' &&
+      reportedReason==='within_target_band'?null:reportedReason;
+    const evidence=[];
+    if (qualified) {
+      if (Number.isFinite(mold.mold_surface_rh)) evidence.push(this._metricName('mold')+': '+
+        this._format(mold.mold_surface_rh)+'%'+(Number.isFinite(mold.mold_surface_limit)
+          ?' · '+this._t('limits')+' '+this._format(mold.mold_surface_limit)+'%':''));
+      if (mold.mold_target_active===true && Number.isFinite(mold.effective_humidity_target))
+        evidence.push('HEM · '+this._l65('target')+' · '+this._t('humidity')+': '+
+          this._format(mold.effective_humidity_target)+'%');
+    }
+    return {status,label,demand,evidence,qualified,reason:statusReason};
+  };
   proto65._deviceSummary65 = function(entry) {
     const a=entry.climate.attributes || {}, d=entry.statusInfo?.state?.attributes || {};
     const c=a.controller_status || {};
@@ -3159,12 +3446,13 @@
       else if(typeof attrs.fan_mode==='string')add(t.speed,attrs.fan_mode);
     }
     const supplyId=d.upstream_power_switch || a.upstream_power_switch;
-    const status=d.status_code || c.status;
-    const reason=d.status_reason_code || c.reason;
+    const presentation=this._controllerPresentation7(entry);
+    const status=presentation.status;
+    const reason=presentation.reason;
     const reasonLabel=reason?this._controllerStatusLabel(reason):'';
     const diagnostics=[entry.entityId,...safeArray(a.source_entity_ids),supplyId,status,reason].filter(Boolean);
     const friendlySupply=this._hass?.states?.[supplyId]?.attributes?.friendly_name;
-    return '<div class="managed-status">'+escape(this._controllerStatusLabel(status || entry.climate.state))+'</div>'+
+    return '<div class="managed-status">'+escape(presentation.label)+'</div>'+
       '<div class="hem-device-data">'+rows.join('')+'</div>'+
       (friendlySupply?'<small>'+escape(t.supply)+': '+escape(friendlySupply)+'</small>':'')+
       (reasonLabel && reasonLabel!==t.unknown ? '<small>'+escape(t.reason)+': '+escape(reasonLabel)+'</small>':'')+
@@ -3343,14 +3631,16 @@
     const states=this._hass?.states || {};
     const friendly=entity=>states[entity]?.attributes?.friendly_name || entity;
     const row=(label,value)=>'<div><dt>'+escape(label)+'</dt><dd>'+escape(value)+'</dd></div>';
-    const status=d.status_code || c.status || entry.climate.state;
-    const reason=d.status_reason_code || c.reason;
+    const presentation=this._controllerPresentation7(entry), status=presentation.status;
+    const reason=presentation.reason;
     const sources=safeArray(a.source_entity_ids);
     const supply=d.upstream_power_switch || a.upstream_power_switch;
     let diagnostics=row(this._l66('controller'),a.friendly_name || friendly(id));
     diagnostics+=sources.map(entity=>row(this._l66('source'),friendly(entity))).join('');
-    diagnostics+=row(this._l66('status'),this._controllerStatusLabel(status));
+    diagnostics+=row(this._l66('status'),presentation.label);
     if(reason && reason!==status)diagnostics+=row(this._l65('reason'),this._controllerStatusLabel(reason));
+    if(presentation.demand)diagnostics+=row(this._l65('demand'),presentation.demand);
+    if(presentation.evidence.length)diagnostics+=row(this._l65('information'),presentation.evidence.join(' · '));
     if(supply)diagnostics+=row(this._l65('supply'),friendly(supply));
     const raw=[id,...sources,supply].filter(Boolean).map(escape).join('<br>');
     diagnostics='<dl class="hem-diagnostic-data66">'+diagnostics+'</dl>'+
@@ -3571,7 +3861,8 @@
     const d=entry.statusInfo?.state?.attributes || {};
     const c=a.controller_status || {};
     const t=CARD65[this._language()]?.text || CARD65.en.text;
-    const id=entry.entityId, state=d.status_code || c.status || entry.climate.state;
+    const presentation=this._controllerPresentation7(entry);
+    const id=entry.entityId, state=presentation.status;
     const transition109=this._setpointPhase109(entry);
     const untilKey=state==='minimum_on_hold'?'native_minimum_on_until':
       state==='minimum_off_hold'?'native_minimum_off_until':null;
@@ -3579,14 +3870,17 @@
     const held=!!untilKey && Number.isFinite(until) &&
       until>0 && until>Date.now()/1000;
     const untilLabel=held?' · '+Math.ceil((until-Date.now()/1000)/60)+' min':'';
-    const label=transition109?.label || this._controllerStatusLabel(state)+untilLabel;
-    const tone=transition109?'neutral':/(paused|hold|unavailable|unknown|failed|error|blocked|inactive|missing)/.test(
+    const label=transition109?.label || presentation.label+untilLabel;
+    const tone=transition109?'neutral':/(paused|hold|unavailable|unknown|failed|error|blocked|inactive|missing|mold_above_limit)/.test(
       String(state))?'warn':/^(controlling|ready|within_target_band|manual)$/.test(
       String(state))?'good':'neutral';
     const info=[];
-    const reason=d.status_reason_code || c.reason;
+    const reason=presentation.reason;
     if (reason && reason!==state)
       info.push('<div>'+escape(t.reason)+': '+escape(this._controllerStatusLabel(reason))+'</div>');
+    if (presentation.demand)
+      info.push('<div>'+escape(t.demand)+': '+escape(presentation.demand)+'</div>');
+    info.push(...presentation.evidence.map(value=>'<div>'+escape(value)+'</div>'));
     if (transition109?.target) info.push('<div>'+escape(transition109.target)+'</div>');
     // All truncated mini-tile values remain fully readable on touch as well
     // as hover, without repeating them permanently below the measurements.
@@ -4036,6 +4330,12 @@
       ?this._t('limits')+' '+this._format(item.threshold)+' '+(item.unit||''):'';
     const calibration=item.metric==='mold'&&Number.isFinite(item.details?.calibration_factor)
       ?this._moldLabels()[4]+': '+this._formatCalibration(item.details.calibration_factor):'';
+    // Keep the calibrated surface estimate beside its own threshold. A mold
+    // warning/calibration tile must not look like a missing measurement when
+    // the same available estimate is already visible in the room summary.
+    const moldValue=item.metric==='mold' && item.available===true && Number.isFinite(item.value)
+      ?'<span class="metric-number">'+escape(this._format(item.value))+' <small>'+
+        escape(item.unit||'%')+'</small></span>':'';
     return '<div class="metric hem-metric-info122 metric-'+(item.exceeded?'attention':'safe')+'" '+
       'data-room-metric114="'+escape(item.metric)+'" data-metric-source114="'+escape(item.entity_id||'')+'" '+
       'data-overview-detail122="'+escape(item.metric)+'">'+
@@ -4044,7 +4344,7 @@
       '<details class="metric-help"><summary aria-label="'+escape(this._l65('information')+': '+title)+'" '+
       'title="'+escape(help)+'">'+this._icon('mdi:information-outline')+'</summary>'+
       '<div class="metric-help-content" role="note">'+escape(help)+
-      (calibration?this._moldCalibrationDetails(item):'')+'</div></details></span></div>'+
+      (calibration?this._moldCalibrationDetails(item):'')+'</div></details></span>'+moldValue+'</div>'+
       (item.exceeded?'<small class="hem-metric-alert122">'+escape(this._t('indoorHigh'))+'</small>':'')+
       (threshold?'<div class="metric-limit">'+escape(threshold)+'</div>':'')+
       (calibration?'<div class="metric-limit">'+escape(calibration)+'</div>':'')+'</div>';

@@ -164,6 +164,10 @@ for helper in ("climate_equipment", "pid_math", "comfort_targets", "climate_stra
     helper_spec.loader.exec_module(helper_module)
 strategy = sys.modules["hem_beta88_fixture.climate_strategy"]
 target_scope = {
+    "MODE_KEYS": next(ast.literal_eval(node.value)
+        for node in ast.parse((ROOT / "equipment_mode_settings.py").read_text()).body
+        if isinstance(node, ast.Assign) and any(
+            isinstance(target, ast.Name) and target.id == "MODE_KEYS" for target in node.targets)),
     "room_config": Model.room_config,
     "profile_name": Model.profile_name,
     "device_limits": Model.device_limits,

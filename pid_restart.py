@@ -99,3 +99,63 @@ def restore(
         "stamp": now, "derivative": 0.0, "demand": demand,
     }
     return tuple(signature), memory, anchor
+
+
+def reset_logical_cycle(runtime: Any, spec: Any, reason: str) -> bool:
+    """Invalidate controller math without changing physical safety evidence.
+
+    A pause or a changed active intent cannot restore the old PWM phase on the
+    next tick. Physical ownership, observed ON/OFF times, manual holds, native
+    command journals and committed shutdown sequences are deliberately absent
+    from this list. Repeating an unchanged hold performs no storage write.
+    """
+    changed = False
+    cancel = getattr(runtime, "_cancel_pid_pwm_evaluation", None)
+    if callable(cancel):
+        cancel(spec)
+    for name in ("_memory", "_profile_wake", "_fan_allocations",
+                 "_pid_offline_previews", "_pid_passive_observers"):
+        cache = getattr(runtime, name, None)
+        if isinstance(cache, dict) and spec.identifier in cache:
+            cache.pop(spec.identifier, None)
+            changed = True
+    record = runtime._record(spec)
+    for key in ("pid_checkpoint", "pid_restart_status", "pid_target_cutoff", "pid_pwm_run"):
+        if key in record:
+            record.pop(key, None)
+            changed = True
+    if changed:
+        record["pid_cycle_reset"] = {"at": runtime.clock(), "reason": str(reason)}
+    return changed
+
+
+def control_intent(settings: dict, mode: str | None = None) -> dict:
+    """Only active mathematical/output parameters define a logical cycle."""
+    from copy import deepcopy
+    fields = (
+        "control_mode", "operating_mode", "requested_mode", "preset",
+        "kp", "ki", "kd", "sample_seconds", "cycle_seconds",
+        "min_on_seconds", "min_off_seconds", "max_on_seconds",
+        "profile_targets", "profile_fans", "fan_mode", "swing_mode",
+        "swing_horizontal_mode", "quiet_percentage", "quiet_fan_mode",
+        "quiet_sleep", "quiet_occupied", "fan_purpose", "sensor_verified",
+        "pid_calibration_method", "pid_fan_capacity_mode",
+        "pid_fan_capacity_models", "fan_speed_limits",
+    )
+    result = {key: deepcopy(settings.get(key)) for key in fields}
+    direction = settings.get("operating_mode") or mode or settings.get("requested_mode")
+    keys = ({direction} if direction in ("heat", "cool") else
+            {"humidity"} if direction in ("dry", "humidify") else
+            {"heat", "cool"} if direction in ("auto", "heat_cool") else
+            set() if direction == "fan_only" else None)
+    table = result.get("profile_targets")
+    if keys is not None and isinstance(table, dict):
+        result["profile_targets"] = {profile: {key: value for key, value in values.items() if key in keys}
+                                     for profile, values in table.items() if isinstance(values, dict)
+                                     and any(key in keys for key in values)}
+    curves = result.get("pid_fan_capacity_models")
+    if direction is not None and isinstance(curves, dict):
+        result["pid_fan_capacity_models"] = ({direction: curves[direction]} if direction in curves else {})
+    if mode is not None:
+        result["resolved_mode"] = mode
+    return result

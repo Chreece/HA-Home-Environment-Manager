@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import ast
 import asyncio
+import importlib.util
 import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -142,6 +143,16 @@ sys.modules.update({
     "beta61_probe.equipment_power_switch": switch_mod,
     "beta61_probe.device_activation": device_mod,
 })
+# Preference edits run the real logical-cycle reset helper. Its production
+# implementation keeps physical ownership and unresolved command evidence;
+# the transport fixture must not replace that behavior with a no-op.
+restart_spec = importlib.util.spec_from_file_location(
+    "beta61_probe.pid_restart", ROOT / "pid_restart.py",
+)
+assert restart_spec is not None and restart_spec.loader is not None
+restart_mod = importlib.util.module_from_spec(restart_spec)
+sys.modules[restart_spec.name] = restart_mod
+restart_spec.loader.exec_module(restart_mod)
 
 runtime_env = {
     "__name__": "beta61_probe.equipment_runtime",

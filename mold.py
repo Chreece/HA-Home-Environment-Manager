@@ -116,6 +116,41 @@ class MoldEstimate:
     estimated_surface_c: float
 
 
+def indoor_humidity_for_surface_limit(
+    indoor_c: float | None, outdoor_c: float | None,
+    factor: float | None, surface_limit: float | None,
+) -> float | None:
+    """Invert the existing calibrated Magnus surface-RH relationship.
+
+    This is the room RH at which the estimated cold surface reaches the
+    configured surface RH limit.  It is not a guessed comfort target, an
+    independent building model or a probability of mold growth.  Keep full
+    precision: the display estimate is rounded and capped at 100%, so scaling
+    a displayed mold percentage would be wrong at condensation and rounding
+    boundaries.
+    """
+    inside, outside = _temperature(indoor_c), _temperature(outdoor_c)
+    if isinstance(factor, bool) or isinstance(surface_limit, bool):
+        return None
+    try:
+        f, limit = float(factor), float(surface_limit)
+    except (TypeError, ValueError, OverflowError):
+        return None
+    if (inside is None or outside is None or not math.isfinite(f)
+            or not 0.5 <= abs(f) <= 20 or not math.isfinite(limit)
+            or not 0 < limit <= 100):
+        return None
+    surface = outside + (inside - outside) / f
+    try:
+        humidity = limit * math.exp(
+            MAGNUS_A * surface / (MAGNUS_B + surface)
+            - MAGNUS_A * inside / (MAGNUS_B + inside)
+        )
+    except (ValueError, OverflowError, ZeroDivisionError):
+        return None
+    return min(100.0, humidity) if math.isfinite(humidity) and humidity > 0 else None
+
+
 def estimate_mold(
     indoor_c: float | None, outdoor_c: float | None,
     humidity: float | None, factor: float | None,

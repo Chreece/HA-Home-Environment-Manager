@@ -132,7 +132,7 @@ def _native_demands(manager: Any, area: str, plan: dict) -> dict[str, _Demand]:
     from . import equipment_model as model
     from .device_activation import effective_device
     from .occupancy_policy import live_device_permission
-    from .equipment_power_switch import output_required, verified_capabilities
+    from .equipment_power_switch import output_required, verified_capabilities, permitted_supply
     from .dry_mode import automatic_mode
 
     runtime = getattr(manager, "equipment", None)
@@ -167,8 +167,9 @@ def _native_demands(manager: Any, area: str, plan: dict) -> dict[str, _Demand]:
             requested_mode=cfg.get("requested_mode"), fan_purpose=purpose, plan=plan,
         )
         native = manager.hass.states.get(cap.primary)
-        mode = cfg.get("requested_mode") if cfg["control_mode"] == "pid" else None
-        if cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}:
+        mode = (cfg.get("requested_mode") if cfg["control_mode"] == "pid"
+                or cfg.get("operating_mode") else None)
+        if cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"} or mode == "fan_only":
             effect = "filtration" if purpose == "filtration" else None
             if not (device.get("sensor_verified") is True
                     or room_config.get("pm25_sensor_verified") is True):
@@ -176,7 +177,7 @@ def _native_demands(manager: Any, area: str, plan: dict) -> dict[str, _Demand]:
         elif getattr(cap, "humidifying", False):
             effect = "humidify"
         else:
-            if mode not in ("heat", "cool", "dry"):
+            if mode not in ("heat", "cool", "dry", "heat_cool", "auto"):
                 mode = automatic_mode(
                     cap, native, measured, targets,
                     dedicated_dry=model.room_config(manager, spec).get("dry_climate_entity") == cap.primary,
@@ -215,6 +216,13 @@ def _native_demands(manager: Any, area: str, plan: dict) -> dict[str, _Demand]:
                 needed = None
             elif (current >= target if effect == "humidify" else current <= target):
                 needed = False
+            if (effect == "humidify" and hasattr(model, "humidity_demand")
+                    and model.humidity_demand(manager, spec, cap, cfg, plan).get(
+                        "mold_protection_required") is True):
+                # The native and supply drivers inhibit humidification for
+                # a qualified mold excess, even if a native minimum prevents
+                # the effective target from reaching the required low RH.
+                needed = False
         elif effect == "filtration":
             current = _number(measured.get("pm25"), 0, 2000)
             target = _number(plan.get("air_actions", {}).get("thresholds", {}).get(
@@ -237,6 +245,29 @@ def _native_demands(manager: Any, area: str, plan: dict) -> dict[str, _Demand]:
             needed = None  # No invented direction for an unsupported AUTO mode.
         supply_id = cfg.get("power_switch_entity")
         supply = manager.hass.states.get(supply_id) if isinstance(supply_id, str) else None
+        # A cached mode is useful configuration metadata, not evidence that
+        # an unavailable appliance can solve the room's current problem.
+        # An explicitly selected, verified OFF supply is the one recoverable
+        # offline case: the normal supply driver still owns its startup.
+        available = all(
+            (state := manager.hass.states.get(entity)) is not None
+            and state.state not in ("unknown", "unavailable")
+            for entity in spec.source_entities
+        )
+        upstream = record.get("upstream", {})
+        upstream = upstream if isinstance(upstream, dict) else {}
+        recoverable_supply = False
+        valid_supply = not supply_id
+        if supply_id and not upstream.get("paused"):
+            try:
+                valid_supply = permitted_supply(
+                    manager, spec, supply_id, upstream.get("identity"),
+                ) is not None
+            except (AttributeError, KeyError, TypeError):
+                # Partial setup is not proof that a physical supply can act.
+                valid_supply = False
+            recoverable_supply = bool(valid_supply and supply is not None and supply.state == "off")
+        allowed = bool(allowed and valid_supply and (available or recoverable_supply))
         idle = bool(not record.get("pending") and not (record.get("upstream") or {}).get("pending") and (
             _idle(native) or supply is not None and supply.state == "off"
             and (native is None or native.state in ("unknown", "unavailable"))))
@@ -438,6 +469,18 @@ class WindowOpeningWait:
         codes = _EFFECT_REASONS.get(demand.effect, ())
         return any(reason.code in codes for reason in rec.reasons)
 
+    @staticmethod
+    def _immediate_coverage(demands: dict[str, _Demand]) -> set[str]:
+        """Causes already handled by a qualified device with no airing wait."""
+        return {code for demand in demands.values()
+                if demand.needed is True and demand.allowed and not demand.enabled
+                for code in _EFFECT_REASONS.get(demand.effect, ())}
+
+    @staticmethod
+    def _covered(demand: _Demand, codes: set[str]) -> bool:
+        matching = _EFFECT_REASONS.get(demand.effect, ())
+        return bool(matching and set(matching) <= codes)
+
     def has_enabled_alternative(self, area: str, option: dict) -> bool:
         """Per-device opt-in also enables its proved room opening alternative."""
         if not isinstance(option, dict) or option.get("status") != "opportunity":
@@ -472,6 +515,7 @@ class WindowOpeningWait:
         areas.update(rec.area_id for rec in notices)
         self._offered = {}
         demands = {area: self._demands(plan, area) for area in areas}
+        immediate = {area: self._immediate_coverage(items) for area, items in demands.items()}
         enabled = self._enabled() and valid_clock
         for area, episodes in tuple(self._rooms.items()):
             if area not in areas:
@@ -510,7 +554,11 @@ class WindowOpeningWait:
                     episode.resolved_since = None
                 if episode.phase not in _HOLD_STATES:
                     continue
-                if not enabled or demand is not None and not demand.enabled:
+                if (not enabled or demand is not None and not demand.enabled
+                        or self._covered(episode.target, immediate[area])):
+                    # One ready no-wait remedy owns the matching problem.
+                    # An opted-in sibling must not recreate a redundant
+                    # window request or hold while that remedy can act.
                     self._finish(episode, "window_wait_disabled")
                 elif contacts != episode.contacts or contact_state in ("unknown", "missing"):
                     self._finish(episode, "window_wait_evidence_changed")
@@ -554,7 +602,8 @@ class WindowOpeningWait:
                     for entity, demand in demands[area].items():
                         if (entity in episodes or count >= MAX_DEVICES or not demand.enabled
                                 or not demand.allowed or not demand.idle or demand.needed is not True
-                                or not self._matches(demand, rec)):
+                                or not self._matches(demand, rec)
+                                or self._covered(demand, immediate[area])):
                             continue
                         episode = _Episode(
                             rec.action_signature, rec.reason_signature, contacts, demand,
@@ -623,6 +672,7 @@ class WindowOpeningWait:
         current = self._current(rec)
         now = self.clock()
         demands = self._demands(self.manager.plan, rec.area_id)
+        immediate = self._immediate_coverage(demands)
         accepted = False
         for episode in attempt[1]:
             if (not any(item is episode for item in current)
@@ -634,7 +684,8 @@ class WindowOpeningWait:
                     or self._contacts(self.manager.plan, rec.area_id) != episode.contacts
                     or self._contact_state(rec.area_id, episode.contacts) != "closed"
                     or demand is None or not demand.enabled or not demand.allowed or not demand.idle
-                    or demand.needed is not True or not self._matches(demand, rec)):
+                    or demand.needed is not True or not self._matches(demand, rec)
+                    or self._covered(demand, immediate)):
                 self._finish(episode, "window_request_no_longer_current")
                 continue
             episode.timeout_seconds = min(episode.timeout_seconds, demand.timeout_seconds)
@@ -697,9 +748,11 @@ class WindowOpeningWait:
                 or self._contacts(self.manager.plan, area) != episode.contacts
                 or self._contact_state(area, episode.contacts) != "closed"):
             return None
-        demand = self._demands(self.manager.plan, area).get(entity)
+        demands = self._demands(self.manager.plan, area)
+        demand = demands.get(entity)
         if (demand is None or not demand.enabled or not demand.allowed or not demand.idle
-                or demand.needed is not True or demand.effect != episode.target.effect):
+                or demand.needed is not True or demand.effect != episode.target.effect
+                or self._covered(demand, self._immediate_coverage(demands))):
             return None
         if demand.timeout_seconds < episode.timeout_seconds:
             episode.timeout_seconds = demand.timeout_seconds
@@ -711,6 +764,49 @@ class WindowOpeningWait:
                 self._timer(area, episode)
         return self.status(area, entity)
 
+    def announcement_request(self, rec: Any) -> Any:
+        """Keep only opening reasons that still require a human response.
+
+        A ready automatic remedy whose airing option is OFF must not regain
+        an opening announcement through the general mold/humidity/PM path.
+        Keep unrelated causes (for example CO2 beside mold) and never hide
+        a warning on the strength of an unavailable or unauthorized device.
+        This is a delivery view; it does not change the original request's
+        signatures or its accepted-delivery deadline.
+        """
+        if getattr(rec, "action", None) != "open":
+            return rec
+        episodes = self._rooms.get(rec.area_id, {})
+        now = self.clock()
+        active_codes = set()
+        for episode in episodes.values():
+            if self._active(episode, now):
+                active_codes.update(_EFFECT_REASONS.get(episode.target.effect, ()))
+        demands = self._demands(self.manager.plan, rec.area_id)
+        immediate = self._immediate_coverage(demands)
+        consumed_codes = set()
+        for entity, demand in demands.items():
+            if demand.needed is not True or not demand.allowed:
+                continue
+            episode = episodes.get(entity)
+            consumed = (episode is not None and not self._active(episode, now)
+                        and demand.effect == episode.target.effect)
+            if consumed:
+                consumed_codes.update(_EFFECT_REASONS.get(demand.effect, ()))
+        # A newly waiting device may still request its own bounded episode
+        # after a sibling's old timeout. An immediately eligible no-wait
+        # remedy has priority over both, without hiding unrelated causes.
+        covered = immediate | (consumed_codes - active_codes)
+        reasons = tuple(reason for reason in rec.reasons if reason.code not in covered)
+        if reasons == rec.reasons:
+            return rec
+        remaining = {reason.code for reason in reasons}
+        waits = tuple(row for row in rec.wait_devices
+                      if remaining.intersection(_EFFECT_REASONS.get(row.get("effect"), ())))
+        seconds = (max((row["remaining_seconds"] for row in waits), default=0)
+                   if rec.wait_devices else rec.wait_seconds if reasons else 0)
+        return replace(rec, reasons=reasons, wait_devices=waits, wait_seconds=seconds)
+
     def should_announce(self, rec: Any) -> bool:
         """Do not keep asking for a consumed alternative to the same demand.
 
@@ -720,22 +816,7 @@ class WindowOpeningWait:
         """
         if getattr(rec, "action", None) != "open":
             return True
-        episodes = self._rooms.get(rec.area_id, {})
-        if not episodes:
-            return True
-        now = self.clock()
-        if any(self._active(item, now) and self._matches(item.target, rec)
-               for item in episodes.values()):
-            return True
-        codes = {reason.code for reason in rec.reasons}
-        solved = set()
-        for entity, demand in self._demands(self.manager.plan, rec.area_id).items():
-            episode = episodes.get(entity)
-            if (episode is not None and not self._active(episode, now)
-                    and demand.needed is True and demand.allowed
-                    and demand.effect == episode.target.effect):
-                solved.update(_EFFECT_REASONS.get(demand.effect, ()))
-        return not bool(codes and codes <= solved)
+        return bool(self.announcement_request(rec).reasons)
 
     def stop(self) -> None:
         self._stopped = True

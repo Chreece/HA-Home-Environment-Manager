@@ -426,10 +426,10 @@ class DispatchTests(unittest.IsolatedAsyncioTestCase):
         record = m.equipment.records[SPEC.identifier]
         record["upstream"] = {"entity": "switch.supply", "identity": identity, "owned": False,
                               "off_at": m.now - 1800, "off_min_seconds": 600}
-        m._recalculate()
-        self.assertIsNone(power.approved_demand(m.equipment, SPEC, m.cfg, Cap()))
-        self.assertFalse(power._dispatch_safe(m.equipment, SPEC, record, m.cfg, "switch.supply", "on"))
         with patch.object(power, "permitted_supply", return_value=identity):
+            m._recalculate()
+            self.assertIsNone(power.approved_demand(m.equipment, SPEC, m.cfg, Cap()))
+            self.assertFalse(power._dispatch_safe(m.equipment, SPEC, record, m.cfg, "switch.supply", "on"))
             await power.before_tick(m.equipment, SPEC)
             self.assertEqual(m.equipment.statuses[SPEC.identifier]["status"], "window_request_pending")
             self.assertEqual(m.calls, [])

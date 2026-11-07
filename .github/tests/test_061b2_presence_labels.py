@@ -50,7 +50,7 @@ def selector_fixture(language="en"):
     _compile([identifier], ns, "equipment_model.py")
     model.device_identifier = ns["device_identifier"]
     for filename, name, methods in (
-        ("equipment_entity.py", "EquipmentEntity", {"_equipment_init", "controller_settings"}),
+        ("equipment_entity.py", "EquipmentEntity", {"_equipment_init", "controller_settings", "_async_update_controller_settings"}),
         ("select.py", "EquipmentSelect", {"__init__", "options", "current_option", "async_select_option"}),
     ):
         node = next(node for node in ast.parse((ROOT / filename).read_text()).body

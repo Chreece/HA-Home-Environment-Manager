@@ -207,7 +207,7 @@ test('first expansion has four complementary tiles and More retains additional r
   assert.ok(warning.includes('metric-help-content'));
   assert.ok(warning.includes('data-room-metric114="co2"'));
 });
-test('unavailable measurements and mold calibration remain available without duplicate headlines',()=>{
+test('unavailable measurements remain distinct and mold calibration retains its current estimate',()=>{
   const {card,room}=make();
   room.readings.push({metric:'pm25',available:false,entity_id:'sensor.failed_particles'});
   assert.ok(card._roomDetailReadings122(room).some(item=>item.entity_id==='sensor.failed_particles'));
@@ -216,7 +216,7 @@ test('unavailable measurements and mold calibration remain available without dup
   assert.ok(card._roomDetailReadings122(room)[0].overview_detail122);
   const html=card._metricInfo122(mold);
   assert.ok(html.includes('1.25')&&html.includes('mold-calibration-details'));
-  assert.ok(!html.includes('metric-number'));
+  assert.ok(html.includes('<span class="metric-number">74 <small>%</small></span>'));
   room.readings=[{metric:'temperature',available:false,value:null}];
   assert.ok(!card._roomGlance122(room).metrics.has('temperature'));
   assert.equal(card._roomDetailReadings122(room).length,1);

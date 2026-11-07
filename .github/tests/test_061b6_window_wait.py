@@ -116,11 +116,16 @@ class DeviceConsentTests(unittest.TestCase):
     def test_a_later_device_gets_its_own_delivery_without_restarting_the_first(self):
         m = Manager()
         other, cap = second_device(m, minutes=2, enabled=False)
+        # A ready no-wait sibling now resolves the matching window request.
+        # This test's later participant is genuinely unavailable until it
+        # joins, so the first opted-in device still has a useful request.
+        m.set_state(cap.primary, "unavailable")
         first, accepted = accept(m)
         self.assertTrue(accepted)
         first_deadline = m.window_open_wait.status("room", "climate.dry")["expires_at"]
         m.advance(20)
         model.settings(m, other)["announce_before_start"] = True
+        m.set_state(cap.primary, "off", {"friendly_name": other.name})
         m._recalculate()
         second = m.plan.recommendations[0]
         self.assertEqual(m.window_open_wait.status("room")["status"], "window_request_pending")
@@ -391,8 +396,8 @@ class ActualDispatchTests(unittest.IsolatedAsyncioTestCase):
         record = m.equipment.records[SPEC.identifier]
         record["upstream"] = {"entity": "switch.supply", "identity": identity, "owned": False,
                               "off_at": m.now - 1800, "off_min_seconds": 600}
-        m._recalculate()
         with patch.object(power, "permitted_supply", return_value=identity):
+            m._recalculate()
             await power.before_tick(m.equipment, SPEC)
         self.assertEqual([(domain, service) for domain, service, _, _ in m.calls], [("switch", "turn_on")])
         self.assertEqual(m.plan.recommendations[0].wait_devices, ())
@@ -406,9 +411,9 @@ class ActualDispatchTests(unittest.IsolatedAsyncioTestCase):
         record = m.equipment.records[SPEC.identifier]
         record["upstream"] = {"entity": "switch.supply", "identity": identity, "owned": False,
                               "off_at": m.now - 1800, "off_min_seconds": 600}
-        _, accepted = accept(m)
-        self.assertTrue(accepted)
         with patch.object(power, "permitted_supply", return_value=identity):
+            _, accepted = accept(m)
+            self.assertTrue(accepted)
             await power.before_tick(m.equipment, SPEC)
             self.assertEqual(m.calls, [])
             m.advance(60)

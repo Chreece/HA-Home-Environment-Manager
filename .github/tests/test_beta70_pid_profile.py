@@ -37,9 +37,9 @@ def extract(file, names, ns, *, constants=()):
 
 
 phase_ns = {"math": math, "TARGET_CHANGE_C": 0.25, "COMFORT_ERROR_C": 0.5}
-(phase_decision, safe_binary_pwm_cycle, binary_pwm_off_phase) = extract(
+(phase_decision, safe_binary_pwm_cycle, binary_pwm_off_phase, sampled_binary_pwm_plan) = extract(
     "pid_phase.py", ("phase_decision", "safe_binary_pwm_cycle",
-                     "binary_pwm_off_phase"), phase_ns
+                     "binary_pwm_off_phase", "sampled_binary_pwm_plan"), phase_ns
 )
 model_ns = {"math": math, "dataclass": dataclass}
 PIDMemory, pid_step, duty_on, profile_name, automatic_profile_reason = extract(
@@ -97,6 +97,7 @@ phase_module = ModuleType("test_beta70.pid_phase")
 phase_module.phase_decision = phase_decision
 phase_module.binary_pwm_off_phase = binary_pwm_off_phase
 phase_module.safe_binary_pwm_cycle = safe_binary_pwm_cycle
+phase_module.sampled_binary_pwm_plan = sampled_binary_pwm_plan
 sys.modules[pkg.__name__] = pkg
 sys.modules[supply.__name__] = supply
 sys.modules[phase_module.__name__] = phase_module

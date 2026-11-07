@@ -59,12 +59,14 @@ class NativeHarness(Harness):
                 'status':'window_open_pause','remaining_seconds':0}
 
 async def scenarios():
-    original_duty=model.duty_on
+    phase=base['phase_module']
+    original_plan=phase.sampled_binary_pwm_plan
     original_cap=model.capabilities
     # Force the PWM duty into an OFF phase, even though a previous ON must
     # finish its minimum-ON dwell. The old code returned at _power(off)
     # leaving the actual heating thermostat at 5°C.
-    model.duty_on=lambda *args,**kwargs:False
+    phase.sampled_binary_pwm_plan=lambda *args,**kwargs:{
+        **original_plan(*args,**kwargs), 'wanted':False, 'state':'off_window'}
     try:
         heat=NativeHarness()
         await tick(heat,spec)
@@ -105,7 +107,7 @@ async def scenarios():
         await tick(cool,spec)
         assert cool._native_writes==[('cool',4.0)],cool._native_writes
     finally:
-        model.duty_on=original_duty
+        phase.sampled_binary_pwm_plan=original_plan
         model.capabilities=original_cap
     # Native source is physically OFF: no temperature write may bypass the
     # source-bound minimum OFF protection or cause an implicit startup.

@@ -83,7 +83,7 @@ async def main():
  tree=ast.parse((ROOT/'equipment_runtime.py').read_text())
  cls=next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='EquipmentRuntime')
  fn=next(n for n in cls.body if isinstance(n,ast.FunctionDef) and n.name=='_status')
- ns={'Any':object,'__name__':'hem68test.equipment_runtime','__package__':'hem68test'}
+ ns={'Any':object,'model':model,'__name__':'hem68test.equipment_runtime','__package__':'hem68test'}
  exec(compile(ast.Module(body=[fn],type_ignores=[]),'equipment_runtime.py','exec'),ns)
  status=ns['_status']
  specs=[N(identifier=f'device-{i}',source_entities=(f'climate.native_{i}',)) for i in range(24)]

@@ -95,6 +95,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
     def native_feature_selects():
         selection = []
         for spec in equipment.specs(manager):
+            from .equipment_mode_entities import scoped_fields
+            selection.extend(
+                EquipmentSelect(manager, spec, key, operating_mode=mode)
+                for mode, key in scoped_fields(manager, spec, "select")
+            )
             if pid_calibration_supported(manager, registry, spec, platform="select"):
                 selection.append(EquipmentSelect(manager, spec, "pid_calibration_method"))
             selection.extend(EquipmentSelect(manager, spec, key)
@@ -330,11 +335,18 @@ from . import equipment_model as equipment
 class EquipmentSelect(EquipmentEntity, SelectEntity):
     _attr_entity_category = EntityCategory.CONFIG
 
-    def __init__(self, manager, spec, key):
-        self._equipment_init(manager, spec, key)
+    def __init__(self, manager, spec, key, *, operating_mode=None):
+        self._equipment_init(manager, spec, key, operating_mode=operating_mode)
 
     @property
     def available(self):
+        if getattr(self, "_operating_mode", None):
+            descriptor = equipment.mode_descriptor(self._manager, self._spec, self._operating_mode)
+            if not descriptor or self._key not in descriptor.get("select_fields", ()):
+                return False
+            if self._key.startswith("pid_"):
+                return self.controller_settings["control_mode"] == "pid"
+            return True
         if self._key == "quiet_fan_mode":
             cap = equipment.capabilities(self._manager, self._spec)
             return bool(cap and cap.fan_modes and not cap.fan_percentage)
@@ -365,7 +377,11 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
     @property
     def options(self):
         if self._key == "control_mode":
+            if getattr(self, "_operating_mode", None):
+                return list(equipment.mode_control_modes(self._manager, self._spec, self._operating_mode))
             return list(equipment.control_modes(self._manager, self._spec))
+        if self._key == "preset":
+            return list(equipment.PRESETS)
         if self._key == "pid_calibration_method":
             return list(equipment.PID_CALIBRATION_METHODS)
         if self._key == "pid_fan_capacity_mode":
@@ -376,8 +392,13 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
                 if mode in equipment.PID_FAN_DIRECTIONS)]
         if self._key in equipment.DEVICE_SELECTS:
             return list(equipment.DEVICE_SELECTS[self._key])
-        cap = equipment.capabilities(self._manager, self._spec)
-        return list(cap.fan_modes) if cap else []
+        cap = (equipment.mode_capabilities(self._manager, self._spec)
+               if getattr(self, "_operating_mode", None)
+               else equipment.capabilities(self._manager, self._spec))
+        if cap is None:
+            return []
+        return list({"swing_mode": cap.swing_modes,
+                     "swing_horizontal_mode": cap.swing_horizontal_modes}.get(self._key, cap.fan_modes))
 
     @property
     def extra_state_attributes(self):
@@ -402,7 +423,7 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
         return value if value in self.options else None
 
     async def async_select_option(self, option):
-        await self._manager.equipment.async_update(self._spec, {self._key: option})
+        await self._async_update_controller_settings({self._key: option})
 
 
 class EquipmentPowerSwitchSelect(EquipmentSelect):

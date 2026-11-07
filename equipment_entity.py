@@ -16,9 +16,11 @@ class EquipmentEntity:
     _attr_has_entity_name = False
     _attr_should_poll = False
 
-    def _equipment_init(self, manager, spec, key):
+    def _equipment_init(self, manager, spec, key, *, operating_mode=None):
         self._manager, self._spec, self._key = manager, spec, key
-        self._attr_unique_id = f"{spec.identifier}_{key}"
+        self._operating_mode = operating_mode
+        suffix = f"mode_{operating_mode}_{key}" if operating_mode else key
+        self._attr_unique_id = f"{spec.identifier}_{suffix}"
         self._attr_translation_key = f"equipment_{key}"
         # All equipment entities sort by their functional leading group:
         # PID, Power, Quiet, Control, Presence, etc. HA must not prepend the
@@ -51,23 +53,51 @@ class EquipmentEntity:
         # in memory and use a full legacy name instead.
         locale = getattr(getattr(manager.hass, "config", None), "language", "en")
         self._attr_name = localized_equipment_name(key, locale, channel)
+        if operating_mode:
+            from .equipment_mode_entities import setting_label
+            from .operating_mode_catalog import operating_mode_label
+            label = operating_mode_label(operating_mode, locale)
+            self._attr_name = f"{label} · {channel}{setting_label(key, locale)}"
 
     @property
     def controller_settings(self):
+        if getattr(self, "_operating_mode", None):
+            if model.mode_descriptor(self._manager, self._spec, self._operating_mode) is None:
+                from .equipment_mode_entities import saved_display_settings
+                return saved_display_settings(self._manager, self._spec, self._operating_mode)
+            return model.settings_for_mode(self._manager, self._spec, self._operating_mode)
         return model.settings(self._manager, self._spec)
+
+    async def _async_update_controller_settings(self, changes):
+        mode = getattr(self, "_operating_mode", None)
+        if mode:
+            await self._manager.equipment.async_update(
+                self._spec, changes, operating_mode=mode,
+            )
+        else:
+            await self._manager.equipment.async_update(self._spec, changes)
 
     @property
     def extra_state_attributes(self):
         locale = self._manager.settings.get("language", "auto")
         if locale == "auto":
             locale = getattr(getattr(self._manager.hass, "config", None), "language", "en")
-        return {"area_id": self._spec.area_id,
+        attributes = {"area_id": self._spec.area_id,
+                "controller_id": self._spec.identifier,
                 "source_device_id": self._spec.source_device_id,
                 "source_entity_ids": list(self._spec.source_entities),
                 "controller_status": self._manager.equipment.statuses.get(self._spec.identifier, {}),
                 "configuration_help": equipment_configuration_help(
                     getattr(self, "_key", "control_status"), locale
                 )}
+        mode = getattr(self, "_operating_mode", None)
+        if mode:
+            from .equipment_mode_entities import scoped_metadata, scoped_help
+            attributes.update(scoped_metadata(self._manager, self._spec, mode, self._key, locale))
+            attributes["configuration_help"] = scoped_help(
+                self._key, locale, attributes["configuration_help"],
+            )
+        return attributes
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
