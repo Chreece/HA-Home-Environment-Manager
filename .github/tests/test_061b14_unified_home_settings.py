@@ -91,9 +91,9 @@ with sync_playwright() as pw:
           if(method==="DELETE")return {};
           if(path==="config/config_entries/options/flow")return {
             type:"menu",handler:"entry0",flow_id:"optionsHOME",
-            menu_options:["edit_room_room0","setup_general"]
+            menu_options:["choose_rooms","edit_room_room0","general_settings"]
           };
-          if(data?.next_step_id==="setup_general")return homeForm;
+          if(data?.next_step_id==="general_settings")return homeForm;
           if(method==="POST" && data?.weather_entities)return {
             type:"create_entry",flow_id:"optionsHOME"
           };
@@ -107,6 +107,7 @@ with sync_playwright() as pw:
     page.wait_for_function("card._homeSettingsDialog128?.fullRegistry127?.length===4")
     dialog = page.locator("dialog.hem-home-options128")
     expect(dialog).to_be_visible()
+    assert page.evaluate("homeCalls.some(c=>c.data?.next_step_id==='general_settings')")
     assert dialog.locator("[data-hem-home-field128]").count() == 5
     assert dialog.locator('[data-hem-home-category128="presence"]').count() == 1
     assert dialog.locator('[data-hem-home-category128="weather"]').count() == 1
