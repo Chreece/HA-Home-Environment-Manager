@@ -8592,6 +8592,7 @@
   const HEM_WORDS126={
     en:{settings:"HEM device settings",close:"Close",unavailable:"Settings unavailable",
       room:"Room device settings",immediate:"HEM settings below apply immediately. Source selections above use Save.",
+       immediateShort:"Applies immediately",
       apply:"Apply",saved:"Setting applied",failed:"Could not confirm the change",
       comfort:"Comfort targets",humidity:"Humidity and mold",air:"Air quality and environment",
       climate:"Climate and PID",shade:"Shading",occupancy:"Occupancy and sleep",other:"Other settings",
@@ -8600,6 +8601,7 @@
       power:"Power supply",fault:"Device error"},
     de:{settings:"HEM-Geräteeinstellungen",close:"Schließen",unavailable:"Einstellungen nicht verfügbar",
       room:"Einstellungen des Raumgeräts",immediate:"HEM-Einstellungen unten werden sofort übernommen. Für die Sensorauswahl oben Speichern wählen.",
+       immediateShort:"Wird sofort übernommen",
       apply:"Übernehmen",saved:"Einstellung übernommen",failed:"Änderung konnte nicht bestätigt werden",
       comfort:"Komfortziele",humidity:"Feuchte und Schimmel",air:"Luftqualität und Raumklima",
       climate:"Klima und PID",shade:"Beschattung",occupancy:"Anwesenheit und Schlaf",other:"Weitere Einstellungen",
@@ -8608,6 +8610,7 @@
       power:"Stromversorgung",fault:"Gerätefehler"},
     el:{settings:"Ρυθμίσεις συσκευής HEM",close:"Κλείσιμο",unavailable:"Μη διαθέσιμες ρυθμίσεις",
       room:"Ρυθμίσεις συσκευής χώρου",immediate:"Οι παρακάτω ρυθμίσεις HEM εφαρμόζονται αμέσως. Οι επιλογές αισθητήρων πιο πάνω αποθηκεύονται με «Αποθήκευση».",
+       immediateShort:"Εφαρμόζεται αμέσως",
       apply:"Εφαρμογή",saved:"Η ρύθμιση εφαρμόστηκε",failed:"Δεν επιβεβαιώθηκε η αλλαγή",
       comfort:"Στόχοι άνεσης",humidity:"Υγρασία και μούχλα",air:"Ποιότητα αέρα και περιβάλλον",
       climate:"Κλιματισμός και PID",shade:"Σκίαση",occupancy:"Παρουσία και ύπνος",other:"Άλλες ρυθμίσεις",
@@ -8997,7 +9000,7 @@
           (scope==="room"?'data-room-native-group126="'+category+'" ':"")+'>'+
           '<summary>'+this._icon(ICONS127[category])+
           '<span class="hem-room-options-label114"><strong>'+escape(tr127(this,category))+
-          '</strong><small>'+escape(hemWord126(this,"immediate"))+'</small></span>'+
+          '</strong><small>'+escape(hemWord126(this,"immediateShort"))+'</small></span>'+
           '<span class="hem-room-options-count114">'+fields.length+'</span>'+
           this._icon("mdi:chevron-down")+'</summary>'+
           '<div class="hem-full-rows127">'+fields.map(f=>this._hemFullRow127(f,scope)).join("")+
@@ -9527,11 +9530,11 @@
       if(!homeActive128(this,saved))return false;
       const options=Array.isArray(menu?.menu_options)?menu.menu_options:
         Object.keys(menu?.menu_options||{});
-      if(menu?.type!=="menu"||!saved.flowId||!options.includes("setup_general")||
+      if(menu?.type!=="menu"||!saved.flowId||!options.includes("general_settings")||
         (menu.handler!==undefined&&menu.handler!==saved.entryId))
         throw Error("Home option step is unavailable");
       const form=await saved.api("POST",_roomOptionsEndpoint114(saved),{
-        next_step_id:"setup_general"});
+        next_step_id:"general_settings"});
       if(!homeActive128(this,saved))return false;
       this._renderHomeGeneral128(saved,form);
       return true;
