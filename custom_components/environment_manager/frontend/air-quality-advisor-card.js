@@ -9200,8 +9200,8 @@
       return "presence";
     if(/away_window.*(?:person|delivery|alert)|notify|notification|tts|media_player|ai_agent|language|delivery|_hub/.test(key))
       return "alerts";
-    if(/window|ventilat/.test(key))return "ventilation";
     if(/pollen|threshold|mold|aqi|humidity|temperature/.test(key))return "targets";
+    if(/window|ventilat/.test(key))return "ventilation";
     return "other";
   };
   const homeType128=field=>{
