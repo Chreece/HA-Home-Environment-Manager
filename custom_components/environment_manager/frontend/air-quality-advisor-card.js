@@ -591,8 +591,8 @@
           const area = edit.getAttribute('data-edit-area');
           const id = area === null ? this._homeDeviceId : this._areaDeviceIds.get(area);
           if (!id) return;
-          if (area === null && typeof this._openHomeSettings128 === 'function') {
-            event.preventDefault();
+          if (area === null && typeof this._openHomeSettings128 === 'function' &&
+              this._homeOptionsContext128?.()) {
             this._openHomeSettings128();
             return;
           }
