@@ -9551,6 +9551,8 @@
       saved.node.removeAttribute("open");this.shadowRoot.appendChild(saved.node);
       try{saved.node.showModal();}catch{saved.node.setAttribute("open","");}
     }
+    // Refresh only changed native controls; never replace the unsaved Options draft.
+    this._hemFullRender127(saved,"home");
   };
   const priorHomeContent128=hemHome128._renderContent;
   hemHome128._renderContent=function(force=false){
