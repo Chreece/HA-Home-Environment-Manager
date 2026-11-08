@@ -101,7 +101,9 @@ with sync_playwright() as pw:
         };
         card._renderContent(true);
     }""")
-    assert page.evaluate("card._openHomeSettings128()") is True
+    # Verify the card's Home gear opens the complete settings dialog.
+    assert page.evaluate("Boolean(card.shadowRoot.querySelector('[data-edit-home]:not([disabled])'))")
+    page.evaluate("card.shadowRoot.querySelector('[data-edit-home]').click()")
     page.wait_for_function("card._homeSettingsDialog128?.fullRegistry127?.length===4")
     dialog = page.locator("dialog.hem-home-options128")
     expect(dialog).to_be_visible()
@@ -113,7 +115,7 @@ with sync_playwright() as pw:
     assert dialog.locator('[data-hem-full-row127="select.home_language"]').count() == 1
     assert dialog.locator('[data-hem-full-row127="number.bedroom_timeout"]').count() == 0
     assert dialog.locator('[data-hem-full-row127="switch.foreign_entry"]').count() == 0
-    assert dialog.locator(".hem-room-options-group114").count() >= 6
+    assert dialog.locator(".hem-room-options-group114").count() == 5
 
     dialog.locator('[data-hem-home-category128="weather"] > summary').click()
     dialog.locator('[data-hem-home-input128="weather_entities"][value="weather.second"]').check()
