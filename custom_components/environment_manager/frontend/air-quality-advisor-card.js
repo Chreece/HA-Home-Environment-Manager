@@ -1493,7 +1493,9 @@
         const supplied=state.attributes || {};
         options.push({key,id,state,icon,attribute,
           label:typeof supplied.setting_label==='string' && supplied.setting_label.trim()
-            ? supplied.setting_label.trim():label,
+            ? supplied.setting_label.trim():
+            typeof supplied.friendly_name==='string' && supplied.friendly_name.trim()
+              ? supplied.friendly_name.trim():label,
           help:typeof supplied.configuration_help==='string' && supplied.configuration_help.trim()
             ? supplied.configuration_help.trim():help});
       };
