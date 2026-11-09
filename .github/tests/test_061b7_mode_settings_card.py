@@ -310,6 +310,11 @@ def run():
           card._renderContent(true);
           card._configEntryId114='entry0';card._configEntryOwner114='sensor.hem';
           card._areaDeviceIds=new Map([['room0','room-hub']]);
+          // This fixture injects a verified registry without the initial hass
+          // setter. Simulate the completed registry context so a subsequent
+          // native hass refresh does not reset its ownership and close dialog.
+          card._deviceRegistryContext={stateId:'sensor.hem',connection:card._hass.connection};
+          card._deviceRegistryLoaded=true;
           window.refresh7=(states,language='en')=>{
             card._hass={...card._hass,states:structuredClone(states),language};
             card._renderContent(true);
