@@ -1691,7 +1691,7 @@
       return option.replaceAll('_',' ').replace(/^./,letter=>letter.toLocaleUpperCase());
     }
 
-    _operatingModeControls7(entry,area) {
+    _operatingModeControls7(entry,area,methodsOnly=false) {
       if (!entry.operatingModes?.length) return '';
       const l=this._climateLabels65();
       const supplied=entry.climate?.attributes?.operating_mode_ui_labels || {};
@@ -1756,7 +1756,7 @@
         const method=panel.method?renderField(panel,panel.method):
           '<label class="managed-method-label"><span>'+escape(l.method)+'</span><select disabled '+
           'aria-label="'+escape(panel.label+' · '+l.method)+'"><option>'+escape(this._t('missing'))+'</option></select></label>';
-        const details=panel.parameters.length?this._detail66('mode-settings:'+entry.entityId+':'+panel.mode,
+        const details=!methodsOnly && panel.parameters.length?this._detail66('mode-settings:'+entry.entityId+':'+panel.mode,
           parametersLabel,panel.parameters.map(field=>renderField(panel,field)).join(''),'hem-mode-parameters7'):'';
         return '<section class="hem-operating-mode7" data-operating-mode="'+escape(panel.mode)+'" '+
           'data-mode-controller="'+escape(entry.entityId)+'"><div class="hem-mode-heading7">'+
@@ -2291,7 +2291,7 @@
           el:['Προσαρμοστικό · Πρόταση για έγκριση','Προσαρμοστικό · Αυτόματο','Έγκριση','Απόρριψη','Προτεινόμενη ρύθμιση PID'],
         }[this._language()] || ['Adaptive · Suggest & approve','Adaptive · Automatic','Approve','Discard','Proposed PID adjustment'];
         const quickOptions=this._deviceQuickRow8(entry,room.area_id);
-        const modeControls=this._operatingModeControls7(entry,room.area_id);
+        const modeControls=this._operatingModeControls7(entry,room.area_id,true);
         const deviceFault=entry.errorAnnounce?.attributes?.native_error;
         const errorLabels={
           en:['Announce errors','Physical device error','Severity','Code','Details',
@@ -2543,12 +2543,7 @@
           quickOptions+
           recoveryPanel+this._configurationHelp116(resumeControl,entry.resumeButtonId,entry.resumeButton,continueLabel)+
           this._configurationHelp116(method,entry.methodId,entry.method,l.method)+
-          modeControls+editors.join('')+
-          this._calibrationDetails65(entry,!hasModeSettings && control==='pid' ?
-            this._configurationHelp116(calibrationMethod,entry.calibrationSelectId,entry.calibrationSelect,pidLabels[0])+
-            pidInputs+this._configurationHelp116(apply,entry.calibrationButtonId,entry.calibrationButton,pidLabels[9])+
-            reviewPanel+capSelectors+capacityInput+
-            this._configurationHelp116(applyCapacity,entry.capacityButtonId,entry.capacityButton,fanCapacityLabels[13])+capacitySummary : '')+
+          modeControls+
           '</section>';
       }).join('');
       return '<div class="managed-controllers">'+
@@ -8701,12 +8696,10 @@
     return {area,controllerId,owner,entryId,device,connection:this._hass.connection,room,controller};
   };
   hemProto126._hemControllerPanel126=function(ctx){
-    const wrapper=document.createElement("template");
-    wrapper.innerHTML=this._controllerPanel(ctx.room);
-    const target=[...wrapper.content.querySelectorAll("section[data-managed-climate93]")].find(
-      item=>item.getAttribute("data-managed-climate93")===ctx.controllerId &&
-        item.getAttribute("data-controller-area")===ctx.area);
-    return target?target.outerHTML:null;
+    // The device dialog is a settings menu, not a second copy of the card.
+    // Its exact configuration-entity categories load below this anchor.
+    return ctx?.controller ?
+      '<div class="hem-device-category-anchor129" data-hem-device-category-anchor129></div>' : null;
   };
   hemProto126._closeHemControllerSettings126=function(restoreFocus=true){
     const saved=this._hemControllerDialog126;
@@ -8873,15 +8866,17 @@
     schedule:"mdi:clock-outline",other:"mdi:cog-outline"};
   hemFull127._hemFullCategory127=function(field){
     const meta=field.state?.attributes||{};
-    const name=(field.kind+" "+(meta.setting_key||"")+" "+(meta.settings_scope||"")).toLowerCase();
-    if(field.domain==="time"||/sleep_start|sleep_end|_schedule_/.test(name))return "schedule";
-    if(/mode_|control_mode|operating_mode|preset|method/.test(name)&&!/calibration_method/.test(name))return "mode";
-    if(/pid|calibrat|_kp$|_ki$|_kd$|gain_|capacity|adaptive/.test(name))return "pid";
+    // Use the actual setting key, not a mode-prefixed entity unique ID:
+    // otherwise mode_heat_kp is miscategorized as a control-mode selector.
+    const name=String(meta.setting_key||field.kind||"").toLowerCase();
+    if(field.domain==="time"||/sleep_start|sleep_end|_schedule_|wake_alarm/.test(name))return "schedule";
+    if(/pid|calibrat|(^|_)kp$|(^|_)ki$|(^|_)kd$|gain_|capacity|adaptive/.test(name))return "pid";
+    if(/control_mode|requested_mode|operating_mode|preset|^method$|^area_manual_profile$|^area_climate_policy_target_source$/.test(name))return "mode";
     if(/fan|quiet|speed|cadr/.test(name))return "fan";
     if(/window|ventilat|extraction/.test(name))return "ventilation";
-    if(/presence|occup|sleep|wake|alarm|away_policy/.test(name))return "presence";
-    if(/notify|announce|tts|error/.test(name))return "alerts";
-    if(/power|battery|minimum|maximum|cooldown|hold|relay|readiness/.test(name))return "power";
+    if(/notify|announce|tts|error|fault/.test(name))return "alerts";
+    if(/presence|occup|sleep|away_policy/.test(name))return "presence";
+    if(/power|battery|minimum|maximum|cooldown|hold|relay|readiness|min_on|min_off|max_on/.test(name))return "power";
     if(/profile|target|temperature|humidity|mold|dewpoint|comfort/.test(name))return "targets";
     return "other";
   };
@@ -8938,6 +8933,32 @@
     }
     return result.sort((a,b)=>a.label.localeCompare(b.label,this._language())||a.id.localeCompare(b.id));
   };
+  hemFull127._hemFullOptionLabel129=function(field,option){
+    // Native IDs remain unchanged. Only the displayed option is localized.
+    const attr=field.state?.attributes||{};
+    const supplied=attr.option_labels?.[option];
+    if(typeof supplied==="string"&&supplied.trim())return supplied;
+    const keys=[];
+    const add=key=>{if(typeof key==="string"&&key&&!keys.includes(key))keys.push(key);};
+    add(field.reg?.translation_key);
+    add(attr.translation_key);
+    add(attr.setting_key);
+    if(typeof attr.setting_key==="string"){
+      add("equipment_"+attr.setting_key);
+      add("area_climate_policy_"+attr.setting_key);
+      add("home_global_policy_"+attr.setting_key);
+    }
+    for(const key of keys){
+      const path="component.environment_manager.entity.select."+key+".state."+option;
+      const translated=this._hass?.localize?.(path);
+      if(typeof translated==="string"&&translated.trim()&&translated!==path)
+        return translated;
+    }
+    const method=attr.setting_key==="control_mode"?this._climateLabels65()?.[option]:null;
+    if(typeof method==="string"&&method)return method;
+    // Manufacturer-specific native modes are intentionally never renamed.
+    return option;
+  };
   hemFull127._hemFullRow127=function(field,scope){
     const s=field.state,a=s?.attributes||{},value=s?.state,domain=field.domain;
     const live=!field.disabled&&s&&value!=="unavailable"&&(domain==="button"||value!=="unknown");
@@ -8961,7 +8982,7 @@
     }else if(domain==="select"){
       input='<select data-hem-full-value127="'+escape(field.id)+'" '+(enabled?"":"disabled")+'>'+
         options.map(option=>'<option value="'+escape(option)+'" '+
-        (option===value?"selected":"")+'>'+escape(option)+'</option>').join("")+'</select>';
+        (option===value?"selected":"")+'>'+escape(this._hemFullOptionLabel129(field,option))+'</option>').join("")+'</select>';
     }else if(domain==="time"){
       input='<input type="time" data-hem-full-value127="'+escape(field.id)+'" '+
         'value="'+(enabled?escape(value.slice(0,5)):"")+'" '+(enabled?"":"disabled")+'>';
