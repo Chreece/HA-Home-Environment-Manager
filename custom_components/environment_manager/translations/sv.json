@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Profil · Enheter · CLIMATE_MANUAL_PROFILE",
+        "name": "Profil · Välj",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatisk",
+          "comfort": "Komfort",
+          "home": "Hem",
+          "away": "Borta",
+          "sleep": "Sömn",
+          "eco": "Energisparläge"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Solskydd · Luxsensor för solskydd",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Strömförsörjning · Fysisk enhet",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjälp"
