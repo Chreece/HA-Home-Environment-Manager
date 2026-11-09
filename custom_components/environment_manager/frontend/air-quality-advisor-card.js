@@ -2245,6 +2245,9 @@
         const state=entry.climate;
         const attrs=state.attributes || {};
         const available=state.state!=='unavailable' && state.state!=='unknown';
+        // This is the effective mode from the logical controller itself, not
+        // the retired device-wide method select entity.
+        const control=attrs.control_mode || 'existing';
         // The folded row names the HEM controller. The expanded heading
         // names the ORIGINAL physical endpoint as registered in HA.
         // Never recycle the HEM facade's friendly_name for that heading.
