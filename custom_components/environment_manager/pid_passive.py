@@ -121,6 +121,28 @@ def _prediction_error(
     )
 
 
+def _rejection_reason(
+    on: list[tuple[float, float]], baseline: float, direction: int, metric: str
+) -> str:
+    """Diagnostic explanation ONLY; never changes a fit's acceptance."""
+    if metric not in METRICS or len(on) < 10:
+        return "insufficient_on_samples"
+    if (on[-1][0] - on[0][0]) < MIN_ON_S:
+        return "on_cycle_too_short"
+    threshold, maximum, _, max_jump = METRICS[metric]
+    response = [direction * (val - baseline) for _, val in on]
+    amp = median(response[-3:])
+    if amp < threshold:
+        return "response_too_small"
+    if amp > maximum:
+        return "response_outside_physical_limits"
+    if max(response[-8:]) - min(response[-8:]) > 0.12 * amp:
+        return "no_stable_plateau"
+    if any(abs(b - a) > max_jump for a, b in zip(response, response[1:])):
+        return "sensor_jump"
+    return "response_model_fit_rejected"
+
+
 class PassiveObserver:
     """One in-memory sampler and a compact, restart-safe cycle ledger."""
 
@@ -134,6 +156,9 @@ class PassiveObserver:
         self.last_t: float | None = None
         self.proposal: dict | None = None
         self.status: str = "collecting"
+        # Volatile operator diagnostics, never consulted by tuning or actuation.
+        self.last_rejection_reason: str | None = None
+        self.rejection_counts: dict[str, int] = {}
         if isinstance(saved, dict):
             ctx = saved.get("context")
             rows = saved.get("cycles")
@@ -148,6 +173,34 @@ class PassiveObserver:
                 # A persisted model is never sufficient to auto-act after
                 # restart without new, live, complete OFF->ON->OFF evidence.
                 self.status = "collecting"
+
+    def _reject(self, reason: str) -> None:
+        self.last_rejection_reason = reason
+        self.rejection_counts[reason] = min(
+            9999, self.rejection_counts.get(reason, 0) + 1
+        )
+
+    def progress(self) -> dict[str, Any]:
+        """Bounded in-session learning progress, no raw waveform or actuation."""
+        phase = (
+            "observing_on_response" if self.on
+            else "collecting_stable_off_baseline" if self.last_on is False
+            else "awaiting_verified_off"
+        )
+        return {
+            "phase": phase,
+            "valid_cycles": len(self.cycles),
+            "required_for_auto": AUTO_MIN_CYCLES,
+            "off_samples": len(self.off),
+            "on_samples": len(self.on),
+            "on_observed_minutes": (
+                round(max(0.0, self.on[-1][0] - self.on[0][0]) / 60, 1)
+                if self.on else 0.0
+            ),
+            "last_rejection_reason": self.last_rejection_reason,
+            "rejection_counts": dict(self.rejection_counts),
+            "raw_history_saved": False,
+        }
 
     def interrupt(self) -> None:
         self.off.clear()
@@ -164,6 +217,8 @@ class PassiveObserver:
         """Return True ONLY for one newly accepted completed natural cycle."""
         if context != self.context:
             self.context = context
+            self.last_rejection_reason = None
+            self.rejection_counts.clear()
             self.cycles.clear()
             self.proposal = None
             self.status = "collecting"
@@ -172,12 +227,16 @@ class PassiveObserver:
                 or metric not in METRICS or not _finite(at)
                 or not _finite(value) or not _finite(sample_seconds)
                 or sample_seconds < 120):
+            if self.last_on is not None:
+                self._reject("unsafe_or_invalid_observation")
             self.interrupt()
             return False
         assert value is not None
         if (self.last_t is not None and (
                 at <= self.last_t or
                 at - self.last_t > max(3 * sample_seconds, 1800))):
+            if self.on or self.off:
+                self._reject("observation_clock_or_gap")
             self.interrupt()
         if self.last_t is not None and at - self.last_t < sample_seconds * 0.7:
             return False
@@ -187,7 +246,11 @@ class PassiveObserver:
             completed = False
             if before is True and self.on and self.baseline is not None:
                 episode = _fit_episode(self.on, self.baseline, direction, metric)
-                if episode is not None:
+                if episode is None:
+                    self._reject(_rejection_reason(
+                        self.on, self.baseline, direction, metric
+                    ))
+                else:
                     episode["at"] = at
                     self.cycles = [
                         cycle for cycle in self.cycles
@@ -202,6 +265,8 @@ class PassiveObserver:
             return completed
         if not owned:
             # Exclude manual starts and all unacknowledged/unowned power.
+            if before is True or self.on:
+                self._reject("unowned_native_output")
             self.interrupt()
             return False
         if before is False:
@@ -213,6 +278,7 @@ class PassiveObserver:
                 self.baseline = median(v for _, v in self.off[-4:])
                 self.on = [(at, float(value))]
             else:
+                self._reject("off_baseline_not_stable_or_too_short")
                 self.on.clear()
                 self.baseline = None
         elif before is True and self.on and len(self.on) < MAX_POINTS:
