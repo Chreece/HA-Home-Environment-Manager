@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "通知 · {channel}窓を開けるよう案内",
+        "name": "通知 · {channel}この機器の使用を避けるため窓を開けるよう促す",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
