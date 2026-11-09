@@ -144,7 +144,7 @@ test('supported modes use metadata, own parameters, native options and one physi
   const html=card._controllerPanel(room);
   assert.equal((html.match(/class="hem-operating-mode7"/g)||[]).length,0);
   assert.equal((html.match(/data-hem-card-method129=/g)||[]).length,2);
-  assert.equal((html.match(/data-climate-method=/g)||[]).length,1);
+  assert.equal((html.match(/data-climate-method=/g)||[]).length,0);
   assert.equal((html.match(/data-pid-calibration-method=/g)||[]).length,0);
   assert.equal((html.match(/data-window-announce-switch=/g)||[]).length,2);
   assert.equal((html.match(/data-device-quick-key8="native_full_output"/g)||[]).length,2);
@@ -339,7 +339,7 @@ def run():
         assert card_panel.locator('.hem-calibration').count()==0
         assert card_panel.locator('[data-quick-option8]').count()>=2
         assert card_panel.locator('[data-detail-id="diagnostics:climate.managed_0_0"]').count()==1
-        assert page.locator('[data-climate-method]').count()==1  # legacy device
+        assert page.locator('[data-climate-method]').count()==0  # legacy method retired
         assert page.locator('[data-timed-setpoint-switch]').count()==0
         assert page.evaluate("calls.length")==0
         card_panel.locator('[data-mode-setting-select="select.method_0_cool"]').select_option('pid')
@@ -425,10 +425,10 @@ def run():
             modal.screenshot(path=str(shots/'b17-categorized-device-settings.png'),animations='disabled')
         modal.locator('[data-close-hem-controller126]').click()
         assert not modal.is_visible()
-        # An offline/legacy-only device keeps its old selector as fallback.
+        # Even an offline device must not resurrect the retired selector.
         assert page.evaluate("card._openHemControllerSettings126('room0','climate.managed_0_2')") is True
         page.wait_for_function("card._hemControllerDialog126?.fullRegistry127?.length>8")
-        assert modal.locator('[data-hem-full-row127="select.control_0_2"]').count()==1
+        assert modal.locator('[data-hem-full-row127="select.control_0_2"]').count()==0
         modal.locator('[data-close-hem-controller126]').click()
         assert not errors,errors
         browser.close()
