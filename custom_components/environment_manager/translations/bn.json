@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "প্রোফাইল · ডিভাইস · CLIMATE_MANUAL_PROFILE",
+        "name": "প্রোফাইল · নির্বাচন",
         "state": {
-          "auto": "Automatic"
+          "auto": "স্বয়ংক্রিয়",
+          "comfort": "আরাম",
+          "home": "বাড়ি",
+          "away": "বাড়ির বাইরে",
+          "sleep": "ঘুম",
+          "eco": "শক্তি সাশ্রয়"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "ছায়া · ছায়ার জন্য আলোর সেন্সর",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "সাহায্য"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "বিদ্যুৎ সরবরাহ · প্রকৃত যন্ত্র",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
