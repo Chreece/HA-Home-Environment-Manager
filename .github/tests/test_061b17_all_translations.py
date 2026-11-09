@@ -6,6 +6,7 @@ Assistant entity UIs. Stable option IDs must remain invariant for services.
 from __future__ import annotations
 
 import json
+import runpy
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -30,6 +31,8 @@ def strings(value, prefix=""):
 
 all_languages = {file.stem: strings(json.loads(file.read_text(encoding="utf-8")))
                  for file in FILES}
+catalog = runpy.run_path(str(ROOT / "custom_components/environment_manager/window_option_catalog.py"))["WINDOW_OPTION_LABELS"]
+assert set(catalog) == set(all_languages), "Window label catalog must cover every supported locale"
 master = all_languages["en"]
 canonical = set(master)
 window_key = "entity.switch.equipment_announce_before_start.name"
@@ -53,6 +56,9 @@ for lang, values in all_languages.items():
     )
     assert all(value.strip() for value in values.values()), f"{lang}: empty translation string"
     assert all(values.get(key) for key in required), f"{lang}: missing device control label"
+    assert catalog[lang][0] == values[window_key], (
+        f"{lang}: card window-prompt label differs from its native switch translation"
+    )
     assert "{channel}" not in values[window_key], (
         f"{lang}: per-device toggle should not repeat the channel/device prefix"
     )
