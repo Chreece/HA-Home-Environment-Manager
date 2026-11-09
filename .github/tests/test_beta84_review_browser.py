@@ -103,7 +103,7 @@ with sync_playwright() as p:
     ]
     modal.locator('[data-hem-full-value127="select.calibration"]').select_option("cohen_coon")
     modal.locator('[data-hem-full-apply127="select.calibration"]').click()
-    assert page.evaluate("calls[-1] if false else calls.at(-1)")==[
+    assert page.evaluate("calls.at(-1)")==[
         "select", "select_option", {"entity_id": "select.calibration", "option": "cohen_coon"},
     ]
     # The actual HA entity availability, not stale review HTML, gates writes.
