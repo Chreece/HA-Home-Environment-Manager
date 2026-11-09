@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "設定檔 · 裝置 · CLIMATE_MANUAL_PROFILE",
+        "name": "設定檔 · 選擇",
         "state": {
-          "auto": "Automatic"
+          "auto": "自動",
+          "comfort": "舒適",
+          "home": "家中",
+          "away": "離家",
+          "sleep": "睡眠",
+          "eco": "節能"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "遮陽 · 遮陽照度感測器",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "供電 · 實體裝置",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"
