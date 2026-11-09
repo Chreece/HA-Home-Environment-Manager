@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Profilo · Dispositivi · CLIMATE_MANUAL_PROFILE",
+        "name": "Profilo · Seleziona",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatico",
+          "comfort": "Comfort",
+          "home": "Casa",
+          "away": "Assente",
+          "sleep": "Sonno",
+          "eco": "Risparmio energetico"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Schermatura solare · Sensore di illuminamento per schermatura",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Alimentazione · Dispositivo fisico",
         "state_attributes": {
           "configuration_help": {
             "name": "Aiuto"
