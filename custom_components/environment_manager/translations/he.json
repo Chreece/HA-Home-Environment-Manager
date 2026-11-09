@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "הודעות · {channel}בקשה לפתוח חלונות",
+        "name": "הודעות · {channel}הצע לפתוח חלונות כדי להימנע משימוש במכשיר הזה",
         "state_attributes": {
           "configuration_help": {
             "name": "עזרה"
