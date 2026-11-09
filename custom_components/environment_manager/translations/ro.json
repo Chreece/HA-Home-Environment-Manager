@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Profil · Dispozitive · CLIMATE_MANUAL_PROFILE",
+        "name": "Profil · Selectați",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automat",
+          "comfort": "Confort",
+          "home": "Acasă",
+          "away": "Absent",
+          "sleep": "Somn",
+          "eco": "Economisire energie"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Umbrire · Senzor de iluminare pentru umbrire",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajutor"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Alimentare · Dispozitiv fizic",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
