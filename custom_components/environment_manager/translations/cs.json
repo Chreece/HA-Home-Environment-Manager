@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Oznámení · {channel}Požádat o otevření oken",
+        "name": "Oznámení · {channel}Doporučit otevření oken, aby nebylo nutné použít toto zařízení",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"
