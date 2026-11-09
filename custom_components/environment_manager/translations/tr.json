@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Duyurular · {channel}Pencerelerin açılmasını iste",
+        "name": "Duyurular · {channel}Bu cihazı kullanmamak için pencereleri açmayı öner",
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"
