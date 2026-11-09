@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Оголошення · {channel}Попросити відкрити вікна",
+        "name": "Оголошення · {channel}Запропонувати відкрити вікна, щоб не використовувати цей пристрій",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"
