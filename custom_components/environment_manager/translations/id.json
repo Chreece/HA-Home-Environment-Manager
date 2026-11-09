@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Profil · Perangkat · CLIMATE_MANUAL_PROFILE",
+        "name": "Profil · Pilih",
         "state": {
-          "auto": "Automatic"
+          "auto": "Otomatis",
+          "comfort": "Nyaman",
+          "home": "Rumah",
+          "away": "Tidak di rumah",
+          "sleep": "Tidur",
+          "eco": "Hemat energi"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Peneduhan · Sensor cahaya peneduh surya",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Catu daya · Perangkat fisik",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"
