@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Espera após fechar as janelas",
           "window_state_unknown": "Aguardando o estado das janelas",
           "window_open_wait": "Aguardando você abrir a janela",
-          "window_request_pending": "Enviando um pedido para abrir a janela"
+          "window_request_pending": "Enviando um pedido para abrir a janela",
+          "physical_device_startup_timeout": "O aparelho não se reconectou em até 60 segundos após ligar"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Ajuda"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Energia · Espera antes de desligar a alimentação (segundos)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajuda"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Anúncios · {channel}Pedir para abrir as janelas",
+        "name": "Sugerir abrir as janelas para evitar o uso deste aparelho",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Perfil · Dispositivos · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "Conforto",
+          "home": "Em casa",
+          "away": "Ausente",
+          "sleep": "Sono",
+          "eco": "Eco"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajuda"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Energia · Interruptor externo de alimentação",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"
