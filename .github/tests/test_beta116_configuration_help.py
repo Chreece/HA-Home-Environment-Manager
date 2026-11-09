@@ -29,6 +29,14 @@ def fixture():
     states['select.method_cooler']['attributes']['configuration_help'] = help_text
     common = {key: states['select.method_cooler']['attributes'][key]
               for key in ('area_id', 'source_device_id', 'source_entity_ids')}
+    # This is a genuine scoped method, not the retired device-level select.
+    states['climate.managed_cooler']['attributes'].update(
+        controller_id='cool-controller', supported_operating_modes=['cool'],
+        selected_operating_mode='cool')
+    states['select.method_cooler']['attributes'].update(
+        controller_id='cool-controller', settings_scope='operating_mode',
+        operating_mode='cool', operating_mode_label='Cooling',
+        setting_key='control_mode', setting_label='Control method')
     extra = {
         'switch.cooler_maximum': {'state': 'off', 'attributes': {
             **common, 'equipment_option_role': 'policy', 'setting_key': 'native_full_output',
@@ -70,7 +78,8 @@ const room=input['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id==='c
 const html=card._controllerPanel(room);
 const ids=['select.method_cooler','switch.cooler_maximum','select.cooler_calibration','number.cooler_gain','button.cooler_calibrate'];
 const encode=t=>t.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
-assert.ok(html.includes('data-climate-method="select.method_cooler"'));
+assert.ok(!html.includes('data-climate-method="select.method_cooler"'));
+assert.ok(html.includes('data-mode-setting-select="select.method_cooler"'));
 assert.ok(html.includes('data-device-quick-switch8="switch.cooler_maximum"'));
 assert.ok(html.includes('aria-checked="false"'));
 // The compact card keeps quick controls, not PID model editors or calibrations.
