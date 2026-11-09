@@ -23,6 +23,20 @@ PROFILE_OPTIONS = ("auto", "comfort", "home", "away", "sleep", "eco")
 GAIN_SOURCE_OPTIONS = ("defaults", "manual")
 
 
+def _retire_device_wide_control_methods(registry, specs):
+    """Remove only exact obsolete HEM method entities, never scoped methods.
+
+    Registry removal is a one-time setup migration; the existing stored
+    controller settings remain untouched until edited through per-mode controls.
+    """
+    for spec in specs:
+        legacy = registry.async_get_entity_id(
+            "select", DOMAIN, f"{spec.identifier}_control_mode"
+        )
+        if legacy:
+            registry.async_remove(legacy)
+
+
 async def async_setup_entry(hass, entry, async_add_entities):
     manager = entry.runtime_data
     entities = [TTSLanguageSelect(manager, entry.entry_id)]
@@ -64,12 +78,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     # Retire only this integration's immutable legacy selector IDs; a custom
     # friendly name cannot prevent cleanup, and neither a scoped selector nor
     # any physical device entity is removed. Saved tuning is untouched.
-    for spec in physical_specs:
-        legacy = registry.async_get_entity_id(
-            "select", DOMAIN, f"{spec.identifier}_control_mode"
-        )
-        if legacy:
-            registry.async_remove(legacy)
+    _retire_device_wide_control_methods(registry, physical_specs)
     # Optional upstream power is meaningful for mains-powered equipment.
     # A physical device reporting its own battery (native attributes or a
     # same-device battery diagnostic sensor) must not expose the relay picker.
