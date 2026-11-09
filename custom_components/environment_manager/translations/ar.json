@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "الملف · الأجهزة · CLIMATE_MANUAL_PROFILE",
+        "name": "الملف · اختيار",
         "state": {
-          "auto": "Automatic"
+          "auto": "تلقائي",
+          "comfort": "راحة",
+          "home": "المنزل",
+          "away": "خارج المنزل",
+          "sleep": "النوم",
+          "eco": "توفير الطاقة"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "التظليل · مستشعر الإضاءة للتظليل",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "مصدر الطاقة · الجهاز الفعلي",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"
