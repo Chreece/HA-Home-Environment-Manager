@@ -787,7 +787,7 @@ class EquipmentRuntime:
             await asyncio.gather(*tasks, return_exceptions=True)
         self._pid_passive_tasks.clear()
         self._pid_passive_observers.clear()
-        self._pid_performance.clear()
+        getattr(self, "_pid_performance", {}).clear()
         if self._ready:
             await self._save()
 
