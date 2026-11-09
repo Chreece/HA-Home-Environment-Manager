@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Профил · Устройства · CLIMATE_MANUAL_PROFILE",
+        "name": "Профил · Избор",
         "state": {
-          "auto": "Automatic"
+          "auto": "Автоматично",
+          "comfort": "Комфорт",
+          "home": "Дом",
+          "away": "Отсъствие",
+          "sleep": "Сън",
+          "eco": "Пестене на енергия"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Засенчване · Сензор за осветеност за щори",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помощ"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Захранване · Физическо устройство",
         "state_attributes": {
           "configuration_help": {
             "name": "Помощ"
