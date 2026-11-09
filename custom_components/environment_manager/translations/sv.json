@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Väntar efter stängning av fönster",
           "window_state_unknown": "Väntar på fönsterstatus",
           "window_open_wait": "Väntar på att du öppnar fönstret",
-          "window_request_pending": "Skickar en uppmaning att öppna fönstret"
+          "window_request_pending": "Skickar en uppmaning att öppna fönstret",
+          "physical_device_startup_timeout": "Enheten anslöt inte igen inom 60 sekunder efter påslagning"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Hjälp"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Ström · Väntetid före avstängning av strömförsörjningen (sekunder)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Meddelanden · {channel}Be om att öppna fönster",
+        "name": "Föreslå att öppna fönster för att undvika att använda den här enheten",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjälp"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Profil · Enheter · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "Komfort",
+          "home": "Hemma",
+          "away": "Borta",
+          "sleep": "Sömn",
+          "eco": "Eco"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjälp"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Ström · Extern strömbrytare",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjälp"
