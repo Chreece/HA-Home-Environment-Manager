@@ -9584,6 +9584,112 @@
     "</style>"].join("");};
   /* HEM_HOME_SETTINGS128_END */
 
+
+  /* HEM_DEVICE_SETTINGS129_START
+   * Card: essentials only. Device dialog: full categorized registry settings.
+   * Pure presentation changes: existing HA service, authorization and physical
+   * safety paths remain untouched. No duplicate editor above the categories.
+   */
+  const hemDevice129=AirQualityAdvisorCard.prototype;
+  const originalCardController129=hemDevice129._controllerPanel;
+  hemDevice129._controllerPanel=function(room){
+    const html=originalCardController129.call(this,room);
+    if(!html || !html.includes('data-managed-climate93'))return html;
+    const template=document.createElement('template');
+    template.innerHTML=html;
+    for(const section of template.content.querySelectorAll('section[data-managed-climate93]')){
+      const active=section.querySelector('.hem-operating-mode7 .hem-mode-selected7')?.closest('.hem-operating-mode7');
+      const modeMethod=active?.querySelector('select[data-mode-setting-select]')?.closest('label');
+      const method=section.querySelector('select[data-climate-method]')?.closest('label');
+      const modeMethodCopy=!method && modeMethod?modeMethod.cloneNode(true):null;
+      section.querySelectorAll('.hem-operating-modes7,.hem-calibration,.climate-target-editor,'
+        +'.hem-mode-parameters7,.hem-mode-number7,.hem-mode-button7,'
+        +'.hem-mode-toggle7,.hem-window-settings6').forEach(node=>{
+          // Window waiting-time editor is intentionally part of its quick tile.
+          if(node.closest('.hem-device-quick-row8'))return;
+          node.remove();
+        });
+      // Keep the native control method in the card for a scoped controller.
+      if(modeMethodCopy){
+        const options=section.querySelector('.hem-device-quick-row8');
+        if(options)options.after(modeMethodCopy);
+        else section.append(modeMethodCopy);
+      }
+      // The card retains the native summary/diagnostics, Continue Automatic,
+      // and per-device quick ON/OFF tiles. All other editors live in dialog.
+    }
+    return template.innerHTML;
+  };
+  hemDevice129._hemControllerPanel126=function(ctx){
+    if(!ctx?.controller || ctx.controller.entityId!==ctx.controllerId)return null;
+    // The full registry renderer appends categorized settings into this
+    // dialog body. Do not repeat the complete card controls above them.
+    return '<section class="hem-device-settings-only129" data-managed-climate93="'+
+      escape(ctx.controllerId)+'" data-controller-area="'+escape(ctx.area)+'"></section>';
+  };
+  const previousFullRow129=hemDevice129._hemFullRow127;
+  hemDevice129._hemFullRow127=function(field,scope){
+    let html=previousFullRow129.call(this,field,scope);
+    if(field.domain!=='select')return html;
+    const labels=field.state?.attributes?.option_labels||{};
+    const opts=field.state?.attributes?.options||[];
+    const name=field.state?.attributes?.setting_key;
+    const language=this._language();
+    const fallback={
+      existing:{en:'Existing',el:'Υφιστάμενος',de:'Bestehend'},
+      automatic:{en:'Automatic',el:'Αυτόματο',de:'Automatisch'},
+      manual:{en:'Manual',el:'Χειροκίνητο',de:'Manuell'},
+      off:{en:'Off',el:'Ανενεργό',de:'Aus'},
+      pid:{en:'PID',el:'PID',de:'PID'},
+      filtration:{en:'Filtration',el:'Φιλτράρισμα αέρα',de:'Luftfiltration'},
+      extraction:{en:'Extraction',el:'Απαγωγή αέρα',de:'Abluft'},
+      occupied:{en:'Occupied',el:'Με παρουσία',de:'Belegt'},
+      absent:{en:'Unoccupied',el:'Χωρίς παρουσία',de:'Unbelegt'},
+      always:{en:'Always',el:'Πάντα',de:'Immer'},
+      pause:{en:'Pause',el:'Παύση',de:'Pausieren'},
+      normal:{en:'Normal',el:'Κανονικά',de:'Normal'},
+      sleep_targets:{en:'Sleep targets',el:'Στόχοι ύπνου',de:'Schlaf-Sollwerte'},
+      home:{en:'Home',el:'Σπίτι',de:'Zuhause'},
+      comfort:{en:'Comfort',el:'Άνεση',de:'Komfort'},
+      away:{en:'Away',el:'Απουσία',de:'Abwesend'},
+      sleep:{en:'Sleep',el:'Ύπνος',de:'Schlaf'},
+      eco:{en:'Eco',el:'Οικονομία',de:'Eco'},
+      heat:{en:'Heating',el:'Θέρμανση',de:'Heizen'},
+      cool:{en:'Cooling',el:'Ψύξη',de:'Kühlen'},
+      dry:{en:'Dehumidifying',el:'Αφύγρανση',de:'Entfeuchten'},
+      humidify:{en:'Humidifying',el:'Ύγρανση',de:'Befeuchten'},
+      fan_only:{en:'Fan',el:'Ανεμιστήρας',de:'Lüfter'},
+      heat_cool:{en:'Heating / cooling',el:'Θέρμανση / ψύξη',de:'Heizen / Kühlen'},
+    };
+    for(const option of opts){
+      if(typeof option!=='string')continue;
+      const native=labels[option];
+      const key=name||field.kind;
+      const path='component.environment_manager.entity.select.'+key+'.state.'+option;
+      const translated=this._hass?.localize?.(path);
+      const label=(typeof native==='string'&&native.trim()?native:
+        typeof translated==='string'&&translated.trim()&&translated!==path?translated:
+        fallback[option]?.[language]||fallback[option]?.en||option);
+      const literal='<option value="'+escape(option)+'"';
+      const at=html.indexOf(literal);
+      if(at<0)continue;
+      const gt=html.indexOf('>',at+literal.length),end=html.indexOf('</option>',gt+1);
+      if(gt<0||end<0)continue;
+      html=html.slice(0,gt+1)+escape(label)+html.slice(end);
+    }
+    return html;
+  };
+  const previousFullCategory129=hemDevice129._hemFullCategory127;
+  hemDevice129._hemFullCategory127=function(field){
+    const a=field.state?.attributes||{};
+    const key=String(a.setting_key||field.kind||'').toLowerCase();
+    // Announcement-related window preferences belong with announcements,
+    // not with hardware/window interlocks.
+    if(/announce_before_start|announce_device_errors|window_announcement/.test(key))return 'alerts';
+    return previousFullCategory129.call(this,field);
+  };
+  /* HEM_DEVICE_SETTINGS129_END */
+
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
   // New brand alias; old Lovelace YAML configurations keep working unmodified.
