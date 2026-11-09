@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Profiili · Laitteet · CLIMATE_MANUAL_PROFILE",
+        "name": "Profiili · Valitse",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automaattinen",
+          "comfort": "Mukavuus",
+          "home": "Koti",
+          "away": "Poissa",
+          "sleep": "Uni",
+          "eco": "Energiansäästö"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Aurinkosuojaus · Luksianturi aurinkosuojaukseen",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Virransyöttö · Fyysinen laite",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"
