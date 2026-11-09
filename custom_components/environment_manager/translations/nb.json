@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Meldinger · {channel}Be om å åpne vinduer",
+        "name": "Meldinger · {channel}Foreslå å åpne vinduer for å unngå å bruke denne enheten",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"
