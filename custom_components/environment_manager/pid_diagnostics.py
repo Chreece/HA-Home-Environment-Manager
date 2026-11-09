@@ -108,6 +108,7 @@ class PerformanceWindow:
         band = BANDS[self.metric]
         samples = list(self.samples)
         covered = integrated = signed = run_floor = off_floor = 0.0
+        inside_floor = outside_floor = 0.0
         starts = 0
         gaps = 0
         qualified_pairs = 0
@@ -121,6 +122,12 @@ class PerformanceWindow:
             qualified_pairs += 1
             covered += dt
             # Trapezoidal integration gives an observed tracking-error estimate.
+            # Only credit comfort duration when BOTH measured endpoints
+            # support the same classification; transition time is unknown.
+            if abs(previous.error) <= band and abs(current.error) <= band:
+                inside_floor += dt
+            elif abs(previous.error) > band and abs(current.error) > band:
+                outside_floor += dt
             integrated += 0.5 * (abs(previous.error) + abs(current.error)) * dt / 3600
             signed += 0.5 * (previous.error + current.error) * dt / 3600
             if previous.output == current.output == "on":
@@ -152,6 +159,8 @@ class PerformanceWindow:
             "maximum_observed_overshoot": round(overshoot, 3),
             "maximum_observed_shortfall": round(max_shortfall, 3),
             "verified_off_to_on_transitions": starts,
+            "observed_inside_band_hours_lower_bound": round(inside_floor / 3600, 3),
+            "observed_outside_band_hours_lower_bound": round(outside_floor / 3600, 3),
             "observed_on_hours_lower_bound": round(run_floor / 3600, 3),
             "observed_off_hours_lower_bound": round(off_floor / 3600, 3),
             "unobserved_or_long_intervals": gaps,
