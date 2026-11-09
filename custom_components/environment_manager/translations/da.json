@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Profil · Enheder · CLIMATE_MANUAL_PROFILE",
+        "name": "Profil · Vælg",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatisk",
+          "comfort": "Komfort",
+          "home": "Hjem",
+          "away": "Ude",
+          "sleep": "Søvn",
+          "eco": "Energibesparelse"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Solafskærmning · Luxsensor til solafskærmning",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjælp"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Strømforsyning · Fysisk enhed",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjælp"
