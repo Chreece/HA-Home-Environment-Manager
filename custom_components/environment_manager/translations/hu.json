@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Értesítések · {channel}Ablaknyitás kérése",
+        "name": "Értesítések · {channel}Javasolja az ablakok kinyitását az eszköz használatának elkerülésére",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"
