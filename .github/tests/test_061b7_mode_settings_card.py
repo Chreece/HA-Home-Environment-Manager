@@ -151,8 +151,11 @@ test('supported modes use metadata, own parameters, native options and one physi
   assert.ok(html.includes('data-device-quick-switch8="switch.native_full_output_0"'));
   assert.ok(html.includes('data-window-policy-switch="switch.shared_window"'));
   assert.ok(!entries[0].operatingModes.some(mode=>mode.parameters.some(field=>field.key==='native_full_output')));
-  assert.ok(html.includes('data-mode-setting-input="number.cycle_0_heat"'));
-  assert.ok(html.includes('data-mode-setting-input="number.away_target"'));
+  // Compact card omits parameters; the separate advanced renderer remains verified.
+  assert.ok(!html.includes('data-mode-setting-input='));
+  const advanced=card._operatingModeControls7(entries[0],'room0');
+  assert.ok(advanced.includes('data-mode-setting-input="number.cycle_0_heat"'));
+  assert.ok(advanced.includes('data-mode-setting-input="number.away_target"'));
   assert.ok(!html.includes('data-operating-mode="defrost"'));
 });
 test('mode writes use exact native setting entities and reject forged scope and stale bounds',async()=>{
@@ -283,6 +286,22 @@ def run():
           card._config={entity:'sensor.hem'};
           card._roomsExpanded87=new Set(['room0']);
           card._devicesExpanded87=new Set([0,1,2].map(i=>'climate.managed_0_'+i));
+          // Legacy editor interaction tests use a test-only full-mode
+          // renderer. In production only the compact method controls are
+          // shown on the card; b17 verifies the real categorized modal.
+          const compactPanel=card._controllerPanel;
+          card._controllerPanel=function(room){
+            const template=document.createElement('template');
+            template.innerHTML=compactPanel.call(this,room);
+            for(const box of template.content.querySelectorAll('.hem-operating-modes7')){
+              const controller=box.closest('[data-managed-climate93]')
+                ?.getAttribute('data-managed-climate93');
+              const entry=this._managedControllers(room.area_id)
+                .find(item=>item.entityId===controller);
+              if(entry)box.outerHTML=this._operatingModeControls7(entry,room.area_id);
+            }
+            return template.innerHTML;
+          };
           window.refresh7=(states,language='en')=>{
             card._hass={...card._hass,states:structuredClone(states),language}; card._renderContent(true);
           };refresh7(states);
