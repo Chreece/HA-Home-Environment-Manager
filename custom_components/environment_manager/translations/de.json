@@ -4008,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Ansagen · {channel}Zum Fensteröffnen auffordern",
+        "name": "Ansagen · {channel}Zum Fensteröffnen auffordern, um dieses Gerät nicht einsetzen zu müssen",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
