@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Profil · Appareils · CLIMATE_MANUAL_PROFILE",
+        "name": "Profil · Choisir",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatique",
+          "comfort": "Confort",
+          "home": "Maison",
+          "away": "Absent",
+          "sleep": "Sommeil",
+          "eco": "Économie d’énergie"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Ombrage · Capteur de luminosité pour les stores",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aide"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Alimentation · Appareil physique",
         "state_attributes": {
           "configuration_help": {
             "name": "Aide"
