@@ -121,14 +121,19 @@ with sync_playwright() as playwright:
       card._hass={language:"el",states:data.states,user:{is_admin:true},entities:{
         "sensor.hem":{config_entry_id:"entry0"},
         [data.controller]:{device_id:"hem-controller-device",config_entry_id:"entry0"}
-      },connection:{},localize:()=>undefined,
+      },connection:{},localize:key=>({
+         "component.environment_manager.entity.select.equipment_presence_requirement.state.always":"Χωρίς περιορισμό παρουσίας",
+         "component.environment_manager.entity.select.equipment_presence_requirement.state.occupied":"Μόνο με παρουσία",
+         "component.environment_manager.entity.select.equipment_presence_requirement.state.absent":"Μόνο σε άδειο δωμάτιο"
+       })[key],
         callService:(...args)=>{calls.push(args);return Promise.resolve();}};
       card._renderContent(true);card._configEntryId114="entry0";
       card._configEntryOwner114="sensor.hem";
       card._areaDeviceIds=new Map([["living","room-hub"]]);
       const fields=[
-        ["number.hem_pid_kp","1.2",{min:0,max:100,step:0.1,friendly_name:"PID Kp",controller_id:"ctrl_a"}],
-        ["select.hem_cool_mode","manual",{options:["manual","pid"],friendly_name:"Cool control",controller_id:"ctrl_a",settings_scope:"operating_mode",operating_mode:"cool"}],
+        ["number.hem_pid_kp","1.2",{min:0,max:100,step:0.1,friendly_name:"PID Kp",controller_id:"ctrl_a",setting_key:"kp",settings_scope:"operating_mode",operating_mode:"heat"}],
+        ["select.hem_cool_mode","manual",{options:["manual","pid"],option_labels:{manual:"Χειροκίνητα",pid:"PID"},friendly_name:"Cool control",controller_id:"ctrl_a",setting_key:"control_mode",settings_scope:"operating_mode",operating_mode:"cool"}],
+         ["select.hem_presence","always",{options:["always","occupied","absent"],friendly_name:"Presence policy",controller_id:"ctrl_a",setting_key:"presence_requirement"}],
         ["switch.hem_quiet","on",{friendly_name:"Quiet room",controller_id:"ctrl_a"}],
         ["button.hem_apply","unknown",{friendly_name:"Apply calibration",controller_id:"ctrl_a"}],
         ["number.foreign_controller","100",{min:0,max:100,step:1,friendly_name:"Other controller",controller_id:"ctrl_b"}]
@@ -137,7 +142,9 @@ with sync_playwright() as playwright:
       for(const [id,state,attributes] of fields)card._hass.states[id]={state,attributes};
       window.registryController127=fields.map(([id])=>({
         entity_id:id,device_id:id==="number.foreign_controller"?"other-hem-device":"hem-controller-device",
-        config_entry_id:"entry0",platform:"environment_manager",unique_id:"entry0_controller_alpha_"+id.replace(".","_")
+        config_entry_id:"entry0",platform:"environment_manager",
+        unique_id:id==="number.hem_pid_kp"?"entry0_mode_heat_kp":
+          "entry0_controller_alpha_"+id.replace(".","_")
       }));
       card._hass.callWS=async req=>req.type==="config/entity_registry/list"?
         registryController127:Promise.reject(Error("Unexpected request"));
@@ -148,19 +155,35 @@ with sync_playwright() as playwright:
     controller.locator('[data-open-controller-device122]').click()
     modal=page.locator(".hem-controller-options126")
     expect(modal).to_be_visible()
-    page.wait_for_function("card._hemControllerDialog126?.fullRegistry127?.length===5")
+    page.wait_for_function("card._hemControllerDialog126?.fullRegistry127?.length===6")
     assert page.evaluate("routes.length")==0
-    for id in ("number.hem_pid_kp","select.hem_cool_mode","switch.hem_quiet","button.hem_apply"):
+    # Device dialog is the categorized settings surface, not another copy of the card.
+    assert modal.locator('[data-managed-climate93]').count()==0
+    assert modal.locator('.hem-device-quick-row8,.hem-operating-modes7,.hem-diagnostics').count()==0
+    assert controller.locator('[data-mode-setting-input],.hem-calibration,[data-climate-input]').count()==0
+    for id in ("number.hem_pid_kp","select.hem_cool_mode","select.hem_presence","switch.hem_quiet","button.hem_apply"):
         expect(modal.locator(f'[data-hem-full-row127="{id}"]')).to_have_count(1)
     assert modal.locator('[data-hem-full-row127="number.foreign_controller"]').count()==0
     assert modal.locator('[data-hem-full-category127="pid"]').count()>=1
     assert modal.locator('[data-hem-full-category127="mode"]').count()>=1
+    assert modal.locator('[data-hem-full-category127="presence"]').count()==1
+    assert modal.locator('[data-hem-full-category127="pid"] [data-hem-full-row127="number.hem_pid_kp"]').count()==1
+    assert modal.locator('[data-hem-full-category127="mode"] [data-hem-full-row127="number.hem_pid_kp"]').count()==0
+    modal.locator('[data-hem-full-category127="mode"] > summary').click()
+    assert modal.locator('[data-hem-full-value127="select.hem_cool_mode"] option[value="manual"]').inner_text()=="Χειροκίνητα"
+    modal.locator('[data-hem-full-category127="presence"] > summary').click()
+    presence=modal.locator('[data-hem-full-value127="select.hem_presence"]')
+    assert presence.locator('option[value="absent"]').inner_text()=="Μόνο σε άδειο δωμάτιο"
     assert page.evaluate("calls.length")==0
     modal.locator('[data-hem-full-category127="pid"] > summary').click()
     modal.locator('[data-hem-full-value127="number.hem_pid_kp"]').fill("2.5")
     modal.locator('[data-hem-full-apply127="number.hem_pid_kp"]').click()
     page.wait_for_function("calls.length===1")
     assert page.evaluate("calls[0]")==["number","set_value",{"entity_id":"number.hem_pid_kp","value":2.5}]
+    presence.select_option("absent")
+    modal.locator('[data-hem-full-apply127="select.hem_presence"]').click()
+    page.wait_for_function("calls.length===2")
+    assert page.evaluate("calls[1]")==["select","select_option",{"entity_id":"select.hem_presence","option":"absent"}]
     modal.locator('[data-close-hem-controller126]').click()
     assert not modal.is_visible()
     assert not errors,errors
