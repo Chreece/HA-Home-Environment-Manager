@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "اعلان‌ها · {channel}درخواست باز کردن پنجره‌ها",
+        "name": "اعلان‌ها · {channel}پیشنهاد باز کردن پنجره‌ها برای جلوگیری از استفاده از این دستگاه",
         "state_attributes": {
           "configuration_help": {
             "name": "راهنما"
