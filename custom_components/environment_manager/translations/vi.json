@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Thông báo · {channel}Yêu cầu mở cửa sổ",
+        "name": "Thông báo · {channel}Đề nghị mở cửa sổ để tránh phải sử dụng thiết bị này",
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"
