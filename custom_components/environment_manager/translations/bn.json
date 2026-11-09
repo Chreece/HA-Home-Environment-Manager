@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "ঘোষণা · {channel}জানালা খোলার অনুরোধ",
+        "name": "ঘোষণা · {channel}এই যন্ত্র ব্যবহার এড়াতে জানালা খোলার পরামর্শ দিন",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
