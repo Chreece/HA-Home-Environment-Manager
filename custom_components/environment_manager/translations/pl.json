@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Powiadomienia · {channel}Poproś o otwarcie okien",
+        "name": "Powiadomienia · {channel}Zaproponuj otwarcie okien, aby uniknąć użycia tego urządzenia",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
