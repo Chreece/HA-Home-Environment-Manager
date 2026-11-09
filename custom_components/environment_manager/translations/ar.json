@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "الإعلانات · {channel}طلب فتح النوافذ",
+        "name": "الإعلانات · {channel}اقترح فتح النوافذ لتجنّب استخدام هذا الجهاز",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"
