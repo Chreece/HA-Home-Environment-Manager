@@ -1477,13 +1477,13 @@
 
     _deviceQuickOptions8(entry) {
       const copy={
-        en:{error:'Announce device errors',airing:'Ask to open windows',
+        en:{error:'Announce device errors',airing:'Suggest opening windows to avoid using this device',
           errorHelp:'Announce faults reported by this device through the configured notification destinations. Turning this off silences announcements; the reported fault remains visible.',
           airingHelp:'When outdoor conditions allow useful ventilation, ask someone to open the windows before this device starts automatically. The waiting time limits how long it waits for a window to open.'},
-        el:{error:'Ανακοίνωση σφαλμάτων συσκευής',airing:'Αίτημα ανοίγματος παραθύρων',
+        el:{error:'Ανακοίνωση σφαλμάτων συσκευής',airing:'Προτροπή ανοίγματος παραθύρων για αποφυγή χρήσης αυτής της συσκευής',
           errorHelp:'Αναγγέλλει σφάλματα που αναφέρει αυτή η συσκευή στους ρυθμισμένους προορισμούς ειδοποιήσεων. Η απενεργοποίηση σταματά τις αναγγελίες· το σφάλμα παραμένει ορατό.',
           airingHelp:'Όταν οι εξωτερικές συνθήκες επιτρέπουν χρήσιμο αερισμό, ζητά να ανοίξει κάποιος τα παράθυρα πριν ξεκινήσει αυτόματα αυτή η συσκευή. Ο χρόνος αναμονής ορίζει πόσο θα περιμένει να ανοίξει παράθυρο.'},
-        de:{error:'Gerätefehler melden',airing:'Zum Fensteröffnen auffordern',
+        de:{error:'Gerätefehler melden',airing:'Fensteröffnen empfehlen, um den Einsatz dieses Geräts zu vermeiden',
           errorHelp:'Meldet von diesem Gerät gemeldete Fehler über die eingerichteten Benachrichtigungsziele. Ausschalten unterdrückt die Ansagen; der gemeldete Fehler bleibt sichtbar.',
           airingHelp:'Wenn die Außenbedingungen sinnvolles Lüften erlauben, vor dem automatischen Start dieses Geräts zum Fensteröffnen auffordern. Die Wartezeit begrenzt, wie lange auf ein geöffnetes Fenster gewartet wird.'},
       };
@@ -2291,7 +2291,7 @@
           el:['Προσαρμοστικό · Πρόταση για έγκριση','Προσαρμοστικό · Αυτόματο','Έγκριση','Απόρριψη','Προτεινόμενη ρύθμιση PID'],
         }[this._language()] || ['Adaptive · Suggest & approve','Adaptive · Automatic','Approve','Discard','Proposed PID adjustment'];
         const quickOptions=this._deviceQuickRow8(entry,room.area_id);
-        const modeControls=this._operatingModeControls7(entry,room.area_id);
+        const modeControls=this._compactControllerMethod129(entry,room.area_id);
         const deviceFault=entry.errorAnnounce?.attributes?.native_error;
         const errorLabels={
           en:['Announce errors','Physical device error','Severity','Code','Details',
@@ -2543,12 +2543,7 @@
           quickOptions+
           recoveryPanel+this._configurationHelp116(resumeControl,entry.resumeButtonId,entry.resumeButton,continueLabel)+
           this._configurationHelp116(method,entry.methodId,entry.method,l.method)+
-          modeControls+editors.join('')+
-          this._calibrationDetails65(entry,!hasModeSettings && control==='pid' ?
-            this._configurationHelp116(calibrationMethod,entry.calibrationSelectId,entry.calibrationSelect,pidLabels[0])+
-            pidInputs+this._configurationHelp116(apply,entry.calibrationButtonId,entry.calibrationButton,pidLabels[9])+
-            reviewPanel+capSelectors+capacityInput+
-            this._configurationHelp116(applyCapacity,entry.capacityButtonId,entry.capacityButton,fanCapacityLabels[13])+capacitySummary : '')+
+          modeControls+
           '</section>';
       }).join('');
       return '<div class="managed-controllers">'+
@@ -8701,12 +8696,15 @@
     return {area,controllerId,owner,entryId,device,connection:this._hass.connection,room,controller};
   };
   hemProto126._hemControllerPanel126=function(ctx){
-    const wrapper=document.createElement("template");
-    wrapper.innerHTML=this._controllerPanel(ctx.room);
-    const target=[...wrapper.content.querySelectorAll("section[data-managed-climate93]")].find(
-      item=>item.getAttribute("data-managed-climate93")===ctx.controllerId &&
-        item.getAttribute("data-controller-area")===ctx.area);
-    return target?target.outerHTML:null;
+    // The card is for quick actions. The dialog is exclusively a directory
+    // of the exact managed device's native configuration entities.
+    const message={
+      en:"All settings are organized by function and apply immediately.",
+      el:"Όλες οι ρυθμίσεις είναι οργανωμένες ανά λειτουργία και εφαρμόζονται αμέσως.",
+      de:"Alle Einstellungen sind nach Funktion geordnet und werden sofort übernommen.",
+    }[this._language()]||"All settings are organized by function and apply immediately.";
+    return '<p class="hem-controller-intro129" data-hem-controller-intro129>'+
+      escape(message)+'</p>';
   };
   hemProto126._closeHemControllerSettings126=function(restoreFocus=true){
     const saved=this._hemControllerDialog126;
@@ -8780,8 +8778,10 @@
     if(saved.node.matches(":focus-within"))return;
     const html=this._hemControllerPanel126(current);
     if(!html){this._closeHemControllerSettings126(false);return;}
-    const body=saved.node.querySelector(".hem-controller-body126");
-    if(body&&body.innerHTML!==html)body.innerHTML=html;
+    // Updating the small introduction must not destroy categorized settings,
+    // a focused editor, or the user's expanded accordion sections.
+    const intro=saved.node.querySelector("[data-hem-controller-intro129]");
+    if(intro&&intro.outerHTML!==html)intro.outerHTML=html;
   };
   const oldRenderSettings126=hemProto126._renderContent;
   hemProto126._renderContent=function(force=false){
@@ -8833,6 +8833,88 @@
   /* HEM_CARD_SETTINGS126_END */
 
 
+  /* HEM_CARD_QUICK_AND_I18N129_START */
+  const hemUi129=AirQualityAdvisorCard.prototype;
+  hemUi129._compactControllerMethod129=function(entry,area){
+    const panels=Array.isArray(entry.operatingModes)?entry.operatingModes:[];
+    if(!panels.length)return "";
+    const current=entry.climate?.attributes?.selected_operating_mode;
+    const panel=panels.find(item=>item.mode===current)||panels[0];
+    if(!panel?.method)return "";
+    const field=panel.method,attrs=field.state?.attributes||{};
+    const options=Array.isArray(attrs.options)
+      ? attrs.options.filter(value=>typeof value==="string"):[];
+    const label=this._climateLabels65().method;
+    const modeName=panel.label||panel.mode;
+    const supported=Boolean(current&&current===panel.mode);
+    const modeContext=supported?"":" · "+({
+      en:"Configure this mode",el:"Ρύθμιση αυτής της λειτουργίας",
+      de:"Diese Betriebsart konfigurieren",
+    }[this._language()]||"Configure this mode");
+    const enabled=this._modeSettingAvailable7(field);
+    return '<label class="managed-method-label hem-card-method129" '+
+      'data-hem-card-method129="'+escape(entry.entityId)+'">'+
+      '<span>'+escape(label+" · "+modeName+modeContext)+'</span>'+
+      '<select data-mode-setting-select="'+escape(field.id)+'" '+
+      'data-mode-setting-mode="'+escape(panel.mode)+'" '+
+      'data-mode-setting-key="control_mode" '+
+      'data-mode-setting-entity="'+escape(field.id)+'" '+
+      'data-managed-controller="'+escape(entry.entityId)+'" '+
+      'data-controller-area="'+escape(area)+'" '+
+      'aria-label="'+escape(label+" · "+modeName)+'" '+
+      (enabled?"":"disabled ")+
+      '>'+
+      (!options.includes(field.state?.state)?'<option selected disabled value="">'+
+        escape(this._t("missing"))+'</option>':"")+
+      options.map(option=>'<option value="'+escape(option)+'" '+
+        (field.state.state===option?'selected':'')+'>'+
+        escape(this._modeOptionLabel7(field,option))+'</option>').join("")+
+      '</select></label>';
+  };
+  hemUi129._hemFullOptionLabel129=function(field,option){
+    const meta=field.state?.attributes||{};
+    const declared=meta.option_labels?.[option];
+    if(typeof declared==="string"&&declared.trim())return declared;
+    // Native entity translation uses the stable option value for writes but
+    // the current HA language for display. Do not translate physical
+    // device presets, entity IDs, or manufacturer-provided speed labels.
+    const key=String(meta.setting_key||field.reg?.translation_key||"").trim();
+    if(key){
+      const translationKey=key.startsWith("equipment_")?key:"equipment_"+key;
+      const candidate=this._hass?.localize?.(
+        "component.environment_manager.entity.select."+translationKey+".state."+option);
+      if(typeof candidate==="string"&&candidate.trim()&&candidate!==option)return candidate;
+    }
+    const raw=this._hass?.localize?.(
+      "component.environment_manager.entity.select."+
+      (field.reg?.translation_key||"")+".state."+option);
+    if(typeof raw==="string"&&raw.trim()&&raw!==option)return raw;
+    const variants={
+      en:{none:"None",choose:"Choose",existing:"Existing controller",automatic:"Automatic",
+        pid:"PID",manual:"Manual",off:"Off",home:"Home",comfort:"Comfort",
+        away:"Away",sleep:"Sleep",eco:"Eco",heat:"Heat",cool:"Cool",dry:"Dehumidify",
+        humidify:"Humidify",fan_only:"Fan only",heat_cool:"Heat / Cool",
+        auto:"Auto",filtration:"Filtration",extraction:"Extraction",
+        occupied:"Room occupied",absent:"Absent",always:"Always"},
+      el:{none:"Καμία",choose:"Επιλογή",existing:"Υφιστάμενος ελεγκτής",
+        automatic:"Αυτόματο",pid:"PID",manual:"Χειροκίνητο",off:"Κλειστό",
+        home:"Σπίτι",comfort:"Άνεση",away:"Απουσία",sleep:"Ύπνος",eco:"Οικονομία",
+        heat:"Θέρμανση",cool:"Ψύξη",dry:"Αφύγρανση",humidify:"Ύγρανση",
+        fan_only:"Μόνο ανεμιστήρας",heat_cool:"Θέρμανση / Ψύξη",
+        auto:"Αυτόματο",filtration:"Φιλτράρισμα",extraction:"Απαγωγή αέρα",
+        occupied:"Παρουσία στον χώρο",absent:"Απουσία",always:"Πάντα"},
+      de:{none:"Keine",choose:"Auswählen",existing:"Bestehender Regler",
+        automatic:"Automatisch",pid:"PID",manual:"Manuell",off:"Aus",
+        home:"Zuhause",comfort:"Komfort",away:"Abwesend",sleep:"Schlaf",eco:"Eco",
+        heat:"Heizen",cool:"Kühlen",dry:"Entfeuchten",humidify:"Befeuchten",
+        fan_only:"Nur Lüfter",heat_cool:"Heizen / Kühlen",
+        auto:"Automatisch",filtration:"Filtration",extraction:"Abluft",
+        occupied:"Raum belegt",absent:"Abwesend",always:"Immer"}
+    };
+    return (variants[this._language()]||variants.en)[option]||option;
+  };
+  /* HEM_CARD_QUICK_AND_I18N129_END */
+
   /* HEM_FULL_REGISTRY_SETTINGS127_START
    * The compact controller card is not a complete HA device settings page.
    * Discover configuration entities from the device's actual registry, then
@@ -8873,16 +8955,20 @@
     schedule:"mdi:clock-outline",other:"mdi:cog-outline"};
   hemFull127._hemFullCategory127=function(field){
     const meta=field.state?.attributes||{};
-    const name=(field.kind+" "+(meta.setting_key||"")+" "+(meta.settings_scope||"")).toLowerCase();
+    // A scoped setting's unique ID starts "mode_heat_" etc. Categorizing
+    // that entire ID put *every* target, fan and PID parameter under "Mode".
+    // Classify the actual setting key; never its owning mode's prefix.
+    const name=String(meta.setting_key||field.kind||field.id||"").toLowerCase();
     if(field.domain==="time"||/sleep_start|sleep_end|_schedule_/.test(name))return "schedule";
-    if(/mode_|control_mode|operating_mode|preset|method/.test(name)&&!/calibration_method/.test(name))return "mode";
+    if(/(?:^|_)(?:control_mode|requested_mode|operating_mode|preset)$/.test(name))return "mode";
     if(/pid|calibrat|_kp$|_ki$|_kd$|gain_|capacity|adaptive/.test(name))return "pid";
-    if(/fan|quiet|speed|cadr/.test(name))return "fan";
     if(/window|ventilat|extraction/.test(name))return "ventilation";
-    if(/presence|occup|sleep|wake|alarm|away_policy/.test(name))return "presence";
     if(/notify|announce|tts|error/.test(name))return "alerts";
-    if(/power|battery|minimum|maximum|cooldown|hold|relay|readiness/.test(name))return "power";
+    if(/fan|quiet|speed|cadr/.test(name))return "fan";
+    if(/presence|occup|sleep|wake|alarm|away_policy/.test(name))return "presence";
     if(/profile|target|temperature|humidity|mold|dewpoint|comfort/.test(name))return "targets";
+    if(/power|battery|minimum|maximum|cooldown|hold|relay|readiness|full_output/.test(name))return "power";
+    if(/mode_|control_mode|operating_mode|preset|method/.test(name))return "mode";
     return "other";
   };
   hemFull127._hemFullContext127=function(saved,scope){
@@ -8931,8 +9017,12 @@
       const owner=saved.controller?.climate?.attributes?.controller_id;
       if(scope==="device"&&owner&&attr.controller_id&&attr.controller_id!==owner)continue;
       const kind=reg.unique_id||attr.setting_key||id;
+      const scopedLabel=typeof attr.setting_label==="string"&&attr.setting_label.trim()
+        ? (typeof attr.operating_mode_label==="string"&&attr.operating_mode_label.trim()
+          ? attr.operating_mode_label+" · "+attr.setting_label:attr.setting_label):null;
       const field={id,domain,kind,state,reg,disabled:Boolean(reg.disabled_by),
-        label:attr.friendly_name||reg.name||reg.name_by_user||reg.original_name||id};
+        label:scopedLabel||attr.friendly_name||reg.name_by_user||reg.name||
+          reg.original_name||id};
       field.category=this._hemFullCategory127(field);
       result.push(field);
     }
@@ -8961,7 +9051,8 @@
     }else if(domain==="select"){
       input='<select data-hem-full-value127="'+escape(field.id)+'" '+(enabled?"":"disabled")+'>'+
         options.map(option=>'<option value="'+escape(option)+'" '+
-        (option===value?"selected":"")+'>'+escape(option)+'</option>').join("")+'</select>';
+        (option===value?"selected":"")+'>'+
+        escape(this._hemFullOptionLabel129(field,option))+'</option>').join("")+'</select>';
     }else if(domain==="time"){
       input='<input type="time" data-hem-full-value127="'+escape(field.id)+'" '+
         'value="'+(enabled?escape(value.slice(0,5)):"")+'" '+(enabled?"":"disabled")+'>';
