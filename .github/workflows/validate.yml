@@ -253,6 +253,8 @@ jobs:
           python -I .github/tests/test_beta83_supply_safety.py
           python -I .github/tests/test_beta74_upstream_dwell.py
           python -I .github/tests/test_beta64_sleep_idle.py
+      - name: B19 PID evidence, source-bound learning progress and unchanged anti-windup
+        run: python -I .github/tests/test_061b19_pid_evidence.py
       - name: Actual Beta82 menu entrypoints, per-room and consolidated General settings
         run: |
           set -euo pipefail
