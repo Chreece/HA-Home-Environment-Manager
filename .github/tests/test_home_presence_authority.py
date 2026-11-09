@@ -240,9 +240,11 @@ class HomeAuthorityTests(unittest.TestCase):
                 actual = occupancy.home_presence(hass, config)
                 self.assertEqual(actual[0], expected, actual)
                 self.assertEqual(actual[2], [PERSON, HOME, COUNT])
-        # A missing or stale tracker is not a verified negative, even when
-        # room motion is ON and another direct tracker is away.
-        for value, age in ((None, 1), ("home", 400), ("not_home", 400)):
+        # Missing and stale negative trackers do not prove Away. A stale
+        # positive HOME stays positive when the source is change-driven.
+        for value, age, expected in ((None, 1, "unknown"),
+                                     ("home", 400, "home"),
+                                     ("not_home", 400, "unknown")):
             with self.subTest(missing_or_stale=value, age=age):
                 hass = Hass()
                 hass.put(HOME, "off")
@@ -253,7 +255,50 @@ class HomeAuthorityTests(unittest.TestCase):
                     hass, room_config(home_trackers=[PERSON, HOME],
                                       room_occupancy_sensors=[MOTION]),
                 )
-                self.assertEqual(actual[:2], ("unknown", "unverified_home_trackers"))
+                self.assertEqual(actual[:2], (
+                    ("home", "any_home_policy") if expected == "home"
+                    else ("unknown", "unverified_home_trackers")
+                ))
+
+    def test_change_driven_home_does_not_expire_during_sleep(self):
+        # Person, tracker and binary home-presence entities may only report
+        # when their states CHANGE, not again during a long quiet night.
+        for entity, state_value in ((PERSON, "home"), (TRACKER, "home"),
+                                    (HOME, "on")):
+            with self.subTest(entity=entity):
+                hass = Hass()
+                hass.put(entity, state_value, age=720)
+                hass.put(COUNT, "0")
+                hass.forbid_room_reads()
+                settings = room_config(home_trackers=[entity, COUNT],
+                                       source_stale_minutes=240,
+                                       room_occupancy_sensors=[MOTION])
+                self.assertEqual(
+                    occupancy.home_presence(hass, settings),
+                    ("home", "any_home_policy", [entity, COUNT]),
+                )
+                # A restored source is NOT evidence, despite a HOME/ON label.
+                hass.put(entity, state_value, age=720,
+                         attributes={"restored": True})
+                self.assertEqual(occupancy.home_presence(hass, settings)[:2],
+                                 ("unknown", "unverified_home_trackers"))
+                # Actual unknown/unavailable values also stay unverified.
+                for invalid in ("unknown", "unavailable"):
+                    hass.put(entity, invalid, age=720)
+                    self.assertEqual(
+                        occupancy.home_presence(hass, settings)[0], "unknown")
+
+        # Numeric counts are sampled measurements, not latched change contacts.
+        for value in ("0", "2", "unavailable"):
+            with self.subTest(sampled_count=value):
+                hass = Hass()
+                hass.put(COUNT, value, age=720)
+                self.assertEqual(
+                    occupancy.home_presence(
+                        hass, room_config(home_trackers=[COUNT],
+                                          source_stale_minutes=240))[0],
+                    "unknown",
+                )
 
     def test_legacy_area_trackers_are_real_home_sources(self):
         hass = Hass()
