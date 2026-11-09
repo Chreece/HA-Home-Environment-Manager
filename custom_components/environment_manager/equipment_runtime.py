@@ -223,6 +223,9 @@ class EquipmentRuntime:
         # completed, verified cycle statistics are saved on completion.
         self._pid_passive_observers: dict[str, PassiveObserver] = {}
         self._pid_passive_tasks: dict[str, asyncio.Task] = {}
+        # Mathematical performance observers are session-only and never save
+        # raw samples or influence any PID gain, authorization or device output.
+        self._pid_performance: dict[str, Any] = {}
         self._store = None
         self._ready = False
         self._active = False
@@ -784,6 +787,7 @@ class EquipmentRuntime:
             await asyncio.gather(*tasks, return_exceptions=True)
         self._pid_passive_tasks.clear()
         self._pid_passive_observers.clear()
+        self._pid_performance.clear()
         if self._ready:
             await self._save()
 
@@ -2159,6 +2163,56 @@ class EquipmentRuntime:
         if getattr(self.manager, "_active", False):
             self.manager._recalculate(initial=True)
 
+    def _observe_pid_performance(
+        self, spec: model.ManagedDevice, cfg: dict, cap: model.Capabilities,
+        state: Any, measured: dict, metric: str, goal: float,
+        mode: str, increasing: bool, profile: str,
+    ) -> None:
+        """Read-only 24h evidence from fresh, qualified control evaluations.
+
+        Do not call services or storage; sampling cannot change a requested
+        output or timing deadline. Use exact physical feedback source identity
+        and segregate modes, policies, profiles and setpoints.
+        """
+        if (cfg.get("control_mode") not in ("pid", "automatic")
+                or metric not in ("temperature", "humidity")
+                or mode not in ("heat", "cool", "dry")):
+            return
+        source_ids = measured.get(metric + "_selected_entities")
+        if isinstance(source_ids, (list, tuple)):
+            if not source_ids or any(not isinstance(x, str) for x in source_ids):
+                return
+            feedback = tuple(sorted(source_ids))
+        else:
+            physical_id = measured.get(metric + "_entity")
+            if not isinstance(physical_id, str) or not physical_id:
+                return
+            feedback = (physical_id,)
+        value = measured.get(metric)
+        if (finite(value, -40 if metric == "temperature" else 0,
+                   80 if metric == "temperature" else 100) is None
+                or finite(goal, -40 if metric == "temperature" else 0,
+                          80 if metric == "temperature" else 100) is None):
+            return
+        from .pid_diagnostics import PerformanceWindow, observed_output
+        key = spec.identifier
+        observer = self._pid_performance.get(key)
+        if observer is None:
+            observer = self._pid_performance[key] = PerformanceWindow()
+        context = (
+            spec.area_id, tuple(spec.source_entities), cap.primary, feedback,
+            cfg["control_mode"], mode, metric, bool(increasing), profile,
+            round(float(goal), 2),
+        )
+        if observer.observe(
+            context=context, metric=metric, method=cfg["control_mode"],
+            mode=mode, target=goal, measured=value, increasing=increasing,
+            at=self.clock(), sample_seconds=cfg["sample_seconds"],
+            output=observed_output(cap.domain, state, mode),
+        ):
+            # Controller-only presentation updates; no extra state Store write.
+            self._presentation_updates.request(key)
+
     async def _pid_passive_observe(
         self, spec: model.ManagedDevice, cfg: dict, cap: model.Capabilities,
         plan: dict, target: dict, measured: dict, record: dict,
@@ -2232,12 +2286,15 @@ class EquipmentRuntime:
         observer = self._pid_passive_observers.get(key)
         if observer is None:
             observer = self._pid_passive_observers[key] = PassiveObserver(saved)
+        before_learning = observer.progress()
         complete = observer.observe(
             context=context, at=self.clock(), value=measured.get(metric),
             on=is_on, owned=bool(record.get("power", {}).get(cap.primary)),
             metric=metric, direction=1 if mode == "heat" else -1,
             sample_seconds=cfg["sample_seconds"], safe=bool(valid),
         )
+        if observer.progress() != before_learning:
+            self._presentation_updates.request(key)
         if not complete:
             return
         summary = observer.summary(metric=metric, sample_seconds=cfg["sample_seconds"])
@@ -6109,6 +6166,12 @@ class EquipmentRuntime:
             if cfg["control_mode"] == "pid" and mode in ("heat_cool", "auto") and cap.domain == "climate":
                 self._status(spec, "select_single_direction_for_pid")
                 return
+            diagnostic_sample = getattr(self, "_observe_pid_performance", None)
+            if callable(diagnostic_sample):
+                diagnostic_sample(
+                    spec, cfg, cap, state, measured, metric, goal,
+                    mode, increasing, model.profile_name(cfg, plan),
+                )
             if cfg["control_mode"] == "pid":
                 feedback = {
                     "metric": metric, "source": measured.get(metric + "_source"),
