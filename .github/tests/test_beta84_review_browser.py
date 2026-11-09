@@ -1,126 +1,119 @@
-"""Beta84 live Chromium actionable PID review and exclusive calibration menu.
+"""PID review and calibration remain usable in categorized HEM device settings.
 
-Synthetic Home Assistant states, no real commands or device connections.
+The card exposes only current control method, diagnostics, resume and binary
+quick switches. All actions here use mocked HA services.
 """
 from __future__ import annotations
 
+import runpy
 import shutil
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-ROOT=Path(__file__).resolve().parents[2]
-COMMON={"area_id":"bathroom","source_entity_ids":["climate.dehumidifier"]}
-def row(state,**attributes):
-    return {"state":state,"attributes":{**COMMON,**attributes}}
+ROOT = Path(__file__).resolve().parents[2]
+CARD = ROOT / "frontend/air-quality-advisor-card.js"
+device_module = runpy.run_path(str(ROOT / ".github/tests/test_beta122_card_details.py"))
+base = runpy.run_path(str(ROOT / ".github/tests/test_beta108_setpoint_feedback_browser.py"))
+chrome = shutil.which("chromium") or shutil.which("google-chrome")
+assert chrome, "Chromium is required"
+fixture = device_module["fixture"]()
+states = fixture["states"]
+controller = fixture["controller"]
+source_id = states[controller]["attributes"]["source_device_id"]
 
-states={
-    "climate.managed":row("dry",friendly_name="Bathroom dehumidifier",
-                          control_mode="pid",physical_source_state="off",
-                          controller_status={"status":"within_target_band"},
-                          measurements={"humidity":58.},humidity=60.),
-    "climate.dehumidifier":{"state":"off","attributes":{"friendly_name":"Dehumidifier"}},
-    "select.method":row("pid",options=["existing","automatic","manual","off","pid"]),
-    "select.calibration":row(
-        "adaptive_suggest",pid_calibration_role="single_authoritative_method",
-        options=["manual","imc_lambda","cohen_coon","adaptive_suggest","adaptive_auto"]
-    ),
-    "button.review_approve":row(
-        "unknown",pid_review_role="approve",pending=True,confidence="medium",
-        current_gains={"kp":20.,"ki":.2,"kd":3.},
-        next_gains={"kp":22.,"ki":.22,"kd":3.}
-    ),
-    "button.review_discard":row(
-        "unknown",pid_review_role="discard",pending=True,
-    ),
-    "button.classical_apply":row(
-        "unknown",pid_calibration_role="apply",calibration_status="ready_to_apply_when_physical_off",
-    ),
-    "number.model_gain":row(
-        "4",pid_calibration_field="pid_process_gain",min=0,max=10000,step=.01,
-    ),
-}
-room={
-    "area_id":"bathroom","name":"Bathroom","status":"safe",
-    "windows":[],"readings":[],
-    "environment":{"climate_plan":{
-        "status":"ready","controller":"environment","profile":"home",
-        "temperature_c":21.,"equipment_plan":{"humidity":{"status":"advisory",
-                                                          "action":"idle","measured_rh":58.}},
-        "actuation":{"status":"advisory_only"},
-    }},
-}
-executable=shutil.which("chromium") or shutil.which("google-chrome")
-assert executable,"Chromium is required"
+
+def option(value, **extra):
+    return {"state": value, "attributes": {
+        "source_device_id": source_id, "area_id": "living",
+        "source_entity_ids": ["climate.physical"], "controller_id": "ctrl_a", **extra,
+    }}
+
+
+states["select.calibration"] = option("adaptive_suggest",
+    setting_key="pid_calibration_method", options=[
+        "manual", "imc_lambda", "cohen_coon", "adaptive_suggest", "adaptive_auto"],
+    option_labels={"adaptive_suggest": "Adaptive suggestions", "cohen_coon": "Cohen-Coon"})
+states["button.review_approve"] = option("unknown",
+    setting_key="pid_review_approve", pid_review_role="approve", pending=True,
+    confidence="medium", current_gains={"kp": 20., "ki": .2, "kd": 3.},
+    next_gains={"kp": 22., "ki": .22, "kd": 3.})
+states["button.review_discard"] = option("unknown",
+    setting_key="pid_review_discard", pid_review_role="discard", pending=True)
+states["button.classical_apply"] = option("unknown",
+    setting_key="pid_apply_calibration", pid_calibration_role="apply")
+states["number.model_gain"] = option("4",
+    setting_key="pid_process_gain", min=0, max=10000, step=0.01)
+states["button.foreign_review"] = option("unknown",
+    setting_key="pid_review_approve", controller_id="ctrl_b")
+
 with sync_playwright() as p:
-    browser=p.chromium.launch(executable_path=executable,headless=True,
-                              args=["--no-sandbox","--disable-dev-shm-usage"])
-    page=browser.new_page(viewport={"width":590,"height":1000})
-    errors=[]
-    page.on("pageerror",lambda error:errors.append(str(error)))
-    page.set_content('<html><body></body></html>')
-    page.add_script_tag(path=str(ROOT/"frontend/air-quality-advisor-card.js"))
-    page.evaluate("""({states,room})=>{
-        window.calls=[];
-        window.card=document.createElement('home-environment-manager-card');
-        document.body.appendChild(card);
-        card._hass={language:'en',states,localize:()=>undefined,
-            callService:(...args)=>{calls.push(args);return Promise.resolve();}};
-        window.draw=()=>{card.shadowRoot.innerHTML=card._styles()+
-           '<ha-card class="shell"><div class="content">'+card._climatePanel(room)+'</div></ha-card>';};
-        window.draw();
-    }""",{"states":states,"room":room})
-    assert page.locator("details.hem-calibration>summary").count()==1, (
-        errors,page.evaluate("card._managedControllers('bathroom').length"),
-        page.evaluate("card._climatePanel(window.room||{area_id:'bathroom',environment:{climate_plan:{status:'ready'}}}).slice(-2500)"),
-        page.locator("body").inner_text()[-1000:]
-    )
-    page.locator("details.hem-calibration>summary").click()
-    assert page.locator("[data-pid-calibration-method]").count()==1
-    assert page.locator("[data-pid-review-action='approve']").count()==1
-    assert page.locator("[data-pid-review-action='discard']").count()==1
-    assert page.locator("[data-pid-model-input]").count()==0
-    assert page.locator("[data-apply-pid-calibration]").count()==0
-    assert "20" in page.locator(".managed-controllers").inner_text()
-    assert "22" in page.locator(".managed-controllers").inner_text()
+    browser = p.chromium.launch(executable_path=chrome, headless=True,
+        args=["--no-sandbox", "--disable-dev-shm-usage"])
+    page = browser.new_page(viewport={"width": 390, "height": 900})
+    errors = []
+    page.on("pageerror", lambda error: errors.append(str(error)))
+    page.set_content('<style>body{font:14px Arial;background:#151515;color:#fff}</style>')
+    page.evaluate(base["icon_fixture"]())
+    page.add_script_tag(path=str(CARD))
+    page.evaluate("""data=>{
+      window.calls=[];window.card=document.createElement('home-environment-manager-card');
+      document.body.appendChild(card);
+      card._config={entity:'sensor.hem'};
+      card._hass={language:'en',states:data.states,user:{is_admin:true},
+        entities:{'sensor.hem':{config_entry_id:'entry0'},
+          [data.controller]:{device_id:'hem-controller-device',config_entry_id:'entry0'}},
+        connection:{},localize:()=>undefined,
+        callService:(...args)=>{calls.push(args);return Promise.resolve();}};
+      card._renderContent(true);
+      card._configEntryId114='entry0';
+      card._configEntryOwner114='sensor.hem';
+      card._areaDeviceIds=new Map([['living','room-hub']]);
+      window.registry84=[
+        'select.calibration','button.review_approve','button.review_discard',
+        'button.classical_apply','number.model_gain','button.foreign_review'
+      ].map(id=>({entity_id:id,config_entry_id:'entry0',
+        platform:'environment_manager',
+        device_id:'hem-controller-device',unique_id:'entry0_'+id.replace('.','_')}));
+      card._hass.states[data.controller].attributes.controller_id='ctrl_a';
+      card._hass.callWS=async request=>request.type==='config/entity_registry/list'?
+        registry84:Promise.reject(Error('Unexpected WebSocket request'));
+    }""", fixture)
+    assert page.locator('details.hem-calibration,[data-pid-review-action]').count()==0
+    assert page.evaluate("card._openHemControllerSettings126('living',"+
+                         repr(controller)+")") is True
+    page.wait_for_function("card._hemControllerDialog126?.fullRegistry127?.length===6")
+    modal = page.locator("dialog.hem-controller-options126")
+    assert modal.is_visible()
+    assert modal.locator('.managed-controller,.hem-device-quick-row8').count()==0
+    section = modal.locator('[data-hem-full-category127="pid"]')
+    assert section.count()==1
+    section.locator(":scope > summary").click()
+    for id in ("select.calibration", "button.review_approve", "button.review_discard",
+               "button.classical_apply", "number.model_gain"):
+        assert modal.locator('[data-hem-full-row127="'+id+'"]').count()==1
+    assert modal.locator('[data-hem-full-row127="button.foreign_review"]').count()==0
+    assert modal.locator('option[value="adaptive_suggest"]').inner_text()=="Adaptive suggestions"
+    assert page.evaluate("calls.length")==0
 
-    page.locator("[data-pid-review-action='approve']").click()
-    page.wait_for_timeout(30)
+    modal.locator('[data-hem-full-apply127="button.review_approve"]').click()
+    modal.locator('[data-hem-full-apply127="button.review_discard"]').click()
     assert page.evaluate("calls")==[
-      ["button","press",{"entity_id":"button.review_approve"}]
+        ["button", "press", {"entity_id": "button.review_approve"}],
+        ["button", "press", {"entity_id": "button.review_discard"}],
     ]
-    page.locator("[data-pid-review-action='discard']").click()
-    page.wait_for_timeout(30)
-    assert page.evaluate("calls")[-1]==[
-      "button","press",{"entity_id":"button.review_discard"}
+    modal.locator('[data-hem-full-value127="select.calibration"]').select_option("cohen_coon")
+    modal.locator('[data-hem-full-apply127="select.calibration"]').click()
+    assert page.evaluate("calls.at(-1)")==[
+        "select", "select_option", {"entity_id": "select.calibration", "option": "cohen_coon"},
     ]
-    # A stale or unrelated button must not be able to issue an approval.
+    # The actual HA entity availability, not stale review HTML, gates writes.
     page.evaluate("""()=>{
-       const button=card.shadowRoot.querySelector('[data-pid-review-action="approve"]');
-       button.dataset.pidReviewEntity='button.unrelated';
-       button.click();
+      card._hass.states['button.review_approve'].state='unavailable';
+      card._renderContent(true);
     }""")
-    page.wait_for_timeout(20)
-    assert page.evaluate("calls.length")==2
-
-    page.evaluate("""()=>{
-       card._hass.states['button.review_approve'].attributes.pending=false;
-       draw();
-    }""")
-    assert page.locator("[data-pid-review-action]").count()==0
-    page.evaluate("""()=>{
-       card._hass.states['select.calibration'].state='cohen_coon';
-       draw();
-    }""")
-    assert page.locator("[data-pid-review-action]").count()==0
-    assert page.locator("[data-pid-model-input]").count()>=1
-    assert page.locator("[data-apply-pid-calibration]").count()==1
-    page.evaluate("""()=>{
-       card._hass.states['select.calibration'].state='adaptive_auto';
-       draw();
-    }""")
-    assert page.locator("[data-pid-review-action]").count()==0
-    assert page.locator("[data-pid-model-input]").count()==0
-    assert page.locator("[data-apply-pid-calibration]").count()==0
-    assert not errors,errors
+    assert modal.locator('[data-hem-full-apply127="button.review_approve"]').is_disabled()
+    assert len(page.evaluate("calls")) == 3
+    assert not errors, errors
     browser.close()
-print("BETA84_CHROMIUM_EXCLUSIVE_PID_SELECTOR_ACTION_BUTTONS=PASS")
+
+print("HEM_PID_REVIEW_ACTIONS_ONLY_IN_CATEGORIZED_DEVICE_SETTINGS=PASS")

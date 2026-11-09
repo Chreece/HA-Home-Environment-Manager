@@ -2871,7 +2871,8 @@
           "window_close_warmup": "खिड़कियाँ बंद होने के बाद प्रतीक्षा",
           "window_state_unknown": "खिड़कियों की स्थिति की प्रतीक्षा",
           "window_open_wait": "आपके खिड़की खोलने की प्रतीक्षा में",
-          "window_request_pending": "खिड़की खोलने का अनुरोध भेजा जा रहा है"
+          "window_request_pending": "खिड़की खोलने का अनुरोध भेजा जा रहा है",
+          "physical_device_startup_timeout": "चालू होने के 60 सेकंड के भीतर उपकरण फिर से कनेक्ट नहीं हुआ"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "सहायता"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "बिजली · आपूर्ति बंद करने से पहले प्रतीक्षा (सेकंड)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "सहायता"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "घोषणाएँ · {channel}खिड़कियाँ खोलने का अनुरोध",
+        "name": "इस उपकरण का उपयोग टालने के लिए खिड़कियाँ खोलने का सुझाव दें",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "प्रोफ़ाइल · उपकरण · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "स्वचालित",
+          "comfort": "आराम",
+          "home": "घर पर",
+          "away": "बाहर",
+          "sleep": "नींद",
+          "eco": "किफ़ायती"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "सहायता"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "बिजली · बाहरी आपूर्ति स्विच",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"

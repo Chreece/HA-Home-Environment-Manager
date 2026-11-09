@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Čekání po zavření oken",
           "window_state_unknown": "Čekání na stav oken",
           "window_open_wait": "Čeká se, až otevřete okno",
-          "window_request_pending": "Odesílá se žádost o otevření okna"
+          "window_request_pending": "Odesílá se žádost o otevření okna",
+          "physical_device_startup_timeout": "Zařízení se do 60 sekund po zapnutí znovu nepřipojilo"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Nápověda"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Napájení · Čekání před vypnutím napájení (sekundy)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Oznámení · {channel}Požádat o otevření oken",
+        "name": "Doporučit otevření oken, aby nebylo nutné používat toto zařízení",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Profil · Zařízení · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatické",
+          "comfort": "Komfort",
+          "home": "Doma",
+          "away": "Pryč",
+          "sleep": "Spánek",
+          "eco": "Úsporný"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Napájení · Externí napájecí spínač",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"

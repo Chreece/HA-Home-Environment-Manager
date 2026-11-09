@@ -101,7 +101,8 @@ with sync_playwright() as playwright:
     modal=page.locator('.hem-controller-options126')
     assert modal.is_visible()
     assert page.evaluate('routes.length')==0
-    assert modal.locator('[data-managed-climate93="'+ctrl_heat+'"]').count()==1
+    assert modal.locator('.hem-controller-intro129').count()==1
+    assert modal.locator('[data-managed-climate93],.managed-controller,.hem-device-quick-row8').count()==0
     modal.locator('[data-close-hem-controller126]').click()
     assert not modal.is_visible()
     assert controller.get_attribute('open') is None

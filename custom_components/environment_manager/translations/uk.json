@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Очікування після закриття вікон",
           "window_state_unknown": "Очікування стану вікон",
           "window_open_wait": "Очікування, поки ви відчините вікно",
-          "window_request_pending": "Надсилання прохання відчинити вікно"
+          "window_request_pending": "Надсилання прохання відчинити вікно",
+          "physical_device_startup_timeout": "Пристрій не підключився повторно протягом 60 секунд після ввімкнення"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Довідка"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Живлення · Затримка перед вимкненням живлення (секунди)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Оголошення · {channel}Попросити відкрити вікна",
+        "name": "Запропонувати відкрити вікна, щоб уникнути використання цього пристрою",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Профіль · Пристрої · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "Комфорт",
+          "home": "Вдома",
+          "away": "Немає вдома",
+          "sleep": "Сон",
+          "eco": "Економія"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Живлення · Зовнішній вимикач живлення",
         "state_attributes": {
           "configuration_help": {
             "name": "Довідка"

@@ -2871,7 +2871,8 @@
           "window_close_warmup": "關窗後等待中",
           "window_state_unknown": "等待窗戶狀態",
           "window_open_wait": "正在等你打開窗戶",
-          "window_request_pending": "正在傳送開窗請求"
+          "window_request_pending": "正在傳送開窗請求",
+          "physical_device_startup_timeout": "裝置通電後 60 秒內未重新連線"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "說明"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "電源 · 切斷供電前等待時間（秒）",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "播報 · {channel}提示打開窗戶",
+        "name": "建議開窗以避免使用此裝置",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "設定檔 · 裝置 · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "舒適",
+          "home": "在家",
+          "away": "離家",
+          "sleep": "睡眠",
+          "eco": "節能"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "電源 · 外部供電開關",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"

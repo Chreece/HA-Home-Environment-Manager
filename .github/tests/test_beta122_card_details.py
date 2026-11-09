@@ -282,6 +282,13 @@ def browser_checks(data):
           card._configEntryId114='entry0';
           card._configEntryOwner114='sensor.hem';
           card._areaDeviceIds=new Map([['living','room-hub']]);
+          // The controller settings modal is registry-backed; it must never
+          // duplicate the compact device card above the categories.
+          window.registry122=['select.hem_method','switch.hem_announce'].map(id=>({
+            entity_id:id,config_entry_id:'entry0',platform:'environment_manager',
+            device_id:'hem-controller-device',unique_id:'entry0_'+id.replace('.','_')}));
+          card._hass.callWS=async request=>request.type==='config/entity_registry/list'?
+            registry122:Promise.reject(Error('Unexpected WebSocket request'));
         }""", data)
         room = page.locator('[data-room-fold87="living"]')
         assert room.get_attribute("open") is None
@@ -292,7 +299,13 @@ def browser_checks(data):
         dialog=page.locator('.hem-controller-options126')
         expect(dialog).to_be_visible()
         assert page.evaluate("routes.length")==0, "Controller gear must not navigate"
-        assert dialog.locator('[data-managed-climate93="'+data["controller"]+'"]').count()==1
+        # The full settings dialog shows only exact registry-owned controls,
+        # never a duplicate controller panel or quick switch row.
+        page.wait_for_function("card._hemControllerDialog126?.fullRegistry127?.length===2")
+        assert dialog.locator('[data-managed-climate93]').count()==0
+        assert dialog.locator('.managed-controller,.hem-device-quick-row8').count()==0
+        assert dialog.locator('[data-hem-full-row127="select.hem_method"]').count()==1
+        assert dialog.locator('[data-hem-full-row127="switch.hem_announce"]').count()==1
         assert page.evaluate("calls.length")==0
         dialog.locator('[data-close-hem-controller126]').click()
         expect(dialog).to_have_count(0)

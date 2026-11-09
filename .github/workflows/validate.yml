@@ -103,7 +103,10 @@ jobs:
       - name: Consistent profile humidity defaults and saved targets
         run: python -I .github/tests/test_beta116_humidity_defaults.py
       - name: Grouped setting names, translated options and purpose-specific help
-        run: python -I .github/tests/test_beta116_settings_metadata.py
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta116_settings_metadata.py
+          python -I .github/tests/test_061b17_all_translations.py
       - name: Comfort target validity, native room settings and card request ownership
         run: |
           set -euo pipefail

@@ -4008,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Ανακοινώσεις · {channel}Αίτημα ανοίγματος παραθύρων",
+        "name": "Προτροπή ανοίγματος παραθύρων για αποφυγή χρήσης αυτής της συσκευής",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"

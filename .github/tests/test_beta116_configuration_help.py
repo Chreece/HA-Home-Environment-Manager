@@ -1,4 +1,4 @@
-"""Beta116: the card exposes each rendered setting's purpose-specific help.
+"""Beta116: compact quick controls and categorized device settings retain purpose-specific help.
 
 --logic-only runs production rendering and refresh signatures in Node. The full
 run also checks the real information disclosure, escaping, keyboard close and
@@ -69,19 +69,27 @@ card._expanded=new Set();card._areaDeviceIds=new Map();card._config={entity:'sen
 const room=input['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id==='cool');
 const html=card._controllerPanel(room);
 const ids=['select.method_cooler','switch.cooler_maximum','select.cooler_calibration','number.cooler_gain','button.cooler_calibrate'];
-for(const id of ids){
- const prefix=id==='switch.cooler_maximum'?'device-option:':'setting-help:';
- assert.ok(html.includes('data-detail-id="'+prefix+id+'"'),id+' help missing');
- for(const paragraph of input[id].attributes.configuration_help.split(/\n\s*\n/))
-   assert.ok(html.includes('<p class="hem-help-text116">'+paragraph.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')+'</p>'),id+' wrong help');
-}
-assert.ok(!html.includes('<img src=x'),'help HTML executed');
+const encode=t=>t.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 assert.ok(html.includes('data-climate-method="select.method_cooler"'));
 assert.ok(html.includes('data-device-quick-switch8="switch.cooler_maximum"'));
 assert.ok(html.includes('aria-checked="false"'));
-assert.ok(html.includes('data-pid-model-input="pid_process_gain"'));
-assert.ok(html.includes('data-save-pid-model="number.cooler_gain"'));
-assert.ok(html.includes('data-apply-pid-calibration="button.cooler_calibrate"'));
+// The compact card keeps quick controls, not PID model editors or calibrations.
+assert.ok(!html.includes('data-pid-model-input="pid_process_gain"'));
+assert.ok(!html.includes('data-save-pid-model="number.cooler_gain"'));
+assert.ok(!html.includes('data-apply-pid-calibration="button.cooler_calibrate"'));
+for(const id of ids){
+ const state=input[id],domain=id.split('.')[0];
+ const field={id,domain,state,disabled:false,label:id};
+ const row=card._hemFullRow127(field,'device');
+ assert.ok(row.includes('data-hem-full-row127="'+id+'"'),id+' missing from full-row rendering');
+ assert.ok(row.includes('class="hem-full-help127"'),id+' lost its help disclosure');
+ assert.ok(row.includes(encode(state.attributes.configuration_help.trim())),id+' wrong escaped help');
+ assert.ok(!row.includes('<img src=x'),id+' rendered unsafe markup');
+ if(domain==='select')assert.ok(row.includes('data-hem-full-value127="'+id+'"'));
+ if(domain==='button')assert.ok(row.includes('data-hem-full-apply127="'+id+'"'));
+}
+assert.ok(html.includes('data-detail-id="device-option:switch.cooler_maximum"'),
+  'Quick switch must retain its independent help disclosure');
 assert.equal(card._configurationHelp116('<input>', 'number.test', {attributes:{}}, 'Test'),'<input>');
 assert.equal(card._configurationHelp116('<input>', 'number.test', {attributes:{configuration_help:{bad:'shape'}}}, 'Test'),'<input>');
 assert.equal(card._configurationHelp116('', 'number.test', {attributes:{configuration_help:'Text'}}, 'Test'),'');
@@ -111,33 +119,59 @@ with sync_playwright() as playwright:
     page.evaluate("""states=>{
       window.calls=[];window.card=document.createElement('home-environment-manager-card');
       document.querySelector('main').append(card);
-      card._hass={language:'en',states,localize:()=>undefined,
+      const controller='climate.managed_cooler';
+      states[controller].attributes.controller_id='cool-controller';
+      card._hass={language:'en',states,user:{is_admin:true},connection:{},
+        entities:{'sensor.hem':{config_entry_id:'entry0'},
+          [controller]:{device_id:'hem-cooler-device',config_entry_id:'entry0'}},
+        localize:()=>undefined,
         callService:(...args)=>{calls.push(args);return Promise.resolve()}};
       card._config={entity:'sensor.hem'};card._renderContent(true);
+      card._configEntryId114='entry0';card._configEntryOwner114='sensor.hem';
+      card._areaDeviceIds=new Map([['cool','room-hub']]);
+      const ids=['select.method_cooler','switch.cooler_maximum',
+        'select.cooler_calibration','number.cooler_gain','button.cooler_calibrate'];
+      window.helpRegistry116=ids.map(id=>({entity_id:id,config_entry_id:'entry0',
+        platform:'environment_manager',device_id:'hem-cooler-device',
+        unique_id:'entry0_'+id.replace('.','_')}));
+      card._hass.callWS=async request=>request.type==='config/entity_registry/list'?
+        helpRegistry116:Promise.reject(Error('Unexpected WebSocket request'));
     }""", states)
     row = page.locator('[data-room-fold87="cool"]')
     row.locator('.hem-room-name87').click()
-    # Open the existing device disclosure before reaching its settings.
     device = row.locator('[data-device-fold87="climate.managed_cooler"]')
     if device.get_attribute('open') is None:
         device.locator(':scope > summary .hem-device-state87').click()
-    method = row.locator('[data-detail-id="setting-help:select.method_cooler"]')
-    method.locator(':scope > summary').click()
+    # Quick switch remains on the card; advanced editor help lives in settings.
+    quick = row.locator('[data-detail-id="device-option:switch.cooler_maximum"]')
+    quick.locator(':scope > summary').click()
     body = page.locator('.hem-floating-info87')
-    body.wait_for(state='visible')
-    assert states['select.method_cooler']['attributes']['configuration_help'] in body.text_content()
-    assert row.locator('[data-climate-method="select.method_cooler"]').input_value() == 'pid'
-    page.keyboard.press('Escape')
-    # Native dismissal hides synchronously; its queued toggle removes the node.
-    body.wait_for(state='detached')
-    assert body.count() == 0, 'Escape did not close setting help'
-    maximum = row.locator('[data-detail-id="device-option:switch.cooler_maximum"]')
-    maximum.locator(':scope > summary').click()
     body.wait_for(state='visible')
     assert body.locator('img').count() == 0, 'help content became HTML'
     assert '<img src=x' in body.text_content()
     assert row.locator('[data-device-quick-switch8="switch.cooler_maximum"]').get_attribute('aria-checked') == 'false'
-    assert page.evaluate('calls') == [], 'opening help mutated a setting'
+    page.keyboard.press('Escape')
+    body.wait_for(state='detached')
+    assert page.evaluate("card._openHemControllerSettings126('cool','climate.managed_cooler')") is True
+    page.wait_for_function("card._hemControllerDialog126?.fullRegistry127?.length===5")
+    modal = page.locator('dialog.hem-controller-options126')
+    assert modal.is_visible()
+    # The categorized menu's native <details> controls are rendered even
+    # when collapsed; separate Chromium tests exercise category navigation.
+    # Here assert their summaries and escaped read-only body are preserved.
+    for id in ('select.method_cooler','switch.cooler_maximum','select.cooler_calibration',
+               'number.cooler_gain','button.cooler_calibrate'):
+        setting = modal.locator('[data-hem-full-row127="'+id+'"]')
+        assert setting.count() == 1, id
+        help_box = setting.locator('details.hem-full-help127')
+        assert help_box.count() == 1, id
+        assert help_box.locator(':scope > summary').count() == 1
+        assert states[id]['attributes']['configuration_help'].strip() in help_box.text_content()
+        assert help_box.locator('img').count() == 0
+    assert modal.locator('[data-hem-full-value127="select.method_cooler"]').input_value() == 'pid'
+    assert modal.locator('[data-hem-full-apply127="number.cooler_gain"]').count() == 1
+    assert modal.locator('[data-hem-full-apply127="button.cooler_calibrate"]').count() == 1
+    assert page.evaluate('calls') == [], 'reading help mutated a setting'
     assert not errors, errors
     browser.close()
 print('BETA116_CONFIGURATION_HELP_DISCLOSURE_READ_ONLY=PASS')

@@ -2871,7 +2871,8 @@
           "window_close_warmup": "انتظار بعد إغلاق النوافذ",
           "window_state_unknown": "انتظار حالة النوافذ",
           "window_open_wait": "بانتظار أن تفتح النافذة",
-          "window_request_pending": "جارٍ إرسال طلب لفتح النافذة"
+          "window_request_pending": "جارٍ إرسال طلب لفتح النافذة",
+          "physical_device_startup_timeout": "لم يُعَد الاتصال بالجهاز بعد تشغيله خلال 60 ثانية"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "مساعدة"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "الطاقة · مهلة انتظار قبل فصل التغذية (ثوانٍ)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "الإعلانات · {channel}طلب فتح النوافذ",
+        "name": "اقتراح فتح النوافذ لتجنّب استخدام هذا الجهاز",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "الملف · الأجهزة · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "تلقائي",
+          "comfort": "راحة",
+          "home": "في المنزل",
+          "away": "غياب",
+          "sleep": "نوم",
+          "eco": "اقتصادي"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مساعدة"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "الطاقة · مفتاح التغذية الرئيسي",
         "state_attributes": {
           "configuration_help": {
             "name": "مساعدة"

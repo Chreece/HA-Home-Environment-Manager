@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Menunggu setelah jendela ditutup",
           "window_state_unknown": "Menunggu status jendela",
           "window_open_wait": "Menunggu Anda membuka jendela",
-          "window_request_pending": "Mengirim permintaan untuk membuka jendela"
+          "window_request_pending": "Mengirim permintaan untuk membuka jendela",
+          "physical_device_startup_timeout": "Perangkat tidak terhubung kembali dalam 60 detik setelah dinyalakan"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Bantuan"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Daya · Jeda sebelum memutus pasokan listrik (detik)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Pengumuman · {channel}Minta membuka jendela",
+        "name": "Sarankan membuka jendela agar perangkat ini tidak perlu digunakan",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Profil · Perangkat · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Otomatis",
+          "comfort": "Nyaman",
+          "home": "Di rumah",
+          "away": "Pergi",
+          "sleep": "Tidur",
+          "eco": "Hemat"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Bantuan"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Daya · Sakelar pasokan listrik eksternal",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"

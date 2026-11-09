@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Attente après fermeture des fenêtres",
           "window_state_unknown": "En attente de l’état des fenêtres",
           "window_open_wait": "En attente que vous ouvriez la fenêtre",
-          "window_request_pending": "Envoi d’une demande d’ouverture de fenêtre"
+          "window_request_pending": "Envoi d’une demande d’ouverture de fenêtre",
+          "physical_device_startup_timeout": "L’appareil ne s’est pas reconnecté dans les 60 secondes suivant sa mise sous tension"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Aide"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Alimentation · Délai avant la coupure de l’alimentation (secondes)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aide"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Annonces · {channel}Demander d’ouvrir les fenêtres",
+        "name": "Suggérer d’ouvrir les fenêtres pour éviter d’utiliser cet appareil",
         "state_attributes": {
           "configuration_help": {
             "name": "Aide"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Profil · Appareils · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatique",
+          "comfort": "Confort",
+          "home": "À la maison",
+          "away": "Absent",
+          "sleep": "Sommeil",
+          "eco": "Éco"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aide"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Alimentation · Interrupteur d’alimentation externe",
         "state_attributes": {
           "configuration_help": {
             "name": "Aide"

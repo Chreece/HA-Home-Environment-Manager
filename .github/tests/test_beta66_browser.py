@@ -46,7 +46,7 @@ with sync_playwright() as p:
  assert 'within_target_band' not in text and 'climate.managed' not in text,text
  assert 'Comfee Schlafzimmer' in text
  assert page.evaluate("()=>card._controllerStatusLabel('within_target_band')") in text
- assert page.locator('details.hem-calibration').evaluate('(e)=>e.open') is False
+ assert page.locator('details.hem-calibration').count()==0
  page.locator('.hem-technical66>summary').click()
  page.evaluate('draw()');page.wait_for_timeout(30)
  assert page.locator('.hem-technical66').evaluate('(e)=>e.open')
@@ -57,8 +57,8 @@ with sync_playwright() as p:
  page.locator('details.hem-diagnostics>summary').focus()
  page.keyboard.press('Enter');page.evaluate('draw()');page.wait_for_timeout(30)
  assert page.locator('details.hem-diagnostics').evaluate('(e)=>e.open')
- page.locator('details.hem-calibration>summary').click();page.evaluate('draw()')
- assert page.locator('[data-pid-calibration-method]').is_visible()
+ page.evaluate('draw()')
+ assert page.locator('[data-pid-calibration-method]').count()==0, 'Calibration must be in the categorized device settings dialog'
  assert page.evaluate('calls.length')==0,'Disclosure expansion is read-only'
  page.locator('[data-window-policy-switch]').click();page.wait_for_timeout(100)
  assert page.evaluate('calls')==[['switch','turn_off',{'entity_id':'switch.window_policy'}]]

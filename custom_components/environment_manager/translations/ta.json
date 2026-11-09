@@ -2871,7 +2871,8 @@
           "window_close_warmup": "சாளரங்கள் மூடிய பிறகு காத்திருப்பு",
           "window_state_unknown": "சாளர நிலைக்காகக் காத்திருக்கிறது",
           "window_open_wait": "நீங்கள் சாளரத்தைத் திறக்கக் காத்திருக்கிறது",
-          "window_request_pending": "சாளரத்தைத் திறக்கும் கோரிக்கையை அனுப்புகிறது"
+          "window_request_pending": "சாளரத்தைத் திறக்கும் கோரிக்கையை அனுப்புகிறது",
+          "physical_device_startup_timeout": "மின்சாரம் இயக்கப்பட்ட 60 வினாடிகளுக்குள் சாதனம் மீண்டும் இணைக்கப்படவில்லை"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "உதவி"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "மின்சாரம் · விநியோகத்தை நிறுத்தும் முன் காத்திருப்பு (வினாடிகள்)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "அறிவிப்புகள் · {channel}சாளரங்களைத் திறக்கக் கோரு",
+        "name": "இந்தச் சாதனத்தைப் பயன்படுத்தாமல் இருக்க சாளரங்களைத் திறக்கப் பரிந்துரைக்கவும்",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "சுயவிவரம் · சாதனங்கள் · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "வசதி",
+          "home": "வீட்டில்",
+          "away": "வெளியே",
+          "sleep": "தூக்கம்",
+          "eco": "சிக்கனம்"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "மின்சாரம் · வெளிப்புற விநியோக சுவிட்ச்",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"

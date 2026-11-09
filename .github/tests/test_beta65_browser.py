@@ -41,8 +41,8 @@ with sync_playwright() as p:
  assert 'Επισκόπηση δωματίου' in text,text
  assert 'Μόνο σχεδιασμός' not in text and 'Selected mean' not in text and 'Idle' not in text
  assert '58,8' in text and '60%' in text and '21,6' in text
- assert page.locator('[data-calibration-id]').count()==1
- assert page.locator('[data-pid-calibration-method]').is_hidden()
+ assert page.locator('[data-calibration-id]').count()==0
+ assert page.locator('[data-pid-calibration-method]').count()==0
  assert page.locator('[data-pid-capacity-input]').count()==0,'Legacy strategy must not show unused measured stages'
  assert page.evaluate('calls.length')==0,'Read-only render sent a device command'
  for lang in langs:
@@ -50,21 +50,19 @@ with sync_playwright() as p:
   got=page.evaluate('''()=>({label:card._controllerStatusLabel('idle'),mean:card._controllerStatusLabel('selected_mean'),cal:card._controllerStatusLabel('complete_measured_stage_capacities_required'),lux:card._metricName('illuminance'),home:card._controllerStatusLabel('home'),html:card._controllerPanel(room)})''')
   assert got['label'] not in ('idle','') and got['mean'] not in ('selected_mean','') and 'complete_measured_stage_capacities_required' not in got['cal'],(lang,got)
   assert got['lux']!='metric_illuminance' and got['home'] not in ('','unknown'),lang
-  assert 'data-calibration-id' in got['html'] and '<select data-climate-method' in got['html'],lang
- # Expand, then rerender preserving just this device's section.
+  assert 'data-calibration-id' not in got['html'] and '<select data-climate-method' in got['html'],lang
+ # The card remains compact even across refreshes. Full calibration inputs
+ # are available in the HEM device settings categories instead.
  page.evaluate("()=>{card._hass={...card._hass,language:'el'};draw();}")
- page.locator('details.hem-calibration>summary').click()
- page.wait_for_timeout(100)
- assert page.locator('[data-pid-calibration-method]').is_visible()
  page.evaluate('draw()');page.wait_for_timeout(100)
- assert page.locator('[data-pid-calibration-method]').is_visible()
+ assert page.locator('[data-pid-calibration-method]').count()==0
  # Current service handlers remain connected and scoped to verified device.
  page.locator('[data-climate-method]').select_option('automatic')
  page.wait_for_timeout(50)
  assert page.evaluate('calls.length')==1
  assert page.evaluate('calls[0]')[:2]==['select','select_option']
  page.evaluate("()=>{card._hass={...card._hass,states:{...card._hass.states,'select.capacity':{...card._hass.states['select.capacity'],state:'measured'}}};draw();}")
- assert page.locator('[data-pid-capacity-input]').count()==2
+ assert page.locator('[data-pid-capacity-input]').count()==0, 'Capacity inputs moved to device settings'
  assert 'complete_measured_stage_capacities_required' not in page.locator('home-environment-manager-card .content').inner_text()
  # Status matching is exact, not a substring of device/entity names.
  index=page.evaluate("()=>card._managedControllers('bedroom')[0].statusInfo.id")
@@ -81,7 +79,7 @@ with sync_playwright() as p:
  # Responsive bounds for expanded advanced controls.
  page.set_viewport_size({'width':375,'height':1100})
  assert page.evaluate('document.documentElement.scrollWidth')<=375
- page.evaluate("()=>{card._calibrationExpanded65.clear();card._hass={...card._hass,states:{...card._hass.states,'select.capacity':{...card._hass.states['select.capacity'],state:'legacy'},'switch.strip':{state:'on',attributes:{friendly_name:'Schlafzimmer Steckdose'}}}};draw();}")
+ page.evaluate("()=>{card._hass={...card._hass,states:{...card._hass.states,'select.capacity':{...card._hass.states['select.capacity'],state:'legacy'},'switch.strip':{state:'on',attributes:{friendly_name:'Schlafzimmer Steckdose'}}}};draw();}")
  page.set_viewport_size({'width':590,'height':1050})
  Path(ROOT/'dist').mkdir(exist_ok=True)
  page.screenshot(path=str(ROOT/'dist/beta65-device-card.png'),full_page=True)

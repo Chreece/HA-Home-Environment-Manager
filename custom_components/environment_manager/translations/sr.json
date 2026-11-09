@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Чекање после затварања прозора",
           "window_state_unknown": "Чекање на стање прозора",
           "window_open_wait": "Чека се да отворите прозор",
-          "window_request_pending": "Шаље се захтев за отварање прозора"
+          "window_request_pending": "Шаље се захтев за отварање прозора",
+          "physical_device_startup_timeout": "Уређај се није поново повезао у року од 60 секунди након укључивања"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Помоћ"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Напајање · Чекање пре искључивања напајања (секунде)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Обавештења · {channel}Затражи отварање прозора",
+        "name": "Предложи отварање прозора да би се избегла употреба овог уређаја",
         "state_attributes": {
           "configuration_help": {
             "name": "Помоћ"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Профил · Uređaji · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "Удобност",
+          "home": "Код куће",
+          "away": "Одсутан",
+          "sleep": "Спавање",
+          "eco": "Штедња"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Напајање · Спољни прекидач напајања",
         "state_attributes": {
           "configuration_help": {
             "name": "Помоћ"

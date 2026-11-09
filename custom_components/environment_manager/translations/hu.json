@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Várakozás az ablakok bezárása után",
           "window_state_unknown": "Várakozás az ablakok állapotára",
           "window_open_wait": "Arra vár, hogy kinyisd az ablakot",
-          "window_request_pending": "Ablaknyitási kérés küldése"
+          "window_request_pending": "Ablaknyitási kérés küldése",
+          "physical_device_startup_timeout": "A készülék a bekapcsolást követő 60 másodpercen belül nem csatlakozott újra"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Súgó"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Tápellátás · Várakozás a tápellátás kikapcsolása előtt (másodperc)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Értesítések · {channel}Ablaknyitás kérése",
+        "name": "Javasolja az ablaknyitást az eszköz használatának elkerülésére",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Profil · Eszközök · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatikus",
+          "comfort": "Komfort",
+          "home": "Otthon",
+          "away": "Távol",
+          "sleep": "Alvás",
+          "eco": "Takarékos"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Tápellátás · Külső tápkapcsoló",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"

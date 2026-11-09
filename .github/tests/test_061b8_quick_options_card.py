@@ -210,8 +210,10 @@ test('all shared options form one row; scoped flags and retired timing never dup
   assert.equal((html.match(/data-timed-setpoint-switch=/g)||[]).length,0);
   assert.ok(!html.includes('class="hem-window-policy66"'));
   assert.ok(!html.includes('class="hem-device-error-toggle"'));
-  assert.ok(html.includes('data-mode-setting-entity="switch.mode_quiet_sleep"'));
-  assert.ok(html.includes('data-mode-setting-entity="switch.mode_quiet_occupied"'));
+  assert.ok(!html.includes('data-mode-setting-entity="switch.mode_quiet_sleep"'));
+  assert.ok(!html.includes('data-mode-setting-entity="switch.mode_quiet_occupied"'));
+  assert.ok(items[0].operatingModes.some(mode=>mode.parameters.some(field=>field.id==='switch.mode_quiet_sleep')));
+  assert.ok(items[0].operatingModes.some(mode=>mode.parameters.some(field=>field.id==='switch.mode_quiet_occupied')));
 });
 test('localized visible state is compact; separate icon and switch keep exact accessible purpose',()=>{
   for(const locale of ['en','el','de']){
@@ -480,11 +482,12 @@ def browser_checks():
             for language in ("en", "el", "de"):
                 states = fixture(language)
                 page.evaluate("([s,l])=>refresh8(s,l)", [states, language])
-                # Per-mode control and parameter disclosures still exist, and
-                # their own quiet flag is not repeated in the shared toolbar.
-                expect(device(0).locator('.hem-operating-mode7')).to_have_count(2)
+                # Only the active method stays on the card. Per-mode quiet
+                # and target fields now belong to the categorized device dialog.
+                expect(device(0).locator('.hem-operating-mode7')).to_have_count(0)
+                expect(device(0).locator('[data-hem-card-method129]')).to_have_count(1)
                 assert chip(0, 'quiet_sleep').count() == 0
-                assert device(0).locator('[data-mode-setting-entity="switch.mode_quiet_sleep"]').count() == 1
+                assert device(0).locator('[data-mode-setting-entity="switch.mode_quiet_sleep"]').count() == 0
                 assert page.locator('.hem-window-policy66,.hem-device-error-toggle').count() == 0
                 for width in (320, 390):
                     page.set_viewport_size({"width": width, "height": 1000})

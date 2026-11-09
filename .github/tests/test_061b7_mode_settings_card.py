@@ -142,7 +142,8 @@ test('supported modes use metadata, own parameters, native options and one physi
   assert.equal(entries[2].operatingModes.length,0);
   const room=card._hass.states['sensor.hem'].attributes.dashboard.rooms[0];
   const html=card._controllerPanel(room);
-  assert.equal((html.match(/class="hem-operating-mode7"/g)||[]).length,8);
+  assert.equal((html.match(/class="hem-operating-mode7"/g)||[]).length,0);
+  assert.equal((html.match(/data-hem-card-method129=/g)||[]).length,2);
   assert.equal((html.match(/data-climate-method=/g)||[]).length,1);
   assert.equal((html.match(/data-pid-calibration-method=/g)||[]).length,0);
   assert.equal((html.match(/data-window-announce-switch=/g)||[]).length,2);
@@ -151,8 +152,10 @@ test('supported modes use metadata, own parameters, native options and one physi
   assert.ok(html.includes('data-device-quick-switch8="switch.native_full_output_0"'));
   assert.ok(html.includes('data-window-policy-switch="switch.shared_window"'));
   assert.ok(!entries[0].operatingModes.some(mode=>mode.parameters.some(field=>field.key==='native_full_output')));
-  assert.ok(html.includes('data-mode-setting-input="number.cycle_0_heat"'));
-  assert.ok(html.includes('data-mode-setting-input="number.away_target"'));
+  assert.ok(!html.includes('data-mode-setting-input="number.cycle_0_heat"'));
+  assert.ok(!html.includes('data-mode-setting-input="number.away_target"'));
+  assert.ok(html.includes('data-mode-setting-select="select.method_0_cool"'));
+  assert.ok(html.includes('data-mode-setting-select="select.method_1_heat"'));
   assert.ok(!html.includes('data-operating-mode="defrost"'));
 });
 test('mode writes use exact native setting entities and reject forged scope and stale bounds',async()=>{
@@ -271,202 +274,148 @@ def run():
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.set_content('<style>*{box-sizing:border-box}body{margin:0;background:#111;color:#eee;font:14px Arial}'
-                         ':root{--primary-text-color:#eee;--secondary-text-color:#bbb;--primary-color:#03a9f4;'
-                         '--card-background-color:#202020;--secondary-background-color:#292929;--divider-color:#444}</style>')
+                         ':root{--primary-text-color:#eee;--secondary-background-color:#292929;'
+                         '--card-background-color:#202020;--divider-color:#444;--primary-color:#03a9f4}</style>')
         page.evaluate(BASE["BASE"]["PREVIOUS"]["icon_fixture"]())
         page.add_script_tag(path=str(ROOT / "frontend/air-quality-advisor-card.js"))
         page.evaluate("""states=>{
-          window.calls=[]; window.card=document.createElement('home-environment-manager-card');
+          window.calls=[];
+          window.card=document.createElement('home-environment-manager-card');
           document.body.appendChild(card);
-          card._hass={language:'en',states,localize:()=>undefined,
+          const entities={'sensor.hem':{config_entry_id:'entry0'}};
+          for(let i=0;i<3;i++){
+            entities['climate.managed_0_'+i]={
+              device_id:'managed-device-'+i,config_entry_id:'entry0'};
+          }
+          const registry=[];
+          for(const [id,state] of Object.entries(states)){
+            const source=state?.attributes?.source_device_id;
+            if(!['hardware0','hardware1','hardware2'].includes(source))continue;
+            const n=Number(source.slice(-1));
+            if(!['number','select','switch','button','time'].includes(id.split('.')[0]))continue;
+            if(id==='number.wrong_device'||id==='select.unsupported_mode')continue;
+            registry.push({entity_id:id,device_id:'managed-device-'+n,
+              config_entry_id:'entry0',platform:'environment_manager',
+              unique_id:'entry0_controller_'+n+'_'+id.replace('.','_')});
+          }
+          window.registry7=registry;
+          card._hass={language:'en',states,user:{is_admin:true},
+            entities,connection:{},localize:()=>undefined,
+            callWS:async request=>request.type==='config/entity_registry/list'?
+              registry7:Promise.reject(Error('Unexpected WebSocket request')),
             callService:(...args)=>{calls.push(args);return Promise.resolve();}};
           card._config={entity:'sensor.hem'};
           card._roomsExpanded87=new Set(['room0']);
           card._devicesExpanded87=new Set([0,1,2].map(i=>'climate.managed_0_'+i));
+          card._renderContent(true);
+          card._configEntryId114='entry0';card._configEntryOwner114='sensor.hem';
+          card._areaDeviceIds=new Map([['room0','room-hub']]);
+          // This fixture injects a verified registry without the initial hass
+          // setter. Simulate the completed registry context so a subsequent
+          // native hass refresh does not reset its ownership and close dialog.
+          card._deviceRegistryContext={stateId:'sensor.hem',connection:card._hass.connection};
+          card._deviceRegistryLoaded=true;
           window.refresh7=(states,language='en')=>{
-            card._hass={...card._hass,states:structuredClone(states),language}; card._renderContent(true);
-          };refresh7(states);
+            card._hass={...card._hass,states:structuredClone(states),language};
+            card._renderContent(true);
+          };
         }""", fixture())
 
-        def panel(device, mode):
-            return page.locator(f'[data-mode-controller="climate.managed_0_{device}"][data-operating-mode="{mode}"]')
+        # The card is a quick control surface: current method, status,
+        # recovery, and binary tiles. No PID/target/calibration form fields.
+        card_panel=page.locator('section[data-managed-climate93="climate.managed_0_0"]')
+        assert card_panel.locator('[data-hem-card-method129]').count()==1
+        assert card_panel.locator('[data-mode-setting-select="select.method_0_cool"]').count()==1
+        assert card_panel.locator('[data-mode-setting-input]').count()==0
+        assert card_panel.locator('[data-mode-setting-action]').count()==0
+        assert card_panel.locator('.hem-calibration').count()==0
+        assert card_panel.locator('[data-quick-option8]').count()>=2
+        assert card_panel.locator('[data-detail-id="diagnostics:climate.managed_0_0"]').count()==1
+        assert page.locator('[data-climate-method]').count()==1  # legacy device
+        assert page.locator('[data-timed-setpoint-switch]').count()==0
+        assert page.evaluate("calls.length")==0
+        card_panel.locator('[data-mode-setting-select="select.method_0_cool"]').select_option('pid')
+        assert page.evaluate("calls[0]")==['select','select_option',
+            {'entity_id':'select.method_0_cool','option':'pid'}]
 
-        def method(device, mode):
-            return panel(device, mode).locator('select[data-mode-setting-key="control_mode"]')
+        # The device settings dialog must contain ONLY native categorized
+        # settings; it must never replicate the card controller above them.
+        assert page.evaluate("card._openHemControllerSettings126('room0','climate.managed_0_0')") is True
+        page.wait_for_function("card._hemControllerDialog126?.fullRegistry127?.length>8")
+        modal=page.locator('dialog.hem-controller-options126')
+        assert modal.is_visible()
+        assert modal.locator('.managed-controller,.hem-device-quick-row8').count()==0
+        assert modal.locator('[data-hem-full-list127="device"]').count()==1
+        assert page.evaluate("calls.length")==1
+        for category,entity in (
+            ('mode','select.user_renamed_method'),
+            ('pid','number.gain_0_heat'),
+            ('targets','number.away_target'),
+            ('fan','switch.mode_quiet_sleep'),
+        ):
+            section=modal.locator(f'[data-hem-full-category127="{category}"]')
+            assert section.count()==1,(category,entity)
+            assert section.locator(f'[data-hem-full-row127="{entity}"]').count()==1,(category,entity)
+        assert modal.locator('[data-hem-full-row127="number.wrong_device"]').count()==0
+        assert modal.locator('[data-hem-full-row127="select.unsupported_mode"]').count()==0
+        assert modal.locator('[data-hem-full-row127="button.mode_unavailable"]').count()==1
 
-        def number(entity):
-            return page.locator(f'[data-mode-setting-input="{entity}"]')
+        modal.locator('[data-hem-full-category127="mode"] > summary').click()
+        modal.locator('[data-hem-full-category127="pid"] > summary').click()
+        modal.locator('[data-hem-full-category127="targets"] > summary').click()
+        modal.locator('[data-hem-full-category127="fan"] > summary').click()
+        modal.locator('[data-hem-full-value127="select.user_renamed_method"]').select_option('manual')
+        modal.locator('[data-hem-full-apply127="select.user_renamed_method"]').click()
+        assert page.evaluate("calls[1]")==['select','select_option',
+            {'entity_id':'select.user_renamed_method','option':'manual'}]
+        gain=modal.locator('[data-hem-full-value127="number.gain_0_heat"]')
+        gain.fill("4.6")
+        modal.locator('[data-hem-full-apply127="number.gain_0_heat"]').click()
+        assert page.evaluate("calls[2]")==['number','set_value',
+            {'entity_id':'number.gain_0_heat','value':4.6}]
+        modal.locator('[data-hem-full-apply127="switch.mode_quiet_sleep"]').click()
+        assert page.evaluate("calls[3]")==['switch','turn_on',
+            {'entity_id':'switch.mode_quiet_sleep'}]
+        modal.locator('[data-hem-full-category127="pid"] [data-hem-full-value127="select.mode_calibration"]').select_option('imc_lambda')
+        modal.locator('[data-hem-full-apply127="select.mode_calibration"]').click()
+        assert page.evaluate("calls[4]")==['select','select_option',
+            {'entity_id':'select.mode_calibration','option':'imc_lambda'}]
+        assert modal.locator('[data-hem-full-apply127="button.mode_unavailable"]').is_disabled()
+        assert modal.locator('option[value="imc_lambda"]').first.inner_text()=='IMC / λ'
+        assert modal.locator('[data-hem-full-row127="number.gain_0_heat"] strong').first.inner_text().startswith('Heating · PID · Kp')
 
-        def action(entity):
-            return page.locator(f'button[data-mode-setting-entity="{entity}"]')
-
-        def count():
-            return page.evaluate("calls.length")
-
-        parameter_panels = ((0, "heat"), (0, "cool"), (1, "heat"), (1, "cool"))
-
-        def parameters(device, mode):
-            return panel(device, mode).locator('details.hem-mode-parameters7')
-
-        def assert_parameters_open(context):
-            for device, mode in parameter_panels:
-                assert parameters(device, mode).evaluate("element => element.open"), (
-                    context, device, mode, "User-opened Parameters must survive the refresh")
-                assert number(f"number.gain_{device}_{mode}").is_visible(), (
-                    context, device, mode, "An expanded mode must expose its own parameters")
-
-        assert page.locator('.hem-operating-mode7').count() == 8
-        assert page.locator('[data-climate-method]').count() == 1, "Only the legacy third device keeps a global method"
-        assert page.locator('[data-pid-calibration-method]').count() == 0
-        assert page.locator('[data-window-announce-switch]').count() == 2
-        assert page.locator('[data-window-policy-switch="switch.shared_window"]').count() == 1
-        assert page.locator('[data-device-quick-key8="native_full_output"]').count() == 2
-        assert page.locator('[data-timed-setpoint-switch]').count() == 0
-        assert page.locator('[data-device-quick-switch8="switch.native_full_output_0"]').is_visible()
-        assert page.locator('.hem-operating-mode7 [data-device-quick-key8="native_full_output"],.hem-operating-mode7 [data-window-policy-switch]').count() == 0
-        assert panel(0, "defrost").count() == 0
-        assert page.locator('[data-mode-setting-input="number.wrong_device"]').count() == 0
-        assert method(0, "auto").locator('option[value="pid"]').count() == 0
-        assert method(0, "heat_cool").locator('option[value="pid"]').count() == 0
-        assert method(0, "fan_only").locator('option[value="pid"]').count() == 1
-        assert method(0, "heat").input_value() == "pid"
-        assert method(0, "cool").input_value() == "automatic"
-        assert panel(0, "cool").locator('.hem-mode-selected7').inner_text() == "Selected mode"
-        assert panel(0, "heat").locator('.hem-mode-selected7').count() == 0
-        mold = page.locator('[data-overview-detail122="mold"]')
-        assert mold.locator('.metric-number').inner_text() == "80 %"
-        assert mold.locator(':scope > .metric-limit').first.inner_text() == "Limit 70 %"
-        assert page.locator('.hem-room-glance87 .hem-room-air-chip89').first.locator('.hem-room-metric-value107').inner_text() == "80"
-
-        # The first render installs the disclosure state. Exercise the same
-        # summary clicks as a user instead of seeding a private pre-render Set,
-        # which interaction setup correctly initializes to its empty default.
-        for device, mode in parameter_panels:
-            details = parameters(device, mode)
-            assert not details.evaluate("element => element.open"), (device, mode)
-            details.locator(':scope > summary').click()
-        assert_parameters_open("initial user clicks")
-        assert count() == 0, "Opening configuration panels must not call a device service"
-
-        for language in ("en", "el", "de"):
-            page.evaluate("([s,l])=>refresh7(s,l)", [fixture(language), language])
-            assert_parameters_open(f"{language} locale refresh")
-            assert LABELS[language]["heat"] in panel(0, "heat").locator('h4').inner_text()
-            assert LABELS[language]["parameters"] in panel(0, "heat").locator('.hem-mode-parameters7>summary').inner_text()
-            cycle_label = panel(0, "heat").locator('.hem-mode-number7 label').filter(
-                has=number("number.cycle_0_heat")).locator(':scope > span')
-            label_evidence = cycle_label.evaluate("""element => {
-              const style = getComputedStyle(element);
-              return {inner_text: element.innerText, text_content: element.textContent,
-                outer_html: element.outerHTML, display: style.display,
-                white_space: style.whiteSpace, text_transform: style.textTransform};
-            }""")
-            label_evidence.update(locale=language, viewport=page.viewport_size,
-                expected=LABELS[language]["cycle_seconds"] + " (s)")
-            print("HEM_061B7_CYCLE_LABEL=" + json.dumps(label_evidence, ensure_ascii=False), flush=True)
-            if shots:
-                # Capture before the assertion so a browser-only mismatch
-                # leaves useful evidence in the CI artifact, not an empty folder.
-                (shots / f"061b7-label-{language}.json").write_text(
-                    json.dumps(label_evidence, ensure_ascii=False, indent=2), encoding="utf-8")
-                try:
-                    panel(0, "heat").screenshot(
-                        path=str(shots / f"061b7-label-{language}.png"), animations="disabled")
-                except Exception as error:
-                    print(f"HEM_061B7_LABEL_SCREENSHOT_FAILED={error!r}", flush=True)
-            assert cycle_label.is_visible(), label_evidence
-            assert cycle_label.inner_text() == LABELS[language]["cycle_seconds"] + " (s)", label_evidence
-            for width in (390, 320):
-                page.set_viewport_size({"width": width, "height": 1000})
-                for box in page.locator('.hem-operating-mode7,.hem-mode-number7,.hem-mode-heading7').all():
-                    bounds = box.evaluate("e=>({width:e.clientWidth,scroll:e.scrollWidth,left:e.getBoundingClientRect().left,right:e.getBoundingClientRect().right})")
-                    assert bounds["scroll"] <= bounds["width"] + 1, (language, width, bounds)
-                    assert bounds["left"] >= -1 and bounds["right"] <= width + 1, (language, width, bounds)
-                if width == 320 and language in ("el", "de"):
-                    assert cycle_label.evaluate("e=>{const range=document.createRange();range.selectNodeContents(e);return range.getClientRects().length}") > 1
-                if shots:
-                    panel(0, "heat").screenshot(path=str(shots / f"061b7-modes-{language}-{width}.png"), animations="disabled")
-
-        states = fixture()
-        page.evaluate("s=>refresh7(s)", states)
-        assert_parameters_open("return to English before scoped service checks")
-        method(0, "heat").select_option("manual")
-        assert page.evaluate("calls") == [["select", "select_option", {"entity_id": "select.user_renamed_method", "option": "manual"}]]
-        method(0, "cool").select_option("pid")
-        assert page.evaluate("calls[1]") == ["select", "select_option", {"entity_id": "select.method_0_cool", "option": "pid"}]
-        assert method(1, "heat").input_value() == "automatic"
-        number("number.gain_0_heat").fill("4.6")
-        action("number.gain_0_heat").click()
-        assert page.evaluate("calls[2]") == ["number", "set_value", {"entity_id": "number.gain_0_heat", "value": 4.6}]
-        number("number.gain_0_cool").fill("8.1")
-        action("number.gain_0_cool").click()
-        assert page.evaluate("calls[3]") == ["number", "set_value", {"entity_id": "number.gain_0_cool", "value": 8.1}]
-        assert number("number.gain_1_heat").input_value() == "1.2"
-        action("switch.mode_quiet_sleep").click()
-        assert page.evaluate("calls[4]") == ["switch", "turn_on", {"entity_id": "switch.mode_quiet_sleep"}]
-        action("button.mode_review_discard").click()
-        assert page.evaluate("calls[5]") == ["button", "press", {"entity_id": "button.mode_review_discard"}]
-        assert action("button.mode_unavailable").is_disabled()
-        page.locator('[data-mode-setting-select="select.mode_calibration"]').select_option("imc_lambda")
-        assert page.evaluate("calls[6]") == ["select", "select_option", {"entity_id": "select.mode_calibration", "option": "imc_lambda"}]
-
-        for value in ("101", "4.65", ""):
-            number("number.gain_0_heat").fill(value)
-            action("number.gain_0_heat").click()
-            assert count() == 7, "Native range, step and empty-value checks must prevent a service"
-        for attribute, value in (("data-mode-setting-mode", "cool"),
-                                 ("data-managed-controller", "climate.managed_0_1"),
-                                 ("data-mode-setting-key", "target_away_heat"),
-                                 ("data-mode-setting-entity", "number.gain_1_heat")):
-            page.evaluate("s=>refresh7(s)", states)
-            number("number.gain_0_heat").fill("2")
-            action("number.gain_0_heat").evaluate("(e,[a,v])=>{e.setAttribute(a,v);e.click()}", [attribute, value])
-            assert count() == 7, (attribute, value)
-
-        # An HA refresh cannot discard a user's unfinished mode-specific edit.
-        page.evaluate("s=>refresh7(s)", states)
-        number("number.gain_0_heat").fill("8.5")
-        number("number.gain_0_heat").evaluate("e=>window.editBefore7=e")
-        updated = deepcopy(states)
-        updated["number.gain_0_heat"]["state"] = "3.4"
-        page.evaluate("s=>{card.hass={...card._hass,states:s}}", updated)
+        # A locale refresh preserves open sections, never recreates the
+        # duplicate quick panel, and presents localized scoped labels.
+        for language in ('el','de','en'):
+            page.evaluate("([s,l])=>refresh7(s,l)", [fixture(language),language])
+            assert modal.locator('.managed-controller').count()==0
+            assert modal.locator('[data-hem-full-category127="pid"]').get_attribute('open') is not None
+            label=modal.locator('[data-hem-full-row127="number.gain_0_heat"] strong').first.inner_text()
+            assert label.startswith(LABELS[language]['heat']+' · '),(language,label)
+        gain=modal.locator('[data-hem-full-value127="number.gain_0_heat"]')
+        gain.fill("8.5")
+        gain.evaluate("el=>window.editBefore7=el")
+        changed=fixture()
+        changed['number.gain_0_heat']['state']='3.4'
+        page.evaluate("s=>{card.hass={...card._hass,states:s}}",changed)
         page.evaluate("()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))")
-        assert_parameters_open("live Home Assistant update with an unfinished edit")
-        assert number("number.gain_0_heat").input_value() == "8.5"
-        assert number("number.gain_0_heat").evaluate("e=>e===editBefore7 && e===e.getRootNode().activeElement")
-        action("number.gain_0_heat").click()
-        assert page.evaluate("calls[7]") == ["number", "set_value", {"entity_id": "number.gain_0_heat", "value": 8.5}]
+        assert gain.input_value()=="8.5"
+        assert gain.evaluate("el=>el===editBefore7 && el===el.getRootNode().activeElement")
 
-        states["climate.managed_0_0"]["state"] = "unavailable"
-        states["climate.physical_0_0"]["state"] = "unavailable"
-        states["climate.managed_0_0"]["attributes"]["humidity_demand"] = {
-            "mold_protection_required": True, "reason": "mold_above_limit",
-            "mold_surface_rh": 80, "mold_surface_limit": 70, "mold_target_active": True,
-            "requested_humidity_target": 60, "effective_humidity_target": 48}
-        states["sensor.control_0_0"]["attributes"]["status_code"] = "within_target_band"
-        page.evaluate("s=>refresh7(s)", states)
-        assert method(0, "heat").is_enabled() and number("number.gain_0_heat").is_enabled()
-        device = page.locator('[data-device-fold87="climate.managed_0_0"]')
-        assert device.locator('.hem-device-state76>.hem-status-pill76').first.inner_text() == "Physical device is unavailable"
-        diagnostics = device.locator('[data-detail-id="diagnostics:climate.managed_0_0"]')
-        diagnostics.locator(':scope > summary').click()
-        assert "Mold" in diagnostics.inner_text() and "80%" in diagnostics.inner_text()
-        assert "48%" in diagnostics.inner_text()
-        assert "Within the configured target range" not in diagnostics.inner_text()
-        states["number.gain_0_heat"]["state"] = "unavailable"
-        page.evaluate("s=>refresh7(s)", states)
-        assert number("number.gain_0_heat").is_disabled() and action("number.gain_0_heat").is_disabled()
-        states["number.duplicate"] = deepcopy(states["number.gain_0_cool"])
-        states["select.duplicate"] = deepcopy(states["select.user_renamed_method"])
-        page.evaluate("s=>refresh7(s)", states)
-        assert number("number.gain_0_cool").count() == 0
-        assert method(0, "heat").count() == 0
-        assert panel(0, "heat").locator('select').first.is_disabled()
-        assert page.locator('[data-climate-method]').count() == 1
-        assert method(1, "heat").is_enabled()
-        assert not errors, errors
+        # Real missing physical feedback does not discard a saved method,
+        # nor does a second controller or registry spoof enter this dialog.
+        changed['climate.managed_0_0']['state']='unavailable'
+        changed['climate.physical_0_0']['state']='unavailable'
+        page.evaluate("s=>refresh7(s)",changed)
+        assert modal.locator('[data-hem-full-row127="number.gain_0_heat"]').count()==1
+        assert card_panel.locator('[data-detail-id="diagnostics:climate.managed_0_0"]').count()==1
+        if shots:
+            modal.screenshot(path=str(shots/'b17-categorized-device-settings.png'),animations='disabled')
+        modal.locator('[data-close-hem-controller126]').click()
+        assert not modal.is_visible()
+        assert not errors,errors
         browser.close()
-    print("HEM_061B7_SCOPED_MODE_CONTROLS=PASS")
+    print("HEM_061B7_SCOPED_MODE_SETTINGS_IN_CATEGORIZED_DIALOG=PASS")
 
 
 if __name__ == "__main__":

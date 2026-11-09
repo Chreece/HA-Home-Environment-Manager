@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Ожидание после закрытия окон",
           "window_state_unknown": "Ожидание состояния окон",
           "window_open_wait": "Ожидание, пока вы откроете окно",
-          "window_request_pending": "Отправка просьбы открыть окно"
+          "window_request_pending": "Отправка просьбы открыть окно",
+          "physical_device_startup_timeout": "Устройство не подключилось повторно в течение 60 секунд после включения"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Справка"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Питание · Задержка перед отключением питания (секунды)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Справка"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Объявления · {channel}Попросить открыть окна",
+        "name": "Предложить открыть окна, чтобы избежать использования этого устройства",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Профиль · Устройства · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "Комфорт",
+          "home": "Дома",
+          "away": "Нет дома",
+          "sleep": "Сон",
+          "eco": "Экономия"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Справка"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Питание · Внешний выключатель питания",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"
