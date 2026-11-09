@@ -239,7 +239,8 @@ def browser_checks():
             for language in LANGUAGES:
                 states = fixture(language)
                 page.evaluate('([s,l])=>refresh9(s,l)', [states, language])
-                expect(device().locator('.hem-operating-mode7')).to_have_count(2)
+                expect(device().locator('.hem-operating-mode7')).to_have_count(0)
+                expect(device().locator('[data-hem-card-method129]')).to_have_count(1)
                 assert page.locator('[data-timed-setpoint-switch],[data-mode-setting-key="timed_setpoint_sequence"]').count() == 0
                 assert 'RETIRED' not in page.locator('home-environment-manager-card').inner_text()
                 for width in (320, 390):
