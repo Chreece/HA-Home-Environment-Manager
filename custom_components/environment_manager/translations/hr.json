@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Čekanje nakon zatvaranja prozora",
           "window_state_unknown": "Čekanje na stanje prozora",
           "window_open_wait": "Čeka se da otvorite prozor",
-          "window_request_pending": "Šalje se zahtjev za otvaranje prozora"
+          "window_request_pending": "Šalje se zahtjev za otvaranje prozora",
+          "physical_device_startup_timeout": "Uređaj se nije ponovno povezao unutar 60 sekundi od uključivanja"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Pomoć"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Napajanje · Odgoda prije isključivanja napajanja (sekunde)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Obavijesti · {channel}Zatraži otvaranje prozora",
+        "name": "Predloži otvaranje prozora kako bi se izbjegla uporaba ovog uređaja",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Profil · Uređaji · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "Udobnost",
+          "home": "Kod kuće",
+          "away": "Odsutnost",
+          "sleep": "Spavanje",
+          "eco": "Štednja"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Napajanje · Vanjska sklopka napajanja",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"
