@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "ประกาศ · {channel}ขอให้เปิดหน้าต่าง",
+        "name": "ประกาศ · {channel}แนะนำให้เปิดหน้าต่างเพื่อหลีกเลี่ยงการใช้อุปกรณ์นี้",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"
