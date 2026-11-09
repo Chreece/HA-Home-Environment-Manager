@@ -70,6 +70,7 @@ jobs:
           set -euo pipefail
           python -I .github/tests/test_061b7_mode_settings.py
           python -I .github/tests/test_061b7_mode_entities.py
+          python -I .github/tests/test_061b18_retire_legacy_controller_method.py
           python -I .github/tests/test_061b7_mold_demand.py
           python -I .github/tests/test_061b7_mold_announcement.py
           python -I .github/tests/test_061b7_window_modes.py
