@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Espera tras cerrar las ventanas",
           "window_state_unknown": "Esperando el estado de las ventanas",
           "window_open_wait": "Esperando a que abras la ventana",
-          "window_request_pending": "Enviando una solicitud para abrir la ventana"
+          "window_request_pending": "Enviando una solicitud para abrir la ventana",
+          "physical_device_startup_timeout": "El dispositivo no volvió a conectarse en los 60 segundos posteriores al encendido"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Ayuda"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Alimentación · Espera antes de cortar la corriente (segundos)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ayuda"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Avisos · {channel}Pedir que se abran las ventanas",
+        "name": "Sugerir abrir las ventanas para evitar utilizar este dispositivo",
         "state_attributes": {
           "configuration_help": {
             "name": "Ayuda"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Perfil · Dispositivos · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "Confort",
+          "home": "En casa",
+          "away": "Ausente",
+          "sleep": "Sueño",
+          "eco": "Eco"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ayuda"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Alimentación · Interruptor de suministro externo",
         "state_attributes": {
           "configuration_help": {
             "name": "Ayuda"
