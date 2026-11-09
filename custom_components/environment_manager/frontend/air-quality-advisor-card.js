@@ -8970,7 +8970,7 @@
     if(/presence|occup|sleep|wake|alarm|away_policy/.test(name))return "presence";
     if(/profile|target|temperature|humidity|mold|dewpoint|comfort/.test(name))return "targets";
     if(/power|battery|minimum|maximum|cooldown|hold|relay|readiness|full_output/.test(name))return "power";
-    if(/mode_|control_mode|operating_mode|preset|method/.test(name))return "mode";
+    if(/(?:^|_)mode(?:_|$)|control_mode|operating_mode|preset|method/.test(name))return "mode";
     return "other";
   };
   hemFull127._hemFullContext127=function(saved,scope){
