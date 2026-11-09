@@ -108,6 +108,8 @@ class PerformanceWindow:
         band = BANDS[self.metric]
         samples = list(self.samples)
         covered = integrated = signed = run_floor = off_floor = 0.0
+        # Endpoint-consistent duration is descriptive, NOT a guaranteed
+        # physical lower bound: equipment can change between samples.
         inside_floor = outside_floor = 0.0
         starts = 0
         gaps = 0
@@ -159,12 +161,13 @@ class PerformanceWindow:
             "maximum_observed_overshoot": round(overshoot, 3),
             "maximum_observed_shortfall": round(max_shortfall, 3),
             "verified_off_to_on_transitions": starts,
-            "observed_inside_band_hours_lower_bound": round(inside_floor / 3600, 3),
-            "observed_outside_band_hours_lower_bound": round(outside_floor / 3600, 3),
-            "observed_on_hours_lower_bound": round(run_floor / 3600, 3),
-            "observed_off_hours_lower_bound": round(off_floor / 3600, 3),
+            "sampled_both_endpoints_in_band_hours": round(inside_floor / 3600, 3),
+            "sampled_both_endpoints_out_of_band_hours": round(outside_floor / 3600, 3),
+            "sampled_same_state_on_hours": round(run_floor / 3600, 3),
+            "sampled_same_state_off_hours": round(off_floor / 3600, 3),
+            "intervals_are_continuous_runtime_proof": False,
             "unobserved_or_long_intervals": gaps,
             "energy_kwh": None,
-            "energy_note": "No verified device energy meter; runtime is not energy.",
+            "energy_note": "No verified device energy meter; sampled ON observations are not measured energy.",
             "scope": "current context and running Home Assistant session only",
         }
