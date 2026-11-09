@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "โปรไฟล์ · อุปกรณ์ · CLIMATE_MANUAL_PROFILE",
+        "name": "โปรไฟล์ · เลือก",
         "state": {
-          "auto": "Automatic"
+          "auto": "อัตโนมัติ",
+          "comfort": "สบาย",
+          "home": "บ้าน",
+          "away": "ไม่อยู่บ้าน",
+          "sleep": "นอน",
+          "eco": "ประหยัดพลังงาน"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "การบังแดด · เซ็นเซอร์แสงสำหรับม่านกันแดด",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ความช่วยเหลือ"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "แหล่งจ่ายไฟ · อุปกรณ์จริง",
         "state_attributes": {
           "configuration_help": {
             "name": "ความช่วยเหลือ"
