@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Pengumuman · {channel}Minta membuka jendela",
+        "name": "Pengumuman · {channel}Sarankan membuka jendela agar perangkat ini tidak perlu digunakan",
         "state_attributes": {
           "configuration_help": {
             "name": "Bantuan"
