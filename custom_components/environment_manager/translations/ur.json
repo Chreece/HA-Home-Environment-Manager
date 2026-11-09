@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "اعلانات · {channel}کھڑکیاں کھولنے کی درخواست",
+        "name": "اعلانات · {channel}اس آلے کا استعمال کم کرنے کے لیے کھڑکیاں کھولنے کی تجویز دیں",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"
