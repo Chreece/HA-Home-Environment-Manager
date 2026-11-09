@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "சுயவிவரம் · சாதனங்கள் · CLIMATE_MANUAL_PROFILE",
+        "name": "சுயவிவரம் · தேர்வு",
         "state": {
-          "auto": "Automatic"
+          "auto": "தானியங்கி",
+          "comfort": "வசதி",
+          "home": "வீடு",
+          "away": "வீட்டில் இல்லை",
+          "sleep": "தூக்கம்",
+          "eco": "ஆற்றல் சேமிப்பு"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "நிழல் · நிழலுக்கான ஒளி உணரி",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "உதவி"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "மின்வழங்கல் · இயற்பியல் சாதனம்",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
