@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Perfil · Dispositivos · CLIMATE_MANUAL_PROFILE",
+        "name": "Perfil · Elegir",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automático",
+          "comfort": "Confort",
+          "home": "Casa",
+          "away": "Ausente",
+          "sleep": "Sueño",
+          "eco": "Ahorro de energía"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Sombreado · Sensor de luz para sombreado",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ayuda"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Alimentación · Dispositivo físico",
         "state_attributes": {
           "configuration_help": {
             "name": "Ayuda"
