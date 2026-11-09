@@ -125,9 +125,17 @@ def configured_rooms(hass: Any, entity_id: str | None, attribute: str | None,
 
 
 def _bool_presence(state: Any, minutes: float = 240, *, room_input: bool = False) -> bool | None:
-    # Room presence contacts hold ON/OFF until their next transition.
-    # Whole-home trackers and sampled counts keep their age limit.
-    if not _fresh(state, None if room_input and getattr(state, "domain", None) == "binary_sensor" else minutes):
+    # Change-driven room contacts keep ON/OFF until the next transition.
+    # Whole-home positives from change-driven trackers also remain positive:
+    # a person/device tracker can stay HOME all night without a new report.
+    # Negatives must still be recent before they authorize household Away.
+    # Missing, restored, invalid and unavailable values never prove presence.
+    domain = getattr(state, "domain", None)
+    positive_state = "on" if domain == "binary_sensor" else "home"
+    if (not room_input and domain in ("person", "device_tracker", "binary_sensor")
+            and getattr(state, "state", None) == positive_state):
+        return True if _fresh(state, None) else None
+    if not _fresh(state, None if room_input and domain == "binary_sensor" else minutes):
         return None
     if state.domain == "binary_sensor":
         if state.state == "on":
