@@ -156,6 +156,10 @@ with sync_playwright() as playwright:
     page.wait_for_function("card._hemControllerDialog126?.fullRegistry127?.length===5")
     modal = page.locator('dialog.hem-controller-options126')
     assert modal.is_visible()
+    # Accordion sections are closed initially; open them before interacting
+    # with their read-only purpose-specific help disclosures.
+    for category in modal.locator('details.hem-full-category127').all():
+        category.locator(':scope > summary').click()
     for id in ('select.method_cooler','switch.cooler_maximum','select.cooler_calibration',
                'number.cooler_gain','button.cooler_calibrate'):
         setting = modal.locator('[data-hem-full-row127="'+id+'"]')
