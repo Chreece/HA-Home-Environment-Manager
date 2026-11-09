@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Wachten na sluiten van ramen",
           "window_state_unknown": "Wachten op raamstatus",
           "window_open_wait": "Wacht tot je het raam opent",
-          "window_request_pending": "Verzoek om het raam te openen wordt verstuurd"
+          "window_request_pending": "Verzoek om het raam te openen wordt verstuurd",
+          "physical_device_startup_timeout": "Het apparaat is niet binnen 60 seconden na inschakelen opnieuw verbonden"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Hulp"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Voeding · Wachttijd voordat de stroomvoorziening wordt uitgeschakeld (seconden)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Meldingen · {channel}Vragen om ramen te openen",
+        "name": "Stel voor ramen te openen om het gebruik van dit apparaat te vermijden",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Profiel · Apparaten · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "Comfort",
+          "home": "Thuis",
+          "away": "Afwezig",
+          "sleep": "Slaap",
+          "eco": "Eco"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Voeding · Externe voedingsschakelaar",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"
