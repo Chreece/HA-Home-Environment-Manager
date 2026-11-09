@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Oznámenia · {channel}Požiadať o otvorenie okien",
+        "name": "Oznámenia · {channel}Odporučiť otvoriť okná, aby nebolo potrebné použiť toto zariadenie",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
