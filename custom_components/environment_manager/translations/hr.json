@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Profil · Uređaji · CLIMATE_MANUAL_PROFILE",
+        "name": "Profil · Odaberi",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatsko",
+          "comfort": "Udobnost",
+          "home": "Dom",
+          "away": "Odsutnost",
+          "sleep": "Spavanje",
+          "eco": "Ušteda energije"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Zasjenjenje · Senzor osvijetljenosti za sjenila",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Napajanje · Fizički uređaj",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"
