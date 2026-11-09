@@ -148,11 +148,45 @@ class PublishReleaseTests(unittest.TestCase):
         with self.assertRaises(publisher.ReleaseError):
             publisher.is_new_version([release(VERSION, draft=True)], VERSION)
 
-    def test_existing_published_version_is_a_strict_no_write(self):
-        api = FakeGitHub(self.sha, initial=[release(VERSION)])
-        publisher.publish(api, self.repo, self.sha)
+    def published_fixture(self):
+        api = FakeGitHub(self.sha, initial=[release(VERSION, identifier=2)])
+        api.data = publisher.package(self.repo, self.sha, VERSION)
+        api.asset = {
+            "id": 7, "name": "environment_manager.zip",
+            "state": "uploaded", "size": len(api.data),
+            "digest": "sha256:" + hashlib.sha256(api.data).hexdigest(),
+            "browser_download_url": (
+                f"https://github.com/{publisher.REPOSITORY}/releases/download/"
+                f"v{VERSION}/environment_manager.zip"
+            ),
+        }
+        api.created = {**api.items[0], "target_commitish": self.sha,
+                       "assets": [api.asset]}
+        api.tags["v" + VERSION] = self.sha
+        return api
+
+    def test_existing_published_version_is_reverified_without_any_write(self):
+        api = self.published_fixture()
+        with patch.object(publisher, "download_asset", return_value=api.data) as downloaded:
+            publisher.publish(api, self.repo, self.sha)
+        downloaded.assert_called_once()
         self.assertFalse(any(method != "GET" for method, path in api.events))
         self.assertEqual(len(api.items), 1)
+
+    def test_existing_version_never_skips_corrupt_asset_or_missing_tag(self):
+        for failure in ("server_digest", "tag", "download"):
+            with self.subTest(failure=failure):
+                api = self.published_fixture()
+                if failure == "server_digest":
+                    api.asset["digest"] = "sha256:" + "0" * 64
+                elif failure == "tag":
+                    api.tags["v" + VERSION] = "9" * 40
+                wrong = b"not the published archive"
+                with patch.object(publisher, "download_asset",
+                                  return_value=wrong if failure == "download" else api.data):
+                    with self.assertRaises(publisher.ReleaseError):
+                        publisher.publish(api, self.repo, self.sha)
+                self.assertFalse(any(method != "GET" for method, path in api.events))
 
     def test_matching_successful_main_run_is_required(self):
         run = {"name": publisher.WORKFLOW, "workflow_id": 8, "event": "push",
@@ -230,6 +264,26 @@ class PublishReleaseTests(unittest.TestCase):
                 with self.subTest(method=method, path=path), self.assertRaises(publisher.ReleaseError):
                     api.request(method, path)
         opener.return_value.open.assert_not_called()
+
+    def test_public_504_falls_back_to_unauthenticated_release_api(self):
+        name = "asset.zip"
+        url = f"https://github.com/{publisher.REPOSITORY}/releases/download/v{VERSION}/{name}"
+        error = lambda: HTTPError(url, 504, "GitHub edge timed out", {}, None)
+        opener = Mock()
+        opener.open.side_effect = [error() for _ in range(5)] + [BytesIO(b"zip")]
+        asset = {"id": 7, "browser_download_url": url}
+        with patch.object(publisher, "build_opener", return_value=opener), patch.object(
+            publisher, "sleep"
+        ) as sleep:
+            self.assertEqual(publisher.download_asset(asset, "v" + VERSION, name, 3), b"zip")
+        self.assertEqual(opener.open.call_count, 6)
+        self.assertEqual(sleep.call_count, 4)
+        for call in opener.open.call_args_list:
+            self.assertFalse(call.args[0].has_header("Authorization"))
+        api_request = opener.open.call_args_list[-1].args[0]
+        self.assertEqual(api_request.full_url,
+                         f"https://api.github.com/repos/{publisher.REPOSITORY}/releases/assets/7")
+        self.assertEqual(api_request.get_header("Accept"), "application/octet-stream")
 
     def test_asset_download_retries_without_authorization(self):
         name = "asset.zip"
