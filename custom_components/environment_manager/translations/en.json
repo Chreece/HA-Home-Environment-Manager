@@ -4008,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Announcement · {channel}Ask to open windows",
+        "name": "Suggest opening windows to avoid using this device",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
