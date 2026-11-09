@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Anunțuri · {channel}Solicită deschiderea ferestrelor",
+        "name": "Anunțuri · {channel}Sugerează deschiderea ferestrelor pentru a evita folosirea acestui dispozitiv",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajutor"
