@@ -2871,7 +2871,8 @@
           "window_close_warmup": "জানালা বন্ধ হওয়ার পর অপেক্ষা",
           "window_state_unknown": "জানালার অবস্থার জন্য অপেক্ষা",
           "window_open_wait": "আপনার জানালা খোলার অপেক্ষায়",
-          "window_request_pending": "জানালা খোলার অনুরোধ পাঠানো হচ্ছে"
+          "window_request_pending": "জানালা খোলার অনুরোধ পাঠানো হচ্ছে",
+          "physical_device_startup_timeout": "চালু করার ৬০ সেকেন্ডের মধ্যে যন্ত্রটি পুনরায় সংযুক্ত হয়নি"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "সাহায্য"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "বিদ্যুৎ · সরবরাহ বন্ধের আগে অপেক্ষা (সেকেন্ড)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "সাহায্য"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "ঘোষণা · {channel}জানালা খোলার অনুরোধ",
+        "name": "এই যন্ত্রটির ব্যবহার এড়াতে জানালা খোলার পরামর্শ দিন",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "প্রোফাইল · ডিভাইস · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "আরাম",
+          "home": "বাড়িতে",
+          "away": "বাইরে",
+          "sleep": "ঘুম",
+          "eco": "সাশ্রয়ী"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "সাহায্য"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "বিদ্যুৎ · বাহ্যিক সরবরাহ সুইচ",
         "state_attributes": {
           "configuration_help": {
             "name": "সাহায্য"
