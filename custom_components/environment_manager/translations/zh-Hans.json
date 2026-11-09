@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "播报 · {channel}提示打开窗户",
+        "name": "播报 · {channel}建议开窗以避免使用此设备",
         "state_attributes": {
           "configuration_help": {
             "name": "帮助"
