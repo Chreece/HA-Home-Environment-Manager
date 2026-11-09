@@ -146,11 +146,14 @@ with sync_playwright() as p:
         ("en","Announce device errors"),
     ]:
         for state in ("on", "off"):
-            page.evaluate("""({locale,state})=>{
-                const id='switch.hem_device_error_alerts';
+            # Native setting_label is localized by the HEM backend; a
+            # fixture's static English friendly_name must not override it.
+            page.evaluate("""({locale,state,label})=>{
+                const id='switch.hem_device_error_alerts',previous=card._hass.states[id];
                 card._hass={...card._hass,language:locale,states:{...card._hass.states,
-                    [id]:{...card._hass.states[id],state}}};draw();
-            }""", {"locale": locale, "state": state})
+                    [id]:{...previous,state,attributes:{
+                        ...previous.attributes,setting_label:label}}}};draw();
+            }""", {"locale": locale, "state": state, "label": label})
             assert_announcement(page, label, state)
     assert page.evaluate("calls") == [
         ["switch", "turn_off", {"entity_id": "switch.hem_device_error_alerts"}],
