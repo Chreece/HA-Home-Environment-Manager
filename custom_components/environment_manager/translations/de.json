@@ -4008,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Ansagen · {channel}Zum Fensteröffnen auffordern",
+        "name": "Fensteröffnen empfehlen, um den Einsatz dieses Geräts zu vermeiden",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
