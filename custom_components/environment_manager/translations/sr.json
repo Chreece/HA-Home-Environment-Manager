@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Обавештења · {channel}Затражи отварање прозора",
+        "name": "Обавештења · {channel}Предложи отварање прозора да би се избегло коришћење овог уређаја",
         "state_attributes": {
           "configuration_help": {
             "name": "Помоћ"
