@@ -8961,7 +8961,7 @@
     const name=String(meta.setting_key||field.kind||field.id||"").toLowerCase();
     if(field.domain==="time"||/sleep_start|sleep_end|_schedule_/.test(name))return "schedule";
     if(/(?:^|_)(?:control_mode|requested_mode|operating_mode|preset)$/.test(name))return "mode";
-    if(/pid|calibrat|_kp$|_ki$|_kd$|gain_|capacity|adaptive/.test(name))return "pid";
+    if(/pid|calibrat|^(?:kp|ki|kd)$|_kp$|_ki$|_kd$|gain_|capacity|adaptive/.test(name))return "pid";
     if(/window|ventilat|extraction/.test(name))return "ventilation";
     if(/notify|announce|tts|error/.test(name))return "alerts";
     if(/fan|quiet|speed|cadr/.test(name))return "fan";
