@@ -237,21 +237,68 @@ def verified_asset(api, release_id, tag, sha, name, digest, size, *, published):
 
 
 def download_asset(asset, tag, name, size):
+    """Verify public download, then try the unauthenticated asset API on CDN 504.
+
+    GitHub's public /releases/download endpoint can return transient 504s
+    while the API asset endpoint remains accessible. Neither request carries
+    our workflow token; the final content must pass SHA256 and ZIP checks.
+    """
     expected = f"https://github.com/{REPOSITORY}/releases/download/{tag}/{name}"
     require(asset.get("browser_download_url") == expected, "Unexpected published download URL")
-    # No Authorization header or authenticated opener is used for any hop.
-    request = Request(expected, headers={"User-Agent": "hem-beta-verifier"})
-    for attempt in range(5):
-        try:
-            with build_opener(AssetRedirect()).open(request, timeout=30) as response:
-                data = response.read(size + 1)
-            break
-        except HTTPError as error:
-            if attempt == 4 or error.code not in (404, 429, 500, 502, 503, 504):
-                raise ReleaseError(f"Published asset download returned HTTP {error.code}") from None
-            sleep(2 * (attempt + 1))
-    require(len(data) == size, "Downloaded asset size mismatch")
-    return data
+    sources = [(expected, {"User-Agent": "hem-beta-verifier"}, "public")]
+    identifier = asset.get("id")
+    if type(identifier) is int:
+        sources.append((
+            f"https://api.github.com/repos/{REPOSITORY}/releases/assets/{identifier}",
+            {"User-Agent": "hem-beta-verifier",
+             "Accept": "application/octet-stream",
+             "X-GitHub-Api-Version": "2022-11-28"},
+            "API",
+        ))
+    for url, headers, label in sources:
+        for attempt in range(5):
+            request = Request(url, headers=headers)
+            try:
+                with build_opener(AssetRedirect()).open(request, timeout=30) as response:
+                    downloaded = response.read(size + 1)
+                if len(downloaded) == size:
+                    return downloaded
+                # Not a full asset (often API JSON); try the next transport.
+                break
+            except HTTPError as error:
+                if error.code not in (404, 429, 500, 502, 503, 504):
+                    raise ReleaseError(f"Published asset {label} download returned HTTP {error.code}") from None
+                if attempt < 4:
+                    sleep(2 * (attempt + 1))
+    raise ReleaseError("Published asset download failed at both public and API endpoints")
+
+
+def verify_existing_release(api, repo, sha, version, releases):
+    """Recheck an already-published beta without replacing tags or assets.
+
+    Repeated main validations must never report green merely because a
+    public release exists. The current integration package must be byte-for-byte
+    identical to the immutable published asset, even when only publisher tests
+    or scripts advanced the main commit.
+    """
+    validate_release_history(releases, version)
+    tag = "v" + version
+    matching = [item for item in releases if item.get("tag_name") == tag]
+    require(len(matching) == 1 and matching[0].get("draft") is False,
+            "Expected exactly one already-published beta")
+    published_sha = tag_commit(api, tag)
+    require(isinstance(published_sha, str), "Published beta tag is missing")
+    main_head(api, sha)
+    data = package(repo, sha, version)
+    digest = hashlib.sha256(data).hexdigest()
+    asset = verified_asset(api, matching[0]["id"], tag, published_sha,
+                           "environment_manager.zip", digest, len(data),
+                           published=True)
+    downloaded = download_asset(asset, tag, "environment_manager.zip", len(data))
+    require(hashlib.sha256(downloaded).hexdigest() == digest,
+            "Already published ZIP SHA256 differs from validated package")
+    inspect_zip(downloaded, version)
+    print("Verified already-published beta:", tag, published_sha, "SHA256", digest)
 
 
 def publish(api, repo, sha):
@@ -264,7 +311,7 @@ def publish(api, repo, sha):
         return
     releases = api.releases()
     if not is_new_version(releases, version):
-        print("Already published; no changes:", "v" + version)
+        verify_existing_release(api, repo, sha, version, releases)
         return
     tag = "v" + version
     notes = git(repo, "show", sha + f":.github/releases/{tag}.md").decode("utf-8")
