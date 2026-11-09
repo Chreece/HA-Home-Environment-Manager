@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Профиль · Устройства · CLIMATE_MANUAL_PROFILE",
+        "name": "Профиль · Выбрать",
         "state": {
-          "auto": "Automatic"
+          "auto": "Автоматическое",
+          "comfort": "Комфорт",
+          "home": "Дом",
+          "away": "Вне дома",
+          "sleep": "Сон",
+          "eco": "Энергосбережение"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Затенение · Датчик освещённости для штор",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Справка"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Питание · Физическое устройство",
         "state_attributes": {
           "configuration_help": {
             "name": "Справка"
