@@ -166,6 +166,7 @@ if (process.argv[3]) {
   assert.ok(lines[0].includes('Προτεραιότητα'), JSON.stringify(lines));
   assert.ok(lines.some(line => line.includes('Απόφαση υγρασίας') && line.includes('56,2%')), JSON.stringify(lines));
   assert.ok(lines.some(line => line.includes('Σύνοψη δωματίου')), JSON.stringify(lines));
-  assert.ok(markup.includes('data-detail-id="setting-help:select.hem_method"'));
+  assert.ok(!markup.includes('data-detail-id="setting-help:select.hem_method"'));
+  assert.ok(markup.includes('data-detail-id="device-option:switch.hem_announce"'));
 }
 console.log('061B2_INFO_BUBBLE_LIFECYCLE=PASS');

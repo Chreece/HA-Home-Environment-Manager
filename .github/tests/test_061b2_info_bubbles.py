@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CARD = ROOT / "frontend/air-quality-advisor-card.js"
 ROOM_KEY = "room-info:living"
 DEVICE_KEY = "device-info:climate.hem_heater"
-HELP_KEY = "setting-help:select.hem_method"
+HELP_KEY = "device-option:switch.hem_announce"
 HELP_TEXT = "Χωρίς έλεγχο παρουσίας: συνεχίζει κανονικά.\nΠαρουσία: λειτουργεί όταν υπάρχει κάποιος.\nΑπουσία: λειτουργεί όταν ο χώρος είναι άδειος."
 
 
@@ -30,7 +30,7 @@ def fixture():
     plan["coordination"] = {"priority": "hold_or_no_demand"}
     plan["reason"] = "environment_only_no_hvac"
     plan["equipment_plan"]["humidity"]["measured_rh"] = 56.2
-    data["states"]["select.hem_method"]["attributes"]["configuration_help"] = HELP_TEXT
+    data["states"]["switch.hem_announce"]["attributes"]["configuration_help"] = HELP_TEXT
     # Keep the test data explicitly JSON serializable, as real HA state is.
     return json.loads(json.dumps(data, ensure_ascii=False))
 
@@ -225,7 +225,7 @@ def browser_checks(data):
                 open_bubble(page, ROOM_KEY)
                 page.keyboard.press("Escape")
                 assert_closed(page, ROOM_KEY)
-                # Device and setting help use the same portal/dismissal path.
+                # Device quick-option help uses the same portal/dismissal path.
                 device = room.locator('[data-device-fold87="climate.hem_heater"]')
                 device.locator(":scope > summary > ha-icon:last-child").click()
                 expect(device).to_have_attribute("open", "")

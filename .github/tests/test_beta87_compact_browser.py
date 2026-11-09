@@ -180,7 +180,9 @@ with sync_playwright() as p:
     assert "60,2" in device.locator(":scope > summary").inner_text()
     device.locator(":scope > summary").evaluate("(el)=>el.click()")
     assert device.get_attribute("open") is not None
-    assert device.locator("[data-climate-method]").is_visible()
+    # This fixture has no verified scoped operating modes; the retired
+    # device-wide method must not reappear as an offline fallback.
+    assert device.locator("[data-climate-method]").count()==0
     assert device.locator("[data-device-error-announce]").count()==1
     assert device.locator(".hem-device-error").count()==1
 

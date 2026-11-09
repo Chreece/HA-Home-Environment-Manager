@@ -185,7 +185,9 @@ env={
 tree=ast.parse(SELECT.read_text())
 func=next(f for f in tree.body if isinstance(f,ast.AsyncFunctionDef)
           and f.name=='async_setup_entry')
-exec(compile(ast.Module(body=[func],type_ignores=[]),
+retire=next(f for f in tree.body if isinstance(f,ast.FunctionDef)
+            and f.name=='_retire_device_wide_control_methods')
+exec(compile(ast.Module(body=[retire,func],type_ignores=[]),
              str(SELECT),'exec'),env)
 manager=N(settings={
     'equipment_controllers':{

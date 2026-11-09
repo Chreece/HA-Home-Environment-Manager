@@ -66,7 +66,9 @@ for modes, bits in [
     assert c.temperature or c.temperature_range, (modes, c)
 
 frontend = (ROOT / "frontend/air-quality-advisor-card.js").read_text(encoding="utf-8")
-assert "kind==='temperature' && !thermalModes" in frontend
+# The old card-only Manual editor was removed along with the legacy
+# device-wide method. Real native DRY/FAN_ONLY target gating remains enforced.
+assert "const method=!hasModeSettings" not in frontend
 # DRY/FAN_ONLY native devices may report temperature measurements, but
 # must not offer a physical temperature TARGET they do not support.
 assert "const physicalThermal=" in frontend

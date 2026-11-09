@@ -23,6 +23,20 @@ PROFILE_OPTIONS = ("auto", "comfort", "home", "away", "sleep", "eco")
 GAIN_SOURCE_OPTIONS = ("defaults", "manual")
 
 
+def _retire_device_wide_control_methods(registry, specs):
+    """Remove only exact obsolete HEM method entities, never scoped methods.
+
+    Registry removal is a one-time setup migration; the existing stored
+    controller settings remain untouched until edited through per-mode controls.
+    """
+    for spec in specs:
+        legacy = registry.async_get_entity_id(
+            "select", DOMAIN, f"{spec.identifier}_control_mode"
+        )
+        if legacy:
+            registry.async_remove(legacy)
+
+
 async def async_setup_entry(hass, entry, async_add_entities):
     manager = entry.runtime_data
     entities = [TTSLanguageSelect(manager, entry.entry_id)]
@@ -55,17 +69,21 @@ async def async_setup_entry(hass, entry, async_add_entities):
                 manager, entry.entry_id, area, "climate_policy", values, setting_key=key
             ))
     from . import equipment_model as equipment
-    entities.extend(EquipmentSelect(manager, spec, "control_mode")
-                    for spec in equipment.specs(manager))
+    from homeassistant.helpers import entity_registry as er
+    from .equipment_battery import battery_reporting_controllers
+    registry = er.async_get(hass)
+    physical_specs = equipment.specs(manager)
+    # The old device-wide Control Method selector conflicts with explicit
+    # per-mode method selectors (heat, cool, dry, humidify, fan, etc).
+    # Retire only this integration's immutable legacy selector IDs; a custom
+    # friendly name cannot prevent cleanup, and neither a scoped selector nor
+    # any physical device entity is removed. Saved tuning is untouched.
+    _retire_device_wide_control_methods(registry, physical_specs)
     # Optional upstream power is meaningful for mains-powered equipment.
     # A physical device reporting its own battery (native attributes or a
     # same-device battery diagnostic sensor) must not expose the relay picker.
     # Retire exact legacy HEM selector IDs, including user-renamed entities,
     # without altering any saved relay association or physical control state.
-    from homeassistant.helpers import entity_registry as er
-    from .equipment_battery import battery_reporting_controllers
-    registry = er.async_get(hass)
-    physical_specs = equipment.specs(manager)
     battery_controllers = battery_reporting_controllers(
         hass, physical_specs, registry,
     )

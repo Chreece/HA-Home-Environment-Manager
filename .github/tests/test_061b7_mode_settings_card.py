@@ -144,7 +144,7 @@ test('supported modes use metadata, own parameters, native options and one physi
   const html=card._controllerPanel(room);
   assert.equal((html.match(/class="hem-operating-mode7"/g)||[]).length,0);
   assert.equal((html.match(/data-hem-card-method129=/g)||[]).length,2);
-  assert.equal((html.match(/data-climate-method=/g)||[]).length,1);
+  assert.equal((html.match(/data-climate-method=/g)||[]).length,0);
   assert.equal((html.match(/data-pid-calibration-method=/g)||[]).length,0);
   assert.equal((html.match(/data-window-announce-switch=/g)||[]).length,2);
   assert.equal((html.match(/data-device-quick-key8="native_full_output"/g)||[]).length,2);
@@ -288,6 +288,12 @@ def run():
               device_id:'managed-device-'+i,config_entry_id:'entry0'};
           }
           const registry=[];
+          // Native method selectors share the immutable controller identifier.
+          for(const state of Object.values(states)){
+            const source=state?.attributes?.source_device_id;
+            if(['hardware0','hardware1','hardware2'].includes(source))
+              state.attributes.controller_id='controller_'+source.slice(-1);
+          }
           for(const [id,state] of Object.entries(states)){
             const source=state?.attributes?.source_device_id;
             if(!['hardware0','hardware1','hardware2'].includes(source))continue;
@@ -296,7 +302,9 @@ def run():
             if(id==='number.wrong_device'||id==='select.unsupported_mode')continue;
             registry.push({entity_id:id,device_id:'managed-device-'+n,
               config_entry_id:'entry0',platform:'environment_manager',
-              unique_id:'entry0_controller_'+n+'_'+id.replace('.','_')});
+              unique_id:id==='select.control_0_'+n
+                ?'controller_'+n+'_control_mode'
+                :'entry0_controller_'+n+'_'+id.replace('.','_')});
           }
           window.registry7=registry;
           card._hass={language:'en',states,user:{is_admin:true},
@@ -331,7 +339,7 @@ def run():
         assert card_panel.locator('.hem-calibration').count()==0
         assert card_panel.locator('[data-quick-option8]').count()>=2
         assert card_panel.locator('[data-detail-id="diagnostics:climate.managed_0_0"]').count()==1
-        assert page.locator('[data-climate-method]').count()==1  # legacy device
+        assert page.locator('[data-climate-method]').count()==0  # legacy method retired
         assert page.locator('[data-timed-setpoint-switch]').count()==0
         assert page.evaluate("calls.length")==0
         card_panel.locator('[data-mode-setting-select="select.method_0_cool"]').select_option('pid')
@@ -346,6 +354,10 @@ def run():
         assert modal.is_visible()
         assert modal.locator('.managed-controller,.hem-device-quick-row8').count()==0
         assert modal.locator('[data-hem-full-list127="device"]').count()==1
+        # The legacy device-level selector must not duplicate scoped controls.
+        assert modal.locator('[data-hem-full-row127="select.control_0_0"]').count()==0
+        assert modal.locator('[data-hem-full-row127="select.user_renamed_method"]').count()==1
+        assert modal.locator('[data-hem-full-row127="select.method_0_cool"]').count()==1
         assert page.evaluate("calls.length")==1
         for category,entity in (
             ('mode','select.user_renamed_method'),
@@ -413,6 +425,11 @@ def run():
             modal.screenshot(path=str(shots/'b17-categorized-device-settings.png'),animations='disabled')
         modal.locator('[data-close-hem-controller126]').click()
         assert not modal.is_visible()
+        # Even an offline device must not resurrect the retired selector.
+        assert page.evaluate("card._openHemControllerSettings126('room0','climate.managed_0_2')") is True
+        page.wait_for_function("card._hemControllerDialog126?.fullRegistry127?.length>8")
+        assert modal.locator('[data-hem-full-row127="select.control_0_2"]').count()==0
+        modal.locator('[data-close-hem-controller126]').click()
         assert not errors,errors
         browser.close()
     print("HEM_061B7_SCOPED_MODE_SETTINGS_IN_CATEGORIZED_DIALOG=PASS")
