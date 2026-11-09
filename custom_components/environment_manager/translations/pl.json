@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Profil · Urządzenia · CLIMATE_MANUAL_PROFILE",
+        "name": "Profil · Wybierz",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatyczne",
+          "comfort": "Komfort",
+          "home": "Dom",
+          "away": "Nieobecność",
+          "sleep": "Sen",
+          "eco": "Oszczędzanie energii"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Zacienianie · Czujnik światła do zacieniania",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Zasilanie · Urządzenie fizyczne",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
