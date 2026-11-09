@@ -65,7 +65,7 @@ class PerformanceWindow:
         self.mode: str | None = None
         self.target: float | None = None
         self.samples: deque[Observation] = deque(maxlen=MAX_SAMPLES)
-        self.gaps = 0
+        self.max_gap_seconds = 1800
 
     def observe(
         self, *, context: tuple[Any, ...], metric: str, method: str,
@@ -84,7 +84,7 @@ class PerformanceWindow:
                 metric, method, mode, float(target)
             )
             self.samples.clear()
-            self.gaps = 0
+        self.max_gap_seconds = max(3 * sample_seconds, 1800)
         last = self.samples[-1] if self.samples else None
         if last is not None:
             elapsed = at - last.at
@@ -92,8 +92,8 @@ class PerformanceWindow:
                 return False
             if elapsed < 0.7 * sample_seconds:
                 return False
-            if elapsed > max(3 * sample_seconds, 1800):
-                self.gaps += 1
+            # A long gap remains visible between two samples but receives
+            # no integration credit. Never infer runtime while HA was asleep.
         direction = 1 if increasing else -1
         self.samples.append(Observation(
             float(at), direction * (target - measured), output
@@ -115,8 +115,7 @@ class PerformanceWindow:
         for previous, current in zip(samples, samples[1:]):
             dt = current.at - previous.at
             # Include only adjacent observations close enough to be credible.
-            max_gap = 1800
-            if dt <= 0 or dt > max_gap:
+            if dt <= 0 or dt > self.max_gap_seconds:
                 gaps += 1
                 continue
             qualified_pairs += 1
@@ -155,7 +154,7 @@ class PerformanceWindow:
             "verified_off_to_on_transitions": starts,
             "observed_on_hours_lower_bound": round(run_floor / 3600, 3),
             "observed_off_hours_lower_bound": round(off_floor / 3600, 3),
-            "unobserved_or_long_intervals": gaps + self.gaps,
+            "unobserved_or_long_intervals": gaps,
             "energy_kwh": None,
             "energy_note": "No verified device energy meter; runtime is not energy.",
             "scope": "current context and running Home Assistant session only",
