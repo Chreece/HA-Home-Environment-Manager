@@ -2871,7 +2871,8 @@
           "window_close_warmup": "关窗后等待中",
           "window_state_unknown": "等待窗户状态",
           "window_open_wait": "正在等你打开窗户",
-          "window_request_pending": "正在发送开窗请求"
+          "window_request_pending": "正在发送开窗请求",
+          "physical_device_startup_timeout": "设备通电后 60 秒内未重新连接"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "帮助"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "电源 · 断开供电前的等待时间（秒）",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "帮助"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "播报 · {channel}提示打开窗户",
+        "name": "建议开窗以避免使用此设备",
         "state_attributes": {
           "configuration_help": {
             "name": "帮助"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "配置 · 设备 · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "舒适",
+          "home": "在家",
+          "away": "离家",
+          "sleep": "睡眠",
+          "eco": "节能"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "帮助"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "电源 · 外部供电开关",
         "state_attributes": {
           "configuration_help": {
             "name": "帮助"
