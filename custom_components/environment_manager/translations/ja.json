@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "プロファイル · デバイス · CLIMATE_MANUAL_PROFILE",
+        "name": "プロファイル · 選択",
         "state": {
-          "auto": "Automatic"
+          "auto": "自動",
+          "comfort": "快適",
+          "home": "自宅",
+          "away": "外出",
+          "sleep": "睡眠",
+          "eco": "省エネ"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "日よけ · 日よけ用照度センサー",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "電源 · 実機の状態",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
