@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "配置 · 设备 · CLIMATE_MANUAL_PROFILE",
+        "name": "配置 · 选择",
         "state": {
-          "auto": "Automatic"
+          "auto": "自动",
+          "comfort": "舒适",
+          "home": "家中",
+          "away": "离家",
+          "sleep": "睡眠",
+          "eco": "节能"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "遮阳 · 遮阳照度传感器",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "帮助"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "供电 · 实体设备",
         "state_attributes": {
           "configuration_help": {
             "name": "帮助"
