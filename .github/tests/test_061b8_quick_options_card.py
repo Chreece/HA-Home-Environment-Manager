@@ -210,8 +210,13 @@ test('all shared options form one row; scoped flags and retired timing never dup
   assert.equal((html.match(/data-timed-setpoint-switch=/g)||[]).length,0);
   assert.ok(!html.includes('class="hem-window-policy66"'));
   assert.ok(!html.includes('class="hem-device-error-toggle"'));
-  assert.ok(html.includes('data-mode-setting-entity="switch.mode_quiet_sleep"'));
-  assert.ok(html.includes('data-mode-setting-entity="switch.mode_quiet_occupied"'));
+  // Scoped quiet controls are settings, not card controls. The compact card
+  // keeps only its policy tiles; advanced controls remain in the device menu.
+  assert.ok(!html.includes('data-mode-setting-entity="switch.mode_quiet_sleep"'));
+  assert.ok(!html.includes('data-mode-setting-entity="switch.mode_quiet_occupied"'));
+  const advanced=card._operatingModeControls7(items[0],'room0');
+  assert.ok(advanced.includes('data-mode-setting-entity="switch.mode_quiet_sleep"'));
+  assert.ok(advanced.includes('data-mode-setting-entity="switch.mode_quiet_occupied"'));
 });
 test('localized visible state is compact; separate icon and switch keep exact accessible purpose',()=>{
   for(const locale of ['en','el','de']){
