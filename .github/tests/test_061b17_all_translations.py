@@ -56,7 +56,10 @@ for lang, values in all_languages.items():
     assert "{channel}" not in values[window_key], (
         f"{lang}: per-device toggle should not repeat the channel/device prefix"
     )
-    assert len(values[window_key]) >= 20, f"{lang}: window-prompt label is incomplete"
+    # Chinese uses compact logographs; 12 meaningful Han characters convey
+    # the same device-specific purpose without needing 20 Latin-style glyphs.
+    minimum = 10 if lang in ("zh-Hans", "zh-Hant") else 20
+    assert len(values[window_key]) >= minimum, f"{lang}: window-prompt label is incomplete"
     for group, states in (
         (profile, ("auto", "comfort", "home", "away", "sleep", "eco")),
         (method, ("existing", "automatic", "manual", "off", "pid")),
