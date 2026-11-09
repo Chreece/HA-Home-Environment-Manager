@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Profil · Zariadenia · CLIMATE_MANUAL_PROFILE",
+        "name": "Profil · Vybrať",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatické",
+          "comfort": "Pohodlie",
+          "home": "Domov",
+          "away": "Neprítomnosť",
+          "sleep": "Spánok",
+          "eco": "Úspora energie"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Tienenie · Snímač osvetlenia pre tienenie",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Napájanie · Fyzické zariadenie",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
