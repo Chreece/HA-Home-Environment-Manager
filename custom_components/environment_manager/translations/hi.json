@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "घोषणाएँ · {channel}खिड़कियाँ खोलने का अनुरोध",
+        "name": "घोषणाएँ · {channel}इस उपकरण का उपयोग टालने के लिए खिड़कियाँ खोलने का सुझाव दें",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"
