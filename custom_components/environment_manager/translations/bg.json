@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Известия · {channel}Поискай отваряне на прозорците",
+        "name": "Известия · {channel}Предложи отваряне на прозорците, за да не се използва това устройство",
         "state_attributes": {
           "configuration_help": {
             "name": "Помощ"
