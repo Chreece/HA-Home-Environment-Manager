@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Meldingen · {channel}Vragen om ramen te openen",
+        "name": "Meldingen · {channel}Stel voor ramen te openen om dit apparaat niet te hoeven gebruiken",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"
