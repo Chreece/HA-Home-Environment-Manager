@@ -9028,6 +9028,30 @@
       field.category=this._hemFullCategory127(field);
       result.push(field);
     }
+    if(scope==="device"){
+      // Per-mode controller methods supersede the older, shared method UI.
+      // The shared entity must remain registered for old installations,
+      // automations and safe fallback when no scoped method is available.
+      // Match immutable registry IDs and exact controller provenance, never
+      // names or a sibling channel on the same physical Home Assistant device.
+      const scopedOwners=new Set(result.filter(field=>
+        field.domain==="select"&&
+        field.state?.attributes?.settings_scope==="operating_mode"&&
+        field.state?.attributes?.setting_key==="control_mode"&&
+        typeof field.state?.attributes?.controller_id==="string"
+      ).map(field=>field.state.attributes.controller_id));
+      if(scopedOwners.size){
+        const clean=result.filter(field=>{
+          const controller=field.state?.attributes?.controller_id;
+          const legacy=field.domain==="select"&&
+            typeof controller==="string"&&
+            field.state?.attributes?.settings_scope!=="operating_mode"&&
+            field.reg?.unique_id===controller+"_control_mode";
+          return !(legacy&&scopedOwners.has(controller));
+        });
+        return clean.sort((a,b)=>a.label.localeCompare(b.label,this._language())||a.id.localeCompare(b.id));
+      }
+    }
     return result.sort((a,b)=>a.label.localeCompare(b.label,this._language())||a.id.localeCompare(b.id));
   };
   hemFull127._hemFullRow127=function(field,scope){
