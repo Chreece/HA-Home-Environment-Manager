@@ -2871,7 +2871,8 @@
           "window_close_warmup": "Venter efter lukning af vinduer",
           "window_state_unknown": "Venter på vinduesstatus",
           "window_open_wait": "Venter på, at du åbner vinduet",
-          "window_request_pending": "Sender en anmodning om at åbne vinduet"
+          "window_request_pending": "Sender en anmodning om at åbne vinduet",
+          "physical_device_startup_timeout": "Enheden blev ikke tilgængelig igen inden for 60 sekunder efter opstart"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "Hjælp"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Strøm · Ventetid før afbrydelse af strømforsyning (sekunder)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjælp"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Meddelelser · {channel}Bed om at åbne vinduer",
+        "name": "Foreslå at åbne vinduer for at undgå at bruge denne enhed",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjælp"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "Profil · Enheder · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "Komfort",
+          "home": "Hjemme",
+          "away": "Ude",
+          "sleep": "Søvn",
+          "eco": "Øko"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjælp"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Strøm · Ekstern strømforsyningskontakt",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjælp"
