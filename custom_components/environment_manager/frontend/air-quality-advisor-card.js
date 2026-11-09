@@ -2239,20 +2239,12 @@
       const devices=this._managedControllers(room.area_id);
       if (!devices.length) return '';
       const l=this._climateLabels65();
-      const methods={existing:l.existing,automatic:l.automatic,manual:l.manual,
-        pid:l.pid,off:l.off};
       const pidLabels=this._pidLabels65();
       const fanCapacityLabels=this._fanLabels65();
       const sections=devices.map((entry)=>{
         const state=entry.climate;
         const attrs=state.attributes || {};
         const available=state.state!=='unavailable' && state.state!=='unknown';
-        const selection=entry.method;
-        const options=Array.isArray(selection?.attributes?.options)
-          ? selection.attributes.options : [];
-        const control=selection?.state || attrs.control_mode || 'existing';
-        const hasModeSettings=entry.operatingModes?.length>0;
-        const name=attrs.friendly_name || entry.entityId;
         // The folded row names the HEM controller. The expanded heading
         // names the ORIGINAL physical endpoint as registered in HA.
         // Never recycle the HEM facade's friendly_name for that heading.
@@ -2277,16 +2269,6 @@
           : '<span class="climate-entity-link hem-physical-title93 hem-physical-title93-unavailable" '+
             'title="'+escape(nativeEndpoint?.entityId || l.selectedDevice)+'">'+
             '<strong>'+escape(nativeName)+'</strong></span>')+'</div>';
-        const method=!hasModeSettings && entry.methodId && options.length
-          ? '<label class="managed-method-label"><span>'+escape(l.method)+'</span>'+
-          '<select data-climate-method="'+escape(entry.methodId)+
-          '" data-controller-area="'+escape(room.area_id)+
-          '" aria-label="'+escape(l.method)+' · '+escape(name)+'" '+
-          (available ? '' : 'disabled')+'>'+
-          options.map((option)=>'<option value="'+escape(option)+'" '+
-            (option===control ? 'selected' : '')+'>'+
-            escape(methods[option] || option)+'</option>').join('')+
-          '</select></label>' : '';
         const localizedReview={
           en:['Adaptive · Suggest & approve','Adaptive · Automatic','Approve','Discard','Proposed PID adjustment'],
           de:['Adaptiv · Vorschlag bestätigen','Adaptiv · Automatisch','Übernehmen','Verwerfen','Vorgeschlagene PID-Anpassung'],
@@ -2502,31 +2484,6 @@
               escape(this._format(capacityStatus.unmet_demand_percent))+'%' : '')+
           '</small>' : '';
         const features=Number(attrs.supported_features) || 0;
-        const thermalModes=Array.isArray(attrs.hvac_modes) &&
-          attrs.hvac_modes.some(mode=>['heat','cool','heat_cool','auto'].includes(mode));
-        const editable=!hasModeSettings && available && control==='manual';
-        const editors=[];
-        for(const [kind,bit,label,minKey,maxKey,fallbackLow,fallbackHigh,step] of [
-          ['temperature',1,l.manualTemperature,'min_temp','max_temp',5,35,0.5],
-          ['humidity',4,l.manualHumidity,'min_humidity','max_humidity',20,80,1],
-        ]) {
-          if (!(features & bit) || !editable ||
-              (kind==='temperature' && !thermalModes)) continue;
-          const minimum=Number(attrs[minKey] ?? fallbackLow);
-          const maximum=Number(attrs[maxKey] ?? fallbackHigh);
-          const value=attrs[kind];
-          if (!Number.isFinite(minimum) || !Number.isFinite(maximum) ||
-              !(maximum > minimum)) continue;
-          editors.push('<div class="climate-target-editor">'+
-            '<label><span>'+escape(label)+'</span>'+
-            '<input type="number" data-climate-input="'+escape(kind)+
-            '" min="'+escape(minimum)+'" max="'+escape(maximum)+
-            '" step="'+escape(step)+'" value="'+
-            (Number.isFinite(value) ? escape(value) : '')+'"></label>'+
-            '<button type="button" data-save-climate-target="'+escape(entry.entityId)+
-            '" data-target-metric="'+escape(kind)+'" data-controller-area="'+
-            escape(room.area_id)+'">'+escape(l.save)+'</button></div>');
-        }
         const status=attrs.controller_status?.status || '';
         const continueLabel=({'en':'Continue Automatic','de':'Automatik fortsetzen',
           'el':'Συνέχιση αυτόματης λειτουργίας'})[this._language()]||'Continue Automatic';
@@ -2544,7 +2501,6 @@
           this._deviceSummary65(entry)+faultPanel+
           quickOptions+
           recoveryPanel+this._configurationHelp116(resumeControl,entry.resumeButtonId,entry.resumeButton,continueLabel)+
-          this._configurationHelp116(method,entry.methodId,entry.method,l.method)+
           modeControls+
           '</section>';
       }).join('');
@@ -9016,6 +8972,13 @@
         reg.platform!=="environment_manager"))continue;
       const state=states[id]||null,attr=state?.attributes||{};
       if(this._retiredDeviceOption9?.(state))continue;
+      // The device-wide method is retired. This also blocks a transient
+      // registry/state snapshot from showing an obsolete dropdown during an
+      // upgrade; do not filter or mutate genuine per-operating-mode methods.
+      if(scope==="device"&&domain==="select"&&
+         typeof attr.controller_id==="string"&&
+         attr.settings_scope!=="operating_mode"&&
+         reg.unique_id===attr.controller_id+"_control_mode")continue;
       const owner=saved.controller?.climate?.attributes?.controller_id;
       if(scope==="device"&&owner&&attr.controller_id&&attr.controller_id!==owner)continue;
       const kind=reg.unique_id||attr.setting_key||id;
@@ -9028,30 +8991,7 @@
       field.category=this._hemFullCategory127(field);
       result.push(field);
     }
-    if(scope==="device"){
-      // Per-mode controller methods supersede the older, shared method UI.
-      // The shared entity must remain registered for old installations,
-      // automations and safe fallback when no scoped method is available.
-      // Match immutable registry IDs and exact controller provenance, never
-      // names or a sibling channel on the same physical Home Assistant device.
-      const scopedOwners=new Set(result.filter(field=>
-        field.domain==="select"&&
-        field.state?.attributes?.settings_scope==="operating_mode"&&
-        field.state?.attributes?.setting_key==="control_mode"&&
-        typeof field.state?.attributes?.controller_id==="string"
-      ).map(field=>field.state.attributes.controller_id));
-      if(scopedOwners.size){
-        const clean=result.filter(field=>{
-          const controller=field.state?.attributes?.controller_id;
-          const legacy=field.domain==="select"&&
-            typeof controller==="string"&&
-            field.state?.attributes?.settings_scope!=="operating_mode"&&
-            field.reg?.unique_id===controller+"_control_mode";
-          return !(legacy&&scopedOwners.has(controller));
-        });
-        return clean.sort((a,b)=>a.label.localeCompare(b.label,this._language())||a.id.localeCompare(b.id));
-      }
-    }
+
     return result.sort((a,b)=>a.label.localeCompare(b.label,this._language())||a.id.localeCompare(b.id));
   };
   hemFull127._hemFullRow127=function(field,scope){
