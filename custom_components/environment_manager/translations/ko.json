@@ -2871,7 +2871,8 @@
           "window_close_warmup": "창문을 닫은 후 대기 중",
           "window_state_unknown": "창문 상태를 기다리는 중",
           "window_open_wait": "사용자가 창문을 열기를 기다리는 중",
-          "window_request_pending": "창문 열기 요청을 보내는 중"
+          "window_request_pending": "창문 열기 요청을 보내는 중",
+          "physical_device_startup_timeout": "전원을 켠 후 60초 안에 기기가 다시 연결되지 않았습니다"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "도움말"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "전원 · 전원 공급 차단 전 대기 시간(초)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "알림 · {channel}창문 열기 요청",
+        "name": "이 기기 사용을 피하도록 창문 열기를 권장",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "프로필 · 장치 · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "쾌적",
+          "home": "재택",
+          "away": "외출",
+          "sleep": "수면",
+          "eco": "절전"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "전원 · 외부 전원 스위치",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"
