@@ -2871,7 +2871,8 @@
           "window_close_warmup": "窓を閉じた後の待機中",
           "window_state_unknown": "窓の状態を確認中",
           "window_open_wait": "窓が開けられるのを待っています",
-          "window_request_pending": "窓を開ける依頼を送信中"
+          "window_request_pending": "窓を開ける依頼を送信中",
+          "physical_device_startup_timeout": "電源投入後60秒以内に機器が再接続されませんでした"
         }
       }
     },
@@ -3819,6 +3820,14 @@
             "name": "ヘルプ"
           }
         }
+      },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "電源 · 給電を切る前の待機時間（秒）",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
       }
     },
     "switch": {
@@ -3999,7 +4008,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "通知 · {channel}窓を開けるよう案内",
+        "name": "この機器の使用を避けるために窓を開けるよう提案する",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
@@ -4027,7 +4036,12 @@
       "area_manual_profile": {
         "name": "プロファイル · デバイス · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatic",
+          "comfort": "快適",
+          "home": "在宅",
+          "away": "外出",
+          "sleep": "睡眠",
+          "eco": "省エネ"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4254,6 +4268,14 @@
           "observe": "Observe and suggest",
           "bounded": "Bounded auto-adapt (10% / day)"
         },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "電源 · 外部給電スイッチ",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
