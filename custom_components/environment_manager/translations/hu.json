@@ -4036,7 +4036,7 @@
       "area_manual_profile": {
         "name": "Profil · Eszközök · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic",
+          "auto": "Automatikus",
           "comfort": "Komfort",
           "home": "Otthon",
           "away": "Távol",

@@ -4036,7 +4036,7 @@
       "area_manual_profile": {
         "name": "プロファイル · デバイス · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic",
+          "auto": "自動",
           "comfort": "快適",
           "home": "在宅",
           "away": "外出",

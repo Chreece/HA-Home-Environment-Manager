@@ -4036,7 +4036,7 @@
       "area_manual_profile": {
         "name": "פרופיל · התקנים · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic",
+          "auto": "אוטומטי",
           "comfort": "נוחות",
           "home": "בבית",
           "away": "מחוץ לבית",

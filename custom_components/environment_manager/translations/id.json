@@ -4036,7 +4036,7 @@
       "area_manual_profile": {
         "name": "Profil · Perangkat · CLIMATE_MANUAL_PROFILE",
         "state": {
-          "auto": "Automatic",
+          "auto": "Otomatis",
           "comfort": "Nyaman",
           "home": "Di rumah",
           "away": "Pergi",
