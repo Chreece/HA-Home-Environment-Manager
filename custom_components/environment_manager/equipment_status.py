@@ -115,6 +115,10 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         else:
             pid_phase = None
         pid_wake = getattr(runtime, "_profile_wake", {}).get(self._spec.identifier)
+        perf_tracker = getattr(runtime, "_pid_performance", {}).get(self._spec.identifier)
+        learning_tracker = getattr(runtime, "_pid_passive_observers", {}).get(self._spec.identifier)
+        perf = perf_tracker.snapshot() if perf_tracker is not None else None
+        learning = learning_tracker.progress() if learning_tracker is not None else None
         # Surface both pieces of an externally powered controller. The HA
         # native appliance may be unavailable precisely BECAUSE the supply
         # is OFF. Neither observation implies that the logical controller
@@ -253,6 +257,14 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             ),
             "pid_comfort_wake_pending": bool(pid_wake),
             "pid_comfort_wake_until": pid_wake.get("until") if isinstance(pid_wake, dict) else None,
+            # Session-only measured tracking performance. No energy claim
+            # without a verified power meter, and no implied 24h coverage
+            # when HA restarted or sensors were unavailable.
+            "pid_performance_24h": (perf if cfg.get("control_mode")
+                                   in ("pid", "automatic") else None),
+            "pid_learning_progress": (learning if cfg.get("pid_calibration_method")
+                                      in ("adaptive_suggest", "adaptive_auto")
+                                      and cfg.get("control_mode") == "pid" else None),
             "pid_calibration_method": cfg.get("pid_calibration_method", "manual"),
             "pid_last_calibration": cfg.get("pid_last_calibration"),
             # Compatibility field derived from the one selected method.
