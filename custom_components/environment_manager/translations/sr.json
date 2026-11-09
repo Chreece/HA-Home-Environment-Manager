@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "Профил · Uređaji · CLIMATE_MANUAL_PROFILE",
+        "name": "Профил · Izaberi",
         "state": {
-          "auto": "Automatic"
+          "auto": "Automatsko",
+          "comfort": "Удобност",
+          "home": "Dom",
+          "away": "Одсутност",
+          "sleep": "Spavanje",
+          "eco": "Уштеда енергије"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "Засенчење · Сензор осветљења за сенчење",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "Напајање · Физички уређај",
         "state_attributes": {
           "configuration_help": {
             "name": "Помоћ"
