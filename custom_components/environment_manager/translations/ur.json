@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "پروفائل · آلات · CLIMATE_MANUAL_PROFILE",
+        "name": "پروفائل · منتخب کریں",
         "state": {
-          "auto": "Automatic"
+          "auto": "خودکار",
+          "comfort": "آرام",
+          "home": "گھر",
+          "away": "گھر سے باہر",
+          "sleep": "نیند",
+          "eco": "توانائی کی بچت"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "سایہ · شیڈنگ کا لکس سینسر",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مدد"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "بجلی کی فراہمی · اصل آلہ",
         "state_attributes": {
           "configuration_help": {
             "name": "مدد"
