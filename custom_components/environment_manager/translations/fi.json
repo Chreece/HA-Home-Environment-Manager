@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Ilmoitukset · {channel}Pyydä avaamaan ikkunat",
+        "name": "Ilmoitukset · {channel}Ehdota ikkunoiden avaamista, jotta laitetta ei tarvitsisi käyttää",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"
