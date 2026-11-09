@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "播報 · {channel}提示打開窗戶",
+        "name": "播報 · {channel}建議開窗以避免使用此裝置",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"
