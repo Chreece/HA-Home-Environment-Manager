@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "அறிவிப்புகள் · {channel}சாளரங்களைத் திறக்கக் கோரு",
+        "name": "அறிவிப்புகள் · {channel}இந்தச் சாதனத்தைப் பயன்படுத்துவதைத் தவிர்க்க ஜன்னல்களைத் திறக்கப் பரிந்துரை செய்",
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
