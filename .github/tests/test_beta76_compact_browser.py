@@ -108,7 +108,7 @@ with sync_playwright() as p:
     assert 'Bedroom power supply' in deviceInfo.inner_text()
     assert page.evaluate('calls.length')==0
     assert page.locator('details.hem-diagnostics').count()==1
-    assert page.locator('details.hem-calibration').count()==1
+    assert page.locator('details.hem-calibration').count()==0, "Calibration now lives in the device settings categories"
     assert page.locator('[data-window-policy-switch]').count()==1
 
     # Info icon remains keyboard accessible and survives a status refresh.
