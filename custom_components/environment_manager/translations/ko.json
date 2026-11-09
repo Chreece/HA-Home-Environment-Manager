@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "알림 · {channel}창문 열기 요청",
+        "name": "알림 · {channel}이 기기 사용을 피하도록 창문 열기를 권장",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"
