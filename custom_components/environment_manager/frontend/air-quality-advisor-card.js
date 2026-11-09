@@ -8554,7 +8554,10 @@
       climate:"Climate and PID",shade:"Shading",occupancy:"Occupancy and sleep",other:"Other settings",
       controller:"Controller",mode:"Operating mode",status:"Current status",source:"Physical device",
       demand:"Demand",target:"Target",feedback:"Device reports",windows:"Window policy",
-      power:"Power supply",fault:"Device error"},
+      power:"Power supply",fault:"Device error",
+      pidEvidence:"Control evidence",pidLearning:"PID learning",
+      pidSamples:"samples",pidCoverage:"h coverage",pidStarts:"verified starts",
+      pidRejected:"Last rejection",pidUnmeasured:"Energy not measured"},
     de:{settings:"HEM-Geräteeinstellungen",close:"Schließen",unavailable:"Einstellungen nicht verfügbar",
       room:"Einstellungen des Raumgeräts",immediate:"HEM-Einstellungen unten werden sofort übernommen. Für die Sensorauswahl oben Speichern wählen.",
        immediateShort:"Wird sofort übernommen",
@@ -8563,7 +8566,10 @@
       climate:"Klima und PID",shade:"Beschattung",occupancy:"Anwesenheit und Schlaf",other:"Weitere Einstellungen",
       controller:"Regler",mode:"Betriebsmodus",status:"Aktueller Status",source:"Physisches Gerät",
       demand:"Bedarf",target:"Sollwert",feedback:"Gerät meldet",windows:"Fensterrichtlinie",
-      power:"Stromversorgung",fault:"Gerätefehler"},
+      power:"Stromversorgung",fault:"Gerätefehler",
+      pidEvidence:"Regelungsnachweis",pidLearning:"PID-Lernen",
+      pidSamples:"Messwerte",pidCoverage:"h Abdeckung",pidStarts:"bestätigte Starts",
+      pidRejected:"Letzte Ablehnung",pidUnmeasured:"Energie nicht gemessen"},
     el:{settings:"Ρυθμίσεις συσκευής HEM",close:"Κλείσιμο",unavailable:"Μη διαθέσιμες ρυθμίσεις",
       room:"Ρυθμίσεις συσκευής χώρου",immediate:"Οι παρακάτω ρυθμίσεις HEM εφαρμόζονται αμέσως. Οι επιλογές αισθητήρων πιο πάνω αποθηκεύονται με «Αποθήκευση».",
        immediateShort:"Εφαρμόζεται αμέσως",
@@ -8572,7 +8578,10 @@
       climate:"Κλιματισμός και PID",shade:"Σκίαση",occupancy:"Παρουσία και ύπνος",other:"Άλλες ρυθμίσεις",
       controller:"Ελεγκτής",mode:"Λειτουργία",status:"Τρέχουσα κατάσταση",source:"Φυσική συσκευή",
       demand:"Ζήτηση",target:"Στόχος",feedback:"Ένδειξη συσκευής",windows:"Πολιτική παραθύρων",
-      power:"Τροφοδοσία",fault:"Σφάλμα συσκευής"}
+      power:"Τροφοδοσία",fault:"Σφάλμα συσκευής",
+      pidEvidence:"Μετρήσεις ελέγχου",pidLearning:"Εκμάθηση PID",
+      pidSamples:"δείγματα",pidCoverage:"ώρες κάλυψης",pidStarts:"επιβεβαιωμένες εκκινήσεις",
+      pidRejected:"Τελευταία απόρριψη",pidUnmeasured:"Δεν μετρήθηκε ενέργεια"}
   };
   const hemWord126=(card,key)=>(HEM_WORDS126[card._language()]||HEM_WORDS126.en)[key]||key;
   hemProto126._deviceInfoScoped126=function(entry){
@@ -8614,6 +8623,30 @@
       row("demand",this._format(s.demand_percent,1)+"%");
     if(Number.isFinite(s.pid_control_target))
       row("target",this._format(s.pid_control_target));
+    const perf=s.pid_performance_24h;
+    if(perf&&typeof perf==="object"&&Number.isFinite(perf.sample_count)){
+      const parts=[perf.sample_count+" "+hemWord126(this,"pidSamples")];
+      if(Number.isFinite(perf.coverage_hours))
+        parts.push(this._format(perf.coverage_hours,2)+" "+hemWord126(this,"pidCoverage"));
+      if(Number.isFinite(perf.mae))
+        parts.push("MAE "+this._format(perf.mae,2)+" "+(perf.unit||""));
+      if(Number.isFinite(perf.maximum_observed_overshoot))
+        parts.push("↑ "+this._format(perf.maximum_observed_overshoot,2)+" "+(perf.unit||""));
+      if(Number.isFinite(perf.verified_off_to_on_transitions))
+        parts.push(perf.verified_off_to_on_transitions+" "+hemWord126(this,"pidStarts"));
+      parts.push(hemWord126(this,"pidUnmeasured"));
+      row("pidEvidence",parts.join(" · "));
+    }
+    const progress=s.pid_learning_progress;
+    if(progress&&typeof progress==="object"){
+      const valid=Number.isFinite(progress.valid_cycles)?progress.valid_cycles:0;
+      const required=Number.isFinite(progress.required_for_auto)?progress.required_for_auto:5;
+      const parts=[valid+"/"+required, String(progress.phase||"collecting").replaceAll("_"," ")];
+      if(progress.last_rejection_reason)
+        parts.push(hemWord126(this,"pidRejected")+": "+
+          String(progress.last_rejection_reason).replaceAll("_"," "));
+      row("pidLearning",parts.join(" · "));
+    }
     const wait=s.window_policy||{};
     if(wait.status)row("windows",this._controllerStatusLabel(wait.status));
     const supply=s.upstream_power_switch||a.upstream_power_switch;
