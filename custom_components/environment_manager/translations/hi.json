@@ -4025,9 +4025,14 @@
         }
       },
       "area_manual_profile": {
-        "name": "प्रोफ़ाइल · उपकरण · CLIMATE_MANUAL_PROFILE",
+        "name": "प्रोफ़ाइल · चुनें",
         "state": {
-          "auto": "Automatic"
+          "auto": "स्वचालित",
+          "comfort": "आराम",
+          "home": "घर",
+          "away": "घर से बाहर",
+          "sleep": "नींद",
+          "eco": "ऊर्जा बचत"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4241,6 +4246,14 @@
       },
       "shade_lux_entity": {
         "name": "छाया · छायांकन के लिए प्रकाश सेंसर",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "सहायता"
+          }
+        }
+      },
+      "equipment_power_switch_entity": {
+        "name": "बिजली आपूर्ति · भौतिक उपकरण",
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"
