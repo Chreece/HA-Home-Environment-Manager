@@ -3999,7 +3999,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Avisos · {channel}Pedir que se abran las ventanas",
+        "name": "Avisos · {channel}Sugerir abrir las ventanas para evitar usar este dispositivo",
         "state_attributes": {
           "configuration_help": {
             "name": "Ayuda"
