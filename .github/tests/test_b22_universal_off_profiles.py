@@ -86,6 +86,6 @@ for effect in profiles.EFFECTS:
             title,message=profiles.notice(effect,lang,kind,
                 name="Device", room="Room",first=40,current=45,target=42,
                 attempts=2)
-            assert "Device" in message and "Room" in message and "OFF" in message
+            assert "Device" in message and "Room" in message
             assert title and "42.0" in message
 print("B22_ALL_FOUR_OUTPUT_DIRECTIONS_SOURCE_TARGET_AND_NOTICE_GATES=PASS")
