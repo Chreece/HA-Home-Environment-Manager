@@ -331,6 +331,21 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         sessions.pop(spec.identifier, None)
         await _clear_warning(runtime, record)
         return False
+    # Relative humidity changes with air temperature even when no moisture
+    # is added or removed. Require a separate, fresh, same-room temperature
+    # measurement to cross-check absolute humidity before blaming an output.
+    room_temp = None
+    watch_ids = ids
+    if profile.metric == "humidity":
+        room_temp, temp_ids = _independent_room_temperature(runtime, spec)
+        if room_temp is None or not temp_ids:
+            sessions.pop(spec.identifier, None)
+            await _clear_warning(runtime, record)
+            return False
+        # Bind the entire trend to BOTH source inventories. Switching any
+        # humidity or temperature sensor cannot manufacture a fault signature.
+        watch_ids = (tuple("humidity:" + name for name in ids)
+                     + tuple("temperature:" + name for name in temp_ids))
     target = model.targets(
         runtime.manager, spec, cap, cfg, model.plan_for(runtime.manager, spec)
     ).get(direction if profile.metric == "temperature" else "humidity")
@@ -340,17 +355,17 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         return False
     sensor_watch = sessions.get(spec.identifier)
     if (not isinstance(sensor_watch, ThermalWatch)
-            or sensor_watch.source_ids != ids
+            or sensor_watch.source_ids != watch_ids
             or sensor_watch.off_since != off_since
             or sensor_watch.effect != direction):
         sensor_watch = sessions[spec.identifier] = ThermalWatch(
-            ids, off_since, effect=direction,
+            watch_ids, off_since, effect=direction,
         )
     cleared = _competing_effect_clear(runtime, spec, cap.primary, direction)
     risk = sensor_watch.observe(
-        now=now, temperature_c=measured, target_c=target, source_ids=ids,
+        now=now, temperature_c=measured, target_c=target, source_ids=watch_ids,
         off_since=off_since, other_heat_sources_clear=cleared,
-        direction=direction,
+        direction=direction, room_temperature_c=room_temp,
     )
     if risk == "none":
         # Clear stale red status when the physical-response evidence resolves.
@@ -365,7 +380,7 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         "direction": direction,
         "metric": profile.metric,
         "unit": profile.unit,
-        "source_ids": list(ids),
+        "source_ids": list(watch_ids),
         "first": round(first, 2),
         "current": round(measured, 2),
         "target": round(target, 2),
