@@ -100,12 +100,14 @@ class ThermalWatch:
     samples: list[tuple[float, float]] = field(default_factory=list)
     effect: str = "heat"
     sampled_target: float | None = None
+    moisture_samples: list[tuple[float, float]] = field(default_factory=list)
 
     def observe(self, *, now: float, temperature_c: float | None,
                 target_c: float | None, source_ids: tuple[str, ...],
                 off_since: float, other_heat_sources_clear: bool,
                 independent_heat_output: bool | None = None,
-                direction: str = "heat") -> str:
+                direction: str = "heat",
+                room_temperature_c: float | None = None) -> str:
         """Return none/suspected/confirmed; temperature or RH is not proof of ON.
 
         The old keyword names remain for binary compatibility with the
@@ -124,6 +126,7 @@ class ThermalWatch:
             profile = EFFECTS.get(direction)
             if profile is None:
                 self.samples.clear()
+            self.moisture_samples.clear()
                 return "none"
             rising, settle, span, excess, rise = (
                 profile.rising, profile.settle_seconds,
@@ -136,6 +139,7 @@ class ThermalWatch:
                 or source_ids != self.source_ids
                 or abs(off_since - self.off_since) > 1):
             self.samples.clear()
+            self.moisture_samples.clear()
             return "none"
         if (temperature_c is None or target_c is None
                 or not isfinite(temperature_c) or not isfinite(target_c)
@@ -143,26 +147,44 @@ class ThermalWatch:
                 or not target_min <= target_c <= target_max
                 or not other_heat_sources_clear):
             self.samples.clear()
+            self.moisture_samples.clear()
             return "none"
+        moisture = None
+        if direction in ("humidify", "dry"):
+            # Natural room cooling can raise RH without adding moisture. Do
+            # not accuse an appliance or repeat OFF unless water vapor itself
+            # also changed in the suspicious direction.
+            from .off_state_profiles import absolute_humidity_gm3
+            moisture = absolute_humidity_gm3(room_temperature_c, temperature_c)
+            if moisture is None:
+                self.samples.clear()
+                self.moisture_samples.clear()
+                return "none"
         # A new mode or effective target invalidates the old trend. Otherwise
         # changing an away/comfort/mold target could fabricate a false alarm.
         if (self.effect != direction
                 or self.sampled_target is not None and abs(self.sampled_target-target_c) > .05):
             self.samples.clear()
+            self.moisture_samples.clear()
         self.effect = direction
         self.sampled_target = target_c
         # Residual heater/cooler output, humidity buffering and sensor
         # equilibration must finish before ANY trend sample is admitted.
         if now - off_since < settle:
             self.samples.clear()
+            self.moisture_samples.clear()
             return "none"
         if self.samples and (now < self.samples[-1][0]
                 or now - self.samples[-1][0] > MAX_SAMPLE_AGE_SECONDS):
             self.samples.clear()
+            self.moisture_samples.clear()
         if (not self.samples
                 or now - self.samples[-1][0] >= MIN_SAMPLE_STEP_SECONDS):
             self.samples.append((now, temperature_c))
             self.samples = self.samples[-MAX_SAMPLES:]
+            if moisture is not None:
+                self.moisture_samples.append((now, moisture))
+                self.moisture_samples = self.moisture_samples[-MAX_SAMPLES:]
         if len(self.samples) < 2:
             return "none"
         first_time, first_value = self.samples[0]
@@ -170,6 +192,11 @@ class ThermalWatch:
         if (now - first_time < span
                 or polarity * (temperature_c - target_c) < excess
                 or polarity * (temperature_c - first_value) < rise):
+            return "none"
+        if moisture is not None and (
+            not self.moisture_samples or
+            polarity * (moisture - self.moisture_samples[0][1]) < 0.45
+        ):
             return "none"
         return "confirmed" if independent_heat_output is True else "suspected"
 
