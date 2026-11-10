@@ -871,3 +871,8 @@ Released under the [MIT license](LICENSE).
 ### Per-device post-shutdown watchdog (v0.6.1b23)
 
 Each physical HEM controller has a **Safety · Post-shutdown watchdog** setting: **Monitor and recover** (the existing b22 default), **Monitor only** (warn without OFF repeats), or **Disabled** (no watchdog sampling, warning or recovery). This preference is shared by all physical operating modes. It never affects normal shutdowns, command safety gates, or PID decisions. Existing settings and durable retry history remain unchanged.
+
+
+### Unified Home, Room and Device settings (v0.6.1b24)
+
+The HEM card now combines draft Home/Room Options-flow settings with immediate native device controls **inside the same functional accordion headings** rather than repeating categories. Room source pickers are retained as subgroups, device settings have six compact groups, and the redundant Other category is removed throughout. Saved drafts still use the dialog's Save button; native HEM controls apply only when their individual Apply/Toggle control is used. No device control logic has changed.
