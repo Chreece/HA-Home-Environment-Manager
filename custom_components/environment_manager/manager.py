@@ -380,6 +380,9 @@ class AirQualityManager:
                 window_safe=all(contact.opened is False for contact in monitored.windows),
                 sleeping=None,
             )
+            # This read-only overview never authorizes an Eco transition.
+            # Active climate plans re-evaluate sleep/arrival/safety separately.
+            door["eco_active"] = False
             environment.setdefault(area_id, {})["door"] = door
             self._tracked.update(door["sensor_entities"])
         environment["__outside__"] = {"pollen": pollen}
