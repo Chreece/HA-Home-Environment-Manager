@@ -4587,7 +4587,7 @@
       '<div class="hem-room-ventilation95" role="status">'+
       this._icon('mdi:air-filter')+
       '<span>'+ventNotes95.map(value=>escape(value)).join(' · ')+'</span></div>':'';
-    const door062=room?.environment?.door||room?.environment?.climate_plan?.door||{};
+    const door062=room?.environment?.climate_plan?.door||room?.environment?.door||{};
     const doorLocales062={
       en:{open:'Door open',closed:'Door closed',settling:'Door closing · confirming',
         unknown:'Door status unknown',eco:'Eco active',
