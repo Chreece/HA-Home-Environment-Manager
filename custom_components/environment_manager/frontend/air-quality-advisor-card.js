@@ -10064,6 +10064,12 @@
   floorProto140.disconnectedCallback=function(){
     this._floorCleanupSubscriptions140();
     this._floorClose140(false);
+    // The HA WebSocket connection can survive card removal. A reconnected
+    // card must refetch/re-subscribe even when the same connection is reused.
+    this._floorConnection140=null;
+    this._floorRegistry140=null;
+    this._floorRequest140=null;
+    this._floorRefetch140=false;
     return floorOldDisconnected140.call(this);
   };
   const floorOldStyles140=floorProto140._styles;
