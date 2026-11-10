@@ -10209,7 +10209,7 @@
   })[name]||"targets";
   const hemFieldCategory141=(field,scope)=>{
     const a=field.state?.attributes||{};
-    const key=[a.setting_key,field.reg?.unique_id,field.id].filter(Boolean).join("_").toLowerCase();
+    const key=[a.setting_key,field.reg?.unique_id,field.id,field.label].filter(Boolean).join("_").toLowerCase();
     if(scope==="home"){
       if(/weather|outdoor|warning/.test(key))return "weather";
       if(/announce|notification|notify|tts|media_player|delivery|language|_hub|_ai_|ai_rewrite|conversation/.test(key))
@@ -10420,7 +10420,7 @@
     }
     // Preserve the original Options editors and focused native controls.
     // Order only newly created groups or settled/focus-free dialogs.
-    if(!root.contains(document.activeElement)){
+    if(!root.contains(_roomOptionsDeepFocus114())){
       const ordered=keys.map(key=>groups.get(key)).filter(Boolean);
       ordered.forEach((group,index)=>{
         const current=[...root.children].filter(node=>node.matches("details"))[index];
@@ -10432,7 +10432,7 @@
   const hemOriginalRoomForm141=hemUnified141._renderRoomSettingsForm114;
   hemUnified141._renderRoomSettingsForm114=function(saved,form,keepDraft=false){
     const root=saved.node.querySelector("[data-room-options-groups114]");
-    const expanded=new Set([...root?.querySelectorAll(":scope > [data-hem-unified141][open]")||[]]
+    const expanded=new Set([...(root?.querySelectorAll(":scope > [data-hem-unified141][open]")||[])]
       .map(group=>group.getAttribute("data-hem-unified141")));
     const result=hemOriginalRoomForm141.call(this,saved,form,keepDraft);
     this._hemFullRender127(saved,"room");
@@ -10445,7 +10445,7 @@
   const hemOriginalHomeForm141=hemUnified141._renderHomeGeneral128;
   hemUnified141._renderHomeGeneral128=function(saved,form,keepDraft=false){
     const root=saved.node.querySelector("[data-hem-home-form-groups128]");
-    const expanded=new Set([...root?.querySelectorAll(":scope > details[open]")||[]]
+    const expanded=new Set([...(root?.querySelectorAll(":scope > details[open]")||[])]
       .map(group=>group.getAttribute("data-hem-unified141")||
         group.getAttribute("data-hem-home-category128")));
     const result=hemOriginalHomeForm141.call(this,saved,form,keepDraft);

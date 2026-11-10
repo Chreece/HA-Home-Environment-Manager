@@ -116,7 +116,13 @@ with sync_playwright() as pw:
     assert dialog.locator('[data-hem-full-row127="select.home_language"]').count() == 1
     assert dialog.locator('[data-hem-full-row127="number.bedroom_timeout"]').count() == 0
     assert dialog.locator('[data-hem-full-row127="switch.foreign_entry"]').count() == 0
-    assert dialog.locator(".hem-room-options-group114").count() == 5
+    # All draft/native settings share one top-level category each.
+    assert dialog.locator('[data-hem-home-form-groups128] > details').count() == 4
+    assert dialog.locator('[data-hem-home-category128="other"]').count() == 0
+    assert dialog.locator('[data-hem-full-category127="presence"]').count() == 0
+    assert dialog.locator('[data-hem-home-category128="presence"] [data-hem-home-field128="general_home_policy"]').count()==1
+    assert dialog.locator('[data-hem-home-category128="presence"] [data-hem-full-row127="number.home_timeout"]').count()==1
+    assert dialog.locator('[data-hem-home-category128="alerts"] [data-hem-full-row127="select.home_language"]').count()==1
 
     dialog.locator('[data-hem-home-category128="weather"] > summary').click()
     dialog.locator('[data-hem-home-input128="weather_entities"][value="weather.second"]').check()
@@ -144,7 +150,7 @@ with sync_playwright() as pw:
     assert page.evaluate("card._openHomeSettings128()") is True
     page.wait_for_function("card._homeSettingsDialog128?.fullRegistry127?.length===4")
     dialog=page.locator("dialog.hem-home-options128")
-    dialog.locator('[data-hem-full-category127="other"] > summary').click()
+    dialog.locator('[data-hem-full-category127="presence"] > summary').click()
     dialog.locator('[data-hem-full-value127="number.home_timeout"]').fill("45")
     dialog.locator('[data-hem-full-apply127="number.home_timeout"]').click()
     page.wait_for_function("nativeCalls.length===1")
@@ -153,7 +159,7 @@ with sync_playwright() as pw:
     ]
     page.evaluate("card._renderContent(true)")
     expect(dialog).to_be_visible()
-    assert dialog.locator('[data-hem-full-category127="other"]').get_attribute("open") is not None
+    assert dialog.locator('[data-hem-full-category127="presence"]').get_attribute("open") is not None
     dialog.locator('[data-hem-home-close128]').last.click()
     page.wait_for_function("homeCalls.some(c=>c.method==='DELETE')")
 

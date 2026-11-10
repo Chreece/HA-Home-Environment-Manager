@@ -87,7 +87,15 @@ with sync_playwright() as playwright:
     for id in ("number.foreign_room","select.foreign_entry","button.foreign_platform"):
         assert dialog.locator(f'[data-hem-full-row127="{id}"]').count()==0
     assert page.evaluate("nativeCalls127.length")==0
-    for category in ("targets","pid","presence","schedule"):
+    # Seven original selectors and native room controls share compact groups.
+    assert dialog.locator('[data-room-options-groups114] > details').count() == 4
+    assert dialog.locator('[data-hem-full-category127="other"]').count()==0
+    for source in ("windows","air_quality","temperature","humidity",
+                   "climate_devices","shades","occupancy_sensors"):
+        assert dialog.locator(f'[data-room-options-group114="{source}"]').count()==1
+    assert dialog.locator('[data-hem-full-category127="ventilation"] [data-room-options-group114="shades"]').count()==1
+    assert dialog.locator('[data-hem-full-category127="mode"] [data-room-options-group114="climate_devices"]').count()==1
+    for category in ("targets","mode","presence"):
         section=dialog.locator(f'[data-hem-full-category127="{category}"]')
         expect(section).to_have_count(1)
     dialog.locator('[data-hem-full-category127="targets"] > summary').click()
@@ -95,12 +103,12 @@ with sync_playwright() as playwright:
     dialog.locator('[data-hem-full-apply127="number.hem_room_target"]').click()
     page.wait_for_function("nativeCalls127.length===1")
     assert page.evaluate("nativeCalls127[0]")==["number","set_value",{"entity_id":"number.hem_room_target","value":21.5}]
-    dialog.locator('[data-hem-full-category127="schedule"] > summary').click()
+    dialog.locator('[data-hem-full-category127="presence"] > summary').click()
     dialog.locator('[data-hem-full-value127="time.hem_room_sleep_start"]').fill("06:40")
     dialog.locator('[data-hem-full-apply127="time.hem_room_sleep_start"]').click()
     page.wait_for_function("nativeCalls127.length===2")
     assert page.evaluate("nativeCalls127[1]")==["time","set_value",{"entity_id":"time.hem_room_sleep_start","time":"06:40:00"}]
-    dialog.locator('[data-hem-full-category127="pid"] > summary').click()
+    dialog.locator('[data-hem-full-category127="mode"] > summary').click()
     dialog.locator('[data-hem-full-apply127="button.hem_room_calibrate"]').click()
     page.wait_for_function("nativeCalls127.length===3")
     assert page.evaluate("nativeCalls127[2]")==["button","press",{"entity_id":"button.hem_room_calibrate"}]
@@ -154,9 +162,11 @@ with sync_playwright() as playwright:
         expect(modal.locator(f'[data-hem-full-row127="{id}"]')).to_have_count(1)
     assert modal.locator('[data-hem-full-row127="number.foreign_controller"]').count()==0
     assert modal.locator('[data-hem-full-category127="pid"]').count()>=1
+    assert modal.locator('[data-hem-full-category127="other"]').count()==0
+    assert modal.locator('[data-hem-full-list127="device"] > details').count()<=6
     assert modal.locator('[data-hem-full-category127="mode"]').count()>=1
     assert page.evaluate("calls.length")==0
-    modal.locator('[data-hem-full-category127="pid"] > summary').click()
+    modal.locator('[data-hem-full-category127="mode"] > summary').click()
     modal.locator('[data-hem-full-value127="number.hem_pid_kp"]').fill("2.5")
     modal.locator('[data-hem-full-apply127="number.hem_pid_kp"]').click()
     page.wait_for_function("calls.length===1")
