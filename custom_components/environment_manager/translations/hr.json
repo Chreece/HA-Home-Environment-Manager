@@ -1137,7 +1137,8 @@
           "humidity": "Vlažnost",
           "climate_devices": "Uređaji",
           "shades": "Prozorske rolete, sjenila i žaluzine",
-          "occupancy_sensors": "Prisutnost · senzor"
+          "occupancy_sensors": "Prisutnost · senzor",
+          "door_sensors": "Senzori vrata"
         },
         "data_description": {
           "windows": "Prozori. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
@@ -1146,7 +1147,8 @@
           "humidity": "Vlažnost. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
           "climate_devices": "Uređaji. Odaberi samo fizičke entitete climate.*, humidifier.* i fan.* ove sobe. Izvorne funkcije određuju grijanje, hlađenje, odvlaživanje, zadane vrijednosti i brzinu ventilatora. Sam odabir ništa ne pokreće; automatiku uključi zasebno za uređaj.",
           "shades": "Prozorske rolete, sjenila i žaluzine. Odaberi rolete, žaluzine i zavjese cover.* ove sobe. Covers bez device_class prihvaćaju se uz CLOSE ako su stvarno zasjenjivači prozora. Garaže, vrata, kapije, prozori i tende su isključeni. Odabir ništa ne pomiče: dodijeli senzor prozora i postavi automatiku, najavu i temperaturu na kontroleru. Nepoznato stanje blokira pokret.",
-          "occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu."
+          "occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
+          "door_sensors": "Select only same-area door contacts; closure does not prove isolation. Optional Eco requires verified vacancy, stable closure, safe room temperature and humidity, and preserves every device protection."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Vlažnost",
           "climate_devices": "Uređaji",
           "shades": "Prozorske rolete, sjenila i žaluzine",
-          "occupancy_sensors": "Prisutnost · senzor"
+          "occupancy_sensors": "Prisutnost · senzor",
+          "door_sensors": "Senzori vrata"
         },
         "data_description": {
           "windows": "Prozori. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
@@ -2357,7 +2360,8 @@
           "humidity": "Vlažnost. Odaberite ulaze sobe: naziv uređaja - naziv entiteta. Prazne se grupe ne koriste i ne uključuju automatsko otkrivanje ni upravljanje.",
           "climate_devices": "Uređaji. Odaberi samo fizičke entitete climate.*, humidifier.* i fan.* ove sobe. Izvorne funkcije određuju grijanje, hlađenje, odvlaživanje, zadane vrijednosti i brzinu ventilatora. Sam odabir ništa ne pokreće; automatiku uključi zasebno za uređaj.",
           "shades": "Prozorske rolete, sjenila i žaluzine. Odaberi rolete, žaluzine i zavjese cover.* ove sobe. Covers bez device_class prihvaćaju se uz CLOSE ako su stvarno zasjenjivači prozora. Garaže, vrata, kapije, prozori i tende su isključeni. Odabir ništa ne pomiče: dodijeli senzor prozora i postavi automatiku, najavu i temperaturu na kontroleru. Nepoznato stanje blokira pokret.",
-          "occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu."
+          "occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
+          "door_sensors": "Select only same-area door contacts; closure does not prove isolation. Optional Eco requires verified vacancy, stable closure, safe room temperature and humidity, and preserves every device protection."
         }
       }
     },
