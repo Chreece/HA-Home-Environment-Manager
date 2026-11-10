@@ -76,14 +76,17 @@ def _independent_room_temperature(runtime: Any, spec: Any) -> tuple[float | None
     return temp, ids
 
 
-def _guard(runtime: Any, spec: Any, cap: Any, state: Any, watch: dict) -> bool:
+def _guard(runtime: Any, spec: Any, cap: Any, state: Any, watch: dict, *,
+           allowed_pending: dict | None = None) -> bool:
     """Guard to allow another OFF, never an inferred ON or broadened authority."""
     record = runtime._record(spec)
     now = runtime.clock()
     cfg = model.settings(runtime.manager, spec)
     if (not runtime._active or not runtime._ready
             or cfg.get("control_mode") not in ("automatic", "pid", "off")
-            or record.get("pending") or record.get("paused")
+            or (record.get("pending") is not None
+                and record.get("pending") is not allowed_pending)
+            or record.get("paused")
             or record.get("native_setpoint_stop")
             or record.get("restart_power_verification")
             or not runtime._current_spec(spec) or not runtime._identity_ok(spec)
