@@ -10223,6 +10223,8 @@
     }
     if(/announce|notification|notify|tts|delivery|_error|device_fault/.test(key))return "alerts";
     if(/window|ventilat|shade|cover|blind|extraction/.test(key))return "ventilation";
+    // Quiet-when-sleeping is a fan policy, not a room sleep controller.
+    if(/quiet|fan_mode|fan_percentage|fan_speed/.test(key))return "mode";
     if(/presence|occup|sleep|wake|alarm|away_policy|schedule|_start|_end/.test(key))
       return "presence";
     if(/power|safety|watchdog|battery|cooldown|relay|_min_|_max_|hold|readiness|full_output/.test(key))
