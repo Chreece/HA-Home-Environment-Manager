@@ -55,10 +55,14 @@ def _independent_room_temperature(runtime: Any, spec: Any) -> tuple[float | None
     """Only verified, fresh, same-room temperature sensors, not heater telemetry."""
     room = model.room_config(runtime.manager, spec)
     pinned = room.get("temperature_entity")
-    temp, evidence = room_temperature_evidence(
-        runtime.hass, runtime.manager.settings, spec.area_id,
-        pinned=pinned if isinstance(pinned, str) else None,
-    )
+    try:
+        temp, evidence = room_temperature_evidence(
+            runtime.hass, runtime.manager.settings, spec.area_id,
+            pinned=pinned if isinstance(pinned, str) else None,
+        )
+    except (ImportError, AttributeError):
+        # Incomplete source-registry setup is not an authorization to act.
+        return None, ()
     ids = tuple(evidence.get("entity_ids") or ())
     if (evidence.get("status") != "ready" or evidence.get("partial") is True
             or not ids or evidence.get("valid_count") != len(ids)):
