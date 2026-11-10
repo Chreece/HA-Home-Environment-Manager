@@ -36,7 +36,7 @@ def door_choices(hass: Any, area: str, previous: list[str] | None = None) -> lis
     found: dict[str, str] = {}
     for state in hass.states.async_all("binary_sensor"):
         if (entity_area(hass, state.entity_id) == area
-                and _device_class(hass, state).casefold() in DOOR_CLASSES
+                and str(_device_class(hass, state) or "").casefold() in DOOR_CLASSES
                 and native(hass, state.entity_id)):
             found[state.entity_id] = label(hass, state.entity_id)
     registry = er.async_get(hass)
@@ -108,7 +108,7 @@ def observe(hass: Any, area: str, config: Mapping | None, *,
             if (not entity_id.startswith("binary_sensor.")
                     or entity_area(hass, entity_id) != area
                     or state is None or not native(hass, entity_id)
-                    or _device_class(hass, state).casefold() not in DOOR_CLASSES
+                    or str(_device_class(hass, state) or "").casefold() not in DOOR_CLASSES
                     or state.state not in ("on", "off")
                     or (state.attributes or {}).get("restored") is True):
                 unknown = True
