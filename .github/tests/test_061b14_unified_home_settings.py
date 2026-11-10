@@ -131,6 +131,14 @@ with sync_playwright() as pw:
     dialog.locator('[data-hem-home-input128="general_away_cooldown_minutes"]').fill("23")
     dialog.locator('[data-hem-home-category128="targets"] > summary').click()
     dialog.locator('[data-hem-home-input128="pollen_avoid_ventilation"]').check()
+    # A native HA refresh must NOT replace unsaved draft fields or create
+    # a second category containing the same controls.
+    page.evaluate("card._renderContent(true)")
+    assert dialog.locator('[data-hem-home-input128="general_home_policy"]').input_value()=="all_home"
+    assert dialog.locator('[data-hem-home-input128="general_away_cooldown_minutes"]').input_value()=="23"
+    assert dialog.locator('[data-hem-home-input128="weather_entities"][value="weather.second"]').is_checked()
+    assert dialog.locator('[data-hem-home-form-groups128] > details').count() == 4
+    assert dialog.locator('[data-hem-full-row127="number.home_timeout"]').count()==1
     assert page.evaluate("nativeCalls.length") == 0
     expect(dialog.locator('[data-hem-home-save128]')).to_be_enabled()
     dialog.locator('[data-hem-home-save128]').click()
