@@ -173,6 +173,7 @@ class RoomSetupMixin:
     async def async_step_edit_room(self, user_input=None):
         """All per-room source groups plus occupancy on one page."""
         from .occupancy_policy import room_sensor_choices
+        from .room_doors import door_choices
         from .const import CONF_CLIMATE_ROOMS
         area = self._edit_room_area
         registry = ar.async_get(self.hass)
@@ -186,7 +187,15 @@ class RoomSetupMixin:
         prior = prior if isinstance(prior, dict) else {}
         local = prior.get("occupancy_sensors")
         occupancy_default = local if isinstance(local, list) else room_sensor_choices(self.hass, area)
-        occupancy_ids = sorted(set(room_sensor_choices(self.hass, area)) | set(occupancy_default))
+        occupancy_ids = sorted(set(room_sensor_choices(self.hass, area)) | set(
+            eid for eid in occupancy_default if isinstance(eid, str)
+            and eid in room_sensor_choices(self.hass, area)
+        ))
+        prior_doors = prior.get("door_sensors")
+        door_defaults = prior_doors if isinstance(prior_doors, list) else []
+        available_doors = door_choices(self.hass, area, door_defaults)
+        door_ids = {item["value"] for item in available_doors}
+        door_defaults = [eid for eid in door_defaults if eid in door_ids]
         errors = {}
         if user_input is not None:
             changes = {}
@@ -202,11 +211,15 @@ class RoomSetupMixin:
             occupants = user_input.get("occupancy_sensors", occupancy_default)
             if not isinstance(occupants, list) or any(v not in occupancy_ids for v in occupants):
                 errors["occupancy_sensors"] = "invalid_room_source"
+            doors = user_input.get("door_sensors", [])
+            if not isinstance(doors, list) or any(eid not in door_ids for eid in doors):
+                errors["door_sensors"] = "invalid_room_source"
             if not errors:
                 sources.store_selection(self.hass, self._values, area, changes)
                 rooms = self._values.setdefault(CONF_CLIMATE_ROOMS, {})
                 updated = dict(rooms.get(area, {}))
                 updated["occupancy_sensors"] = list(dict.fromkeys(occupants))
+                updated["door_sensors"] = list(dict.fromkeys(doors))
                 rooms[area] = updated
                 return await self._finish()
         fields = {
@@ -215,6 +228,9 @@ class RoomSetupMixin:
         }
         fields[field("occupancy_sensors", occupancy_default)] = select(
             [{"value": eid, "label": eid} for eid in occupancy_ids], multiple=True
+        )
+        fields[field("door_sensors", door_defaults)] = select(
+            available_doors, multiple=True
         )
         return self.async_show_form(
             step_id="edit_room", errors=errors,
