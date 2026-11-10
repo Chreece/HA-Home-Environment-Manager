@@ -9791,7 +9791,10 @@
   floorProto140._floorFetch140=function(force=false){
     const hass=this._hass,connection=hass?.connection;
     if(!connection||typeof hass.callWS!=="function")return;
-    if(this._floorRequest140)return;
+    if(this._floorRequest140){
+      if(force)this._floorRefetch140=true;
+      return;
+    }
     if(!force&&this._floorRegistry140)return;
     if(!force&&Date.now()<(this._floorRetryAt140||0))return;
     const call=hass.callWS.bind(hass);
@@ -9833,7 +9836,13 @@
       if(this._floorConnection140===connection)
         this._floorRetryAt140=Date.now()+30000;
     }).finally(()=>{
-      if(this._floorRequest140===pending)this._floorRequest140=null;
+      if(this._floorRequest140===pending){
+        this._floorRequest140=null;
+        if(this._floorRefetch140){
+          this._floorRefetch140=false;
+          this._floorFetch140(true);
+        }
+      }
     });
   };
   floorProto140._floorEnsure140=function(){
@@ -9844,6 +9853,7 @@
       this._floorConnection140=connection;
       this._floorRegistry140=null;
       this._floorRequest140=null;
+      this._floorRefetch140=false;
       this._floorRetryAt140=0;
     }
     this._floorFetch140();
@@ -10037,6 +10047,7 @@
       this._floorClose140(false);
       this._floorRegistry140=null;
       this._floorRequest140=null;
+      this._floorRefetch140=false;
       this._floorRetryAt140=0;
       this._floorConnection140=connection;
     }
