@@ -58,7 +58,7 @@ with sync_playwright() as p:
     expect(dialog).to_be_visible()
     assert dialog.locator('[data-room-options-group114]').count()>=7
     for category,id in (("targets","number.hem_home_target_a"),
-                        ("pid","select.hem_pid_gain_a"),
+                        ("mode","select.hem_pid_gain_a"),
                         ("presence","switch.hem_occupancy_a")):
         section=dialog.locator(f'[data-room-native-group126="{category}"]')
         expect(section).to_have_count(1)
@@ -66,9 +66,11 @@ with sync_playwright() as p:
     assert dialog.locator('[data-hem-room-row126="number.foreign_room"]').count()==0
     assert dialog.locator('[data-hem-room-row126="number.spoof_room"]').count()==0
     assert dialog.locator('[data-hem-room-row126="number.spoof_device"]').count()==0
+    assert dialog.locator('[data-room-native-group126="other"]').count()==0
+    assert dialog.locator('[data-room-options-groups114] > details').count() <= 6
     assert page.evaluate("nativeCalls.length")==0
     comfort=dialog.locator('[data-room-native-group126="targets"]')
-    comfort.locator("summary").click()
+    comfort.locator(":scope > summary").click()
     comfort.locator('[data-hem-full-value127="number.hem_home_target_a"]').fill("21.5")
     comfort.locator('[data-hem-full-apply127="number.hem_home_target_a"]').click()
     page.wait_for_function("nativeCalls.length===1")
