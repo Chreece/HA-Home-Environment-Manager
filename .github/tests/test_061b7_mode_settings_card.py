@@ -362,8 +362,8 @@ def run():
         for category,entity in (
             ('mode','select.user_renamed_method'),
             ('pid','number.gain_0_heat'),
-            ('targets','number.away_target'),
-            ('fan','switch.mode_quiet_sleep'),
+            ('mode','number.away_target'),
+            ('mode','switch.mode_quiet_sleep'),
         ):
             section=modal.locator(f'[data-hem-full-category127="{category}"]')
             assert section.count()==1,(category,entity)
@@ -372,10 +372,12 @@ def run():
         assert modal.locator('[data-hem-full-row127="select.unsupported_mode"]').count()==0
         assert modal.locator('[data-hem-full-row127="button.mode_unavailable"]').count()==1
 
+        # The former standalone Targets/Fan accordions now share Control.
+        assert modal.locator('[data-hem-full-category127="targets"]').count()==0
+        assert modal.locator('[data-hem-full-category127="fan"]').count()==0
+        assert modal.locator('[data-hem-full-category127="other"]').count()==0
         modal.locator('[data-hem-full-category127="mode"] > summary').click()
         modal.locator('[data-hem-full-category127="pid"] > summary').click()
-        modal.locator('[data-hem-full-category127="targets"] > summary').click()
-        modal.locator('[data-hem-full-category127="fan"] > summary').click()
         modal.locator('[data-hem-full-value127="select.user_renamed_method"]').select_option('manual')
         modal.locator('[data-hem-full-apply127="select.user_renamed_method"]').click()
         assert page.evaluate("calls[1]")==['select','select_option',
