@@ -1137,7 +1137,8 @@
           "humidity": "Vochtigheid",
           "climate_devices": "Apparaten",
           "shades": "Raamzonwering, jaloezieën en rolluiken",
-          "occupancy_sensors": "Aanwezigheid · sensor"
+          "occupancy_sensors": "Aanwezigheid · sensor",
+          "door_sensors": "Deurcontacten"
         },
         "data_description": {
           "windows": "Ramen. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
@@ -1146,7 +1147,8 @@
           "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
-          "occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet."
+          "occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
+          "door_sensors": "Select only same-area interior door contacts. A closed door does not prove air isolation. Optional Eco requires verified vacancy, stable closure, fresh safe temperature and humidity, and all existing device protections."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Vochtigheid",
           "climate_devices": "Apparaten",
           "shades": "Raamzonwering, jaloezieën en rolluiken",
-          "occupancy_sensors": "Aanwezigheid · sensor"
+          "occupancy_sensors": "Aanwezigheid · sensor",
+          "door_sensors": "Deurcontacten"
         },
         "data_description": {
           "windows": "Ramen. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
@@ -2357,7 +2360,8 @@
           "humidity": "Vochtigheid. Selecteer ingangen voor deze kamer: apparaatnaam - entiteitsnaam. Lege groepen blijven ongebruikt en activeren geen automatische detectie of bediening.",
           "climate_devices": "Apparaten. Selecteer alleen fysieke climate.*, humidifier.* en fan.*-entiteiten van deze kamer. De eigen mogelijkheden bepalen verwarmen, koelen, drogen, setpoints en ventilatorsnelheden. Selecteren bedient niets; schakel automatische besturing per apparaat apart in.",
           "shades": "Raamzonwering, jaloezieën en rolluiken. Selecteer rolluiken, jaloezieën en gordijnen als cover.* in deze kamer. Covers zonder device_class zijn toegestaan met CLOSE-ondersteuning; controleer dat het echte raamzonwering is. Deuren, garages, poorten, ramen en luifels zijn uitgesloten. Selecteren beweegt niets; koppel raamcontact en stel automatisering, aankondiging en temperatuur in op het controllerapparaat. Onbekende status blokkeert beweging.",
-          "occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet."
+          "occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
+          "door_sensors": "Select only same-area interior door contacts. A closed door does not prove air isolation. Optional Eco requires verified vacancy, stable closure, fresh safe temperature and humidity, and all existing device protections."
         }
       }
     },
