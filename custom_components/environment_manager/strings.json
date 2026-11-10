@@ -4169,6 +4169,19 @@
           }
         }
       },
+      "equipment_off_state_watchdog_mode": {
+        "name": "Safety · {channel}Post-shutdown watchdog",
+        "state": {
+          "monitor_recover": "Monitor and recover",
+          "monitor_only": "Monitor only",
+          "disabled": "Disabled"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
       "equipment_presence_requirement": {
         "name": "Presence · {channel}Requirement",
         "state": {
