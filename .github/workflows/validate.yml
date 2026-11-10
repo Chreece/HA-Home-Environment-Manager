@@ -67,6 +67,11 @@ jobs:
         run: python -I .github/tests/test_publish_release.py
       - name: Native floor registry grouping without requiring any floors
         run: python -I .github/tests/test_061b20_floors.py --logic-only
+      - name: Off-state thermal anomaly evidence and false-positive guards
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_b21_off_state_watchdog.py
+          python -I .github/tests/test_b21_off_state_runtime.py
       - name: Independent mode profiles, native controls and calibrated mold demand
         run: |
           set -euo pipefail

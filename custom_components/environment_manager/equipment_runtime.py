@@ -226,6 +226,8 @@ class EquipmentRuntime:
         # Mathematical performance observers are session-only and never save
         # raw samples or influence any PID gain, authorization or device output.
         self._pid_performance: dict[str, Any] = {}
+        # Independent room-temperature samples never persist in HA Recorder.
+        self._thermal_off_sessions: dict[str, Any] = {}
         self._store = None
         self._ready = False
         self._active = False
@@ -278,6 +280,12 @@ class EquipmentRuntime:
                                and 0 <= now - since < NATIVE_RECONNECT_SETTLE_SECONDS]
                 data["readiness_source_entity_ids"] = list(sources if sources is not None else unavailable)
         value = {"status": status, **data}
+        anomaly = self.records.get(key, {}).get("thermal_off_warning")
+        if isinstance(anomaly, dict):
+            value["thermal_off_watchdog"] = dict(anomaly)
+            if status in ("off", "within_target_band", "pid_output_inactive",
+                          "controlling", "manual"):
+                value["status"] = "suspected_heating_after_off"
         from .equipment_pid_safety import status_details
         value.update(status_details(self.records.get(key, {})))
         if not isinstance(spec, str) and hasattr(model, "humidity_demand"):
@@ -652,6 +660,7 @@ class EquipmentRuntime:
         getattr(self, "_startup_source_done", set()).clear()
         self._native_session_observations = {}
         self._native_on_epoch = {}
+        getattr(self, '_thermal_off_sessions', {}).clear()
         getattr(self, "_restart_baseline_pending", set()).clear()
         getattr(self, "_native_offline_under_owned_supply", set()).clear()
         getattr(self, "_native_ready_since", {}).clear()
@@ -769,6 +778,7 @@ class EquipmentRuntime:
         getattr(self, "_automatic_recovery_tasks", {}).clear()
         self._profile_wake.clear()
         self._native_session_observations.clear()
+        getattr(self, '_thermal_off_sessions', {}).clear()
         getattr(self, "_native_on_epoch", {}).clear()
         self._ha_running_since = None
         getattr(self, "_startup_source_observed", {}).clear()
@@ -823,6 +833,12 @@ class EquipmentRuntime:
         if not isinstance(snapshots, dict):
             raise HomeAssistantError("Invalid persisted physical observation history")
         current = "off" if output_off(state) else "on"
+        # A real native ON ends the previous HEM OFF-watch episode.
+        if current == "on" and record.get("thermal_off_watch"):
+            record.pop("thermal_off_watch", None)
+            record.pop("thermal_off_warning", None)
+            getattr(self, '_thermal_off_sessions', {}).pop(spec.identifier, None)
+            await self._save()
         wake = record.get("upstream", {}).get("native_wake")
         if isinstance(wake, dict) and wake.get("reconciled"):
             if current == "on":
@@ -3785,6 +3801,10 @@ class EquipmentRuntime:
                     "at": now, "context_id": context_id,
                 }
                 record["pending"] = None
+                # A same-state OFF recovery is merely an HA command
+                # acknowledgement, not proof of physical heat cessation.
+                # Preserve the original shutdown's off_since across repeats.
+                recovery_off = pending.get("off_state_recovery") is True
                 previous_target = record.get("unconfirmed_native_target")
                 if (isinstance(previous_target, dict)
                         and previous_target.get("pid_target_satisfied") is True
@@ -3798,7 +3818,22 @@ class EquipmentRuntime:
                     entity = pending["entity"]
                     if pending.get("output_on") is False or pending["expected"].get("state") == "off":
                         record["power"].pop(entity, None)
-                        record["off_at"][entity] = now
+                        if not recovery_off:
+                            record["off_at"][entity] = now
+                            if pending.get("thermal_heating_before_shutdown") is True:
+                                record["thermal_off_watch"] = {
+                                    "entity": entity, "off_since": now,
+                                    "area": spec.area_id,
+                                    "source_device_id": spec.source_device_id,
+                                    "attempts": 0, "last_attempt_at": None,
+                                    "notified": False,
+                                }
+                                record.pop("thermal_off_warning", None)
+                                getattr(self, '_thermal_off_sessions', {}).pop(spec.identifier, None)
+                            else:
+                                record.pop("thermal_off_watch", None)
+                                record.pop("thermal_off_warning", None)
+                                getattr(self, '_thermal_off_sessions', {}).pop(spec.identifier, None)
                     else:
                         record["power"].setdefault(entity, {"since": now,
                             "min_on": pending["min_on"], "max_on": pending["max_on"]})
@@ -4513,7 +4548,8 @@ class EquipmentRuntime:
                     mode: str | None = None, automatic: bool = True,
                     shutdown: bool = False, policy_stop: str | None = None,
                     stop_finish: bool = False,
-                    full_output_target: bool = False) -> bool:
+                    full_output_target: bool = False,
+                    off_state_recovery: bool = False) -> bool:
         """Durable intent, exact target, live rechecks after *every* yield."""
         record = self._record(spec)
         if record.get("pending") or record.get("paused"):
@@ -4541,6 +4577,23 @@ class EquipmentRuntime:
             "off", "unknown", "unavailable"
         ):
             return False
+        if off_state_recovery:
+            from .off_state_runtime import _reported_off
+            if cap.domain == "climate":
+                recovery_operation = ("set_hvac_mode", {"hvac_mode": "off"}, {"state": "off"})
+            elif cap.domain in ("number", "input_number"):
+                recovery_operation = ("set_value", {"value": 0.0}, {"state": "0.0"})
+            elif cap.domain in ("switch", "input_boolean"):
+                recovery_operation = ("turn_off", {}, {"state": "off"})
+            else:
+                return False
+            if (not power or action_mode != "off" or cap.primary != entity
+                    or not _reported_off(cap, primary)
+                    or (service, data, expected) != recovery_operation
+                    or not model.permission(self.manager, spec, cap)[1]
+                    or not isinstance(record.get("thermal_off_watch"), dict)
+                    or record["thermal_off_watch"].get("entity") != entity):
+                return False
         if stop_finish and (
             service != "set_hvac_mode" or not power or action_mode != "off"
             or data != {"hvac_mode": "off"} or expected != {"state": "off"}
@@ -4702,7 +4755,29 @@ class EquipmentRuntime:
             min_on, _, max_on = model.timing(self.manager, spec, cap)
         record["baseline"].setdefault(entity, before_sources[entity])
         record["capabilities"] = asdict(cap)
+        # Resolve the old heating direction without importing optional
+        # monitor modules into the normal native command path. Existing
+        # controller-only test fixtures deliberately load this file alone.
+        preceding = before_sources.get(entity)
+        preceding_mode = preceding.get("state") if isinstance(preceding, dict) else None
+        heat_before_shutdown = bool(
+            power and not off_state_recovery and
+            (expected == {"state": "off"} or
+             (cap.domain in ("number", "input_number")
+              and expected == {"state": "0.0"})) and "off" in cap.modes
+            and "heat" in cap.modes and (
+                (cap.domain == "climate" and (
+                    preceding_mode == "heat"
+                    or (preceding_mode in ("auto", "heat_cool")
+                        and primary.attributes.get("hvac_action") == "heating")))
+                or (cap.domain in ("switch", "input_boolean", "number", "input_number")
+                    and preceding_mode not in (
+                        None, "off", "unknown", "unavailable", "0", "0.0"))
+            )
+        )
         pending = {"entity": entity, "service": service, "data": data,
+                   "off_state_recovery": off_state_recovery,
+                   "thermal_heating_before_shutdown": heat_before_shutdown,
                    "expected": expected, "power": power, "output_on": not (
                        expected.get("state") == "off" or service == "set_value" and data.get("value") == 0),
                    "phase": "intent", "when": self.clock(), "min_on": min_on, "max_on": max_on,
@@ -4780,6 +4855,14 @@ class EquipmentRuntime:
                 return self._shutdown_allowed(
                     spec, entity, expected
                 )
+            if off_state_recovery:
+                from .off_state_runtime import _guard
+                current_watch = record.get("thermal_off_watch")
+                if not isinstance(current_watch, dict) or not _guard(
+                    self, spec, cap, self.hass.states.get(entity),
+                    current_watch, allowed_pending=pending
+                ):
+                    return False
             if not command_allowed(
                 self, spec, cap, service, data, mode=action_mode,
                 automatic=automatic, power=power,
@@ -5975,6 +6058,24 @@ class EquipmentRuntime:
             return
         record["baseline"].setdefault(cap.primary, snapshot(state))
         await self._observe_native_running(spec, cap, state)
+        # The optional, independent OFF watchdog only runs when a genuine
+        # HEM heating shutdown was journaled. Never import it for ordinary
+        # climate control (including minimal source-extracted HA test rigs).
+        if record.get("thermal_off_watch"):
+            try:
+                from .off_state_runtime import watchdog_tick
+                if await watchdog_tick(self, spec, cap, state):
+                    return
+            except asyncio.CancelledError:
+                raise
+            except ImportError:
+                # Missing/partial monitoring components cannot disable HVAC.
+                pass
+            except Exception:
+                # A monitoring bug must never disable the real HVAC controller.
+                logger = globals().get("_LOGGER")
+                if logger is not None:
+                    logger.exception("Off-state thermal monitor failed for %s", spec.identifier)
         plan = model.plan_for(self.manager, spec)
         presentation = getattr(self, "_presentation_context", None)
         if isinstance(presentation, dict):

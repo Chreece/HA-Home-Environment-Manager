@@ -318,6 +318,29 @@ modes, such as **(Heating, Cooling)** or **(Dehumidifying)**, using translated
 mode names. **Keep device off when all asleep** explicitly pauses an opted-in
 automatic device while the household sleep condition is confirmed.
 
+### Detect possible heating after an OFF command
+
+HEM monitors independent, fresh room temperature sensors after an HEM-owned
+heater has been commanded OFF. If, after a 30-minute thermal settling period,
+the room continues warming for at least 15 minutes (≥0.7°C increase and
+≥1.5°C above the heating target), HEM records a **suspected** thermal fault.
+The device can still report OFF while physically heating; room temperature
+alone never proves that a valve/relay is active.
+
+For HEM-commissioned heating endpoints with unchanged identity, available
+native sources, no conflicting heater and authorization to control the device,
+HEM may send **at most two** additional OFF commands, 10 minutes apart. HEM
+never infers permission to turn anything ON. The original OFF time and retry
+budget persist across restarts. If the anomaly remains, HEM escalates via the
+same device-error notification channels, including Announcement Hub. The
+controller diagnostics show the room temperature evidence and recovery count.
+
+This uses Home Assistant's generic heating capabilities; there are no
+brand-specific Zigbee profiles or entity-ID lists. The watchdog is inactive
+without a verified HEM OFF episode and independent room temperature evidence.
+Solar gain, residual radiator heat and unknown heat sources are still possible.
+A native reported OFF is **not proof of physical shutdown**.
+
 ## Enable device control
 
 1. Select the appliance in the room's **Devices** group and save.

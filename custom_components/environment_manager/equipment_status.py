@@ -179,6 +179,8 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "source_device_id": self._spec.source_device_id,
             "source_entity_ids": list(self._spec.source_entities),
             "status_code": observed.get("status"),
+            "thermal_off_watchdog": observed.get("thermal_off_watchdog")
+                or record.get("thermal_off_warning"),
             "status_reason_code": observed.get("reason"),
             "native_target_attempt_budget": native_target_diagnostics(runtime, self._spec),
             "readiness_until": readiness_until,
