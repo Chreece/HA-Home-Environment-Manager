@@ -1137,16 +1137,18 @@
           "humidity": "Humidity",
           "climate_devices": "Devices",
           "shades": "Window blinds, shades and shutters",
-          "occupancy_sensors": "Occupancy/presence sensors in this room"
+          "occupancy_sensors": "Occupancy/presence sensors in this room",
+          "door_sensors": "Interior door contacts"
         },
         "data_description": {
-          "windows": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
+          "windows": "Select this room's real window-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
           "air_quality": "Select this room's air-quality sensors and optional light sensors (lux). Lux records light history. For solar shading, enable lux on the individual cover controller and choose a same-room sensor or the selected room mean: new automatic closing then requires the configured minimum brightness. Selecting sensors here does not enable movement.",
           "temperature": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
           "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
-          "occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight."
+          "occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
+          "door_sensors": "Select real binary_sensor door contacts assigned to this exact Home Assistant room (effective Area). A closed door is not proof of an airtight room. The optional Eco policy is disabled by default and requires stable closure, verified vacancy, known safe indoor temperature/humidity, and all device protections. Door contacts never count as windows or occupancy."
         }
       }
     },
@@ -2348,16 +2350,18 @@
           "humidity": "Humidity",
           "climate_devices": "Devices",
           "shades": "Window blinds, shades and shutters",
-          "occupancy_sensors": "Occupancy/presence sensors in this room"
+          "occupancy_sensors": "Occupancy/presence sensors in this room",
+          "door_sensors": "Interior door contacts"
         },
         "data_description": {
-          "windows": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
+          "windows": "Select this room's real window-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
           "air_quality": "Select this room's air-quality sensors and optional light sensors (lux). Lux records light history. For solar shading, enable lux on the individual cover controller and choose a same-room sensor or the selected room mean: new automatic closing then requires the configured minimum brightness. Selecting sensors here does not enable movement.",
           "temperature": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
           "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
-          "occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight."
+          "occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
+          "door_sensors": "Select real binary_sensor door contacts assigned to this exact Home Assistant room (effective Area). A closed door is not proof of an airtight room. The optional Eco policy is disabled by default and requires stable closure, verified vacancy, known safe indoor temperature/humidity, and all device protections. Door contacts never count as windows or occupancy."
         }
       }
     },
