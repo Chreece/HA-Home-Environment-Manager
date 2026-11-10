@@ -126,7 +126,7 @@ class ThermalWatch:
             profile = EFFECTS.get(direction)
             if profile is None:
                 self.samples.clear()
-            self.moisture_samples.clear()
+                self.moisture_samples.clear()
                 return "none"
             rising, settle, span, excess, rise = (
                 profile.rising, profile.settle_seconds,
