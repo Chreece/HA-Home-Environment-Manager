@@ -55,6 +55,7 @@ model.sources_available=lambda *_args:env["source_available"]
 room_sources.room_temperature_evidence=lambda *_args,**_kw:(
     env["temp"],{"status":"ready","partial":False,"valid_count":1,
                   "entity_ids":["sensor.room_temperature"]})
+runtime_module.room_temperature_evidence=room_sources.room_temperature_evidence
 discovery.entity_area=lambda _hass,_entity:"living"
 state=SimpleNamespace(state="off",entity_id=cap.primary,attributes={},name="Generic heater",
     context=SimpleNamespace(user_id=None,parent_id=None),
