@@ -837,7 +837,7 @@ class EquipmentRuntime:
         if current == "on" and record.get("thermal_off_watch"):
             record.pop("thermal_off_watch", None)
             record.pop("thermal_off_warning", None)
-            self._thermal_off_sessions.pop(spec.identifier, None)
+            getattr(self, '_thermal_off_sessions', {}).pop(spec.identifier, None)
             await self._save()
         wake = record.get("upstream", {}).get("native_wake")
         if isinstance(wake, dict) and wake.get("reconciled"):
@@ -3829,11 +3829,11 @@ class EquipmentRuntime:
                                     "notified": False,
                                 }
                                 record.pop("thermal_off_warning", None)
-                                self._thermal_off_sessions.pop(spec.identifier, None)
+                                getattr(self, '_thermal_off_sessions', {}).pop(spec.identifier, None)
                             else:
                                 record.pop("thermal_off_watch", None)
                                 record.pop("thermal_off_warning", None)
-                                self._thermal_off_sessions.pop(spec.identifier, None)
+                                getattr(self, '_thermal_off_sessions', {}).pop(spec.identifier, None)
                     else:
                         record["power"].setdefault(entity, {"since": now,
                             "min_on": pending["min_on"], "max_on": pending["max_on"]})
