@@ -17,6 +17,7 @@ from .off_state_watchdog import (
     MIN_RECOVERY_INTERVAL_SECONDS, MESSAGES, ThermalWatch, recovery_due,
 )
 from .room_sources import room_temperature_evidence
+from .off_state_profiles import EFFECTS, notice, supported
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -80,6 +81,104 @@ def _independent_room_temperature(runtime: Any, spec: Any) -> tuple[float | None
     return temp, ids
 
 
+
+def _independent_room_measurement(runtime: Any, spec: Any, metric: str
+                                  ) -> tuple[float | None, tuple[str, ...]]:
+    """Use independently assigned, fully fresh sensor evidence only."""
+    if metric == "temperature":
+        return _independent_room_temperature(runtime, spec)
+    if metric != "humidity":
+        return None, ()
+    from .room_sources import selected, numeric, native
+    ids = selected(runtime.manager.settings, spec.area_id, "humidity")
+    if ids is None:
+        room = model.room_config(runtime.manager, spec)
+        pin = room.get("humidity_entity")
+        if not pin:
+            pin = model.device_config(runtime.manager, spec).get("humidity_entity")
+        ids = (pin,) if isinstance(pin, str) and pin else ()
+    ids = tuple(dict.fromkeys(ids))
+    if not ids:
+        return None, ()
+    from homeassistant.helpers import entity_registry as er
+    registry = er.async_get(runtime.hass)
+    samples = []
+    for entity in ids:
+        entry = registry.async_get(entity)
+        if (entity in spec.source_entities
+                or not native(runtime.hass, entity)
+                or entry is not None and spec.source_device_id
+                and getattr(entry, "device_id", None) == spec.source_device_id):
+            return None, ()
+        value = numeric(runtime.hass, entity, spec.area_id, "humidity", 10)
+        if value is None or not isfinite(value) or not 0 <= value <= 100:
+            return None, ()
+        samples.append(value)
+    return sum(samples) / len(samples), ids
+
+
+def _competing_effect_clear(runtime: Any, spec: Any, primary: str,
+                             effect: str) -> bool:
+    """No known competing physical outputs and no known open room windows.
+
+    Unrecognized sun, air leaks and external systems remain possible, so the
+    conclusion stays `suspected` and never claims physical verification.
+    """
+    if effect not in EFFECTS:
+        return False
+    try:
+        from .room_sources import selected
+        windows = selected(runtime.manager.settings, spec.area_id, "windows")
+        if windows is not None:
+            for entity in windows:
+                observed = runtime.hass.states.get(entity)
+                if observed is None or observed.state not in ("off", "closed"):
+                    return False
+    except (AttributeError, ImportError, TypeError):
+        return False
+
+    if effect == "heat":
+        return _competing_heat_clear(runtime, spec, primary)
+
+    def competing_capability(cap: Any) -> bool:
+        if supported(cap, effect):
+            return True
+        # Cooling can also remove room moisture.
+        return effect == "dry" and supported(cap, "cool")
+
+    for other in model.specs(runtime.manager):
+        if other.area_id != spec.area_id or other.identifier == spec.identifier:
+            continue
+        cap = model.capabilities(runtime.manager, other)
+        if cap is None or cap.primary == primary or not competing_capability(cap):
+            continue
+        native_state = runtime.hass.states.get(cap.primary)
+        if native_state is None or native_state.state not in ("off", "idle"):
+            return False
+    from .discovery import entity_area
+    for domain in ("climate", "humidifier"):
+        for other in runtime.hass.states.async_all(domain):
+            if (other.entity_id == primary
+                    or entity_area(runtime.hass, other.entity_id) != spec.area_id):
+                continue
+            if domain == "climate":
+                modes = tuple(other.attributes.get("hvac_modes") or ())
+                relevant = (
+                    effect in modes
+                    or effect in ("heat", "cool") and bool(
+                        set(modes) & {"auto", "heat_cool"})
+                    or effect == "dry" and bool(
+                        set(modes) & {"cool", "auto", "heat_cool"})
+                )
+            else:
+                klass = other.attributes.get("device_class")
+                relevant = (effect == "humidify" and klass != "dehumidifier"
+                            or effect == "dry" and klass != "humidifier")
+            if relevant and other.state not in ("off", "idle"):
+                return False
+    return True
+
+
 def _reported_off(cap: Any, state: Any) -> bool:
     """Only native OFF or a zero-valued verified 0..100% heat actuator."""
     if state is None or state.state in ("unknown", "unavailable"):
@@ -116,7 +215,11 @@ def _guard(runtime: Any, spec: Any, cap: Any, state: Any, watch: dict, *,
             or not _reported_off(cap, state)
             or state.attributes.get("hvac_action") == "defrosting"
             or not model.sources_available(runtime.manager, spec)
-            or "off" not in cap.modes or "heat" not in cap.modes):
+            or not supported(cap, watch.get("direction", "heat"))
+            or (cfg.get("requested_mode") not in (
+                None, "off", "auto", "heat_cool", watch.get("direction", "heat"))
+                and not (watch.get("direction") == "humidify"
+                         and cfg.get("requested_mode") == "auto"))):
         return False
     if not model.permission(runtime.manager, spec, cap)[1]:
         return False
@@ -164,22 +267,30 @@ async def _notify(runtime: Any, spec: Any, kind: str, evidence: dict) -> None:
     language = announcement_language(
         runtime.hass, runtime.manager.settings.get("language", "auto"),
     )
-    words = MESSAGES.get(language, MESSAGES["en"])
-    message = words[kind].format(
-        name=device_name, room=room_name,
-        first=evidence["first_c"], current=evidence["current_c"],
-        target=evidence["target_c"], attempts=evidence.get("attempts", 0),
-    )
+    direction = evidence.get("direction", "heat")
+    if direction == "heat":
+        words = MESSAGES.get(language, MESSAGES["en"])
+        title, message = words["title"], words[kind].format(
+            name=device_name, room=room_name,
+            first=evidence["first_c"], current=evidence["current_c"],
+            target=evidence["target_c"], attempts=evidence.get("attempts", 0),
+        )
+    else:
+        title, message = notice(
+            direction, language, kind, name=device_name, room=room_name,
+            first=evidence["first"], current=evidence["current"],
+            target=evidence["target"], attempts=evidence.get("attempts", 0),
+        )
     await _deliver_device_notice(
-        runtime.manager, spec, f"HEM · {words['title']}", message, language,
-        area_name=room_name, kind="thermal_off_" + kind,
+        runtime.manager, spec, f"HEM · {title}", message, language,
+        area_name=room_name, kind="off_output_" + kind,
     )
 
 
 async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
-    """Observe an explicitly HEM-commanded OFF; return True only if OFF resent."""
+    """Watch HEM's journaled OFF episode and repeat only native OFF commands."""
     record = runtime._record(spec)
-    ledger = record.get("thermal_off_watch")
+    ledger = record.get("thermal_off_watch")  # stable pre-b22 persisted key
     sessions = getattr(runtime, "_thermal_off_sessions", None)
     if sessions is None:
         sessions = runtime._thermal_off_sessions = {}
@@ -188,8 +299,11 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         return False
     now = runtime.clock()
     off_since = ledger.get("off_since")
+    direction = ledger.get("direction", "heat")  # migrate previous heating episodes
+    profile = EFFECTS.get(direction)
     if (type(off_since) not in (float, int) or not isfinite(off_since)
             or not 0 <= now - off_since <= MAX_WATCH_SECONDS
+            or profile is None or not supported(cap, direction)
             or not _reported_off(cap, state)
             or cap.primary != ledger.get("entity")
             or record.get("power", {}).get(cap.primary)
@@ -201,37 +315,52 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
     if cfg.get("control_mode") not in ("automatic", "pid", "off"):
         sessions.pop(spec.identifier, None)
         return False
-    temperature, ids = _independent_room_temperature(runtime, spec)
-    if temperature is None:
+    measured, ids = _independent_room_measurement(runtime, spec, profile.metric)
+    if measured is None:
         sessions.pop(spec.identifier, None)
         return False
     target = model.targets(
         runtime.manager, spec, cap, cfg, model.plan_for(runtime.manager, spec)
-    ).get("heat")
+    ).get(direction if profile.metric == "temperature" else "humidity")
     if type(target) not in (int, float) or not isfinite(target):
         sessions.pop(spec.identifier, None)
         return False
     sensor_watch = sessions.get(spec.identifier)
     if (not isinstance(sensor_watch, ThermalWatch)
             or sensor_watch.source_ids != ids
-            or sensor_watch.off_since != off_since):
-        sensor_watch = sessions[spec.identifier] = ThermalWatch(ids, off_since)
+            or sensor_watch.off_since != off_since
+            or sensor_watch.effect != direction):
+        sensor_watch = sessions[spec.identifier] = ThermalWatch(
+            ids, off_since, effect=direction,
+        )
+    cleared = _competing_effect_clear(runtime, spec, cap.primary, direction)
     risk = sensor_watch.observe(
-        now=now, temperature_c=temperature, target_c=target, source_ids=ids,
-        off_since=off_since,
-        other_heat_sources_clear=_competing_heat_clear(runtime, spec, cap.primary),
+        now=now, temperature_c=measured, target_c=target, source_ids=ids,
+        off_since=off_since, other_heat_sources_clear=cleared,
+        direction=direction,
     )
     if risk == "none":
+        # Clear stale red status when the physical-response evidence resolves.
+        # Do not reset the durable retry budget or announce the same episode twice.
+        if record.pop("thermal_off_warning", None) is not None:
+            await runtime._save()
         return False
     first = sensor_watch.samples[0][1]
     observation = {
         "state": "suspected",
         "physical_output_confirmed": False,
         "entity": cap.primary,
+        "direction": direction,
+        "metric": profile.metric,
+        "unit": profile.unit,
         "source_ids": list(ids),
-        "first_c": round(first, 2),
-        "current_c": round(temperature, 2),
-        "target_c": round(target, 2),
+        "first": round(first, 2),
+        "current": round(measured, 2),
+        "target": round(target, 2),
+        # Legacy keys still serve existing b21 diagnostic consumers.
+        "first_c": round(first, 2) if profile.metric == "temperature" else None,
+        "current_c": round(measured, 2) if profile.metric == "temperature" else None,
+        "target_c": round(target, 2) if profile.metric == "temperature" else None,
         "observed_at": now,
         "off_since": off_since,
         "attempts": ledger.get("attempts", 0),
@@ -241,7 +370,6 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
     first_alert = ledger.get("notified") is not True
     if first_alert:
         ledger["notified"] = True
-        # Freeze an alert episode before any potentially slow notification.
         record["thermal_off_warning"] = observation
         await runtime._save()
         try:
@@ -249,25 +377,20 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         except asyncio.CancelledError:
             raise
         except Exception:
-            _LOGGER.exception("HEM OFF thermal alert delivery failed for %s", spec.identifier)
-    # This is a fresh observation and not a physical confirmation. Keep
-    # transient diagnostic updates out of the durable HA Store.
+            _LOGGER.exception("HEM OFF output warning delivery failed for %s", spec.identifier)
     record["thermal_off_warning"] = observation
-    eligible = (
-        _guard(runtime, spec, cap, state, ledger)
-        and _competing_heat_clear(runtime, spec, cap.primary)
-    )
+    eligible = _guard(runtime, spec, cap, state, ledger) and cleared
     if recovery_due(ledger, now, guarded=eligible):
-        # Reserve the finite budget durably *before* sending. An interrupted
-        # HA call/restart is NOT a free new attempt.
         ledger["attempts"] = int(ledger.get("attempts", 0)) + 1
         ledger["last_attempt_at"] = now
+        # Reserve BEFORE dispatch; unavailable/failed calls never gain free
+        # retries after reload or reconnection.
         await runtime._save()
         if cap.domain == "climate":
             service, data, expected = "set_hvac_mode", {"hvac_mode": "off"}, {"state": "off"}
         elif cap.domain in ("number", "input_number"):
             service, data, expected = "set_value", {"value": 0.0}, {"state": "0.0"}
-        elif cap.domain in ("switch", "input_boolean"):
+        elif cap.domain in ("switch", "input_boolean", "humidifier"):
             service, data, expected = "turn_off", {}, {"state": "off"}
         else:
             return False
@@ -289,5 +412,5 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         except asyncio.CancelledError:
             raise
         except Exception:
-            _LOGGER.exception("HEM repeated-OFF escalation delivery failed for %s", spec.identifier)
+            _LOGGER.exception("HEM OFF output escalation failed for %s", spec.identifier)
     return False
