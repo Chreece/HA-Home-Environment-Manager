@@ -93,47 +93,110 @@ def verified_heat_shutdown(domain: str, modes: tuple[str, ...],
 
 @dataclass
 class ThermalWatch:
-    """Session-local samples bound to one real OFF command and sensor set."""
+    """Session-local samples bound to one genuine OFF, room sensors and effect."""
 
     source_ids: tuple[str, ...]
     off_since: float
     samples: list[tuple[float, float]] = field(default_factory=list)
+    effect: str = "heat"
+    sampled_target: float | None = None
+    moisture_samples: list[tuple[float, float]] = field(default_factory=list)
 
     def observe(self, *, now: float, temperature_c: float | None,
                 target_c: float | None, source_ids: tuple[str, ...],
                 off_since: float, other_heat_sources_clear: bool,
-                independent_heat_output: bool | None = None) -> str:
-        """Return none/suspected/confirmed; never assert heat from temperature alone."""
+                independent_heat_output: bool | None = None,
+                direction: str = "heat",
+                room_temperature_c: float | None = None) -> str:
+        """Return none/suspected/confirmed; temperature or RH is not proof of ON.
+
+        The old keyword names remain for binary compatibility with the
+        published heating watchdog. For humidity they carry relative humidity
+        percentage points and the caller also provides the direction.
+        """
+        if direction == "heat":
+            # Keep b21 heating thresholds as-is, including standalone tests.
+            rising, settle, span, excess, rise = (
+                True, MIN_OFF_SECONDS, MIN_SAMPLE_SPAN_SECONDS,
+                MIN_EXCESS_C, MIN_RISE_C,
+            )
+            lower, upper, target_min, target_max = -30, 60, 5, 40
+        else:
+            from .off_state_profiles import EFFECTS
+            profile = EFFECTS.get(direction)
+            if profile is None:
+                self.samples.clear()
+                self.moisture_samples.clear()
+                return "none"
+            rising, settle, span, excess, rise = (
+                profile.rising, profile.settle_seconds,
+                profile.trend_seconds, profile.excess, profile.change,
+            )
+            lower, upper = profile.minimum, profile.maximum
+            target_min, target_max = profile.goal_min, profile.goal_max
         if (not isfinite(now) or not isfinite(off_since) or now < off_since
                 or now - off_since > MAX_WATCH_SECONDS
                 or source_ids != self.source_ids
                 or abs(off_since - self.off_since) > 1):
             self.samples.clear()
+            self.moisture_samples.clear()
             return "none"
         if (temperature_c is None or target_c is None
                 or not isfinite(temperature_c) or not isfinite(target_c)
-                or not -30 <= temperature_c <= 60
-                or not 5 <= target_c <= 40 or not other_heat_sources_clear):
+                or not lower <= temperature_c <= upper
+                or not target_min <= target_c <= target_max
+                or not other_heat_sources_clear):
             self.samples.clear()
+            self.moisture_samples.clear()
             return "none"
-        # A hot radiator may continue warming a room for some time after a
-        # valid shutdown. Start the trend only *after* that settling window.
-        if now - off_since < MIN_OFF_SECONDS:
+        moisture = None
+        if direction in ("humidify", "dry"):
+            # Natural room cooling can raise RH without adding moisture. Do
+            # not accuse an appliance or repeat OFF unless water vapor itself
+            # also changed in the suspicious direction.
+            from .off_state_profiles import absolute_humidity_gm3
+            moisture = absolute_humidity_gm3(room_temperature_c, temperature_c)
+            if moisture is None:
+                self.samples.clear()
+                self.moisture_samples.clear()
+                return "none"
+        # A new mode or effective target invalidates the old trend. Otherwise
+        # changing an away/comfort/mold target could fabricate a false alarm.
+        if (self.effect != direction
+                or self.sampled_target is not None and abs(self.sampled_target-target_c) > .05):
             self.samples.clear()
+            self.moisture_samples.clear()
+        self.effect = direction
+        self.sampled_target = target_c
+        # Residual heater/cooler output, humidity buffering and sensor
+        # equilibration must finish before ANY trend sample is admitted.
+        if now - off_since < settle:
+            self.samples.clear()
+            self.moisture_samples.clear()
             return "none"
         if self.samples and (now < self.samples[-1][0]
                 or now - self.samples[-1][0] > MAX_SAMPLE_AGE_SECONDS):
             self.samples.clear()
+            self.moisture_samples.clear()
         if (not self.samples
                 or now - self.samples[-1][0] >= MIN_SAMPLE_STEP_SECONDS):
             self.samples.append((now, temperature_c))
             self.samples = self.samples[-MAX_SAMPLES:]
+            if moisture is not None:
+                self.moisture_samples.append((now, moisture))
+                self.moisture_samples = self.moisture_samples[-MAX_SAMPLES:]
         if len(self.samples) < 2:
             return "none"
-        first_time, first_temp = self.samples[0]
-        if (now - first_time < MIN_SAMPLE_SPAN_SECONDS
-                or temperature_c - target_c < MIN_EXCESS_C
-                or temperature_c - first_temp < MIN_RISE_C):
+        first_time, first_value = self.samples[0]
+        polarity = 1 if rising else -1
+        if (now - first_time < span
+                or polarity * (temperature_c - target_c) < excess
+                or polarity * (temperature_c - first_value) < rise):
+            return "none"
+        if moisture is not None and (
+            not self.moisture_samples or
+            polarity * (moisture - self.moisture_samples[0][1]) < 0.45
+        ):
             return "none"
         return "confirmed" if independent_heat_output is True else "suspected"
 

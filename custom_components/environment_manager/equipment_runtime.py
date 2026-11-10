@@ -285,7 +285,9 @@ class EquipmentRuntime:
             value["thermal_off_watchdog"] = dict(anomaly)
             if status in ("off", "within_target_band", "pid_output_inactive",
                           "controlling", "manual"):
-                value["status"] = "suspected_heating_after_off"
+                value["status"] = ("suspected_heating_after_off"
+                                   if anomaly.get("direction", "heat") == "heat"
+                                   else "suspected_output_after_off")
         from .equipment_pid_safety import status_details
         value.update(status_details(self.records.get(key, {})))
         if not isinstance(spec, str) and hasattr(model, "humidity_demand"):
@@ -3820,11 +3822,15 @@ class EquipmentRuntime:
                         record["power"].pop(entity, None)
                         if not recovery_off:
                             record["off_at"][entity] = now
-                            if pending.get("thermal_heating_before_shutdown") is True:
+                            effect = pending.get("off_output_direction")
+                            if effect is None and pending.get("thermal_heating_before_shutdown") is True:
+                                effect = "heat"  # restore in-flight b21 intents
+                            if effect in ("heat", "cool", "humidify", "dry"):
                                 record["thermal_off_watch"] = {
                                     "entity": entity, "off_since": now,
                                     "area": spec.area_id,
                                     "source_device_id": spec.source_device_id,
+                                    "direction": effect,
                                     "attempts": 0, "last_attempt_at": None,
                                     "notified": False,
                                 }
@@ -4583,7 +4589,7 @@ class EquipmentRuntime:
                 recovery_operation = ("set_hvac_mode", {"hvac_mode": "off"}, {"state": "off"})
             elif cap.domain in ("number", "input_number"):
                 recovery_operation = ("set_value", {"value": 0.0}, {"state": "0.0"})
-            elif cap.domain in ("switch", "input_boolean"):
+            elif cap.domain in ("switch", "input_boolean", "humidifier"):
                 recovery_operation = ("turn_off", {}, {"state": "off"})
             else:
                 return False
@@ -4755,29 +4761,33 @@ class EquipmentRuntime:
             min_on, _, max_on = model.timing(self.manager, spec, cap)
         record["baseline"].setdefault(entity, before_sources[entity])
         record["capabilities"] = asdict(cap)
-        # Resolve the old heating direction without importing optional
-        # monitor modules into the normal native command path. Existing
-        # controller-only test fixtures deliberately load this file alone.
-        preceding = before_sources.get(entity)
-        preceding_mode = preceding.get("state") if isinstance(preceding, dict) else None
-        heat_before_shutdown = bool(
-            power and not off_state_recovery and
-            (expected == {"state": "off"} or
-             (cap.domain in ("number", "input_number")
-              and expected == {"state": "0.0"})) and "off" in cap.modes
-            and "heat" in cap.modes and (
-                (cap.domain == "climate" and (
-                    preceding_mode == "heat"
-                    or (preceding_mode in ("auto", "heat_cool")
-                        and primary.attributes.get("hvac_action") == "heating")))
-                or (cap.domain in ("switch", "input_boolean", "number", "input_number")
-                    and preceding_mode not in (
-                        None, "off", "unknown", "unavailable", "0", "0.0"))
-            )
-        )
+        # A journaled OFF inherits the genuine previously observed physical
+        # effect from advertised HA capabilities. Never infer from hardware
+        # brand, a Zigbee model or a generic auto mode lacking hvac_action.
+        off_output_direction = None
+        if power and not off_state_recovery and (
+            expected == {"state": "off"} or
+            cap.domain in ("number", "input_number")
+            and expected == {"state": "0.0"}
+        ):
+            # Monitoring must never break ordinary native ON/OFF control.
+            # Also retain compatibility with source-isolated test harnesses
+            # that load the controller without its optional watcher modules.
+            try:
+                from .off_state_profiles import shutdown_effect
+            except ImportError:
+                shutdown_effect = None
+            if shutdown_effect is not None:
+                preceding = before_sources.get(entity)
+                preceding_mode = (
+                    preceding.get("state") if isinstance(preceding, dict) else None
+                )
+                off_output_direction = shutdown_effect(
+                    cap, preceding_mode, primary.attributes.get("hvac_action")
+                )
         pending = {"entity": entity, "service": service, "data": data,
                    "off_state_recovery": off_state_recovery,
-                   "thermal_heating_before_shutdown": heat_before_shutdown,
+                   "off_output_direction": off_output_direction,
                    "expected": expected, "power": power, "output_on": not (
                        expected.get("state") == "off" or service == "set_value" and data.get("value") == 0),
                    "phase": "intent", "when": self.clock(), "min_on": min_on, "max_on": max_on,
@@ -6058,9 +6068,9 @@ class EquipmentRuntime:
             return
         record["baseline"].setdefault(cap.primary, snapshot(state))
         await self._observe_native_running(spec, cap, state)
-        # The optional, independent OFF watchdog only runs when a genuine
-        # HEM heating shutdown was journaled. Never import it for ordinary
-        # climate control (including minimal source-extracted HA test rigs).
+        # OFF monitoring is independent of PID. Only a genuine journaled
+        # HEM shutdown is eligible, for heat/cool/humidify/dry effects.
+        # Keep the normal control path unaffected if the monitor is absent.
         if record.get("thermal_off_watch"):
             try:
                 from .off_state_runtime import watchdog_tick

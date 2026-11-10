@@ -2779,6 +2779,7 @@
           "temperature_stale_or_wrong_room": "Temperature stale or wrong room",
           "temperature_unavailable_or_stale": "Temperature measurement is missing or too old",
           "suspected_heating_after_off": "オフと報告されているのに暖房が続いている可能性",
+          "suspected_output_after_off": "オフと表示されていても動作が続いている可能性",
           "thermal_priority_defer_dry": "Heating or cooling has priority over drying",
           "thermal_temperature_control_has_priority": "Thermal temperature control has priority",
           "thermostat_turned_off": "Physical thermostat was turned off",
