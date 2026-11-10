@@ -23,6 +23,7 @@ def module(name, load=False):
 
 model=module("equipment_model")
 room=module("room_sources")
+room.room_temperature_evidence=lambda *_a,**_kw:(None,{})
 discovery=module("discovery")
 module("device_faults")
 module("languages")
