@@ -10028,6 +10028,24 @@
       event.preventDefault();event.stopImmediatePropagation();
       this._floorOpen140(button.getAttribute("data-floor-settings140"));
     },true);
+    // Own the summary click rather than relying on Chromium's deferred
+    // <details> default action. Native toggles can race with a refreshed
+    // registry snapshot and reopen an intentionally collapsed floor.
+    this.shadowRoot.addEventListener("click",event=>{
+      const summary=event.target?.closest?.("summary.hem-floor-summary140");
+      if(!summary)return;
+      const details=summary.parentElement;
+      if(!details?.matches?.("details.hem-floor-fold140")||!details.isConnected)return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      details.open=!details.open;
+      const id=details.getAttribute("data-floor-fold140");
+      if(details.open)this._floorCollapsed140.delete(id);
+      else this._floorCollapsed140.add(id);
+      const indicator=summary.querySelector(":scope > ha-icon:last-child");
+      if(indicator)indicator.setAttribute("icon",
+        details.open?"mdi:chevron-up":"mdi:chevron-down");
+    },true);
     this.shadowRoot.addEventListener("toggle",event=>{
       const element=event.target;
       if(!element?.matches?.("details.hem-floor-fold140")||
