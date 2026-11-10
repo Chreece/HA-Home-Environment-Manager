@@ -2780,6 +2780,7 @@
           "temperature_stale_or_wrong_room": "Temperature stale or wrong room",
           "temperature_unavailable_or_stale": "Temperaturmessung fehlt oder ist veraltet",
           "suspected_heating_after_off": "Mögliche Heizleistung trotz AUS-Anzeige",
+          "suspected_output_after_off": "Möglicher Weiterbetrieb trotz AUS-Meldung",
           "thermal_priority_defer_dry": "Heizen oder Kühlen hat Vorrang vor Entfeuchten",
           "thermal_temperature_control_has_priority": "Thermal temperature control has priority",
           "thermostat_turned_off": "Physischer Thermostat ausgeschaltet",
