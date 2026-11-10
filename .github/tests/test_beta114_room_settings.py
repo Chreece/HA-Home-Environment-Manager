@@ -211,9 +211,10 @@ def browser_checks(card_source):
         assert len(page.evaluate("calls")) == 2, "Opening must not submit a settings form"
         assert popup.locator('[data-room-detect-shades115]').count() == 1
         shades = popup.locator('[data-room-options-group114="shades"]')
+        # Nested source fields are not visible until their parent opens.
+        reveal_source(shades)
         assert shades.locator('[data-room-options-count114]').inner_text() == "0"
         assert page.evaluate("card._roomSettingsDialog114.draft") == DEFAULTS
-        reveal_source(shades)
         shades.locator("summary").click()
         detect = shades.locator('[data-room-detect-shades115]')
         assert detect.inner_text() == "Select detected covers"
