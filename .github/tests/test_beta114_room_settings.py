@@ -188,6 +188,14 @@ def browser_checks(card_source):
             page.evaluate(SETUP, {"states": states, "form": FORM, "native": native})
             return page
 
+        def reveal_source(element):
+            # Source inputs are nested inside purpose-based accordion groups
+            # since b24. Expand the parent without implicitly submitting Save.
+            element.evaluate("""node=>{
+              const section=node.closest('[data-hem-unified141]');
+              if(section)section.open=true;
+            }""")
+
         page = new_page()
         assert page.evaluate("card._openRoomSettings114('foreign')") is False
         page.evaluate("card._hass.user.is_admin=false")
@@ -197,12 +205,15 @@ def browser_checks(card_source):
         assert page.evaluate("card._openRoomSettings114('room0')") is True
         popup = page.locator(".hem-room-options114")
         assert popup.evaluate("node=>node.matches(':modal')")
-        assert popup.locator("details").count() == len(KEYS)
+        assert popup.locator('[data-room-options-group114]').count() == len(KEYS)
+        assert popup.locator('[data-room-options-groups114] > details').count() <= 6
+        assert popup.locator('[data-hem-unified141="other"]').count() == 0
         assert len(page.evaluate("calls")) == 2, "Opening must not submit a settings form"
         assert popup.locator('[data-room-detect-shades115]').count() == 1
         shades = popup.locator('[data-room-options-group114="shades"]')
         assert shades.locator('[data-room-options-count114]').inner_text() == "0"
         assert page.evaluate("card._roomSettingsDialog114.draft") == DEFAULTS
+        reveal_source(shades)
         shades.locator("summary").click()
         detect = shades.locator('[data-room-detect-shades115]')
         assert detect.inner_text() == "Select detected covers"
@@ -236,6 +247,7 @@ def browser_checks(card_source):
         page.evaluate("calls=[]")
         assert page.evaluate("card._openRoomSettings114('room0')") is True
         assert page.evaluate("card._roomSettingsDialog114.draft") == DEFAULTS
+        reveal_source(shades)
         shades.locator("summary").click()
         shades.locator(f'input[value="{COVERS[1]}"]').check()
         detect.click()
@@ -244,12 +256,14 @@ def browser_checks(card_source):
         assert shades.locator('[data-room-options-count114]').inner_text() == "2"
         assert len(page.evaluate("calls")) == 2
         temp = popup.locator('[data-room-options-group114="temperature"]')
+        reveal_source(temp)
         temp.locator("summary").click()
         temp.locator('input[value="sensor.temp_a"]').uncheck()
         temp.locator('input[value="sensor.temp_c"]').check()
         temp.locator('input[type="search"]').fill("TEMP C")
         assert temp.locator('[data-room-options-choice114]:visible').count() == 1
         humidity = popup.locator('[data-room-options-group114="humidity"]')
+        reveal_source(humidity)
         humidity.locator("summary").click()
         humidity.locator('[data-room-clear114]').click()
         assert humidity.locator('[data-room-options-count114]').inner_text() == "0"
@@ -336,6 +350,7 @@ def browser_checks(card_source):
         assert native.evaluate("calls.length") == 2
         shades = popup.locator('[data-room-options-group114="shades"]')
         assert shades.locator('ha-form').evaluate("node=>node.data.shades") == []
+        reveal_source(shades)
         shades.locator("summary").click()
         native.evaluate("""cover=>{
           const form=card._roomSettingsDialog114.node.querySelector(
