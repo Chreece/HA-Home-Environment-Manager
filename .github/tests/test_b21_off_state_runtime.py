@@ -30,6 +30,8 @@ def module(name, file=None):
 
 model=module("equipment_model")
 room_sources=module("room_sources")
+# The production module imports its source adapter at module-load time.
+room_sources.room_temperature_evidence=lambda *_a,**_kw:(None,{})
 discovery=module("discovery")
 faults=module("device_faults")
 languages=module("languages")
