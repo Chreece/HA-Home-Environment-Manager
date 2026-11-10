@@ -1137,7 +1137,8 @@
           "humidity": "Độ ẩm",
           "climate_devices": "Thiết bị",
           "shades": "Rèm, mành và cửa chớp",
-          "occupancy_sensors": "Hiện diện · cảm biến"
+          "occupancy_sensors": "Hiện diện · cảm biến",
+          "door_sensors": "Cảm biến cửa"
         },
         "data_description": {
           "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
@@ -1146,7 +1147,8 @@
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
-          "occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn."
+          "occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
+          "door_sensors": "Select only same-area interior door contacts. Closure does not prove an airtight room. Optional Eco requires stable closure, verified vacancy, fresh safe temperature and humidity; native protections remain effective."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Độ ẩm",
           "climate_devices": "Thiết bị",
           "shades": "Rèm, mành và cửa chớp",
-          "occupancy_sensors": "Hiện diện · cảm biến"
+          "occupancy_sensors": "Hiện diện · cảm biến",
+          "door_sensors": "Cảm biến cửa"
         },
         "data_description": {
           "windows": "Cửa sổ. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
@@ -2357,7 +2360,8 @@
           "humidity": "Độ ẩm. Chọn đầu vào của phòng: tên thiết bị - tên thực thể. Nhóm trống không được dùng và không bật khám phá hoặc điều khiển tự động.",
           "climate_devices": "Thiết bị. Chỉ chọn các thực thể vật lý climate.*, humidifier.* và fan.* trong phòng. Tính năng gốc quyết định sưởi, làm mát, hút ẩm, mức đặt và tốc độ quạt. Việc chọn không điều khiển thiết bị; hãy bật tự động riêng trên mỗi bộ điều khiển.",
           "shades": "Rèm, mành và cửa chớp. Chọn rèm cuốn, mành và cửa chớp cover.* của phòng. Covers không có device_class vẫn được chấp nhận nếu hỗ trợ CLOSE và thực sự che nắng cửa sổ. Gara, cổng, cửa ra vào, cửa sổ và mái che ngoài trời bị loại. Chọn không di chuyển gì: gán cảm biến cửa sổ rồi cấu hình tự động, thông báo và ngưỡng nhiệt độ. Trạng thái không rõ ngăn mọi chuyển động.",
-          "occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn."
+          "occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
+          "door_sensors": "Select only same-area interior door contacts. Closure does not prove an airtight room. Optional Eco requires stable closure, verified vacancy, fresh safe temperature and humidity; native protections remain effective."
         }
       }
     },
