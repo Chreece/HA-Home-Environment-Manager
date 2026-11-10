@@ -4577,16 +4577,23 @@ class EquipmentRuntime:
             "off", "unknown", "unavailable"
         ):
             return False
-        if off_state_recovery and (
-            not power or action_mode != "off" or expected != {"state": "off"}
-            or primary.state != "off" or cap.primary != entity
-            or service != ("set_hvac_mode" if cap.domain == "climate" else "turn_off")
-            or data != ({"hvac_mode": "off"} if cap.domain == "climate" else {})
-            or not model.permission(self.manager, spec, cap)[1]
-            or not isinstance(record.get("thermal_off_watch"), dict)
-            or record["thermal_off_watch"].get("entity") != entity
-        ):
-            return False
+        if off_state_recovery:
+            from .off_state_runtime import _reported_off
+            if cap.domain == "climate":
+                recovery_operation = ("set_hvac_mode", {"hvac_mode": "off"}, {"state": "off"})
+            elif cap.domain in ("number", "input_number"):
+                recovery_operation = ("set_value", {"value": 0.0}, {"state": "0.0"})
+            elif cap.domain in ("switch", "input_boolean"):
+                recovery_operation = ("turn_off", {}, {"state": "off"})
+            else:
+                return False
+            if (not power or action_mode != "off" or cap.primary != entity
+                    or not _reported_off(cap, primary)
+                    or (service, data, expected) != recovery_operation
+                    or not model.permission(self.manager, spec, cap)[1]
+                    or not isinstance(record.get("thermal_off_watch"), dict)
+                    or record["thermal_off_watch"].get("entity") != entity):
+                return False
         if stop_finish and (
             service != "set_hvac_mode" or not power or action_mode != "off"
             or data != {"hvac_mode": "off"} or expected != {"state": "off"}
@@ -4755,7 +4762,9 @@ class EquipmentRuntime:
         preceding_mode = preceding.get("state") if isinstance(preceding, dict) else None
         heat_before_shutdown = bool(
             power and not off_state_recovery and
-            expected == {"state": "off"} and "off" in cap.modes
+            (expected == {"state": "off"} or
+             (cap.domain in ("number", "input_number")
+              and expected == {"state": "0.0"})) and "off" in cap.modes
             and "heat" in cap.modes and (
                 (cap.domain == "climate" and (
                     preceding_mode == "heat"
