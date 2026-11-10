@@ -192,8 +192,13 @@ def check_translations():
         SOURCE / "equipment_status.py"
     ).read_text()
     version = json.loads((SOURCE / "manifest.json").read_text())["version"]
-    assert version.startswith("0.6.1b") and version[6:].isdigit()
-    assert int(version[6:]) >= 23, "This behavioral test must survive later betas"
+    # B23 remains a permanent regression gate across future patch series.
+    from re import fullmatch
+    match = fullmatch(r"0\.6\.(\d+)b(\d+)", version)
+    assert match is not None, "Expected a canonical HEM 0.6.x beta version"
+    assert tuple(map(int, match.groups())) >= (1, 23), (
+        "This behavioral test must survive later patch-series betas"
+    )
 
 
 asyncio.run(check_runtime())
