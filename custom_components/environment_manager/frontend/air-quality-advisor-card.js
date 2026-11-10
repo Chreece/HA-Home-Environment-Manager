@@ -9260,7 +9260,7 @@
       draft:"Saved with Save",available:"No choices available",
       weather:"Weather and outdoor sources",targets:"Air quality and thresholds",
       presence:"Presence and sleep",ventilation:"Windows and ventilation",
-      alerts:"Announcements and delivery",other:"Other home settings"},
+      alerts:"Announcements and delivery",other:"Other home settings",power:"Power and safety"},
     de:{home:"Zuhause",title:"Hauseinstellungen",loading:"Hauseinstellungen werden geladen…",
       save:"Speichern",saving:"Wird gespeichert…",saved:"Hauseinstellungen gespeichert",
       close:"Schließen",done:"Fertig",retry:"Erneut versuchen",
@@ -9271,7 +9271,7 @@
       draft:"Mit Speichern übernehmen",available:"Keine Auswahl verfügbar",
       weather:"Wetter und Außenquellen",targets:"Luftqualität und Grenzwerte",
       presence:"Anwesenheit und Schlaf",ventilation:"Fenster und Lüftung",
-      alerts:"Meldungen und Zustellung",other:"Weitere Hauseinstellungen"},
+      alerts:"Meldungen und Zustellung",other:"Weitere Hauseinstellungen",power:"Stromversorgung und Schutz"},
     el:{home:"Περιβάλλον σπιτιού",title:"Ρυθμίσεις σπιτιού",loading:"Φόρτωση ρυθμίσεων σπιτιού…",
       save:"Αποθήκευση",saving:"Αποθήκευση…",saved:"Οι ρυθμίσεις σπιτιού αποθηκεύτηκαν",
       close:"Κλείσιμο",done:"Τέλος",retry:"Επανάληψη",
@@ -9282,13 +9282,13 @@
       draft:"Αποθήκευση με το κουμπί",available:"Δεν υπάρχουν επιλογές",
       weather:"Καιρός και εξωτερικές πηγές",targets:"Ποιότητα αέρα και όρια",
       presence:"Παρουσία και ύπνος",ventilation:"Παράθυρα και αερισμός",
-      alerts:"Ανακοινώσεις και παράδοση",other:"Άλλες ρυθμίσεις σπιτιού"}
+      alerts:"Ανακοινώσεις και παράδοση",other:"Άλλες ρυθμίσεις σπιτιού",power:"Ισχύς και προστασία"}
   };
   const homeWord128=(card,key)=>(HOME_WORDS128[card._language()]||HOME_WORDS128.en)[key]||key;
-  const HOME_GROUPS128=["weather","targets","presence","ventilation","alerts","other"];
+  const HOME_GROUPS128=["weather","targets","presence","ventilation","alerts","power"];
   const HOME_ICONS128={weather:"mdi:weather-partly-cloudy",targets:"mdi:target",
     presence:"mdi:bed-clock",ventilation:"mdi:window-open-variant",
-    alerts:"mdi:bullhorn-outline",other:"mdi:cog-outline"};
+    alerts:"mdi:bullhorn-outline",power:"mdi:shield-check-outline"};
   const homeGroup128=name=>{
     const key=String(name).toLowerCase();
     if(/weather|outdoor|warning/.test(key))return "weather";
@@ -9298,7 +9298,9 @@
       return "alerts";
     if(/pollen|threshold|mold|aqi|humidity|temperature/.test(key))return "targets";
     if(/window|ventilat/.test(key))return "ventilation";
-    return "other";
+    if(/arrival|prepar|wake|alarm|schedule/.test(key))return "presence";
+    if(/announce|ai_rewrite|conversation|recipient/.test(key))return "alerts";
+    return "power";
   };
   const homeType128=field=>{
     const selector=field?.selector;
@@ -9567,8 +9569,7 @@
       'data-hem-home-status128 role="status" aria-live="polite">'+
       escape(homeWord128(this,"loading"))+'</p>'+
       '<p class="hem-home-intro128">'+escape(homeWord128(this,"select"))+'</p>'+
-      '<div data-hem-home-groups128><div data-hem-home-form-groups128></div>'+
-      '<div data-hem-home-native-groups128></div></div></div>'+
+      '<div data-hem-home-groups128><div data-hem-home-form-groups128></div></div></div>'+
       '<footer class="hem-room-options-footer114">'+
       '<button type="button" data-hem-home-retry128 hidden>'+
         escape(homeWord128(this,"retry"))+'</button>'+
@@ -10137,6 +10138,348 @@
     ].join("");
   };
   /* HEM_FLOOR_GROUPS140_END */
+
+
+  /* HEM_UNIFIED_SETTINGS141_START
+   * Home/Room: one semantic accordion for draft Options and native HA
+   * entities. Do not change either authority, save endpoint, or device ID.
+   * Device: six consistently named categories, never an "Other" bucket.
+   * Source selectors remain their original validated HA Options-flow fields.
+   */
+  const hemUnified141=AirQualityAdvisorCard.prototype;
+  const HEM_GROUP_ORDER141={
+    home:["weather","targets","presence","ventilation","alerts","power"],
+    room:["targets","mode","presence","ventilation","power","alerts"],
+    device:["mode","pid","presence","ventilation","power","alerts"]
+  };
+  const HEM_GROUP_ICONS141={
+    weather:"mdi:weather-partly-cloudy",targets:"mdi:target",
+    mode:"mdi:tune-variant",pid:"mdi:chart-bell-curve",fan:"mdi:fan",
+    presence:"mdi:bed-clock",ventilation:"mdi:window-open-variant",
+    power:"mdi:shield-check-outline",alerts:"mdi:bullhorn-outline"
+  };
+  const HEM_GROUP_WORDS141={
+    en:{
+      home:{weather:"Weather and outdoor sources",targets:"Air quality and limits",
+        presence:"Presence, sleep and arrival",ventilation:"Windows and ventilation",
+        alerts:"Announcements and delivery",power:"Power and protection"},
+      room:{targets:"Room sensors and comfort",mode:"Equipment, control and PID",
+        presence:"Presence and sleep",ventilation:"Windows, ventilation and shades",
+        power:"Power and protection",alerts:"Announcements and errors"},
+      device:{mode:"Control, targets and fans",pid:"PID and calibration",
+        presence:"Presence and sleep",ventilation:"Windows and ventilation",
+        power:"Power and protection",alerts:"Announcements and errors"},
+      both:"Saved with Save · Applies immediately",saved:"Saved with Save",live:"Applies immediately"},
+    de:{
+      home:{weather:"Wetter und Außenquellen",targets:"Luftqualität und Grenzwerte",
+        presence:"Anwesenheit, Schlaf und Ankunft",ventilation:"Fenster und Lüftung",
+        alerts:"Meldungen und Zustellung",power:"Stromversorgung und Schutz"},
+      room:{targets:"Raumsensoren und Komfort",mode:"Geräte, Steuerung und PID",
+        presence:"Anwesenheit und Schlaf",ventilation:"Fenster, Lüftung und Beschattung",
+        power:"Stromversorgung und Schutz",alerts:"Meldungen und Fehler"},
+      device:{mode:"Steuerung, Sollwerte und Lüfter",pid:"PID und Kalibrierung",
+        presence:"Anwesenheit und Schlaf",ventilation:"Fenster und Lüftung",
+        power:"Stromversorgung und Schutz",alerts:"Meldungen und Fehler"},
+      both:"Mit Speichern sichern · Sofort wirksam",saved:"Mit Speichern sichern",live:"Sofort wirksam"},
+    el:{
+      home:{weather:"Καιρός και εξωτερικές πηγές",targets:"Ποιότητα αέρα και όρια",
+        presence:"Παρουσία, ύπνος και άφιξη",ventilation:"Παράθυρα και αερισμός",
+        alerts:"Ανακοινώσεις και παράδοση",power:"Ισχύς και προστασία"},
+      room:{targets:"Αισθητήρες χώρου και άνεση",mode:"Συσκευές, έλεγχος και PID",
+        presence:"Παρουσία και ύπνος",ventilation:"Παράθυρα, αερισμός και σκίαση",
+        power:"Ισχύς και προστασία",alerts:"Ανακοινώσεις και σφάλματα"},
+      device:{mode:"Έλεγχος, στόχοι και ανεμιστήρες",pid:"PID και βαθμονόμηση",
+        presence:"Παρουσία και ύπνος",ventilation:"Παράθυρα και αερισμός",
+        power:"Ισχύς και προστασία",alerts:"Ανακοινώσεις και σφάλματα"},
+      both:"Αποθήκευση με το κουμπί · Εφαρμόζεται αμέσως",
+      saved:"Αποθήκευση με το κουμπί",live:"Εφαρμόζεται αμέσως"}
+  };
+  const hemWord141=(card,scope,key)=>{
+    const lang=HEM_GROUP_WORDS141[card._language()]||HEM_GROUP_WORDS141.en;
+    return (lang[scope]||{})[key]||HEM_GROUP_WORDS141.en[scope][key]||key;
+  };
+  const hemTiming141=(card,draftCount,nativeCount)=>{
+    const words=HEM_GROUP_WORDS141[card._language()]||HEM_GROUP_WORDS141.en;
+    return draftCount&&nativeCount?words.both:draftCount?words.saved:words.live;
+  };
+  const hemRoomDraftCategory141=name=>({
+    windows:"ventilation",shades:"ventilation",
+    climate_devices:"mode",occupancy_sensors:"presence",
+    air_quality:"targets",temperature:"targets",humidity:"targets"
+  })[name]||"targets";
+  const hemFieldCategory141=(field,scope)=>{
+    const a=field.state?.attributes||{};
+    const key=[a.setting_key,field.reg?.unique_id,field.id].filter(Boolean).join("_").toLowerCase();
+    if(scope==="home"){
+      if(/weather|outdoor|warning/.test(key))return "weather";
+      if(/announce|notification|notify|tts|media_player|delivery|language|_hub|_ai_|ai_rewrite|conversation/.test(key))
+        return "alerts";
+      if(/window|ventilat|shade|cover/.test(key))return "ventilation";
+      if(/presence|occup|sleep|wake|alarm|trackers|arrival|prepar|home_policy|away|schedule/.test(key))
+        return "presence";
+      if(/threshold|mold|pollen|aqi|co2|radon|humidity|temperature|pm25|pm10|voc|limit/.test(key))
+        return "targets";
+      return "power";
+    }
+    if(/announce|notification|notify|tts|delivery|_error|device_fault/.test(key))return "alerts";
+    if(/window|ventilat|shade|cover|blind|extraction/.test(key))return "ventilation";
+    if(/presence|occup|sleep|wake|alarm|away_policy|schedule|_start|_end/.test(key))
+      return "presence";
+    if(/power|safety|watchdog|battery|cooldown|relay|_min_|_max_|hold|readiness|full_output/.test(key))
+      return "power";
+    if(scope==="room"){
+      if(/pid|calibrat|kp|ki|kd|gain|capacity|control_mode|operating_mode|fan|quiet|method/.test(key))
+        return "mode";
+      if(/target|profile|temperature|humidity|mold|dewpoint|comfort|air_|environment|limit|source|sensor/.test(key))
+        return "targets";
+      return "mode";
+    }
+    if(/pid|calibrat|kp|ki|kd|gain|capacity|adaptive/.test(key))return "pid";
+    return /target|profile|fan|quiet|speed|control|mode|preset|method|temperature|humidity|comfort/.test(key)
+      ?"mode":"power";
+  };
+  const hemHomeNativeDuplicate141=(field,saved)=>{
+    if(!Array.isArray(saved.fields)||!saved.fields.length)return false;
+    const a=field.state?.attributes||{};
+    const key=String(a.setting_key||field.reg?.unique_id||"").toLowerCase();
+    if(!key)return false;
+    // Same underlying configuration must not have one unsaved and one
+    // immediately writable editor in the same Home dialog.
+    return saved.fields.some(item=>{
+      const name=String(item.name||"").toLowerCase();
+      return name.length>2&&(key===name||key.endsWith("_"+name));
+    });
+  };
+  const hemUnifiedFields141=(card,saved,scope)=>{
+    const fields=card._hemFullFields127(saved,scope);
+    return scope==="home"?fields.filter(field=>!hemHomeNativeDuplicate141(field,saved)):fields;
+  };
+  const hemUnifiedNotice141=(card,saved,scope,root,fields)=>{
+    let notice=root.querySelector(":scope > [data-hem-unified-notice141]");
+    const message=saved.fullLoading127?tr127(card,"load"):
+      saved.fullError127?tr127(card,"error"):
+      !fields.length&&scope==="device"?tr127(card,"empty"):"";
+    if(!message){notice?.remove();return;}
+    if(!notice){
+      notice=document.createElement("p");
+      notice.className="hem-full-notice127";
+      notice.setAttribute("role","status");
+      notice.setAttribute("data-hem-unified-notice141","");
+      root.prepend(notice);
+    }
+    notice.textContent=message;
+  };
+  const hemUnifiedCreate141=(card,scope,key)=>{
+    const group=document.createElement("details");
+    group.className="hem-room-options-group114 hem-full-category127 hem-unified141";
+    group.setAttribute("data-hem-unified141",key);
+    group.setAttribute("data-hem-full-category127",key);
+    if(scope==="home"){
+      group.classList.add("hem-home-category128");
+      group.setAttribute("data-hem-home-category128",key);
+    }else group.setAttribute("data-room-native-group126",key);
+    group.innerHTML='<summary>'+card._icon(HEM_GROUP_ICONS141[key])+
+      '<span class="hem-room-options-label114"><strong>'+escape(hemWord141(card,scope,key))+
+      '</strong><small></small></span>'+
+      '<span class="hem-room-options-count114">0</span>'+
+      card._icon("mdi:chevron-down")+'</summary>'+
+      '<div class="hem-unified-content141"></div>';
+    return group;
+  };
+
+  // Device settings have no Options draft. Use six coherent categories
+  // instead of ten including "Other", without changing native control rows.
+  const hemOriginalFullHtml141=hemUnified141._hemFullHtml127;
+  hemUnified141._hemFullHtml127=function(saved,scope){
+    if(scope!=="device")return hemOriginalFullHtml141.call(this,saved,scope);
+    const fields=hemUnifiedFields141(this,saved,scope),grouped=new Map();
+    for(const field of fields){
+      const key=hemFieldCategory141(field,"device");
+      if(!grouped.has(key))grouped.set(key,[]);
+      grouped.get(key).push(field);
+    }
+    const message=saved.fullLoading127?tr127(this,"load"):
+      saved.fullError127?tr127(this,"error"):
+      fields.length?"":tr127(this,"empty");
+    return '<section class="hem-full-list127" data-hem-full-list127="device">'+
+      (message?'<p role="status" class="hem-full-notice127">'+escape(message)+'</p>':"")+
+      HEM_GROUP_ORDER141.device.map(key=>{
+        const found=grouped.get(key);
+        if(!found?.length)return "";
+        return '<details class="hem-room-options-group114 hem-full-category127 hem-unified141" '+
+          'data-hem-unified141="'+key+'" data-hem-full-category127="'+key+'">'+
+          '<summary>'+this._icon(HEM_GROUP_ICONS141[key])+
+          '<span class="hem-room-options-label114"><strong>'+
+          escape(hemWord141(this,"device",key))+'</strong><small>'+
+          escape(hemTiming141(this,0,found.length))+'</small></span>'+
+          '<span class="hem-room-options-count114">'+found.length+'</span>'+
+          this._icon("mdi:chevron-down")+'</summary>'+
+          '<div class="hem-full-rows127">'+found.map(field=>this._hemFullRow127(field,"device")).join("")+
+          '</div></details>';
+      }).join("")+'</section>';
+  };
+
+  // Room and Home retain their original Options flow, validation and Save,
+  // but the visible native rows now live INSIDE the corresponding source
+  // group. Every category appears exactly once at the top level.
+  const hemOriginalFullRender141=hemUnified141._hemFullRender127;
+  hemUnified141._hemFullRender127=function(saved,scope){
+    if(scope==="device")return hemOriginalFullRender141.call(this,saved,scope);
+    if(scope!=="room"&&scope!=="home")return;
+    if(!this._hemFullContext127(saved,scope))return;
+    const root=saved.node.querySelector(scope==="home"?
+      "[data-hem-home-form-groups128]":"[data-room-options-groups114]");
+    if(!root)return;
+    const keys=HEM_GROUP_ORDER141[scope],keyset=new Set(keys);
+    const groups=new Map(),fields=hemUnifiedFields141(this,saved,scope);
+    const native=new Map();
+    for(const field of fields){
+      const key=hemFieldCategory141(field,scope);
+      if(!native.has(key))native.set(key,[]);
+      native.get(key).push(field);
+    }
+    const expanded=new Set([...root.querySelectorAll(":scope > details[open]")]
+      .map(el=>el.getAttribute("data-hem-unified141")||
+        el.getAttribute("data-hem-home-category128")));
+    for(const child of [...root.children]){
+      if(!child.matches("details"))continue;
+      const key=child.getAttribute("data-hem-unified141")||
+        child.getAttribute("data-hem-home-category128");
+      if(!keyset.has(key))continue;
+      groups.set(key,child);
+      child.setAttribute("data-hem-unified141",key);
+      child.setAttribute("data-hem-full-category127",key);
+      if(scope==="room")child.setAttribute("data-room-native-group126",key);
+    }
+    // Source sections are ordinary field-level details nested under one
+    // parent category, not a second independent list of sections.
+    const sources=scope==="room"?
+      [...root.querySelectorAll("[data-room-options-group114]")]:[];
+    const sourceCount=new Map();
+    for(const source of sources){
+      const name=source.getAttribute("data-room-options-group114");
+      const key=hemRoomDraftCategory141(name);
+      sourceCount.set(key,(sourceCount.get(key)||0)+1);
+      let group=groups.get(key);
+      if(!group){
+        group=hemUnifiedCreate141(this,scope,key);
+        groups.set(key,group);root.appendChild(group);
+      }
+      let mount=group.querySelector(":scope > .hem-unified-content141");
+      if(!mount){
+        mount=document.createElement("div");mount.className="hem-unified-content141";
+        group.appendChild(mount);
+      }
+      let holder=mount.querySelector(":scope > [data-hem-unified-sources141]");
+      if(!holder){
+        holder=document.createElement("div");
+        holder.className="hem-unified-sources141";
+        holder.setAttribute("data-hem-unified-sources141","");
+        mount.prepend(holder);
+      }
+      source.removeAttribute("name"); // avoid accordion auto-closing across groups
+      if(source.parentElement!==holder)holder.appendChild(source);
+    }
+    for(const key of keys){
+      const rows=native.get(key)||[];
+      let group=groups.get(key);
+      if(!group&&rows.length){
+        group=hemUnifiedCreate141(this,scope,key);
+        groups.set(key,group);root.appendChild(group);
+      }
+      if(!group)continue;
+      const draft=scope==="home"?
+        group.querySelectorAll("[data-hem-home-field128]").length:
+        sourceCount.get(key)||0;
+      if(!draft&&!rows.length){group.remove();groups.delete(key);continue;}
+      let mount=group.querySelector(":scope > .hem-unified-content141");
+      if(!mount){
+        mount=document.createElement("div");
+        mount.className="hem-unified-content141";
+        group.appendChild(mount);
+      }
+      let holder=mount.querySelector(":scope > [data-hem-unified-native141]");
+      if(rows.length){
+        if(!holder){
+          holder=document.createElement("div");
+          holder.className="hem-full-rows127 hem-unified-native141";
+          holder.setAttribute("data-hem-unified-native141","");
+          mount.appendChild(holder);
+        }
+        const html=rows.map(field=>this._hemFullRow127(field,scope)).join("");
+        if(holder.innerHTML!==html&&!holder.matches(":focus-within"))holder.innerHTML=html;
+      }else holder?.remove();
+      const strong=group.querySelector(":scope > summary .hem-room-options-label114 strong");
+      const small=group.querySelector(":scope > summary .hem-room-options-label114 small");
+      const count=group.querySelector(":scope > summary .hem-room-options-count114");
+      if(strong)strong.textContent=hemWord141(this,scope,key);
+      if(small)small.textContent=hemTiming141(this,draft,rows.length);
+      if(count)count.textContent=String(draft+rows.length);
+      if(scope==="room")group.setAttribute("data-room-native-group126",key);
+      if(expanded.has(key))group.open=true;
+    }
+    // Preserve the original Options editors and focused native controls.
+    // Order only newly created groups or settled/focus-free dialogs.
+    if(!root.contains(document.activeElement)){
+      const ordered=keys.map(key=>groups.get(key)).filter(Boolean);
+      ordered.forEach((group,index)=>{
+        const current=[...root.children].filter(node=>node.matches("details"))[index];
+        if(current!==group)root.insertBefore(group,current||null);
+      });
+    }
+    hemUnifiedNotice141(this,saved,scope,root,fields);
+  };
+  const hemOriginalRoomForm141=hemUnified141._renderRoomSettingsForm114;
+  hemUnified141._renderRoomSettingsForm114=function(saved,form,keepDraft=false){
+    const root=saved.node.querySelector("[data-room-options-groups114]");
+    const expanded=new Set([...root?.querySelectorAll(":scope > [data-hem-unified141][open]")||[]]
+      .map(group=>group.getAttribute("data-hem-unified141")));
+    const result=hemOriginalRoomForm141.call(this,saved,form,keepDraft);
+    this._hemFullRender127(saved,"room");
+    for(const key of expanded){
+      const group=saved.node.querySelector('[data-hem-unified141="'+key+'"]');
+      if(group)group.open=true;
+    }
+    return result;
+  };
+  const hemOriginalHomeForm141=hemUnified141._renderHomeGeneral128;
+  hemUnified141._renderHomeGeneral128=function(saved,form,keepDraft=false){
+    const root=saved.node.querySelector("[data-hem-home-form-groups128]");
+    const expanded=new Set([...root?.querySelectorAll(":scope > details[open]")||[]]
+      .map(group=>group.getAttribute("data-hem-unified141")||
+        group.getAttribute("data-hem-home-category128")));
+    const result=hemOriginalHomeForm141.call(this,saved,form,keepDraft);
+    this._hemFullRender127(saved,"home");
+    for(const key of expanded){
+      const group=saved.node.querySelector('[data-hem-home-category128="'+key+'"]');
+      if(group)group.open=true;
+    }
+    return result;
+  };
+  const hemOriginalRoomError141=hemUnified141._roomSettingsFieldError114;
+  hemUnified141._roomSettingsFieldError114=function(saved,name,message){
+    const result=hemOriginalRoomError141.call(this,saved,name,message);
+    if(message){
+      const source=saved.node.querySelector('[data-room-options-group114="'+name+'"]');
+      const parent=source?.closest("[data-hem-unified141]");
+      if(parent)parent.open=true;
+    }
+    return result;
+  };
+  const hemOriginalStyles141=hemUnified141._styles;
+  hemUnified141._styles=function(){return hemOriginalStyles141.call(this)+[
+    "<style>",
+    ".hem-unified141{margin-bottom:7px}",
+    ".hem-unified-content141{display:grid;gap:7px;padding:3px 8px 10px;min-width:0}",
+    ".hem-unified-sources141{display:grid;gap:6px;min-width:0}",
+    ".hem-unified-sources141>.hem-room-options-group114{margin:0;border-radius:9px}",
+    ".hem-unified-native141{padding:3px 0 0}",
+    ".hem-home-category128>.hem-unified-content141{padding:0 8px 10px}",
+    ".hem-home-category128>.hem-unified-content141>.hem-unified-native141{margin-top:5px;border-top:1px solid var(--aqa-edge);padding-top:9px}",
+    ".hem-unified141>summary .hem-room-options-label114 small{overflow-wrap:anywhere}",
+    "</style>"
+  ].join("");};
+  /* HEM_UNIFIED_SETTINGS141_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
