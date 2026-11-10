@@ -167,8 +167,6 @@ async def check_setting_editor():
 
 
 def check_translations():
-    from importlib.util import module_from_spec, spec_from_file_location
-    spec = spec_from_file_location("watchdog_names", SOURCE / "equipment_name_catalog.py")
     # Names module uses a standalone-safe catalog path as part of its real API.
     names = runpy.run_path(str(SOURCE / "equipment_name_catalog.py"))
     paths = sorted((SOURCE / "translations").glob("*.json"))
@@ -193,9 +191,6 @@ def check_translations():
     assert '"off_state_watchdog_mode": cfg.get("off_state_watchdog_mode", "monitor_recover")' in (
         SOURCE / "equipment_status.py"
     ).read_text()
-    assert "off_state_watchdog_mode" in json.loads(
-        (SOURCE / "manifest.json").read_text()
-    ).get("version", "") or True  # version validated by dedicated gate
     assert json.loads((SOURCE / "manifest.json").read_text())["version"] == "0.6.1b23"
 
 
