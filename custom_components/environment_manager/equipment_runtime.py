@@ -4748,15 +4748,22 @@ class EquipmentRuntime:
             min_on, _, max_on = model.timing(self.manager, spec, cap)
         record["baseline"].setdefault(entity, before_sources[entity])
         record["capabilities"] = asdict(cap)
-        from .off_state_watchdog import verified_heat_shutdown
-        heat_before_shutdown = (
+        # Resolve the old heating direction without importing optional
+        # monitor modules into the normal native command path. Existing
+        # controller-only test fixtures deliberately load this file alone.
+        preceding = before_sources.get(entity)
+        preceding_mode = preceding.get("state") if isinstance(preceding, dict) else None
+        heat_before_shutdown = bool(
             power and not off_state_recovery and
-            expected == {"state": "off"} and
-            verified_heat_shutdown(
-                cap.domain, cap.modes,
-                before_sources.get(entity, {}).get("state")
-                if isinstance(before_sources.get(entity), dict) else None,
-                primary.attributes.get("hvac_action"),
+            expected == {"state": "off"} and "off" in cap.modes
+            and "heat" in cap.modes and (
+                (cap.domain == "climate" and (
+                    preceding_mode == "heat"
+                    or (preceding_mode in ("auto", "heat_cool")
+                        and primary.attributes.get("hvac_action") == "heating")))
+                or (cap.domain in ("switch", "input_boolean", "number", "input_number")
+                    and preceding_mode not in (
+                        None, "off", "unknown", "unavailable", "0", "0.0"))
             )
         )
         pending = {"entity": entity, "service": service, "data": data,
