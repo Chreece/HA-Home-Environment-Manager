@@ -169,7 +169,7 @@ DEVICE_POLICY_OPTIONS = {
     "sleep_behavior": ("normal", "pause", "sleep_targets"),
 }
 GLOBAL_POLICY_OPTIONS = {"home_policy": ("any_home", "all_home")}
-CLIMATE_OPERATING_FLAGS = ("sleep_active", "sleep_schedule_enabled",
+CLIMATE_OPERATING_FLAGS = ("sleep_active", "sleep_schedule_enabled", "closed_door_eco",
                            "window_efficiency_notify")
 AREA_ENV_FLAGS = ("sleep_room", "enable_pmv")
 GLOBAL_ENV_FLAGS = ("pollen_avoid_ventilation",)
