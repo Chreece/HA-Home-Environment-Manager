@@ -141,6 +141,14 @@ async def main():
     assert not await tick(5000,24.2)
     assert len(commands)==2
     assert persisted and all(item[1]<=2 for item in persisted)
+    from types import SimpleNamespace as NS
+    percent = NS(domain="number")
+    zero = NS(state="0",attributes={"unit_of_measurement":"%","min":0,"max":100})
+    assert runtime_module._reported_off(percent,zero)
+    assert not runtime_module._reported_off(percent,NS(state="5",
+        attributes=zero.attributes))
+    assert not runtime_module._reported_off(percent,NS(state="0",
+        attributes={"unit_of_measurement":"°C","min":0,"max":100}))
     # Explicit manual / no permission / unavailable / foreign ownership blocks
     # even when a completely fresh, qualifying temperature trend is present.
     for reason in ("manual","not_commissioned","unavailable","different_identity",
