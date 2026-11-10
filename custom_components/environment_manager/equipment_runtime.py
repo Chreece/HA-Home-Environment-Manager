@@ -4764,18 +4764,27 @@ class EquipmentRuntime:
         # A journaled OFF inherits the genuine previously observed physical
         # effect from advertised HA capabilities. Never infer from hardware
         # brand, a Zigbee model or a generic auto mode lacking hvac_action.
-        from .off_state_profiles import shutdown_effect
-        preceding = before_sources.get(entity)
-        preceding_mode = preceding.get("state") if isinstance(preceding, dict) else None
-        off_output_direction = (
-            shutdown_effect(cap, preceding_mode,
-                            primary.attributes.get("hvac_action"))
-            if power and not off_state_recovery and (
-                expected == {"state": "off"} or
-                cap.domain in ("number", "input_number") and
-                expected == {"state": "0.0"}
-            ) else None
-        )
+        off_output_direction = None
+        if power and not off_state_recovery and (
+            expected == {"state": "off"} or
+            cap.domain in ("number", "input_number")
+            and expected == {"state": "0.0"}
+        ):
+            # Monitoring must never break ordinary native ON/OFF control.
+            # Also retain compatibility with source-isolated test harnesses
+            # that load the controller without its optional watcher modules.
+            try:
+                from .off_state_profiles import shutdown_effect
+            except ImportError:
+                shutdown_effect = None
+            if shutdown_effect is not None:
+                preceding = before_sources.get(entity)
+                preceding_mode = (
+                    preceding.get("state") if isinstance(preceding, dict) else None
+                )
+                off_output_direction = shutdown_effect(
+                    cap, preceding_mode, primary.attributes.get("hvac_action")
+                )
         pending = {"entity": entity, "service": service, "data": data,
                    "off_state_recovery": off_state_recovery,
                    "off_output_direction": off_output_direction,
