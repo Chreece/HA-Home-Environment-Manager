@@ -6049,17 +6049,24 @@ class EquipmentRuntime:
             return
         record["baseline"].setdefault(cap.primary, snapshot(state))
         await self._observe_native_running(spec, cap, state)
-        # This is an OFF-only, HEM-commissioned recovery. The normal
-        # tick/ACK/physical ownership path below remains unchanged.
-        try:
-            from .off_state_runtime import watchdog_tick
-            if await watchdog_tick(self, spec, cap, state):
-                return
-        except asyncio.CancelledError:
-            raise
-        except Exception:
-            # A monitoring bug must never disable the real HVAC controller.
-            _LOGGER.exception("Off-state thermal monitor failed for %s", spec.identifier)
+        # The optional, independent OFF watchdog only runs when a genuine
+        # HEM heating shutdown was journaled. Never import it for ordinary
+        # climate control (including minimal source-extracted HA test rigs).
+        if record.get("thermal_off_watch"):
+            try:
+                from .off_state_runtime import watchdog_tick
+                if await watchdog_tick(self, spec, cap, state):
+                    return
+            except asyncio.CancelledError:
+                raise
+            except ImportError:
+                # Missing/partial monitoring components cannot disable HVAC.
+                pass
+            except Exception:
+                # A monitoring bug must never disable the real HVAC controller.
+                logger = globals().get("_LOGGER")
+                if logger is not None:
+                    logger.exception("Off-state thermal monitor failed for %s", spec.identifier)
         plan = model.plan_for(self.manager, spec)
         presentation = getattr(self, "_presentation_context", None)
         if isinstance(presentation, dict):
