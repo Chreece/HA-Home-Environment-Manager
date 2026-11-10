@@ -1920,6 +1920,17 @@ for _locale, _labels in WINDOW_OPTION_LABELS.items():
         _names[_key] = _group + " · {channel}" + _label
 
 
+_OFF_WATCHDOG_NAMES = {
+    "en": "Safety · {channel}Post-shutdown watchdog",
+    "el": "Ασφάλεια · {channel}Επιτήρηση μετά την απενεργοποίηση",
+    "de": "Sicherheit · {channel}Überwachung nach Abschaltung",
+}
+for _locale, _names in EQUIPMENT_TRANSLATED_NAMES.items():
+    _names["off_state_watchdog_mode"] = _OFF_WATCHDOG_NAMES.get(
+        _locale, _OFF_WATCHDOG_NAMES["en"],
+    )
+
+
 _NATIVE_FULL_OUTPUT_LABELS = {'ar': 'القيمة المستهدفة القصوى حسب الوضع',
  'bg': 'Максимална зададена стойност по режим',
  'bn': 'মোড অনুযায়ী সর্বোচ্চ লক্ষ্য',

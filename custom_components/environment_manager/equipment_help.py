@@ -10,6 +10,44 @@ from __future__ import annotations
 # reuse the description of a neighbouring field. Other UI locales use English
 # for these explanations while keeping their existing translated entity names.
 HELP = {
+    "off_state_watchdog_mode": (
+        "Choose how HEM monitors this physical device after an HEM-commanded OFF. "
+        "Monitor and recover (default, including existing installations): detect "
+        "a sustained, independently measured room trend inconsistent with shutdown, "
+        "warn of a suspected fault, and allow no more than two guarded native OFF "
+        "requests at least ten minutes apart. Monitor only: the same monitoring "
+        "and warnings, but no watchdog recovery commands. Disabled: no watchdog "
+        "monitoring, warnings or recovery commands.\n\n"
+        "This is one shared preference for every supported heating, cooling, "
+        "humidifying and dehumidifying direction. Room trends cannot prove physical "
+        "output. The watchdog never turns a device ON, overrides manual intervention, "
+        "or changes PID, window, presence or native minimum-runtime protections. "
+        "Normal control and shutdown remain active in all three settings.",
+        "Ορίζει την επιτήρηση μετά από εντολή OFF του HEM στη φυσική συσκευή. "
+        "Παρακολούθηση και επανάληψη OFF (προεπιλογή): εντοπίζει ύποπτη παρατεταμένη "
+        "μεταβολή μέσω ανεξάρτητων αισθητήρων, ανακοινώνει πιθανή βλάβη και επιτρέπει "
+        "έως δύο πρόσθετες προστατευμένες εντολές OFF με διάστημα τουλάχιστον "
+        "δέκα λεπτών. Μόνο παρακολούθηση: ίδια ανίχνευση και ειδοποιήσεις, "
+        "χωρίς επιπλέον εντολές. Ανενεργό: χωρίς ανίχνευση, ειδοποιήσεις ή "
+        "επαναλήψεις αυτού του μηχανισμού.\n\n"
+        "Μία ρύθμιση για όλες τις υποστηριζόμενες λειτουργίες θέρμανσης, ψύξης, "
+        "ύγρανσης και αφύγρανσης. Η τάση του χώρου δεν αποδεικνύει φυσική κατάσταση. "
+        "Δεν ενεργοποιεί συσκευές, δεν παρακάμπτει χειροκίνητες εντολές ή "
+        "προστασίες PID, παραθύρων, παρουσίας και ελάχιστου χρόνου λειτουργίας. "
+        "Οι κανονικές εντολές απενεργοποίησης συνεχίζουν να λειτουργούν.",
+        "Regelt die Überwachung nach einem HEM-AUS-Befehl an diesem Gerät. "
+        "Überwachen und erneut ausschalten (Standard): einen anhaltenden verdächtigen "
+        "Raumtrend unabhängiger Sensoren erkennen, einen möglichen Fehler melden "
+        "und höchstens zwei abgesicherte zusätzliche AUS-Befehle mit mindestens "
+        "zehn Minuten Abstand zulassen. Nur überwachen: gleiche Erkennung und "
+        "Warnungen, aber keine Wächter-Wiederholungen. Deaktiviert: keine "
+        "Überwachung, Warnungen oder Wiederholungen durch diesen Wächter.\n\n"
+        "Die Option gilt für alle unterstützten Heiz-, Kühl-, Befeuchtungs- "
+        "und Entfeuchtungsrichtungen. Raumtrends beweisen keinen physischen "
+        "Schaltzustand. Der Wächter schaltet niemals EIN und umgeht weder "
+        "manuelle Eingriffe noch PID-, Fenster-, Anwesenheits- oder "
+        "Mindestlaufzeitschutz. Die normale Abschaltung bleibt aktiv.",
+    ),
     "control_mode": (
         "Choose who controls this device: its existing integration, HEM automatic rules, manual requests, Off, or PID demand control. Available choices depend on the device's supported functions.",
         "Επίλεξε ποιος ελέγχει τη συσκευή: η υπάρχουσα ενσωμάτωση, οι αυτόματοι κανόνες του HEM, οι χειροκίνητες εντολές, η απενεργοποίηση ή ο έλεγχος ζήτησης PID. Οι διαθέσιμες επιλογές εξαρτώνται από τις δυνατότητες της συσκευής.",
