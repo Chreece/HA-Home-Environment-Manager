@@ -2930,7 +2930,7 @@
           ${this._outside(data.outdoor || {})}
           ${this._pollenIndicator(data.outdoor || {})}
           ${this._summary(data.summary || {})}
-          <div class="rooms-list">${rooms.length ? rooms.map((room) => this._room(room)).join('')
+          <div class="rooms-list">${rooms.length || this._floorRegistry140?.floors?.length ? this._floorRooms140(rooms)
             : `<div class="empty-rooms">${this._icon('mdi:home-outline')}${escape(this._t('noRooms'))}</div>`}</div>
           <footer>${this._icon('mdi:shield-check-outline')} ${escape(this._t('sourceData'))}</footer>
         </div>
@@ -9676,6 +9676,432 @@
     ".hem-home-helper128{font-size:11px;color:var(--aqa-muted);line-height:1.4;margin:0;overflow-wrap:anywhere}",
     "</style>"].join("");};
   /* HEM_HOME_SETTINGS128_END */
+
+
+  /* HEM_FLOOR_GROUPS140_START
+   * Home Assistant owns the floor and area registries. This layer only groups
+   * existing HEM room cards and offers authenticated native floor edits.
+   * It does not create parallel HEM floor membership or physical controllers.
+   */
+  const floorProto140=AirQualityAdvisorCard.prototype;
+  const floorCopy140={
+    en:{floor:"Floor",rooms:"rooms",empty:"No HEM rooms assigned",unassigned:"Rooms without a floor",
+      settings:"Floor settings",name:"Floor name",level:"Floor level",icon:"Floor icon (MDI)",
+      members:"Rooms on this floor",note:"Only HEM rooms are listed. Selecting a room from another floor moves its Home Assistant area here.",
+      manage:"Room settings",save:"Save changes",close:"Close",attention:"need attention",
+      unknown:"unknown",saved:"Floor settings saved",saving:"Saving floor settings…",
+      error:"Could not save all changes. Check the actual Home Assistant floor and area assignments.",
+      invalid:"Enter a floor name, a whole-number level or blank, and a valid mdi: icon or blank.",
+      pending:"Loading Home Assistant floor details",changed:"The floor was changed or removed. Reopen its settings."},
+    el:{floor:"Όροφος",rooms:"δωμάτια",empty:"Δεν έχουν αντιστοιχιστεί δωμάτια του HEM",
+      unassigned:"Δωμάτια χωρίς όροφο",settings:"Ρυθμίσεις ορόφου",name:"Όνομα ορόφου",
+      level:"Επίπεδο ορόφου",icon:"Εικονίδιο ορόφου (MDI)",members:"Δωμάτια αυτού του ορόφου",
+      note:"Εμφανίζονται μόνο τα δωμάτια του HEM. Αν επιλέξετε δωμάτιο άλλου ορόφου, μεταφέρεται στον συγκεκριμένο όροφο του Home Assistant.",
+      manage:"Ρυθμίσεις δωματίου",save:"Αποθήκευση αλλαγών",close:"Κλείσιμο",
+      attention:"χρειάζονται προσοχή",unknown:"άγνωστη κατάσταση",
+      saved:"Οι ρυθμίσεις ορόφου αποθηκεύτηκαν",saving:"Αποθήκευση ρυθμίσεων ορόφου…",
+      error:"Δεν αποθηκεύτηκαν όλες οι αλλαγές. Ελέγξτε τις αντιστοιχίσεις ορόφων και χώρων στο Home Assistant.",
+      invalid:"Δώστε όνομα ορόφου, ακέραιο επίπεδο ή κενό, και έγκυρο εικονίδιο mdi: ή κενό.",
+      pending:"Φόρτωση ορόφων Home Assistant",changed:"Ο όροφος άλλαξε ή αφαιρέθηκε. Ανοίξτε ξανά τις ρυθμίσεις."},
+    de:{floor:"Etage",rooms:"Räume",empty:"Keine HEM-Räume zugeordnet",
+      unassigned:"Räume ohne Etage",settings:"Etage einstellen",name:"Name der Etage",
+      level:"Etagenhöhe",icon:"Etagen-Icon (MDI)",members:"Räume auf dieser Etage",
+      note:"Nur HEM-Räume werden aufgeführt. Wird ein Raum einer anderen Etage ausgewählt, verschiebt Home Assistant diesen Bereich hierher.",
+      manage:"Raumeinstellungen",save:"Änderungen speichern",close:"Schließen",
+      attention:"brauchen Aufmerksamkeit",unknown:"unbekannt",
+      saved:"Etagen-Einstellungen gespeichert",saving:"Etagen-Einstellungen werden gespeichert…",
+      error:"Nicht alle Änderungen wurden gespeichert. Bitte Etagen und Bereichszuordnungen in Home Assistant prüfen.",
+      invalid:"Etagenname, ganzzahlige Höhe oder leer und gültiges mdi:-Icon oder leer eingeben.",
+      pending:"Home Assistant-Etagen laden",changed:"Die Etage wurde geändert oder entfernt. Einstellungen erneut öffnen."}
+  };
+  floorProto140._floorWords140=function(){
+    return floorCopy140[this._language()]||floorCopy140.en;
+  };
+  floorProto140._floorRooms140=function(rooms){
+    const registry=this._floorRegistry140;
+    if(!Array.isArray(registry?.floors)||!registry.floors.length)
+      return rooms.map(room=>this._room(room)).join("");
+    const words=this._floorWords140(),groups=new Map(),ids=new Set();
+    for(const floor of registry.floors){groups.set(floor.floor_id,[]);ids.add(floor.floor_id);}
+    const unassigned=[];
+    for(const room of rooms){
+      const assigned=registry.membership.get(room.area_id);
+      if(ids.has(assigned))groups.get(assigned).push(room);
+      else unassigned.push(room);
+    }
+    const collapsed=this._floorCollapsed140||new Set();
+    const render=(floor,assigned,unowned=false)=>{
+      const id=floor.floor_id,open=!collapsed.has(id),n=assigned.length;
+      const attention=assigned.filter(room=>room.status==="attention").length;
+      const unknown=assigned.filter(room=>room.status==="unknown").length;
+      const count=String(n)+" "+words.rooms;
+      const details=[count];
+      if(attention)details.push(String(attention)+" "+words.attention);
+      if(unknown)details.push(String(unknown)+" "+words.unknown);
+      const name=unowned?words.unassigned:floor.name;
+      const nativeIcon=!unowned&&typeof floor.icon==="string"&&
+        /^mdi:[a-z0-9-]{1,90}$/.test(floor.icon)?floor.icon:
+        unowned?"mdi:home-question-outline":"mdi:home-floor-0";
+      const settings=!unowned&&this._hass?.user?.is_admin===true
+        ?'<button type="button" class="hem-floor-settings140" data-floor-settings140="'+escape(id)+
+          '" title="'+escape(words.settings+" · "+name)+'" aria-label="'+
+          escape(words.settings+" · "+name)+'">'+this._icon("mdi:cog-outline")+'</button>'
+        :"";
+      return '<details class="hem-floor-fold140" data-floor-fold140="'+escape(id)+'" '+
+        (open?'open ':'')+'><summary class="hem-floor-summary140" aria-label="'+
+        escape(name+" · "+details.join(" · "))+'">'+
+        this._icon(nativeIcon)+
+        '<span class="hem-floor-main140"><strong>'+escape(name)+'</strong>'+
+        '<small>'+escape(details.join(" · "))+'</small></span>'+
+        settings+this._icon(open?"mdi:chevron-up":"mdi:chevron-down")+
+        '</summary><div class="hem-floor-rooms140" data-floor-rooms140="'+escape(id)+'">'+
+        (assigned.length?assigned.map(room=>this._room(room)).join(""):
+          '<div class="hem-floor-empty140">'+escape(words.empty)+'</div>')+
+        '</div></details>';
+    };
+    return registry.floors.map(floor=>render(floor,groups.get(floor.floor_id))).join("")+
+      (unassigned.length?render({floor_id:"__hem_unassigned140__",name:words.unassigned},
+        unassigned,true):"");
+  };
+  floorProto140._floorCleanupSubscriptions140=function(){
+    for(const unsub of this._floorUnsubs140||[]){
+      try{unsub();}catch{}
+    }
+    this._floorUnsubs140=[];
+    this._floorListenersConnection140=null;
+  };
+  floorProto140._floorSubscribe140=function(connection){
+    if(!connection||typeof connection.subscribeEvents!=="function"||
+       this._floorListenersConnection140===connection)return;
+    this._floorCleanupSubscriptions140();
+    this._floorListenersConnection140=connection;
+    for(const type of ["floor_registry_updated","area_registry_updated"]){
+      Promise.resolve().then(()=>connection.subscribeEvents(()=>{
+        if(this._floorConnection140===connection&&this.isConnected)
+          this._floorFetch140(true);
+      },type)).then(unsubscribe=>{
+        if(typeof unsubscribe!=="function")return;
+        if(this._floorConnection140===connection&&
+           this._floorListenersConnection140===connection)
+          this._floorUnsubs140.push(unsubscribe);
+        else unsubscribe();
+      }).catch(()=>{});
+    }
+  };
+  floorProto140._floorFetch140=function(force=false){
+    const hass=this._hass,connection=hass?.connection;
+    if(!connection||typeof hass.callWS!=="function")return;
+    if(this._floorRequest140)return;
+    if(!force&&this._floorRegistry140)return;
+    if(!force&&Date.now()<(this._floorRetryAt140||0))return;
+    const call=hass.callWS.bind(hass);
+    const pending=Promise.all([
+      call({type:"config/floor_registry/list"}),
+      call({type:"config/area_registry/list"})
+    ]);
+    this._floorRequest140=pending;
+    pending.then(([floorItems,areaItems])=>{
+      if(this._floorConnection140!==connection||
+         this._floorRequest140!==pending)return;
+      if(!Array.isArray(floorItems)||!Array.isArray(areaItems))
+        throw Error("Invalid floor or area registry response");
+      const floors=[],ids=new Set();
+      for(const entry of floorItems){
+        const id=entry?.floor_id;
+        if(typeof id!=="string"||!id||id.length>160||ids.has(id)||
+           typeof entry.name!=="string"||!entry.name.trim())continue;
+        ids.add(id);
+        floors.push({floor_id:id,name:entry.name,icon:entry.icon,
+          level:Number.isInteger(entry.level)?entry.level:null});
+      }
+      const areas=[],membership=new Map();
+      for(const area of areaItems){
+        const id=area?.area_id||area?.id;
+        if(typeof id!=="string"||!id||id.length>160||membership.has(id))continue;
+        const floorId=ids.has(area.floor_id)?area.floor_id:null;
+        areas.push({area_id:id,name:typeof area.name==="string"?area.name:id,floor_id:floorId});
+        membership.set(id,floorId);
+      }
+      this._floorRegistry140={floors,areas,membership};
+      this._floorRetryAt140=0;
+      this._floorSubscribe140(connection);
+      if(this._floorDialog140&&!this._floorDialog140.busy){
+        this._floorClose140(false);
+      }
+      if(this.isConnected!==false)this._renderContent(true);
+    }).catch(()=>{
+      if(this._floorConnection140===connection)
+        this._floorRetryAt140=Date.now()+30000;
+    }).finally(()=>{
+      if(this._floorRequest140===pending)this._floorRequest140=null;
+    });
+  };
+  floorProto140._floorEnsure140=function(){
+    const connection=this._hass?.connection;
+    if(this._floorConnection140!==connection){
+      this._floorCleanupSubscriptions140();
+      this._floorClose140(false);
+      this._floorConnection140=connection;
+      this._floorRegistry140=null;
+      this._floorRequest140=null;
+      this._floorRetryAt140=0;
+    }
+    this._floorFetch140();
+  };
+  floorProto140._floorClose140=function(restore=true){
+    const saved=this._floorDialog140;
+    if(!saved)return;
+    this._floorDialog140=null;
+    try{if(saved.node.open)saved.node.close();}catch{}
+    saved.node.remove();
+    if(restore&&saved.returnFocus?.isConnected)
+      saved.returnFocus.focus?.({preventScroll:true});
+  };
+  floorProto140._floorContext140=function(floorId){
+    if(typeof floorId!=="string"||this._hass?.user?.is_admin!==true||
+       typeof this._hass?.callWS!=="function"||!this._floorRegistry140)return null;
+    const floor=this._floorRegistry140.floors.find(x=>x.floor_id===floorId);
+    if(!floor)return null;
+    const displayed=this._dashboard105?.()?.rooms||this._state()?.[1]?.attributes?.dashboard?.rooms||[];
+    const ids=new Set(safeArray(displayed).map(room=>room?.area_id).filter(x=>typeof x==="string"));
+    const areas=this._floorRegistry140.areas.filter(area=>ids.has(area.area_id));
+    return {floor,areas,connection:this._hass.connection};
+  };
+  floorProto140._floorOpen140=function(floorId){
+    const ctx=this._floorContext140(floorId);
+    if(!ctx||!this.shadowRoot)return false;
+    this._floorClose140(false);
+    this._closeRoomSettings114?.(false);
+    this._closeHomeSettings128?.(false);
+    this._closeHemControllerSettings126?.(false);
+    this._closeInfo87?.();
+    const words=this._floorWords140(),floor=ctx.floor;
+    const node=document.createElement("dialog");
+    node.className="hem-floor-dialog140";
+    node.dir=RTL_LANGUAGES.has(this._language())?"rtl":"ltr";
+    node.setAttribute("aria-modal","true");
+    const toIcon=typeof floor.icon==="string"?floor.icon:"";
+    const rooms=ctx.areas.map(area=>{
+      const assigned=area.floor_id===floorId;
+      return '<div class="hem-floor-room-choice140"><label>'+
+        '<input type="checkbox" data-floor-area140="'+escape(area.area_id)+'" '+
+        (assigned?'checked ':'')+'>'+
+        '<span>'+escape(area.name)+'</span></label>'+
+        '<button type="button" data-floor-room-settings140="'+escape(area.area_id)+'" '+
+        'title="'+escape(words.manage+' · '+area.name)+'" aria-label="'+
+        escape(words.manage+' · '+area.name)+'">'+this._icon("mdi:cog-outline")+
+        '</button></div>';
+    }).join("");
+    node.innerHTML='<header class="hem-floor-dialog-head140"><div><small>'+
+      escape(words.settings)+'</small><h2>'+escape(floor.name)+'</h2></div>'+
+      '<button type="button" data-floor-close140 aria-label="'+escape(words.close)+'">'+
+      this._icon("mdi:close")+'</button></header>'+
+      '<div class="hem-floor-dialog-body140"><section class="hem-floor-field-group140">'+
+      '<label>'+escape(words.name)+'<input type="text" data-floor-name140 required maxlength="100" value="'+
+      escape(floor.name)+'"></label>'+
+      '<label>'+escape(words.level)+'<input type="number" data-floor-level140 step="1" '+
+      'value="'+(floor.level===null?'':escape(floor.level))+'"></label>'+
+      '<label>'+escape(words.icon)+'<input type="text" data-floor-icon140 maxlength="94" '+
+      'placeholder="mdi:home-floor-1" value="'+escape(toIcon)+'"></label></section>'+
+      '<details class="hem-floor-members140" open><summary>'+
+      this._icon("mdi:floor-plan")+' '+escape(words.members)+' · '+ctx.areas.filter(a=>
+        a.floor_id===floorId).length)+'</summary>'+
+      '<p>'+escape(words.note)+'</p>'+
+      '<div class="hem-floor-room-choices140">'+(rooms||'<small>'+
+        escape(words.empty)+'</small>')+'</div></details>'+
+      '<p class="hem-floor-status140" data-floor-status140 role="status" aria-live="polite"></p>'+
+      '</div><footer class="hem-floor-dialog-actions140">'+
+      '<button type="button" data-floor-close140>'+escape(words.close)+'</button>'+
+      '<button type="button" data-floor-save140>'+escape(words.save)+'</button></footer>';
+    const saved={...ctx,node,id:floorId,busy:false,
+      returnFocus:this.shadowRoot.activeElement};
+    this._floorDialog140=saved;
+    node.addEventListener("cancel",event=>{
+      event.preventDefault();if(!saved.busy)this._floorClose140();
+    });
+    node.addEventListener("close",()=>{
+      if(this._floorDialog140===saved)this._floorClose140();
+    });
+    node.addEventListener("click",event=>{
+      const button=event.target?.closest?.("button");
+      if(!button||!node.contains(button))return;
+      event.stopPropagation();
+      if(button.hasAttribute("data-floor-close140")){
+        if(!saved.busy)this._floorClose140();
+      }else if(button.hasAttribute("data-floor-save140")){
+        this._floorSave140(saved);
+      }else if(button.hasAttribute("data-floor-room-settings140")){
+        const id=button.getAttribute("data-floor-room-settings140");
+        if(saved.areas.some(area=>area.area_id===id)){
+          this._floorClose140(false);
+          this._openRoomSettings114?.(id);
+        }
+      }
+    });
+    this.shadowRoot.appendChild(node);
+    try{node.showModal();}catch{node.setAttribute("open","");}
+    node.querySelector("[data-floor-name140]").focus({preventScroll:true});
+    return true;
+  };
+  floorProto140._floorSave140=async function(saved){
+    if(this._floorDialog140!==saved||saved.busy||!saved.node.isConnected||
+       this._hass?.user?.is_admin!==true||this._hass?.connection!==saved.connection)
+      return;
+    const current=this._floorContext140(saved.id);
+    if(!current||current.floor.name!==saved.floor.name||
+       current.areas.some((area,i)=>area.area_id!==saved.areas[i]?.area_id||
+         area.floor_id!==saved.areas[i]?.floor_id)){
+      saved.node.querySelector("[data-floor-status140]").textContent=
+        this._floorWords140().changed;
+      return;
+    }
+    const nameInput=saved.node.querySelector("[data-floor-name140]");
+    const levelInput=saved.node.querySelector("[data-floor-level140]");
+    const iconInput=saved.node.querySelector("[data-floor-icon140]");
+    const name=nameInput?.value.trim(),levelText=levelInput?.value.trim()||"";
+    const icon=iconInput?.value.trim()||"";
+    const level=levelText===""?null:Number(levelText);
+    const words=this._floorWords140();
+    if(!name||name.length>100||
+       (level!==null&&(!Number.isSafeInteger(level)||level< -100||level>100))||
+       (icon!==""&&!/^mdi:[a-z0-9-]{1,90}$/.test(icon))){
+      saved.node.querySelector("[data-floor-status140]").textContent=words.invalid;
+      return;
+    }
+    const selected=new Set([...saved.node.querySelectorAll("[data-floor-area140]:checked")]
+      .map(input=>input.getAttribute("data-floor-area140")));
+    const allowed=new Set(saved.areas.map(a=>a.area_id));
+    if([...selected].some(id=>!allowed.has(id)))return;
+    saved.busy=true;
+    for(const button of saved.node.querySelectorAll("button"))button.disabled=true;
+    saved.node.querySelector("[data-floor-status140]").textContent=words.saving;
+    const call=this._hass.callWS.bind(this._hass);
+    let changed=0;
+    try{
+      const changes={type:"config/floor_registry/update",floor_id:saved.id};
+      if(name!==saved.floor.name)changes.name=name;
+      if(level!==saved.floor.level)changes.level=level;
+      if((icon||null)!==(saved.floor.icon||null))changes.icon=icon||null;
+      if(Object.keys(changes).length>2){await call(changes);changed++;}
+      for(const area of saved.areas){
+        const was=area.floor_id===saved.id,now=selected.has(area.area_id);
+        if(was===now)continue;
+        await call({type:"config/area_registry/update",area_id:area.area_id,
+          floor_id:now?saved.id:null});
+        changed++;
+      }
+      if(this._floorDialog140===saved){
+        this._floorClose140(false);
+        this._floorFetch140(true);
+      }
+    }catch{
+      if(this._floorDialog140===saved){
+        saved.node.querySelector("[data-floor-status140]").textContent=
+          words.error+(changed?" ("+changed+")":"");
+        this._floorFetch140(true);
+      }
+    }finally{
+      saved.busy=false;
+      if(this._floorDialog140===saved)
+        for(const button of saved.node.querySelectorAll("button"))button.disabled=false;
+    }
+  };
+  const floorOldInstall140=floorProto140._installFolds87;
+  floorProto140._installFolds87=function(){
+    floorOldInstall140.call(this);
+    if(this._floorHandlersInstalled140)return;
+    this._floorHandlersInstalled140=true;
+    this._floorCollapsed140 ||= new Set();
+    this.shadowRoot.addEventListener("click",event=>{
+      const button=event.target?.closest?.("[data-floor-settings140]");
+      if(!button)return;
+      event.preventDefault();event.stopImmediatePropagation();
+      this._floorOpen140(button.getAttribute("data-floor-settings140"));
+    },true);
+    this.shadowRoot.addEventListener("toggle",event=>{
+      const element=event.target;
+      if(!element?.matches?.("details.hem-floor-fold140")||
+         element.getRootNode()!==this.shadowRoot)return;
+      const id=element.getAttribute("data-floor-fold140");
+      if(element.open)this._floorCollapsed140.delete(id);
+      else this._floorCollapsed140.add(id);
+      const icon=element.querySelector(":scope > summary > ha-icon:last-child");
+      if(icon)icon.setAttribute("icon",element.open?"mdi:chevron-up":"mdi:chevron-down");
+    },true);
+  };
+  const floorOldRender140=floorProto140._renderContent;
+  floorProto140._renderContent=function(force=false){
+    const connection=this._hass?.connection;
+    if(this._floorConnection140!==connection){
+      this._floorCleanupSubscriptions140();
+      this._floorClose140(false);
+      this._floorRegistry140=null;
+      this._floorRequest140=null;
+      this._floorRetryAt140=0;
+      this._floorConnection140=connection;
+    }
+    const result=floorOldRender140.call(this,force);
+    this._floorEnsure140();
+    const saved=this._floorDialog140;
+    if(saved&&!saved.node.isConnected&&this.isConnected){
+      this.shadowRoot.appendChild(saved.node);
+      try{saved.node.showModal();}catch{saved.node.setAttribute("open","");}
+    }
+    return result;
+  };
+  const floorOldDisconnected140=floorProto140.disconnectedCallback;
+  floorProto140.disconnectedCallback=function(){
+    this._floorCleanupSubscriptions140();
+    this._floorClose140(false);
+    return floorOldDisconnected140.call(this);
+  };
+  const floorOldStyles140=floorProto140._styles;
+  floorProto140._styles=function(){
+    return floorOldStyles140.call(this)+[
+      "<style>",
+      ".hem-floor-fold140{min-width:0;border:1px solid var(--aqa-edge);border-radius:13px;margin:0 0 10px;overflow:visible}",
+      ".hem-floor-summary140{display:flex;align-items:center;gap:10px;min-width:0;list-style:none;cursor:pointer;padding:11px 12px}",
+      ".hem-floor-summary140::-webkit-details-marker{display:none}",
+      ".hem-floor-summary140>ha-icon:first-child{flex:none;color:var(--aqa-blue);--mdc-icon-size:22px}",
+      ".hem-floor-summary140>ha-icon:last-child{flex:none;--mdc-icon-size:18px;color:var(--aqa-muted)}",
+      ".hem-floor-main140{display:grid;gap:3px;flex:1;min-width:0}",
+      ".hem-floor-main140 strong{font-size:14px;overflow-wrap:anywhere}",
+      ".hem-floor-main140 small{font-size:11px;color:var(--aqa-muted);overflow-wrap:anywhere}",
+      ".hem-floor-settings140{flex:none;display:grid;place-items:center;border:1px solid var(--aqa-edge);border-radius:9px;padding:5px;background:transparent;color:var(--aqa-blue);cursor:pointer}",
+      ".hem-floor-settings140 ha-icon{--mdc-icon-size:18px}",
+      ".hem-floor-rooms140{min-width:0;padding:0 8px 10px;display:grid;gap:7px}",
+      ".hem-floor-rooms140>.hem-room-fold87{margin:0;min-width:0}",
+      ".hem-floor-empty140{padding:7px 10px;font-size:12px;color:var(--aqa-muted)}",
+      ".hem-floor-dialog140{color:var(--aqa-text);background:var(--aqa-surface);border:1px solid var(--aqa-edge);border-radius:15px;width:min(540px,calc(100vw - 20px));max-height:calc(100dvh - 28px);padding:0;box-sizing:border-box;overflow:auto}",
+      ".hem-floor-dialog140::backdrop{background:rgba(0,0,0,.55)}",
+      ".hem-floor-dialog-head140,.hem-floor-dialog-actions140{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 15px}",
+      ".hem-floor-dialog-head140{border-bottom:1px solid var(--aqa-edge)}",
+      ".hem-floor-dialog-head140 small{color:var(--aqa-muted);font-size:11px}",
+      ".hem-floor-dialog-head140 h2{font-size:17px;margin:4px 0 0;overflow-wrap:anywhere}",
+      ".hem-floor-dialog-head140 button,.hem-floor-dialog-actions140 button,.hem-floor-room-choice140 button{border:1px solid var(--aqa-edge);border-radius:8px;padding:7px;background:transparent;color:inherit;cursor:pointer}",
+      ".hem-floor-dialog-actions140{border-top:1px solid var(--aqa-edge);justify-content:flex-end}",
+      ".hem-floor-dialog-actions140 [data-floor-save140]{color:var(--aqa-blue);font-weight:600}",
+      ".hem-floor-dialog140 button:disabled{opacity:.5;cursor:default}",
+      ".hem-floor-dialog-body140{padding:14px;display:grid;gap:12px}",
+      ".hem-floor-field-group140{display:grid;gap:10px}",
+      ".hem-floor-field-group140 label{display:grid;gap:5px;font-size:12px;min-width:0}",
+      ".hem-floor-field-group140 input{box-sizing:border-box;width:100%;min-width:0;border:1px solid var(--aqa-edge);border-radius:8px;padding:9px;background:var(--secondary-background-color,#29323b);color:inherit}",
+      ".hem-floor-members140{min-width:0;border:1px solid var(--aqa-edge);border-radius:9px;padding:10px}",
+      ".hem-floor-members140 summary{cursor:pointer;font-weight:600;font-size:13px}",
+      ".hem-floor-members140 summary ha-icon{--mdc-icon-size:17px;color:var(--aqa-blue)}",
+      ".hem-floor-members140 p{font-size:11px;line-height:1.45;color:var(--aqa-muted)}",
+      ".hem-floor-room-choices140{display:grid;gap:6px;max-height:260px;overflow-y:auto}",
+      ".hem-floor-room-choice140{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px;border-bottom:1px solid var(--aqa-edge)}",
+      ".hem-floor-room-choice140 label{display:flex;align-items:center;gap:8px;flex:1;min-width:0;cursor:pointer;font-size:12px}",
+      ".hem-floor-room-choice140 label span{min-width:0;overflow-wrap:anywhere}",
+      ".hem-floor-room-choice140 input{accent-color:var(--primary-color,#0288c7)}",
+      ".hem-floor-room-choice140 button ha-icon{--mdc-icon-size:17px}",
+      ".hem-floor-status140{margin:0;font-size:12px;color:var(--aqa-muted);min-height:1em}",
+      "@media(max-width:420px){.hem-floor-summary140{padding:9px 8px;gap:7px}.hem-floor-rooms140{padding:0 4px 7px}.hem-floor-main140 strong{font-size:13px}}",
+      "</style>"
+    ].join("");
+  };
+  /* HEM_FLOOR_GROUPS140_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
