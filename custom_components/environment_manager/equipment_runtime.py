@@ -4843,7 +4843,8 @@ class EquipmentRuntime:
                 from .off_state_runtime import _guard
                 current_watch = record.get("thermal_off_watch")
                 if not isinstance(current_watch, dict) or not _guard(
-                    self, spec, cap, self.hass.states.get(entity), current_watch
+                    self, spec, cap, self.hass.states.get(entity),
+                    current_watch, allowed_pending=pending
                 ):
                     return False
             if not command_allowed(
