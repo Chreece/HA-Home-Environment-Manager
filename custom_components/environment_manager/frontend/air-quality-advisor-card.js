@@ -9063,9 +9063,13 @@
     return '<div class="hem-full-row127" data-hem-full-row127="'+escape(field.id)+'" '+
       (scope==="room"?'data-hem-room-row126="'+escape(field.id)+'" ':"")+
       'data-hem-full-scope127="'+scope+'">'+
-      '<div class="hem-full-label127"><strong title="'+escape(field.id)+'">'+escape(field.label)+'</strong>'+
-      (help?'<details class="hem-full-help127"><summary title="'+escape(tr127(this,"help"))+'">'+
-        this._icon("mdi:information-outline")+'</summary><p>'+escape(help)+'</p></details>':"")+'</div>'+
+      (help?'<details class="hem-full-help127"><summary class="hem-full-label127" title="'+
+         escape(tr127(this,"help"))+'">'+
+         '<strong title="'+escape(field.id)+'">'+escape(field.label)+'</strong>'+
+         this._icon("mdi:information-outline")+'</summary>'+
+         '<div class="hem-full-help-body127"><p>'+escape(help)+'</p></div></details>':
+         '<div class="hem-full-label127"><strong title="'+escape(field.id)+'">'+
+         escape(field.label)+'</strong></div>')+
       '<div class="hem-full-editor127">'+input+
       '<button type="button" data-hem-full-apply127="'+escape(field.id)+'" '+
       'data-hem-full-target127="'+scope+'" '+(enabled?"":"disabled")+'>'+
@@ -9227,8 +9231,8 @@
     ".hem-full-list127{display:grid;gap:0;margin:0;min-width:0}",
     ".hem-full-notice127{font-size:11px;color:var(--aqa-muted);padding:0 4px}",
     ".hem-full-category127{margin-bottom:6px}",
-    ".hem-full-rows127{display:grid;gap:7px;padding:3px 10px 10px}",
-    ".hem-full-row127{display:grid;gap:5px;padding:8px;border:1px solid var(--aqa-edge);border-radius:8px}",
+    ".hem-full-rows127{display:grid;grid-template-columns:minmax(0,1fr);gap:7px;padding:3px 10px 10px;min-width:0}",
+    ".hem-full-row127{display:grid;grid-template-columns:minmax(0,1fr);gap:5px;padding:8px;min-width:0;max-width:100%;box-sizing:border-box;border:1px solid var(--aqa-edge);border-radius:8px}",
     ".hem-full-label127{display:flex;gap:5px;align-items:center;min-width:0}",
     ".hem-full-label127 strong{flex:1;min-width:0;font-size:12px;overflow-wrap:anywhere}",
     ".hem-full-editor127{display:flex;align-items:center;flex-wrap:wrap;gap:6px}",
@@ -9236,10 +9240,15 @@
     ".hem-full-editor127 button{border:1px solid var(--aqa-edge);padding:6px 10px;border-radius:7px;background:transparent;color:var(--aqa-blue);cursor:pointer}",
     ".hem-full-editor127 button:disabled{opacity:.48;cursor:default}",
     ".hem-full-row127>small{font-size:10px;color:var(--aqa-muted)}",
+    ".hem-full-help127{display:block;min-width:0;width:100%;max-width:100%;box-sizing:border-box}",
+    ".hem-full-help127>summary.hem-full-label127{display:flex;align-items:center;gap:6px;min-width:0;max-width:100%}",
+    ".hem-full-help127>summary.hem-full-label127 strong{flex:1 1 auto;min-width:0}",
+    ".hem-full-help127 .hem-full-help-body127{min-width:0;max-width:100%;box-sizing:border-box;padding-top:3px}",
     ".hem-full-help127 summary{list-style:none;cursor:pointer}",
+    ".hem-full-help127 summary:focus-visible{outline:2px solid var(--aqa-blue);outline-offset:2px;border-radius:4px}",
     ".hem-full-help127 summary::-webkit-details-marker{display:none}",
-    ".hem-full-help127 ha-icon{--mdc-icon-size:16px;color:var(--aqa-blue)}",
-    ".hem-full-help127 p{font-size:11px;line-height:1.4;overflow-wrap:anywhere;margin:5px 0}",
+    ".hem-full-help127 ha-icon{--mdc-icon-size:16px;width:18px;height:18px;flex:0 0 18px;color:var(--aqa-blue)}",
+    ".hem-full-help127 p{font-size:11px;line-height:1.5;white-space:pre-line;overflow-wrap:break-word;word-break:normal;margin:5px 0}",
     "</style>"].join("");};
   /* HEM_FULL_REGISTRY_SETTINGS127_END */
 
