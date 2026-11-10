@@ -4587,6 +4587,33 @@
       '<div class="hem-room-ventilation95" role="status">'+
       this._icon('mdi:air-filter')+
       '<span>'+ventNotes95.map(value=>escape(value)).join(' · ')+'</span></div>':'';
+    const door062=room?.environment?.door||room?.environment?.climate_plan?.door||{};
+    const doorLocales062={
+      en:{open:'Door open',closed:'Door closed',settling:'Door closing · confirming',
+        unknown:'Door status unknown',eco:'Eco active',
+        co2:'Check air quality: high CO₂ behind closed door',
+        rh:'Check ventilation: high humidity behind closed door'},
+      el:{open:'Ανοιχτή πόρτα',closed:'Κλειστή πόρτα',settling:'Κλείσιμο πόρτας · επιβεβαίωση',
+        unknown:'Άγνωστη κατάσταση πόρτας',eco:'Eco ενεργό',
+        co2:'Έλεγχος αέρα: υψηλό CO₂ με κλειστή πόρτα',
+        rh:'Έλεγχος αερισμού: υψηλή υγρασία με κλειστή πόρτα'},
+      de:{open:'Tür offen',closed:'Tür geschlossen',settling:'Tür schließt · Prüfung',
+        unknown:'Türstatus unbekannt',eco:'Eco aktiv',
+        co2:'Luftqualität prüfen: hohes CO₂ bei geschlossener Tür',
+        rh:'Lüftung prüfen: hohe Feuchtigkeit bei geschlossener Tür'}
+    };
+    const doorWords062=doorLocales062[this._language()]||doorLocales062.en;
+    const doorStatus062=doorWords062[door062.boundary]||doorWords062.unknown;
+    const doorAdvice062=door062.advisory==='closed_door_high_co2'?doorWords062.co2:
+      door062.advisory==='closed_door_high_humidity'?doorWords062.rh:'';
+    const doorNote062=Array.isArray(door062.sensor_entities)&&door062.sensor_entities.length?
+      '<div class="hem-room-door062" role="status" title="'+
+      escape(door062.sensor_entities.join(' · '))+'">'+
+      this._icon(door062.boundary==='open'?'mdi:door-open':
+        door062.boundary==='closed'?'mdi:door-closed':'mdi:door')+
+      '<span>'+escape(doorStatus062)+
+      (door062.eco_active?' · '+escape(doorWords062.eco):'')+
+      (doorAdvice062?' · '+escape(doorAdvice062):'')+'</span></div>':'';
     if(roomStatus==='attention') alerts.push(this._roomAlert114(room,'attention',
       'mdi:alert-circle-outline',labels.attention,'warn'));
     if(roomStatus==='unknown') alerts.push(this._roomAlert114(room,'missing',
@@ -4657,7 +4684,7 @@
       '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
       alerts.slice(0,4).join('')+'</span>'+
       this._icon(open?'mdi:chevron-up':'mdi:chevron-down')+
-      '</summary><div class="hem-room-body87">'+ventHeader95+
+      '</summary><div class="hem-room-body87">'+doorNote062+ventHeader95+
       this._roomIssueDetail114(room)+original+'</div></details>';
   };
 
@@ -7622,7 +7649,9 @@
   const _roomOptionsFields114=form=>{
     if(form?.type!=='form'||form.step_id!=='edit_room'||
        !Array.isArray(form.data_schema)||
-       form.data_schema.length!==_roomOptionsKeys114.length)
+       !(_roomOptionsKeys114.length===form.data_schema.length||
+         _roomOptionsKeys114.length-1===form.data_schema.length &&
+         !form.data_schema.some(field=>field?.name==='door_sensors')))
       throw new Error('Unexpected room settings form');
     const names=new Set();
     return form.data_schema.map(field=>{
@@ -10509,6 +10538,16 @@
     "</style>"
   ].join("");};
   /* HEM_UNIFIED_SETTINGS141_END */
+  // Read-only door context does not consume the four compact room metrics.
+  const roomDoorStyles062=AirQualityAdvisorCard.prototype._styles;
+  AirQualityAdvisorCard.prototype._styles=function(){return roomDoorStyles062.call(this)+[
+    "<style>",
+    ".hem-room-door062{display:flex;align-items:center;gap:7px;min-width:0;margin:4px 0 7px;padding:6px 9px;border:1px solid var(--aqa-edge);border-radius:8px;font-size:11px;line-height:1.4;color:var(--aqa-muted)}",
+    ".hem-room-door062 span{flex:1;min-width:0;overflow-wrap:break-word;word-break:normal}",
+    ".hem-room-door062 ha-icon{--mdc-icon-size:16px;flex:0 0 16px}",
+    "</style>"
+  ].join("");};
+
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
