@@ -65,6 +65,8 @@ jobs:
           PYCODE
       - name: Validate beta publication guards and canonical ZIP
         run: python -I .github/tests/test_publish_release.py
+      - name: Native floor registry grouping without requiring any floors
+        run: python -I .github/tests/test_061b20_floors.py --logic-only
       - name: Independent mode profiles, native controls and calibrated mold demand
         run: |
           set -euo pipefail
@@ -317,6 +319,10 @@ jobs:
           python -I .github/tests/test_061b8_dehumidifier_fan.py
       - name: Install runner-only Home Assistant and browser test packages
         run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+      - name: Native floor accordion, settings, room moves and zero-floor parity
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b20_floors.py
       - name: Informative device help, exact mode labels and retired option exclusion
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
