@@ -57,7 +57,8 @@ def observe(effect, target, points, *, clear=True):
         traces.append(w.observe(
             now=at, temperature_c=value, target_c=target,
             source_ids=("sensor.independent",),off_since=100,
-            other_heat_sources_clear=clear, direction=effect))
+            other_heat_sources_clear=clear, direction=effect,
+            room_temperature_c=21.0 if effect in ("humidify","dry") else None))
     return traces
 
 cool_trace=observe("cool", 22, [(100,24),(1000,23),(1900,23.2),
@@ -70,6 +71,28 @@ assert rh_up_trace[:-1]==["none"]*6 and rh_up_trace[-1]=="suspected",rh_up_trace
 rh_down_trace=observe("dry",50,[(1900,30),(2700,45),(2900,56),
     (3200,53),(3500,49),(3800,45),(4100,41)])
 assert rh_down_trace[:-1]==["none"]*6 and rh_down_trace[-1]=="suspected",rh_down_trace
+
+# An RH trend caused by cooling/warming ALONE must never trigger a fault
+# or an actuator retry: absolute water vapor did not increase/decrease.
+def psychrometric(effect, points):
+    w = detector.ThermalWatch(("sensor.independent",), 100, effect=effect)
+    return [w.observe(now=at, temperature_c=rh, target_c=50.,
+        source_ids=w.source_ids, off_since=100.,
+        other_heat_sources_clear=True, direction=effect,
+        room_temperature_c=temp) for at, temp, rh in points]
+
+assert psychrometric("humidify", [
+    (2900,22.,53.),(3200,21.,55.),(3500,20.,57.),
+    (3800,19.,60.),(4100,18.,62.)
+])[-1] == "none", "RH rise from cooling must not implicate humidifier"
+assert psychrometric("dry", [
+    (2900,18.,56.),(3200,19.5,53.),(3500,21.,49.),
+    (3800,22.5,45.),(4100,24.,41.)
+])[-1] == "none", "RH fall from warming must not implicate dehumidifier"
+no_temp = detector.ThermalWatch(("sensor.independent",), 100, effect="dry")
+assert no_temp.observe(now=4200., temperature_c=40.,target_c=50.,
+    source_ids=no_temp.source_ids,off_since=100.,
+    other_heat_sources_clear=True,direction="dry") == "none"
 
 w = detector.ThermalWatch(("sensor.independent",), 100)
 for at,temp in [(1900,21),(2200,21.5)]:
