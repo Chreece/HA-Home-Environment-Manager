@@ -365,6 +365,8 @@ jobs:
         run: python -I .github/tests/test_061b15_home_options_contract.py
       - name: B14 unified Home and room settings, exact registry and Options saves
         run: python -I .github/tests/test_061b14_unified_home_settings.py
+      - name: B25 full-width HEM setting information in every menu
+        run: python -I .github/tests/test_b25_settings_help_layout.py
       - name: Responsive outdoor and room text boundaries
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
