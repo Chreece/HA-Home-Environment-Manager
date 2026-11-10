@@ -465,6 +465,10 @@ class RoomSetupMixin:
             value[CONF_LANGUAGE] = language.lower()
         if user_input is not None:
             for key, items in options.items():
+                # Older cached/test option providers can still advertise the
+                # retired Home room sensor selector; never require or save it.
+                if key == "general_room_occupancy_sensors":
+                    continue
                 allowed = {i["value"] if isinstance(i, dict) else i for i in items}
                 vals = value[key] if key in multi else [value[key]]
                 if (not isinstance(vals, list) or any(not isinstance(v, str) or v not in allowed for v in vals)):
