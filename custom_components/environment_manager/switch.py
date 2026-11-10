@@ -136,6 +136,7 @@ class HomeSettingSwitch(SettingsMetadata, SwitchEntity):
             "enable_pmv": "mdi:human-male-board-poll",
             "sleep_active": "mdi:sleep",
             "sleep_schedule_enabled": "mdi:clock-check-outline",
+            "closed_door_eco": "mdi:door-closed-lock",
             "window_efficiency_notify": "mdi:window-open-variant",
         }.get(key, "mdi:cog")
 
