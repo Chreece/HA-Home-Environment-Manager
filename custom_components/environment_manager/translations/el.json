@@ -2779,6 +2779,7 @@
           "temperature_source_missing_or_wrong_area": "Temperature source missing or wrong area",
           "temperature_stale_or_wrong_room": "Temperature stale or wrong room",
           "temperature_unavailable_or_stale": "Η μέτρηση θερμοκρασίας λείπει ή είναι παλιά",
+          "suspected_heating_after_off": "Πιθανή θέρμανση παρά την ένδειξη OFF",
           "thermal_priority_defer_dry": "Η θέρμανση ή η ψύξη έχει προτεραιότητα από την αφύγρανση",
           "thermal_temperature_control_has_priority": "Thermal temperature control has priority",
           "thermostat_turned_off": "Ο φυσικός θερμοστάτης απενεργοποιήθηκε",
