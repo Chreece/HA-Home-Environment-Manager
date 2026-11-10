@@ -1137,7 +1137,8 @@
           "humidity": "Humedad",
           "climate_devices": "Dispositivos",
           "shades": "Persianas, estores y cortinas de ventana",
-          "occupancy_sensors": "Ocupación · sensor"
+          "occupancy_sensors": "Ocupación · sensor",
+          "door_sensors": "Contactos de puerta"
         },
         "data_description": {
           "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
@@ -1146,7 +1147,8 @@
           "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
           "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve.",
-          "occupancy_sensors": "Una lista válida de habitaciones ocupadas en el estado o atributo seleccionado tiene prioridad: las incluidas están ocupadas y las omitidas vacías. Sin lista, cualquier sensor de presencia activado significa ocupación; todos desactivados o ninguno seleccionado significa vacío. Una fuente seleccionada no disponible o inválida sigue siendo desconocida. Las listas y estados binarios sin cambios no caducan."
+          "occupancy_sensors": "Una lista válida de habitaciones ocupadas en el estado o atributo seleccionado tiene prioridad: las incluidas están ocupadas y las omitidas vacías. Sin lista, cualquier sensor de presencia activado significa ocupación; todos desactivados o ninguno seleccionado significa vacío. Una fuente seleccionada no disponible o inválida sigue siendo desconocida. Las listas y estados binarios sin cambios no caducan.",
+          "door_sensors": "Select genuine same-area interior door contacts. Door state is not occupancy or window evidence. Optional Eco requires stable closure, verified vacancy and safe temperature/humidity, and is disabled until selected."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Humedad",
           "climate_devices": "Dispositivos",
           "shades": "Persianas, estores y cortinas de ventana",
-          "occupancy_sensors": "Ocupación · sensor"
+          "occupancy_sensors": "Ocupación · sensor",
+          "door_sensors": "Contactos de puerta"
         },
         "data_description": {
           "windows": "Ventanas. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
@@ -2357,7 +2360,8 @@
           "humidity": "Humedad. Selecciona las entradas de esta estancia: nombre del dispositivo - nombre de la entidad. Los grupos vacíos no se usan ni activan descubrimiento o control automático.",
           "climate_devices": "Dispositivos. Selecciona solo las entidades físicas climate.*, humidifier.* y fan.* de esta habitación. Sus capacidades nativas determinan calefacción, refrigeración, secado, consignas y velocidades. Seleccionarlas no acciona nada: habilita el control automático por separado en cada dispositivo.",
           "shades": "Persianas, estores y cortinas de ventana. Selecciona persianas, contraventanas, estores y cortinas cover.* de esta habitación. También se admiten covers sin device_class con función CLOSE, tras comprobar que son protecciones de ventana. Puertas, garajes, portones, ventanas y toldos quedan excluidos. Seleccionar no mueve nada: configura contacto de ventana, automatización, aviso y temperatura en su controlador. Estado desconocido: no se mueve.",
-          "occupancy_sensors": "Una lista válida de habitaciones ocupadas en el estado o atributo seleccionado tiene prioridad: las incluidas están ocupadas y las omitidas vacías. Sin lista, cualquier sensor de presencia activado significa ocupación; todos desactivados o ninguno seleccionado significa vacío. Una fuente seleccionada no disponible o inválida sigue siendo desconocida. Las listas y estados binarios sin cambios no caducan."
+          "occupancy_sensors": "Una lista válida de habitaciones ocupadas en el estado o atributo seleccionado tiene prioridad: las incluidas están ocupadas y las omitidas vacías. Sin lista, cualquier sensor de presencia activado significa ocupación; todos desactivados o ninguno seleccionado significa vacío. Una fuente seleccionada no disponible o inválida sigue siendo desconocida. Las listas y estados binarios sin cambios no caducan.",
+          "door_sensors": "Select genuine same-area interior door contacts. Door state is not occupancy or window evidence. Optional Eco requires stable closure, verified vacancy and safe temperature/humidity, and is disabled until selected."
         }
       }
     },
