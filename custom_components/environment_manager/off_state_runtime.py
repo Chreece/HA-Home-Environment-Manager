@@ -202,6 +202,7 @@ def _guard(runtime: Any, spec: Any, cap: Any, state: Any, watch: dict, *,
     now = runtime.clock()
     cfg = model.settings(runtime.manager, spec)
     if (not runtime._active or not runtime._ready
+            or cfg.get("off_state_watchdog_mode", "monitor_recover") != "monitor_recover"
             or cfg.get("control_mode") not in ("automatic", "pid", "off")
             or (record.get("pending") is not None
                 and record.get("pending") is not allowed_pending)
@@ -322,6 +323,13 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         await _clear_warning(runtime, record)
         return False
     cfg = model.settings(runtime.manager, spec)
+    # Disabled skips sensor work entirely; monitor-only keeps evidence
+    # and warning delivery but never gains native recovery permission.
+    if cfg.get("off_state_watchdog_mode", "monitor_recover") not in (
+            "monitor_recover", "monitor_only"):
+        sessions.pop(spec.identifier, None)
+        await _clear_warning(runtime, record)
+        return False
     if cfg.get("control_mode") not in ("automatic", "pid", "off"):
         sessions.pop(spec.identifier, None)
         await _clear_warning(runtime, record)
@@ -394,6 +402,13 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         "last_attempt_at": ledger.get("last_attempt_at"),
         "native_state": state.state,
     }
+    # Reject warnings if policy changed while evidence was being collected.
+    if model.settings(runtime.manager, spec).get(
+            "off_state_watchdog_mode", "monitor_recover") not in (
+                "monitor_recover", "monitor_only"):
+        sessions.pop(spec.identifier, None)
+        await _clear_warning(runtime, record)
+        return False
     first_alert = ledger.get("notified") is not True
     if first_alert:
         ledger["notified"] = True

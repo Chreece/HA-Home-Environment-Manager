@@ -1510,6 +1510,45 @@ class EquipmentRuntime:
         """Validate edits to one operating profile or shared physical settings."""
         if "timed_setpoint_sequence" in changes:
             raise HomeAssistantError("The timed target setting has been removed")
+        if "off_state_watchdog_mode" in changes:
+            # A shared device safety preference. Never take the hardware lock
+            # or change the native state, even with pending ACKs or offline.
+            key = "off_state_watchdog_mode"
+            choice = changes[key]
+            if (operating_mode is not None or set(changes) != {key}
+                    or type(choice) is not str
+                    or choice not in model.DEVICE_SELECTS[key]):
+                raise HomeAssistantError("Invalid per-device shutdown watchdog preference")
+            lock = getattr(self.manager, "_device_settings_write_lock", None)
+            if lock is None:
+                lock = self.manager._device_settings_write_lock = asyncio.Lock()
+            async with lock:
+                if not self._ready or not self._current_spec(spec):
+                    raise HomeAssistantError("Controller storage or source identity is unavailable")
+                options = deepcopy(self.manager.entry.options)
+                profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+                profiles = profiles if isinstance(profiles, dict) else {}
+                previous = profiles.get(spec.identifier)
+                previous = previous if isinstance(previous, dict) else {}
+                profiles[spec.identifier] = {**previous, key: choice}
+                options[model.SETTINGS] = profiles
+                self.hass.config_entries.async_update_entry(
+                    self.manager.entry, options=options,
+                )
+            if choice == "disabled":
+                # Keep the durable OFF journal/retry budget, discard only
+                # ephemeral samples and stale warning presentation.
+                getattr(self, "_thermal_off_sessions", {}).pop(spec.identifier, None)
+                record = getattr(self, "records", {}).get(spec.identifier, {})
+                if isinstance(record, dict) and record.pop("thermal_off_warning", None) is not None:
+                    await self._save()
+                observed = getattr(self, "statuses", {}).get(spec.identifier, {})
+                if isinstance(observed, dict) and observed.get("status") in (
+                        "suspected_heating_after_off", "suspected_output_after_off"):
+                    self._status(spec, "awaiting_evaluation",
+                                 reason="post_shutdown_watchdog_disabled")
+            self._presentation_updates.request(spec.identifier)
+            return
         if operating_mode is None and hasattr(model, "MODE_FIELDS") and set(changes) & model.MODE_FIELDS:
             operating_mode = model.settings(self.manager, spec).get("operating_mode")
         descriptor = None
@@ -1774,6 +1813,7 @@ class EquipmentRuntime:
                     # Independent switches may have changed while we waited.
                     adjusted["sleep_when_everyone_asleep"] = model.settings(self.manager, spec).get("sleep_when_everyone_asleep") is True
                     adjusted["native_full_output"] = model.settings(self.manager, spec).get("native_full_output", True) is True
+                    adjusted["off_state_watchdog_mode"] = model.settings(self.manager, spec).get("off_state_watchdog_mode", "monitor_recover")
                     latest_profile = existing.get(spec.identifier)
                     latest_fan_limits = (latest_profile.get("fan_speed_limits")
                                          if isinstance(latest_profile, dict) else None)
@@ -4584,6 +4624,8 @@ class EquipmentRuntime:
         ):
             return False
         if off_state_recovery:
+            if cfg.get("off_state_watchdog_mode", "monitor_recover") != "monitor_recover":
+                return False
             from .off_state_runtime import _reported_off
             if cap.domain == "climate":
                 recovery_operation = ("set_hvac_mode", {"hvac_mode": "off"}, {"state": "off"})

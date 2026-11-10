@@ -63,7 +63,8 @@ LIMIT_FIELDS = (
     "humidity_min_limit", "humidity_max_limit",
 )
 FAN_LIMIT_FIELDS = ("fan_min_percentage", "fan_max_percentage")
-DEVICE_SELECTS = {"presence_requirement": ("always", "occupied", "absent"),
+DEVICE_SELECTS = {"off_state_watchdog_mode": ("monitor_recover", "monitor_only", "disabled"),
+                  "presence_requirement": ("always", "occupied", "absent"),
                   "sleep_behavior": ("normal", "pause", "sleep_targets"),
                   "fan_purpose": ("auto", "extraction", "filtration")}
 ROOM_LIMITS_KEY = "equipment_limits"
@@ -79,6 +80,8 @@ DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None
             # New native fault announcements are independently enabled by
             # default per selected controller; no synthetic error sensor.
             "announce_device_errors": True,
+            # Shared across all modes; preserve legacy b22 recovery behavior.
+            "off_state_watchdog_mode": "monitor_recover",
             "quiet_fan_mode": None, "profile_targets": {}, "profile_fans": {},
             "pid_calibration_method": "adaptive_suggest", "pid_last_calibration": None,
             # Observe only; never alter gains without per-device opt-in.
@@ -147,6 +150,12 @@ def base_settings(manager: Any, spec: ManagedDevice) -> dict:
             "operating_mode", "timed_setpoint_sequence")
     }}
     # Missing settings and legacy strings/numbers never opt a device in.
+    # Old installations keep recovery; invalid persisted settings fail closed.
+    watchdog_mode = raw.get("off_state_watchdog_mode", "monitor_recover")
+    result["off_state_watchdog_mode"] = (
+        watchdog_mode if watchdog_mode in DEVICE_SELECTS["off_state_watchdog_mode"]
+        else "disabled"
+    )
     result["native_full_output"] = raw.get("native_full_output", True) is True
     result["sleep_when_everyone_asleep"] = raw.get("sleep_when_everyone_asleep") is True
     result["announce_before_start"] = raw.get("announce_before_start") is True
