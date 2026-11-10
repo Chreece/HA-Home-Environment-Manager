@@ -166,7 +166,9 @@ with sync_playwright() as playwright:
     assert modal.locator('[data-hem-full-list127="device"] > details').count()<=6
     assert modal.locator('[data-hem-full-category127="mode"]').count()>=1
     assert page.evaluate("calls.length")==0
-    modal.locator('[data-hem-full-category127="mode"] > summary').click()
+    # PID inputs live in PID/calibration, while method choices live in
+    # Control/targets/fans. Test the exact device-scoped native action.
+    modal.locator('[data-hem-full-category127="pid"] > summary').click()
     modal.locator('[data-hem-full-value127="number.hem_pid_kp"]').fill("2.5")
     modal.locator('[data-hem-full-apply127="number.hem_pid_kp"]').click()
     page.wait_for_function("calls.length===1")
