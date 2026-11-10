@@ -660,7 +660,7 @@ class EquipmentRuntime:
         getattr(self, "_startup_source_done", set()).clear()
         self._native_session_observations = {}
         self._native_on_epoch = {}
-        self._thermal_off_sessions.clear()
+        getattr(self, '_thermal_off_sessions', {}).clear()
         getattr(self, "_restart_baseline_pending", set()).clear()
         getattr(self, "_native_offline_under_owned_supply", set()).clear()
         getattr(self, "_native_ready_since", {}).clear()
@@ -778,7 +778,7 @@ class EquipmentRuntime:
         getattr(self, "_automatic_recovery_tasks", {}).clear()
         self._profile_wake.clear()
         self._native_session_observations.clear()
-        self._thermal_off_sessions.clear()
+        getattr(self, '_thermal_off_sessions', {}).clear()
         getattr(self, "_native_on_epoch", {}).clear()
         self._ha_running_since = None
         getattr(self, "_startup_source_observed", {}).clear()
