@@ -4177,6 +4177,19 @@
           }
         }
       },
+      "equipment_off_state_watchdog_mode": {
+        "name": "Безбедност · {channel}Надзор након искључивања",
+        "state": {
+          "monitor_recover": "Надзор и поновно искључивање",
+          "monitor_only": "Само надзор",
+          "disabled": "Искључено"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
+      },
       "equipment_presence_requirement": {
         "name": "Присуство · {channel}Prisustvo",
         "state": {

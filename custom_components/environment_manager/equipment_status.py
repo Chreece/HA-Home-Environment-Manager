@@ -179,6 +179,7 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "source_device_id": self._spec.source_device_id,
             "source_entity_ids": list(self._spec.source_entities),
             "status_code": observed.get("status"),
+            "off_state_watchdog_mode": cfg.get("off_state_watchdog_mode", "monitor_recover"),
             "thermal_off_watchdog": observed.get("thermal_off_watchdog")
                 or record.get("thermal_off_warning"),
             "status_reason_code": observed.get("reason"),
