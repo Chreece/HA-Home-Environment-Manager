@@ -1057,6 +1057,53 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
     else:
         # Never inherit an active marker from a previous manager instance.
         facts.update(arrival_preparing=False, arrival_preparation_expires_at=None)
+    # Every native dispatch rechecks the SAME door/vacancy/temperature/RH
+    # gates. A stale cached plan must not keep Eco active after the door opens.
+    # Do not operate a physical device or infer isolation from an unselected
+    # contact. Use only independently verified fresh same-area measurements.
+    if room.get("closed_door_eco") is True or room.get("door_sensors"):
+        from .room_doors import observe as observe_room_door
+        from .room_sources import (
+            selected as selected_room_inputs, aggregate, room_temperature_evidence,
+        )
+        from .discovery import entity_area
+        temperature, _ = room_temperature_evidence(
+            manager.hass, current, spec.area_id,
+            pinned=room.get("temperature_entity"), age_minutes=10,
+        )
+        humidity_ids = selected_room_inputs(current, spec.area_id, "humidity")
+        if humidity_ids is None:
+            legacy_humidity = room.get("humidity_entity")
+            humidity_ids = ([legacy_humidity] if isinstance(legacy_humidity, str) and legacy_humidity
+                            else [])
+        humidity, _ = aggregate(manager.hass, humidity_ids, spec.area_id, "humidity", 10)
+        windows = selected_room_inputs(current, spec.area_id, "windows")
+        if windows is None:
+            contact_ids = [
+                state.entity_id for state in manager.hass.states.async_all("binary_sensor")
+                if entity_area(manager.hass, state.entity_id) == spec.area_id
+                and state.attributes.get("device_class") == "window"
+            ]
+        else:
+            contact_ids = list(windows)
+        window_safe = all(
+            (item := manager.hass.states.get(eid)) is not None
+            and item.state == "off"
+            and entity_area(manager.hass, eid) == spec.area_id
+            and item.attributes.get("device_class") == "window"
+            for eid in contact_ids
+        )
+        door = observe_room_door(
+            manager.hass, spec.area_id, room,
+            occupancy=occupancy, occupancy_evidence=evidence,
+            home=home, sleeping=sleeping,
+            temperature_c=temperature, humidity_rh=humidity,
+            window_safe=window_safe,
+            preparing_arrival=bool(facts.get("arrival_preparing")),
+        )
+        facts.update(door=door, door_eco_active=door["eco_active"])
+    else:
+        facts.update(door_eco_active=False)
     if cached:
         return {**plan, **facts}
     # Legacy PID-only rooms have no climate profile/window plan.
@@ -1111,6 +1158,11 @@ def profile_name(config: dict, plan: dict) -> str:
         return "sleep"
     if plan.get("occupancy") == "occupied":
         return "comfort"
+    if (config.get("control_mode") in ("automatic", "pid")
+            and plan.get("door_eco_active") is True
+            and plan.get("occupancy") == "unoccupied"
+            and plan.get("away") == "home"):
+        return "eco"
     # A verified home with an empty room, and incomplete occupancy evidence,
     # both use Home. Unknown evidence must never imply Away.
     return "home"
