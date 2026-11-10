@@ -119,7 +119,7 @@ with sync_playwright() as pw:
     # All draft/native settings share one top-level category each.
     assert dialog.locator('[data-hem-home-form-groups128] > details').count() == 4
     assert dialog.locator('[data-hem-home-category128="other"]').count() == 0
-    assert dialog.locator('[data-hem-full-category127="presence"]').count() == 0
+    assert dialog.locator('[data-hem-full-category127="other"]').count() == 0
     assert dialog.locator('[data-hem-home-category128="presence"] [data-hem-home-field128="general_home_policy"]').count()==1
     assert dialog.locator('[data-hem-home-category128="presence"] [data-hem-full-row127="number.home_timeout"]').count()==1
     assert dialog.locator('[data-hem-home-category128="alerts"] [data-hem-full-row127="select.home_language"]').count()==1
