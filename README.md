@@ -237,6 +237,22 @@ Entity IDs can differ with your language, naming and renames. The older
 
 ### Using the card
 
+When Home Assistant has configured floors, HEM groups each monitored room under
+its real HA floor. Floor groups can be expanded or collapsed independently and
+show room counts and whether any of their rooms need attention. Rooms not
+assigned to a floor appear under **Rooms without a floor**. The floor gear lets
+an HA administrator change that floor's name, level, icon and the room
+assignments, or open the existing settings of an individual HEM room. These
+floor settings use the native Home Assistant floor and area registries and
+never control a heater, fan or dehumidifier themselves.
+
+If you have **no Home Assistant floors**, HEM displays the original flat room
+list, with no floor heading or floor settings. Create or assign floors in
+**Settings → Areas, labels & zones**. Renaming or moving areas in Home Assistant
+updates their HEM groups without duplicating area configuration. Room targets,
+sleep, PID and other environmental controls remain independently configured
+per room; floor-wide environmental overrides are not implied.
+
 - Read the outdoor summary and room status, then expand a room for its advice,
   additional measurements and device controllers. Expanded tiles show data
   that is not already in the room overview; warning and calibration details
