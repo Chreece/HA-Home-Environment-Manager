@@ -1137,7 +1137,8 @@
           "humidity": "湿度",
           "climate_devices": "设备",
           "shades": "窗帘、百叶帘及卷帘",
-          "occupancy_sensors": "占用 · 传感器"
+          "occupancy_sensors": "占用 · 传感器",
+          "door_sensors": "门磁传感器"
         },
         "data_description": {
           "windows": "窗户. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
@@ -1146,7 +1147,8 @@
           "humidity": "湿度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
           "climate_devices": "设备. 只选择本房间实际的 climate.*、humidifier.* 和 fan.* 实体。设备自身的能力决定供暖、制冷、除湿、温湿度目标和风扇速度。选择不会立即控制设备；须在每台设备控制器中分别启用自动控制。",
           "shades": "窗帘、百叶帘及卷帘. 选择本房间的 cover.* 百叶帘、卷帘、卷闸和窗帘。没有 device_class 的 covers 只要支持 CLOSE 且确实用于窗户遮阳，也可以选择。车库门、门、闸门、窗户及室外遮阳棚均排除。仅选择不会移动：请在控制器中指定窗户传感器、自动控制、提前通知和温度阈值。状态未知时禁止移动。",
-          "occupancy_sensors": "所选状态或属性中的有效有人房间列表具有优先权：列出的房间有人，未列出的房间为空。没有列表时，所选存在传感器中任意一个 ON 表示有人；全部 OFF 或未选传感器表示空房。已选择但不可用或无效的来源仍为未知。未变化的列表和二元状态不会过期。"
+          "occupancy_sensors": "所选状态或属性中的有效有人房间列表具有优先权：列出的房间有人，未列出的房间为空。没有列表时，所选存在传感器中任意一个 ON 表示有人；全部 OFF 或未选传感器表示空房。已选择但不可用或无效的来源仍为未知。未变化的列表和二元状态不会过期。",
+          "door_sensors": "Select only same-area interior door contacts. Closure does not prove an airtight room. Optional Eco requires stable closure, verified vacancy, fresh safe temperature and humidity; native protections remain effective."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "湿度",
           "climate_devices": "设备",
           "shades": "窗帘、百叶帘及卷帘",
-          "occupancy_sensors": "占用 · 传感器"
+          "occupancy_sensors": "占用 · 传感器",
+          "door_sensors": "门磁传感器"
         },
         "data_description": {
           "windows": "窗户. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
@@ -2357,7 +2360,8 @@
           "humidity": "湿度. 选择房间的输入，显示为设备名称 - 实体名称。空组不使用，也不会启用自动发现或控制。",
           "climate_devices": "设备. 只选择本房间实际的 climate.*、humidifier.* 和 fan.* 实体。设备自身的能力决定供暖、制冷、除湿、温湿度目标和风扇速度。选择不会立即控制设备；须在每台设备控制器中分别启用自动控制。",
           "shades": "窗帘、百叶帘及卷帘. 选择本房间的 cover.* 百叶帘、卷帘、卷闸和窗帘。没有 device_class 的 covers 只要支持 CLOSE 且确实用于窗户遮阳，也可以选择。车库门、门、闸门、窗户及室外遮阳棚均排除。仅选择不会移动：请在控制器中指定窗户传感器、自动控制、提前通知和温度阈值。状态未知时禁止移动。",
-          "occupancy_sensors": "所选状态或属性中的有效有人房间列表具有优先权：列出的房间有人，未列出的房间为空。没有列表时，所选存在传感器中任意一个 ON 表示有人；全部 OFF 或未选传感器表示空房。已选择但不可用或无效的来源仍为未知。未变化的列表和二元状态不会过期。"
+          "occupancy_sensors": "所选状态或属性中的有效有人房间列表具有优先权：列出的房间有人，未列出的房间为空。没有列表时，所选存在传感器中任意一个 ON 表示有人；全部 OFF 或未选传感器表示空房。已选择但不可用或无效的来源仍为未知。未变化的列表和二元状态不会过期。",
+          "door_sensors": "Select only same-area interior door contacts. Closure does not prove an airtight room. Optional Eco requires stable closure, verified vacancy, fresh safe temperature and humidity; native protections remain effective."
         }
       }
     },
