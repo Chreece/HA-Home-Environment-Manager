@@ -4177,6 +4177,19 @@
           }
         }
       },
+      "equipment_off_state_watchdog_mode": {
+        "name": "安全 · {channel}關閉後監測",
+        "state": {
+          "monitor_recover": "監測並重發關閉指令",
+          "monitor_only": "僅監測",
+          "disabled": "已停用"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
+      },
       "equipment_presence_requirement": {
         "name": "在場 · {channel}佔用",
         "state": {
