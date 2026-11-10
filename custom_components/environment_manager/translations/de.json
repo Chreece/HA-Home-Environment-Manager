@@ -1137,16 +1137,18 @@
           "humidity": "Luftfeuchtigkeit",
           "climate_devices": "Geräte",
           "shades": "Fensterrollos, Jalousien und Rollläden",
-          "occupancy_sensors": "Präsenzsensoren in diesem Raum"
+          "occupancy_sensors": "Präsenzsensoren in diesem Raum",
+          "door_sensors": "Innentürkontakte"
         },
         "data_description": {
-          "windows": "Wähle die echten Fenster- und Türkontakte des Raums. Sie melden geöffnete oder geschlossene Öffnungen, steuern aber keine Fenster.",
+          "windows": "Wähle die echten Fensterkontakte des Raums. Sie melden geöffnete oder geschlossene Öffnungen, steuern aber keine Fenster.",
           "air_quality": "Wähle die Luftqualitätssensoren und optionalen Lichtsensoren (Lux) dieses Raums. Lux liefert den Beleuchtungsverlauf. Für die Sonnenbeschattung Lux am jeweiligen Beschattungscontroller aktivieren und einen Sensor desselben Raums oder den Mittelwert der ausgewählten Raumsensoren wählen: Jedes neue automatische Schließen erfordert dann die eingestellte Mindesthelligkeit. Die Sensorauswahl hier gibt keine Bewegung frei.",
           "temperature": "Wähle Innentemperatursensoren des Raums. Mehrere gültige Messungen können gemittelt werden; nicht verfügbare Werte werden ignoriert.",
           "humidity": "Wähle Luftfeuchtigkeitssensoren des Raums. Gültige Werte unterstützen Komfort-, Entfeuchtungs- und Schimmelrisikohinweise; fehlende Werte gelten nicht als null.",
           "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
-          "occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab."
+          "occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
+          "door_sensors": "Wähle echte binary_sensor-Türkontakte mit der tatsächlichen HA-Raumzuordnung dieses Raums. Geschlossen bedeutet nicht luftdicht. Die optionale Eco-Regel ist standardmäßig aus und erfordert stabile Schließung, nachgewiesene Leere, sichere Innenraumtemperatur und Feuchte sowie alle Geräteschutzmaßnahmen. Türkontakte zählen weder als Fenster noch als Anwesenheit."
         }
       }
     },
@@ -2348,16 +2350,18 @@
           "humidity": "Luftfeuchtigkeit",
           "climate_devices": "Geräte",
           "shades": "Fensterrollos, Jalousien und Rollläden",
-          "occupancy_sensors": "Präsenzsensoren in diesem Raum"
+          "occupancy_sensors": "Präsenzsensoren in diesem Raum",
+          "door_sensors": "Innentürkontakte"
         },
         "data_description": {
-          "windows": "Wähle die echten Fenster- und Türkontakte des Raums. Sie melden geöffnete oder geschlossene Öffnungen, steuern aber keine Fenster.",
+          "windows": "Wähle die echten Fensterkontakte des Raums. Sie melden geöffnete oder geschlossene Öffnungen, steuern aber keine Fenster.",
           "air_quality": "Wähle die Luftqualitätssensoren und optionalen Lichtsensoren (Lux) dieses Raums. Lux liefert den Beleuchtungsverlauf. Für die Sonnenbeschattung Lux am jeweiligen Beschattungscontroller aktivieren und einen Sensor desselben Raums oder den Mittelwert der ausgewählten Raumsensoren wählen: Jedes neue automatische Schließen erfordert dann die eingestellte Mindesthelligkeit. Die Sensorauswahl hier gibt keine Bewegung frei.",
           "temperature": "Wähle Innentemperatursensoren des Raums. Mehrere gültige Messungen können gemittelt werden; nicht verfügbare Werte werden ignoriert.",
           "humidity": "Wähle Luftfeuchtigkeitssensoren des Raums. Gültige Werte unterstützen Komfort-, Entfeuchtungs- und Schimmelrisikohinweise; fehlende Werte gelten nicht als null.",
           "climate_devices": "Geräte. Nur die physischen climate.*, humidifier.* und fan.*-Entitäten dieses Raums auswählen. Die tatsächlichen Funktionen bestimmen, ob Heizen, Kühlen, Entfeuchten, Sollwerte für Temperatur/Feuchte, Lüfterstufen und Ein/Aus genutzt werden können. Die Auswahl steuert noch nichts; Automatik und Freigaben werden für jedes Controller-Gerät separat aktiviert. Schalter und proportionale Stellantriebe werden gesondert konfiguriert.",
           "shades": "Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung.",
-          "occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab."
+          "occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
+          "door_sensors": "Wähle echte binary_sensor-Türkontakte mit der tatsächlichen HA-Raumzuordnung dieses Raums. Geschlossen bedeutet nicht luftdicht. Die optionale Eco-Regel ist standardmäßig aus und erfordert stabile Schließung, nachgewiesene Leere, sichere Innenraumtemperatur und Feuchte sowie alle Geräteschutzmaßnahmen. Türkontakte zählen weder als Fenster noch als Anwesenheit."
         }
       }
     },
