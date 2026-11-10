@@ -6,6 +6,7 @@ A room trend is circumstantial evidence, never a physical actuator ACK.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import exp, isfinite
 
 @dataclass(frozen=True, slots=True)
 class OutputEffect:
@@ -85,6 +86,23 @@ def shutdown_effect(cap, previous_state: str | None, hvac_action: str | None) ->
         possible = tuple(e for e in ("heat", "cool") if supported(cap, e))
         return possible[0] if active and len(possible) == 1 else None
     return None
+
+
+def absolute_humidity_gm3(room_temp_c: float, relative_humidity: float) -> float | None:
+    """Psychrometric cross-check: RH alone changes with air temperature.
+
+    6.112 hPa saturation vapor pressure (Magnus approximation) and the ideal
+    gas relation. Use only ordinary indoor ranges; no device telemetry.
+    """
+    if (isinstance(room_temp_c, bool) or isinstance(relative_humidity, bool)
+            or not isinstance(room_temp_c, (float, int))
+            or not isinstance(relative_humidity, (float, int))
+            or not isfinite(room_temp_c) or not isfinite(relative_humidity)
+            or not -20 <= room_temp_c <= 45
+            or not 0 <= relative_humidity <= 100):
+        return None
+    saturation = 6.112 * exp(17.67 * room_temp_c / (room_temp_c + 243.5))
+    return (2.1674 * saturation * relative_humidity) / (273.15 + room_temp_c)
 
 
 # The two native thermal directions reuse the existing published v0.6.1b21
