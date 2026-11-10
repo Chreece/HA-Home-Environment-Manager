@@ -219,7 +219,9 @@ def _guard(runtime: Any, spec: Any, cap: Any, state: Any, watch: dict, *,
             or (cfg.get("requested_mode") not in (
                 None, "off", "auto", "heat_cool", watch.get("direction", "heat"))
                 and not (watch.get("direction") == "humidify"
-                         and cfg.get("requested_mode") == "auto"))):
+                         and cfg.get("requested_mode") == "auto"))
+            or not _competing_effect_clear(
+                runtime, spec, cap.primary, watch.get("direction", "heat"))):
         return False
     if not model.permission(runtime.manager, spec, cap)[1]:
         return False
@@ -287,6 +289,12 @@ async def _notify(runtime: Any, spec: Any, kind: str, evidence: dict) -> None:
     )
 
 
+async def _clear_warning(runtime: Any, record: dict) -> None:
+    """Stale/unqualified room evidence must not leave a permanent red status."""
+    if record.pop("thermal_off_warning", None) is not None:
+        await runtime._save()
+
+
 async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
     """Watch HEM's journaled OFF episode and repeat only native OFF commands."""
     record = runtime._record(spec)
@@ -296,6 +304,7 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         sessions = runtime._thermal_off_sessions = {}
     if not isinstance(ledger, dict):
         sessions.pop(spec.identifier, None)
+        await _clear_warning(runtime, record)
         return False
     now = runtime.clock()
     off_since = ledger.get("off_since")
@@ -310,20 +319,24 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
             or spec.source_device_id != ledger.get("source_device_id")
             or spec.area_id != ledger.get("area")):
         sessions.pop(spec.identifier, None)
+        await _clear_warning(runtime, record)
         return False
     cfg = model.settings(runtime.manager, spec)
     if cfg.get("control_mode") not in ("automatic", "pid", "off"):
         sessions.pop(spec.identifier, None)
+        await _clear_warning(runtime, record)
         return False
     measured, ids = _independent_room_measurement(runtime, spec, profile.metric)
     if measured is None:
         sessions.pop(spec.identifier, None)
+        await _clear_warning(runtime, record)
         return False
     target = model.targets(
         runtime.manager, spec, cap, cfg, model.plan_for(runtime.manager, spec)
     ).get(direction if profile.metric == "temperature" else "humidity")
     if type(target) not in (int, float) or not isfinite(target):
         sessions.pop(spec.identifier, None)
+        await _clear_warning(runtime, record)
         return False
     sensor_watch = sessions.get(spec.identifier)
     if (not isinstance(sensor_watch, ThermalWatch)
@@ -342,8 +355,7 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
     if risk == "none":
         # Clear stale red status when the physical-response evidence resolves.
         # Do not reset the durable retry budget or announce the same episode twice.
-        if record.pop("thermal_off_warning", None) is not None:
-            await runtime._save()
+        await _clear_warning(runtime, record)
         return False
     first = sensor_watch.samples[0][1]
     observation = {
