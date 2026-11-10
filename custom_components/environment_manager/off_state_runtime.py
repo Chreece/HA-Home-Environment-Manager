@@ -80,6 +80,22 @@ def _independent_room_temperature(runtime: Any, spec: Any) -> tuple[float | None
     return temp, ids
 
 
+def _reported_off(cap: Any, state: Any) -> bool:
+    """Only native OFF or a zero-valued verified 0..100% heat actuator."""
+    if state is None or state.state in ("unknown", "unavailable"):
+        return False
+    if cap.domain in ("number", "input_number"):
+        attrs = state.attributes
+        try:
+            value = float(state.state)
+        except (TypeError, ValueError, OverflowError):
+            return False
+        return (isfinite(value) and value == 0
+                and attrs.get("unit_of_measurement") == "%"
+                and attrs.get("min") == 0 and attrs.get("max") == 100)
+    return state.state == "off"
+
+
 def _guard(runtime: Any, spec: Any, cap: Any, state: Any, watch: dict, *,
            allowed_pending: dict | None = None) -> bool:
     """Guard to allow another OFF, never an inferred ON or broadened authority."""
@@ -97,7 +113,7 @@ def _guard(runtime: Any, spec: Any, cap: Any, state: Any, watch: dict, *,
             or cap.primary != watch.get("entity")
             or spec.source_device_id != watch.get("source_device_id")
             or spec.area_id != watch.get("area")
-            or state is None or state.state != "off"
+            or not _reported_off(cap, state)
             or state.attributes.get("hvac_action") == "defrosting"
             or not model.sources_available(runtime.manager, spec)
             or "off" not in cap.modes or "heat" not in cap.modes):
@@ -174,7 +190,7 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
     off_since = ledger.get("off_since")
     if (type(off_since) not in (float, int) or not isfinite(off_since)
             or not 0 <= now - off_since <= MAX_WATCH_SECONDS
-            or state is None or state.state != "off"
+            or not _reported_off(cap, state)
             or cap.primary != ledger.get("entity")
             or record.get("power", {}).get(cap.primary)
             or spec.source_device_id != ledger.get("source_device_id")
@@ -220,7 +236,7 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         "off_since": off_since,
         "attempts": ledger.get("attempts", 0),
         "last_attempt_at": ledger.get("last_attempt_at"),
-        "native_state": "off",
+        "native_state": state.state,
     }
     first_alert = ledger.get("notified") is not True
     if first_alert:
@@ -247,13 +263,17 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         ledger["attempts"] = int(ledger.get("attempts", 0)) + 1
         ledger["last_attempt_at"] = now
         await runtime._save()
-        service = "set_hvac_mode" if cap.domain == "climate" else "turn_off"
-        if cap.domain not in ("climate", "switch", "input_boolean"):
+        if cap.domain == "climate":
+            service, data, expected = "set_hvac_mode", {"hvac_mode": "off"}, {"state": "off"}
+        elif cap.domain in ("number", "input_number"):
+            service, data, expected = "set_value", {"value": 0.0}, {"state": "0.0"}
+        elif cap.domain in ("switch", "input_boolean"):
+            service, data, expected = "turn_off", {}, {"state": "off"}
+        else:
             return False
         result = await runtime._send(
-            spec, cap, cap.primary, service,
-            {"hvac_mode": "off"} if cap.domain == "climate" else {},
-            {"state": "off"}, power=True, mode="off", automatic=False,
+            spec, cap, cap.primary, service, data, expected,
+            power=True, mode="off", automatic=False,
             off_state_recovery=True,
         )
         return result is True
