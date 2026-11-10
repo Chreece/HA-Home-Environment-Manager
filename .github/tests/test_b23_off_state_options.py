@@ -191,7 +191,9 @@ def check_translations():
     assert '"off_state_watchdog_mode": cfg.get("off_state_watchdog_mode", "monitor_recover")' in (
         SOURCE / "equipment_status.py"
     ).read_text()
-    assert json.loads((SOURCE / "manifest.json").read_text())["version"] == "0.6.1b23"
+    version = json.loads((SOURCE / "manifest.json").read_text())["version"]
+    assert version.startswith("0.6.1b") and version[6:].isdigit()
+    assert int(version[6:]) >= 23, "This behavioral test must survive later betas"
 
 
 asyncio.run(check_runtime())
