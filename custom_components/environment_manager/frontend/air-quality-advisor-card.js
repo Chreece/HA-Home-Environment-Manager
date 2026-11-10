@@ -9905,7 +9905,7 @@
       'placeholder="mdi:home-floor-1" value="'+escape(toIcon)+'"></label></section>'+
       '<details class="hem-floor-members140" open><summary>'+
       this._icon("mdi:floor-plan")+' '+escape(words.members)+' · '+ctx.areas.filter(a=>
-        a.floor_id===floorId).length)+'</summary>'+
+        a.floor_id===floorId).length+'</summary>'+
       '<p>'+escape(words.note)+'</p>'+
       '<div class="hem-floor-room-choices140">'+(rooms||'<small>'+
         escape(words.empty)+'</small>')+'</div></details>'+
