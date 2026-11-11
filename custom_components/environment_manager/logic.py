@@ -18,6 +18,22 @@ class Reading:
     value: float | None  # Normalized to the units documented in const.py.
     details: dict[str, float | int | str | list[str]] | None = None  # Derived mold data only.
 
+    @property
+    def available(self) -> bool:
+        """Whether the normalized reading contains usable numeric evidence.
+
+        Discovery already maps missing, stale, restored, unsupported-unit and
+        invalid measurements to None. Derive availability from that result;
+        do not introduce a second stored flag or infer missing data as zero.
+        Keep the constructor and serialized dataclass fields unchanged.
+        """
+        if isinstance(self.value, bool) or not isinstance(self.value, (int, float)):
+            return False
+        try:
+            return math.isfinite(self.value)
+        except (TypeError, ValueError, OverflowError):
+            return False
+
 
 @dataclass(frozen=True)
 class Weather:
