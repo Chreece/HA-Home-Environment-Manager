@@ -15,7 +15,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           python - <<'PY'
-          import os, json, base64, gzip, hashlib, urllib.request
+          import os, json, base64, gzip, hashlib, urllib.request, zlib
           from pathlib import Path
           sha = '0334c5c54eabb0477aa7ce07a7bc7bf8fedd409a'
           req = urllib.request.Request('https://api.github.com/repos/Chreece/HA-Home-Environment-Manager/git/blobs/' + sha, headers={'Authorization':'Bearer '+os.environ['GITHUB_TOKEN'],'Accept':'application/vnd.github+json'})
@@ -25,8 +25,19 @@ jobs:
           assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest() == sha
           root = Path('/tmp/hem-recovery'); root.mkdir()
           (root/'pending.gz').write_bytes(data)
-          (root/'pending.txt').write_bytes(gzip.decompress(data))
-          print('Recovered saved source payload:', len(data), 'bytes; no source executed')
+          try:
+              (root/'pending.txt').write_bytes(gzip.decompress(data))
+          except zlib.error as error:
+              decoder = zlib.decompressobj(31)
+              recovered = bytearray()
+              for offset, byte in enumerate(data):
+                  try:
+                      recovered.extend(decoder.decompress(bytes([byte])))
+                  except zlib.error:
+                      break
+              (root/'partial.txt').write_bytes(recovered)
+              (root/'error.txt').write_text(str(error)+' at compressed byte '+str(offset))
+          print('Downloaded saved payload:', len(data), 'bytes; no source executed')
           PY
       - uses: actions/upload-artifact@v4
         with:
