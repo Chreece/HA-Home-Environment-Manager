@@ -1,0 +1,26 @@
+name: HEM isolated door development
+on:
+  push:
+    branches: [feat/062b4-door-coordination-performance]
+    paths: [.github/workflows/door-b4-dev.yml, '.github/door-b4/**']
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    if: github.repository == 'Chreece/HA-Home-Environment-Manager'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Archive tracked public source only
+        run: |
+          mkdir -p /tmp/hem-source
+          git archive --format=tar.gz HEAD > /tmp/hem-source/source.tar.gz
+          git rev-parse HEAD > /tmp/hem-source/commit.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hem-source-${{ github.sha }}
+          path: /tmp/hem-source/
+          retention-days: 3
