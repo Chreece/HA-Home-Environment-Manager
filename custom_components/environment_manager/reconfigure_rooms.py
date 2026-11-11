@@ -240,13 +240,26 @@ class ReconfigureRoomsMixin:
                     # True source changes use the existing independent
                     # revocation path (no new hardware permissions).
                     sources.store_selection(self.hass, self._values, area, selected_sources)
-                if (not isinstance(actual_occupancy, list)
-                        or actual_occupancy != picked["occupancy_sensors"]
-                        or old_doors != picked["door_sensors"]):
+                # A legacy room without a door configuration is already
+                # equivalent to an unselected [] contact list. Do not mutate
+                # its Options payload on an unchanged/no-op Save. Still store
+                # explicit clearing when an earlier list actually existed.
+                occupancy_changed = (
+                    not isinstance(actual_occupancy, list)
+                    or actual_occupancy != picked["occupancy_sensors"]
+                )
+                doors_changed = (
+                    old_doors != picked["door_sensors"]
+                    if isinstance(old_doors, list)
+                    else bool(picked["door_sensors"])
+                )
+                if occupancy_changed or doors_changed:
                     rooms = self._values.setdefault(CONF_CLIMATE_ROOMS, {})
                     cfg = deepcopy(rooms.get(area, {}))
-                    cfg["occupancy_sensors"] = picked["occupancy_sensors"]
-                    cfg["door_sensors"] = picked["door_sensors"]
+                    if occupancy_changed:
+                        cfg["occupancy_sensors"] = picked["occupancy_sensors"]
+                    if doors_changed:
+                        cfg["door_sensors"] = picked["door_sensors"]
                     rooms[area] = cfg
                 # Retire legacy global room-source duplicates only for THIS
                 # verified area. Other rooms/unassigned sources remain intact
