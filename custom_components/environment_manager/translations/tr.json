@@ -2880,6 +2880,16 @@
           "window_request_pending": "Pencereyi açma isteği gönderiliyor",
           "physical_device_startup_timeout": "Cihaz açıldıktan sonra 60 saniye içinde yeniden bağlanmadı"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

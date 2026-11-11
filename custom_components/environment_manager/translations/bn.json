@@ -2880,6 +2880,16 @@
           "window_request_pending": "জানালা খোলার অনুরোধ পাঠানো হচ্ছে",
           "physical_device_startup_timeout": "চালু করার ৬০ সেকেন্ডের মধ্যে যন্ত্রটি পুনরায় সংযুক্ত হয়নি"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

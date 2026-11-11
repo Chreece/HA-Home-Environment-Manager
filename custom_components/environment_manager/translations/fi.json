@@ -2880,6 +2880,16 @@
           "window_request_pending": "Lähetetään pyyntö avata ikkuna",
           "physical_device_startup_timeout": "Laite ei yhdistynyt uudelleen 60 sekunnin kuluessa virran kytkemisestä"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

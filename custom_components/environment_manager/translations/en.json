@@ -2880,6 +2880,16 @@
           "window_open_wait": "Waiting for you to open the window",
           "window_request_pending": "Sending a request to open the window"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

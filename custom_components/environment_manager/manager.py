@@ -669,6 +669,24 @@ class AirQualityManager:
                 if any(cover_config(config, area, cover)["enabled"]
                        for cover in enrolled):
                     self._tracked.add("sun.sun")
+        # One passive, per-entry snapshot for door diagnostics/connectivity.
+        # It does not add demands, alter occupancy or dispatch appliances.
+        if any(isinstance(room, dict) and room.get("door_sensors")
+               for room in room_climate_configs.values()):
+            from .door_context import DoorContextMonitor
+            monitor = getattr(self, "door_context", None)
+            if monitor is None:
+                self.door_context = monitor = DoorContextMonitor()
+            context_rooms = list({room.area_id: room
+                                  for room in (*raw_rooms, *climate_only)}.values())
+            _door_reports, door_sources = monitor.update(
+                self.hass, config, environment, context_rooms, observed_rooms,
+                home_status, outside_safe=(base_plan.outdoor_safe is True
+                                          and not base_plan.unavailable_outdoor),
+            )
+            self._tracked.update(door_sources)
+        elif getattr(self, "door_context", None) is not None:
+            self.door_context = None  # No latent history after removing doors.
         air_plan=evaluate(
             outdoor_readings, current_weather, warnings, selected_rooms,
             self.thresholds, environment=environment,
@@ -1078,6 +1096,10 @@ class AirQualityManager:
         # refresh. Use the last validated plan; _tick rechecks sensor freshness.
         if not self._active:
             return
+        door_monitor = getattr(self, "door_context", None)
+        if door_monitor is not None and door_monitor.should_refresh(time()):
+            self._recalculate()
+            return
         # Sun elevation and stable weather release timers need clock ticks
         # even when no physical climate equipment is selected in this room.
         from .shade_cooling import cover_config
@@ -1142,6 +1164,9 @@ class AirQualityManager:
         if not native_room_source(self.hass, entity_id):
             return  # Never use our own climate/overview as measurement input.
         old, new = event.data.get("old_state"), event.data.get("new_state")
+        door_monitor = getattr(self, "door_context", None)
+        if door_monitor is not None:
+            door_monitor.state_changed(entity_id, old, new, time())
         # Native availability changes must reach the physical controller
         # before the room-plan refresh, so its 30s restart-settle clock starts
         # at the actual HA reconnect event rather than on a later poll.

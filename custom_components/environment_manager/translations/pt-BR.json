@@ -2880,6 +2880,16 @@
           "window_request_pending": "Enviando um pedido para abrir a janela",
           "physical_device_startup_timeout": "O aparelho não se reconectou em até 60 segundos após ligar"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

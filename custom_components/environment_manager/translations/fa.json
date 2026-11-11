@@ -2880,6 +2880,16 @@
           "window_request_pending": "در حال ارسال درخواست باز کردن پنجره",
           "physical_device_startup_timeout": "دستگاه پس از روشن شدن تا ۶۰ ثانیه دوباره متصل نشد"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

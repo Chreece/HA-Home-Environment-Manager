@@ -2880,6 +2880,16 @@
           "window_request_pending": "Odosiela sa žiadosť o otvorenie okna",
           "physical_device_startup_timeout": "Zariadenie sa do 60 sekúnd po zapnutí znovu nepripojilo"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

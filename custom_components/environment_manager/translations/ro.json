@@ -2880,6 +2880,16 @@
           "window_request_pending": "Se trimite o cerere de deschidere a ferestrei",
           "physical_device_startup_timeout": "Dispozitivul nu s-a reconectat în 60 de secunde de la pornire"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

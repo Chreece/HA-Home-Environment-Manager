@@ -2880,6 +2880,16 @@
           "window_request_pending": "کھڑکی کھولنے کی درخواست بھیجی جا رہی ہے",
           "physical_device_startup_timeout": "آن ہونے کے 60 سیکنڈ کے اندر آلہ دوبارہ منسلک نہیں ہوا"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

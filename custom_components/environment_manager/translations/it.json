@@ -2880,6 +2880,16 @@
           "window_request_pending": "Invio della richiesta di apertura della finestra",
           "physical_device_startup_timeout": "Il dispositivo non si è riconnesso entro 60 secondi dall'accensione"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

@@ -2880,6 +2880,16 @@
           "window_request_pending": "窓を開ける依頼を送信中",
           "physical_device_startup_timeout": "電源投入後60秒以内に機器が再接続されませんでした"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

@@ -2880,6 +2880,16 @@
           "window_request_pending": "खिड़की खोलने का अनुरोध भेजा जा रहा है",
           "physical_device_startup_timeout": "चालू होने के 60 सेकंड के भीतर उपकरण फिर से कनेक्ट नहीं हुआ"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {
