@@ -1,0 +1,253 @@
+diff --git a/.github/tests/test_062b3_door_entities.py b/.github/tests/test_062b3_door_entities.py
+index e98419f..4156a99 100644
+--- a/.github/tests/test_062b3_door_entities.py
++++ b/.github/tests/test_062b3_door_entities.py
+@@ -37 +37 @@ if '--with-ha' not in sys.argv:
+-saved={'kind':'interior','target_area':None,'report_timeout_minutes':0}
++saved={'kind':'interior','target_area':None,'report_timeout_minutes':0,'coordination':'observe','energy_meter':None}
+@@ -46,0 +47 @@ module(PKG+'.room_doors',contact_options=lambda *args:dict(saved))
++module(PKG+'.door_energy',choices=lambda *args:{'sensor.energy':'Energy'})
+@@ -55 +56 @@ selects=entity.select_entities(manager);numbers=entity.number_entities(manager);
+-assert len(selects)==2 and len(numbers)==len(sensors)==1
++assert len(selects)==4 and len(numbers)==len(sensors)==1
+@@ -57 +58 @@ all_entities=[*selects,*numbers,*sensors]
+-assert len({item._attr_unique_id for item in all_entities})==4
++assert len({item._attr_unique_id for item in all_entities})==6
+@@ -63 +64 @@ for item in all_entities:
+-connection,kind=selects
++connection,kind,coordination,energy=selects
+@@ -79,0 +81,10 @@ assert saved['kind']=='fire'
++assert coordination.options==['Observe only'], 'Fire door must not coordinate starts'
++asyncio.run(kind.async_select_option('Interior'))
++assert coordination.current_option=='Observe only'
++asyncio.run(coordination.async_select_option('Coordinate starts'))
++assert saved['coordination']=='shared'
++assert energy.options==['No energy meter','Energy [sensor.energy]']
++asyncio.run(energy.async_select_option('Energy [sensor.energy]'))
++assert saved['energy_meter']=='sensor.energy'
++assert coordination.extra_state_attributes['door_setting_key']=='coordination'
++assert energy.extra_state_attributes['door_setting_key']=='energy_meter'
+diff --git a/.github/tests/test_062b3_door_ui.py b/.github/tests/test_062b3_door_ui.py
+index f5a206a..f6b5a77 100644
+--- a/.github/tests/test_062b3_door_ui.py
++++ b/.github/tests/test_062b3_door_ui.py
+@@ -106 +106,3 @@ with sync_playwright() as pw:
+-                  ['number.door_report','0','door_report_timeout_minutes','Interior door A · Expected report timeout']
++                  ['number.door_report','0','door_report_timeout_minutes','Interior door A · Expected report timeout'],
++                  ['select.door_coordination','Observe only','door_coordination','Interior door A · Device start coordination'],
++                  ['select.door_energy','No energy meter','door_energy_meter','Interior door A · Measured energy meter']
+@@ -117 +119,3 @@ with sync_playwright() as pw:
+-                        key==='door_kind'?['Interior','Fire/safety door','Exterior']:undefined}};
++                        key==='door_kind'?['Interior','Fire/safety door','Exterior']:
++                        key==='door_coordination'?['Observe only','Delay conflicting starts','Coordinate starts']:
++                        key==='door_energy_meter'?['No energy meter','Energy [sensor.energy]']:undefined}};
+@@ -129 +133 @@ with sync_playwright() as pw:
+-            page.wait_for_function('card._roomSettingsDialog114?.fullRegistry127?.length===6')
++            page.wait_for_function('card._roomSettingsDialog114?.fullRegistry127?.length===8')
+@@ -142 +146,2 @@ with sync_playwright() as pw:
+-                    'switch.closed_room_eco','select.door_target','select.door_kind','number.door_report']
++                    'switch.closed_room_eco','select.door_target','select.door_coordination',
++                    'select.door_kind','number.door_report','select.door_energy']
+@@ -171,0 +177,10 @@ with sync_playwright() as pw:
++            coordination=paired.locator('[data-hem-full-row127="select.door_coordination"]')
++            coordination.locator('select').select_option('Coordinate starts')
++            coordination.locator('[data-hem-full-apply127]').click()
++            assert page.evaluate('native062.at(-1)')==['select','select_option',{
++                'entity_id':'select.door_coordination','option':'Coordinate starts'}]
++            meter=paired.locator('[data-hem-full-row127="select.door_energy"]')
++            meter.locator('select').select_option('Energy [sensor.energy]')
++            meter.locator('[data-hem-full-apply127]').click()
++            assert page.evaluate('native062.at(-1)')==['select','select_option',{
++                'entity_id':'select.door_energy','option':'Energy [sensor.energy]'}]
+@@ -205,0 +221,4 @@ with sync_playwright() as pw:
++                  energy:[{contact:'binary_sensor.door_a',meter:'sensor.energy',comparison_ready:true,
++                    excluded_intervals:2,open:{kwh:0.01,observed_minutes:15,mean_power_w:40},
++                    closed:{kwh:0.02,observed_minutes:30,mean_power_w:40}}],
++                  coordination:[{peer:'climate.peer',status:'waiting',remaining_seconds:45}],
+@@ -217,0 +237,2 @@ with sync_playwright() as pw:
++            assert 'kWh' in popup.inner_text() and 'sensor.energy' in popup.inner_text()
++            assert 'climate.peer' in popup.inner_text() and '45' in popup.inner_text()
+diff --git a/.github/workflows/validate.yml b/.github/workflows/validate.yml
+index 106b47b..6481c2d 100644
+--- a/.github/workflows/validate.yml
++++ b/.github/workflows/validate.yml
+@@ -75,0 +76,2 @@ jobs:
++      - name: B5 bounded door start coordination and measured energy intervals
++        run: python -I .github/tests/test_062b5_door_coordination.py
+diff --git a/custom_components/environment_manager/door_context.py b/custom_components/environment_manager/door_context.py
+index 4002820..6a13f2a 100644
+--- a/custom_components/environment_manager/door_context.py
++++ b/custom_components/environment_manager/door_context.py
+@@ -179,0 +180 @@ class DoorContextMonitor:
++        self._energy = None
+@@ -215 +216,2 @@ class DoorContextMonitor:
+-               *, outside_safe: bool = False, now: float | None = None) -> tuple[dict, set]:
++               *, outside_safe: bool = False, now: float | None = None,
++               runtime: Any = None) -> tuple[dict, set]:
+@@ -335,0 +338,14 @@ class DoorContextMonitor:
++            if any(contact.get("energy_meter") for contact in contacts) or self._energy is not None:
++                from .door_energy import DoorEnergyMonitor
++                if self._energy is None:
++                    self._energy = DoorEnergyMonitor()
++                report["energy"], energy_sources = self._energy.update(
++                    hass, settings, area, contacts, signature, now)
++                tracked.update(energy_sources)
++            budget = getattr(runtime, "_door_start_budget", None)
++            report["coordination"] = [{"controller": key, "status": value.get("status"),
++                "peer": value.get("peer"), "kind": value.get("kind"),
++                "remaining_seconds": round(max(0, value["deadline"] - now), 1)
++                    if not value["released"] else 0}
++                for key, value in (budget.records.items() if budget else ())
++                if value["area"] == area][:16]
+@@ -339,0 +356,3 @@ class DoorContextMonitor:
++        if self._energy is not None:
++            self._energy.records = {key: value for key, value in self._energy.records.items()
++                                    if key[0] in active_areas}
+diff --git a/custom_components/environment_manager/door_entities.py b/custom_components/environment_manager/door_entities.py
+index b5257c1..c0fdbe8 100644
+--- a/custom_components/environment_manager/door_entities.py
++++ b/custom_components/environment_manager/door_entities.py
+@@ -41,0 +42,21 @@ WORDS = {
++# These policy labels also describe the strict limits of this optional layer.
++WORDS["en"].update(
++    coordination="Device start coordination", observe="Observe only",
++    conflicts="Delay conflicting starts", shared="Coordinate starts",
++    energy_meter="Measured energy meter", no_meter="No energy meter",
++    coordination_help="Optional direct interior connection only. Briefly delay a NEW Automatic start if an authorized peer is already active. Coordinate starts also tests measured improvement from a same-purpose peer after 60 seconds. Absolute maximum 3 minutes; closure, lost evidence, manual/PID/sleep/away/arrival and urgent local needs bypass the wait. Never changes targets, stops a running device or starts a peer. An open door does not prove airflow.",
++    energy_help="Select a native cumulative energy meter assigned to this Area (Wh/kWh/MWh; total or total_increasing). Observed consumption and covered minutes are compared by door state, not attributed savings. Gaps, observed resets, unit changes and door transitions are excluded. Session-only; each contact comparison is independent and must not be added to others using the same meter.")
++WORDS["el"].update(
++    coordination="Συντονισμός εκκίνησης συσκευών", observe="Μόνο παρατήρηση",
++    conflicts="Καθυστέρηση αντίθετων λειτουργιών", shared="Συντονισμός εκκινήσεων",
++    energy_meter="Μετρητής κατανάλωσης ενέργειας", no_meter="Χωρίς μετρητή ενέργειας",
++    coordination_help="Προαιρετικά, μόνο για άμεση εσωτερική σύνδεση. Καθυστερεί λίγο μια ΝΕΑ αυτόματη εκκίνηση όταν λειτουργεί ήδη επιτρεπόμενη συσκευή στον συνδεδεμένο χώρο. Ο συντονισμός ελέγχει βελτίωση των μετρήσεων σε 60 δευτερόλεπτα. Μέγιστο 3 λεπτά. Κλείσιμο, έλλειψη δεδομένων, χειροκίνητος έλεγχος/PID/ύπνος/απουσία/άφιξη και επείγουσα ανάγκη ακυρώνουν την αναμονή. Δεν αλλάζει στόχους ούτε σταματά ή ξεκινά άλλη συσκευή. Ανοιχτή πόρτα δεν αποδεικνύει ροή αέρα.",
++    energy_help="Επίλεξε πραγματικό αθροιστικό μετρητή ενέργειας του ίδιου χώρου (Wh/kWh/MWh). Σύγκριση μετρημένης κατανάλωσης και χρόνου ανά κατάσταση πόρτας, όχι εκτίμηση εξοικονόμησης. Κενά, μηδενισμοί, αλλαγές μονάδων και μεταβάσεις πόρτας εξαιρούνται. Μόνο τρέχουσα συνεδρία. Μην αθροίζεις συγκρίσεις διαφορετικών επαφών που χρησιμοποιούν τον ίδιο μετρητή.")
++WORDS["de"].update(
++    coordination="Gerätestarts koordinieren", observe="Nur beobachten",
++    conflicts="Gegenläufige Starts verzögern", shared="Starts koordinieren",
++    energy_meter="Gemessener Energiezähler", no_meter="Kein Energiezähler",
++    coordination_help="Optional, nur über direkte Innentür-Verbindungen. Verzögert einen NEUEN Automatikstart kurz, wenn ein freigegebenes Nachbargerät bereits arbeitet. Gemeinsame Starts prüfen nach 60 Sekunden eine gemessene Verbesserung. Höchstens 3 Minuten; Schließen, fehlende Daten, manuell/PID/Schlaf/Abwesenheit/Ankunft und dringender Bedarf umgehen die Wartezeit. Keine Sollwertänderung, kein Stoppen laufender Geräte und kein Starten anderer Geräte. Offene Türen beweisen keinen Luftstrom.",
++    energy_help="Nativen kumulativen Energiezähler dieses Bereichs wählen (Wh/kWh/MWh). Gemessener Verbrauch und erfasste Zeit werden nach Türzustand verglichen, nicht als Einsparung bewertet. Lücken, beobachtete Zählerrücksetzungen, Einheitenwechsel und Türwechsel werden ausgeschlossen. Nur aktuelle Sitzung; Vergleiche mehrerer Kontakte mit demselben Zähler nicht addieren.")
++
++
+@@ -76 +97,2 @@ class DoorEntity:
+-                    "report_timeout_minutes": "timeout_help"}[self._key]
++                    "report_timeout_minutes": "timeout_help", "coordination": "coordination_help",
++                    "energy_meter": "energy_help"}[self._key]
+@@ -93,0 +116,7 @@ class DoorSelect(DoorEntity, SelectEntity):
++        if self._key == "coordination":
++            allowed = ("observe", "conflicts", "shared") if self._config()["kind"] == "interior" else ("observe",)
++            return {text[key]: key for key in allowed}
++        if self._key == "energy_meter":
++            from .door_energy import choices
++            return {text["no_meter"]: None, **{f"{name} [{entity}]": entity for entity, name in
++                    choices(self._manager.hass, self._area, self._config().get("energy_meter")).items()}}
+@@ -178 +207,3 @@ class RoomDoorContextSensor(SensorEntity):
+-                "advisory_only": True}
++                "advisory_only": True,
++                "measured_energy": item.get("energy", [])[:16],
++                "device_start_coordination": item.get("coordination", [])[:16]}
+@@ -193 +224 @@ def select_entities(manager):
+-            for key in ("target_area", "kind")]
++            for key in ("target_area", "kind", "coordination", "energy_meter")]
+diff --git a/custom_components/environment_manager/door_settings.py b/custom_components/environment_manager/door_settings.py
+index 7fe066d..3491a25 100644
+--- a/custom_components/environment_manager/door_settings.py
++++ b/custom_components/environment_manager/door_settings.py
+@@ -73,0 +74,2 @@ async def async_update(manager, area, entity, key, value):
++            if value != "interior":
++                item["coordination"] = "observe"
+@@ -75,0 +78,10 @@ async def async_update(manager, area, entity, key, value):
++        elif key == "coordination":
++            if value not in ("observe", "conflicts", "shared"):
++                raise HomeAssistantError("Unsupported door coordination policy")
++            if value != "observe" and item.get("kind", "interior") != "interior":
++                raise HomeAssistantError("Only interior doors can coordinate device starts")
++        elif key == "energy_meter":
++            from .door_energy import choices
++            if value is not None and (not isinstance(value, str)
++                    or value not in choices(manager.hass, area, item.get("energy_meter"))):
++                raise HomeAssistantError("Choose a native cumulative energy meter in this exact Area")
+diff --git a/custom_components/environment_manager/equipment_runtime.py b/custom_components/environment_manager/equipment_runtime.py
+index df80858..191b085 100644
+--- a/custom_components/environment_manager/equipment_runtime.py
++++ b/custom_components/environment_manager/equipment_runtime.py
+@@ -763,0 +764 @@ class EquipmentRuntime:
++        self._door_start_budget = None
+@@ -3637,0 +3639,7 @@ class EquipmentRuntime:
++        # A verified active physical output finishes the optional door-start
++        # episode. Unknown/reconnect/idle timestamps cannot renew its budget.
++        budget = getattr(self, "_door_start_budget", None)
++        current_native = self.hass.states.get(cap.primary)
++        if budget is not None and current_native is not None and not output_off(current_native):
++            if current_native.state not in ("unknown", "unavailable") and not current_native.attributes.get("restored"):
++                budget.records.pop(spec.identifier, None)
+@@ -4690,0 +4699,16 @@ class EquipmentRuntime:
++        def door_hold():
++            if not (automatic and power and action_mode != "off" and entity == cap.primary):
++                return None
++            rooms = self.manager.settings.get("climate_rooms", {})
++            opted = isinstance(rooms, dict) and any(
++                isinstance(room, dict) and isinstance(room.get("door_settings"), dict)
++                and any(isinstance(item, dict) and item.get("coordination") in ("conflicts", "shared")
++                        for item in room["door_settings"].values()) for room in rooms.values())
++            if not opted and getattr(self, "_door_start_budget", None) is None:
++                return None
++            from .door_coordination import start_hold
++            return start_hold(self, spec, cap, model.settings(self.manager, spec),
++                              model.plan_for(self.manager, spec), action_mode)
++        if hold := door_hold():
++            self._status(spec, "awaiting_evaluation", **hold, door_coordination=hold)
++            return False
+@@ -4924,0 +4949,2 @@ class EquipmentRuntime:
++            if door_hold():
++                return False
+diff --git a/custom_components/environment_manager/frontend/air-quality-advisor-card.js b/custom_components/environment_manager/frontend/air-quality-advisor-card.js
+index 7ca871d..ff354da 100644
+--- a/custom_components/environment_manager/frontend/air-quality-advisor-card.js
++++ b/custom_components/environment_manager/frontend/air-quality-advisor-card.js
+@@ -8998 +8998 @@
+-      ["target_area","kind","report_timeout_minutes"].includes(a.door_setting_key);
++      ["target_area","kind","report_timeout_minutes","coordination","energy_meter"].includes(a.door_setting_key);
+@@ -10706,0 +10707,18 @@
++    const energyWords={
++      en:{title:'Measured energy by door state',coverage:'observed min',excluded:'excluded intervals',pending:'Collecting comparable coverage',ready:'Coverage available',note:'Session observations, not energy savings. Other conditions differ; comparisons sharing a meter are not additive.',coord:'Device start coordination',waiting:'Waiting',released:'Released',observe:'No active delay'},
++      el:{title:'Μετρημένη ενέργεια ανά κατάσταση πόρτας',coverage:'λεπτά κάλυψης',excluded:'εξαιρεμένα διαστήματα',pending:'Συλλογή συγκρίσιμης κάλυψης',ready:'Διαθέσιμη κάλυψη',note:'Παρατηρήσεις συνεδρίας, όχι εξοικονόμηση. Άλλες συνθήκες διαφέρουν· οι συγκρίσεις με κοινό μετρητή δεν αθροίζονται.',coord:'Συντονισμός εκκίνησης',waiting:'Αναμονή',released:'Χωρίς αναμονή',observe:'Χωρίς ενεργή καθυστέρηση'},
++      de:{title:'Gemessene Energie nach Türzustand',coverage:'erfasste Min.',excluded:'ausgeschlossene Intervalle',pending:'Vergleichbare Abdeckung wird erfasst',ready:'Abdeckung verfügbar',note:'Sitzungsbeobachtungen, keine Energieeinsparung. Andere Bedingungen unterscheiden sich; Vergleiche mit demselben Zähler sind nicht addierbar.',coord:'Gerätestart-Koordination',waiting:'Warten',released:'Freigegeben',observe:'Keine aktive Verzögerung'}
++    };
++    const ew=energyWords[this._language()]||energyWords.en;
++    for(const item of Array.isArray(report.energy)?report.energy:[]){
++      body+='<strong>'+escape(ew.title)+'</strong>'+paragraph(sourceName(item.contact)+' · '+sourceName(item.meter));
++      for(const mode of ['open','closed']){
++        const bucket=item[mode]||{};
++        body+=paragraph(tr(mode)+': '+(typeof bucket.kwh==='number'&&Number.isFinite(bucket.kwh)?this._format(bucket.kwh,3):'—')+' kWh · '+numeric(bucket.observed_minutes)+' '+ew.coverage+' · '+numeric(bucket.mean_power_w)+' W');
++      }
++      body+=paragraph((item.comparison_ready?ew.ready:ew.pending)+' · '+numeric(item.excluded_intervals)+' '+ew.excluded)+paragraph(ew.note);
++    }
++    const coordination=Array.isArray(report.coordination)?report.coordination:[];
++    if(coordination.length)body+='<strong>'+escape(ew.coord)+'</strong>';
++    for(const item of coordination)body+=paragraph((item.status==='waiting'&&item.remaining_seconds>0?ew.waiting:ew.released)+
++      (item.peer?' · '+sourceName(item.peer):'')+' · '+numeric(item.remaining_seconds)+' s');
+diff --git a/custom_components/environment_manager/manager.py b/custom_components/environment_manager/manager.py
+index 0e14708..17a2b31 100644
+--- a/custom_components/environment_manager/manager.py
++++ b/custom_components/environment_manager/manager.py
+@@ -685,0 +686 @@ class AirQualityManager:
++                runtime=getattr(self, "equipment", None),
+diff --git a/custom_components/environment_manager/manifest.json b/custom_components/environment_manager/manifest.json
+index 251ad52..f69e074 100644
+--- a/custom_components/environment_manager/manifest.json
++++ b/custom_components/environment_manager/manifest.json
+@@ -17 +17 @@
+-  "version": "0.6.2b4"
++  "version": "0.6.2b5"
+diff --git a/custom_components/environment_manager/room_doors.py b/custom_components/environment_manager/room_doors.py
+index d5f6865..7e89a80 100644
+--- a/custom_components/environment_manager/room_doors.py
++++ b/custom_components/environment_manager/room_doors.py
+@@ -89 +89,5 @@ def contact_options(config: Mapping | None, entity_id: str) -> dict:
+-    return {"kind": kind,
++    coordination = item.get("coordination", "observe")
++    meter = item.get("energy_meter")
++    return {"coordination": coordination if coordination in ("observe", "conflicts", "shared") else "observe",
++            "energy_meter": meter if isinstance(meter, str) and meter.startswith("sensor.") else None,
++            "kind": kind,
