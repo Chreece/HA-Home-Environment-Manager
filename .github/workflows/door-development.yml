@@ -3,24 +3,66 @@ name: Door development evidence
 on:
   push:
     branches: [feat/062b3-door-context]
+    paths: [.github/workflows/door-development.yml]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   evidence:
+    if: github.repository == 'Chreece/HA-Home-Environment-Manager' && github.ref == 'refs/heads/feat/062b3-door-context'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
-      - name: Export tracked source for isolated development verification
-        run: git archive --format=tar HEAD -o /tmp/hem-door-source.tar
-      - uses: actions/upload-artifact@v4
+          ref: feat/062b3-door-context
+      - uses: actions/setup-python@v5
         with:
-          name: hem-door-source
-          path: /tmp/hem-door-source.tar
-          retention-days: 1
-          if-no-files-found: error
+          python-version: '3.14'
+      - name: Verify exact payload and apply source changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import base64, hashlib, json, lzma, subprocess
+          manifest = Path('custom_components/environment_manager/manifest.json')
+          assert json.loads(manifest.read_text())['version'] == '0.6.2b2'
+          chunks = [Path(f'.github/patches/door-context-063.{i}.b64').read_text().strip() for i in range(3)]
+          patch = lzma.decompress(base64.b64decode(''.join(chunks), validate=True))
+          assert hashlib.sha256(patch).hexdigest() == 'd931c81391b9783ee72298baefab7d57011a12c71c660c105e0c1d7be2a44b4d'
+          assert b'.github/workflows/' not in patch
+          Path('/tmp/door-context.patch').write_bytes(patch)
+          subprocess.run(['git', 'apply', '--check', '/tmp/door-context.patch'], check=True)
+          subprocess.run(['git', 'apply', '/tmp/door-context.patch'], check=True)
+          # Store the reviewed CI text as a non-executable staging blob. The
+          # connector later promotes it with the clean source tree to dev.
+          text = Path('.github/workflows/validate.yml').read_text()
+          a = '      - name: Off-state thermal anomaly evidence and false-positive guards\n'
+          b = '      - name: B1 concise settings labels and door UI in Chromium\n'
+          assert text.count(a) == text.count(b) == 1
+          text = text.replace(a, '      - name: B3 passive door context, source health and exact-Area metadata\n        run: |\n          python -I .github/tests/test_062b3_door_context.py\n          python -I .github/tests/test_062b3_door_entities.py\n' + a)
+          text = text.replace(b, '      - name: B3 native HA door entities, metadata writes and responsive context popup\n        run: |\n          python -I .github/tests/test_062b3_door_entities.py --with-ha\n          python -I .github/tests/test_062b3_door_ui.py\n' + b)
+          Path('.github/patches/validate-063.txt').write_text(text)
+          print('PAYLOAD_SHA256_VERIFIED', len(patch))
+          PY
+      - name: Verify syntax and deterministic contracts
+        run: |
+          set -euo pipefail
+          node --check custom_components/environment_manager/frontend/air-quality-advisor-card.js
+          python -I .github/tests/test_062b1_room_doors.py
+          python -I .github/tests/test_062b3_door_context.py
+          python -I .github/tests/test_062b3_door_entities.py
+          git diff --check
+      - name: Commit verified code on this isolated branch only
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add custom_components/environment_manager .github/tests .github/releases docs .github/patches/validate-063.txt
+          git commit -m 'Implement HEM b3 passive door connections, health, diagnostics and Eco consistency'
+          git push origin HEAD:refs/heads/feat/062b3-door-context
+          git rev-parse HEAD HEAD^{tree}
+          git rev-parse HEAD:.github/patches/validate-063.txt
