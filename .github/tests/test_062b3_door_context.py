@@ -1,8 +1,10 @@
 """Door evidence, graph and configuration invariants without physical I/O."""
 from __future__ import annotations
 
+import ast
 import asyncio
 from copy import deepcopy
+from dataclasses import asdict, fields, FrozenInstanceError, replace
 from datetime import timedelta
 from pathlib import Path
 import runpy
@@ -16,6 +18,101 @@ door, hass, now = base['door'], base['hass'], base['now']
 load, AREAS, state = base['load'], base['AREAS'], base['state']
 sources = base['sources']
 context = load('door_context', base['ROOT'] / 'door_context.py')
+# Use the real production data model. A SimpleNamespace(available=True)
+# previously hid the startup crash and the silently discarded measurements.
+logic = load('logic', base['ROOT'] / 'logic.py')
+Reading, Room, Window = logic.Reading, logic.Room, logic.Window
+
+
+def production_block(filename, method, predicate):
+    tree = ast.parse((base['ROOT'] / filename).read_text(encoding='utf-8'))
+    functions = [node for node in ast.walk(tree)
+                 if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                 and node.name == method]
+    assert len(functions) == 1, (filename, method)
+    chosen = [node for node in functions[0].body if predicate(node)]
+    assert chosen, (filename, method, 'production block not found')
+    return compile(ast.Module(body=chosen, type_ignores=[]), str(base['ROOT'] / filename), 'exec')
+
+
+MANAGER_DOOR_BLOCK = production_block('manager.py', '_capture', lambda node:
+    isinstance(node, ast.For) and isinstance(node.target, ast.Name)
+    and node.target.id == 'monitored')
+CLIMATE_CO2_BLOCK = production_block('climate_rooms.py', 'gather', lambda node:
+    isinstance(node, ast.Assign) and any(isinstance(target, ast.Name)
+    and target.id == 'co2_values' for target in node.targets))
+
+
+class ReadingContract(unittest.TestCase):
+    def test_real_model_has_computed_availability(self):
+        for value in (0, 0.0, 45, 55.5, 1400.0):
+            with self.subTest(value=value):
+                self.assertIs(Reading('sensor.a', 'A', 'humidity', value).available, True)
+        for value in (None, True, False, float('nan'), float('inf'), -float('inf'),
+                      '55', 'unavailable', [], 10 ** 1000):
+            with self.subTest(value=repr(value)[:40]):
+                self.assertIs(Reading('sensor.a', 'A', 'humidity', value).available, False)
+
+    def test_constructor_serialization_and_immutability_remain_compatible(self):
+        item = Reading('sensor.a', 'A', 'humidity', 55.0)
+        self.assertEqual([field.name for field in fields(item)],
+                         ['entity_id', 'name', 'metric', 'value', 'details'])
+        self.assertEqual(asdict(item), {'entity_id': 'sensor.a', 'name': 'A',
+                         'metric': 'humidity', 'value': 55.0, 'details': None})
+        self.assertFalse(replace(item, value=None).available)
+        self.assertTrue(replace(item, value=0.0).available)
+        with self.assertRaises((FrozenInstanceError, AttributeError)):
+            item.available = True
+
+    def test_discovery_produces_available_only_for_accepted_sensor_evidence(self):
+        # Execute the genuine sensor normalization/freshness functions. Only
+        # HA's state store, clock and registry boundaries are test fixtures.
+        names = {'_device_class', 'is_pressure_sensor', '_metric', '_numeric',
+                 '_normalize', 'supported_metric', 'is_stale', 'reading'}
+        tree = ast.parse((base['ROOT'] / 'discovery.py').read_text())
+        nodes = [node for node in tree.body if
+                 isinstance(node, ast.FunctionDef) and node.name in names or
+                 isinstance(node, ast.Assign) and any(isinstance(target, ast.Name)
+                    and target.id in ('DEVICE_CLASS_METRICS', 'SUFFIX_METRICS')
+                    for target in node.targets)]
+        constants = sys.modules[base['PACKAGE'] + '.const']
+        namespace = dict(Reading=Reading, timedelta=timedelta,
+                         dt_util=N(utcnow=lambda: now), er=base['registry'],
+                         INDOOR_METRICS=constants.INDOOR_METRICS,
+                         SUPPORTED_AIR_METRICS=constants.SUPPORTED_AIR_METRICS)
+        future = ast.parse('from __future__ import annotations').body
+        exec(compile(ast.Module(body=future + nodes, type_ignores=[]),
+                     'discovery.py', 'exec'), namespace)
+        cases = [
+            ('45', 'humidity', '%', {}, 1, 45.0),
+            ('1400', 'co2', 'ppm', {}, 1, 1400.0),
+            ('0', 'pm25', 'µg/m³', {}, 1, 0.0),
+            ('45', 'humidity', '%', {}, 6000, None),
+            ('45', 'humidity', '%', {'restored': True}, 1, None),
+            ('unavailable', 'humidity', '%', {}, 1, None),
+            ('unknown', 'co2', 'ppm', {}, 1, None),
+            ('nan', 'humidity', '%', {}, 1, None),
+            ('inf', 'co2', 'ppm', {}, 1, None),
+            ('101', 'humidity', '%', {}, 1, None),
+            ('100', 'co2', 'ppm', {}, 1, None),
+            ('1400', 'co2', 'wrong_unit', {}, 1, None),
+        ]
+        for value, metric, unit, extra, age, expected in cases:
+            with self.subTest(value=value, metric=metric, extra=extra, age=age):
+                native = N(entity_id='sensor.contract_' + metric, name='Measured',
+                           domain='sensor', state=value,
+                           attributes={'device_class': metric, 'unit_of_measurement': unit, **extra},
+                           last_updated=now - timedelta(seconds=age))
+                local_hass = N(states=N(get=lambda eid: native))
+                result = namespace['reading'](local_hass, native.entity_id, 10, outdoor=False)
+                self.assertIs(type(result), Reading)
+                self.assertEqual(result.value, expected)
+                self.assertIs(result.available, expected is not None)
+        missing = namespace['reading'](N(states=N(get=lambda eid: None)), 'sensor.missing', 10,
+                                       outdoor=False)
+        self.assertIsNone(missing.value)
+        self.assertFalse(missing.available)
+
 
 class Evidence(unittest.TestCase):
     def setUp(self):
@@ -213,10 +310,12 @@ class MonitorAdapter(unittest.TestCase):
                       'door_settings':{'binary_sensor.door_a':{'target_area':'area_b'}}},
             'area_b':{}},'room_sources':{'area_a':{'temperature':['sensor.a']},
                                        'area_b':{'temperature':['sensor.b']}}}
-        self.rooms=[N(area_id='area_a',name='A',readings=[
-                N(metric='humidity',value=60,available=True),N(metric='co2',value=1400,available=True)],windows=[]),
-            N(area_id='area_b',name='B',readings=[N(metric='humidity',value=40,available=True)],
-              windows=[N(opened=True)])]
+        self.rooms=[Room(area_id='area_a',name='A',readings=(
+                Reading('sensor.a_humidity','A humidity','humidity',60),
+                Reading('sensor.a_co2','A CO2','co2',1400)),windows=()),
+            Room(area_id='area_b',name='B',
+                 readings=(Reading('sensor.b_humidity','B humidity','humidity',40),),
+                 windows=(Window('binary_sensor.b_window','B window',True),))]
         self.env={a:{'climate_plan':{'sleeping':False}} for a in ('area_a','area_b')}
         self.presence={a:('unoccupied','verified_room_list_unoccupied',[]) for a in ('area_a','area_b')}
         self.monitor=context.DoorContextMonitor()
@@ -236,6 +335,56 @@ class MonitorAdapter(unittest.TestCase):
         self.assertIn('fresh_air_needed',[n['code'] for n in reports['area_a']['advisories']])
         self.assertIn('door_context',self.env['area_a'])
         self.assertEqual(self.env['area_a']['climate_plan'],{'sleeping':False})
+    def capture_doors(self):
+        manager = N(hass=hass, _tracked=set())
+        namespace = dict(self=manager, raw_rooms=self.rooms, config=self.cfg,
+                         room_climate_configs=self.cfg['climate_rooms'],
+                         room_temperature_evidence=sources.room_temperature_evidence,
+                         observed_rooms=self.presence, home_status='home',
+                         environment=self.env, observe_room_door=door.observe)
+        # This is the exact _capture loop from the user's traceback, not a
+        # reimplementation of its filtering/aggregation or a fake Reading.
+        exec(MANAGER_DOOR_BLOCK, namespace)
+        self.assertEqual(manager._tracked, {'binary_sensor.door_a'})
+        return self.env['area_a']['door']
+
+    def test_initial_manager_capture_with_real_readings(self):
+        report = self.capture_doors()
+        self.assertEqual(report['humidity_rh'], 60)
+        self.assertEqual(report['co2_ppm'], 1400)
+        self.assertFalse(report['eco_active'])  # Overview cannot authorize Eco.
+        repeated = self.capture_doors()  # Contact age may advance between calls.
+        for key in ('humidity_rh', 'co2_ppm', 'boundary', 'eco_active'):
+            self.assertEqual(repeated[key], report[key])
+
+    def test_manager_capture_rejects_unavailable_and_nonfinite_values(self):
+        invalid = (None, float('nan'), float('inf'), True, '65')
+        extra = tuple(Reading('sensor.bad_' + str(i), 'Bad', metric, value)
+                      for metric in ('humidity', 'co2')
+                      for i, value in enumerate(invalid))
+        self.rooms[0] = replace(self.rooms[0], readings=self.rooms[0].readings + extra)
+        self.assertEqual(self.capture_doors()['humidity_rh'], 60)
+        self.assertEqual(self.capture_doors()['co2_ppm'], 1400)
+        self.rooms[0] = replace(self.rooms[0], readings=extra)
+        report = self.capture_doors()
+        self.assertIsNone(report['humidity_rh'])
+        self.assertIsNone(report['co2_ppm'])
+        reports, _ = self.update()
+        self.assertIsNone(reports['area_a']['measurements']['humidity_rh'])
+        self.assertIsNone(reports['area_a']['measurements']['co2_ppm'])
+        self.assertNotIn('fresh_air_needed', [n['code'] for n in reports['area_a']['advisories']])
+
+    def test_climate_co2_aggregation_accepts_real_readings_not_mock_flags(self):
+        finite = load('pid_math', base['ROOT'] / 'pid_math.py').finite
+        namespace = {'room': self.rooms[0], 'finite': finite}
+        exec(CLIMATE_CO2_BLOCK, namespace)
+        self.assertEqual(namespace['co2_values'], [1400.0])
+        namespace['room'] = replace(self.rooms[0], readings=(
+            Reading('sensor.missing', 'Missing', 'co2', None),
+            Reading('sensor.nan', 'Invalid', 'co2', float('nan'))))
+        exec(CLIMATE_CO2_BLOCK, namespace)
+        self.assertEqual(namespace['co2_values'], [])
+
     def test_contact_only_deadline_uses_existing_tick(self):
         hass.states['binary_sensor.door_a']=state('binary_sensor.door_a','off','door',age=30)
         reports,_=self.update()
