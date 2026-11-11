@@ -89,8 +89,6 @@ def observe(hass: Any, area: str, config: Mapping | None, *,
     Unknown/old/foreign contacts fail closed; no assumption from an empty list.
     Eco never bypasses manual presets, device safety, sleep or arrival handling.
     """
-    from .discovery import entity_area, _device_class
-    from .room_sources import native
     now = now or datetime.now(timezone.utc)
     cfg = config if isinstance(config, Mapping) else {}
     raw = cfg.get("door_sensors", [])
@@ -103,6 +101,10 @@ def observe(hass: Any, area: str, config: Mapping | None, *,
     if not selected:
         boundary = "not_configured"
     else:
+        # Most rooms have no door contacts; avoid needless registry lookups
+        # and dependencies in the common, entirely passive case.
+        from .discovery import entity_area, _device_class
+        from .room_sources import native
         for entity_id in selected:
             state = hass.states.get(entity_id)
             if (not entity_id.startswith("binary_sensor.")
