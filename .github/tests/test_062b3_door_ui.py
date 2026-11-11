@@ -103,7 +103,9 @@ with sync_playwright() as pw:
                   ['number.sleep_heat','18','climate_profile_sleep_heat','Sleep · Heating target (°C)'],
                   ['select.door_target','Not connected','door_target_area','Interior door A · Connects to room'],
                   ['select.door_kind','Interior','door_kind','Interior door A · Door purpose'],
-                  ['number.door_report','0','door_report_timeout_minutes','Interior door A · Expected report timeout']
+                  ['number.door_report','0','door_report_timeout_minutes','Interior door A · Expected report timeout'],
+                  ['select.door_coordination','Observe only','door_coordination','Interior door A · Device start coordination'],
+                  ['select.door_energy','No energy meter','door_energy_meter','Interior door A · Measured energy meter']
                 ];
                 window.registry062=data.map(([entity_id,value,key,name])=>{
                     card._hass.states[entity_id]={state:value,attributes:{
@@ -114,7 +116,9 @@ with sync_playwright() as pw:
                       door_setting_key:key.startsWith('door_')?key.slice(5):undefined,
                       door_source_entity:key.startsWith('door_')?'binary_sensor.door_a':undefined,
                       options:key==='door_target_area'?['Not connected','Bedroom [room1]']:
-                        key==='door_kind'?['Interior','Fire/safety door','Exterior']:undefined}};
+                        key==='door_kind'?['Interior','Fire/safety door','Exterior']:
+                        key==='door_coordination'?['Observe only','Delay conflicting starts','Coordinate starts']:
+                        key==='door_energy_meter'?['No energy meter','Energy [sensor.energy]']:undefined}};
                     return {entity_id,device_id:'living-device',config_entry_id:'entry0',platform:'environment_manager',
                         unique_id:'entry0_area_room0_'+key};
                 });
@@ -126,7 +130,7 @@ with sync_playwright() as pw:
                 card._hass.callService=async (...args)=>{native062.push(args);};
             }""",language)
             assert page.evaluate("card._openRoomSettings114('room0')")
-            page.wait_for_function('card._roomSettingsDialog114?.fullRegistry127?.length===6')
+            page.wait_for_function('card._roomSettingsDialog114?.fullRegistry127?.length===8')
             dialog=page.locator('dialog.hem-room-options114')
             group=dialog.locator('[data-hem-unified141="ventilation"]')
             expect(group.locator(':scope > summary strong')).to_have_text(HEADINGS[language])
@@ -139,7 +143,8 @@ with sync_playwright() as pw:
             paired=group.locator('[data-hem-door-eco062]')
             assert paired.locator('[data-hem-full-row127]').evaluate_all(
                 'nodes=>nodes.map(n=>n.getAttribute("data-hem-full-row127"))') == [
-                    'switch.closed_room_eco','select.door_target','select.door_kind','number.door_report']
+                    'switch.closed_room_eco','select.door_target','select.door_coordination',
+                    'select.door_kind','number.door_report','select.door_energy']
             assert dialog.locator('[data-hem-unified141="presence"] [data-hem-full-row127="select.door_target"]').count()==0
             for text in dialog.locator('.hem-full-label127 strong').all_text_contents():
                 assert 'Gästezimmer' not in text and 'Environment' not in text,text
@@ -169,6 +174,16 @@ with sync_playwright() as pw:
             target.locator('[data-hem-full-apply127]').click()
             assert page.evaluate('native062.at(-1)')==['select','select_option',{
                 'entity_id':'select.door_target','option':'Bedroom [room1]'}]
+            coordination=paired.locator('[data-hem-full-row127="select.door_coordination"]')
+            coordination.locator('select').select_option('Coordinate starts')
+            coordination.locator('[data-hem-full-apply127]').click()
+            assert page.evaluate('native062.at(-1)')==['select','select_option',{
+                'entity_id':'select.door_coordination','option':'Coordinate starts'}]
+            meter=paired.locator('[data-hem-full-row127="select.door_energy"]')
+            meter.locator('select').select_option('Energy [sensor.energy]')
+            meter.locator('[data-hem-full-apply127]').click()
+            assert page.evaluate('native062.at(-1)')==['select','select_option',{
+                'entity_id':'select.door_energy','option':'Energy [sensor.energy]'}]
             timeout=paired.locator('[data-hem-full-row127="number.door_report"]')
             timeout.locator('input').fill('30')
             timeout.locator('[data-hem-full-apply127]').click()
@@ -203,6 +218,10 @@ with sync_playwright() as pw:
                   connections:[{other_area:'room1',other_name:'Bedroom <img src=x onerror=bad()>',state:'closed',kind:'interior',temperature_difference_c:5,
                     observations:{open:{samples:6,mean_absolute_temperature_difference_c:2},closed:{samples:8,mean_absolute_temperature_difference_c:5}}}],
                   advisories:[{code:'contact_unverified'},{code:'fresh_air_needed'},{code:'moisture_transfer_risk',related_area:'room1'}],
+                  energy:[{contact:'binary_sensor.door_a',meter:'sensor.energy',comparison_ready:true,
+                    excluded_intervals:2,open:{kwh:0.01,observed_minutes:15,mean_power_w:40},
+                    closed:{kwh:0.02,observed_minutes:30,mean_power_w:40}}],
+                  coordination:[{peer:'climate.peer',status:'waiting',remaining_seconds:45}],
                   quiet_boundary:true,presence_recheck_hint:true,session:{open_minutes:15,closed_minutes:45,unknown_minutes:2,unobserved_minutes:5}};
                 card.shadowRoot.innerHTML=card._styles()+'<div style="padding:12px"><ha-card class="hem-portal-ready87">'+
                     card._doorContext063({area_id:'room0',environment:{door_context:report}})+'</ha-card></div>';
@@ -215,6 +234,8 @@ with sync_playwright() as pw:
             assert popup.locator('script,img').count()==0
             assert 'Bedroom <img src=x onerror=bad()>' in popup.inner_text()
             assert 'Door <script>bad()</script>' in popup.inner_text()
+            assert 'kWh' in popup.inner_text() and 'sensor.energy' in popup.inner_text()
+            assert 'climate.peer' in popup.inner_text() and '45' in popup.inner_text()
             geometry=popup.evaluate('n=>({w:n.getBoundingClientRect().width,overflow:n.scrollWidth-n.clientWidth,left:n.getBoundingClientRect().left,right:n.getBoundingClientRect().right})')
             assert geometry['w']>=280 and geometry['overflow']<=2,geometry
             assert geometry['left']>=0 and geometry['right']<=width,geometry

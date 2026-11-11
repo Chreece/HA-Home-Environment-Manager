@@ -71,8 +71,20 @@ async def async_update(manager, area, entity, key, value):
         elif key == "kind":
             if value not in ("interior", "fire", "exterior"):
                 raise HomeAssistantError("Unknown door purpose")
+            if value != "interior":
+                item["coordination"] = "observe"
             if value == "exterior":
                 item["target_area"] = None
+        elif key == "coordination":
+            if value not in ("observe", "conflicts", "shared"):
+                raise HomeAssistantError("Unsupported door coordination policy")
+            if value != "observe" and item.get("kind", "interior") != "interior":
+                raise HomeAssistantError("Only interior doors can coordinate device starts")
+        elif key == "energy_meter":
+            from .door_energy import choices
+            if value is not None and (not isinstance(value, str)
+                    or value not in choices(manager.hass, area, item.get("energy_meter"))):
+                raise HomeAssistantError("Choose a native cumulative energy meter in this exact Area")
         elif key == "report_timeout_minutes":
             if isinstance(value, bool):
                 raise HomeAssistantError("Report timeout must be minutes, not a Boolean")
