@@ -343,6 +343,48 @@ class AirQualityManager:
             home_status=home_status,
             observed_rooms=observed_rooms,
         )
+        # Observe selected doors even in rooms without an enabled HVAC
+        # controller. Door context is an independent room input, not a window
+        # or occupancy source; only the existing authorized climate pipeline
+        # may act on the separately verified Eco recommendation.
+        from .room_doors import observe as observe_room_door
+        for monitored in raw_rooms:
+            area_id = monitored.area_id
+            cfg = room_climate_configs.get(area_id, {})
+            cfg = cfg if isinstance(cfg, dict) else {}
+            doors = cfg.get("door_sensors")
+            if not (isinstance(doors, list) and doors):
+                continue
+            current_presence = observed_rooms.get(area_id, ("unknown", "", []))
+            measured_temp, _ = room_temperature_evidence(
+                self.hass, config, area_id,
+                pinned=cfg.get("temperature_entity"), age_minutes=10,
+            )
+            rh_values = [
+                item.value for item in monitored.readings
+                if item.metric == "humidity" and item.available is True
+                and isinstance(item.value, (int, float))
+            ]
+            co2_values = [
+                item.value for item in monitored.readings
+                if item.metric == "co2" and item.available is True
+                and isinstance(item.value, (int, float))
+            ]
+            door = observe_room_door(
+                self.hass, area_id, cfg,
+                occupancy=current_presence[0],
+                occupancy_evidence=current_presence[1],
+                home=home_status, temperature_c=measured_temp,
+                humidity_rh=sum(rh_values) / len(rh_values) if rh_values else None,
+                co2_ppm=max(co2_values) if co2_values else None,
+                window_safe=all(contact.opened is False for contact in monitored.windows),
+                sleeping=None,
+            )
+            # This read-only overview never authorizes an Eco transition.
+            # Active climate plans re-evaluate sleep/arrival/safety separately.
+            door["eco_active"] = False
+            environment.setdefault(area_id, {})["door"] = door
+            self._tracked.update(door["sensor_entities"])
         environment["__outside__"] = {"pollen": pollen}
         # Stable metadata refreshes even an empty home's card without storing
         # a ticking countdown in sensor attributes or the plan.

@@ -173,6 +173,7 @@ class RoomSetupMixin:
     async def async_step_edit_room(self, user_input=None):
         """All per-room source groups plus occupancy on one page."""
         from .occupancy_policy import room_sensor_choices
+        from .room_doors import door_choices
         from .const import CONF_CLIMATE_ROOMS
         area = self._edit_room_area
         registry = ar.async_get(self.hass)
@@ -186,7 +187,15 @@ class RoomSetupMixin:
         prior = prior if isinstance(prior, dict) else {}
         local = prior.get("occupancy_sensors")
         occupancy_default = local if isinstance(local, list) else room_sensor_choices(self.hass, area)
-        occupancy_ids = sorted(set(room_sensor_choices(self.hass, area)) | set(occupancy_default))
+        occupancy_ids = sorted(set(room_sensor_choices(self.hass, area)) | set(
+            eid for eid in occupancy_default if isinstance(eid, str)
+            and eid in room_sensor_choices(self.hass, area)
+        ))
+        prior_doors = prior.get("door_sensors")
+        door_defaults = prior_doors if isinstance(prior_doors, list) else []
+        available_doors = door_choices(self.hass, area, door_defaults)
+        door_ids = {item["value"] for item in available_doors}
+        door_defaults = [eid for eid in door_defaults if eid in door_ids]
         errors = {}
         if user_input is not None:
             changes = {}
@@ -202,11 +211,15 @@ class RoomSetupMixin:
             occupants = user_input.get("occupancy_sensors", occupancy_default)
             if not isinstance(occupants, list) or any(v not in occupancy_ids for v in occupants):
                 errors["occupancy_sensors"] = "invalid_room_source"
+            doors = user_input.get("door_sensors", [])
+            if not isinstance(doors, list) or any(eid not in door_ids for eid in doors):
+                errors["door_sensors"] = "invalid_room_source"
             if not errors:
                 sources.store_selection(self.hass, self._values, area, changes)
                 rooms = self._values.setdefault(CONF_CLIMATE_ROOMS, {})
                 updated = dict(rooms.get(area, {}))
                 updated["occupancy_sensors"] = list(dict.fromkeys(occupants))
+                updated["door_sensors"] = list(dict.fromkeys(doors))
                 rooms[area] = updated
                 return await self._finish()
         fields = {
@@ -215,6 +228,9 @@ class RoomSetupMixin:
         }
         fields[field("occupancy_sensors", occupancy_default)] = select(
             [{"value": eid, "label": eid} for eid in occupancy_ids], multiple=True
+        )
+        fields[field("door_sensors", door_defaults)] = select(
+            available_doors, multiple=True
         )
         return self.async_show_form(
             step_id="edit_room", errors=errors,
@@ -283,6 +299,7 @@ class RoomSetupMixin:
         from .discovery import outdoor_choices, warning_choices, _device_class
         from .ai_rewrite import conversation_agent_choices
         from .config_flow import _tts_player_options
+        from .discovery import entity_area
         state_options = lambda domain: [{"value": s.entity_id, "label": sources.label(self.hass, s.entity_id)}
             for s in self.hass.states.async_all(domain) if sources.native(self.hass, s.entity_id)]
         pres = [{"value": s.entity_id, "label": sources.label(self.hass, s.entity_id)}
@@ -340,8 +357,22 @@ class RoomSetupMixin:
             CONF_WEATHER: state_options("weather"),
             CONF_OUTDOOR: outdoor_choices(self.hass, self._values.get(CONF_AREAS, [])),
             CONF_WARNINGS: warning_choices(self.hass),
-            "general_room_occupancy_sensors": pres,
-            "general_home_trackers": [*state_options("person"), *state_options("device_tracker"), *pres],
+            # Room-bound presence belongs to the room editor; only genuinely
+            # unassigned/global presence can be a Home tracker.
+            "general_home_trackers": [
+                *state_options("person"), *state_options("device_tracker"),
+                *(item for item in pres if entity_area(self.hass, item["value"]) is None),
+                *(item for item in (
+                    {"value": eid, "label": sources.label(self.hass, eid)}
+                    for eid in saved.get("home_trackers", [])
+                    if isinstance(eid, str) and sources.native(self.hass, eid)
+                ) if item["value"] not in {
+                    x["value"] for x in [
+                        *state_options("person"), *state_options("device_tracker"),
+                        *(p for p in pres if entity_area(self.hass, p["value"]) is None),
+                    ]
+                }),
+            ],
             "general_occupied_rooms_entity": room_entities,
             "general_sleep_rooms_entity": room_entities,
             "general_wake_alarm_entity": optional_entities(alarm_ids),
@@ -397,7 +428,6 @@ class RoomSetupMixin:
             CONF_AWAY_WINDOWS_DELIVERY: self._values.get(CONF_AWAY_WINDOWS_DELIVERY, ["mobile_notification"]),
             "pollen_entities": saved_pollen if saved_pollen is not None else [x["value"] for x in options["pollen_entities"]],
             CONF_HUB: bool(self._values.get(CONF_HUB, False)),
-            "general_room_occupancy_sensors": old.get("room_occupancy_sensors", []),
             "general_home_trackers": old.get("home_trackers", []),
             "general_away_cooldown_minutes": old.get("away_cooldown_minutes", 10),
             "general_source_stale_minutes": old.get("source_stale_minutes", 240),
@@ -415,7 +445,7 @@ class RoomSetupMixin:
                for prefix in ("occupied", "sleep")},
         }
         multi = {CONF_WEATHER, CONF_OUTDOOR, CONF_WARNINGS, CONF_NOTIFY_TARGETS, CONF_MEDIA_PLAYERS,
-                 "general_room_occupancy_sensors", "general_home_trackers", "pollen_entities",
+                 "general_home_trackers", "pollen_entities",
                   CONF_AWAY_WINDOWS_PERSONS, CONF_AWAY_WINDOWS_DELIVERY}
         errors = {}
         value = {**defaults, **(user_input or {})}
@@ -435,6 +465,10 @@ class RoomSetupMixin:
             value[CONF_LANGUAGE] = language.lower()
         if user_input is not None:
             for key, items in options.items():
+                # Older cached/test option providers can still advertise the
+                # retired Home room sensor selector; never require or save it.
+                if key == "general_room_occupancy_sensors":
+                    continue
                 allowed = {i["value"] if isinstance(i, dict) else i for i in items}
                 vals = value[key] if key in multi else [value[key]]
                 if (not isinstance(vals, list) or any(not isinstance(v, str) or v not in allowed for v in vals)):
@@ -565,8 +599,7 @@ class RoomSetupMixin:
                 global_env["pollen_avoid_ventilation"] = value["pollen_avoid_ventilation"]
                 self._values[CONF_THRESHOLDS] = checked_limits
                 occupancy = deepcopy(old)
-                for name in ("room_occupancy_sensors", "home_trackers"):
-                    occupancy[name] = list(dict.fromkeys(value["general_"+name]))
+                occupancy["home_trackers"] = list(dict.fromkeys(value["general_home_trackers"]))
                 occupancy["away_cooldown_minutes"] = float(value["general_away_cooldown_minutes"])
                 occupancy["source_stale_minutes"] = source_age
                 for name in ("wake_alarm_entity", "wake_lead_minutes_entity"):
@@ -583,7 +616,7 @@ class RoomSetupMixin:
                 # a native ConfigFlow intentionally has no self.config_entry.
                 return await self._finish()
         fields = {}
-        for key in (CONF_WEATHER, CONF_OUTDOOR, CONF_WARNINGS, "general_room_occupancy_sensors",
+        for key in (CONF_WEATHER, CONF_OUTDOOR, CONF_WARNINGS,
                     "general_home_trackers", "general_occupied_rooms_entity", "general_sleep_rooms_entity",
                     "general_wake_alarm_entity", "general_wake_lead_minutes_entity",
                     "pollen_entities", CONF_NOTIFY_TARGETS, CONF_MEDIA_PLAYERS, CONF_TTS_ENGINE, CONF_AI_AGENT):

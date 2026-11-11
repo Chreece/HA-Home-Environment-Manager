@@ -1137,7 +1137,8 @@
           "humidity": "Umidità",
           "climate_devices": "Dispositivi",
           "shades": "Tende, persiane e tapparelle",
-          "occupancy_sensors": "Presenza · sensore"
+          "occupancy_sensors": "Presenza · sensore",
+          "door_sensors": "Sensori porta"
         },
         "data_description": {
           "windows": "Finestre. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
@@ -1146,7 +1147,8 @@
           "humidity": "Umidità. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
           "climate_devices": "Dispositivi. Seleziona solo entità fisiche climate.*, humidifier.* e fan.* di questa stanza. Le capacità native definiscono riscaldamento, raffrescamento, deumidificazione, setpoint e velocità. La selezione non comanda nulla: abilita l'automazione nel singolo controller.",
           "shades": "Tende, persiane e tapparelle. Seleziona tapparelle, tende, veneziane e persiane cover.* della stanza. Sono ammessi cover senza device_class se supportano CLOSE, dopo aver verificato che siano schermature di finestre. Porte, garage, cancelli, finestre e tende da sole esterne sono esclusi. La selezione non provoca movimenti: associa il contatto finestra e configura automazione, avviso e temperatura nel controller. Stato sconosciuto: nessun movimento.",
-          "occupancy_sensors": "Una lista valida di stanze occupate nello stato o attributo scelto ha priorità: quelle elencate sono occupate, quelle omesse vuote. Senza lista, un sensore di presenza attivo è sufficiente; tutti spenti o nessuno selezionato significa vuoto. Una fonte selezionata non disponibile o non valida resta sconosciuta. Liste e stati binari invariati non scadono."
+          "occupancy_sensors": "Una lista valida di stanze occupate nello stato o attributo scelto ha priorità: quelle elencate sono occupate, quelle omesse vuote. Senza lista, un sensore di presenza attivo è sufficiente; tutti spenti o nessuno selezionato significa vuoto. Una fonte selezionata non disponibile o non valida resta sconosciuta. Liste e stati binari invariati non scadono.",
+          "door_sensors": "Select only same-area interior door contacts. A closed door does not prove air isolation. Optional Eco requires verified vacancy, stable closure, fresh safe temperature and humidity, and all existing device protections."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Umidità",
           "climate_devices": "Dispositivi",
           "shades": "Tende, persiane e tapparelle",
-          "occupancy_sensors": "Presenza · sensore"
+          "occupancy_sensors": "Presenza · sensore",
+          "door_sensors": "Sensori porta"
         },
         "data_description": {
           "windows": "Finestre. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
@@ -2357,7 +2360,8 @@
           "humidity": "Umidità. Seleziona gli ingressi della stanza: nome dispositivo - nome entità. I gruppi vuoti non vengono usati e non attivano rilevamento o controllo automatico.",
           "climate_devices": "Dispositivi. Seleziona solo entità fisiche climate.*, humidifier.* e fan.* di questa stanza. Le capacità native definiscono riscaldamento, raffrescamento, deumidificazione, setpoint e velocità. La selezione non comanda nulla: abilita l'automazione nel singolo controller.",
           "shades": "Tende, persiane e tapparelle. Seleziona tapparelle, tende, veneziane e persiane cover.* della stanza. Sono ammessi cover senza device_class se supportano CLOSE, dopo aver verificato che siano schermature di finestre. Porte, garage, cancelli, finestre e tende da sole esterne sono esclusi. La selezione non provoca movimenti: associa il contatto finestra e configura automazione, avviso e temperatura nel controller. Stato sconosciuto: nessun movimento.",
-          "occupancy_sensors": "Una lista valida di stanze occupate nello stato o attributo scelto ha priorità: quelle elencate sono occupate, quelle omesse vuote. Senza lista, un sensore di presenza attivo è sufficiente; tutti spenti o nessuno selezionato significa vuoto. Una fonte selezionata non disponibile o non valida resta sconosciuta. Liste e stati binari invariati non scadono."
+          "occupancy_sensors": "Una lista valida di stanze occupate nello stato o attributo scelto ha priorità: quelle elencate sono occupate, quelle omesse vuote. Senza lista, un sensore di presenza attivo è sufficiente; tutti spenti o nessuno selezionato significa vuoto. Una fonte selezionata non disponibile o non valida resta sconosciuta. Liste e stati binari invariati non scadono.",
+          "door_sensors": "Select only same-area interior door contacts. A closed door does not prove air isolation. Optional Eco requires verified vacancy, stable closure, fresh safe temperature and humidity, and all existing device protections."
         }
       }
     },

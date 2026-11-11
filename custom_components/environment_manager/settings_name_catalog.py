@@ -5582,6 +5582,16 @@ for _locale, _text in WINDOW_OPEN_TEXT.items():
     )
 
 
+# Room-level door policy is opt-in. Other locales fall back to English.
+SETTING_GROUPS["area_climate_operating_closed_door_eco"] = "room_presence"
+for _locale, _label in {
+    "en": "Door · Eco if closed and room is empty",
+    "el": "Πόρτα · Eco όταν είναι κλειστή και ο χώρος άδειος",
+    "de": "Tür · Eco bei geschlossener Tür und leerem Raum",
+}.items():
+    SETTING_NAMES[_locale]["area_climate_operating_closed_door_eco"] = _label
+
+
 def setting_locale(locale: str) -> str:
     tag = str(locale or "en").replace("_", "-").casefold()
     exact = next((key for key in SETTING_NAMES if key.casefold() == tag), None)

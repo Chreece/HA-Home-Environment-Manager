@@ -1137,7 +1137,8 @@
           "humidity": "Luftfuktighet",
           "climate_devices": "Enheter",
           "shades": "Persienner, rullegardiner og skodder",
-          "occupancy_sensors": "Tilstedeværelse · sensor"
+          "occupancy_sensors": "Tilstedeværelse · sensor",
+          "door_sensors": "Dørkontakter"
         },
         "data_description": {
           "windows": "Vinduer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
@@ -1146,7 +1147,8 @@
           "humidity": "Luftfuktighet. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
           "climate_devices": "Enheter. Velg bare fysiske climate.*, humidifier.* og fan.* i rommet. Enhetens egne funksjoner bestemmer varme, kjøling, avfukting, målverdier og viftehastighet. Valget betjener ingenting; automatikken aktiveres separat på hver enhet.",
           "shades": "Persienner, rullegardiner og skodder. Velg rullegardiner, persienner og skodder som cover.* i rommet. Covers uten device_class støttes med CLOSE hvis de faktisk skjermer vinduer. Garasjer, porter, dører, vinduer og markiser er utelukket. Valget beveger ingenting: koble vinduskontakt og konfigurer automatikk, kunngjøring og temperatur i kontrolleren. Ukjent status hindrer bevegelse.",
-          "occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke."
+          "occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
+          "door_sensors": "Select only same-area interior door contacts. A closed door does not prove air isolation. Optional Eco requires verified vacancy, stable closure, fresh safe temperature and humidity, and all existing device protections."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Luftfuktighet",
           "climate_devices": "Enheter",
           "shades": "Persienner, rullegardiner og skodder",
-          "occupancy_sensors": "Tilstedeværelse · sensor"
+          "occupancy_sensors": "Tilstedeværelse · sensor",
+          "door_sensors": "Dørkontakter"
         },
         "data_description": {
           "windows": "Vinduer. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
@@ -2357,7 +2360,8 @@
           "humidity": "Luftfuktighet. Velg rommets innganger: enhetsnavn - entitetsnavn. Tomme grupper brukes ikke og aktiverer ikke automatisk oppdagelse eller styring.",
           "climate_devices": "Enheter. Velg bare fysiske climate.*, humidifier.* og fan.* i rommet. Enhetens egne funksjoner bestemmer varme, kjøling, avfukting, målverdier og viftehastighet. Valget betjener ingenting; automatikken aktiveres separat på hver enhet.",
           "shades": "Persienner, rullegardiner og skodder. Velg rullegardiner, persienner og skodder som cover.* i rommet. Covers uten device_class støttes med CLOSE hvis de faktisk skjermer vinduer. Garasjer, porter, dører, vinduer og markiser er utelukket. Valget beveger ingenting: koble vinduskontakt og konfigurer automatikk, kunngjøring og temperatur i kontrolleren. Ukjent status hindrer bevegelse.",
-          "occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke."
+          "occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
+          "door_sensors": "Select only same-area interior door contacts. A closed door does not prove air isolation. Optional Eco requires verified vacancy, stable closure, fresh safe temperature and humidity, and all existing device protections."
         }
       }
     },

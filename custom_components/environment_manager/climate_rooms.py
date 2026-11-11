@@ -226,8 +226,26 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
                   if getattr(item,"metric",None)=="humidity"]
         observed=[value for value in observed if value is not None]
         comfort_rh=(sum(observed)/len(observed)) if observed else None
+    from .room_doors import observe as observe_room_door
+    co2_values = [
+        finite(getattr(item, "value", None), 0, 50000)
+        for item in room.readings
+        if getattr(item, "metric", None) == "co2"
+        and getattr(item, "available", False) is True
+    ]
+    co2_values = [value for value in co2_values if value is not None]
+    door = observe_room_door(
+        hass, area, settings, occupancy=profile_occupied,
+        occupancy_evidence=occ_reason, home=at_home, sleeping=sleeping,
+        temperature_c=temp, humidity_rh=comfort_rh,
+        co2_ppm=max(co2_values) if co2_values else None,
+        window_safe=window_safe,
+        preparing_arrival=bool(arrival_preparation and
+                               arrival_preparation.get("arrival_preparing")),
+    )
     result=policy(settings,temp_c=temp,capability=cap,at_home=at_home,
                   occupied=profile_occupied,sleeping=sleeping,
+                  door_eco_active=door["eco_active"],
                   manual_profile=settings.get("manual_profile"),prior_mode=prior_mode,
                   window_safe=window_safe,comfort_target_c=comfort_target_c,
                   comfort_humidity_rh=comfort_rh,
@@ -257,6 +275,7 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
 
     return {
         "humidity_source_entities": humidity_sources if humidity_sources is not None else [],
+        "door": door, "door_eco_active": door["eco_active"],
         **(arrival_preparation or {}),
         "automatic_comfort_input_rh": comfort_rh if settings.get("target_source")=="auto_comfort" else None,
         "humidity_management":equipment.get("humidity", {"status":"unavailable"}),
@@ -293,6 +312,6 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
             (strategy=="device" or settings.get("direct_hardware_confirmed"))
         ),
         "note":"Only explicitly authorized same-room actuators are controllable; equipment safety remains external",
-    },(set(sensors+trackers+[x for x in (temperature_id,climate_id)
+    },(set(sensors+trackers+door["sensor_entities"]+[x for x in (temperature_id,climate_id)
                            if isinstance(x,str)]) | assigned_entities(settings) |
           ({settings["humidity_entity"]} if isinstance(settings.get("humidity_entity"),str) else set()))

@@ -4587,6 +4587,33 @@
       '<div class="hem-room-ventilation95" role="status">'+
       this._icon('mdi:air-filter')+
       '<span>'+ventNotes95.map(value=>escape(value)).join(' · ')+'</span></div>':'';
+    const door062=room?.environment?.climate_plan?.door||room?.environment?.door||{};
+    const doorLocales062={
+      en:{open:'Door open',closed:'Door closed',settling:'Door closing · confirming',
+        unknown:'Door status unknown',eco:'Eco active',
+        co2:'Check air quality: high CO₂ behind closed door',
+        rh:'Check ventilation: high humidity behind closed door'},
+      el:{open:'Ανοιχτή πόρτα',closed:'Κλειστή πόρτα',settling:'Κλείσιμο πόρτας · επιβεβαίωση',
+        unknown:'Άγνωστη κατάσταση πόρτας',eco:'Eco ενεργό',
+        co2:'Έλεγχος αέρα: υψηλό CO₂ με κλειστή πόρτα',
+        rh:'Έλεγχος αερισμού: υψηλή υγρασία με κλειστή πόρτα'},
+      de:{open:'Tür offen',closed:'Tür geschlossen',settling:'Tür schließt · Prüfung',
+        unknown:'Türstatus unbekannt',eco:'Eco aktiv',
+        co2:'Luftqualität prüfen: hohes CO₂ bei geschlossener Tür',
+        rh:'Lüftung prüfen: hohe Feuchtigkeit bei geschlossener Tür'}
+    };
+    const doorWords062=doorLocales062[this._language()]||doorLocales062.en;
+    const doorStatus062=doorWords062[door062.boundary]||doorWords062.unknown;
+    const doorAdvice062=door062.advisory==='closed_door_high_co2'?doorWords062.co2:
+      door062.advisory==='closed_door_high_humidity'?doorWords062.rh:'';
+    const doorNote062=Array.isArray(door062.sensor_entities)&&door062.sensor_entities.length?
+      '<div class="hem-room-door062" role="status" title="'+
+      escape(door062.sensor_entities.join(' · '))+'">'+
+      this._icon(door062.boundary==='open'?'mdi:door-open':
+        door062.boundary==='closed'?'mdi:door-closed':'mdi:door')+
+      '<span>'+escape(doorStatus062)+
+      (door062.eco_active?' · '+escape(doorWords062.eco):'')+
+      (doorAdvice062?' · '+escape(doorAdvice062):'')+'</span></div>':'';
     if(roomStatus==='attention') alerts.push(this._roomAlert114(room,'attention',
       'mdi:alert-circle-outline',labels.attention,'warn'));
     if(roomStatus==='unknown') alerts.push(this._roomAlert114(room,'missing',
@@ -4657,7 +4684,7 @@
       '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
       alerts.slice(0,4).join('')+'</span>'+
       this._icon(open?'mdi:chevron-up':'mdi:chevron-down')+
-      '</summary><div class="hem-room-body87">'+ventHeader95+
+      '</summary><div class="hem-room-body87">'+doorNote062+ventHeader95+
       this._roomIssueDetail114(room)+original+'</div></details>';
   };
 
@@ -7506,12 +7533,12 @@
    */
   const _roomOptionsProto114=AirQualityAdvisorCard.prototype;
   const _roomOptionsKeys114=['windows','air_quality','temperature','humidity',
-    'climate_devices','shades','occupancy_sensors'];
+    'climate_devices','shades','occupancy_sensors','door_sensors'];
   const _roomOptionsIcons114={windows:'mdi:window-closed-variant',
     air_quality:'mdi:air-filter',temperature:'mdi:thermometer',
     humidity:'mdi:water-percent',
     climate_devices:'mdi:thermostat',shades:'mdi:blinds',
-    occupancy_sensors:'mdi:account-outline'};
+    occupancy_sensors:'mdi:account-outline',door_sensors:'mdi:door-closed'};
   const _roomOptionsWords114={
     en:{title:'Room settings',loading:'Loading room settings…',
       save:'Save',saving:'Saving…',saved:'Room settings saved.',close:'Close',
@@ -7527,7 +7554,7 @@
       invalidSelection:'Choose only entities currently listed for this room.',
       windows:'Windows',air_quality:'Air quality',temperature:'Temperature',
       humidity:'Humidity',climate_devices:'Climate devices',
-      shades:'Window shades',occupancy_sensors:'Occupancy sensors'},
+      shades:'Window shades',occupancy_sensors:'Occupancy sensors',door_sensors:'Door contacts'},
     de:{title:'Raumeinstellungen',loading:'Raumeinstellungen werden geladen…',
       save:'Speichern',saving:'Wird gespeichert…',saved:'Raumeinstellungen gespeichert.',
       close:'Schließen',done:'Fertig',retry:'Einstellungen neu laden',
@@ -7542,7 +7569,7 @@
       invalidSelection:'Nur aktuell für diesen Raum aufgeführte Entitäten auswählen.',
       windows:'Fenster',air_quality:'Luftqualität',temperature:'Temperatur',
       humidity:'Luftfeuchtigkeit',climate_devices:'Klimageräte',
-      shades:'Beschattung',occupancy_sensors:'Anwesenheitssensoren'},
+      shades:'Beschattung',occupancy_sensors:'Anwesenheitssensoren',door_sensors:'Türkontakte'},
     el:{title:'Ρυθμίσεις χώρου',loading:'Φόρτωση ρυθμίσεων χώρου…',
       save:'Αποθήκευση',saving:'Αποθήκευση…',saved:'Οι ρυθμίσεις χώρου αποθηκεύτηκαν.',
       close:'Κλείσιμο',done:'Τέλος',retry:'Επαναφόρτωση ρυθμίσεων',
@@ -7557,7 +7584,7 @@
       invalidSelection:'Επίλεξε μόνο οντότητες που αναφέρονται για αυτόν τον χώρο.',
       windows:'Παράθυρα',air_quality:'Ποιότητα αέρα',temperature:'Θερμοκρασία',
       humidity:'Υγρασία',climate_devices:'Συσκευές κλιματισμού',
-      shades:'Σκίαστρα',occupancy_sensors:'Αισθητήρες παρουσίας'},
+      shades:'Σκίαστρα',occupancy_sensors:'Αισθητήρες παρουσίας',door_sensors:'Αισθητήρες πόρτας'},
   };
   const _roomOptionsWord114=(card,key)=>
     (_roomOptionsWords114[card._language()]||_roomOptionsWords114.en)[key]||key;
@@ -7566,6 +7593,11 @@
       const text=card._hass?.localize?.(key,placeholders);
       return typeof text==='string'&&text&&text!==key?text:null;
     }catch{return null;}
+  };
+  const DOOR_HELP062={
+    en:"Select same-area interior door contacts. Closed is not proof of an airtight room. Optional Eco requires verified vacancy, stable closure, safe temperature/humidity and existing device safeguards. Doors are not windows or occupancy sensors.",
+    el:"Επίλεξε επαφές εσωτερικής πόρτας που ανήκουν στον ίδιο χώρο. Κλειστή πόρτα δεν σημαίνει αεροστεγής απομόνωση. Το προαιρετικό Eco απαιτεί επιβεβαιωμένη απουσία, σταθερό κλείσιμο και ασφαλή θερμοκρασία/υγρασία. Οι πόρτες δεν είναι παράθυρα ή αισθητήρες παρουσίας.",
+    de:"Innentürkontakte desselben HA-Raums auswählen. Geschlossen ist kein Beweis für Luftdichtheit. Optionales Eco erfordert nachgewiesene Abwesenheit, stabiles Schließen, sichere Temperatur/Feuchte und Geräteschutz. Türen gelten nicht als Fenster- oder Präsenzsensoren."
   };
   const _roomOptionsHelp115={"en":{"air_quality":"Select this room's air-quality sensors and optional light sensors (lux). Lux records light history. For solar shading, enable lux on the individual cover controller and choose a same-room sensor or the selected room mean: new automatic closing then requires the configured minimum brightness. Selecting sensors here does not enable movement.","shades":"Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available."},"de":{"air_quality":"Wähle die Luftqualitätssensoren und optionalen Lichtsensoren (Lux) dieses Raums. Lux liefert den Beleuchtungsverlauf. Für die Sonnenbeschattung Lux am jeweiligen Beschattungscontroller aktivieren und einen Sensor desselben Raums oder den Mittelwert der ausgewählten Raumsensoren wählen: Jedes neue automatische Schließen erfordert dann die eingestellte Mindesthelligkeit. Die Sensorauswahl hier gibt keine Bewegung frei.","shades":"Fensterrollos, Jalousien und Rollläden. Fensterrollos, Jalousien, Rollläden und Vorhänge als cover.* dieses Raums auswählen. Auch generische Covers ohne device_class sind bei unterstützter CLOSE-Funktion zulässig; bitte prüfen, dass es wirklich Fensterbeschattung ist. Garagentore, Türen, Tore, Fenster, Luftklappen und Außenmarkisen sind ausgeschlossen. Die Auswahl bewegt nichts: Auf dem eigenen Controller-Gerät werden Fensterkontakt, Automatik, optionale Vorankündigung und Schließtemperatur eingestellt. Unbekannter/nicht verfügbarer Status verhindert jede Bewegung."},"el":{"air_quality":"Επίλεξε αισθητήρες ποιότητας αέρα και προαιρετικά φωτισμού (lux) για αυτό το δωμάτιο. Τα lux καταγράφουν το ιστορικό φωτισμού. Για ηλιακή σκίαση, ενεργοποίησε τα lux στον ελεγκτή κάθε καλύμματος και επίλεξε αισθητήρα του ίδιου δωματίου ή τον μέσο όρο των επιλεγμένων αισθητήρων του: κάθε νέο αυτόματο κλείσιμο απαιτεί τότε την ελάχιστη ρυθμισμένη φωτεινότητα. Η επιλογή αισθητήρων εδώ δεν ενεργοποιεί κίνηση.","shades":"Σκίαστρα, περσίδες και ρολά παραθύρων. Επίλεξε ρολά, περσίδες, σκίαστρα ή κουρτίνες τύπου cover.* αυτού του χώρου. Δεκτά είναι και γενικά cover χωρίς device_class, εφόσον υποστηρίζουν την εντολή CLOSE· βεβαιώσου ότι πρόκειται πράγματι για σκίαση παραθύρου. Γκαραζόπορτες, πόρτες, πύλες, πραγματικά παράθυρα, αεραγωγοί και εξωτερικές τέντες εξαιρούνται. Η επιλογή δεν κινεί το ρολό: στη δική του συσκευή-ελεγκτή αντιστοιχίζεις επαφή παραθύρου, αυτόματο έλεγχο, προαιρετική ανακοίνωση και όριο θερμοκρασίας. Αν η κατάσταση είναι unknown/unavailable, επιτρέπεται η επιλογή αλλά όχι η κίνηση."}};
   const _roomOptionsLabel114=(card,name,form)=>
@@ -7617,7 +7649,9 @@
   const _roomOptionsFields114=form=>{
     if(form?.type!=='form'||form.step_id!=='edit_room'||
        !Array.isArray(form.data_schema)||
-       form.data_schema.length!==_roomOptionsKeys114.length)
+       !(_roomOptionsKeys114.length===form.data_schema.length||
+         _roomOptionsKeys114.length-1===form.data_schema.length &&
+         !form.data_schema.some(field=>field?.name==='door_sensors')))
       throw new Error('Unexpected room settings form');
     const names=new Set();
     return form.data_schema.map(field=>{
@@ -7749,7 +7783,9 @@
       const name=field.name,label=_roomOptionsLabel114(this,name,form);
       const helper=_roomOptionsLocalized114(this,
         'component.environment_manager.options.step.edit_room.data_description.'+name,
-        form.description_placeholders)||(_roomOptionsHelp115[this._language()]||_roomOptionsHelp115.en)[name]||'';
+        form.description_placeholders)||(name==='door_sensors'?
+        (DOOR_HELP062[this._language()]||DOOR_HELP062.en):
+        (_roomOptionsHelp115[this._language()]||_roomOptionsHelp115.en)[name]||'');
       const selected=saved.draft[name];
       const orphan=selected.filter(value=>!field.values.has(value));
       if(orphan.length)saved.clientErrors.add(name);
@@ -9021,9 +9057,20 @@
       const scopedLabel=typeof attr.setting_label==="string"&&attr.setting_label.trim()
         ? (typeof attr.operating_mode_label==="string"&&attr.operating_mode_label.trim()
           ? attr.operating_mode_label+" · "+attr.setting_label:attr.setting_label):null;
-      const field={id,domain,kind,state,reg,disabled:Boolean(reg.disabled_by),
-        label:scopedLabel||attr.friendly_name||reg.name_by_user||reg.name||
-          reg.original_name||id};
+      // Settings already live within a Room/Device title and group accordion.
+      // Metadata names are independent of HA's full "Gästezimmer Environment"
+      // friendly names, but explicit user-renamed registry labels take priority.
+      const declaredName=typeof attr.setting_display_name==="string"?
+        attr.setting_display_name.trim():"";
+      const declaredGroup=typeof attr.setting_group==="string"?
+        attr.setting_group.trim():"";
+      const conciseName=declaredGroup&&declaredName.startsWith(declaredGroup+" · ")?
+        declaredName.slice(declaredGroup.length+3).trim():declaredName;
+      const explicitName=typeof reg.name_by_user==="string"&&reg.name_by_user.trim()?
+        reg.name_by_user.trim():null;
+      const label=explicitName||scopedLabel||conciseName||
+        attr.friendly_name||reg.name||reg.original_name||id;
+      const field={id,domain,kind,state,reg,disabled:Boolean(reg.disabled_by),label};
       field.category=this._hemFullCategory127(field);
       result.push(field);
     }
@@ -10213,7 +10260,7 @@
   };
   const hemRoomDraftCategory141=name=>({
     windows:"ventilation",shades:"ventilation",
-    climate_devices:"mode",occupancy_sensors:"presence",
+    climate_devices:"mode",occupancy_sensors:"presence",door_sensors:"presence",
     air_quality:"targets",temperature:"targets",humidity:"targets"
   })[name]||"targets";
   const hemFieldCategory141=(field,scope)=>{
@@ -10234,7 +10281,7 @@
     if(/window|ventilat|shade|cover|blind|extraction/.test(key))return "ventilation";
     // Quiet-when-sleeping is a fan policy, not a room sleep controller.
     if(/quiet|fan_mode|fan_percentage|fan_speed/.test(key))return "mode";
-    if(/presence|occup|sleep|wake|alarm|away_policy|schedule|_start|_end/.test(key))
+    if(/presence|occup|sleep|wake|alarm|away_policy|schedule|closed_door_eco|_start|_end/.test(key))
       return "presence";
     if(/power|safety|watchdog|battery|cooldown|relay|_min_|_max_|hold|readiness|full_output/.test(key))
       return "power";
@@ -10491,6 +10538,16 @@
     "</style>"
   ].join("");};
   /* HEM_UNIFIED_SETTINGS141_END */
+  // Read-only door context does not consume the four compact room metrics.
+  const roomDoorStyles062=AirQualityAdvisorCard.prototype._styles;
+  AirQualityAdvisorCard.prototype._styles=function(){return roomDoorStyles062.call(this)+[
+    "<style>",
+    ".hem-room-door062{display:flex;align-items:center;gap:7px;min-width:0;margin:4px 0 7px;padding:6px 9px;border:1px solid var(--aqa-edge);border-radius:8px;font-size:11px;line-height:1.4;color:var(--aqa-muted)}",
+    ".hem-room-door062 span{flex:1;min-width:0;overflow-wrap:break-word;word-break:normal}",
+    ".hem-room-door062 ha-icon{--mdc-icon-size:16px;flex:0 0 16px}",
+    "</style>"
+  ].join("");};
+
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);

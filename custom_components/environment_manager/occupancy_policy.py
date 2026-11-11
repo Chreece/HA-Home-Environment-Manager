@@ -212,6 +212,21 @@ def shared_home_settings(global_settings: Any, rooms: Any) -> dict:
         direct = ([entity for entity in direct if isinstance(entity, str)]
                   if isinstance(direct, list) else [])
         shared["home_trackers"] = list(dict.fromkeys([*direct, *legacy]))
+    # The removed Home "room occupancy sensors" selector now lives in each
+    # room. Keep aggregating explicitly selected local sensors as positive
+    # household evidence when no direct person/tracker is configured.
+    # An explicit [] contributes nothing and must remain authoritative.
+    local_presence = []
+    for room in rooms.values() if isinstance(rooms, Mapping) else ():
+        chosen = room.get("occupancy_sensors") if isinstance(room, Mapping) else None
+        if isinstance(chosen, list):
+            local_presence.extend(
+                eid for eid in chosen if isinstance(eid, str)
+                and eid.startswith(("binary_sensor.", "sensor.", "number.", "input_number."))
+            )
+    old = shared.get("room_occupancy_sensors", [])
+    old = old if isinstance(old, list) else []
+    shared["room_occupancy_sensors"] = list(dict.fromkeys([*old, *local_presence]))
     return shared
 
 

@@ -84,11 +84,16 @@ presence.room_sensor_choices=lambda hass,area: [
 ] + (["binary_sensor.bath_empty"] if area=="badezimmer" else [])
 discovery=ModuleType("beta79_fixture.discovery")
 discovery.entity_area=lambda hass,eid:actual.get(eid)
+door_module=ModuleType("beta79_fixture.room_doors")
+door_module.door_choices=lambda hass,area,previous=None: []
+const_module=ModuleType("beta79_fixture.const")
+const_module.CONF_OCCUPANCY_GLOBAL="occupancy_global"
 hierarchy=ModuleType("beta79_fixture.device_hierarchy")
 hierarchy.configured_area_ids=membership_ns["configured_area_ids"]
 sys.modules.update({
  "beta79_fixture":pack,"beta79_fixture.occupancy_policy":presence,
- "beta79_fixture.discovery":discovery,"beta79_fixture.device_hierarchy":hierarchy
+ "beta79_fixture.discovery":discovery,"beta79_fixture.device_hierarchy":hierarchy,
+ "beta79_fixture.room_doors":door_module,"beta79_fixture.const":const_module
 })
 def schema(fields):return fields
 class Probatio:
@@ -164,7 +169,7 @@ async def run():
     # HA's actual dispatcher does getattr(flow, "async_step_"+choice).
     page=await getattr(f,"async_step_edit_room_badezimmer")()
     assert page["type"]=="form" and page["step_id"]=="edit_room"
-    assert set(page["data_schema"])==set(group_names)|{"occupancy_sensors"}
+    assert set(page["data_schema"])==set(group_names)|{"occupancy_sensors","door_sensors"}
     assert f._room_edit_area=="badezimmer"
     # First visit must not mutate a configuration.
     assert f.saves==0 and "room_sources" not in f._values

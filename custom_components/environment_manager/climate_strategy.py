@@ -120,7 +120,7 @@ def home_away_evidence(states: list[bool|None], *, mode: str="any_home") -> tupl
 
 def select_profile(settings:dict, *, at_home:str, occupied:str,
                    sleeping:bool=False, manual:str|None=None,
-                   preparing_arrival:bool=False) -> tuple[str,str]:
+                   preparing_arrival:bool=False, door_eco_active:bool=False) -> tuple[str,str]:
     # Eco is intentionally explicit-only; it is not another occupancy state.
     if manual in ("comfort","home","away","sleep","eco"):
         return manual,"manual_profile"
@@ -133,6 +133,8 @@ def select_profile(settings:dict, *, at_home:str, occupied:str,
     if occupied=="occupied":
         return "comfort","room_occupied"
     if at_home=="home" and occupied=="unoccupied":
+        if door_eco_active is True:
+            return "eco","closed_door_verified_vacancy"
         return "home","someone_home_room_unoccupied"
     # Unknown evidence must never imply Away. Home is the conservative
     # middle setpoint until valid occupancy evidence returns.
@@ -183,14 +185,15 @@ def policy(settings:dict, *, temp_c:float|None,
            prior_mode:str|None=None, window_safe:bool=True,
            comfort_target_c:float|None=None,
            comfort_humidity_rh:float|None=None,
-           preparing_arrival:bool=False) -> Output:
+           preparing_arrival:bool=False, door_eco_active:bool=False) -> Output:
     default=Output("disabled","home",None,None,"not_enabled","none")
     if not isinstance(settings,dict) or settings.get("enabled") is not True: return default
     all_profiles,err=profiles(settings)
     if err: return Output("invalid_config","home",None,None,err,"none")
     name,why=select_profile(settings,at_home=at_home,occupied=occupied,
                             sleeping=sleeping,manual=manual_profile,
-                            preparing_arrival=preparing_arrival)
+                            preparing_arrival=preparing_arrival,
+                            door_eco_active=door_eco_active)
     band=all_profiles[name]
     heat_target,cool_target=band.heat_c,band.cool_c
     # "Auto comfort" is a bounded measured-humidity heuristic, not an ISO

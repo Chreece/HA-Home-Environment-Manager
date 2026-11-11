@@ -1137,7 +1137,8 @@
           "humidity": "Humidité",
           "climate_devices": "Appareils",
           "shades": "Stores, rideaux et volets de fenêtre",
-          "occupancy_sensors": "Présence · capteur"
+          "occupancy_sensors": "Présence · capteur",
+          "door_sensors": "Contacts de porte"
         },
         "data_description": {
           "windows": "Fenêtres. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
@@ -1146,7 +1147,8 @@
           "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
-          "occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas."
+          "occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
+          "door_sensors": "Select only same-area door contacts; closure does not prove isolation. Optional Eco requires verified vacancy, stable closure, safe room temperature and humidity, and preserves every device protection."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Humidité",
           "climate_devices": "Appareils",
           "shades": "Stores, rideaux et volets de fenêtre",
-          "occupancy_sensors": "Présence · capteur"
+          "occupancy_sensors": "Présence · capteur",
+          "door_sensors": "Contacts de porte"
         },
         "data_description": {
           "windows": "Fenêtres. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
@@ -2357,7 +2360,8 @@
           "humidity": "Humidité. Sélectionnez les entrées de cette pièce : nom de l’appareil - nom de l’entité. Les groupes vides restent inutilisés et n’activent ni découverte automatique ni commande.",
           "climate_devices": "Appareils. Sélectionnez uniquement les entités physiques climate.*, humidifier.* et fan.* de cette pièce. Les fonctions natives déterminent les modes chauffage, refroidissement, déshumidification, consignes et vitesse du ventilateur. La sélection n'actionne rien : l'automatisation est activée séparément sur chaque contrôleur.",
           "shades": "Stores, rideaux et volets de fenêtre. Sélectionnez les stores, volets et rideaux cover.* de cette pièce. Les covers sans device_class sont acceptés s'ils prennent en charge CLOSE, après vérification qu'il s'agit d'une protection de fenêtre. Portes, garages, portails, fenêtres et auvents sont exclus. La sélection ne déplace rien : associez un contact de fenêtre, activez l'automatisation et réglez annonce et température sur le contrôleur. État inconnu : aucun mouvement.",
-          "occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas."
+          "occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
+          "door_sensors": "Select only same-area door contacts; closure does not prove isolation. Optional Eco requires verified vacancy, stable closure, safe room temperature and humidity, and preserves every device protection."
         }
       }
     },

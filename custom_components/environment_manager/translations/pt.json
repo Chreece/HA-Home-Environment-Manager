@@ -1137,7 +1137,8 @@
           "humidity": "Humidade",
           "climate_devices": "Dispositivos",
           "shades": "Estores, persianas e cortinas de janela",
-          "occupancy_sensors": "Ocupação · sensor"
+          "occupancy_sensors": "Ocupação · sensor",
+          "door_sensors": "Sensores de porta"
         },
         "data_description": {
           "windows": "Janelas. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
@@ -1146,7 +1147,8 @@
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
           "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
-          "occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram."
+          "occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
+          "door_sensors": "Select only same-area interior door contacts. Closure does not imply isolation. Optional Eco requires verified vacancy, stable closure, fresh safe temperature and humidity; all device protections remain effective."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Humidade",
           "climate_devices": "Dispositivos",
           "shades": "Estores, persianas e cortinas de janela",
-          "occupancy_sensors": "Ocupação · sensor"
+          "occupancy_sensors": "Ocupação · sensor",
+          "door_sensors": "Sensores de porta"
         },
         "data_description": {
           "windows": "Janelas. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
@@ -2357,7 +2360,8 @@
           "humidity": "Humidade. Selecione entradas da divisão: nome do dispositivo - nome da entidade. Grupos vazios não são usados e não ativam descoberta nem controlo automático.",
           "climate_devices": "Dispositivos. Seleciona apenas entidades físicas climate.*, humidifier.* e fan.* desta divisão. As funções nativas determinam aquecimento, arrefecimento, secagem, temperaturas, humidade e velocidades. A seleção não aciona equipamentos; ativa o controlo automático individualmente.",
           "shades": "Estores, persianas e cortinas de janela. Seleciona estores, persianas e cortinas cover.* desta divisão. Covers sem device_class são aceites com CLOSE, após verificar que são proteção de janela. Portas, garagens, portões, janelas e toldos exteriores são excluídos. A seleção não move nada: associa o sensor da janela e configura automação, aviso e temperatura no controlador. Estado desconhecido impede o movimento.",
-          "occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram."
+          "occupancy_sensors": "Uma lista válida de divisões ocupadas no estado ou atributo selecionado tem prioridade: as listadas estão ocupadas, as omitidas vazias. Sem lista, qualquer sensor de presença ativo significa ocupada; todos desligados ou nenhum selecionado significa vazia. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem alterações não expiram.",
+          "door_sensors": "Select only same-area interior door contacts. Closure does not imply isolation. Optional Eco requires verified vacancy, stable closure, fresh safe temperature and humidity; all device protections remain effective."
         }
       }
     },

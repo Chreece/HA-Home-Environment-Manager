@@ -1137,7 +1137,8 @@
           "humidity": "Kelembapan",
           "climate_devices": "Perangkat",
           "shades": "Tirai, gorden, dan penutup jendela",
-          "occupancy_sensors": "Kehadiran · sensor"
+          "occupancy_sensors": "Kehadiran · sensor",
+          "door_sensors": "Sensor pintu"
         },
         "data_description": {
           "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
@@ -1146,7 +1147,8 @@
           "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
-          "occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa."
+          "occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
+          "door_sensors": "Select only same-area door contacts; closure does not prove isolation. Optional Eco requires verified vacancy, stable closure, safe room temperature and humidity, and preserves every device protection."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Kelembapan",
           "climate_devices": "Perangkat",
           "shades": "Tirai, gorden, dan penutup jendela",
-          "occupancy_sensors": "Kehadiran · sensor"
+          "occupancy_sensors": "Kehadiran · sensor",
+          "door_sensors": "Sensor pintu"
         },
         "data_description": {
           "windows": "Jendela. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
@@ -2357,7 +2360,8 @@
           "humidity": "Kelembapan. Pilih masukan ruangan: nama perangkat - nama entitas. Kelompok kosong tidak digunakan dan tidak mengaktifkan penemuan atau kendali otomatis.",
           "climate_devices": "Perangkat. Pilih hanya entitas fisik climate.*, humidifier.* dan fan.* di ruangan ini. Kemampuan asli perangkat menentukan pemanasan, pendinginan, pengeringan, target suhu/kelembapan dan kecepatan kipas. Memilih tidak menggerakkan perangkat; aktifkan kontrol otomatis terpisah.",
           "shades": "Tirai, gorden, dan penutup jendela. Pilih tirai, kerai dan penutup jendela cover.* di ruangan ini. Covers tanpa device_class diterima bila mendukung CLOSE dan benar-benar peneduh jendela. Garasi, gerbang, pintu, jendela dan awning dikecualikan. Pemilihan tidak menggerakkan apa pun: pasangkan sensor jendela dan atur otomatisasi, pengumuman dan batas suhu di pengontrol. Status tak diketahui mencegah gerakan.",
-          "occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa."
+          "occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
+          "door_sensors": "Select only same-area door contacts; closure does not prove isolation. Optional Eco requires verified vacancy, stable closure, safe room temperature and humidity, and preserves every device protection."
         }
       }
     },

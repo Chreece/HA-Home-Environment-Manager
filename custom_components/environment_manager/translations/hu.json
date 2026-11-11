@@ -1137,7 +1137,8 @@
           "humidity": "Páratartalom",
           "climate_devices": "Eszközök",
           "shades": "Ablakredőnyök, reluxák és függönyök",
-          "occupancy_sensors": "Jelenlét · érzékelő"
+          "occupancy_sensors": "Jelenlét · érzékelő",
+          "door_sensors": "Ajtóérzékelők"
         },
         "data_description": {
           "windows": "Ablakok. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
@@ -1146,7 +1147,8 @@
           "humidity": "Páratartalom. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
           "climate_devices": "Eszközök. Csak a szoba valódi climate.*, humidifier.* és fan.* entitásait válaszd. A natív képességek határozzák meg a fűtést, hűtést, párátlanítást, célértékeket és ventilátorsebességet. A kiválasztás nem kapcsol be semmit; az automatika eszközönként engedélyezhető.",
           "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás.",
-          "occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el."
+          "occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
+          "door_sensors": "Select only same-area door contacts; closure does not prove isolation. Optional Eco requires verified vacancy, stable closure, safe room temperature and humidity, and preserves every device protection."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Páratartalom",
           "climate_devices": "Eszközök",
           "shades": "Ablakredőnyök, reluxák és függönyök",
-          "occupancy_sensors": "Jelenlét · érzékelő"
+          "occupancy_sensors": "Jelenlét · érzékelő",
+          "door_sensors": "Ajtóérzékelők"
         },
         "data_description": {
           "windows": "Ablakok. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
@@ -2357,7 +2360,8 @@
           "humidity": "Páratartalom. Válaszd ki a helyiség bemeneteit: eszköznév - entitásnév. Az üres csoportok nem használtak, és nem indítanak automatikus felismerést vagy vezérlést.",
           "climate_devices": "Eszközök. Csak a szoba valódi climate.*, humidifier.* és fan.* entitásait válaszd. A natív képességek határozzák meg a fűtést, hűtést, párátlanítást, célértékeket és ventilátorsebességet. A kiválasztás nem kapcsol be semmit; az automatika eszközönként engedélyezhető.",
           "shades": "Ablakredőnyök, reluxák és függönyök. Válaszd ki a szoba cover.* redőnyeit, reluxáit és függönyeit. A device_class nélküli cover is megengedett CLOSE funkcióval, ha valóban ablakot árnyékol. Garázskapuk, ajtók, kapuk, ablakok és napellenzők kizárva. A kiválasztás nem mozgat semmit: rendelj hozzá ablakérzékelőt, majd állítsd be az automatikát, értesítést és hőmérsékletet. Ismeretlen állapotban nincs mozgás.",
-          "occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el."
+          "occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
+          "door_sensors": "Select only same-area door contacts; closure does not prove isolation. Optional Eco requires verified vacancy, stable closure, safe room temperature and humidity, and preserves every device protection."
         }
       }
     },

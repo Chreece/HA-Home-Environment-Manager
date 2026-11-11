@@ -1137,7 +1137,8 @@
           "humidity": "Kosteus",
           "climate_devices": "Laitteet",
           "shades": "Ikkunaverhot, kaihtimet ja luukut",
-          "occupancy_sensors": "Läsnäolo · anturi"
+          "occupancy_sensors": "Läsnäolo · anturi",
+          "door_sensors": "Ovitunnistimet"
         },
         "data_description": {
           "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
@@ -1146,7 +1147,8 @@
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
-          "occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene."
+          "occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
+          "door_sensors": "Select only same-area door contacts; closure does not prove isolation. Optional Eco requires verified vacancy, stable closure, safe room temperature and humidity, and preserves every device protection."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Kosteus",
           "climate_devices": "Laitteet",
           "shades": "Ikkunaverhot, kaihtimet ja luukut",
-          "occupancy_sensors": "Läsnäolo · anturi"
+          "occupancy_sensors": "Läsnäolo · anturi",
+          "door_sensors": "Ovitunnistimet"
         },
         "data_description": {
           "windows": "Ikkunat. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
@@ -2357,7 +2360,8 @@
           "humidity": "Kosteus. Valitse huoneen tulot: laitteen nimi - entiteetin nimi. Tyhjät ryhmät jäävät käyttämättä eivätkä käynnistä automaattista tunnistusta tai ohjausta.",
           "climate_devices": "Laitteet. Valitse vain huoneen fyysiset climate.*, humidifier.* ja fan.* -entiteetit. Laitteen omat ominaisuudet määrittävät lämmityksen, jäähdytyksen, kuivauksen, tavoitearvot ja puhallinnopeuden. Valinta ei ohjaa laitetta; ota automatiikka erikseen käyttöön laiteohjaimessa.",
           "shades": "Ikkunaverhot, kaihtimet ja luukut. Valitse huoneen ikkunaverhot, kaihtimet ja rullaverhot cover.*. Myös ilman device_class-tietoa olevat cover-entiteetit käyvät, jos CLOSE on tuettu ja kyse on ikkunavarjostimesta. Autotallit, portit, ovet, ikkunat ja markiisit on suljettu pois. Valinta ei liikuta mitään: määritä ikkunakosketin sekä automatiikka, ilmoitus ja lämpötilaraja ohjaimessa. Tuntematon tila estää liikkeen.",
-          "occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene."
+          "occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
+          "door_sensors": "Select only same-area door contacts; closure does not prove isolation. Optional Eco requires verified vacancy, stable closure, safe room temperature and humidity, and preserves every device protection."
         }
       }
     },

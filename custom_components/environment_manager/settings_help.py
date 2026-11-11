@@ -1295,6 +1295,31 @@ SETTING_HELP["global_setting_window_open_timeout_minutes"] = {
 }
 
 
+SETTING_HELP["area_climate_operating_closed_door_eco"] = {
+    "en": ("Optional: use the room's existing Eco targets only when every selected "
+           "same-room DOOR contact has been closed for at least two minutes and "
+           "vacancy is verified. A door does not prove airtight isolation. "
+           "Unknown/unavailable sensors, occupancy, sleeping, arrival preparation, "
+           "open windows, excessive humidity or insufficiently warm room readings "
+           "prevent Eco. Existing manual overrides, anti-mold measures and "
+           "native device safety always remain effective."),
+    "el": ("Προαιρετικά επιλέγει τους υπάρχοντες στόχους Eco μόνο όταν όλες οι "
+           "επιλεγμένες πόρτες του χώρου είναι κλειστές τουλάχιστον δύο λεπτά "
+           "και έχει επιβεβαιωθεί ότι ο χώρος είναι άδειος. Η κλειστή πόρτα "
+           "δεν αποδεικνύει αεροστεγή απομόνωση. Άγνωστοι αισθητήρες, παρουσία, "
+           "ύπνος, προετοιμασία άφιξης, ανοιχτά παράθυρα, υψηλή υγρασία ή "
+           "ανεπαρκής θερμοκρασία εμποδίζουν το Eco. Οι χειροκίνητες επιλογές "
+           "και οι προστασίες της συσκευής παραμένουν ενεργές."),
+    "de": ("Optional: Die bestehenden Eco-Sollwerte des Raums gelten nur, wenn "
+           "alle ausgewählten Türkontakte seit mindestens zwei Minuten "
+           "geschlossen sind und der Raum nachweislich leer ist. Geschlossene "
+           "Türen beweisen keine luftdichte Trennung. Unbekannte Sensoren, "
+           "Anwesenheit, Schlaf, Ankunftsvorbereitung, offene Fenster, zu hohe "
+           "Feuchte oder zu niedrige Raumtemperatur verhindern Eco. Manuelle "
+           "Vorgaben und Geräteschutzfunktionen bleiben maßgeblich."),
+}
+
+
 def configuration_help(key: str, locale: str = "en") -> str | None:
     """One current setting explanation; never the complete help catalog."""
     translations = SETTING_HELP.get(key)
@@ -1342,7 +1367,11 @@ class SettingsMetadata:
         locale = getattr(getattr(self._manager.hass, "config", None), "language", "en")
         text = configuration_help(key, locale) if key else None
         attributes = dict(getattr(super(), "extra_state_attributes", None) or {})
-        if text:
-            attributes.update({"configuration_help": text, "setting_key": key,
+        name = localized_setting_name(key, locale) if key else None
+        if name:
+            attributes.update({"setting_display_name": name,
+                               "setting_key": key,
                                "setting_group": localized_setting_group(key, locale)})
+        if text:
+            attributes["configuration_help"] = text
         return attributes

@@ -1137,7 +1137,8 @@
           "humidity": "湿度",
           "climate_devices": "デバイス",
           "shades": "窓のブラインド・シェード・シャッター",
-          "occupancy_sensors": "在室 · センサー"
+          "occupancy_sensors": "在室 · センサー",
+          "door_sensors": "ドアセンサー"
         },
         "data_description": {
           "windows": "窓. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
@@ -1146,7 +1147,8 @@
           "humidity": "湿度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
           "climate_devices": "デバイス. この部屋の実機 climate.*、humidifier.*、fan.* のエンティティだけを選択します。対応する暖房・冷房・除湿、設定温湿度、ファン速度は機器の機能に依存します。選択だけでは動作せず、各コントローラーで自動制御を個別に有効にします。",
           "shades": "窓のブラインド・シェード・シャッター. 部屋の cover.* ブラインド、ローラーシャッター、カーテンを選択します。device_class がなくても CLOSE に対応し、実際の窓の日除けなら選択できます。ガレージ、門、ドア、窓、屋外オーニングは除外します。選択だけでは動かず、コントローラーで窓センサー、自動制御、事前通知、温度しきい値を設定します。状態不明時は動作しません。",
-          "occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。"
+          "occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
+          "door_sensors": "Select only same-area interior door contacts. A closed door does not prove air isolation. Optional Eco requires verified vacancy, stable closure, fresh safe temperature and humidity, and all existing device protections."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "湿度",
           "climate_devices": "デバイス",
           "shades": "窓のブラインド・シェード・シャッター",
-          "occupancy_sensors": "在室 · センサー"
+          "occupancy_sensors": "在室 · センサー",
+          "door_sensors": "ドアセンサー"
         },
         "data_description": {
           "windows": "窓. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
@@ -2357,7 +2360,8 @@
           "humidity": "湿度. 部屋の入力を選択します。機器名 - エンティティ名で表示されます。空のグループは使用されず、自動検出や自動制御を有効にしません。",
           "climate_devices": "デバイス. この部屋の実機 climate.*、humidifier.*、fan.* のエンティティだけを選択します。対応する暖房・冷房・除湿、設定温湿度、ファン速度は機器の機能に依存します。選択だけでは動作せず、各コントローラーで自動制御を個別に有効にします。",
           "shades": "窓のブラインド・シェード・シャッター. 部屋の cover.* ブラインド、ローラーシャッター、カーテンを選択します。device_class がなくても CLOSE に対応し、実際の窓の日除けなら選択できます。ガレージ、門、ドア、窓、屋外オーニングは除外します。選択だけでは動かず、コントローラーで窓センサー、自動制御、事前通知、温度しきい値を設定します。状態不明時は動作しません。",
-          "occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。"
+          "occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
+          "door_sensors": "Select only same-area interior door contacts. A closed door does not prove air isolation. Optional Eco requires verified vacancy, stable closure, fresh safe temperature and humidity, and all existing device protections."
         }
       }
     },

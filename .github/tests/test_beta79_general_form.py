@@ -143,11 +143,14 @@ async def run():
     assert all('global_threshold_'+k in page['data_schema'] for k in limits)
     assert all(k in page['data_schema'] for k in (
        'general_occupied_rooms_entity','general_sleep_rooms_entity',
-       'general_home_trackers','general_room_occupancy_sensors',
+       'general_home_trackers',
        'general_home_policy','general_source_stale_minutes',
        'pollen_high_from','pollen_max_scale','pollen_avoid_ventilation',
        'weather_entities','outdoor_sensors','notify_entities',
     ))
+    assert 'general_room_occupancy_sensors' not in page['data_schema'], (
+        "Room-presence sensors must be configured per room, not Home"
+    )
     assert keys['global_threshold_indoor_humidity']==65.
     assert keys['general_source_stale_minutes']==120
     new=await real(ui,{

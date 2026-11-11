@@ -1137,7 +1137,8 @@
           "humidity": "Umiditate",
           "climate_devices": "Dispozitive",
           "shades": "Jaluzele, rulouri și obloane",
-          "occupancy_sensors": "Ocupare · senzor"
+          "occupancy_sensors": "Ocupare · senzor",
+          "door_sensors": "Senzori de ușă"
         },
         "data_description": {
           "windows": "Ferestre. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
@@ -1146,7 +1147,8 @@
           "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
           "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea.",
-          "occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră."
+          "occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
+          "door_sensors": "Select only same-area interior door contacts. Closure does not imply isolation. Optional Eco requires verified vacancy, stable closure, fresh safe temperature and humidity; all device protections remain effective."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Umiditate",
           "climate_devices": "Dispozitive",
           "shades": "Jaluzele, rulouri și obloane",
-          "occupancy_sensors": "Ocupare · senzor"
+          "occupancy_sensors": "Ocupare · senzor",
+          "door_sensors": "Senzori de ușă"
         },
         "data_description": {
           "windows": "Ferestre. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
@@ -2357,7 +2360,8 @@
           "humidity": "Umiditate. Selectează intrările camerei: numele dispozitivului - numele entității. Grupurile goale rămân neutilizate și nu activează descoperirea sau controlul automat.",
           "climate_devices": "Dispozitive. Selectează doar entitățile fizice climate.*, humidifier.* și fan.* ale camerei. Funcțiile native determină încălzirea, răcirea, dezumidificarea, valorile-țintă și viteza ventilatorului. Selectarea nu acționează nimic; activează separat controlul automat pe dispozitiv.",
           "shades": "Jaluzele, rulouri și obloane. Selectează jaluzele, rulouri și perdele cover.* ale camerei. Covers fără device_class sunt acceptate cu funcția CLOSE dacă umbresc cu adevărat ferestre. Garaje, porți, uși, ferestre și copertine sunt excluse. Selectarea nu mișcă nimic: asociază senzorul ferestrei și setează automatizarea, anunțul și temperatura pe controller. Starea necunoscută blochează mișcarea.",
-          "occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră."
+          "occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
+          "door_sensors": "Select only same-area interior door contacts. Closure does not imply isolation. Optional Eco requires verified vacancy, stable closure, fresh safe temperature and humidity; all device protections remain effective."
         }
       }
     },

@@ -1137,7 +1137,8 @@
           "humidity": "Nem",
           "climate_devices": "Cihazlar",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler",
-          "occupancy_sensors": "Doluluk · sensör"
+          "occupancy_sensors": "Doluluk · sensör",
+          "door_sensors": "Kapı sensörleri"
         },
         "data_description": {
           "windows": "Pencereler. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
@@ -1146,7 +1147,8 @@
           "humidity": "Nem. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "climate_devices": "Cihazlar. Yalnızca odadaki fiziksel climate.*, humidifier.* ve fan.* varlıklarını seçin. Cihazın yerel özellikleri ısıtma, soğutma, nem alma, hedefler ve fan hızını belirler. Seçim cihazı çalıştırmaz; otomatik kontrolü her cihazda ayrıca etkinleştirin.",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler. Odadaki cover.* panjur, stor ve perdeleri seçin. device_class olmayan covers, CLOSE destekliyorsa ve gerçekten pencere gölgeliyorsa kabul edilir. Garajlar, kapılar, geçitler, pencereler ve tenteler hariçtir. Seçim hareket ettirmez: pencere sensörünü bağlayın, otomatik kontrolü, duyuruyu ve sıcaklığı ayarlayın. Bilinmeyen durum hareketi engeller.",
-          "occupancy_sensors": "Seçilen durum veya öznitelikteki geçerli dolu oda listesi önceliklidir: listedeki odalar dolu, listede olmayanlar boştur. Liste yoksa seçilen herhangi bir varlık sensörünün açık olması dolu; hepsinin kapalı olması veya hiç sensör seçilmemesi boş demektir. Kullanılamayan veya geçersiz seçili kaynak bilinmiyor olarak kalır. Değişmeyen listeler ve ikili durumlar eskimez."
+          "occupancy_sensors": "Seçilen durum veya öznitelikteki geçerli dolu oda listesi önceliklidir: listedeki odalar dolu, listede olmayanlar boştur. Liste yoksa seçilen herhangi bir varlık sensörünün açık olması dolu; hepsinin kapalı olması veya hiç sensör seçilmemesi boş demektir. Kullanılamayan veya geçersiz seçili kaynak bilinmiyor olarak kalır. Değişmeyen listeler ve ikili durumlar eskimez.",
+          "door_sensors": "Select only same-area interior door contacts. Closure does not prove an airtight room. Optional Eco requires stable closure, verified vacancy, fresh safe temperature and humidity; native protections remain effective."
         }
       }
     },
@@ -2348,7 +2350,8 @@
           "humidity": "Nem",
           "climate_devices": "Cihazlar",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler",
-          "occupancy_sensors": "Doluluk · sensör"
+          "occupancy_sensors": "Doluluk · sensör",
+          "door_sensors": "Kapı sensörleri"
         },
         "data_description": {
           "windows": "Pencereler. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
@@ -2357,7 +2360,8 @@
           "humidity": "Nem. Odanın girişlerini seçin: cihaz adı - varlık adı. Boş gruplar kullanılmaz ve otomatik keşif veya kontrolü etkinleştirmez.",
           "climate_devices": "Cihazlar. Yalnızca odadaki fiziksel climate.*, humidifier.* ve fan.* varlıklarını seçin. Cihazın yerel özellikleri ısıtma, soğutma, nem alma, hedefler ve fan hızını belirler. Seçim cihazı çalıştırmaz; otomatik kontrolü her cihazda ayrıca etkinleştirin.",
           "shades": "Pencere perdeleri, panjurlar ve jaluziler. Odadaki cover.* panjur, stor ve perdeleri seçin. device_class olmayan covers, CLOSE destekliyorsa ve gerçekten pencere gölgeliyorsa kabul edilir. Garajlar, kapılar, geçitler, pencereler ve tenteler hariçtir. Seçim hareket ettirmez: pencere sensörünü bağlayın, otomatik kontrolü, duyuruyu ve sıcaklığı ayarlayın. Bilinmeyen durum hareketi engeller.",
-          "occupancy_sensors": "Seçilen durum veya öznitelikteki geçerli dolu oda listesi önceliklidir: listedeki odalar dolu, listede olmayanlar boştur. Liste yoksa seçilen herhangi bir varlık sensörünün açık olması dolu; hepsinin kapalı olması veya hiç sensör seçilmemesi boş demektir. Kullanılamayan veya geçersiz seçili kaynak bilinmiyor olarak kalır. Değişmeyen listeler ve ikili durumlar eskimez."
+          "occupancy_sensors": "Seçilen durum veya öznitelikteki geçerli dolu oda listesi önceliklidir: listedeki odalar dolu, listede olmayanlar boştur. Liste yoksa seçilen herhangi bir varlık sensörünün açık olması dolu; hepsinin kapalı olması veya hiç sensör seçilmemesi boş demektir. Kullanılamayan veya geçersiz seçili kaynak bilinmiyor olarak kalır. Değişmeyen listeler ve ikili durumlar eskimez.",
+          "door_sensors": "Select only same-area interior door contacts. Closure does not prove an airtight room. Optional Eco requires stable closure, verified vacancy, fresh safe temperature and humidity; native protections remain effective."
         }
       }
     },

@@ -157,6 +157,8 @@ class ReconfigureRoomsMixin:
         """Edit all selected sources in one room; never auto-operate hardware."""
         from .occupancy_policy import room_sensor_choices
         from .discovery import entity_area
+        from .room_doors import door_choices
+        from .const import CONF_OCCUPANCY_GLOBAL
         area = getattr(self, "_room_edit_area", None)
         registered = {key for key, _ in self._selected_edit_rooms()}
         if area not in registered:
@@ -175,8 +177,16 @@ class ReconfigureRoomsMixin:
         current = current if isinstance(current, dict) else {}
         actual_occupancy = current.get("occupancy_sensors")
         discovered = room_sensor_choices(self.hass, area)
+        legacy_global = self._values.get(CONF_OCCUPANCY_GLOBAL, {})
+        legacy_global = legacy_global if isinstance(legacy_global, dict) else {}
+        legacy = legacy_global.get("room_occupancy_sensors", [])
+        legacy_local = [
+            eid for eid in legacy if isinstance(eid, str)
+            and eid.startswith("binary_sensor.")
+            and entity_area(self.hass, eid) == area
+        ] if isinstance(legacy, list) else []
         suggested = (actual_occupancy if isinstance(actual_occupancy, list)
-                     else discovered)
+                     else sorted(set(discovered) | set(legacy_local)))
         # Keep unavailable selected sensors visible when the HA entity
         # registry still confirms this exact room; never accept another area.
         permitted = sorted(set(discovered) | {
@@ -191,10 +201,19 @@ class ReconfigureRoomsMixin:
         defaults["occupancy_sensors"] = [
             eid for eid in suggested if eid in permitted
         ]
+        # Door contacts are opt-in. Unlike presence defaults, observing a
+        # DOOR-class sensor never automatically selects it or enables Eco.
+        old_doors = current.get("door_sensors")
+        saved_doors = old_doors if isinstance(old_doors, list) else []
+        options["door_sensors"] = door_choices(self.hass, area, saved_doors)
+        allowed_doors = {item["value"] for item in options["door_sensors"]}
+        defaults["door_sensors"] = [
+            eid for eid in saved_doors if eid in allowed_doors
+        ]
         errors = {}
         if user_input is not None:
             picked = {}
-            for group in (*sources.GROUPS, "occupancy_sensors"):
+            for group in (*sources.GROUPS, "occupancy_sensors", "door_sensors"):
                 # Optional HA multi-select fields are absent when explicitly
                 # cleared. Never reinstate old defaults on a submit.
                 value = user_input.get(group, [])
@@ -221,12 +240,36 @@ class ReconfigureRoomsMixin:
                     # True source changes use the existing independent
                     # revocation path (no new hardware permissions).
                     sources.store_selection(self.hass, self._values, area, selected_sources)
-                if (not isinstance(actual_occupancy, list)
-                        or actual_occupancy != picked["occupancy_sensors"]):
+                # A legacy room without a door configuration is already
+                # equivalent to an unselected [] contact list. Do not mutate
+                # its Options payload on an unchanged/no-op Save. Still store
+                # explicit clearing when an earlier list actually existed.
+                occupancy_changed = (
+                    not isinstance(actual_occupancy, list)
+                    or actual_occupancy != picked["occupancy_sensors"]
+                )
+                doors_changed = (
+                    old_doors != picked["door_sensors"]
+                    if isinstance(old_doors, list)
+                    else bool(picked["door_sensors"])
+                )
+                if occupancy_changed or doors_changed:
                     rooms = self._values.setdefault(CONF_CLIMATE_ROOMS, {})
                     cfg = deepcopy(rooms.get(area, {}))
-                    cfg["occupancy_sensors"] = picked["occupancy_sensors"]
+                    if occupancy_changed:
+                        cfg["occupancy_sensors"] = picked["occupancy_sensors"]
+                    if doors_changed:
+                        cfg["door_sensors"] = picked["door_sensors"]
                     rooms[area] = cfg
+                # Retire legacy global room-source duplicates only for THIS
+                # verified area. Other rooms/unassigned sources remain intact
+                # until their own editors can migrate them safely.
+                if legacy_local:
+                    previous = legacy_global.get("room_occupancy_sensors", [])
+                    remaining = [eid for eid in previous if eid not in legacy_local]
+                    self._values[CONF_OCCUPANCY_GLOBAL] = {
+                        **legacy_global, "room_occupancy_sensors": remaining,
+                    }
                 return await self._finish()
         return self.async_show_form(
             step_id="edit_room", errors=errors,
@@ -234,7 +277,7 @@ class ReconfigureRoomsMixin:
             data_schema=probatio.Schema({
                 field(group, (user_input or {}).get(group, defaults[group])):
                     select(options[group], multiple=True)
-                for group in (*sources.GROUPS, "occupancy_sensors")
+                for group in (*sources.GROUPS, "occupancy_sensors", "door_sensors")
             }),
         )
 
