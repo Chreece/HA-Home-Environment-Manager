@@ -34,7 +34,7 @@ if '--with-ha' not in sys.argv:
     module('homeassistant.helpers.dispatcher',async_dispatcher_connect=lambda *args:lambda:None)
     module('homeassistant.helpers.entity',EntityCategory=N(CONFIG='config',DIAGNOSTIC='diagnostic'))
 
-saved={'kind':'interior','target_area':None,'report_timeout_minutes':0}
+saved={'kind':'interior','target_area':None,'report_timeout_minutes':0,'coordination':'observe','energy_meter':None}
 calls=[]
 async def update(manager,area,entity,key,value):
     assert (area,entity)==('a','binary_sensor.door')
@@ -44,6 +44,7 @@ module(PKG+'.door_settings',async_update=update,
        inventory=lambda *args:iter([('a','binary_sensor.door')]),
        target_areas=lambda *args:{'b':'Guest room','c':'Guest room'})
 module(PKG+'.room_doors',contact_options=lambda *args:dict(saved))
+module(PKG+'.door_energy',choices=lambda *args:{'sensor.energy':'Energy'})
 load('const');entity=load('door_entities')
 manager=N(entry=N(entry_id='entry'),settings={'climate_rooms':{'a':{}}},
           hass=N(config=N(language='en'),states=N(get=lambda eid:N(name='Hall contact'))),
@@ -52,15 +53,15 @@ manager=N(entry=N(entry_id='entry'),settings={'climate_rooms':{'a':{}}},
               'connected_rooms':['b'],'advisories':[{'code':'fresh_air_needed'}],
               'quiet_boundary':True,'presence_recheck_hint':False}}}))
 selects=entity.select_entities(manager);numbers=entity.number_entities(manager);sensors=entity.sensor_entities(manager)
-assert len(selects)==2 and len(numbers)==len(sensors)==1
+assert len(selects)==4 and len(numbers)==len(sensors)==1
 all_entities=[*selects,*numbers,*sensors]
-assert len({item._attr_unique_id for item in all_entities})==4
+assert len({item._attr_unique_id for item in all_entities})==6
 for item in all_entities:
     assert item._attr_device_info['identifiers']=={('environment_manager','entry_area_a')}
     # State publication is a boundary fixture; production entity properties,
     # class MRO, native schemas, choices and setter dispatch remain actual.
     item.async_write_ha_state=lambda:None
-connection,kind=selects
+connection,kind,coordination,energy=selects
 assert connection.options==['Not connected','Guest room [b]','Guest room [c]']
 assert connection.current_option=='Not connected'
 assert connection.extra_state_attributes['door_setting_key']=='target_area'
@@ -77,6 +78,16 @@ asyncio.run(connection.async_select_option('Not connected'))
 assert saved['target_area'] is None
 asyncio.run(kind.async_select_option('Fire/safety door'))
 assert saved['kind']=='fire'
+assert coordination.options==['Observe only'], 'Fire door must not coordinate starts'
+asyncio.run(kind.async_select_option('Interior'))
+assert coordination.current_option=='Observe only'
+asyncio.run(coordination.async_select_option('Coordinate starts'))
+assert saved['coordination']=='shared'
+assert energy.options==['No energy meter','Energy [sensor.energy]']
+asyncio.run(energy.async_select_option('Energy [sensor.energy]'))
+assert saved['energy_meter']=='sensor.energy'
+assert coordination.extra_state_attributes['door_setting_key']=='coordination'
+assert energy.extra_state_attributes['door_setting_key']=='energy_meter'
 saved['kind']='exterior'
 assert connection.options==['Not connected']
 assert numbers[0].native_value==0

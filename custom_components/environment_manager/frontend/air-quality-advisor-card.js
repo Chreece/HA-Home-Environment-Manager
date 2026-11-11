@@ -8995,7 +8995,7 @@
   const hemDoorSetting063=field=>{
     const a=field.state?.attributes||{};
     return typeof a.door_source_entity==="string"&&
-      ["target_area","kind","report_timeout_minutes"].includes(a.door_setting_key);
+      ["target_area","kind","report_timeout_minutes","coordination","energy_meter"].includes(a.door_setting_key);
   };
   const hemRenderNativeRows062=(card,holder,rows,scope)=>{
     if(holder.matches(":focus-within"))return;
@@ -10704,6 +10704,24 @@
       const names=report.possible_outdoor_paths.map(id=>links.find(link=>link.other_area===id)?.other_name||id);
       body+=paragraph(words.paths+': '+names.join(', '));
     }
+    const energyWords={
+      en:{title:'Measured energy by door state',coverage:'observed min',excluded:'excluded intervals',pending:'Collecting comparable coverage',ready:'Coverage available',note:'Session observations, not energy savings. Other conditions differ; comparisons sharing a meter are not additive.',coord:'Device start coordination',waiting:'Waiting',released:'Released',observe:'No active delay'},
+      el:{title:'Μετρημένη ενέργεια ανά κατάσταση πόρτας',coverage:'λεπτά κάλυψης',excluded:'εξαιρεμένα διαστήματα',pending:'Συλλογή συγκρίσιμης κάλυψης',ready:'Διαθέσιμη κάλυψη',note:'Παρατηρήσεις συνεδρίας, όχι εξοικονόμηση. Άλλες συνθήκες διαφέρουν· οι συγκρίσεις με κοινό μετρητή δεν αθροίζονται.',coord:'Συντονισμός εκκίνησης',waiting:'Αναμονή',released:'Χωρίς αναμονή',observe:'Χωρίς ενεργή καθυστέρηση'},
+      de:{title:'Gemessene Energie nach Türzustand',coverage:'erfasste Min.',excluded:'ausgeschlossene Intervalle',pending:'Vergleichbare Abdeckung wird erfasst',ready:'Abdeckung verfügbar',note:'Sitzungsbeobachtungen, keine Energieeinsparung. Andere Bedingungen unterscheiden sich; Vergleiche mit demselben Zähler sind nicht addierbar.',coord:'Gerätestart-Koordination',waiting:'Warten',released:'Freigegeben',observe:'Keine aktive Verzögerung'}
+    };
+    const ew=energyWords[this._language()]||energyWords.en;
+    for(const item of Array.isArray(report.energy)?report.energy:[]){
+      body+='<strong>'+escape(ew.title)+'</strong>'+paragraph(sourceName(item.contact)+' · '+sourceName(item.meter));
+      for(const mode of ['open','closed']){
+        const bucket=item[mode]||{};
+        body+=paragraph(tr(mode)+': '+(typeof bucket.kwh==='number'&&Number.isFinite(bucket.kwh)?this._format(bucket.kwh,3):'—')+' kWh · '+numeric(bucket.observed_minutes)+' '+ew.coverage+' · '+numeric(bucket.mean_power_w)+' W');
+      }
+      body+=paragraph((item.comparison_ready?ew.ready:ew.pending)+' · '+numeric(item.excluded_intervals)+' '+ew.excluded)+paragraph(ew.note);
+    }
+    const coordination=Array.isArray(report.coordination)?report.coordination:[];
+    if(coordination.length)body+='<strong>'+escape(ew.coord)+'</strong>';
+    for(const item of coordination)body+=paragraph((item.status==='waiting'&&item.remaining_seconds>0?ew.waiting:ew.released)+
+      (item.peer?' · '+sourceName(item.peer):'')+' · '+numeric(item.remaining_seconds)+' s');
     if(report.session)body+=paragraph(words.session+': '+[
       words.open+' '+numeric(report.session.open_minutes),
       words.closed+' '+numeric(report.session.closed_minutes),

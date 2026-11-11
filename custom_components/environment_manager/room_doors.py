@@ -86,7 +86,11 @@ def contact_options(config: Mapping | None, entity_id: str) -> dict:
     kind = kind if kind in ("interior", "fire", "exterior") else "unknown"
     target = item.get("target_area")
     timeout = _numeric(item.get("report_timeout_minutes", 0), 0, 10080)
-    return {"kind": kind,
+    coordination = item.get("coordination", "observe")
+    meter = item.get("energy_meter")
+    return {"coordination": coordination if coordination in ("observe", "conflicts", "shared") else "observe",
+            "energy_meter": meter if isinstance(meter, str) and meter.startswith("sensor.") else None,
+            "kind": kind,
             "target_area": target if isinstance(target, str) and target else None,
             "report_timeout_minutes": timeout}
 

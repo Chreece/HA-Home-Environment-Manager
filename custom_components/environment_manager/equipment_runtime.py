@@ -761,6 +761,7 @@ class EquipmentRuntime:
             _LOGGER.exception("Equipment controller storage unavailable; new control stays inactive")
 
     async def async_stop(self) -> None:
+        self._door_start_budget = None
         self._active = False
         for _, handle in getattr(self, "_pid_pwm_wakeups", {}).values():
             handle.cancel()
@@ -3635,6 +3636,13 @@ class EquipmentRuntime:
                 return "other_endpoint_acknowledgement_pending"
         if self._record(spec).get("paused"):
             return "controller_paused"
+        # A verified active physical output finishes the optional door-start
+        # episode. Unknown/reconnect/idle timestamps cannot renew its budget.
+        budget = getattr(self, "_door_start_budget", None)
+        current_native = self.hass.states.get(cap.primary)
+        if budget is not None and current_native is not None and not output_off(current_native):
+            if current_native.state not in ("unknown", "unavailable") and not current_native.attributes.get("restored"):
+                budget.records.pop(spec.identifier, None)
         if cfg["control_mode"] == "existing":
             return "existing_controller_selected"
         room = model.room_config(self.manager, spec)
@@ -4688,6 +4696,22 @@ class EquipmentRuntime:
         if not self.hass.services.has_service(domain, service):
             self._status(spec, "native_service_unavailable", service=f"{domain}.{service}")
             return False
+        def door_hold():
+            if not (automatic and power and action_mode != "off" and entity == cap.primary):
+                return None
+            rooms = self.manager.settings.get("climate_rooms", {})
+            opted = isinstance(rooms, dict) and any(
+                isinstance(room, dict) and isinstance(room.get("door_settings"), dict)
+                and any(isinstance(item, dict) and item.get("coordination") in ("conflicts", "shared")
+                        for item in room["door_settings"].values()) for room in rooms.values())
+            if not opted and getattr(self, "_door_start_budget", None) is None:
+                return None
+            from .door_coordination import start_hold
+            return start_hold(self, spec, cap, model.settings(self.manager, spec),
+                              model.plan_for(self.manager, spec), action_mode)
+        if hold := door_hold():
+            self._status(spec, "awaiting_evaluation", **hold, door_coordination=hold)
+            return False
         target_budget = record.get("unconfirmed_native_target")
         budget_retry = False
         previous_budget = None
@@ -4922,6 +4946,8 @@ class EquipmentRuntime:
                 return False
             latest = model.settings(self.manager, spec)
             latest_plan = model.plan_for(self.manager, spec)
+            if door_hold():
+                return False
             return bool(self._current_spec(spec) and self.manager.settings == before_settings
                 and model.capabilities(self.manager, spec) == cap and latest_plan == before_plan
                 and (not automatic or self.measurements(spec, cap) == before_feedback)

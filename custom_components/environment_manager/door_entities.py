@@ -39,6 +39,27 @@ WORDS = {
 }
 
 
+# These policy labels also describe the strict limits of this optional layer.
+WORDS["en"].update(
+    coordination="Device start coordination", observe="Observe only",
+    conflicts="Delay conflicting starts", shared="Coordinate starts",
+    energy_meter="Measured energy meter", no_meter="No energy meter",
+    coordination_help="Optional direct interior connection only. Briefly delay a NEW Automatic start if an authorized peer is already active. Coordinate starts also tests measured improvement from a same-purpose peer after 60 seconds. Absolute maximum 3 minutes; closure, lost evidence, manual/PID/sleep/away/arrival and urgent local needs bypass the wait. Never changes targets, stops a running device or starts a peer. An open door does not prove airflow.",
+    energy_help="Select a native cumulative energy meter assigned to this Area (Wh/kWh/MWh; total or total_increasing). Observed consumption and covered minutes are compared by door state, not attributed savings. Gaps, observed resets, unit changes and door transitions are excluded. Session-only; each contact comparison is independent and must not be added to others using the same meter.")
+WORDS["el"].update(
+    coordination="Συντονισμός εκκίνησης συσκευών", observe="Μόνο παρατήρηση",
+    conflicts="Καθυστέρηση αντίθετων λειτουργιών", shared="Συντονισμός εκκινήσεων",
+    energy_meter="Μετρητής κατανάλωσης ενέργειας", no_meter="Χωρίς μετρητή ενέργειας",
+    coordination_help="Προαιρετικά, μόνο για άμεση εσωτερική σύνδεση. Καθυστερεί λίγο μια ΝΕΑ αυτόματη εκκίνηση όταν λειτουργεί ήδη επιτρεπόμενη συσκευή στον συνδεδεμένο χώρο. Ο συντονισμός ελέγχει βελτίωση των μετρήσεων σε 60 δευτερόλεπτα. Μέγιστο 3 λεπτά. Κλείσιμο, έλλειψη δεδομένων, χειροκίνητος έλεγχος/PID/ύπνος/απουσία/άφιξη και επείγουσα ανάγκη ακυρώνουν την αναμονή. Δεν αλλάζει στόχους ούτε σταματά ή ξεκινά άλλη συσκευή. Ανοιχτή πόρτα δεν αποδεικνύει ροή αέρα.",
+    energy_help="Επίλεξε πραγματικό αθροιστικό μετρητή ενέργειας του ίδιου χώρου (Wh/kWh/MWh). Σύγκριση μετρημένης κατανάλωσης και χρόνου ανά κατάσταση πόρτας, όχι εκτίμηση εξοικονόμησης. Κενά, μηδενισμοί, αλλαγές μονάδων και μεταβάσεις πόρτας εξαιρούνται. Μόνο τρέχουσα συνεδρία. Μην αθροίζεις συγκρίσεις διαφορετικών επαφών που χρησιμοποιούν τον ίδιο μετρητή.")
+WORDS["de"].update(
+    coordination="Gerätestarts koordinieren", observe="Nur beobachten",
+    conflicts="Gegenläufige Starts verzögern", shared="Starts koordinieren",
+    energy_meter="Gemessener Energiezähler", no_meter="Kein Energiezähler",
+    coordination_help="Optional, nur über direkte Innentür-Verbindungen. Verzögert einen NEUEN Automatikstart kurz, wenn ein freigegebenes Nachbargerät bereits arbeitet. Gemeinsame Starts prüfen nach 60 Sekunden eine gemessene Verbesserung. Höchstens 3 Minuten; Schließen, fehlende Daten, manuell/PID/Schlaf/Abwesenheit/Ankunft und dringender Bedarf umgehen die Wartezeit. Keine Sollwertänderung, kein Stoppen laufender Geräte und kein Starten anderer Geräte. Offene Türen beweisen keinen Luftstrom.",
+    energy_help="Nativen kumulativen Energiezähler dieses Bereichs wählen (Wh/kWh/MWh). Gemessener Verbrauch und erfasste Zeit werden nach Türzustand verglichen, nicht als Einsparung bewertet. Lücken, beobachtete Zählerrücksetzungen, Einheitenwechsel und Türwechsel werden ausgeschlossen. Nur aktuelle Sitzung; Vergleiche mehrerer Kontakte mit demselben Zähler nicht addieren.")
+
+
 def words(manager):
     locale = str(getattr(getattr(manager.hass, "config", None), "language", "en")).split("-")[0]
     return WORDS.get(locale, WORDS["en"])
@@ -73,7 +94,8 @@ class DoorEntity:
     @property
     def extra_state_attributes(self):
         help_key = {"target_area": "target_help", "kind": "kind_help",
-                    "report_timeout_minutes": "timeout_help"}[self._key]
+                    "report_timeout_minutes": "timeout_help", "coordination": "coordination_help",
+                    "energy_meter": "energy_help"}[self._key]
         return {"setting_display_name": self.name, "setting_key": "door_" + self._key,
                 "door_source_entity": self._contact, "door_setting_key": self._key,
                 "configuration_help": words(self._manager)[help_key]}
@@ -91,6 +113,13 @@ class DoorEntity:
 class DoorSelect(DoorEntity, SelectEntity):
     def _choices(self):
         text = words(self._manager)
+        if self._key == "coordination":
+            allowed = ("observe", "conflicts", "shared") if self._config()["kind"] == "interior" else ("observe",)
+            return {text[key]: key for key in allowed}
+        if self._key == "energy_meter":
+            from .door_energy import choices
+            return {text["no_meter"]: None, **{f"{name} [{entity}]": entity for entity, name in
+                    choices(self._manager.hass, self._area, self._config().get("energy_meter")).items()}}
         if self._key == "kind":
             return {text[key]: key for key in ("interior", "fire", "exterior")}
         choices = {text["none"]: None}
@@ -175,7 +204,9 @@ class RoomDoorContextSensor(SensorEntity):
                 "advisory_codes": list(dict.fromkeys(x["code"] for x in item.get("advisories", [])))[:12],
                 "quiet_boundary": item.get("quiet_boundary", False),
                 "presence_recheck_hint": item.get("presence_recheck_hint", False),
-                "advisory_only": True}
+                "advisory_only": True,
+                "measured_energy": item.get("energy", [])[:16],
+                "device_start_coordination": item.get("coordination", [])[:16]}
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
@@ -190,7 +221,7 @@ class RoomDoorContextSensor(SensorEntity):
 def select_entities(manager):
     return [DoorSelect(manager, area, contact, key)
             for area, contact in inventory(manager.hass, manager.settings)
-            for key in ("target_area", "kind")]
+            for key in ("target_area", "kind", "coordination", "energy_meter")]
 
 
 def number_entities(manager):

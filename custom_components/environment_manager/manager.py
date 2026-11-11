@@ -683,6 +683,7 @@ class AirQualityManager:
                 self.hass, config, environment, context_rooms, observed_rooms,
                 home_status, outside_safe=(base_plan.outdoor_safe is True
                                           and not base_plan.unavailable_outdoor),
+                runtime=getattr(self, "equipment", None),
             )
             self._tracked.update(door_sources)
         elif getattr(self, "door_context", None) is not None:

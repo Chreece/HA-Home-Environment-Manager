@@ -177,6 +177,7 @@ class DoorContextMonitor:
         self._sessions: dict[str, dict] = {}
         self._links: dict[tuple, dict] = {}
         self._next_deadline: float | None = None
+        self._energy = None
 
     def should_refresh(self, now: float) -> bool:
         """Reuse the manager's existing fast tick; do not create a poller."""
@@ -212,7 +213,8 @@ class DoorContextMonitor:
 
     def update(self, hass: Any, settings: Mapping, environment: dict,
                rooms: list, presence: Mapping, home_status: str,
-               *, outside_safe: bool = False, now: float | None = None) -> tuple[dict, set]:
+               *, outside_safe: bool = False, now: float | None = None,
+               runtime: Any = None) -> tuple[dict, set]:
         from .room_sources import room_temperature_evidence
         from .discovery import entity_area
         from homeassistant.helpers import area_registry as ar
@@ -333,9 +335,26 @@ class DoorContextMonitor:
                         "mean_absolute_temperature_difference_c": round(sum(values) / len(values), 2) if values else None}
                 link["observations"] = observations
                 link["observation_note"] = "Not a causal heat-transfer or energy-savings estimate"
+            if any(contact.get("energy_meter") for contact in contacts) or self._energy is not None:
+                from .door_energy import DoorEnergyMonitor
+                if self._energy is None:
+                    self._energy = DoorEnergyMonitor()
+                report["energy"], energy_sources = self._energy.update(
+                    hass, settings, area, contacts, signature, now)
+                tracked.update(energy_sources)
+            budget = getattr(runtime, "_door_start_budget", None)
+            report["coordination"] = [{"controller": key, "status": value.get("status"),
+                "peer": value.get("peer"), "kind": value.get("kind"),
+                "remaining_seconds": round(max(0, value["deadline"] - now), 1)
+                    if not value["released"] else 0}
+                for key, value in (budget.records.items() if budget else ())
+                if value["area"] == area][:16]
             report["advisories"] = report["advisories"][:12]
             report["no_energy_savings_estimate"] = True
             environment.setdefault(area, {})["door_context"] = report
         self._links = {key: value for key, value in self._links.items() if key in active_links}
+        if self._energy is not None:
+            self._energy.records = {key: value for key, value in self._energy.records.items()
+                                    if key[0] in active_areas}
         self._next_deadline = min(deadlines) if deadlines else None
         return reports, tracked
