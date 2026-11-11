@@ -1,0 +1,35 @@
+name: Recover HEM door work
+on:
+  push:
+    branches: [feat/062b5-door-coordination-performance]
+    paths: [.github/workflows/door-b5-recover.yml]
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Recover exact saved public-source blob without executing it
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import os, json, base64, gzip, hashlib, urllib.request
+          from pathlib import Path
+          sha = '0334c5c54eabb0477aa7ce07a7bc7bf8fedd409a'
+          req = urllib.request.Request('https://api.github.com/repos/Chreece/HA-Home-Environment-Manager/git/blobs/' + sha, headers={'Authorization':'Bearer '+os.environ['GITHUB_TOKEN'],'Accept':'application/vnd.github+json'})
+          with urllib.request.urlopen(req, timeout=30) as response:
+              obj = json.load(response)
+          data = base64.b64decode(obj['content'])
+          assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest() == sha
+          root = Path('/tmp/hem-recovery'); root.mkdir()
+          (root/'pending.gz').write_bytes(data)
+          (root/'pending.txt').write_bytes(gzip.decompress(data))
+          print('Recovered saved source payload:', len(data), 'bytes; no source executed')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hem-door-pending-recovery
+          path: /tmp/hem-recovery/
+          retention-days: 3
