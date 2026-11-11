@@ -42,7 +42,11 @@ def production_nodes(filename, names, namespace):
 package = module(PKG)
 package.__path__ = [str(ROOT)]
 module(PKG + ".const", DOMAIN="environment_manager", CONF_AREAS="areas",
-       CONF_CLIMATE_ROOMS="climate_rooms", CONF_PID_ROOMS="pid_rooms")
+       CONF_CLIMATE_ROOMS="climate_rooms", CONF_PID_ROOMS="pid_rooms",
+       CONF_OCCUPANCY_GLOBAL="occupancy_global")
+# This is a cover-only fixture. Actual DOOR classification and its area
+# authority are exercised separately by test_062b1_room_doors.py.
+module(PKG + ".room_doors", door_choices=lambda hass, area, previous=None: [])
 # Import the real pure-Python config-copy and inventory modules without loading
 # the integration's HA setup module.
 def load(name):
