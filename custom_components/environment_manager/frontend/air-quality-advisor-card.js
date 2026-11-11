@@ -1067,6 +1067,7 @@
         this._deviceRegistryNextAttemptAt = 0;
         this._homeDeviceId = null;
         this._areaDeviceIds = new Map();
+        this._hemDeviceRegistry062 = new Map();
         this._configEntryId114 = null;
         this._configEntryOwner114 = null;
       }
@@ -1114,6 +1115,7 @@
         this._configEntryId114 = entryId;
         this._configEntryOwner114 = stateId;
         this._areaDeviceIds = roomDevices;
+        this._hemDeviceRegistry062 = new Map(entries.filter(device=>typeof device?.id==="string").map(device=>[device.id,device]));
         this._deviceRegistryLoaded = true;
         this._deviceRegistryUnavailable = false;
         this._deviceRegistryFailureCount = 0;
@@ -1492,10 +1494,8 @@
         if(!id || !state) return;
         const supplied=state.attributes || {};
         options.push({key,id,state,icon,attribute,
-          label:typeof supplied.setting_label==='string' && supplied.setting_label.trim()
-            ? supplied.setting_label.trim():
-            typeof supplied.friendly_name==='string' && supplied.friendly_name.trim()
-              ? supplied.friendly_name.trim():label,
+          label:this._hemSettingLabel062(id,state,this._hass?.entities?.[id]||{},
+            {controller:entry},false,label),
           help:typeof supplied.configuration_help==='string' && supplied.configuration_help.trim()
             ? supplied.configuration_help.trim():help});
       };
@@ -1702,8 +1702,8 @@
       const parametersLabel=typeof supplied.parameters==='string'?supplied.parameters:fallback[0];
       const selectedLabel=typeof supplied.selected==='string'?supplied.selected:fallback[1];
       const selected=entry.climate?.attributes?.selected_operating_mode;
-      const fieldLabel=field=>field.state.attributes.setting_label ||
-        field.state.attributes.friendly_name || field.key.replaceAll('_',' ');
+      const fieldLabel=field=>this._hemSettingLabel062(field.id,field.state,
+        this._hass?.entities?.[field.id]||{},{area,controller:entry},false);
       const common=(panel,field)=>'data-controller-area="'+escape(area)+'" '+
         'data-managed-controller="'+escape(entry.entityId)+'" '+
         'data-mode-setting-mode="'+escape(panel.mode)+'" '+
@@ -8945,6 +8945,95 @@
   };
   /* HEM_CARD_QUICK_AND_I18N129_END */
 
+  /* HEM_SETTINGS_LABELS062B2_START
+   * Presentation only. Resolve names from the exact entity/device registry,
+   * not an arbitrary split of friendly_name. HA adds device context to the
+   * latter; unavailable entities still have useful original/translated names.
+   */
+  const HEM_CONTEXT_GROUPS062 = {"ar":["تنقية الهواء","الإعلانات","الراحة المتقدمة","التواجد في المنزل","العفن","الضوضاء","حبوب اللقاح","الملف","حدود الغرفة","التواجد في الغرفة","التظليل","التهوية"],"bg":["Пречистване на въздуха","Известия","Разширен комфорт","Присъствие у дома","Мухъл","Шум","Полени","Профил","Граници на стаята","Присъствие в стаята","Засенчване","Проветряване"],"bn":["বায়ু পরিশোধন","ঘোষণা","উন্নত আরাম","বাড়িতে উপস্থিতি","ছাঁচ","শব্দ","পরাগ","প্রোফাইল","ঘরের সীমা","ঘরে উপস্থিতি","ছায়া","বায়ু চলাচল"],"cs":["Čištění vzduchu","Oznámení","Pokročilý komfort","Přítomnost doma","Plíseň","Hluk","Pyl","Profil","Limity místnosti","Přítomnost v místnosti","Stínění","Větrání"],"da":["Luftrensning","Meddelelser","Avanceret komfort","Tilstedeværelse hjemme","Skimmelsvamp","Støj","Pollen","Profil","Rumgrænser","Tilstedeværelse i rummet","Solafskærmning","Ventilation"],"de":["Luftreinigung","Ansagen","Erweiterter Komfort","Anwesenheit zu Hause","Schimmel","Lärm","Pollen","Profil","Raumgrenzen","Raumanwesenheit","Beschattung","Lüftung"],"el":["Καθαρισμός αέρα","Ανακοινώσεις","Προηγμένη άνεση","Σπίτι - Παρουσία","Μούχλα","Θόρυβος","Γύρη","Προφίλ","Όρια χώρου","Παρουσία χώρου","Σκίαση","Αερισμός"],"en":["Air cleaning","Announcement","Advanced comfort","Home Occupancy","Mold","Noise","Pollen","Profile","Room limits","Room occupancy","Shading","Ventilation"],"es":["Purificación del aire","Avisos","Confort avanzado","Presencia en casa","Moho","Ruido","Polen","Perfil","Límites de la habitación","Ocupación de la habitación","Sombreado","Ventilación"],"fa":["تصفیه هوا","اعلان‌ها","آسایش پیشرفته","حضور در خانه","کپک","صدا","گرده","نمایه","محدوده‌های اتاق","حضور در اتاق","سایه‌اندازی","تهویه"],"fi":["Ilmanpuhdistus","Ilmoitukset","Edistynyt mukavuus","Kotonaolo","Home","Melu","Siitepöly","Profiili","Huonerajat","Huoneen läsnäolo","Aurinkosuojaus","Ilmanvaihto"],"fr":["Purification de l’air","Annonces","Confort avancé","Présence à domicile","Moisissures","Bruit","Pollen","Profil","Limites de la pièce","Présence dans la pièce","Ombrage","Aération"],"he":["טיהור אוויר","הודעות","נוחות מתקדמת","נוכחות בבית","עובש","רעש","אבקנים","פרופיל","גבולות החדר","נוכחות בחדר","הצללה","אוורור"],"hi":["वायु शोधन","घोषणाएँ","उन्नत आराम","घर में उपस्थिति","फफूँद","शोर","पराग","प्रोफ़ाइल","कमरे की सीमाएँ","कमरे में उपस्थिति","छाया","वेंटिलेशन"],"hr":["Pročišćavanje zraka","Obavijesti","Napredna udobnost","Prisutnost kod kuće","Plijesan","Buka","Pelud","Profil","Ograničenja prostorije","Prisutnost u prostoriji","Zasjenjenje","Ventilacija"],"hu":["Légtisztítás","Értesítések","Fejlett komfort","Otthoni jelenlét","Penész","Zaj","Pollen","Profil","Helyiséghatárok","Jelenlét a helyiségben","Árnyékolás","Szellőztetés"],"id":["Pemurnian udara","Pengumuman","Kenyamanan lanjutan","Kehadiran di rumah","Jamur","Kebisingan","Serbuk sari","Profil","Batas ruangan","Kehadiran di ruangan","Peneduhan","Ventilasi"],"it":["Purificazione dell’aria","Annunci","Comfort avanzato","Presenza in casa","Muffa","Rumore","Polline","Profilo","Limiti della stanza","Presenza nella stanza","Schermatura solare","Ventilazione"],"ja":["空気清浄","通知","高度な快適性","在宅状況","カビ","騒音","花粉","プロファイル","部屋の制限","部屋の在室状況","日よけ","換気"],"ko":["공기 정화","알림","고급 쾌적도","재택 상태","곰팡이","소음","꽃가루","프로필","실내 제한","실내 재실","차양","환기"],"nb":["Luftrensing","Meldinger","Avansert komfort","Tilstedeværelse hjemme","Mugg","Støy","Pollen","Profil","Romgrenser","Tilstedeværelse i rommet","Solskjerming","Ventilasjon"],"nl":["Luchtreiniging","Meldingen","Geavanceerd comfort","Aanwezigheid thuis","Schimmel","Geluid","Pollen","Profiel","Kamergrenzen","Aanwezigheid in kamer","Zonwering","Ventilatie"],"pl":["Oczyszczanie powietrza","Powiadomienia","Zaawansowany komfort","Obecność w domu","Pleśń","Hałas","Pyłki","Profil","Limity pomieszczenia","Obecność w pomieszczeniu","Zacienianie","Wentylacja"],"pt":["Purificação do ar","Anúncios","Conforto avançado","Presença em casa","Bolor","Ruído","Pólen","Perfil","Limites da divisão","Presença na divisão","Sombreamento","Ventilação"],"pt-BR":["Purificação do ar","Anúncios","Conforto avançado","Presença em casa","Mofo","Ruído","Pólen","Perfil","Limites do cômodo","Presença no cômodo","Sombreamento","Ventilação"],"ro":["Purificarea aerului","Anunțuri","Confort avansat","Prezență acasă","Mucegai","Zgomot","Polen","Profil","Limitele camerei","Prezență în cameră","Umbrire","Ventilație"],"ru":["Очистка воздуха","Объявления","Расширенный комфорт","Присутствие дома","Плесень","Шум","Пыльца","Профиль","Ограничения комнаты","Присутствие в комнате","Затенение","Проветривание"],"sk":["Čistenie vzduchu","Oznámenia","Pokročilý komfort","Prítomnosť doma","Pleseň","Hluk","Peľ","Profil","Limity miestnosti","Prítomnosť v miestnosti","Tienenie","Vetranie"],"sr":["Пречишћавање ваздуха","Обавештења","Напредна удобност","Присуство код куће","Буђ","Бука","Полен","Профил","Ограничења просторије","Присуство у просторији","Засенчење","Вентилација"],"sv":["Luftrening","Meddelanden","Avancerad komfort","Närvaro hemma","Mögel","Buller","Pollen","Profil","Rumsgränser","Närvaro i rummet","Solskydd","Ventilation"],"ta":["காற்று சுத்திகரிப்பு","அறிவிப்புகள்","மேம்பட்ட வசதி","வீட்டில் இருப்பு","பூஞ்சை","இரைச்சல்","மகரந்தம்","சுயவிவரம்","அறை வரம்புகள்","அறையில் இருப்பு","நிழல்","காற்றோட்டம்"],"th":["การฟอกอากาศ","ประกาศ","ความสบายขั้นสูง","การอยู่บ้าน","เชื้อรา","เสียงรบกวน","ละอองเกสร","โปรไฟล์","ขีดจำกัดห้อง","การอยู่ในห้อง","การบังแดด","การระบายอากาศ"],"tr":["Hava temizleme","Duyurular","Gelişmiş konfor","Evde bulunma","Küf","Gürültü","Polen","Profil","Oda sınırları","Odada bulunma","Gölgeleme","Havalandırma"],"uk":["Очищення повітря","Оголошення","Розширений комфорт","Присутність удома","Пліснява","Шум","Пилок","Профіль","Межі кімнати","Присутність у кімнаті","Затінення","Провітрювання"],"ur":["ہوا کی صفائی","اعلانات","اعلیٰ آرام","گھر میں موجودگی","پھپھوندی","شور","زرگل","پروفائل","کمرے کی حدود","کمرے میں موجودگی","سایہ","ہوا کی آمدورفت"],"vi":["Lọc không khí","Thông báo","Tiện nghi nâng cao","Có mặt ở nhà","Nấm mốc","Tiếng ồn","Phấn hoa","Hồ sơ","Giới hạn phòng","Có mặt trong phòng","Che nắng","Thông gió"],"zh-Hans":["空气净化","播报","高级舒适度","在家状态","霉菌","噪声","花粉","配置","房间限制","房间占用","遮阳","通风"],"zh-Hant":["空氣淨化","播報","進階舒適度","在家狀態","黴菌","噪音","花粉","設定檔","房間限制","房間使用","遮陽","通風"]};
+  const hemText062=value=>typeof value==="string"?value.trim().replace(/\s+/gu," "):"";
+  const hemUnprefix062=(value,prefix)=>{
+    const text=hemText062(value),head=hemText062(prefix);
+    if(!head||text.length<=head.length||
+       text.slice(0,head.length).toLocaleLowerCase()!==head.toLocaleLowerCase())return text;
+    const rest=text.slice(head.length);
+    // A whole identity at the start only; never remove a substring in a
+    // meaningful name, or a degree sign from a temperature/angle unit.
+    if(!/^[\s·•°:|—–-]/u.test(rest))return text;
+    const cleaned=rest.replace(/^[\s·•°:|—–-]+/u,"");
+    return cleaned||text;
+  };
+  AirQualityAdvisorCard.prototype._hemSettingLabel062=function(id,state,record={},saved={},includeMode=true,fallback=""){
+    const attrs=state?.attributes||{},reg=record||{},clean=hemText062;
+    const deviceId=reg.device_id||saved.device;
+    const device=this._hass?.devices?.[deviceId]||this._hemDeviceRegistry062?.get(deviceId)||{};
+    const areaId=saved.area||reg.area_id||device.area_id;
+    const areaName=clean(saved.room?.name)||clean(this._hass?.areas?.[areaId]?.name)||
+      clean(areaId?safeArray(this._dashboard105?.()?.rooms).find(room=>room.area_id===areaId)?.name:"");
+    const sourceNames=[device.name_by_user,device.name,saved.controller?.climate?.attributes?.friendly_name,
+      areaName].map(clean).filter(Boolean).sort((a,b)=>b.length-a.length);
+    const stripOwner=value=>{
+      let text=clean(value);
+      for(let round=0;round<3;round++){
+        const before=text;
+        for(const prefix of sourceNames)text=hemUnprefix062(text,prefix);
+        // Integration role prefixes are never entity functionality.
+        for(const prefix of ["Home Environment Manager","Home Environment","Environment Manager","Environment"])
+          text=hemUnprefix062(text,prefix);
+        if(text===before)break;
+      }
+      return text;
+    };
+    // HA stores explicit entity names in `name`; name_by_user is retained
+    // for older card caches. Device names use their own name_by_user field.
+    const custom=clean(reg.name_by_user)||clean(reg.name);
+    let localized="";
+    if(reg.translation_key&&typeof this._hass?.localize==="function"){
+      const key="component.environment_manager.entity."+String(id).split(".")[0]+"."+reg.translation_key+".name";
+      try{const value=this._hass.localize(key);if(value&&value!==key)localized=clean(value);}catch{}
+    }
+    let label=stripOwner(custom||attrs.setting_label||attrs.setting_display_name||
+      reg.original_name_unprefixed||localized||reg.original_name||attrs.friendly_name||fallback||id);
+    if(!custom){
+      const group=clean(attrs.setting_group);
+      const locale=String(this._language()||"en");
+      const possible=group?[group]:(HEM_CONTEXT_GROUPS062[locale]||HEM_CONTEXT_GROUPS062.en);
+      for(const prefix of [...possible].sort((a,b)=>b.length-a.length)){
+        // Functional categories use a visible separator. Do not strip words
+        // from a sentence such as "Noise threshold" or "Profile selection".
+        const tail=label.slice(prefix.length);
+        if(label.slice(0,prefix.length).toLocaleLowerCase()===prefix.toLocaleLowerCase()&&
+           /^\s*[·•°:|—–-]\s*/u.test(tail)){
+          label=hemUnprefix062(label,prefix);break;
+        }
+      }
+    }
+    label=label||stripOwner(attrs.friendly_name)||String(id);
+    const mode=clean(attrs.operating_mode_label);
+    if(includeMode&&!custom&&mode&&hemUnprefix062(label,mode)===label)label=mode+" · "+label;
+    return label;
+  };
+  const hemDoorEco062=field=>{
+    const attrs=field.state?.attributes||{},reg=field.reg||{};
+    return field.domain==="switch"&&[attrs.setting_key,reg.translation_key,reg.unique_id]
+      .some(value=>typeof value==="string"&&/(?:^|_)closed_door_eco$/.test(value));
+  };
+  const hemRenderNativeRows062=(card,holder,rows,scope)=>{
+    if(holder.matches(":focus-within"))return;
+    const opened=new Set([...holder.querySelectorAll("[data-hem-full-row127]")]
+      .filter(row=>row.querySelector(".hem-full-help127[open]"))
+      .map(row=>row.getAttribute("data-hem-full-row127")));
+    const html=rows.map(field=>card._hemFullRow127(field,scope)).join("");
+    if(holder.innerHTML!==html){
+      holder.innerHTML=html;
+      for(const row of holder.querySelectorAll("[data-hem-full-row127]")){
+        const help=row.querySelector(".hem-full-help127");
+        if(help&&opened.has(row.getAttribute("data-hem-full-row127")))help.open=true;
+      }
+    }
+  };
+  /* HEM_SETTINGS_LABELS062B2_END */
+
   /* HEM_FULL_REGISTRY_SETTINGS127_START
    * The compact controller card is not a complete HA device settings page.
    * Discover configuration entities from the device's actual registry, then
@@ -9054,22 +9143,7 @@
       const owner=saved.controller?.climate?.attributes?.controller_id;
       if(scope==="device"&&owner&&attr.controller_id&&attr.controller_id!==owner)continue;
       const kind=reg.unique_id||attr.setting_key||id;
-      const scopedLabel=typeof attr.setting_label==="string"&&attr.setting_label.trim()
-        ? (typeof attr.operating_mode_label==="string"&&attr.operating_mode_label.trim()
-          ? attr.operating_mode_label+" · "+attr.setting_label:attr.setting_label):null;
-      // Settings already live within a Room/Device title and group accordion.
-      // Metadata names are independent of HA's full "Gästezimmer Environment"
-      // friendly names, but explicit user-renamed registry labels take priority.
-      const declaredName=typeof attr.setting_display_name==="string"?
-        attr.setting_display_name.trim():"";
-      const declaredGroup=typeof attr.setting_group==="string"?
-        attr.setting_group.trim():"";
-      const conciseName=declaredGroup&&declaredName.startsWith(declaredGroup+" · ")?
-        declaredName.slice(declaredGroup.length+3).trim():declaredName;
-      const explicitName=typeof reg.name_by_user==="string"&&reg.name_by_user.trim()?
-        reg.name_by_user.trim():null;
-      const label=explicitName||scopedLabel||conciseName||
-        attr.friendly_name||reg.name||reg.original_name||id;
+      const label=this._hemSettingLabel062(id,state,reg,saved);
       const field={id,domain,kind,state,reg,disabled:Boolean(reg.disabled_by),label};
       field.category=this._hemFullCategory127(field);
       result.push(field);
@@ -10220,7 +10294,7 @@
         presence:"Presence, sleep and arrival",ventilation:"Windows and ventilation",
         alerts:"Announcements and delivery",power:"Power and protection"},
       room:{targets:"Room sensors and comfort",mode:"Equipment, control and PID",
-        presence:"Presence and sleep",ventilation:"Windows, ventilation and shades",
+        presence:"Presence and sleep",ventilation:"Windows, doors, ventilation and shading",
         power:"Power and protection",alerts:"Announcements and errors"},
       device:{mode:"Control, targets and fans",pid:"PID and calibration",
         presence:"Presence and sleep",ventilation:"Windows and ventilation",
@@ -10231,7 +10305,7 @@
         presence:"Anwesenheit, Schlaf und Ankunft",ventilation:"Fenster und Lüftung",
         alerts:"Meldungen und Zustellung",power:"Stromversorgung und Schutz"},
       room:{targets:"Raumsensoren und Komfort",mode:"Geräte, Steuerung und PID",
-        presence:"Anwesenheit und Schlaf",ventilation:"Fenster, Lüftung und Beschattung",
+        presence:"Anwesenheit und Schlaf",ventilation:"Fenster, Türen, Lüftung und Beschattung",
         power:"Stromversorgung und Schutz",alerts:"Meldungen und Fehler"},
       device:{mode:"Steuerung, Sollwerte und Lüfter",pid:"PID und Kalibrierung",
         presence:"Anwesenheit und Schlaf",ventilation:"Fenster und Lüftung",
@@ -10242,7 +10316,7 @@
         presence:"Παρουσία, ύπνος και άφιξη",ventilation:"Παράθυρα και αερισμός",
         alerts:"Ανακοινώσεις και παράδοση",power:"Ισχύς και προστασία"},
       room:{targets:"Αισθητήρες χώρου και άνεση",mode:"Συσκευές, έλεγχος και PID",
-        presence:"Παρουσία και ύπνος",ventilation:"Παράθυρα, αερισμός και σκίαση",
+        presence:"Παρουσία και ύπνος",ventilation:"Παράθυρα, πόρτες, αερισμός και σκίαση",
         power:"Ισχύς και προστασία",alerts:"Ανακοινώσεις και σφάλματα"},
       device:{mode:"Έλεγχος, στόχοι και ανεμιστήρες",pid:"PID και βαθμονόμηση",
         presence:"Παρουσία και ύπνος",ventilation:"Παράθυρα και αερισμός",
@@ -10260,11 +10334,12 @@
   };
   const hemRoomDraftCategory141=name=>({
     windows:"ventilation",shades:"ventilation",
-    climate_devices:"mode",occupancy_sensors:"presence",door_sensors:"presence",
+    climate_devices:"mode",occupancy_sensors:"presence",door_sensors:"ventilation",
     air_quality:"targets",temperature:"targets",humidity:"targets"
   })[name]||"targets";
   const hemFieldCategory141=(field,scope)=>{
     const a=field.state?.attributes||{};
+    if(hemDoorEco062(field))return "ventilation";
     const key=[a.setting_key,field.reg?.unique_id,field.id,field.label].filter(Boolean).join("_").toLowerCase();
     if(scope==="home"){
       if(/weather|outdoor|warning/.test(key))return "weather";
@@ -10281,7 +10356,7 @@
     if(/window|ventilat|shade|cover|blind|extraction/.test(key))return "ventilation";
     // Quiet-when-sleeping is a fan policy, not a room sleep controller.
     if(/quiet|fan_mode|fan_percentage|fan_speed/.test(key))return "mode";
-    if(/presence|occup|sleep|wake|alarm|away_policy|schedule|closed_door_eco|_start|_end/.test(key))
+    if(/presence|occup|sleep|wake|alarm|away_policy|schedule|_start|_end/.test(key))
       return "presence";
     if(/power|safety|watchdog|battery|cooldown|relay|_min_|_max_|hold|readiness|full_output/.test(key))
       return "power";
@@ -10411,8 +10486,15 @@
     }
     // Source sections are ordinary field-level details nested under one
     // parent category, not a second independent list of sections.
+    const sourceOrder062=["windows","door_sensors","shades"];
     const sources=scope==="room"?
-      [...root.querySelectorAll("[data-room-options-group114]")]:[];
+      [...root.querySelectorAll("[data-room-options-group114]")].sort((a,b)=>{
+        const rank=node=>{
+          const index=sourceOrder062.indexOf(node.getAttribute("data-room-options-group114"));
+          return index<0?sourceOrder062.length:index;
+        };
+        return rank(a)-rank(b);
+      }):[];
     const sourceCount=new Map();
     for(const source of sources){
       const name=source.getAttribute("data-room-options-group114");
@@ -10438,6 +10520,22 @@
       source.removeAttribute("name"); // avoid accordion auto-closing across groups
       if(source.parentElement!==holder)holder.appendChild(source);
     }
+    if(scope==="room"){
+      const holder=groups.get("ventilation")?.querySelector("[data-hem-unified-sources141]");
+      if(holder&&!holder.contains(_roomOptionsDeepFocus114())){
+        const ordered=sourceOrder062.map(name=>sources.find(node=>
+          node.getAttribute("data-room-options-group114")===name)).filter(Boolean);
+        const actual=[...holder.querySelectorAll(":scope > [data-room-options-group114]")];
+        if(ordered.some((source,index)=>actual[index]!==source)){
+          let previous=null;
+          for(const source of ordered){
+            const position=previous?previous.nextElementSibling:holder.firstElementChild;
+            if(position!==source)holder.insertBefore(source,position);
+            previous=source;
+          }
+        }
+      }
+    }
     for(const key of keys){
       const rows=native.get(key)||[];
       let group=groups.get(key);
@@ -10456,16 +10554,29 @@
         mount.className="hem-unified-content141";
         group.appendChild(mount);
       }
+      const doorSource=scope==="room"&&key==="ventilation"?
+        mount.querySelector('[data-room-options-group114="door_sensors"]'):null;
+      const paired=doorSource?rows.filter(hemDoorEco062):[];
+      const remaining=paired.length?rows.filter(field=>!hemDoorEco062(field)):rows;
+      let doorControls=mount.querySelector("[data-hem-door-eco062]");
+      if(paired.length){
+        if(!doorControls){
+          doorControls=document.createElement("div");
+          doorControls.className="hem-full-rows127 hem-door-eco062";
+          doorControls.setAttribute("data-hem-door-eco062","");
+        }
+        if(doorSource.nextElementSibling!==doorControls)doorSource.after(doorControls);
+        hemRenderNativeRows062(this,doorControls,paired,scope);
+      }else doorControls?.remove();
       let holder=mount.querySelector(":scope > [data-hem-unified-native141]");
-      if(rows.length){
+      if(remaining.length){
         if(!holder){
           holder=document.createElement("div");
           holder.className="hem-full-rows127 hem-unified-native141";
           holder.setAttribute("data-hem-unified-native141","");
           mount.appendChild(holder);
         }
-        const html=rows.map(field=>this._hemFullRow127(field,scope)).join("");
-        if(holder.innerHTML!==html&&!holder.matches(":focus-within"))holder.innerHTML=html;
+        hemRenderNativeRows062(this,holder,remaining,scope);
       }else holder?.remove();
       const strong=group.querySelector(":scope > summary .hem-room-options-label114 strong");
       const small=group.querySelector(":scope > summary .hem-room-options-label114 small");
@@ -10532,6 +10643,7 @@
     ".hem-unified-sources141{display:grid;gap:6px;min-width:0}",
     ".hem-unified-sources141>.hem-room-options-group114{margin:0;border-radius:9px}",
     ".hem-unified-native141{padding:3px 0 0}",
+    ".hem-door-eco062{padding:0;min-width:0}",
     ".hem-home-category128>.hem-unified-content141{padding:0 8px 10px}",
     ".hem-home-category128>.hem-unified-content141>.hem-unified-native141{margin-top:5px;border-top:1px solid var(--aqa-edge);padding-top:9px}",
     ".hem-unified141>summary .hem-room-options-label114 small{overflow-wrap:anywhere}",
