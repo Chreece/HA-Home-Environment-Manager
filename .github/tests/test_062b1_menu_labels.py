@@ -73,3 +73,7 @@ with sync_playwright() as pw:
         page.close()
     browser.close()
 print("PASS: B1 short localized setting labels, user renames, menu geometry and door CSS")
+
+# Keep the b2 menu regression in the existing mandatory browser CI gate.
+import runpy
+runpy.run_path(str(ROOT / ".github/tests/test_062b2_settings_menus.py"), run_name="__main__")
