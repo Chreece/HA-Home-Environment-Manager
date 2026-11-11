@@ -29,9 +29,17 @@ async def async_setup_entry(
         ControllerStatusSensor(entry.runtime_data, spec)
         for spec in equipment.specs(entry.runtime_data)
     ]
+    manager = entry.runtime_data
+    door_sensors = []
+    door_rooms = manager.settings.get("climate_rooms", {})
+    if isinstance(door_rooms, dict) and any(
+            isinstance(room, dict) and isinstance(room.get("door_sensors"), list)
+            and room["door_sensors"] for room in door_rooms.values()):
+        from .door_entities import sensor_entities
+        door_sensors = sensor_entities(manager)
     async_add_grouped_entities(entry.runtime_data, async_add_entities, [
         AirQualityRecommendation(entry.runtime_data, entry.entry_id),
-        *area_entities, *controllers,
+        *area_entities, *controllers, *door_sensors,
     ])
 
 

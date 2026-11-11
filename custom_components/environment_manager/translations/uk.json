@@ -2880,6 +2880,16 @@
           "window_request_pending": "Надсилання прохання відчинити вікно",
           "physical_device_startup_timeout": "Пристрій не підключився повторно протягом 60 секунд після ввімкнення"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

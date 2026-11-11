@@ -2880,6 +2880,16 @@
           "window_request_pending": "กำลังส่งคำขอให้เปิดหน้าต่าง",
           "physical_device_startup_timeout": "อุปกรณ์ไม่เชื่อมต่ออีกครั้งภายใน 60 วินาทีหลังเปิดเครื่อง"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

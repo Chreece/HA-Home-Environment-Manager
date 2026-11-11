@@ -2880,6 +2880,16 @@
           "window_request_pending": "Đang gửi yêu cầu mở cửa sổ",
           "physical_device_startup_timeout": "Thiết bị không kết nối lại trong vòng 60 giây sau khi bật nguồn"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

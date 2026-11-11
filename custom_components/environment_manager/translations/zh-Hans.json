@@ -2880,6 +2880,16 @@
           "window_request_pending": "正在发送开窗请求",
           "physical_device_startup_timeout": "设备通电后 60 秒内未重新连接"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

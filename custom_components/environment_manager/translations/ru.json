@@ -2880,6 +2880,16 @@
           "window_request_pending": "Отправка просьбы открыть окно",
           "physical_device_startup_timeout": "Устройство не подключилось повторно в течение 60 секунд после включения"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

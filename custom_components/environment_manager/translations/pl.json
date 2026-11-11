@@ -2880,6 +2880,16 @@
           "window_request_pending": "Wysyłanie prośby o otwarcie okna",
           "physical_device_startup_timeout": "Urządzenie nie połączyło się ponownie w ciągu 60 sekund od włączenia"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

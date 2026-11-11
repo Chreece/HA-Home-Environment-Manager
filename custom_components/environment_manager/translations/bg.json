@@ -2880,6 +2880,16 @@
           "window_request_pending": "Изпраща се молба за отваряне на прозореца",
           "physical_device_startup_timeout": "Устройството не се свърза отново до 60 секунди след включването"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

@@ -2880,6 +2880,16 @@
           "window_request_pending": "Skickar en uppmaning att öppna fönstret",
           "physical_device_startup_timeout": "Enheten anslöt inte igen inom 60 sekunder efter påslagning"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

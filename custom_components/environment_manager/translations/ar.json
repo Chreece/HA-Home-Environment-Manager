@@ -2880,6 +2880,16 @@
           "window_request_pending": "جارٍ إرسال طلب لفتح النافذة",
           "physical_device_startup_timeout": "لم يُعَد الاتصال بالجهاز بعد تشغيله خلال 60 ثانية"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

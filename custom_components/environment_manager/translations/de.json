@@ -2880,6 +2880,16 @@
           "window_open_wait": "Wartet darauf, dass du das Fenster öffnest",
           "window_request_pending": "Aufforderung zum Fensteröffnen wird gesendet"
         }
+      },
+      "room_door_context": {
+        "name": "Türkontext",
+        "state": {
+          "open": "Offen",
+          "closed": "Geschlossen",
+          "settling": "Schließen wird bestätigt",
+          "unknown": "Unbekannt",
+          "not_configured": "Keine Kontakte ausgewählt"
+        }
       }
     },
     "number": {

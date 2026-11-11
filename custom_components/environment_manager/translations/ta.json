@@ -2880,6 +2880,16 @@
           "window_request_pending": "சாளரத்தைத் திறக்கும் கோரிக்கையை அனுப்புகிறது",
           "physical_device_startup_timeout": "மின்சாரம் இயக்கப்பட்ட 60 வினாடிகளுக்குள் சாதனம் மீண்டும் இணைக்கப்படவில்லை"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

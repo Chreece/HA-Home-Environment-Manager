@@ -25,6 +25,7 @@ AREAS = {
     "binary_sensor.door_a": "area_a", "binary_sensor.door_b": "area_b",
     "binary_sensor.window_a": "area_a",
     "binary_sensor.motion_a": "area_a",
+    "binary_sensor.presence_a": "area_a",
 }
 discovery.entity_area = lambda hass, entity: AREAS.get(entity)
 discovery._device_class = lambda hass, state: state.attributes.get("device_class", "")
@@ -66,6 +67,7 @@ def state(entity, state, klass, age=180, restored=False):
                                                     "restored": restored},
                            last_changed=now - timedelta(seconds=age))
 hass.states.update({
+    "binary_sensor.presence_a": state("binary_sensor.presence_a", "off", "occupancy", age=900),
     "binary_sensor.door_a": state("binary_sensor.door_a", "off", "door"),
     "binary_sensor.door_b": state("binary_sensor.door_b", "off", "door"),
     "binary_sensor.window_a": state("binary_sensor.window_a", "off", "window"),
@@ -80,6 +82,7 @@ assert door.door_choices(hass, "area_b")[0]["value"] == "binary_sensor.door_b"
 cfg = {"door_sensors": ["binary_sensor.door_a"], "closed_door_eco": True}
 base = dict(occupancy="unoccupied",
             occupancy_evidence="all_selected_room_sensors_off",
+            occupancy_sources=["binary_sensor.presence_a"],
             home="home", sleeping=False, temperature_c=20,
             humidity_rh=42, window_safe=True, now=now)
 def evaluate(config=None, **overrides):

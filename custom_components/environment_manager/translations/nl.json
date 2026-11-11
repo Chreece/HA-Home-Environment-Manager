@@ -2880,6 +2880,16 @@
           "window_request_pending": "Verzoek om het raam te openen wordt verstuurd",
           "physical_device_startup_timeout": "Het apparaat is niet binnen 60 seconden na inschakelen opnieuw verbonden"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {
