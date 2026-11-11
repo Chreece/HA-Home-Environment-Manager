@@ -236,10 +236,14 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
     co2_values = [value for value in co2_values if value is not None]
     door = observe_room_door(
         hass, area, settings, occupancy=profile_occupied,
-        occupancy_evidence=occ_reason, home=at_home, sleeping=sleeping,
+        occupancy_evidence=occ_reason,
+        occupancy_sources=[source for source in sensors
+                           if source != (global_presence or {}).get("occupied_rooms_entity")],
+        home=at_home, sleeping=sleeping,
         temperature_c=temp, humidity_rh=comfort_rh,
         co2_ppm=max(co2_values) if co2_values else None,
         window_safe=window_safe,
+        now=datetime.fromtimestamp(now, timezone.utc) if now is not None else None,
         preparing_arrival=bool(arrival_preparation and
                                arrival_preparation.get("arrival_preparing")),
     )

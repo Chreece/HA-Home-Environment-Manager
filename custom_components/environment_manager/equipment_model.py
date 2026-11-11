@@ -1096,6 +1096,8 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
         door = observe_room_door(
             manager.hass, spec.area_id, room,
             occupancy=occupancy, occupancy_evidence=evidence,
+            occupancy_sources=[source for source in sensors
+                               if source != shared.get("occupied_rooms_entity")],
             home=home, sleeping=sleeping,
             temperature_c=temperature, humidity_rh=humidity,
             window_safe=window_safe,

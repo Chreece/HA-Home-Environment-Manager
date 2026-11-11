@@ -316,6 +316,12 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
             ))
     for spec in equipment.specs(manager):
         numbers.extend(_equipment_numbers(manager, spec, registry))
+    door_rooms = manager.settings.get("climate_rooms", {})
+    if isinstance(door_rooms, dict) and any(
+            isinstance(room, dict) and isinstance(room.get("door_sensors"), list)
+            and room["door_sensors"] for room in door_rooms.values()):
+        from .door_entities import number_entities
+        numbers.extend(number_entities(manager))
     async_add_grouped_entities(entry.runtime_data, async_add_entities, numbers)
     from .aqi_sources import register_late_sources
     register_late_sources(manager, entry, async_add_entities, numbers,

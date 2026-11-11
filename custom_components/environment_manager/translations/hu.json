@@ -2880,6 +2880,16 @@
           "window_request_pending": "Ablaknyitási kérés küldése",
           "physical_device_startup_timeout": "A készülék a bekapcsolást követő 60 másodpercen belül nem csatlakozott újra"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

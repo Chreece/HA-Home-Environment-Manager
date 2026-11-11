@@ -2880,6 +2880,16 @@
           "window_request_pending": "Envoi d’une demande d’ouverture de fenêtre",
           "physical_device_startup_timeout": "L’appareil ne s’est pas reconnecté dans les 60 secondes suivant sa mise sous tension"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

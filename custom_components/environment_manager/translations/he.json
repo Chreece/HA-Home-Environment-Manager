@@ -2880,6 +2880,16 @@
           "window_request_pending": "שולח בקשה לפתיחת החלון",
           "physical_device_startup_timeout": "המכשיר לא התחבר מחדש בתוך 60 שניות מהפעלתו"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {

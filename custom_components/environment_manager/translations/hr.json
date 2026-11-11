@@ -2880,6 +2880,16 @@
           "window_request_pending": "Šalje se zahtjev za otvaranje prozora",
           "physical_device_startup_timeout": "Uređaj se nije ponovno povezao unutar 60 sekundi od uključivanja"
         }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
+        }
       }
     },
     "number": {
