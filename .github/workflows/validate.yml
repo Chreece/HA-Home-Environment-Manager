@@ -73,6 +73,8 @@ jobs:
         run: |
           python -I .github/tests/test_062b3_door_context.py
           python -I .github/tests/test_062b3_door_entities.py
+      - name: B5 bounded door start coordination and measured energy intervals
+        run: python -I .github/tests/test_062b5_door_coordination.py
       - name: Off-state thermal anomaly evidence and false-positive guards
         run: |
           set -euo pipefail
