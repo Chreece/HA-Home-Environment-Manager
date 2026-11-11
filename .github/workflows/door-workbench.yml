@@ -1,0 +1,23 @@
+name: Door feature workbench
+on:
+  push:
+    branches: [feat/062b3-door-intelligence]
+    paths: [.github/workflows/door-workbench.yml, .github/door-workbench.patch]
+permissions:
+  contents: read
+jobs:
+  workspace:
+    if: github.repository == 'Chreece/HA-Home-Environment-Manager'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Snapshot tracked source for isolated testing
+        run: git archive --format=tar HEAD > /tmp/hem-source.tar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hem-source
+          path: /tmp/hem-source.tar
+          retention-days: 1
