@@ -117,7 +117,8 @@
           "max_outdoor_humidity": "बाहर · RH (%) (≤)",
           "max_wind_kmh": "वेंटिलेशन · मौसम और चेतावनियाँ · km/h (≤)",
           "max_age_minutes": "वेंटिलेशन · ⏱ · खोलें (min, ≤)",
-          "indoor_mold": "फफूंद संकेतक · ≥ 70%"
+          "indoor_mold": "फफूंद संकेतक · ≥ 70%",
+          "max_age_mode": "Environment reading validity"
         },
         "data_description": {
           "outdoor_aqi": "“बाहर · AQI (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
@@ -141,7 +142,8 @@
           "max_outdoor_humidity": "“बाहर · RH (%) (≤)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
           "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
-          "indoor_mold": "“फफूंद संकेतक · ≥ 70%” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।"
+          "indoor_mold": "“फफूंद संकेतक · ≥ 70%” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "max_age_mode": "Ventilation · Measurement freshness"
         }
       },
       "setup_rooms": {
@@ -712,7 +714,8 @@
           "climate_sleep_start": "नींद · उपकरण · START",
           "climate_sleep_end": "नींद · उपकरण · END",
           "climate_target_source": "उपकरण · स्रोत · लक्ष्य",
-          "climate_comfort_adjustment_max_c": "उपकरण (°C)"
+          "climate_comfort_adjustment_max_c": "उपकरण (°C)",
+          "climate_occupancy_freshness_mode": "Room count freshness"
         },
         "data_description": {
           "climate_occupancy_sensors": "चुनी गई स्थिति या विशेषता में उपस्थित कमरों की वैध सूची को प्राथमिकता मिलती है: सूची में शामिल कमरे भरे हैं, छूटे हुए खाली। सूची न होने पर कोई भी सक्रिय उपस्थिति सेंसर मतलब उपस्थिति; सभी बंद या कोई सेंसर न चुना होना मतलब खाली। चुना गया अनुपलब्ध या अमान्य स्रोत अज्ञात रहता है। अपरिवर्तित सूचियाँ और बाइनरी अवस्थाएँ समाप्त नहीं होतीं।",
@@ -727,7 +730,8 @@
           "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
           "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "“उपकरण · स्रोत · लक्ष्य” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
-          "climate_comfort_adjustment_max_c": "“उपकरण (°C)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।"
+          "climate_comfort_adjustment_max_c": "“उपकरण (°C)” के लिए निर्णय सीमा। यह सुझाव बदलती है, चिकित्सा सीमा नहीं है।",
+          "climate_occupancy_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven."
         }
       },
       "climate_equipment": {
@@ -2228,7 +2232,9 @@
           "general_home_policy": "घर में उपस्थिति",
           "general_wake_alarm_entity": "नींद · अगला अलार्म",
           "general_wake_lead_minutes_entity": "नींद · अलार्म से पहले के मिनट",
-          "window_open_timeout_minutes": "खिड़की खोलने का प्रतीक्षा समय (मिनट)"
+          "window_open_timeout_minutes": "खिड़की खोलने का प्रतीक्षा समय (मिनट)",
+          "general_source_freshness_mode": "Home occupancy · Validity policy",
+          "global_threshold_max_age_mode": "Environment · Validity policy"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2281,7 +2287,9 @@
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "अगले अलार्म के समय या दिनांक-समय की एंटिटी और पहले के मिनटों की एंटिटी चुनें। HEM इतने मिनट पहले स्वचालित नींद मोड छोड़कर सामान्य लक्ष्यों पर लौटता है। केवल समय वाली एंटिटी Home Assistant का समय क्षेत्र उपयोग करती है। अनुपस्थिति, मैन्युअल नियंत्रण और डिवाइस सुरक्षा की प्राथमिकता बनी रहती है।",
           "general_wake_lead_minutes_entity": "मिनटों में शून्य या धनात्मक मान वाली संख्यात्मक एंटिटी चुनें; इकाई min या कोई इकाई नहीं। 07:00 का अलार्म और 30 का मान स्वचालित नींद 06:30 पर समाप्त करते हैं; 0 का अर्थ अलार्म बजने का समय है। बंद करने के लिए दोनों स्रोत हटाएँ।",
-          "window_open_timeout_minutes": "हवा आने देने का अनुरोध स्वीकार होने के बाद, आवश्यकता होने पर नए स्वचालित/PID आरंभ की अनुमति देने से पहले प्रतीक्षा। 0–30 मिनट, डिफ़ॉल्ट 5; 0 प्रतीक्षा बंद करता है। खुली खिड़की की सुरक्षा और उपकरण के न्यूनतम समय लागू रहते हैं।"
+          "window_open_timeout_minutes": "हवा आने देने का अनुरोध स्वीकार होने के बाद, आवश्यकता होने पर नए स्वचालित/PID आरंभ की अनुमति देने से पहले प्रतीक्षा। 0–30 मिनट, डिफ़ॉल्ट 5; 0 प्रतीक्षा बंद करता है। खुली खिड़की की सुरक्षा और उपकरण के न्यूनतम समय लागू रहते हैं।",
+          "general_source_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven.",
+          "global_threshold_max_age_mode": "Automatic: weather entities can remain valid for 180 minutes, other numeric environmental measurements for 90 minutes, while valid change-driven binary contacts remain usable without an inactivity timeout. Custom: use the minute value below. Availability and restored-state checks always apply. Home Assistant last_reported advances on a repeated same-value write, not merely because time has passed."
         }
       },
       "room_occupancy": {
@@ -4308,6 +4316,42 @@
         "state_attributes": {
           "configuration_help": {
             "name": "सहायता"
+          }
+        }
+      },
+      "global_threshold_mode_max_age_mode": {
+        "name": "Ventilation · Measurement freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "home_global_policy_source_freshness_mode": {
+        "name": "Home occupancy · Report freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "area_climate_policy_occupancy_freshness_mode": {
+        "name": "Room occupancy · Count freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
           }
         }
       }
