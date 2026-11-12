@@ -4,21 +4,81 @@ on:
     branches: [fix/062b6-door-dispatch-evidence]
     paths: [.github/workflows/hem-b6-work.yml]
 permissions:
-  contents: read
+  contents: write
 jobs:
-  source:
+  verify:
+    if: github.repository == 'Chreece/HA-Home-Environment-Manager'
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
-      - name: Archive tracked source only
-        run: |
-          mkdir -p /tmp/hem-b6-source
-          git archive --format=tar.gz HEAD > /tmp/hem-b6-source/source.tar.gz
-      - uses: actions/upload-artifact@v4
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
         with:
-          name: hem-b6-source
-          path: /tmp/hem-b6-source/
-          retention-days: 3
+          python-version: '3.14'
+      - name: Verify exact patch and all locally tested source hashes
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          p = Path('.github/hem-b6.patch')
+          p.write_text(p.read_text().replace('\n diff --git ', '\ndiff --git '))
+          assert subprocess.check_output(['git','hash-object',str(p)],text=True).strip() == '038a4bb13ce20cc923a582150fd296d18d181df1'
+          PY
+          git apply --check .github/hem-b6.patch
+          git apply .github/hem-b6.patch
+          python - <<'PY'
+          import subprocess
+          expected = {
+              '.github/tests/test_062b6_dispatch_evidence.py':'7d9783d866b6360e4d0a5e7f244b611899c5d4fe',
+              '.github/tests/test_062b6_name_placeholders.py':'47c219d7cd4815475941a2ea14230f8982315e15',
+              '.github/releases/v0.6.2b6.md':'302ea00e26c373a3e0f4b0717dba8b2f6fa3dcf8',
+              '.github/workflows/validate.yml':'d16c641e110dbf0cba6220bee74c1580ce886fc9',
+              'custom_components/environment_manager/room_doors.py':'daec2d34266397ca5475a996545440df8e2b3461',
+              'custom_components/environment_manager/equipment_runtime.py':'9e3059e5f0a1b010b4cc5518f1c62133d73bee12',
+              'custom_components/environment_manager/equipment_resume.py':'9445ca42a2e9ea3b3207b127ba193219878a439d',
+              'custom_components/environment_manager/frontend/air-quality-advisor-card.js':'857e5f7993193e3acef2c6613f6624021febef71',
+              'custom_components/environment_manager/manifest.json':'5729479b450dd1c157c0ccd3eceef866e3a7035e'
+          }
+          for path, expected_sha in expected.items():
+              actual = subprocess.check_output(['git','hash-object',path],text=True).strip()
+              assert actual == expected_sha, (path,actual,expected_sha)
+          print('All nine changed files match tested sources')
+          PY
+          node --check custom_components/environment_manager/frontend/air-quality-advisor-card.js
+          git diff --check
+      - name: Run actual native dispatch and recovery regressions without appliances
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          for entry in Path('custom_components/environment_manager').iterdir():
+              target=Path(entry.name)
+              assert not target.exists() and not target.is_symlink(),str(target)
+              target.symlink_to(entry,target_is_directory=entry.is_dir())
+          PY
+          python -I .github/tests/test_062b6_dispatch_evidence.py
+          python -I .github/tests/test_062b3_door_context.py
+          python -I .github/tests/test_062b5_door_coordination.py
+          python -I .github/tests/test_onoff_native_extrema.py
+          python -I .github/tests/test_beta85_native_resume.py
+          python - <<'PY'
+          from pathlib import Path
+          for entry in Path('custom_components/environment_manager').iterdir():
+              target=Path(entry.name)
+              if target.is_symlink(): target.unlink()
+          PY
+      - name: Commit verified non-workflow source to the fix branch only
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp .github/workflows/validate.yml .github/hem-b6-validated-workflow.txt
+          git restore .github/workflows/validate.yml
+          git add -u
+          git add .github/hem-b6-validated-workflow.txt
+          git diff --cached --check
+          git commit -m 'Fix door-age dispatch cancellation, intent feedback and name placeholders'
+          git push origin HEAD:refs/heads/fix/062b6-door-dispatch-evidence
