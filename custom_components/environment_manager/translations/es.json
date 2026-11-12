@@ -117,7 +117,8 @@
           "max_outdoor_humidity": "Humedad exterior máxima (%)",
           "max_wind_kmh": "Ventilación · Velocidad máxima del viento (km/h)",
           "max_age_minutes": "Ventilación · Antigüedad máxima de una medición exterior (minutos)",
-          "indoor_mold": "Umbral de moho para ventilar (humedad superficial estimada, %)"
+          "indoor_mold": "Umbral de moho para ventilar (humedad superficial estimada, %)",
+          "max_age_mode": "Environment reading validity"
         },
         "data_description": {
           "outdoor_aqi": "Umbral de decisión para «AQI exterior máximo». Afecta las recomendaciones, no es un límite médico.",
@@ -141,7 +142,8 @@
           "max_outdoor_humidity": "Umbral de decisión para «Humedad exterior máxima (%)». Afecta las recomendaciones, no es un límite médico.",
           "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
-          "indoor_mold": "Umbral de decisión para «Umbral de moho para ventilar (humedad superficial estimada, %)». Afecta las recomendaciones, no es un límite médico."
+          "indoor_mold": "Umbral de decisión para «Umbral de moho para ventilar (humedad superficial estimada, %)». Afecta las recomendaciones, no es un límite médico.",
+          "max_age_mode": "Ventilation · Measurement freshness"
         }
       },
       "setup_rooms": {
@@ -712,7 +714,8 @@
           "climate_sleep_start": "Sueño · Dispositivos · START",
           "climate_sleep_end": "Sueño · Dispositivos · END",
           "climate_target_source": "Método de confort",
-          "climate_comfort_adjustment_max_c": "Dispositivos (°C)"
+          "climate_comfort_adjustment_max_c": "Dispositivos (°C)",
+          "climate_occupancy_freshness_mode": "Room count freshness"
         },
         "data_description": {
           "climate_occupancy_sensors": "Una lista válida de habitaciones ocupadas en el estado o atributo seleccionado tiene prioridad: las incluidas están ocupadas y las omitidas vacías. Sin lista, cualquier sensor de presencia activado significa ocupación; todos desactivados o ninguno seleccionado significa vacío. Una fuente seleccionada no disponible o inválida sigue siendo desconocida. Las listas y estados binarios sin cambios no caducan.",
@@ -727,7 +730,8 @@
           "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
           "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Confort automático (temperatura y humedad); ISO 7730 requires separately verified measurements.",
-          "climate_comfort_adjustment_max_c": "Umbral de decisión para «Dispositivos (°C)». Afecta las recomendaciones, no es un límite médico."
+          "climate_comfort_adjustment_max_c": "Umbral de decisión para «Dispositivos (°C)». Afecta las recomendaciones, no es un límite médico.",
+          "climate_occupancy_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven."
         }
       },
       "climate_equipment": {
@@ -2228,7 +2232,9 @@
           "general_home_policy": "Presencia en casa",
           "general_wake_alarm_entity": "Sueño · Próxima alarma",
           "general_wake_lead_minutes_entity": "Sueño · Minutos antes de la alarma",
-          "window_open_timeout_minutes": "Espera para abrir ventanas (min)"
+          "window_open_timeout_minutes": "Espera para abrir ventanas (min)",
+          "general_source_freshness_mode": "Home occupancy · Validity policy",
+          "global_threshold_max_age_mode": "Environment · Validity policy"
         },
         "data_description": {
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
@@ -2281,7 +2287,9 @@
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Selecciona una entidad de hora o fecha y hora para la próxima alarma, y otra para los minutos de antelación. HEM sale del sueño automático con esa antelación y recupera los objetivos normales. Las horas sin fecha usan la zona horaria de Home Assistant. Ausencia, control manual y protecciones mantienen su prioridad.",
           "general_wake_lead_minutes_entity": "Selecciona una entidad numérica con minutos no negativos, con unidad min o sin unidad. Una alarma a las 07:00 y un valor de 30 terminan el sueño automático a las 06:30; 0 significa al sonar. Para desactivar, borra ambas fuentes.",
-          "window_open_timeout_minutes": "Espera tras aceptar una solicitud de ventilación antes de permitir nuevos arranques automáticos/PID si aún son necesarios. 0–30 minutos, 5 por defecto; 0 desactiva la espera. Se mantienen las protecciones por ventanas abiertas y los tiempos mínimos de los equipos."
+          "window_open_timeout_minutes": "Espera tras aceptar una solicitud de ventilación antes de permitir nuevos arranques automáticos/PID si aún son necesarios. 0–30 minutos, 5 por defecto; 0 desactiva la espera. Se mantienen las protecciones por ventanas abiertas y los tiempos mínimos de los equipos.",
+          "general_source_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven.",
+          "global_threshold_max_age_mode": "Automatic: weather entities can remain valid for 180 minutes, other numeric environmental measurements for 90 minutes, while valid change-driven binary contacts remain usable without an inactivity timeout. Custom: use the minute value below. Availability and restored-state checks always apply. Home Assistant last_reported advances on a repeated same-value write, not merely because time has passed."
         }
       },
       "room_occupancy": {
@@ -4308,6 +4316,42 @@
         "state_attributes": {
           "configuration_help": {
             "name": "Ayuda"
+          }
+        }
+      },
+      "global_threshold_mode_max_age_mode": {
+        "name": "Ventilation · Measurement freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "home_global_policy_source_freshness_mode": {
+        "name": "Home occupancy · Report freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "area_climate_policy_occupancy_freshness_mode": {
+        "name": "Room occupancy · Count freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
           }
         }
       }
