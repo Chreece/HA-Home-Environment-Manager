@@ -1,0 +1,98 @@
+name: Apply verified HEM b11 freshness patch
+on:
+  push:
+    branches: [feat/062b11-freshness-auto-custom]
+    paths:
+      - .github/workflows/b11-apply.yml
+      - .github/b11-verified.patch.gz.b64
+permissions:
+  contents: write
+jobs:
+  apply:
+    if: github.repository == 'Chreece/HA-Home-Environment-Manager'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Verify patch and reproduce source exactly
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64,gzip,hashlib
+          from pathlib import Path
+          raw=base64.b64decode(Path('.github/b11-verified.patch.gz.b64').read_text().strip(),validate=True)
+          patch=gzip.decompress(raw)
+          actual=hashlib.sha256(patch).hexdigest()
+          assert actual=='7ee2ee972a19c648b0cbf7a9df424bdc3b8413494e279403f1315d19a742bdd3',actual
+          Path('/tmp/hem-b11-reviewed.patch').write_bytes(patch)
+          print('Exact reviewed patch SHA-256:',actual)
+          PY
+          git apply --check /tmp/hem-b11-reviewed.patch
+          git apply /tmp/hem-b11-reviewed.patch
+          node --check custom_components/environment_manager/frontend/air-quality-advisor-card.js
+          python -I -m py_compile custom_components/environment_manager/freshness_policy.py
+          git diff --check
+      - name: Verify real freshness, native settings, existing policies
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          source=Path('custom_components/environment_manager')
+          for entry in source.iterdir():
+              target=Path(entry.name)
+              assert not target.exists() and not target.is_symlink(),str(target)
+              target.symlink_to(entry,target_is_directory=entry.is_dir())
+          PY
+          python -I .github/tests/test_062b11_freshness.py
+          python -I .github/tests/test_062b11_native_modes.py
+          python -I .github/tests/test_062b3_door_context.py
+          python -I .github/tests/test_062b6_dispatch_evidence.py
+          python -I .github/tests/test_beta116_settings_metadata.py
+          python -I .github/tests/test_bugfix_native_settings.py
+          python -I .github/scripts/audit_settings.py --check
+          python - <<'PY'
+          from pathlib import Path
+          for entry in Path('custom_components/environment_manager').iterdir():
+              target=Path(entry.name)
+              if target.is_symlink():target.unlink()
+          PY
+      - name: Commit tested source changes only to feature branch
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp .github/workflows/validate.yml .github/b11-validated-workflow.txt
+          git restore .github/workflows/validate.yml
+          git add .github/releases/v0.6.2b11.md .github/tests/test_062b11_freshness.py \
+            .github/tests/test_062b11_native_modes.py .github/tests/test_062b11_freshness_ui.py \
+            .github/tests/test_062b3_door_context.py .github/b11-validated-workflow.txt \
+            docs/settings-inventory.json \
+            custom_components/environment_manager/climate_rooms.py \
+            custom_components/environment_manager/config_flow.py \
+            custom_components/environment_manager/device_controls.py \
+            custom_components/environment_manager/discovery.py \
+            custom_components/environment_manager/freshness_policy.py \
+            custom_components/environment_manager/frontend/air-quality-advisor-card.js \
+            custom_components/environment_manager/frontend/settings-audit-policy.json \
+            custom_components/environment_manager/manager.py \
+            custom_components/environment_manager/manifest.json \
+            custom_components/environment_manager/mold_controls.py \
+            custom_components/environment_manager/occupancy_policy.py \
+            custom_components/environment_manager/presence_continuity.py \
+            custom_components/environment_manager/room_setup.py \
+            custom_components/environment_manager/select.py \
+            custom_components/environment_manager/settings_help.py \
+            custom_components/environment_manager/settings_name_catalog.py \
+            custom_components/environment_manager/strings.json \
+            custom_components/environment_manager/translations/de.json \
+            custom_components/environment_manager/translations/el.json \
+            custom_components/environment_manager/translations/en.json
+          git diff --cached --check
+          git commit -m 'Implement tested Automatic/Custom freshness policies for environment and presence'
+          git push origin HEAD:refs/heads/feat/062b11-freshness-auto-custom
