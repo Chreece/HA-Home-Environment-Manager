@@ -2752,6 +2752,15 @@ class EquipmentRuntime:
             checked["instructions"] = instructions(
                 checked, language=language,
             )
+        if checked.get("phase") in ("intent", "retry_intent"):
+            # Persisted intent is not proof a service was dispatched. It
+            # might also survive interruption mid-call, so never call it
+            # definitively unsent or clear its reconciliation requirements.
+            from .equipment_resume import unconfirmed_dispatch_message
+            checked["instructions"] = unconfirmed_dispatch_message(
+                checked, language=language,
+            )
+            checked["dispatch_confirmed"] = False
         return checked
 
     async def async_continue_automatic(self, spec: model.ManagedDevice) -> bool:
@@ -4814,8 +4823,24 @@ class EquipmentRuntime:
                 )
                 return False
             previous_budget = deepcopy(target_budget)
+        def plan_evidence(value: dict) -> dict:
+            # A diagnostic elapsed age changes with every clock read, even
+            # when the physical door and every control fact are unchanged.
+            # Keep the transition epoch, health, boundary/stability, Eco and
+            # all other plan evidence. Live gates below still re-evaluate
+            # time thresholds, freshness, authority and source identity.
+            evidence = deepcopy(value)
+            door = evidence.get("door")
+            if isinstance(door, dict):
+                contacts = door.get("contacts")
+                if isinstance(contacts, (list, tuple)):
+                    for contact in contacts:
+                        if isinstance(contact, dict):
+                            contact.pop("state_age_seconds", None)
+            return evidence
+
         before_settings = deepcopy(self.manager.settings)
-        before_plan = deepcopy(plan)
+        before_plan = plan_evidence(plan)
         before_sources = {e: snapshot(self.hass.states.get(e)) for e in spec.source_entities}
         before_on_epoch = getattr(self, "_native_on_epoch", {}).get(entity)
         before_feedback = self.measurements(spec, cap) if automatic else None
@@ -4949,7 +4974,7 @@ class EquipmentRuntime:
             if door_hold():
                 return False
             return bool(self._current_spec(spec) and self.manager.settings == before_settings
-                and model.capabilities(self.manager, spec) == cap and latest_plan == before_plan
+                and model.capabilities(self.manager, spec) == cap and plan_evidence(latest_plan) == before_plan
                 and (not automatic or self.measurements(spec, cap) == before_feedback)
                 and self._quiet_context(spec, latest, latest_plan) == before_quiet
                 and not self._gate(spec, cap, latest, latest_plan, action_mode, automatic=automatic,
@@ -4969,6 +4994,12 @@ class EquipmentRuntime:
                 self, spec, cap, service, data, mode=action_mode, automatic=automatic,
             )
             self._status(spec, why or "authority_or_evidence_changed_before_dispatch")
+            # Pending intent may have been serialized by a status entity
+            # while Store yielded. Refresh it even if the abort reason is
+            # identical to the previous tick: no command remains pending.
+            updates = getattr(self, "_presentation_updates", None)
+            if updates is not None:
+                updates.request(spec.identifier)
             return False
 
         if not current():

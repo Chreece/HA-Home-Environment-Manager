@@ -20,7 +20,7 @@ index 6481c2d..d16c641 100644
        - name: B1 concise settings labels and door UI in Chromium
          run: python -I .github/tests/test_062b1_menu_labels.py
        - name: Native floor accordion, settings, room moves and zero-floor parity
- diff --git a/custom_components/environment_manager/equipment_resume.py b/custom_components/environment_manager/equipment_resume.py
+diff --git a/custom_components/environment_manager/equipment_resume.py b/custom_components/environment_manager/equipment_resume.py
 index 6a87b41..9445ca4 100644
 --- a/custom_components/environment_manager/equipment_resume.py
 +++ b/custom_components/environment_manager/equipment_resume.py

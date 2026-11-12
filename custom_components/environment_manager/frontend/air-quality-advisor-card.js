@@ -8964,7 +8964,11 @@
     let localized="";
     if(reg.translation_key&&typeof this._hass?.localize==="function"){
       const key="component.environment_manager.entity."+String(id).split(".")[0]+"."+reg.translation_key+".name";
-      try{const value=this._hass.localize(key);if(value&&value!==key)localized=clean(value);}catch{}
+      // Name translations require placeholders even when the channel is
+      // empty. Missing values log on every render before this catch runs.
+      const supplied=reg.translation_placeholders||attrs.translation_placeholders;
+      const placeholders={channel:"",...(supplied&&typeof supplied==="object"&&!Array.isArray(supplied)?supplied:{})};
+      try{const value=this._hass.localize(key,placeholders);if(value&&value!==key)localized=clean(value);}catch{}
     }
     let label=stripOwner(custom||attrs.setting_label||attrs.setting_display_name||
       reg.original_name_unprefixed||localized||reg.original_name||attrs.friendly_name||fallback||id);
