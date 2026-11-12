@@ -99,7 +99,9 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
         thresholds = self._values.get(CONF_THRESHOLDS, {})
         if not isinstance(thresholds, dict):
             thresholds = {}
-        return {**DEFAULT_THRESHOLDS, **thresholds}["max_age_minutes"]
+        from .freshness_policy import configured_limit
+        return configured_limit(thresholds, family="environment",
+            minutes_key="max_age_minutes", mode_key="max_age_mode")
 
     def _mold_weather_notice(self, entity_ids: list[str]) -> str:
         """Non-blocking, live weather-temperature source status in the UI."""
@@ -1032,6 +1034,8 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
                                                          draft.get("unoccupied_delay_minutes",10)),
                 "occupancy_stale_minutes":user_input.get("climate_occupancy_stale_minutes",
                                                        draft.get("occupancy_stale_minutes",240)),
+                "occupancy_freshness_mode": user_input.get("climate_occupancy_freshness_mode",
+                                                       draft.get("occupancy_freshness_mode", "auto")),
                 "away_policy":user_input.get("climate_away_policy",
                                              draft.get("away_policy","any_home")),
                 "manual_profile":user_input.get("climate_manual_profile",
@@ -1053,7 +1057,8 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
                     or proposal["away_policy"] not in ("any_home","all_home")
                     or proposal["manual_profile"] not in
                       ("auto","comfort","home","away","sleep","eco")
-                    or proposal["target_source"] not in ("temperature","auto_comfort","pmv")):
+                    or proposal["target_source"] not in ("temperature","auto_comfort","pmv")
+                    or proposal["occupancy_freshness_mode"] not in ("auto", "custom")):
                 errors["base"]="climate_occupancy_invalid"
             elif not all(x in {s["value"] for s in sensor_options}
                          for x in proposal["occupancy_sensors"]):
@@ -1096,6 +1101,12 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
                 _multi(sensor_options),
             _marker("climate_away_entities",draft.get("away_entities",[])):
                 _multi(away_options),
+            _marker("climate_occupancy_freshness_mode",draft.get("occupancy_freshness_mode", "auto")):
+                selector.SelectSelector(selector.SelectSelectorConfig(
+                    options=[{"value": "auto", "label": "Automatic (by source type)"},
+                             {"value": "custom", "label": "Custom timeout"}],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                )),
             # Manual/automatic occupancy profile is on the Area Select entity.
         }
         return self.async_show_form(step_id="climate_presence",
@@ -1811,16 +1822,30 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
 
     async def async_step_thresholds(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         if user_input is not None:
-            if user_input["min_outdoor_temp"] >= user_input["max_outdoor_temp"]:
+            mode = user_input.get("max_age_mode", "auto")
+            if mode not in ("auto", "custom"):
+                errors = {"max_age_mode": "invalid_freshness_mode"}
+            elif user_input["min_outdoor_temp"] >= user_input["max_outdoor_temp"]:
                 errors = {"base": "temperature_range"}
             else:
-                self._values[CONF_THRESHOLDS] = user_input
+                self._values[CONF_THRESHOLDS] = {
+                    **{key: user_input[key] for key in DEFAULT_THRESHOLDS},
+                    "max_age_mode": mode,
+                }
                 return await self._finish()
         else:
             errors = {}
         previous = {**DEFAULT_THRESHOLDS, **self._values.get(CONF_THRESHOLDS, {})}
-        schema = {}
-        for key, default in previous.items():
+        schema = {
+            _marker("max_age_mode", previous.get("max_age_mode", "auto"), required=True):
+                selector.SelectSelector(selector.SelectSelectorConfig(
+                    options=[{"value": "auto", "label": "Automatic (by source type)"},
+                             {"value": "custom", "label": "Custom timeout"}],
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                ))
+        }
+        for key, default in DEFAULT_THRESHOLDS.items():
+            default = previous[key]
             is_temp = key in ("min_outdoor_temp", "max_outdoor_temp")
             schema[_marker(key, default, required=True)] = selector.NumberSelector(
                 selector.NumberSelectorConfig(

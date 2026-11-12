@@ -76,7 +76,9 @@ class ReadingContract(unittest.TestCase):
                     and target.id in ('DEVICE_CLASS_METRICS', 'SUFFIX_METRICS')
                     for target in node.targets)]
         constants = sys.modules[base['PACKAGE'] + '.const']
-        namespace = dict(Reading=Reading, timedelta=timedelta,
+        namespace = dict(__name__=base['PACKAGE'] + '.discovery',
+                         __package__=base['PACKAGE'],
+                         Reading=Reading, timedelta=timedelta,
                          dt_util=N(utcnow=lambda: now), er=base['registry'],
                          INDOOR_METRICS=constants.INDOOR_METRICS,
                          SUPPORTED_AIR_METRICS=constants.SUPPORTED_AIR_METRICS)

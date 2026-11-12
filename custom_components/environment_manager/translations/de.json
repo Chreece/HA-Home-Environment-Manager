@@ -117,7 +117,8 @@
           "max_outdoor_humidity": "Maximale Außenluftfeuchte (%)",
           "max_wind_kmh": "Lüftung · Maximale Windgeschwindigkeit (km/h)",
           "max_age_minutes": "Lüftung · Höchstalter der Messwerte (min)",
-          "indoor_mold": "Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)"
+          "indoor_mold": "Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)",
+          "max_age_mode": "Gültigkeit von Umweltmesswerten"
         },
         "data_description": {
           "outdoor_aqi": "Dies ist ein Entscheidungswert für „Maximaler Außen-AQI“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
@@ -141,7 +142,8 @@
           "max_outdoor_humidity": "Dies ist ein Entscheidungswert für „Maximale Außenluftfeuchte (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "max_wind_kmh": "Höchste Außenwindgeschwindigkeit für Lüftungsprüfungen in km/h. Meldet die gewählte Wetterquelle stärkeren Wind, nennt HEM dies in sinnvollen bedingten Öffnungshinweisen, sperrt automatische Außenluftnutzung und kann das Schließen offener Fenster empfehlen. Dies ist keine Ventilatordrehzahl.",
           "max_age_minutes": "Höchstalter der verwendeten Umweltmesswerte in Minuten, einschließlich Außen-/Wetterdaten und Raummessungen. Ältere Werte gelten als veraltet und belegen weder sichere Lüftung noch gültige Temperaturen für die Schimmelkalibrierung.",
-          "indoor_mold": "Dies ist ein Entscheidungswert für „Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert."
+          "indoor_mold": "Dies ist ein Entscheidungswert für „Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "max_age_mode": "Lüftung · Aktualität der Messwerte"
         }
       },
       "setup_rooms": {
@@ -712,7 +714,8 @@
           "climate_sleep_start": "Schlaf · Beginn (Ortszeit)",
           "climate_sleep_end": "Schlaf · Ende (Ortszeit)",
           "climate_target_source": "Komfortregelung",
-          "climate_comfort_adjustment_max_c": "Maximale Komfortkorrektur (°C)"
+          "climate_comfort_adjustment_max_c": "Maximale Komfortkorrektur (°C)",
+          "climate_occupancy_freshness_mode": "Aktualität der Raum-Personenzähler"
         },
         "data_description": {
           "climate_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
@@ -727,7 +730,8 @@
           "climate_sleep_start": "Lokale Beginnzeit des Schlafintervalls. Sie trägt nur bei aktiviertem Zeitplan zum Schlafnachweis bei. Das Intervall kann über Mitternacht reichen, etwa 22:00–07:00. Der konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor dieses Schlafsignal endet. Die normale Regelung wird innerhalb der bestehenden Freigaben fortgesetzt.",
           "climate_sleep_end": "Lokale Endzeit des Schlafintervalls, wirksam nur bei aktiviertem Zeitplan. Das Ende hebt Schlafmeldungen des manuellen Schalters oder einer anderen gewählten Quelle nicht auf. Der konfigurierte Wecker mit Vorlauf kann den automatischen Schlafmodus beenden, bevor dieses Schlafsignal endet. Die normale Regelung wird innerhalb der bestehenden Freigaben fortgesetzt.",
           "climate_target_source": "Feste Temperaturen, begrenzte Korrektur nach gemessener Luftfeuchte oder ISO 7730 mit echten Messwerten.",
-          "climate_comfort_adjustment_max_c": "Dies ist ein Entscheidungswert für „Maximale Komfortkorrektur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert."
+          "climate_comfort_adjustment_max_c": "Dies ist ein Entscheidungswert für „Maximale Komfortkorrektur (°C)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
+          "climate_occupancy_freshness_mode": "Automatisch: Numerische Personenzähler und negative Anwesenheitsmeldungen gelten bis zu 240 Minuten; bestätigtes Zuhausebleiben bleibt auch ohne Änderung gültig. Unbekannte, wiederhergestellte und nicht verfügbare Werte beweisen keine Abwesenheit. Benutzerdefiniert: Minutengrenze für Meldungen. Raumlisten bleiben zustandsbasiert."
         }
       },
       "climate_equipment": {
@@ -2228,7 +2232,9 @@
           "general_home_policy": "Anwesenheit zu Hause",
           "general_wake_alarm_entity": "Schlaf · Nächster Wecker",
           "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker",
-          "window_open_timeout_minutes": "Wartezeit zum Fensteröffnen (min)"
+          "window_open_timeout_minutes": "Wartezeit zum Fensteröffnen (min)",
+          "general_source_freshness_mode": "Anwesenheit · Gültigkeitsregel",
+          "global_threshold_max_age_mode": "Umgebung · Gültigkeitsregel"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -2281,7 +2287,9 @@
           "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
           "general_wake_alarm_entity": "Home-Assistant-Quelle für den nächsten Weckalarm auswählen. HEM kann das automatische Schlafprofil nur vor dem Alarm verlassen, wenn auch eine Quelle für die Minuten davor konfiguriert ist. Beide Quellen zusammen auswählen oder beide frei lassen. Unbekannte Werte beweisen keine Weckzeit.",
           "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus.",
-          "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin."
+          "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin.",
+          "general_source_freshness_mode": "Automatisch: Numerische Personenzähler und negative Anwesenheitsmeldungen gelten bis zu 240 Minuten; bestätigtes Zuhausebleiben bleibt auch ohne Änderung gültig. Unbekannte, wiederhergestellte und nicht verfügbare Werte beweisen keine Abwesenheit. Benutzerdefiniert: Minutengrenze für Meldungen. Raumlisten bleiben zustandsbasiert.",
+          "global_threshold_max_age_mode": "Automatisch: Wetterdaten höchstens 180 Minuten und numerische Umweltdaten 90 Minuten gültig; gültige zustandsgetriebene Binärkontakte verfallen nicht wegen Inaktivität. Benutzerdefiniert: Minutengrenze unten. Nicht verfügbare oder wiederhergestellte Werte bleiben ungültig. last_reported wird nur bei erneutem Zustandsbericht aktualisiert, auch bei gleichem Wert."
         }
       },
       "room_occupancy": {
@@ -3062,7 +3070,7 @@
         }
       },
       "global_threshold_max_age_minutes": {
-        "name": "Lüftung · Höchstalter der Messwerte (min)",
+        "name": "Benutzerdefiniertes Höchstalter (Min.)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
@@ -3294,7 +3302,7 @@
         }
       },
       "global_occupancy_source_stale_minutes": {
-        "name": "Anwesenheit zu Hause · Höchstalter von Tracker-/Zählwerten (min)",
+        "name": "Benutzerdefiniertes Höchstalter (Min.)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
@@ -3366,7 +3374,7 @@
         }
       },
       "area_climate_operating_occupancy_stale_minutes": {
-        "name": "Raumanwesenheit · Höchstalter der Personenzählung (min)",
+        "name": "Benutzerdefiniertes Höchstalter (Min.)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
@@ -4304,6 +4312,42 @@
           "disabled": "Deaktiviert",
           "observe": "Beobachten und empfehlen",
           "bounded": "Begrenzte automatische Anpassung (10 % / Tag)"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "global_threshold_mode_max_age_mode": {
+        "name": "Lüftung · Aktualität der Messwerte",
+        "state": {
+          "auto": "Automatisch (nach Quellentyp)",
+          "custom": "Benutzerdefiniertes Zeitlimit"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "home_global_policy_source_freshness_mode": {
+        "name": "Anwesenheit · Aktualität der Meldungen",
+        "state": {
+          "auto": "Automatisch (nach Quellentyp)",
+          "custom": "Benutzerdefiniertes Zeitlimit"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "area_climate_policy_occupancy_freshness_mode": {
+        "name": "Raumbelegung · Aktualität der Zählwerte",
+        "state": {
+          "auto": "Automatisch (nach Quellentyp)",
+          "custom": "Benutzerdefiniertes Zeitlimit"
         },
         "state_attributes": {
           "configuration_help": {

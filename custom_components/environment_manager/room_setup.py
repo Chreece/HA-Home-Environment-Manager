@@ -503,6 +503,8 @@ class RoomSetupMixin:
             "general_home_trackers": old.get("home_trackers", []),
             "general_away_cooldown_minutes": old.get("away_cooldown_minutes", 10),
             "general_source_stale_minutes": old.get("source_stale_minutes", 240),
+            "general_source_freshness_mode": old.get("source_freshness_mode", "auto"),
+            "global_threshold_max_age_mode": limits.get("max_age_mode", "auto"),
             "general_home_policy": old.get("home_policy", "any_home"),
             "general_wake_alarm_entity": old.get("wake_alarm_entity") or "none",
             "general_wake_lead_minutes_entity": old.get("wake_lead_minutes_entity") or "none",
@@ -583,6 +585,10 @@ class RoomSetupMixin:
                 source_age = float("nan")
             if not math.isfinite(source_age) or not 10 <= source_age <= 1440:
                 errors["general_source_stale_minutes"] = "invalid_room_source"
+            if value["general_source_freshness_mode"] not in ("auto", "custom"):
+                errors["general_source_freshness_mode"] = "invalid_room_source"
+            if value["global_threshold_max_age_mode"] not in ("auto", "custom"):
+                errors["global_threshold_max_age_mode"] = "invalid_room_source"
             try:
                 pollen_high = float(value["pollen_high_from"])
                 pollen_max = float(value["pollen_max_scale"])
@@ -695,11 +701,13 @@ class RoomSetupMixin:
                 global_env["pollen_high_from"] = pollen_high
                 global_env["pollen_max_scale"] = pollen_max
                 global_env["pollen_avoid_ventilation"] = value["pollen_avoid_ventilation"]
+                checked_limits["max_age_mode"] = value["global_threshold_max_age_mode"]
                 self._values[CONF_THRESHOLDS] = checked_limits
                 occupancy = deepcopy(old)
                 occupancy["home_trackers"] = list(dict.fromkeys(value["general_home_trackers"]))
                 occupancy["away_cooldown_minutes"] = float(value["general_away_cooldown_minutes"])
                 occupancy["source_stale_minutes"] = source_age
+                occupancy["source_freshness_mode"] = value["general_source_freshness_mode"]
                 for name in ("wake_alarm_entity", "wake_lead_minutes_entity"):
                     occupancy[name] = None if value["general_" + name] == "none" else value["general_" + name]
                 occupancy["home_policy"] = value["general_home_policy"]
@@ -742,6 +750,10 @@ class RoomSetupMixin:
             selector.NumberSelector(selector.NumberSelectorConfig(
                 min=0, max=240, step=1, unit_of_measurement="min",
                 mode=selector.NumberSelectorMode.BOX)))
+        fields[field("general_source_freshness_mode", value["general_source_freshness_mode"])] = select([
+            {"value": "auto", "label": "Automatic (by source type)"},
+            {"value": "custom", "label": "Custom timeout"},
+        ])
         fields[field("general_source_stale_minutes", value["general_source_stale_minutes"])] = (
             selector.NumberSelector(selector.NumberSelectorConfig(
                 min=10, max=1440, step=1, unit_of_measurement="min",
@@ -749,6 +761,10 @@ class RoomSetupMixin:
         fields[field("general_home_policy", value["general_home_policy"])] = select([
             {"value": "any_home", "label": "Any home"},
             {"value": "all_home", "label": "All home"},
+        ])
+        fields[field("global_threshold_max_age_mode", value["global_threshold_max_age_mode"])] = select([
+            {"value": "auto", "label": "Automatic (by source type)"},
+            {"value": "custom", "label": "Custom timeout"},
         ])
         for name in DEFAULT_THRESHOLDS:
             low = -40 if name in ("min_outdoor_temp", "max_outdoor_temp") else 1

@@ -163,8 +163,10 @@ def is_stale(state: State | None, max_age_minutes: float) -> bool:
         # HA can recreate an old measurement with a new startup timestamp.
         # Its explicit restore placeholder is not a fresh physical report.
         return True
-    last = getattr(state, "last_reported", None) or state.last_updated
-    return dt_util.utcnow() - last > timedelta(minutes=max_age_minutes)
+    from .freshness_policy import effective_minutes, observed_age_seconds
+    limit = effective_minutes(state, max_age_minutes)
+    age = observed_age_seconds(state, now=dt_util.utcnow())
+    return age is None or (limit is not None and age > limit * 60)
 
 
 def indoor_temperature_choices(

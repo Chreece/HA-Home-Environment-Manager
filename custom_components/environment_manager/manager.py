@@ -145,7 +145,9 @@ class AirQualityManager:
     @callback
     def _capture(self) -> Plan:
         config = self.settings
-        max_age = self.thresholds["max_age_minutes"]
+        from .freshness_policy import configured_limit
+        max_age = configured_limit(self.thresholds, family="environment",
+            minutes_key="max_age_minutes", mode_key="max_age_mode")
         from .discovery import is_pressure_sensor
         # Retired pressure selections stay in saved configuration but do not
         # create an unsupported/missing-air-data warning. Real pollutant
@@ -321,6 +323,10 @@ class AirQualityManager:
         shared_presence["_room_occupancy_stale_minutes"] = {
             area: cfg["occupancy_stale_minutes"] for area, cfg in room_climate_configs.items()
             if isinstance(cfg, dict) and "occupancy_stale_minutes" in cfg
+        }
+        shared_presence["_room_occupancy_freshness_mode"] = {
+            area: cfg.get("occupancy_freshness_mode", "auto")
+            for area, cfg in room_climate_configs.items() if isinstance(cfg, dict)
         }
         home_status, _home_evidence, _home_sources = home_presence(
             self.hass,shared_presence)

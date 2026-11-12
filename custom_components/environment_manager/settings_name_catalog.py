@@ -5592,6 +5592,32 @@ for _locale, _label in {
     SETTING_NAMES[_locale]["area_climate_operating_closed_door_eco"] = _label
 
 
+
+# Automatic/custom measurement validity policy: three distinct authorities.
+# The editable minute values are meaningful only in Custom mode.
+for _key in ("global_threshold_max_age_minutes",
+             "global_occupancy_source_stale_minutes",
+             "area_climate_operating_occupancy_stale_minutes"):
+    for _lang, _label in {
+        "en": "Custom maximum age (minutes)",
+        "el": "Προσαρμοσμένη μέγιστη ηλικία (λεπτά)",
+        "de": "Benutzerdefiniertes Höchstalter (Min.)",
+    }.items():
+        SETTING_NAMES[_lang][_key] = _label
+
+SETTING_GROUPS['global_threshold_mode_max_age_mode'] = 'ventilation'
+SETTING_NAMES['en']['global_threshold_mode_max_age_mode'] = 'Ventilation · Measurement freshness'
+SETTING_NAMES['el']['global_threshold_mode_max_age_mode'] = 'Αερισμός · Εγκυρότητα μετρήσεων'
+SETTING_NAMES['de']['global_threshold_mode_max_age_mode'] = 'Lüftung · Aktualität der Messwerte'
+SETTING_GROUPS['home_global_policy_source_freshness_mode'] = 'home_presence'
+SETTING_NAMES['en']['home_global_policy_source_freshness_mode'] = 'Home occupancy · Report freshness'
+SETTING_NAMES['el']['home_global_policy_source_freshness_mode'] = 'Παρουσία στο σπίτι · Εγκυρότητα αναφορών'
+SETTING_NAMES['de']['home_global_policy_source_freshness_mode'] = 'Anwesenheit · Aktualität der Meldungen'
+SETTING_GROUPS['area_climate_policy_occupancy_freshness_mode'] = 'room_presence'
+SETTING_NAMES['en']['area_climate_policy_occupancy_freshness_mode'] = 'Room occupancy · Count freshness'
+SETTING_NAMES['el']['area_climate_policy_occupancy_freshness_mode'] = 'Παρουσία χώρου · Εγκυρότητα μετρητών'
+SETTING_NAMES['de']['area_climate_policy_occupancy_freshness_mode'] = 'Raumbelegung · Aktualität der Zählwerte'
+
 def setting_locale(locale: str) -> str:
     tag = str(locale or "en").replace("_", "-").casefold()
     exact = next((key for key in SETTING_NAMES if key.casefold() == tag), None)
