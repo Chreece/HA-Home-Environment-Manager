@@ -54,8 +54,23 @@ jobs:
           git diff --check
       - name: Run dependency-free freshness and native-mode regressions
         run: |
+          python - <<'PY'
+          from pathlib import Path
+          source=Path('custom_components/environment_manager')
+          for entry in source.iterdir():
+              target=Path(entry.name)
+              assert not target.exists() and not target.is_symlink(), str(target)
+              target.symlink_to(entry,target_is_directory=entry.is_dir())
+          PY
           python -I .github/tests/test_062b11_freshness.py
           python -I .github/tests/test_062b11_native_modes.py
+          python - <<'PY'
+          from pathlib import Path
+          source=Path('custom_components/environment_manager')
+          for entry in source.iterdir():
+              target=Path(entry.name)
+              if target.is_symlink(): target.unlink()
+          PY
       - name: Record patch on feature branch, not main
         run: |
           set -euo pipefail
