@@ -157,6 +157,8 @@ class AwayProfileTests(unittest.TestCase):
     def test_current_freshness_setting_wins_over_cached_configuration(self):
         self.hass.put(PERSON, "not_home", age=20)
         self.manager.settings["occupancy_global"] = {"home_trackers": [PERSON], "source_stale_minutes": 10}
+        self.assertEqual(self.evaluate()[0]["away"], "away", "Automatic uses the type-based 240-minute limit")
+        self.manager.settings["occupancy_global"]["source_freshness_mode"] = "custom"
         facts, _, _, hold = self.evaluate()
         self.assertEqual((facts["away"], hold), ("unknown", "house_occupancy_unknown"))
         self.manager.settings["occupancy_global"]["source_stale_minutes"] = 60
