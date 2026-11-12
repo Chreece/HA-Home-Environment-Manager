@@ -1,0 +1,23 @@
+name: HEM b8 source snapshot
+on:
+  push:
+    branches: [feat/062b8-settings-audit]
+    paths: [.github/workflows/b8-source.yml]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: |
+          mkdir /tmp/hem-b8
+          git archive --format=tar.gz HEAD > /tmp/hem-b8/source.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hem-b8-source
+          path: /tmp/hem-b8/
+          retention-days: 2
