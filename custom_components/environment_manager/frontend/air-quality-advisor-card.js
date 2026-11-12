@@ -10834,7 +10834,7 @@
     for(const row of saved.node.querySelectorAll('[data-hem-full-row127]')){
       const id=row.getAttribute('data-hem-full-row127'),edit=saved.nativeEdits.get(id);
       if(!edit)continue;
-      if(edit.phase==="confirming"&&this._settingsNativeValue(saved,scope,id)===edit.value){
+      if(["confirming","unconfirmed"].includes(edit.phase)&&this._settingsNativeValue(saved,scope,id)===edit.value){
         edit.phase="saved";clearTimeout(edit.confirmTimer);
       }
       const status=row.querySelector('[data-hem-full-status127]');
@@ -11099,7 +11099,10 @@
         }
         flow=null;
         for(const [name,sent] of patch){
-          if(state.dirty.get(name)?.revision===sent.revision)state.dirty.delete(name);
+          if(state.dirty.get(name)?.revision===sent.revision){
+            state.dirty.delete(name);
+            if(scope==="room")this._roomSettingsFieldError114(saved,name,"");
+          }
         }
         if(this._settingsActive(saved,scope)){
           this._settingsOptionsStatus(saved,scope,settingsText(this,state.dirty.size?"saving":"saved"));
@@ -11155,12 +11158,42 @@
   settingsProto._submitRoomSettings114=function(saved){this._settingsSaveOptions(saved,"room");};
   settingsProto._saveHomeGeneral128=function(saved){this._settingsSaveOptions(saved,"home");};
 
-  // Floors use native registry writes; update only the edited property or Area.
+  // Floors use native registry writes; retain drafts until a registry read
+  // confirms them. An older in-flight list response is not an acknowledgment.
+  settingsProto._settingsFloorStatus=function(saved){
+    if(this._floorDialog140!==saved)return;
+    const status=saved.node.querySelector('[data-floor-status140]');
+    if(!status)return;
+    const edits=[...(saved.floorEdits?.values()||[])];
+    const bad=edits.find(edit=>edit.invalid||["failed","unconfirmed"].includes(edit.phase));
+    const phase=bad?(bad.invalid?"invalid":bad.phase):
+      edits.some(edit=>edit.running||edit.dirty)?"saving":edits.length?"confirming":"saved";
+    status.textContent=settingsText(this,phase);
+    status.setAttribute('role',bad?'alert':'status');
+    saved.node.setAttribute('aria-busy',String(!bad&&edits.length>0));
+    for(const edit of edits){
+      if(!["failed","unconfirmed"].includes(edit.phase)||edit.invalid)continue;
+      const retry=document.createElement('button');retry.type='button';
+      retry.textContent=settingsText(this,"retry")+' · '+edit.label;
+      retry.addEventListener('click',()=>{
+        clearTimeout(edit.confirmTimer);edit.revision++;edit.dirty=true;edit.phase="saving";
+        edit.send?.();
+      });
+      status.append(' ',retry);
+    }
+  };
   settingsProto._settingsRefreshFloor=function(saved){
     const ctx=this._floorContext140(saved.id);
     if(!ctx||saved.connection!==this._hass?.connection){this._floorClose140(false);return;}
     saved.floor=ctx.floor;saved.areas=ctx.areas;
     const pending=saved.floorEdits||new Map();
+    for(const [key,edit] of pending){
+      if(!["confirming","unconfirmed"].includes(edit.phase)||edit.dirty||edit.invalid)continue;
+      const reported=key.startsWith('area:')?
+        ctx.areas.some(area=>area.area_id===key.slice(5)&&area.floor_id===saved.id):
+        (ctx.floor[key]??null);
+      if(reported===edit.value){clearTimeout(edit.confirmTimer);pending.delete(key);}
+    }
     for(const [key,selector] of [['name','[data-floor-name140]'],['level','[data-floor-level140]'],['icon','[data-floor-icon140]']]){
       const input=saved.node.querySelector(selector);
       if(input&&!pending.has(key)&&input!==_roomOptionsDeepFocus114())input.value=ctx.floor[key]??"";
@@ -11169,6 +11202,7 @@
       const id=input.getAttribute('data-floor-area140');
       if(!pending.has('area:'+id))input.checked=ctx.areas.some(area=>area.area_id===id&&area.floor_id===saved.id);
     }
+    if(saved.floorEdits)this._settingsFloorStatus(saved);
   };
   settingsProto._settingsFloorEdit=function(saved,input,immediate=false){
     if(this._floorDialog140!==saved||!this.isConnected||this._hass?.user?.is_admin!==true||
@@ -11179,7 +11213,6 @@
     else if(input.hasAttribute('data-floor-level140')){key='level';value=input.value.trim()===''?null:Number(input.value);}
     else if(input.hasAttribute('data-floor-icon140')){key='icon';value=input.value.trim()||null;}
     else return;
-    const status=saved.node.querySelector('[data-floor-status140]');
     const valid=input.checkValidity()&&(key!=='name'||value&&value.length<=100)&&
       (key!=='level'||value===null||Number.isSafeInteger(value)&&Math.abs(value)<=100)&&
       (key!=='icon'||value===null||/^mdi:[a-z0-9-]{1,90}$/.test(value));
@@ -11189,19 +11222,22 @@
         (saved.floor[key]??null);
       if(valid&&prior===value)return;
     }
-    if(!valid){
-      const pending=saved.floorEdits.get(key)||{revision:0};
-      clearTimeout(pending.timer);pending.invalid=true;pending.dirty=false;
-      saved.floorEdits.set(key,pending);
-      status.textContent=this._floorWords140().invalid;status.setAttribute('role','alert');return;
-    }
     const edit=saved.floorEdits.get(key)||{revision:0};clearTimeout(edit.timer);
-    if(edit.value!==value||edit.invalid){edit.value=value;edit.revision++;edit.dirty=true;edit.invalid=false;}
+    if(!valid){
+      clearTimeout(edit.confirmTimer);edit.revision++;edit.invalid=true;edit.dirty=false;
+      edit.phase="invalid";saved.floorEdits.set(key,edit);
+      this._settingsFloorStatus(saved);return;
+    }
+    if(edit.value!==value||edit.invalid){
+      clearTimeout(edit.confirmTimer);edit.value=value;edit.revision++;edit.dirty=true;
+      edit.invalid=false;edit.phase="saving";
+    }
+    edit.label=input.closest('label')?.textContent?.trim()||key;
     saved.floorEdits.set(key,edit);
-    status.textContent=settingsText(this,"saving");status.setAttribute('role','status');
     const send=()=>{
       if(edit.running||!edit.dirty||edit.invalid)return;
-      edit.running=true;
+      edit.running=true;this._settingsFloorStatus(saved);
+      let attemptRevision=edit.revision;
       this._settingsQueue('floor:'+saved.id,async()=>{
         const active=()=>this._floorDialog140===saved&&saved.connection===this._hass?.connection&&
           this.isConnected&&this._hass?.user?.is_admin===true;
@@ -11210,7 +11246,7 @@
         const [floors,areas]=await Promise.all([call({type:'config/floor_registry/list'}),call({type:'config/area_registry/list'})]);
         if(!active())return;
         if(!Array.isArray(floors)||!Array.isArray(areas)||!floors.some(f=>f.floor_id===saved.id))throw Error('Floor changed');
-        const value=edit.value,revision=edit.revision;edit.dirty=false;
+        const value=edit.value,revision=edit.revision;attemptRevision=revision;edit.dirty=false;
         if(edit.invalid)return;
         if(key.startsWith('area:')){
           const id=key.slice(5),area=areas.find(a=>(a.area_id||a.id)===id);
@@ -11219,21 +11255,22 @@
             await call({type:'config/area_registry/update',area_id:id,floor_id:value?saved.id:null});
         }else await call({type:'config/floor_registry/update',floor_id:saved.id,[key]:value});
         if(active()&&edit.revision===revision){
-          if(key.startsWith('area:'))saved.areas=saved.areas.map(area=>area.area_id===key.slice(5)?
-            {...area,floor_id:value?saved.id:null}:area);
-          else saved.floor={...saved.floor,[key]:value};
-          saved.floorEdits.delete(key);status.textContent=settingsText(this,"saved");
+          edit.phase="confirming";
+          edit.confirmTimer=setTimeout(()=>{
+            if(active()&&edit.revision===revision&&edit.phase==="confirming"&&saved.floorEdits.get(key)===edit){
+              edit.phase="unconfirmed";this._settingsFloorStatus(saved);
+            }
+          },15000);
         }
         if(active())this._floorFetch140(true);
       }).catch(()=>{
-        edit.dirty=false;
-        if(this._floorDialog140===saved){
-          status.textContent=settingsText(this,"failed");status.setAttribute('role','alert');
-          const retry=document.createElement('button');retry.type='button';retry.textContent=settingsText(this,"retry");
-          retry.onclick=()=>{edit.dirty=true;send();};status.append(' ',retry);
-        }
-      }).finally(()=>{edit.running=false;if(edit.dirty&&!edit.invalid&&this._floorDialog140===saved)send();});
+        if(edit.revision===attemptRevision){edit.dirty=false;edit.phase="failed";}
+      }).finally(()=>{
+        edit.running=false;this._settingsFloorStatus(saved);
+        if(edit.dirty&&!edit.invalid&&this._floorDialog140===saved)send();
+      });
     };
+    edit.send=send;this._settingsFloorStatus(saved);
     if(immediate||key.startsWith('area:'))send();else edit.timer=setTimeout(send,450);
   };
   const settingsFloorOpenBefore=settingsProto._floorOpen140;
@@ -11260,7 +11297,7 @@
       if(saved){
         saved.settingsClosed=true;clearTimeout(saved.optionsAutosave?.timer);
         for(const edit of saved.nativeEdits?.values()||[]){clearTimeout(edit.timer);clearTimeout(edit.confirmTimer);}
-        for(const edit of saved.floorEdits?.values()||[])clearTimeout(edit.timer);
+        for(const edit of saved.floorEdits?.values()||[]){clearTimeout(edit.timer);clearTimeout(edit.confirmTimer);}
       }
       return prior.apply(this,args);
     };
