@@ -1,0 +1,44 @@
+name: HEM b7 verified settings build
+on:
+  push:
+    branches: [feat/062b7-card-settings-autosave]
+    paths: [.github/workflows/b7-build.yml]
+permissions:
+  contents: write
+jobs:
+  build:
+    if: github.repository == 'Chreece/HA-Home-Environment-Manager'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Apply exact tested settings sources
+        run: |
+          set -euo pipefail
+          python .github/b7-build.py
+          node --check custom_components/environment_manager/frontend/air-quality-advisor-card.js
+          python -m py_compile .github/tests/test_062b7_autosave.py
+          git diff --check
+          python - <<'PY'
+          import json, subprocess
+          allowed=set(json.load(open('.github/b7-expected.json')))
+          changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
+          assert changed <= allowed, changed-allowed
+          PY
+      - name: Record verified non-workflow changes on feature branch
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp .github/workflows/validate.yml .github/b7-validated-workflow.txt
+          git restore .github/workflows/validate.yml
+          git add -u
+          git add .github/b7-validated-workflow.txt
+          git diff --cached --check
+          git commit -m 'Apply tested automatic saving, retained drafts and purpose-specific menu descriptions'
+          git push origin HEAD:refs/heads/feat/062b7-card-settings-autosave
