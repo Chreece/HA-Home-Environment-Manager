@@ -41,6 +41,8 @@ class TestPolicy(unittest.TestCase):
         for typ,expected in [('weather',180),('sensor',90),('binary_sensor',None)]:
             self.assertEqual(policy.effective_minutes(state(typ),env),expected)
         self.assertEqual(policy.effective_minutes(state('sensor'),home),240)
+        self.assertEqual(policy.effective_minutes(state('binary_sensor',state='off'),home),240)
+        self.assertEqual(policy.effective_minutes(state('binary_sensor',state='on'),room),None)
         self.assertEqual(policy.effective_minutes(state('sensor'),room),240)
         manual=policy.configured_limit({'max_age_mode':'custom','max_age_minutes':15},family='environment',minutes_key='max_age_minutes',mode_key='max_age_mode')
         self.assertEqual(policy.effective_minutes(state('weather'),manual),15)
