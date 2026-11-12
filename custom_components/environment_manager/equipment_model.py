@@ -1022,6 +1022,10 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
                   area: value["occupancy_stale_minutes"]
                   for area, value in rooms.items()
                   if isinstance(value, dict) and "occupancy_stale_minutes" in value
+              },
+              "_room_occupancy_freshness_mode": {
+                  area: value.get("occupancy_freshness_mode", "auto")
+                  for area, value in rooms.items() if isinstance(value, dict)
               }}
     from .occupancy_policy import room_presence, home_presence, controlled_sleep_presence
     from .climate_schedule import scheduled_sleep
