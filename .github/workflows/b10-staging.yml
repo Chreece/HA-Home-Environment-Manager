@@ -43,8 +43,27 @@ jobs:
           set -euo pipefail
           test "$(git hash-object custom_components/environment_manager/frontend/air-quality-advisor-card.js)" = 2359668ecba47b56a7ceadedcf5efb8d097c5340
           test "$(git hash-object custom_components/environment_manager/room_setup.py)" = 9b09366054650f32d77a0af9b397446f04b3f670
-          git apply --check /tmp/hem-b10-reviewed.patch
-          git apply /tmp/hem-b10-reviewed.patch
+          # The recovered b9 source snapshot had stale manifest and CI metadata.
+          # Apply all production/translation/test changes unchanged, then
+          # rebase those two metadata paths onto the verified current dev.
+          git apply --check --exclude=.github/workflows/validate.yml --exclude=custom_components/environment_manager/manifest.json /tmp/hem-b10-reviewed.patch
+          git apply --exclude=.github/workflows/validate.yml --exclude=custom_components/environment_manager/manifest.json /tmp/hem-b10-reviewed.patch
+          python - <<'PY'
+          from pathlib import Path
+          manifest = Path('custom_components/environment_manager/manifest.json')
+          value = manifest.read_text()
+          assert value.count('"version": "0.6.2b9"') == 1
+          manifest.write_text(value.replace('"version": "0.6.2b9"', '"version": "0.6.2b10"'))
+          workflow = Path('.github/workflows/validate.yml')
+          source = workflow.read_text()
+          anchor = '      - name: B9 on-demand setting help in every menu\n'
+          assert source.count(anchor) == 1 and 'B10 stable settings UI' not in source
+          addition = ('      - name: B10 stable settings UI, source selection and safe room changes\n'
+                      '        run: |\n'
+                      '          python -I .github/tests/test_062b10_settings_completeness.py\n'
+                      '          python -I .github/tests/test_062b10_source_validation.py\n')
+          workflow.write_text(source.replace(anchor, addition + anchor))
+          PY
           node --check custom_components/environment_manager/frontend/air-quality-advisor-card.js
           python -m compileall -q custom_components/environment_manager
           python -I .github/scripts/audit_settings.py --check
