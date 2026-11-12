@@ -143,7 +143,8 @@ def contact_observation(hass: Any, area: str, entity_id: str,
                 result["health"] = "report_expired"
                 return result
         result.update(state="open" if state.state == "on" else "closed",
-                      health="ok", state_age_seconds=age)
+                      health="ok", state_age_seconds=age,
+                      state_changed_epoch=state.last_changed.timestamp())
     return result
 
 

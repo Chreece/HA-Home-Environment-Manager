@@ -440,3 +440,21 @@ def instructions(result: dict, *, language: str = "en") -> str:
             "Assistant entity; do not power-cycle it. If this persists, "
             "collect the controller's read-only recovery diagnostics. "
             "(interrupted native command)")
+
+
+def unconfirmed_dispatch_message(info: dict, *, language: str = "en") -> str:
+    """Describe intent without claiming either delivery or device failure."""
+    requested = info.get("requested") or "?"
+    entity = info.get("entity") or "?"
+    observed = info.get("observed") or "?"
+    if language.split("-", 1)[0] == "el":
+        return (f"Δεν έχει επιβεβαιωθεί η αποστολή του αιτήματος {requested} στη συσκευή {entity}. "
+                f"Το HEM ελέγχει το αίτημα και την τρέχουσα αναφορά ({observed}). "
+                "Αυτό δεν αποτελεί επιβεβαιωμένη αποτυχία απόκρισης της συσκευής.")
+    if language.split("-", 1)[0] == "de":
+        return (f"Der Versand der Anforderung {requested} an {entity} ist nicht bestätigt. "
+                f"HEM prüft die Anforderung und den gemeldeten Zustand ({observed}). "
+                "Dies ist kein bestätigter Antwortfehler des Geräts.")
+    return (f"Dispatch of the {requested} request to {entity} is not confirmed. "
+            f"HEM is checking the request and reported state ({observed}). "
+            "This is not a confirmed device nonresponse.")
