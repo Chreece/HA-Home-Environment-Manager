@@ -9212,32 +9212,135 @@
           '</div></details>';
       }).join("")+'</section>';
   };
+  /* HEM_B10_STABLE_NATIVE_ROWS
+   * Structural reconciliation instead of replacing the entire dialog list.
+   * Keep native elements and <details> alive across unrelated HA updates,
+   * including pointer-down/up. Every service still performs its live checks.
+   */
+  function hemSyncNativeRowB10(old,next){
+    const oldHelp=old.querySelector('.hem-full-help127');
+    const nextHelp=next.querySelector('.hem-full-help127');
+    // Do not replace the native disclosure during a mouse/keyboard action.
+    if(oldHelp&&nextHelp){
+      const title=oldHelp.querySelector('strong'),nextTitle=nextHelp.querySelector('strong');
+      if(title&&nextTitle&&title.textContent!==nextTitle.textContent)title.textContent=nextTitle.textContent;
+      const text=oldHelp.querySelector('.hem-full-help-body127 p');
+      const newText=nextHelp.querySelector('.hem-full-help-body127 p');
+      if(text&&newText&&text.textContent!==newText.textContent)text.textContent=newText.textContent;
+    }
+    const oldEditor=old.querySelector('.hem-full-editor127');
+    const newEditor=next.querySelector('.hem-full-editor127');
+    if(oldEditor&&newEditor){
+      const oldField=oldEditor.querySelector('input,select');
+      const newField=newEditor.querySelector('input,select');
+      if(oldField&&newField&&oldField.tagName===newField.tagName&&oldField.type===newField.type){
+        const active=oldField.matches(':focus')||oldField.matches(':active');
+        // A newer unsaved edit is authoritative for presentation only; the
+        // backend/native entity remains the authority for permissions.
+        if(oldField.tagName==='SELECT'){
+          const oldOptions=[...oldField.options].map(x=>[x.value,x.textContent]);
+          const newOptions=[...newField.options].map(x=>[x.value,x.textContent]);
+          if(!active&&JSON.stringify(oldOptions)!==JSON.stringify(newOptions)){
+            oldField.innerHTML=newField.innerHTML;
+          }
+        }
+        if(!active&&oldField.value!==newField.value)oldField.value=newField.value;
+        for(const key of ['min','max','step','placeholder']){
+          const val=newField.getAttribute(key);
+          if(val===null)oldField.removeAttribute(key);
+          else if(oldField.getAttribute(key)!==val)oldField.setAttribute(key,val);
+        }
+        oldField.disabled=newField.disabled;
+      }else if(!oldEditor.matches(':focus-within,:active')){
+        // A genuine backend editor type change requires a new editor; never
+        // replace one that is being interacted with.
+        oldEditor.replaceWith(newEditor.cloneNode(true));
+      }
+      const oldButton=oldEditor.querySelector('[data-hem-full-apply127]');
+      const newButton=newEditor.querySelector('[data-hem-full-apply127]');
+      if(oldButton&&newButton){
+        oldButton.disabled=newButton.disabled;
+        if(!oldButton.matches(':active')&&oldButton.textContent!==newButton.textContent)
+          oldButton.textContent=newButton.textContent;
+      }
+    }
+    const oldLabel=old.querySelector('.hem-full-label127>strong');
+    const newLabel=next.querySelector('.hem-full-label127>strong');
+    if(oldLabel&&newLabel&&oldLabel.textContent!==newLabel.textContent)
+      oldLabel.textContent=newLabel.textContent;
+    const oldStatus=old.querySelector('[data-hem-full-status127]');
+    const nextStatus=next.querySelector('[data-hem-full-status127]');
+    // The draft/save feedback owns live statuses and retry nodes. Never
+    // overwrite an existing one with a stale native snapshot.
+    if(oldStatus&&nextStatus&&!oldStatus.querySelector('[data-hem-full-status-text127]')
+       &&!oldStatus.querySelector('[data-settings-retry]')){
+      if(oldStatus.textContent!==nextStatus.textContent)oldStatus.textContent=nextStatus.textContent;
+    }
+    old.hidden=next.hidden;
+    old.setAttribute('data-settings-tier-b8',next.getAttribute('data-settings-tier-b8')||'primary');
+  }
   hemFull127._hemFullRender127=function(saved,scope){
     if(!this._hemFullContext127(saved,scope))return;
-    const base=scope==="device"?saved.node.querySelector(".hem-controller-body126"):
-      scope==="home"?saved.node.querySelector("[data-hem-home-native-groups128]"):
-      saved.node.querySelector("[data-room-options-groups114]");
+    const base=scope==='device'?saved.node.querySelector('.hem-controller-body126'):
+      scope==='home'?saved.node.querySelector('[data-hem-home-native-groups128]'):
+      saved.node.querySelector('[data-room-options-groups114]');
     if(!base)return;
-    if(scope==="room"){
-      // b12 used a cache-only list that could be empty. Never show duplicates.
-      for(const el of base.querySelectorAll("[data-room-native-group126]"))
-        if(!el.closest("[data-hem-full-list127]"))el.remove();
+    if(scope==='room'){
+      for(const el of base.querySelectorAll('[data-room-native-group126]'))
+        if(!el.closest('[data-hem-full-list127]'))el.remove();
     }
-    const old=base.querySelector('[data-hem-full-list127="'+scope+'"]');
-    const container=document.createElement("div");
+    let old=base.querySelector('[data-hem-full-list127="'+scope+'"]');
+    const container=document.createElement('div');
     container.innerHTML=this._hemFullHtml127(saved,scope);
     const next=container.firstElementChild;
     if(!next)return;
-    if(old){
-      const editor=old.querySelector("input:focus,select:focus");
-      if(editor)return;
-      const open=new Set([...old.querySelectorAll(".hem-full-category127[open]")].map(
-        el=>el.getAttribute("data-hem-full-category127")));
-      for(const el of next.querySelectorAll(".hem-full-category127")){
-        if(open.has(el.getAttribute("data-hem-full-category127")))el.open=true;
+    if(!old){base.appendChild(next);return;}
+    const newMessage=next.querySelector(':scope>.hem-full-notice127');
+    let oldMessage=old.querySelector(':scope>.hem-full-notice127');
+    if(newMessage){
+      if(!oldMessage){old.insertBefore(newMessage.cloneNode(true),old.firstChild);}
+      else if(oldMessage.textContent!==newMessage.textContent)oldMessage.textContent=newMessage.textContent;
+    }else oldMessage?.remove();
+    const activeCategories=new Set();
+    for(const group of next.querySelectorAll(':scope>[data-hem-full-category127]')){
+      const category=group.getAttribute('data-hem-full-category127');
+      activeCategories.add(category);
+      let existing=[...old.querySelectorAll(':scope>[data-hem-full-category127]')].find(
+        el=>el.getAttribute('data-hem-full-category127')===category);
+      if(!existing){old.appendChild(group.cloneNode(true));continue;}
+      const names=existing.querySelector(':scope>summary .hem-room-options-label114');
+      const freshNames=group.querySelector(':scope>summary .hem-room-options-label114');
+      if(names&&freshNames&&names.textContent!==freshNames.textContent){
+        names.innerHTML=freshNames.innerHTML;
       }
-      if(old.outerHTML!==next.outerHTML)old.replaceWith(next);
-    }else base.appendChild(next);
+      // Counters are owned by the same b8 Advanced/filter pass for all menus;
+      // do not overwrite them with unfiltered counts on each state refresh.
+      const rows=existing.querySelector(':scope>.hem-full-rows127');
+      const freshRows=group.querySelector(':scope>.hem-full-rows127');
+      if(!rows||!freshRows)continue;
+      const activeIds=new Set();
+      for(const nextRow of freshRows.querySelectorAll(':scope>[data-hem-full-row127]')){
+        const id=nextRow.getAttribute('data-hem-full-row127');activeIds.add(id);
+        const oldRow=[...rows.children].find(row=>row.getAttribute('data-hem-full-row127')===id);
+        if(!oldRow){rows.appendChild(nextRow.cloneNode(true));continue;}
+        hemSyncNativeRowB10(oldRow,nextRow);
+      }
+      for(const row of [...rows.children]){
+        if(activeIds.has(row.getAttribute('data-hem-full-row127')))continue;
+        if(row.matches(':active,:focus-within')||row.querySelector(':active')){
+          // Never disconnect a pressed control; live write authorization still
+          // rejects removed/moved entities. The next refresh removes it.
+          row.querySelectorAll('input,select,button').forEach(el=>el.disabled=true);
+          continue;
+        }
+        row.remove();
+      }
+    }
+    for(const group of [...old.querySelectorAll(':scope>[data-hem-full-category127]')]){
+      if(activeCategories.has(group.getAttribute('data-hem-full-category127')))continue;
+      if(group.matches(':active,:focus-within')||group.querySelector(':active'))continue;
+      group.remove();
+    }
   };
   hemFull127._hemFullLoad127=function(saved,scope){
     if(typeof this._hass?.callWS!=="function")return;
@@ -10845,7 +10948,16 @@
       const text=edit.phase==="unconfirmed"?settingsText(this,"unconfirmed")+" "+
         String(this._settingsNativeValue(saved,scope,id)??"—"):
         settingsText(this,edit.phase==="queued"?"saving":edit.phase);
-      status.textContent=text||"";status.setAttribute('role',bad?'alert':'status');
+      let statusText=status.querySelector('[data-hem-full-status-text127]');
+      if(!statusText){
+        statusText=document.createElement('span');statusText.setAttribute('data-hem-full-status-text127','');
+        // Existing Retry buttons must survive a refresh or pointer press.
+        const child=[...status.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join('');
+        for(const node of [...status.childNodes])if(node.nodeType===3)node.remove();
+        status.prepend(statusText);statusText.textContent=child;
+      }
+      if(statusText.textContent!==(text||''))statusText.textContent=text||'';
+      status.setAttribute('role',bad?'alert':'status');
       status.classList.toggle('hem-room-options-error114',bad);
       row.setAttribute('aria-busy',String(edit.running||edit.phase==="confirming"));
       const toggle=row.querySelector('[data-hem-full-apply127]');
@@ -10859,16 +10971,22 @@
         if(edit.phase!=="saved"&&input!==_roomOptionsDeepFocus114()&&edit.raw!==undefined)
           input.value=edit.raw;
       }
-      row.querySelector('[data-settings-retry]')?.remove();
-      if(edit.phase==="failed"||edit.phase==="unconfirmed"){
-        const retry=document.createElement('button');retry.type='button';
-        retry.setAttribute('data-settings-retry',id);retry.textContent=settingsText(this,"retry");
+      let retry=status.querySelector('[data-settings-retry]');
+      const canRetry=edit.phase==='failed'||edit.phase==='unconfirmed';
+      if(canRetry&&!retry){
+        retry=document.createElement('button');retry.type='button';
+        retry.setAttribute('data-settings-retry',id);
         retry.addEventListener('click',()=>{
-          edit.dirty=true;edit.revision++;edit.phase="queued";
+          if(!this._settingsActive(saved,scope))return;
+          const latest=saved.nativeEdits?.get(id);
+          if(!latest||!['failed','unconfirmed'].includes(latest.phase))return;
+          latest.dirty=true;latest.revision++;latest.phase='queued';
           this._settingsNativeSend(saved,scope,id);
         });
         status.append(' ',retry);
       }
+      if(retry){retry.hidden=!canRetry;retry.disabled=!canRetry;
+        if(retry.textContent!==settingsText(this,'retry'))retry.textContent=settingsText(this,'retry');}
     }
   };
   const settingsRowBefore=settingsProto._hemFullRow127;
@@ -11045,10 +11163,32 @@
   settingsProto._settingsSaveOptions=function(saved,scope){
     const state=saved.optionsAutosave;
     if(!state||state.running||state.blocked||!state.dirty.size||!this._settingsActive(saved,scope))return;
+    // Some Options inputs are a single logical choice, not independently
+    // valid fields. Keep the incomplete draft, but continue saving unrelated
+    // fields. Do not generate a rejected request or an automatic retry loop.
+    const patch=new Map(state.dirty);
+    if(scope==='home'){
+      const draft=saved.draft||{};
+      const pairs=[['general_wake_alarm_entity','general_wake_lead_minutes_entity']];
+      for(const [first,second] of pairs){
+        const a=draft[first],b=draft[second];
+        const aOn=typeof a==='string'&&a!=='none',bOn=typeof b==='string'&&b!=='none';
+        if(aOn!==bOn){patch.delete(first);patch.delete(second);}
+      }
+      const scale=Number(draft.pollen_max_scale),high=Number(draft.pollen_high_from);
+      if(!Number.isFinite(scale)||!Number.isFinite(high)||scale<1||high<0||high>scale){
+        patch.delete('pollen_max_scale');patch.delete('pollen_high_from');
+      }
+    }
+    if(!patch.size){
+      const message=scope==='home'?settingsDependentMessageB10(this,saved):null;
+      if(message)this._settingsOptionsStatus(saved,scope,message);
+      return;
+    }
     clearTimeout(state.timer);state.running=true;
     this._settingsQueue(saved.entryId,async()=>{
       if(!this._settingsActive(saved,scope))return;
-      const patch=new Map(state.dirty);let flow=null,posted=false;
+      let flow=null,posted=false;
       const active=()=>{if(!this._settingsActive(saved,scope))throw Error("Context changed");};
       try{
         // Dispose the read-only initial form before creating a short transaction.
@@ -11095,6 +11235,7 @@
           if(this._settingsActive(saved,scope)&&result.type==="form"){
             for(const [name,error] of Object.entries(result.errors||{})){
               if(scope==="room")this._roomSettingsFieldError114(saved,name,_roomOptionsError114(this,error,result));
+              else this._settingsHomeFieldErrorB10(saved,name,_roomOptionsError114(this,error,result));
             }
           }
           throw Error("Settings rejected");
@@ -11107,7 +11248,8 @@
           }
         }
         if(this._settingsActive(saved,scope)){
-          this._settingsOptionsStatus(saved,scope,settingsText(this,state.dirty.size?"saving":"saved"));
+          const dependent=scope==='home'?settingsDependentMessageB10(this,saved):null;
+          this._settingsOptionsStatus(saved,scope,dependent||settingsText(this,state.dirty.size?'saving':'saved'));
           this._hemFullLoad127(saved,scope);
         }
       }catch(error){
@@ -11556,5 +11698,305 @@
     '.hem-floor-members140>summary>span{flex:1;min-width:0}'+
     '</style>';};
   /* HEM_SETTING_HELP_B9_END */
+
+  /* HEM_B10_SETUP_AND_SOURCE_INVENTORY
+   * The real Options schema remains the source of truth; no virtual device
+   * controls or silent permissions. All transactions are entry/owner scoped.
+   */
+  const B10_WORDS={
+    en:{refresh:'Refresh sources',refreshing:'Refreshing source choices…',refreshed:'Source choices updated',
+      sourceEmpty:'No compatible sources currently available. Add a numeric sensor in Home Assistant, then select Refresh sources. An existing HEM selection does not install a new provider.',
+      sourceRoom:'No compatible entities found for this room. Check the entity Area, type and availability in Home Assistant; then refresh.',
+      manage:'Manage monitored rooms',managed:'Monitored rooms updated',remove:'Removing monitored rooms can revoke HEM automation permissions and room-specific monitoring. Existing Home Assistant Areas and devices are not deleted.',
+      confirm:'I understand the effect of removing these rooms',commit:'Apply room selection',none:'At least one monitored room is required.',
+      failure:'Unable to refresh or save. Existing settings are retained.',unavailable:'The entity is disabled or unavailable. Configure its prerequisite or manage it in Home Assistant; no device action is authorized.',
+      missing:'No registered setting entity exists for this optional feature. Configure the feature in the HEM integration before it can be adjusted here.',
+      wake:'Choose both the next-alarm source and its minutes-before-alarm source, or clear both. The incomplete pair is kept but not saved.',
+      pollen:'The pollen high threshold must be within the provider scale, whose maximum must be at least 1. Adjust both values to finish configuring the pair.',
+      dismiss:'Close',retry:'Retry',sourceGuide:'Entity management',fieldError:'Check this setting; no changes were saved.',
+      disabledBy:'Disabled in entity registry',notConfigured:'Not configured'},
+    el:{refresh:'Ανανέωση πηγών',refreshing:'Ανανέωση διαθέσιμων πηγών…',refreshed:'Οι επιλογές πηγών ενημερώθηκαν',
+      sourceEmpty:'Δεν υπάρχουν διαθέσιμες συμβατές πηγές. Πρόσθεσε αριθμητικό αισθητήρα στο Home Assistant και πάτησε Ανανέωση πηγών. Η επιλογή στο HEM δεν εγκαθιστά πάροχο.',
+      sourceRoom:'Δεν βρέθηκαν συμβατές οντότητες για αυτόν τον χώρο. Έλεγξε την Περιοχή, τον τύπο και τη διαθεσιμότητα στο Home Assistant και ανανέωσε.',
+      manage:'Διαχείριση παρακολουθούμενων χώρων',managed:'Η επιλογή χώρων ενημερώθηκε',remove:'Η αφαίρεση χώρων από την παρακολούθηση μπορεί να ανακαλέσει δικαιώματα αυτοματισμού HEM και παρακολούθηση χώρων. Δεν διαγράφονται Περιοχές ή συσκευές Home Assistant.',
+      confirm:'Κατανοώ τις επιπτώσεις από την αφαίρεση αυτών των χώρων',commit:'Εφαρμογή επιλογής χώρων',none:'Απαιτείται τουλάχιστον ένας παρακολουθούμενος χώρος.',
+      failure:'Η ανανέωση ή αποθήκευση απέτυχε. Οι υπάρχουσες ρυθμίσεις διατηρήθηκαν.',unavailable:'Η οντότητα είναι απενεργοποιημένη ή μη διαθέσιμη. Διαμόρφωσε τις προϋποθέσεις ή διαχειρίσου την στο Home Assistant· δεν επιτρέπεται εντολή στη συσκευή.',
+      missing:'Δεν υπάρχει καταχωρισμένη οντότητα για αυτή την προαιρετική λειτουργία. Διαμόρφωσε τη λειτουργία από την ενσωμάτωση HEM πριν την τροποποιήσεις εδώ.',
+      wake:'Επίλεξε και την επόμενη αφύπνιση και την πηγή λεπτών πριν από αυτήν, ή καθάρισε και τις δύο. Το ελλιπές ζεύγος διατηρείται χωρίς αποθήκευση.',
+      pollen:'Το υψηλό όριο γύρης πρέπει να βρίσκεται εντός της κλίμακας του παρόχου, με μέγιστο τουλάχιστον 1. Ρύθμισε και τις δύο τιμές.',
+      dismiss:'Κλείσιμο',retry:'Επανάληψη',sourceGuide:'Διαχείριση οντοτήτων',fieldError:'Έλεγξε αυτή τη ρύθμιση· δεν αποθηκεύτηκε αλλαγή.',
+      disabledBy:'Απενεργοποιημένη στο μητρώο οντοτήτων',notConfigured:'Δεν έχει διαμορφωθεί'},
+    de:{refresh:'Quellen aktualisieren',refreshing:'Quellen werden aktualisiert…',refreshed:'Quellen aktualisiert',
+      sourceEmpty:'Keine kompatiblen Quellen verfügbar. Einen numerischen Sensor in Home Assistant hinzufügen und Quellen aktualisieren wählen. HEM installiert keinen Anbieter.',
+      sourceRoom:'Keine kompatiblen Entitäten für diesen Raum. Bereich, Typ und Verfügbarkeit in Home Assistant prüfen und aktualisieren.',
+      manage:'Überwachte Räume verwalten',managed:'Überwachte Räume aktualisiert',remove:'Das Entfernen überwachter Räume kann HEM-Automatikberechtigungen und Raumüberwachung widerrufen. Home-Assistant-Bereiche und Geräte bleiben erhalten.',
+      confirm:'Ich verstehe die Auswirkungen der Entfernung dieser Räume',commit:'Raumauswahl übernehmen',none:'Mindestens ein überwachter Raum ist erforderlich.',
+      failure:'Aktualisierung oder Speichern fehlgeschlagen. Bestehende Einstellungen bleiben erhalten.',unavailable:'Entität deaktiviert oder nicht verfügbar. Voraussetzungen konfigurieren oder in Home Assistant verwalten; keine Geräteaktion erlaubt.',
+      missing:'Für diese optionale Funktion ist keine Einstellungsentität registriert. Funktion zuerst in HEM konfigurieren.',
+      wake:'Beide Quellen für den nächsten Wecker und die Vorlaufzeit auswählen oder beide leeren. Unvollständige Auswahl bleibt ungespeichert.',
+      pollen:'Pollenschwelle muss innerhalb der Anbieterskala liegen, Maximum mindestens 1. Beide Werte anpassen.',
+      dismiss:'Schließen',retry:'Erneut versuchen',sourceGuide:'Entitäten verwalten',fieldError:'Diese Einstellung prüfen; die Änderung wurde nicht gespeichert.',
+      disabledBy:'Im Entitätsregister deaktiviert',notConfigured:'Nicht eingerichtet'}
+  };
+  const b10Text=(card,key)=>(B10_WORDS[card._language()]||B10_WORDS.en)[key];
+  const b10CompatibleFlow=id=>typeof id==='string'&&/^[A-Za-z0-9_-]{1,128}$/.test(id);
+  function settingsDependentMessageB10(card,saved){
+    const d=saved.draft||{},state=saved.optionsAutosave;
+    if(!state?.dirty?.size)return null;
+    if(state.dirty.has('general_wake_alarm_entity')||state.dirty.has('general_wake_lead_minutes_entity')){
+      const alarm=d.general_wake_alarm_entity!=='none';
+      const lead=d.general_wake_lead_minutes_entity!=='none';
+      if(alarm!==lead)return b10Text(card,'wake');
+    }
+    if(state.dirty.has('pollen_high_from')||state.dirty.has('pollen_max_scale')){
+      const high=Number(d.pollen_high_from),scale=Number(d.pollen_max_scale);
+      if(!Number.isFinite(high)||!Number.isFinite(scale)||scale<1||high<0||high>scale)
+        return b10Text(card,'pollen');
+    }
+    return null;
+  }
+  const b10=AirQualityAdvisorCard.prototype;
+  b10._settingsHomeFieldErrorB10=function(saved,name,reason){
+    saved.optionsErrorsB10 ||= new Map();
+    if(reason)saved.optionsErrorsB10.set(name,reason);else saved.optionsErrorsB10.delete(name);
+    const row=[...saved.node.querySelectorAll('[data-hem-home-field128]')].find(
+      item=>item.getAttribute('data-hem-home-field128')===name);
+    if(!row)return;
+    let feedback=row.querySelector('[data-settings-home-error-b10]');
+    if(!feedback){feedback=document.createElement('small');feedback.setAttribute('data-settings-home-error-b10','');
+      feedback.setAttribute('role','alert');feedback.className='hem-room-options-error114';row.append(feedback);}
+    feedback.textContent=reason||'';feedback.hidden=!reason;
+    if(reason)row.closest('details')?.setAttribute('open','');
+  };
+  const renderHomeB10=b10._renderHomeGeneral128;
+  b10._renderHomeGeneral128=function(saved,...args){
+    const result=renderHomeB10.call(this,saved,...args);
+    for(const [key,reason] of saved.optionsErrorsB10||[])this._settingsHomeFieldErrorB10(saved,key,reason);
+    this._settingsAttachSourcesB10(saved,'home');
+    return result;
+  };
+  const optionsEditB10=b10._settingsOptionsEdit;
+  b10._settingsOptionsEdit=function(saved,scope,name,value,delay=0){
+    if(scope==='home')this._settingsHomeFieldErrorB10(saved,name,'');
+    return optionsEditB10.call(this,saved,scope,name,value,delay);
+  };
+  const homeFieldB10=b10._homeFieldHtml128;
+  b10._homeFieldHtml128=function(field,form){
+    let html=homeFieldB10.call(this,field,form);
+    if(field.kind==='select'&&!homeOptions128(field.schema).length){
+      const description=b10Text(this,'sourceEmpty');
+      html=html.replace(/<\/div>$/, '<p role="status" class="hem-full-notice127" data-settings-empty-source-b10>'+escape(description)+'</p></div>');
+    }
+    return html;
+  };
+  const roomFormB10=b10._renderRoomSettingsForm114;
+  b10._renderRoomSettingsForm114=function(saved,...args){
+    const result=roomFormB10.call(this,saved,...args);
+    for(const group of saved.node.querySelectorAll('[data-room-options-group114]')){
+      const empty=group.querySelector('[data-room-options-empty114]');
+      if(empty&&!empty.hidden)empty.textContent=b10Text(this,'sourceRoom');
+    }
+    this._settingsAttachSourcesB10(saved,'room');
+    return result;
+  };
+  b10._settingsAttachSourcesB10=function(saved,scope){
+    if(!saved?.node||saved.settingsSourcesBoundB10)return;
+    const node=saved.node;
+    const header=node.querySelector(scope==='home'?'.hem-home-options-head128':'.hem-room-options-head114')||node.querySelector('header');
+    if(!header)return;
+    saved.settingsSourcesBoundB10=true;
+    const refresh=document.createElement('button');refresh.type='button';
+    refresh.setAttribute('data-settings-refresh-b10','');refresh.textContent=b10Text(this,'refresh');
+    header.append(refresh);
+    if(scope==='home'){
+      const manage=document.createElement('button');manage.type='button';
+      manage.setAttribute('data-settings-manage-rooms-b10','');manage.textContent=b10Text(this,'manage');
+      header.append(manage);
+    }
+    node.addEventListener('click',event=>{
+      const button=event.target?.closest?.('button');
+      if(button===refresh){event.stopPropagation();this._settingsRefreshSourcesB10(saved,scope);}
+      if(button?.hasAttribute('data-settings-manage-rooms-b10')){
+        event.stopPropagation();this._settingsManageRoomsB10(saved);
+      }
+    });
+    saved.sourceFingerprintB10=this._settingsSourceFingerprintB10();
+  };
+  b10._settingsSourceFingerprintB10=function(){
+    const ids=Object.keys(this._hass?.entities||{});
+    const states=Object.keys(this._hass?.states||{}).filter(id=>
+      /^(sensor|binary_sensor|weather|climate|humidifier|cover|fan|person|device_tracker|notify|tts|conversation)\./.test(id));
+    return ids.concat(states).sort().join('|');
+  };
+  b10._settingsRefreshSourcesB10=function(saved,scope){
+    if(!this._settingsActive(saved,scope)||saved.sourcesRefreshingB10)return;
+    saved.sourcesRefreshingB10=true;
+    const button=saved.node.querySelector('[data-settings-refresh-b10]');
+    if(button){button.disabled=true;button.textContent=b10Text(this,'refreshing');}
+    this._settingsQueue(saved.entryId,async()=>{
+      if(!this._settingsActive(saved,scope))return;
+      const active=()=>{if(!this._settingsActive(saved,scope))throw Error('Configuration owner changed');};
+      let flow=null;
+      try{
+        const menu=await saved.api('POST','config/config_entries/options/flow',{handler:saved.entryId});
+        active();flow=menu?.flow_id;
+        const options=Array.isArray(menu?.menu_options)?menu.menu_options:Object.keys(menu?.menu_options||{});
+        const step=scope==='home'?'general_settings':'edit_room_'+saved.area;
+        if(menu?.type!=='menu'||!b10CompatibleFlow(flow)||!options.includes(step)||
+           menu.handler!==undefined&&menu.handler!==saved.entryId)throw Error('Invalid options menu');
+        const form=await saved.api('POST',settingsFlow(flow),{next_step_id:step});active();
+        if(form?.type!=='form'||form.flow_id!==flow||!Array.isArray(form.data_schema)||
+           form.step_id!==(scope==='home'?'setup_general':'edit_room'))throw Error('Invalid refreshed schema');
+        const previous=saved.flowId;
+        saved.flowId=flow;flow=null;
+        if(scope==='home')this._renderHomeGeneral128(saved,form,true);
+        else this._renderRoomSettingsForm114(saved,form,true);
+        if(b10CompatibleFlow(previous)&&previous!==saved.flowId){
+          try{await saved.api('DELETE',settingsFlow(previous));}catch{}
+        }
+        active();saved.sourceFingerprintB10=this._settingsSourceFingerprintB10();
+        this._settingsOptionsStatus(saved,scope,b10Text(this,'refreshed'));
+      }catch(error){
+        if(this._settingsActive(saved,scope))this._settingsOptionsStatus(saved,scope,b10Text(this,'failure'),true);
+      }finally{if(b10CompatibleFlow(flow))try{await saved.api('DELETE',settingsFlow(flow));}catch{}}
+    }).finally(()=>{
+      saved.sourcesRefreshingB10=false;
+      if(this._settingsActive(saved,scope)&&button?.isConnected){button.disabled=false;button.textContent=b10Text(this,'refresh');}
+    });
+  };
+  // Registry/source membership changes are less frequent than sensor values.
+  // Reconcile fresh choices once per changed identity set, and only after
+  // existing drafts finish their queued writes. A user can always refresh now.
+  for(const [method,scope] of [['_refreshRoomSettings114','room'],['_refreshHomeSettings128','home']]){
+    const previous=b10[method];
+    b10[method]=function(...args){
+      const result=previous.apply(this,args);
+      const saved=scope==='home'?this._homeSettingsDialog128:this._roomSettingsDialog114;
+      if(!saved?.fields||!this._settingsActive(saved,scope)||saved.sourcesRefreshingB10)return result;
+      const fingerprint=this._settingsSourceFingerprintB10();
+      if(saved.sourceFingerprintB10&&fingerprint!==saved.sourceFingerprintB10){
+        clearTimeout(saved.sourceRefreshTimerB10);
+        saved.sourceRefreshTimerB10=setTimeout(()=>{
+          if(this._settingsActive(saved,scope)&&!saved.optionsAutosave?.running)
+            this._settingsRefreshSourcesB10(saved,scope);
+        },600);
+      }
+      return result;
+    };
+  }
+  // Explicit room enrollment uses the supported 'choose_rooms' Options step.
+  // It is not equivalent to granting a new appliance permission.
+  b10._settingsManageRoomsB10=async function(saved){
+    if(!this._settingsActive(saved,'home')||saved.roomManagerB10)return;
+    const connection=saved.connection,owner=saved.owner,entry=saved.entryId;
+    const active=()=>this._settingsActive(saved,'home')&&saved.connection===connection&&saved.owner===owner;
+    const words=B10_WORDS[this._language()]||B10_WORDS.en;
+    let flow=null,node=null;
+    const disposeFlow=()=>{if(b10CompatibleFlow(flow)){
+      const stale=flow;flow=null;
+      Promise.resolve(saved.api('DELETE',settingsFlow(stale))).catch(()=>{});
+    }};
+    try{
+      const menu=await saved.api('POST','config/config_entries/options/flow',{handler:entry});
+      if(!active())return;
+      flow=menu?.flow_id;
+      const options=Array.isArray(menu?.menu_options)?menu.menu_options:Object.keys(menu?.menu_options||{});
+      if(menu?.type!=='menu'||!b10CompatibleFlow(flow)||!options.includes('choose_rooms'))throw Error('Room management unavailable');
+      const form=await saved.api('POST',settingsFlow(flow),{next_step_id:'choose_rooms'});
+      if(!active())return;
+      if(form?.type!=='form'||form.flow_id!==flow||form.step_id!=='choose_rooms')throw Error('Invalid room form');
+      const field=form.data_schema?.find(item=>item.name==='areas');
+      if(!field?.selector?.select?.multiple)throw Error('Room selector missing');
+      const optionsList=homeOptions128(field);
+      const originally=new Set(Array.isArray(field.default)?field.default:[]);
+      node=document.createElement('dialog');node.className='hem-room-options114 hem-settings-rooms-b10';
+      node.setAttribute('aria-label',words.manage);
+      const choices=optionsList.map(option=>'<label class="hem-room-options-choice114"><input type="checkbox" data-room-member-b10="'+escape(option.value)+'" '+
+        (originally.has(option.value)?'checked ':'')+'><span>'+escape(option.label)+'</span></label>').join('');
+      node.innerHTML='<header class="hem-room-options-head114"><h2>'+escape(words.manage)+'</h2></header>'+
+        '<div class="hem-room-options-body114"><p>'+escape(words.remove)+'</p>'+
+        '<div class="hem-room-options-choices114">'+choices+'</div>'+
+        '<label data-settings-removal-confirm-b10 hidden><input type="checkbox" data-settings-removal-ack-b10> '+escape(words.confirm)+'</label>'+
+        '<p role="status" data-settings-room-status-b10></p></div><footer class="hem-room-options-footer114">'+
+        '<button type="button" data-settings-close-room-b10>'+escape(words.dismiss)+'</button>'+
+        '<button type="button" data-settings-save-room-b10>'+escape(words.commit)+'</button></footer>';
+      saved.roomManagerB10=node;
+      const close=()=>{if(!node)return;
+        disposeFlow();try{if(node.open)node.close();}catch{}node.remove();
+        if(saved.roomManagerB10===node)saved.roomManagerB10=null;};
+      saved.closeRoomManagerB10=close;
+      node.addEventListener('cancel',e=>{e.preventDefault();close();});
+      const current=()=>[...node.querySelectorAll('[data-room-member-b10]:checked')].map(el=>el.getAttribute('data-room-member-b10'));
+      const status=node.querySelector('[data-settings-room-status-b10]');
+      const render=()=>{
+        const selected=current(),removed=[...originally].filter(a=>!selected.includes(a));
+        const label=node.querySelector('[data-settings-removal-confirm-b10]');
+        label.hidden=!removed.length;
+        const save=node.querySelector('[data-settings-save-room-b10]');
+        save.disabled=!selected.length||(removed.length&&!node.querySelector('[data-settings-removal-ack-b10]').checked);
+        status.textContent=!selected.length?words.none:removed.length?words.remove:'';
+      };
+      node.addEventListener('change',render);
+      node.addEventListener('click',async event=>{
+        const button=event.target?.closest?.('button');if(!button)return;
+        event.stopPropagation();
+        if(button.hasAttribute('data-settings-close-room-b10')){close();return;}
+        if(!button.hasAttribute('data-settings-save-room-b10')||button.disabled||!active())return;
+        button.disabled=true;
+        try{
+          const selected=current();if(!selected.length)throw Error('No selected rooms');
+          const result=await saved.api('POST',settingsFlow(flow),{areas:selected});
+          if(result?.type!=='create_entry'||result.flow_id!==flow)throw Error('Room change rejected');
+          flow=null;status.textContent=words.managed;close();
+        }catch{if(active()){status.textContent=words.failure;button.disabled=false;}}
+      });
+      this.shadowRoot.appendChild(node);try{node.showModal();}catch{node.setAttribute('open','');}
+      render();
+    }catch{
+      if(active())this._settingsOptionsStatus(saved,'home',words.failure,true);
+    }finally{
+      if(!node&&b10CompatibleFlow(flow))try{await saved.api('DELETE',settingsFlow(flow));}catch{}
+    }
+  };
+  const closeHomeB10=b10._closeHomeSettings128;
+  b10._closeHomeSettings128=function(...args){
+    this._homeSettingsDialog128?.closeRoomManagerB10?.();
+    return closeHomeB10.apply(this,args);
+  };
+  // Registered but disabled settings are still discoverable, without
+  // silently enabling features or inventing unsupported actuators.
+  const fieldRowB10=b10._hemFullRow127;
+  b10._hemFullRow127=function(field,scope){
+    let html=fieldRowB10.call(this,field,scope);
+    if(field.reg?.disabled_by){
+      const reason=b10Text(this,'unavailable')+' ('+field.reg.disabled_by+').';
+      html=html.replace(/<\/div>$/, '<small role="status" data-settings-disabled-b10>'+escape(reason)+'</small>'+
+        '<a href="/config/entities" target="_self" data-settings-entity-manage-b10>'+escape(b10Text(this,'sourceGuide'))+'</a></div>');
+    }
+    return html;
+  };
+  // Each native entity exposes its own localized explanation. Never guess
+  // from an announcement language or the Home Assistant server locale.
+  const localeFieldB10=b10._hemFullRow127;
+  b10._hemFullRow127=function(field,scope){
+    const language=this._language();
+    const descriptions=field.state?.attributes?.configuration_help_locales;
+    const translated=descriptions?.[language]||descriptions?.en;
+    if(typeof translated==='string'&&translated.trim()){
+      field={...field,state:{...field.state,attributes:{
+        ...field.state.attributes,configuration_help:translated}}};
+    }
+    return localeFieldB10.call(this,field,scope);
+  };
+  const cssB10=b10._styles;
+  b10._styles=function(){return cssB10.call(this)+'<style>'+
+    '[data-settings-refresh-b10],[data-settings-manage-rooms-b10]{font:inherit;font-size:12px;padding:6px 9px;max-width:100%;border:1px solid var(--aqa-edge);border-radius:8px;background:transparent;color:var(--aqa-blue);cursor:pointer}'+
+    '[data-settings-refresh-b10]:disabled{opacity:.5}'+
+    '.hem-room-options-head114{flex-wrap:wrap}'+
+    '[data-settings-room-status-b10]{font-size:12px;white-space:normal}'+
+    '[data-settings-disabled-b10]{color:var(--secondary-text-color,#aaa);font-size:12px}'+
+    '[data-settings-entity-manage-b10]{font-size:12px;color:var(--aqa-blue)}'+
+    '</style>';};
+  /* HEM_B10_SETUP_AND_SOURCE_INVENTORY_END */
 
 })();

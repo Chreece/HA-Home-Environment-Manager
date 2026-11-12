@@ -337,12 +337,44 @@ class RoomSetupMixin:
                 if sources.native(self.hass, eid)
             )]
         env = self._values.get(CONF_ENVIRONMENT_GLOBAL, {})
-        saved_pollen = set(env.get("pollen_entities", [])) if isinstance(env, dict) else set()
+        retained_pollen = env.get("pollen_entities", ()) if isinstance(env, dict) else ()
+        saved_pollen = set(retained_pollen) if isinstance(retained_pollen, (list, tuple)) else set()
         if isinstance(env, dict) and isinstance(env.get("pollen_entity"), str):
             saved_pollen.add(env["pollen_entity"])
+        # A provider's entity_id is not evidence of its measurement kind.
+        # Make all currently numeric, class-compatible sensor indices eligible
+        # for explicit opt-in, including translated names (e.g. birch_index).
+        # Exclude established incompatible physical measurements; choosing an
+        # index never changes the device or enrolls an actuator.
+        def pollen_candidate(state):
+            if not sources.native(self.hass, state.entity_id):
+                return False
+            forbidden = {"temperature", "humidity", "pressure", "battery",
+                         "power", "energy", "current", "voltage", "distance",
+                         "duration", "gas", "carbon_dioxide", "pm25", "pm10",
+                         "volatile_organic_compounds", "illuminance", "wind_speed"}
+            if _device_class(self.hass, state) in forbidden:
+                return False
+            if state.state in ("unknown", "unavailable"):
+                return False
+            try:
+                index = float(state.state)
+            except (TypeError, ValueError, OverflowError):
+                return False
+            return math.isfinite(index) and 0 <= index <= 100
         pollen = [{"value": s.entity_id, "label": sources.label(self.hass, s.entity_id)}
-                  for s in self.hass.states.async_all("sensor")
-                  if "pollen" in s.entity_id.casefold() or s.entity_id in saved_pollen]
+                  for s in self.hass.states.async_all("sensor") if pollen_candidate(s)]
+        # A previously saved sensor is only offered as a carried-over value,
+        # even when its integration vanished. This permits unrelated Home
+        # settings to save, but new missing IDs are never selectable.
+        existing_pollen = {item["value"] for item in pollen}
+        for entity_id in sorted(saved_pollen):
+            if (isinstance(entity_id, str) and entity_id.startswith("sensor.")
+                    and entity_id not in existing_pollen):
+                pollen.append({"value": entity_id,
+                               "label": sources.label(self.hass, entity_id)
+                               + " · unavailable / check source"})
+                existing_pollen.add(entity_id)
         from .hub_delivery import hub_installed
         if hub_installed(self.hass):
             from .away_windows import DELIVERY_CHANNELS
@@ -383,6 +415,26 @@ class RoomSetupMixin:
             CONF_TTS_ENGINE: [{"value": "none", "label": "-"}, *state_options("tts")],
             CONF_AI_AGENT: conversation_agent_choices(self.hass, self._values.get(CONF_AI_AGENT)),
         }
+        # Preserve already-saved references only, without allowing the user
+        # to invent new IDs or bypass normal discovery for new selections.
+        saved_sources = {
+            CONF_WEATHER: self._values.get(CONF_WEATHER, []),
+            CONF_OUTDOOR: self._values.get(CONF_OUTDOOR, []),
+            CONF_WARNINGS: self._values.get(CONF_WARNINGS, []),
+            CONF_NOTIFY_TARGETS: self._values.get(CONF_NOTIFY_TARGETS, []),
+            CONF_MEDIA_PLAYERS: self._values.get(CONF_MEDIA_PLAYERS, []),
+            "general_home_trackers": saved.get("home_trackers", []),
+        }
+        for key, retained in saved_sources.items():
+            if not isinstance(retained, list):
+                continue
+            available = {item["value"] for item in result.get(key, []) if isinstance(item, dict)}
+            for entity_id in retained:
+                if (isinstance(entity_id, str) and "." in entity_id
+                        and entity_id not in available):
+                    result[key].append({"value": entity_id,
+                        "label": sources.label(self.hass, entity_id) + " · unavailable / saved"})
+                    available.add(entity_id)
         for items in result.values():
             for item in items:
                 # Translated static SelectSelector options use string keys;
@@ -426,7 +478,17 @@ class RoomSetupMixin:
             CONF_AWAY_WINDOWS_ALERT: self._values.get(CONF_AWAY_WINDOWS_ALERT, False),
             CONF_AWAY_WINDOWS_PERSONS: self._values.get(CONF_AWAY_WINDOWS_PERSONS, []),
             CONF_AWAY_WINDOWS_DELIVERY: self._values.get(CONF_AWAY_WINDOWS_DELIVERY, ["mobile_notification"]),
-            "pollen_entities": saved_pollen if saved_pollen is not None else [x["value"] for x in options["pollen_entities"]],
+            # Additional numeric candidates are offered for explicit selection,
+            # never auto-enrolled as pollen on an existing or fresh install.
+            # Preserve legacy first-setup auto-selection only for verified
+            # candidates whose identity explicitly indicates pollen.
+            "pollen_entities": saved_pollen if saved_pollen is not None else [
+                x["value"] for x in options["pollen_entities"]
+                if "pollen" in x["value"].casefold()
+                and (reading := self.hass.states.get(x["value"])) is not None
+                and not reading.attributes.get("restored")
+                and reading.state not in ("unknown", "unavailable")
+            ],
             CONF_HUB: bool(self._values.get(CONF_HUB, False)),
             "general_home_trackers": old.get("home_trackers", []),
             "general_away_cooldown_minutes": old.get("away_cooldown_minutes", 10),
@@ -516,9 +578,35 @@ class RoomSetupMixin:
                 pollen_max = float(value["pollen_max_scale"])
             except (TypeError, ValueError, OverflowError):
                 pollen_high = pollen_max = float("nan")
-            if (not all(math.isfinite(v) for v in (pollen_high, pollen_max))
-                    or not 0 <= pollen_high <= pollen_max <= 100):
+            valid_pollen_scale = (all(math.isfinite(v) for v in (pollen_high, pollen_max))
+                                  and 0 <= pollen_high <= pollen_max <= 100 and pollen_max >= 1)
+            # A previously saved invalid scale may be retained, unchanged,
+            # while repairing unrelated Home settings. It remains unusable by
+            # the pollen runtime until explicitly corrected; no invalid new
+            # scale or sensor may be submitted.
+            previous_scale = env.get("pollen_max_scale", 5)
+            previous_threshold = env.get("pollen_high_from", 3)
+            retained_invalid = (not valid_pollen_scale
+                                and value["pollen_max_scale"] == previous_scale
+                                and value["pollen_high_from"] == previous_threshold)
+            if not valid_pollen_scale and not retained_invalid:
                 errors["pollen_high_from"] = "invalid_room_source"
+            if valid_pollen_scale:
+                previous_selected = set(saved_pollen or [])
+                for selected_id in value["pollen_entities"]:
+                    if selected_id in previous_selected:
+                        continue  # Carry-over is allowed even if unavailable.
+                    state = self.hass.states.get(selected_id)
+                    try:
+                        index = float(state.state) if state is not None else float("nan")
+                    except (ValueError, TypeError, OverflowError):
+                        index = float("nan")
+                    # Same numeric index/scale boundaries as pollen_reading.
+                    if not math.isfinite(index) or not 0 <= index <= pollen_max:
+                        errors["pollen_entities"] = "invalid_room_source"
+                        break
+            elif any(item not in set(saved_pollen or []) for item in value["pollen_entities"]):
+                errors["pollen_entities"] = "invalid_room_source"
             if type(value["pollen_avoid_ventilation"]) is not bool:
                 errors["pollen_avoid_ventilation"] = "invalid_room_source"
             # All previously separate global thresholds share this exact
@@ -667,7 +755,7 @@ class RoomSetupMixin:
                 mode=selector.NumberSelectorMode.BOX))
         fields[field("pollen_max_scale", value["pollen_max_scale"])] = selector.NumberSelector(
             selector.NumberSelectorConfig(
-                min=0, max=100, step=0.1,
+                min=1, max=100, step=0.1,
                 mode=selector.NumberSelectorMode.BOX))
         fields[field("pollen_avoid_ventilation", value["pollen_avoid_ventilation"])] = selector.BooleanSelector()
         fields[field(CONF_WINDOW_OPEN_TIMEOUT_MINUTES, value[CONF_WINDOW_OPEN_TIMEOUT_MINUTES])] = (
