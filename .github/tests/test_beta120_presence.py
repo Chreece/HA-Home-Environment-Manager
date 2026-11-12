@@ -122,8 +122,13 @@ class OvernightPresenceTests(unittest.TestCase):
         self.conf.pop("occupied_rooms_entity")
         self.conf["room_occupancy_sensors"] = [num]
         self.hass.put(num, "1", age=15, area=OTHER)
-        self.assertEqual(self.room(OTHER, {"occupancy_stale_minutes":10}), "unknown")
-        self.assertEqual(self.room(OTHER, {"occupancy_stale_minutes":20}), "occupied")
+        # Automatic is type-based; a dormant numeric override applies only
+        # when the room explicitly selects Custom freshness.
+        self.assertEqual(self.room(OTHER, {"occupancy_stale_minutes":10}), "occupied")
+        self.assertEqual(self.room(OTHER, {"occupancy_stale_minutes":10,
+                                           "occupancy_freshness_mode":"custom"}), "unknown")
+        self.assertEqual(self.room(OTHER, {"occupancy_stale_minutes":20,
+                                           "occupancy_freshness_mode":"custom"}), "occupied")
         self.hass.put(HOME, "not_home", age=400)
         self.assertEqual(policy.home_presence(self.hass, {"home_trackers":[HOME]})[0], "unknown")
 
@@ -135,6 +140,7 @@ class OvernightPresenceTests(unittest.TestCase):
         self.hass.put(num, "1", age=15, area=OTHER)
         self.conf["_room_occupancy_selections"] = {OTHER: [num]}
         self.conf["_room_occupancy_stale_minutes"] = {AREA: 10, OTHER: 10}
+        self.conf["_room_occupancy_freshness_mode"] = {AREA: "custom", OTHER: "custom"}
         self.assertIsNone(self.household())
         self.assertIsNone(policy.controlled_sleep_presence(
             self.hass, OTHER, self.conf, {AREA}, home_status="home")[0])
