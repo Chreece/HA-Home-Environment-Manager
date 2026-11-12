@@ -117,7 +117,8 @@
           "max_outdoor_humidity": "வெளியே · RH (%) (≤)",
           "max_wind_kmh": "காற்றோட்டம் · வானிலை மற்றும் எச்சரிக்கைகள் · km/h (≤)",
           "max_age_minutes": "காற்றோட்டம் · ⏱ · திறக்கவும் (min, ≤)",
-          "indoor_mold": "பூஞ்சை குறியீடு · ≥ 70%"
+          "indoor_mold": "பூஞ்சை குறியீடு · ≥ 70%",
+          "max_age_mode": "Environment reading validity"
         },
         "data_description": {
           "outdoor_aqi": "“வெளியே · AQI (≤)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
@@ -141,7 +142,8 @@
           "max_outdoor_humidity": "“வெளியே · RH (%) (≤)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
           "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
-          "indoor_mold": "“பூஞ்சை குறியீடு · ≥ 70%” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல."
+          "indoor_mold": "“பூஞ்சை குறியீடு · ≥ 70%” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
+          "max_age_mode": "Ventilation · Measurement freshness"
         }
       },
       "setup_rooms": {
@@ -712,7 +714,8 @@
           "climate_sleep_start": "உறக்கம் · தூக்கம் · சாதனங்கள் · START",
           "climate_sleep_end": "உறக்கம் · தூக்கம் · சாதனங்கள் · END",
           "climate_target_source": "சாதனங்கள் · மூலம் · இலக்கு",
-          "climate_comfort_adjustment_max_c": "சாதனங்கள் (°C)"
+          "climate_comfort_adjustment_max_c": "சாதனங்கள் (°C)",
+          "climate_occupancy_freshness_mode": "Room count freshness"
         },
         "data_description": {
           "climate_occupancy_sensors": "தேர்ந்தெடுத்த நிலை அல்லது பண்பில் உள்ள செல்லுபடியான ஆக்கிரமிப்பு அறைப் பட்டியலுக்கு முன்னுரிமை: பட்டியலிலுள்ள அறைகளில் ஆட்கள் உள்ளனர்; விடுபட்ட அறைகள் காலி. பட்டியல் இல்லாவிட்டால் ஏதேனும் ஓர் இருப்பு உணரி ON என்றால் ஆட்கள் உள்ளனர்; அனைத்தும் OFF அல்லது உணரிகள் தேர்வாகவில்லை என்றால் காலி. தேர்ந்தெடுத்த மூலம் கிடைக்காவிட்டால் அல்லது தவறாக இருந்தால் நிலை தெரியாததாகும். மாறாத பட்டியல்களும் இருநிலை மதிப்புகளும் காலாவதியாகாது.",
@@ -727,7 +730,8 @@
           "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
           "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "“சாதனங்கள் · மூலம் · இலக்கு” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
-          "climate_comfort_adjustment_max_c": "“சாதனங்கள் (°C)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல."
+          "climate_comfort_adjustment_max_c": "“சாதனங்கள் (°C)” க்கான தீர்மான வரம்பு பரிந்துரைகளைப் பாதிக்கும்; இது மருத்துவ வரம்பல்ல.",
+          "climate_occupancy_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven."
         }
       },
       "climate_equipment": {
@@ -2228,7 +2232,9 @@
           "general_home_policy": "வீட்டில் இருப்பு",
           "general_wake_alarm_entity": "உறக்கம் · அடுத்த அலாரம்",
           "general_wake_lead_minutes_entity": "உறக்கம் · அலாரத்திற்கு முன் உள்ள நிமிடங்கள்",
-          "window_open_timeout_minutes": "சாளரம் திறக்கக் காத்திருக்கும் நேரம் (நிமிடம்)"
+          "window_open_timeout_minutes": "சாளரம் திறக்கக் காத்திருக்கும் நேரம் (நிமிடம்)",
+          "general_source_freshness_mode": "Home occupancy · Validity policy",
+          "global_threshold_max_age_mode": "Environment · Validity policy"
         },
         "data_description": {
           "weather_entities": "தேர்ந்தெடுக்கவும்: வானிலை மற்றும் எச்சரிக்கைகள் · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2281,7 +2287,9 @@
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "அடுத்த அலாரத்தின் நேரம் அல்லது தேதி-நேர entity-யையும், அதற்கு முன் உள்ள நிமிடங்களின் entity-யையும் தேர்ந்தெடுக்கவும். வழக்கமான இலக்குகளை மீண்டும் பயன்படுத்த HEM அதற்கு முன்பே தானியக்க உறக்கத்தை முடிக்கும். தேதி இல்லாத நேரத்திற்கு Home Assistant நேர மண்டலம் பயன்படும். வெளியே இருப்பது, கைமுறைக் கட்டுப்பாடு மற்றும் சாதனப் பாதுகாப்புகளின் முன்னுரிமை தொடரும்.",
           "general_wake_lead_minutes_entity": "பூஜ்ஜியம் அல்லது அதற்கு மேற்பட்ட நிமிட மதிப்புள்ள எண் entity-யைத் தேர்ந்தெடுக்கவும்; அலகு min அல்லது அலகு இல்லாமல் இருக்கலாம். 07:00 அலாரமும் 30 மதிப்பும் தானியக்க உறக்கத்தை 06:30-க்கு முடிக்கும்; 0 என்றால் அலாரம் ஒலிக்கும்போது. முடக்க இரு மூலங்களையும் அகற்றவும்.",
-          "window_open_timeout_minutes": "காற்றோட்டக் கோரிக்கை ஏற்கப்பட்ட பின், இன்னும் தேவை இருந்தால் புதிய தானியங்கி/PID தொடக்கங்களை அனுமதிக்கும் முன் காத்திருக்கும் நேரம். 0–30 நிமிடங்கள், இயல்புநிலை 5; 0 காத்திருப்பை முடக்கும். திறந்த சாளரப் பாதுகாப்புகளும் சாதனங்களின் குறைந்தபட்ச நேரங்களும் தொடர்ந்து பொருந்தும்."
+          "window_open_timeout_minutes": "காற்றோட்டக் கோரிக்கை ஏற்கப்பட்ட பின், இன்னும் தேவை இருந்தால் புதிய தானியங்கி/PID தொடக்கங்களை அனுமதிக்கும் முன் காத்திருக்கும் நேரம். 0–30 நிமிடங்கள், இயல்புநிலை 5; 0 காத்திருப்பை முடக்கும். திறந்த சாளரப் பாதுகாப்புகளும் சாதனங்களின் குறைந்தபட்ச நேரங்களும் தொடர்ந்து பொருந்தும்.",
+          "general_source_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven.",
+          "global_threshold_max_age_mode": "Automatic: weather entities can remain valid for 180 minutes, other numeric environmental measurements for 90 minutes, while valid change-driven binary contacts remain usable without an inactivity timeout. Custom: use the minute value below. Availability and restored-state checks always apply. Home Assistant last_reported advances on a repeated same-value write, not merely because time has passed."
         }
       },
       "room_occupancy": {
@@ -4308,6 +4316,42 @@
         "state_attributes": {
           "configuration_help": {
             "name": "உதவி"
+          }
+        }
+      },
+      "global_threshold_mode_max_age_mode": {
+        "name": "Ventilation · Measurement freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "home_global_policy_source_freshness_mode": {
+        "name": "Home occupancy · Report freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "area_climate_policy_occupancy_freshness_mode": {
+        "name": "Room occupancy · Count freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
           }
         }
       }

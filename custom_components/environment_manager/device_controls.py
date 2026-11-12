@@ -163,12 +163,15 @@ CLIMATE_POLICY_OPTIONS = {
     "unknown_occupancy": ("occupied", "hold"),
     "away_policy": ("any_home", "all_home"),
     "target_source": ("temperature", "auto_comfort", "pmv"),
+    "occupancy_freshness_mode": ("auto", "custom"),
 }
 DEVICE_POLICY_OPTIONS = {
     "presence_requirement": ("always", "occupied", "absent"),
     "sleep_behavior": ("normal", "pause", "sleep_targets"),
 }
-GLOBAL_POLICY_OPTIONS = {"home_policy": ("any_home", "all_home")}
+GLOBAL_POLICY_OPTIONS = {"home_policy": ("any_home", "all_home"),
+                         "source_freshness_mode": ("auto", "custom")}
+GLOBAL_THRESHOLD_MODE_OPTIONS = {"max_age_mode": ("auto", "custom")}
 CLIMATE_OPERATING_FLAGS = ("sleep_active", "sleep_schedule_enabled", "closed_door_eco",
                            "window_efficiency_notify")
 AREA_ENV_FLAGS = ("sleep_room", "enable_pmv")
@@ -254,7 +257,7 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                                 entity_id: str | None = None) -> None:
     """One atomic, validated options update; never broaden device ownership."""
     if kind not in (
-        "pid", "profile", "climate_profile", "global_threshold", "global_setting",
+        "pid", "profile", "climate_profile", "global_threshold", "global_threshold_mode", "global_setting",
         "pid_gain_source", "global_environment", "global_occupancy",
         "area_environment", "climate_operating", "global_policy", "climate_policy",
         "device_target", "device_policy", "aqi_scale", "aqi_limit",
@@ -486,6 +489,13 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                     raise HomeAssistantError(f"Invalid comfort band: {reason}")
             rooms[area] = draft
             options[CONF_CLIMATE_ROOMS] = rooms
+        elif kind == "global_threshold_mode":
+            if area is not None or key not in GLOBAL_THRESHOLD_MODE_OPTIONS or value not in GLOBAL_THRESHOLD_MODE_OPTIONS[key]:
+                raise HomeAssistantError("Invalid environment freshness mode")
+            draft = deepcopy(current.get(CONF_THRESHOLDS, {}))
+            draft = draft if isinstance(draft, dict) else {}
+            draft[key] = value
+            options[CONF_THRESHOLDS] = draft
         elif kind == "global_threshold":
             if area is not None or key not in DEFAULT_THRESHOLDS:
                 raise HomeAssistantError("Invalid home-wide threshold")
@@ -681,7 +691,7 @@ async def update_device_setting(manager: Any, kind: str, key: str,
                         raise HomeAssistantError("Select native room equipment or configure its climate manager first")
                     # Native controllers consume the shared target source.
                     # The other selectors belong to the legacy room policy.
-                    if key != "target_source" and original.get("enabled") is not True:
+                    if key not in ("target_source", "occupancy_freshness_mode") and original.get("enabled") is not True:
                         raise HomeAssistantError("Room climate manager is not enabled")
                     new_room = dict(original)
                     new_room[key] = value

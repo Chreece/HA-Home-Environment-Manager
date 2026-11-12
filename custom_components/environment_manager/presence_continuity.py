@@ -38,6 +38,7 @@ def source_signature(config: dict[str, Any]) -> str:
         "occupied_rooms_entity": config.get("occupied_rooms_entity") or "",
         "occupied_rooms_attribute": config.get("occupied_rooms_attribute") or "__state__",
         "source_stale_minutes": config.get("source_stale_minutes", 240),
+        "source_freshness_mode": config.get("source_freshness_mode", "auto"),
     }
     return hashlib.sha256(
         json.dumps(fingerprint, sort_keys=True, ensure_ascii=True).encode("utf-8")

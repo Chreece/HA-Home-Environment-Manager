@@ -29,8 +29,10 @@ def _fresh(state: Any, max_age_minutes: float | None = 240, *, allow_empty: bool
     stamp = getattr(state, "last_reported", None) or getattr(state, "last_updated", None)
     if not isinstance(stamp, datetime) or stamp.tzinfo is None:
         return False
-    age = (datetime.now(timezone.utc) - stamp).total_seconds()
-    return age >= 0 and (max_age_minutes is None or age <= max_age_minutes * 60)
+    from .freshness_policy import effective_minutes, observed_age_seconds
+    age = observed_age_seconds(state)
+    limit = effective_minutes(state, max_age_minutes)
+    return age is not None and (limit is None or age <= limit * 60)
 
 
 def _room_key(value: str) -> str:
@@ -241,6 +243,9 @@ def home_presence(hass: Any, global_settings: Mapping,
     its existing absence cooldown. Return the sources that decided presence,
     so room sensors cannot become home trackers at a later control check.
     """
+    from .freshness_policy import configured_limit
+    fresh_limit = configured_limit(global_settings, family="home_presence",
+        minutes_key="source_stale_minutes", mode_key="source_freshness_mode")
     global_trackers = global_settings.get("home_trackers", [])
     # Legacy area trackers are explicit sources too: a positive should not
     # disappear merely because the General settings list is also configured.
@@ -255,7 +260,7 @@ def home_presence(hass: Any, global_settings: Mapping,
                                "number.", "input_number.", "sensor."))
     ))
     if allowed:
-        tracker_values = [_bool_presence(hass.states.get(e), global_settings.get("source_stale_minutes", 240))
+        tracker_values = [_bool_presence(hass.states.get(e), fresh_limit)
                           for e in allowed]
         if any(value is True for value in tracker_values):
             return "home", "any_home_policy", allowed
@@ -277,7 +282,7 @@ def home_presence(hass: Any, global_settings: Mapping,
         *([room_entity] if isinstance(room_entity, str) and room_entity else []),
         *allowed_rooms,
     ]))
-    room_values = [_bool_presence(hass.states.get(e), global_settings.get("source_stale_minutes", 240),
+    room_values = [_bool_presence(hass.states.get(e), fresh_limit,
                                   room_input=True) for e in allowed_rooms]
     resumed_since = global_settings.get("_verified_absence_since")
 
@@ -289,7 +294,7 @@ def home_presence(hass: Any, global_settings: Mapping,
     if has_room_list:
         rooms, why = configured_rooms(
             hass, room_entity, global_settings.get("occupied_rooms_attribute"),
-            set(), max_age_minutes=global_settings.get("source_stale_minutes", 240))
+            set(), max_age_minutes=fresh_limit)
         if rooms is None:
             return "unknown", why, all_sources
         if rooms:
@@ -386,6 +391,11 @@ def room_presence(hass: Any, area: str, settings: Mapping,
         )
     if home_status == "away":
         return "unoccupied", "verified_home_away", []
+    from .freshness_policy import configured_limit
+    fresh_limit = configured_limit(global_settings, family="home_presence",
+        minutes_key="source_stale_minutes", mode_key="source_freshness_mode")
+    room_limit = configured_limit(settings, family="room_presence",
+        minutes_key="occupancy_stale_minutes", mode_key="occupancy_freshness_mode")
     sensors = selected_room_sensors(hass, area, settings, global_settings)
     entity = global_settings.get("occupied_rooms_entity")
     has_list = isinstance(entity, str) and bool(entity) and entity != "none"
@@ -393,7 +403,7 @@ def room_presence(hass: Any, area: str, settings: Mapping,
     if has_list:
         rooms, reason = configured_rooms(
             hass, entity, global_settings.get("occupied_rooms_attribute"),
-            known_areas, max_age_minutes=global_settings.get("source_stale_minutes", 240),
+            known_areas, max_age_minutes=fresh_limit,
         )
         if rooms is not None:
             if area in rooms:
@@ -406,7 +416,7 @@ def room_presence(hass: Any, area: str, settings: Mapping,
 
     values = [
         _bool_presence(hass.states.get(eid),
-                       settings.get("occupancy_stale_minutes", 240), room_input=True)
+                       room_limit, room_input=True)
         for eid in sensors
     ]
     if any(value is True for value in values):
@@ -425,7 +435,7 @@ def sleep_presence(hass: Any, area: str, global_settings: Mapping,
     rooms, reason = configured_rooms(
         hass, global_settings.get("sleep_rooms_entity"),
         global_settings.get("sleep_rooms_attribute"),
-        known_areas, max_age_minutes=global_settings.get("source_stale_minutes", 240))
+        known_areas, max_age_minutes=None)
     return (area in rooms if rooms is not None else None), reason
 
 
@@ -457,6 +467,7 @@ def household_sleep_presence(
         overrides = global_settings.get("_room_occupancy_selections", {})
         overrides = overrides if isinstance(overrides, Mapping) else {}
         age_limits = global_settings.get("_room_occupancy_stale_minutes", {})
+        mode_limits = global_settings.get("_room_occupancy_freshness_mode", {})
         age_limits = age_limits if isinstance(age_limits, Mapping) else {}
         general = global_settings.get("room_occupancy_sensors")
         if isinstance(general, list) and general:
@@ -478,7 +489,8 @@ def household_sleep_presence(
             selected = overrides.get(candidate, by_area.get(candidate, []))
             status, _, _ = room_presence(
                 hass, candidate, {"occupancy_sensors": selected,
-                                  "occupancy_stale_minutes": age_limits.get(candidate, 240)},
+                                  "occupancy_stale_minutes": age_limits.get(candidate, 240),
+                                  "occupancy_freshness_mode": mode_limits.get(candidate, "auto")},
                 global_settings,
                 known_areas=known_areas, home_status=home_status,
             )
@@ -526,9 +538,11 @@ def controlled_sleep_presence(
             if room_status is None:
                 selected = global_settings.get("_room_occupancy_selections") or {}
                 age_limits = global_settings.get("_room_occupancy_stale_minutes") or {}
+                mode_limits = global_settings.get("_room_occupancy_freshness_mode") or {}
                 room_status, _, _ = room_presence(
                     hass, area, {"occupancy_sensors": selected.get(area),
-                                 "occupancy_stale_minutes": age_limits.get(area, 240)},
+                                 "occupancy_stale_minutes": age_limits.get(area, 240),
+                                 "occupancy_freshness_mode": mode_limits.get(area, "auto")},
                     global_settings,
                     known_areas=known_areas, home_status=home_status,
                 )

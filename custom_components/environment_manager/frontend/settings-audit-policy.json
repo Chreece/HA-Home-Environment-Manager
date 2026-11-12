@@ -62,6 +62,9 @@
   "home_aliases": {
     "global_occupancy_source_stale_minutes": "general_source_stale_minutes",
     "global_occupancy_away_cooldown_minutes": "general_away_cooldown_minutes",
-    "home_global_policy_home_policy": "general_home_policy"
+    "home_global_policy_home_policy": "general_home_policy",
+    "home_global_policy_source_freshness_mode": "general_source_freshness_mode",
+    "home_global_threshold_mode_max_age_mode": "global_threshold_max_age_mode",
+    "global_threshold_max_age_minutes": "global_threshold_max_age_minutes"
   }
 }

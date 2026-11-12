@@ -15,7 +15,7 @@ from .device_hierarchy import controller_device_info
 from .device_controls import (
     climate_settings, pid_settings, tuning_source, update_device_setting,
     CLIMATE_POLICY_OPTIONS, DEVICE_POLICY_OPTIONS, GLOBAL_POLICY_OPTIONS,
-    configured_aqi_entities, AQI_SCALES,
+    configured_aqi_entities, AQI_SCALES, GLOBAL_THRESHOLD_MODE_OPTIONS,
 )
 from .device_hierarchy import configured_area_ids
 
@@ -53,17 +53,22 @@ async def async_setup_entry(hass, entry, async_add_entities):
                      setting_key="scale", entity_id=source)
         for source in configured_aqi_entities(manager)
     )
+    entities.append(ConfigSelect(
+        manager, entry.entry_id, None, "global_threshold_mode",
+        GLOBAL_THRESHOLD_MODE_OPTIONS["max_age_mode"], setting_key="max_age_mode"))
     entities.extend(
         ConfigSelect(manager, entry.entry_id, None, "global_policy",
                      GLOBAL_POLICY_OPTIONS["home_policy"], setting_key="home_policy")
         for _ in (0,)
     )
+    entities.append(ConfigSelect(manager, entry.entry_id, None, "global_policy",
+                GLOBAL_POLICY_OPTIONS["source_freshness_mode"], setting_key="source_freshness_mode"))
     for area in configured_area_ids(manager.settings):
         room = climate_settings(manager.settings, area)
         if room is None:
             continue
         for key, values in CLIMATE_POLICY_OPTIONS.items():
-            if key != "target_source" and room.get("enabled") is not True:
+            if key not in ("target_source", "occupancy_freshness_mode") and room.get("enabled") is not True:
                 continue  # Legacy occupancy selectors do not drive native policy.
             entities.append(ConfigSelect(
                 manager, entry.entry_id, area, "climate_policy", values, setting_key=key
@@ -300,9 +305,15 @@ class ConfigSelect(SettingsMetadata, SelectEntity):
             cfg = scales.get(self._entity_id, {}) if isinstance(scales, dict) else {}
             from .aqi_sources import scale_selection
             return scale_selection(env, self._entity_id)
+        if self._kind == "global_threshold_mode":
+            cfg = settings.get("thresholds", {})
+            value = cfg.get(self._setting_key, "auto") if isinstance(cfg, dict) else "auto"
+            return value if value in self._attr_options else "auto"
         if self._kind == "global_policy":
             cfg = settings.get("occupancy_global", {})
-            return cfg.get(self._setting_key, "any_home") if isinstance(cfg, dict) else "any_home"
+            default = "auto" if self._setting_key == "source_freshness_mode" else "any_home"
+            value = cfg.get(self._setting_key, default) if isinstance(cfg, dict) else default
+            return value if value in self._attr_options else default
         cfg = settings.get("climate_rooms", {}).get(self._area_id, {})
         if self._kind == "device_policy":
             devices = cfg.get("device_settings", {}) if isinstance(cfg, dict) else {}
@@ -313,6 +324,7 @@ class ConfigSelect(SettingsMetadata, SelectEntity):
             "unknown_occupancy": "occupied",
             "away_policy": "any_home",
             "target_source": "temperature",
+            "occupancy_freshness_mode": "auto",
         }
         return cfg.get(self._setting_key, defaults[self._setting_key]) if isinstance(cfg, dict) else defaults[self._setting_key]
 

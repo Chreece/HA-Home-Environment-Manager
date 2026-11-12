@@ -343,6 +343,11 @@ jobs:
           python -I .github/tests/test_062b3_door_ui.py
       - name: B6 translated entity names include required placeholders
         run: python -I .github/tests/test_062b6_name_placeholders.py
+      - name: B11 Automatic/Custom report-age evidence and native selectors
+        run: |
+          python -I .github/tests/test_062b11_freshness.py
+          python -I .github/tests/test_062b11_native_modes.py
+          python -I .github/tests/test_062b11_freshness_ui.py
       - name: B10 stable settings UI, source selection and safe room changes
         run: |
           python -I .github/tests/test_062b10_settings_completeness.py

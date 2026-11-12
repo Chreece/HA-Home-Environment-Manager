@@ -117,7 +117,8 @@
           "max_outdoor_humidity": "室外 · RH (%) (≤)",
           "max_wind_kmh": "通风 · 天气与预警 · km/h (≤)",
           "max_age_minutes": "通风 · ⏱ · 打开 (min, ≤)",
-          "indoor_mold": "霉菌指标 · ≥ 70%"
+          "indoor_mold": "霉菌指标 · ≥ 70%",
+          "max_age_mode": "Environment reading validity"
         },
         "data_description": {
           "outdoor_aqi": "“室外 · AQI (≤)”的决策阈值会影响建议，但不属于医学限值。",
@@ -141,7 +142,8 @@
           "max_outdoor_humidity": "“室外 · RH (%) (≤)”的决策阈值会影响建议，但不属于医学限值。",
           "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
-          "indoor_mold": "“霉菌指标 · ≥ 70%”的决策阈值会影响建议，但不属于医学限值。"
+          "indoor_mold": "“霉菌指标 · ≥ 70%”的决策阈值会影响建议，但不属于医学限值。",
+          "max_age_mode": "Ventilation · Measurement freshness"
         }
       },
       "setup_rooms": {
@@ -712,7 +714,8 @@
           "climate_sleep_start": "睡眠 · 设备 · START",
           "climate_sleep_end": "睡眠 · 设备 · END",
           "climate_target_source": "设备 · 来源 · 目标",
-          "climate_comfort_adjustment_max_c": "设备 (°C)"
+          "climate_comfort_adjustment_max_c": "设备 (°C)",
+          "climate_occupancy_freshness_mode": "Room count freshness"
         },
         "data_description": {
           "climate_occupancy_sensors": "所选状态或属性中的有效有人房间列表具有优先权：列出的房间有人，未列出的房间为空。没有列表时，所选存在传感器中任意一个 ON 表示有人；全部 OFF 或未选传感器表示空房。已选择但不可用或无效的来源仍为未知。未变化的列表和二元状态不会过期。",
@@ -727,7 +730,8 @@
           "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
           "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "“设备 · 来源 · 目标”的决策阈值会影响建议，但不属于医学限值。",
-          "climate_comfort_adjustment_max_c": "“设备 (°C)”的决策阈值会影响建议，但不属于医学限值。"
+          "climate_comfort_adjustment_max_c": "“设备 (°C)”的决策阈值会影响建议，但不属于医学限值。",
+          "climate_occupancy_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven."
         }
       },
       "climate_equipment": {
@@ -2228,7 +2232,9 @@
           "general_home_policy": "在家状态",
           "general_wake_alarm_entity": "睡眠 · 下次闹钟",
           "general_wake_lead_minutes_entity": "睡眠 · 闹钟响铃前的分钟数",
-          "window_open_timeout_minutes": "等待开窗时间（分钟）"
+          "window_open_timeout_minutes": "等待开窗时间（分钟）",
+          "general_source_freshness_mode": "Home occupancy · Validity policy",
+          "global_threshold_max_age_mode": "Environment · Validity policy"
         },
         "data_description": {
           "weather_entities": "请选择: 天气与预警 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2281,7 +2287,9 @@
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "选择下次闹钟的时间或日期时间实体，以及提前分钟数实体。HEM 会提前这些分钟结束自动睡眠模式，恢复常规目标值。仅含时间的值使用 Home Assistant 的时区。离家、手动控制和设备保护仍保持优先级。",
           "general_wake_lead_minutes_entity": "选择值不小于 0 的数字实体，单位为 min 或无单位。闹钟为 07:00、数值为 30 时，自动睡眠于 06:30 结束；0 表示响铃时。清除两个来源即可禁用。",
-          "window_open_timeout_minutes": "开窗请求被接受后，等待一段时间，再根据需要允许新的自动/PID启动。范围0–30分钟，默认5；0表示不等待。开窗保护和设备最短运行/停机时间仍然有效。"
+          "window_open_timeout_minutes": "开窗请求被接受后，等待一段时间，再根据需要允许新的自动/PID启动。范围0–30分钟，默认5；0表示不等待。开窗保护和设备最短运行/停机时间仍然有效。",
+          "general_source_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven.",
+          "global_threshold_max_age_mode": "Automatic: weather entities can remain valid for 180 minutes, other numeric environmental measurements for 90 minutes, while valid change-driven binary contacts remain usable without an inactivity timeout. Custom: use the minute value below. Availability and restored-state checks always apply. Home Assistant last_reported advances on a repeated same-value write, not merely because time has passed."
         }
       },
       "room_occupancy": {
@@ -4308,6 +4316,42 @@
         "state_attributes": {
           "configuration_help": {
             "name": "帮助"
+          }
+        }
+      },
+      "global_threshold_mode_max_age_mode": {
+        "name": "Ventilation · Measurement freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "home_global_policy_source_freshness_mode": {
+        "name": "Home occupancy · Report freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "area_climate_policy_occupancy_freshness_mode": {
+        "name": "Room occupancy · Count freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
           }
         }
       }

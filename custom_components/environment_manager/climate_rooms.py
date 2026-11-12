@@ -120,10 +120,9 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
                     break
     else:
         sensors=_presence_ids(hass,area,settings)
-        age_limit=settings.get("occupancy_stale_minutes",240)
-        try: age_limit=float(age_limit)
-        except (ValueError,TypeError,OverflowError): age_limit=240
-        if not 10<=age_limit<=1440: age_limit=240
+        from .freshness_policy import configured_limit
+        age_limit = configured_limit(settings, family="room_presence",
+            minutes_key="occupancy_stale_minutes", mode_key="occupancy_freshness_mode")
         occupants=[_bool_state(hass,s,max_age_minutes=age_limit) for s in sensors]
         occupied,occ_reason=occupied_evidence(
             occupants,unknown_policy=settings.get("unknown_occupancy","occupied")

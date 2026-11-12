@@ -11,11 +11,12 @@ import ast
 import json
 import math
 import re
+import sys
 import unicodedata
 from collections.abc import Mapping
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
-from types import SimpleNamespace as N
+from types import ModuleType, SimpleNamespace as N
 
 ROOT=Path(__file__).resolve().parents[2]
 source=(ROOT/'occupancy_policy.py').read_text(encoding='utf-8')
@@ -54,7 +55,13 @@ class Hass:
         if area:self.areas[eid]=area
         return s
 
-ns={'ast':ast,'json':json,'math':math,'re':re,
+# Run extracted production functions inside a real package namespace, so
+# their relative imports of the pure freshness policy are exercised.
+pkg=ModuleType('hem_beta78_occupancy')
+pkg.__path__=[str(ROOT/'custom_components/environment_manager')]
+sys.modules[pkg.__name__]=pkg
+ns={'__name__':pkg.__name__+'.occupancy_policy', '__package__':pkg.__name__,
+    'ast':ast,'json':json,'math':math,'re':re,
     'unicodedata':unicodedata,'Mapping':Mapping,
     'datetime':datetime,'timezone':timezone,
     'Any':object,

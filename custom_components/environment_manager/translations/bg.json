@@ -117,7 +117,8 @@
           "max_outdoor_humidity": "Навън · RH (%) (≤)",
           "max_wind_kmh": "Проветряване · Време и предупреждения · km/h (≤)",
           "max_age_minutes": "Проветряване · ⏱ · Отворете (min, ≤)",
-          "indoor_mold": "Индикатор за мухъл · ≥ 70%"
+          "indoor_mold": "Индикатор за мухъл · ≥ 70%",
+          "max_age_mode": "Environment reading validity"
         },
         "data_description": {
           "outdoor_aqi": "Праг за решение за „Навън · AQI (≤)“. Влияе на препоръките, но не е медицинска граница.",
@@ -141,7 +142,8 @@
           "max_outdoor_humidity": "Праг за решение за „Навън · RH (%) (≤)“. Влияе на препоръките, но не е медицинска граница.",
           "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
-          "indoor_mold": "Праг за решение за „Индикатор за мухъл · ≥ 70%“. Влияе на препоръките, но не е медицинска граница."
+          "indoor_mold": "Праг за решение за „Индикатор за мухъл · ≥ 70%“. Влияе на препоръките, но не е медицинска граница.",
+          "max_age_mode": "Ventilation · Measurement freshness"
         }
       },
       "setup_rooms": {
@@ -712,7 +714,8 @@
           "climate_sleep_start": "Сън · Устройства · START",
           "climate_sleep_end": "Сън · Устройства · END",
           "climate_target_source": "Устройства · източник · цел",
-          "climate_comfort_adjustment_max_c": "Устройства (°C)"
+          "climate_comfort_adjustment_max_c": "Устройства (°C)",
+          "climate_occupancy_freshness_mode": "Room count freshness"
         },
         "data_description": {
           "climate_occupancy_sensors": "Валидният списък на заети стаи в избраното състояние или атрибут е водещ: включените стаи са заети, пропуснатите са празни. Без списък всеки включен сензор за присъствие означава заетост; всички изключени или липса на избрани сензори означава празна стая. Недостъпен или невалиден избран източник остава неизвестен. Непроменени списъци и двоични състояния не изтичат.",
@@ -727,7 +730,8 @@
           "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
           "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Праг за решение за „Устройства · източник · цел“. Влияе на препоръките, но не е медицинска граница.",
-          "climate_comfort_adjustment_max_c": "Праг за решение за „Устройства (°C)“. Влияе на препоръките, но не е медицинска граница."
+          "climate_comfort_adjustment_max_c": "Праг за решение за „Устройства (°C)“. Влияе на препоръките, но не е медицинска граница.",
+          "climate_occupancy_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven."
         }
       },
       "climate_equipment": {
@@ -2228,7 +2232,9 @@
           "general_home_policy": "Присъствие у дома",
           "general_wake_alarm_entity": "Сън · Следваща аларма",
           "general_wake_lead_minutes_entity": "Сън · Минути преди алармата",
-          "window_open_timeout_minutes": "Изчакване за отваряне на прозорец (мин)"
+          "window_open_timeout_minutes": "Изчакване за отваряне на прозорец (мин)",
+          "general_source_freshness_mode": "Home occupancy · Validity policy",
+          "global_threshold_max_age_mode": "Environment · Validity policy"
         },
         "data_description": {
           "weather_entities": "Изберете: Време и предупреждения · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2281,7 +2287,9 @@
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Изберете обект с час или дата и час за следващата аларма, както и обект за минутите. HEM излиза от автоматичния режим Сън толкова минути по-рано и възстановява нормалните цели. Часовете без дата използват часовата зона на Home Assistant. Отсъствието, ръчният контрол и защитите запазват приоритета си.",
           "general_wake_lead_minutes_entity": "Изберете числов обект с неотрицателна стойност в минути, с единица min или без единица. Аларма в 07:00 и стойност 30 прекратяват автоматичния Сън в 06:30; 0 означава при звънене. За изключване изчистете и двата източника.",
-          "window_open_timeout_minutes": "Изчакване след приемане на заявка за проветряване, преди да се разрешат нови автоматични/PID стартирания при нужда. 0–30 минути, по подразбиране 5; 0 изключва изчакването. Защитите при отворен прозорец и минималните времена на уредите остават активни."
+          "window_open_timeout_minutes": "Изчакване след приемане на заявка за проветряване, преди да се разрешат нови автоматични/PID стартирания при нужда. 0–30 минути, по подразбиране 5; 0 изключва изчакването. Защитите при отворен прозорец и минималните времена на уредите остават активни.",
+          "general_source_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven.",
+          "global_threshold_max_age_mode": "Automatic: weather entities can remain valid for 180 minutes, other numeric environmental measurements for 90 minutes, while valid change-driven binary contacts remain usable without an inactivity timeout. Custom: use the minute value below. Availability and restored-state checks always apply. Home Assistant last_reported advances on a repeated same-value write, not merely because time has passed."
         }
       },
       "room_occupancy": {
@@ -4308,6 +4316,42 @@
         "state_attributes": {
           "configuration_help": {
             "name": "Помощ"
+          }
+        }
+      },
+      "global_threshold_mode_max_age_mode": {
+        "name": "Ventilation · Measurement freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "home_global_policy_source_freshness_mode": {
+        "name": "Home occupancy · Report freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "area_climate_policy_occupancy_freshness_mode": {
+        "name": "Room occupancy · Count freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
           }
         }
       }

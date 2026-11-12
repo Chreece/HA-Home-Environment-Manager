@@ -9512,7 +9512,7 @@
   const homeGroup128=name=>{
     const key=String(name).toLowerCase();
     if(/weather|outdoor|warning/.test(key))return "weather";
-    if(/occup|presence|sleep|wake|alarm|trackers|home_policy|away_cooldown|source_stale|rooms_attribute|rooms_entity/.test(key))
+    if(/occup|presence|sleep|wake|alarm|trackers|home_policy|away_cooldown|source_stale|source_freshness|rooms_attribute|rooms_entity/.test(key))
       return "presence";
     if(/away_window.*(?:person|delivery|alert)|notify|notification|tts|media_player|ai_agent|language|delivery|_hub/.test(key))
       return "alerts";
@@ -11452,7 +11452,7 @@
    * Presentation only. Exact setting identities, never translated label guesses.
    * Fold specialist tuning, not native entities, stored values or safety policy.
    */
-  const auditPolicyB8={"version":1,"advanced":{"area_area_environment_enable_pmv":"comfort_model","area_area_environment_air_speed_m_s":"comfort_model","area_area_environment_met":"comfort_model","area_area_environment_clo":"comfort_model","area_area_science_radiant_temperature_entity":"comfort_model","area_area_science_air_speed_entity":"comfort_model","area_climate_operating_comfort_adjustment_max_c":"comfort_model","area_area_environment_radon_reference_bq_m3":"specialist_reference","global_environment_pollen_high_from":"specialist_reference","global_environment_pollen_max_scale":"specialist_reference","equipment_kp":"controller_tuning","equipment_ki":"controller_tuning","equipment_kd":"controller_tuning","equipment_sample_seconds":"controller_tuning","equipment_cycle_seconds":"controller_tuning","equipment_pid_process_gain":"controller_tuning","equipment_pid_time_constant_minutes":"controller_tuning","equipment_pid_dead_time_minutes":"controller_tuning","equipment_pid_lambda_minutes":"controller_tuning","equipment_pid_fan_capacity_mode":"controller_tuning","equipment_pid_fan_capacity_for_mode":"controller_tuning","equipment_pid_capacity_speed_1":"controller_tuning","equipment_pid_capacity_speed_2":"controller_tuning","equipment_pid_capacity_speed_3":"controller_tuning","equipment_pid_capacity_output_1":"controller_tuning","equipment_pid_capacity_output_2":"controller_tuning","equipment_pid_capacity_output_3":"controller_tuning","equipment_pid_capacity_stage_1":"controller_tuning","equipment_pid_capacity_stage_2":"controller_tuning","equipment_pid_capacity_stage_3":"controller_tuning","equipment_pid_capacity_stage_4":"controller_tuning","area_pid_kp":"compatibility_tuning","area_pid_ki":"compatibility_tuning","area_pid_kd":"compatibility_tuning","area_pid_offset_c":"compatibility_tuning","area_pid_sample_seconds":"compatibility_tuning","area_pid_max_change_c":"compatibility_tuning","area_pid_min_change_c":"compatibility_tuning","area_pid_gain_source":"compatibility_tuning","area_direct_tuning_kp":"compatibility_tuning","area_direct_tuning_ki":"compatibility_tuning","area_direct_tuning_kd":"compatibility_tuning","area_direct_tuning_sample_seconds":"compatibility_tuning","area_direct_tuning_max_demand_change":"compatibility_tuning","area_direct_tuning_min_demand_change":"compatibility_tuning","area_area_environment_particle_cadr_m3h":"compatibility_tuning","equipment_pid_adaptation_mode":"compatibility_tuning","area_climate_operating_humidity_hysteresis_rh":"strategy_tuning","area_climate_operating_cooling_dry_deferral_rh_points":"strategy_tuning","door_report_timeout_minutes":"optional_diagnostics","door_energy_meter":"optional_diagnostics"},"advanced_options":{"pollen_high_from":"specialist_reference","pollen_max_scale":"specialist_reference","general_occupied_rooms_attribute":"source_format","general_sleep_rooms_attribute":"source_format"},"home_aliases":{"global_occupancy_source_stale_minutes":"general_source_stale_minutes","global_occupancy_away_cooldown_minutes":"general_away_cooldown_minutes","home_global_policy_home_policy":"general_home_policy"}};
+  const auditPolicyB8={"version":1,"advanced":{"area_area_environment_enable_pmv":"comfort_model","area_area_environment_air_speed_m_s":"comfort_model","area_area_environment_met":"comfort_model","area_area_environment_clo":"comfort_model","area_area_science_radiant_temperature_entity":"comfort_model","area_area_science_air_speed_entity":"comfort_model","area_climate_operating_comfort_adjustment_max_c":"comfort_model","area_area_environment_radon_reference_bq_m3":"specialist_reference","global_environment_pollen_high_from":"specialist_reference","global_environment_pollen_max_scale":"specialist_reference","equipment_kp":"controller_tuning","equipment_ki":"controller_tuning","equipment_kd":"controller_tuning","equipment_sample_seconds":"controller_tuning","equipment_cycle_seconds":"controller_tuning","equipment_pid_process_gain":"controller_tuning","equipment_pid_time_constant_minutes":"controller_tuning","equipment_pid_dead_time_minutes":"controller_tuning","equipment_pid_lambda_minutes":"controller_tuning","equipment_pid_fan_capacity_mode":"controller_tuning","equipment_pid_fan_capacity_for_mode":"controller_tuning","equipment_pid_capacity_speed_1":"controller_tuning","equipment_pid_capacity_speed_2":"controller_tuning","equipment_pid_capacity_speed_3":"controller_tuning","equipment_pid_capacity_output_1":"controller_tuning","equipment_pid_capacity_output_2":"controller_tuning","equipment_pid_capacity_output_3":"controller_tuning","equipment_pid_capacity_stage_1":"controller_tuning","equipment_pid_capacity_stage_2":"controller_tuning","equipment_pid_capacity_stage_3":"controller_tuning","equipment_pid_capacity_stage_4":"controller_tuning","area_pid_kp":"compatibility_tuning","area_pid_ki":"compatibility_tuning","area_pid_kd":"compatibility_tuning","area_pid_offset_c":"compatibility_tuning","area_pid_sample_seconds":"compatibility_tuning","area_pid_max_change_c":"compatibility_tuning","area_pid_min_change_c":"compatibility_tuning","area_pid_gain_source":"compatibility_tuning","area_direct_tuning_kp":"compatibility_tuning","area_direct_tuning_ki":"compatibility_tuning","area_direct_tuning_kd":"compatibility_tuning","area_direct_tuning_sample_seconds":"compatibility_tuning","area_direct_tuning_max_demand_change":"compatibility_tuning","area_direct_tuning_min_demand_change":"compatibility_tuning","area_area_environment_particle_cadr_m3h":"compatibility_tuning","equipment_pid_adaptation_mode":"compatibility_tuning","area_climate_operating_humidity_hysteresis_rh":"strategy_tuning","area_climate_operating_cooling_dry_deferral_rh_points":"strategy_tuning","door_report_timeout_minutes":"optional_diagnostics","door_energy_meter":"optional_diagnostics"},"advanced_options":{"pollen_high_from":"specialist_reference","pollen_max_scale":"specialist_reference","general_occupied_rooms_attribute":"source_format","general_sleep_rooms_attribute":"source_format"},"home_aliases":{"global_occupancy_source_stale_minutes":"general_source_stale_minutes","global_occupancy_away_cooldown_minutes":"general_away_cooldown_minutes","home_global_policy_home_policy":"general_home_policy","home_global_policy_source_freshness_mode":"general_source_freshness_mode","home_global_threshold_mode_max_age_mode":"global_threshold_max_age_mode","global_threshold_max_age_minutes":"global_threshold_max_age_minutes"}};
   const auditWordsB8={
     en:{search:'Find a setting',advanced:'Show advanced settings',showing:'Shown',total:'total',empty:'No settings match. Clear the search or show advanced settings.',help:'Advanced settings include specialist models, controller tuning and optional diagnostics. Existing values and protections remain active.'},
     el:{search:'Αναζήτηση ρύθμισης',advanced:'Εμφάνιση προηγμένων ρυθμίσεων',showing:'Εμφανίζονται',total:'σύνολο',empty:'Δεν βρέθηκαν ρυθμίσεις. Καθάρισε την αναζήτηση ή εμφάνισε τις προηγμένες ρυθμίσεις.',help:'Οι προηγμένες ρυθμίσεις περιλαμβάνουν ειδικά μοντέλα, συντονισμό ελεγκτών και προαιρετικά διαγνωστικά. Οι υπάρχουσες τιμές και οι προστασίες παραμένουν ενεργές.'},
@@ -11998,5 +11998,105 @@
     '[data-settings-entity-manage-b10]{font-size:12px;color:var(--aqa-blue)}'+
     '</style>';};
   /* HEM_B10_SETUP_AND_SOURCE_INVENTORY_END */
+
+  /* HEM_FRESHNESS_POLICY_B11_START
+   * Automatic/custom is a preference, not a fresh data assertion.
+   * Only the numeric manual timeout editor is conditional; the policy
+   * selector remains visible, and errors/pending edits are never discarded.
+   */
+  const freshnessWordsB11={
+    en:{auto:'Automatic (by source type)',custom:'Custom timeout'},
+    el:{auto:'Αυτόματα (ανά τύπο πηγής)',custom:'Προσαρμοσμένο όριο'},
+    de:{auto:'Automatisch (nach Quellentyp)',custom:'Benutzerdefiniertes Zeitlimit'}
+  };
+  const freshnessB11=AirQualityAdvisorCard.prototype;
+  const freshnessAuditB11=freshnessB11._settingsAuditApplyB8;
+  freshnessB11._settingsAuditApplyB8=function(saved,scope){
+    const result=freshnessAuditB11.call(this,saved,scope);
+    if(!saved?.node)return result;
+    const rows=saved.node;
+    if(!saved.freshnessBoundB11){
+      saved.freshnessBoundB11=true;
+      rows.addEventListener('change',event=>{
+        const input=event.target?.closest?.('[data-hem-full-value127],[data-hem-home-input128]');
+        if(!input||input.tagName!=='SELECT'||!['auto','custom'].includes(input.value))return;
+        // Existing b7 handlers first save the changed mode. Recompute only
+        // its conditional presentation after the edited draft is captured.
+        Promise.resolve().then(()=>{
+          if(!saved.settingsClosed&&saved.node?.isConnected)this._settingsAuditApplyB8(saved,scope);
+        });
+      });
+    }
+    const fields=this._hemFullFields127(saved,scope);
+    const lookup=key=>{
+      const field=fields.find(f=>f.reg?.translation_key===key);
+      if(!field)return null;
+      const edited=saved.nativeEdits?.get(field.id);
+      return edited&&edited.phase!=='saved'&&edited.valid?edited.value:field.state?.state;
+    };
+    const homeValue=(key,nativeKey)=>scope==='home'&&saved.fields?.some(f=>f.name===key)?
+      (saved.draft?.[key]||'auto'):(lookup(nativeKey)||'auto');
+    const modes={
+      environment:homeValue('global_threshold_max_age_mode','home_global_threshold_mode_max_age_mode'),
+      home:homeValue('general_source_freshness_mode','home_global_policy_source_freshness_mode'),
+      room:lookup('area_climate_policy_occupancy_freshness_mode')||'auto',
+    };
+    const conditions=[
+      ['[data-hem-home-field128="global_threshold_max_age_minutes"]',modes.environment],
+      ['[data-hem-home-field128="general_source_stale_minutes"]',modes.home],
+      ['[data-hem-full-row127]',null],
+    ];
+    // B8's visibility is authoritative for search/Advanced; this overlay
+    // only hides custom values when Automatic is selected. Never forcibly
+    // unhide a filtered or advanced-hidden value in Custom mode.
+    for(const [selector,mode] of conditions.slice(0,2)){
+      const row=rows.querySelector(selector);if(!row)continue;
+      const name=row.getAttribute('data-hem-home-field128');
+      const dirty=saved.optionsAutosave?.dirty?.has(name)||[...row.querySelectorAll('[role="alert"]')].some(item=>!item.hidden&&item.textContent.trim());
+      row.classList.toggle('hem-freshness-auto-b11',mode!=='custom'&&!dirty);
+    }
+    for(const row of rows.querySelectorAll('[data-hem-full-row127]')){
+      const field=fields.find(f=>f.id===row.getAttribute('data-hem-full-row127'));
+      if(!field)continue;
+      const key=field.reg?.translation_key;
+      const mode=key==='area_climate_operating_occupancy_stale_minutes'?modes.room:
+        key==='global_threshold_max_age_minutes'?modes.environment:
+        key==='global_occupancy_source_stale_minutes'?modes.home:null;
+      if(!mode)continue;
+      const edit=saved.nativeEdits?.get(field.id);
+      row.classList.toggle('hem-freshness-auto-b11',mode!=='custom'&&
+        !(edit&&edit.phase!=='saved'));
+    }
+    // Use localized labels, but submit exact 'auto'/'custom' values.
+    const words=freshnessWordsB11[this._language()]||freshnessWordsB11.en;
+    for(const item of rows.querySelectorAll('select[data-hem-full-value127]')){
+      const row=item.closest('[data-hem-full-row127]');
+      const field=fields.find(f=>f.id===row?.getAttribute('data-hem-full-row127'));
+      if(!['home_global_policy_source_freshness_mode',
+           'home_global_threshold_mode_max_age_mode',
+           'area_climate_policy_occupancy_freshness_mode'].includes(field?.reg?.translation_key))continue;
+      for(const option of item.options){if(words[option.value])option.textContent=words[option.value];}
+    }
+    for(const item of rows.querySelectorAll('select[data-hem-home-input128]')){
+      if(!['general_source_freshness_mode','global_threshold_max_age_mode'].includes(
+           item.getAttribute('data-hem-home-input128')))continue;
+      for(const option of item.options){if(words[option.value])option.textContent=words[option.value];}
+    }
+    return result;
+  };
+  // b7's native and Options handlers run first. Reconcile dependent
+  // visibility after their draft update, not before validation/autosave.
+  const freshnessHomeB11=freshnessB11._homeValueChanged128;
+  freshnessB11._homeValueChanged128=function(...args){
+    const result=freshnessHomeB11.apply(this,args);
+    if(args[1]?.matches?.('[data-hem-home-input128]')){
+      const saved=args[0];if(saved)this._settingsAuditApplyB8(saved,'home');
+    }
+    return result;
+  };
+  const freshnessStylesB11=freshnessB11._styles;
+  freshnessB11._styles=function(){return freshnessStylesB11.call(this)+
+    '<style>.hem-freshness-auto-b11{display:none!important}</style>';};
+  /* HEM_FRESHNESS_POLICY_B11_END */
 
 })();

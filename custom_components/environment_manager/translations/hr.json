@@ -117,7 +117,8 @@
           "max_outdoor_humidity": "Vani · RH (%) (≤)",
           "max_wind_kmh": "Ventilacija · Vrijeme i upozorenja · km/h (≤)",
           "max_age_minutes": "Ventilacija · ⏱ · Otvorite (min, ≤)",
-          "indoor_mold": "Pokazatelj plijesni · ≥ 70%"
+          "indoor_mold": "Pokazatelj plijesni · ≥ 70%",
+          "max_age_mode": "Environment reading validity"
         },
         "data_description": {
           "outdoor_aqi": "Prag odluke za „Vani · AQI (≤)”. Utječe na preporuke, nije medicinska granica.",
@@ -141,7 +142,8 @@
           "max_outdoor_humidity": "Prag odluke za „Vani · RH (%) (≤)”. Utječe na preporuke, nije medicinska granica.",
           "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
-          "indoor_mold": "Prag odluke za „Pokazatelj plijesni · ≥ 70%”. Utječe na preporuke, nije medicinska granica."
+          "indoor_mold": "Prag odluke za „Pokazatelj plijesni · ≥ 70%”. Utječe na preporuke, nije medicinska granica.",
+          "max_age_mode": "Ventilation · Measurement freshness"
         }
       },
       "setup_rooms": {
@@ -712,7 +714,8 @@
           "climate_sleep_start": "Spavanje · Uređaji · START",
           "climate_sleep_end": "Spavanje · Uređaji · END",
           "climate_target_source": "Uređaji · izvor · cilj",
-          "climate_comfort_adjustment_max_c": "Uređaji (°C)"
+          "climate_comfort_adjustment_max_c": "Uređaji (°C)",
+          "climate_occupancy_freshness_mode": "Room count freshness"
         },
         "data_description": {
           "climate_occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
@@ -727,7 +730,8 @@
           "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
           "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Prag odluke za „Uređaji · izvor · cilj”. Utječe na preporuke, nije medicinska granica.",
-          "climate_comfort_adjustment_max_c": "Prag odluke za „Uređaji (°C)”. Utječe na preporuke, nije medicinska granica."
+          "climate_comfort_adjustment_max_c": "Prag odluke za „Uređaji (°C)”. Utječe na preporuke, nije medicinska granica.",
+          "climate_occupancy_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven."
         }
       },
       "climate_equipment": {
@@ -2228,7 +2232,9 @@
           "general_home_policy": "Prisutnost kod kuće",
           "general_wake_alarm_entity": "Spavanje · Sljedeći alarm",
           "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma",
-          "window_open_timeout_minutes": "Čekanje na otvaranje prozora (min)"
+          "window_open_timeout_minutes": "Čekanje na otvaranje prozora (min)",
+          "general_source_freshness_mode": "Home occupancy · Validity policy",
+          "global_threshold_max_age_mode": "Environment · Validity policy"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2281,7 +2287,9 @@
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Odaberite entitet vremena ili datuma i vremena sljedećeg alarma te entitet za minute. HEM završava automatsko spavanje toliko minuta ranije i vraća uobičajene ciljeve. Vrijeme bez datuma koristi vremensku zonu Home Assistanta. Odsutnost, ručno upravljanje i zaštite zadržavaju prednost.",
           "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora.",
-          "window_open_timeout_minutes": "Čekanje nakon prihvaćanja zahtjeva za prozračivanje prije dopuštanja novih automatskih/PID pokretanja ako su potrebna. 0–30 minuta, zadano 5; 0 isključuje čekanje. Zaštite pri otvorenom prozoru i minimalna vremena rada uređaja i dalje vrijede."
+          "window_open_timeout_minutes": "Čekanje nakon prihvaćanja zahtjeva za prozračivanje prije dopuštanja novih automatskih/PID pokretanja ako su potrebna. 0–30 minuta, zadano 5; 0 isključuje čekanje. Zaštite pri otvorenom prozoru i minimalna vremena rada uređaja i dalje vrijede.",
+          "general_source_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven.",
+          "global_threshold_max_age_mode": "Automatic: weather entities can remain valid for 180 minutes, other numeric environmental measurements for 90 minutes, while valid change-driven binary contacts remain usable without an inactivity timeout. Custom: use the minute value below. Availability and restored-state checks always apply. Home Assistant last_reported advances on a repeated same-value write, not merely because time has passed."
         }
       },
       "room_occupancy": {
@@ -4308,6 +4316,42 @@
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"
+          }
+        }
+      },
+      "global_threshold_mode_max_age_mode": {
+        "name": "Ventilation · Measurement freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "home_global_policy_source_freshness_mode": {
+        "name": "Home occupancy · Report freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "area_climate_policy_occupancy_freshness_mode": {
+        "name": "Room occupancy · Count freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
           }
         }
       }
