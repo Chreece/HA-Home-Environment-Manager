@@ -117,7 +117,8 @@
           "max_outdoor_humidity": "Ngoài trời · RH (%) (≤)",
           "max_wind_kmh": "Thông gió · Thời tiết và cảnh báo · km/h (≤)",
           "max_age_minutes": "Thông gió · ⏱ · Mở (min, ≤)",
-          "indoor_mold": "Chỉ số nấm mốc · ≥ 70%"
+          "indoor_mold": "Chỉ số nấm mốc · ≥ 70%",
+          "max_age_mode": "Environment reading validity"
         },
         "data_description": {
           "outdoor_aqi": "Ngưỡng quyết định cho “Ngoài trời · AQI (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
@@ -141,7 +142,8 @@
           "max_outdoor_humidity": "Ngưỡng quyết định cho “Ngoài trời · RH (%) (≤)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
           "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
-          "indoor_mold": "Ngưỡng quyết định cho “Chỉ số nấm mốc · ≥ 70%”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế."
+          "indoor_mold": "Ngưỡng quyết định cho “Chỉ số nấm mốc · ≥ 70%”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "max_age_mode": "Ventilation · Measurement freshness"
         }
       },
       "setup_rooms": {
@@ -712,7 +714,8 @@
           "climate_sleep_start": "Ngủ · Thiết bị · START",
           "climate_sleep_end": "Ngủ · Thiết bị · END",
           "climate_target_source": "Thiết bị · nguồn · mục tiêu",
-          "climate_comfort_adjustment_max_c": "Thiết bị (°C)"
+          "climate_comfort_adjustment_max_c": "Thiết bị (°C)",
+          "climate_occupancy_freshness_mode": "Room count freshness"
         },
         "data_description": {
           "climate_occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
@@ -727,7 +730,8 @@
           "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
           "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "Ngưỡng quyết định cho “Thiết bị · nguồn · mục tiêu”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
-          "climate_comfort_adjustment_max_c": "Ngưỡng quyết định cho “Thiết bị (°C)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế."
+          "climate_comfort_adjustment_max_c": "Ngưỡng quyết định cho “Thiết bị (°C)”. Ảnh hưởng đến khuyến nghị, không phải giới hạn y tế.",
+          "climate_occupancy_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven."
         }
       },
       "climate_equipment": {
@@ -2228,7 +2232,9 @@
           "general_home_policy": "Có mặt ở nhà",
           "general_wake_alarm_entity": "Ngủ · Báo thức tiếp theo",
           "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức",
-          "window_open_timeout_minutes": "Thời gian chờ mở cửa sổ (phút)"
+          "window_open_timeout_minutes": "Thời gian chờ mở cửa sổ (phút)",
+          "general_source_freshness_mode": "Home occupancy · Validity policy",
+          "global_threshold_max_age_mode": "Environment · Validity policy"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2281,7 +2287,9 @@
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Chọn thực thể giờ hoặc ngày giờ của báo thức tiếp theo và thực thể số phút sớm hơn. HEM kết thúc chế độ ngủ tự động sớm hơn số phút đó để tiếp tục các mục tiêu thông thường. Giờ không có ngày dùng múi giờ Home Assistant. Vắng nhà, điều khiển thủ công và bảo vệ thiết bị vẫn được ưu tiên.",
           "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn.",
-          "window_open_timeout_minutes": "Chờ sau khi yêu cầu thông gió được chấp nhận trước khi cho phép khởi động tự động/PID mới nếu vẫn cần. 0–30 phút, mặc định 5; 0 tắt thời gian chờ. Bảo vệ khi cửa sổ mở và thời gian tối thiểu của thiết bị vẫn áp dụng."
+          "window_open_timeout_minutes": "Chờ sau khi yêu cầu thông gió được chấp nhận trước khi cho phép khởi động tự động/PID mới nếu vẫn cần. 0–30 phút, mặc định 5; 0 tắt thời gian chờ. Bảo vệ khi cửa sổ mở và thời gian tối thiểu của thiết bị vẫn áp dụng.",
+          "general_source_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven.",
+          "global_threshold_max_age_mode": "Automatic: weather entities can remain valid for 180 minutes, other numeric environmental measurements for 90 minutes, while valid change-driven binary contacts remain usable without an inactivity timeout. Custom: use the minute value below. Availability and restored-state checks always apply. Home Assistant last_reported advances on a repeated same-value write, not merely because time has passed."
         }
       },
       "room_occupancy": {
@@ -4308,6 +4316,42 @@
         "state_attributes": {
           "configuration_help": {
             "name": "Trợ giúp"
+          }
+        }
+      },
+      "global_threshold_mode_max_age_mode": {
+        "name": "Ventilation · Measurement freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "home_global_policy_source_freshness_mode": {
+        "name": "Home occupancy · Report freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "area_climate_policy_occupancy_freshness_mode": {
+        "name": "Room occupancy · Count freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
           }
         }
       }
