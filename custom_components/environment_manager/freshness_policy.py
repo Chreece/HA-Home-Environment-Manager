@@ -60,6 +60,12 @@ def effective_minutes(state: Any, configured: float | None) -> float | None:
         return float(configured)
     domain = getattr(state, "domain", "")
     if domain == "binary_sensor":
+        # An unchanged room contact can remain authoritative indefinitely,
+        # but a whole-home OFF/away binary MUST be fresh before it is allowed
+        # to prove that everyone is absent. Positive Home is handled by the
+        # presence policy's separate status-specific fast path.
+        if configured.family == "home_presence":
+            return DEFAULT_MINUTES["home_presence"]
         return None
     if configured.family == "environment":
         return WEATHER_MINUTES if domain == "weather" else DEFAULT_MINUTES["environment"]
