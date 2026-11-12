@@ -67,6 +67,15 @@ jobs:
           node --check custom_components/environment_manager/frontend/air-quality-advisor-card.js
           python -m compileall -q custom_components/environment_manager
           python -I .github/scripts/audit_settings.py --check
+          # Legacy extracted production-method regressions resolve old source
+          # module names from repository root. These symlinks are runner-only.
+          python - <<'PY'
+          from pathlib import Path
+          for entry in Path('custom_components/environment_manager').iterdir():
+              path = Path(entry.name)
+              if not path.exists() and not path.is_symlink():
+                  path.symlink_to(entry, target_is_directory=entry.is_dir())
+          PY
           python -I .github/tests/test_beta79_general_form.py
           python -I .github/tests/test_062b10_source_validation.py
           git diff --check
