@@ -382,6 +382,7 @@ def run():
         modal.locator('[data-hem-full-value127="select.user_renamed_method"]').dispatch_event('change')
         assert page.evaluate("calls[1]")==['select','select_option',
             {'entity_id':'select.user_renamed_method','option':'manual'}]
+        modal.locator("[data-settings-advanced-b8]").check()
         gain=modal.locator('[data-hem-full-value127="number.gain_0_heat"]')
         gain.fill("4.6")
         modal.locator('[data-hem-full-value127="number.gain_0_heat"]').dispatch_event('change')
